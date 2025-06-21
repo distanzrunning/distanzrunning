@@ -1,3 +1,5 @@
+// src/sanity/schemaTypes/blockContentType.ts
+
 import {defineType, defineArrayMember} from 'sanity'
 import {ImageIcon} from '@sanity/icons'
 
@@ -57,9 +59,7 @@ export const blockContentType = defineType({
         ],
       },
     }),
-    // You can add additional types here. Note that you can't use
-    // primitive types such as 'string' and 'number' in the same array
-    // as a block type.
+    // Enhanced image block with caption and credit
     defineArrayMember({
       type: 'image',
       icon: ImageIcon,
@@ -69,8 +69,29 @@ export const blockContentType = defineType({
           name: 'alt',
           type: 'string',
           title: 'Alternative Text',
+          description: 'Important for accessibility and SEO',
+        },
+        {
+          name: 'caption',
+          type: 'string',
+          title: 'Caption',
+          description: 'Image description that will appear below the image',
+        },
+        {
+          name: 'credit',
+          type: 'string',
+          title: 'Image Credit',
+          description: 'Photo credit or source (e.g., "Photo by John Doe" or "Source: Getty Images")',
         }
       ]
+    }),
+    // Add the custom table component
+    defineArrayMember({
+      type: 'customTable',
+    }),
+    // Add the custom code block component
+    defineArrayMember({
+      type: 'customCodeBlock',
     }),
   ],
 })

@@ -1,3 +1,5 @@
+// src/lib/sanity.ts
+
 import { createClient } from 'next-sanity';
 
 const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;

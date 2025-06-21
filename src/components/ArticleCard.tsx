@@ -21,7 +21,7 @@ interface ArticleCardProps {
 const ArticleCard = React.memo(function ArticleCard({ post }: ArticleCardProps) {
   return (
     <div className="bg-white rounded-lg overflow-hidden shadow hover:shadow-md transition-shadow duration-300">
-      <Link href={`/articles/${post.slug.current}`}>
+      <Link href={`/articles/post/${post.slug.current}`}>
         <div>
           {post.mainImage && (
             <img

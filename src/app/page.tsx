@@ -1,23 +1,121 @@
 // src/app/page.tsx
-import { sanity } from '@/lib/sanity';
-import { urlFor } from '@/lib/image';
-import Link from 'next/link';
-import Image from 'next/image';
-import { format } from 'date-fns';
+import { sanity } from '@/lib/sanity'
+import { urlFor } from '@/lib/image'
+import Link from 'next/link'
+import { format } from 'date-fns'
+import NewsletterSignup from '@/components/NewsletterSignup'
 
-// Define type for posts
 type Post = {
-  _id: string;
-  title: string;
-  slug: { current: string };
-  mainImage: any;
-  publishedAt: string;
-  excerpt: string;
-  categories: Array<{ title: string }>;
-};
+  _id: string
+  title: string
+  slug: { current: string }
+  mainImage: any
+  publishedAt: string
+  excerpt: string
+  categories: Array<{ title: string }>
+}
 
-export default async function HomePage() {
-  // Fetch featured posts and recent posts
+// Preview Mode Component
+function PreviewPage() {
+  return (
+    <div className="min-h-screen flex flex-col">
+      {/* Header with bigger logo */}
+      <header className="pt-8 pb-4">
+        <div className="flex justify-center">
+          <img
+            src="/images/logo.svg"
+            alt="Distanz Running Logo"
+            className="h-16 md:h-20 w-auto"
+          />
+        </div>
+      </header>
+
+      {/* Main content */}
+      <main className="flex-1 flex items-center justify-center px-6">
+        <div className="text-center max-w-lg mx-auto space-y-8">
+          <h1 className="text-title-quartr text-textDefault">
+            Coming Soon
+          </h1>
+          
+          <p className="text-intro-quartr text-textSubtle">
+            We're building the ultimate destination for running news, marathon guides, and gear reviews.
+          </p>
+          
+          <div className="pt-6 border-t border-borderNeutralSubtle">
+            <p className="text-meta-quartr text-textSubtle mb-6">
+              Follow us for updates
+            </p>
+            
+            {/* Social Icons - matching footer styling exactly */}
+            <div className="flex items-center justify-center space-x-4">
+              <a 
+                href="https://x.com" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                aria-label="X / Twitter" 
+                className="text-textSubtle hover:text-primary transition-colors duration-200"
+              >
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 512 512">
+                  <path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"/>
+                </svg>
+              </a>
+              <a 
+                href="https://linkedin.com" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                aria-label="LinkedIn" 
+                className="text-textSubtle hover:text-primary transition-colors duration-200"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+                  <rect width="4" height="12" x="2" y="9"/>
+                  <circle cx="4" cy="4" r="2"/>
+                </svg>
+              </a>
+              <a 
+                href="https://www.instagram.com/distanzrunning/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                aria-label="Instagram" 
+                className="text-textSubtle hover:text-primary transition-colors duration-200"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect width="20" height="20" x="2" y="2" rx="5" ry="5"/>
+                  <path d="m16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+                  <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/>
+                </svg>
+              </a>
+              <a 
+                href="https://strava.com" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                aria-label="Strava" 
+                className="text-textSubtle hover:text-primary transition-colors duration-200"
+              >
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 384 512">
+                  <path d="M158.4 0L7 292h89.7l62.5-116L221 292h89.4L158.4 0z"/>
+                  <path d="m192 304l-25.4 47.6L140.2 304h-32l50.4 96l50.4-96z"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      {/* Simple footer */}
+      <footer className="pb-8 pt-4">
+        <div className="text-center">
+          <p className="text-meta-quartr text-textSubtle">
+            © 2025 Distanz Running. All rights reserved.
+          </p>
+        </div>
+      </footer>
+    </div>
+  );
+}
+
+// Development Homepage Component
+async function DevelopmentHomePage() {
   const posts: Post[] = await sanity.fetch(`
     *[_type == "post"] | order(publishedAt desc)[0...6]{
       _id,
@@ -28,15 +126,15 @@ export default async function HomePage() {
       excerpt,
       "categories": categories[]->title
     }
-  `);
+  `)
 
-  const featuredPost = posts[0];
-  const recentPosts = posts.slice(1);
+  const featuredPost = posts[0]
+  const recentPosts = posts.slice(1)
 
   return (
-    <div className="bg-light">
+    <div>
       {/* Hero Section */}
-      <section className="py-16">
+      <section className="bg-secondary/20 py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h1 className="text-4xl font-bold tracking-tight text-dark sm:text-5xl md:text-6xl">
@@ -70,8 +168,8 @@ export default async function HomePage() {
                 </div>
                 <h3 className="text-2xl font-bold mb-3 text-dark">{featuredPost.title}</h3>
                 <p className="text-muted mb-4">{featuredPost.excerpt}</p>
-                <Link href={`/articles/${featuredPost.slug.current}`}>
-                  <div className="inline-flex items-center px-4 py-2 border border-primary text-sm font-medium rounded-md text-white bg-primary hover:bg-dark hover:border-dark transition-colors duration-300">
+                <Link href={`/articles/post/${featuredPost.slug.current}`}>
+                  <div className="inline-flex items-center px-4 py-2 border border-primary text-sm font-medium rounded-md text-white bg-primary hover:bg-primary/90">
                     Read Article
                   </div>
                 </Link>
@@ -82,12 +180,15 @@ export default async function HomePage() {
       )}
 
       {/* Recent Posts */}
-      <section className="py-12">
+      <section className="py-12 bg-secondary/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-2xl font-bold mb-8 text-dark">Recent Articles</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {recentPosts.map((post) => (
-              <div key={post._id} className="bg-white rounded-lg overflow-hidden shadow hover:shadow-md transition-shadow duration-300">
+              <div
+                key={post._id}
+                className="bg-white rounded-lg overflow-hidden shadow hover:shadow-md transition-shadow duration-300"
+              >
                 {post.mainImage && (
                   <img
                     src={urlFor(post.mainImage).width(400).height(250).url()}
@@ -101,8 +202,8 @@ export default async function HomePage() {
                   </div>
                   <h3 className="text-xl font-bold mb-2 text-dark">{post.title}</h3>
                   <p className="text-muted mb-4 line-clamp-3">{post.excerpt}</p>
-                  <Link href={`/articles/${post.slug.current}`}>
-                    <div className="text-sm font-medium text-primary hover:text-dark transition-colors duration-300">
+                  <Link href={`/articles/post/${post.slug.current}`}>
+                    <div className="text-sm font-medium text-primary hover:text-primary/80">
                       Read More →
                     </div>
                   </Link>
@@ -112,7 +213,7 @@ export default async function HomePage() {
           </div>
           <div className="mt-8 text-center">
             <Link href="/articles">
-              <div className="inline-flex items-center px-4 py-2 border border-primary text-sm font-medium rounded-md text-white bg-primary hover:bg-dark hover:border-dark transition-colors duration-300">
+              <div className="inline-flex items-center px-4 py-2 border border-primary text-sm font-medium rounded-md text-white bg-primary hover:bg-primary/90">
                 View All Articles
               </div>
             </Link>
@@ -120,40 +221,22 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Newsletter Section */}
-      <section className="py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-primary/90 rounded-2xl shadow-lg overflow-hidden">
-            <div className="px-6 py-12 md:p-12 md:flex md:items-center md:justify-between">
-              <div className="md:w-0 md:flex-1">
-                <h2 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
-                  Get running updates in your inbox
-                </h2>
-                <p className="mt-3 max-w-3xl text-white opacity-90">
-                  Sign up for our newsletter to receive the latest running news, race guides, and gear reviews.
-                </p>
-              </div>
-              <div className="mt-8 md:mt-0 md:ml-10">
-                <form className="sm:flex">
-                  <input
-                    type="email"
-                    placeholder="Enter your email"
-                    className="w-full px-5 py-3 border border-transparent placeholder-gray-400 focus:ring-2 focus:ring-white focus:border-white sm:max-w-xs rounded-md"
-                  />
-                  <div className="mt-3 rounded-md shadow sm:mt-0 sm:ml-3 sm:flex-shrink-0">
-                    <button
-                      type="submit"
-                      className="w-full flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-primary bg-white hover:bg-gray-50 transition-colors duration-300"
-                    >
-                      Subscribe
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Reusable Newsletter Signup */}
+      <NewsletterSignup />
     </div>
-  );
+  )
+}
+
+export default async function HomePage() {
+  // Check if we're in preview mode
+  // You can use an environment variable or check the hostname
+  const isPreviewMode = process.env.PREVIEW_MODE === 'true' || 
+                       process.env.NODE_ENV === 'production';
+
+  // Return preview page if in preview mode, otherwise return development page
+  if (isPreviewMode) {
+    return <PreviewPage />;
+  }
+
+  return <DevelopmentHomePage />;
 }
