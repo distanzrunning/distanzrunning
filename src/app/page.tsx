@@ -9,7 +9,7 @@ type Post = {
   _id: string
   title: string
   slug: { current: string }
-  mainImage: any
+  mainImage: any // Keep as any for Sanity image objects
   publishedAt: string
   excerpt: string
   categories: Array<{ title: string }>
@@ -38,7 +38,7 @@ function PreviewPage() {
           </h1>
           
           <p className="text-intro-quartr text-textSubtle">
-            We're building the ultimate destination for running news, marathon guides, and gear reviews.
+            We&apos;re building the ultimate destination for running news, marathon guides, and gear reviews.
           </p>
           
           <div className="pt-6 border-t border-borderNeutralSubtle">
@@ -46,14 +46,14 @@ function PreviewPage() {
               Follow us for updates
             </p>
             
-            {/* Social Icons - matching footer styling exactly */}
-            <div className="flex items-center justify-center space-x-4">
+            {/* Social Icons - matching footer container exactly */}
+            <div className="flex items-center space-x-4 justify-center">
               <a 
                 href="https://x.com" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 aria-label="X / Twitter" 
-                className="text-textSubtle hover:text-primary transition-colors duration-200"
+                className="hover:text-primary transition-colors duration-200"
               >
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 512 512">
                   <path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"/>
@@ -64,7 +64,7 @@ function PreviewPage() {
                 target="_blank" 
                 rel="noopener noreferrer"
                 aria-label="LinkedIn" 
-                className="text-textSubtle hover:text-primary transition-colors duration-200"
+                className="hover:text-primary transition-colors duration-200"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
@@ -77,7 +77,7 @@ function PreviewPage() {
                 target="_blank" 
                 rel="noopener noreferrer"
                 aria-label="Instagram" 
-                className="text-textSubtle hover:text-primary transition-colors duration-200"
+                className="hover:text-primary transition-colors duration-200"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <rect width="20" height="20" x="2" y="2" rx="5" ry="5"/>
@@ -90,11 +90,10 @@ function PreviewPage() {
                 target="_blank" 
                 rel="noopener noreferrer"
                 aria-label="Strava" 
-                className="text-textSubtle hover:text-primary transition-colors duration-200"
+                className="hover:text-primary transition-colors duration-200"
               >
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 384 512">
-                  <path d="M158.4 0L7 292h89.7l62.5-116L221 292h89.4L158.4 0z"/>
-                  <path d="m192 304l-25.4 47.6L140.2 304h-32l50.4 96l50.4-96z"/>
+                  <path d="M158.4 0L7 292h89.2l62.2-116.1L220.1 292h88.5zm150.2 292l-43.9 88.2-44.6-88.2h-67.6l112.2 220 111.5-220z"/>
                 </svg>
               </a>
             </div>
@@ -116,20 +115,28 @@ function PreviewPage() {
 
 // Development Homepage Component
 async function DevelopmentHomePage() {
-  const posts: Post[] = await sanity.fetch(`
-    *[_type == "post"] | order(publishedAt desc)[0...6]{
-      _id,
-      title,
-      slug,
-      mainImage,
-      publishedAt,
-      excerpt,
-      "categories": categories[]->title
-    }
-  `)
+  let posts: Post[] = [];
+  
+  try {
+    posts = await sanity.fetch(`
+      *[_type == "post"] | order(publishedAt desc)[0...6]{
+        _id,
+        title,
+        slug,
+        mainImage,
+        publishedAt,
+        excerpt,
+        "categories": categories[]->title
+      }
+    `);
+  } catch (error) {
+    console.error('Error fetching posts:', error);
+    // Return a fallback if Sanity is not available
+    posts = [];
+  }
 
-  const featuredPost = posts[0]
-  const recentPosts = posts.slice(1)
+  const featuredPost = posts[0];
+  const recentPosts = posts.slice(1);
 
   return (
     <div>
@@ -183,55 +190,61 @@ async function DevelopmentHomePage() {
       <section className="py-12 bg-secondary/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-2xl font-bold mb-8 text-dark">Recent Articles</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {recentPosts.map((post) => (
-              <div
-                key={post._id}
-                className="bg-white rounded-lg overflow-hidden shadow hover:shadow-md transition-shadow duration-300"
-              >
-                {post.mainImage && (
-                  <img
-                    src={urlFor(post.mainImage).width(400).height(250).url()}
-                    alt={post.title}
-                    className="w-full h-48 object-cover"
-                  />
-                )}
-                <div className="p-6">
-                  <div className="text-sm text-muted mb-2">
-                    {format(new Date(post.publishedAt), 'MMMM d, yyyy')}
-                  </div>
-                  <h3 className="text-xl font-bold mb-2 text-dark">{post.title}</h3>
-                  <p className="text-muted mb-4 line-clamp-3">{post.excerpt}</p>
-                  <Link href={`/articles/post/${post.slug.current}`}>
-                    <div className="text-sm font-medium text-primary hover:text-primary/80">
-                      Read More →
+          {recentPosts.length > 0 ? (
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {recentPosts.map((post) => (
+                  <div
+                    key={post._id}
+                    className="bg-white rounded-lg overflow-hidden shadow hover:shadow-md transition-shadow duration-300"
+                  >
+                    {post.mainImage && (
+                      <img
+                        src={urlFor(post.mainImage).width(400).height(250).url()}
+                        alt={post.title}
+                        className="w-full h-48 object-cover"
+                      />
+                    )}
+                    <div className="p-6">
+                      <div className="text-sm text-muted mb-2">
+                        {format(new Date(post.publishedAt), 'MMMM d, yyyy')}
+                      </div>
+                      <h3 className="text-xl font-bold mb-2 text-dark">{post.title}</h3>
+                      <p className="text-muted mb-4 line-clamp-3">{post.excerpt}</p>
+                      <Link href={`/articles/post/${post.slug.current}`}>
+                        <div className="text-sm font-medium text-primary hover:text-primary/80">
+                          Read More →
+                        </div>
+                      </Link>
                     </div>
-                  </Link>
-                </div>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-          <div className="mt-8 text-center">
-            <Link href="/articles">
-              <div className="inline-flex items-center px-4 py-2 border border-primary text-sm font-medium rounded-md text-white bg-primary hover:bg-primary/90">
-                View All Articles
+              <div className="mt-8 text-center">
+                <Link href="/articles">
+                  <div className="inline-flex items-center px-4 py-2 border border-primary text-sm font-medium rounded-md text-white bg-primary hover:bg-primary/90">
+                    View All Articles
+                  </div>
+                </Link>
               </div>
-            </Link>
-          </div>
+            </>
+          ) : (
+            <div className="text-center py-12">
+              <p className="text-muted text-lg">Content coming soon...</p>
+            </div>
+          )}
         </div>
       </section>
 
-      {/* Reusable Newsletter Signup */}
-      <NewsletterSignup />
+      {/* Newsletter Signup - Only if component exists */}
+      {NewsletterSignup && <NewsletterSignup />}
     </div>
   )
 }
 
 export default async function HomePage() {
   // Check if we're in preview mode
-  // You can use an environment variable or check the hostname
-  const isPreviewMode = process.env.PREVIEW_MODE === 'true' || 
-                       process.env.NODE_ENV === 'production';
+  const isPreviewMode = process.env.PREVIEW_MODE === 'true';
 
   // Return preview page if in preview mode, otherwise return development page
   if (isPreviewMode) {
