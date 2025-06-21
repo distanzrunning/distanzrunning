@@ -54,7 +54,7 @@ function PreviewPage() {
             {/* Social Icons - matching footer container exactly */}
             <div className="flex items-center space-x-4 justify-center">
               <a 
-                href="https://x.com" 
+                href="https://x.com/DistanzRunning" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 aria-label="X / Twitter" 
