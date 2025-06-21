@@ -43,7 +43,7 @@ function PreviewPage() {
           </h1>
           
           <p className="text-intro-quartr text-textSubtle">
-            We&apos;re building the ultimate destination for running news, marathon guides, and gear reviews.
+            We&apos;re building the ultimate destination for running news, gear reviews, and interactive race guides.
           </p>
           
           <div className="pt-6 border-t border-borderNeutralSubtle">
