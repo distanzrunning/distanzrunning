@@ -2,6 +2,7 @@
 import { sanity } from '@/lib/sanity'
 import { urlFor } from '@/lib/image'
 import Link from 'next/link'
+import Image from 'next/image'
 import { format } from 'date-fns'
 import NewsletterSignup from '@/components/NewsletterSignup'
 
@@ -22,10 +23,14 @@ function PreviewPage() {
       {/* Header with bigger logo */}
       <header className="pt-8 pb-4">
         <div className="flex justify-center">
-          <img
+          <Image
             src="/images/logo.svg"
             alt="Distanz Running Logo"
+            width={320}
+            height={80}
             className="h-16 md:h-20 w-auto"
+            priority
+            quality={100}
           />
         </div>
       </header>
@@ -33,7 +38,7 @@ function PreviewPage() {
       {/* Main content */}
       <main className="flex-1 flex items-center justify-center px-6">
         <div className="text-center max-w-lg mx-auto space-y-8">
-          <h1 className="text-title-quartr text-textDefault">
+          <h1 className="font-playfair font-semibold tracking-tight text-[35px] leading-[36px] md:text-[56px] md:leading-[52px] text-textDefault">
             Coming Soon
           </h1>
           
