@@ -14,9 +14,20 @@ const playfair = Playfair_Display({
 
 export const metadata: Metadata = {
   title: "Distanz Running",
-  description: "The latest running news, marathon guides and gear reviews.",
+  description: "The latest running news, gear reviews, and interactive race guides.",
   icons: {
-    icon: "/favicon.ico",
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+    ],
+    apple: "/apple-touch-icon.png",
+    shortcut: "/favicon.ico",
+  },
+  // Google-specific optimizations
+  metadataBase: new URL('https://distanzrunning.com'),
+  alternates: {
+    canonical: 'https://distanzrunning.com',
   },
 };
 
@@ -26,8 +37,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   // Check if we're in preview mode
-  const isPreviewMode = process.env.PREVIEW_MODE === 'true' || 
-                       process.env.NODE_ENV === 'production';
+  const isPreviewMode = process.env.PREVIEW_MODE === 'true';
 
   if (isPreviewMode) {
     // Preview mode: no navbar/footer
