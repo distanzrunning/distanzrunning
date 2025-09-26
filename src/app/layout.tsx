@@ -50,6 +50,19 @@ export default function RootLayout({
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
         />
+        {/* Disable Vercel feedback widget */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                if (typeof window !== 'undefined') {
+                  window.__VERCEL_FEEDBACK__ = { disabled: true };
+                  document.cookie = '__vercel_toolbar=0; path=/; max-age=31536000';
+                }
+              })();
+            `
+          }}
+        />
       </head>
       <body className="font-sans antialiased bg-white text-textDefault min-h-screen flex flex-col quartr-font-features">
         {isPreviewMode ? (
