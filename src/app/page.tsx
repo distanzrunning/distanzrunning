@@ -10,7 +10,6 @@ import { TypewriterText } from '@/components/TypewriterText'
 import { ExploreButton } from '@/components/ExploreButton'
 import { NewsletterButton } from '@/components/NewsletterModal'
 import { DarkModeProvider, DarkModeToggle } from '@/components/DarkModeProvider'
-import { headers } from 'next/headers'
 
 type Post = {
   _id: string
@@ -287,18 +286,11 @@ async function DevelopmentHomePage() {
 }
 
 export default async function HomePage() {
-  // Get the current request headers to check the hostname
-  const headersList = await headers()
-  const host = headersList.get('host') || ''
-  
-  // Check if we're in preview mode
+  // Only check PREVIEW_MODE environment variable, not domain
+  // Let middleware handle all domain-based redirects
   const isPreviewMode = process.env.PREVIEW_MODE === 'true'
-  
-  // Check if we're on the staging domain
-  const isStagingDomain = host === 'distanzrunning.vercel.app'
 
-  // Return preview page if in preview mode OR on staging domain
-  if (isPreviewMode || isStagingDomain) {
+  if (isPreviewMode) {
     return <PreviewPage />;
   }
 
