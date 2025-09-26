@@ -1,16 +1,29 @@
+// src/app/login/page.tsx
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 
 export default function LoginPage() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [debugInfo, setDebugInfo] = useState('')
   const router = useRouter()
+
+  useEffect(() => {
+    console.log('Login page mounted')
+    setDebugInfo('Login page loaded')
+    
+    // Check if there's already an auth cookie
+    const cookies = document.cookie
+    console.log('Current cookies:', cookies)
+    setDebugInfo(prev => prev + '; Cookies: ' + cookies)
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    console.log('Form submitted with password length:', password.length)
     setIsLoading(true)
     setError('')
 
@@ -22,15 +35,17 @@ export default function LoginPage() {
       })
 
       const data = await response.json()
+      console.log('Auth response:', data)
 
       if (data.success) {
-        // Redirect to home page after successful authentication
+        console.log('Authentication successful, redirecting')
         router.push('/')
         router.refresh()
       } else {
         setError('Incorrect password')
       }
     } catch (err) {
+      console.error('Auth error:', err)
       setError('Something went wrong')
     } finally {
       setIsLoading(false)
@@ -41,7 +56,6 @@ export default function LoginPage() {
     <div className="min-h-screen bg-white dark:bg-[#0c0c0d] flex items-center justify-center p-4">
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
-          {/* Logo */}
           <img
             src="/images/logo_1.svg"
             alt="Distanz Running Logo"
@@ -58,6 +72,11 @@ export default function LoginPage() {
           </h2>
           <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
             Enter the password to access the staging site
+          </p>
+          
+          {/* Debug info */}
+          <p className="mt-2 text-xs text-gray-400">
+            Debug: {debugInfo}
           </p>
         </div>
         
