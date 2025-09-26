@@ -18,20 +18,32 @@ const nextConfig: NextConfig = {
     optimizeCss: true,
     optimizeServerReact: true,
   },
-  productionBrowserSourceMaps: false, // Removes 404s for .map files in console
+  productionBrowserSourceMaps: false,
   
-  // Disable the build indicator that shows in preview/development
   devIndicators: {
     buildActivity: false,
     buildActivityPosition: 'bottom-right',
   },
   
-  // Temporarily disable strict checking for deployment
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          { key: 'Access-Control-Allow-Origin', value: '*' },
+          { key: 'Access-Control-Allow-Methods', value: 'GET, POST, PUT, DELETE, OPTIONS' },
+          { key: 'Access-Control-Allow-Headers', value: 'Content-Type, Authorization, X-Requested-With' },
+          { key: 'Access-Control-Max-Age', value: '86400' },
+        ],
+      },
+    ];
+  },
+  
   eslint: {
-    ignoreDuringBuilds: true, // Skip ESLint during builds
+    ignoreDuringBuilds: true,
   },
   typescript: {
-    ignoreBuildErrors: true, // Skip TypeScript errors during builds
+    ignoreBuildErrors: true,
   },
 };
 
