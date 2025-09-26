@@ -16,10 +16,12 @@ export function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
-  // Skip auth for login and API routes
+  // Skip auth for login, API routes, and static assets
   if (request.nextUrl.pathname.startsWith('/login') || 
       request.nextUrl.pathname.startsWith('/api/') ||
-      request.nextUrl.pathname.startsWith('/_next/')) {
+      request.nextUrl.pathname.startsWith('/_next/') ||
+      request.nextUrl.pathname === '/favicon.ico' ||
+      request.nextUrl.pathname.startsWith('/images/')) {
     console.log('Skipping auth for protected path:', request.nextUrl.pathname)
     return NextResponse.next()
   }
@@ -28,6 +30,7 @@ export function middleware(request: NextRequest) {
   const authCookie = request.cookies.get('staging-auth')
   console.log('Auth cookie exists:', !!authCookie)
   console.log('Auth cookie value:', authCookie?.value)
+  console.log('All cookies:', request.cookies.getAll())
   
   if (!authCookie || authCookie.value !== 'authenticated') {
     console.log('No valid auth cookie found, redirecting to login')
@@ -42,6 +45,14 @@ export function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    '/((?!_next/static|_next/image|favicon.ico).*)',
+    /*
+     * Match all request paths except for the ones starting with:
+     * - api (API routes)
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     * - images (public images)
+     */
+    '/((?!api|_next/static|_next/image|favicon.ico|images).*)',
   ],
 }
