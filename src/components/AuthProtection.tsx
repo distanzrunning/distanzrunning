@@ -23,16 +23,33 @@ export default function AuthProtection({ children }: AuthProtectionProps) {
       return
     }
 
-    // Check for auth cookie
+    // More robust cookie checking with retry logic
     const checkAuth = () => {
       const cookies = document.cookie
+      console.log('Checking cookies:', cookies) // Debug log
       const hasAuthCookie = cookies.includes('staging-auth=authenticated')
       
       if (!hasAuthCookie) {
-        router.push('/login')
+        // Add a small delay and retry once to handle timing issues
+        setTimeout(() => {
+          const retriedCookies = document.cookie
+          console.log('Retry cookies check:', retriedCookies) // Debug log
+          const hasAuthCookieRetry = retriedCookies.includes('staging-auth=authenticated')
+          
+          if (!hasAuthCookieRetry) {
+            console.log('No auth cookie found, redirecting to login')
+            router.push('/login')
+            return
+          } else {
+            console.log('Auth cookie found on retry')
+            setIsAuthenticated(true)
+            setIsLoading(false)
+          }
+        }, 100) // 100ms delay for cookie to be fully set
         return
       }
       
+      console.log('Auth cookie found immediately')
       setIsAuthenticated(true)
       setIsLoading(false)
     }
