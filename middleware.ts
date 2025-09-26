@@ -1,6 +1,9 @@
 // middleware.ts
 import { NextRequest, NextResponse } from 'next/server'
 
+// Use edge runtime for better performance
+export const runtime = 'edge'
+
 export function middleware(request: NextRequest) {
   // Add comprehensive logging to verify execution
   console.log('Middleware executing for:', request.nextUrl.href)

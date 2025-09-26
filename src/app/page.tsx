@@ -11,6 +11,9 @@ import { ExploreButton } from '@/components/ExploreButton'
 import { NewsletterButton } from '@/components/NewsletterModal'
 import { DarkModeProvider, DarkModeToggle } from '@/components/DarkModeProvider'
 
+// Force dynamic rendering to ensure middleware runs
+export const dynamic = 'force-dynamic'
+
 type Post = {
   _id: string
   title: string
