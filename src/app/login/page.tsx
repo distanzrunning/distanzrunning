@@ -19,13 +19,15 @@ export default function LoginPage() {
       const response = await fetch('/api/auth', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password })
+        body: JSON.stringify({ password }),
+        credentials: 'same-origin' // Ensure cookies are properly handled
       })
 
       const data = await response.json()
 
       if (data.success) {
-        router.push('/')
+        // Use window.location for a hard redirect instead of router.push
+        window.location.href = '/'
       } else {
         setError('Incorrect password')
       }
@@ -56,6 +58,7 @@ export default function LoginPage() {
             onChange={(e) => setPassword(e.target.value)}
             className="relative block w-full px-3 py-3 border border-gray-300 dark:border-gray-700 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white bg-white dark:bg-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
             placeholder="Enter staging password"
+            autoComplete="current-password"
           />
 
           {error && (
