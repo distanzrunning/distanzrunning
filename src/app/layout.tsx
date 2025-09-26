@@ -1,3 +1,4 @@
+// src/app/layout.tsx
 import type { Metadata } from "next";
 import { Playfair_Display } from "next/font/google";
 import "./globals.css";
@@ -6,6 +7,7 @@ import Footer from "@/components/Footer";
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { GoogleTagManager } from '@next/third-parties/google';
+import { headers } from 'next/headers';
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -27,25 +29,28 @@ export const metadata: Metadata = {
     apple: "/apple-touch-icon.png",
     shortcut: "/favicon.ico",
   },
-  // Google-specific optimizations
   metadataBase: new URL('https://distanzrunning.com'),
   alternates: {
     canonical: 'https://distanzrunning.com',
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const isPreviewMode = process.env.PREVIEW_MODE === 'true';
+  // Get hostname to check for staging domain
+  const headersList = await headers()
+  const host = headersList.get('host') || ''
+  const isStagingDomain = host === 'distanzrunning.vercel.app'
+  
+  const isPreviewMode = process.env.PREVIEW_MODE === 'true' || isStagingDomain;
 
   return (
     <html lang="en" className={`${playfair.variable}`}>
       <GoogleTagManager gtmId="GTM-K3W2LWHM" />
       <head>
-        {/* Add Material Symbols */}
         <link
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
