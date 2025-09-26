@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
       
       // Set authentication cookie with explicit path
       response.cookies.set('staging-auth', 'authenticated', {
-        httpOnly: true,
+        httpOnly: false,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax',
         path: '/', // Explicit path
