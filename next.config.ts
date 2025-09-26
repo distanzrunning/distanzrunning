@@ -20,6 +20,12 @@ const nextConfig: NextConfig = {
   },
   productionBrowserSourceMaps: false, // Removes 404s for .map files in console
   
+  // Disable the build indicator that shows in preview/development
+  devIndicators: {
+    buildActivity: false,
+    buildActivityPosition: 'bottom-right',
+  },
+  
   // Temporarily disable strict checking for deployment
   eslint: {
     ignoreDuringBuilds: true, // Skip ESLint during builds
