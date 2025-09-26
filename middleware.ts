@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
 export function middleware(request: NextRequest) {
-  // Handle CORS preflight requests first
+  // Handle CORS preflight requests FIRST - before any other logic
   if (request.method === 'OPTIONS') {
     return new NextResponse(null, {
       status: 200,
@@ -16,28 +16,14 @@ export function middleware(request: NextRequest) {
     })
   }
 
+  // Only do auth checks for staging domain, skip for all other domains
   const hostname = request.headers.get('host') || ''
-  
-  // Only check authentication on staging domain
   if (hostname !== 'distanzrunning.vercel.app') {
     return NextResponse.next()
   }
 
-  // Get the authentication cookie
-  const authCookie = request.cookies.get('staging-auth')
-  const isAuthenticated = authCookie?.value === 'authenticated'
-  const pathname = request.nextUrl.pathname
-
-  // Allow access to login page and API routes
-  if (pathname === '/login' || pathname.startsWith('/api/')) {
-    return NextResponse.next()
-  }
-
-  // Redirect to login if not authenticated (but since you're using client-side auth, this is optional)
-  if (!isAuthenticated) {
-    return NextResponse.redirect(new URL('/login', request.url))
-  }
-
+  // Since you're using client-side auth, just let all requests through
+  // The AuthProtection component handles the auth check
   return NextResponse.next()
 }
 
