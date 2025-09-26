@@ -3,6 +3,24 @@
 @tailwind components;
 @tailwind utilities;
 
+@property --border-angle {
+    inherits: false;
+    initial-value: 0deg;
+    syntax: '<angle>';
+}
+
+@keyframes rotate-border {
+  to {
+    --angle: 360deg;
+  }
+}
+
+.animate-border {
+  animation: rotate-border 8s linear infinite;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0');
+
 /* Load InterVariable font exactly like Quartr */
 @font-face {
   font-display: swap;

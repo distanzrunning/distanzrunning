@@ -1,29 +1,17 @@
 // src/app/login/page.tsx
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
 export default function LoginPage() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
-  const [debugInfo, setDebugInfo] = useState('')
   const router = useRouter()
-
-  useEffect(() => {
-    console.log('Login page mounted')
-    setDebugInfo('Login page loaded')
-    
-    // Check if there's already an auth cookie
-    const cookies = document.cookie
-    console.log('Current cookies:', cookies)
-    setDebugInfo(prev => prev + '; Cookies: ' + cookies)
-  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    console.log('Form submitted with password length:', password.length)
     setIsLoading(true)
     setError('')
 
@@ -35,17 +23,13 @@ export default function LoginPage() {
       })
 
       const data = await response.json()
-      console.log('Auth response:', data)
 
       if (data.success) {
-        console.log('Authentication successful, redirecting')
         router.push('/')
-        router.refresh()
       } else {
         setError('Incorrect password')
       }
     } catch (err) {
-      console.error('Auth error:', err)
       setError('Something went wrong')
     } finally {
       setIsLoading(false)
@@ -56,46 +40,23 @@ export default function LoginPage() {
     <div className="min-h-screen bg-white dark:bg-[#0c0c0d] flex items-center justify-center p-4">
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
-          <img
-            src="/images/logo_1.svg"
-            alt="Distanz Running Logo"
-            className="mx-auto h-16 w-auto block dark:hidden"
-          />
-          <img
-            src="/images/logo_white.svg"
-            alt="Distanz Running Logo"
-            className="mx-auto h-16 w-auto hidden dark:block"
-          />
-          
           <h2 className="mt-6 text-3xl font-bold text-gray-900 dark:text-white">
             Staging Access
           </h2>
           <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
             Enter the password to access the staging site
           </p>
-          
-          {/* Debug info */}
-          <p className="mt-2 text-xs text-gray-400">
-            Debug: {debugInfo}
-          </p>
         </div>
         
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div>
-            <label htmlFor="password" className="sr-only">
-              Password
-            </label>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="relative block w-full px-3 py-3 border border-gray-300 dark:border-gray-700 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white bg-white dark:bg-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
-              placeholder="Enter staging password"
-            />
-          </div>
+          <input
+            type="password"
+            required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="relative block w-full px-3 py-3 border border-gray-300 dark:border-gray-700 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white bg-white dark:bg-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+            placeholder="Enter staging password"
+          />
 
           {error && (
             <div className="text-red-600 dark:text-red-400 text-sm text-center">
