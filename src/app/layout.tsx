@@ -38,8 +38,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // Only check PREVIEW_MODE environment variable, not domain
-  // Let middleware handle all domain-based logic
   const isPreviewMode = process.env.PREVIEW_MODE === 'true';
 
   return (
@@ -50,16 +48,16 @@ export default function RootLayout({
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
         />
-        {/* Disable Vercel feedback widget */}
+        {/* Disable Vercel feedback widget and toolbar */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
-              (function() {
-                if (typeof window !== 'undefined') {
-                  window.__VERCEL_FEEDBACK__ = { disabled: true };
-                  document.cookie = '__vercel_toolbar=0; path=/; max-age=31536000';
-                }
-              })();
+              window.__VERCEL_FEEDBACK__ = { disabled: true };
+              window.__VERCEL_TOOLBAR__ = false;
+              if (typeof document !== 'undefined') {
+                document.cookie = '__vercel_toolbar=0; path=/; max-age=31536000; SameSite=Lax';
+                document.cookie = '__vercel_feedback=0; path=/; max-age=31536000; SameSite=Lax';
+              }
             `
           }}
         />

@@ -20,20 +20,22 @@ export default function LoginPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ password }),
-        credentials: 'same-origin' // Ensure cookies are properly handled
+        credentials: 'same-origin'
       })
 
       const data = await response.json()
 
       if (data.success) {
-        // Use window.location for a hard redirect instead of router.push
-        window.location.href = '/'
+        // Add a small delay to ensure cookie is set before redirect
+        setTimeout(() => {
+          window.location.href = '/'
+        }, 250) // 250ms delay
       } else {
         setError('Incorrect password')
+        setIsLoading(false)
       }
     } catch (err) {
       setError('Something went wrong')
-    } finally {
       setIsLoading(false)
     }
   }
@@ -59,6 +61,7 @@ export default function LoginPage() {
             className="relative block w-full px-3 py-3 border border-gray-300 dark:border-gray-700 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white bg-white dark:bg-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
             placeholder="Enter staging password"
             autoComplete="current-password"
+            disabled={isLoading}
           />
 
           {error && (
