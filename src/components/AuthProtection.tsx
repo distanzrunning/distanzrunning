@@ -23,37 +23,34 @@ export default function AuthProtection({ children }: AuthProtectionProps) {
       return
     }
 
-    // More robust cookie checking with retry logic
-    const checkAuth = () => {
+    // Enhanced cookie checking with multiple retries and longer delays
+    const checkAuth = (attempt = 1, maxAttempts = 5) => {
       const cookies = document.cookie
-      console.log('Checking cookies:', cookies) // Debug log
+      console.log(`Auth check attempt ${attempt}:`, cookies)
       const hasAuthCookie = cookies.includes('staging-auth=authenticated')
       
-      if (!hasAuthCookie) {
-        // Add a small delay and retry once to handle timing issues
-        setTimeout(() => {
-          const retriedCookies = document.cookie
-          console.log('Retry cookies check:', retriedCookies) // Debug log
-          const hasAuthCookieRetry = retriedCookies.includes('staging-auth=authenticated')
-          
-          if (!hasAuthCookieRetry) {
-            console.log('No auth cookie found, redirecting to login')
-            router.push('/login')
-            return
-          } else {
-            console.log('Auth cookie found on retry')
-            setIsAuthenticated(true)
-            setIsLoading(false)
-          }
-        }, 100) // 100ms delay for cookie to be fully set
+      if (hasAuthCookie) {
+        console.log('Auth cookie found on attempt', attempt)
+        setIsAuthenticated(true)
+        setIsLoading(false)
         return
       }
-      
-      console.log('Auth cookie found immediately')
-      setIsAuthenticated(true)
-      setIsLoading(false)
+
+      if (attempt < maxAttempts) {
+        // Exponential backoff: 200ms, 400ms, 800ms, 1600ms
+        const delay = 200 * Math.pow(2, attempt - 1)
+        console.log(`No auth cookie found, retrying in ${delay}ms (attempt ${attempt}/${maxAttempts})`)
+        
+        setTimeout(() => {
+          checkAuth(attempt + 1, maxAttempts)
+        }, delay)
+      } else {
+        console.log('No auth cookie found after all attempts, redirecting to login')
+        router.push('/login')
+      }
     }
 
+    // Start checking immediately
     checkAuth()
   }, [router])
 
