@@ -1,8 +1,8 @@
 // components/CustomCodeBlock.tsx
 
 import React from 'react'
-import { TokyoMarathonStats, BerlinMarathonStats, BostonMarathonStats } from './RaceStatsGrid'
-import { TokyoMarathonRaceMap, BerlinMarathonRaceMap, BostonMarathonRaceMap } from './RaceMapComponent'
+import { TokyoMarathonStats, BerlinMarathonStats, BostonMarathonStats, LondonMarathonStats, ChicagoMarathonStats } from './RaceStatsGrid'
+import { TokyoMarathonRaceMap, BerlinMarathonRaceMap, BostonMarathonRaceMap, LondonMarathonRaceMap, ChicagoMarathonRaceMap, NewYorkCityMarathonRaceMap } from './RaceMapComponent'
 
 interface CustomCodeBlockProps {
   value: {
@@ -42,6 +42,16 @@ export const CustomCodeBlock: React.FC<CustomCodeBlockProps> = ({ value }) => {
         htmlContent.includes('boston-marathon-stats')) {
       return <BostonMarathonStats />
     }
+
+    if (content === 'london-marathon-stats' || 
+        htmlContent.includes('london-marathon-stats')) {
+      return <LondonMarathonStats />
+    }
+
+    if (content === 'chicago-marathon-stats' || 
+        htmlContent.includes('chicago-marathon-stats')) {
+      return <ChicagoMarathonStats />
+    }
   }
 
   // Special handling for race maps
@@ -73,6 +83,38 @@ export const CustomCodeBlock: React.FC<CustomCodeBlockProps> = ({ value }) => {
         htmlContent.includes('boston-race-map') ||
         htmlContent.includes('boston-marathon-map')) {
       return <BostonMarathonRaceMap />
+    }
+
+    // London Marathon map
+    if (content === 'london-race-map' || 
+        content === 'london-marathon-map' ||
+        htmlContent.includes('london-race-map') ||
+        htmlContent.includes('london-marathon-map')) {
+      return <LondonMarathonRaceMap />
+    }
+
+    // Chicago Marathon map
+    if (content === 'chicago-race-map' || 
+        content === 'chicago-marathon-map' ||
+        htmlContent.includes('chicago-race-map') ||
+        htmlContent.includes('chicago-marathon-map')) {
+      return <ChicagoMarathonRaceMap />
+    }
+
+    // New York City Marathon map
+    if (content === 'nyc-race-map' || 
+        content === 'nyc-marathon-map' ||
+        content === 'new-york-race-map' || 
+        content === 'new-york-marathon-map' ||
+        content === 'newyork-race-map' || 
+        content === 'newyork-marathon-map' ||
+        htmlContent.includes('nyc-race-map') ||
+        htmlContent.includes('nyc-marathon-map') ||
+        htmlContent.includes('new-york-race-map') ||
+        htmlContent.includes('new-york-marathon-map') ||
+        htmlContent.includes('newyork-race-map') ||
+        htmlContent.includes('newyork-marathon-map')) {
+      return <NewYorkCityMarathonRaceMap />
     }
   }
 

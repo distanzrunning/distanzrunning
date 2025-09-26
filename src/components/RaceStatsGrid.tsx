@@ -313,3 +313,155 @@ export const BostonMarathonStats: React.FC = () => {
 
   return <RaceStatsGrid title="Key Stats" stats={marathonStats} />
 }
+
+export const LondonMarathonStats: React.FC = () => {
+  const marathonStats: StatItem[] = [
+    {
+      title: "Distance",
+      tooltip: "The official marathon distance",
+      metric: "42.2 km",
+      imperial: "26.2 miles"
+    },
+    {
+      title: "Surface",
+      tooltip: "The running surface for the majority of the race",
+      icon: "https://cdn.prod.website-files.com/67192759e7cd9e25b2c84df5/6772d6a647ebe75817fe6e64_TablerRoad.svg",
+      static: "Road"
+    },
+    {
+      title: "Profile",
+      tooltip: "Flat indicates minimal elevation change",
+      icon: "https://cdn.prod.website-files.com/67192759e7cd9e25b2c84df5/6772cda4af74ad84f1c170a4_IcOutlineTerrain.svg",
+      static: "Flat"
+    },
+    {
+      title: "Elevation Gain",
+      tooltip: "The total elevation gain throughout the race",
+      icon: "https://cdn.prod.website-files.com/67192759e7cd9e25b2c84df5/6772ceccfb2b021053bf1719_IcSharpArrowDropUp.svg",
+      metric: "124m",
+      imperial: "407ft"
+    },
+    {
+      title: "When",
+      tooltip: "The race typically occurs every year in April",
+      static: "April"
+    },
+    {
+      title: "Entry Opens",
+      tooltip: "The race registration usually opens in April",
+      static: "April"
+    },
+    {
+      title: "Average Temp (high)",
+      tooltip: "Average high temperature on race day",
+      metric: "15°C",
+      imperial: "59°F"
+    },
+    {
+      title: "Elevation Loss",
+      tooltip: "The total elevation loss throughout the race",
+      icon: "https://cdn.prod.website-files.com/67192759e7cd9e25b2c84df5/6772d595582a68396e1373fc_IcSharpArrowDropDown.svg",
+      metric: "161m",
+      imperial: "528ft"
+    },
+    {
+      title: "Men's Course Record",
+      tooltip: "The men's course record is held by Kelvin Kiptum, KEN, 2023",
+      static: "2:01:25"
+    },
+    {
+      title: "Women's Course Record",
+      tooltip: "The women's course record for the London Marathon",
+      static: "2:15:25"
+    },
+    {
+      title: "World Athletics Label",
+      tooltip: "The Platinum Label is the highest distinction in the World Athletics Label Road Races program",
+      icon: "https://cdn.prod.website-files.com/67192759e7cd9e25b2c84df5/6772da3ee14c20d7a1cd3aa6_WA%20Label%20Plat.svg",
+      static: "Platinum"
+    },
+    {
+      title: "Finishers (2024)",
+      tooltip: "The estimated number of finishers in 2024",
+      static: "53,700"
+    }
+  ]
+
+  return <RaceStatsGrid title="Key Stats" stats={marathonStats} />
+}
+
+export const ChicagoMarathonStats: React.FC = () => {
+  const marathonStats: StatItem[] = [
+    {
+      title: "Distance",
+      tooltip: "The official marathon distance",
+      metric: "42.2 km",
+      imperial: "26.2 miles"
+    },
+    {
+      title: "Surface",
+      tooltip: "The running surface for the majority of the race",
+      icon: "https://cdn.prod.website-files.com/67192759e7cd9e25b2c84df5/6772d6a647ebe75817fe6e64_TablerRoad.svg",
+      static: "Road"
+    },
+    {
+      title: "Profile",
+      tooltip: "Flat indicates minimal elevation change",
+      icon: "https://cdn.prod.website-files.com/67192759e7cd9e25b2c84df5/6772cda4af74ad84f1c170a4_IcOutlineTerrain.svg",
+      static: "Flat"
+    },
+    {
+      title: "Elevation Gain",
+      tooltip: "The total elevation gain throughout the race",
+      icon: "https://cdn.prod.website-files.com/67192759e7cd9e25b2c84df5/6772ceccfb2b021053bf1719_IcSharpArrowDropUp.svg",
+      metric: "62m",
+      imperial: "203ft"
+    },
+    {
+      title: "When",
+      tooltip: "The race typically occurs every year in October",
+      static: "October"
+    },
+    {
+      title: "Entry Opens",
+      tooltip: "The race registration usually opens in October",
+      static: "October"
+    },
+    {
+      title: "Average Temp (high)",
+      tooltip: "Average high temperature on race day",
+      metric: "19°C",
+      imperial: "66°F"
+    },
+    {
+      title: "Elevation Loss",
+      tooltip: "The total elevation loss throughout the race",
+      icon: "https://cdn.prod.website-files.com/67192759e7cd9e25b2c84df5/6772d595582a68396e1373fc_IcSharpArrowDropDown.svg",
+      metric: "73m",
+      imperial: "239ft"
+    },
+    {
+      title: "Men's Course Record",
+      tooltip: "The men's course record for the Chicago Marathon",
+      static: "2:00:35"
+    },
+    {
+      title: "Women's Course Record",
+      tooltip: "The women's course record for the Chicago Marathon",
+      static: "2:09:56"
+    },
+    {
+      title: "World Athletics Label",
+      tooltip: "The Platinum Label is the highest distinction in the World Athletics Label Road Races program",
+      icon: "https://cdn.prod.website-files.com/67192759e7cd9e25b2c84df5/6772da3ee14c20d7a1cd3aa6_WA%20Label%20Plat.svg",
+      static: "Platinum"
+    },
+    {
+      title: "Finishers (2024)",
+      tooltip: "The estimated number of finishers in 2024",
+      static: "52,000"
+    }
+  ]
+
+  return <RaceStatsGrid title="Key Stats" stats={marathonStats} />
+}
