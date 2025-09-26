@@ -10,6 +10,7 @@ import { TypewriterText } from '@/components/TypewriterText'
 import { ExploreButton } from '@/components/ExploreButton'
 import { NewsletterButton } from '@/components/NewsletterModal'
 import { DarkModeProvider, DarkModeToggle } from '@/components/DarkModeProvider'
+import { headers } from 'next/headers'
 
 // Force dynamic rendering to ensure middleware runs
 export const dynamic = 'force-dynamic'
@@ -289,11 +290,14 @@ async function DevelopmentHomePage() {
 }
 
 export default async function HomePage() {
-  // Only check PREVIEW_MODE environment variable, not domain
-  // Let middleware handle all domain-based redirects
-  const isPreviewMode = process.env.PREVIEW_MODE === 'true'
-
-  if (isPreviewMode) {
+  // Get the hostname from headers to determine which page to show
+  const headersList = await headers()
+  const hostname = headersList.get('host') || ''
+  
+  // Show preview page for staging domain, development page for others
+  const isStagingDomain = hostname === 'distanzrunning.vercel.app'
+  
+  if (isStagingDomain) {
     return <PreviewPage />;
   }
 
