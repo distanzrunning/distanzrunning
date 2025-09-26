@@ -5,6 +5,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
+import { GoogleTagManager } from '@next/third-parties/google';
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -38,29 +39,29 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // Check if we're in preview mode
   const isPreviewMode = process.env.PREVIEW_MODE === 'true';
 
-  if (isPreviewMode) {
-    // Preview mode: no navbar/footer
-    return (
-      <html lang="en" className={`${playfair.variable}`}>
-        <body className="font-sans antialiased bg-white text-textDefault min-h-screen quartr-font-features">
-          <main className="min-h-screen">{children}</main>
-          <Analytics />
-          <SpeedInsights />
-        </body>
-      </html>
-    );
-  }
-
-  // Development mode: full layout with navbar/footer
   return (
     <html lang="en" className={`${playfair.variable}`}>
+      <GoogleTagManager gtmId="GTM-K3W2LWHM" />
+      <head>
+        {/* Add Material Symbols */}
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
+        />
+      </head>
       <body className="font-sans antialiased bg-white text-textDefault min-h-screen flex flex-col quartr-font-features">
-        <Navbar />
-        <main className="flex-grow">{children}</main>
-        <Footer />
+        {isPreviewMode ? (
+          <main className="min-h-screen">{children}</main>
+        ) : (
+          <>
+            <Navbar />
+            <main className="flex-grow">{children}</main>
+            <Footer />
+          </>
+        )}
+        
         <Analytics />
         <SpeedInsights />
       </body>
