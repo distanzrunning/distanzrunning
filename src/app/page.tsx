@@ -12,6 +12,7 @@ import { NewsletterButton } from '@/components/NewsletterModal'
 import { DarkModeProvider, DarkModeToggle } from '@/components/DarkModeProvider'
 import { headers } from 'next/headers'
 import AuthProtection from '@/components/AuthProtection'
+import { Metadata } from 'next'
 
 // Force dynamic rendering to ensure middleware runs
 export const dynamic = 'force-dynamic'
@@ -24,6 +25,34 @@ type Post = {
   publishedAt: string
   excerpt: string
   categories: Array<{ title: string }>
+}
+
+// Generate metadata based on the hostname
+export async function generateMetadata(): Promise<Metadata> {
+  const headersList = await headers()
+  const hostname = headersList.get('host') || ''
+  const isStagingDomain = hostname === 'distanzrunning.vercel.app'
+  
+  if (isStagingDomain) {
+    return {
+      title: 'Distanz Running | The ultimate destination for running news, gear reviews, and interactive race guides.',
+      description: 'Be the first to know when we launch with exclusive running content, gear reviews, and interactive race guides.',
+      metadataBase: new URL('https://distanzrunning.vercel.app'),
+      alternates: {
+        canonical: 'https://distanzrunning.vercel.app',
+      },
+    }
+  }
+  
+  // Return default metadata for production
+  return {
+    title: "Distanz Running",
+    description: "The latest running news, gear reviews, and interactive race guides.",
+    metadataBase: new URL('https://distanzrunning.com'),
+    alternates: {
+      canonical: 'https://distanzrunning.com',
+    },
+  }
 }
 
 // Preview Mode Component with Marathon Showcase and Dark Mode
