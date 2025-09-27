@@ -48,7 +48,7 @@ export default function LoginPage() {
         <DarkModeToggle />
         
         {/* Logo and container wrapper */}
-        <div className="w-full max-w-sm space-y-6">
+        <div className="w-full max-w-sm space-y-8">
           {/* Logo */}
           <div className="flex justify-center">
             <img
@@ -111,7 +111,7 @@ export default function LoginPage() {
                   disabled={isLoading}
                   className="w-full bg-black dark:bg-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-700 disabled:bg-neutral-500 dark:disabled:bg-neutral-600 text-white font-medium py-2 px-4 rounded-md transition-colors duration-300 disabled:cursor-not-allowed"
                 >
-                  {isLoading ? 'Authenticating...' : 'Access Staging Site'}
+                  {isLoading ? 'Authenticating...' : 'Sign in'}
                 </button>
               </form>
             </div>
