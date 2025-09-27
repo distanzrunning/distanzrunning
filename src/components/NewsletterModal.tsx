@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence, useTime, useTransform } from 'framer-motion'
+import Image from 'next/image'
 
 type NewsletterModalProps = {
   isOpen: boolean
@@ -150,23 +151,30 @@ export function NewsletterModal({ isOpen, onClose }: NewsletterModalProps) {
                 </svg>
               </button>
 
-              {/* Hero section with background image and white logo */}
-              <div 
-                className="relative h-48 bg-cover bg-center bg-neutral-900"
-                style={{ 
-                  backgroundImage: 'url("/images/berlin_cover.png")',
-                  backgroundPosition: 'center center'
-                }}
-              >
+              {/* Hero section with optimized background image and white logo */}
+              <div className="relative h-48 bg-neutral-900 overflow-hidden">
+                {/* Optimized background image */}
+                <Image
+                  src="/images/berlin_cover.png"
+                  alt="Berlin Marathon Background"
+                  fill
+                  className="object-cover"
+                  priority
+                  sizes="(max-width: 448px) 100vw, 448px"
+                />
+                
                 {/* Dark overlay for better text readability */}
-                <div className="absolute inset-0 bg-black/30"></div>
+                <div className="absolute inset-0 bg-black/30 z-10"></div>
                 
                 {/* White logo centered */}
-                <div className="absolute inset-0 flex items-center justify-center z-10">
-                  <img
+                <div className="absolute inset-0 flex items-center justify-center z-20">
+                  <Image
                     src="/images/logo_white.svg"
                     alt="Distanz Running Logo"
+                    width={64}
+                    height={64}
                     className="h-16 w-auto"
+                    priority
                   />
                 </div>
               </div>
@@ -177,8 +185,7 @@ export function NewsletterModal({ isOpen, onClose }: NewsletterModalProps) {
                   Stay in the Loop
                 </h2>
                 <p className="text-gray-600 dark:text-neutral-300 text-sm leading-relaxed mb-6 transition-colors duration-300">
-                  Be the first to know when we launch with exclusive running content, 
-                  marathon guides, and gear reviews.
+                  Be the first to know when we launch with exclusive running content, gear reviews, and interactive race guides.
                 </p>
 
                 {isSubmitted ? (
@@ -192,7 +199,7 @@ export function NewsletterModal({ isOpen, onClose }: NewsletterModalProps) {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
                     </div>
-                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Welcome to the team!</h3>
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Welcome to the team!</h3>
                   </motion.div>
                 ) : (
                   <form onSubmit={handleSubmit} className="space-y-4">
