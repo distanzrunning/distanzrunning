@@ -325,7 +325,7 @@ export async function POST(request: NextRequest) {
                     <h1 class="greeting">Welcome to Distanz Running!</h1>
                     
                     <p class="intro-text">
-                      Thank you for subscribing to our newsletter. We will keep you updated on our progress to bring you comprensive running content, race guides, and gear reviews.
+                      Thank you for subscribing to our newsletter. We will keep you updated on our progress to bring you comprehensive running content, race guides, and gear reviews.
                     </p>
                     
                     <p class="instruction-text">
@@ -446,7 +446,8 @@ export async function POST(request: NextRequest) {
           subject: 'Please confirm your subscription to Distanz Running',
           html: confirmationHtml,
           'o:tag': 'confirmation-email',
-          'o:tracking': 'yes'
+          'o:tracking': 'yes',
+          'o:tracking-clicks': 'no'  // This disables click tracking!
         })
       }
     )
