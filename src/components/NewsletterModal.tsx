@@ -133,7 +133,7 @@ export function NewsletterModal({ isOpen, onClose }: NewsletterModalProps) {
               {/* Close button */}
               <button
                 onClick={onClose}
-                className="absolute top-4 right-4 z-20 p-2 text-white hover:text-gray-200 transition-colors bg-black/20 dark:bg-white/20 rounded-full backdrop-blur-sm"
+                className="absolute top-4 right-4 z-30 p-2 text-white hover:text-gray-200 transition-colors bg-black/20 dark:bg-white/20 rounded-full backdrop-blur-sm"
                 aria-label="Close newsletter signup"
               >
                 <svg 
