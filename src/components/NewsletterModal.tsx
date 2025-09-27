@@ -192,10 +192,7 @@ export function NewsletterModal({ isOpen, onClose }: NewsletterModalProps) {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
                     </div>
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Welcome to the team!</h3>
-                    <p className="text-gray-600 dark:text-neutral-300 text-sm">
-                      You'll receive our best running content and marathon guides straight to your inbox.
-                    </p>
+                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Welcome to the team!</h3>
                   </motion.div>
                 ) : (
                   <form onSubmit={handleSubmit} className="space-y-4">
