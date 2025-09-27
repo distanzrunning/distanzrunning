@@ -398,7 +398,7 @@ export async function POST(request: NextRequest) {
                         </td>
 
                         <td style="background-color: #fafafa !important;">
-                          <a href="https://strava.com"
+                          <a href="https://www.strava.com/clubs/distanzrunning"
                             target="_blank"
                             rel="noopener noreferrer"
                             aria-label="Strava"

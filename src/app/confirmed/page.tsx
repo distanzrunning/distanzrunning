@@ -117,7 +117,7 @@ function ConfirmedContent() {
               </svg>
             </a>
             <a 
-              href="https://strava.com" 
+              href="https://www.strava.com/clubs/distanzrunning" 
               target="_blank" 
               rel="noopener noreferrer"
               aria-label="Strava" 
