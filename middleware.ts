@@ -36,28 +36,45 @@ function verifySignedCookie(signedValue: string): boolean {
 }
 
 export function middleware(request: NextRequest) {
+  // Debug logging
+  console.log('Middleware executing for:', request.nextUrl.pathname)
+  
   // Only run on staging domain
   const hostname = request.headers.get('host') || ''
+  console.log('Hostname detected:', hostname)
   const isStagingDomain = hostname === 'distanzrunning.vercel.app'
+  console.log('Is staging domain:', isStagingDomain)
   
   if (!isStagingDomain) {
+    console.log('Not staging domain, skipping auth check')
     return NextResponse.next()
   }
 
   // Allow auth API and login page
   if (request.nextUrl.pathname.startsWith('/api/auth') || 
       request.nextUrl.pathname === '/login') {
+    console.log('Auth or login path, allowing through')
     return NextResponse.next()
   }
 
   // Check for signed authentication cookie
   const authCookie = request.cookies.get('staging-auth')?.value
+  console.log('Auth cookie value:', authCookie)
   
-  if (!authCookie || !verifySignedCookie(authCookie)) {
-    // Redirect to login if not authenticated or invalid signature
+  if (!authCookie) {
+    console.log('No auth cookie, redirecting to login')
+    return NextResponse.redirect(new URL('/login', request.url))
+  }
+  
+  const isValid = verifySignedCookie(authCookie)
+  console.log('Cookie verification result:', isValid)
+  
+  if (!isValid) {
+    console.log('Invalid cookie, redirecting to login')
     return NextResponse.redirect(new URL('/login', request.url))
   }
 
+  console.log('Authentication successful, proceeding')
   return NextResponse.next()
 }
 
