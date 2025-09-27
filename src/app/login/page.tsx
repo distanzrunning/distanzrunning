@@ -3,6 +3,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { DarkModeProvider, DarkModeToggle } from '@/components/DarkModeProvider'
 
 export default function LoginPage() {
   const [password, setPassword] = useState('')
@@ -41,57 +42,65 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-4">
-      {/* Clean minimal container */}
-      <div className="w-full max-w-sm">
-        <div className="bg-slate-800/80 backdrop-blur-sm border border-slate-700/50 rounded-lg p-6 shadow-xl">
-          <div className="space-y-6">
-            {/* Title */}
-            <div>
-              <h2 className="text-xl font-semibold text-white">
-                Staging Access
-              </h2>
-            </div>
-            
-            {/* Form */}
-            <form className="space-y-4" onSubmit={handleSubmit}>
-              {/* Password field */}
-              <div className="space-y-2">
-                <label htmlFor="password" className="block text-sm font-medium text-slate-300">
-                  Password
-                </label>
-                <input
-                  id="password"
-                  type="password"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-900/50 border border-slate-600/50 rounded-md text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                  placeholder="Enter staging password"
-                  autoComplete="current-password"
-                  disabled={isLoading}
-                />
+    <DarkModeProvider>
+      <div className="min-h-screen bg-white dark:bg-[#0c0c0d] transition-colors duration-300 flex items-center justify-center p-4">
+        {/* Dark Mode Toggle */}
+        <DarkModeToggle />
+        
+        {/* Clean minimal container */}
+        <div className="w-full max-w-sm">
+          <div className="bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg p-6 shadow-lg dark:shadow-2xl transition-colors duration-300">
+            <div className="space-y-6">
+              {/* Title */}
+              <div>
+                <h2 className="text-xl font-semibold text-neutral-900 dark:text-white transition-colors duration-300">
+                  Staging Access
+                </h2>
+                <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-1 transition-colors duration-300">
+                  Enter the password to access the staging site
+                </p>
               </div>
-
-              {/* Error message */}
-              {error && (
-                <div className="text-red-400 text-sm">
-                  {error}
+              
+              {/* Form */}
+              <form className="space-y-4" onSubmit={handleSubmit}>
+                {/* Password field */}
+                <div className="space-y-2">
+                  <label htmlFor="password" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 transition-colors duration-300">
+                    Password
+                  </label>
+                  <input
+                    id="password"
+                    type="password"
+                    required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="w-full px-3 py-2 bg-white dark:bg-neutral-700 border border-neutral-300 dark:border-neutral-600 rounded-md text-neutral-900 dark:text-white placeholder-neutral-500 dark:placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-colors duration-300"
+                    placeholder="Enter staging password"
+                    autoComplete="current-password"
+                    disabled={isLoading}
+                  />
                 </div>
-              )}
 
-              {/* Submit button */}
-              <button
-                type="submit"
-                disabled={isLoading}
-                className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-600/50 text-white font-medium py-2 px-4 rounded-md transition-colors disabled:cursor-not-allowed"
-              >
-                {isLoading ? 'Authenticating...' : 'Access Staging Site'}
-              </button>
-            </form>
+                {/* Error message */}
+                {error && (
+                  <div className="text-red-600 dark:text-red-400 text-sm transition-colors duration-300">
+                    {error}
+                  </div>
+                )}
+
+                {/* Submit button */}
+                <button
+                  type="submit"
+                  disabled={isLoading}
+                  className="w-full bg-black dark:bg-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-800 disabled:bg-neutral-500 dark:disabled:bg-neutral-600 text-white font-medium py-2 px-4 rounded-md transition-colors duration-300 disabled:cursor-not-allowed"
+                >
+                  {isLoading ? 'Authenticating...' : 'Access Staging Site'}
+                </button>
+              </form>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </DarkModeProvider>
   )
 }
