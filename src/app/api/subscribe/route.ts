@@ -325,7 +325,7 @@ export async function POST(request: NextRequest) {
                     <h1 class="greeting">Welcome to Distanz Running!</h1>
                     
                     <p class="intro-text">
-                      Thank you for subscribing to our newsletter. We will keep you updated on our progress to bring you comprehensive running content, race guides, and gear reviews.
+                      Thank you for subscribing to our newsletter. We will keep you updated on our progress to bring you comprehensive running content, gear reviews, and interactive race guides.
                     </p>
                     
                     <p class="instruction-text">
