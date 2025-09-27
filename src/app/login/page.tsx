@@ -47,8 +47,25 @@ export default function LoginPage() {
         {/* Dark Mode Toggle */}
         <DarkModeToggle />
         
-        {/* Clean minimal container */}
-        <div className="w-full max-w-sm">
+        {/* Logo and container wrapper */}
+        <div className="w-full max-w-sm space-y-6">
+          {/* Logo */}
+          <div className="flex justify-center">
+            <img
+              src="/images/logo_1.svg"
+              alt="Distanz Running Logo"
+              className="block dark:hidden"
+              style={{ height: '60px', width: 'auto' }}
+            />
+            <img
+              src="/images/logo_white.svg"
+              alt="Distanz Running Logo"
+              className="hidden dark:block"
+              style={{ height: '60px', width: 'auto' }}
+            />
+          </div>
+          
+          {/* Login container */}
           <div className="bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg p-6 shadow-lg dark:shadow-2xl transition-colors duration-300">
             <div className="space-y-6">
               {/* Title */}
@@ -92,7 +109,7 @@ export default function LoginPage() {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full bg-black dark:bg-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-800 disabled:bg-neutral-500 dark:disabled:bg-neutral-600 text-white font-medium py-2 px-4 rounded-md transition-colors duration-300 disabled:cursor-not-allowed"
+                  className="w-full bg-black dark:bg-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-700 disabled:bg-neutral-500 dark:disabled:bg-neutral-600 text-white font-medium py-2 px-4 rounded-md transition-colors duration-300 disabled:cursor-not-allowed"
                 >
                   {isLoading ? 'Authenticating...' : 'Access Staging Site'}
                 </button>
