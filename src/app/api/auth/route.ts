@@ -17,8 +17,14 @@ function createSignedCookie(value: string): string {
 // Function to verify signed cookie
 function verifySignedCookie(signedValue: string): boolean {
   try {
-    const [value, signature] = signedValue.split('.')
-    if (!value || !signature) return false
+    const parts = signedValue.split('.')
+    if (parts.length !== 2) return false
+    
+    const [value, signature] = parts
+    if (!value || !signature || value !== 'authenticated') return false
+    
+    // Validate signature format (should be 64 hex characters)
+    if (!/^[a-f0-9]{64}$/i.test(signature)) return false
     
     const expectedSignature = crypto
       .createHmac('sha256', SECRET_KEY)
@@ -31,8 +37,9 @@ function verifySignedCookie(signedValue: string): boolean {
     
     if (signatureBuffer.length !== expectedBuffer.length) return false
     
-    return crypto.timingSafeEqual(signatureBuffer, expectedBuffer) && value === 'authenticated'
+    return crypto.timingSafeEqual(signatureBuffer, expectedBuffer)
   } catch (error) {
+    console.log('Cookie verification error:', error)
     return false
   }
 }
