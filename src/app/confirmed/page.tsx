@@ -60,11 +60,11 @@ function ConfirmedContent() {
           <div className="text-sm md:text-base text-neutral-500 dark:text-neutral-400 mb-6 transition-colors duration-300 leading-relaxed">
             {already ? (
               <p>
-                You're already subscribed to our newsletter. Keep an eye on your inbox for our latest running content, marathon guides, and gear reviews.
+                You're already subscribed to our newsletter. Keep an eye on your inbox for our latest running content, gear reviews, and interactive race guides.
               </p>
             ) : (
               <p>
-                Thanks for confirming your subscription! You'll receive our newsletter with exclusive running content, marathon guides, and gear reviews straight to your inbox.
+                Thanks for confirming your subscription! You'll receive our newsletter with exclusive running content, gear reviews, and interactive race guides straight to your inbox.
               </p>
             )}
           </div>
