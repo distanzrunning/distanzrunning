@@ -25,50 +25,8 @@ const nextConfig: NextConfig = {
     buildActivityPosition: 'bottom-right',
   },
   
-  async headers() {
-    return [
-      {
-        // Apply to all routes
-        source: '/(.*)',
-        headers: [
-          {
-            key: 'Access-Control-Allow-Origin',
-            value: '*',
-          },
-          {
-            key: 'Access-Control-Allow-Methods',
-            value: 'GET, POST, PUT, DELETE, OPTIONS',
-          },
-          {
-            key: 'Access-Control-Allow-Headers',
-            value: 'Content-Type, Authorization, X-Requested-With',
-          },
-          {
-            key: 'Access-Control-Max-Age',
-            value: '86400',
-          },
-        ],
-      },
-      {
-        // Specific headers for API routes
-        source: '/api/(.*)',
-        headers: [
-          {
-            key: 'Access-Control-Allow-Origin',
-            value: '*',
-          },
-          {
-            key: 'Access-Control-Allow-Methods',
-            value: 'GET, POST, PUT, DELETE, OPTIONS',
-          },
-          {
-            key: 'Access-Control-Allow-Headers',
-            value: 'Content-Type, Authorization, X-Requested-With',
-          },
-        ],
-      },
-    ];
-  },
+  // REMOVED: async headers() function that was blocking middleware
+  // Move CORS handling to middleware instead
   
   // Disable Vercel toolbar completely
   env: {

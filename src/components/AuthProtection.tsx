@@ -2,7 +2,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
 
 interface AuthProtectionProps {
   children: React.ReactNode
@@ -12,62 +12,100 @@ export default function AuthProtection({ children }: AuthProtectionProps) {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const router = useRouter()
+  const pathname = usePathname()
 
   useEffect(() => {
-    // Only check authentication on staging domain
-    const hostname = window.location.hostname
-    
-    if (hostname !== 'distanzrunning.vercel.app') {
-      setIsAuthenticated(true)
-      setIsLoading(false)
-      return
-    }
+    const checkAuth = async () => {
+      try {
+        // Check if we're on staging domain
+        const hostname = window.location.hostname
+        console.log('🔍 AuthProtection: Checking auth for hostname:', hostname)
+        
+        if (hostname !== 'distanzrunning.vercel.app') {
+          // Not staging domain, allow access
+          console.log('✅ AuthProtection: Not staging domain, allowing access')
+          setIsAuthenticated(true)
+          setIsLoading(false)
+          return
+        }
 
-    // Enhanced cookie checking with multiple retries and longer delays
-    const checkAuth = (attempt = 1, maxAttempts = 5) => {
-      const cookies = document.cookie
-      console.log(`Auth check attempt ${attempt}:`, cookies)
-      const hasAuthCookie = cookies.includes('staging-auth=authenticated')
-      
-      if (hasAuthCookie) {
-        console.log('Auth cookie found on attempt', attempt)
-        setIsAuthenticated(true)
-        setIsLoading(false)
+        // Skip auth check for login page
+        if (pathname === '/login') {
+          console.log('✅ AuthProtection: On login page, allowing access')
+          setIsAuthenticated(true)
+          setIsLoading(false)
+          return
+        }
+
+        console.log('🔍 AuthProtection: Checking authentication status via API')
+
+        // Check authentication status via API
+        const response = await fetch('/api/auth', {
+          method: 'GET',
+          credentials: 'same-origin'
+        })
+
+        if (response.ok) {
+          const data = await response.json()
+          console.log('🔍 AuthProtection: API response:', data)
+          setIsAuthenticated(data.authenticated)
+          
+          if (!data.authenticated) {
+            // Not authenticated, redirect to login
+            console.log('🔒 AuthProtection: Not authenticated, redirecting to login')
+            router.replace('/login')
+            return
+          } else {
+            console.log('✅ AuthProtection: Authenticated, allowing access')
+          }
+        } else {
+          // API error, assume not authenticated
+          console.log('❌ AuthProtection: API error, redirecting to login')
+          setIsAuthenticated(false)
+          router.replace('/login')
+          return
+        }
+      } catch (error) {
+        console.error('❌ AuthProtection: Auth check failed:', error)
+        setIsAuthenticated(false)
+        router.replace('/login')
         return
       }
-
-      if (attempt < maxAttempts) {
-        // Exponential backoff: 200ms, 400ms, 800ms, 1600ms
-        const delay = 200 * Math.pow(2, attempt - 1)
-        console.log(`No auth cookie found, retrying in ${delay}ms (attempt ${attempt}/${maxAttempts})`)
-        
-        setTimeout(() => {
-          checkAuth(attempt + 1, maxAttempts)
-        }, delay)
-      } else {
-        console.log('No auth cookie found after all attempts, redirecting to login')
-        router.push('/login')
-      }
+      
+      setIsLoading(false)
     }
 
-    // Start checking immediately
     checkAuth()
-  }, [router])
+  }, [pathname, router])
 
+  // Show loading spinner while checking authentication
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-white dark:bg-[#0c0c0d]">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-500 mx-auto mb-4"></div>
-          <p className="text-gray-600 dark:text-gray-400">Loading...</p>
+      <div className="min-h-screen bg-white dark:bg-[#0c0c0d] flex items-center justify-center">
+        <div className="flex flex-col items-center space-y-4">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-pink-500"></div>
+          <p className="text-sm text-neutral-600 dark:text-neutral-400">
+            Checking authentication...
+          </p>
         </div>
       </div>
     )
   }
 
-  if (!isAuthenticated) {
-    return null // Will redirect to login
+  // Show children if authenticated
+  if (isAuthenticated) {
+    return <>{children}</>
   }
 
-  return <>{children}</>
+  // Show nothing while redirecting (this should be brief)
+  return (
+    <div className="min-h-screen bg-white dark:bg-[#0c0c0d] flex items-center justify-center">
+      <div className="flex flex-col items-center space-y-4">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-pink-500"></div>
+        <p className="text-sm text-neutral-600 dark:text-neutral-400">
+          Redirecting to login...
+        </p>
+      </div>
+    </div>
+  )
 }

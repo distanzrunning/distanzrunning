@@ -1,8 +1,10 @@
+// src/app/layout.tsx
 import type { Metadata } from "next";
 import { Playfair_Display } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import AuthProtection from "@/components/AuthProtection";
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { GoogleTagManager } from '@next/third-parties/google';
@@ -48,18 +50,19 @@ export default function RootLayout({
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
         />
-
       </head>
       <body className="font-sans antialiased bg-white text-textDefault min-h-screen flex flex-col quartr-font-features">
-        {isPreviewMode ? (
-          <main className="min-h-screen">{children}</main>
-        ) : (
-          <>
-            <Navbar />
-            <main className="flex-grow">{children}</main>
-            <Footer />
-          </>
-        )}
+        <AuthProtection>
+          {isPreviewMode ? (
+            <main className="min-h-screen">{children}</main>
+          ) : (
+            <>
+              <Navbar />
+              <main className="flex-grow">{children}</main>
+              <Footer />
+            </>
+          )}
+        </AuthProtection>
         
         <Analytics />
         <SpeedInsights />
