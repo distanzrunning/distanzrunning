@@ -127,4 +127,4 @@ export const config = {
      */
     '/((?!_next/static|_next/image|favicon.ico|images|.*\\..*|api).*)',
   ],
-}
+}// Force rebuild Sat 27 Sep 2025 22:40:50 CEST
