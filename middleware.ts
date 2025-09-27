@@ -1,48 +1,57 @@
 // middleware.ts
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
+import crypto from 'crypto'
+
+const SECRET_KEY = process.env.AUTH_SECRET || 'fallback-secret-key-change-in-production'
+
+// Function to verify signed cookie (same as in auth route)
+function verifySignedCookie(signedValue: string): boolean {
+  try {
+    const [value, signature] = signedValue.split('.')
+    if (!value || !signature) return false
+    
+    const expectedSignature = crypto
+      .createHmac('sha256', SECRET_KEY)
+      .update(value)
+      .digest('hex')
+    
+    // Use crypto.timingSafeEqual to prevent timing attacks
+    const signatureBuffer = Buffer.from(signature, 'hex')
+    const expectedBuffer = Buffer.from(expectedSignature, 'hex')
+    
+    if (signatureBuffer.length !== expectedBuffer.length) return false
+    
+    return crypto.timingSafeEqual(signatureBuffer, expectedBuffer) && value === 'authenticated'
+  } catch (error) {
+    return false
+  }
+}
 
 export function middleware(request: NextRequest) {
-  // Handle OPTIONS requests (CORS preflight)
-  if (request.method === 'OPTIONS') {
-    return new NextResponse(null, {
-      status: 200,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Requested-With',
-        'Access-Control-Max-Age': '86400',
-      },
-    })
-  }
-
-  // Get the pathname and check if it's a staging domain
-  const url = request.nextUrl.clone()
+  // Only run on staging domain
   const hostname = request.headers.get('host') || ''
+  const isStagingDomain = hostname === 'distanzrunning.vercel.app'
   
-  // Check if this is a staging domain (vercel.app domains)
-  const isStaging = hostname.includes('.vercel.app') || 
-                    hostname.includes('staging') || 
-                    process.env.NODE_ENV === 'development'
-
-  // If it's staging and not already on login page, check for auth
-  if (isStaging && !url.pathname.startsWith('/login') && !url.pathname.startsWith('/api/auth')) {
-    const authCookie = request.cookies.get('staging-auth')
-    
-    if (!authCookie || authCookie.value !== 'authenticated') {
-      url.pathname = '/login'
-      return NextResponse.redirect(url)
-    }
+  if (!isStagingDomain) {
+    return NextResponse.next()
   }
 
-  // Continue with the request
-  const response = NextResponse.next()
+  // Allow auth API and login page
+  if (request.nextUrl.pathname.startsWith('/api/auth') || 
+      request.nextUrl.pathname === '/login') {
+    return NextResponse.next()
+  }
+
+  // Check for signed authentication cookie
+  const authCookie = request.cookies.get('staging-auth')?.value
   
-  // Add CORS headers to all responses
-  response.headers.set('Access-Control-Allow-Origin', '*')
-  response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
-  response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With')
-  
-  return response
+  if (!authCookie || !verifySignedCookie(authCookie)) {
+    // Redirect to login if not authenticated or invalid signature
+    return NextResponse.redirect(new URL('/login', request.url))
+  }
+
+  return NextResponse.next()
 }
 
 export const config = {
@@ -52,8 +61,8 @@ export const config = {
      * - _next/static (static files)
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
-     * - public folder files
+     * - images/ (your static images)
      */
-    '/((?!_next/static|_next/image|favicon.ico|public/).*)',
+    '/((?!_next/static|_next/image|favicon.ico|images/).*)',
   ],
 }
