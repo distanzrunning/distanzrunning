@@ -11,7 +11,6 @@ import { ExploreButton } from '@/components/ExploreButton'
 import { NewsletterButton } from '@/components/NewsletterModal'
 import { DarkModeProvider, DarkModeToggle } from '@/components/DarkModeProvider'
 import { headers } from 'next/headers'
-import AuthProtection from '@/components/AuthProtection'
 import { Metadata } from 'next'
 
 // Force dynamic rendering to ensure middleware runs
@@ -58,7 +57,6 @@ export async function generateMetadata(): Promise<Metadata> {
 // Preview Mode Component with Marathon Showcase and Dark Mode
 function PreviewPage() {
   return (
-    <AuthProtection>
       <DarkModeProvider>
         <div className="min-h-screen flex flex-col bg-white dark:bg-[#0c0c0d] transition-colors duration-300">
           {/* Dark Mode Toggle */}
@@ -183,7 +181,6 @@ function PreviewPage() {
           </div>
         </div>
       </DarkModeProvider>
-    </AuthProtection>
   );
 }
 
