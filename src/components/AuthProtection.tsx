@@ -3,9 +3,25 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
+import { motion } from "motion/react"
 
 interface AuthProtectionProps {
   children: React.ReactNode
+}
+
+function LoadingSpinner() {
+  return (
+    <motion.div
+      className="w-8 h-8 border-4 border-neutral-200 dark:border-neutral-700 border-t-pink-500 rounded-full"
+      animate={{ rotate: 360 }}
+      transition={{
+        duration: 1.5,
+        repeat: Infinity,
+        ease: "linear",
+      }}
+      style={{ willChange: 'transform' }}
+    />
+  )
 }
 
 export default function AuthProtection({ children }: AuthProtectionProps) {
@@ -83,7 +99,7 @@ export default function AuthProtection({ children }: AuthProtectionProps) {
     return (
       <div className="min-h-screen bg-white dark:bg-[#0c0c0d] flex items-center justify-center">
         <div className="flex flex-col items-center space-y-4">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-pink-500"></div>
+          <LoadingSpinner />
           <p className="text-sm text-neutral-600 dark:text-neutral-400">
             Checking authentication...
           </p>
@@ -101,7 +117,7 @@ export default function AuthProtection({ children }: AuthProtectionProps) {
   return (
     <div className="min-h-screen bg-white dark:bg-[#0c0c0d] flex items-center justify-center">
       <div className="flex flex-col items-center space-y-4">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-pink-500"></div>
+        <LoadingSpinner />
         <p className="text-sm text-neutral-600 dark:text-neutral-400">
           Redirecting to login...
         </p>
