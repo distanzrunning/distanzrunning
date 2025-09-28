@@ -46,12 +46,8 @@ export function MapLoadingProgress({ isLoading, currentStep, onComplete }: MapLo
       
       if (currentStepIndex >= steps || newProgress >= targetProgress) {
         clearInterval(progressInterval)
-        if (targetProgress === 100) {
-          // Small delay before completion
-          setTimeout(() => {
-            onComplete?.()
-          }, 200)
-        }
+        // REMOVED: Auto-completion when reaching 100%
+        // The parent component will now handle calling finishLoading()
       }
     }, stepDuration)
 
@@ -119,6 +115,9 @@ export function useMarathonLoading() {
         setStepTimeout(timeout)
       })
     }
+    
+    // REMOVED: Automatic finishLoading() call
+    // The progress will stay at 100% until finishLoading is called externally
   }
 
   const finishLoading = () => {
