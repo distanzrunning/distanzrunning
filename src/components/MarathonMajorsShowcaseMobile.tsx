@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { MapLoadingProgress, useMarathonLoading } from './MapLoadingProgress'
 
 declare global {
   interface Window {
@@ -208,6 +209,14 @@ export const MarathonMajorsShowcaseMobile: React.FC = () => {
   const [error, setError] = useState<string | null>(null)
   const [isDarkMode, setIsDarkMode] = useState<boolean | null>(null)
   const [isClient, setIsClient] = useState(false)
+
+  const { 
+    isLoading: isMapLoading, 
+    currentStep, 
+    startLoading, 
+    finishLoading,
+    cleanup 
+  } = useMarathonLoading()  
 
   // Mobile-specific refs
   const mobileRouteCoordinates = useRef<number[][]>([])
@@ -1023,11 +1032,16 @@ export const MarathonMajorsShowcaseMobile: React.FC = () => {
     setError(null)
     
     try {
+      await startLoading(marathon.name)
+      
       const routeData = await loadRoute(marathon)
       addRoute(routeData.coordinates, routeData.aidStations)
       createMobileChart(routeData.coordinates, isMetric)
       setSelectedMarathon(marathon)
+      
+      finishLoading()
     } catch (err) {
+      cleanup()
       setError(err instanceof Error ? err.message : 'Failed to switch marathon')
     } finally {
       setIsLoading(false)
@@ -1184,6 +1198,12 @@ export const MarathonMajorsShowcaseMobile: React.FC = () => {
     return () => observer.disconnect()
   }, [])
 
+  useEffect(() => {
+    return () => {
+      cleanup()
+    }
+  }, [])
+
   return (
     <div className="my-8 relative">
       {error && (
@@ -1275,8 +1295,13 @@ export const MarathonMajorsShowcaseMobile: React.FC = () => {
           </div>
           
           {/* Map Section */}
-          <div className="h-64 border-b border-neutral-200 dark:border-neutral-700">
+          <div className="h-64 border-b border-neutral-200 dark:border-neutral-700 relative">
             <div ref={mobileMapContainer} className="w-full h-full" />
+            <MapLoadingProgress 
+              isLoading={isMapLoading}
+              currentStep={currentStep}
+              onComplete={finishLoading}
+            />
           </div>
           
           {/* Chart Section */}

@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { MapLoadingProgress, useMarathonLoading } from './MapLoadingProgress'
 
 declare global {
   interface Window {
@@ -209,6 +210,14 @@ export const MarathonMajorsShowcase: React.FC = () => {
   // Fix: Initialize as null and set after hydration
   const [isDarkMode, setIsDarkMode] = useState<boolean | null>(null)
   const [isClient, setIsClient] = useState(false)
+  // Add the loading hook HERE - after state, before refs
+  const { 
+    isLoading: isMapLoading, 
+    currentStep, 
+    startLoading, 
+    finishLoading,
+    cleanup 
+  } = useMarathonLoading()
   // Fix: Handle client-side hydration properly
   useEffect(() => {
     setIsClient(true)
@@ -1362,18 +1371,20 @@ export const MarathonMajorsShowcase: React.FC = () => {
   const switchMarathon = async (marathon: MarathonData) => {
     if (marathon.id === selectedMarathon.id) return
     
-    setIsLoading(true)
     setError(null)
     
     try {
+      await startLoading(marathon.name)
+      
       const routeData = await loadRoute(marathon)
       addRoute(routeData.coordinates, routeData.aidStations)
       createChart(routeData.coordinates)
       setSelectedMarathon(marathon)
+      
+      finishLoading()
     } catch (err) {
+      cleanup()
       setError(err instanceof Error ? err.message : 'Failed to switch marathon')
-    } finally {
-      setIsLoading(false)
     }
   }
 
@@ -1816,6 +1827,13 @@ export const MarathonMajorsShowcase: React.FC = () => {
     return () => observer.disconnect()
   }, [])
 
+  // ADD THE CLEANUP USEEFFECT HERE - after all other useEffects
+  useEffect(() => {
+    return () => {
+      cleanup()
+    }
+  }, [cleanup])
+
   return (
     <div className="my-8 relative">
       {error && (
@@ -1861,8 +1879,13 @@ export const MarathonMajorsShowcase: React.FC = () => {
 
           <div className="hidden lg:grid h-full" style={{ gridTemplateColumns: '3fr 2fr', gridTemplateRows: '495px 265px' }}>
             {/* Map */}
-            <div className="border-r border-b border-neutral-200 dark:border-neutral-700">
+            <div className="border-r border-b border-neutral-200 dark:border-neutral-700 relative">
               <div ref={mapContainer} className="w-full h-full" />
+              <MapLoadingProgress 
+                isLoading={isMapLoading}
+                currentStep={currentStep}
+                onComplete={finishLoading}
+              />
             </div>
             
             {/* Stats */}
