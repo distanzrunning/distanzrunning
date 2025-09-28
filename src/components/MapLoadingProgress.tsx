@@ -8,25 +8,22 @@ interface MapLoadingProgressProps {
 
 export function MapLoadingProgress({ isLoading, currentStep, onComplete }: MapLoadingProgressProps) {
   const [progress, setProgress] = useState(0)
-  const [displayStep, setDisplayStep] = useState('')
 
   // Define loading steps with their progress weights
   const loadingSteps = {
-    'Loading route data...': 20,
-    'Processing coordinates...': 40,
-    'Adding route to map...': 60,
-    'Placing markers...': 80,
-    'Finalizing view...': 100
+    'Loading route data...': 15,
+    'Processing coordinates...': 30,
+    'Adding route to map...': 50,
+    'Placing markers...': 70,
+    'Finalizing view...': 95  // Stop at 95% instead of 100%
   }
 
   useEffect(() => {
     if (!isLoading) {
       setProgress(0)
-      setDisplayStep('')
       return
     }
 
-    setDisplayStep(currentStep)
     const targetProgress = loadingSteps[currentStep as keyof typeof loadingSteps] || 0
 
     // Smooth progress animation
@@ -46,44 +43,41 @@ export function MapLoadingProgress({ isLoading, currentStep, onComplete }: MapLo
       
       if (currentStepIndex >= steps || newProgress >= targetProgress) {
         clearInterval(progressInterval)
-        // REMOVED: Auto-completion when reaching 100%
-        // The parent component will now handle calling finishLoading()
       }
     }, stepDuration)
 
     return () => clearInterval(progressInterval)
   }, [currentStep, isLoading])
 
+  // Effect to handle final progress completion
+  useEffect(() => {
+    if (!isLoading && progress > 0) {
+      // Quickly animate to 100% when finishing
+      const finalAnimation = setInterval(() => {
+        setProgress(prev => {
+          if (prev >= 100) {
+            clearInterval(finalAnimation)
+            return 100
+          }
+          return prev + 2
+        })
+      }, 20)
+      
+      return () => clearInterval(finalAnimation)
+    }
+  }, [isLoading, progress])
+
   if (!isLoading && progress === 0) return null
 
   return (
-    <div className="absolute inset-0 bg-white/90 dark:bg-neutral-900/90 backdrop-blur-sm z-50 flex flex-col items-center justify-center transition-opacity duration-300">
-      {/* Loading content */}
-      <div className="text-center space-y-4 max-w-sm mx-auto px-4">
-        
-        {/* Spinner */}
-        <div className="w-8 h-8 border-2 border-neutral-200 dark:border-neutral-700 border-t-pink-500 rounded-full animate-spin mx-auto"></div>
-        
-        {/* Progress bar container */}
-        <div className="w-full max-w-xs mx-auto">
-          <div className="mb-2">
-            <span className="text-sm font-medium text-neutral-700 dark:text-neutral-300 transition-colors duration-300">
-              {displayStep}
-            </span>
-          </div>
-          
-          {/* Progress bar */}
-          <div className="w-full bg-neutral-200 dark:bg-neutral-700 rounded-full h-2 transition-colors duration-300">
-            <div 
-              className="bg-gradient-to-r from-pink-500 to-pink-600 h-2 rounded-full transition-all duration-300 ease-out"
-              style={{ width: `${progress}%` }}
-            />
-          </div>
-          
-          {/* Progress percentage */}
-          <div className="mt-1 text-xs text-neutral-500 dark:text-neutral-400 text-center transition-colors duration-300">
-            {Math.round(progress)}%
-          </div>
+    <div className="absolute inset-0 bg-white/70 dark:bg-neutral-900/70 backdrop-blur-sm z-50 flex flex-col items-center justify-center transition-opacity duration-300">
+      {/* Simplified loading content - just the progress bar */}
+      <div className="bg-white dark:bg-neutral-800 rounded-lg border border-neutral-200 dark:border-neutral-600 p-4 shadow-lg">
+        <div className="w-64 bg-neutral-200 dark:bg-neutral-700 rounded-full h-2">
+          <div 
+            className="bg-gradient-to-r from-pink-500 to-pink-600 h-2 rounded-full transition-all duration-300 ease-out"
+            style={{ width: `${progress}%` }}
+          />
         </div>
       </div>
     </div>
@@ -115,9 +109,6 @@ export function useMarathonLoading() {
         setStepTimeout(timeout)
       })
     }
-    
-    // REMOVED: Automatic finishLoading() call
-    // The progress will stay at 100% until finishLoading is called externally
   }
 
   const finishLoading = () => {
