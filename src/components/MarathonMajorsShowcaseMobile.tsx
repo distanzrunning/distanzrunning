@@ -1031,7 +1031,8 @@ export const MarathonMajorsShowcaseMobile: React.FC = () => {
     setError(null)
     
     try {
-      await startLoading(marathon.name)
+      // Start loading but don't let it complete automatically
+      const loadingPromise = startLoading(marathon.name)
       
       const routeData = await loadRoute(marathon)
       
@@ -1039,7 +1040,7 @@ export const MarathonMajorsShowcaseMobile: React.FC = () => {
       const mapOperationsComplete = new Promise<void>((resolve) => {
         let moveEndFired = false
         let idleFired = false
-        let styleLoadFired = true // Assume style is already loaded unless we detect otherwise
+        let styleLoadFired = true
         
         const checkCompletion = () => {
           if (moveEndFired && idleFired && styleLoadFired) {
@@ -1065,7 +1066,6 @@ export const MarathonMajorsShowcaseMobile: React.FC = () => {
           checkCompletion()
         }
         
-        // Check if map style is currently loading
         if (!mobileMapInstance.current.isStyleLoaded()) {
           styleLoadFired = false
           mobileMapInstance.current.once('styledata', handleStyleData)
@@ -1074,7 +1074,6 @@ export const MarathonMajorsShowcaseMobile: React.FC = () => {
         mobileMapInstance.current.once('moveend', handleMoveEnd)
         mobileMapInstance.current.once('idle', handleIdle)
         
-        // Safety timeout in case events don't fire
         setTimeout(() => {
           if (!moveEndFired || !idleFired || !styleLoadFired) {
             console.warn('Map settling timeout reached')
@@ -1088,8 +1087,8 @@ export const MarathonMajorsShowcaseMobile: React.FC = () => {
       createMobileChart(routeData.coordinates, isMetric)
       setSelectedMarathon(marathon)
       
-      // Wait for ALL map operations to complete before finishing loading
-      await mapOperationsComplete
+      // Wait for both loading animation AND map operations to complete
+      await Promise.all([loadingPromise, mapOperationsComplete])
       
       finishLoading()
     } catch (err) {
