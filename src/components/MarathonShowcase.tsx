@@ -1377,9 +1377,40 @@ export const MarathonMajorsShowcase: React.FC = () => {
       await startLoading(marathon.name)
       
       const routeData = await loadRoute(marathon)
+      
+      // Promise that resolves when map is fully settled
+      const mapSettledPromise = new Promise<void>((resolve) => {
+        let moveEndFired = false
+        let idleFired = false
+        
+        const checkCompletion = () => {
+          if (moveEndFired && idleFired) {
+            resolve()
+          }
+        }
+        
+        const handleMoveEnd = () => {
+          moveEndFired = true
+          mapInstance.current.off('moveend', handleMoveEnd)
+          checkCompletion()
+        }
+        
+        const handleIdle = () => {
+          idleFired = true
+          mapInstance.current.off('idle', handleIdle)
+          checkCompletion()
+        }
+        
+        mapInstance.current.once('moveend', handleMoveEnd)
+        mapInstance.current.once('idle', handleIdle)
+      })
+      
       addRoute(routeData.coordinates, routeData.aidStations)
       createChart(routeData.coordinates)
       setSelectedMarathon(marathon)
+      
+      // Wait for map to completely settle
+      await mapSettledPromise
       
       finishLoading()
     } catch (err) {

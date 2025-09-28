@@ -1034,19 +1034,46 @@ export const MarathonMajorsShowcaseMobile: React.FC = () => {
       await startLoading(marathon.name)
       
       const routeData = await loadRoute(marathon)
+      
+      // Promise that resolves when map is fully settled
+      const mapSettledPromise = new Promise<void>((resolve) => {
+        let moveEndFired = false
+        let idleFired = false
+        
+        const checkCompletion = () => {
+          if (moveEndFired && idleFired) {
+            resolve()
+          }
+        }
+        
+        const handleMoveEnd = () => {
+          moveEndFired = true
+          mobileMapInstance.current.off('moveend', handleMoveEnd)
+          checkCompletion()
+        }
+        
+        const handleIdle = () => {
+          idleFired = true
+          mobileMapInstance.current.off('idle', handleIdle)
+          checkCompletion()
+        }
+        
+        mobileMapInstance.current.once('moveend', handleMoveEnd)
+        mobileMapInstance.current.once('idle', handleIdle)
+      })
+      
       addRoute(routeData.coordinates, routeData.aidStations)
       createMobileChart(routeData.coordinates, isMetric)
       setSelectedMarathon(marathon)
       
-      // Wait for map to settle before finishing
-      setTimeout(() => {
-        finishLoading()
-      }, 500)
+      // Wait for map to completely settle
+      await mapSettledPromise
+      
+      finishLoading()
     } catch (err) {
       cleanup()
       setError(err instanceof Error ? err.message : 'Failed to switch marathon')
     }
-    // Remove the finally block that sets setIsLoading(false)
   }
 
   // Toggle units
