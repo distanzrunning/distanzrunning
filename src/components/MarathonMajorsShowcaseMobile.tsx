@@ -1031,8 +1031,8 @@ export const MarathonMajorsShowcaseMobile: React.FC = () => {
     setError(null)
     
     try {
-      // Start loading but don't let it complete automatically
-      const loadingPromise = startLoading(marathon.name)
+      // Start loading animation
+      await startLoading(marathon.name)
       
       const routeData = await loadRoute(marathon)
       
@@ -1087,8 +1087,8 @@ export const MarathonMajorsShowcaseMobile: React.FC = () => {
       createMobileChart(routeData.coordinates, isMetric)
       setSelectedMarathon(marathon)
       
-      // Wait for both loading animation AND map operations to complete
-      await Promise.all([loadingPromise, mapOperationsComplete])
+      // Wait for map operations to complete
+      await mapOperationsComplete
       
       finishLoading()
     } catch (err) {
