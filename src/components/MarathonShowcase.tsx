@@ -1832,7 +1832,7 @@ export const MarathonMajorsShowcase: React.FC = () => {
     return () => {
       cleanup()
     }
-  }, [cleanup])
+  }, [])
 
   return (
     <div className="my-8 relative">

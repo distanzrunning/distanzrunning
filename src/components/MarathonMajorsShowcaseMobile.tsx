@@ -1028,7 +1028,6 @@ export const MarathonMajorsShowcaseMobile: React.FC = () => {
   const switchMarathon = async (marathon: MarathonData) => {
     if (marathon.id === selectedMarathon.id) return
     
-    setIsLoading(true)
     setError(null)
     
     try {
@@ -1039,13 +1038,15 @@ export const MarathonMajorsShowcaseMobile: React.FC = () => {
       createMobileChart(routeData.coordinates, isMetric)
       setSelectedMarathon(marathon)
       
-      finishLoading()
+      // Wait for map to settle before finishing
+      setTimeout(() => {
+        finishLoading()
+      }, 500)
     } catch (err) {
       cleanup()
       setError(err instanceof Error ? err.message : 'Failed to switch marathon')
-    } finally {
-      setIsLoading(false)
     }
+    // Remove the finally block that sets setIsLoading(false)
   }
 
   // Toggle units
@@ -1239,13 +1240,6 @@ export const MarathonMajorsShowcaseMobile: React.FC = () => {
             ))}
           </div>
         </nav>
-
-        {/* Loading Overlay */}
-        {isLoading && (
-          <div className="absolute inset-0 bg-white dark:bg-neutral-900 flex items-center justify-center z-50 transition-colors duration-300">
-            <p className="text-sm text-neutral-600 dark:text-neutral-300 font-medium">Loading {selectedMarathon.name} Marathon...</p>
-          </div>
-        )}
 
         {/* Mobile Stacked Layout */}
         <div className="flex flex-col">
