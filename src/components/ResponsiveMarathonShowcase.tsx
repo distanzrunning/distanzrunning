@@ -3,17 +3,24 @@
 
 import { useEffect, useState } from 'react'
 import dynamic from 'next/dynamic'
+import { MarathonShowcaseSkeleton } from './MarathonShowcaseSkeleton'
 
 // ✅ point desktop to MarathonShowcase.tsx and grab the named export
 const MarathonMajorsShowcase = dynamic(
   () => import('./MarathonShowcase').then(m => m.MarathonMajorsShowcase),
-  { ssr: false }
+  { 
+    ssr: false,
+    loading: () => <MarathonShowcaseSkeleton />
+  }
 )
 
 // ✅ mobile file/ export name already matches
 const MarathonMajorsShowcaseMobile = dynamic(
   () => import('./MarathonMajorsShowcaseMobile').then(m => m.MarathonMajorsShowcaseMobile),
-  { ssr: false }
+  { 
+    ssr: false,
+    loading: () => <MarathonShowcaseSkeleton />
+  }
 )
 
 const LG_MIN_WIDTH = 1024
@@ -29,6 +36,10 @@ export default function ResponsiveMarathonShowcase() {
     return () => mq.removeEventListener?.('change', setFromMQ) ?? mq.removeListener(setFromMQ)
   }, [])
 
-  if (isDesktop === null) return null
+  // Show skeleton while determining screen size
+  if (isDesktop === null) {
+    return <MarathonShowcaseSkeleton />
+  }
+
   return isDesktop ? <MarathonMajorsShowcase /> : <MarathonMajorsShowcaseMobile />
 }
