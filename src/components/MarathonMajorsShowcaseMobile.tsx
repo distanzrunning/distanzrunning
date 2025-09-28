@@ -1024,7 +1024,7 @@ export const MarathonMajorsShowcaseMobile: React.FC = () => {
     mobileMapInstance.current.fitBounds(bounds, { padding: 30 })
   }
 
-  // Switch marathon
+  // Switch marathon - Fixed version
   const switchMarathon = async (marathon: MarathonData) => {
     if (marathon.id === selectedMarathon.id) return
     
@@ -1035,13 +1035,14 @@ export const MarathonMajorsShowcaseMobile: React.FC = () => {
       
       const routeData = await loadRoute(marathon)
       
-      // Promise that resolves when map is fully settled
-      const mapSettledPromise = new Promise<void>((resolve) => {
+      // Create a promise that resolves when map operations are complete
+      const mapOperationsComplete = new Promise<void>((resolve) => {
         let moveEndFired = false
         let idleFired = false
+        let styleLoadFired = true // Assume style is already loaded unless we detect otherwise
         
         const checkCompletion = () => {
-          if (moveEndFired && idleFired) {
+          if (moveEndFired && idleFired && styleLoadFired) {
             resolve()
           }
         }
@@ -1058,16 +1059,37 @@ export const MarathonMajorsShowcaseMobile: React.FC = () => {
           checkCompletion()
         }
         
+        const handleStyleData = () => {
+          styleLoadFired = true
+          mobileMapInstance.current.off('styledata', handleStyleData)
+          checkCompletion()
+        }
+        
+        // Check if map style is currently loading
+        if (!mobileMapInstance.current.isStyleLoaded()) {
+          styleLoadFired = false
+          mobileMapInstance.current.once('styledata', handleStyleData)
+        }
+        
         mobileMapInstance.current.once('moveend', handleMoveEnd)
         mobileMapInstance.current.once('idle', handleIdle)
+        
+        // Safety timeout in case events don't fire
+        setTimeout(() => {
+          if (!moveEndFired || !idleFired || !styleLoadFired) {
+            console.warn('Map settling timeout reached')
+            resolve()
+          }
+        }, 5000)
       })
       
+      // Start map operations
       addRoute(routeData.coordinates, routeData.aidStations)
       createMobileChart(routeData.coordinates, isMetric)
       setSelectedMarathon(marathon)
       
-      // Wait for map to completely settle
-      await mapSettledPromise
+      // Wait for ALL map operations to complete before finishing loading
+      await mapOperationsComplete
       
       finishLoading()
     } catch (err) {
