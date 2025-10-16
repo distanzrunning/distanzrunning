@@ -153,13 +153,14 @@ export function NewsletterModal({ isOpen, onClose }: NewsletterModalProps) {
 
               {/* Hero section with optimized background image and white logo */}
               <div className="relative h-48 bg-neutral-900 overflow-hidden">
-                {/* Optimized background image */}
+                {/* Optimized background image - Using JPEG (337KB vs 1.6MB PNG) */}
                 <Image
-                  src="/images/berlin_cover.png"
+                  src="/images/berlin_cover.jpg"
                   alt="Berlin Marathon Background"
                   fill
                   className="object-cover"
                   priority
+                  quality={85}
                   sizes="(max-width: 448px) 100vw, 448px"
                 />
                 
