@@ -1,7 +1,7 @@
 // src/components/FeaturedArticle.tsx
 import React from 'react';
 import Link from 'next/link';
-import { urlFor } from '@/lib/image';
+import { urlFor } from '@/sanity/lib/image';
 import { format } from 'date-fns';
 
 interface FeaturedArticleProps {

@@ -1,7 +1,7 @@
 // src/lib/optimizedImage.tsx
 
 import Image from 'next/image';
-import { urlFor } from '@/lib/image';
+import { urlFor } from '@/sanity/lib/image';
 
 interface OptimizedImageProps {
   image: any;
