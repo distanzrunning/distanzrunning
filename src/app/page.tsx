@@ -4,8 +4,8 @@ import { urlFor } from '@/lib/image'
 import Link from 'next/link'
 import Image from 'next/image'
 import { format } from 'date-fns'
-import dynamic from 'next/dynamic'
 import NewsletterSignup from '@/components/NewsletterSignup'
+import ResponsiveMarathonShowcase from '@/components/ResponsiveMarathonShowcase'
 import { TypewriterText } from '@/components/TypewriterText'
 import { ExploreButton } from '@/components/ExploreButton'
 import { NewsletterButton } from '@/components/NewsletterModal'
@@ -13,12 +13,6 @@ import { DarkModeProvider, DarkModeToggle } from '@/components/DarkModeProvider'
 import SocialLinks from '@/components/SocialLinks'
 import { headers } from 'next/headers'
 import { Metadata } from 'next'
-
-// Dynamically import heavy components for better code splitting
-const ResponsiveMarathonShowcase = dynamic(
-  () => import('@/components/ResponsiveMarathonShowcase'),
-  { ssr: false }
-)
 
 // Force dynamic rendering to ensure middleware runs
 export const dynamic = 'force-dynamic'
