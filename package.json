@@ -33,7 +33,6 @@
     "date-fns": "^4.1.0",
     "framer-motion": "^12.7.4",
     "lucide-react": "^0.503.0",
-    "motion": "^12.23.11",
     "next": "^15.4.2",
     "next-sanity": "^9.10.2",
     "papaparse": "^5.5.2",
