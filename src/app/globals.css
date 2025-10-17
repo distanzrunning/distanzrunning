@@ -564,55 +564,6 @@
   .fragment-ul .fragment-li {
     position: relative;
     padding-left: 1.5rem; /* 24px */
-    margin-bottom: 1.5rem; /* 24px */
-  }
-
-  .fragment-ul .fragment-li:before {
-    content: "→";
-    position: absolute;
-    left: 0;
-    top: 0;
-    color: rgb(var(--color-textSubtle));
-    font-weight: 500;
-    font-size: 1rem;
-    line-height: inherit;
-  }
-
-  /* Alternative: Use a more subtle arrow */
-  .fragment-ul .fragment-li:before {
-    content: "→";
-    position: absolute;
-    left: 0;
-    top: 0;
-    color: rgb(var(--color-primary, 228, 60, 129)); /* Your primary color */
-    font-weight: 400;
-    font-size: 0.875rem; /* 14px */
-    line-height: inherit;
-    transform: translateY(2px); /* Fine-tune vertical alignment */
-  }
-
-  /* Or use a Unicode arrow for a cleaner look */
-  .fragment-ul .fragment-li:before {
-    content: "▸"; /* Right-pointing triangle */
-    position: absolute;
-    left: 0;
-    top: 0;
-    color: rgb(var(--color-textSubtle));
-    font-weight: 400;
-    font-size: 0.875rem;
-    line-height: inherit;
-    transform: translateY(1px);
-  }
-
-  /* Custom arrow bullets for lists */
-  .fragment-ul {
-    list-style: none;
-    padding-left: 0;
-  }
-
-  .fragment-ul .fragment-li {
-    position: relative;
-    padding-left: 1.5rem; /* 24px */
   }
 
   .fragment-ul .fragment-li:before {

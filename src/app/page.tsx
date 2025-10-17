@@ -1,6 +1,6 @@
 // src/app/page.tsx
-import { sanity } from '@/lib/sanity'
-import { urlFor } from '@/lib/image'
+import { client as sanity } from '@/sanity/lib/client'
+import { urlFor } from '@/sanity/lib/image'
 import Link from 'next/link'
 import Image from 'next/image'
 import { format } from 'date-fns'

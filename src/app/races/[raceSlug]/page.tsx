@@ -1,7 +1,7 @@
 // src/app/races/[raceSlug]/page.tsx
 
-import { sanity } from '@/lib/sanity'
-import { urlFor } from '@/lib/image'
+import { client as sanity } from '@/sanity/lib/client'
+import { urlFor } from '@/sanity/lib/image'
 import { notFound } from 'next/navigation'
 import { format } from 'date-fns'
 

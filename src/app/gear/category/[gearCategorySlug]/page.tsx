@@ -1,4 +1,4 @@
-import { sanity } from "@/lib/sanity";
+import { client as sanity } from "@/sanity/lib/client";
 import { notFound } from "next/navigation";
 import TagFilterGrid from "@/components/TagFilterGrid";
 import NewsletterSignup from "@/components/NewsletterSignup";

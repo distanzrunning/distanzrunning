@@ -1,5 +1,5 @@
 // src/app/articles/page.tsx
-import { sanity } from '@/lib/sanity';
+import { client as sanity } from '@/sanity/lib/client';
 import ArticleCard from '@/components/ArticleCard';
 
 type Post = {

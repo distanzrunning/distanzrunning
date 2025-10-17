@@ -1,9 +1,9 @@
 // src/app/races/page.tsx
 
-import { sanity } from '@/lib/sanity'
+import { client as sanity } from '@/sanity/lib/client'
 import Link from 'next/link'
 import { format } from 'date-fns'
-import { urlFor } from '@/lib/image'
+import { urlFor } from '@/sanity/lib/image'
 
 type RaceGuide = {
   _id: string

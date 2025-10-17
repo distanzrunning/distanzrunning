@@ -1,7 +1,7 @@
 // src/app/gear/[gearSlug]/page.tsx
 
-import { sanity } from '@/lib/sanity'
-import { urlFor } from '@/lib/image'
+import { client as sanity } from '@/sanity/lib/client'
+import { urlFor } from '@/sanity/lib/image'
 import { PortableText } from '@portabletext/react'
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
