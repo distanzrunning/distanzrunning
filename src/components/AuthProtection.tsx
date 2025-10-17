@@ -3,7 +3,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
-import { motion } from "motion/react"
+import { motion } from "framer-motion"
 
 interface AuthProtectionProps {
   children: React.ReactNode
