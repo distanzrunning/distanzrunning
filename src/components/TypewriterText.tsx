@@ -3,20 +3,21 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 
-export function TypewriterText() {
-  const phrases = [
-    "Running News",
-    "Gear Reviews", 
-    "Interactive Race Guides"
-  ]
+// Move phrases outside component to prevent recreation on every render
+const PHRASES = [
+  "Running News",
+  "Gear Reviews",
+  "Interactive Race Guides"
+] as const
 
+export function TypewriterText() {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [currentText, setCurrentText] = useState("")
   const [isDeleting, setIsDeleting] = useState(false)
   const [isPaused, setIsPaused] = useState(false)
 
   useEffect(() => {
-    const currentPhrase = phrases[currentIndex]
+    const currentPhrase = PHRASES[currentIndex]
 
     if (isPaused) {
       const pauseTimer = setTimeout(() => {
@@ -33,7 +34,7 @@ export function TypewriterText() {
           setCurrentText(currentText.slice(0, -1))
         } else {
           setIsDeleting(false)
-          setCurrentIndex((currentIndex + 1) % phrases.length)
+          setCurrentIndex((currentIndex + 1) % PHRASES.length)
         }
       } else {
         if (currentText.length < currentPhrase.length) {
@@ -45,7 +46,7 @@ export function TypewriterText() {
     }, isDeleting ? 50 : 100)
 
     return () => clearTimeout(timer)
-  }, [currentText, isDeleting, isPaused, currentIndex, phrases])
+  }, [currentText, isDeleting, isPaused, currentIndex])
 
   return (
     <div className="inline-block relative max-w-full overflow-visible align-bottom">
