@@ -11,11 +11,7 @@ import { ExploreButton } from '@/components/ExploreButton'
 import { NewsletterButton } from '@/components/NewsletterModal'
 import { DarkModeProvider, DarkModeToggle } from '@/components/DarkModeProvider'
 import SocialLinks from '@/components/SocialLinks'
-import { headers } from 'next/headers'
 import { Metadata } from 'next'
-
-// Force dynamic rendering to ensure middleware runs
-export const dynamic = 'force-dynamic'
 
 type Post = {
   _id: string
@@ -27,31 +23,21 @@ type Post = {
   categories: Array<{ title: string }>
 }
 
-// Generate metadata based on the hostname
+// Generate metadata based on preview mode
 export async function generateMetadata(): Promise<Metadata> {
-  const headersList = await headers()
-  const hostname = headersList.get('host') || ''
-  const isStagingDomain = hostname === 'distanzrunning.vercel.app'
-  
-  if (isStagingDomain) {
+  const isPreviewMode = process.env.PREVIEW_MODE === 'true';
+
+  if (isPreviewMode) {
     return {
       title: 'Distanz Running | The ultimate destination for running news, gear reviews, and interactive race guides.',
       description: 'Be the first to know when we launch with exclusive running content, gear reviews, and interactive race guides.',
-      metadataBase: new URL('https://distanzrunning.vercel.app'),
-      alternates: {
-        canonical: 'https://distanzrunning.vercel.app',
-      },
     }
   }
-  
-  // Return default metadata for production
+
+  // Return default metadata for development/production
   return {
     title: "Distanz Running",
     description: "The latest running news, gear reviews, and interactive race guides.",
-    metadataBase: new URL('https://distanzrunning.com'),
-    alternates: {
-      canonical: 'https://distanzrunning.com',
-    },
   }
 }
 
@@ -273,14 +259,11 @@ async function DevelopmentHomePage() {
 }
 
 export default async function HomePage() {
-  // Get the hostname from headers to determine which page to show
-  const headersList = await headers()
-  const hostname = headersList.get('host') || ''
-  
-  // Show preview page for staging domain, development page for others
-  const isStagingDomain = hostname === 'distanzrunning.vercel.app'
-  
-  if (isStagingDomain) {
+  // Check if we're in preview mode
+  const isPreviewMode = process.env.PREVIEW_MODE === 'true';
+
+  // Return preview page if in preview mode, otherwise return development page
+  if (isPreviewMode) {
     return <PreviewPage />;
   }
 
