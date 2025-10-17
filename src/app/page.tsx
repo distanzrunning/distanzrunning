@@ -58,6 +58,9 @@ export async function generateMetadata(): Promise<Metadata> {
 function PreviewPage() {
   return (
       <DarkModeProvider>
+        {/* Preload newsletter modal background for instant loading */}
+        <link rel="preload" as="image" href="/images/berlin_cover.jpg" />
+
         <div className="min-h-screen flex flex-col bg-white dark:bg-[#0c0c0d] transition-colors duration-300">
           {/* Dark Mode Toggle */}
           <DarkModeToggle />
