@@ -47,18 +47,25 @@ export function ExploreButton({ variant = 'default' }: ExploreButtonProps) {
         {/* Pink variant with rotating gradient border */}
         {variant === 'pink' && (
           <>
-            {/* Rotating gradient border - Quartr technique with ::before pseudo-element */}
-            <div
-              className="absolute inset-0 z-[1] overflow-hidden rounded-lg pointer-events-none"
-              style={{
-                WebkitMaskImage: '-webkit-radial-gradient(white, black)'
-              }}
-            >
-              <div className="rotating-border-gradient absolute inset-0 h-full w-full" />
+            {/* Rotating gradient border container */}
+            <div className="absolute inset-0 z-0 overflow-hidden rounded-lg pointer-events-none">
+              {/* Rotating gradient element (replaces ::before) */}
+              <div
+                className="absolute animate-spin"
+                style={{
+                  aspectRatio: '1',
+                  width: '200%',
+                  inset: '0 auto auto 50%',
+                  transform: 'translate(-50%, -15%) rotate(-90deg)',
+                  background: 'conic-gradient(from 0deg, transparent 0deg 340deg, rgba(236, 72, 153, 0.8) 360deg)',
+                  animationDuration: '2s',
+                  animationTimingFunction: 'linear'
+                }}
+              />
             </div>
 
             {/* Inner background to create border effect */}
-            <div className="absolute inset-[1px] z-[1] rounded-lg bg-white dark:bg-neutral-800 group-hover:bg-gray-50 dark:group-hover:bg-neutral-700 transition-colors pointer-events-none" />
+            <div className="absolute inset-[2px] z-[1] rounded-lg bg-white dark:bg-neutral-800 group-hover:bg-gray-50 dark:group-hover:bg-neutral-700 transition-colors pointer-events-none" />
 
             {/* Glow effect on hover */}
             <div
@@ -67,25 +74,6 @@ export function ExploreButton({ variant = 'default' }: ExploreButtonProps) {
                 boxShadow: '0 0 20px 5px rgba(236, 72, 153, 0.2)'
               }}
             />
-
-            <style dangerouslySetInnerHTML={{
-              __html: `
-                .rotating-border-gradient::before {
-                  content: '';
-                  position: absolute;
-                  aspect-ratio: 1;
-                  width: 200%;
-                  rotate: -90deg;
-                  inset: 0 auto auto 50%;
-                  translate: -50% -15%;
-                  background: conic-gradient(from 0deg, transparent 0deg 340deg, rgba(236, 72, 153, 0.8) 360deg);
-                  animation: rotate-border 2s linear infinite;
-                }
-                @keyframes rotate-border {
-                  to { transform: rotate(360deg); }
-                }
-              `
-            }} />
           </>
         )}
         
