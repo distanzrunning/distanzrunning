@@ -47,25 +47,37 @@ export function ExploreButton({ variant = 'default' }: ExploreButtonProps) {
         {/* Pink variant with rotating gradient border */}
         {variant === 'pink' && (
           <>
-            {/* Rotating gradient border container */}
-            <div className="absolute inset-0 z-0 overflow-hidden rounded-lg pointer-events-none">
-              {/* Rotating gradient element (replaces ::before) */}
+            {/* Rotating gradient border - positioned behind button */}
+            <div
+              className="absolute inset-0 overflow-hidden rounded-lg pointer-events-none"
+              style={{ padding: '1px' }}
+            >
               <div
                 className="absolute animate-spin"
                 style={{
                   aspectRatio: '1',
                   width: '200%',
-                  inset: '0 auto auto 50%',
-                  transform: 'translate(-50%, -15%) rotate(-90deg)',
+                  top: '0',
+                  left: '50%',
+                  transform: 'translate(-50%, -15%)',
                   background: 'conic-gradient(from 0deg, transparent 0deg 340deg, rgba(236, 72, 153, 0.8) 360deg)',
                   animationDuration: '2s',
-                  animationTimingFunction: 'linear'
+                  animationTimingFunction: 'linear',
+                  willChange: 'transform'
                 }}
               />
             </div>
 
-            {/* Inner background to create border effect */}
-            <div className="absolute inset-[2px] z-[1] rounded-lg bg-white dark:bg-neutral-800 group-hover:bg-gray-50 dark:group-hover:bg-neutral-700 transition-colors pointer-events-none" />
+            {/* Inner background to create border effect - sits above gradient but below button text */}
+            <div
+              className="absolute rounded-lg bg-white dark:bg-neutral-800 group-hover:bg-gray-50 dark:group-hover:bg-neutral-700 transition-colors pointer-events-none"
+              style={{
+                top: '1px',
+                left: '1px',
+                right: '1px',
+                bottom: '1px'
+              }}
+            />
 
             {/* Glow effect on hover */}
             <div
