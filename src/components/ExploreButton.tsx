@@ -47,11 +47,9 @@ export function ExploreButton({ variant = 'default' }: ExploreButtonProps) {
         {/* Pink variant with rotating gradient border */}
         {variant === 'pink' && (
           <>
-            {/* Rotating gradient border layer */}
-            <div
-              className="absolute inset-0 rounded-lg overflow-hidden pointer-events-none"
-              style={{ padding: '2px' }}
-            >
+            {/* Rotating gradient border container */}
+            <div className="absolute inset-0 rounded-lg overflow-hidden pointer-events-none -z-10">
+              {/* Rotating gradient layer */}
               <div
                 className="absolute inset-[-100%] animate-spin"
                 style={{
@@ -62,9 +60,12 @@ export function ExploreButton({ variant = 'default' }: ExploreButtonProps) {
               />
             </div>
 
+            {/* Inner background to create border effect */}
+            <div className="absolute inset-[2px] rounded-lg bg-white dark:bg-neutral-800 pointer-events-none -z-[9]" />
+
             {/* Glow effect on hover */}
             <div
-              className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none -z-10"
+              className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none -z-[11]"
               style={{
                 boxShadow: '0 0 20px 5px rgba(236, 72, 153, 0.2)'
               }}
