@@ -183,23 +183,15 @@ module.exports = {
         '23': '5.75rem',
       },
       animation: {
-        'rotate': 'rotate 3s ease-in-out infinite',
-        'flip': 'flip 6s ease-in-out infinite',
+        'rotate': 'rotate 6s linear infinite',
+        'flip': 'flip 6s steps(2) infinite',
       },
       keyframes: {
         rotate: {
-          '0%': { transform: 'rotate(0deg)' },
-          '45%': { transform: 'rotate(180deg)' },
-          '50%': { transform: 'rotate(180deg)' },
-          '95%': { transform: 'rotate(360deg)' },
-          '100%': { transform: 'rotate(360deg)' },
+          'to': { transform: 'rotate(90deg)' },
         },
         flip: {
-          '0%': { transform: 'rotate(0deg)' },
-          '45%': { transform: 'rotate(0deg)' },
-          '50%': { transform: 'rotate(180deg)' },
-          '95%': { transform: 'rotate(180deg)' },
-          '100%': { transform: 'rotate(360deg)' },
+          'to': { transform: 'rotate(1turn)' },
         },
       },
     },
