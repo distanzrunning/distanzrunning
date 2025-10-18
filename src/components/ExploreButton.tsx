@@ -21,14 +21,14 @@ export function ExploreButton({ variant = 'default' }: ExploreButtonProps) {
         className={`group whitespace-nowrap font-medium text-sm relative m-0 flex cursor-pointer select-none items-center rounded-lg border-none p-0 no-underline outline-none ease-out focus-visible:outline-none after:pointer-events-none after:absolute after:inset-0 after:z-[0] after:rounded-lg focus-visible:after:ring active:scale-[0.98] active:duration-100 h-12 gap-2 px-5 focus-visible:after:ring-formSecondarySubtleHover justify-center
           ${
             variant === 'pink'
-              ? 'text-textDefault transition-shadow after:transition-border after:border after:border-transparent hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:shadow-[0_0_20px_5px_rgba(236,72,153,0.2)] pr-4'
+              ? 'text-black dark:text-white transition-shadow after:transition-border after:border after:border-transparent hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:shadow-[0_0_20px_5px_rgba(236,72,153,0.2)] pr-4'
               : 'bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200'
           }`}
       >
         {/* Rotating gradient border for pink variant */}
         {variant === 'pink' && (
           <>
-            <div className="absolute inset-0 z-[1]">
+            <div className="absolute inset-0 z-0">
               <div className="mask-gradient absolute inset-0 h-[100%] w-[100%] animate-flip overflow-hidden rounded-md [mask:linear-gradient(white,_transparent_50%)] before:absolute before:aspect-square before:w-[200%] before:rotate-[-90deg] before:animate-rotate before:bg-[conic-gradient(from_0deg,transparent_0_340deg,rgba(236,72,153,0.8)_360deg)] before:content-[''] before:[inset:0_auto_auto_50%] before:[translate:-50%_-15%]"></div>
             </div>
             <div className="absolute inset-[1px] z-[1] rounded-[7px] bg-white dark:bg-neutral-900 group-hover:bg-neutral-50 dark:group-hover:bg-neutral-800"></div>
