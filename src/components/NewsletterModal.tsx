@@ -15,44 +15,34 @@ export function NewsletterModal({ isOpen, onClose }: NewsletterModalProps) {
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [error, setError] = useState('')
 
+  // Combined effect: handle body scroll lock, escape key, and form reset
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden'
-    } else {
-      document.body.style.overflow = 'unset'
-    }
+    if (!isOpen) return
 
-    return () => {
-      document.body.style.overflow = 'unset'
-    }
-  }, [isOpen])
+    // Lock body scroll
+    document.body.style.overflow = 'hidden'
 
-  // Close on escape key
-  useEffect(() => {
+    // Reset form state
+    setEmail('')
+    setIsSubmitted(false)
+    setError('')
+    setIsSubmitting(false)
+
+    // Setup escape key handler
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         onClose()
       }
     }
 
-    if (isOpen) {
-      document.addEventListener('keydown', handleEscape)
-    }
+    document.addEventListener('keydown', handleEscape)
 
+    // Cleanup function
     return () => {
+      document.body.style.overflow = 'unset'
       document.removeEventListener('keydown', handleEscape)
     }
   }, [isOpen, onClose])
-
-  // Reset form when modal opens
-  useEffect(() => {
-    if (isOpen) {
-      setEmail('')
-      setIsSubmitted(false)
-      setError('')
-      setIsSubmitting(false)
-    }
-  }, [isOpen])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
