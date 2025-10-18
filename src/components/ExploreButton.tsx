@@ -1,27 +1,20 @@
 'use client';
 
-import { motion, useTime, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 type ExploreButtonProps = {
   variant?: 'default' | 'pink';
 };
 
 export function ExploreButton({ variant = 'default' }: ExploreButtonProps) {
-  const time = useTime();
-  
-  // Rotating animation for pink variant
-  const rotate = useTransform(time, (latest) => (latest / 25) % 360);
-  
-  // Enhanced gradient with more color stops for smoother effect
-  const rotatingBg = useTransform(rotate, (r) => {
-    return `conic-gradient(from ${r}deg, 
-      transparent 0%, 
-      rgba(236, 72, 153, 0.1) 20%, 
-      rgba(236, 72, 153, 0.3) 40%, 
-      rgba(168, 85, 247, 0.2) 60%, 
-      rgba(236, 72, 153, 0.7) 80%, 
-      transparent 100%)`;
-  });
+  // Gradient with color stops for rotating border effect
+  const gradientStyle = `conic-gradient(from 0deg,
+    transparent 0%,
+    rgba(236, 72, 153, 0.1) 20%,
+    rgba(236, 72, 153, 0.3) 40%,
+    rgba(168, 85, 247, 0.2) 60%,
+    rgba(236, 72, 153, 0.7) 80%,
+    transparent 100%)`;
 
   return (
     <div className="flex justify-center">
@@ -67,10 +60,11 @@ export function ExploreButton({ variant = 'default' }: ExploreButtonProps) {
           <>
             {/* Glow effect */}
             <motion.div
-              className="absolute inset-0 rounded-lg z-0 pointer-events-none blur-sm opacity-60 group-hover:opacity-80 transition-opacity duration-300"
+              className="absolute inset-0 rounded-lg z-0 pointer-events-none blur-sm opacity-60 group-hover:opacity-80 transition-opacity duration-300 animate-spin"
               style={{
-                background: rotatingBg,
-                willChange: 'transform'
+                background: gradientStyle,
+                animationDuration: '9s',
+                animationTimingFunction: 'linear'
               }}
               animate={{
                 scale: [1, 1.05, 1]
@@ -81,13 +75,14 @@ export function ExploreButton({ variant = 'default' }: ExploreButtonProps) {
                 ease: "easeInOut"
               }}
             />
-            
+
             {/* Main rotating border */}
-            <motion.div
-              className="absolute inset-0 rounded-lg z-0 pointer-events-none opacity-90 group-hover:opacity-100 transition-opacity duration-300"
+            <div
+              className="absolute inset-0 rounded-lg z-0 pointer-events-none opacity-90 group-hover:opacity-100 transition-opacity duration-300 animate-spin"
               style={{
-                background: rotatingBg,
-                willChange: 'transform',
+                background: gradientStyle,
+                animationDuration: '9s',
+                animationTimingFunction: 'linear',
                 mask: 'linear-gradient(white, white) content-box, linear-gradient(white, white)',
                 maskComposite: 'xor',
                 WebkitMask: 'linear-gradient(white, white) content-box, linear-gradient(white, white)',
