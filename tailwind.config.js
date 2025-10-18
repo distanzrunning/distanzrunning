@@ -182,6 +182,18 @@ module.exports = {
         '21': '5.25rem',
         '23': '5.75rem',
       },
+      animation: {
+        'rotate': 'rotate 2s linear infinite',
+        'flip': 'flip 6s infinite steps(2, end)',
+      },
+      keyframes: {
+        rotate: {
+          'to': { transform: 'rotate(90deg)' },
+        },
+        flip: {
+          'to': { transform: 'rotate(360deg)' },
+        },
+      },
     },
   },
   typography: (theme) => ({
