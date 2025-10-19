@@ -4,6 +4,15 @@ import React, { useEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { MapLoadingProgress, useMarathonLoading } from './MapLoadingProgress'
 import { marathonData, type MarathonData, type PointOfInterest } from '@/constants/marathonData'
+import {
+  calculateDistance,
+  calculateTotalDistance,
+  calculateGrade,
+  findCoordinateAtDistance,
+  calculateDistanceAtFractionalIndex,
+  calculateDistanceAtIndex,
+  findCoordinateAtDistancePrecise
+} from '@/utils/marathonCalculations'
 
 declare global {
   interface Window {
@@ -236,26 +245,6 @@ export const MarathonMajorsShowcase: React.FC = () => {
         }
       }
     }
-  }
-
-  // Calculate grade between points
-  const calculateGrade = (coordinates: number[][], index: number) => {
-    if (index === 0 || index >= coordinates.length - 1) return 0
-
-    const prevCoord = coordinates[index - 1]
-    const currentCoord = coordinates[index]
-    const nextCoord = coordinates[index + 1]
-
-    const distance1 = calculateDistance(prevCoord, currentCoord)
-    const distance2 = calculateDistance(currentCoord, nextCoord)
-    const totalDistance = distance1 + distance2
-
-    if (totalDistance === 0) return 0
-
-    const elevationChange = (nextCoord[2] || 0) - (prevCoord[2] || 0)
-    const grade = (elevationChange / totalDistance) * 100
-
-    return grade
   }
 
   // Marker creation functions
@@ -508,64 +497,6 @@ export const MarathonMajorsShowcase: React.FC = () => {
     return { coordinate: closestPoint, fractionalIndex: fractionalIndex }
   }
 
-  // Calculate distance at fractional index
-  const calculateDistanceAtFractionalIndex = (fractionalIndex: number, coordinates: number[][], useMetric: boolean) => {
-    let distance = 0
-    const wholeIndex = Math.floor(fractionalIndex)
-    const fraction = fractionalIndex - wholeIndex
-    
-    // Calculate distance up to the whole index
-    for (let i = 1; i <= wholeIndex && i < coordinates.length; i++) {
-      distance += calculateDistance(coordinates[i - 1], coordinates[i])
-    }
-    
-    // Add fractional distance within the current segment
-    if (wholeIndex < coordinates.length - 1 && fraction > 0) {
-      const segmentDistance = calculateDistance(coordinates[wholeIndex], coordinates[wholeIndex + 1])
-      distance += segmentDistance * fraction
-    }
-    
-    return useMetric ? distance / 1000 : distance / 1609.34
-  }
-
-  // Calculate distance at specific index
-  const calculateDistanceAtIndex = (index: number, coordinates: number[][], useMetric: boolean) => {
-    let distance = 0
-    for (let i = 1; i <= index && i < coordinates.length; i++) {
-      distance += calculateDistance(coordinates[i - 1], coordinates[i])
-    }
-    return useMetric ? distance / 1000 : distance / 1609.34
-  }
-
-  // Find coordinate at distance using precise distance data
-  const findCoordinateAtDistancePrecise = (targetDistance: number, coordinates: number[][], distanceData: number[]) => {
-    if (targetDistance <= 0) return coordinates[0]
-    if (targetDistance >= distanceData[distanceData.length - 1]) return coordinates[coordinates.length - 1]
-
-    // Find the segment that contains our target distance
-    let segmentIndex = 0
-    for (let i = 1; i < distanceData.length; i++) {
-      if (distanceData[i] >= targetDistance) {
-        segmentIndex = i - 1
-        break
-      }
-    }
-
-    // Interpolate within this segment
-    const distance1 = distanceData[segmentIndex]
-    const distance2 = distanceData[segmentIndex + 1]
-    const ratio = distance2 > distance1 ? (targetDistance - distance1) / (distance2 - distance1) : 0
-
-    const coord1 = coordinates[segmentIndex]
-    const coord2 = coordinates[segmentIndex + 1]
-
-    return [
-      coord1[0] + (coord2[0] - coord1[0]) * ratio,
-      coord1[1] + (coord2[1] - coord1[1]) * ratio,
-      coord1[2] ? coord1[2] + ((coord2[2] || 0) - coord1[2]) * ratio : 0
-    ]
-  }
-
   // Update chart hover based on map interaction with higher precision
   const updateChartFromMapHover = (mouseEvent: any) => {
     if (!chartInstance.current || !routeCoordinates.current.length) return
@@ -665,67 +596,6 @@ export const MarathonMajorsShowcase: React.FC = () => {
         clearChartHover()
       }
     }, delay)
-  }
-
-  // Simplified distance calculation
-  const calculateDistance = (coord1: number[], coord2: number[]) => {
-    const R = 6371000
-    const lat1 = coord1[1] * Math.PI / 180
-    const lat2 = coord2[1] * Math.PI / 180
-    const deltaLat = (coord2[1] - coord1[1]) * Math.PI / 180
-    const deltaLng = (coord2[0] - coord1[0]) * Math.PI / 180
-
-    const a = Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2) +
-              Math.cos(lat1) * Math.cos(lat2) *
-              Math.sin(deltaLng / 2) * Math.sin(deltaLng / 2)
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
-
-    return R * c
-  }
-
-  // Calculate total route distance
-  const calculateTotalDistance = (coordinates: number[][], useMetric: boolean) => {
-    let totalDistance = 0
-    for (let i = 1; i < coordinates.length; i++) {
-      const distance = calculateDistance(coordinates[i - 1], coordinates[i])
-      totalDistance += distance
-    }
-    return useMetric ? totalDistance / 1000 : totalDistance / 1609.34
-  }
-
-  // Find coordinate at specific distance along route
-  const findCoordinateAtDistance = (targetDistance: number, coordinates: number[][], useMetric: boolean) => {
-    let cumulativeDistance = 0
-    
-    // Handle edge cases
-    if (targetDistance <= 0) {
-      return coordinates[0]
-    }
-    
-    for (let i = 1; i < coordinates.length; i++) {
-      const segmentDistance = calculateDistance(coordinates[i - 1], coordinates[i])
-      const segmentDistanceUnit = useMetric ? segmentDistance / 1000 : segmentDistance / 1609.34
-      
-      if (cumulativeDistance + segmentDistanceUnit >= targetDistance) {
-        // Interpolate within this segment
-        const remainingDistance = targetDistance - cumulativeDistance
-        const ratio = segmentDistanceUnit > 0 ? remainingDistance / segmentDistanceUnit : 0
-        
-        const coord1 = coordinates[i - 1]
-        const coord2 = coordinates[i]
-        
-        return [
-          coord1[0] + (coord2[0] - coord1[0]) * ratio,
-          coord1[1] + (coord2[1] - coord1[1]) * ratio,
-          coord1[2] ? coord1[2] + ((coord2[2] || 0) - coord1[2]) * ratio : 0
-        ]
-      }
-      
-      cumulativeDistance += segmentDistanceUnit
-    }
-    
-    // If we've gone past the end, return the last coordinate
-    return coordinates[coordinates.length - 1]
   }
 
   // Densify route for smoother interactions (higher density for 0.01 precision)

@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { MapLoadingProgress, useMarathonLoading } from './MapLoadingProgress'
 import { marathonData, type MarathonData, type PointOfInterest } from '@/constants/marathonData'
+import { calculateDistance, calculateTotalDistance, calculateGrade, findCoordinateAtDistance } from '@/utils/marathonCalculations'
 
 declare global {
   interface Window {
@@ -302,63 +303,7 @@ export const MarathonMajorsShowcaseMobile: React.FC = () => {
     return markerElement
   }
 
-  // Distance calculation helper
-  const calculateDistance = (coord1: number[], coord2: number[]) => {
-    const R = 6371000
-    const lat1 = coord1[1] * Math.PI / 180
-    const lat2 = coord2[1] * Math.PI / 180
-    const deltaLat = (coord2[1] - coord1[1]) * Math.PI / 180
-    const deltaLng = (coord2[0] - coord1[0]) * Math.PI / 180
-
-    const a = Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2) +
-              Math.cos(lat1) * Math.cos(lat2) *
-              Math.sin(deltaLng / 2) * Math.sin(deltaLng / 2)
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
-
-    return R * c
-  }
-
-  // Calculate total route distance
-  const calculateTotalDistance = (coordinates: number[][], useMetric: boolean) => {
-    let totalDistance = 0
-    for (let i = 1; i < coordinates.length; i++) {
-      const distance = calculateDistance(coordinates[i - 1], coordinates[i])
-      totalDistance += distance
-    }
-    return useMetric ? totalDistance / 1000 : totalDistance / 1609.34
-  }
-
-  // Find coordinate at specific distance along route
-  const findCoordinateAtDistance = (targetDistance: number, coordinates: number[][], useMetric: boolean) => {
-    let cumulativeDistance = 0
-    
-    if (targetDistance <= 0) {
-      return coordinates[0]
-    }
-    
-    for (let i = 1; i < coordinates.length; i++) {
-      const segmentDistance = calculateDistance(coordinates[i - 1], coordinates[i])
-      const segmentDistanceUnit = useMetric ? segmentDistance / 1000 : segmentDistance / 1609.34
-      
-      if (cumulativeDistance + segmentDistanceUnit >= targetDistance) {
-        const remainingDistance = targetDistance - cumulativeDistance
-        const ratio = segmentDistanceUnit > 0 ? remainingDistance / segmentDistanceUnit : 0
-        
-        const coord1 = coordinates[i - 1]
-        const coord2 = coordinates[i]
-        
-        return [
-          coord1[0] + (coord2[0] - coord1[0]) * ratio,
-          coord1[1] + (coord2[1] - coord1[1]) * ratio,
-          coord1[2] ? coord1[2] + ((coord2[2] || 0) - coord1[2]) * ratio : 0
-        ]
-      }
-      
-      cumulativeDistance += segmentDistanceUnit
-    }
-    
-    return coordinates[coordinates.length - 1]
-  }
+  // Calculation functions now imported from shared utilities
 
   // Create vertical line plugin for chart
   const createVerticalLinePlugin = () => {
@@ -386,26 +331,6 @@ export const MarathonMajorsShowcaseMobile: React.FC = () => {
         }
       }
     }
-  }
-
-  // Calculate grade between points
-  const calculateGrade = (coordinates: number[][], index: number) => {
-    if (index === 0 || index >= coordinates.length - 1) return 0
-
-    const prevCoord = coordinates[index - 1]
-    const currentCoord = coordinates[index]
-    const nextCoord = coordinates[index + 1]
-
-    const distance1 = calculateDistance(prevCoord, currentCoord)
-    const distance2 = calculateDistance(currentCoord, nextCoord)
-    const totalDistance = distance1 + distance2
-
-    if (totalDistance === 0) return 0
-
-    const elevationChange = (nextCoord[2] || 0) - (prevCoord[2] || 0)
-    const grade = (elevationChange / totalDistance) * 100
-
-    return grade
   }
 
   // Densify route for smoother interactions
