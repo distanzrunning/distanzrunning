@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { motion, AnimatePresence, useTime, useTransform } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
 
 type NewsletterModalProps = {
@@ -245,14 +245,6 @@ export function NewsletterModal({ isOpen, onClose }: NewsletterModalProps) {
 
 export function NewsletterButton() {
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const time = useTime()
-  
-  // Same rotating animation as ExploreButton
-  const rotate = useTransform(time, (latest) => (latest / 25) % 360)
-  
-  const rotatingBg = useTransform(rotate, (r) => {
-    return `conic-gradient(from ${r}deg, transparent 85%, rgba(236, 72, 153, 0.15) 88%, rgba(236, 72, 153, 0.3) 92%, rgba(236, 72, 153, 0.5) 96%, rgba(236, 72, 153, 0.7) 100%)`
-  })
 
   const handleOpenModal = () => setIsModalOpen(true)
   const handleCloseModal = () => setIsModalOpen(false)
@@ -260,32 +252,17 @@ export function NewsletterButton() {
   return (
     <>
       <div className="flex justify-center">
-        <div className="relative">
-          <button
-            onClick={handleOpenModal}
-            className="relative inline-flex items-center gap-2 px-6 py-3 font-semibold text-sm text-white dark:text-black border border-black dark:border-neutral-300 rounded-lg bg-black dark:bg-neutral-50 hover:bg-neutral-800 dark:hover:bg-white focus:outline-none active:scale-[0.98] active:duration-100 transition-all duration-200 z-10 group"          >
-            <span style={{ lineHeight: '18px' }}>Newsletter</span>
-          </button>
-          
-          {/* Rotating gradient border */}
-          <motion.div
-            className="absolute inset-0 rounded-lg z-0 pointer-events-none"
-            style={{
-              background: rotatingBg,
-              willChange: 'transform',
-              mask: 'linear-gradient(white, white) content-box, linear-gradient(white, white)',
-              maskComposite: 'xor',
-              WebkitMask: 'linear-gradient(white, white) content-box, linear-gradient(white, white)',
-              WebkitMaskComposite: 'xor',
-              padding: '1px'
-            }}
-          />
-        </div>
+        <button
+          onClick={handleOpenModal}
+          className="group whitespace-nowrap font-medium text-sm relative m-0 flex cursor-pointer select-none items-center rounded-lg border-none p-0 no-underline outline-none ease-out focus-visible:outline-none active:scale-[0.98] active:duration-100 h-12 gap-2 px-5 justify-center bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200"
+        >
+          <span className="font-sans font-semibold text-sm leading-snug">Newsletter</span>
+        </button>
       </div>
 
-      <NewsletterModal 
-        isOpen={isModalOpen} 
-        onClose={handleCloseModal} 
+      <NewsletterModal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
       />
     </>
   )
