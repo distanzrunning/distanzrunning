@@ -200,7 +200,7 @@ export function NewsletterModal({ isOpen, onClose }: NewsletterModalProps) {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="Email Address"
-                        className="w-full px-4 py-3 border border-gray-200 dark:border-neutral-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500 focus:border-transparent text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-neutral-400 bg-white dark:bg-neutral-700 font-['InterVariable','Inter',-apple-system,BlinkMacSystemFont,'Segoe_UI',Roboto,sans-serif] transition-colors duration-300"
+                        className="w-full px-4 py-3 border border-gray-200 dark:border-neutral-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-neutral-300 dark:focus:ring-neutral-500 focus:border-transparent text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-neutral-400 bg-white dark:bg-neutral-700 font-['InterVariable','Inter',-apple-system,BlinkMacSystemFont,'Segoe_UI',Roboto,sans-serif] transition-colors duration-300"
                         style={{ fontSize: '15px', lineHeight: '1.5' }}
                         required
                         disabled={isSubmitting}
