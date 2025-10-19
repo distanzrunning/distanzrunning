@@ -5,6 +5,13 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { MapLoadingProgress, useMarathonLoading } from './MapLoadingProgress'
 import { marathonData, type MarathonData, type PointOfInterest } from '@/constants/marathonData'
 import { calculateDistance, calculateTotalDistance, calculateGrade, findCoordinateAtDistance } from '@/utils/marathonCalculations'
+import {
+  createAidStationMarker,
+  createStravaStartMarker,
+  createStravaFinishMarker,
+  createStravaNumberMarker,
+  createStravaFlagMarker
+} from '@/utils/marathonMarkers'
 
 declare global {
   interface Window {
@@ -101,38 +108,7 @@ export const MarathonMajorsShowcaseMobile: React.FC = () => {
     return aidStations
   }
 
-  // Create aid station marker
-  const createAidStationMarker = () => {
-    const markerElement = document.createElement('div')
-    markerElement.style.cssText = `
-      background: #60a5fa;
-      border: 2px solid white;
-      border-radius: 50%;
-      width: 16px;
-      height: 16px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      z-index: 6;
-    `
-    
-    const dropSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg")
-    dropSvg.setAttribute("fill", "none")
-    dropSvg.setAttribute("viewBox", "0 0 12 12")
-    dropSvg.setAttribute("width", "8")
-    dropSvg.setAttribute("height", "8")
-    
-    const dropPath = document.createElementNS("http://www.w3.org/2000/svg", "path")
-    dropPath.setAttribute("d", "M6 1.5c-1.2 1.6-3.2 3.6-3.2 5.6a3.2 3.2 0 0 0 6.4 0c0-2-2-4-3.2-5.6z")
-    dropPath.setAttribute("fill", "white")
-    
-    dropSvg.appendChild(dropPath)
-    markerElement.appendChild(dropSvg)
-    
-    return markerElement
-  }
+  // Marker creation functions now imported from shared utilities
 
   // Add aid station markers to map
   const addAidStationMarkers = (aidStations: PointOfInterest[]) => {
@@ -143,7 +119,7 @@ export const MarathonMajorsShowcaseMobile: React.FC = () => {
     mobileAidStationMarkers.current = []
 
     aidStations.forEach(aidStation => {
-      const markerElement = createAidStationMarker()
+      const markerElement = createAidStationMarker('small')
       
       const marker = new window.mapboxgl.Marker(markerElement)
         .setLngLat(aidStation.coordinates)
@@ -200,110 +176,7 @@ export const MarathonMajorsShowcaseMobile: React.FC = () => {
     })
   }
 
-  // Marker creation functions
-  const createStravaStartMarker = () => {
-    const markerElement = document.createElement('div')
-    markerElement.style.cssText = `
-      background: #22c55e;
-      border: 2px solid white;
-      border-radius: 50%;
-      width: 14px;
-      height: 14px;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-      cursor: pointer;
-      z-index: 5;
-    `
-    return markerElement
-  }
-
-  const createStravaFinishMarker = () => {
-    const markerElement = document.createElement('div')
-    markerElement.style.cssText = `
-      border: 2px solid white;
-      border-radius: 50%;
-      width: 14px;
-      height: 14px;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-      cursor: pointer;
-      overflow: hidden;
-      position: relative;
-      z-index: 5;
-    `
-    
-    const flagPattern = document.createElement('div')
-    flagPattern.style.cssText = `
-      width: 100%;
-      height: 100%;
-      background-image: 
-        linear-gradient(45deg, #000 25%, transparent 25%), 
-        linear-gradient(-45deg, #000 25%, transparent 25%), 
-        linear-gradient(45deg, transparent 75%, #000 75%), 
-        linear-gradient(-45deg, transparent 75%, #000 75%);
-      background-size: 4px 4px;
-      background-position: 0 0, 0 2px, 2px -2px, -2px 0px;
-      background-color: white;
-    `
-    
-    markerElement.appendChild(flagPattern)
-    return markerElement
-  }
-
-  const createStravaNumberMarker = (number: string) => {
-    const markerElement = document.createElement('div')
-    markerElement.style.cssText = `
-      background: white;
-      border: 2px solid #e43c81;
-      border-radius: 50%;
-      width: 20px;
-      height: 20px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-      font-weight: 600;
-      font-size: 10px;
-      color: #e43c81;
-      cursor: pointer;
-      z-index: 10;
-    `
-    markerElement.textContent = number
-    return markerElement
-  }
-
-  const createStravaFlagMarker = () => {
-    const markerElement = document.createElement('div')
-    markerElement.style.cssText = `
-      background: white;
-      border: 2px solid #e43c81;
-      border-radius: 50%;
-      width: 14px;
-      height: 14px;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      z-index: 8;
-    `
-    
-    const flagSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg")
-    flagSvg.setAttribute("fill", "none")
-    flagSvg.setAttribute("viewBox", "0 0 16 16")
-    flagSvg.setAttribute("width", "7")
-    flagSvg.setAttribute("height", "7")
-    
-    const flagPath = document.createElementNS("http://www.w3.org/2000/svg", "path")
-    flagPath.setAttribute("d", "M3 3.5a.5.5 0 011 0V5h8V3.5a.5.5 0 011 0V13h-1V9H4v4H3V5.667v-.019z")
-    flagPath.setAttribute("fill", "#e43c81")
-    
-    flagSvg.appendChild(flagPath)
-    markerElement.appendChild(flagSvg)
-    
-    return markerElement
-  }
-
-  // Calculation functions now imported from shared utilities
+  // Marker and calculation functions now imported from shared utilities
 
   // Create vertical line plugin for chart
   const createVerticalLinePlugin = () => {
@@ -536,7 +409,7 @@ export const MarathonMajorsShowcaseMobile: React.FC = () => {
     // Add halfway marker
     const halfwayCoordinate = findCoordinateAtDistance(halfwayDistance, coordinates, useMetric)
     if (halfwayCoordinate) {
-      const halfwayMarkerElement = createStravaFlagMarker()
+      const halfwayMarkerElement = createStravaFlagMarker('small')
       
       mobileHalfwayMarker.current = new window.mapboxgl.Marker(halfwayMarkerElement)
         .setLngLat([halfwayCoordinate[0], halfwayCoordinate[1]])
@@ -566,7 +439,7 @@ export const MarathonMajorsShowcaseMobile: React.FC = () => {
       const markerCoordinate = findCoordinateAtDistance(currentMarkerDistance, coordinates, useMetric)
       
       if (markerCoordinate) {
-        const markerElement = createStravaNumberMarker(`${currentMarkerDistance}`)
+        const markerElement = createStravaNumberMarker(`${currentMarkerDistance}`, 'small')
         
         const marker = new window.mapboxgl.Marker(markerElement)
           .setLngLat([markerCoordinate[0], markerCoordinate[1]])
@@ -740,12 +613,12 @@ export const MarathonMajorsShowcaseMobile: React.FC = () => {
     }
 
     // Add start and finish markers
-    const startMarkerElement = createStravaStartMarker()
+    const startMarkerElement = createStravaStartMarker('small')
     mobileStartMarker.current = new window.mapboxgl.Marker(startMarkerElement)
       .setLngLat(coordinates[0])
       .addTo(mobileMapInstance.current)
 
-    const finishMarkerElement = createStravaFinishMarker()
+    const finishMarkerElement = createStravaFinishMarker('small')
     mobileFinishMarker.current = new window.mapboxgl.Marker(finishMarkerElement)
       .setLngLat(coordinates[coordinates.length - 1])
       .addTo(mobileMapInstance.current)
