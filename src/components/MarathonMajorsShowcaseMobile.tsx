@@ -12,6 +12,7 @@ import {
   createStravaNumberMarker,
   createStravaFlagMarker
 } from '@/utils/marathonMarkers'
+import { createVerticalLinePlugin } from '@/utils/chartPlugins'
 
 declare global {
   interface Window {
@@ -178,32 +179,9 @@ export const MarathonMajorsShowcaseMobile: React.FC = () => {
 
   // Marker and calculation functions now imported from shared utilities
 
-  // Create vertical line plugin for chart
-  const createVerticalLinePlugin = () => {
-    mobileVerticalLinePlugin.current = {
-      id: 'verticalLineMobile',
-      afterDatasetsDraw: (chart: any) => {
-        if (chart.active && chart.active.length > 0) {
-          const ctx = chart.ctx
-          const activePoint = chart.active[0]
-          
-          const x = activePoint.element.x
-          const topY = chart.scales.y.top
-          const bottomY = chart.scales.y.bottom
-
-          ctx.save()
-          ctx.strokeStyle = '#e43c81'
-          ctx.lineWidth = 1.5
-          ctx.setLineDash([4, 4])
-          ctx.globalAlpha = 0.8
-          ctx.beginPath()
-          ctx.moveTo(x, topY)
-          ctx.lineTo(x, bottomY)
-          ctx.stroke()
-          ctx.restore()
-        }
-      }
-    }
+  // Create vertical line plugin for chart using shared utility
+  const createMobileVerticalLinePlugin = () => {
+    mobileVerticalLinePlugin.current = createVerticalLinePlugin('verticalLineMobile')
   }
 
   // Densify route for smoother interactions
@@ -275,7 +253,7 @@ export const MarathonMajorsShowcaseMobile: React.FC = () => {
     const currentlyDark = document.documentElement.classList.contains('dark')
 
     if (!mobileVerticalLinePlugin.current) {
-      createVerticalLinePlugin()
+      createMobileVerticalLinePlugin()
     }
 
     const { distanceData, elevationData, densifiedCoords, calculatedGrades } = getChartDataPrecise(coordinates, useMetric)

@@ -21,6 +21,7 @@ import {
   createStravaFlagMarker,
   createHoverMarkerElement
 } from '@/utils/marathonMarkers'
+import { createVerticalLinePlugin } from '@/utils/chartPlugins'
 
 declare global {
   interface Window {
@@ -196,32 +197,9 @@ export const MarathonMajorsShowcase: React.FC = () => {
     console.log(`Aid stations added: ${aidStations.length}`)
   }
 
-  // Create vertical line plugin for chart
-  const createVerticalLinePlugin = () => {
-    verticalLinePlugin.current = {
-      id: 'verticalLine',
-      afterDatasetsDraw: (chart: any) => {
-        if (chart.active && chart.active.length > 0) {
-          const ctx = chart.ctx
-          const activePoint = chart.active[0]
-          
-          const x = activePoint.element.x
-          const topY = chart.scales.y.top
-          const bottomY = chart.scales.y.bottom
-
-          ctx.save()
-          ctx.strokeStyle = '#e43c81'
-          ctx.lineWidth = 1.5
-          ctx.setLineDash([4, 4])
-          ctx.globalAlpha = 0.8
-          ctx.beginPath()
-          ctx.moveTo(x, topY)
-          ctx.lineTo(x, bottomY)
-          ctx.stroke()
-          ctx.restore()
-        }
-      }
-    }
+  // Create vertical line plugin for chart using shared utility
+  const createDesktopVerticalLinePlugin = () => {
+    verticalLinePlugin.current = createVerticalLinePlugin('verticalLine')
   }
 
   // Create hover marker for chart interactions
@@ -1013,7 +991,7 @@ export const MarathonMajorsShowcase: React.FC = () => {
 
     // Create vertical line plugin if not exists
     if (!verticalLinePlugin.current) {
-      createVerticalLinePlugin()
+      createDesktopVerticalLinePlugin()
     }
 
     const { distanceData, elevationData, densifiedCoords, calculatedGrades } = getChartDataPrecise(coordinates, useMetric)
