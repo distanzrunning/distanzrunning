@@ -29,7 +29,7 @@ export function ExploreButton({ variant = 'default' }: ExploreButtonProps) {
         {variant === 'pink' && (
           <>
             <div className="absolute inset-0 z-0">
-              <div className="absolute inset-0 h-[100%] w-[100%] animate-flip overflow-hidden rounded-lg [mask:linear-gradient(white,_transparent_50%)] before:absolute before:aspect-square before:w-[200%] before:rotate-[-90deg] before:animate-rotate before:bg-[conic-gradient(from_0deg,transparent_0_340deg,rgba(236,72,153,0.8)_360deg)] before:content-[''] before:[inset:0_auto_auto_50%] before:[translate:-50%_-15%]"></div>
+              <div className="absolute inset-0 h-[100%] w-[100%] animate-flip overflow-hidden rounded-lg [mask:linear-gradient(white,_transparent_50%)] before:absolute before:aspect-square before:w-[200%] before:rotate-[-90deg] before:animate-rotate before:bg-[conic-gradient(from_0deg,transparent_0_340deg,rgba(236,72,153,0.8)_360deg)] before:content-[''] before:[inset:0_auto_auto_50%] before:[translate:-50%_-50%]"></div>
             </div>
             <div className="absolute inset-[1px] z-[1] rounded-[7px] bg-white dark:bg-neutral-900 group-hover:bg-neutral-50 dark:group-hover:bg-neutral-800"></div>
           </>
