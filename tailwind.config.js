@@ -188,10 +188,10 @@ module.exports = {
       },
       keyframes: {
         rotate: {
-          'to': { transform: 'rotate(360deg)' },
+          'to': { transform: 'rotate(90deg)' },
         },
         flip: {
-          'to': { transform: 'rotate(360deg)' },
+          'to': { transform: 'rotate(1turn)' },
         },
       },
     },
