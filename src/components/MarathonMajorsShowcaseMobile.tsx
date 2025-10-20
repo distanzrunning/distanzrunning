@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { MapLoadingProgress, useMarathonLoading } from './MapLoadingProgress'
+import { MarathonSkeleton } from './MarathonSkeleton'
 import { marathonData, type MarathonData, type PointOfInterest } from '@/constants/marathonData'
 import { calculateDistance, calculateTotalDistance, calculateGrade, findCoordinateAtDistance } from '@/utils/marathonCalculations'
 import {
@@ -13,6 +13,7 @@ import {
   createStravaFlagMarker
 } from '@/utils/marathonMarkers'
 import { createVerticalLinePlugin } from '@/utils/chartPlugins'
+import { useMarathonDataPreloader } from '@/hooks/useMarathonDataPreloader'
 
 declare global {
   interface Window {
@@ -35,14 +36,11 @@ export const MarathonMajorsShowcaseMobile: React.FC = () => {
   const [error, setError] = useState<string | null>(null)
   const [isDarkMode, setIsDarkMode] = useState<boolean | null>(null)
   const [isClient, setIsClient] = useState(false)
+  // Add state for transition loading (shows skeleton during marathon switches)
+  const [isTransitioning, setIsTransitioning] = useState(false)
 
-  const { 
-    isLoading: isMapLoading, 
-    currentStep, 
-    startLoading, 
-    finishLoading,
-    cleanup 
-  } = useMarathonLoading()  
+  // Add the preloader hook to load all marathon data into memory
+  const { getPreloadedData } = useMarathonDataPreloader(marathonData)  
 
   // Mobile-specific refs
   const mobileRouteCoordinates = useRef<number[][]>([])
@@ -451,9 +449,20 @@ export const MarathonMajorsShowcaseMobile: React.FC = () => {
   // Load route data
   const loadRoute = async (marathon: MarathonData) => {
     try {
+      // First, try to get preloaded data for instant transitions
+      const preloadedData = getPreloadedData(marathon.id)
+
+      if (preloadedData && preloadedData.coordinates.length > 0) {
+        // Use preloaded data for instant transition
+        mobileRouteCoordinates.current = preloadedData.coordinates
+        mobileStoredAidStations.current = preloadedData.aidStations
+        return preloadedData
+      }
+
+      // Fallback: fetch if not preloaded (shouldn't happen after initial load)
       const response = await fetch(marathon.gpxUrl)
       const geojson = await response.json()
-      
+
       const route = geojson.features?.find((f: any) => f.geometry.type === 'LineString')
       if (!route?.geometry.coordinates) throw new Error('Invalid route data')
 
@@ -617,75 +626,83 @@ export const MarathonMajorsShowcaseMobile: React.FC = () => {
     mobileMapInstance.current.fitBounds(bounds, { padding: 30 })
   }
 
-  // Switch marathon - Fixed version
+  // Switch marathon with smooth skeleton transition
   const switchMarathon = async (marathon: MarathonData) => {
     if (marathon.id === selectedMarathon.id) return
-    
+
     setError(null)
-    
+
     try {
-      // Start loading animation
-      await startLoading(marathon.name)
-      
+      // Show skeleton overlay for smooth transition
+      setIsTransitioning(true)
+
+      // Small delay to allow skeleton to render
+      await new Promise(resolve => setTimeout(resolve, 100))
+
+      // Load route data (will use preloaded data if available)
       const routeData = await loadRoute(marathon)
-      
+
+      // Update map and chart
+      addRoute(routeData.coordinates, routeData.aidStations)
+      createMobileChart(routeData.coordinates, isMetric)
+      setSelectedMarathon(marathon)
+
       // Create a promise that resolves when map operations are complete
       const mapOperationsComplete = new Promise<void>((resolve) => {
         let moveEndFired = false
         let idleFired = false
         let styleLoadFired = true
-        
+
         const checkCompletion = () => {
           if (moveEndFired && idleFired && styleLoadFired) {
             resolve()
           }
         }
-        
+
         const handleMoveEnd = () => {
           moveEndFired = true
           mobileMapInstance.current.off('moveend', handleMoveEnd)
           checkCompletion()
         }
-        
+
         const handleIdle = () => {
           idleFired = true
           mobileMapInstance.current.off('idle', handleIdle)
           checkCompletion()
         }
-        
+
         const handleStyleData = () => {
           styleLoadFired = true
           mobileMapInstance.current.off('styledata', handleStyleData)
           checkCompletion()
         }
-        
+
         if (!mobileMapInstance.current.isStyleLoaded()) {
           styleLoadFired = false
           mobileMapInstance.current.once('styledata', handleStyleData)
         }
-        
+
         mobileMapInstance.current.once('moveend', handleMoveEnd)
         mobileMapInstance.current.once('idle', handleIdle)
-        
+
         setTimeout(() => {
           if (!moveEndFired || !idleFired || !styleLoadFired) {
             console.warn('Map settling timeout reached')
             resolve()
           }
-        }, 5000)
+        }, 3000) // Reduced from 5000ms to 3000ms for faster transitions
       })
-      
-      // Start map operations
-      addRoute(routeData.coordinates, routeData.aidStations)
-      createMobileChart(routeData.coordinates, isMetric)
-      setSelectedMarathon(marathon)
-      
+
       // Wait for map operations to complete
       await mapOperationsComplete
-      
-      finishLoading()
+
+      // Small delay before hiding skeleton for smooth visual transition
+      await new Promise(resolve => setTimeout(resolve, 150))
+
+      // Hide skeleton overlay
+      setIsTransitioning(false)
     } catch (err) {
-      cleanup()
+      setIsTransitioning(false)
       setError(err instanceof Error ? err.message : 'Failed to switch marathon')
     }
   }
@@ -840,11 +857,6 @@ export const MarathonMajorsShowcaseMobile: React.FC = () => {
     return () => observer.disconnect()
   }, [])
 
-  useEffect(() => {
-    return () => {
-      cleanup()
-    }
-  }, [])
 
   return (
     <div className="my-8 relative">
@@ -882,9 +894,12 @@ export const MarathonMajorsShowcaseMobile: React.FC = () => {
           </div>
         </nav>
 
+        {/* Skeleton overlay during marathon transitions */}
+        <MarathonSkeleton isVisible={isTransitioning} />
+
         {/* Mobile Stacked Layout */}
         <div className="flex flex-col">
-          
+
           {/* Title Section */}
           <div className="p-4 bg-white dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-700 transition-colors duration-300">
             <AnimatePresence mode="wait">
@@ -932,11 +947,6 @@ export const MarathonMajorsShowcaseMobile: React.FC = () => {
           {/* Map Section */}
           <div className="h-64 border-b border-neutral-200 dark:border-neutral-700 relative">
             <div ref={mobileMapContainer} className="w-full h-full" />
-            <MapLoadingProgress 
-              isLoading={isMapLoading}
-              currentStep={currentStep}
-              onComplete={finishLoading}
-            />
           </div>
           
           {/* Chart Section */}
