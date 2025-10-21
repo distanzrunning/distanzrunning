@@ -1468,7 +1468,12 @@ export const MarathonMajorsShowcase: React.FC = () => {
           )}
 
           {/* Skeleton overlay during marathon transitions */}
-          <MarathonSkeleton isVisible={isTransitioning} />
+          <MarathonSkeleton
+            isVisible={isTransitioning}
+            marathonName={selectedMarathon.name}
+            marathonLogo={selectedMarathon.logo}
+            isDarkMode={isDarkMode ?? false}
+          />
 
           <div className="hidden lg:grid h-full" style={{ gridTemplateColumns: '3fr 2fr', gridTemplateRows: '495px 265px' }}>
             {/* Map */}

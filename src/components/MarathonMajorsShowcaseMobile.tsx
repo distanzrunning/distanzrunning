@@ -895,7 +895,12 @@ export const MarathonMajorsShowcaseMobile: React.FC = () => {
         </nav>
 
         {/* Skeleton overlay during marathon transitions */}
-        <MarathonSkeleton isVisible={isTransitioning} />
+        <MarathonSkeleton
+          isVisible={isTransitioning}
+          marathonName={selectedMarathon.name}
+          marathonLogo={selectedMarathon.logo}
+          isDarkMode={isDarkMode ?? false}
+        />
 
         {/* Mobile Stacked Layout */}
         <div className="flex flex-col">

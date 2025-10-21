@@ -3,9 +3,12 @@ import { motion } from 'framer-motion'
 
 interface MarathonSkeletonProps {
   isVisible: boolean
+  marathonName?: string
+  marathonLogo?: string
+  isDarkMode?: boolean
 }
 
-export function MarathonSkeleton({ isVisible }: MarathonSkeletonProps) {
+export function MarathonSkeleton({ isVisible, marathonName, marathonLogo, isDarkMode }: MarathonSkeletonProps) {
   if (!isVisible) return null
 
   return (
@@ -21,10 +24,27 @@ export function MarathonSkeleton({ isVisible }: MarathonSkeletonProps) {
         {/* Map Skeleton */}
         <div className="border-r border-b border-neutral-200 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-800 transition-colors duration-300">
           <div className="w-full h-full flex items-center justify-center">
-            <div className="flex flex-col items-center gap-3">
-              {/* Map icon skeleton */}
-              <div className="w-16 h-16 rounded-lg bg-neutral-200 dark:bg-neutral-700 animate-pulse" />
-              <div className="h-3 w-32 bg-neutral-200 dark:bg-neutral-700 rounded animate-pulse" />
+            <div className="flex flex-col items-center gap-4">
+              {/* Marathon Logo */}
+              {marathonLogo ? (
+                <div className="w-20 h-20 bg-white dark:bg-neutral-700 rounded-lg p-3 border border-neutral-200 dark:border-neutral-600 flex items-center justify-center shadow-sm">
+                  <img
+                    src={isDarkMode ? marathonLogo.replace('.svg', '_white.svg') : marathonLogo}
+                    alt=""
+                    className="max-w-full max-h-full object-contain"
+                  />
+                </div>
+              ) : (
+                <div className="w-20 h-20 rounded-lg bg-neutral-200 dark:bg-neutral-700 animate-pulse" />
+              )}
+              {/* Loading text */}
+              {marathonName ? (
+                <p className="text-sm font-medium text-neutral-600 dark:text-neutral-300">
+                  Loading {marathonName}...
+                </p>
+              ) : (
+                <div className="h-4 w-32 bg-neutral-200 dark:bg-neutral-700 rounded animate-pulse" />
+              )}
             </div>
           </div>
         </div>
@@ -120,8 +140,26 @@ export function MarathonSkeleton({ isVisible }: MarathonSkeletonProps) {
         {/* Map Section */}
         <div className="h-64 border-b border-neutral-200 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center transition-colors duration-300">
           <div className="flex flex-col items-center gap-3">
-            <div className="w-12 h-12 rounded-lg bg-neutral-200 dark:bg-neutral-700 animate-pulse" />
-            <div className="h-3 w-24 bg-neutral-200 dark:bg-neutral-700 rounded animate-pulse" />
+            {/* Marathon Logo */}
+            {marathonLogo ? (
+              <div className="w-16 h-16 bg-white dark:bg-neutral-700 rounded-lg p-2 border border-neutral-200 dark:border-neutral-600 flex items-center justify-center shadow-sm">
+                <img
+                  src={isDarkMode ? marathonLogo.replace('.svg', '_white.svg') : marathonLogo}
+                  alt=""
+                  className="max-w-full max-h-full object-contain"
+                />
+              </div>
+            ) : (
+              <div className="w-16 h-16 rounded-lg bg-neutral-200 dark:bg-neutral-700 animate-pulse" />
+            )}
+            {/* Loading text */}
+            {marathonName ? (
+              <p className="text-sm font-medium text-neutral-600 dark:text-neutral-300">
+                Loading {marathonName}...
+              </p>
+            ) : (
+              <div className="h-3 w-24 bg-neutral-200 dark:bg-neutral-700 rounded animate-pulse" />
+            )}
           </div>
         </div>
 
