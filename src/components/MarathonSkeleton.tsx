@@ -30,75 +30,133 @@ export function MarathonSkeleton({ isVisible }: MarathonSkeletonProps) {
         </div>
 
         {/* Stats Skeleton */}
-        <div className="bg-neutral-50 dark:bg-neutral-800 border-b border-neutral-200 dark:border-neutral-700 transition-colors duration-300">
-          {/* Header Skeleton */}
+        <div className="bg-neutral-50 dark:bg-neutral-800 border-b border-neutral-200 dark:border-neutral-700 flex flex-col overflow-hidden transition-colors duration-300">
+          {/* Header Skeleton - matches exact layout with logo, name/location, and date box */}
           <div className="p-3 border-b border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 transition-colors duration-300">
-            <div className="flex items-center gap-3">
-              <div className="w-16 h-16 bg-neutral-200 dark:bg-neutral-700 rounded-lg animate-pulse" />
-              <div className="flex-1 space-y-2">
-                <div className="h-6 bg-neutral-200 dark:bg-neutral-700 rounded w-3/4 animate-pulse" />
-                <div className="h-4 bg-neutral-200 dark:bg-neutral-700 rounded w-1/2 animate-pulse" />
+            <div className="flex items-center justify-between w-full">
+              {/* Left side: Logo + Name/Location */}
+              <div className="flex items-center gap-3 flex-1 min-w-0">
+                {/* Logo Box */}
+                <div className="flex-shrink-0 bg-neutral-50 dark:bg-neutral-800 rounded-lg p-1 border dark:border-neutral-600 w-16 h-16 flex items-center justify-center transition-colors duration-300">
+                  <div className="w-12 h-12 bg-neutral-200 dark:bg-neutral-700 rounded animate-pulse" />
+                </div>
+
+                {/* Name and Location */}
+                <div className="flex-1 min-w-0 space-y-2">
+                  <div className="h-6 bg-neutral-200 dark:bg-neutral-700 rounded w-3/4 animate-pulse" />
+                  <div className="h-4 bg-neutral-200 dark:bg-neutral-700 rounded w-1/2 animate-pulse" />
+                </div>
+              </div>
+
+              {/* Right side: Date Box */}
+              <div className="flex-shrink-0 text-center bg-neutral-50 dark:bg-neutral-800 rounded-lg border dark:border-neutral-600 w-16 h-16 flex flex-col items-center justify-center transition-colors duration-300">
+                <div className="h-3 w-8 bg-neutral-200 dark:bg-neutral-700 rounded mb-1 animate-pulse" />
+                <div className="h-5 w-6 bg-neutral-200 dark:bg-neutral-700 rounded animate-pulse" />
               </div>
             </div>
           </div>
 
-          {/* Stats Grid Skeleton */}
-          <div className="p-3 space-y-3 overflow-y-auto" style={{ maxHeight: 'calc(495px - 5rem)' }}>
-            {[1, 2, 3, 4, 5, 6].map((i) => (
-              <div key={i} className="bg-white dark:bg-neutral-900 rounded-lg p-3 transition-colors duration-300">
-                <div className="h-3 bg-neutral-200 dark:bg-neutral-700 rounded w-1/3 mb-2 animate-pulse" />
-                <div className="h-5 bg-neutral-200 dark:bg-neutral-700 rounded w-2/3 animate-pulse" />
-              </div>
-            ))}
+          {/* Stats Grid Skeleton - 2 column grid with icons on right */}
+          <div className="flex-1 flex items-center p-3 min-h-0">
+            <div className="grid grid-cols-2 gap-3 w-full">
+              {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+                <div key={i} className="bg-white dark:bg-neutral-700 p-3 rounded border dark:border-neutral-600 transition-colors duration-300">
+                  <div className="flex items-center gap-3">
+                    {/* Text Content */}
+                    <div className="flex-1 min-w-0">
+                      <div className="h-3 bg-neutral-200 dark:bg-neutral-600 rounded w-2/3 mb-1 animate-pulse" />
+                      <div className="h-4 bg-neutral-200 dark:bg-neutral-600 rounded w-3/4 animate-pulse" />
+                    </div>
+
+                    {/* Icon */}
+                    <div className="flex-shrink-0">
+                      <div className="w-10 h-10 bg-neutral-200 dark:bg-neutral-600 rounded-full animate-pulse" />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 
         {/* Chart Skeleton */}
-        <div className="col-span-2 bg-white dark:bg-neutral-900 p-4 transition-colors duration-300">
-          <div className="h-full flex flex-col">
-            <div className="h-5 bg-neutral-200 dark:bg-neutral-700 rounded w-48 mb-4 animate-pulse" />
-            <div className="flex-1 bg-neutral-100 dark:bg-neutral-800 rounded-lg animate-pulse" />
+        <div className="col-span-2 flex flex-col">
+          {/* Chart Header with title and button */}
+          <div className="bg-neutral-50 dark:bg-neutral-800 border-b border-neutral-100 dark:border-neutral-700 px-4 py-2 flex items-center justify-between flex-shrink-0 transition-colors duration-300">
+            <div className="h-4 bg-neutral-200 dark:bg-neutral-700 rounded w-32 animate-pulse" />
+            <div className="h-6 w-16 bg-neutral-200 dark:bg-neutral-700 rounded animate-pulse" />
+          </div>
+          {/* Chart Content */}
+          <div className="bg-white dark:bg-neutral-900 flex-1 p-4 min-h-0 transition-colors duration-300">
+            <div className="w-full h-full bg-neutral-100 dark:bg-neutral-800 rounded animate-pulse" />
           </div>
         </div>
       </div>
 
       {/* Mobile Layout Skeleton */}
-      <div className="lg:hidden flex flex-col h-full">
-        {/* Mobile Map Skeleton */}
-        <div className="h-[400px] bg-neutral-100 dark:bg-neutral-800 border-b border-neutral-200 dark:border-neutral-700 flex items-center justify-center transition-colors duration-300">
+      <div className="lg:hidden flex flex-col">
+        {/* Title Section - matches mobile header with logo, name/location, and date */}
+        <div className="p-4 bg-white dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-700 transition-colors duration-300">
+          <div className="flex items-center gap-3">
+            {/* Logo */}
+            <div className="flex-shrink-0 bg-neutral-50 dark:bg-neutral-800 rounded-lg p-2 border dark:border-neutral-600 w-14 h-14 flex items-center justify-center transition-colors duration-300">
+              <div className="w-10 h-10 bg-neutral-200 dark:bg-neutral-700 rounded animate-pulse" />
+            </div>
+
+            {/* Name and Location */}
+            <div className="flex-1 min-w-0 space-y-2">
+              <div className="h-5 bg-neutral-200 dark:bg-neutral-700 rounded w-3/4 animate-pulse" />
+              <div className="h-4 bg-neutral-200 dark:bg-neutral-700 rounded w-1/2 animate-pulse" />
+            </div>
+
+            {/* Date Box */}
+            <div className="flex-shrink-0 text-center bg-neutral-50 dark:bg-neutral-800 rounded-lg border dark:border-neutral-600 w-14 h-14 flex flex-col items-center justify-center transition-colors duration-300">
+              <div className="h-3 w-8 bg-neutral-200 dark:bg-neutral-700 rounded mb-1 animate-pulse" />
+              <div className="h-4 w-6 bg-neutral-200 dark:bg-neutral-700 rounded animate-pulse" />
+            </div>
+          </div>
+        </div>
+
+        {/* Map Section */}
+        <div className="h-64 border-b border-neutral-200 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center transition-colors duration-300">
           <div className="flex flex-col items-center gap-3">
             <div className="w-12 h-12 rounded-lg bg-neutral-200 dark:bg-neutral-700 animate-pulse" />
             <div className="h-3 w-24 bg-neutral-200 dark:bg-neutral-700 rounded animate-pulse" />
           </div>
         </div>
 
-        {/* Mobile Content Skeleton */}
-        <div className="flex-1 overflow-hidden bg-neutral-50 dark:bg-neutral-800 transition-colors duration-300">
-          <div className="p-4 space-y-4">
-            {/* Header */}
-            <div className="flex items-center gap-3 pb-4 border-b border-neutral-200 dark:border-neutral-700">
-              <div className="w-12 h-12 bg-neutral-200 dark:bg-neutral-700 rounded-lg animate-pulse" />
-              <div className="flex-1 space-y-2">
-                <div className="h-5 bg-neutral-200 dark:bg-neutral-700 rounded w-3/4 animate-pulse" />
-                <div className="h-3 bg-neutral-200 dark:bg-neutral-700 rounded w-1/2 animate-pulse" />
-              </div>
-            </div>
+        {/* Chart Section */}
+        <div className="flex flex-col bg-white dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-700 transition-colors duration-300">
+          {/* Chart Header */}
+          <div className="bg-neutral-50 dark:bg-neutral-800 px-4 py-3 flex items-center justify-between transition-colors duration-300">
+            <div className="h-4 bg-neutral-200 dark:bg-neutral-700 rounded w-32 animate-pulse" />
+            <div className="h-6 w-16 bg-neutral-200 dark:bg-neutral-700 rounded animate-pulse" />
+          </div>
+          {/* Chart Content */}
+          <div className="bg-white dark:bg-neutral-900 h-48 p-3 transition-colors duration-300">
+            <div className="w-full h-full bg-neutral-100 dark:bg-neutral-800 rounded animate-pulse" />
+          </div>
+        </div>
 
-            {/* Stats */}
-            <div className="space-y-3">
-              {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="bg-white dark:bg-neutral-900 rounded-lg p-3 transition-colors duration-300">
-                  <div className="h-3 bg-neutral-200 dark:bg-neutral-700 rounded w-1/3 mb-2 animate-pulse" />
-                  <div className="h-5 bg-neutral-200 dark:bg-neutral-700 rounded w-2/3 animate-pulse" />
+        {/* Stats Section - 2 column grid */}
+        <div className="bg-neutral-50 dark:bg-neutral-800 p-4 transition-colors duration-300">
+          <div className="grid grid-cols-2 gap-3">
+            {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+              <div key={i} className="bg-white dark:bg-neutral-700 p-3 rounded border dark:border-neutral-600 transition-colors duration-300">
+                <div className="flex items-center gap-2">
+                  {/* Text Content */}
+                  <div className="flex-1 min-w-0">
+                    <div className="h-3 bg-neutral-200 dark:bg-neutral-600 rounded w-2/3 mb-1 animate-pulse" />
+                    <div className="h-4 bg-neutral-200 dark:bg-neutral-600 rounded w-3/4 animate-pulse" />
+                  </div>
+
+                  {/* Icon */}
+                  <div className="flex-shrink-0">
+                    <div className="w-8 h-8 bg-neutral-200 dark:bg-neutral-600 rounded-full animate-pulse" />
+                  </div>
                 </div>
-              ))}
-            </div>
-
-            {/* Chart placeholder */}
-            <div className="bg-white dark:bg-neutral-900 rounded-lg p-3 transition-colors duration-300">
-              <div className="h-4 bg-neutral-200 dark:bg-neutral-700 rounded w-40 mb-3 animate-pulse" />
-              <div className="h-32 bg-neutral-100 dark:bg-neutral-800 rounded animate-pulse" />
-            </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
