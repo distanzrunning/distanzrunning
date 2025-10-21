@@ -47,6 +47,8 @@ export const MarathonMajorsShowcase: React.FC = () => {
   const [isClient, setIsClient] = useState(false)
   // Add state for transition loading (shows skeleton during marathon switches)
   const [isTransitioning, setIsTransitioning] = useState(false)
+  // Track which marathon we're transitioning TO (different from currently displayed)
+  const [transitioningToMarathon, setTransitioningToMarathon] = useState<MarathonData | null>(null)
 
   // Add the preloader hook to load all marathon data into memory
   const { getPreloadedData } = useMarathonDataPreloader(marathonData)
@@ -910,6 +912,8 @@ export const MarathonMajorsShowcase: React.FC = () => {
     setError(null)
 
     try {
+      // Set which marathon we're transitioning to (for skeleton logo)
+      setTransitioningToMarathon(marathon)
       // Show skeleton overlay for smooth transition
       setIsTransitioning(true)
 
@@ -919,10 +923,9 @@ export const MarathonMajorsShowcase: React.FC = () => {
       // Load route data (will use preloaded data if available)
       const routeData = await loadRoute(marathon)
 
-      // Update map and chart
+      // Update map and chart (but NOT selectedMarathon yet - that happens after skeleton hides)
       addRoute(routeData.coordinates, routeData.aidStations)
       createChart(routeData.coordinates)
-      setSelectedMarathon(marathon)
 
       // Create a promise that resolves when map operations are complete
       const mapOperationsComplete = new Promise<void>((resolve) => {
@@ -976,10 +979,14 @@ export const MarathonMajorsShowcase: React.FC = () => {
       // Small delay before hiding skeleton for smooth visual transition
       await new Promise(resolve => setTimeout(resolve, 150))
 
+      // NOW update the displayed marathon (after skeleton hides, prevents flash)
+      setSelectedMarathon(marathon)
       // Hide skeleton overlay
       setIsTransitioning(false)
+      setTransitioningToMarathon(null)
     } catch (err) {
       setIsTransitioning(false)
+      setTransitioningToMarathon(null)
       setError(err instanceof Error ? err.message : 'Failed to switch marathon')
     }
   }
@@ -1470,8 +1477,8 @@ export const MarathonMajorsShowcase: React.FC = () => {
           {/* Skeleton overlay during marathon transitions */}
           <MarathonSkeleton
             isVisible={isTransitioning}
-            marathonName={selectedMarathon.name}
-            marathonLogo={selectedMarathon.logo}
+            marathonName={transitioningToMarathon?.name}
+            marathonLogo={transitioningToMarathon?.logo}
             isDarkMode={isDarkMode ?? false}
           />
 

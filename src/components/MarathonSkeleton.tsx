@@ -45,6 +45,22 @@ export function MarathonSkeleton({ isVisible, marathonName, marathonLogo, isDark
               ) : (
                 <div className="h-4 w-32 bg-neutral-200 dark:bg-neutral-700 rounded animate-pulse" />
               )}
+              {/* Loading Progress Bar */}
+              <div className="bg-white dark:bg-neutral-900 rounded-xl border border-neutral-200 dark:border-neutral-700 p-1.5 shadow-sm transition-colors duration-300">
+                <div className="w-48 bg-neutral-200 dark:bg-neutral-700 rounded-xl h-1.5 overflow-hidden transition-colors duration-300">
+                  <motion.div
+                    className="bg-gradient-to-r from-pink-500 to-pink-600 h-1.5 rounded-xl"
+                    initial={{ width: '0%' }}
+                    animate={{ width: '100%' }}
+                    transition={{
+                      duration: 0.8,
+                      ease: 'easeInOut',
+                      repeat: Infinity,
+                      repeatType: 'reverse'
+                    }}
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -160,6 +176,22 @@ export function MarathonSkeleton({ isVisible, marathonName, marathonLogo, isDark
             ) : (
               <div className="h-3 w-24 bg-neutral-200 dark:bg-neutral-700 rounded animate-pulse" />
             )}
+            {/* Loading Progress Bar */}
+            <div className="bg-white dark:bg-neutral-900 rounded-xl border border-neutral-200 dark:border-neutral-700 p-1.5 shadow-sm transition-colors duration-300">
+              <div className="w-40 bg-neutral-200 dark:bg-neutral-700 rounded-xl h-1.5 overflow-hidden transition-colors duration-300">
+                <motion.div
+                  className="bg-gradient-to-r from-pink-500 to-pink-600 h-1.5 rounded-xl"
+                  initial={{ width: '0%' }}
+                  animate={{ width: '100%' }}
+                  transition={{
+                    duration: 0.8,
+                    ease: 'easeInOut',
+                    repeat: Infinity,
+                    repeatType: 'reverse'
+                  }}
+                />
+              </div>
+            </div>
           </div>
         </div>
 
@@ -199,24 +231,6 @@ export function MarathonSkeleton({ isVisible, marathonName, marathonLogo, isDark
         </div>
       </div>
 
-      {/* Loading Progress Bar */}
-      <div className="absolute inset-x-0 bottom-8 flex justify-center z-50">
-        <div className="bg-white dark:bg-neutral-900 rounded-xl border border-neutral-200 dark:border-neutral-700 p-1.5 shadow-lg transition-colors duration-300">
-          <div className="w-64 bg-neutral-200 dark:bg-neutral-700 rounded-xl h-1.5 overflow-hidden transition-colors duration-300">
-            <motion.div
-              className="bg-gradient-to-r from-pink-500 to-pink-600 h-1.5 rounded-xl"
-              initial={{ width: '0%' }}
-              animate={{ width: '100%' }}
-              transition={{
-                duration: 0.8,
-                ease: 'easeInOut',
-                repeat: Infinity,
-                repeatType: 'reverse'
-              }}
-            />
-          </div>
-        </div>
-      </div>
     </motion.div>
   )
 }
