@@ -116,7 +116,7 @@ export function NewsletterModal({ isOpen, onClose }: NewsletterModalProps) {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ duration: 0.2, ease: 'easeOut' }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            className="fixed inset-0 z-50 flex items-center justify-center p-6 sm:p-4"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="bg-white dark:bg-neutral-800 rounded-2xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-hidden relative transition-colors duration-300">
