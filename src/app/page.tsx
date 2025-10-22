@@ -94,8 +94,10 @@ function PreviewPage() {
               </div>
 
               {/* Combined blurb and typewriter text */}
-              <div className="text-lg sm:text-xl md:text-2xl text-neutral-600 dark:text-neutral-300 max-w-3xl mx-auto leading-snug font-medium text-center mb-16 px-4 transition-colors duration-300">
-                <div className="mb-3">We're building the ultimate destination for</div>
+              <div className="max-w-3xl mx-auto text-center mb-16 px-4">
+                <div className="text-[19px] sm:text-[20px] text-neutral-600 dark:text-neutral-300 leading-snug font-medium mb-3 transition-colors duration-300">
+                  We're building the ultimate destination for
+                </div>
                 <div className="flex justify-center">
                   <TypewriterText />
                 </div>
