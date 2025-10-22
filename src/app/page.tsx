@@ -66,27 +66,29 @@ function PreviewPage() {
               </div>
 
               {/* Logo - smaller, switches between light and dark */}
-              <div className="flex justify-center mb-3">
+              <div className="flex justify-center mb-3 svg-container">
                 <img
                   src="/images/logo_1.svg"
                   alt="Distanz Running Logo"
-                  className="block dark:hidden"
+                  width="400"
+                  height="200"
+                  className="block dark:hidden logo-svg"
                   style={{
                     height: '100px',
                     width: 'auto',
-                    shapeRendering: 'geometricPrecision',
-                    textRendering: 'geometricPrecision'
+                    maxWidth: '100%'
                   }}
                 />
                 <img
                   src="/images/logo_white.svg"
                   alt="Distanz Running Logo"
-                  className="hidden dark:block"
+                  width="400"
+                  height="200"
+                  className="hidden dark:block logo-svg"
                   style={{
                     height: '100px',
                     width: 'auto',
-                    shapeRendering: 'geometricPrecision',
-                    textRendering: 'geometricPrecision'
+                    maxWidth: '100%'
                   }}
                 />
               </div>
