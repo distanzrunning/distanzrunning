@@ -127,7 +127,8 @@ export const MarathonMajorsShowcaseMobile: React.FC = () => {
       const popup = new window.mapboxgl.Popup({
         closeButton: false,
         closeOnClick: false,
-        offset: -15
+        anchor: 'bottom',
+        offset: 25
       })
 
       markerElement.addEventListener('mouseenter', () => {
@@ -381,7 +382,8 @@ export const MarathonMajorsShowcaseMobile: React.FC = () => {
       const halfwayPopup = new window.mapboxgl.Popup({
         closeButton: false,
         closeOnClick: false,
-        offset: -15
+        anchor: 'bottom',
+        offset: 25
       })
 
       halfwayMarkerElement.addEventListener('mouseenter', () => {
@@ -413,7 +415,8 @@ export const MarathonMajorsShowcaseMobile: React.FC = () => {
         const popup = new window.mapboxgl.Popup({
           closeButton: false,
           closeOnClick: false,
-          offset: -15
+          anchor: 'bottom',
+          offset: 25
         })
 
         const markerDistance = currentMarkerDistance
