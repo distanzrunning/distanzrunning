@@ -29,8 +29,12 @@ export function ExploreButton({ variant = 'default' }: ExploreButtonProps) {
         {variant === 'pink' && (
           <>
             {/* Outer rotating gradient layer */}
-            <div className="absolute inset-0 z-[1] rounded-lg overflow-hidden">
-              <div className="absolute inset-0 h-full w-full animate-flip [mask:linear-gradient(white,_transparent_50%)] before:absolute before:aspect-square before:w-[200%] before:rotate-[-90deg] before:animate-rotate before:bg-[conic-gradient(from_0deg,transparent_0_340deg,rgba(236,72,153,0.8)_360deg)] before:content-[''] before:left-1/2 before:top-0 before:-translate-x-1/2 before:-translate-y-[15%]"></div>
+            <div className="absolute inset-0 z-[1]">
+              <div className="absolute inset-0 overflow-hidden rounded-lg [mask:linear-gradient(white,_transparent_50%)]">
+                <div className="absolute left-1/2 top-1/2 aspect-square w-[200%] -translate-x-1/2 -translate-y-1/2 animate-rotate">
+                  <div className="absolute inset-0 bg-[conic-gradient(from_0deg,transparent_0_340deg,rgba(236,72,153,0.8)_360deg)] animate-flip"></div>
+                </div>
+              </div>
             </div>
             {/* Inner background layer */}
             <div className="absolute inset-[1px] z-[1] rounded-[7px] bg-white dark:bg-neutral-900 group-hover:bg-neutral-50 dark:group-hover:bg-neutral-800"></div>
