@@ -158,13 +158,13 @@ export function NewsletterModal({ isOpen, onClose }: NewsletterModalProps) {
                 <div className="absolute inset-0 bg-black/30 z-10"></div>
                 
                 {/* White logo centered */}
-                <div className="absolute inset-0 flex items-center justify-center z-20">
+                <div className="absolute inset-0 flex items-center justify-center z-20 px-6">
                   <Image
                     src="/images/logo_white.svg"
                     alt="Distanz Running Logo"
                     width={64}
                     height={64}
-                    className="h-16 w-auto"
+                    className="h-12 sm:h-16 w-auto max-w-full"
                     priority
                   />
                 </div>
