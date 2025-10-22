@@ -12,7 +12,6 @@ import {
   createStravaNumberMarker,
   createStravaFlagMarker
 } from '@/utils/marathonMarkers'
-import { createVerticalLinePlugin } from '@/utils/chartPlugins'
 import { useMarathonDataPreloader } from '@/hooks/useMarathonDataPreloader'
 
 declare global {
@@ -50,12 +49,9 @@ export const MarathonMajorsShowcaseMobile: React.FC = () => {
   const mobileFinishMarker = useRef<any>(null)
   const mobileDistanceMarkers = useRef<any[]>([])
   const mobileHalfwayMarker = useRef<any>(null)
-  const mobileHoverMarker = useRef<any>(null)
   const mobileAidStationMarkers = useRef<any[]>([])
   const mobileStoredAidStations = useRef<PointOfInterest[]>([])
-  const mobileVerticalLinePlugin = useRef<any>(null)
-  
-  const mobileIsHovering = useRef<boolean>(false)
+
   const hasUnitToggle = selectedMarathon.stats.some(stat => stat.metric && stat.imperial)
 
   // Store densified coordinates and precise distance data for mobile
@@ -179,11 +175,6 @@ export const MarathonMajorsShowcaseMobile: React.FC = () => {
 
   // Marker and calculation functions now imported from shared utilities
 
-  // Create vertical line plugin for chart using shared utility
-  const createMobileVerticalLinePlugin = () => {
-    mobileVerticalLinePlugin.current = createVerticalLinePlugin('verticalLineMobile')
-  }
-
   // Densify route for smoother interactions
   const densifyRouteForPrecision = (coordinates: number[][], targetPointsPerKm: number = 100) => {
     const densified: number[][] = []
@@ -251,10 +242,6 @@ export const MarathonMajorsShowcaseMobile: React.FC = () => {
     }
 
     const currentlyDark = document.documentElement.classList.contains('dark')
-
-    if (!mobileVerticalLinePlugin.current) {
-      createMobileVerticalLinePlugin()
-    }
 
     const { distanceData, elevationData, densifiedCoords, calculatedGrades } = getChartDataPrecise(coordinates, useMetric)
     
@@ -334,8 +321,7 @@ export const MarathonMajorsShowcaseMobile: React.FC = () => {
                 ]
               }
             }
-          },
-          verticalLineMobile: mobileVerticalLinePlugin.current
+          }
         },
         scales: {
           x: {
@@ -361,8 +347,7 @@ export const MarathonMajorsShowcaseMobile: React.FC = () => {
           intersect: false,
           mode: 'index'
         }
-      },
-      plugins: [mobileVerticalLinePlugin.current]
+      }
     })
   }
 

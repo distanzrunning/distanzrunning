@@ -17,7 +17,7 @@ export function MarathonSkeleton({ isVisible, marathonName, marathonLogo, isDark
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.2 }}
-      className="absolute inset-0 bg-white dark:bg-neutral-900 z-40 transition-colors duration-300"
+      className="absolute inset-0 bg-white dark:bg-neutral-900 z-40 transition-colors duration-300 rounded-lg overflow-hidden"
     >
       {/* Desktop Layout Skeleton */}
       <div className="hidden lg:grid h-full" style={{ gridTemplateColumns: '3fr 2fr', gridTemplateRows: '495px 265px' }}>
