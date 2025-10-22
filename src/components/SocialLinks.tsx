@@ -53,11 +53,11 @@ const socialLinks: SocialLink[] = [
 export default function SocialLinks() {
   return (
     <>
-      <p className="text-xs text-textSubtle dark:text-neutral-400 mb-4">
+      <p className="text-sm font-medium text-neutral-600 dark:text-neutral-300 mb-5 transition-colors duration-300">
         Follow us for updates
       </p>
 
-      <div className="flex items-center space-x-4 justify-center mb-6">
+      <div className="flex items-center gap-3 justify-center mb-8">
         {socialLinks.map((social) => (
           <a
             key={social.label}
@@ -65,14 +65,16 @@ export default function SocialLinks() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label={social.label}
-            className="p-2 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-full transition-colors duration-200"
+            className="group relative p-3 rounded-lg border border-neutral-200 dark:border-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-600 bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-all duration-300 hover:scale-105 hover:shadow-md"
           >
-            {social.icon}
+            <div className="relative z-10">
+              {social.icon}
+            </div>
           </a>
         ))}
       </div>
 
-      <p className="text-xs text-textSubtler dark:text-neutral-500">
+      <p className="text-xs text-neutral-500 dark:text-neutral-400 font-normal transition-colors duration-300">
         © 2025 Distanz Running. All rights reserved.
       </p>
     </>
