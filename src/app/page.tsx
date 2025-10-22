@@ -70,20 +70,34 @@ function PreviewPage() {
                 <Image
                   src="/images/logo_1.svg"
                   alt="Distanz Running Logo"
-                  width={200}
-                  height={100}
+                  width={400}
+                  height={200}
                   priority
+                  unoptimized
                   className="block dark:hidden"
-                  style={{ height: '100px', width: 'auto' }}
+                  style={{
+                    height: '100px',
+                    width: 'auto',
+                    imageRendering: '-webkit-optimize-contrast',
+                    WebkitFontSmoothing: 'antialiased',
+                    transform: 'translateZ(0)'
+                  }}
                 />
                 <Image
                   src="/images/logo_white.svg"
                   alt="Distanz Running Logo"
-                  width={200}
-                  height={100}
+                  width={400}
+                  height={200}
                   priority
+                  unoptimized
                   className="hidden dark:block"
-                  style={{ height: '100px', width: 'auto' }}
+                  style={{
+                    height: '100px',
+                    width: 'auto',
+                    imageRendering: '-webkit-optimize-contrast',
+                    WebkitFontSmoothing: 'antialiased',
+                    transform: 'translateZ(0)'
+                  }}
                 />
               </div>
 
