@@ -53,7 +53,7 @@ const socialLinks: SocialLink[] = [
 export default function SocialLinks() {
   return (
     <>
-      <p className="text-sm font-medium text-neutral-600 dark:text-neutral-300 mb-5 transition-colors duration-300">
+      <p className="text-base font-medium text-neutral-600 dark:text-neutral-300 mb-5 transition-colors duration-300">
         Follow us for updates
       </p>
 
