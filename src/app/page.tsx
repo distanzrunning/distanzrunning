@@ -11,6 +11,7 @@ import { ExploreButton } from '@/components/ExploreButton'
 import { NewsletterButton } from '@/components/NewsletterModal'
 import { DarkModeProvider, DarkModeToggle } from '@/components/DarkModeProvider'
 import SocialLinks from '@/components/SocialLinks'
+import FeatureShowcase from '@/components/FeatureShowcase'
 import { Metadata } from 'next'
 
 type Post = {
@@ -120,6 +121,9 @@ function PreviewPage() {
               </div>
             </div>
           </main>
+
+          {/* Feature Showcase Section */}
+          <FeatureShowcase />
 
           {/* Social links moved to bottom */}
           <div className="px-6 py-8">
