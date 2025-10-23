@@ -79,7 +79,12 @@ export default function FeatureShowcase() {
 
               {/* Image */}
               <div className="relative flex-1 min-h-[200px]">
+                {/* Bottom fade */}
                 <div className="absolute inset-0 bg-gradient-to-t from-neutral-50 dark:from-neutral-900 via-transparent to-transparent pointer-events-none z-10" />
+                {/* Left fade */}
+                <div className="absolute inset-0 bg-gradient-to-r from-neutral-50 dark:from-neutral-900 via-transparent to-transparent pointer-events-none z-10" />
+                {/* Right fade */}
+                <div className="absolute inset-0 bg-gradient-to-l from-neutral-50 dark:from-neutral-900 via-transparent to-transparent pointer-events-none z-10" />
                 <Image
                   src={features[1].image}
                   alt={features[1].imageAlt}
@@ -106,7 +111,12 @@ export default function FeatureShowcase() {
 
               {/* Image */}
               <div className="relative flex-1 min-h-[200px]">
+                {/* Bottom fade */}
                 <div className="absolute inset-0 bg-gradient-to-t from-neutral-50 dark:from-neutral-900 via-transparent to-transparent pointer-events-none z-10" />
+                {/* Left fade */}
+                <div className="absolute inset-0 bg-gradient-to-r from-neutral-50 dark:from-neutral-900 via-transparent to-transparent pointer-events-none z-10" />
+                {/* Right fade */}
+                <div className="absolute inset-0 bg-gradient-to-l from-neutral-50 dark:from-neutral-900 via-transparent to-transparent pointer-events-none z-10" />
                 <Image
                   src={features[2].image}
                   alt={features[2].imageAlt}
