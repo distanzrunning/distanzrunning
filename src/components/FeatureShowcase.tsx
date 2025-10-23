@@ -32,8 +32,8 @@ const features: Feature[] = [
 
 export default function FeatureShowcase() {
   return (
-    <section className="w-full py-16 sm:py-20 md:py-24">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6">
+    <section className="w-full py-16 sm:py-20 md:py-24 px-6">
+      <div className="max-w-6xl mx-auto">
         {/* Grid container */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 auto-rows-auto">
 
