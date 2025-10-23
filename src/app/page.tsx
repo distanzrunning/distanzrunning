@@ -51,9 +51,10 @@ function PreviewPage() {
         <link rel="preload" as="image" href="/images/logo_1.svg" fetchPriority="high" />
         <link rel="preload" as="image" href="/images/logo_white.svg" fetchPriority="high" />
 
+        {/* Dark Mode Toggle - outside main container for true fixed positioning */}
+        <DarkModeToggle />
+
         <div className="min-h-screen flex flex-col bg-white dark:bg-[#0c0c0d] transition-colors duration-300">
-          {/* Dark Mode Toggle */}
-          <DarkModeToggle />
           
           {/* Coming Soon Section */}
           <div className="pt-12 pb-8 px-6">
