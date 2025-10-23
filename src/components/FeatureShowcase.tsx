@@ -25,7 +25,7 @@ const features: Feature[] = [
   {
     title: "Interactive Race Guides",
     description: "Explore detailed race guides with interactive maps, elevation profiles, and insider tips for your next marathon.",
-    image: "/images/placeholder-race.jpg", // Replace with your image
+    image: "/images/races_logos.webp",
     imageAlt: "Interactive Race Guides"
   }
 ]
@@ -107,6 +107,8 @@ export default function FeatureShowcase() {
 
               {/* Image */}
               <div className="relative flex-1 min-h-[200px]">
+                {/* Top fade */}
+                <div className="absolute inset-0 bg-gradient-to-b from-neutral-50 dark:from-neutral-900 via-transparent to-transparent pointer-events-none z-10" />
                 {/* Bottom fade */}
                 <div className="absolute inset-0 bg-gradient-to-t from-neutral-50 dark:from-neutral-900 via-transparent to-transparent pointer-events-none z-10" />
                 {/* Left fade */}
