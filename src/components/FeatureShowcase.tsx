@@ -81,8 +81,6 @@ export default function FeatureShowcase() {
               <div className="relative flex-1 min-h-[200px]">
                 {/* Top fade */}
                 <div className="absolute inset-0 bg-gradient-to-b from-neutral-50 dark:from-neutral-900 via-transparent to-transparent pointer-events-none z-10" />
-                {/* Bottom fade */}
-                <div className="absolute inset-0 bg-gradient-to-t from-neutral-50 dark:from-neutral-900 via-transparent to-transparent pointer-events-none z-10" />
                 <Image
                   src={features[1].image}
                   alt={features[1].imageAlt}
