@@ -52,7 +52,7 @@ export default function FeatureShowcase() {
 
               {/* Image */}
               <div className="relative lg:w-3/5 h-64 lg:h-auto">
-                <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(250,250,250,0.7)_0%,transparent_30%)] dark:bg-[linear-gradient(to_top,rgba(12,12,13,0.7)_0%,transparent_30%)] lg:bg-[linear-gradient(to_right,rgba(250,250,250,0.7)_0%,transparent_30%)] dark:lg:bg-[linear-gradient(to_right,rgba(12,12,13,0.7)_0%,transparent_30%)] pointer-events-none z-10" />
+                <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(250,250,250,0.9)_0%,rgba(250,250,250,0.3)_40%,transparent_70%)] dark:bg-[linear-gradient(to_top,rgba(12,12,13,0.9)_0%,rgba(12,12,13,0.3)_40%,transparent_70%)] lg:bg-[linear-gradient(to_right,rgba(250,250,250,0.9)_0%,rgba(250,250,250,0.3)_40%,transparent_70%)] dark:lg:bg-[linear-gradient(to_right,rgba(12,12,13,0.9)_0%,rgba(12,12,13,0.3)_40%,transparent_70%)] pointer-events-none z-10" />
                 <Image
                   src={features[0].image}
                   alt={features[0].imageAlt}
@@ -80,7 +80,7 @@ export default function FeatureShowcase() {
               {/* Image */}
               <div className="relative flex-1 min-h-[200px]">
                 {/* Top fade */}
-                <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(250,250,250,0.7)_0%,transparent_30%)] dark:bg-[linear-gradient(to_bottom,rgba(12,12,13,0.7)_0%,transparent_30%)] pointer-events-none z-10" />
+                <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(250,250,250,0.9)_0%,rgba(250,250,250,0.3)_40%,transparent_70%)] dark:bg-[linear-gradient(to_bottom,rgba(12,12,13,0.9)_0%,rgba(12,12,13,0.3)_40%,transparent_70%)] pointer-events-none z-10" />
                 <Image
                   src={features[1].image}
                   alt={features[1].imageAlt}
@@ -108,13 +108,13 @@ export default function FeatureShowcase() {
               {/* Image */}
               <div className="relative flex-1 min-h-[200px]">
                 {/* Top fade */}
-                <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(250,250,250,0.7)_0%,transparent_25%)] dark:bg-[linear-gradient(to_bottom,rgba(12,12,13,0.7)_0%,transparent_25%)] pointer-events-none z-10" />
+                <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(250,250,250,0.9)_0%,rgba(250,250,250,0.3)_30%,transparent_60%)] dark:bg-[linear-gradient(to_bottom,rgba(12,12,13,0.9)_0%,rgba(12,12,13,0.3)_30%,transparent_60%)] pointer-events-none z-10" />
                 {/* Bottom fade */}
-                <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(250,250,250,0.7)_0%,transparent_25%)] dark:bg-[linear-gradient(to_top,rgba(12,12,13,0.7)_0%,transparent_25%)] pointer-events-none z-10" />
+                <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(250,250,250,0.9)_0%,rgba(250,250,250,0.3)_30%,transparent_60%)] dark:bg-[linear-gradient(to_top,rgba(12,12,13,0.9)_0%,rgba(12,12,13,0.3)_30%,transparent_60%)] pointer-events-none z-10" />
                 {/* Left fade */}
-                <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(250,250,250,0.7)_0%,transparent_25%)] dark:bg-[linear-gradient(to_right,rgba(12,12,13,0.7)_0%,transparent_25%)] pointer-events-none z-10" />
+                <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(250,250,250,0.9)_0%,rgba(250,250,250,0.3)_30%,transparent_60%)] dark:bg-[linear-gradient(to_right,rgba(12,12,13,0.9)_0%,rgba(12,12,13,0.3)_30%,transparent_60%)] pointer-events-none z-10" />
                 {/* Right fade */}
-                <div className="absolute inset-0 bg-[linear-gradient(to_left,rgba(250,250,250,0.7)_0%,transparent_25%)] dark:bg-[linear-gradient(to_left,rgba(12,12,13,0.7)_0%,transparent_25%)] pointer-events-none z-10" />
+                <div className="absolute inset-0 bg-[linear-gradient(to_left,rgba(250,250,250,0.9)_0%,rgba(250,250,250,0.3)_30%,transparent_60%)] dark:bg-[linear-gradient(to_left,rgba(12,12,13,0.9)_0%,rgba(12,12,13,0.3)_30%,transparent_60%)] pointer-events-none z-10" />
                 <Image
                   src={features[2].image}
                   alt={features[2].imageAlt}
