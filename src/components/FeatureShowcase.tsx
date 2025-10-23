@@ -13,7 +13,7 @@ const features: Feature[] = [
   {
     title: "Running News",
     description: "Stay up to date with the latest running news, race results, and athlete profiles from around the world.",
-    image: "/images/placeholder-news.jpg", // Replace with your image
+    image: "/images/running_news.jpg",
     imageAlt: "Running News"
   },
   {
