@@ -19,7 +19,7 @@ const features: Feature[] = [
   {
     title: "Gear Reviews",
     description: "In-depth reviews and comparisons of the latest running shoes, apparel, and accessories to help you make informed decisions.",
-    image: "/images/placeholder-gear.jpg", // Replace with your image
+    image: "/images/gear_reviews.jpg",
     imageAlt: "Gear Reviews"
   },
   {
