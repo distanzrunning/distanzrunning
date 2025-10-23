@@ -38,7 +38,7 @@ export default function FeatureShowcase() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 auto-rows-auto">
 
           {/* Running News - Full width top section */}
-          <div className="md:col-span-2 relative overflow-hidden rounded-2xl bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 transition-all duration-300 hover:shadow-xl hover:border-neutral-300 dark:hover:border-neutral-700 group">
+          <div className="md:col-span-2 relative overflow-hidden rounded-2xl bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 transition-colors duration-300">
             <div className="flex flex-col lg:flex-row h-full min-h-[400px] md:min-h-[500px]">
               {/* Text content */}
               <div className="flex flex-col justify-center gap-4 px-8 py-10 md:px-12 md:py-16 lg:w-2/5 z-10">
@@ -57,7 +57,7 @@ export default function FeatureShowcase() {
                   src={features[0].image}
                   alt={features[0].imageAlt}
                   fill
-                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  className="object-cover"
                   sizes="(max-width: 768px) 100vw, (max-width: 1024px) 100vw, 60vw"
                 />
               </div>
@@ -65,7 +65,7 @@ export default function FeatureShowcase() {
           </div>
 
           {/* Gear Reviews - Bottom left */}
-          <div className="relative overflow-hidden rounded-2xl bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 transition-all duration-300 hover:shadow-xl hover:border-neutral-300 dark:hover:border-neutral-700 group">
+          <div className="relative overflow-hidden rounded-2xl bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 transition-colors duration-300">
             <div className="flex flex-col h-full min-h-[400px]">
               {/* Text content */}
               <div className="flex flex-col gap-4 px-8 py-10 md:px-12 md:py-12 z-10">
@@ -84,7 +84,7 @@ export default function FeatureShowcase() {
                   src={features[1].image}
                   alt={features[1].imageAlt}
                   fill
-                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  className="object-cover"
                   sizes="(max-width: 768px) 100vw, 50vw"
                 />
               </div>
@@ -92,7 +92,7 @@ export default function FeatureShowcase() {
           </div>
 
           {/* Interactive Race Guides - Bottom right */}
-          <div className="relative overflow-hidden rounded-2xl bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 transition-all duration-300 hover:shadow-xl hover:border-neutral-300 dark:hover:border-neutral-700 group">
+          <div className="relative overflow-hidden rounded-2xl bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 transition-colors duration-300">
             <div className="flex flex-col h-full min-h-[400px]">
               {/* Text content */}
               <div className="flex flex-col gap-4 px-8 py-10 md:px-12 md:py-12 z-10">
@@ -111,7 +111,7 @@ export default function FeatureShowcase() {
                   src={features[2].image}
                   alt={features[2].imageAlt}
                   fill
-                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  className="object-cover"
                   sizes="(max-width: 768px) 100vw, 50vw"
                 />
               </div>
