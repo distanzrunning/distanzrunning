@@ -107,14 +107,14 @@ export default function FeatureShowcase() {
 
               {/* Image */}
               <div className="relative flex-1 min-h-[200px]">
-                {/* Top fade */}
+                {/* Top fade - keep same */}
                 <div className="absolute inset-0 bg-gradient-to-b from-neutral-50 dark:from-neutral-900 via-transparent to-transparent pointer-events-none z-10" />
-                {/* Bottom fade */}
-                <div className="absolute inset-0 bg-gradient-to-t from-neutral-50 dark:from-neutral-900 via-transparent to-transparent pointer-events-none z-10" />
-                {/* Left fade */}
-                <div className="absolute inset-0 bg-gradient-to-r from-neutral-50 dark:from-neutral-900 via-transparent to-transparent pointer-events-none z-10" />
-                {/* Right fade */}
-                <div className="absolute inset-0 bg-gradient-to-l from-neutral-50 dark:from-neutral-900 via-transparent to-transparent pointer-events-none z-10" />
+                {/* Bottom fade - reduced */}
+                <div className="absolute inset-0 bg-gradient-to-t from-neutral-50/50 dark:from-neutral-900/50 to-transparent pointer-events-none z-10" />
+                {/* Left fade - reduced */}
+                <div className="absolute inset-0 bg-gradient-to-r from-neutral-50/50 dark:from-neutral-900/50 to-transparent pointer-events-none z-10" />
+                {/* Right fade - reduced */}
+                <div className="absolute inset-0 bg-gradient-to-l from-neutral-50/50 dark:from-neutral-900/50 to-transparent pointer-events-none z-10" />
                 <Image
                   src={features[2].image}
                   alt={features[2].imageAlt}
