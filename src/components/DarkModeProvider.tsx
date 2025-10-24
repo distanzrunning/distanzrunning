@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect, createContext, useContext } from 'react'
-import { createPortal } from 'react-dom'
 import { Moon, Sun } from 'lucide-react'
 
 const DarkModeContext = createContext<{
@@ -45,67 +44,41 @@ export function DarkModeProvider({ children }: { children: React.ReactNode }) {
 
 export function DarkModeToggle() {
   const { isDark, toggleDarkMode } = useContext(DarkModeContext)
-  const [mounted, setMounted] = useState(false)
 
-  useEffect(() => {
-    setMounted(true)
-  }, [])
-
-  useEffect(() => {
-    if (!mounted) return
-
-    // Create the toggle element
-    const toggleContainer = document.createElement('div')
-    toggleContainer.id = 'dark-mode-toggle-container'
-    toggleContainer.style.cssText = `
-      position: fixed !important;
-      top: 1rem !important;
-      right: 1rem !important;
-      z-index: 99999 !important;
-    `
-
-    document.body.appendChild(toggleContainer)
-
-    return () => {
-      if (document.body.contains(toggleContainer)) {
-        document.body.removeChild(toggleContainer)
-      }
-    }
-  }, [mounted])
-
-  if (!mounted) return null
-
-  const toggleElement = document.getElementById('dark-mode-toggle-container')
-  if (!toggleElement) return null
-
-  return createPortal(
-    <button
-      onClick={toggleDarkMode}
-      className="group relative inline-flex items-center gap-2 px-3 py-2 rounded-full bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-600 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
-      aria-label="Toggle dark mode"
-      type="button"
-    >
-      {/* Toggle Track */}
-      <div className="relative w-12 h-6 rounded-full bg-neutral-200 dark:bg-neutral-700 transition-colors duration-300">
-        {/* Toggle Knob */}
-        <div
-          className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white shadow-md transition-all duration-300 flex items-center justify-center ${
-            isDark ? 'translate-x-6' : 'translate-x-0'
-          }`}
-        >
-          {isDark ? (
-            <Moon className="w-3 h-3 text-neutral-700" />
-          ) : (
-            <Sun className="w-3 h-3 text-yellow-500" />
-          )}
+  return (
+    <div style={{
+      position: 'fixed',
+      top: '1rem',
+      right: '1rem',
+      zIndex: 99999,
+    }}>
+      <button
+        onClick={toggleDarkMode}
+        className="group relative inline-flex items-center gap-2 px-3 py-2 rounded-full bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-600 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+        aria-label="Toggle dark mode"
+        type="button"
+      >
+        {/* Toggle Track */}
+        <div className="relative w-12 h-6 rounded-full bg-neutral-200 dark:bg-neutral-700 transition-colors duration-300">
+          {/* Toggle Knob */}
+          <div
+            className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white shadow-md transition-all duration-300 flex items-center justify-center ${
+              isDark ? 'translate-x-6' : 'translate-x-0'
+            }`}
+          >
+            {isDark ? (
+              <Moon className="w-3 h-3 text-neutral-700" />
+            ) : (
+              <Sun className="w-3 h-3 text-yellow-500" />
+            )}
+          </div>
         </div>
-      </div>
 
-      {/* Text Label */}
-      <span className="text-xs font-medium text-neutral-600 dark:text-neutral-300 transition-colors duration-300">
-        {isDark ? 'Dark' : 'Light'}
-      </span>
-    </button>,
-    toggleElement
+        {/* Text Label */}
+        <span className="text-xs font-medium text-neutral-600 dark:text-neutral-300 transition-colors duration-300">
+          {isDark ? 'Dark' : 'Light'}
+        </span>
+      </button>
+    </div>
   )
 }
