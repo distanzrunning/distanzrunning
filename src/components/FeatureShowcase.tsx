@@ -32,55 +32,69 @@ const features: Feature[] = [
 
 export default function FeatureShowcase() {
   return (
-    <section className="w-full py-16 sm:py-20 md:py-24 px-6">
-      <div className="max-w-6xl mx-auto">
-        {/* Grid container */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 auto-rows-auto">
+    <section className="w-full overflow-x-clip pb-24">
+      <div className="pt-0 pb-24 max-w-[calc(1024px+2rem)] mx-auto flex w-full flex-col gap-6 px-4">
+        {/* Grid container with auto-rows */}
+        <div className="flex auto-rows-[minmax(300px,auto)] grid-cols-6 flex-col gap-2.5 md:grid">
 
-          {/* Running News - Full width top section */}
-          <div className="md:col-span-2 relative overflow-hidden rounded-2xl bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 transition-colors duration-300">
-            <div className="flex flex-col lg:flex-row h-full min-h-[400px] md:min-h-[500px]">
+          {/* Running News - Full width top section (spans 6 columns, 2 rows) */}
+          <div
+            className="relative z-0 overflow-hidden rounded-xl bg-neutralBgSubtle"
+            style={{ gridColumn: 'span 6 / span 6', gridRow: 'span 2 / span 2' }}
+          >
+            <div className="flex h-full w-full flex-col lg:flex-row">
               {/* Text content */}
-              <div className="flex flex-col justify-center gap-4 px-8 py-10 md:px-12 md:py-16 lg:w-2/5 z-10">
-                <h3 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-neutral-900 dark:text-white transition-colors duration-300">
+              <div className="flex flex-col gap-3 lg:basis-2/5 px-8 py-8 md:px-16 md:pt-16">
+                <h3 className="text-h3-quartr md:text-h2-quartr text-textDefault">
                   {features[0].title}
                 </h3>
-                <p className="text-base sm:text-lg text-neutral-600 dark:text-neutral-300 leading-relaxed transition-colors duration-300">
+                <p className="text-body-quartr text-textSubtle">
                   {features[0].description}
                 </p>
               </div>
 
-              {/* Image */}
-              <div className="relative lg:w-3/5 h-64 lg:h-auto">
-                <div className="absolute inset-0 bg-gradient-to-t lg:bg-gradient-to-r from-neutral-50 dark:from-neutral-900 via-transparent to-transparent pointer-events-none z-10" />
+              {/* Image - Desktop */}
+              <div className="relative lg:basis-3/5 h-64 lg:h-auto hidden lg:block">
                 <Image
                   src={features[0].image}
                   alt={features[0].imageAlt}
                   fill
                   className="object-cover"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 100vw, 60vw"
+                  sizes="(max-width: 1024px) 0vw, 60vw"
+                />
+              </div>
+
+              {/* Image - Mobile */}
+              <div className="relative w-full h-64 lg:hidden">
+                <Image
+                  src={features[0].image}
+                  alt={features[0].imageAlt}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 1024px) 100vw, 0vw"
                 />
               </div>
             </div>
           </div>
 
-          {/* Gear Reviews - Bottom left */}
-          <div className="relative overflow-hidden rounded-2xl bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 transition-colors duration-300">
-            <div className="flex flex-col h-full min-h-[400px]">
+          {/* Gear Reviews - Bottom left (spans 3 columns, 1 row) */}
+          <div
+            className="relative z-0 overflow-hidden rounded-xl bg-neutralBgSubtle"
+            style={{ gridColumn: 'span 3 / span 3', gridRow: 'span 1 / span 1' }}
+          >
+            <div className="flex h-full w-full flex-col">
               {/* Text content */}
-              <div className="flex flex-col gap-4 px-8 py-10 md:px-12 md:py-12 z-10">
-                <h3 className="text-2xl sm:text-3xl font-semibold text-neutral-900 dark:text-white transition-colors duration-300">
+              <div className="flex flex-col gap-3 px-8 py-8 md:px-16 md:pt-16">
+                <h3 className="text-h3-quartr text-textDefault">
                   {features[1].title}
                 </h3>
-                <p className="text-base text-neutral-600 dark:text-neutral-300 leading-relaxed transition-colors duration-300">
+                <p className="text-body-quartr text-textSubtle">
                   {features[1].description}
                 </p>
               </div>
 
               {/* Image */}
               <div className="relative flex-1 min-h-[200px]">
-                {/* Top fade */}
-                <div className="absolute inset-0 bg-gradient-to-b from-neutral-50 dark:from-neutral-900 via-transparent to-transparent pointer-events-none z-10" />
                 <Image
                   src={features[1].image}
                   alt={features[1].imageAlt}
@@ -92,30 +106,24 @@ export default function FeatureShowcase() {
             </div>
           </div>
 
-          {/* Interactive Race Guides - Bottom right */}
-          <div className="relative overflow-hidden rounded-2xl bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 transition-colors duration-300">
-            <div className="flex flex-col h-full min-h-[400px]">
+          {/* Interactive Race Guides - Bottom right (spans 3 columns) */}
+          <div
+            className="relative z-0 overflow-hidden rounded-xl bg-neutralBgSubtle"
+            style={{ gridColumn: 'span 3 / span 3' }}
+          >
+            <div className="flex h-full w-full flex-col">
               {/* Text content */}
-              <div className="flex flex-col gap-4 px-8 py-10 md:px-12 md:py-12 z-10 bg-neutral-50 dark:bg-neutral-900 transition-colors duration-300">
-                <h3 className="text-2xl sm:text-3xl font-semibold text-neutral-900 dark:text-white transition-colors duration-300">
+              <div className="flex flex-col gap-3 px-8 py-8 md:px-16 md:pt-16">
+                <h3 className="text-h3-quartr text-textDefault">
                   {features[2].title}
                 </h3>
-                <p className="text-base text-neutral-600 dark:text-neutral-300 leading-relaxed transition-colors duration-300">
+                <p className="text-body-quartr text-textSubtle">
                   {features[2].description}
                 </p>
               </div>
 
               {/* Image */}
-              <div className="relative flex-1 min-h-[250px] bg-neutral-50 dark:bg-neutral-900 transition-colors duration-300">
-                {/* Corner fades - stronger and larger */}
-                {/* Top-left corner */}
-                <div className="absolute top-0 left-0 w-48 h-48 bg-[radial-gradient(circle_at_top_left,rgb(250_250_250)_0%,transparent_50%)] dark:bg-[radial-gradient(circle_at_top_left,rgb(12_12_13)_0%,transparent_50%)] pointer-events-none z-10" />
-                {/* Top-right corner */}
-                <div className="absolute top-0 right-0 w-48 h-48 bg-[radial-gradient(circle_at_top_right,rgb(250_250_250)_0%,transparent_50%)] dark:bg-[radial-gradient(circle_at_top_right,rgb(12_12_13)_0%,transparent_50%)] pointer-events-none z-10" />
-                {/* Bottom-left corner */}
-                <div className="absolute bottom-0 left-0 w-48 h-48 bg-[radial-gradient(circle_at_bottom_left,rgb(250_250_250)_0%,transparent_50%)] dark:bg-[radial-gradient(circle_at_bottom_left,rgb(12_12_13)_0%,transparent_50%)] pointer-events-none z-10" />
-                {/* Bottom-right corner */}
-                <div className="absolute bottom-0 right-0 w-48 h-48 bg-[radial-gradient(circle_at_bottom_right,rgb(250_250_250)_0%,transparent_50%)] dark:bg-[radial-gradient(circle_at_bottom_right,rgb(12_12_13)_0%,transparent_50%)] pointer-events-none z-10" />
+              <div className="relative flex-1 min-h-[200px]">
                 <Image
                   src={features[2].image}
                   alt={features[2].imageAlt}

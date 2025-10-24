@@ -33,13 +33,15 @@ module.exports = {
         'surface': 'rgb(var(--color-surface))',
         'canvas': 'rgb(var(--color-canvas))',
         'greyCold400': 'rgb(var(--color-greyCold400))',
+        'neutralBgSubtle': 'rgb(var(--color-neutralBgSubtle))',
       },
       backgroundColor: {
         'primary-light': '#f9e8ee',
-        
+
         // Quartr background colors
         'surface': 'rgb(var(--color-surface))',
         'canvas': 'rgb(var(--color-canvas))',
+        'neutralBgSubtle': 'rgb(var(--color-neutralBgSubtle))',
       },
       textColor: {
         primary: '#e43c81',
@@ -221,6 +223,8 @@ module.exports = {
 
   plugins: [
     require('@tailwindcss/typography'),
+    // TODO: Install @tailwindcss/container-queries package
+    // require('@tailwindcss/container-queries'),
     function({ addComponents, theme }) {
       addComponents({
         // Quartr's exact article container from their CSS
