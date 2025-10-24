@@ -55,8 +55,6 @@ export default function FeatureShowcase() {
 
               {/* Image - Desktop */}
               <div className="relative lg:basis-3/5 h-64 lg:h-auto hidden lg:block">
-                {/* Gradient fade from left */}
-                <div className="absolute inset-0 bg-gradient-to-r from-neutralBgSubtle via-neutralBgSubtle/20 to-transparent pointer-events-none z-10" />
                 <Image
                   src={features[0].image}
                   alt={features[0].imageAlt}
@@ -65,12 +63,12 @@ export default function FeatureShowcase() {
                   sizes="(max-width: 1024px) 0vw, 60vw"
                   priority={true}
                 />
+                {/* Gradient fade from left - placed after image to be on top */}
+                <div className="absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-neutralBgSubtle to-transparent pointer-events-none" />
               </div>
 
               {/* Image - Mobile */}
               <div className="relative w-full h-64 lg:hidden">
-                {/* Gradient fade from top on mobile */}
-                <div className="absolute inset-0 bg-gradient-to-b from-neutralBgSubtle via-neutralBgSubtle/20 to-transparent pointer-events-none z-10" />
                 <Image
                   src={features[0].image}
                   alt={features[0].imageAlt}
@@ -79,6 +77,8 @@ export default function FeatureShowcase() {
                   sizes="(max-width: 1024px) 100vw, 0vw"
                   priority={true}
                 />
+                {/* Gradient fade from top on mobile - placed after image to be on top */}
+                <div className="absolute inset-x-0 top-0 h-1/3 bg-gradient-to-b from-neutralBgSubtle to-transparent pointer-events-none" />
               </div>
             </div>
           </div>
@@ -101,8 +101,6 @@ export default function FeatureShowcase() {
 
               {/* Image - Desktop */}
               <div className="relative flex-1 min-h-[200px] -z-10 hidden md:block">
-                {/* Gradient fade from top */}
-                <div className="absolute inset-0 bg-gradient-to-b from-neutralBgSubtle via-neutralBgSubtle/20 to-transparent pointer-events-none z-10" />
                 <Image
                   src={features[1].image}
                   alt={features[1].imageAlt}
@@ -111,12 +109,12 @@ export default function FeatureShowcase() {
                   sizes="(max-width: 768px) 0vw, 50vw"
                   priority={false}
                 />
+                {/* Gradient fade from top - placed after image to be on top */}
+                <div className="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-neutralBgSubtle to-transparent pointer-events-none" />
               </div>
 
               {/* Image - Mobile */}
               <div className="relative w-full h-64 -z-10 md:hidden">
-                {/* Gradient fade from top */}
-                <div className="absolute inset-0 bg-gradient-to-b from-neutralBgSubtle via-neutralBgSubtle/20 to-transparent pointer-events-none z-10" />
                 <Image
                   src={features[1].image}
                   alt={features[1].imageAlt}
@@ -125,6 +123,8 @@ export default function FeatureShowcase() {
                   sizes="(max-width: 768px) 100vw, 0vw"
                   priority={false}
                 />
+                {/* Gradient fade from top - placed after image to be on top */}
+                <div className="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-neutralBgSubtle to-transparent pointer-events-none" />
               </div>
             </div>
           </div>
@@ -147,8 +147,6 @@ export default function FeatureShowcase() {
 
               {/* Image - Desktop */}
               <div className="relative flex-1 min-h-[200px] -z-10 hidden md:block">
-                {/* Gradient fade from top */}
-                <div className="absolute inset-0 bg-gradient-to-b from-neutralBgSubtle via-neutralBgSubtle/20 to-transparent pointer-events-none z-10" />
                 <Image
                   src={features[2].image}
                   alt={features[2].imageAlt}
@@ -157,12 +155,12 @@ export default function FeatureShowcase() {
                   sizes="(max-width: 768px) 0vw, 50vw"
                   priority={false}
                 />
+                {/* Gradient fade from top - placed after image to be on top */}
+                <div className="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-neutralBgSubtle to-transparent pointer-events-none" />
               </div>
 
               {/* Image - Mobile */}
               <div className="relative w-full h-64 -z-10 md:hidden">
-                {/* Gradient fade from top */}
-                <div className="absolute inset-0 bg-gradient-to-b from-neutralBgSubtle via-neutralBgSubtle/20 to-transparent pointer-events-none z-10" />
                 <Image
                   src={features[2].image}
                   alt={features[2].imageAlt}
@@ -171,6 +169,8 @@ export default function FeatureShowcase() {
                   sizes="(max-width: 768px) 100vw, 0vw"
                   priority={false}
                 />
+                {/* Gradient fade from top - placed after image to be on top */}
+                <div className="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-neutralBgSubtle to-transparent pointer-events-none" />
               </div>
             </div>
           </div>
