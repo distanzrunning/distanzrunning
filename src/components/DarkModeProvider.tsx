@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, createContext, useContext } from 'react'
+import { createPortal } from 'react-dom'
 import { Moon, Sun } from 'lucide-react'
 
 const DarkModeContext = createContext<{
@@ -44,8 +45,15 @@ export function DarkModeProvider({ children }: { children: React.ReactNode }) {
 
 export function DarkModeToggle() {
   const { isDark, toggleDarkMode } = useContext(DarkModeContext)
+  const [mounted, setMounted] = useState(false)
 
-  return (
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  if (!mounted) return null
+
+  const button = (
     <button
       onClick={toggleDarkMode}
       className="p-2 rounded-lg bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-lg hover:shadow-xl transition-all duration-200"
@@ -64,4 +72,6 @@ export function DarkModeToggle() {
       )}
     </button>
   )
+
+  return createPortal(button, document.body)
 }
