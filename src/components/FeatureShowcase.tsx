@@ -74,6 +74,12 @@ export default function FeatureShowcase() {
             <div className="flex h-full w-full flex-col lg:flex-row">
               {/* Text content */}
               <div className="flex flex-col gap-3 lg:basis-2/5 px-8 py-8 md:px-16 md:py-16">
+                {/* Category Pill */}
+                <div className="inline-flex items-center self-start px-3 py-1.5 bg-pink-500/10 dark:bg-pink-500/20 rounded-full mb-1">
+                  <span className="text-pink-600 dark:text-pink-400 font-medium text-xs tracking-wide uppercase leading-none">
+                    News
+                  </span>
+                </div>
                 <h3 className="text-xl md:text-2xl leading-tight text-textDefault font-semibold">
                   {features[0].title}
                 </h3>
@@ -120,6 +126,12 @@ export default function FeatureShowcase() {
             <div className="flex h-full w-full flex-col">
               {/* Text content */}
               <div className="flex flex-col gap-3 px-8 py-8 md:px-16 md:py-16 z-10">
+                {/* Category Pill */}
+                <div className="inline-flex items-center self-start px-3 py-1.5 bg-pink-500/10 dark:bg-pink-500/20 rounded-full mb-1">
+                  <span className="text-pink-600 dark:text-pink-400 font-medium text-xs tracking-wide uppercase leading-none">
+                    Gear
+                  </span>
+                </div>
                 <h3 className="text-xl md:text-2xl leading-tight text-textDefault font-semibold">
                   {features[1].title}
                 </h3>
@@ -166,6 +178,12 @@ export default function FeatureShowcase() {
             <div className="flex h-full w-full flex-col">
               {/* Text content */}
               <div className="flex flex-col gap-3 px-8 py-8 md:px-16 md:py-16 z-10">
+                {/* Category Pill */}
+                <div className="inline-flex items-center self-start px-3 py-1.5 bg-pink-500/10 dark:bg-pink-500/20 rounded-full mb-1">
+                  <span className="text-pink-600 dark:text-pink-400 font-medium text-xs tracking-wide uppercase leading-none">
+                    Races
+                  </span>
+                </div>
                 <h3 className="text-xl md:text-2xl leading-tight text-textDefault font-semibold">
                   {features[2].title}
                 </h3>
