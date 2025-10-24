@@ -107,14 +107,15 @@ export default function FeatureShowcase() {
 
               {/* Image */}
               <div className="relative flex-1 min-h-[200px]">
-                {/* Top fade - keep same strength */}
-                <div className="absolute inset-0 bg-gradient-to-b from-neutral-50 dark:from-neutral-900 via-transparent to-transparent pointer-events-none z-10" />
-                {/* Bottom fade - reduced, shorter distance */}
-                <div className="absolute inset-0 bg-[linear-gradient(to_top,rgb(250_250_250_/_0.4)_0%,transparent_12%)] dark:bg-[linear-gradient(to_top,rgb(12_12_13_/_0.4)_0%,transparent_12%)] pointer-events-none z-10" />
-                {/* Left fade - reduced, shorter distance */}
-                <div className="absolute inset-0 bg-[linear-gradient(to_right,rgb(250_250_250_/_0.4)_0%,transparent_12%)] dark:bg-[linear-gradient(to_right,rgb(12_12_13_/_0.4)_0%,transparent_12%)] pointer-events-none z-10" />
-                {/* Right fade - reduced, shorter distance */}
-                <div className="absolute inset-0 bg-[linear-gradient(to_left,rgb(250_250_250_/_0.4)_0%,transparent_12%)] dark:bg-[linear-gradient(to_left,rgb(12_12_13_/_0.4)_0%,transparent_12%)] pointer-events-none z-10" />
+                {/* Corner fades only */}
+                {/* Top-left corner */}
+                <div className="absolute top-0 left-0 w-32 h-32 bg-[radial-gradient(circle_at_top_left,rgb(250_250_250)_0%,transparent_70%)] dark:bg-[radial-gradient(circle_at_top_left,rgb(12_12_13)_0%,transparent_70%)] pointer-events-none z-10" />
+                {/* Top-right corner */}
+                <div className="absolute top-0 right-0 w-32 h-32 bg-[radial-gradient(circle_at_top_right,rgb(250_250_250)_0%,transparent_70%)] dark:bg-[radial-gradient(circle_at_top_right,rgb(12_12_13)_0%,transparent_70%)] pointer-events-none z-10" />
+                {/* Bottom-left corner */}
+                <div className="absolute bottom-0 left-0 w-32 h-32 bg-[radial-gradient(circle_at_bottom_left,rgb(250_250_250)_0%,transparent_70%)] dark:bg-[radial-gradient(circle_at_bottom_left,rgb(12_12_13)_0%,transparent_70%)] pointer-events-none z-10" />
+                {/* Bottom-right corner */}
+                <div className="absolute bottom-0 right-0 w-32 h-32 bg-[radial-gradient(circle_at_bottom_right,rgb(250_250_250)_0%,transparent_70%)] dark:bg-[radial-gradient(circle_at_bottom_right,rgb(12_12_13)_0%,transparent_70%)] pointer-events-none z-10" />
                 <Image
                   src={features[2].image}
                   alt={features[2].imageAlt}
