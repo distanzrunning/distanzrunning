@@ -37,10 +37,10 @@ export default function FeatureShowcase() {
         {/* Grid container with auto-rows */}
         <div className="flex auto-rows-[minmax(300px,auto)] grid-cols-6 flex-col gap-2.5 md:grid">
 
-          {/* Running News - Full width top section (spans 6 columns, 2 rows) */}
+          {/* Running News - Full width top section (spans 6 columns, 1 row) */}
           <div
             className="relative z-0 overflow-hidden rounded-xl bg-neutralBgSubtle"
-            style={{ gridColumn: 'span 6 / span 6', gridRow: 'span 2 / span 2' }}
+            style={{ gridColumn: 'span 6 / span 6' }}
           >
             <div className="flex h-full w-full flex-col lg:flex-row">
               {/* Text content */}
@@ -83,10 +83,10 @@ export default function FeatureShowcase() {
             </div>
           </div>
 
-          {/* Gear Reviews - Bottom left (spans 3 columns, 1 row) */}
+          {/* Gear Reviews - Bottom left (spans 3 columns) */}
           <div
             className="relative z-0 overflow-hidden rounded-xl bg-neutralBgSubtle"
-            style={{ gridColumn: 'span 3 / span 3', gridRow: 'span 1 / span 1' }}
+            style={{ gridColumn: 'span 3 / span 3' }}
           >
             <div className="flex h-full w-full flex-col">
               {/* Text content */}
