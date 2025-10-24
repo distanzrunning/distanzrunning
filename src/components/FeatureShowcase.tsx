@@ -93,36 +93,36 @@ export default function FeatureShowcase() {
           </div>
 
           {/* Interactive Race Guides - Bottom right */}
-          <div className="relative overflow-hidden rounded-2xl border border-neutral-200 dark:border-neutral-800 transition-colors duration-300">
-            {/* Full background image */}
-            <div className="absolute inset-0">
-              <Image
-                src={features[2].image}
-                alt={features[2].imageAlt}
-                fill
-                className="object-cover"
-                sizes="(max-width: 768px) 100vw, 50vw"
-              />
-              {/* Corner fades - stronger and larger */}
-              {/* Top-left corner */}
-              <div className="absolute top-0 left-0 w-48 h-48 bg-[radial-gradient(circle_at_top_left,rgb(250_250_250)_0%,transparent_50%)] dark:bg-[radial-gradient(circle_at_top_left,rgb(12_12_13)_0%,transparent_50%)] pointer-events-none z-10" />
-              {/* Top-right corner */}
-              <div className="absolute top-0 right-0 w-48 h-48 bg-[radial-gradient(circle_at_top_right,rgb(250_250_250)_0%,transparent_50%)] dark:bg-[radial-gradient(circle_at_top_right,rgb(12_12_13)_0%,transparent_50%)] pointer-events-none z-10" />
-              {/* Bottom-left corner */}
-              <div className="absolute bottom-0 left-0 w-48 h-48 bg-[radial-gradient(circle_at_bottom_left,rgb(250_250_250)_0%,transparent_50%)] dark:bg-[radial-gradient(circle_at_bottom_left,rgb(12_12_13)_0%,transparent_50%)] pointer-events-none z-10" />
-              {/* Bottom-right corner */}
-              <div className="absolute bottom-0 right-0 w-48 h-48 bg-[radial-gradient(circle_at_bottom_right,rgb(250_250_250)_0%,transparent_50%)] dark:bg-[radial-gradient(circle_at_bottom_right,rgb(12_12_13)_0%,transparent_50%)] pointer-events-none z-10" />
-            </div>
-
-            {/* Text content overlay */}
-            <div className="relative z-20 flex flex-col justify-center min-h-[400px] px-8 py-10 md:px-12 md:py-12">
-              <div className="flex flex-col gap-4 bg-neutral-50/95 dark:bg-neutral-900/95 backdrop-blur-sm rounded-xl p-6">
+          <div className="relative overflow-hidden rounded-2xl bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 transition-colors duration-300">
+            <div className="flex flex-col h-full min-h-[400px]">
+              {/* Text content */}
+              <div className="flex flex-col gap-4 px-8 py-10 md:px-12 md:py-12 z-10 bg-neutral-50 dark:bg-neutral-900 transition-colors duration-300">
                 <h3 className="text-2xl sm:text-3xl font-semibold text-neutral-900 dark:text-white transition-colors duration-300">
                   {features[2].title}
                 </h3>
                 <p className="text-base text-neutral-600 dark:text-neutral-300 leading-relaxed transition-colors duration-300">
                   {features[2].description}
                 </p>
+              </div>
+
+              {/* Image */}
+              <div className="relative flex-1 min-h-[250px] bg-neutral-50 dark:bg-neutral-900 transition-colors duration-300">
+                {/* Corner fades - stronger and larger */}
+                {/* Top-left corner */}
+                <div className="absolute top-0 left-0 w-48 h-48 bg-[radial-gradient(circle_at_top_left,rgb(250_250_250)_0%,transparent_50%)] dark:bg-[radial-gradient(circle_at_top_left,rgb(12_12_13)_0%,transparent_50%)] pointer-events-none z-10" />
+                {/* Top-right corner */}
+                <div className="absolute top-0 right-0 w-48 h-48 bg-[radial-gradient(circle_at_top_right,rgb(250_250_250)_0%,transparent_50%)] dark:bg-[radial-gradient(circle_at_top_right,rgb(12_12_13)_0%,transparent_50%)] pointer-events-none z-10" />
+                {/* Bottom-left corner */}
+                <div className="absolute bottom-0 left-0 w-48 h-48 bg-[radial-gradient(circle_at_bottom_left,rgb(250_250_250)_0%,transparent_50%)] dark:bg-[radial-gradient(circle_at_bottom_left,rgb(12_12_13)_0%,transparent_50%)] pointer-events-none z-10" />
+                {/* Bottom-right corner */}
+                <div className="absolute bottom-0 right-0 w-48 h-48 bg-[radial-gradient(circle_at_bottom_right,rgb(250_250_250)_0%,transparent_50%)] dark:bg-[radial-gradient(circle_at_bottom_right,rgb(12_12_13)_0%,transparent_50%)] pointer-events-none z-10" />
+                <Image
+                  src={features[2].image}
+                  alt={features[2].imageAlt}
+                  fill
+                  className="object-cover object-center"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                />
               </div>
             </div>
           </div>
