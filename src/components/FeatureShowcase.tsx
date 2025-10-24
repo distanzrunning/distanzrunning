@@ -33,7 +33,36 @@ const features: Feature[] = [
 export default function FeatureShowcase() {
   return (
     <section className="w-full overflow-x-clip px-6">
-      <div className="pt-0 pb-48 max-w-6xl mx-auto flex w-full flex-col gap-6">
+      <div className="pt-0 pb-48 max-w-6xl mx-auto flex w-full flex-col gap-24">
+
+        {/* Title Section */}
+        <div className="w-full">
+          <div className="flex w-full flex-col gap-6">
+            <div className="flex flex-col gap-4 max-w-screen-md">
+              <div className="flex flex-col gap-6">
+                {/* Badge/Pill */}
+                <div className="flex gap-3">
+                  <div className="flex items-center gap-2 self-start rounded-full border border-borderNeutralSubtle backdrop-blur-md px-2.5 py-2 md:px-3 md:py-2.5">
+                    <span className="text-sm md:text-base text-textDefault font-medium">
+                      Features
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Headline and Description */}
+              <div className="flex flex-col gap-5">
+                <h2 className="text-h2-quartr md:text-[2.75rem] md:leading-tight text-pretty md:text-balance text-textDefault">
+                  Everything you need to stay ahead
+                </h2>
+                <p className="text-body-quartr text-textSubtle">
+                  From breaking news to detailed race guides and expert gear reviews, we provide the insights and tools every runner needs.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Grid container with auto-rows */}
         <div className="flex auto-rows-[minmax(300px,auto)] grid-cols-6 flex-col gap-2.5 md:grid">
 
