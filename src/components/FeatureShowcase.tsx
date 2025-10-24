@@ -36,7 +36,7 @@ export default function FeatureShowcase() {
       <div className="pb-48 max-w-6xl mx-auto flex w-full flex-col gap-24">
 
         {/* Title Section - Indented */}
-        <div className="w-full pl-0 md:pl-8 lg:pl-12">
+        <div className="w-full pl-0 md:pl-16 lg:pl-24">
           <div className="flex w-full flex-col gap-6">
             <div className="flex flex-col gap-4 max-w-screen-md">
               <div className="flex flex-col gap-6">
@@ -68,16 +68,16 @@ export default function FeatureShowcase() {
 
           {/* Running News - Full width top section (spans 6 columns, 1 row) */}
           <div
-            className="relative z-0 overflow-hidden rounded-xl bg-neutralBgSubtle"
+            className="relative z-0 overflow-hidden rounded-xl bg-neutralBgSubtle min-h-[400px]"
             style={{ gridColumn: 'span 6 / span 6' }}
           >
             <div className="flex h-full w-full flex-col lg:flex-row">
               {/* Text content */}
               <div className="flex flex-col gap-3 lg:basis-2/5 px-8 py-8 md:px-16 md:py-16">
-                <h3 className="text-h3-quartr md:text-h2-quartr text-textDefault">
+                <h3 className="text-xl md:text-2xl leading-tight text-textDefault font-semibold">
                   {features[0].title}
                 </h3>
-                <p className="text-body-quartr text-textSubtle">
+                <p className="text-base md:text-lg text-textSubtle leading-relaxed">
                   {features[0].description}
                 </p>
               </div>
@@ -120,10 +120,10 @@ export default function FeatureShowcase() {
             <div className="flex h-full w-full flex-col">
               {/* Text content */}
               <div className="flex flex-col gap-3 px-8 py-8 md:px-16 md:py-16 z-10">
-                <h3 className="text-h3-quartr text-textDefault">
+                <h3 className="text-xl md:text-2xl leading-tight text-textDefault font-semibold">
                   {features[1].title}
                 </h3>
-                <p className="text-body-quartr text-textSubtle">
+                <p className="text-base md:text-lg text-textSubtle leading-relaxed">
                   {features[1].description}
                 </p>
               </div>
@@ -166,10 +166,10 @@ export default function FeatureShowcase() {
             <div className="flex h-full w-full flex-col">
               {/* Text content */}
               <div className="flex flex-col gap-3 px-8 py-8 md:px-16 md:py-16 z-10">
-                <h3 className="text-h3-quartr text-textDefault">
+                <h3 className="text-xl md:text-2xl leading-tight text-textDefault font-semibold">
                   {features[2].title}
                 </h3>
-                <p className="text-body-quartr text-textSubtle">
+                <p className="text-base md:text-lg text-textSubtle leading-relaxed">
                   {features[2].description}
                 </p>
               </div>
