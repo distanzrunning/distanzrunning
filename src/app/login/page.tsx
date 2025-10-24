@@ -3,7 +3,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { DarkModeProvider, DarkModeToggle } from '@/components/DarkModeProvider'
+import { DarkModeProvider } from '@/components/DarkModeProvider'
 
 export default function LoginPage() {
   const [password, setPassword] = useState('')
@@ -44,9 +44,6 @@ export default function LoginPage() {
   return (
     <DarkModeProvider>
       <div className="min-h-screen bg-white dark:bg-[#0c0c0d] transition-colors duration-300 flex items-center justify-center p-4">
-        {/* Dark Mode Toggle */}
-        <DarkModeToggle />
-        
         {/* Logo and container wrapper */}
         <div className="w-full max-w-sm space-y-8">
           {/* Logo */}

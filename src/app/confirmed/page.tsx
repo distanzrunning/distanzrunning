@@ -4,7 +4,7 @@
 import { Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
-import { DarkModeProvider, DarkModeToggle } from '@/components/DarkModeProvider'
+import { DarkModeProvider } from '@/components/DarkModeProvider'
 
 function ConfirmedContent() {
   const searchParams = useSearchParams()
@@ -12,9 +12,6 @@ function ConfirmedContent() {
 
   return (
     <div className="min-h-screen bg-white dark:bg-[#0c0c0d] transition-colors duration-300 flex flex-col">
-      {/* Dark Mode Toggle */}
-      <DarkModeToggle />
-      
       <div className="flex-1 flex flex-col items-center justify-center p-4 md:p-6">
         <div className="max-w-md w-full text-center">
           
