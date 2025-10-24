@@ -33,7 +33,7 @@ const features: Feature[] = [
 export default function FeatureShowcase() {
   return (
     <section className="w-full overflow-x-clip px-6">
-      <div className="pt-0 pb-48 max-w-6xl mx-auto flex w-full flex-col gap-24">
+      <div className="pt-24 md:pt-32 lg:pt-48 pb-48 max-w-6xl mx-auto flex w-full flex-col gap-24">
 
         {/* Title Section */}
         <div className="w-full">
