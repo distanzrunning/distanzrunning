@@ -6,27 +6,27 @@ import { ChevronRight } from 'lucide-react'
 
 export default function WriteForUs() {
   return (
-    <section className="w-full overflow-x-clip bg-gradient-to-b from-canvas to-neutralBgSubtle px-6">
-      <div className="pt-0 pb-24 max-w-6xl mx-auto flex w-full flex-col">
-        <div className="flex min-h-56 w-full items-center overflow-hidden rounded-2xl bg-gradient-to-b from-canvas to-neutralBgSubtle p-10 md:p-16">
+    <section className="w-full overflow-x-clip px-6">
+      <div className="pt-0 pb-24 max-w-[calc(1024px+2rem)] mx-auto flex w-full flex-col px-4">
+        <div className="flex min-h-56 w-full items-center gap-6 overflow-hidden rounded-2xl bg-gray-900 dark:bg-white p-10">
           <div className="flex grow flex-col gap-6 items-center">
-            <div className="flex flex-col items-center gap-6 max-w-2xl">
+            <div className="flex flex-col items-center gap-6">
               {/* Heading and Description */}
-              <div className="flex flex-col gap-3">
-                <h4 className="text-[1.75rem] md:text-[2.25rem] leading-tight font-semibold text-center text-textDefault">
+              <div className="flex flex-col gap-4">
+                <h4 className="text-[1.75rem] md:text-[2.25rem] leading-tight font-semibold text-center text-white dark:text-gray-900">
                   Want to write and create running content?
                 </h4>
-                <p className="text-base md:text-lg text-center text-textSubtle">
+                <p className="text-base md:text-lg text-center text-gray-300 dark:text-gray-600">
                   We want to hear from you
                 </p>
               </div>
             </div>
 
             {/* CTA Button */}
-            <div className="flex items-center gap-3">
+            <div className="flex flex-wrap items-center gap-3 flex-col sm:flex-row">
               <Link
                 href="/contact-us"
-                className="group inline-flex items-center gap-2 px-5 h-12 rounded-lg bg-gray-900 text-white hover:bg-pink-600 transition-colors duration-200 font-semibold text-sm"
+                className="group inline-flex items-center gap-2 px-5 h-12 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white hover:bg-pink-600 hover:text-white transition-colors duration-200 font-semibold text-sm"
               >
                 <span>Get in touch</span>
                 <ChevronRight className="h-5 w-5" />
