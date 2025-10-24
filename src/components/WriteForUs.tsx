@@ -14,7 +14,7 @@ export default function WriteForUs() {
               {/* Heading */}
               <div className="flex flex-col gap-4">
                 <h4 className="text-[1.75rem] md:text-[2.25rem] leading-tight font-semibold text-center text-white dark:text-gray-900">
-                  Write for Distanz Running
+                  Want to create running content? We want to hear from you.
                 </h4>
               </div>
             </div>
@@ -23,7 +23,7 @@ export default function WriteForUs() {
             <div className="flex flex-wrap items-center gap-3 flex-col sm:flex-row">
               <Link
                 href="/contact-us"
-                className="group inline-flex items-center gap-2 px-5 h-12 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white hover:bg-pink-600 hover:text-white transition-colors duration-200 font-semibold text-sm"
+                className="group inline-flex items-center gap-2 px-5 h-12 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200 font-semibold text-sm"
               >
                 <span>Get in touch</span>
                 <ChevronRight className="h-5 w-5" />
