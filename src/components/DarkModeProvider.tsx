@@ -56,11 +56,8 @@ export function DarkModeToggle() {
   const toggle = (
     <button
       onClick={toggleDarkMode}
-      className="relative w-12 h-6 rounded-full bg-neutral-200 dark:bg-neutral-700 transition-colors duration-300 shadow-lg hover:shadow-xl cursor-pointer"
+      className="fixed top-4 right-4 w-12 h-6 rounded-full bg-neutral-200 dark:bg-neutral-700 transition-colors duration-300 shadow-lg hover:shadow-xl cursor-pointer"
       style={{
-        position: 'fixed',
-        top: '1rem',
-        right: '1rem',
         zIndex: 99999,
       }}
       aria-label="Toggle dark mode"
