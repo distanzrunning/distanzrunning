@@ -12,6 +12,7 @@ import { NewsletterButton } from '@/components/NewsletterModal'
 import { DarkModeProvider } from '@/components/DarkModeProvider'
 import SocialLinks from '@/components/SocialLinks'
 import FeatureShowcase from '@/components/FeatureShowcase'
+import WriteForUs from '@/components/WriteForUs'
 import { Metadata } from 'next'
 import { PreviewDarkModeToggle } from '@/components/PreviewDarkModeToggle'
 
@@ -126,6 +127,9 @@ function PreviewPage() {
 
           {/* Feature Showcase Section */}
           <FeatureShowcase />
+
+          {/* Write For Us Section */}
+          <WriteForUs />
 
           {/* Social links moved to bottom */}
           <div className="px-6 py-8">
