@@ -11,14 +11,11 @@ export default function WriteForUs() {
         <div className="flex min-h-56 w-full items-center gap-6 overflow-hidden rounded-2xl bg-gray-900 dark:bg-white p-10">
           <div className="flex grow flex-col gap-6 items-center">
             <div className="flex flex-col items-center gap-6">
-              {/* Heading and Description */}
+              {/* Heading */}
               <div className="flex flex-col gap-4">
                 <h4 className="text-[1.75rem] md:text-[2.25rem] leading-tight font-semibold text-center text-white dark:text-gray-900">
-                  Want to write and create running content?
+                  Write for Distanz Running
                 </h4>
-                <p className="text-base md:text-lg text-center text-gray-300 dark:text-gray-600">
-                  We want to hear from you
-                </p>
               </div>
             </div>
 
