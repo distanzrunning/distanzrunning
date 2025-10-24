@@ -32,8 +32,8 @@ const features: Feature[] = [
 
 export default function FeatureShowcase() {
   return (
-    <section className="w-full overflow-x-clip pb-24">
-      <div className="pt-0 pb-24 max-w-[calc(1024px+2rem)] mx-auto flex w-full flex-col gap-6 px-4">
+    <section className="w-full overflow-x-clip">
+      <div className="pt-0 pb-48 max-w-[calc(1024px+2rem)] mx-auto flex w-full flex-col gap-6 px-4">
         {/* Grid container with auto-rows */}
         <div className="flex auto-rows-[minmax(300px,auto)] grid-cols-6 flex-col gap-2.5 md:grid">
 
@@ -44,7 +44,7 @@ export default function FeatureShowcase() {
           >
             <div className="flex h-full w-full flex-col lg:flex-row">
               {/* Text content */}
-              <div className="flex flex-col gap-3 lg:basis-2/5 px-8 py-8 md:px-16 md:pt-16">
+              <div className="flex flex-col gap-3 lg:basis-2/5 px-8 py-8 md:px-16 md:py-16">
                 <h3 className="text-h3-quartr md:text-h2-quartr text-textDefault">
                   {features[0].title}
                 </h3>
@@ -61,6 +61,7 @@ export default function FeatureShowcase() {
                   fill
                   className="object-cover"
                   sizes="(max-width: 1024px) 0vw, 60vw"
+                  priority={true}
                 />
               </div>
 
@@ -72,6 +73,7 @@ export default function FeatureShowcase() {
                   fill
                   className="object-cover"
                   sizes="(max-width: 1024px) 100vw, 0vw"
+                  priority={true}
                 />
               </div>
             </div>
@@ -84,7 +86,7 @@ export default function FeatureShowcase() {
           >
             <div className="flex h-full w-full flex-col">
               {/* Text content */}
-              <div className="flex flex-col gap-3 px-8 py-8 md:px-16 md:pt-16">
+              <div className="flex flex-col gap-3 px-8 py-8 md:px-16 md:py-16 z-10">
                 <h3 className="text-h3-quartr text-textDefault">
                   {features[1].title}
                 </h3>
@@ -93,14 +95,27 @@ export default function FeatureShowcase() {
                 </p>
               </div>
 
-              {/* Image */}
-              <div className="relative flex-1 min-h-[200px]">
+              {/* Image - Desktop */}
+              <div className="relative flex-1 min-h-[200px] -z-10 hidden md:block">
                 <Image
                   src={features[1].image}
                   alt={features[1].imageAlt}
                   fill
                   className="object-cover"
-                  sizes="(max-width: 768px) 100vw, 50vw"
+                  sizes="(max-width: 768px) 0vw, 50vw"
+                  priority={false}
+                />
+              </div>
+
+              {/* Image - Mobile */}
+              <div className="relative w-full h-64 -z-10 md:hidden">
+                <Image
+                  src={features[1].image}
+                  alt={features[1].imageAlt}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 0vw"
+                  priority={false}
                 />
               </div>
             </div>
@@ -113,7 +128,7 @@ export default function FeatureShowcase() {
           >
             <div className="flex h-full w-full flex-col">
               {/* Text content */}
-              <div className="flex flex-col gap-3 px-8 py-8 md:px-16 md:pt-16">
+              <div className="flex flex-col gap-3 px-8 py-8 md:px-16 md:py-16 z-10">
                 <h3 className="text-h3-quartr text-textDefault">
                   {features[2].title}
                 </h3>
@@ -122,14 +137,27 @@ export default function FeatureShowcase() {
                 </p>
               </div>
 
-              {/* Image */}
-              <div className="relative flex-1 min-h-[200px]">
+              {/* Image - Desktop */}
+              <div className="relative flex-1 min-h-[200px] -z-10 hidden md:block">
                 <Image
                   src={features[2].image}
                   alt={features[2].imageAlt}
                   fill
                   className="object-cover object-center"
-                  sizes="(max-width: 768px) 100vw, 50vw"
+                  sizes="(max-width: 768px) 0vw, 50vw"
+                  priority={false}
+                />
+              </div>
+
+              {/* Image - Mobile */}
+              <div className="relative w-full h-64 -z-10 md:hidden">
+                <Image
+                  src={features[2].image}
+                  alt={features[2].imageAlt}
+                  fill
+                  className="object-cover object-center"
+                  sizes="(max-width: 768px) 100vw, 0vw"
+                  priority={false}
                 />
               </div>
             </div>
