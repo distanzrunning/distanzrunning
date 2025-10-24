@@ -12,7 +12,7 @@ type Feature = {
 const features: Feature[] = [
   {
     title: "Running News",
-    description: "Road, track, and trail running coverage. Stay up to date with race results, athlete profiles, and the latest developments in the running world.",
+    description: "Breaking news from the world of running. Plus longer-form stories and features on athletes, training, races, locations, travel, and running culture.",
     image: "/images/running_news.jpg",
     imageAlt: "Running News"
   },
@@ -24,7 +24,7 @@ const features: Feature[] = [
   },
   {
     title: "Race Guides",
-    description: "In-depth marathon guides and course analysis. Explore our race database to search and compare races worldwide.",
+    description: "In-depth marathon guides and course analysis. Use our race database and tools to find your perfect next race.",
     image: "/images/races_logos.webp",
     imageAlt: "Race Guides"
   }
