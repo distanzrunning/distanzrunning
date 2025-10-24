@@ -12,10 +12,13 @@ export default function WriteForUs() {
           <div className="flex grow flex-col gap-6 items-center">
             <div className="flex flex-col items-center gap-6">
               {/* Heading */}
-              <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-3">
                 <h4 className="text-[1.75rem] md:text-[2.25rem] leading-tight font-semibold text-center text-white dark:text-gray-900">
-                  Want to create running content? We want to hear from you.
+                  Want to create running content?
                 </h4>
+                <p className="text-base md:text-lg text-center text-gray-300 dark:text-gray-600">
+                  We want to hear from you.
+                </p>
               </div>
             </div>
 
