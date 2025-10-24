@@ -4,7 +4,7 @@ import { useState, useEffect, createContext, useContext } from 'react'
 import { createPortal } from 'react-dom'
 import { Moon, Sun } from 'lucide-react'
 
-const DarkModeContext = createContext<{
+export const DarkModeContext = createContext<{
   isDark: boolean
   toggleDarkMode: () => void
 }>({

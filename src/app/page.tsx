@@ -9,10 +9,11 @@ import ResponsiveMarathonShowcase from '@/components/ResponsiveMarathonShowcase'
 import { TypewriterText } from '@/components/TypewriterText'
 import { ExploreButton } from '@/components/ExploreButton'
 import { NewsletterButton } from '@/components/NewsletterModal'
-import { DarkModeProvider, DarkModeToggle } from '@/components/DarkModeProvider'
+import { DarkModeProvider } from '@/components/DarkModeProvider'
 import SocialLinks from '@/components/SocialLinks'
 import FeatureShowcase from '@/components/FeatureShowcase'
 import { Metadata } from 'next'
+import { PreviewDarkModeToggle } from '@/components/PreviewDarkModeToggle'
 
 type Post = {
   _id: string
@@ -51,8 +52,8 @@ function PreviewPage() {
         <link rel="preload" as="image" href="/images/logo_1.svg" fetchPriority="high" />
         <link rel="preload" as="image" href="/images/logo_white.svg" fetchPriority="high" />
 
-        {/* Dark Mode Toggle - outside main container for true fixed positioning */}
-        <DarkModeToggle />
+        {/* Dark Mode Toggle - fixed position toggle specific to preview page */}
+        <PreviewDarkModeToggle />
 
         <div className="min-h-screen flex flex-col bg-white dark:bg-[#0c0c0d] transition-colors duration-300">
           
