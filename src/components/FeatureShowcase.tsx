@@ -32,8 +32,8 @@ const features: Feature[] = [
 
 export default function FeatureShowcase() {
   return (
-    <section className="w-full overflow-x-clip">
-      <div className="pt-0 pb-48 max-w-6xl mx-auto flex w-full flex-col gap-6 px-6">
+    <section className="w-full overflow-x-clip px-6">
+      <div className="pt-0 pb-48 max-w-6xl mx-auto flex w-full flex-col gap-6">
         {/* Grid container with auto-rows */}
         <div className="flex auto-rows-[minmax(300px,auto)] grid-cols-6 flex-col gap-2.5 md:grid">
 
