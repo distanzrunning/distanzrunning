@@ -54,23 +54,35 @@ export function DarkModeToggle() {
   if (!mounted) return null
 
   const button = (
-    <button
-      onClick={toggleDarkMode}
-      className="p-2 rounded-lg bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-lg hover:shadow-xl transition-all duration-200"
+    <div
       style={{
         position: 'fixed',
-        top: '1rem',
-        right: '1rem',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        pointerEvents: 'none',
         zIndex: 9999
       }}
-      aria-label="Toggle dark mode"
     >
-      {isDark ? (
-        <Sun className="w-5 h-5 text-yellow-500" />
-      ) : (
-        <Moon className="w-5 h-5 text-neutral-600" />
-      )}
-    </button>
+      <button
+        onClick={toggleDarkMode}
+        className="p-2 rounded-lg bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-lg hover:shadow-xl transition-all duration-200"
+        style={{
+          position: 'absolute',
+          top: '1rem',
+          right: '1rem',
+          pointerEvents: 'auto'
+        }}
+        aria-label="Toggle dark mode"
+      >
+        {isDark ? (
+          <Sun className="w-5 h-5 text-yellow-500" />
+        ) : (
+          <Moon className="w-5 h-5 text-neutral-600" />
+        )}
+      </button>
+    </div>
   )
 
   return createPortal(button, document.body)
