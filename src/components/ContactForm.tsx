@@ -48,7 +48,7 @@ export default function ContactForm() {
             Email<span className="text-textSubtle"> *</span>
           </label>
           <input
-            className="placeholder:font-medium placeholder:text-textSubtle relative text-left transition-all outline-none min-h-12 rounded-lg px-3 text-base text-textDefault border border-borderNeutral bg-gray-50 dark:bg-gray-800 hover:border-borderNeutralHover disabled:opacity-40 focus:border-borderNeutralHover focus:outline-none focus:ring-2 focus:ring-borderNeutral"
+            className="placeholder:font-medium placeholder:text-textSubtle relative text-left transition-all outline-none min-h-12 rounded-lg px-3 text-base text-textDefault border border-borderNeutral bg-gray-50 dark:bg-neutral-800 hover:border-borderNeutralHover disabled:opacity-40 focus:border-borderNeutralHover focus:outline-none focus:ring-2 focus:ring-borderNeutral"
             id="email"
             autoComplete="email"
             placeholder="name@email.com"
@@ -65,7 +65,7 @@ export default function ContactForm() {
             Name<span className="text-textSubtle"> *</span>
           </label>
           <input
-            className="placeholder:font-medium placeholder:text-textSubtle relative text-left transition-all outline-none min-h-12 rounded-lg px-3 text-base text-textDefault border border-borderNeutral bg-gray-50 dark:bg-gray-800 hover:border-borderNeutralHover disabled:opacity-40 focus:border-borderNeutralHover focus:outline-none focus:ring-2 focus:ring-borderNeutral"
+            className="placeholder:font-medium placeholder:text-textSubtle relative text-left transition-all outline-none min-h-12 rounded-lg px-3 text-base text-textDefault border border-borderNeutral bg-gray-50 dark:bg-neutral-800 hover:border-borderNeutralHover disabled:opacity-40 focus:border-borderNeutralHover focus:outline-none focus:ring-2 focus:ring-borderNeutral"
             id="name"
             autoComplete="name"
             placeholder="First and last name"
@@ -91,7 +91,7 @@ export default function ContactForm() {
                       role="checkbox"
                       aria-checked={formData.interests.includes(interest)}
                       onClick={() => handleCheckboxChange(interest)}
-                      className="flex items-center justify-center w-5 h-5 rounded border border-borderNeutral bg-gray-50 dark:bg-gray-800 hover:border-borderNeutralHover transition cursor-pointer data-[checked=true]:border-gray-900 data-[checked=true]:bg-gray-900 dark:data-[checked=true]:border-white dark:data-[checked=true]:bg-white"
+                      className="flex items-center justify-center w-5 h-5 rounded border border-borderNeutral bg-gray-50 dark:bg-neutral-800 hover:border-borderNeutralHover transition cursor-pointer data-[checked=true]:border-gray-900 data-[checked=true]:bg-gray-900 dark:data-[checked=true]:border-white dark:data-[checked=true]:bg-white"
                       data-checked={formData.interests.includes(interest)}
                     >
                       {formData.interests.includes(interest) && (
@@ -117,7 +117,7 @@ export default function ContactForm() {
             Would you like to add anything?
           </label>
           <textarea
-            className="placeholder:font-medium placeholder:text-textSubtle relative text-left transition-all outline-none min-h-32 rounded-lg px-3 py-3 text-base text-textDefault border border-borderNeutral bg-gray-50 dark:bg-gray-800 hover:border-borderNeutralHover disabled:opacity-40 focus:border-borderNeutralHover focus:outline-none focus:ring-2 focus:ring-borderNeutral resize-none"
+            className="placeholder:font-medium placeholder:text-textSubtle relative text-left transition-all outline-none min-h-32 rounded-lg px-3 py-3 text-base text-textDefault border border-borderNeutral bg-gray-50 dark:bg-neutral-800 hover:border-borderNeutralHover disabled:opacity-40 focus:border-borderNeutralHover focus:outline-none focus:ring-2 focus:ring-borderNeutral resize-none"
             id="message"
             placeholder="Tell us more about your interests"
             value={formData.message}
