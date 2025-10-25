@@ -1,12 +1,12 @@
 'use client'
 
 import { useState } from 'react'
+import { Check } from 'lucide-react'
 
 export default function ContactForm() {
   const [formData, setFormData] = useState({
     email: '',
     name: '',
-    phone: '',
     interests: [] as string[],
     message: '',
   })
@@ -33,7 +33,7 @@ export default function ContactForm() {
 
       // Reset form after success
       setTimeout(() => {
-        setFormData({ email: '', name: '', phone: '', interests: [], message: '' })
+        setFormData({ email: '', name: '', interests: [], message: '' })
         setSubmitStatus('idle')
       }, 3000)
     }, 1000)
@@ -44,11 +44,11 @@ export default function ContactForm() {
       <div className="flex w-full flex-col items-start justify-center gap-6">
         {/* Email */}
         <div className="flex w-full flex-col gap-2">
-          <label htmlFor="email" className="text-base text-textDefault">
+          <label htmlFor="email" className="text-base text-textDefault font-normal">
             Email<span className="text-textSubtle"> *</span>
           </label>
           <input
-            className="placeholder:font-medium placeholder:text-textSubtle relative text-left transition-all outline-none min-h-12 rounded-lg px-3 text-base text-textDefault border border-borderNeutral bg-surface hover:border-borderNeutralHover disabled:opacity-40 focus:border-borderNeutralHover focus:outline-none focus:ring-2 focus:ring-borderNeutral"
+            className="placeholder:font-medium placeholder:text-textSubtle relative text-left transition-all outline-none min-h-12 rounded-lg px-3 text-base text-textDefault border border-borderNeutral bg-gray-50 dark:bg-gray-800 hover:border-borderNeutralHover disabled:opacity-40 focus:border-borderNeutralHover focus:outline-none focus:ring-2 focus:ring-borderNeutral"
             id="email"
             autoComplete="email"
             placeholder="name@email.com"
@@ -61,11 +61,11 @@ export default function ContactForm() {
 
         {/* Name */}
         <div className="flex w-full flex-col gap-2">
-          <label htmlFor="name" className="text-base text-textDefault">
+          <label htmlFor="name" className="text-base text-textDefault font-normal">
             Name<span className="text-textSubtle"> *</span>
           </label>
           <input
-            className="placeholder:font-medium placeholder:text-textSubtle relative text-left transition-all outline-none min-h-12 rounded-lg px-3 text-base text-textDefault border border-borderNeutral bg-surface hover:border-borderNeutralHover disabled:opacity-40 focus:border-borderNeutralHover focus:outline-none focus:ring-2 focus:ring-borderNeutral"
+            className="placeholder:font-medium placeholder:text-textSubtle relative text-left transition-all outline-none min-h-12 rounded-lg px-3 text-base text-textDefault border border-borderNeutral bg-gray-50 dark:bg-gray-800 hover:border-borderNeutralHover disabled:opacity-40 focus:border-borderNeutralHover focus:outline-none focus:ring-2 focus:ring-borderNeutral"
             id="name"
             autoComplete="name"
             placeholder="First and last name"
@@ -76,41 +76,33 @@ export default function ContactForm() {
           />
         </div>
 
-        {/* Phone */}
-        <div className="flex w-full flex-col gap-2">
-          <label htmlFor="phone" className="text-base text-textDefault">
-            Phone (incl. country code)
-          </label>
-          <input
-            className="placeholder:font-medium placeholder:text-textSubtle relative text-left transition-all outline-none min-h-12 rounded-lg px-3 text-base text-textDefault border border-borderNeutral bg-surface hover:border-borderNeutralHover disabled:opacity-40 focus:border-borderNeutralHover focus:outline-none focus:ring-2 focus:ring-borderNeutral"
-            id="phone"
-            autoComplete="tel"
-            placeholder="+1 (123) - 456 78 90"
-            type="tel"
-            value={formData.phone}
-            onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))}
-          />
-        </div>
-
         {/* Interests Checkboxes */}
         <fieldset className="w-full">
           <div className="flex flex-col gap-5">
-            <legend className="text-base text-textDefault">
+            <legend className="text-base text-textDefault font-normal">
               What are you interested in?<span className="text-textSubtle"> *</span>
             </legend>
             <div className="flex flex-col gap-3">
               {['Writing articles', 'Race guides', 'Gear reviews', 'Other'].map((interest) => (
-                <div key={interest} className="flex flex-row items-center gap-2 text-textSubtle">
+                <div key={interest} className="flex flex-row items-center gap-3">
                   <div className="shrink-0">
-                    <input
-                      type="checkbox"
-                      id={interest}
-                      checked={formData.interests.includes(interest)}
-                      onChange={() => handleCheckboxChange(interest)}
-                      className="w-6 h-6 cursor-pointer rounded border border-borderNeutral bg-surface hover:border-borderNeutralHover checked:bg-pink-500 checked:border-pink-500 focus:ring-2 focus:ring-borderNeutral transition"
-                    />
+                    <button
+                      type="button"
+                      role="checkbox"
+                      aria-checked={formData.interests.includes(interest)}
+                      onClick={() => handleCheckboxChange(interest)}
+                      className="flex items-center justify-center w-5 h-5 rounded border border-borderNeutral bg-gray-50 dark:bg-gray-800 hover:border-borderNeutralHover transition cursor-pointer data-[checked=true]:border-gray-900 data-[checked=true]:bg-gray-900 dark:data-[checked=true]:border-white dark:data-[checked=true]:bg-white"
+                      data-checked={formData.interests.includes(interest)}
+                    >
+                      {formData.interests.includes(interest) && (
+                        <Check className="w-3.5 h-3.5 text-white dark:text-gray-900" strokeWidth={3} />
+                      )}
+                    </button>
                   </div>
-                  <label className="text-base cursor-pointer" htmlFor={interest}>
+                  <label
+                    className="text-base cursor-pointer text-textSubtle font-normal leading-snug"
+                    onClick={() => handleCheckboxChange(interest)}
+                  >
                     {interest}
                   </label>
                 </div>
@@ -121,11 +113,11 @@ export default function ContactForm() {
 
         {/* Message */}
         <div className="flex w-full flex-col gap-2">
-          <label htmlFor="message" className="text-base text-textDefault">
+          <label htmlFor="message" className="text-base text-textDefault font-normal">
             Would you like to add anything?
           </label>
           <textarea
-            className="placeholder:font-medium placeholder:text-textSubtle relative text-left transition-all outline-none min-h-32 rounded-lg px-3 py-3 text-base text-textDefault border border-borderNeutral bg-surface hover:border-borderNeutralHover disabled:opacity-40 focus:border-borderNeutralHover focus:outline-none focus:ring-2 focus:ring-borderNeutral resize-none"
+            className="placeholder:font-medium placeholder:text-textSubtle relative text-left transition-all outline-none min-h-32 rounded-lg px-3 py-3 text-base text-textDefault border border-borderNeutral bg-gray-50 dark:bg-gray-800 hover:border-borderNeutralHover disabled:opacity-40 focus:border-borderNeutralHover focus:outline-none focus:ring-2 focus:ring-borderNeutral resize-none"
             id="message"
             placeholder="Tell us more about your interests"
             value={formData.message}
