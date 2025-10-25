@@ -1,5 +1,8 @@
 import { Metadata } from 'next'
 import ContactForm from '@/components/ContactForm'
+import SocialLinks from '@/components/SocialLinks'
+import { DarkModeProvider } from '@/components/DarkModeProvider'
+import Link from 'next/link'
 import { Check } from 'lucide-react'
 
 export const metadata: Metadata = {
@@ -9,8 +12,43 @@ export const metadata: Metadata = {
 
 export default function ContactUsPage() {
   return (
-    <div className="relative w-full pt-16 md:pt-32 lg:pt-40 pb-0 px-3">
-      <div className="relative mx-auto grid items-start max-w-[900px] md:grid-cols-2 gap-8">
+    <DarkModeProvider>
+      <div className="min-h-screen bg-white dark:bg-[#0c0c0d] transition-colors duration-300">
+        {/* Logo */}
+        <div className="pt-12 pb-8 px-6">
+          <div className="flex justify-center">
+            <Link href="/" className="svg-container">
+              <img
+                src="/images/logo_1.svg"
+                alt="Distanz Running Logo"
+                width="400"
+                height="200"
+                className="block dark:hidden logo-svg"
+                style={{
+                  height: '80px',
+                  width: 'auto',
+                  maxWidth: '100%'
+                }}
+              />
+              <img
+                src="/images/logo_white.svg"
+                alt="Distanz Running Logo"
+                width="400"
+                height="200"
+                className="hidden dark:block logo-svg"
+                style={{
+                  height: '80px',
+                  width: 'auto',
+                  maxWidth: '100%'
+                }}
+              />
+            </Link>
+          </div>
+        </div>
+
+        {/* Main Content */}
+        <div className="relative w-full pt-8 md:pt-16 pb-16 px-3">
+          <div className="relative mx-auto grid items-start max-w-[900px] md:grid-cols-2 gap-8">
         {/* Left Column - Info */}
         <div className="relative pt-8 md:pt-12 pb-8 md:pr-16">
           <div className="relative">
@@ -59,5 +97,14 @@ export default function ContactUsPage() {
         </div>
       </div>
     </div>
+
+    {/* Social Links */}
+    <div className="px-6 py-8">
+      <div className="max-w-6xl mx-auto text-center">
+        <SocialLinks />
+      </div>
+    </div>
+      </div>
+    </DarkModeProvider>
   )
 }
