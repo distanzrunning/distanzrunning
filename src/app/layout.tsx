@@ -7,7 +7,6 @@ import Footer from "@/components/Footer";
 import AuthProtection from "@/components/AuthProtection";
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
-import { GoogleTagManager } from '@next/third-parties/google';
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -44,7 +43,6 @@ export default function RootLayout({
 
   return (
     <html lang="en" className={`${playfair.variable}`}>
-      <GoogleTagManager gtmId="GTM-K3W2LWHM" />
       <head>
         <link
           rel="stylesheet"
