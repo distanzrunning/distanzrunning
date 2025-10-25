@@ -17,11 +17,14 @@ export function DarkModeProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme')
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-    
-    if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+
+    // Only enable dark mode if explicitly saved as 'dark'
+    if (savedTheme === 'dark') {
       setIsDark(true)
       document.documentElement.classList.add('dark')
+    } else {
+      // Default to light mode
+      document.documentElement.classList.remove('dark')
     }
   }, [])
 
