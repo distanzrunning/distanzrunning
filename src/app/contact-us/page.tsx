@@ -53,7 +53,7 @@ export default function ContactUsPage() {
         <div className="relative pt-8 md:pt-12 pb-8 md:pr-16">
           <div className="relative">
             <div className="flex flex-col gap-6 text-left pb-8">
-              <h1 className="font-semibold tracking-tight text-[35px] leading-[40px] md:text-[56px] md:leading-[56px] text-textDefault">
+              <h1 className="font-semibold tracking-tight text-[35px] leading-[1.1] md:text-[56px] md:leading-[1.05] text-textDefault">
                 Contact us
               </h1>
             </div>
@@ -61,26 +61,26 @@ export default function ContactUsPage() {
             <div className="flex w-full flex-col gap-10">
               <ul className="flex max-w-screen-sm flex-col gap-12">
                 <li className="flex flex-col gap-7">
-                  <div className="font-normal text-base md:text-lg leading-snug text-textDefault">
+                  <div className="font-normal text-base md:text-lg leading-tight text-textDefault">
                     Want to contribute content, provide feedback, or just say hello? We'd love to hear from you.
                   </div>
 
                   <ul className="flex max-w-md flex-col gap-6">
                     <li className="flex gap-2 text-textSubtle">
-                      <Check className="w-4 h-4 flex-shrink-0 mt-1" strokeWidth={2} />
-                      <div className="font-normal text-base md:text-lg leading-snug">
+                      <Check className="w-4 h-4 flex-shrink-0 mt-0.5" strokeWidth={2} />
+                      <div className="font-normal text-base md:text-lg leading-tight">
                         Submit article ideas or pitches
                       </div>
                     </li>
                     <li className="flex gap-2 text-textSubtle">
-                      <Check className="w-4 h-4 flex-shrink-0 mt-1" strokeWidth={2} />
-                      <div className="font-normal text-base md:text-lg leading-snug">
+                      <Check className="w-4 h-4 flex-shrink-0 mt-0.5" strokeWidth={2} />
+                      <div className="font-normal text-base md:text-lg leading-tight">
                         Share feedback on our platform
                       </div>
                     </li>
                     <li className="flex gap-2 text-textSubtle">
-                      <Check className="w-4 h-4 flex-shrink-0 mt-1" strokeWidth={2} />
-                      <div className="font-normal text-base md:text-lg leading-snug">
+                      <Check className="w-4 h-4 flex-shrink-0 mt-0.5" strokeWidth={2} />
+                      <div className="font-normal text-base md:text-lg leading-tight">
                         Get a response within 48 hours
                       </div>
                     </li>
