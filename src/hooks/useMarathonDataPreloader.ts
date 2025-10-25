@@ -23,7 +23,7 @@ export function useMarathonDataPreloader(marathons: MarathonData[]) {
         // Preload all marathon routes in parallel
         const preloadPromises = marathons.map(async (marathon, index) => {
           try {
-            const response = await fetch(marathon.geojsonUrl)
+            const response = await fetch(marathon.gpxUrl)
             if (!response.ok) {
               throw new Error(`Failed to fetch ${marathon.name}`)
             }

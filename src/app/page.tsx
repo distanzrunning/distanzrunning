@@ -50,7 +50,6 @@ function PreviewPage() {
   return (
       <DarkModeProvider>
         {/* Preload critical images for instant loading */}
-        <link rel="preload" as="image" href="/images/berlin_cover.jpg" fetchPriority="high" />
         <link rel="preload" as="image" href="/images/logo_1.svg" fetchPriority="high" />
         <link rel="preload" as="image" href="/images/logo_white.svg" fetchPriority="high" />
 
