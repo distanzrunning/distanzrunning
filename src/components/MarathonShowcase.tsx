@@ -1554,15 +1554,15 @@ export const MarathonMajorsShowcase: React.FC = () => {
               <div ref={mapContainer} className="w-full h-full" />
 
               {/* Map Controls */}
-              <div className="absolute top-3 right-3 flex flex-col gap-1.5 z-10">
+              <div className="absolute top-3 left-3 flex flex-col gap-1.5 z-10">
                 {/* Recenter Button */}
                 <button
                   onClick={recenterMap}
-                  className="bg-white/90 dark:bg-neutral-800/90 backdrop-blur-sm border border-neutral-200 dark:border-neutral-700 rounded-md p-1.5 shadow-sm hover:bg-white dark:hover:bg-neutral-800 hover:shadow-md transition-all duration-200"
+                  className="bg-white/90 dark:bg-neutral-800/90 backdrop-blur-sm border border-neutral-200 dark:border-neutral-700 rounded-md p-2 shadow-sm hover:bg-white dark:hover:bg-neutral-800 hover:shadow-md transition-all duration-200 w-9 h-9 flex items-center justify-center"
                   title="Reset to course view"
                   aria-label="Recenter map to course view"
                 >
-                  <span className="material-symbols-outlined text-neutral-600 dark:text-neutral-300 text-[18px]">
+                  <span className="material-symbols-outlined text-neutral-600 dark:text-neutral-300 text-[18px] leading-none">
                     my_location
                   </span>
                 </button>
@@ -1570,7 +1570,7 @@ export const MarathonMajorsShowcase: React.FC = () => {
                 {/* Distance Markers Toggle */}
                 <button
                   onClick={toggleDistanceMarkers}
-                  className={`backdrop-blur-sm border rounded-md p-1.5 shadow-sm hover:shadow-md transition-all duration-200 ${
+                  className={`backdrop-blur-sm border rounded-md p-2 shadow-sm hover:shadow-md transition-all duration-200 w-9 h-9 flex items-center justify-center ${
                     showDistanceMarkers
                       ? 'bg-white/90 dark:bg-neutral-800/90 border-neutral-200 dark:border-neutral-700 hover:bg-white dark:hover:bg-neutral-800'
                       : 'bg-neutral-50/90 dark:bg-neutral-700/90 border-neutral-200 dark:border-neutral-600 hover:bg-neutral-100/90 dark:hover:bg-neutral-700'
@@ -1578,7 +1578,7 @@ export const MarathonMajorsShowcase: React.FC = () => {
                   title={showDistanceMarkers ? "Hide distance markers" : "Show distance markers"}
                   aria-label={showDistanceMarkers ? "Hide distance markers" : "Show distance markers"}
                 >
-                  <span className={`material-symbols-outlined text-[18px] transition-colors duration-200 ${
+                  <span className={`material-symbols-outlined text-[18px] leading-none transition-colors duration-200 ${
                     showDistanceMarkers
                       ? 'text-neutral-600 dark:text-neutral-300'
                       : 'text-neutral-400 dark:text-neutral-500'
@@ -1590,7 +1590,7 @@ export const MarathonMajorsShowcase: React.FC = () => {
                 {/* Aid Stations Toggle */}
                 <button
                   onClick={toggleAidStations}
-                  className={`backdrop-blur-sm border rounded-md p-1.5 shadow-sm hover:shadow-md transition-all duration-200 ${
+                  className={`backdrop-blur-sm border rounded-md p-2 shadow-sm hover:shadow-md transition-all duration-200 w-9 h-9 flex items-center justify-center ${
                     showAidStations
                       ? 'bg-white/90 dark:bg-neutral-800/90 border-neutral-200 dark:border-neutral-700 hover:bg-white dark:hover:bg-neutral-800'
                       : 'bg-neutral-50/90 dark:bg-neutral-700/90 border-neutral-200 dark:border-neutral-600 hover:bg-neutral-100/90 dark:hover:bg-neutral-700'
@@ -1598,7 +1598,7 @@ export const MarathonMajorsShowcase: React.FC = () => {
                   title={showAidStations ? "Hide aid stations" : "Show aid stations"}
                   aria-label={showAidStations ? "Hide aid stations" : "Show aid stations"}
                 >
-                  <span className={`material-symbols-outlined text-[18px] transition-colors duration-200 ${
+                  <span className={`material-symbols-outlined text-[18px] leading-none transition-colors duration-200 ${
                     showAidStations
                       ? 'text-neutral-600 dark:text-neutral-300'
                       : 'text-neutral-400 dark:text-neutral-500'
