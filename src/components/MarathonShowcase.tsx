@@ -193,12 +193,19 @@ export const MarathonMajorsShowcase: React.FC = () => {
 
     aidStations.forEach(aidStation => {
       const markerElement = createAidStationMarker('large')
-      
+
       const marker = new window.mapboxgl.Marker(markerElement)
         .setLngLat(aidStation.coordinates)
         .addTo(mapInstance.current)
 
       aidStationMarkers.current.push(marker)
+
+      // Apply current visibility state
+      if (!showAidStations) {
+        markerElement.style.visibility = 'hidden'
+        markerElement.style.opacity = '0'
+        markerElement.style.pointerEvents = 'none'
+      }
 
       const popup = new window.mapboxgl.Popup({
         closeButton: false,
