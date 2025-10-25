@@ -25,18 +25,36 @@ export default function ContactForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
+    setSubmitStatus('idle')
 
-    // Simulate form submission
-    setTimeout(() => {
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      })
+
+      const data = await response.json()
+
+      if (response.ok) {
+        setSubmitStatus('success')
+        // Reset form after success
+        setTimeout(() => {
+          setFormData({ email: '', name: '', interests: [], message: '' })
+          setSubmitStatus('idle')
+        }, 5000)
+      } else {
+        setSubmitStatus('error')
+        console.error('Form submission error:', data.error)
+      }
+    } catch (error) {
+      setSubmitStatus('error')
+      console.error('Network error:', error)
+    } finally {
       setIsSubmitting(false)
-      setSubmitStatus('success')
-
-      // Reset form after success
-      setTimeout(() => {
-        setFormData({ email: '', name: '', interests: [], message: '' })
-        setSubmitStatus('idle')
-      }, 3000)
-    }, 1000)
+    }
   }
 
   return (
@@ -137,11 +155,19 @@ export default function ContactForm() {
         </div>
       </div>
 
-      {/* Success Message */}
+      {/* Status Messages */}
       {submitStatus === 'success' && (
         <div className="w-full text-center">
           <p className="text-sm text-green-600 dark:text-green-400">
-            Thank you! We'll get back to you soon.
+            Thank you! We'll get back to you within 48 hours.
+          </p>
+        </div>
+      )}
+
+      {submitStatus === 'error' && (
+        <div className="w-full text-center">
+          <p className="text-sm text-red-600 dark:text-red-400">
+            Something went wrong. Please try again or email us at info@distanzrunning.com
           </p>
         </div>
       )}
