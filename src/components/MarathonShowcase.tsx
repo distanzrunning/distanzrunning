@@ -1251,7 +1251,7 @@ export const MarathonMajorsShowcase: React.FC = () => {
     const unit = useMetric ? 'km' : 'mi'
     const totalDistance = calculateTotalDistance(coordinates, useMetric)
     const halfwayDistance = totalDistance / 2
-    
+
     // Set marker intervals based on unit system
     const markerInterval = useMetric ? 5 : 5 // 5km or 5mi intervals
 
@@ -1259,10 +1259,17 @@ export const MarathonMajorsShowcase: React.FC = () => {
     const halfwayCoordinate = findCoordinateAtDistance(halfwayDistance, coordinates, useMetric)
     if (halfwayCoordinate) {
       const halfwayMarkerElement = createStravaFlagMarker('large')
-      
+
       halfwayMarker.current = new window.mapboxgl.Marker(halfwayMarkerElement)
         .setLngLat([halfwayCoordinate[0], halfwayCoordinate[1]])
         .addTo(mapInstance.current)
+
+      // Apply current visibility state
+      if (!showDistanceMarkers) {
+        halfwayMarkerElement.style.visibility = 'hidden'
+        halfwayMarkerElement.style.opacity = '0'
+        halfwayMarkerElement.style.pointerEvents = 'none'
+      }
 
       const halfwayPopup = new window.mapboxgl.Popup({
         closeButton: false,
@@ -1276,7 +1283,7 @@ export const MarathonMajorsShowcase: React.FC = () => {
           .setLngLat([halfwayCoordinate[0], halfwayCoordinate[1]])
           .setHTML(`<div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-weight: 600; color: #1f2937; font-size: 12px; padding: 4px;">Halfway</div>`)
           .addTo(mapInstance.current)
-          
+
         setTimeout(() => {
           const popupEl = halfwayPopup.getElement()
           if (popupEl) {
@@ -1294,15 +1301,22 @@ export const MarathonMajorsShowcase: React.FC = () => {
     let currentMarkerDistance = markerInterval
     while (currentMarkerDistance < totalDistance) {
       const markerCoordinate = findCoordinateAtDistance(currentMarkerDistance, coordinates, useMetric)
-      
+
       if (markerCoordinate) {
         const markerElement = createStravaNumberMarker(`${currentMarkerDistance}`, 'large')
-        
+
         const marker = new window.mapboxgl.Marker(markerElement)
           .setLngLat([markerCoordinate[0], markerCoordinate[1]])
           .addTo(mapInstance.current)
 
         distanceMarkers.current.push(marker)
+
+        // Apply current visibility state
+        if (!showDistanceMarkers) {
+          markerElement.style.visibility = 'hidden'
+          markerElement.style.opacity = '0'
+          markerElement.style.pointerEvents = 'none'
+        }
 
         const popup = new window.mapboxgl.Popup({
           closeButton: false,
@@ -1318,7 +1332,7 @@ export const MarathonMajorsShowcase: React.FC = () => {
             .setLngLat([markerCoordinate[0], markerCoordinate[1]])
             .setHTML(`<div style="font-family: -apple-system, BlinkMacSystemFont, 'Segue UI', Roboto, sans-serif; font-weight: 600; color: #1f2937; font-size: 12px; padding: 4px;">${markerDistance} ${unit}</div>`)
             .addTo(mapInstance.current)
-            
+
           setTimeout(() => {
             const popupEl = popup.getElement()
             if (popupEl) {
@@ -1331,7 +1345,7 @@ export const MarathonMajorsShowcase: React.FC = () => {
           popup.remove()
         })
       }
-      
+
       currentMarkerDistance += markerInterval
     }
   }
