@@ -118,7 +118,7 @@ function PreviewPage() {
           </div>
 
           {/* Marathon Showcase - takes up remaining space */}
-          <main id="marathon-showcase" className="flex-1 flex flex-col px-6 pb-8">
+          <main id="marathon-showcase" className="flex-1 flex flex-col px-6 pb-4">
             <div className="flex-1 max-w-6xl mx-auto w-full flex flex-col min-h-0">
               <div className="flex-1 min-h-0">
                 <ResponsiveMarathonShowcase />
@@ -127,7 +127,7 @@ function PreviewPage() {
           </main>
 
           {/* Scroll Indicator */}
-          <div className="flex justify-center pb-12">
+          <div className="flex justify-center pb-8">
             <ScrollIndicator />
           </div>
 
