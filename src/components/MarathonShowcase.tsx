@@ -1573,8 +1573,8 @@ export const MarathonMajorsShowcase: React.FC = () => {
                 <button
                   onClick={recenterMap}
                   className="bg-white/90 dark:bg-neutral-800/90 backdrop-blur-sm border border-neutral-200 dark:border-neutral-700 rounded-md p-2 shadow-sm hover:bg-white dark:hover:bg-neutral-800 hover:shadow-md transition-all duration-200 w-9 h-9 flex items-center justify-center"
-                  title="Reset to course view"
-                  aria-label="Recenter map to course view"
+                  title="Re-center"
+                  aria-label="Re-center"
                 >
                   <span className="material-symbols-outlined text-neutral-600 dark:text-neutral-300 text-[18px] leading-none">
                     my_location
@@ -1589,8 +1589,8 @@ export const MarathonMajorsShowcase: React.FC = () => {
                       ? 'bg-white/90 dark:bg-neutral-800/90 border-neutral-200 dark:border-neutral-700 hover:bg-white dark:hover:bg-neutral-800'
                       : 'bg-neutral-50/90 dark:bg-neutral-700/90 border-neutral-200 dark:border-neutral-600 hover:bg-neutral-100/90 dark:hover:bg-neutral-700'
                   }`}
-                  title={showDistanceMarkers ? "Hide distance markers" : "Show distance markers"}
-                  aria-label={showDistanceMarkers ? "Hide distance markers" : "Show distance markers"}
+                  title="Distance markers"
+                  aria-label="Distance markers"
                 >
                   <span className={`material-symbols-outlined text-[18px] leading-none transition-colors duration-200 ${
                     showDistanceMarkers
@@ -1609,8 +1609,8 @@ export const MarathonMajorsShowcase: React.FC = () => {
                       ? 'bg-white/90 dark:bg-neutral-800/90 border-neutral-200 dark:border-neutral-700 hover:bg-white dark:hover:bg-neutral-800'
                       : 'bg-neutral-50/90 dark:bg-neutral-700/90 border-neutral-200 dark:border-neutral-600 hover:bg-neutral-100/90 dark:hover:bg-neutral-700'
                   }`}
-                  title={showAidStations ? "Hide aid stations" : "Show aid stations"}
-                  aria-label={showAidStations ? "Hide aid stations" : "Show aid stations"}
+                  title="Aid station markers"
+                  aria-label="Aid station markers"
                 >
                   <span className={`material-symbols-outlined text-[18px] leading-none transition-colors duration-200 ${
                     showAidStations
