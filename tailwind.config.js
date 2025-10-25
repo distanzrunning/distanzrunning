@@ -29,6 +29,8 @@ module.exports = {
         'textAccentSubtle': 'rgb(var(--color-textAccentSubtle))',
         
         // Additional Quartr colors
+        'borderNeutral': 'rgb(var(--color-borderNeutral))',
+        'borderNeutralHover': 'rgb(var(--color-borderNeutralHover))',
         'borderNeutralSubtle': 'rgb(var(--color-borderNeutralSubtle))',
         'surface': 'rgb(var(--color-surface))',
         'canvas': 'rgb(var(--color-canvas))',
@@ -64,8 +66,10 @@ module.exports = {
       borderColor: {
         primary: '#e43c81',
         secondary: '#eeb6cd',
-        
+
         // Quartr border colors
+        'borderNeutral': 'rgb(var(--color-borderNeutral))',
+        'borderNeutralHover': 'rgb(var(--color-borderNeutralHover))',
         'borderNeutralSubtle': 'rgb(var(--color-borderNeutralSubtle))',
       },
       fontFamily: {

@@ -142,6 +142,8 @@
     --color-textAccentSubtle: 229, 229, 255;
     
     /* Additional Quartr colors */
+    --color-borderNeutral: 229, 229, 229;
+    --color-borderNeutralHover: 204, 204, 204;
     --color-borderNeutralSubtle: 231, 231, 231;
     --color-surface: 255, 255, 255;
     --color-canvas: 247, 247, 247;
@@ -158,6 +160,8 @@
     --color-textSubtler: 107, 114, 128;
     --color-textInverted: 17, 24, 39;
 
+    --color-borderNeutral: 38, 38, 38;
+    --color-borderNeutralHover: 64, 64, 64;
     --color-borderNeutralSubtle: 38, 38, 38;
     --color-surface: 17, 17, 17;
     --color-canvas: 12, 12, 13;
