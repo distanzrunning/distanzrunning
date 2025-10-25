@@ -25,24 +25,22 @@ function LoadingSpinner() {
 }
 
 export default function AuthProtection({ children }: AuthProtectionProps) {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
+  // Check if we're on staging domain BEFORE setting initial state
+  const isStagingDomain = typeof window !== 'undefined' && window.location.hostname === 'distanzrunning.vercel.app'
+
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(isStagingDomain ? null : true)
+  const [isLoading, setIsLoading] = useState(isStagingDomain)
   const router = useRouter()
   const pathname = usePathname()
 
   useEffect(() => {
+    // Skip auth check if not on staging domain
+    if (!isStagingDomain) {
+      return
+    }
+
     const checkAuth = async () => {
       try {
-        // Check if we're on staging domain
-        const hostname = window.location.hostname
-
-        if (hostname !== 'distanzrunning.vercel.app') {
-          // Not staging domain, allow access
-          setIsAuthenticated(true)
-          setIsLoading(false)
-          return
-        }
-
         // Skip auth check for login page
         if (pathname === '/login') {
           setIsAuthenticated(true)
@@ -82,7 +80,7 @@ export default function AuthProtection({ children }: AuthProtectionProps) {
     }
 
     checkAuth()
-  }, [pathname, router])
+  }, [pathname, router, isStagingDomain])
 
   // Show loading spinner while checking authentication
   if (isLoading) {
