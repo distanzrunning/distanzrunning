@@ -104,7 +104,9 @@ export const MarathonMajorsShowcase: React.FC = () => {
       if (marker) {
         const element = marker.getElement()
         if (element) {
-          element.style.display = newVisibility ? 'block' : 'none'
+          element.style.visibility = newVisibility ? 'visible' : 'hidden'
+          element.style.opacity = newVisibility ? '1' : '0'
+          element.style.pointerEvents = newVisibility ? 'auto' : 'none'
         }
       }
     })
@@ -113,7 +115,9 @@ export const MarathonMajorsShowcase: React.FC = () => {
     if (halfwayMarker.current) {
       const element = halfwayMarker.current.getElement()
       if (element) {
-        element.style.display = newVisibility ? 'block' : 'none'
+        element.style.visibility = newVisibility ? 'visible' : 'hidden'
+        element.style.opacity = newVisibility ? '1' : '0'
+        element.style.pointerEvents = newVisibility ? 'auto' : 'none'
       }
     }
   }
@@ -128,7 +132,9 @@ export const MarathonMajorsShowcase: React.FC = () => {
       if (marker) {
         const element = marker.getElement()
         if (element) {
-          element.style.display = newVisibility ? 'block' : 'none'
+          element.style.visibility = newVisibility ? 'visible' : 'hidden'
+          element.style.opacity = newVisibility ? '1' : '0'
+          element.style.pointerEvents = newVisibility ? 'auto' : 'none'
         }
       }
     })
@@ -1548,15 +1554,15 @@ export const MarathonMajorsShowcase: React.FC = () => {
               <div ref={mapContainer} className="w-full h-full" />
 
               {/* Map Controls */}
-              <div className="absolute top-3 right-3 flex flex-col gap-2 z-10">
+              <div className="absolute top-3 right-3 flex flex-col gap-1.5 z-10">
                 {/* Recenter Button */}
                 <button
                   onClick={recenterMap}
-                  className="bg-white dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-600 rounded-lg p-2 shadow-lg hover:bg-neutral-50 dark:hover:bg-neutral-700 transition-all duration-200 group"
+                  className="bg-white/90 dark:bg-neutral-800/90 backdrop-blur-sm border border-neutral-200 dark:border-neutral-700 rounded-md p-1.5 shadow-sm hover:bg-white dark:hover:bg-neutral-800 hover:shadow-md transition-all duration-200"
                   title="Reset to course view"
                   aria-label="Recenter map to course view"
                 >
-                  <span className="material-symbols-outlined text-neutral-700 dark:text-neutral-200 text-xl">
+                  <span className="material-symbols-outlined text-neutral-600 dark:text-neutral-300 text-[18px]">
                     my_location
                   </span>
                 </button>
@@ -1564,37 +1570,37 @@ export const MarathonMajorsShowcase: React.FC = () => {
                 {/* Distance Markers Toggle */}
                 <button
                   onClick={toggleDistanceMarkers}
-                  className={`border rounded-lg p-2 shadow-lg transition-all duration-200 group ${
+                  className={`backdrop-blur-sm border rounded-md p-1.5 shadow-sm hover:shadow-md transition-all duration-200 ${
                     showDistanceMarkers
-                      ? 'bg-white dark:bg-neutral-800 border-neutral-300 dark:border-neutral-600 hover:bg-neutral-50 dark:hover:bg-neutral-700'
-                      : 'bg-neutral-100 dark:bg-neutral-700 border-neutral-400 dark:border-neutral-500 hover:bg-neutral-200 dark:hover:bg-neutral-600'
+                      ? 'bg-white/90 dark:bg-neutral-800/90 border-neutral-200 dark:border-neutral-700 hover:bg-white dark:hover:bg-neutral-800'
+                      : 'bg-neutral-50/90 dark:bg-neutral-700/90 border-neutral-200 dark:border-neutral-600 hover:bg-neutral-100/90 dark:hover:bg-neutral-700'
                   }`}
                   title={showDistanceMarkers ? "Hide distance markers" : "Show distance markers"}
                   aria-label={showDistanceMarkers ? "Hide distance markers" : "Show distance markers"}
                 >
-                  <span className={`material-symbols-outlined text-xl transition-colors duration-200 ${
+                  <span className={`material-symbols-outlined text-[18px] transition-colors duration-200 ${
                     showDistanceMarkers
-                      ? 'text-neutral-700 dark:text-neutral-200'
+                      ? 'text-neutral-600 dark:text-neutral-300'
                       : 'text-neutral-400 dark:text-neutral-500'
                   }`}>
-                    straighten
+                    arrow_range
                   </span>
                 </button>
 
                 {/* Aid Stations Toggle */}
                 <button
                   onClick={toggleAidStations}
-                  className={`border rounded-lg p-2 shadow-lg transition-all duration-200 group ${
+                  className={`backdrop-blur-sm border rounded-md p-1.5 shadow-sm hover:shadow-md transition-all duration-200 ${
                     showAidStations
-                      ? 'bg-white dark:bg-neutral-800 border-neutral-300 dark:border-neutral-600 hover:bg-neutral-50 dark:hover:bg-neutral-700'
-                      : 'bg-neutral-100 dark:bg-neutral-700 border-neutral-400 dark:border-neutral-500 hover:bg-neutral-200 dark:hover:bg-neutral-600'
+                      ? 'bg-white/90 dark:bg-neutral-800/90 border-neutral-200 dark:border-neutral-700 hover:bg-white dark:hover:bg-neutral-800'
+                      : 'bg-neutral-50/90 dark:bg-neutral-700/90 border-neutral-200 dark:border-neutral-600 hover:bg-neutral-100/90 dark:hover:bg-neutral-700'
                   }`}
                   title={showAidStations ? "Hide aid stations" : "Show aid stations"}
                   aria-label={showAidStations ? "Hide aid stations" : "Show aid stations"}
                 >
-                  <span className={`material-symbols-outlined text-xl transition-colors duration-200 ${
+                  <span className={`material-symbols-outlined text-[18px] transition-colors duration-200 ${
                     showAidStations
-                      ? 'text-neutral-700 dark:text-neutral-200'
+                      ? 'text-neutral-600 dark:text-neutral-300'
                       : 'text-neutral-400 dark:text-neutral-500'
                   }`}>
                     water_drop
