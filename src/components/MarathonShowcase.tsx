@@ -1387,9 +1387,14 @@ export const MarathonMajorsShowcase: React.FC = () => {
 
         // Initialize map with safe dark mode detection
         const initialDarkMode = document?.documentElement?.classList?.contains('dark') || false
-        
-        window.mapboxgl.accessToken = "pk.eyJ1IjoiZGlzdGFuenJ1bm5pbmciLCJhIjoiY21ia2Y4YjB0MDVyczJqcGduaXoxeW12dSJ9.tCFipup9j7bs_60hpBLqsg"
-        
+
+        const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN
+        if (!mapboxToken) {
+          throw new Error('Mapbox access token is not configured')
+        }
+
+        window.mapboxgl.accessToken = mapboxToken
+
         mapInstance.current = new window.mapboxgl.Map({
           container: mapContainer.current,
           style: initialDarkMode ? 'mapbox://styles/mapbox/dark-v11' : 'mapbox://styles/mapbox/streets-v11',
