@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { motion } from 'framer-motion'
 import { Check } from 'lucide-react'
 
 export default function ContactForm() {
@@ -55,6 +56,27 @@ export default function ContactForm() {
     } finally {
       setIsSubmitting(false)
     }
+  }
+
+  // Show success state
+  if (submitStatus === 'success') {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="text-center py-12"
+      >
+        <div className="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
+          <svg className="w-8 h-8 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
+        <h3 className="text-lg font-semibold text-textDefault mb-2">Message sent!</h3>
+        <p className="text-sm text-textSubtle">
+          We'll get back to you within 48 hours.
+        </p>
+      </motion.div>
+    )
   }
 
   return (
@@ -155,21 +177,17 @@ export default function ContactForm() {
         </div>
       </div>
 
-      {/* Status Messages */}
-      {submitStatus === 'success' && (
-        <div className="w-full text-center">
-          <p className="text-sm text-green-600 dark:text-green-400">
-            Thank you! We'll get back to you within 48 hours.
-          </p>
-        </div>
-      )}
-
+      {/* Error Message */}
       {submitStatus === 'error' && (
-        <div className="w-full text-center">
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="w-full text-center"
+        >
           <p className="text-sm text-red-600 dark:text-red-400">
             Something went wrong. Please try again or email us at info@distanzrunning.com
           </p>
-        </div>
+        </motion.div>
       )}
     </form>
   )
