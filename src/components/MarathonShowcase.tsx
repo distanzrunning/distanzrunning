@@ -77,6 +77,63 @@ export const MarathonMajorsShowcase: React.FC = () => {
   const gradeData = useRef<number[]>([])
   const verticalLinePlugin = useRef<any>(null)
 
+  // Store original bounds for recenter functionality
+  const originalBounds = useRef<any>(null)
+
+  // State for marker visibility toggles
+  const [showDistanceMarkers, setShowDistanceMarkers] = useState(true)
+  const [showAidStations, setShowAidStations] = useState(true)
+
+  // Recenter map to original course view
+  const recenterMap = () => {
+    if (mapInstance.current && originalBounds.current) {
+      mapInstance.current.fitBounds(originalBounds.current, {
+        padding: 50,
+        duration: 1000 // Smooth animation
+      })
+    }
+  }
+
+  // Toggle distance markers visibility
+  const toggleDistanceMarkers = () => {
+    const newVisibility = !showDistanceMarkers
+    setShowDistanceMarkers(newVisibility)
+
+    // Toggle all distance markers
+    distanceMarkers.current.forEach(marker => {
+      if (marker) {
+        const element = marker.getElement()
+        if (element) {
+          element.style.display = newVisibility ? 'block' : 'none'
+        }
+      }
+    })
+
+    // Toggle halfway marker
+    if (halfwayMarker.current) {
+      const element = halfwayMarker.current.getElement()
+      if (element) {
+        element.style.display = newVisibility ? 'block' : 'none'
+      }
+    }
+  }
+
+  // Toggle aid station markers visibility
+  const toggleAidStations = () => {
+    const newVisibility = !showAidStations
+    setShowAidStations(newVisibility)
+
+    // Toggle all aid station markers
+    aidStationMarkers.current.forEach(marker => {
+      if (marker) {
+        const element = marker.getElement()
+        if (element) {
+          element.style.display = newVisibility ? 'block' : 'none'
+        }
+      }
+    })
+  }
+
   // Aid station detection function (from RaceMapComponent)
   const isAidStation = (name: string): boolean => {
     const lowerName = name.toLowerCase()
@@ -902,6 +959,9 @@ export const MarathonMajorsShowcase: React.FC = () => {
       return bounds.extend(coord as [number, number])
     }, new window.mapboxgl.LngLatBounds(coordinates[0], coordinates[0]))
 
+    // Store original bounds for recenter functionality
+    originalBounds.current = bounds
+
     mapInstance.current.fitBounds(bounds, { padding: 50 })
   }
 
@@ -1486,6 +1546,61 @@ export const MarathonMajorsShowcase: React.FC = () => {
             {/* Map */}
             <div className="border-r border-b border-neutral-200 dark:border-neutral-700 relative">
               <div ref={mapContainer} className="w-full h-full" />
+
+              {/* Map Controls */}
+              <div className="absolute top-3 right-3 flex flex-col gap-2 z-10">
+                {/* Recenter Button */}
+                <button
+                  onClick={recenterMap}
+                  className="bg-white dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-600 rounded-lg p-2 shadow-lg hover:bg-neutral-50 dark:hover:bg-neutral-700 transition-all duration-200 group"
+                  title="Reset to course view"
+                  aria-label="Recenter map to course view"
+                >
+                  <span className="material-symbols-outlined text-neutral-700 dark:text-neutral-200 text-xl">
+                    my_location
+                  </span>
+                </button>
+
+                {/* Distance Markers Toggle */}
+                <button
+                  onClick={toggleDistanceMarkers}
+                  className={`border rounded-lg p-2 shadow-lg transition-all duration-200 group ${
+                    showDistanceMarkers
+                      ? 'bg-white dark:bg-neutral-800 border-neutral-300 dark:border-neutral-600 hover:bg-neutral-50 dark:hover:bg-neutral-700'
+                      : 'bg-neutral-100 dark:bg-neutral-700 border-neutral-400 dark:border-neutral-500 hover:bg-neutral-200 dark:hover:bg-neutral-600'
+                  }`}
+                  title={showDistanceMarkers ? "Hide distance markers" : "Show distance markers"}
+                  aria-label={showDistanceMarkers ? "Hide distance markers" : "Show distance markers"}
+                >
+                  <span className={`material-symbols-outlined text-xl transition-colors duration-200 ${
+                    showDistanceMarkers
+                      ? 'text-neutral-700 dark:text-neutral-200'
+                      : 'text-neutral-400 dark:text-neutral-500'
+                  }`}>
+                    straighten
+                  </span>
+                </button>
+
+                {/* Aid Stations Toggle */}
+                <button
+                  onClick={toggleAidStations}
+                  className={`border rounded-lg p-2 shadow-lg transition-all duration-200 group ${
+                    showAidStations
+                      ? 'bg-white dark:bg-neutral-800 border-neutral-300 dark:border-neutral-600 hover:bg-neutral-50 dark:hover:bg-neutral-700'
+                      : 'bg-neutral-100 dark:bg-neutral-700 border-neutral-400 dark:border-neutral-500 hover:bg-neutral-200 dark:hover:bg-neutral-600'
+                  }`}
+                  title={showAidStations ? "Hide aid stations" : "Show aid stations"}
+                  aria-label={showAidStations ? "Hide aid stations" : "Show aid stations"}
+                >
+                  <span className={`material-symbols-outlined text-xl transition-colors duration-200 ${
+                    showAidStations
+                      ? 'text-neutral-700 dark:text-neutral-200'
+                      : 'text-neutral-400 dark:text-neutral-500'
+                  }`}>
+                    water_drop
+                  </span>
+                </button>
+              </div>
             </div>
             
             {/* Stats */}
