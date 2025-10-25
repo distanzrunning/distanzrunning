@@ -63,23 +63,23 @@ export default function LoginPage() {
           </div>
           
           {/* Login container */}
-          <div className="bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg p-6 shadow-lg dark:shadow-2xl transition-colors duration-300">
+          <div className="bg-neutralBgSubtle rounded-xl p-8 shadow-sm transition-colors duration-300">
             <div className="space-y-6">
               {/* Title */}
               <div>
-                <h2 className="text-xl font-semibold text-neutral-900 dark:text-white transition-colors duration-300">
+                <h2 className="text-xl font-semibold text-textDefault leading-tight">
                   Staging Access
                 </h2>
-                <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-1 transition-colors duration-300">
+                <p className="text-sm text-textSubtle mt-2 leading-tight">
                   Enter the password to access the staging site
                 </p>
               </div>
-              
+
               {/* Form */}
-              <form className="space-y-4" onSubmit={handleSubmit}>
+              <form className="space-y-6" onSubmit={handleSubmit}>
                 {/* Password field */}
                 <div className="space-y-2">
-                  <label htmlFor="password" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 transition-colors duration-300">
+                  <label htmlFor="password" className="block text-base font-normal text-textDefault">
                     Password
                   </label>
                   <input
@@ -88,7 +88,7 @@ export default function LoginPage() {
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full px-3 py-2 bg-white dark:bg-neutral-700 border border-neutral-300 dark:border-neutral-600 rounded-md text-neutral-900 dark:text-white placeholder-neutral-500 dark:placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-colors duration-300"
+                    className="w-full px-3 py-3 bg-gray-50 dark:bg-neutral-800 border border-borderNeutral rounded-lg text-textDefault placeholder:text-textSubtle focus:outline-none focus:ring-2 focus:ring-borderNeutral focus:border-borderNeutralHover hover:border-borderNeutralHover transition-colors duration-300"
                     placeholder="Enter staging password"
                     autoComplete="current-password"
                     disabled={isLoading}
@@ -97,7 +97,7 @@ export default function LoginPage() {
 
                 {/* Error message */}
                 {error && (
-                  <div className="text-red-600 dark:text-red-400 text-sm transition-colors duration-300">
+                  <div className="text-red-600 dark:text-red-400 text-sm">
                     {error}
                   </div>
                 )}
@@ -106,7 +106,7 @@ export default function LoginPage() {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full bg-black dark:bg-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-700 disabled:bg-neutral-500 dark:disabled:bg-neutral-600 text-white font-medium py-2 px-4 rounded-md transition-colors duration-300 disabled:cursor-not-allowed"
+                  className="w-full bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-medium py-3 px-4 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors duration-300"
                 >
                   {isLoading ? 'Authenticating...' : 'Sign in'}
                 </button>
