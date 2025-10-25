@@ -100,7 +100,7 @@ export default function ContactForm() {
                     </button>
                   </div>
                   <label
-                    className="text-base cursor-pointer text-textSubtle font-normal leading-snug"
+                    className="text-base cursor-pointer text-textSubtle font-normal leading-tight"
                     onClick={() => handleCheckboxChange(interest)}
                   >
                     {interest}
