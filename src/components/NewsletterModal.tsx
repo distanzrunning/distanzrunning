@@ -220,7 +220,7 @@ export function NewsletterModal({ isOpen, onClose }: NewsletterModalProps) {
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="w-full bg-black dark:bg-neutral-900 text-white font-medium py-3 px-4 rounded-lg hover:bg-pink-500 dark:hover:bg-pink-500 transition-colors focus:outline-none font-['InterVariable','Inter',-apple-system,BlinkMacSystemFont,'Segue_UI',Roboto,sans-serif] disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="w-full bg-black dark:bg-white text-white dark:text-gray-900 font-medium py-3 px-4 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors focus:outline-none font-['InterVariable','Inter',-apple-system,BlinkMacSystemFont,'Segue_UI',Roboto,sans-serif] disabled:opacity-50 disabled:cursor-not-allowed"
                       style={{ fontSize: '15px', lineHeight: '1.5' }}
                     >
                       {isSubmitting ? 'Subscribing...' : 'Subscribe'}
