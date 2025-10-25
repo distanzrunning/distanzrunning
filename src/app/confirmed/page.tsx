@@ -43,13 +43,13 @@ function ConfirmedContent() {
             </Link>
           </div>
           
-          {/* Main Heading - Inter font for consistency */}
+          {/* Main Heading - Playfair font for elegant feel */}
           {already ? (
-            <h1 className="text-3xl md:text-4xl font-semibold text-textDefault transition-colors duration-300 mb-4">
+            <h1 className="font-playfair text-3xl md:text-4xl font-semibold text-textDefault transition-colors duration-300 mb-4">
               Already Confirmed!
             </h1>
           ) : (
-            <h1 className="text-3xl md:text-4xl font-semibold text-textDefault transition-colors duration-300 mb-4">
+            <h1 className="font-playfair text-3xl md:text-4xl font-semibold text-textDefault transition-colors duration-300 mb-4">
               You're All Set!
             </h1>
           )}
