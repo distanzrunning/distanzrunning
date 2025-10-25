@@ -256,8 +256,6 @@ export const MarathonMajorsShowcase: React.FC = () => {
         popup.remove()
       })
     })
-
-    console.log(`Aid stations added: ${aidStations.length}`)
   }
 
   // Create vertical line plugin for chart using shared utility
@@ -953,7 +951,6 @@ export const MarathonMajorsShowcase: React.FC = () => {
 
     // Add aid station markers if available
     if (aidStations.length > 0) {
-      console.log(`Adding ${aidStations.length} aid station markers`)
       addAidStationMarkers(aidStations)
     }
 

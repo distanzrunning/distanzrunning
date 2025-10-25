@@ -35,11 +35,9 @@ export default function AuthProtection({ children }: AuthProtectionProps) {
       try {
         // Check if we're on staging domain
         const hostname = window.location.hostname
-        console.log('🔍 AuthProtection: Checking auth for hostname:', hostname)
-        
+
         if (hostname !== 'distanzrunning.vercel.app') {
           // Not staging domain, allow access
-          console.log('✅ AuthProtection: Not staging domain, allowing access')
           setIsAuthenticated(true)
           setIsLoading(false)
           return
@@ -47,13 +45,10 @@ export default function AuthProtection({ children }: AuthProtectionProps) {
 
         // Skip auth check for login page
         if (pathname === '/login') {
-          console.log('✅ AuthProtection: On login page, allowing access')
           setIsAuthenticated(true)
           setIsLoading(false)
           return
         }
-
-        console.log('🔍 AuthProtection: Checking authentication status via API')
 
         // Check authentication status via API
         const response = await fetch('/api/auth', {
@@ -63,20 +58,15 @@ export default function AuthProtection({ children }: AuthProtectionProps) {
 
         if (response.ok) {
           const data = await response.json()
-          console.log('🔍 AuthProtection: API response:', data)
           setIsAuthenticated(data.authenticated)
-          
+
           if (!data.authenticated) {
             // Not authenticated, redirect to login
-            console.log('🔒 AuthProtection: Not authenticated, redirecting to login')
             router.replace('/login')
             return
-          } else {
-            console.log('✅ AuthProtection: Authenticated, allowing access')
           }
         } else {
           // API error, assume not authenticated
-          console.log('❌ AuthProtection: API error, redirecting to login')
           setIsAuthenticated(false)
           router.replace('/login')
           return
