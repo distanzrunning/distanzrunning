@@ -84,6 +84,10 @@ export const MarathonMajorsShowcase: React.FC = () => {
   const [showDistanceMarkers, setShowDistanceMarkers] = useState(true)
   const [showAidStations, setShowAidStations] = useState(true)
 
+  // Use refs to always have current toggle state values
+  const showDistanceMarkersRef = useRef(true)
+  const showAidStationsRef = useRef(true)
+
   // Recenter map to original course view
   const recenterMap = () => {
     if (mapInstance.current && originalBounds.current) {
@@ -98,6 +102,7 @@ export const MarathonMajorsShowcase: React.FC = () => {
   const toggleDistanceMarkers = () => {
     const newVisibility = !showDistanceMarkers
     setShowDistanceMarkers(newVisibility)
+    showDistanceMarkersRef.current = newVisibility
 
     // Toggle all distance markers
     distanceMarkers.current.forEach(marker => {
@@ -126,6 +131,7 @@ export const MarathonMajorsShowcase: React.FC = () => {
   const toggleAidStations = () => {
     const newVisibility = !showAidStations
     setShowAidStations(newVisibility)
+    showAidStationsRef.current = newVisibility
 
     // Toggle all aid station markers
     aidStationMarkers.current.forEach(marker => {
@@ -200,8 +206,8 @@ export const MarathonMajorsShowcase: React.FC = () => {
 
       aidStationMarkers.current.push(marker)
 
-      // Apply current visibility state
-      if (!showAidStations) {
+      // Apply current visibility state using ref (always current)
+      if (!showAidStationsRef.current) {
         markerElement.style.visibility = 'hidden'
         markerElement.style.opacity = '0'
         markerElement.style.pointerEvents = 'none'
@@ -1285,8 +1291,8 @@ export const MarathonMajorsShowcase: React.FC = () => {
         .setLngLat([halfwayCoordinate[0], halfwayCoordinate[1]])
         .addTo(mapInstance.current)
 
-      // Apply current visibility state
-      if (!showDistanceMarkers) {
+      // Apply current visibility state using ref (always current)
+      if (!showDistanceMarkersRef.current) {
         halfwayMarkerElement.style.visibility = 'hidden'
         halfwayMarkerElement.style.opacity = '0'
         halfwayMarkerElement.style.pointerEvents = 'none'
@@ -1332,8 +1338,8 @@ export const MarathonMajorsShowcase: React.FC = () => {
 
         distanceMarkers.current.push(marker)
 
-        // Apply current visibility state
-        if (!showDistanceMarkers) {
+        // Apply current visibility state using ref (always current)
+        if (!showDistanceMarkersRef.current) {
           markerElement.style.visibility = 'hidden'
           markerElement.style.opacity = '0'
           markerElement.style.pointerEvents = 'none'
