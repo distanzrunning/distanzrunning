@@ -28,11 +28,11 @@ export default function InstagramPostPage() {
           </ul>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="flex flex-col gap-8 items-center">
           {/* Map Post */}
           <div>
             <h2 className="text-xl font-semibold text-neutral-900 mb-4">Post 1: Map & Logo</h2>
-            <div className="inline-block shadow-2xl">
+            <div className="inline-block border-4 border-neutral-800">
               <InstagramPost marathonId={marathonId} type="map" />
             </div>
           </div>
@@ -40,7 +40,7 @@ export default function InstagramPostPage() {
           {/* Stats Post */}
           <div>
             <h2 className="text-xl font-semibold text-neutral-900 mb-4">Post 2: Key Stats</h2>
-            <div className="inline-block shadow-2xl">
+            <div className="inline-block border-4 border-neutral-800">
               <InstagramPost marathonId={marathonId} type="stats" />
             </div>
           </div>

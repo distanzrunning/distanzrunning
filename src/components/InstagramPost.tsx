@@ -21,8 +21,16 @@ export function InstagramPost({ marathonId, type }: InstagramPostProps) {
   const mapContainer = useRef<HTMLDivElement>(null)
   const mapInstance = useRef<any>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [isMounted, setIsMounted] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  // Fix hydration errors
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
 
   if (!marathon) return null
+  if (!isMounted && type === 'map') return <div style={{ width: 1080, height: 1350 }} /> // Prevent hydration mismatch
 
   // Instagram dimensions: 1080x1350 (4:5 ratio)
   const instagramSize = { width: 1080, height: 1350 }
@@ -47,7 +55,12 @@ export function InstagramPost({ marathonId, type }: InstagramPostProps) {
         }
 
         const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN
-        if (!mapboxToken) return
+        if (!mapboxToken) {
+          console.error('Mapbox token not found. Please set NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN in your environment variables.')
+          setError('Mapbox token not configured')
+          setIsLoading(false)
+          return
+        }
 
         window.mapboxgl.accessToken = mapboxToken
 
@@ -138,6 +151,16 @@ export function InstagramPost({ marathonId, type }: InstagramPostProps) {
   }, [type, marathon])
 
   if (type === 'map') {
+    // Prevent hydration mismatch by only rendering map content on client
+    if (!isMounted) {
+      return (
+        <div
+          className="relative bg-white overflow-hidden"
+          style={{ width: `${instagramSize.width}px`, height: `${instagramSize.height}px` }}
+        />
+      )
+    }
+
     return (
       <div
         className="relative bg-white overflow-hidden"
@@ -147,17 +170,28 @@ export function InstagramPost({ marathonId, type }: InstagramPostProps) {
         <div ref={mapContainer} className="w-full h-full" />
 
         {/* Overlay Header */}
-        <div className="absolute top-0 left-0 right-0 bg-gradient-to-b from-black/60 to-transparent p-12">
+        <div className="absolute top-0 left-0 right-0 bg-gradient-to-b from-black/70 to-transparent p-12">
           <div className="flex items-center gap-6">
-            <img
-              src={marathon.logo}
-              alt={`${marathon.name} Marathon`}
-              className="w-32 h-32 object-contain bg-white p-4 rounded-2xl"
-            />
-            <div className="text-white">
-              <h1 className="text-5xl font-bold mb-2">{marathon.name}</h1>
-              <p className="text-3xl">{marathon.location}</p>
-              <p className="text-2xl mt-2">{marathon.date.month} {marathon.date.day}</p>
+            <div className="bg-white rounded-xl p-3 border border-neutral-200 w-28 h-28 flex items-center justify-center flex-shrink-0">
+              <img
+                src={marathon.logo}
+                alt={`${marathon.name} Marathon`}
+                className="w-full h-full object-contain"
+              />
+            </div>
+            <div className="text-white flex-1">
+              <h1 className="quartr-font-features text-[56px] font-semibold leading-[1.15] mb-1">{marathon.name} Marathon</h1>
+              <p className="quartr-font-features text-[28px] font-normal leading-[1.25]">{marathon.location}</p>
+            </div>
+
+            {/* Date Box */}
+            <div className="bg-white rounded-xl border border-neutral-200 w-28 h-28 flex flex-col items-center justify-center flex-shrink-0">
+              <div className="quartr-font-features text-[14px] font-medium text-neutral-600 uppercase tracking-wide">
+                {marathon.date.month}
+              </div>
+              <div className="quartr-font-features text-[42px] font-bold text-neutral-900 leading-none mt-1">
+                {marathon.date.day}
+              </div>
             </div>
           </div>
         </div>
@@ -165,14 +199,23 @@ export function InstagramPost({ marathonId, type }: InstagramPostProps) {
         {/* Branding Footer */}
         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-12">
           <div className="text-white text-center">
-            <p className="text-3xl font-semibold">DISTANZ RUNNING</p>
-            <p className="text-2xl mt-2">distanzrunning.com</p>
+            <p className="quartr-font-features text-[32px] font-semibold leading-tight tracking-wide">DISTANZ RUNNING</p>
+            <p className="quartr-font-features text-[22px] mt-1 font-normal">distanzrunning.com</p>
           </div>
         </div>
 
-        {isLoading && (
+        {isLoading && !error && (
           <div className="absolute inset-0 bg-white flex items-center justify-center">
             <p className="text-2xl">Loading map...</p>
+          </div>
+        )}
+
+        {error && (
+          <div className="absolute inset-0 bg-white flex items-center justify-center">
+            <div className="text-center p-8">
+              <p className="text-2xl text-red-600 mb-2">Error Loading Map</p>
+              <p className="text-xl text-gray-600">{error}</p>
+            </div>
           </div>
         )}
       </div>
@@ -187,24 +230,25 @@ export function InstagramPost({ marathonId, type }: InstagramPostProps) {
     >
       {/* Header */}
       <div className="mb-12">
-        <div className="flex items-center gap-6 mb-8">
-          <img
-            src={marathon.logo}
-            alt={`${marathon.name} Marathon`}
-            className="w-28 h-28 object-contain bg-white p-4 rounded-2xl border-2 border-neutral-200"
-          />
-          <div>
-            <h1 className="text-5xl font-bold text-neutral-900">{marathon.name} Marathon</h1>
-            <p className="text-3xl text-neutral-600 mt-2">{marathon.location}</p>
+        <div className="flex items-center gap-6 mb-6">
+          <div className="bg-white rounded-xl p-3 border border-neutral-200 w-28 h-28 flex items-center justify-center flex-shrink-0">
+            <img
+              src={marathon.logo}
+              alt={`${marathon.name} Marathon`}
+              className="w-full h-full object-contain"
+            />
           </div>
-        </div>
+          <div className="flex-1">
+            <h1 className="quartr-font-features text-[52px] font-semibold text-neutral-900 leading-[1.15]">{marathon.name} Marathon</h1>
+            <p className="quartr-font-features text-[26px] text-neutral-600 leading-[1.25] mt-1">{marathon.location}</p>
+          </div>
 
-        <div className="bg-white rounded-2xl p-6 border-2 border-neutral-200 inline-block">
-          <div className="text-center">
-            <div className="text-2xl font-medium text-neutral-600 uppercase tracking-wide">
+          {/* Date Box */}
+          <div className="bg-white rounded-xl border border-neutral-200 w-28 h-28 flex flex-col items-center justify-center flex-shrink-0">
+            <div className="quartr-font-features text-[14px] font-medium text-neutral-600 uppercase tracking-wide">
               {marathon.date.month}
             </div>
-            <div className="text-6xl font-bold text-neutral-900 leading-none mt-2">
+            <div className="quartr-font-features text-[42px] font-bold text-neutral-900 leading-none mt-1">
               {marathon.date.day}
             </div>
           </div>
@@ -231,19 +275,19 @@ export function InstagramPost({ marathonId, type }: InstagramPostProps) {
           }
 
           return (
-            <div key={index} className="bg-white p-8 rounded-2xl border-2 border-neutral-200 hover:shadow-lg transition-all">
+            <div key={index} className="bg-white p-8 rounded-xl border border-neutral-200">
               <div className="flex items-center gap-5">
                 <div className="flex-1">
-                  <div className="text-xl font-medium text-neutral-600 mb-3">
+                  <div className="quartr-font-features text-[18px] font-medium text-neutral-600 mb-2 leading-tight">
                     {stat.title}
                   </div>
-                  <div className="text-4xl font-bold text-neutral-900">
+                  <div className="quartr-font-features text-[36px] font-semibold text-neutral-900 leading-[1.15]">
                     {value}
                   </div>
                 </div>
 
-                <div className="w-20 h-20 bg-gradient-to-br from-neutral-100 to-neutral-200 rounded-full flex items-center justify-center border-2 border-neutral-300 shadow-lg flex-shrink-0">
-                  <span className="material-symbols-outlined text-neutral-700 text-4xl">
+                <div className="w-20 h-20 bg-gradient-to-br from-neutral-100 to-neutral-200 rounded-full flex items-center justify-center border border-neutral-300 flex-shrink-0">
+                  <span className="material-symbols-outlined text-neutral-700 text-[40px]">
                     {getIconName(stat.title)}
                   </span>
                 </div>
@@ -255,9 +299,9 @@ export function InstagramPost({ marathonId, type }: InstagramPostProps) {
 
       {/* Footer Branding */}
       <div className="absolute bottom-16 left-16 right-16">
-        <div className="bg-neutral-900 rounded-2xl p-8 text-center">
-          <p className="text-4xl font-semibold text-white">DISTANZ RUNNING</p>
-          <p className="text-2xl text-neutral-300 mt-2">distanzrunning.com</p>
+        <div className="bg-neutral-900 rounded-xl p-8 text-center border border-neutral-800">
+          <p className="quartr-font-features text-[36px] font-semibold text-white leading-tight tracking-wide">DISTANZ RUNNING</p>
+          <p className="quartr-font-features text-[22px] text-neutral-300 mt-1 font-normal">distanzrunning.com</p>
         </div>
       </div>
     </div>
