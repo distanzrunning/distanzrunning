@@ -44,6 +44,7 @@ export default function NewsletterSignup() {
             />
             <button
               type="submit"
+              data-attr="newsletter-footer-submit"
               className="inline-flex items-center justify-center px-4 py-2 rounded-md bg-dark text-white text-sm font-semibold hover:bg-primary transition-colors duration-300"
             >
               Subscribe

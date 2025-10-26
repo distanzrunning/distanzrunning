@@ -228,6 +228,7 @@ export function NewsletterModal({ isOpen, onClose }: NewsletterModalProps) {
                     <button
                       type="submit"
                       disabled={isSubmitting}
+                      data-attr="newsletter-modal-submit"
                       className="w-full bg-black dark:bg-white text-white dark:text-gray-900 font-medium py-3 px-4 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors focus:outline-none font-['InterVariable','Inter',-apple-system,BlinkMacSystemFont,'Segue_UI',Roboto,sans-serif] disabled:opacity-50 disabled:cursor-not-allowed"
                       style={{ fontSize: '15px', lineHeight: '1.5' }}
                     >
@@ -268,6 +269,7 @@ export function NewsletterButton() {
       <div className="flex justify-center">
         <button
           onClick={handleOpenModal}
+          data-attr="newsletter-modal-open"
           className="group whitespace-nowrap font-medium text-sm relative m-0 flex cursor-pointer select-none items-center rounded-lg border-none p-0 no-underline outline-none ease-out focus-visible:outline-none active:scale-[0.98] active:duration-100 h-12 gap-2 px-5 justify-center bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200"
         >
           <span className="font-sans font-semibold text-sm leading-snug">Newsletter</span>

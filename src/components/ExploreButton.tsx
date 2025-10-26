@@ -1,5 +1,7 @@
 'use client';
 
+import posthog from 'posthog-js';
+
 type ExploreButtonProps = {
   variant?: 'default' | 'pink';
 };
@@ -10,6 +12,13 @@ export function ExploreButton({ variant = 'default' }: ExploreButtonProps) {
       <a
         onClick={(e) => {
           e.preventDefault();
+
+          // Track button click in PostHog
+          posthog.capture('explore_marathon_majors_clicked', {
+            variant: variant,
+            location: 'homepage'
+          });
+
           const marathonSection = document.getElementById('marathon-showcase');
           if (marathonSection) {
             marathonSection.scrollIntoView({
@@ -18,6 +27,7 @@ export function ExploreButton({ variant = 'default' }: ExploreButtonProps) {
             });
           }
         }}
+        data-attr="explore-marathon-majors"
         className={`group whitespace-nowrap font-medium text-sm relative m-0 flex cursor-pointer select-none items-center rounded-lg border-none p-0 no-underline outline-none ease-out focus-visible:outline-none after:pointer-events-none after:absolute after:inset-0 after:z-[0] after:rounded-lg focus-visible:after:ring active:scale-[0.98] active:duration-100 h-12 gap-2 px-5 justify-center
           ${
             variant === 'pink'

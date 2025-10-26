@@ -185,6 +185,8 @@ posthog.identify('user_id', { email: 'user@example.com' });
   - Properties: `location` (modal/footer), `email_domain`, `source`
 - `newsletter_modal_opened` - Fired when newsletter modal is opened
   - Properties: `location` (homepage)
+- `explore_marathon_majors_clicked` - Fired when "Explore the Marathon Majors" button is clicked
+  - Properties: `variant` (default/pink), `location` (homepage)
 
 **Creating Conversion Goals in PostHog:**
 1. Go to [Web Analytics Dashboard](https://eu.i.posthog.com/web)

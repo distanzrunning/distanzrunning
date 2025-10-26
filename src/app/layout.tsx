@@ -44,6 +44,22 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${playfair.variable}`}>
       <head>
+        {/* Prevent flash of dark mode - ensure light mode by default */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                var theme = localStorage.getItem('theme');
+                // Only apply dark mode if explicitly saved, otherwise ensure light mode
+                if (theme === 'dark') {
+                  document.documentElement.classList.add('dark');
+                } else {
+                  document.documentElement.classList.remove('dark');
+                }
+              })();
+            `,
+          }}
+        />
         <link
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
