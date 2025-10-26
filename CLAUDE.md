@@ -180,6 +180,28 @@ posthog.capture('button_clicked', { button_name: 'newsletter_signup' });
 posthog.identify('user_id', { email: 'user@example.com' });
 ```
 
+**Custom Events Tracked:**
+- `newsletter_signup` - Fired when user successfully subscribes to newsletter
+  - Properties: `location` (modal/footer), `email_domain`, `source`
+- `newsletter_modal_opened` - Fired when newsletter modal is opened
+  - Properties: `location` (homepage)
+
+**Creating Conversion Goals in PostHog:**
+1. Go to [Web Analytics Dashboard](https://eu.i.posthog.com/web)
+2. Click **Add conversion goal** (next to filters)
+3. Search and select event: `newsletter_signup`
+4. This adds conversion metrics to your dashboard:
+   - Total conversions
+   - Unique conversions
+   - Conversion rate (% of visitors who subscribe)
+5. Use filters to segment by location (modal vs footer)
+
+**Alternative: Create Action First (Optional)**
+1. Go to **Data Management** → **Actions** → **New Action**
+2. Name: "Newsletter Signup"
+3. Match event: `newsletter_signup`
+4. Then add this action as a conversion goal in Web Analytics
+
 **Google Tag Manager:**
 - Configured in main layout
 - GTM ID: GTM-K3W2LWHM

@@ -2,12 +2,21 @@
 'use client'
 
 import { useState } from 'react'
+import posthog from 'posthog-js'
 
 export default function NewsletterSignup() {
   const [email, setEmail] = useState('')
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+
+    // Track newsletter signup in PostHog
+    posthog.capture('newsletter_signup', {
+      location: 'footer',
+      email_domain: email.split('@')[1], // Track domain without PII
+      source: 'newsletter_footer'
+    })
+
     alert(`Subscribed with: ${email}`)
     setEmail('')
   }

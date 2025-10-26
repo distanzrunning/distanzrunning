@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
+import posthog from 'posthog-js'
 
 type NewsletterModalProps = {
   isOpen: boolean
@@ -69,6 +70,13 @@ export function NewsletterModal({ isOpen, onClose }: NewsletterModalProps) {
       const data = await response.json()
 
       if (response.ok) {
+        // Track successful newsletter signup in PostHog
+        posthog.capture('newsletter_signup', {
+          location: 'modal',
+          email_domain: email.split('@')[1], // Track domain without PII
+          source: 'newsletter_modal'
+        })
+
         setIsSubmitted(true)
         setEmail('')
         // Close modal after 3 seconds
@@ -246,7 +254,13 @@ export function NewsletterModal({ isOpen, onClose }: NewsletterModalProps) {
 export function NewsletterButton() {
   const [isModalOpen, setIsModalOpen] = useState(false)
 
-  const handleOpenModal = () => setIsModalOpen(true)
+  const handleOpenModal = () => {
+    // Track when newsletter modal is opened
+    posthog.capture('newsletter_modal_opened', {
+      location: 'homepage'
+    })
+    setIsModalOpen(true)
+  }
   const handleCloseModal = () => setIsModalOpen(false)
 
   return (
