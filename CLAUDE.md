@@ -154,20 +154,26 @@ npm run lint         # Run ESLint (note: ignoreDuringBuilds: true in next.config
 ### Analytics & Tracking
 
 **PostHog Web Analytics:**
-- Initialized in `/instrumentation-client.ts` (Next.js 15.3+ feature)
+- Initialized via JavaScript snippet in `/src/app/layout.tsx` (recommended approach)
+- Also available via `/instrumentation-client.ts` for module-based usage
 - Automatic pageview and pageleave tracking enabled
 - Uses EU hosting at `https://eu.i.posthog.com`
 - Configuration:
   - `defaults: '2025-05-24'` - Latest SDK defaults for automatic tracking
-  - `capture_pageleave: true` - Tracks user engagement metrics
+  - Automatically captures button clicks, form submissions, and other interactions
   - Automatically captures scroll depth and time on page
 
-**Usage:**
-Import `posthog` from `posthog-js` in any component to capture custom events:
-```typescript
-import posthog from 'posthog-js';
+**Implementation:**
+The PostHog snippet is loaded in the `<head>` of `layout.tsx` using `dangerouslySetInnerHTML`. This ensures PostHog is available globally as `window.posthog` on all pages.
 
-// Capture custom event
+**Usage:**
+Access PostHog directly via `window.posthog` or import from `posthog-js`:
+```typescript
+// Option 1: Use window.posthog (available globally)
+window.posthog.capture('button_clicked', { button_name: 'newsletter_signup' });
+
+// Option 2: Import from posthog-js
+import posthog from 'posthog-js';
 posthog.capture('button_clicked', { button_name: 'newsletter_signup' });
 
 // Identify users
