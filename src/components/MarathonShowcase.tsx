@@ -1076,8 +1076,14 @@ export const MarathonMajorsShowcase: React.FC = () => {
   const createChartWithUnits = (coordinates: number[][], useMetric: boolean) => {
     if (!chartContainer.current || !window.Chart) return
 
+    // Safely destroy existing chart
     if (chartInstance.current) {
-      chartInstance.current.destroy()
+      try {
+        chartInstance.current.destroy()
+      } catch (err) {
+        console.warn('Error destroying chart:', err)
+      }
+      chartInstance.current = null
     }
 
     // Add this line here - check current dark mode state directly
@@ -1102,6 +1108,9 @@ export const MarathonMajorsShowcase: React.FC = () => {
     const sampleInterval = Math.max(1, Math.floor(distanceData.length / 500)) // Keep ~500 display points
     const displayDistances = distanceData.filter((_, i) => i % sampleInterval === 0)
     const displayElevations = elevationData.filter((_, i) => i % sampleInterval === 0)
+
+    // Double-check container still exists before creating chart
+    if (!chartContainer.current) return
 
     chartInstance.current = new window.Chart(chartContainer.current, {
       type: 'line',
@@ -1468,9 +1477,18 @@ export const MarathonMajorsShowcase: React.FC = () => {
         if (marker) marker.remove()
       })
       aidStationMarkers.current = []
-      
+
       mapInstance.current?.remove()
-      chartInstance.current?.destroy()
+
+      // Safely destroy chart
+      if (chartInstance.current) {
+        try {
+          chartInstance.current.destroy()
+        } catch (err) {
+          console.warn('Error destroying chart on cleanup:', err)
+        }
+        chartInstance.current = null
+      }
     }
   }, [])
 
