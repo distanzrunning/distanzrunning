@@ -258,6 +258,26 @@ PREVIEW_MODE (set to 'true' to disable navbar/footer)
 - Staging branch: `staging` (current branch)
 - Clean working tree at conversation start
 
+### Instagram Post Generator
+
+**Instagram Post Component:**
+- Located in `/src/components/InstagramPost.tsx`
+- Generates 1080x1080px Instagram-ready posts
+- Two types: `map` (route + logo) and `stats` (key statistics)
+- View at `/instagram-post` route
+
+**Generating Posts:**
+1. Navigate to `http://localhost:3000/instagram-post`
+2. Posts are displayed at exact Instagram dimensions (1080x1080)
+3. Screenshot or save images to use on Instagram
+4. Edit `/src/app/instagram-post/page.tsx` to change marathon or post type
+
+**Customization:**
+```typescript
+const marathonId = 'nyc' // tokyo, boston, london, berlin, chicago, nyc, sydney
+const postType: 'map' | 'stats' = 'map' // or 'stats'
+```
+
 ## Common Tasks
 
 ### Adding a New Sanity Schema Type
