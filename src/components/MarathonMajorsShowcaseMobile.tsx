@@ -755,15 +755,10 @@ export const MarathonMajorsShowcaseMobile: React.FC = () => {
 
         mobileMapInstance.current = new window.mapboxgl.Map({
           container: mobileMapContainer.current,
-          style: 'mapbox://styles/mapbox/standard',
+          style: initialDarkMode ? 'mapbox://styles/mapbox/dark-v11' : 'mapbox://styles/mapbox/streets-v11',
           center: selectedMarathon.center,
           zoom: 11,
           attributionControl: false
-        })
-
-        // Set initial lighting preset based on dark mode
-        mobileMapInstance.current.on('style.load', () => {
-          mobileMapInstance.current.setConfigProperty('basemap', 'lightPreset', initialDarkMode ? 'night' : 'day')
         })
 
         mobileMapInstance.current.on('load', async () => {
@@ -835,8 +830,17 @@ export const MarathonMajorsShowcaseMobile: React.FC = () => {
       setIsDarkMode(darkMode)
       
       if (mobileMapInstance.current && mobileMapInstance.current.isStyleLoaded()) {
-        // Use Mapbox Standard's lighting preset for smooth transition
-        mobileMapInstance.current.setConfigProperty('basemap', 'lightPreset', darkMode ? 'night' : 'day')
+        const newStyle = darkMode
+          ? 'mapbox://styles/mapbox/dark-v11'
+          : 'mapbox://styles/mapbox/streets-v11'
+
+        mobileMapInstance.current.setStyle(newStyle, { diff: false })
+
+        mobileMapInstance.current.once('styledata', () => {
+          if (mobileRouteCoordinates.current.length > 0) {
+            addRoute(mobileRouteCoordinates.current, mobileStoredAidStations.current)
+          }
+        })
       }
       
       if (mobileChartInstance.current && mobileRouteCoordinates.current.length > 0) {

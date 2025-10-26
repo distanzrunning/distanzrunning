@@ -1418,15 +1418,10 @@ export const MarathonMajorsShowcase: React.FC = () => {
 
         mapInstance.current = new window.mapboxgl.Map({
           container: mapContainer.current,
-          style: 'mapbox://styles/mapbox/standard',
+          style: initialDarkMode ? 'mapbox://styles/mapbox/dark-v11' : 'mapbox://styles/mapbox/streets-v11',
           center: selectedMarathon.center,
           zoom: 12,
           attributionControl: false
-        })
-
-        // Set initial lighting preset based on dark mode
-        mapInstance.current.on('style.load', () => {
-          mapInstance.current.setConfigProperty('basemap', 'lightPreset', initialDarkMode ? 'night' : 'day')
         })
 
         mapInstance.current.on('load', async () => {
@@ -1518,10 +1513,20 @@ export const MarathonMajorsShowcase: React.FC = () => {
       const darkMode = document.documentElement.classList.contains('dark')
       setIsDarkMode(darkMode)
       
-      // Update map lighting preset if map is initialized
+      // Update map style if map is initialized
       if (mapInstance.current && mapInstance.current.isStyleLoaded()) {
-        // Use Mapbox Standard's lighting preset for smooth transition
-        mapInstance.current.setConfigProperty('basemap', 'lightPreset', darkMode ? 'night' : 'day')
+        const newStyle = darkMode
+          ? 'mapbox://styles/mapbox/dark-v11'
+          : 'mapbox://styles/mapbox/streets-v11'
+
+        mapInstance.current.setStyle(newStyle, { diff: false })
+
+        // Re-add the route after style loads
+        mapInstance.current.once('styledata', () => {
+          if (routeCoordinates.current.length > 0) {
+            addRoute(routeCoordinates.current, storedAidStations.current)
+          }
+        })
       }
       
       // ADD THIS: Recreate chart with new colors when dark mode changes
