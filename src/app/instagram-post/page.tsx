@@ -7,9 +7,8 @@ export const metadata: Metadata = {
 }
 
 export default function InstagramPostPage() {
-  // You can change these to generate different posts
+  // You can change this to generate posts for different marathons
   const marathonId = 'nyc' // Options: tokyo, boston, london, berlin, chicago, nyc, sydney
-  const postType: 'map' | 'stats' = 'map' // Change to 'stats' for the stats post
 
   return (
     <div className="min-h-screen bg-neutral-100 p-8">
@@ -17,15 +16,15 @@ export default function InstagramPostPage() {
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-neutral-900 mb-4">Instagram Post Generator</h1>
           <p className="text-neutral-600">
-            Screenshot these to create Instagram posts. Each post is 1080x1080px.
+            Screenshot these to create Instagram posts. Each post is 1080x1350px (4:5 ratio).
           </p>
           <p className="text-neutral-600 mt-2">
             <strong>Tips for screenshots:</strong>
           </p>
           <ul className="list-disc list-inside text-neutral-600 mt-2">
-            <li>Use a screenshot tool to capture exactly 1080x1080px</li>
+            <li>Use a screenshot tool to capture exactly 1080x1350px</li>
             <li>Or right-click and "Save Image As" if your browser supports it</li>
-            <li>Change the <code className="bg-neutral-200 px-2 py-1 rounded">marathonId</code> and <code className="bg-neutral-200 px-2 py-1 rounded">postType</code> in the code to generate different posts</li>
+            <li>Change the <code className="bg-neutral-200 px-2 py-1 rounded">marathonId</code> in the code to generate posts for different marathons</li>
           </ul>
         </div>
 

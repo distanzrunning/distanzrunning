@@ -24,8 +24,8 @@ export function InstagramPost({ marathonId, type }: InstagramPostProps) {
 
   if (!marathon) return null
 
-  // Instagram dimensions: 1080x1080 (square)
-  const instagramSize = { width: 1080, height: 1080 }
+  // Instagram dimensions: 1080x1350 (4:5 ratio)
+  const instagramSize = { width: 1080, height: 1350 }
 
   useEffect(() => {
     if (type === 'map' && mapContainer.current && !mapInstance.current) {
