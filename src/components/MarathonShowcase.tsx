@@ -765,44 +765,54 @@ export const MarathonMajorsShowcase: React.FC = () => {
         }
       })
 
-      // Add directional arrows
-      mapInstance.current.addLayer({
-        id: 'route-arrows',
-        type: 'symbol',
-        source: 'route',
-        layout: {
-          'symbol-placement': 'line',
-          'symbol-spacing': 80,
-          'icon-image': 'arrow-right',
-          'icon-size': 1.2,
-          'icon-rotation-alignment': 'map',
-          'icon-pitch-alignment': 'map',
-          'icon-ignore-placement': true,
-          'icon-allow-overlap': true
-        },
-        paint: {
-          'icon-opacity': 1.0
-        }
-      })
+      // Create arrow icon BEFORE adding the layer that uses it
+      const addArrowLayer = () => {
+        if (!mapInstance.current) return
 
-      // Create arrow icon if it doesn't exist
+        // Add directional arrows layer
+        mapInstance.current.addLayer({
+          id: 'route-arrows',
+          type: 'symbol',
+          source: 'route',
+          layout: {
+            'symbol-placement': 'line',
+            'symbol-spacing': 80,
+            'icon-image': 'arrow-right',
+            'icon-size': 1.2,
+            'icon-rotation-alignment': 'map',
+            'icon-pitch-alignment': 'map',
+            'icon-ignore-placement': true,
+            'icon-allow-overlap': true
+          },
+          paint: {
+            'icon-opacity': 1.0
+          }
+        })
+      }
+
+      // Create and load arrow icon first
       if (!mapInstance.current.hasImage('arrow-right')) {
         const arrowSvg = `
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
-            <path fill="none" stroke="#ffffff" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" 
+            <path fill="none" stroke="#ffffff" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"
                   d="M6 6 L13 10 L6 14" />
-            <path fill="none" stroke="#e43c81" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" 
+            <path fill="none" stroke="#e43c81" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"
                   d="M6 6 L13 10 L6 14" />
           </svg>
         `
-        
+
         const img = new Image(20, 20)
         img.onload = () => {
           if (mapInstance.current && !mapInstance.current.hasImage('arrow-right')) {
             mapInstance.current.addImage('arrow-right', img)
+            // Now add the layer that uses the image
+            addArrowLayer()
           }
         }
         img.src = 'data:image/svg+xml;base64,' + btoa(arrowSvg)
+      } else {
+        // Image already exists, just add the layer
+        addArrowLayer()
       }
 
     // Add route hover interactions
