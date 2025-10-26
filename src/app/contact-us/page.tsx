@@ -2,7 +2,6 @@ import { Metadata } from 'next'
 import ContactForm from '@/components/ContactForm'
 import SocialLinks from '@/components/SocialLinks'
 import { DarkModeProvider } from '@/components/DarkModeProvider'
-import { MixpanelProvider } from '@/components/MixpanelProvider'
 import Link from 'next/link'
 import { Check } from 'lucide-react'
 
@@ -13,9 +12,8 @@ export const metadata: Metadata = {
 
 export default function ContactUsPage() {
   return (
-    <MixpanelProvider>
-      <DarkModeProvider>
-        <div className="min-h-screen bg-white dark:bg-[#0c0c0d] transition-colors duration-300">
+    <DarkModeProvider>
+      <div className="min-h-screen bg-white dark:bg-[#0c0c0d] transition-colors duration-300">
         {/* Logo - Centered Header */}
         <div className="pt-12 pb-6 px-6">
           <div className="flex justify-center">
@@ -106,8 +104,7 @@ export default function ContactUsPage() {
         <SocialLinks />
       </div>
     </div>
-        </div>
-      </DarkModeProvider>
-    </MixpanelProvider>
+      </div>
+    </DarkModeProvider>
   )
 }

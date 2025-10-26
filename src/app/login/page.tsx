@@ -4,7 +4,6 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { DarkModeProvider } from '@/components/DarkModeProvider'
-import { MixpanelProvider } from '@/components/MixpanelProvider'
 
 export default function LoginPage() {
   const [password, setPassword] = useState('')
@@ -43,9 +42,8 @@ export default function LoginPage() {
   }
 
   return (
-    <MixpanelProvider>
-      <DarkModeProvider>
-        <div className="min-h-screen bg-white dark:bg-[#0c0c0d] transition-colors duration-300 flex items-center justify-center p-4">
+    <DarkModeProvider>
+      <div className="min-h-screen bg-white dark:bg-[#0c0c0d] transition-colors duration-300 flex items-center justify-center p-4">
         {/* Logo and container wrapper */}
         <div className="w-full max-w-sm space-y-8">
           {/* Logo */}
@@ -116,8 +114,7 @@ export default function LoginPage() {
             </div>
           </div>
         </div>
-        </div>
-      </DarkModeProvider>
-    </MixpanelProvider>
+      </div>
+    </DarkModeProvider>
   )
 }
