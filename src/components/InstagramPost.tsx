@@ -24,19 +24,16 @@ export function InstagramPost({ marathonId, type }: InstagramPostProps) {
   const [isMounted, setIsMounted] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
+  // Instagram dimensions: 1080x1350 (4:5 ratio)
+  const instagramSize = { width: 1080, height: 1350 }
+
   // Fix hydration errors
   useEffect(() => {
     setIsMounted(true)
   }, [])
 
-  if (!marathon) return null
-  if (!isMounted && type === 'map') return <div style={{ width: 1080, height: 1350 }} /> // Prevent hydration mismatch
-
-  // Instagram dimensions: 1080x1350 (4:5 ratio)
-  const instagramSize = { width: 1080, height: 1350 }
-
   useEffect(() => {
-    if (type === 'map' && mapContainer.current && !mapInstance.current) {
+    if (type === 'map' && mapContainer.current && !mapInstance.current && marathon) {
       const init = async () => {
         // Load Mapbox
         if (!window.mapboxgl) {
@@ -149,6 +146,9 @@ export function InstagramPost({ marathonId, type }: InstagramPostProps) {
       }
     }
   }, [type, marathon])
+
+  // Early return after all hooks
+  if (!marathon) return null
 
   if (type === 'map') {
     // Prevent hydration mismatch by only rendering map content on client
