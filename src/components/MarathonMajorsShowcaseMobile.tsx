@@ -721,13 +721,13 @@ export const MarathonMajorsShowcaseMobile: React.FC = () => {
         // Load external libraries
         if (!window.mapboxgl) {
           const link = document.createElement('link')
-          link.href = 'https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css'
+          link.href = 'https://api.mapbox.com/mapbox-gl-js/v3.8.0/mapbox-gl.css'
           link.rel = 'stylesheet'
           document.head.appendChild(link)
 
           await new Promise((resolve, reject) => {
             const script = document.createElement('script')
-            script.src = 'https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js'
+            script.src = 'https://api.mapbox.com/mapbox-gl-js/v3.8.0/mapbox-gl.js'
             script.onload = resolve
             script.onerror = reject
             document.head.appendChild(script)
