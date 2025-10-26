@@ -1515,11 +1515,12 @@ export const MarathonMajorsShowcase: React.FC = () => {
       
       // Update map style if map is initialized
       if (mapInstance.current && mapInstance.current.isStyleLoaded()) {
-        const newStyle = darkMode 
-          ? 'mapbox://styles/mapbox/dark-v11' 
+        const newStyle = darkMode
+          ? 'mapbox://styles/mapbox/dark-v11'
           : 'mapbox://styles/mapbox/streets-v11'
-        
-        mapInstance.current.setStyle(newStyle)
+
+        // Set diff: false to avoid warning about rebuilding style from scratch
+        mapInstance.current.setStyle(newStyle, { diff: false })
         
         // Re-add the route after style loads
         mapInstance.current.once('styledata', () => {
