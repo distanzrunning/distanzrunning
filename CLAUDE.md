@@ -151,6 +151,33 @@ npm run lint         # Run ESLint (note: ignoreDuringBuilds: true in next.config
 **Authentication:**
 - `/api/auth` - POST: Login with password, GET: Check auth status
 
+### Analytics & Tracking
+
+**PostHog Web Analytics:**
+- Initialized in `/instrumentation-client.ts` (Next.js 15.3+ feature)
+- Automatic pageview and pageleave tracking enabled
+- Uses EU hosting at `https://eu.i.posthog.com`
+- Configuration:
+  - `defaults: '2025-05-24'` - Latest SDK defaults for automatic tracking
+  - `capture_pageleave: true` - Tracks user engagement metrics
+  - Automatically captures scroll depth and time on page
+
+**Usage:**
+Import `posthog` from `posthog-js` in any component to capture custom events:
+```typescript
+import posthog from 'posthog-js';
+
+// Capture custom event
+posthog.capture('button_clicked', { button_name: 'newsletter_signup' });
+
+// Identify users
+posthog.identify('user_id', { email: 'user@example.com' });
+```
+
+**Google Tag Manager:**
+- Configured in main layout
+- GTM ID: GTM-K3W2LWHM
+
 ## Environment Variables
 
 Environment variables are managed in Vercel (not stored in local `.env` files):
@@ -167,6 +194,8 @@ AUTH_SECRET
 
 # Analytics
 GTM_ID (Google Tag Manager, referenced in layout.tsx)
+NEXT_PUBLIC_POSTHOG_KEY (PostHog project API key)
+NEXT_PUBLIC_POSTHOG_HOST (PostHog host URL - EU: https://eu.i.posthog.com)
 
 # Preview Mode
 PREVIEW_MODE (set to 'true' to disable navbar/footer)
@@ -192,6 +221,7 @@ PREVIEW_MODE (set to 'true' to disable navbar/footer)
 - `experimental.optimizeServerReact: true` - Server component optimizations
 - Vercel Analytics and Speed Insights integrated
 - Google Tag Manager (GTM-K3W2LWHM)
+- PostHog Web Analytics integrated via `instrumentation-client.ts`
 
 ### Git Workflow
 - Main branch: `main`

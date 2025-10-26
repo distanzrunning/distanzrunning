@@ -36,6 +36,7 @@
     "next": "^15.4.2",
     "next-sanity": "^9.10.2",
     "papaparse": "^5.5.2",
+    "posthog-js": "^1.280.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^5.5.0",
