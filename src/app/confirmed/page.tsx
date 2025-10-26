@@ -5,6 +5,7 @@ import { Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { DarkModeProvider } from '@/components/DarkModeProvider'
+import MixpanelAnalytics from '@/components/MixpanelAnalytics'
 import SocialLinks from '@/components/SocialLinks'
 
 function ConfirmedContent() {
@@ -82,6 +83,9 @@ function ConfirmedContent() {
 export default function ConfirmedPage() {
   return (
     <DarkModeProvider>
+      {/* Mixpanel Analytics - only runs in production */}
+      <MixpanelAnalytics />
+
       <Suspense fallback={
         <div className="min-h-screen bg-white dark:bg-[#0c0c0d] flex items-center justify-center">
           <div className="text-center">

@@ -2,6 +2,7 @@ import { Metadata } from 'next'
 import ContactForm from '@/components/ContactForm'
 import SocialLinks from '@/components/SocialLinks'
 import { DarkModeProvider } from '@/components/DarkModeProvider'
+import MixpanelAnalytics from '@/components/MixpanelAnalytics'
 import Link from 'next/link'
 import { Check } from 'lucide-react'
 
@@ -13,6 +14,9 @@ export const metadata: Metadata = {
 export default function ContactUsPage() {
   return (
     <DarkModeProvider>
+      {/* Mixpanel Analytics - only runs in production */}
+      <MixpanelAnalytics />
+
       <div className="min-h-screen bg-white dark:bg-[#0c0c0d] transition-colors duration-300">
         {/* Logo - Centered Header */}
         <div className="pt-12 pb-6 px-6">
