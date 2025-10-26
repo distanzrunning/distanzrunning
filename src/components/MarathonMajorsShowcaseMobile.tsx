@@ -830,6 +830,12 @@ export const MarathonMajorsShowcaseMobile: React.FC = () => {
       setIsDarkMode(darkMode)
       
       if (mobileMapInstance.current && mobileMapInstance.current.isStyleLoaded()) {
+        // Add fade-out transition
+        if (mobileMapContainer.current) {
+          mobileMapContainer.current.style.transition = 'opacity 0.3s ease-in-out'
+          mobileMapContainer.current.style.opacity = '0.3'
+        }
+
         const newStyle = darkMode
           ? 'mapbox://styles/mapbox/dark-v11'
           : 'mapbox://styles/mapbox/streets-v11'
@@ -840,6 +846,13 @@ export const MarathonMajorsShowcaseMobile: React.FC = () => {
           if (mobileRouteCoordinates.current.length > 0) {
             addRoute(mobileRouteCoordinates.current, mobileStoredAidStations.current)
           }
+
+          // Fade back in after route is added
+          setTimeout(() => {
+            if (mobileMapContainer.current) {
+              mobileMapContainer.current.style.opacity = '1'
+            }
+          }, 100)
         })
       }
       

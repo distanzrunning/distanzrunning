@@ -1515,6 +1515,12 @@ export const MarathonMajorsShowcase: React.FC = () => {
       
       // Update map style if map is initialized
       if (mapInstance.current && mapInstance.current.isStyleLoaded()) {
+        // Add fade-out transition
+        if (mapContainer.current) {
+          mapContainer.current.style.transition = 'opacity 0.3s ease-in-out'
+          mapContainer.current.style.opacity = '0.3'
+        }
+
         const newStyle = darkMode
           ? 'mapbox://styles/mapbox/dark-v11'
           : 'mapbox://styles/mapbox/streets-v11'
@@ -1526,6 +1532,13 @@ export const MarathonMajorsShowcase: React.FC = () => {
           if (routeCoordinates.current.length > 0) {
             addRoute(routeCoordinates.current, storedAidStations.current)
           }
+
+          // Fade back in after route is added
+          setTimeout(() => {
+            if (mapContainer.current) {
+              mapContainer.current.style.opacity = '1'
+            }
+          }, 100)
         })
       }
       
