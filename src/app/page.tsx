@@ -16,7 +16,7 @@ import WriteForUs from '@/components/WriteForUs'
 import ScrollIndicator from '@/components/ScrollIndicator'
 import { Metadata } from 'next'
 import { PreviewDarkModeToggle } from '@/components/PreviewDarkModeToggle'
-import MixpanelAnalytics from '@/components/MixpanelAnalytics'
+import { MixpanelProvider } from '@/components/MixpanelProvider'
 
 type Post = {
   _id: string
@@ -49,11 +49,9 @@ export async function generateMetadata(): Promise<Metadata> {
 // Preview Mode Component with Marathon Showcase and Dark Mode
 function PreviewPage() {
   return (
-      <DarkModeProvider>
-        {/* Mixpanel Analytics - only runs in production */}
-        <MixpanelAnalytics />
-
-        {/* Preload critical images for instant loading */}
+      <MixpanelProvider>
+        <DarkModeProvider>
+          {/* Preload critical images for instant loading */}
         <link rel="preload" as="image" href="/images/logo_1.svg" fetchPriority="high" />
         <link rel="preload" as="image" href="/images/logo_white.svg" fetchPriority="high" />
 
@@ -149,7 +147,8 @@ function PreviewPage() {
             </div>
           </div>
         </div>
-      </DarkModeProvider>
+        </DarkModeProvider>
+      </MixpanelProvider>
   );
 }
 

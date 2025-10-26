@@ -5,7 +5,7 @@ import { Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { DarkModeProvider } from '@/components/DarkModeProvider'
-import MixpanelAnalytics from '@/components/MixpanelAnalytics'
+import { MixpanelProvider } from '@/components/MixpanelProvider'
 import SocialLinks from '@/components/SocialLinks'
 
 function ConfirmedContent() {
@@ -82,20 +82,19 @@ function ConfirmedContent() {
 
 export default function ConfirmedPage() {
   return (
-    <DarkModeProvider>
-      {/* Mixpanel Analytics - only runs in production */}
-      <MixpanelAnalytics />
-
-      <Suspense fallback={
+    <MixpanelProvider>
+      <DarkModeProvider>
+        <Suspense fallback={
         <div className="min-h-screen bg-white dark:bg-[#0c0c0d] flex items-center justify-center">
           <div className="text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-pink-500 mx-auto mb-4"></div>
             <div className="text-gray-600 dark:text-gray-400">Loading...</div>
           </div>
         </div>
-      }>
-        <ConfirmedContent />
-      </Suspense>
-    </DarkModeProvider>
+        }>
+          <ConfirmedContent />
+        </Suspense>
+      </DarkModeProvider>
+    </MixpanelProvider>
   )
 }
