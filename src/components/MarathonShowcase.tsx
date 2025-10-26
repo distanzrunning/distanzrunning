@@ -88,6 +88,15 @@ export const MarathonMajorsShowcase: React.FC = () => {
   const showDistanceMarkersRef = useRef(true)
   const showAidStationsRef = useRef(true)
 
+  // Keep refs in sync with state
+  useEffect(() => {
+    showDistanceMarkersRef.current = showDistanceMarkers
+  }, [showDistanceMarkers])
+
+  useEffect(() => {
+    showAidStationsRef.current = showAidStations
+  }, [showAidStations])
+
   // Recenter map to original course view
   const recenterMap = () => {
     if (mapInstance.current && originalBounds.current) {
