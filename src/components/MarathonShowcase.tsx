@@ -1045,12 +1045,10 @@ export const MarathonMajorsShowcase: React.FC = () => {
         mapInstance.current.once('moveend', handleMoveEnd)
         mapInstance.current.once('idle', handleIdle)
 
+        // Safety timeout in case map events don't fire
         setTimeout(() => {
-          if (!moveEndFired || !idleFired || !styleLoadFired) {
-            console.warn('Map settling timeout reached')
-            resolve()
-          }
-        }, 3000) // Reduced from 5000ms to 3000ms for faster transitions
+          resolve()
+        }, 3000) // Fallback timeout for faster transitions
       })
 
       // Wait for map operations to complete
