@@ -173,8 +173,22 @@ export const InstagramPost: React.FC<InstagramPostProps> = ({ marathon, type }) 
     }
   }, [marathon, type])
 
-  // Get key stats for stats post (first 6 stats)
-  const keyStats = marathon.stats.slice(0, 6)
+  // Icon mapping for Material Symbols (same as MarathonShowcase)
+  const getIconName = (title: string) => {
+    switch(title) {
+      case 'Distance': return 'arrow_range'
+      case 'Surface': return 'road'
+      case 'Profile': return 'elevation'
+      case 'Elevation Gain': return 'arrow_drop_up'
+      case 'Average Temp (high)': return 'device_thermostat'
+      case 'Elevation Loss': return 'arrow_drop_down'
+      case "Men's Course Record": return 'male'
+      case "Women's Course Record": return 'female'
+      case 'Finishers (2024)': return 'groups'
+      case 'Finishers (2025)': return 'groups'
+      default: return 'info'
+    }
+  }
 
   return (
     <div
@@ -229,23 +243,46 @@ export const InstagramPost: React.FC<InstagramPostProps> = ({ marathon, type }) 
           style={{ height: '1070px' }}
         />
       ) : (
-        <div className="stats-container flex-1 px-12 py-12 bg-white" style={{ height: '1070px' }}>
-          <div className="grid grid-cols-2 gap-8 h-full">
-            {keyStats.map((stat, index) => {
+        <div className="stats-container flex-1 px-10 py-10 bg-white" style={{ height: '1070px' }}>
+          <div className="grid grid-cols-2 gap-6 h-full">
+            {marathon.stats.map((stat, index) => {
               const value = stat.static ||
                 (stat.metric && stat.imperial ? stat.metric :
                 stat.metric || stat.imperial || '')
 
+              const isWorldAthleticsLabel = stat.title === 'World Athletics Label'
+
               return (
                 <div
                   key={index}
-                  className="bg-neutral-50 rounded-xl border-2 border-neutral-200 flex flex-col items-center justify-center text-center p-8"
+                  className="bg-neutral-50 rounded-xl border-2 border-neutral-200 flex items-center justify-between p-6"
                 >
-                  <div className="text-neutral-600 font-semibold mb-4" style={{ fontSize: '22px' }}>
-                    {stat.title}
+                  {/* Text Content */}
+                  <div className="flex-1">
+                    <div className="text-neutral-600 font-semibold mb-2" style={{ fontSize: '18px' }}>
+                      {stat.title}
+                    </div>
+                    <div className="text-neutral-900 font-bold" style={{ fontSize: '32px', lineHeight: '1.1' }}>
+                      {value}
+                    </div>
                   </div>
-                  <div className="text-neutral-900 font-bold" style={{ fontSize: '44px', lineHeight: '1.1' }}>
-                    {value}
+
+                  {/* Icon */}
+                  <div className="flex-shrink-0 ml-4">
+                    {isWorldAthleticsLabel ? (
+                      <div className="flex items-center justify-center" style={{ width: '70px', height: '70px' }}>
+                        <img src="/images/platinum_label.svg" alt="" className="w-full h-full object-contain" />
+                      </div>
+                    ) : (
+                      <div
+                        className="bg-gradient-to-br from-neutral-100 to-neutral-200 rounded-full flex items-center justify-center border-2 border-neutral-300 shadow-lg"
+                        style={{ width: '70px', height: '70px' }}
+                      >
+                        <span className="material-symbols-outlined text-neutral-700" style={{ fontSize: '36px' }}>
+                          {getIconName(stat.title)}
+                        </span>
+                      </div>
+                    )}
                   </div>
                 </div>
               )
