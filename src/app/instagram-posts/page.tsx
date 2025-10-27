@@ -34,6 +34,11 @@ export default function InstagramPostsPage() {
 
   const selectedMarathon = marathonData.find(m => m.id === selectedMarathonId) || marathonData[0]
 
+  // Reset map ready state when marathon changes
+  useEffect(() => {
+    setMapReady(false)
+  }, [selectedMarathonId])
+
   // Wait for all resources to load (fonts, images)
   const waitForResources = async () => {
     // Wait for fonts (Material Symbols, system fonts)
@@ -189,18 +194,18 @@ export default function InstagramPostsPage() {
           <div className="mt-8 text-center">
             <button
               onClick={downloadBothPosts}
-              disabled={isDownloading}
+              disabled={isDownloading || !mapReady}
               className="inline-flex items-center gap-3 bg-gradient-to-r from-pink-600 to-pink-700 hover:from-pink-700 hover:to-pink-800 text-white font-bold px-8 py-4 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <span className="material-symbols-outlined text-2xl">
-                download
+                {!mapReady ? 'hourglass_empty' : 'download'}
               </span>
               <span className="text-lg">
-                {isDownloading ? 'Downloading...' : 'Download Both Images (PNG)'}
+                {isDownloading ? 'Downloading...' : !mapReady ? 'Map is loading...' : 'Download Both Images (PNG)'}
               </span>
             </button>
             <p className="text-sm text-neutral-600 mt-3">
-              Downloads both the map and stats posts as high-quality PNG images
+              {!mapReady ? 'Please wait for the map to fully load before downloading' : 'Downloads both the map and stats posts as high-quality PNG images'}
             </p>
           </div>
         </div>
