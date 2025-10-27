@@ -1,11 +1,14 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { InstagramPost } from '@/components/InstagramPost'
 import { marathonData } from '@/constants/marathonData'
 
 export default function InstagramPostsPage() {
   const [selectedMarathonId, setSelectedMarathonId] = useState(marathonData[0].id)
+  const [isDownloading, setIsDownloading] = useState(false)
+  const mapPostRef = useRef<HTMLDivElement>(null)
+  const statsPostRef = useRef<HTMLDivElement>(null)
 
   // Hide navbar and footer for clean screenshot experience
   useEffect(() => {
@@ -29,6 +32,61 @@ export default function InstagramPostsPage() {
   }, [])
 
   const selectedMarathon = marathonData.find(m => m.id === selectedMarathonId) || marathonData[0]
+
+  // Download a single post as PNG
+  const downloadPost = async (element: HTMLElement | null, filename: string) => {
+    if (!element) return
+
+    try {
+      // Dynamically import html2canvas
+      const html2canvas = (await import('html2canvas')).default
+
+      const canvas = await html2canvas(element, {
+        scale: 2, // Higher quality
+        backgroundColor: '#ffffff',
+        logging: false,
+        useCORS: true,
+        allowTaint: true
+      })
+
+      // Convert to blob and download
+      canvas.toBlob((blob: Blob | null) => {
+        if (blob) {
+          const url = URL.createObjectURL(blob)
+          const link = document.createElement('a')
+          link.href = url
+          link.download = filename
+          link.click()
+          URL.revokeObjectURL(url)
+        }
+      }, 'image/png')
+    } catch (error) {
+      console.error('Error downloading image:', error)
+      alert('Failed to download image. Please try using a screenshot tool instead.')
+    }
+  }
+
+  // Download both posts
+  const downloadBothPosts = async () => {
+    setIsDownloading(true)
+
+    try {
+      // Download map post
+      if (mapPostRef.current) {
+        await downloadPost(mapPostRef.current, `${selectedMarathon.id}-marathon-map.png`)
+      }
+
+      // Wait a bit before downloading the second one
+      await new Promise(resolve => setTimeout(resolve, 500))
+
+      // Download stats post
+      if (statsPostRef.current) {
+        await downloadPost(statsPostRef.current, `${selectedMarathon.id}-marathon-stats.png`)
+      }
+    } finally {
+      setIsDownloading(false)
+    }
+  }
 
   return (
     <div className="min-h-screen bg-neutral-100 py-12">
@@ -67,11 +125,30 @@ export default function InstagramPostsPage() {
               ))}
             </div>
           </div>
+
+          {/* Download Button */}
+          <div className="mt-8 text-center">
+            <button
+              onClick={downloadBothPosts}
+              disabled={isDownloading}
+              className="inline-flex items-center gap-3 bg-gradient-to-r from-pink-600 to-pink-700 hover:from-pink-700 hover:to-pink-800 text-white font-bold px-8 py-4 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <span className="material-symbols-outlined text-2xl">
+                download
+              </span>
+              <span className="text-lg">
+                {isDownloading ? 'Downloading...' : 'Download Both Images (PNG)'}
+              </span>
+            </button>
+            <p className="text-sm text-neutral-600 mt-3">
+              Downloads both the map and stats posts as high-quality PNG images
+            </p>
+          </div>
         </div>
 
         {/* Posts Grid */}
         <div>
-          <div className="border-t-4 border-neutral-300 pt-8">
+          <div className="border-t-4 border-neutral-300 pt-8 mt-12">
             <h2 className="text-3xl font-bold text-neutral-900 mb-8 text-center">
               {selectedMarathon.name} Marathon
             </h2>
@@ -79,7 +156,7 @@ export default function InstagramPostsPage() {
             <div className="space-y-12 max-w-[1080px] mx-auto">
               {/* Map Post */}
               <div className="space-y-4">
-                <div className="bg-white rounded-lg shadow-xl overflow-hidden border-2 border-neutral-300">
+                <div ref={mapPostRef} className="bg-white rounded-lg shadow-xl overflow-hidden border-2 border-neutral-300">
                   <InstagramPost marathon={selectedMarathon} type="map" />
                 </div>
                 <p className="text-center text-sm font-semibold text-neutral-700">
@@ -89,7 +166,7 @@ export default function InstagramPostsPage() {
 
               {/* Stats Post */}
               <div className="space-y-4">
-                <div className="bg-white rounded-lg shadow-xl overflow-hidden border-2 border-neutral-300">
+                <div ref={statsPostRef} className="bg-white rounded-lg shadow-xl overflow-hidden border-2 border-neutral-300">
                   <InstagramPost marathon={selectedMarathon} type="stats" />
                 </div>
                 <p className="text-center text-sm font-semibold text-neutral-700">
