@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { MarathonData } from '@/constants/marathonData'
 
 interface InstagramPostProps {
@@ -11,7 +11,6 @@ interface InstagramPostProps {
 export const InstagramPost: React.FC<InstagramPostProps> = ({ marathon, type }) => {
   const mapContainer = useRef<HTMLDivElement>(null)
   const mapInstance = useRef<any>(null)
-  const [isMapLoaded, setIsMapLoaded] = useState(false)
 
   // Load route and render map for 'map' type posts
   useEffect(() => {
@@ -106,14 +105,59 @@ export const InstagramPost: React.FC<InstagramPostProps> = ({ marathon, type }) 
             }
           })
 
+          // Add start marker (green circle)
+          const startMarkerElement = document.createElement('div')
+          startMarkerElement.style.cssText = `
+            background: #22c55e;
+            border: 3px solid white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            z-index: 10;
+          `
+          new window.mapboxgl.Marker(startMarkerElement)
+            .setLngLat(coordinates[0])
+            .addTo(mapInstance.current)
+
+          // Add finish marker (checkered flag pattern)
+          const finishMarkerElement = document.createElement('div')
+          finishMarkerElement.style.cssText = `
+            border: 3px solid white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            position: relative;
+            z-index: 10;
+          `
+
+          const flagPattern = document.createElement('div')
+          flagPattern.style.cssText = `
+            width: 100%;
+            height: 100%;
+            background-image:
+              linear-gradient(45deg, #000 25%, transparent 25%),
+              linear-gradient(-45deg, #000 25%, transparent 25%),
+              linear-gradient(45deg, transparent 75%, #000 75%),
+              linear-gradient(-45deg, transparent 75%, #000 75%);
+            background-size: 6px 6px;
+            background-position: 0 0, 0 3px, 3px -3px, -3px 0px;
+            background-color: white;
+          `
+          finishMarkerElement.appendChild(flagPattern)
+
+          new window.mapboxgl.Marker(finishMarkerElement)
+            .setLngLat(coordinates[coordinates.length - 1])
+            .addTo(mapInstance.current)
+
           // Fit bounds to route
           const bounds = coordinates.reduce((bounds: any, coord: any) => {
             return bounds.extend(coord as [number, number])
           }, new window.mapboxgl.LngLatBounds(coordinates[0], coordinates[0]))
 
           mapInstance.current.fitBounds(bounds, { padding: 80 })
-
-          setIsMapLoaded(true)
         } catch (err) {
           console.error('Failed to load route:', err)
         }
