@@ -225,11 +225,11 @@ export const InstagramPost: React.FC<InstagramPostProps> = ({ marathon, type }) 
         </div>
 
         {/* Right: Date */}
-        <div className="text-center bg-white rounded-lg border border-neutral-300 flex flex-col items-center justify-center" style={{ width: '90px', height: '90px' }}>
-          <div className="text-neutral-600 font-semibold uppercase tracking-wide" style={{ fontSize: '16px' }}>
+        <div className="bg-white rounded-lg border border-neutral-300" style={{ width: '90px', height: '90px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+          <div className="text-neutral-600 font-semibold uppercase tracking-wide text-center" style={{ fontSize: '16px' }}>
             {marathon.date.month}
           </div>
-          <div className="text-neutral-900 font-bold" style={{ fontSize: '40px', lineHeight: '1' }}>
+          <div className="text-neutral-900 font-bold text-center" style={{ fontSize: '40px', lineHeight: '1', marginTop: '4px' }}>
             {marathon.date.day}
           </div>
         </div>
@@ -268,17 +268,17 @@ export const InstagramPost: React.FC<InstagramPostProps> = ({ marathon, type }) 
                   </div>
 
                   {/* Icon */}
-                  <div className="flex-shrink-0 ml-4">
+                  <div className="flex-shrink-0 ml-4" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     {isWorldAthleticsLabel ? (
-                      <div className="flex items-center justify-center" style={{ width: '70px', height: '70px' }}>
-                        <img src="/images/platinum_label.svg" alt="" className="w-full h-full object-contain" />
+                      <div style={{ width: '70px', height: '70px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <img src="/images/platinum_label.svg" alt="" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                       </div>
                     ) : (
                       <div
-                        className="bg-gradient-to-br from-neutral-100 to-neutral-200 rounded-full flex items-center justify-center border-2 border-neutral-300 shadow-lg"
-                        style={{ width: '70px', height: '70px' }}
+                        className="bg-gradient-to-br from-neutral-100 to-neutral-200 rounded-full border-2 border-neutral-300 shadow-lg"
+                        style={{ width: '70px', height: '70px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                       >
-                        <span className="material-symbols-outlined text-neutral-700" style={{ fontSize: '36px' }}>
+                        <span className="material-symbols-outlined text-neutral-700" style={{ fontSize: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                           {getIconName(stat.title)}
                         </span>
                       </div>
@@ -297,10 +297,10 @@ export const InstagramPost: React.FC<InstagramPostProps> = ({ marathon, type }) 
         style={{ height: '140px' }}
       >
         <img
-          src="/images/logo_1.svg"
+          src="/images/logo_white.svg"
           alt="Distanz Running"
           className="object-contain"
-          style={{ height: '60px', filter: 'brightness(0) invert(1)' }}
+          style={{ height: '60px' }}
         />
       </div>
     </div>
