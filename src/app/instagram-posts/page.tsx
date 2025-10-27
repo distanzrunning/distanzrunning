@@ -7,6 +7,7 @@ import { marathonData } from '@/constants/marathonData'
 export default function InstagramPostsPage() {
   const [selectedMarathonId, setSelectedMarathonId] = useState(marathonData[0].id)
   const [isDownloading, setIsDownloading] = useState(false)
+  const [mapReady, setMapReady] = useState(false)
   const mapPostRef = useRef<HTMLDivElement>(null)
   const statsPostRef = useRef<HTMLDivElement>(null)
 
@@ -33,6 +34,29 @@ export default function InstagramPostsPage() {
 
   const selectedMarathon = marathonData.find(m => m.id === selectedMarathonId) || marathonData[0]
 
+  // Wait for all resources to load (fonts, images)
+  const waitForResources = async () => {
+    // Wait for fonts (Material Symbols, system fonts)
+    if (document.fonts) {
+      await document.fonts.ready
+    }
+
+    // Wait for all images (logos, icons)
+    const images = document.querySelectorAll('img')
+    await Promise.all(
+      Array.from(images).map(img => {
+        if (img.complete) return Promise.resolve()
+        return new Promise(resolve => {
+          img.onload = resolve
+          img.onerror = resolve
+        })
+      })
+    )
+
+    // Additional paint delay
+    await new Promise(resolve => setTimeout(resolve, 300))
+  }
+
   // Download a single post as PNG
   const downloadPost = async (element: HTMLElement | null, filename: string, isMapPost: boolean = false) => {
     if (!element) return
@@ -41,110 +65,48 @@ export default function InstagramPostsPage() {
       // Dynamically import html2canvas
       const html2canvas = (await import('html2canvas')).default
 
-      // Special handling for map posts - we need to capture the Mapbox canvas
-      let canvas: HTMLCanvasElement
+      // Wait for resources to load
+      await waitForResources()
 
+      // For map posts, wait for map ready signal
       if (isMapPost) {
-        // Find the Mapbox canvas element
-        const mapboxCanvas = element.querySelector('.mapboxgl-canvas') as HTMLCanvasElement
-
-        if (mapboxCanvas) {
-          // Create a new canvas with the full post dimensions
-          const finalCanvas = document.createElement('canvas')
-          finalCanvas.width = 2160 // 1080px * 2
-          finalCanvas.height = 2700 // 1350px * 2
-          const ctx = finalCanvas.getContext('2d')
-
-          if (ctx) {
-            // Draw white background
-            ctx.fillStyle = '#ffffff'
-            ctx.fillRect(0, 0, finalCanvas.width, finalCanvas.height)
-
-            // Capture header and footer using html2canvas
-            const tempCanvas = await html2canvas(element, {
-              scale: 2,
-              backgroundColor: '#ffffff',
-              logging: false,
-              useCORS: true,
-              allowTaint: true
-            })
-
-            // Draw the full element (this gets header and footer)
-            ctx.drawImage(tempCanvas, 0, 0)
-
-            // Now overlay the actual Mapbox map canvas on top
-            // The map container starts at y=140px (header height) and is 1070px tall
-            const headerHeight = 140 * 2 // 2x scale
-            const mapWidth = 1080 * 2
-            const mapHeight = 1070 * 2
-
-            ctx.drawImage(mapboxCanvas, 0, headerHeight, mapWidth, mapHeight)
-
-            // Now capture and draw markers sequentially
-            const markers = Array.from(element.querySelectorAll('.mapboxgl-marker'))
-
-            for (const marker of markers) {
-              const markerEl = marker as HTMLElement
-              const style = window.getComputedStyle(markerEl)
-              const transform = style.transform
-
-              // Parse translate values from transform matrix
-              if (transform && transform !== 'none') {
-                const matrix = transform.match(/matrix\((.+)\)/)
-                if (matrix) {
-                  const values = matrix[1].split(', ')
-                  const translateX = parseFloat(values[4]) * 2 // 2x scale
-                  const translateY = parseFloat(values[5]) * 2 // 2x scale
-
-                  // Capture the marker as an image and wait for it
-                  const markerCanvas = await html2canvas(markerEl, {
-                    scale: 2,
-                    backgroundColor: null,
-                    logging: false
-                  })
-
-                  ctx.drawImage(
-                    markerCanvas,
-                    translateX,
-                    headerHeight + translateY,
-                    markerCanvas.width,
-                    markerCanvas.height
-                  )
-                }
-              }
-            }
-
-            canvas = finalCanvas
-          } else {
-            // Fallback to regular html2canvas if context fails
-            canvas = await html2canvas(element, {
-              scale: 2,
-              backgroundColor: '#ffffff',
-              logging: false,
-              useCORS: true,
-              allowTaint: true
-            })
-          }
-        } else {
-          // No mapbox canvas found, use regular html2canvas
-          canvas = await html2canvas(element, {
-            scale: 2,
-            backgroundColor: '#ffffff',
-            logging: false,
-            useCORS: true,
-            allowTaint: true
-          })
+        const maxWait = 10000 // 10s timeout
+        const startTime = Date.now()
+        while (!mapReady && Date.now() - startTime < maxWait) {
+          await new Promise(resolve => setTimeout(resolve, 100))
         }
-      } else {
-        // Regular stats post - use standard html2canvas
-        canvas = await html2canvas(element, {
-          scale: 2,
-          backgroundColor: '#ffffff',
-          logging: false,
-          useCORS: true,
-          allowTaint: true
-        })
+
+        if (!mapReady) {
+          console.warn('Map ready timeout - proceeding with capture anyway')
+        }
       }
+
+      // Capture with improved html2canvas configuration
+      const canvas = await html2canvas(element, {
+        scale: 2,                          // 2x for retina quality
+        backgroundColor: '#ffffff',         // White background
+        logging: false,                     // Disable console logs
+        useCORS: true,                      // Allow cross-origin images
+        allowTaint: true,                   // Allow tainted canvas
+        foreignObjectRendering: false,      // Better compatibility
+        imageTimeout: 15000,                // 15s timeout for images
+        windowWidth: 1080,                  // Force exact width
+        windowHeight: 1350,                 // Force exact height
+        onclone: (clonedDoc) => {
+          // Inject Material Symbols font into cloned document
+          const style = clonedDoc.createElement('style')
+          style.textContent = `
+            @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined');
+            * {
+              font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            }
+            .material-symbols-outlined {
+              font-family: 'Material Symbols Outlined' !important;
+            }
+          `
+          clonedDoc.head.appendChild(style)
+        }
+      })
 
       // Convert to blob and download
       canvas.toBlob((blob: Blob | null) => {
@@ -254,10 +216,14 @@ export default function InstagramPostsPage() {
               {/* Map Post */}
               <div className="space-y-4">
                 <div ref={mapPostRef} className="bg-white rounded-lg shadow-xl overflow-hidden border-2 border-neutral-300">
-                  <InstagramPost marathon={selectedMarathon} type="map" />
+                  <InstagramPost
+                    marathon={selectedMarathon}
+                    type="map"
+                    onMapReady={() => setMapReady(true)}
+                  />
                 </div>
                 <p className="text-center text-sm font-semibold text-neutral-700">
-                  Post 1: Route Map
+                  Post 1: Route Map {!mapReady && <span className="text-pink-600">(Map is loading...)</span>}
                 </p>
               </div>
 

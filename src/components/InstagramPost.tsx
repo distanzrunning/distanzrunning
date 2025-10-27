@@ -6,9 +6,10 @@ import { MarathonData } from '@/constants/marathonData'
 interface InstagramPostProps {
   marathon: MarathonData
   type: 'map' | 'stats'
+  onMapReady?: () => void
 }
 
-export const InstagramPost: React.FC<InstagramPostProps> = ({ marathon, type }) => {
+export const InstagramPost: React.FC<InstagramPostProps> = ({ marathon, type, onMapReady }) => {
   const mapContainer = useRef<HTMLDivElement>(null)
   const mapInstance = useRef<any>(null)
 
@@ -43,14 +44,15 @@ export const InstagramPost: React.FC<InstagramPostProps> = ({ marathon, type }) 
 
       window.mapboxgl.accessToken = mapboxToken
 
-      // Initialize map
+      // Initialize map with preserveDrawingBuffer for canvas capture
       mapInstance.current = new window.mapboxgl.Map({
         container: mapContainer.current,
         style: 'mapbox://styles/mapbox/streets-v11',
         center: marathon.center,
         zoom: 12,
         attributionControl: false,
-        interactive: false // Make it static for Instagram
+        interactive: false, // Make it static for Instagram
+        preserveDrawingBuffer: true // CRITICAL FIX: Enable canvas capture
       })
 
       mapInstance.current.on('load', async () => {
@@ -116,7 +118,10 @@ export const InstagramPost: React.FC<InstagramPostProps> = ({ marathon, type }) 
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
             z-index: 10;
           `
-          new window.mapboxgl.Marker(startMarkerElement)
+          new window.mapboxgl.Marker({
+            element: startMarkerElement,
+            anchor: 'center' // Ensures proper positioning
+          })
             .setLngLat(coordinates[0])
             .addTo(mapInstance.current)
 
@@ -148,7 +153,10 @@ export const InstagramPost: React.FC<InstagramPostProps> = ({ marathon, type }) 
           `
           finishMarkerElement.appendChild(flagPattern)
 
-          new window.mapboxgl.Marker(finishMarkerElement)
+          new window.mapboxgl.Marker({
+            element: finishMarkerElement,
+            anchor: 'center' // Ensures proper positioning
+          })
             .setLngLat(coordinates[coordinates.length - 1])
             .addTo(mapInstance.current)
 
@@ -162,6 +170,16 @@ export const InstagramPost: React.FC<InstagramPostProps> = ({ marathon, type }) 
           console.error('Failed to load route:', err)
         }
       })
+
+      // Add map ready callback - fires when map is fully loaded and idle
+      mapInstance.current.once('idle', () => {
+        // Give extra time for rendering
+        setTimeout(() => {
+          if (onMapReady) {
+            onMapReady()
+          }
+        }, 500)
+      })
     }
 
     initMap()
@@ -171,7 +189,7 @@ export const InstagramPost: React.FC<InstagramPostProps> = ({ marathon, type }) 
         mapInstance.current.remove()
       }
     }
-  }, [marathon, type])
+  }, [marathon, type, onMapReady])
 
   // Icon mapping for Material Symbols (same as MarathonShowcase)
   const getIconName = (title: string) => {
@@ -192,44 +210,104 @@ export const InstagramPost: React.FC<InstagramPostProps> = ({ marathon, type }) 
 
   return (
     <div
-      className="instagram-post relative bg-white"
       style={{
         width: '1080px',
         height: '1350px',
         display: 'flex',
-        flexDirection: 'column'
+        flexDirection: 'column',
+        position: 'relative',
+        backgroundColor: '#ffffff',
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
       }}
     >
       {/* Header: Logo, Title, Date */}
       <div
-        className="header flex items-center justify-between px-12 py-8 bg-neutral-50 border-b-2 border-neutral-200"
-        style={{ height: '140px' }}
+        style={{
+          height: '140px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: '32px 48px',
+          backgroundColor: '#fafafa',
+          borderBottom: '2px solid #e5e5e5'
+        }}
       >
         {/* Left: Marathon Logo + Name/Location */}
-        <div className="flex items-center gap-6">
-          <div className="bg-white rounded-lg p-2 border border-neutral-300 flex items-center justify-center" style={{ width: '90px', height: '90px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
+          <div style={{
+            width: '90px',
+            height: '90px',
+            backgroundColor: '#ffffff',
+            borderRadius: '8px',
+            padding: '8px',
+            border: '1px solid #d4d4d4',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}>
             <img
               src={marathon.logo}
               alt={`${marathon.name} Marathon`}
-              className="max-w-full max-h-full object-contain"
+              style={{
+                maxWidth: '100%',
+                maxHeight: '100%',
+                objectFit: 'contain'
+              }}
             />
           </div>
           <div>
-            <h1 className="font-bold text-neutral-900" style={{ fontSize: '38px', lineHeight: '1.1' }}>
+            <h1 style={{
+              fontSize: '38px',
+              lineHeight: '1.1',
+              fontWeight: 'bold',
+              color: '#171717',
+              margin: 0
+            }}>
               {marathon.name} Marathon
             </h1>
-            <p className="text-neutral-600" style={{ fontSize: '24px', lineHeight: '1.2', marginTop: '4px' }}>
+            <p style={{
+              fontSize: '24px',
+              lineHeight: '1.2',
+              color: '#525252',
+              marginTop: '4px',
+              margin: 0
+            }}>
               {marathon.location}
             </p>
           </div>
         </div>
 
         {/* Right: Date */}
-        <div className="bg-white rounded-lg border border-neutral-300" style={{ width: '90px', height: '90px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}>
-          <div className="text-neutral-600 font-semibold uppercase tracking-wide" style={{ fontSize: '16px', lineHeight: '1', marginBottom: '2px' }}>
+        <div style={{
+          width: '90px',
+          height: '90px',
+          backgroundColor: '#ffffff',
+          borderRadius: '8px',
+          border: '1px solid #d4d4d4',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          textAlign: 'center'
+        }}>
+          <div style={{
+            fontSize: '16px',
+            lineHeight: '1',
+            marginBottom: '2px',
+            color: '#525252',
+            fontWeight: '600',
+            textTransform: 'uppercase',
+            letterSpacing: '0.05em'
+          }}>
             {marathon.date.month}
           </div>
-          <div className="text-neutral-900 font-bold" style={{ fontSize: '40px', lineHeight: '0.9', marginTop: '2px' }}>
+          <div style={{
+            fontSize: '40px',
+            lineHeight: '0.9',
+            marginTop: '2px',
+            color: '#171717',
+            fontWeight: 'bold'
+          }}>
             {marathon.date.day}
           </div>
         </div>
@@ -239,12 +317,25 @@ export const InstagramPost: React.FC<InstagramPostProps> = ({ marathon, type }) 
       {type === 'map' ? (
         <div
           ref={mapContainer}
-          className="map-container flex-1 bg-neutral-100"
-          style={{ height: '1070px' }}
+          style={{
+            height: '1070px',
+            flex: 1,
+            backgroundColor: '#f5f5f5'
+          }}
         />
       ) : (
-        <div className="stats-container flex-1 px-10 py-10 bg-white" style={{ height: '1070px' }}>
-          <div className="grid grid-cols-2 gap-6 h-full">
+        <div style={{
+          height: '1070px',
+          flex: 1,
+          padding: '40px',
+          backgroundColor: '#ffffff'
+        }}>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
+            gap: '24px',
+            height: '100%'
+          }}>
             {marathon.stats.map((stat, index) => {
               const value = stat.static ||
                 (stat.metric && stat.imperial ? stat.metric :
@@ -255,30 +346,81 @@ export const InstagramPost: React.FC<InstagramPostProps> = ({ marathon, type }) 
               return (
                 <div
                   key={index}
-                  className="bg-neutral-50 rounded-xl border-2 border-neutral-200 flex items-center justify-between p-6"
+                  style={{
+                    backgroundColor: '#fafafa',
+                    borderRadius: '12px',
+                    border: '2px solid #e5e5e5',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    padding: '24px'
+                  }}
                 >
                   {/* Text Content */}
-                  <div className="flex-1">
-                    <div className="text-neutral-600 font-semibold mb-2" style={{ fontSize: '18px' }}>
+                  <div style={{ flex: 1 }}>
+                    <div style={{
+                      fontSize: '18px',
+                      color: '#525252',
+                      fontWeight: '600',
+                      marginBottom: '8px'
+                    }}>
                       {stat.title}
                     </div>
-                    <div className="text-neutral-900 font-bold" style={{ fontSize: '32px', lineHeight: '1.1' }}>
+                    <div style={{
+                      fontSize: '32px',
+                      lineHeight: '1.1',
+                      color: '#171717',
+                      fontWeight: 'bold'
+                    }}>
                       {value}
                     </div>
                   </div>
 
                   {/* Icon */}
-                  <div className="flex-shrink-0 ml-4" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <div style={{
+                    flexShrink: 0,
+                    marginLeft: '16px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}>
                     {isWorldAthleticsLabel ? (
-                      <div style={{ width: '70px', height: '70px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <img src="/images/platinum_label.svg" alt="" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                      <div style={{
+                        width: '70px',
+                        height: '70px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                      }}>
+                        <img src="/images/platinum_label.svg" alt="" style={{
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'contain'
+                        }} />
                       </div>
                     ) : (
                       <div
-                        className="bg-gradient-to-br from-neutral-100 to-neutral-200 rounded-full border-2 border-neutral-300 shadow-lg"
-                        style={{ width: '70px', height: '70px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                        style={{
+                          width: '70px',
+                          height: '70px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          background: 'linear-gradient(to bottom right, #f5f5f5, #e5e5e5)',
+                          borderRadius: '50%',
+                          border: '2px solid #d4d4d4',
+                          boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)'
+                        }}
                       >
-                        <span className="material-symbols-outlined text-neutral-700" style={{ fontSize: '36px', lineHeight: '36px', width: '36px', height: '36px', display: 'block' }}>
+                        <span className="material-symbols-outlined" style={{
+                          fontSize: '36px',
+                          lineHeight: '36px',
+                          width: '36px',
+                          height: '36px',
+                          display: 'block',
+                          color: '#404040',
+                          fontFamily: 'Material Symbols Outlined'
+                        }}>
                           {getIconName(stat.title)}
                         </span>
                       </div>
@@ -293,14 +435,21 @@ export const InstagramPost: React.FC<InstagramPostProps> = ({ marathon, type }) 
 
       {/* Footer: Distanz Running Logo */}
       <div
-        className="footer bg-neutral-900 flex items-center justify-center"
-        style={{ height: '140px' }}
+        style={{
+          height: '140px',
+          backgroundColor: '#171717',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}
       >
         <img
           src="/images/logo_white.svg"
           alt="Distanz Running"
-          className="object-contain"
-          style={{ height: '60px' }}
+          style={{
+            height: '60px',
+            objectFit: 'contain'
+          }}
         />
       </div>
     </div>
