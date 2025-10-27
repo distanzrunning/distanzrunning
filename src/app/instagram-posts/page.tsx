@@ -45,62 +45,14 @@ export default function InstagramPostsPage() {
       let canvas: HTMLCanvasElement
 
       if (isMapPost) {
-        // Find the Mapbox canvas element
-        const mapboxCanvas = element.querySelector('.mapboxgl-canvas') as HTMLCanvasElement
-
-        if (mapboxCanvas) {
-          // Create a new canvas with the full post dimensions
-          const finalCanvas = document.createElement('canvas')
-          finalCanvas.width = 2160 // 1080px * 2
-          finalCanvas.height = 2700 // 1350px * 2
-          const ctx = finalCanvas.getContext('2d')
-
-          if (ctx) {
-            // Draw white background
-            ctx.fillStyle = '#ffffff'
-            ctx.fillRect(0, 0, finalCanvas.width, finalCanvas.height)
-
-            // Capture header and footer using html2canvas
-            const tempCanvas = await html2canvas(element, {
-              scale: 2,
-              backgroundColor: '#ffffff',
-              logging: false,
-              useCORS: true,
-              allowTaint: true
-            })
-
-            // Draw the full element (this gets header and footer)
-            ctx.drawImage(tempCanvas, 0, 0)
-
-            // Now overlay the actual Mapbox map canvas on top
-            // The map container starts at y=140px (header height) and is 1070px tall
-            const headerHeight = 140 * 2 // 2x scale
-            const mapWidth = 1080 * 2
-            const mapHeight = 1070 * 2
-
-            ctx.drawImage(mapboxCanvas, 0, headerHeight, mapWidth, mapHeight)
-
-            canvas = finalCanvas
-          } else {
-            // Fallback to regular html2canvas if context fails
-            canvas = await html2canvas(element, {
-              scale: 2,
-              backgroundColor: '#ffffff',
-              logging: false,
-              useCORS: true,
-              allowTaint: true
-            })
-          }
-        } else {
-          // No mapbox canvas found, use regular html2canvas
-          canvas = await html2canvas(element, {
-            scale: 2,
-            backgroundColor: '#ffffff',
-            logging: false,
-            useCORS: true,
-            allowTaint: true
-          })
-        }
+        // Use regular html2canvas for map posts
+        canvas = await html2canvas(element, {
+          scale: 2,
+          backgroundColor: '#ffffff',
+          logging: false,
+          useCORS: true,
+          allowTaint: true
+        })
       } else {
         // Regular stats post - use standard html2canvas
         canvas = await html2canvas(element, {

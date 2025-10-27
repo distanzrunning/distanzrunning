@@ -225,11 +225,11 @@ export const InstagramPost: React.FC<InstagramPostProps> = ({ marathon, type }) 
         </div>
 
         {/* Right: Date */}
-        <div className="bg-white rounded-lg border border-neutral-300" style={{ width: '90px', height: '90px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-          <div className="text-neutral-600 font-semibold uppercase tracking-wide text-center" style={{ fontSize: '16px' }}>
+        <div className="bg-white rounded-lg border border-neutral-300" style={{ width: '90px', height: '90px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}>
+          <div className="text-neutral-600 font-semibold uppercase tracking-wide" style={{ fontSize: '16px', lineHeight: '1', marginBottom: '2px' }}>
             {marathon.date.month}
           </div>
-          <div className="text-neutral-900 font-bold text-center" style={{ fontSize: '40px', lineHeight: '1', marginTop: '4px' }}>
+          <div className="text-neutral-900 font-bold" style={{ fontSize: '40px', lineHeight: '0.9', marginTop: '2px' }}>
             {marathon.date.day}
           </div>
         </div>
@@ -278,7 +278,7 @@ export const InstagramPost: React.FC<InstagramPostProps> = ({ marathon, type }) 
                         className="bg-gradient-to-br from-neutral-100 to-neutral-200 rounded-full border-2 border-neutral-300 shadow-lg"
                         style={{ width: '70px', height: '70px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                       >
-                        <span className="material-symbols-outlined text-neutral-700" style={{ fontSize: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <span className="material-symbols-outlined text-neutral-700" style={{ fontSize: '36px', lineHeight: '36px', width: '36px', height: '36px', display: 'block' }}>
                           {getIconName(stat.title)}
                         </span>
                       </div>
