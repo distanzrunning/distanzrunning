@@ -76,7 +76,7 @@ export default function InstagramPostsPage() {
               {selectedMarathon.name} Marathon
             </h2>
 
-            <div className="flex gap-6 justify-center items-start">
+            <div className="space-y-12 max-w-[1080px] mx-auto">
               {/* Map Post */}
               <div className="space-y-4">
                 <div className="bg-white rounded-lg shadow-xl overflow-hidden border-2 border-neutral-300">
