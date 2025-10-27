@@ -1,10 +1,12 @@
 'use client'
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { InstagramPost } from '@/components/InstagramPost'
 import { marathonData } from '@/constants/marathonData'
 
 export default function InstagramPostsPage() {
+  const [selectedMarathonId, setSelectedMarathonId] = useState(marathonData[0].id)
+
   // Hide navbar and footer for clean screenshot experience
   useEffect(() => {
     // Find and hide navbar
@@ -26,9 +28,11 @@ export default function InstagramPostsPage() {
     }
   }, [])
 
+  const selectedMarathon = marathonData.find(m => m.id === selectedMarathonId) || marathonData[0]
+
   return (
     <div className="min-h-screen bg-neutral-100 py-12">
-      <div className="max-w-7xl mx-auto px-6">
+      <div className="max-w-[1200px] mx-auto px-6">
         <div className="mb-12 text-center">
           <h1 className="text-4xl font-bold text-neutral-900 mb-4">
             Marathon Majors Instagram Posts
@@ -36,44 +40,64 @@ export default function InstagramPostsPage() {
           <p className="text-lg text-neutral-600 mb-6">
             7 marathons × 2 posts each = 14 Instagram-ready images (1080×1350px, 4:5 ratio)
           </p>
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 inline-block">
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 inline-block mb-8">
             <p className="text-sm text-blue-900">
               <strong>How to save:</strong> Right-click each image → "Save Image As" or use screenshot tools to capture at exact dimensions
             </p>
           </div>
+
+          {/* Marathon Selector */}
+          <div className="mt-8">
+            <label className="block text-sm font-semibold text-neutral-700 mb-3">
+              Select Marathon:
+            </label>
+            <div className="flex flex-wrap gap-2 justify-center">
+              {marathonData.map((marathon) => (
+                <button
+                  key={marathon.id}
+                  onClick={() => setSelectedMarathonId(marathon.id)}
+                  className={`px-6 py-3 rounded-lg font-semibold transition-all duration-200 ${
+                    selectedMarathonId === marathon.id
+                      ? 'bg-pink-600 text-white shadow-lg scale-105'
+                      : 'bg-white text-neutral-700 border border-neutral-300 hover:border-pink-400 hover:shadow-md'
+                  }`}
+                >
+                  {marathon.name}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
 
         {/* Posts Grid */}
-        <div className="space-y-16">
-          {marathonData.map((marathon) => (
-            <div key={marathon.id} className="border-t-4 border-neutral-300 pt-8">
-              <h2 className="text-3xl font-bold text-neutral-900 mb-8 text-center">
-                {marathon.name} Marathon
-              </h2>
+        <div>
+          <div className="border-t-4 border-neutral-300 pt-8">
+            <h2 className="text-3xl font-bold text-neutral-900 mb-8 text-center">
+              {selectedMarathon.name} Marathon
+            </h2>
 
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 justify-items-center">
-                {/* Map Post */}
-                <div className="space-y-4">
-                  <div className="bg-white rounded-lg shadow-xl overflow-hidden">
-                    <InstagramPost marathon={marathon} type="map" />
-                  </div>
-                  <p className="text-center text-sm font-semibold text-neutral-700">
-                    Post 1: Route Map
-                  </p>
+            <div className="flex gap-6 justify-center items-start">
+              {/* Map Post */}
+              <div className="space-y-4">
+                <div className="bg-white rounded-lg shadow-xl overflow-hidden border-2 border-neutral-300">
+                  <InstagramPost marathon={selectedMarathon} type="map" />
                 </div>
+                <p className="text-center text-sm font-semibold text-neutral-700">
+                  Post 1: Route Map
+                </p>
+              </div>
 
-                {/* Stats Post */}
-                <div className="space-y-4">
-                  <div className="bg-white rounded-lg shadow-xl overflow-hidden">
-                    <InstagramPost marathon={marathon} type="stats" />
-                  </div>
-                  <p className="text-center text-sm font-semibold text-neutral-700">
-                    Post 2: Key Stats
-                  </p>
+              {/* Stats Post */}
+              <div className="space-y-4">
+                <div className="bg-white rounded-lg shadow-xl overflow-hidden border-2 border-neutral-300">
+                  <InstagramPost marathon={selectedMarathon} type="stats" />
                 </div>
+                <p className="text-center text-sm font-semibold text-neutral-700">
+                  Post 2: Key Stats
+                </p>
               </div>
             </div>
-          ))}
+          </div>
         </div>
 
         {/* Footer Instructions */}
