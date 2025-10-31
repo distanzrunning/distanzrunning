@@ -5,6 +5,7 @@ import "./globals.css";
 import NavbarAlt from "@/components/NavbarAlt";
 import Footer from "@/components/Footer";
 import AuthProtection from "@/components/AuthProtection";
+import { DarkModeProvider } from "@/components/DarkModeProvider";
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 
@@ -123,20 +124,22 @@ export default function RootLayout({
         />
       </head>
       <body className="font-sans antialiased bg-white text-textDefault min-h-screen flex flex-col distanz-font-features">
-        <AuthProtection>
-          {isPreviewMode ? (
-            <main className="min-h-screen">{children}</main>
-          ) : (
-            <>
-              <NavbarAlt />
-              <main className="flex-grow">{children}</main>
-              <Footer />
-            </>
-          )}
-        </AuthProtection>
-        
-        <Analytics />
-        <SpeedInsights />
+        <DarkModeProvider>
+          <AuthProtection>
+            {isPreviewMode ? (
+              <main className="min-h-screen">{children}</main>
+            ) : (
+              <>
+                <NavbarAlt />
+                <main className="flex-grow">{children}</main>
+                <Footer />
+              </>
+            )}
+          </AuthProtection>
+
+          <Analytics />
+          <SpeedInsights />
+        </DarkModeProvider>
       </body>
     </html>
   );

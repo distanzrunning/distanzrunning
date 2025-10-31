@@ -224,8 +224,16 @@ export default function NavbarAlt() {
             </nav>
           </div>
 
-          {/* Right: Dark Mode + Newsletter CTA + Mobile Menu */}
+          {/* Right: Newsletter CTA + Dark Mode + Mobile Menu */}
           <div className="flex items-center gap-3">
+            {/* Newsletter Button - Desktop - Subtle hover like Quartr */}
+            <Link
+              href="/newsletter"
+              className="hidden md:inline-flex items-center px-4 h-9 text-sm font-semibold text-white bg-neutral-900 dark:bg-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-100 rounded-md transition-all duration-200 ease-out active:scale-[0.98]"
+            >
+              Newsletter
+            </Link>
+
             {/* Dark Mode Toggle */}
             {mounted && (
               <button
@@ -241,14 +249,6 @@ export default function NavbarAlt() {
                 )}
               </button>
             )}
-
-            {/* Newsletter Button - Desktop - Subtle hover like Quartr */}
-            <Link
-              href="/newsletter"
-              className="hidden md:inline-flex items-center px-4 h-9 text-sm font-semibold text-white bg-neutral-900 dark:bg-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-100 rounded-md transition-all duration-200 ease-out active:scale-[0.98]"
-            >
-              Newsletter
-            </Link>
 
             {/* Mobile Menu Button */}
             <Dialog.Root open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>

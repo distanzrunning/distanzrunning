@@ -8,13 +8,12 @@ import ResponsiveMarathonShowcase from '@/components/ResponsiveMarathonShowcase'
 import { TypewriterText } from '@/components/TypewriterText'
 import { ExploreButton } from '@/components/ExploreButton'
 import { NewsletterButton } from '@/components/NewsletterModal'
-import { DarkModeProvider, DarkModeToggle } from '@/components/DarkModeProvider'
+import { DarkModeProvider } from '@/components/DarkModeProvider'
 import SocialLinks from '@/components/SocialLinks'
 import FeatureShowcase from '@/components/FeatureShowcase'
 import WriteForUs from '@/components/WriteForUs'
 import ScrollIndicator from '@/components/ScrollIndicator'
 import { Metadata } from 'next'
-import { PreviewDarkModeToggle } from '@/components/PreviewDarkModeToggle'
 
 type Post = {
   _id: string
@@ -51,9 +50,6 @@ function PreviewPage() {
         {/* Preload critical images for instant loading */}
         <link rel="preload" as="image" href="/images/Distanz_Logo_1600_600_Black.svg" fetchPriority="high" />
         <link rel="preload" as="image" href="/images/logo_white.svg" fetchPriority="high" />
-
-        {/* Dark Mode Toggle - fixed position toggle specific to preview page */}
-        <PreviewDarkModeToggle />
 
         <div className="min-h-screen flex flex-col bg-white dark:bg-[#0c0c0d] transition-colors duration-300">
           
@@ -176,9 +172,6 @@ async function DevelopmentHomePage() {
   return (
     <DarkModeProvider>
       <div className="dark:bg-[#0c0c0d] transition-colors duration-300">
-        {/* Dark Mode Toggle */}
-        <DarkModeToggle />
-        
         {/* Hero Section */}
         <section className="bg-secondary/20 dark:bg-neutral-800/20 py-16 transition-colors duration-300">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
