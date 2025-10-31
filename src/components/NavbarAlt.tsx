@@ -46,43 +46,26 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [mobileSubMenu, setMobileSubMenu] = useState<'main' | 'gear' | 'races'>('main')
   const [mounted, setMounted] = useState(false)
-  const [gearDropdownOpen, setGearDropdownOpen] = useState(false)
-  const [racesDropdownOpen, setRacesDropdownOpen] = useState(false)
-  const [gearCloseTimeout, setGearCloseTimeout] = useState<NodeJS.Timeout | null>(null)
-  const [racesCloseTimeout, setRacesCloseTimeout] = useState<NodeJS.Timeout | null>(null)
+  const [activeDropdown, setActiveDropdown] = useState<'gear' | 'races' | null>(null)
+  const [closeTimeout, setCloseTimeout] = useState<NodeJS.Timeout | null>(null)
 
   useEffect(() => {
     setMounted(true)
   }, [])
 
-  const handleGearMouseEnter = () => {
-    if (gearCloseTimeout) {
-      clearTimeout(gearCloseTimeout)
-      setGearCloseTimeout(null)
+  const handleDropdownEnter = (dropdown: 'gear' | 'races') => {
+    if (closeTimeout) {
+      clearTimeout(closeTimeout)
+      setCloseTimeout(null)
     }
-    setGearDropdownOpen(true)
+    setActiveDropdown(dropdown)
   }
 
-  const handleGearMouseLeave = () => {
+  const handleDropdownLeave = () => {
     const timeout = setTimeout(() => {
-      setGearDropdownOpen(false)
+      setActiveDropdown(null)
     }, 100)
-    setGearCloseTimeout(timeout)
-  }
-
-  const handleRacesMouseEnter = () => {
-    if (racesCloseTimeout) {
-      clearTimeout(racesCloseTimeout)
-      setRacesCloseTimeout(null)
-    }
-    setRacesDropdownOpen(true)
-  }
-
-  const handleRacesMouseLeave = () => {
-    const timeout = setTimeout(() => {
-      setRacesDropdownOpen(false)
-    }, 100)
-    setRacesCloseTimeout(timeout)
+    setCloseTimeout(timeout)
   }
 
   return (
@@ -134,40 +117,50 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                 Trail
               </Link>
 
-              {/* Gear Dropdown - Hover Activated Full Width */}
-              <div
-                className="relative flex items-center"
-                onMouseEnter={handleGearMouseEnter}
-                onMouseLeave={handleGearMouseLeave}
+              {/* Gear Trigger */}
+              <button
+                className="flex items-center gap-1 px-3 py-1 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200"
+                onMouseEnter={() => handleDropdownEnter('gear')}
+                onMouseLeave={handleDropdownLeave}
+                aria-expanded={activeDropdown === 'gear'}
+                aria-haspopup="true"
               >
-                <div
-                  tabIndex={0}
-                  className="cursor-pointer"
-                  role="button"
-                  aria-expanded={gearDropdownOpen}
-                  aria-haspopup="true"
-                >
-                  <div className="flex items-center gap-1 px-3 py-1 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200">
-                    Gear
-                    <ChevronDown className="h-4 w-4" />
-                  </div>
-                </div>
+                Gear
+                <ChevronDown className="h-4 w-4" />
+              </button>
 
-                <AnimatePresence mode="wait">
-                  {gearDropdownOpen && (
-                    <motion.div
-                      key="gear"
-                      initial={{ opacity: 0, y: -8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -8 }}
-                      transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
-                      className="overflow-hidden shadow-elevation-flyout fixed left-0 right-0 top-16 w-screen bg-white dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-700 z-50"
-                      onMouseEnter={handleGearMouseEnter}
-                      onMouseLeave={handleGearMouseLeave}
-                    >
-                      <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-8">
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {/* Races Trigger */}
+              <button
+                className="flex items-center gap-1 px-3 py-1 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200"
+                onMouseEnter={() => handleDropdownEnter('races')}
+                onMouseLeave={handleDropdownLeave}
+                aria-expanded={activeDropdown === 'races'}
+                aria-haspopup="true"
+              >
+                Races
+                <ChevronDown className="h-4 w-4" />
+              </button>
+            </nav>
 
+            {/* Single Shared Dropdown Container - Medusa Style */}
+            <div
+              className={`fixed left-0 right-0 top-16 w-screen bg-white dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-700 shadow-elevation-flyout z-40 transition-all duration-200 ease-in-out ${
+                activeDropdown ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 -translate-y-2 pointer-events-none'
+              }`}
+              onMouseEnter={() => activeDropdown && handleDropdownEnter(activeDropdown)}
+              onMouseLeave={handleDropdownLeave}
+            >
+              <AnimatePresence mode="wait">
+                {activeDropdown === 'gear' && (
+                  <motion.div
+                    key="gear"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-8">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                         {/* Column 1: Description */}
                         <div className="border-r border-neutral-200 dark:border-neutral-700 pr-8">
                           <h3 className="font-playfair text-2xl font-semibold text-neutral-900 dark:text-white mb-3">
@@ -284,48 +277,20 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                             </div>
                           )}
                         </div>
-
                       </div>
                     </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-
-              {/* Races Dropdown - Hover Activated Full Width */}
-              <div
-                className="relative flex items-center"
-                onMouseEnter={handleRacesMouseEnter}
-                onMouseLeave={handleRacesMouseLeave}
-              >
-                <div
-                  tabIndex={0}
-                  className="cursor-pointer"
-                  role="button"
-                  aria-expanded={racesDropdownOpen}
-                  aria-haspopup="true"
-                >
-                  <div className="flex items-center gap-1 px-3 py-1 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200">
-                    Races
-                    <ChevronDown className="h-4 w-4" />
-                  </div>
-                </div>
-
-                <AnimatePresence mode="wait">
-                  {racesDropdownOpen && (
-                    <motion.div
-                      key="races"
-                      initial={{ opacity: 0, y: -8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -8 }}
-                      transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
-                      className="overflow-hidden shadow-elevation-flyout fixed left-0 right-0 top-16 w-screen bg-white dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-700 z-50"
-                      onMouseEnter={handleRacesMouseEnter}
-                      onMouseLeave={handleRacesMouseLeave}
-                    >
-                      <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-8">
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-
+                  </motion.div>
+                )}
+                {activeDropdown === 'races' && (
+                  <motion.div
+                    key="races"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-8">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                         {/* Column 1: Description */}
                         <div className="border-r border-neutral-200 dark:border-neutral-700 pr-8">
                           <h3 className="font-playfair text-2xl font-semibold text-neutral-900 dark:text-white mb-3">
@@ -392,14 +357,12 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                             </div>
                           )}
                         </div>
-
                       </div>
                     </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            </nav>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
           </div>
 
           {/* Right: Newsletter CTA + Dark Mode + Mobile Menu */}
