@@ -100,7 +100,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                 Trail
               </Link>
 
-              {/* Gear Dropdown */}
+              {/* Gear Dropdown - Full Width */}
               <DropdownMenu.Root>
                 <DropdownMenu.Trigger className="flex items-center gap-1 px-3 py-2 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800">
                   Gear
@@ -108,128 +108,148 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                 </DropdownMenu.Trigger>
                 <DropdownMenu.Portal>
                   <DropdownMenu.Content
-                    className="min-w-[240px] bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg shadow-lg p-2 z-50"
-                    sideOffset={5}
+                    className="w-screen bg-white dark:bg-neutral-900 border-t border-b border-neutral-200 dark:border-neutral-700 shadow-lg z-50 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0"
+                    sideOffset={0}
+                    align="start"
+                    alignOffset={-9999}
                   >
-                    <DropdownMenu.Item asChild>
-                      <Link
-                        href="/gear/category/race-day-shoes"
-                        className="flex items-center gap-3 px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-700 rounded-md cursor-pointer outline-none"
-                      >
-                        <Flag className="h-4 w-4" />
-                        <div>
-                          <div className="font-semibold">Race Day Shoes</div>
-                          <div className="text-xs text-neutral-500">Carbon plate shoes</div>
-                        </div>
-                      </Link>
-                    </DropdownMenu.Item>
-                    <DropdownMenu.Item asChild>
-                      <Link
-                        href="/gear/category/daily-trainers"
-                        className="flex items-center gap-3 px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-700 rounded-md cursor-pointer outline-none"
-                      >
-                        <Calendar className="h-4 w-4" />
-                        <div>
-                          <div className="font-semibold">Daily Trainers</div>
-                          <div className="text-xs text-neutral-500">Everyday runners</div>
-                        </div>
-                      </Link>
-                    </DropdownMenu.Item>
-                    <DropdownMenu.Item asChild>
-                      <Link
-                        href="/gear/category/max-cushion-shoes"
-                        className="flex items-center gap-3 px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-700 rounded-md cursor-pointer outline-none"
-                      >
-                        <Footprints className="h-4 w-4" />
-                        <div>
-                          <div className="font-semibold">Max Cushion</div>
-                          <div className="text-xs text-neutral-500">Recovery shoes</div>
-                        </div>
-                      </Link>
-                    </DropdownMenu.Item>
-                    <DropdownMenu.Item asChild>
-                      <Link
-                        href="/gear/category/tempo-shoes"
-                        className="flex items-center gap-3 px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-700 rounded-md cursor-pointer outline-none"
-                      >
-                        <Zap className="h-4 w-4" />
-                        <div>
-                          <div className="font-semibold">Tempo Shoes</div>
-                          <div className="text-xs text-neutral-500">Speed work</div>
-                        </div>
-                      </Link>
-                    </DropdownMenu.Item>
-                    <DropdownMenu.Item asChild>
-                      <Link
-                        href="/gear/category/trail-shoes"
-                        className="flex items-center gap-3 px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-700 rounded-md cursor-pointer outline-none"
-                      >
-                        <MountainSnow className="h-4 w-4" />
-                        <div>
-                          <div className="font-semibold">Trail Shoes</div>
-                          <div className="text-xs text-neutral-500">Off-road</div>
-                        </div>
-                      </Link>
-                    </DropdownMenu.Item>
-                    <DropdownMenu.Separator className="h-px bg-neutral-200 dark:bg-neutral-700 my-1" />
-                    <DropdownMenu.Item asChild>
-                      <Link
-                        href="/gear/category/gps-watches"
-                        className="flex items-center gap-3 px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-700 rounded-md cursor-pointer outline-none"
-                      >
-                        <Watch className="h-4 w-4" />
-                        <div>
-                          <div className="font-semibold">GPS Watches</div>
-                          <div className="text-xs text-neutral-500">Track every mile</div>
-                        </div>
-                      </Link>
-                    </DropdownMenu.Item>
-                    <DropdownMenu.Item asChild>
-                      <Link
-                        href="/gear/category/nutrition"
-                        className="flex items-center gap-3 px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-700 rounded-md cursor-pointer outline-none"
-                      >
-                        <UtensilsCrossed className="h-4 w-4" />
-                        <div>
-                          <div className="font-semibold">Nutrition</div>
-                          <div className="text-xs text-neutral-500">Fuel for distance</div>
-                        </div>
-                      </Link>
-                    </DropdownMenu.Item>
+                    <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-8">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
 
-                    {/* Featured Gear Article */}
-                    {featuredGear && (
-                      <>
-                        <DropdownMenu.Separator className="h-px bg-neutral-200 dark:bg-neutral-700 my-1" />
-                        <DropdownMenu.Label className="px-3 py-2 text-xs font-semibold text-neutral-500 uppercase tracking-wider">
-                          Featured Article
-                        </DropdownMenu.Label>
-                        <DropdownMenu.Item asChild>
-                          <Link
-                            href={`/gear/${featuredGear.slug.current}`}
-                            className="flex items-start gap-3 px-3 py-2 text-sm hover:bg-neutral-100 dark:hover:bg-neutral-700 rounded-md cursor-pointer outline-none"
-                          >
-                            <div className="w-16 h-16 flex-shrink-0 rounded overflow-hidden bg-neutral-100 dark:bg-neutral-700">
-                              <img
-                                src={urlFor(featuredGear.mainImage).width(100).height(100).fit('crop').url()}
-                                alt={featuredGear.title}
-                                className="w-full h-full object-cover"
-                              />
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <div className="font-semibold text-neutral-900 dark:text-white line-clamp-2">
-                                {featuredGear.title}
+                        {/* Column 1: Description */}
+                        <div className="border-r border-neutral-200 dark:border-neutral-700 pr-8">
+                          <h3 className="font-playfair text-2xl font-semibold text-neutral-900 dark:text-white mb-3">
+                            Gear
+                          </h3>
+                          <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                            From carbon-plated race shoes to GPS watches and nutrition, we review the latest running gear to help you find the perfect equipment for your training and racing goals.
+                          </p>
+                        </div>
+
+                        {/* Column 2: Category Links */}
+                        <div className="flex flex-col gap-1">
+                          <DropdownMenu.Item asChild>
+                            <Link
+                              href="/gear/category/race-day-shoes"
+                              className="flex items-center gap-3 px-3 py-2.5 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md cursor-pointer outline-none transition-colors"
+                            >
+                              <Flag className="h-4 w-4 flex-shrink-0" />
+                              <div className="flex-1">
+                                <div className="font-semibold">Race Day Shoes</div>
+                                <div className="text-xs text-neutral-500 dark:text-neutral-400">Carbon plate shoes for PRs</div>
                               </div>
+                            </Link>
+                          </DropdownMenu.Item>
+                          <DropdownMenu.Item asChild>
+                            <Link
+                              href="/gear/category/daily-trainers"
+                              className="flex items-center gap-3 px-3 py-2.5 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md cursor-pointer outline-none transition-colors"
+                            >
+                              <Calendar className="h-4 w-4 flex-shrink-0" />
+                              <div className="flex-1">
+                                <div className="font-semibold">Daily Trainers</div>
+                                <div className="text-xs text-neutral-500 dark:text-neutral-400">Everyday runners</div>
+                              </div>
+                            </Link>
+                          </DropdownMenu.Item>
+                          <DropdownMenu.Item asChild>
+                            <Link
+                              href="/gear/category/max-cushion-shoes"
+                              className="flex items-center gap-3 px-3 py-2.5 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md cursor-pointer outline-none transition-colors"
+                            >
+                              <Footprints className="h-4 w-4 flex-shrink-0" />
+                              <div className="flex-1">
+                                <div className="font-semibold">Max Cushion</div>
+                                <div className="text-xs text-neutral-500 dark:text-neutral-400">Recovery and long runs</div>
+                              </div>
+                            </Link>
+                          </DropdownMenu.Item>
+                          <DropdownMenu.Item asChild>
+                            <Link
+                              href="/gear/category/tempo-shoes"
+                              className="flex items-center gap-3 px-3 py-2.5 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md cursor-pointer outline-none transition-colors"
+                            >
+                              <Zap className="h-4 w-4 flex-shrink-0" />
+                              <div className="flex-1">
+                                <div className="font-semibold">Tempo Shoes</div>
+                                <div className="text-xs text-neutral-500 dark:text-neutral-400">Speed work essentials</div>
+                              </div>
+                            </Link>
+                          </DropdownMenu.Item>
+                          <DropdownMenu.Item asChild>
+                            <Link
+                              href="/gear/category/trail-shoes"
+                              className="flex items-center gap-3 px-3 py-2.5 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md cursor-pointer outline-none transition-colors"
+                            >
+                              <MountainSnow className="h-4 w-4 flex-shrink-0" />
+                              <div className="flex-1">
+                                <div className="font-semibold">Trail Shoes</div>
+                                <div className="text-xs text-neutral-500 dark:text-neutral-400">Off-road adventures</div>
+                              </div>
+                            </Link>
+                          </DropdownMenu.Item>
+                          <div className="h-px bg-neutral-200 dark:border-neutral-700 my-2" />
+                          <DropdownMenu.Item asChild>
+                            <Link
+                              href="/gear/category/gps-watches"
+                              className="flex items-center gap-3 px-3 py-2.5 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md cursor-pointer outline-none transition-colors"
+                            >
+                              <Watch className="h-4 w-4 flex-shrink-0" />
+                              <div className="flex-1">
+                                <div className="font-semibold">GPS Watches</div>
+                                <div className="text-xs text-neutral-500 dark:text-neutral-400">Track every mile</div>
+                              </div>
+                            </Link>
+                          </DropdownMenu.Item>
+                          <DropdownMenu.Item asChild>
+                            <Link
+                              href="/gear/category/nutrition"
+                              className="flex items-center gap-3 px-3 py-2.5 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md cursor-pointer outline-none transition-colors"
+                            >
+                              <UtensilsCrossed className="h-4 w-4 flex-shrink-0" />
+                              <div className="flex-1">
+                                <div className="font-semibold">Nutrition</div>
+                                <div className="text-xs text-neutral-500 dark:text-neutral-400">Fuel for distance</div>
+                              </div>
+                            </Link>
+                          </DropdownMenu.Item>
+                        </div>
+
+                        {/* Column 3: Featured Article */}
+                        <div>
+                          {featuredGear ? (
+                            <Link
+                              href={`/gear/${featuredGear.slug.current}`}
+                              className="block group"
+                            >
+                              <div className="relative aspect-[4/5] rounded-lg overflow-hidden bg-neutral-100 dark:bg-neutral-800 mb-3">
+                                <img
+                                  src={urlFor(featuredGear.mainImage).width(400).height(500).fit('crop').url()}
+                                  alt={featuredGear.title}
+                                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                />
+                              </div>
+                              <div className="text-xs font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-2">
+                                Featured Article
+                              </div>
+                              <h4 className="font-semibold text-neutral-900 dark:text-white mb-2 group-hover:text-electric-pink dark:group-hover:text-electric-pink transition-colors">
+                                {featuredGear.title}
+                              </h4>
                               {featuredGear.excerpt && (
-                                <div className="text-xs text-neutral-500 mt-1 line-clamp-2">
+                                <p className="text-sm text-neutral-600 dark:text-neutral-400 line-clamp-2">
                                   {featuredGear.excerpt}
-                                </div>
+                                </p>
                               )}
+                            </Link>
+                          ) : (
+                            <div className="aspect-[4/5] rounded-lg bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center">
+                              <p className="text-neutral-400 dark:text-neutral-600">No featured article</p>
                             </div>
-                          </Link>
-                        </DropdownMenu.Item>
-                      </>
-                    )}
+                          )}
+                        </div>
+
+                      </div>
+                    </div>
                   </DropdownMenu.Content>
                 </DropdownMenu.Portal>
               </DropdownMenu.Root>
