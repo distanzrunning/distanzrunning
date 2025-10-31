@@ -206,31 +206,29 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                           {featuredGear ? (
                             <Link
                               href={`/gear/${featuredGear.slug.current}`}
-                              className="flex gap-4 group"
+                              className="block group"
                             >
-                              <div className="relative w-32 h-32 flex-shrink-0 rounded-lg overflow-hidden bg-neutral-100 dark:bg-neutral-800">
+                              <div className="relative w-full aspect-[16/9] rounded-lg overflow-hidden bg-neutral-100 dark:bg-neutral-800 mb-3">
                                 <img
-                                  src={urlFor(featuredGear.mainImage).width(200).height(200).fit('crop').url()}
+                                  src={urlFor(featuredGear.mainImage).width(400).height(225).fit('crop').url()}
                                   alt={featuredGear.title}
                                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                                 />
                               </div>
-                              <div className="flex-1 min-w-0">
-                                <div className="text-xs font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-2">
-                                  Featured Article
-                                </div>
-                                <h4 className="font-semibold text-neutral-900 dark:text-white mb-2 group-hover:text-electric-pink dark:group-hover:text-electric-pink transition-colors line-clamp-2">
-                                  {featuredGear.title}
-                                </h4>
-                                {featuredGear.excerpt && (
-                                  <p className="text-sm text-neutral-600 dark:text-neutral-400 line-clamp-2">
-                                    {featuredGear.excerpt}
-                                  </p>
-                                )}
+                              <div className="text-xs font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-2">
+                                Featured Article
                               </div>
+                              <h4 className="font-semibold text-neutral-900 dark:text-white mb-2 group-hover:text-electric-pink dark:group-hover:text-electric-pink transition-colors line-clamp-2">
+                                {featuredGear.title}
+                              </h4>
+                              {featuredGear.excerpt && (
+                                <p className="text-sm text-neutral-600 dark:text-neutral-400 line-clamp-2">
+                                  {featuredGear.excerpt}
+                                </p>
+                              )}
                             </Link>
                           ) : (
-                            <div className="flex items-center justify-center h-32 rounded-lg bg-neutral-100 dark:bg-neutral-800">
+                            <div className="flex items-center justify-center aspect-[16/9] rounded-lg bg-neutral-100 dark:bg-neutral-800">
                               <p className="text-neutral-400 dark:text-neutral-600 text-sm">No featured article</p>
                             </div>
                           )}
