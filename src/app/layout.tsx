@@ -2,7 +2,7 @@
 import type { Metadata } from "next";
 import { Playfair_Display, Source_Serif_4, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
-import NavbarAlt from "@/components/NavbarAlt";
+import NavbarAltWrapper from "@/components/NavbarAltWrapper";
 import Footer from "@/components/Footer";
 import AuthProtection from "@/components/AuthProtection";
 import { DarkModeProvider } from "@/components/DarkModeProvider";
@@ -130,7 +130,7 @@ export default function RootLayout({
               <main className="min-h-screen">{children}</main>
             ) : (
               <>
-                <NavbarAlt />
+                <NavbarAltWrapper />
                 <main className="flex-grow">{children}</main>
                 <Footer />
               </>

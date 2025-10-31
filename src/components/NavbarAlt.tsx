@@ -23,8 +23,25 @@ import {
   Sun
 } from 'lucide-react'
 import { DarkModeContext } from './DarkModeProvider'
+import { urlFor } from '@/sanity/lib/image'
 
-export default function NavbarAlt() {
+type NavbarAltProps = {
+  featuredGear: {
+    title: string
+    slug: { current: string }
+    mainImage: any
+    excerpt?: string
+  } | null
+  featuredRace: {
+    title: string
+    slug: { current: string }
+    mainImage: any
+    eventDate?: string
+    location?: string
+  } | null
+}
+
+export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps) {
   const { isDark, toggleDarkMode } = useContext(DarkModeContext)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [mobileSubMenu, setMobileSubMenu] = useState<'main' | 'gear' | 'races'>('main')
@@ -179,6 +196,40 @@ export default function NavbarAlt() {
                         </div>
                       </Link>
                     </DropdownMenu.Item>
+
+                    {/* Featured Gear Article */}
+                    {featuredGear && (
+                      <>
+                        <DropdownMenu.Separator className="h-px bg-neutral-200 dark:bg-neutral-700 my-1" />
+                        <DropdownMenu.Label className="px-3 py-2 text-xs font-semibold text-neutral-500 uppercase tracking-wider">
+                          Featured Article
+                        </DropdownMenu.Label>
+                        <DropdownMenu.Item asChild>
+                          <Link
+                            href={`/gear/${featuredGear.slug.current}`}
+                            className="flex items-start gap-3 px-3 py-2 text-sm hover:bg-neutral-100 dark:hover:bg-neutral-700 rounded-md cursor-pointer outline-none"
+                          >
+                            <div className="w-16 h-16 flex-shrink-0 rounded overflow-hidden bg-neutral-100 dark:bg-neutral-700">
+                              <img
+                                src={urlFor(featuredGear.mainImage).width(100).height(100).fit('crop').url()}
+                                alt={featuredGear.title}
+                                className="w-full h-full object-cover"
+                              />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <div className="font-semibold text-neutral-900 dark:text-white line-clamp-2">
+                                {featuredGear.title}
+                              </div>
+                              {featuredGear.excerpt && (
+                                <div className="text-xs text-neutral-500 mt-1 line-clamp-2">
+                                  {featuredGear.excerpt}
+                                </div>
+                              )}
+                            </div>
+                          </Link>
+                        </DropdownMenu.Item>
+                      </>
+                    )}
                   </DropdownMenu.Content>
                 </DropdownMenu.Portal>
               </DropdownMenu.Root>
@@ -218,6 +269,40 @@ export default function NavbarAlt() {
                         </div>
                       </Link>
                     </DropdownMenu.Item>
+
+                    {/* Featured Race */}
+                    {featuredRace && (
+                      <>
+                        <DropdownMenu.Separator className="h-px bg-neutral-200 dark:bg-neutral-700 my-1" />
+                        <DropdownMenu.Label className="px-3 py-2 text-xs font-semibold text-neutral-500 uppercase tracking-wider">
+                          Featured Race
+                        </DropdownMenu.Label>
+                        <DropdownMenu.Item asChild>
+                          <Link
+                            href={`/races/${featuredRace.slug.current}`}
+                            className="flex items-start gap-3 px-3 py-2 text-sm hover:bg-neutral-100 dark:hover:bg-neutral-700 rounded-md cursor-pointer outline-none"
+                          >
+                            <div className="w-16 h-12 flex-shrink-0 rounded overflow-hidden bg-neutral-100 dark:bg-neutral-700">
+                              <img
+                                src={urlFor(featuredRace.mainImage).width(100).height(75).fit('crop').url()}
+                                alt={featuredRace.title}
+                                className="w-full h-full object-cover"
+                              />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <div className="font-semibold text-neutral-900 dark:text-white line-clamp-2">
+                                {featuredRace.title}
+                              </div>
+                              {featuredRace.location && (
+                                <div className="text-xs text-neutral-500 mt-1">
+                                  {featuredRace.location}
+                                </div>
+                              )}
+                            </div>
+                          </Link>
+                        </DropdownMenu.Item>
+                      </>
+                    )}
                   </DropdownMenu.Content>
                 </DropdownMenu.Portal>
               </DropdownMenu.Root>
