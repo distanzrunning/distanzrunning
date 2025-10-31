@@ -75,8 +75,8 @@ export default function FeatureShowcase() {
               {/* Text content */}
               <div className="flex flex-col gap-3 lg:basis-2/5 px-8 py-8 md:px-16 md:py-16">
                 {/* Category Pill */}
-                <div className="inline-flex items-center self-start px-3 py-1.5 bg-pink-500/10 dark:bg-pink-500/20 rounded-full mb-1">
-                  <span className="text-pink-600 dark:text-pink-400 font-medium text-xs tracking-wide uppercase leading-none">
+                <div className="inline-flex items-center self-start px-3 py-1.5 bg-electric-pink/10 dark:bg-electric-pink/20 rounded-full mb-1">
+                  <span className="text-electric-pink dark:text-electric-pink font-medium text-xs tracking-wide uppercase leading-none">
                     News
                   </span>
                 </div>
@@ -127,8 +127,8 @@ export default function FeatureShowcase() {
               {/* Text content */}
               <div className="flex flex-col gap-3 px-8 py-8 md:px-16 md:py-16 z-10">
                 {/* Category Pill */}
-                <div className="inline-flex items-center self-start px-3 py-1.5 bg-pink-500/10 dark:bg-pink-500/20 rounded-full mb-1">
-                  <span className="text-pink-600 dark:text-pink-400 font-medium text-xs tracking-wide uppercase leading-none">
+                <div className="inline-flex items-center self-start px-3 py-1.5 bg-electric-pink/10 dark:bg-electric-pink/20 rounded-full mb-1">
+                  <span className="text-electric-pink dark:text-electric-pink font-medium text-xs tracking-wide uppercase leading-none">
                     Gear
                   </span>
                 </div>
@@ -179,8 +179,8 @@ export default function FeatureShowcase() {
               {/* Text content */}
               <div className="flex flex-col gap-3 px-8 py-8 md:px-16 md:py-16 z-10">
                 {/* Category Pill */}
-                <div className="inline-flex items-center self-start px-3 py-1.5 bg-pink-500/10 dark:bg-pink-500/20 rounded-full mb-1">
-                  <span className="text-pink-600 dark:text-pink-400 font-medium text-xs tracking-wide uppercase leading-none">
+                <div className="inline-flex items-center self-start px-3 py-1.5 bg-electric-pink/10 dark:bg-electric-pink/20 rounded-full mb-1">
+                  <span className="text-electric-pink dark:text-electric-pink font-medium text-xs tracking-wide uppercase leading-none">
                     Races
                   </span>
                 </div>
