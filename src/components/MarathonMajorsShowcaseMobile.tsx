@@ -898,7 +898,7 @@ export const MarathonMajorsShowcaseMobile: React.FC = () => {
                 {marathon.name}
                 {marathon.id === selectedMarathon.id && (
                   <motion.div
-                    className="absolute bottom-0 left-0 right-0 h-0.5 bg-pink-500"
+                    className="absolute bottom-0 left-0 right-0 h-0.5 bg-electric-pink"
                     layoutId="mobile-underline"
                   />
                 )}
