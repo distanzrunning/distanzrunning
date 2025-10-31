@@ -47,10 +47,42 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
   const [mounted, setMounted] = useState(false)
   const [gearDropdownOpen, setGearDropdownOpen] = useState(false)
   const [racesDropdownOpen, setRacesDropdownOpen] = useState(false)
+  const [gearCloseTimeout, setGearCloseTimeout] = useState<NodeJS.Timeout | null>(null)
+  const [racesCloseTimeout, setRacesCloseTimeout] = useState<NodeJS.Timeout | null>(null)
 
   useEffect(() => {
     setMounted(true)
   }, [])
+
+  const handleGearMouseEnter = () => {
+    if (gearCloseTimeout) {
+      clearTimeout(gearCloseTimeout)
+      setGearCloseTimeout(null)
+    }
+    setGearDropdownOpen(true)
+  }
+
+  const handleGearMouseLeave = () => {
+    const timeout = setTimeout(() => {
+      setGearDropdownOpen(false)
+    }, 100)
+    setGearCloseTimeout(timeout)
+  }
+
+  const handleRacesMouseEnter = () => {
+    if (racesCloseTimeout) {
+      clearTimeout(racesCloseTimeout)
+      setRacesCloseTimeout(null)
+    }
+    setRacesDropdownOpen(true)
+  }
+
+  const handleRacesMouseLeave = () => {
+    const timeout = setTimeout(() => {
+      setRacesDropdownOpen(false)
+    }, 100)
+    setRacesCloseTimeout(timeout)
+  }
 
   return (
     <>
@@ -104,8 +136,8 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
               {/* Gear Dropdown - Hover Activated Full Width */}
               <div
                 className="relative flex items-center"
-                onMouseEnter={() => setGearDropdownOpen(true)}
-                onMouseLeave={() => setGearDropdownOpen(false)}
+                onMouseEnter={handleGearMouseEnter}
+                onMouseLeave={handleGearMouseLeave}
               >
                 <div
                   tabIndex={0}
@@ -121,7 +153,11 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                 </div>
 
                 {gearDropdownOpen && (
-                  <div className="overflow-hidden shadow-elevation-flyout fixed left-0 right-0 top-16 w-screen bg-white dark:bg-neutral-900 border-t border-b border-neutral-200 dark:border-neutral-700 z-50 animate-in fade-in duration-150">
+                  <div
+                    className="overflow-hidden shadow-elevation-flyout fixed left-0 right-0 top-16 w-screen bg-white dark:bg-neutral-900 border-t border-b border-neutral-200 dark:border-neutral-700 z-50 animate-in fade-in duration-150"
+                    onMouseEnter={handleGearMouseEnter}
+                    onMouseLeave={handleGearMouseLeave}
+                  >
                     <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-8">
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
 
@@ -251,8 +287,8 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
               {/* Races Dropdown - Hover Activated Full Width */}
               <div
                 className="relative flex items-center"
-                onMouseEnter={() => setRacesDropdownOpen(true)}
-                onMouseLeave={() => setRacesDropdownOpen(false)}
+                onMouseEnter={handleRacesMouseEnter}
+                onMouseLeave={handleRacesMouseLeave}
               >
                 <div
                   tabIndex={0}
@@ -268,7 +304,11 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                 </div>
 
                 {racesDropdownOpen && (
-                  <div className="overflow-hidden shadow-elevation-flyout fixed left-0 right-0 top-16 w-screen bg-white dark:bg-neutral-900 border-t border-b border-neutral-200 dark:border-neutral-700 z-50 animate-in fade-in duration-150">
+                  <div
+                    className="overflow-hidden shadow-elevation-flyout fixed left-0 right-0 top-16 w-screen bg-white dark:bg-neutral-900 border-t border-b border-neutral-200 dark:border-neutral-700 z-50 animate-in fade-in duration-150"
+                    onMouseEnter={handleRacesMouseEnter}
+                    onMouseLeave={handleRacesMouseLeave}
+                  >
                     <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-8">
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
 
