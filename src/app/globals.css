@@ -848,4 +848,21 @@
   [data-radix-navigation-menu-viewport][data-state="closed"] {
     animation: slideUp 200ms ease-in;
   }
+
+  /* Shadow for dropdown - no effect on top, only sides and bottom */
+  .shadow-elevation-flyout {
+    box-shadow:
+      1px 0 0 0 rgba(0, 0, 0, 0.08),      /* right edge */
+      -1px 0 0 0 rgba(0, 0, 0, 0.08),     /* left edge */
+      0 4px 8px 0 rgba(0, 0, 0, 0.08),    /* bottom shadow */
+      0 8px 16px 0 rgba(0, 0, 0, 0.08);   /* larger bottom shadow */
+  }
+
+  .dark .shadow-elevation-flyout {
+    box-shadow:
+      1px 0 0 0 rgba(255, 255, 255, 0.1),     /* right edge */
+      -1px 0 0 0 rgba(255, 255, 255, 0.1),    /* left edge */
+      0 4px 8px 0 rgba(0, 0, 0, 0.32),        /* bottom shadow */
+      0 8px 16px 0 rgba(0, 0, 0, 0.32);       /* larger bottom shadow */
+  }
 }
