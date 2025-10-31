@@ -186,7 +186,6 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                               <div className="text-xs text-neutral-500 dark:text-neutral-400">Off-road adventures</div>
                             </div>
                           </Link>
-                          <div className="h-px bg-neutral-200 dark:border-neutral-700 my-1" />
                           <Link
                             href="/gear/category/gps-watches"
                             className="flex items-center gap-3 px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-colors"
@@ -224,7 +223,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                                 />
                               </div>
                               <div className="text-xs font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-1">
-                                Latest product news
+                                Featured article
                               </div>
                               <h4 className="text-sm font-semibold text-neutral-900 dark:text-white mb-1 group-hover:text-electric-pink dark:group-hover:text-electric-pink transition-colors line-clamp-2">
                                 {featuredGear.title}
