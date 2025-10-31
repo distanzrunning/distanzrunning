@@ -46,6 +46,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
   const [mobileSubMenu, setMobileSubMenu] = useState<'main' | 'gear' | 'races'>('main')
   const [mounted, setMounted] = useState(false)
   const [gearDropdownOpen, setGearDropdownOpen] = useState(false)
+  const [racesDropdownOpen, setRacesDropdownOpen] = useState(false)
 
   useEffect(() => {
     setMounted(true)
@@ -247,13 +248,102 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                 )}
               </div>
 
-              {/* Races Dropdown - Temporary Link (will convert to full-width after Gear is confirmed) */}
-              <Link
-                href="/races"
-                className="px-3 py-2 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800"
+              {/* Races Dropdown - Hover Activated Full Width */}
+              <div
+                className="relative flex items-center"
+                onMouseEnter={() => setRacesDropdownOpen(true)}
+                onMouseLeave={() => setRacesDropdownOpen(false)}
               >
-                Races
-              </Link>
+                <div
+                  tabIndex={0}
+                  className="cursor-pointer"
+                  role="button"
+                  aria-expanded={racesDropdownOpen}
+                  aria-haspopup="true"
+                >
+                  <div className="flex items-center gap-1 px-3 py-1 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200">
+                    Races
+                    <ChevronDown className="h-4 w-4" />
+                  </div>
+                </div>
+
+                {racesDropdownOpen && (
+                  <div className="overflow-hidden shadow-elevation-flyout fixed left-0 right-0 top-16 w-screen bg-white dark:bg-neutral-900 border-t border-b border-neutral-200 dark:border-neutral-700 z-50 animate-in fade-in duration-150">
+                    <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-8">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+                        {/* Column 1: Description */}
+                        <div className="border-r border-neutral-200 dark:border-neutral-700 pr-8">
+                          <h3 className="font-playfair text-2xl font-semibold text-neutral-900 dark:text-white mb-3">
+                            Races
+                          </h3>
+                          <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                            Explore the world's greatest marathons with detailed race guides, course analysis, and insider tips to help you prepare for your next race.
+                          </p>
+                        </div>
+
+                        {/* Column 2: Race Links */}
+                        <div className="flex flex-col gap-0.5">
+                          <Link
+                            href="/races"
+                            className="flex items-center gap-3 px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-colors"
+                          >
+                            <FileText className="h-4 w-4 flex-shrink-0" />
+                            <div className="flex-1">
+                              <div className="font-semibold">Race Profiles</div>
+                              <div className="text-xs text-neutral-500 dark:text-neutral-400">Marathon guides & analysis</div>
+                            </div>
+                          </Link>
+                          <Link
+                            href="/races/database"
+                            className="flex items-center gap-3 px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-colors"
+                          >
+                            <Database className="h-4 w-4 flex-shrink-0" />
+                            <div className="flex-1">
+                              <div className="font-semibold">Race Database</div>
+                              <div className="text-xs text-neutral-500 dark:text-neutral-400">Search races worldwide</div>
+                            </div>
+                          </Link>
+                        </div>
+
+                        {/* Column 3: Featured Race */}
+                        <div>
+                          {featuredRace ? (
+                            <Link
+                              href={`/races/${featuredRace.slug.current}`}
+                              className="block group"
+                            >
+                              <div className="relative w-full aspect-[16/9] rounded-lg overflow-hidden bg-neutral-100 dark:bg-neutral-800 mb-2">
+                                <img
+                                  src={urlFor(featuredRace.mainImage).width(400).height(225).fit('crop').url()}
+                                  alt={featuredRace.title}
+                                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                />
+                              </div>
+                              <div className="text-xs font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-1">
+                                Featured race
+                              </div>
+                              <h4 className="text-sm font-semibold text-neutral-900 dark:text-white mb-1 group-hover:text-electric-pink dark:group-hover:text-electric-pink transition-colors line-clamp-2">
+                                {featuredRace.title}
+                              </h4>
+                              {featuredRace.location && (
+                                <p className="text-xs text-neutral-600 dark:text-neutral-400">
+                                  {featuredRace.location}
+                                </p>
+                              )}
+                            </Link>
+                          ) : (
+                            <div className="aspect-[16/9] rounded-lg bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center">
+                              <p className="text-neutral-400 dark:text-neutral-600 text-xs">No featured race</p>
+                            </div>
+                          )}
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
             </nav>
           </div>
 
