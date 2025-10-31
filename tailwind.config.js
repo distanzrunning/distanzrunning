@@ -224,6 +224,9 @@ module.exports = {
         '21': '5.25rem',
         '23': '5.75rem',
       },
+      boxShadow: {
+        'elevation-flyout': '0 4px 24px rgba(0, 0, 0, 0.08), 0 0 1px rgba(0, 0, 0, 0.1)',
+      },
       animation: {
         'rotate': 'rotate 3s linear infinite both',
         'flip': 'flip 6s steps(2) infinite',

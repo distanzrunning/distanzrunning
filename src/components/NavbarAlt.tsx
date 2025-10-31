@@ -102,17 +102,25 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
 
               {/* Gear Dropdown - Hover Activated Full Width */}
               <div
-                className="relative"
+                className="relative flex items-center"
                 onMouseEnter={() => setGearDropdownOpen(true)}
                 onMouseLeave={() => setGearDropdownOpen(false)}
               >
-                <button className="flex items-center gap-1 px-3 py-2 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800">
-                  Gear
-                  <ChevronDown className="h-4 w-4" />
-                </button>
+                <div
+                  tabIndex={0}
+                  className="cursor-pointer"
+                  role="button"
+                  aria-expanded={gearDropdownOpen}
+                  aria-haspopup="true"
+                >
+                  <div className="flex items-center gap-1 px-3 py-1 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200">
+                    Gear
+                    <ChevronDown className="h-4 w-4" />
+                  </div>
+                </div>
 
                 {gearDropdownOpen && (
-                  <div className="fixed left-0 right-0 top-16 w-screen bg-white dark:bg-neutral-900 border-t border-b border-neutral-200 dark:border-neutral-700 shadow-lg z-50 animate-in fade-in duration-150">
+                  <div className="overflow-hidden shadow-lg absolute top-full left-1/2 -translate-x-1/2 w-screen bg-white dark:bg-neutral-900 border-t border-b border-neutral-200 dark:border-neutral-700 z-50 animate-in fade-in duration-150">
                     <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-6">
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 
