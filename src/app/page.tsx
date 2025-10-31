@@ -50,7 +50,7 @@ function PreviewPage() {
   return (
       <DarkModeProvider>
         {/* Preload critical images for instant loading */}
-        <link rel="preload" as="image" href="/images/logo_1.svg" fetchPriority="high" />
+        <link rel="preload" as="image" href="/images/Distanz_Logo_1600_600_Black.svg" fetchPriority="high" />
         <link rel="preload" as="image" href="/images/logo_white.svg" fetchPriority="high" />
 
         {/* Dark Mode Toggle - fixed position toggle specific to preview page */}
@@ -72,7 +72,7 @@ function PreviewPage() {
               {/* Logo - smaller, switches between light and dark */}
               <div className="flex justify-center mb-3 svg-container">
                 <img
-                  src="/images/logo_1.svg"
+                  src="/images/Distanz_Logo_1600_600_Black.svg"
                   alt="Distanz Running Logo"
                   width="400"
                   height="200"

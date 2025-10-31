@@ -29,7 +29,7 @@ function ConfirmedContent() {
           <div className="flex justify-center mb-4">
             <Link href="/">
               <img
-                src="/images/logo_1.svg"
+                src="/images/Distanz_Logo_1600_600_Black.svg"
                 alt="Distanz Running Logo"
                 className="block dark:hidden cursor-pointer"
                 style={{ height: '80px', width: 'auto' }}

@@ -19,7 +19,7 @@ export default function ContactUsPage() {
           <div className="flex justify-center">
             <Link href="/" className="svg-container">
               <img
-                src="/images/logo_1.svg"
+                src="/images/Distanz_Logo_1600_600_Black.svg"
                 alt="Distanz Running Logo"
                 width="400"
                 height="200"

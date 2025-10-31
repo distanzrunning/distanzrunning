@@ -49,7 +49,7 @@ export default function LoginPage() {
           {/* Logo */}
           <div className="flex justify-center">
             <img
-              src="/images/logo_1.svg"
+              src="/images/Distanz_Logo_1600_600_Black.svg"
               alt="Distanz Running Logo"
               className="block dark:hidden"
               style={{ height: '60px', width: 'auto' }}
