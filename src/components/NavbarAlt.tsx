@@ -113,8 +113,8 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
 
                 {gearDropdownOpen && (
                   <div className="fixed left-0 right-0 top-16 w-screen bg-white dark:bg-neutral-900 border-t border-b border-neutral-200 dark:border-neutral-700 shadow-lg z-50 animate-in fade-in duration-150">
-                    <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-8">
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-6">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 
                         {/* Column 1: Description */}
                         <div className="border-r border-neutral-200 dark:border-neutral-700 pr-8">
@@ -206,30 +206,32 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                           {featuredGear ? (
                             <Link
                               href={`/gear/${featuredGear.slug.current}`}
-                              className="block group"
+                              className="flex gap-4 group"
                             >
-                              <div className="relative aspect-[4/5] rounded-lg overflow-hidden bg-neutral-100 dark:bg-neutral-800 mb-3">
+                              <div className="relative w-32 h-32 flex-shrink-0 rounded-lg overflow-hidden bg-neutral-100 dark:bg-neutral-800">
                                 <img
-                                  src={urlFor(featuredGear.mainImage).width(400).height(500).fit('crop').url()}
+                                  src={urlFor(featuredGear.mainImage).width(200).height(200).fit('crop').url()}
                                   alt={featuredGear.title}
                                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                                 />
                               </div>
-                              <div className="text-xs font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-2">
-                                Featured Article
+                              <div className="flex-1 min-w-0">
+                                <div className="text-xs font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-2">
+                                  Featured Article
+                                </div>
+                                <h4 className="font-semibold text-neutral-900 dark:text-white mb-2 group-hover:text-electric-pink dark:group-hover:text-electric-pink transition-colors line-clamp-2">
+                                  {featuredGear.title}
+                                </h4>
+                                {featuredGear.excerpt && (
+                                  <p className="text-sm text-neutral-600 dark:text-neutral-400 line-clamp-2">
+                                    {featuredGear.excerpt}
+                                  </p>
+                                )}
                               </div>
-                              <h4 className="font-semibold text-neutral-900 dark:text-white mb-2 group-hover:text-electric-pink dark:group-hover:text-electric-pink transition-colors">
-                                {featuredGear.title}
-                              </h4>
-                              {featuredGear.excerpt && (
-                                <p className="text-sm text-neutral-600 dark:text-neutral-400 line-clamp-2">
-                                  {featuredGear.excerpt}
-                                </p>
-                              )}
                             </Link>
                           ) : (
-                            <div className="aspect-[4/5] rounded-lg bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center">
-                              <p className="text-neutral-400 dark:text-neutral-600">No featured article</p>
+                            <div className="flex items-center justify-center h-32 rounded-lg bg-neutral-100 dark:bg-neutral-800">
+                              <p className="text-neutral-400 dark:text-neutral-600 text-sm">No featured article</p>
                             </div>
                           )}
                         </div>
