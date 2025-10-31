@@ -55,9 +55,11 @@
 
 @layer base {
   :root {
-    /* Quartr's exact font system */
+    /* Distanz font system - Modern Editorial Stack */
     --base-font: "InterVariable", "Inter", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif;
-    --brand-font: "var(--font-playfair)", serif;
+    --brand-font: var(--font-playfair), "Playfair Display", Georgia, serif;
+    --body-font: var(--font-body), "Source Serif 4", Georgia, serif;
+    --mono-font: var(--font-mono), "JetBrains Mono", "Courier New", monospace;
 
     /* Tighter font metrics for more squared typography */
     --ascent-scale: 0.9688;
@@ -74,14 +76,14 @@
     --default-leading-trim-start: 0.26em; /* Reduced from 0.42em */
     --default-leading-trim-end: 0.22em;   /* Reduced from 0.36em */
     
-    /* Font weights exactly matching Quartr */
+    /* Font weights (Quartr-inspired) */
     --font-weight-light: 300;
     --font-weight-regular: 400;
     --font-weight-medium: 500;
     --font-weight-semi-bold: 550;
     --font-weight-bold: 600;
 
-    /* Quartr's exact text sizing system with tighter line heights */
+    /* Distanz text sizing system with tight line heights */
     --quik_text-size-h1: 4.25rem;
     --quik_text-spacing-h1: -0.005em;
     --quik_text-line-height-h1: 1.05; /* Reduced from 1.1 */
@@ -130,7 +132,7 @@
     --quik_text-spacing-xs: 0.0025em;
     --quik_text-line-height-xs: 1.25; /* Reduced from 1.4 */
 
-    /* Quartr Color System - exact values from their CSS */
+    /* Distanz Color System (Quartr-inspired semantic colors) */
     --color-textDefault: 17, 24, 39;
     --color-textSubtle: 107, 114, 128;
     --color-textSubtler: 172, 176, 184;
@@ -138,10 +140,10 @@
     --color-textForceShade: 17, 24, 39;
     --color-textInverted: 249, 250, 250;
     --color-textDisabled: 172, 176, 184;
-    --color-textAccent: 43, 43, 255;
-    --color-textAccentSubtle: 229, 229, 255;
-    
-    /* Additional Quartr colors */
+    --color-textAccent: 228, 60, 129; /* Electric pink */
+    --color-textAccentSubtle: 238, 182, 205; /* Light pink */
+
+    /* Distanz border colors */
     --color-borderNeutral: 229, 229, 229;
     --color-borderNeutralHover: 204, 204, 204;
     --color-borderNeutralSubtle: 231, 231, 231;
@@ -149,7 +151,7 @@
     --color-canvas: 247, 247, 247;
     --color-greyCold400: 140, 145, 156;
 
-    /* Background colors for bento grid */
+    /* Background colors */
     --color-neutralBgSubtle: 247, 247, 247;
   }
 
@@ -169,7 +171,7 @@
     --color-neutralBgSubtle: 23, 23, 23;
   }
 
-  /* Reset exactly like Quartr */
+  /* Distanz reset (Quartr-inspired) */
   *, *::before, *::after {
     box-sizing: border-box;
     margin: 0;
@@ -212,7 +214,40 @@
     @apply col-span-12 lg:col-start-3 lg:col-span-8;
   }
 
-  /* Quartr's exact article container from their CSS */
+  /* Distanz article container (Quartr-inspired) */
+  .distanz-article-container {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 1042px;
+    width: 100%;
+    column-gap: 1.25rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    padding-top: 80px;
+  }
+
+  @media (min-width: 1024px) {
+    .distanz-article-container {
+      grid-template-columns: repeat(18, minmax(0, 1fr));
+    }
+  }
+
+  .distanz-article-col {
+    @apply col-span-full lg:col-start-4 lg:col-span-10;
+  }
+
+  .distanz-full-col {
+    @apply col-span-full;
+  }
+
+  /* Distanz font features */
+  .distanz-font-features {
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  }
+
+  /* Legacy Quartr classes for backwards compatibility */
   .quartr-article-container {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -404,8 +439,103 @@
 }
 
 @layer utilities {
-  /* Updated Quartr utility classes with tighter spacing */
-  
+  /* Distanz utility classes (Quartr-inspired with tight spacing) */
+
+  .text-meta-distanz {
+    font-family: var(--base-font);
+    color: rgb(var(--color-textSubtle));
+    font-weight: 400;
+    font-size: 0.9375rem; /* text-base */
+    line-height: 1.25;
+  }
+
+  .text-intro-distanz {
+    font-family: var(--base-font);
+    color: rgb(var(--color-textSubtle));
+    font-weight: 500;
+    font-size: 21px;
+    line-height: 22px;
+  }
+
+  @media (min-width: 768px) {
+    .text-intro-distanz {
+      font-size: 22px;
+      line-height: 24px;
+    }
+  }
+
+  .text-body-distanz {
+    font-family: var(--body-font);
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 22px;
+    color: rgb(var(--color-textDefault));
+  }
+
+  @media (min-width: 768px) {
+    .text-body-distanz {
+      font-size: 19px;
+      line-height: 25px;
+    }
+  }
+
+  .text-h2-distanz {
+    font-family: var(--base-font);
+    font-weight: 600;
+    font-size: 1.875rem;
+    line-height: 1.15;
+    color: rgb(var(--color-textDefault));
+  }
+
+  .text-h3-distanz {
+    font-family: var(--base-font);
+    font-weight: 600;
+    font-size: 1.5rem;
+    line-height: 1.15;
+    color: rgb(var(--color-textDefault));
+  }
+
+  .text-title-distanz {
+    font-family: var(--brand-font);
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    font-size: 35px;
+    line-height: 36px;
+    color: rgb(var(--color-textDefault));
+  }
+
+  @media (min-width: 768px) {
+    .text-title-distanz {
+      font-size: 56px;
+      line-height: 52px;
+    }
+  }
+
+  .text-breadcrumb-distanz {
+    font-family: var(--base-font);
+    color: rgb(var(--color-textSubtle));
+    font-weight: 400;
+    font-size: 1.0625rem;
+    line-height: 1.25;
+    letter-spacing: 0.0025em;
+    --font-size-px: 17;
+    --line-height: 1.25;
+    --line-height-offset: calc((1.15*17/2 - 17*1.25/2)/17);
+  }
+
+  .text-breadcrumb-distanz:before {
+    content: "";
+    display: table;
+    margin-bottom: calc(((var(--ascent-scale) - var(--cap-height-scale)) - var(--line-height-offset)) * -0.8em);
+  }
+
+  .text-breadcrumb-distanz:after {
+    content: "";
+    display: table;
+    margin-top: calc(((var(--descent-scale)) - var(--line-height-offset)) * -0.8em);
+  }
+
+  /* Legacy Quartr utility classes for backwards compatibility */
   .text-meta-quartr {
     font-family: var(--base-font);
     color: rgb(var(--color-textSubtle));
@@ -557,7 +687,24 @@
     font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
   }
 
-  /* Text colors exactly matching Quartr */
+  /* Distanz text colors */
+  .text-distanz-default {
+    color: rgb(var(--color-textDefault));
+  }
+
+  .text-distanz-subtle {
+    color: rgb(var(--color-textSubtle));
+  }
+
+  .text-distanz-subtler {
+    color: rgb(var(--color-textSubtler));
+  }
+
+  .text-distanz-accent {
+    color: rgb(var(--color-textAccent));
+  }
+
+  /* Legacy Quartr text colors */
   .text-quartr-default {
     color: rgb(var(--color-textDefault));
   }
@@ -570,23 +717,42 @@
     color: rgb(var(--color-textSubtler));
   }
 
-  /* Reduced text spacing for tighter vertical rhythm */
+  /* Distanz text spacing for tight vertical rhythm */
+  .distanz-text-spacing .text-body-distanz {
+    margin-bottom: 1rem;
+  }
+
+  .distanz-text-spacing .text-intro-distanz {
+    margin-bottom: 0.75rem;
+  }
+
+  .distanz-text-spacing .text-h2-distanz {
+    margin-top: 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .distanz-text-spacing .text-h3-distanz {
+    margin-top: 1.25rem;
+    margin-bottom: 0.75rem;
+  }
+
+  /* Legacy Quartr text spacing */
   .quartr-text-spacing .text-body-quartr {
-    margin-bottom: 1rem; /* Reduced from 1.5rem */
+    margin-bottom: 1rem;
   }
 
   .quartr-text-spacing .text-intro-quartr {
-    margin-bottom: 0.75rem; /* Reduced from 1rem */
+    margin-bottom: 0.75rem;
   }
 
   .quartr-text-spacing .text-h2-quartr {
-    margin-top: 1.25rem; /* Reduced from 1.5rem */
-    margin-bottom: 1rem; /* Reduced from 1.25rem */
+    margin-top: 1.25rem;
+    margin-bottom: 1rem;
   }
 
   .quartr-text-spacing .text-h3-quartr {
-    margin-top: 1.25rem; /* Reduced from 1.5rem */
-    margin-bottom: 0.75rem; /* Reduced from 1rem */
+    margin-top: 1.25rem;
+    margin-bottom: 0.75rem;
   }
 
   /* Custom arrow bullets for lists */

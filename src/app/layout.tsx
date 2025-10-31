@@ -1,6 +1,6 @@
 // src/app/layout.tsx
 import type { Metadata } from "next";
-import { Playfair_Display } from "next/font/google";
+import { Playfair_Display, Source_Serif_4, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -8,12 +8,29 @@ import AuthProtection from "@/components/AuthProtection";
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 
+// Distanz headline font (serif) - used for article headlines and display text
 const playfair = Playfair_Display({
   subsets: ["latin"],
   variable: "--font-playfair",
   weight: ["400", "500", "600", "700", "800", "900"],
   display: 'swap',
   adjustFontFallback: false,
+});
+
+// Distanz body font (serif) - used for long-form articles and feature content
+const sourceSerif = Source_Serif_4({
+  subsets: ["latin"],
+  variable: "--font-body",
+  weight: ["400", "600", "700"],
+  display: 'swap',
+});
+
+// Distanz monospace font - used for race times, statistics, and data
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
+  weight: ["400", "500", "700"],
+  display: 'swap',
 });
 
 export const metadata: Metadata = {
@@ -42,7 +59,7 @@ export default function RootLayout({
   const isPreviewMode = process.env.PREVIEW_MODE === 'true';
 
   return (
-    <html lang="en" className={`${playfair.variable}`}>
+    <html lang="en" className={`${playfair.variable} ${sourceSerif.variable} ${jetbrainsMono.variable}`}>
       <head>
         {/* Prevent flash of dark mode - ensure light mode by default */}
         <script
@@ -105,7 +122,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="font-sans antialiased bg-white text-textDefault min-h-screen flex flex-col quartr-font-features">
+      <body className="font-sans antialiased bg-white text-textDefault min-h-screen flex flex-col distanz-font-features">
         <AuthProtection>
           {isPreviewMode ? (
             <main className="min-h-screen">{children}</main>

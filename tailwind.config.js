@@ -11,13 +11,38 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        // Distanz Brand Colors
+        'electric-pink': '#e43c81',
+        'volt-green': '#00D464',
+        'signal-orange': '#FF5722',
+        'pace-purple': '#7C3AED',
+        'trail-brown': '#8B4513',
+        'track-red': '#DC2626',
+
+        // Primary palette
+        'black': '#0A0A0A',
+        'white': '#FFFFFF',
+        'off-white': '#FAFAF8',
+
+        // Gray scale
+        'gray-900': '#1A1A1A',
+        'gray-800': '#2D2D2D',
+        'gray-700': '#404040',
+        'gray-600': '#595959',
+        'gray-500': '#737373',
+        'gray-400': '#A6A6A6',
+        'gray-300': '#D9D9D9',
+        'gray-200': '#E6E6E6',
+        'gray-100': '#F5F5F5',
+
+        // Legacy/compatibility
         primary: '#e43c81',
         secondary: '#eeb6cd',
         dark: '#000000',
         light: '#f7f7f7',
         muted: '#6b7280',
-        
-        // Quartr's exact color system
+
+        // Semantic colors via CSS variables
         'textDefault': 'rgb(var(--color-textDefault))',
         'textSubtle': 'rgb(var(--color-textSubtle))',
         'textSubtler': 'rgb(var(--color-textSubtler))',
@@ -27,8 +52,7 @@ module.exports = {
         'textDisabled': 'rgb(var(--color-textDisabled))',
         'textAccent': 'rgb(var(--color-textAccent))',
         'textAccentSubtle': 'rgb(var(--color-textAccentSubtle))',
-        
-        // Additional Quartr colors
+
         'borderNeutral': 'rgb(var(--color-borderNeutral))',
         'borderNeutralHover': 'rgb(var(--color-borderNeutralHover))',
         'borderNeutralSubtle': 'rgb(var(--color-borderNeutralSubtle))',
@@ -40,7 +64,7 @@ module.exports = {
       backgroundColor: {
         'primary-light': '#f9e8ee',
 
-        // Quartr background colors
+        // Distanz background colors
         'surface': 'rgb(var(--color-surface))',
         'canvas': 'rgb(var(--color-canvas))',
         'neutralBgSubtle': 'rgb(var(--color-neutralBgSubtle))',
@@ -51,8 +75,8 @@ module.exports = {
         dark: '#000000',
         light: '#f7f7f7',
         muted: '#6b7280',
-        
-        // Quartr text colors
+
+        // Distanz semantic text colors
         'textDefault': 'rgb(var(--color-textDefault))',
         'textSubtle': 'rgb(var(--color-textSubtle))',
         'textSubtler': 'rgb(var(--color-textSubtler))',
@@ -67,20 +91,28 @@ module.exports = {
         primary: '#e43c81',
         secondary: '#eeb6cd',
 
-        // Quartr border colors
+        // Distanz border colors
         'borderNeutral': 'rgb(var(--color-borderNeutral))',
         'borderNeutralHover': 'rgb(var(--color-borderNeutralHover))',
         'borderNeutralSubtle': 'rgb(var(--color-borderNeutralSubtle))',
       },
       fontFamily: {
+        // UI font (Inter - sans-serif)
         sans: [
-          'var(--base-font)', 
-          'InterVariable', 
-          'Inter', 
-          'system-ui', 
+          'var(--base-font)',
+          'InterVariable',
+          'Inter',
+          'system-ui',
           'sans-serif'
         ],
-        playfair: ['var(--font-playfair)', 'serif'],
+        // Headline font (Playfair Display - serif)
+        playfair: ['var(--font-playfair)', 'Playfair Display', 'serif'],
+        headline: ['var(--font-playfair)', 'Playfair Display', 'Georgia', 'Times New Roman', 'serif'],
+        // Body font (Source Serif 4 - serif for articles)
+        body: ['var(--font-body)', 'Source Serif 4', 'Georgia', 'serif'],
+        serif: ['var(--font-body)', 'Source Serif 4', 'Georgia', 'serif'],
+        // Monospace font (JetBrains Mono - for data/stats)
+        mono: ['var(--font-mono)', 'JetBrains Mono', 'Courier New', 'monospace'],
       },
       fontSize: {
         // Tighter font sizing system with reduced line heights
@@ -181,7 +213,11 @@ module.exports = {
         18: 'repeat(18, minmax(0, 1fr))',
       },
       maxWidth: {
-        'quartr': '1042px',
+        'distanz': '1042px', // Maintain Quartr-inspired container width
+        'quartr': '1042px', // Legacy
+        'text': '720px', // Optimal reading width for articles
+        'content': '1200px', // Standard content width
+        'wide': '1440px', // Wide layouts
       },
       spacing: {
         '18': '4.5rem',
@@ -231,7 +267,56 @@ module.exports = {
     // require('@tailwindcss/container-queries'),
     function({ addComponents, theme }) {
       addComponents({
-        // Quartr's exact article container from their CSS
+        // Distanz container system (Quartr-inspired)
+        '.distanz-container': {
+          display: 'grid',
+          gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
+          marginLeft: 'auto',
+          marginRight: 'auto',
+          maxWidth: '1042px',
+          width: '100%',
+          columnGap: '1.25rem',
+          paddingLeft: '1.5rem',
+          paddingRight: '1.5rem',
+        },
+        '@media (min-width: 1024px)': {
+          '.distanz-container': {
+            gridTemplateColumns: 'repeat(18, minmax(0, 1fr))',
+          },
+        },
+
+        // Article container with top padding
+        '.distanz-article-container': {
+          display: 'grid',
+          gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
+          marginLeft: 'auto',
+          marginRight: 'auto',
+          maxWidth: '1042px',
+          width: '100%',
+          columnGap: '1.25rem',
+          paddingLeft: '1.5rem',
+          paddingRight: '1.5rem',
+          paddingTop: '80px',
+        },
+        '@media (min-width: 1024px)': {
+          '.distanz-article-container': {
+            gridTemplateColumns: 'repeat(18, minmax(0, 1fr))',
+          },
+        },
+
+        '.distanz-full-col': {
+          gridColumn: '1 / -1',
+        },
+
+        '.distanz-article-col': {
+          gridColumn: '1 / -1',
+          '@media (min-width: 1024px)': {
+            gridColumnStart: '4',
+            gridColumnEnd: '14',
+          },
+        },
+
+        // Legacy Quartr classes for backwards compatibility
         '.quartr-container': {
           display: 'grid',
           gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
@@ -249,7 +334,6 @@ module.exports = {
           },
         },
 
-        // Article container matching Quartr exactly
         '.quartr-article-container': {
           display: 'grid',
           gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
@@ -280,7 +364,12 @@ module.exports = {
           },
         },
 
-        // Quartr's exact font features
+        // Distanz font features (Inter variable font)
+        '.distanz-font-features': {
+          fontFeatureSettings: "'cv02', 'cv03', 'cv04', 'cv11'",
+        },
+
+        // Legacy
         '.quartr-font-features': {
           fontFeatureSettings: "'cv02', 'cv03', 'cv04', 'cv11'",
         },

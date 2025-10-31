@@ -70,24 +70,48 @@ npm run lint         # Run ESLint (note: ignoreDuringBuilds: true in next.config
 
 ### Styling System
 
-**Tailwind Configuration (`tailwind.config.js`):**
-- Custom "Quartr" design system with precise typography
-- CSS variables for colors (rgb(var(--color-*)))
-- Custom utility classes: `.quartr-container`, `.quartr-article-container`, `.quartr-article-col`
-- Custom font feature settings: `.quartr-font-features`
-- Tight line heights (1.15-1.35) for professional, squared typography
+**Distanz Design System** (Quartr-inspired):
+- Professional, magazine-quality typography with tight line heights (1.15-1.35)
+- Precision spacing using 4px base unit system
+- Clean, squared layouts optimized for editorial content
+- Responsive grid system: 4 columns (mobile) → 18 columns (desktop)
 
-**Typography:**
-- Primary font: Playfair Display (serif, loaded via `next/font/google`)
-- Sans-serif: Custom Inter variable font stack
+**Key Design Files:**
+- `DISTANZ_DESIGN_REFERENCE.md` - **Start here!** Quick reference for components and utilities
+- `distanz-design-system.md` - Comprehensive design philosophy and guidelines
+- `distanz-design-tokens.css` - Complete CSS variable reference
+- `tailwind.config.js` - Tailwind configuration with Distanz utilities
+- `src/app/globals.css` - Global styles and utility classes
+- `/src/lib/constants.ts` - JavaScript/TypeScript constants
+
+**Tailwind Configuration (`tailwind.config.js`):**
+- Distanz design system with Quartr-inspired principles
+- CSS variables for semantic colors (rgb(var(--color-*)))
+- Custom utility classes: `.distanz-container`, `.distanz-article-container`, `.distanz-article-col`
+- Custom font feature settings: `.distanz-font-features`
+- Legacy `.quartr-*` classes maintained for backwards compatibility
+
+**Typography (Modern Editorial Stack):**
+- **Headline font**: Playfair Display (serif, loaded via `next/font/google`) - CSS var: `--font-playfair`
+- **Body font**: Source Serif 4 (serif, loaded via `next/font/google`) - CSS var: `--font-body`
+- **UI font**: Inter Variable (sans-serif, loaded via CDN with OpenType features) - CSS var: `--base-font`
+- **Monospace font**: JetBrains Mono (loaded via `next/font/google`) - CSS var: `--font-mono`
+- **Icons**: Material Symbols Outlined (loaded from Google Fonts CDN)
+- All fonts free via Google Fonts (zero licensing costs)
 - Extensive custom font sizes with pixel-perfect specifications (`[17px]`, `[56px]`, etc.)
-- Material Symbols Outlined icons loaded from Google Fonts CDN
+- Pre-built text utilities: `.text-title-distanz`, `.text-body-distanz`, `.text-h2-distanz`, etc.
+- Font loading: Configured in `src/app/layout.tsx` with `font-display: swap` for optimal performance
 
 **Color System:**
-- Primary: `#e43c81` (pink/red)
-- Secondary: `#eeb6cd` (light pink)
+- **Electric Pink** (`#e43c81`) - Primary brand color, CTAs, links, interactive elements
+- **Volt Green** (`#00D464`) - Success states, positive metrics
+- **Signal Orange** (`#FF5722`) - Breaking news, alerts
+- **Pace Purple** (`#7C3AED`) - Premium/featured content
+- **Trail Brown** (`#8B4513`) - Trail running content
+- **Track Red** (`#DC2626`) - Track & field content
+- **Grayscale**: Comprehensive 9-step gray scale from `#1A1A1A` to `#F5F5F5`
 - Dark/light mode via CSS variables defined in `globals.css`
-- Brand colors defined in `/src/lib/constants.ts`
+- Brand colors available in Tailwind (`electric-pink`, `volt-green`, etc.) and constants.ts
 
 ### Authentication System
 
@@ -235,6 +259,19 @@ PREVIEW_MODE (set to 'true' to disable navbar/footer)
 
 ## Important Conventions
 
+### Design System Usage
+- **Always use Distanz design system classes** for new components (`.distanz-*`)
+- **Reference `DISTANZ_DESIGN_REFERENCE.md`** for quick component patterns
+- **Use pre-built text utilities** (`.text-title-distanz`, `.text-body-distanz`, etc.) instead of raw Tailwind classes
+- **Maintain tight line heights** - Use `leading-tight`, `leading-snug`, or pre-built utilities
+- **Follow 4px spacing unit** - Use Tailwind spacing scale (space-1, space-2, etc.)
+- **Legacy `.quartr-*` classes** still work for backwards compatibility but prefer `.distanz-*` for new work
+
+### Brand Assets
+- Logo files in `public/images/`: `Distanz_Logo_1600_600_Black.svg` (primary), `Distanz_Logo_1600_600_White.svg` (dark backgrounds)
+- Favicon and app icons in `public/`: `favicon.ico`, `apple-touch-icon.png`, `android-chrome-*.png`
+- BIMI logo for email: `public/logo-bimi.svg`
+
 ### TypeScript Usage
 - Project uses TypeScript but type errors don't block builds
 - Type safety is aspirational rather than enforced
@@ -279,11 +316,14 @@ PREVIEW_MODE (set to 'true' to disable navbar/footer)
 - Unit conversions: See `metricToImperial` helper functions
 
 ### Styling New Components
-- Use Tailwind utility classes with Quartr design tokens
-- For article content, use `.quartr-article-container` and `.quartr-article-col`
-- Follow tight line-height patterns (1.15-1.35)
-- Reference brand colors from `/src/lib/constants.ts` or Tailwind theme
-- Font feature settings: Add `.quartr-font-features` class for proper Inter rendering
+- **Start with `DISTANZ_DESIGN_REFERENCE.md`** - Contains ready-to-use component patterns
+- Use Distanz utility classes (`.distanz-*`) with Tailwind utilities
+- For article content, use `.distanz-article-container` and `.distanz-article-col`
+- Use pre-built text classes: `.text-title-distanz`, `.text-body-distanz`, `.text-h2-distanz`, etc.
+- Follow tight line-height patterns (1.15-1.35) - automatically applied with pre-built utilities
+- Reference brand colors from `/src/lib/constants.ts` or Tailwind theme (e.g., `bg-electric-pink`)
+- Font feature settings: Add `.distanz-font-features` class for proper Inter rendering (already included in pre-built text utilities)
+- For category-specific styling, use appropriate accent colors (trail-brown, track-red, etc.)
 
 ## Known Issues
 
@@ -293,6 +333,13 @@ PREVIEW_MODE (set to 'true' to disable navbar/footer)
 
 ## Recent Improvements
 
+- ✅ **Distanz Rebrand (October 2025)**: Complete design system overhaul merging Quartr-inspired principles with unique Distanz brand identity
+  - New color palette: Electric Pink, Volt Green, Signal Orange, Pace Purple, Trail Brown, Track Red
+  - Comprehensive design documentation: `DISTANZ_DESIGN_REFERENCE.md` (quick reference), `distanz-design-system.md` (guidelines)
+  - New logo assets and brand identity system
+  - Updated Tailwind config with `.distanz-*` utility classes
+  - Pre-built text utilities for consistent typography
+  - Backwards compatible with legacy `.quartr-*` classes
 - ✅ Consolidated Sanity client configuration (removed duplicate clients)
 - ✅ Added `.env.example` file for environment variable documentation
 - ✅ Cleaned up duplicate CSS rules in `globals.css`
