@@ -118,7 +118,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                     Gear
                     <ChevronDown className="h-4 w-4" aria-hidden />
                   </NavigationMenu.Trigger>
-                  <NavigationMenu.Content className="absolute top-0 left-0 w-screen">
+                  <NavigationMenu.Content className="w-screen">
                     <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-8">
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                         {/* Column 1: Description */}
@@ -248,7 +248,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                     Races
                     <ChevronDown className="h-4 w-4" aria-hidden />
                   </NavigationMenu.Trigger>
-                  <NavigationMenu.Content className="absolute top-0 left-0 w-screen">
+                  <NavigationMenu.Content className="w-screen">
                     <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-8">
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                         {/* Column 1: Description */}
@@ -322,9 +322,12 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                   </NavigationMenu.Content>
                 </NavigationMenu.Item>
 
-                {/* Viewport for positioning dropdown content */}
-                <NavigationMenu.Viewport className="absolute top-full left-0 w-screen mt-2 bg-white dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-700 shadow-elevation-flyout data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out data-[state=open]:fade-in" />
               </NavigationMenu.List>
+
+              {/* Viewport for positioning dropdown content */}
+              <div className="perspective-origin-top">
+                <NavigationMenu.Viewport className="relative mt-2 w-full overflow-hidden bg-white dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-700 shadow-elevation-flyout data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out data-[state=open]:fade-in" />
+              </div>
             </NavigationMenu.Root>
           </div>
 
