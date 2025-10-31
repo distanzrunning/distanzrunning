@@ -4,7 +4,6 @@
 import { useState, useEffect, useContext } from 'react'
 import Link from 'next/link'
 import * as Dialog from '@radix-ui/react-dialog'
-import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import {
   Menu,
   X,
@@ -46,6 +45,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [mobileSubMenu, setMobileSubMenu] = useState<'main' | 'gear' | 'races'>('main')
   const [mounted, setMounted] = useState(false)
+  const [gearDropdownOpen, setGearDropdownOpen] = useState(false)
 
   useEffect(() => {
     setMounted(true)
@@ -100,19 +100,19 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                 Trail
               </Link>
 
-              {/* Gear Dropdown - Full Width */}
-              <DropdownMenu.Root>
-                <DropdownMenu.Trigger className="flex items-center gap-1 px-3 py-2 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800">
+              {/* Gear Dropdown - Hover Activated Full Width */}
+              <div
+                className="relative"
+                onMouseEnter={() => setGearDropdownOpen(true)}
+                onMouseLeave={() => setGearDropdownOpen(false)}
+              >
+                <button className="flex items-center gap-1 px-3 py-2 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800">
                   Gear
                   <ChevronDown className="h-4 w-4" />
-                </DropdownMenu.Trigger>
-                <DropdownMenu.Portal>
-                  <DropdownMenu.Content
-                    className="w-screen bg-white dark:bg-neutral-900 border-t border-b border-neutral-200 dark:border-neutral-700 shadow-lg z-50 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0"
-                    sideOffset={0}
-                    align="start"
-                    alignOffset={-9999}
-                  >
+                </button>
+
+                {gearDropdownOpen && (
+                  <div className="fixed left-0 right-0 top-16 w-screen bg-white dark:bg-neutral-900 border-t border-b border-neutral-200 dark:border-neutral-700 shadow-lg z-50 animate-in fade-in duration-150">
                     <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-8">
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
 
@@ -128,91 +128,77 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
 
                         {/* Column 2: Category Links */}
                         <div className="flex flex-col gap-1">
-                          <DropdownMenu.Item asChild>
-                            <Link
-                              href="/gear/category/race-day-shoes"
-                              className="flex items-center gap-3 px-3 py-2.5 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md cursor-pointer outline-none transition-colors"
-                            >
-                              <Flag className="h-4 w-4 flex-shrink-0" />
-                              <div className="flex-1">
-                                <div className="font-semibold">Race Day Shoes</div>
-                                <div className="text-xs text-neutral-500 dark:text-neutral-400">Carbon plate shoes for PRs</div>
-                              </div>
-                            </Link>
-                          </DropdownMenu.Item>
-                          <DropdownMenu.Item asChild>
-                            <Link
-                              href="/gear/category/daily-trainers"
-                              className="flex items-center gap-3 px-3 py-2.5 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md cursor-pointer outline-none transition-colors"
-                            >
-                              <Calendar className="h-4 w-4 flex-shrink-0" />
-                              <div className="flex-1">
-                                <div className="font-semibold">Daily Trainers</div>
-                                <div className="text-xs text-neutral-500 dark:text-neutral-400">Everyday runners</div>
-                              </div>
-                            </Link>
-                          </DropdownMenu.Item>
-                          <DropdownMenu.Item asChild>
-                            <Link
-                              href="/gear/category/max-cushion-shoes"
-                              className="flex items-center gap-3 px-3 py-2.5 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md cursor-pointer outline-none transition-colors"
-                            >
-                              <Footprints className="h-4 w-4 flex-shrink-0" />
-                              <div className="flex-1">
-                                <div className="font-semibold">Max Cushion</div>
-                                <div className="text-xs text-neutral-500 dark:text-neutral-400">Recovery and long runs</div>
-                              </div>
-                            </Link>
-                          </DropdownMenu.Item>
-                          <DropdownMenu.Item asChild>
-                            <Link
-                              href="/gear/category/tempo-shoes"
-                              className="flex items-center gap-3 px-3 py-2.5 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md cursor-pointer outline-none transition-colors"
-                            >
-                              <Zap className="h-4 w-4 flex-shrink-0" />
-                              <div className="flex-1">
-                                <div className="font-semibold">Tempo Shoes</div>
-                                <div className="text-xs text-neutral-500 dark:text-neutral-400">Speed work essentials</div>
-                              </div>
-                            </Link>
-                          </DropdownMenu.Item>
-                          <DropdownMenu.Item asChild>
-                            <Link
-                              href="/gear/category/trail-shoes"
-                              className="flex items-center gap-3 px-3 py-2.5 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md cursor-pointer outline-none transition-colors"
-                            >
-                              <MountainSnow className="h-4 w-4 flex-shrink-0" />
-                              <div className="flex-1">
-                                <div className="font-semibold">Trail Shoes</div>
-                                <div className="text-xs text-neutral-500 dark:text-neutral-400">Off-road adventures</div>
-                              </div>
-                            </Link>
-                          </DropdownMenu.Item>
+                          <Link
+                            href="/gear/category/race-day-shoes"
+                            className="flex items-center gap-3 px-3 py-2.5 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md cursor-pointer outline-none transition-colors"
+                          >
+                            <Flag className="h-4 w-4 flex-shrink-0" />
+                            <div className="flex-1">
+                              <div className="font-semibold">Race Day Shoes</div>
+                              <div className="text-xs text-neutral-500 dark:text-neutral-400">Carbon plate shoes for PRs</div>
+                            </div>
+                          </Link>
+                          <Link
+                            href="/gear/category/daily-trainers"
+                            className="flex items-center gap-3 px-3 py-2.5 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md cursor-pointer outline-none transition-colors"
+                          >
+                            <Calendar className="h-4 w-4 flex-shrink-0" />
+                            <div className="flex-1">
+                              <div className="font-semibold">Daily Trainers</div>
+                              <div className="text-xs text-neutral-500 dark:text-neutral-400">Everyday runners</div>
+                            </div>
+                          </Link>
+                          <Link
+                            href="/gear/category/max-cushion-shoes"
+                            className="flex items-center gap-3 px-3 py-2.5 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md cursor-pointer outline-none transition-colors"
+                          >
+                            <Footprints className="h-4 w-4 flex-shrink-0" />
+                            <div className="flex-1">
+                              <div className="font-semibold">Max Cushion</div>
+                              <div className="text-xs text-neutral-500 dark:text-neutral-400">Recovery and long runs</div>
+                            </div>
+                          </Link>
+                          <Link
+                            href="/gear/category/tempo-shoes"
+                            className="flex items-center gap-3 px-3 py-2.5 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md cursor-pointer outline-none transition-colors"
+                          >
+                            <Zap className="h-4 w-4 flex-shrink-0" />
+                            <div className="flex-1">
+                              <div className="font-semibold">Tempo Shoes</div>
+                              <div className="text-xs text-neutral-500 dark:text-neutral-400">Speed work essentials</div>
+                            </div>
+                          </Link>
+                          <Link
+                            href="/gear/category/trail-shoes"
+                            className="flex items-center gap-3 px-3 py-2.5 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md cursor-pointer outline-none transition-colors"
+                          >
+                            <MountainSnow className="h-4 w-4 flex-shrink-0" />
+                            <div className="flex-1">
+                              <div className="font-semibold">Trail Shoes</div>
+                              <div className="text-xs text-neutral-500 dark:text-neutral-400">Off-road adventures</div>
+                            </div>
+                          </Link>
                           <div className="h-px bg-neutral-200 dark:border-neutral-700 my-2" />
-                          <DropdownMenu.Item asChild>
-                            <Link
-                              href="/gear/category/gps-watches"
-                              className="flex items-center gap-3 px-3 py-2.5 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md cursor-pointer outline-none transition-colors"
-                            >
-                              <Watch className="h-4 w-4 flex-shrink-0" />
-                              <div className="flex-1">
-                                <div className="font-semibold">GPS Watches</div>
-                                <div className="text-xs text-neutral-500 dark:text-neutral-400">Track every mile</div>
-                              </div>
-                            </Link>
-                          </DropdownMenu.Item>
-                          <DropdownMenu.Item asChild>
-                            <Link
-                              href="/gear/category/nutrition"
-                              className="flex items-center gap-3 px-3 py-2.5 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md cursor-pointer outline-none transition-colors"
-                            >
-                              <UtensilsCrossed className="h-4 w-4 flex-shrink-0" />
-                              <div className="flex-1">
-                                <div className="font-semibold">Nutrition</div>
-                                <div className="text-xs text-neutral-500 dark:text-neutral-400">Fuel for distance</div>
-                              </div>
-                            </Link>
-                          </DropdownMenu.Item>
+                          <Link
+                            href="/gear/category/gps-watches"
+                            className="flex items-center gap-3 px-3 py-2.5 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md cursor-pointer outline-none transition-colors"
+                          >
+                            <Watch className="h-4 w-4 flex-shrink-0" />
+                            <div className="flex-1">
+                              <div className="font-semibold">GPS Watches</div>
+                              <div className="text-xs text-neutral-500 dark:text-neutral-400">Track every mile</div>
+                            </div>
+                          </Link>
+                          <Link
+                            href="/gear/category/nutrition"
+                            className="flex items-center gap-3 px-3 py-2.5 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md cursor-pointer outline-none transition-colors"
+                          >
+                            <UtensilsCrossed className="h-4 w-4 flex-shrink-0" />
+                            <div className="flex-1">
+                              <div className="font-semibold">Nutrition</div>
+                              <div className="text-xs text-neutral-500 dark:text-neutral-400">Fuel for distance</div>
+                            </div>
+                          </Link>
                         </div>
 
                         {/* Column 3: Featured Article */}
@@ -250,82 +236,17 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
 
                       </div>
                     </div>
-                  </DropdownMenu.Content>
-                </DropdownMenu.Portal>
-              </DropdownMenu.Root>
+                  </div>
+                )}
+              </div>
 
-              {/* Races Dropdown */}
-              <DropdownMenu.Root>
-                <DropdownMenu.Trigger className="flex items-center gap-1 px-3 py-2 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800">
-                  Races
-                  <ChevronDown className="h-4 w-4" />
-                </DropdownMenu.Trigger>
-                <DropdownMenu.Portal>
-                  <DropdownMenu.Content
-                    className="min-w-[240px] bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg shadow-lg p-2 z-50"
-                    sideOffset={5}
-                  >
-                    <DropdownMenu.Item asChild>
-                      <Link
-                        href="/races"
-                        className="flex items-center gap-3 px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-700 rounded-md cursor-pointer outline-none"
-                      >
-                        <FileText className="h-4 w-4" />
-                        <div>
-                          <div className="font-semibold">Race Profiles</div>
-                          <div className="text-xs text-neutral-500">Marathon guides</div>
-                        </div>
-                      </Link>
-                    </DropdownMenu.Item>
-                    <DropdownMenu.Item asChild>
-                      <Link
-                        href="/races/database"
-                        className="flex items-center gap-3 px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-700 rounded-md cursor-pointer outline-none"
-                      >
-                        <Database className="h-4 w-4" />
-                        <div>
-                          <div className="font-semibold">Race Database</div>
-                          <div className="text-xs text-neutral-500">Search races</div>
-                        </div>
-                      </Link>
-                    </DropdownMenu.Item>
-
-                    {/* Featured Race */}
-                    {featuredRace && (
-                      <>
-                        <DropdownMenu.Separator className="h-px bg-neutral-200 dark:bg-neutral-700 my-1" />
-                        <DropdownMenu.Label className="px-3 py-2 text-xs font-semibold text-neutral-500 uppercase tracking-wider">
-                          Featured Race
-                        </DropdownMenu.Label>
-                        <DropdownMenu.Item asChild>
-                          <Link
-                            href={`/races/${featuredRace.slug.current}`}
-                            className="flex items-start gap-3 px-3 py-2 text-sm hover:bg-neutral-100 dark:hover:bg-neutral-700 rounded-md cursor-pointer outline-none"
-                          >
-                            <div className="w-16 h-12 flex-shrink-0 rounded overflow-hidden bg-neutral-100 dark:bg-neutral-700">
-                              <img
-                                src={urlFor(featuredRace.mainImage).width(100).height(75).fit('crop').url()}
-                                alt={featuredRace.title}
-                                className="w-full h-full object-cover"
-                              />
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <div className="font-semibold text-neutral-900 dark:text-white line-clamp-2">
-                                {featuredRace.title}
-                              </div>
-                              {featuredRace.location && (
-                                <div className="text-xs text-neutral-500 mt-1">
-                                  {featuredRace.location}
-                                </div>
-                              )}
-                            </div>
-                          </Link>
-                        </DropdownMenu.Item>
-                      </>
-                    )}
-                  </DropdownMenu.Content>
-                </DropdownMenu.Portal>
-              </DropdownMenu.Root>
+              {/* Races Dropdown - Temporary Link (will convert to full-width after Gear is confirmed) */}
+              <Link
+                href="/races"
+                className="px-3 py-2 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800"
+              >
+                Races
+              </Link>
             </nav>
           </div>
 
