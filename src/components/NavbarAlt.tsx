@@ -64,7 +64,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
         <div className="flex items-center justify-between px-4 md:px-6 lg:px-8 h-16">
 
           {/* Left: Logo + Navigation */}
-          <div className="flex items-center gap-6">
+          <NavigationMenu.Root className="flex items-center gap-6">
             {/* Logo */}
             <Link href="/" className="flex items-center flex-shrink-0" title="Home">
               <img
@@ -80,8 +80,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
             </Link>
 
             {/* Desktop Navigation - Radix UI */}
-            <NavigationMenu.Root className="hidden lg:block">
-              <NavigationMenu.List className="flex items-center gap-1">
+            <NavigationMenu.List className="hidden lg:flex items-center gap-1">
                 {/* Road Link */}
                 <NavigationMenu.Item>
                   <Link
@@ -324,12 +323,11 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
 
               </NavigationMenu.List>
 
-              {/* Viewport for positioning dropdown content */}
-              <div className="perspective-origin-top">
-                <NavigationMenu.Viewport className="relative mt-2 w-full overflow-hidden bg-white dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-700 shadow-elevation-flyout data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out data-[state=open]:fade-in" />
-              </div>
-            </NavigationMenu.Root>
-          </div>
+            {/* Viewport for dropdowns - positioned absolutely to span full width */}
+            <div className="absolute left-1/2 -translate-x-1/2 top-full w-screen">
+              <NavigationMenu.Viewport className="w-full bg-white dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-700 shadow-elevation-flyout data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out data-[state=open]:fade-in" />
+            </div>
+          </NavigationMenu.Root>
 
           {/* Right: Newsletter CTA + Dark Mode + Mobile Menu */}
           <div className="flex items-center gap-3">
