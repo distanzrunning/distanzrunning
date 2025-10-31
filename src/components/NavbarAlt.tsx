@@ -4,6 +4,7 @@
 import { useState, useEffect, useContext } from 'react'
 import Link from 'next/link'
 import * as Dialog from '@radix-ui/react-dialog'
+import { motion, AnimatePresence } from 'framer-motion'
 import {
   Menu,
   X,
@@ -152,14 +153,19 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                   </div>
                 </div>
 
-                {gearDropdownOpen && (
-                  <div
-                    className="overflow-hidden shadow-elevation-flyout fixed left-0 right-0 top-16 w-screen bg-white dark:bg-neutral-900 border-t border-b border-neutral-200 dark:border-neutral-700 z-50 animate-in fade-in duration-150"
-                    onMouseEnter={handleGearMouseEnter}
-                    onMouseLeave={handleGearMouseLeave}
-                  >
-                    <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-8">
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <AnimatePresence>
+                  {gearDropdownOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      transition={{ duration: 0.2, ease: "easeOut" }}
+                      className="overflow-hidden shadow-elevation-flyout fixed left-0 right-0 top-16 w-screen bg-white dark:bg-neutral-900 border-t border-b border-neutral-200 dark:border-neutral-700 z-50"
+                      onMouseEnter={handleGearMouseEnter}
+                      onMouseLeave={handleGearMouseLeave}
+                    >
+                      <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-8">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
 
                         {/* Column 1: Description */}
                         <div className="border-r border-neutral-200 dark:border-neutral-700 pr-8">
@@ -280,8 +286,9 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
 
                       </div>
                     </div>
-                  </div>
-                )}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
 
               {/* Races Dropdown - Hover Activated Full Width */}
@@ -303,14 +310,19 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                   </div>
                 </div>
 
-                {racesDropdownOpen && (
-                  <div
-                    className="overflow-hidden shadow-elevation-flyout fixed left-0 right-0 top-16 w-screen bg-white dark:bg-neutral-900 border-t border-b border-neutral-200 dark:border-neutral-700 z-50 animate-in fade-in duration-150"
-                    onMouseEnter={handleRacesMouseEnter}
-                    onMouseLeave={handleRacesMouseLeave}
-                  >
-                    <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-8">
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <AnimatePresence>
+                  {racesDropdownOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      transition={{ duration: 0.2, ease: "easeOut" }}
+                      className="overflow-hidden shadow-elevation-flyout fixed left-0 right-0 top-16 w-screen bg-white dark:bg-neutral-900 border-t border-b border-neutral-200 dark:border-neutral-700 z-50"
+                      onMouseEnter={handleRacesMouseEnter}
+                      onMouseLeave={handleRacesMouseLeave}
+                    >
+                      <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-8">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
 
                         {/* Column 1: Description */}
                         <div className="border-r border-neutral-200 dark:border-neutral-700 pr-8">
@@ -381,8 +393,9 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
 
                       </div>
                     </div>
-                  </div>
-                )}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             </nav>
           </div>
