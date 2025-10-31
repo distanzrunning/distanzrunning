@@ -153,14 +153,15 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                   </div>
                 </div>
 
-                <AnimatePresence>
+                <AnimatePresence mode="wait">
                   {gearDropdownOpen && (
                     <motion.div
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      transition={{ duration: 0.2, ease: "easeOut" }}
-                      className="overflow-hidden shadow-elevation-flyout fixed left-0 right-0 top-16 w-screen bg-white dark:bg-neutral-900 border-t border-b border-neutral-200 dark:border-neutral-700 z-50"
+                      key="gear"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.15 }}
+                      className="overflow-hidden shadow-elevation-flyout fixed left-0 right-0 top-16 w-screen bg-white dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-700 z-50"
                       onMouseEnter={handleGearMouseEnter}
                       onMouseLeave={handleGearMouseLeave}
                     >
@@ -310,14 +311,15 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                   </div>
                 </div>
 
-                <AnimatePresence>
+                <AnimatePresence mode="wait">
                   {racesDropdownOpen && (
                     <motion.div
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      transition={{ duration: 0.2, ease: "easeOut" }}
-                      className="overflow-hidden shadow-elevation-flyout fixed left-0 right-0 top-16 w-screen bg-white dark:bg-neutral-900 border-t border-b border-neutral-200 dark:border-neutral-700 z-50"
+                      key="races"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.15 }}
+                      className="overflow-hidden shadow-elevation-flyout fixed left-0 right-0 top-16 w-screen bg-white dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-700 z-50"
                       onMouseEnter={handleRacesMouseEnter}
                       onMouseLeave={handleRacesMouseLeave}
                     >
