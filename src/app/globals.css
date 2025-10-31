@@ -777,4 +777,62 @@
     line-height: inherit;
     transform: translateY(2px); /* Fine-tune vertical alignment */
   }
+
+  /* Radix UI NavigationMenu animations - Medusa style */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+  }
+
+  /* Animation utilities for Radix */
+  .animate-in {
+    animation: slideDown 200ms ease-out;
+  }
+
+  .animate-out {
+    animation: slideUp 200ms ease-in;
+  }
+
+  .fade-in {
+    animation: fadeIn 200ms ease-out;
+  }
+
+  .fade-out {
+    animation: fadeOut 200ms ease-in;
+  }
 }
