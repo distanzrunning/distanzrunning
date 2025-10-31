@@ -2,7 +2,6 @@
 import { client as sanity } from '@/sanity/lib/client'
 import { urlFor } from '@/sanity/lib/image'
 import Link from 'next/link'
-import Image from 'next/image'
 import { format } from 'date-fns'
 import NewsletterSignup from '@/components/NewsletterSignup'
 import ResponsiveMarathonShowcase from '@/components/ResponsiveMarathonShowcase'
@@ -61,10 +60,10 @@ function PreviewPage() {
           {/* Coming Soon Section */}
           <div className="pt-12 pb-8 px-6">
             <div className="flex flex-col items-center text-center">
-              
-              {/* Coming Soon Pill - no border, smaller */}
-              <div className="inline-flex items-center px-5 py-2 bg-pink-500/10 dark:bg-pink-500/20 rounded-full mb-3">
-                <span className="text-pink-600 dark:text-pink-400 font-medium text-xs tracking-wide uppercase leading-none">
+
+              {/* Coming Soon Pill - Using Distanz Electric Pink */}
+              <div className="inline-flex items-center px-5 py-2 bg-electric-pink/10 dark:bg-electric-pink/20 rounded-full mb-3">
+                <span className="text-electric-pink dark:text-electric-pink font-medium text-xs tracking-wide uppercase leading-none">
                   Coming Soon
                 </span>
               </div>
@@ -99,7 +98,7 @@ function PreviewPage() {
 
               {/* Combined blurb and typewriter text */}
               <div className="max-w-3xl mx-auto text-center mb-16 px-4">
-                <div className="text-[19px] sm:text-[20px] text-neutral-600 dark:text-neutral-300 leading-snug font-medium mb-3 transition-colors duration-300">
+                <div className="font-body text-[19px] sm:text-[20px] text-textSubtle dark:text-neutral-300 leading-snug font-normal mb-3 transition-colors duration-300">
                   We're building the ultimate destination for
                 </div>
                 <div className="flex justify-center">
