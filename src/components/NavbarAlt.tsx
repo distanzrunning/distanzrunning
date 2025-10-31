@@ -157,10 +157,10 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                   {gearDropdownOpen && (
                     <motion.div
                       key="gear"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ duration: 0.15 }}
+                      initial={{ opacity: 0, y: -8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -8 }}
+                      transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
                       className="overflow-hidden shadow-elevation-flyout fixed left-0 right-0 top-16 w-screen bg-white dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-700 z-50"
                       onMouseEnter={handleGearMouseEnter}
                       onMouseLeave={handleGearMouseLeave}
@@ -315,10 +315,10 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                   {racesDropdownOpen && (
                     <motion.div
                       key="races"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ duration: 0.15 }}
+                      initial={{ opacity: 0, y: -8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -8 }}
+                      transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
                       className="overflow-hidden shadow-elevation-flyout fixed left-0 right-0 top-16 w-screen bg-white dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-700 z-50"
                       onMouseEnter={handleRacesMouseEnter}
                       onMouseLeave={handleRacesMouseLeave}
