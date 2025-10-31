@@ -2,7 +2,7 @@
 import type { Metadata } from "next";
 import { Playfair_Display, Source_Serif_4, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/Navbar";
+import NavbarAlt from "@/components/NavbarAlt";
 import Footer from "@/components/Footer";
 import AuthProtection from "@/components/AuthProtection";
 import { Analytics } from '@vercel/analytics/react';
@@ -128,7 +128,7 @@ export default function RootLayout({
             <main className="min-h-screen">{children}</main>
           ) : (
             <>
-              <Navbar />
+              <NavbarAlt />
               <main className="flex-grow">{children}</main>
               <Footer />
             </>
