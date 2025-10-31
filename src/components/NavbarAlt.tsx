@@ -325,7 +325,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
 
             {/* Viewport for dropdowns - positioned absolutely to span full width */}
             <div className="absolute left-1/2 -translate-x-1/2 top-full w-screen">
-              <NavigationMenu.Viewport className="w-full bg-white dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-700 shadow-elevation-flyout data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out data-[state=open]:fade-in" />
+              <NavigationMenu.Viewport className="w-full bg-white dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-700 shadow-elevation-flyout overflow-hidden" />
             </div>
           </NavigationMenu.Root>
 

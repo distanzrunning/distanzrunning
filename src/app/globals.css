@@ -835,4 +835,17 @@
   .fade-out {
     animation: fadeOut 200ms ease-in;
   }
+
+  /* Direct Radix NavigationMenu.Viewport animations */
+  [data-radix-navigation-menu-viewport] {
+    transition: width 200ms ease, height 200ms ease;
+  }
+
+  [data-radix-navigation-menu-viewport][data-state="open"] {
+    animation: slideDown 200ms ease-out;
+  }
+
+  [data-radix-navigation-menu-viewport][data-state="closed"] {
+    animation: slideUp 200ms ease-in;
+  }
 }
