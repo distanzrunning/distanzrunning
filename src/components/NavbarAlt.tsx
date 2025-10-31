@@ -250,19 +250,19 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                           {featuredGear ? (
                             <Link
                               href={`/gear/${featuredGear.slug.current}`}
-                              className="block group"
+                              className="block p-3 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
                             >
                               <div className="relative w-full aspect-[16/9] rounded-lg overflow-hidden bg-neutral-100 dark:bg-neutral-800 mb-2">
                                 <img
                                   src={urlFor(featuredGear.mainImage).width(400).height(225).fit('crop').url()}
                                   alt={featuredGear.title}
-                                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                  className="w-full h-full object-cover"
                                 />
                               </div>
                               <div className="text-xs font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-1">
                                 Featured article
                               </div>
-                              <h4 className="text-sm font-semibold text-neutral-900 dark:text-white mb-1 group-hover:text-electric-pink dark:group-hover:text-electric-pink transition-colors line-clamp-2">
+                              <h4 className="text-sm font-semibold text-neutral-900 dark:text-white mb-1 line-clamp-2">
                                 {featuredGear.title}
                               </h4>
                               {featuredGear.excerpt && (
@@ -351,19 +351,19 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                           {featuredRace ? (
                             <Link
                               href={`/races/${featuredRace.slug.current}`}
-                              className="block group"
+                              className="block p-3 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
                             >
                               <div className="relative w-full aspect-[16/9] rounded-lg overflow-hidden bg-neutral-100 dark:bg-neutral-800 mb-2">
                                 <img
                                   src={urlFor(featuredRace.mainImage).width(400).height(225).fit('crop').url()}
                                   alt={featuredRace.title}
-                                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                  className="w-full h-full object-cover"
                                 />
                               </div>
                               <div className="text-xs font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-1">
                                 Featured race
                               </div>
-                              <h4 className="text-sm font-semibold text-neutral-900 dark:text-white mb-1 group-hover:text-electric-pink dark:group-hover:text-electric-pink transition-colors line-clamp-2">
+                              <h4 className="text-sm font-semibold text-neutral-900 dark:text-white mb-1 line-clamp-2">
                                 {featuredRace.title}
                               </h4>
                               {featuredRace.location && (
