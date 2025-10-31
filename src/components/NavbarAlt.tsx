@@ -71,7 +71,9 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
   return (
     <>
       {/* Desktop & Mobile Header - Fixed */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-white dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-700 transition-colors duration-300" role="banner">
+      <header className={`fixed top-0 left-0 right-0 z-50 bg-white dark:bg-neutral-900 transition-colors duration-300 ${
+        activeDropdown ? 'border-b-0' : 'border-b border-neutral-200 dark:border-neutral-700'
+      }`} role="banner">
 
         {/* Skip Links for Accessibility */}
         <a href="#content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-white px-4 py-2 rounded-md shadow-lg z-[100]">
@@ -144,7 +146,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
 
             {/* Single Shared Dropdown Container - Medusa Style */}
             <div
-              className={`fixed left-0 right-0 top-16 w-screen bg-white dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-700 shadow-elevation-flyout z-40 transition-all duration-200 ease-in-out ${
+              className={`fixed left-0 right-0 top-16 w-screen bg-white dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-700 shadow-elevation-flyout z-50 transition-all duration-200 ease-in-out ${
                 activeDropdown ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 -translate-y-2 pointer-events-none'
               }`}
               onMouseEnter={() => activeDropdown && handleDropdownEnter(activeDropdown)}
