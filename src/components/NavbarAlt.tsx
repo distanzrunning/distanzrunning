@@ -1,7 +1,7 @@
 // src/components/NavbarAlt.tsx
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import Link from 'next/link'
 import * as Dialog from '@radix-ui/react-dialog'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
@@ -18,12 +18,21 @@ import {
   UtensilsCrossed,
   FileText,
   Database,
-  ArrowLeft
+  ArrowLeft,
+  Moon,
+  Sun
 } from 'lucide-react'
+import { DarkModeContext } from './DarkModeProvider'
 
 export default function NavbarAlt() {
+  const { isDark, toggleDarkMode } = useContext(DarkModeContext)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [mobileSubMenu, setMobileSubMenu] = useState<'main' | 'gear' | 'races'>('main')
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   return (
     <>
@@ -215,12 +224,28 @@ export default function NavbarAlt() {
             </nav>
           </div>
 
-          {/* Right: Newsletter CTA + Mobile Menu */}
+          {/* Right: Dark Mode + Newsletter CTA + Mobile Menu */}
           <div className="flex items-center gap-3">
-            {/* Newsletter Button - Desktop */}
+            {/* Dark Mode Toggle */}
+            {mounted && (
+              <button
+                onClick={toggleDarkMode}
+                className="p-2 text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors duration-200"
+                aria-label="Toggle dark mode"
+                title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+              >
+                {isDark ? (
+                  <Sun className="h-5 w-5" />
+                ) : (
+                  <Moon className="h-5 w-5" />
+                )}
+              </button>
+            )}
+
+            {/* Newsletter Button - Desktop - Subtle hover like Quartr */}
             <Link
               href="/newsletter"
-              className="hidden md:inline-flex items-center px-4 py-2 text-sm font-semibold text-white bg-neutral-900 dark:bg-white dark:text-neutral-900 hover:bg-electric-pink dark:hover:bg-electric-pink dark:hover:text-white rounded-md transition-colors duration-200"
+              className="hidden md:inline-flex items-center px-4 h-9 text-sm font-semibold text-white bg-neutral-900 dark:bg-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-100 rounded-md transition-all duration-200 ease-out active:scale-[0.98]"
             >
               Newsletter
             </Link>
@@ -306,7 +331,7 @@ export default function NavbarAlt() {
                         <div className="pt-6 border-t border-neutral-200 dark:border-neutral-700">
                           <Link
                             href="/newsletter"
-                            className="block w-full text-center px-6 py-3 text-base font-semibold text-white bg-neutral-900 dark:bg-white dark:text-neutral-900 hover:bg-electric-pink dark:hover:bg-electric-pink dark:hover:text-white rounded-md transition-colors duration-200"
+                            className="block w-full text-center px-6 py-3 text-base font-semibold text-white bg-neutral-900 dark:bg-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-100 rounded-md transition-all duration-200 ease-out active:scale-[0.98]"
                             onClick={() => setMobileMenuOpen(false)}
                           >
                             Subscribe to Newsletter
