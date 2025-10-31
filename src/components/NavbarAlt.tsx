@@ -120,7 +120,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                 </div>
 
                 {gearDropdownOpen && (
-                  <div className="overflow-hidden shadow-lg absolute top-full left-1/2 -translate-x-1/2 w-screen bg-white dark:bg-neutral-900 border-t border-b border-neutral-200 dark:border-neutral-700 z-50 animate-in fade-in duration-150">
+                  <div className="overflow-hidden shadow-elevation-flyout fixed left-0 right-0 top-16 w-screen bg-white dark:bg-neutral-900 border-t border-b border-neutral-200 dark:border-neutral-700 z-50 animate-in fade-in duration-150">
                     <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-6">
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 
