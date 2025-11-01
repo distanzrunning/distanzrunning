@@ -66,7 +66,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
         <div className="flex items-center justify-between px-4 md:px-6 lg:px-8 h-16">
 
           {/* Left: Logo + Navigation */}
-          <NavigationMenu.Root className="flex items-center gap-6" value={navValue} onValueChange={setNavValue}>
+          <div className="flex items-center gap-6">
             {/* Logo */}
             <Link href="/" className="flex items-center flex-shrink-0" title="Home">
               <img
@@ -82,7 +82,8 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
             </Link>
 
             {/* Desktop Navigation - Radix UI */}
-            <NavigationMenu.List className="hidden lg:flex items-center gap-1">
+            <NavigationMenu.Root value={navValue} onValueChange={setNavValue}>
+              <NavigationMenu.List className="hidden lg:flex items-center gap-1">
                 {/* Road Link */}
                 <NavigationMenu.Item>
                   <NavigationMenu.Link asChild>
@@ -360,6 +361,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
               </AnimatePresence>
             </div>
           </NavigationMenu.Root>
+          </div>
 
           {/* Right: Newsletter CTA + Dark Mode + Mobile Menu */}
           <div className="flex items-center gap-3">
