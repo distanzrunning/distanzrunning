@@ -836,32 +836,116 @@
     animation: fadeOut 200ms ease-in;
   }
 
-  /* Radix NavigationMenu.Viewport - smooth size transitions */
+  /* Radix NavigationMenu.Viewport - uses CSS custom properties from Radix */
   [data-radix-navigation-menu-viewport] {
+    position: relative;
+    transform-origin: top center;
+    width: 100%;
+    height: var(--radix-navigation-menu-viewport-height);
     transition: width 300ms ease, height 300ms ease;
   }
 
-  /* Viewport open/close animations */
+  /* Viewport open/close animations - Radix style with 3D transforms */
   [data-radix-navigation-menu-viewport][data-state="open"] {
-    animation: slideDown 200ms ease-out;
+    animation: scaleIn 200ms ease;
   }
 
   [data-radix-navigation-menu-viewport][data-state="closed"] {
-    animation: slideUp 200ms ease-in;
+    animation: scaleOut 200ms ease;
   }
 
-  /* Content fade animations when switching between dropdowns */
+  /* Content motion animations when switching between dropdowns */
   [data-radix-navigation-menu-content] {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
     animation-duration: 200ms;
     animation-timing-function: ease;
   }
 
-  [data-radix-navigation-menu-content][data-state="open"] {
-    animation-name: fadeIn;
+  [data-radix-navigation-menu-content][data-motion="from-start"] {
+    animation-name: enterFromLeft;
   }
 
-  [data-radix-navigation-menu-content][data-state="closed"] {
-    animation-name: fadeOut;
+  [data-radix-navigation-menu-content][data-motion="from-end"] {
+    animation-name: enterFromRight;
+  }
+
+  [data-radix-navigation-menu-content][data-motion="to-start"] {
+    animation-name: exitToLeft;
+  }
+
+  [data-radix-navigation-menu-content][data-motion="to-end"] {
+    animation-name: exitToRight;
+  }
+
+  /* Radix viewport 3D scale animations */
+  @keyframes scaleIn {
+    from {
+      opacity: 0;
+      transform: rotateX(-30deg) scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: rotateX(0deg) scale(1);
+    }
+  }
+
+  @keyframes scaleOut {
+    from {
+      opacity: 1;
+      transform: rotateX(0deg) scale(1);
+    }
+    to {
+      opacity: 0;
+      transform: rotateX(-10deg) scale(0.95);
+    }
+  }
+
+  /* Content slide animations for switching */
+  @keyframes enterFromRight {
+    from {
+      opacity: 0;
+      transform: translateX(200px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes enterFromLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-200px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes exitToRight {
+    from {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateX(200px);
+    }
+  }
+
+  @keyframes exitToLeft {
+    from {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateX(-200px);
+    }
   }
 
   /* Shadow for dropdown - no effect on top, only sides and bottom */
