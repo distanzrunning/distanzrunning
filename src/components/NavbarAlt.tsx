@@ -82,58 +82,59 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
             </Link>
 
             {/* Desktop Navigation - Radix UI */}
-            <NavigationMenu.Root className="relative" value={navValue} onValueChange={setNavValue}>
-              <NavigationMenu.List className="hidden lg:flex items-center gap-1">
-                {/* Road Link */}
-                <NavigationMenu.Item>
-                  <NavigationMenu.Link asChild>
-                    <Link
-                      href="/articles/category/road"
-                      className="px-3 py-2 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800"
-                    >
-                      Road
-                    </Link>
-                  </NavigationMenu.Link>
-                </NavigationMenu.Item>
+            <div className="relative">
+              <NavigationMenu.Root className="relative z-10" value={navValue} onValueChange={setNavValue}>
+                <NavigationMenu.List className="hidden lg:flex items-center gap-1">
+                  {/* Road Link */}
+                  <NavigationMenu.Item>
+                    <NavigationMenu.Link asChild>
+                      <Link
+                        href="/articles/category/road"
+                        className="px-3 py-2 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                      >
+                        Road
+                      </Link>
+                    </NavigationMenu.Link>
+                  </NavigationMenu.Item>
 
-                {/* Track Link */}
-                <NavigationMenu.Item>
-                  <NavigationMenu.Link asChild>
-                    <Link
-                      href="/articles/category/track"
-                      className="px-3 py-2 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800"
-                    >
-                      Track
-                    </Link>
-                  </NavigationMenu.Link>
-                </NavigationMenu.Item>
+                  {/* Track Link */}
+                  <NavigationMenu.Item>
+                    <NavigationMenu.Link asChild>
+                      <Link
+                        href="/articles/category/track"
+                        className="px-3 py-2 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                      >
+                        Track
+                      </Link>
+                    </NavigationMenu.Link>
+                  </NavigationMenu.Item>
 
-                {/* Trail Link */}
-                <NavigationMenu.Item>
-                  <NavigationMenu.Link asChild>
-                    <Link
-                      href="/articles/category/trail"
-                      className="px-3 py-2 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800"
-                    >
-                      Trail
-                    </Link>
-                  </NavigationMenu.Link>
-                </NavigationMenu.Item>
+                  {/* Trail Link */}
+                  <NavigationMenu.Item>
+                    <NavigationMenu.Link asChild>
+                      <Link
+                        href="/articles/category/trail"
+                        className="px-3 py-2 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                      >
+                        Trail
+                      </Link>
+                    </NavigationMenu.Link>
+                  </NavigationMenu.Item>
 
-                {/* Gear Dropdown */}
-                <NavigationMenu.Item value="gear">
-                  <NavigationMenu.Trigger className="flex items-center gap-1 px-3 py-1 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200 data-[state=open]:text-neutral-900 dark:data-[state=open]:text-white">
-                    Gear
-                    <ChevronDown className="h-4 w-4" aria-hidden />
-                  </NavigationMenu.Trigger>
-                  <NavigationMenu.Content asChild forceMount>
-                    <motion.div
-                      className="w-screen max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-8"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: navValue === 'gear' ? 1 : 0 }}
-                      transition={{ duration: 0.2 }}
-                      style={{ pointerEvents: navValue === 'gear' ? 'auto' : 'none' }}
-                    >
+                  {/* Gear Dropdown */}
+                  <NavigationMenu.Item value="gear">
+                    <NavigationMenu.Trigger className="flex items-center gap-1 px-3 py-1 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200 data-[state=open]:text-neutral-900 dark:data-[state=open]:text-white">
+                      Gear
+                      <ChevronDown className="h-4 w-4" aria-hidden />
+                    </NavigationMenu.Trigger>
+                    <NavigationMenu.Content asChild forceMount>
+                      <motion.div
+                        className="w-screen max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-8"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: navValue === 'gear' ? 1 : 0 }}
+                        transition={{ duration: 0.2 }}
+                        style={{ pointerEvents: navValue === 'gear' ? 'auto' : 'none' }}
+                      >
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                         {/* Column 1: Description */}
                         <div className="border-r border-neutral-200 dark:border-neutral-700 pr-8">
@@ -252,24 +253,24 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                           )}
                         </div>
                       </div>
-                    </motion.div>
-                  </NavigationMenu.Content>
-                </NavigationMenu.Item>
+                      </motion.div>
+                    </NavigationMenu.Content>
+                  </NavigationMenu.Item>
 
-                {/* Races Dropdown */}
-                <NavigationMenu.Item value="races">
-                  <NavigationMenu.Trigger className="flex items-center gap-1 px-3 py-1 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200 data-[state=open]:text-neutral-900 dark:data-[state=open]:text-white">
-                    Races
-                    <ChevronDown className="h-4 w-4" aria-hidden />
-                  </NavigationMenu.Trigger>
-                  <NavigationMenu.Content asChild forceMount>
-                    <motion.div
-                      className="w-screen max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-8"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: navValue === 'races' ? 1 : 0 }}
-                      transition={{ duration: 0.2 }}
-                      style={{ pointerEvents: navValue === 'races' ? 'auto' : 'none' }}
-                    >
+                  {/* Races Dropdown */}
+                  <NavigationMenu.Item value="races">
+                    <NavigationMenu.Trigger className="flex items-center gap-1 px-3 py-1 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200 data-[state=open]:text-neutral-900 dark:data-[state=open]:text-white">
+                      Races
+                      <ChevronDown className="h-4 w-4" aria-hidden />
+                    </NavigationMenu.Trigger>
+                    <NavigationMenu.Content asChild forceMount>
+                      <motion.div
+                        className="w-screen max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-8"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: navValue === 'races' ? 1 : 0 }}
+                        transition={{ duration: 0.2 }}
+                        style={{ pointerEvents: navValue === 'races' ? 'auto' : 'none' }}
+                      >
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                         {/* Column 1: Description */}
                         <div className="border-r border-neutral-200 dark:border-neutral-700 pr-8">
@@ -338,29 +339,30 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                           )}
                         </div>
                       </div>
-                    </motion.div>
-                  </NavigationMenu.Content>
-                </NavigationMenu.Item>
+                      </motion.div>
+                    </NavigationMenu.Content>
+                  </NavigationMenu.Item>
 
-              </NavigationMenu.List>
+                </NavigationMenu.List>
 
-            {/* Viewport for dropdowns - positioned absolutely to span full width */}
-            <div className="absolute left-0 top-full w-screen">
-              <AnimatePresence>
-                {navValue && (
-                  <NavigationMenu.Viewport forceMount asChild>
-                    <motion.div
-                      className="relative left-1/2 -translate-x-1/2 bg-white dark:bg-neutral-900 border-t border-b border-neutral-200 dark:border-neutral-700 shadow-elevation-flyout overflow-hidden"
-                      initial={{ opacity: 0, y: -8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -8 }}
-                      transition={{ duration: 0.2, ease: 'easeOut' }}
-                    />
-                  </NavigationMenu.Viewport>
-                )}
-              </AnimatePresence>
+                {/* Viewport for dropdowns - positioned absolutely to span full width */}
+                <div className="absolute left-0 top-full w-screen perspective-[2000px]">
+                  <AnimatePresence>
+                    {navValue && (
+                      <NavigationMenu.Viewport asChild forceMount>
+                        <motion.div
+                          className="relative left-1/2 -translate-x-1/2 bg-white dark:bg-neutral-900 border-t border-b border-neutral-200 dark:border-neutral-700 shadow-elevation-flyout overflow-hidden origin-top-center"
+                          initial={{ opacity: 0, y: -8 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -8 }}
+                          transition={{ duration: 0.2, ease: 'easeOut' }}
+                        />
+                      </NavigationMenu.Viewport>
+                    )}
+                  </AnimatePresence>
+                </div>
+              </NavigationMenu.Root>
             </div>
-          </NavigationMenu.Root>
           </div>
 
           {/* Right: Newsletter CTA + Dark Mode + Mobile Menu */}
