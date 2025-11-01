@@ -5,6 +5,7 @@ import { useState, useEffect, useContext } from 'react'
 import Link from 'next/link'
 import * as Dialog from '@radix-ui/react-dialog'
 import * as NavigationMenu from '@radix-ui/react-navigation-menu'
+import { motion, AnimatePresence } from 'framer-motion'
 import {
   Menu,
   X,
@@ -46,6 +47,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [mobileSubMenu, setMobileSubMenu] = useState<'main' | 'gear' | 'races'>('main')
   const [mounted, setMounted] = useState(false)
+  const [navValue, setNavValue] = useState('')
 
   useEffect(() => {
     setMounted(true)
@@ -64,7 +66,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
         <div className="flex items-center justify-between px-4 md:px-6 lg:px-8 h-16">
 
           {/* Left: Logo + Navigation */}
-          <NavigationMenu.Root className="flex items-center gap-6">
+          <NavigationMenu.Root className="flex items-center gap-6" value={navValue} onValueChange={setNavValue}>
             {/* Logo */}
             <Link href="/" className="flex items-center flex-shrink-0" title="Home">
               <img
@@ -112,13 +114,19 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                 </NavigationMenu.Item>
 
                 {/* Gear Dropdown */}
-                <NavigationMenu.Item>
+                <NavigationMenu.Item value="gear">
                   <NavigationMenu.Trigger className="flex items-center gap-1 px-3 py-1 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200 data-[state=open]:text-neutral-900 dark:data-[state=open]:text-white">
                     Gear
                     <ChevronDown className="h-4 w-4" aria-hidden />
                   </NavigationMenu.Trigger>
-                  <NavigationMenu.Content>
-                    <div className="w-screen max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-8">
+                  <NavigationMenu.Content asChild forceMount>
+                    <motion.div
+                      className="w-screen max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-8"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: navValue === 'gear' ? 1 : 0 }}
+                      transition={{ duration: 0.2 }}
+                      style={{ pointerEvents: navValue === 'gear' ? 'auto' : 'none' }}
+                    >
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                         {/* Column 1: Description */}
                         <div className="border-r border-neutral-200 dark:border-neutral-700 pr-8">
@@ -237,18 +245,24 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                           )}
                         </div>
                       </div>
-                    </div>
+                    </motion.div>
                   </NavigationMenu.Content>
                 </NavigationMenu.Item>
 
                 {/* Races Dropdown */}
-                <NavigationMenu.Item>
+                <NavigationMenu.Item value="races">
                   <NavigationMenu.Trigger className="flex items-center gap-1 px-3 py-1 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200 data-[state=open]:text-neutral-900 dark:data-[state=open]:text-white">
                     Races
                     <ChevronDown className="h-4 w-4" aria-hidden />
                   </NavigationMenu.Trigger>
-                  <NavigationMenu.Content>
-                    <div className="w-screen max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-8">
+                  <NavigationMenu.Content asChild forceMount>
+                    <motion.div
+                      className="w-screen max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-8"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: navValue === 'races' ? 1 : 0 }}
+                      transition={{ duration: 0.2 }}
+                      style={{ pointerEvents: navValue === 'races' ? 'auto' : 'none' }}
+                    >
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                         {/* Column 1: Description */}
                         <div className="border-r border-neutral-200 dark:border-neutral-700 pr-8">
@@ -317,7 +331,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                           )}
                         </div>
                       </div>
-                    </div>
+                    </motion.div>
                   </NavigationMenu.Content>
                 </NavigationMenu.Item>
 
@@ -325,7 +339,19 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
 
             {/* Viewport for dropdowns - positioned absolutely to span full width */}
             <div className="absolute left-0 top-full w-screen">
-              <NavigationMenu.Viewport className="relative left-1/2 -translate-x-1/2 bg-white dark:bg-neutral-900 border-t border-b border-neutral-200 dark:border-neutral-700 shadow-elevation-flyout overflow-hidden" />
+              <AnimatePresence>
+                {navValue && (
+                  <NavigationMenu.Viewport forceMount asChild>
+                    <motion.div
+                      className="relative left-1/2 -translate-x-1/2 bg-white dark:bg-neutral-900 border-t border-b border-neutral-200 dark:border-neutral-700 shadow-elevation-flyout overflow-hidden"
+                      initial={{ opacity: 0, y: -8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -8 }}
+                      transition={{ duration: 0.2, ease: 'easeOut' }}
+                    />
+                  </NavigationMenu.Viewport>
+                )}
+              </AnimatePresence>
             </div>
           </NavigationMenu.Root>
 
