@@ -5,7 +5,7 @@ import { useState, useEffect, useContext } from 'react'
 import Link from 'next/link'
 import * as Dialog from '@radix-ui/react-dialog'
 import * as NavigationMenu from '@radix-ui/react-navigation-menu'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import {
   Menu,
   X,
@@ -127,9 +127,9 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                       Gear
                       <ChevronDown className="h-4 w-4" aria-hidden />
                     </NavigationMenu.Trigger>
-                    <NavigationMenu.Content forceMount>
+                    <NavigationMenu.Content asChild forceMount>
                       <motion.div
-                        className="w-screen max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-8"
+                        className="absolute left-1/2 top-full z-40 w-screen max-w-7xl -translate-x-1/2 px-4 md:px-6 lg:px-8 py-8 bg-white dark:bg-neutral-900 border-t border-b border-neutral-200 dark:border-neutral-700 shadow-elevation-flyout overflow-hidden"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: navValue === 'gear' ? 1 : 0 }}
                         transition={{ duration: 0.2 }}
@@ -263,9 +263,9 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                       Races
                       <ChevronDown className="h-4 w-4" aria-hidden />
                     </NavigationMenu.Trigger>
-                    <NavigationMenu.Content forceMount>
+                    <NavigationMenu.Content asChild forceMount>
                       <motion.div
-                        className="w-screen max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-8"
+                        className="absolute left-1/2 top-full z-40 w-screen max-w-7xl -translate-x-1/2 px-4 md:px-6 lg:px-8 py-8 bg-white dark:bg-neutral-900 border-t border-b border-neutral-200 dark:border-neutral-700 shadow-elevation-flyout overflow-hidden"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: navValue === 'races' ? 1 : 0 }}
                         transition={{ duration: 0.2 }}
@@ -344,23 +344,6 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                   </NavigationMenu.Item>
 
                 </NavigationMenu.List>
-
-                {/* Viewport for dropdowns - positioned absolutely to span full width */}
-                <div className="absolute left-1/2 -translate-x-1/2 top-full w-screen perspective-[2000px]">
-                  <AnimatePresence>
-                    {navValue && (
-                      <NavigationMenu.Viewport asChild forceMount>
-                        <motion.div
-                          className="bg-white dark:bg-neutral-900 border-t border-b border-neutral-200 dark:border-neutral-700 shadow-elevation-flyout overflow-hidden origin-top-center"
-                          initial={{ opacity: 0, y: -8 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: -8 }}
-                          transition={{ duration: 0.2, ease: 'easeOut' }}
-                        />
-                      </NavigationMenu.Viewport>
-                    )}
-                  </AnimatePresence>
-                </div>
               </NavigationMenu.Root>
             </div>
           </div>
