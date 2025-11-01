@@ -129,7 +129,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                     </NavigationMenu.Trigger>
                     <NavigationMenu.Content asChild forceMount>
                       <motion.div
-                        className="absolute left-1/2 top-full z-40 w-screen max-w-7xl -translate-x-1/2 px-4 md:px-6 lg:px-8 py-8 bg-white dark:bg-neutral-900 border-t border-b border-neutral-200 dark:border-neutral-700 shadow-elevation-flyout overflow-hidden"
+                        className="fixed left-1/2 top-[calc(4rem+1px)] z-40 w-screen max-w-7xl -translate-x-1/2 px-4 md:px-6 lg:px-8 py-8 bg-white dark:bg-neutral-900 border-t border-b border-neutral-200 dark:border-neutral-700 shadow-elevation-flyout overflow-hidden pointer-events-none data-[state=open]:pointer-events-auto"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: navValue === 'gear' ? 1 : 0 }}
                         transition={{ duration: 0.2 }}
@@ -265,7 +265,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                     </NavigationMenu.Trigger>
                     <NavigationMenu.Content asChild forceMount>
                       <motion.div
-                        className="absolute left-1/2 top-full z-40 w-screen max-w-7xl -translate-x-1/2 px-4 md:px-6 lg:px-8 py-8 bg-white dark:bg-neutral-900 border-t border-b border-neutral-200 dark:border-neutral-700 shadow-elevation-flyout overflow-hidden"
+                        className="fixed left-1/2 top-[calc(4rem+1px)] z-40 w-screen max-w-7xl -translate-x-1/2 px-4 md:px-6 lg:px-8 py-8 bg-white dark:bg-neutral-900 border-t border-b border-neutral-200 dark:border-neutral-700 shadow-elevation-flyout overflow-hidden pointer-events-none data-[state=open]:pointer-events-auto"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: navValue === 'races' ? 1 : 0 }}
                         transition={{ duration: 0.2 }}
