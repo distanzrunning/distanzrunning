@@ -44,27 +44,29 @@ type NavbarAltProps = {
 
 const dropdownVariants = {
   closed: (shouldSlide: boolean) => ({
-    opacity: 0,
-    scaleY: shouldSlide ? 0.92 : 1,
-    y: shouldSlide ? -12 : 0,
-    transition: { duration: 0.18, ease: [0.4, 0, 0.2, 1] }
+    opacity: shouldSlide ? 0 : 1,
+    scaleY: shouldSlide ? 0.88 : 1,
+    transformOrigin: 'top center',
+    transition: { duration: 0.2, ease: [0.4, 0, 0.2, 1] }
   }),
   open: {
     opacity: 1,
     scaleY: 1,
-    y: 0,
-    transition: { duration: 0.24, ease: [0.16, 1, 0.3, 1] }
+    transformOrigin: 'top center',
+    transition: { duration: 0.26, ease: [0.16, 1, 0.3, 1] }
   }
 }
 
 const panelContentVariants = {
   closed: {
     opacity: 0,
-    transition: { duration: 0.16, ease: 'easeInOut' }
+    x: -12,
+    transition: { duration: 0.16, ease: [0.4, 0, 0.2, 1] }
   },
   open: {
     opacity: 1,
-    transition: { duration: 0.24, ease: 'easeOut', delay: 0.04 }
+    x: 0,
+    transition: { duration: 0.22, ease: [0.16, 1, 0.3, 1] }
   }
 }
 
@@ -162,11 +164,11 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                         initial="closed"
                         animate={navValue === 'gear' ? 'open' : 'closed'}
                         custom={navValue === ''}
-                        style={{ pointerEvents: navValue === 'gear' ? 'auto' : 'none', transformOrigin: 'top center' }}
+                        style={{ pointerEvents: navValue === 'gear' ? 'auto' : 'none' }}
                         transition={{
-                          duration: 0.24,
+                          duration: 0.26,
                           ease: [0.16, 1, 0.3, 1],
-                          layout: { duration: 0.25, ease: [0.16, 1, 0.3, 1] }
+                          layout: { duration: 0.26, ease: [0.16, 1, 0.3, 1] }
                         }}
                       >
                         <motion.div
@@ -314,11 +316,11 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                         initial="closed"
                         animate={navValue === 'races' ? 'open' : 'closed'}
                         custom={navValue === ''}
-                        style={{ pointerEvents: navValue === 'races' ? 'auto' : 'none', transformOrigin: 'top center' }}
+                        style={{ pointerEvents: navValue === 'races' ? 'auto' : 'none' }}
                         transition={{
-                          duration: 0.24,
+                          duration: 0.26,
                           ease: [0.16, 1, 0.3, 1],
-                          layout: { duration: 0.25, ease: [0.16, 1, 0.3, 1] }
+                          layout: { duration: 0.26, ease: [0.16, 1, 0.3, 1] }
                         }}
                       >
                         <motion.div
