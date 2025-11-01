@@ -836,20 +836,32 @@
     animation: fadeOut 200ms ease-in;
   }
 
-  /* Direct Radix NavigationMenu.Viewport animations */
+  /* Radix NavigationMenu.Viewport - smooth size transitions */
   [data-radix-navigation-menu-viewport] {
-    transition: width 200ms ease, height 200ms ease;
+    transition: width 300ms ease, height 300ms ease;
   }
 
-  /* Viewport animations - using both attribute selectors for compatibility */
-  [data-radix-navigation-menu-viewport][data-state="open"],
-  [data-state="open"][data-radix-navigation-menu-viewport] {
-    animation: slideDown 200ms ease-out forwards;
+  /* Viewport open/close animations */
+  [data-radix-navigation-menu-viewport][data-state="open"] {
+    animation: slideDown 200ms ease-out;
   }
 
-  [data-radix-navigation-menu-viewport][data-state="closed"],
-  [data-state="closed"][data-radix-navigation-menu-viewport] {
-    animation: slideUp 200ms ease-in forwards;
+  [data-radix-navigation-menu-viewport][data-state="closed"] {
+    animation: slideUp 200ms ease-in;
+  }
+
+  /* Content fade animations when switching between dropdowns */
+  [data-radix-navigation-menu-content] {
+    animation-duration: 200ms;
+    animation-timing-function: ease;
+  }
+
+  [data-radix-navigation-menu-content][data-state="open"] {
+    animation-name: fadeIn;
+  }
+
+  [data-radix-navigation-menu-content][data-state="closed"] {
+    animation-name: fadeOut;
   }
 
   /* Shadow for dropdown - no effect on top, only sides and bottom */
