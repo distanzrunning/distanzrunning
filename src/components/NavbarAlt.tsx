@@ -56,17 +56,17 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
   return (
     <>
       {/* Desktop & Mobile Header - Fixed */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-white dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-700 transition-colors duration-300" role="banner">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-white dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-700 transition-colors duration-300 overflow-visible" role="banner">
 
         {/* Skip Links for Accessibility */}
         <a href="#content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-white px-4 py-2 rounded-md shadow-lg z-[100]">
           Skip to Content
         </a>
 
-        <div className="flex items-center justify-between px-4 md:px-6 lg:px-8 h-16">
+        <div className="flex items-center justify-between px-4 md:px-6 lg:px-8 h-16 overflow-visible">
 
           {/* Left: Logo + Navigation */}
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-6 overflow-visible">
             {/* Logo */}
             <Link href="/" className="flex items-center flex-shrink-0" title="Home">
               <img
