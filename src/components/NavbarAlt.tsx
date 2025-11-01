@@ -135,124 +135,126 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                         transition={{ duration: 0.2 }}
                         style={{ pointerEvents: navValue === 'gear' ? 'auto' : 'none' }}
                       >
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                          {/* Column 1: Description */}
-                          <div className="border-r border-neutral-200 dark:border-neutral-700 pr-8">
-                            <h3 className="font-playfair text-2xl font-semibold text-neutral-900 dark:text-white mb-3">
-                              Gear
-                            </h3>
-                            <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
-                              From carbon-plated race shoes to GPS watches and nutrition, we review the latest running gear to help you find the perfect equipment for your training and racing goals.
-                            </p>
-                          </div>
+                        <div className="mx-auto w-full max-w-7xl">
+                          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                            {/* Column 1: Description */}
+                            <div className="border-r border-neutral-200 dark:border-neutral-700 pr-8">
+                              <h3 className="font-playfair text-2xl font-semibold text-neutral-900 dark:text-white mb-3">
+                                Gear
+                              </h3>
+                              <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                                From carbon-plated race shoes to GPS watches and nutrition, we review the latest running gear to help you find the perfect equipment for your training and racing goals.
+                              </p>
+                            </div>
 
-                        {/* Column 2: Category Links */}
-                        <div className="flex flex-col gap-0.5">
-                          <Link
-                            href="/gear/category/race-day-shoes"
-                            className="flex items-center gap-3 px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-colors"
-                          >
-                            <Flag className="h-4 w-4 flex-shrink-0" />
-                            <div className="flex-1">
-                              <div className="font-semibold">Race Day Shoes</div>
-                              <div className="text-xs text-neutral-500 dark:text-neutral-400">Carbon plate shoes for PRs</div>
+                            {/* Column 2: Category Links */}
+                            <div className="flex flex-col gap-0.5">
+                              <Link
+                                href="/gear/category/race-day-shoes"
+                                className="flex items-center gap-3 px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-colors"
+                              >
+                                <Flag className="h-4 w-4 flex-shrink-0" />
+                                <div className="flex-1">
+                                  <div className="font-semibold">Race Day Shoes</div>
+                                  <div className="text-xs text-neutral-500 dark:text-neutral-400">Carbon plate shoes for PRs</div>
+                                </div>
+                              </Link>
+                              <Link
+                                href="/gear/category/daily-trainers"
+                                className="flex items-center gap-3 px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-colors"
+                              >
+                                <Calendar className="h-4 w-4 flex-shrink-0" />
+                                <div className="flex-1">
+                                  <div className="font-semibold">Daily Trainers</div>
+                                  <div className="text-xs text-neutral-500 dark:text-neutral-400">Everyday runners</div>
+                                </div>
+                              </Link>
+                              <Link
+                                href="/gear/category/max-cushion-shoes"
+                                className="flex items-center gap-3 px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-colors"
+                              >
+                                <Footprints className="h-4 w-4 flex-shrink-0" />
+                                <div className="flex-1">
+                                  <div className="font-semibold">Max Cushion</div>
+                                  <div className="text-xs text-neutral-500 dark:text-neutral-400">Recovery and long runs</div>
+                                </div>
+                              </Link>
+                              <Link
+                                href="/gear/category/tempo-shoes"
+                                className="flex items-center gap-3 px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-colors"
+                              >
+                                <Zap className="h-4 w-4 flex-shrink-0" />
+                                <div className="flex-1">
+                                  <div className="font-semibold">Tempo Shoes</div>
+                                  <div className="text-xs text-neutral-500 dark:text-neutral-400">Speed work essentials</div>
+                                </div>
+                              </Link>
+                              <Link
+                                href="/gear/category/trail-shoes"
+                                className="flex items-center gap-3 px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-colors"
+                              >
+                                <MountainSnow className="h-4 w-4 flex-shrink-0" />
+                                <div className="flex-1">
+                                  <div className="font-semibold">Trail Shoes</div>
+                                  <div className="text-xs text-neutral-500 dark:text-neutral-400">Off-road adventures</div>
+                                </div>
+                              </Link>
+                              <Link
+                                href="/gear/category/gps-watches"
+                                className="flex items-center gap-3 px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-colors"
+                              >
+                                <Watch className="h-4 w-4 flex-shrink-0" />
+                                <div className="flex-1">
+                                  <div className="font-semibold">GPS Watches</div>
+                                  <div className="text-xs text-neutral-500 dark:text-neutral-400">Track every mile</div>
+                                </div>
+                              </Link>
+                              <Link
+                                href="/gear/category/nutrition"
+                                className="flex items-center gap-3 px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-colors"
+                              >
+                                <UtensilsCrossed className="h-4 w-4 flex-shrink-0" />
+                                <div className="flex-1">
+                                  <div className="font-semibold">Nutrition</div>
+                                  <div className="text-xs text-neutral-500 dark:text-neutral-400">Fuel for distance</div>
+                                </div>
+                              </Link>
                             </div>
-                          </Link>
-                          <Link
-                            href="/gear/category/daily-trainers"
-                            className="flex items-center gap-3 px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-colors"
-                          >
-                            <Calendar className="h-4 w-4 flex-shrink-0" />
-                            <div className="flex-1">
-                              <div className="font-semibold">Daily Trainers</div>
-                              <div className="text-xs text-neutral-500 dark:text-neutral-400">Everyday runners</div>
-                            </div>
-                          </Link>
-                          <Link
-                            href="/gear/category/max-cushion-shoes"
-                            className="flex items-center gap-3 px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-colors"
-                          >
-                            <Footprints className="h-4 w-4 flex-shrink-0" />
-                            <div className="flex-1">
-                              <div className="font-semibold">Max Cushion</div>
-                              <div className="text-xs text-neutral-500 dark:text-neutral-400">Recovery and long runs</div>
-                            </div>
-                          </Link>
-                          <Link
-                            href="/gear/category/tempo-shoes"
-                            className="flex items-center gap-3 px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-colors"
-                          >
-                            <Zap className="h-4 w-4 flex-shrink-0" />
-                            <div className="flex-1">
-                              <div className="font-semibold">Tempo Shoes</div>
-                              <div className="text-xs text-neutral-500 dark:text-neutral-400">Speed work essentials</div>
-                            </div>
-                          </Link>
-                          <Link
-                            href="/gear/category/trail-shoes"
-                            className="flex items-center gap-3 px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-colors"
-                          >
-                            <MountainSnow className="h-4 w-4 flex-shrink-0" />
-                            <div className="flex-1">
-                              <div className="font-semibold">Trail Shoes</div>
-                              <div className="text-xs text-neutral-500 dark:text-neutral-400">Off-road adventures</div>
-                            </div>
-                          </Link>
-                          <Link
-                            href="/gear/category/gps-watches"
-                            className="flex items-center gap-3 px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-colors"
-                          >
-                            <Watch className="h-4 w-4 flex-shrink-0" />
-                            <div className="flex-1">
-                              <div className="font-semibold">GPS Watches</div>
-                              <div className="text-xs text-neutral-500 dark:text-neutral-400">Track every mile</div>
-                            </div>
-                          </Link>
-                          <Link
-                            href="/gear/category/nutrition"
-                            className="flex items-center gap-3 px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-colors"
-                          >
-                            <UtensilsCrossed className="h-4 w-4 flex-shrink-0" />
-                            <div className="flex-1">
-                              <div className="font-semibold">Nutrition</div>
-                              <div className="text-xs text-neutral-500 dark:text-neutral-400">Fuel for distance</div>
-                            </div>
-                          </Link>
-                        </div>
 
-                        {/* Column 3: Featured Article */}
-                        <div>
-                          {featuredGear ? (
-                            <Link
-                              href={`/gear/${featuredGear.slug.current}`}
-                              className="block p-3 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-                            >
-                              <div className="relative w-full aspect-[16/9] rounded-lg overflow-hidden bg-neutral-100 dark:bg-neutral-800 mb-2">
-                                <img
-                                  src={urlFor(featuredGear.mainImage).width(400).height(225).fit('crop').url()}
-                                  alt={featuredGear.title}
-                                  className="w-full h-full object-cover"
-                                />
-                              </div>
-                              <div className="text-xs font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-1">
-                                Featured article
-                              </div>
-                              <h4 className="text-sm font-semibold text-neutral-900 dark:text-white mb-1 line-clamp-2">
-                                {featuredGear.title}
-                              </h4>
-                              {featuredGear.excerpt && (
-                                <p className="text-xs text-neutral-600 dark:text-neutral-400 line-clamp-2">
-                                  {featuredGear.excerpt}
-                                </p>
+                            {/* Column 3: Featured Article */}
+                            <div>
+                              {featuredGear ? (
+                                <Link
+                                  href={`/gear/${featuredGear.slug.current}`}
+                                  className="block p-3 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                                >
+                                  <div className="relative w-full aspect-[16/9] rounded-lg overflow-hidden bg-neutral-100 dark:bg-neutral-800 mb-2">
+                                    <img
+                                      src={urlFor(featuredGear.mainImage).width(400).height(225).fit('crop').url()}
+                                      alt={featuredGear.title}
+                                      className="w-full h-full object-cover"
+                                    />
+                                  </div>
+                                  <div className="text-xs font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-1">
+                                    Featured article
+                                  </div>
+                                  <h4 className="text-sm font-semibold text-neutral-900 dark:text-white mb-1 line-clamp-2">
+                                    {featuredGear.title}
+                                  </h4>
+                                  {featuredGear.excerpt && (
+                                    <p className="text-xs text-neutral-600 dark:text-neutral-400 line-clamp-2">
+                                      {featuredGear.excerpt}
+                                    </p>
+                                  )}
+                                </Link>
+                              ) : (
+                                <div className="aspect-[16/9] rounded-lg bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center">
+                                  <p className="text-neutral-400 dark:text-neutral-600 text-xs">No featured article</p>
+                                </div>
                               )}
-                            </Link>
-                          ) : (
-                            <div className="aspect-[16/9] rounded-lg bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center">
-                              <p className="text-neutral-400 dark:text-neutral-600 text-xs">No featured article</p>
                             </div>
-                          )}
+                          </div>
                         </div>
-                      </div>
                       </motion.div>
                     </NavigationMenu.Content>
                   </NavigationMenu.Item>
@@ -271,72 +273,74 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                         transition={{ duration: 0.2 }}
                         style={{ pointerEvents: navValue === 'races' ? 'auto' : 'none' }}
                       >
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                          {/* Column 1: Description */}
-                          <div className="border-r border-neutral-200 dark:border-neutral-700 pr-8">
-                            <h3 className="font-playfair text-2xl font-semibold text-neutral-900 dark:text-white mb-3">
-                              Races
-                            </h3>
-                            <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
-                              Explore the world's greatest marathons with detailed race guides, course analysis, and insider tips to help you prepare for your next race.
-                            </p>
-                          </div>
+                        <div className="mx-auto w-full max-w-7xl">
+                          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                            {/* Column 1: Description */}
+                            <div className="border-r border-neutral-200 dark:border-neutral-700 pr-8">
+                              <h3 className="font-playfair text-2xl font-semibold text-neutral-900 dark:text-white mb-3">
+                                Races
+                              </h3>
+                              <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                                Explore the world's greatest marathons with detailed race guides, course analysis, and insider tips to help you prepare for your next race.
+                              </p>
+                            </div>
 
-                          {/* Column 2: Race Links */}
-                          <div className="flex flex-col gap-0.5">
-                            <Link
-                              href="/races"
-                              className="flex items-center gap-3 px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-colors"
-                            >
-                              <FileText className="h-4 w-4 flex-shrink-0" />
-                              <div className="flex-1">
-                                <div className="font-semibold">Race Profiles</div>
-                                <div className="text-xs text-neutral-500 dark:text-neutral-400">Marathon guides & analysis</div>
-                              </div>
-                            </Link>
-                            <Link
-                              href="/races/database"
-                              className="flex items-center gap-3 px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-colors"
-                            >
-                              <Database className="h-4 w-4 flex-shrink-0" />
-                              <div className="flex-1">
-                                <div className="font-semibold">Race Database</div>
-                                <div className="text-xs text-neutral-500 dark:text-neutral-400">Search races worldwide</div>
-                              </div>
-                            </Link>
-                          </div>
-
-                          {/* Column 3: Featured Race */}
-                          <div>
-                            {featuredRace ? (
+                            {/* Column 2: Race Links */}
+                            <div className="flex flex-col gap-0.5">
                               <Link
-                                href={`/races/${featuredRace.slug.current}`}
-                                className="block p-3 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                                href="/races"
+                                className="flex items-center gap-3 px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-colors"
                               >
-                                <div className="relative w-full aspect-[16/9] rounded-lg overflow-hidden bg-neutral-100 dark:bg-neutral-800 mb-2">
-                                  <img
-                                    src={urlFor(featuredRace.mainImage).width(400).height(225).fit('crop').url()}
-                                    alt={featuredRace.title}
-                                    className="w-full h-full object-cover"
-                                  />
+                                <FileText className="h-4 w-4 flex-shrink-0" />
+                                <div className="flex-1">
+                                  <div className="font-semibold">Race Profiles</div>
+                                  <div className="text-xs text-neutral-500 dark:text-neutral-400">Marathon guides & analysis</div>
                                 </div>
-                                <div className="text-xs font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-1">
-                                  Featured race
-                                </div>
-                                <h4 className="text-sm font-semibold text-neutral-900 dark:text-white mb-1 line-clamp-2">
-                                  {featuredRace.title}
-                                </h4>
-                                {featuredRace.location && (
-                                  <p className="text-xs text-neutral-600 dark:text-neutral-400">
-                                    {featuredRace.location}
-                                  </p>
-                                )}
                               </Link>
-                            ) : (
-                              <div className="aspect-[16/9] rounded-lg bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center">
-                                <p className="text-neutral-400 dark:text-neutral-600 text-xs">No featured race</p>
-                              </div>
-                            )}
+                              <Link
+                                href="/races/database"
+                                className="flex items-center gap-3 px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-colors"
+                              >
+                                <Database className="h-4 w-4 flex-shrink-0" />
+                                <div className="flex-1">
+                                  <div className="font-semibold">Race Database</div>
+                                  <div className="text-xs text-neutral-500 dark:text-neutral-400">Search races worldwide</div>
+                                </div>
+                              </Link>
+                            </div>
+
+                            {/* Column 3: Featured Race */}
+                            <div>
+                              {featuredRace ? (
+                                <Link
+                                  href={`/races/${featuredRace.slug.current}`}
+                                  className="block p-3 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                                >
+                                  <div className="relative w-full aspect-[16/9] rounded-lg overflow-hidden bg-neutral-100 dark:bg-neutral-800 mb-2">
+                                    <img
+                                      src={urlFor(featuredRace.mainImage).width(400).height(225).fit('crop').url()}
+                                      alt={featuredRace.title}
+                                      className="w-full h-full object-cover"
+                                    />
+                                  </div>
+                                  <div className="text-xs font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-1">
+                                    Featured race
+                                  </div>
+                                  <h4 className="text-sm font-semibold text-neutral-900 dark:text-white mb-1 line-clamp-2">
+                                    {featuredRace.title}
+                                  </h4>
+                                  {featuredRace.location && (
+                                    <p className="text-xs text-neutral-600 dark:text-neutral-400">
+                                      {featuredRace.location}
+                                    </p>
+                                  )}
+                                </Link>
+                              ) : (
+                                <div className="aspect-[16/9] rounded-lg bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center">
+                                  <p className="text-neutral-400 dark:text-neutral-600 text-xs">No featured race</p>
+                                </div>
+                              )}
+                            </div>
                           </div>
                         </div>
                       </motion.div>
