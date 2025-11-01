@@ -122,9 +122,9 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
 
                   {/* Gear Dropdown */}
                   <NavigationMenu.Item value="gear">
-                    <NavigationMenu.Trigger className="flex items-center gap-1 px-3 py-1 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200 rounded-md data-[state=open]:text-neutral-900 dark:data-[state=open]:text-white data-[state=open]:bg-neutral-100 dark:data-[state=open]:bg-neutral-800">
+                    <NavigationMenu.Trigger className="flex items-center gap-1 px-3 py-2 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 data-[state=open]:text-neutral-900 dark:data-[state=open]:text-white data-[state=open]:bg-neutral-100 dark:data-[state=open]:bg-neutral-800">
                       Gear
-                      <ChevronDown className="h-4 w-4 transition-transform data-[state=open]:rotate-180" aria-hidden />
+                      <ChevronDown className="h-4 w-4 transition-transform duration-200 data-[state=open]:rotate-180" aria-hidden />
                     </NavigationMenu.Trigger>
                     <NavigationMenu.Content className="px-4 md:px-6 lg:px-8 py-8">
                       <div className="mx-auto w-full max-w-7xl">
@@ -252,9 +252,9 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
 
                   {/* Races Dropdown */}
                   <NavigationMenu.Item value="races">
-                    <NavigationMenu.Trigger className="flex items-center gap-1 px-3 py-1 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200 rounded-md data-[state=open]:text-neutral-900 dark:data-[state=open]:text-white data-[state=open]:bg-neutral-100 dark:data-[state=open]:bg-neutral-800">
+                    <NavigationMenu.Trigger className="flex items-center gap-1 px-3 py-2 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 data-[state=open]:text-neutral-900 dark:data-[state=open]:text-white data-[state=open]:bg-neutral-100 dark:data-[state=open]:bg-neutral-800">
                       Races
-                      <ChevronDown className="h-4 w-4 transition-transform data-[state=open]:rotate-180" aria-hidden />
+                      <ChevronDown className="h-4 w-4 transition-transform duration-200 data-[state=open]:rotate-180" aria-hidden />
                     </NavigationMenu.Trigger>
                     <NavigationMenu.Content className="px-4 md:px-6 lg:px-8 py-8">
                       <div className="mx-auto w-full max-w-7xl">
