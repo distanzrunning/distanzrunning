@@ -82,7 +82,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
             </Link>
 
             {/* Desktop Navigation - Radix UI */}
-            <NavigationMenu.Root value={navValue} onValueChange={setNavValue}>
+            <NavigationMenu.Root className="relative" value={navValue} onValueChange={setNavValue}>
               <NavigationMenu.List className="hidden lg:flex items-center gap-1">
                 {/* Road Link */}
                 <NavigationMenu.Item>
