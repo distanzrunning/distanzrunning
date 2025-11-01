@@ -126,7 +126,10 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                       Gear
                       <ChevronDown className="h-4 w-4" aria-hidden />
                     </NavigationMenu.Trigger>
-                    <NavigationMenu.Content className="w-full opacity-0 -translate-y-2 pointer-events-none transition-[opacity,transform] duration-200 ease-out data-[state=open]:opacity-100 data-[state=open]:translate-y-0 data-[state=open]:pointer-events-auto">
+                    <NavigationMenu.Content
+                      forceMount
+                      className="w-full opacity-0 -translate-y-2 pointer-events-none transition-[opacity,transform] duration-200 ease-out data-[state=open]:opacity-100 data-[state=open]:translate-y-0 data-[state=open]:pointer-events-auto data-[state=closed]:hidden"
+                    >
                       <div className="mx-auto w-full max-w-7xl">
                           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                             {/* Column 1: Description */}
@@ -256,7 +259,10 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                       Races
                       <ChevronDown className="h-4 w-4" aria-hidden />
                     </NavigationMenu.Trigger>
-                    <NavigationMenu.Content className="w-full opacity-0 -translate-y-2 pointer-events-none transition-[opacity,transform] duration-200 ease-out data-[state=open]:opacity-100 data-[state=open]:translate-y-0 data-[state=open]:pointer-events-auto">
+                    <NavigationMenu.Content
+                      forceMount
+                      className="w-full opacity-0 -translate-y-2 pointer-events-none transition-[opacity,transform] duration-200 ease-out data-[state=open]:opacity-100 data-[state=open]:translate-y-0 data-[state=open]:pointer-events-auto data-[state=closed]:hidden"
+                    >
                       <div className="mx-auto w-full max-w-7xl">
                           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                             {/* Column 1: Description */}
