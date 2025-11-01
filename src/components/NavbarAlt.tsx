@@ -346,12 +346,12 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                 </NavigationMenu.List>
 
                 {/* Viewport for dropdowns - positioned absolutely to span full width */}
-                <div className="absolute left-0 top-full w-screen perspective-[2000px]">
+                <div className="absolute left-1/2 -translate-x-1/2 top-full w-screen perspective-[2000px]">
                   <AnimatePresence>
                     {navValue && (
                       <NavigationMenu.Viewport asChild forceMount>
                         <motion.div
-                          className="relative left-1/2 -translate-x-1/2 bg-white dark:bg-neutral-900 border-t border-b border-neutral-200 dark:border-neutral-700 shadow-elevation-flyout overflow-hidden origin-top-center"
+                          className="bg-white dark:bg-neutral-900 border-t border-b border-neutral-200 dark:border-neutral-700 shadow-elevation-flyout overflow-hidden origin-top-center"
                           initial={{ opacity: 0, y: -8 }}
                           animate={{ opacity: 1, y: 0 }}
                           exit={{ opacity: 0, y: -8 }}
