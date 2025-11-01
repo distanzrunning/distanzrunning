@@ -43,13 +43,15 @@ type NavbarAltProps = {
 }
 
 const dropdownVariants = {
-  closed: {
+  closed: (shouldSlide: boolean) => ({
     opacity: 0,
-    y: -16,
+    scaleY: shouldSlide ? 0.92 : 1,
+    y: shouldSlide ? -12 : 0,
     transition: { duration: 0.18, ease: [0.4, 0, 0.2, 1] }
-  },
+  }),
   open: {
     opacity: 1,
+    scaleY: 1,
     y: 0,
     transition: { duration: 0.24, ease: [0.16, 1, 0.3, 1] }
   }
@@ -58,13 +60,11 @@ const dropdownVariants = {
 const panelContentVariants = {
   closed: {
     opacity: 0,
-    y: -6,
-    transition: { duration: 0.18, ease: 'easeInOut' }
+    transition: { duration: 0.16, ease: 'easeInOut' }
   },
   open: {
     opacity: 1,
-    y: 0,
-    transition: { duration: 0.22, ease: 'easeOut' }
+    transition: { duration: 0.24, ease: 'easeOut', delay: 0.04 }
   }
 }
 
@@ -155,13 +155,22 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                     </NavigationMenu.Trigger>
                     <NavigationMenu.Content asChild forceMount>
                       <motion.div
+                        layout
+                        layoutRoot
                         className="fixed inset-x-0 top-[calc(4rem+1px)] z-40 px-4 md:px-6 lg:px-8 py-8 bg-white dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-700 shadow-elevation-flyout overflow-hidden pointer-events-none data-[state=open]:pointer-events-auto"
                         variants={dropdownVariants}
                         initial="closed"
                         animate={navValue === 'gear' ? 'open' : 'closed'}
-                        style={{ pointerEvents: navValue === 'gear' ? 'auto' : 'none' }}
+                        custom={navValue === ''}
+                        style={{ pointerEvents: navValue === 'gear' ? 'auto' : 'none', transformOrigin: 'top center' }}
+                        transition={{
+                          duration: 0.24,
+                          ease: [0.16, 1, 0.3, 1],
+                          layout: { duration: 0.25, ease: [0.16, 1, 0.3, 1] }
+                        }}
                       >
                         <motion.div
+                          layout
                           className="mx-auto w-full max-w-7xl"
                           variants={panelContentVariants}
                           initial="closed"
@@ -298,13 +307,22 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                     </NavigationMenu.Trigger>
                     <NavigationMenu.Content asChild forceMount>
                       <motion.div
+                        layout
+                        layoutRoot
                         className="fixed inset-x-0 top-[calc(4rem+1px)] z-40 px-4 md:px-6 lg:px-8 py-8 bg-white dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-700 shadow-elevation-flyout overflow-hidden pointer-events-none data-[state=open]:pointer-events-auto"
                         variants={dropdownVariants}
                         initial="closed"
                         animate={navValue === 'races' ? 'open' : 'closed'}
-                        style={{ pointerEvents: navValue === 'races' ? 'auto' : 'none' }}
+                        custom={navValue === ''}
+                        style={{ pointerEvents: navValue === 'races' ? 'auto' : 'none', transformOrigin: 'top center' }}
+                        transition={{
+                          duration: 0.24,
+                          ease: [0.16, 1, 0.3, 1],
+                          layout: { duration: 0.25, ease: [0.16, 1, 0.3, 1] }
+                        }}
                       >
                         <motion.div
+                          layout
                           className="mx-auto w-full max-w-7xl"
                           variants={panelContentVariants}
                           initial="closed"
