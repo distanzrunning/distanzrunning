@@ -42,6 +42,32 @@ type NavbarAltProps = {
   } | null
 }
 
+const dropdownVariants = {
+  closed: {
+    opacity: 0,
+    y: -16,
+    transition: { duration: 0.18, ease: [0.4, 0, 0.2, 1] }
+  },
+  open: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.24, ease: [0.16, 1, 0.3, 1] }
+  }
+}
+
+const panelContentVariants = {
+  closed: {
+    opacity: 0,
+    y: -6,
+    transition: { duration: 0.18, ease: 'easeInOut' }
+  },
+  open: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.22, ease: 'easeOut' }
+  }
+}
+
 export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps) {
   const { isDark, toggleDarkMode } = useContext(DarkModeContext)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -130,12 +156,17 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                     <NavigationMenu.Content asChild forceMount>
                       <motion.div
                         className="fixed inset-x-0 top-[calc(4rem+1px)] z-40 px-4 md:px-6 lg:px-8 py-8 bg-white dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-700 shadow-elevation-flyout overflow-hidden pointer-events-none data-[state=open]:pointer-events-auto"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: navValue === 'gear' ? 1 : 0 }}
-                        transition={{ duration: 0.2 }}
+                        variants={dropdownVariants}
+                        initial="closed"
+                        animate={navValue === 'gear' ? 'open' : 'closed'}
                         style={{ pointerEvents: navValue === 'gear' ? 'auto' : 'none' }}
                       >
-                        <div className="mx-auto w-full max-w-7xl">
+                        <motion.div
+                          className="mx-auto w-full max-w-7xl"
+                          variants={panelContentVariants}
+                          initial="closed"
+                          animate={navValue === 'gear' ? 'open' : 'closed'}
+                        >
                           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                             {/* Column 1: Description */}
                             <div className="border-r border-neutral-200 dark:border-neutral-700 pr-8">
@@ -254,7 +285,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                               )}
                             </div>
                           </div>
-                        </div>
+                        </motion.div>
                       </motion.div>
                     </NavigationMenu.Content>
                   </NavigationMenu.Item>
@@ -268,12 +299,17 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                     <NavigationMenu.Content asChild forceMount>
                       <motion.div
                         className="fixed inset-x-0 top-[calc(4rem+1px)] z-40 px-4 md:px-6 lg:px-8 py-8 bg-white dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-700 shadow-elevation-flyout overflow-hidden pointer-events-none data-[state=open]:pointer-events-auto"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: navValue === 'races' ? 1 : 0 }}
-                        transition={{ duration: 0.2 }}
+                        variants={dropdownVariants}
+                        initial="closed"
+                        animate={navValue === 'races' ? 'open' : 'closed'}
                         style={{ pointerEvents: navValue === 'races' ? 'auto' : 'none' }}
                       >
-                        <div className="mx-auto w-full max-w-7xl">
+                        <motion.div
+                          className="mx-auto w-full max-w-7xl"
+                          variants={panelContentVariants}
+                          initial="closed"
+                          animate={navValue === 'races' ? 'open' : 'closed'}
+                        >
                           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                             {/* Column 1: Description */}
                             <div className="border-r border-neutral-200 dark:border-neutral-700 pr-8">
@@ -342,7 +378,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                               )}
                             </div>
                           </div>
-                        </div>
+                        </motion.div>
                       </motion.div>
                     </NavigationMenu.Content>
                   </NavigationMenu.Item>
