@@ -117,8 +117,8 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                     Gear
                     <ChevronDown className="h-4 w-4" aria-hidden />
                   </NavigationMenu.Trigger>
-                  <NavigationMenu.Content className="w-screen">
-                    <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-8">
+                  <NavigationMenu.Content>
+                    <div className="w-screen max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-8">
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                         {/* Column 1: Description */}
                         <div className="border-r border-neutral-200 dark:border-neutral-700 pr-8">
@@ -247,8 +247,8 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                     Races
                     <ChevronDown className="h-4 w-4" aria-hidden />
                   </NavigationMenu.Trigger>
-                  <NavigationMenu.Content className="w-screen">
-                    <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-8">
+                  <NavigationMenu.Content>
+                    <div className="w-screen max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-8">
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                         {/* Column 1: Description */}
                         <div className="border-r border-neutral-200 dark:border-neutral-700 pr-8">
@@ -324,8 +324,8 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
               </NavigationMenu.List>
 
             {/* Viewport for dropdowns - positioned absolutely to span full width */}
-            <div className="absolute left-0 top-full w-screen perspective-[2000px]">
-              <NavigationMenu.Viewport className="relative left-1/2 -translate-x-1/2 w-full bg-white dark:bg-neutral-900 border-t border-b border-neutral-200 dark:border-neutral-700 shadow-elevation-flyout overflow-hidden origin-top" />
+            <div className="absolute left-0 top-full w-screen">
+              <NavigationMenu.Viewport className="relative left-1/2 -translate-x-1/2 bg-white dark:bg-neutral-900 border-t border-b border-neutral-200 dark:border-neutral-700 shadow-elevation-flyout overflow-hidden" />
             </div>
           </NavigationMenu.Root>
 
