@@ -841,12 +841,15 @@
     transition: width 200ms ease, height 200ms ease;
   }
 
-  [data-radix-navigation-menu-viewport][data-state="open"] {
-    animation: slideDown 200ms ease-out;
+  /* Viewport animations - using both attribute selectors for compatibility */
+  [data-radix-navigation-menu-viewport][data-state="open"],
+  [data-state="open"][data-radix-navigation-menu-viewport] {
+    animation: slideDown 200ms ease-out forwards;
   }
 
-  [data-radix-navigation-menu-viewport][data-state="closed"] {
-    animation: slideUp 200ms ease-in;
+  [data-radix-navigation-menu-viewport][data-state="closed"],
+  [data-state="closed"][data-radix-navigation-menu-viewport] {
+    animation: slideUp 200ms ease-in forwards;
   }
 
   /* Shadow for dropdown - no effect on top, only sides and bottom */
