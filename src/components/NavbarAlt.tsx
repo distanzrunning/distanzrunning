@@ -85,32 +85,38 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
             <NavigationMenu.List className="hidden lg:flex items-center gap-1">
                 {/* Road Link */}
                 <NavigationMenu.Item>
-                  <Link
-                    href="/articles/category/road"
-                    className="px-3 py-2 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800"
-                  >
-                    Road
-                  </Link>
+                  <NavigationMenu.Link asChild>
+                    <Link
+                      href="/articles/category/road"
+                      className="px-3 py-2 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                    >
+                      Road
+                    </Link>
+                  </NavigationMenu.Link>
                 </NavigationMenu.Item>
 
                 {/* Track Link */}
                 <NavigationMenu.Item>
-                  <Link
-                    href="/articles/category/track"
-                    className="px-3 py-2 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800"
-                  >
-                    Track
-                  </Link>
+                  <NavigationMenu.Link asChild>
+                    <Link
+                      href="/articles/category/track"
+                      className="px-3 py-2 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                    >
+                      Track
+                    </Link>
+                  </NavigationMenu.Link>
                 </NavigationMenu.Item>
 
                 {/* Trail Link */}
                 <NavigationMenu.Item>
-                  <Link
-                    href="/articles/category/trail"
-                    className="px-3 py-2 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800"
-                  >
-                    Trail
-                  </Link>
+                  <NavigationMenu.Link asChild>
+                    <Link
+                      href="/articles/category/trail"
+                      className="px-3 py-2 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                    >
+                      Trail
+                    </Link>
+                  </NavigationMenu.Link>
                 </NavigationMenu.Item>
 
                 {/* Gear Dropdown */}
