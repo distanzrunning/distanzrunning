@@ -98,9 +98,8 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
             </Link>
 
             {/* Desktop Navigation - Radix UI */}
-            <div className="hidden lg:block">
-              <NavigationMenu.Root className="relative z-10" value={navValue} onValueChange={setNavValue}>
-                <NavigationMenu.List className="flex items-center gap-1">
+            <NavigationMenu.Root className="relative z-10 hidden lg:block" value={navValue} onValueChange={setNavValue}>
+              <NavigationMenu.List className="flex items-center gap-1">
                   {/* Road Link */}
                   <NavigationMenu.Item>
                     <NavigationMenu.Link asChild>
@@ -393,10 +392,9 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                 </NavigationMenu.Indicator>
 
                 <div className="perspective-[2000px] absolute top-full left-0 flex w-full justify-center">
-                  <NavigationMenu.Viewport className="relative mt-2 h-[var(--radix-navigation-menu-viewport-height)] w-full origin-top-center overflow-hidden rounded-lg transition-[width,height] duration-300 data-[state=open]:animate-nav-viewport-in data-[state=closed]:animate-nav-viewport-out" />
+                  <NavigationMenu.Viewport className="relative mt-2 h-[var(--radix-navigation-menu-viewport-height)] w-full origin-top-center overflow-visible transition-[width,height] duration-300 data-[state=open]:animate-nav-viewport-in data-[state=closed]:animate-nav-viewport-out" />
                 </div>
               </NavigationMenu.Root>
-            </div>
           </div>
 
           {/* Right: Newsletter CTA + Dark Mode + Mobile Menu */}
