@@ -292,9 +292,9 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                     </NavigationMenu.Trigger>
                     <NavigationMenu.Content className="mega-menu-content absolute left-0 top-0 w-full">
                       <div className="mx-auto w-full max-w-7xl px-4 md:px-6 lg:px-8 py-8 lg:py-10">
-                        <div className="grid grid-cols-1 gap-8 md:grid-cols-[180px_1fr_1.5fr] md:gap-10">
+                        <div className="grid grid-cols-1 gap-4 md:grid-cols-[260px_0.75fr_1.15fr] md:gap-4">
                             {/* Column 1: Description */}
-                            <div className="md:border-r md:border-neutral-200/70 md:pr-6 dark:md:border-neutral-800/70">
+                            <div className="md:border-r md:border-neutral-200/70 md:pr-5 dark:md:border-neutral-800/70">
                               <h3 className="font-playfair text-2xl font-semibold text-neutral-900 dark:text-white mb-3">
                                 Races
                               </h3>
@@ -304,7 +304,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                             </div>
 
                             {/* Column 2: Race Links */}
-                            <div className="flex flex-col gap-0.5 md:px-4">
+                            <div className="flex flex-col gap-0.5 md:px-2">
                               <Link
                                 href="/races"
                                 className="flex items-center gap-3 px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-colors"
