@@ -48,19 +48,10 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
   const [mobileSubMenu, setMobileSubMenu] = useState<'main' | 'gear' | 'races'>('main')
   const [mounted, setMounted] = useState(false)
   const [navValue, setNavValue] = useState('')
-  const [lastHoveredDropdown, setLastHoveredDropdown] = useState<'gear' | 'races' | null>(null)
 
   useEffect(() => {
     setMounted(true)
   }, [])
-
-  const handleGearMouseEnter = () => {
-    setLastHoveredDropdown('gear')
-  }
-
-  const handleRacesMouseEnter = () => {
-    setLastHoveredDropdown('races')
-  }
 
   return (
     <>
@@ -132,10 +123,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
 
                   {/* Gear Dropdown */}
                   <NavigationMenu.Item value="gear">
-                    <NavigationMenu.Trigger
-                      className="flex items-center gap-1 px-3 py-2 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 data-[state=open]:text-neutral-900 dark:data-[state=open]:text-white data-[state=open]:bg-neutral-100 dark:data-[state=open]:bg-neutral-800"
-                      onMouseEnter={handleGearMouseEnter}
-                    >
+                    <NavigationMenu.Trigger className="flex items-center gap-1 px-3 py-2 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 data-[state=open]:text-neutral-900 dark:data-[state=open]:text-white data-[state=open]:bg-neutral-100 dark:data-[state=open]:bg-neutral-800">
                       Gear
                       <motion.div
                         animate={{ rotate: navValue === 'gear' ? 180 : 0 }}
@@ -144,14 +132,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                         <ChevronDown className="h-4 w-4" aria-hidden />
                       </motion.div>
                     </NavigationMenu.Trigger>
-                    <NavigationMenu.Content
-                      className="px-4 md:px-6 lg:px-8 py-8"
-                      style={{
-                        animation: lastHoveredDropdown === 'races'
-                          ? 'slideFromRight 0.3s ease-out'
-                          : 'fadeIn 0.3s ease-out'
-                      }}
-                    >
+                    <NavigationMenu.Content className="px-4 md:px-6 lg:px-8 py-8">
                       <div className="mx-auto w-full max-w-7xl">
                           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                             {/* Column 1: Description */}
@@ -277,10 +258,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
 
                   {/* Races Dropdown */}
                   <NavigationMenu.Item value="races">
-                    <NavigationMenu.Trigger
-                      className="flex items-center gap-1 px-3 py-2 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 data-[state=open]:text-neutral-900 dark:data-[state=open]:text-white data-[state=open]:bg-neutral-100 dark:data-[state=open]:bg-neutral-800"
-                      onMouseEnter={handleRacesMouseEnter}
-                    >
+                    <NavigationMenu.Trigger className="flex items-center gap-1 px-3 py-2 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 data-[state=open]:text-neutral-900 dark:data-[state=open]:text-white data-[state=open]:bg-neutral-100 dark:data-[state=open]:bg-neutral-800">
                       Races
                       <motion.div
                         animate={{ rotate: navValue === 'races' ? 180 : 0 }}
@@ -289,14 +267,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                         <ChevronDown className="h-4 w-4" aria-hidden />
                       </motion.div>
                     </NavigationMenu.Trigger>
-                    <NavigationMenu.Content
-                      className="px-4 md:px-6 lg:px-8 py-8"
-                      style={{
-                        animation: lastHoveredDropdown === 'gear'
-                          ? 'slideFromLeft 0.3s ease-out'
-                          : 'fadeIn 0.3s ease-out'
-                      }}
-                    >
+                    <NavigationMenu.Content className="px-4 md:px-6 lg:px-8 py-8">
                       <div className="mx-auto w-full max-w-7xl">
                           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                             {/* Column 1: Description */}
