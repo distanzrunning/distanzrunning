@@ -149,9 +149,9 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                     </NavigationMenu.Trigger>
                     <NavigationMenu.Content className="mega-menu-content absolute left-0 top-0 w-full">
                       <div className="mx-auto w-full max-w-7xl px-4 md:px-6 lg:px-8 py-8 lg:py-10">
-                        <div className="grid grid-cols-1 gap-8 md:grid-cols-3 md:gap-10">
+                        <div className="grid grid-cols-1 gap-8 md:grid-cols-[200px_1fr_1.2fr] md:gap-10">
                             {/* Column 1: Description */}
-                            <div className="md:border-r md:border-neutral-200/70 md:pr-10 dark:md:border-neutral-800/70">
+                            <div className="md:border-r md:border-neutral-200/70 md:pr-6 dark:md:border-neutral-800/70">
                               <h3 className="font-playfair text-2xl font-semibold text-neutral-900 dark:text-white mb-3">
                                 Gear
                               </h3>
@@ -161,7 +161,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                             </div>
 
                             {/* Column 2: Category Links */}
-                            <div className="flex flex-col gap-0.5 md:px-6">
+                            <div className="flex flex-col gap-0.5 md:px-4">
                               <Link
                                 href="/gear/category/race-day-shoes"
                                 className="flex items-center gap-3 px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-colors"
@@ -235,11 +235,11 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                             </div>
 
                             {/* Column 3: Featured Article */}
-                            <div className="md:pl-10">
+                            <div className="md:pl-6">
                               {featuredGear ? (
                                 <Link
                                   href={`/gear/${featuredGear.slug.current}`}
-                                  className="block rounded-md p-3 transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                                  className="block rounded-md p-4 transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-800"
                                 >
                                   <div className="relative mb-3 w-full overflow-hidden rounded-lg bg-neutral-100 dark:bg-neutral-800">
                                     <div className="relative aspect-[16/9]">
@@ -294,9 +294,9 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                     </NavigationMenu.Trigger>
                     <NavigationMenu.Content className="mega-menu-content absolute left-0 top-0 w-full">
                       <div className="mx-auto w-full max-w-7xl px-4 md:px-6 lg:px-8 py-8 lg:py-10">
-                        <div className="grid grid-cols-1 gap-8 md:grid-cols-3 md:gap-10">
+                        <div className="grid grid-cols-1 gap-8 md:grid-cols-[200px_1fr_1.2fr] md:gap-10">
                             {/* Column 1: Description */}
-                            <div className="md:border-r md:border-neutral-200/70 md:pr-10 dark:md:border-neutral-800/70">
+                            <div className="md:border-r md:border-neutral-200/70 md:pr-6 dark:md:border-neutral-800/70">
                               <h3 className="font-playfair text-2xl font-semibold text-neutral-900 dark:text-white mb-3">
                                 Races
                               </h3>
@@ -306,7 +306,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                             </div>
 
                             {/* Column 2: Race Links */}
-                            <div className="flex flex-col gap-0.5 md:px-6">
+                            <div className="flex flex-col gap-0.5 md:px-4">
                               <Link
                                 href="/races"
                                 className="flex items-center gap-3 px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-colors"
@@ -330,11 +330,11 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                             </div>
 
                             {/* Column 3: Featured Race */}
-                            <div className="md:pl-10">
+                            <div className="md:pl-6">
                               {featuredRace ? (
                                 <Link
                                   href={`/races/${featuredRace.slug.current}`}
-                                  className="block rounded-md p-3 transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                                  className="block rounded-md p-4 transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-800"
                                 >
                                   <div className="relative mb-3 w-full overflow-hidden rounded-lg bg-neutral-100 dark:bg-neutral-800">
                                     <div className="relative aspect-[16/9]">
@@ -356,19 +356,9 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                                   <div className="mb-1 text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
                                     Featured race
                                   </div>
-                                  <h4 className="mb-1 text-sm font-semibold text-neutral-900 dark:text-white line-clamp-2">
+                                  <h4 className="text-sm font-semibold text-neutral-900 dark:text-white line-clamp-2">
                                     {featuredRace.title}
                                   </h4>
-                                  {featuredRace.location && (
-                                    <p className="text-xs text-neutral-600 dark:text-neutral-400">
-                                      {featuredRace.location}
-                                    </p>
-                                  )}
-                                  {featuredRace.eventDate && (
-                                    <p className="text-xs text-neutral-500 dark:text-neutral-500">
-                                      {featuredRace.eventDate}
-                                    </p>
-                                  )}
                                 </Link>
                               ) : (
                                 <div className="flex aspect-[16/9] items-center justify-center rounded-lg bg-neutral-100 text-xs text-neutral-400 dark:bg-neutral-800 dark:text-neutral-600">
