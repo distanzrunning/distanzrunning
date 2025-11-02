@@ -148,7 +148,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                         <ChevronDown className="h-4 w-4" aria-hidden />
                       </motion.div>
                     </NavigationMenu.Trigger>
-                    <NavigationMenu.Content className="pointer-events-none absolute left-0 top-0 w-full bg-white/95 backdrop-blur-sm dark:bg-neutral-950/95 data-[state=open]:pointer-events-auto data-[state=open]:animate-nav-content-in data-[state=closed]:animate-nav-content-out data-[motion=from-start]:animate-nav-enter-from-left data-[motion=from-end]:animate-nav-enter-from-right data-[motion=to-start]:animate-nav-exit-to-left data-[motion=to-end]:animate-nav-exit-to-right">
+                    <NavigationMenu.Content className="pointer-events-none absolute left-0 top-0 w-full border-b border-neutral-200 bg-white shadow-[0_30px_60px_-40px_rgba(15,23,42,0.45)] dark:border-neutral-800 dark:bg-neutral-900 data-[state=open]:pointer-events-auto data-[state=open]:animate-nav-content-in data-[state=closed]:animate-nav-content-out data-[motion=from-start]:animate-nav-enter-from-left data-[motion=from-end]:animate-nav-enter-from-right data-[motion=to-start]:animate-nav-exit-to-left data-[motion=to-end]:animate-nav-exit-to-right">
                       <div className="mx-auto w-full max-w-7xl px-4 md:px-6 lg:px-8 py-8 lg:py-10">
                         <div className="grid grid-cols-1 gap-8 md:grid-cols-3 md:gap-10">
                             {/* Column 1: Description */}
@@ -293,7 +293,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                         <ChevronDown className="h-4 w-4" aria-hidden />
                       </motion.div>
                     </NavigationMenu.Trigger>
-                    <NavigationMenu.Content className="pointer-events-none absolute left-0 top-0 w-full bg-white/95 backdrop-blur-sm dark:bg-neutral-950/95 data-[state=open]:pointer-events-auto data-[state=open]:animate-nav-content-in data-[state=closed]:animate-nav-content-out data-[motion=from-start]:animate-nav-enter-from-left data-[motion=from-end]:animate-nav-enter-from-right data-[motion=to-start]:animate-nav-exit-to-left data-[motion=to-end]:animate-nav-exit-to-right">
+                    <NavigationMenu.Content className="pointer-events-none absolute left-0 top-0 w-full border-b border-neutral-200 bg-white shadow-[0_30px_60px_-40px_rgba(15,23,42,0.45)] dark:border-neutral-800 dark:bg-neutral-900 data-[state=open]:pointer-events-auto data-[state=open]:animate-nav-content-in data-[state=closed]:animate-nav-content-out data-[motion=from-start]:animate-nav-enter-from-left data-[motion=from-end]:animate-nav-enter-from-right data-[motion=to-start]:animate-nav-exit-to-left data-[motion=to-end]:animate-nav-exit-to-right">
                       <div className="mx-auto w-full max-w-7xl px-4 md:px-6 lg:px-8 py-8 lg:py-10">
                         <div className="grid grid-cols-1 gap-8 md:grid-cols-3 md:gap-10">
                             {/* Column 1: Description */}
@@ -388,7 +388,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                   <span className="h-[2px] w-full rounded-full bg-neutral-900/80 dark:bg-white/80" />
                 </NavigationMenu.Indicator>
 
-                <NavigationMenu.Viewport className="fixed inset-x-0 top-[calc(4rem+1px)] z-40 flex justify-center origin-top border-b border-neutral-200 bg-white/95 shadow-[0_28px_48px_-26px_rgba(15,23,42,0.35)] backdrop-blur-sm [perspective:1200px] data-[state=open]:animate-nav-viewport-in data-[state=closed]:animate-nav-viewport-out data-[state=closed]:pointer-events-none data-[state=closed]:opacity-0 dark:border-neutral-800 dark:bg-neutral-950/95" />
+                <NavigationMenu.Viewport className="fixed inset-x-0 top-[calc(4rem+1px)] z-40 flex justify-center overflow-hidden border-b border-neutral-200 bg-white shadow-[0_28px_48px_-26px_rgba(15,23,42,0.35)] dark:border-neutral-800 dark:bg-neutral-900 data-[state=open]:animate-nav-viewport-in data-[state=closed]:animate-nav-viewport-out data-[state=closed]:pointer-events-none data-[state=closed]:opacity-0" />
               </NavigationMenu.Root>
             </div>
           </div>
