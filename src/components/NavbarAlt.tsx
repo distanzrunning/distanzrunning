@@ -48,10 +48,20 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
   const [mobileSubMenu, setMobileSubMenu] = useState<'main' | 'gear' | 'races'>('main')
   const [mounted, setMounted] = useState(false)
   const [navValue, setNavValue] = useState('')
+  const [mouseDirection, setMouseDirection] = useState<'left' | 'right'>('left')
+  const [lastMouseX, setLastMouseX] = useState(0)
 
   useEffect(() => {
     setMounted(true)
   }, [])
+
+  const handleMouseEnter = (e: React.MouseEvent) => {
+    const currentX = e.clientX
+    if (lastMouseX !== 0) {
+      setMouseDirection(currentX > lastMouseX ? 'right' : 'left')
+    }
+    setLastMouseX(currentX)
+  }
 
   return (
     <>
@@ -123,7 +133,10 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
 
                   {/* Gear Dropdown */}
                   <NavigationMenu.Item value="gear">
-                    <NavigationMenu.Trigger className="flex items-center gap-1 px-3 py-2 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 data-[state=open]:text-neutral-900 dark:data-[state=open]:text-white data-[state=open]:bg-neutral-100 dark:data-[state=open]:bg-neutral-800">
+                    <NavigationMenu.Trigger
+                      className="flex items-center gap-1 px-3 py-2 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 data-[state=open]:text-neutral-900 dark:data-[state=open]:text-white data-[state=open]:bg-neutral-100 dark:data-[state=open]:bg-neutral-800"
+                      onMouseEnter={handleMouseEnter}
+                    >
                       Gear
                       <motion.div
                         animate={{ rotate: navValue === 'gear' ? 180 : 0 }}
@@ -133,6 +146,24 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                       </motion.div>
                     </NavigationMenu.Trigger>
                     <NavigationMenu.Content className="px-4 md:px-6 lg:px-8 py-8">
+                      <motion.div
+                        initial={{
+                          opacity: 0,
+                          x: mouseDirection === 'right' ? -20 : 20
+                        }}
+                        animate={{
+                          opacity: 1,
+                          x: 0
+                        }}
+                        exit={{
+                          opacity: 0,
+                          x: mouseDirection === 'right' ? -20 : 20
+                        }}
+                        transition={{
+                          duration: 0.3,
+                          ease: 'easeOut'
+                        }}
+                      >
                       <div className="mx-auto w-full max-w-7xl">
                           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                             {/* Column 1: Description */}
@@ -253,12 +284,16 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                             </div>
                           </div>
                       </div>
+                      </motion.div>
                     </NavigationMenu.Content>
                   </NavigationMenu.Item>
 
                   {/* Races Dropdown */}
                   <NavigationMenu.Item value="races">
-                    <NavigationMenu.Trigger className="flex items-center gap-1 px-3 py-2 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 data-[state=open]:text-neutral-900 dark:data-[state=open]:text-white data-[state=open]:bg-neutral-100 dark:data-[state=open]:bg-neutral-800">
+                    <NavigationMenu.Trigger
+                      className="flex items-center gap-1 px-3 py-2 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 data-[state=open]:text-neutral-900 dark:data-[state=open]:text-white data-[state=open]:bg-neutral-100 dark:data-[state=open]:bg-neutral-800"
+                      onMouseEnter={handleMouseEnter}
+                    >
                       Races
                       <motion.div
                         animate={{ rotate: navValue === 'races' ? 180 : 0 }}
@@ -268,6 +303,24 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                       </motion.div>
                     </NavigationMenu.Trigger>
                     <NavigationMenu.Content className="px-4 md:px-6 lg:px-8 py-8">
+                      <motion.div
+                        initial={{
+                          opacity: 0,
+                          x: mouseDirection === 'right' ? -20 : 20
+                        }}
+                        animate={{
+                          opacity: 1,
+                          x: 0
+                        }}
+                        exit={{
+                          opacity: 0,
+                          x: mouseDirection === 'right' ? -20 : 20
+                        }}
+                        transition={{
+                          duration: 0.3,
+                          ease: 'easeOut'
+                        }}
+                      >
                       <div className="mx-auto w-full max-w-7xl">
                           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                             {/* Column 1: Description */}
@@ -338,6 +391,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                             </div>
                           </div>
                       </div>
+                      </motion.div>
                     </NavigationMenu.Content>
                   </NavigationMenu.Item>
 
