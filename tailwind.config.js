@@ -69,6 +69,40 @@ module.exports = {
         'canvas': 'rgb(var(--color-canvas))',
         'neutralBgSubtle': 'rgb(var(--color-neutralBgSubtle))',
       },
+      keyframes: {
+        navContentIn: {
+          '0%': { opacity: '0', transform: 'translateY(-12px) scale(0.98)' },
+          '100%': { opacity: '1', transform: 'translateY(0) scale(1)' },
+        },
+        navContentOut: {
+          '0%': { opacity: '1', transform: 'translateY(0) scale(1)' },
+          '100%': { opacity: '0', transform: 'translateY(-10px) scale(0.98)' },
+        },
+        navViewportIn: {
+          '0%': { opacity: '0', transform: 'translateY(-10px) scaleY(0.96)' },
+          '100%': { opacity: '1', transform: 'translateY(0) scaleY(1)' },
+        },
+        navViewportOut: {
+          '0%': { opacity: '1', transform: 'translateY(0) scaleY(1)' },
+          '100%': { opacity: '0', transform: 'translateY(-8px) scaleY(0.95)' },
+        },
+        navIndicatorIn: {
+          '0%': { opacity: '0', transform: 'translateY(6px) scaleX(0.8)' },
+          '100%': { opacity: '1', transform: 'translateY(0) scaleX(1)' },
+        },
+        navIndicatorOut: {
+          '0%': { opacity: '1', transform: 'translateY(0) scaleX(1)' },
+          '100%': { opacity: '0', transform: 'translateY(4px) scaleX(0.75)' },
+        },
+      },
+      animation: {
+        'nav-content-in': 'navContentIn 200ms cubic-bezier(.16,1,.3,1) forwards',
+        'nav-content-out': 'navContentOut 160ms cubic-bezier(.16,1,.3,1) forwards',
+        'nav-viewport-in': 'navViewportIn 220ms cubic-bezier(.16,1,.3,1) forwards',
+        'nav-viewport-out': 'navViewportOut 180ms cubic-bezier(.16,1,.3,1) forwards',
+        'nav-indicator-in': 'navIndicatorIn 160ms cubic-bezier(.16,1,.3,1) forwards',
+        'nav-indicator-out': 'navIndicatorOut 140ms cubic-bezier(.16,1,.3,1) forwards',
+      },
       textColor: {
         primary: '#e43c81',
         secondary: '#eeb6cd',

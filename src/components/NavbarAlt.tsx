@@ -3,6 +3,7 @@
 
 import { useState, useEffect, useContext } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import * as Dialog from '@radix-ui/react-dialog'
 import * as NavigationMenu from '@radix-ui/react-navigation-menu'
 import {
@@ -22,24 +23,33 @@ import {
   Moon,
   Sun
 } from 'lucide-react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { DarkModeContext } from './DarkModeProvider'
 import { urlFor } from '@/sanity/lib/image'
+import type { SanityImageSource } from '@sanity/image-url/lib/types/types'
+
+type SanitySlug = {
+  current: string
+}
+
+type FeaturedGear = {
+  title: string
+  slug: SanitySlug
+  mainImage?: SanityImageSource | null
+  excerpt?: string
+}
+
+type FeaturedRace = {
+  title: string
+  slug: SanitySlug
+  mainImage?: SanityImageSource | null
+  eventDate?: string
+  location?: string
+}
 
 type NavbarAltProps = {
-  featuredGear: {
-    title: string
-    slug: { current: string }
-    mainImage: any
-    excerpt?: string
-  } | null
-  featuredRace: {
-    title: string
-    slug: { current: string }
-    mainImage: any
-    eventDate?: string
-    location?: string
-  } | null
+  featuredGear: FeaturedGear | null
+  featuredRace: FeaturedRace | null
 }
 
 export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps) {
@@ -69,15 +79,21 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
           <div className="flex items-center gap-6 overflow-visible">
             {/* Logo */}
             <Link href="/" className="flex items-center flex-shrink-0" title="Home">
-              <img
+              <Image
                 src="/images/logo.svg"
                 alt="Distanz Running Logo"
                 className="h-8 w-auto dark:hidden"
+                width={120}
+                height={32}
+                priority
               />
-              <img
+              <Image
                 src="/images/logo_white.svg"
                 alt="Distanz Running Logo"
-                className="h-8 w-auto hidden dark:block"
+                className="hidden h-8 w-auto dark:block"
+                width={120}
+                height={32}
+                priority
               />
             </Link>
 
@@ -123,7 +139,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
 
                   {/* Gear Dropdown */}
                   <NavigationMenu.Item value="gear">
-                    <NavigationMenu.Trigger className="flex items-center gap-1 px-3 py-2 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 data-[state=open]:text-neutral-900 dark:data-[state=open]:text-white data-[state=open]:bg-neutral-100 dark:data-[state=open]:bg-neutral-800">
+                    <NavigationMenu.Trigger className="group relative flex items-center gap-1 px-3 py-2 text-sm font-semibold text-neutral-700 dark:text-neutral-300 transition-colors duration-200 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:text-neutral-900 dark:hover:text-white data-[state=open]:bg-neutral-100 dark:data-[state=open]:bg-neutral-800 data-[state=open]:text-neutral-900 dark:data-[state=open]:text-white">
                       Gear
                       <motion.div
                         animate={{ rotate: navValue === 'gear' ? 180 : 0 }}
@@ -132,11 +148,11 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                         <ChevronDown className="h-4 w-4" aria-hidden />
                       </motion.div>
                     </NavigationMenu.Trigger>
-                    <NavigationMenu.Content className="px-4 md:px-6 lg:px-8 py-8">
-                      <div className="mx-auto w-full max-w-7xl">
-                          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <NavigationMenu.Content className="w-full pointer-events-auto bg-white/95 backdrop-blur-sm dark:bg-neutral-950/95 data-[state=open]:animate-nav-content-in data-[state=closed]:animate-nav-content-out">
+                      <div className="mx-auto w-full max-w-7xl px-4 md:px-6 lg:px-8 py-8 lg:py-10">
+                        <div className="grid grid-cols-1 gap-8 md:grid-cols-3 md:gap-10">
                             {/* Column 1: Description */}
-                            <div className="border-r border-neutral-200 dark:border-neutral-700 pr-8">
+                            <div className="md:border-r md:border-neutral-200/70 md:pr-10 dark:md:border-neutral-800/70">
                               <h3 className="font-playfair text-2xl font-semibold text-neutral-900 dark:text-white mb-3">
                                 Gear
                               </h3>
@@ -146,7 +162,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                             </div>
 
                             {/* Column 2: Category Links */}
-                            <div className="flex flex-col gap-0.5">
+                            <div className="flex flex-col gap-0.5 md:px-6">
                               <Link
                                 href="/gear/category/race-day-shoes"
                                 className="flex items-center gap-3 px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-colors"
@@ -220,23 +236,33 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                             </div>
 
                             {/* Column 3: Featured Article */}
-                            <div>
+                            <div className="md:pl-10">
                               {featuredGear ? (
                                 <Link
                                   href={`/gear/${featuredGear.slug.current}`}
-                                  className="block p-3 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                                  className="block rounded-md p-3 transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-800"
                                 >
-                                  <div className="relative w-full aspect-[16/9] rounded-lg overflow-hidden bg-neutral-100 dark:bg-neutral-800 mb-2">
-                                    <img
-                                      src={urlFor(featuredGear.mainImage).width(400).height(225).fit('crop').url()}
-                                      alt={featuredGear.title}
-                                      className="w-full h-full object-cover"
-                                    />
+                                  <div className="relative mb-3 w-full overflow-hidden rounded-lg bg-neutral-100 dark:bg-neutral-800">
+                                    <div className="relative aspect-[16/9]">
+                                      {featuredGear.mainImage ? (
+                                        <Image
+                                          src={urlFor(featuredGear.mainImage).width(640).height(360).fit('crop').url()}
+                                          alt={featuredGear.title}
+                                          fill
+                                          sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+                                          className="object-cover"
+                                        />
+                                      ) : (
+                                        <div className="absolute inset-0 flex items-center justify-center text-xs text-neutral-400 dark:text-neutral-500">
+                                          Image coming soon
+                                        </div>
+                                      )}
+                                    </div>
                                   </div>
-                                  <div className="text-xs font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-1">
+                                  <div className="mb-1 text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
                                     Featured article
                                   </div>
-                                  <h4 className="text-sm font-semibold text-neutral-900 dark:text-white mb-1 line-clamp-2">
+                                  <h4 className="mb-1 text-sm font-semibold text-neutral-900 dark:text-white line-clamp-2">
                                     {featuredGear.title}
                                   </h4>
                                   {featuredGear.excerpt && (
@@ -246,19 +272,19 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                                   )}
                                 </Link>
                               ) : (
-                                <div className="aspect-[16/9] rounded-lg bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center">
-                                  <p className="text-neutral-400 dark:text-neutral-600 text-xs">No featured article</p>
+                                <div className="flex aspect-[16/9] items-center justify-center rounded-lg bg-neutral-100 text-xs text-neutral-400 dark:bg-neutral-800 dark:text-neutral-600">
+                                  No featured article
                                 </div>
                               )}
-                            </div>
                           </div>
+                        </div>
                       </div>
                     </NavigationMenu.Content>
                   </NavigationMenu.Item>
 
                   {/* Races Dropdown */}
                   <NavigationMenu.Item value="races">
-                    <NavigationMenu.Trigger className="flex items-center gap-1 px-3 py-2 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 data-[state=open]:text-neutral-900 dark:data-[state=open]:text-white data-[state=open]:bg-neutral-100 dark:data-[state=open]:bg-neutral-800">
+                    <NavigationMenu.Trigger className="group relative flex items-center gap-1 px-3 py-2 text-sm font-semibold text-neutral-700 dark:text-neutral-300 transition-colors duration-200 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:text-neutral-900 dark:hover:text-white data-[state=open]:bg-neutral-100 dark:data-[state=open]:bg-neutral-800 data-[state=open]:text-neutral-900 dark:data-[state=open]:text-white">
                       Races
                       <motion.div
                         animate={{ rotate: navValue === 'races' ? 180 : 0 }}
@@ -267,21 +293,21 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                         <ChevronDown className="h-4 w-4" aria-hidden />
                       </motion.div>
                     </NavigationMenu.Trigger>
-                    <NavigationMenu.Content className="px-4 md:px-6 lg:px-8 py-8">
-                      <div className="mx-auto w-full max-w-7xl">
-                          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <NavigationMenu.Content className="w-full pointer-events-auto bg-white/95 backdrop-blur-sm dark:bg-neutral-950/95 data-[state=open]:animate-nav-content-in data-[state=closed]:animate-nav-content-out">
+                      <div className="mx-auto w-full max-w-7xl px-4 md:px-6 lg:px-8 py-8 lg:py-10">
+                        <div className="grid grid-cols-1 gap-8 md:grid-cols-3 md:gap-10">
                             {/* Column 1: Description */}
-                            <div className="border-r border-neutral-200 dark:border-neutral-700 pr-8">
+                            <div className="md:border-r md:border-neutral-200/70 md:pr-10 dark:md:border-neutral-800/70">
                               <h3 className="font-playfair text-2xl font-semibold text-neutral-900 dark:text-white mb-3">
                                 Races
                               </h3>
                               <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
-                                Explore the world's greatest marathons with detailed race guides, course analysis, and insider tips to help you prepare for your next race.
+                                Explore the world&apos;s greatest marathons with detailed race guides, course analysis, and insider tips to help you prepare for your next race.
                               </p>
                             </div>
 
                             {/* Column 2: Race Links */}
-                            <div className="flex flex-col gap-0.5">
+                            <div className="flex flex-col gap-0.5 md:px-6">
                               <Link
                                 href="/races"
                                 className="flex items-center gap-3 px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-colors"
@@ -305,23 +331,33 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                             </div>
 
                             {/* Column 3: Featured Race */}
-                            <div>
+                            <div className="md:pl-10">
                               {featuredRace ? (
                                 <Link
                                   href={`/races/${featuredRace.slug.current}`}
-                                  className="block p-3 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                                  className="block rounded-md p-3 transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-800"
                                 >
-                                  <div className="relative w-full aspect-[16/9] rounded-lg overflow-hidden bg-neutral-100 dark:bg-neutral-800 mb-2">
-                                    <img
-                                      src={urlFor(featuredRace.mainImage).width(400).height(225).fit('crop').url()}
-                                      alt={featuredRace.title}
-                                      className="w-full h-full object-cover"
-                                    />
+                                  <div className="relative mb-3 w-full overflow-hidden rounded-lg bg-neutral-100 dark:bg-neutral-800">
+                                    <div className="relative aspect-[16/9]">
+                                      {featuredRace.mainImage ? (
+                                        <Image
+                                          src={urlFor(featuredRace.mainImage).width(640).height(360).fit('crop').url()}
+                                          alt={featuredRace.title}
+                                          fill
+                                          sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+                                          className="object-cover"
+                                        />
+                                      ) : (
+                                        <div className="absolute inset-0 flex items-center justify-center text-xs text-neutral-400 dark:text-neutral-500">
+                                          Image coming soon
+                                        </div>
+                                      )}
+                                    </div>
                                   </div>
-                                  <div className="text-xs font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-1">
+                                  <div className="mb-1 text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
                                     Featured race
                                   </div>
-                                  <h4 className="text-sm font-semibold text-neutral-900 dark:text-white mb-1 line-clamp-2">
+                                  <h4 className="mb-1 text-sm font-semibold text-neutral-900 dark:text-white line-clamp-2">
                                     {featuredRace.title}
                                   </h4>
                                   {featuredRace.location && (
@@ -329,21 +365,30 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                                       {featuredRace.location}
                                     </p>
                                   )}
+                                  {featuredRace.eventDate && (
+                                    <p className="text-xs text-neutral-500 dark:text-neutral-500">
+                                      {featuredRace.eventDate}
+                                    </p>
+                                  )}
                                 </Link>
                               ) : (
-                                <div className="aspect-[16/9] rounded-lg bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center">
-                                  <p className="text-neutral-400 dark:text-neutral-600 text-xs">No featured race</p>
+                                <div className="flex aspect-[16/9] items-center justify-center rounded-lg bg-neutral-100 text-xs text-neutral-400 dark:bg-neutral-800 dark:text-neutral-600">
+                                  No featured race
                                 </div>
                               )}
-                            </div>
                           </div>
+                        </div>
                       </div>
                     </NavigationMenu.Content>
                   </NavigationMenu.Item>
 
                 </NavigationMenu.List>
 
-                <NavigationMenu.Viewport className="fixed inset-x-0 top-[calc(4rem+1px)] z-40 w-full bg-white dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-700 shadow-elevation-flyout overflow-hidden data-[state=closed]:hidden" />
+                <NavigationMenu.Indicator className="pointer-events-none absolute top-full hidden h-2 translate-y-[6px] items-center justify-center overflow-hidden rounded-full data-[state=hidden]:animate-nav-indicator-out data-[state=visible]:animate-nav-indicator-in lg:flex">
+                  <span className="h-[2px] w-full rounded-full bg-neutral-900/80 dark:bg-white/80" />
+                </NavigationMenu.Indicator>
+
+                <NavigationMenu.Viewport className="fixed inset-x-0 top-[calc(4rem+1px)] z-40 flex justify-center origin-top border-b border-neutral-200 bg-white/95 shadow-[0_28px_48px_-26px_rgba(15,23,42,0.35)] backdrop-blur-sm [perspective:1200px] data-[state=open]:animate-nav-viewport-in data-[state=closed]:animate-nav-viewport-out data-[state=closed]:pointer-events-none data-[state=closed]:opacity-0 dark:border-neutral-800 dark:bg-neutral-950/95" />
               </NavigationMenu.Root>
             </div>
           </div>
@@ -397,15 +442,21 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                     <>
                       <div className="flex justify-between items-center mb-8">
                         <Link href="/" className="flex items-center" onClick={() => setMobileMenuOpen(false)}>
-                          <img
+                          <Image
                             src="/images/logo.svg"
                             alt="Distanz Running Logo"
                             className="h-8 w-auto dark:hidden"
+                            width={120}
+                            height={32}
+                            priority
                           />
-                          <img
+                          <Image
                             src="/images/logo_white.svg"
                             alt="Distanz Running Logo"
-                            className="h-8 w-auto hidden dark:block"
+                            className="hidden h-8 w-auto dark:block"
+                            width={120}
+                            height={32}
+                            priority
                           />
                         </Link>
                         <Dialog.Close asChild>
