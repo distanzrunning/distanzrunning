@@ -1,7 +1,7 @@
 // src/components/NavbarAlt.tsx
 'use client'
 
-import { useState, useEffect, useContext, useRef } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import Link from 'next/link'
 import * as Dialog from '@radix-ui/react-dialog'
 import * as NavigationMenu from '@radix-ui/react-navigation-menu'
@@ -48,36 +48,31 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
   const [mobileSubMenu, setMobileSubMenu] = useState<'main' | 'gear' | 'races'>('main')
   const [mounted, setMounted] = useState(false)
   const [navValue, setNavValue] = useState('')
-  const [gearDirection, setGearDirection] = useState<'left' | 'right'>('left')
-  const [racesDirection, setRacesDirection] = useState<'left' | 'right'>('left')
-  const lastMouseXRef = useRef(0)
+  const [lastHoveredDropdown, setLastHoveredDropdown] = useState<'gear' | 'races' | null>(null)
 
   useEffect(() => {
     setMounted(true)
   }, [])
 
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      lastMouseXRef.current = e.clientX
-    }
-    window.addEventListener('mousemove', handleMouseMove)
-    return () => window.removeEventListener('mousemove', handleMouseMove)
-  }, [])
-
-  const handleGearMouseEnter = (e: React.MouseEvent) => {
-    const currentX = e.clientX
-    const prevX = lastMouseXRef.current
-    if (prevX !== 0 && Math.abs(currentX - prevX) > 5) {
-      setGearDirection(currentX > prevX ? 'right' : 'left')
-    }
+  const handleGearMouseEnter = () => {
+    setLastHoveredDropdown('gear')
   }
 
-  const handleRacesMouseEnter = (e: React.MouseEvent) => {
-    const currentX = e.clientX
-    const prevX = lastMouseXRef.current
-    if (prevX !== 0 && Math.abs(currentX - prevX) > 5) {
-      setRacesDirection(currentX > prevX ? 'right' : 'left')
-    }
+  const handleRacesMouseEnter = () => {
+    setLastHoveredDropdown('races')
+  }
+
+  // Determine animation direction based on last hovered dropdown
+  // If coming from Races to Gear, slide from right (was on right, moving left)
+  // If coming from Gear to Races, slide from left (was on left, moving right)
+  const getGearAnimationX = () => {
+    if (lastHoveredDropdown === 'races') return 20 // Coming from right, slide from right
+    return 0 // No animation or default
+  }
+
+  const getRacesAnimationX = () => {
+    if (lastHoveredDropdown === 'gear') return -20 // Coming from left, slide from left
+    return 0 // No animation or default
   }
 
   return (
@@ -164,18 +159,14 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                     </NavigationMenu.Trigger>
                     <NavigationMenu.Content className="px-4 md:px-6 lg:px-8 py-8">
                       <motion.div
-                        key={`gear-${navValue}-${gearDirection}`}
+                        key={`gear-${navValue}`}
                         initial={{
                           opacity: 0,
-                          x: gearDirection === 'right' ? -20 : 20
+                          x: getGearAnimationX()
                         }}
                         animate={{
                           opacity: 1,
                           x: 0
-                        }}
-                        exit={{
-                          opacity: 0,
-                          x: gearDirection === 'right' ? -20 : 20
                         }}
                         transition={{
                           duration: 0.3,
@@ -322,18 +313,14 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                     </NavigationMenu.Trigger>
                     <NavigationMenu.Content className="px-4 md:px-6 lg:px-8 py-8">
                       <motion.div
-                        key={`races-${navValue}-${racesDirection}`}
+                        key={`races-${navValue}`}
                         initial={{
                           opacity: 0,
-                          x: racesDirection === 'right' ? -20 : 20
+                          x: getRacesAnimationX()
                         }}
                         animate={{
                           opacity: 1,
                           x: 0
-                        }}
-                        exit={{
-                          opacity: 0,
-                          x: racesDirection === 'right' ? -20 : 20
                         }}
                         transition={{
                           duration: 0.3,
