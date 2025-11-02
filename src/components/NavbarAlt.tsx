@@ -147,8 +147,8 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                         <ChevronDown className="h-4 w-4" aria-hidden />
                       </motion.div>
                     </NavigationMenu.Trigger>
-                    <NavigationMenu.Content className="data-[motion=from-start]:animate-nav-enter-from-left data-[motion=from-end]:animate-nav-enter-from-right data-[motion=to-start]:animate-nav-exit-to-left data-[motion=to-end]:animate-nav-exit-to-right">
-                      <div className="fixed left-0 right-0 top-[calc(4rem+1px)] w-full bg-white dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-800 shadow-[0_30px_60px_-40px_rgba(15,23,42,0.45)]">
+                    <NavigationMenu.Content>
+                      <div className="fixed left-0 right-0 top-[calc(4rem+1px)] w-full bg-white dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-800 shadow-[0_30px_60px_-40px_rgba(15,23,42,0.45)] animate-in fade-in slide-in-from-top-2 duration-200">
                         <div className="mx-auto w-full max-w-7xl px-4 md:px-6 lg:px-8 py-8 lg:py-10">
                           <div className="grid grid-cols-1 gap-8 md:grid-cols-3 md:gap-10">
                             {/* Column 1: Description */}
@@ -294,8 +294,8 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                         <ChevronDown className="h-4 w-4" aria-hidden />
                       </motion.div>
                     </NavigationMenu.Trigger>
-                    <NavigationMenu.Content className="data-[motion=from-start]:animate-nav-enter-from-left data-[motion=from-end]:animate-nav-enter-from-right data-[motion=to-start]:animate-nav-exit-to-left data-[motion=to-end]:animate-nav-exit-to-right">
-                      <div className="fixed left-0 right-0 top-[calc(4rem+1px)] w-full bg-white dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-800 shadow-[0_30px_60px_-40px_rgba(15,23,42,0.45)]">
+                    <NavigationMenu.Content>
+                      <div className="fixed left-0 right-0 top-[calc(4rem+1px)] w-full bg-white dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-800 shadow-[0_30px_60px_-40px_rgba(15,23,42,0.45)] animate-in fade-in slide-in-from-top-2 duration-200">
                         <div className="mx-auto w-full max-w-7xl px-4 md:px-6 lg:px-8 py-8 lg:py-10">
                           <div className="grid grid-cols-1 gap-8 md:grid-cols-3 md:gap-10">
                             {/* Column 1: Description */}
