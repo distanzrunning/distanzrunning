@@ -235,17 +235,17 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                             </div>
 
                             {/* Column 3: Featured Article */}
-                            <div className="flex items-center justify-center md:pl-6">
+                            <div className="md:pl-6">
                               {featuredGear ? (
                                 <Link
                                   href={`/gear/${featuredGear.slug.current}`}
-                                  className="block w-full max-w-sm rounded-lg p-5 transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                                  className="group block rounded-lg overflow-hidden transition-transform hover:scale-[1.02]"
                                 >
-                                  <div className="relative mb-4 w-full overflow-hidden rounded-lg bg-neutral-100 dark:bg-neutral-800">
-                                    <div className="relative aspect-[16/9]">
+                                  <div className="relative w-full overflow-hidden bg-neutral-100 dark:bg-neutral-800">
+                                    <div className="relative aspect-[4/3]">
                                       {featuredGear.mainImage ? (
                                         <Image
-                                          src={urlFor(featuredGear.mainImage).width(640).height(360).fit('crop').url()}
+                                          src={urlFor(featuredGear.mainImage).width(640).height(480).fit('crop').url()}
                                           alt={featuredGear.title}
                                           fill
                                           sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
@@ -256,19 +256,22 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                                           Image coming soon
                                         </div>
                                       )}
+                                      {/* Text overlay */}
+                                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent flex flex-col justify-end p-4">
+                                        <div className="mb-1 text-xs font-semibold uppercase tracking-wider text-white/80">
+                                          Featured article
+                                        </div>
+                                        <h4 className="mb-1 text-base font-semibold text-white line-clamp-2">
+                                          {featuredGear.title}
+                                        </h4>
+                                        {featuredGear.excerpt && (
+                                          <p className="text-sm text-white/90 line-clamp-2">
+                                            {featuredGear.excerpt}
+                                          </p>
+                                        )}
+                                      </div>
                                     </div>
                                   </div>
-                                  <div className="mb-2 text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
-                                    Featured article
-                                  </div>
-                                  <h4 className="mb-2 text-base font-semibold text-neutral-900 dark:text-white line-clamp-2">
-                                    {featuredGear.title}
-                                  </h4>
-                                  {featuredGear.excerpt && (
-                                    <p className="text-sm text-neutral-600 dark:text-neutral-400 line-clamp-2">
-                                      {featuredGear.excerpt}
-                                    </p>
-                                  )}
                                 </Link>
                               ) : (
                                 <div className="flex aspect-[16/9] items-center justify-center rounded-lg bg-neutral-100 text-xs text-neutral-400 dark:bg-neutral-800 dark:text-neutral-600">
@@ -330,17 +333,17 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                             </div>
 
                             {/* Column 3: Featured Race */}
-                            <div className="flex items-center justify-center md:pl-6">
+                            <div className="md:pl-6">
                               {featuredRace ? (
                                 <Link
                                   href={`/races/${featuredRace.slug.current}`}
-                                  className="block w-full max-w-sm rounded-lg p-5 transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                                  className="group block rounded-lg overflow-hidden transition-transform hover:scale-[1.02]"
                                 >
-                                  <div className="relative mb-4 w-full overflow-hidden rounded-lg bg-neutral-100 dark:bg-neutral-800">
-                                    <div className="relative aspect-[16/9]">
+                                  <div className="relative w-full overflow-hidden bg-neutral-100 dark:bg-neutral-800">
+                                    <div className="relative aspect-[4/3]">
                                       {featuredRace.mainImage ? (
                                         <Image
-                                          src={urlFor(featuredRace.mainImage).width(640).height(360).fit('crop').url()}
+                                          src={urlFor(featuredRace.mainImage).width(640).height(480).fit('crop').url()}
                                           alt={featuredRace.title}
                                           fill
                                           sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
@@ -351,14 +354,17 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                                           Image coming soon
                                         </div>
                                       )}
+                                      {/* Text overlay */}
+                                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent flex flex-col justify-end p-4">
+                                        <div className="mb-1 text-xs font-semibold uppercase tracking-wider text-white/80">
+                                          Featured race
+                                        </div>
+                                        <h4 className="text-base font-semibold text-white line-clamp-2">
+                                          {featuredRace.title}
+                                        </h4>
+                                      </div>
                                     </div>
                                   </div>
-                                  <div className="mb-2 text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
-                                    Featured race
-                                  </div>
-                                  <h4 className="text-base font-semibold text-neutral-900 dark:text-white line-clamp-2">
-                                    {featuredRace.title}
-                                  </h4>
                                 </Link>
                               ) : (
                                 <div className="flex aspect-[16/9] items-center justify-center rounded-lg bg-neutral-100 text-xs text-neutral-400 dark:bg-neutral-800 dark:text-neutral-600">
