@@ -235,13 +235,13 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                             </div>
 
                             {/* Column 3: Featured Article */}
-                            <div className="md:pl-6">
+                            <div className="flex items-center justify-center md:pl-6">
                               {featuredGear ? (
                                 <Link
                                   href={`/gear/${featuredGear.slug.current}`}
-                                  className="block rounded-md p-4 transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                                  className="block w-full max-w-sm rounded-lg p-5 transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-800"
                                 >
-                                  <div className="relative mb-3 w-full overflow-hidden rounded-lg bg-neutral-100 dark:bg-neutral-800">
+                                  <div className="relative mb-4 w-full overflow-hidden rounded-lg bg-neutral-100 dark:bg-neutral-800">
                                     <div className="relative aspect-[16/9]">
                                       {featuredGear.mainImage ? (
                                         <Image
@@ -258,14 +258,14 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                                       )}
                                     </div>
                                   </div>
-                                  <div className="mb-1 text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
+                                  <div className="mb-2 text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
                                     Featured article
                                   </div>
-                                  <h4 className="mb-1 text-sm font-semibold text-neutral-900 dark:text-white line-clamp-2">
+                                  <h4 className="mb-2 text-base font-semibold text-neutral-900 dark:text-white line-clamp-2">
                                     {featuredGear.title}
                                   </h4>
                                   {featuredGear.excerpt && (
-                                    <p className="text-xs text-neutral-600 dark:text-neutral-400 line-clamp-2">
+                                    <p className="text-sm text-neutral-600 dark:text-neutral-400 line-clamp-2">
                                       {featuredGear.excerpt}
                                     </p>
                                   )}
@@ -330,13 +330,13 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                             </div>
 
                             {/* Column 3: Featured Race */}
-                            <div className="md:pl-6">
+                            <div className="flex items-center justify-center md:pl-6">
                               {featuredRace ? (
                                 <Link
                                   href={`/races/${featuredRace.slug.current}`}
-                                  className="block rounded-md p-4 transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                                  className="block w-full max-w-sm rounded-lg p-5 transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-800"
                                 >
-                                  <div className="relative mb-3 w-full overflow-hidden rounded-lg bg-neutral-100 dark:bg-neutral-800">
+                                  <div className="relative mb-4 w-full overflow-hidden rounded-lg bg-neutral-100 dark:bg-neutral-800">
                                     <div className="relative aspect-[16/9]">
                                       {featuredRace.mainImage ? (
                                         <Image
@@ -353,10 +353,10 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                                       )}
                                     </div>
                                   </div>
-                                  <div className="mb-1 text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
+                                  <div className="mb-2 text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
                                     Featured race
                                   </div>
-                                  <h4 className="text-sm font-semibold text-neutral-900 dark:text-white line-clamp-2">
+                                  <h4 className="text-base font-semibold text-neutral-900 dark:text-white line-clamp-2">
                                     {featuredRace.title}
                                   </h4>
                                 </Link>
