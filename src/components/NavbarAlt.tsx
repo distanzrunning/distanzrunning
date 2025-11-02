@@ -328,7 +328,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                             </div>
 
                             {/* Column 3: Featured Race */}
-                            <div className="md:pl-6">
+                            <div className="md:pl-3">
                               {featuredRace ? (
                                 <Link
                                   href={`/races/${featuredRace.slug.current}`}
