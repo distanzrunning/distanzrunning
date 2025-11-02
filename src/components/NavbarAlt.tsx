@@ -388,7 +388,10 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                   <span className="h-[2px] w-full rounded-full bg-neutral-900/80 dark:bg-white/80" />
                 </NavigationMenu.Indicator>
 
-                <NavigationMenu.Viewport className="fixed inset-x-0 top-[calc(4rem+1px)] z-40 flex justify-center overflow-hidden border-b border-neutral-200 bg-white shadow-[0_28px_48px_-26px_rgba(15,23,42,0.35)] dark:border-neutral-800 dark:bg-neutral-900 data-[state=open]:animate-nav-viewport-in data-[state=closed]:animate-nav-viewport-out data-[state=closed]:pointer-events-none data-[state=closed]:opacity-0" />
+                <NavigationMenu.Viewport
+                  className="relative fixed inset-x-0 top-[calc(4rem+1px)] z-40 flex w-full justify-center overflow-hidden border-b border-neutral-200 bg-white shadow-[0_28px_48px_-26px_rgba(15,23,42,0.35)] dark:border-neutral-800 dark:bg-neutral-900 data-[state=open]:animate-nav-viewport-in data-[state=closed]:animate-nav-viewport-out data-[state=closed]:pointer-events-none data-[state=closed]:opacity-0"
+                  style={{ height: 'var(--radix-navigation-menu-viewport-height)' }}
+                />
               </NavigationMenu.Root>
             </div>
           </div>
