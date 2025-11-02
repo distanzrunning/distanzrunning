@@ -261,14 +261,9 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                                         <div className="mb-1 text-xs font-semibold uppercase tracking-wider text-white/80">
                                           Featured article
                                         </div>
-                                        <h4 className="mb-1 text-base font-semibold text-white line-clamp-2">
+                                        <h4 className="text-base font-semibold text-white line-clamp-2">
                                           {featuredGear.title}
                                         </h4>
-                                        {featuredGear.excerpt && (
-                                          <p className="text-sm text-white/90 line-clamp-2">
-                                            {featuredGear.excerpt}
-                                          </p>
-                                        )}
                                       </div>
                                     </div>
                                   </div>
