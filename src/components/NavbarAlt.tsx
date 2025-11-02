@@ -22,7 +22,7 @@ import {
   Moon,
   Sun
 } from 'lucide-react'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { DarkModeContext } from './DarkModeProvider'
 import { urlFor } from '@/sanity/lib/image'
 
@@ -144,22 +144,14 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                         <ChevronDown className="h-4 w-4" aria-hidden />
                       </motion.div>
                     </NavigationMenu.Trigger>
-                    <NavigationMenu.Content className="px-4 md:px-6 lg:px-8 py-8">
-                      <motion.div
-                        key={`gear-${navValue}-${lastHoveredDropdown}`}
-                        initial={{
-                          opacity: 0,
-                          x: lastHoveredDropdown === 'races' ? 20 : 0
-                        }}
-                        animate={{
-                          opacity: 1,
-                          x: 0
-                        }}
-                        transition={{
-                          duration: 0.3,
-                          ease: 'easeOut'
-                        }}
-                      >
+                    <NavigationMenu.Content
+                      className="px-4 md:px-6 lg:px-8 py-8"
+                      style={{
+                        animation: lastHoveredDropdown === 'races'
+                          ? 'slideFromRight 0.3s ease-out'
+                          : 'fadeIn 0.3s ease-out'
+                      }}
+                    >
                       <div className="mx-auto w-full max-w-7xl">
                           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                             {/* Column 1: Description */}
@@ -280,7 +272,6 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                             </div>
                           </div>
                       </div>
-                      </motion.div>
                     </NavigationMenu.Content>
                   </NavigationMenu.Item>
 
@@ -298,22 +289,14 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                         <ChevronDown className="h-4 w-4" aria-hidden />
                       </motion.div>
                     </NavigationMenu.Trigger>
-                    <NavigationMenu.Content className="px-4 md:px-6 lg:px-8 py-8">
-                      <motion.div
-                        key={`races-${navValue}-${lastHoveredDropdown}`}
-                        initial={{
-                          opacity: 0,
-                          x: lastHoveredDropdown === 'gear' ? -20 : 0
-                        }}
-                        animate={{
-                          opacity: 1,
-                          x: 0
-                        }}
-                        transition={{
-                          duration: 0.3,
-                          ease: 'easeOut'
-                        }}
-                      >
+                    <NavigationMenu.Content
+                      className="px-4 md:px-6 lg:px-8 py-8"
+                      style={{
+                        animation: lastHoveredDropdown === 'gear'
+                          ? 'slideFromLeft 0.3s ease-out'
+                          : 'fadeIn 0.3s ease-out'
+                      }}
+                    >
                       <div className="mx-auto w-full max-w-7xl">
                           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                             {/* Column 1: Description */}
@@ -384,7 +367,6 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                             </div>
                           </div>
                       </div>
-                      </motion.div>
                     </NavigationMenu.Content>
                   </NavigationMenu.Item>
 
