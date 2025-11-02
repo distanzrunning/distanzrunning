@@ -149,7 +149,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                     </NavigationMenu.Trigger>
                     <NavigationMenu.Content className="mega-menu-content absolute left-0 top-0 w-full">
                       <div className="mx-auto w-full max-w-7xl px-4 md:px-6 lg:px-8 py-8 lg:py-10">
-                        <div className="grid grid-cols-1 gap-8 md:grid-cols-[200px_1fr_1.2fr] md:gap-10">
+                        <div className="grid grid-cols-1 gap-8 md:grid-cols-3 md:gap-10">
                             {/* Column 1: Description */}
                             <div className="md:border-r md:border-neutral-200/70 md:pr-6 dark:md:border-neutral-800/70">
                               <h3 className="font-playfair text-2xl font-semibold text-neutral-900 dark:text-white mb-3">
@@ -294,7 +294,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                     </NavigationMenu.Trigger>
                     <NavigationMenu.Content className="mega-menu-content absolute left-0 top-0 w-full">
                       <div className="mx-auto w-full max-w-7xl px-4 md:px-6 lg:px-8 py-8 lg:py-10">
-                        <div className="grid grid-cols-1 gap-8 md:grid-cols-[200px_1fr_1.2fr] md:gap-10">
+                        <div className="grid grid-cols-1 gap-8 md:grid-cols-3 md:gap-10">
                             {/* Column 1: Description */}
                             <div className="md:border-r md:border-neutral-200/70 md:pr-6 dark:md:border-neutral-800/70">
                               <h3 className="font-playfair text-2xl font-semibold text-neutral-900 dark:text-white mb-3">
