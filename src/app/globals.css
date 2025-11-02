@@ -961,4 +961,70 @@
       0 4px 8px 0 rgba(0, 0, 0, 0.32),        /* bottom shadow */
       0 8px 16px 0 rgba(0, 0, 0, 0.32);       /* larger bottom shadow */
   }
+
+  /* Mega Menu Animations */
+  .mega-menu-content {
+    animation-duration: 250ms;
+    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .mega-menu-content[data-motion="from-start"] {
+    animation-name: enterFromLeft;
+  }
+
+  .mega-menu-content[data-motion="from-end"] {
+    animation-name: enterFromRight;
+  }
+
+  .mega-menu-content[data-motion="to-start"] {
+    animation-name: exitToLeft;
+  }
+
+  .mega-menu-content[data-motion="to-end"] {
+    animation-name: exitToRight;
+  }
+
+  @keyframes enterFromLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-200px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes enterFromRight {
+    from {
+      opacity: 0;
+      transform: translateX(200px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes exitToLeft {
+    from {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateX(-200px);
+    }
+  }
+
+  @keyframes exitToRight {
+    from {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateX(200px);
+    }
+  }
 }
