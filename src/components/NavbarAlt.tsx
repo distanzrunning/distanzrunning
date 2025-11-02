@@ -147,10 +147,9 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                         <ChevronDown className="h-4 w-4" aria-hidden />
                       </motion.div>
                     </NavigationMenu.Trigger>
-                    <NavigationMenu.Content className="mega-menu-content">
-                      <div className="fixed left-0 right-0 top-[calc(4rem+1px)] w-full bg-white dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-800 shadow-[0_30px_60px_-40px_rgba(15,23,42,0.45)]">
-                        <div className="mx-auto w-full max-w-7xl px-4 md:px-6 lg:px-8 py-8 lg:py-10">
-                          <div className="grid grid-cols-1 gap-8 md:grid-cols-3 md:gap-10">
+                    <NavigationMenu.Content className="mega-menu-content absolute left-0 top-0 w-full">
+                      <div className="mx-auto w-full max-w-7xl px-4 md:px-6 lg:px-8 py-8 lg:py-10">
+                        <div className="grid grid-cols-1 gap-8 md:grid-cols-3 md:gap-10">
                             {/* Column 1: Description */}
                             <div className="md:border-r md:border-neutral-200/70 md:pr-10 dark:md:border-neutral-800/70">
                               <h3 className="font-playfair text-2xl font-semibold text-neutral-900 dark:text-white mb-3">
@@ -279,8 +278,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                             </div>
                           </div>
                         </div>
-                      </div>
-                    </NavigationMenu.Content>
+                      </NavigationMenu.Content>
                   </NavigationMenu.Item>
 
                   {/* Races Dropdown */}
@@ -294,10 +292,9 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                         <ChevronDown className="h-4 w-4" aria-hidden />
                       </motion.div>
                     </NavigationMenu.Trigger>
-                    <NavigationMenu.Content className="mega-menu-content">
-                      <div className="fixed left-0 right-0 top-[calc(4rem+1px)] w-full bg-white dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-800 shadow-[0_30px_60px_-40px_rgba(15,23,42,0.45)]">
-                        <div className="mx-auto w-full max-w-7xl px-4 md:px-6 lg:px-8 py-8 lg:py-10">
-                          <div className="grid grid-cols-1 gap-8 md:grid-cols-3 md:gap-10">
+                    <NavigationMenu.Content className="mega-menu-content absolute left-0 top-0 w-full">
+                      <div className="mx-auto w-full max-w-7xl px-4 md:px-6 lg:px-8 py-8 lg:py-10">
+                        <div className="grid grid-cols-1 gap-8 md:grid-cols-3 md:gap-10">
                             {/* Column 1: Description */}
                             <div className="md:border-r md:border-neutral-200/70 md:pr-10 dark:md:border-neutral-800/70">
                               <h3 className="font-playfair text-2xl font-semibold text-neutral-900 dark:text-white mb-3">
@@ -381,8 +378,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                             </div>
                           </div>
                         </div>
-                      </div>
-                    </NavigationMenu.Content>
+                      </NavigationMenu.Content>
                   </NavigationMenu.Item>
 
                 </NavigationMenu.List>
@@ -391,8 +387,8 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                   <span className="h-[2px] w-full rounded-full bg-neutral-900/80 dark:bg-white/80" />
                 </NavigationMenu.Indicator>
 
-                <div className="perspective-[2000px] absolute top-full left-0 flex w-full justify-center">
-                  <NavigationMenu.Viewport className="relative mt-2 h-[var(--radix-navigation-menu-viewport-height)] w-full origin-top-center overflow-visible transition-[width,height] duration-300 data-[state=open]:animate-nav-viewport-in data-[state=closed]:animate-nav-viewport-out" />
+                <div className="perspective-[2000px] fixed left-0 right-0 top-[calc(4rem+1px)] w-full">
+                  <NavigationMenu.Viewport className="relative w-full origin-top-center bg-white dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-800 shadow-[0_30px_60px_-40px_rgba(15,23,42,0.45)] overflow-hidden transition-[height] duration-300 data-[state=open]:animate-nav-viewport-in data-[state=closed]:animate-nav-viewport-out" />
                 </div>
               </NavigationMenu.Root>
           </div>
