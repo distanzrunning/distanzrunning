@@ -148,7 +148,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                         <ChevronDown className="h-4 w-4" aria-hidden />
                       </motion.div>
                     </NavigationMenu.Trigger>
-                    <NavigationMenu.Content className="w-full pointer-events-auto bg-white/95 backdrop-blur-sm dark:bg-neutral-950/95 data-[state=open]:animate-nav-content-in data-[state=closed]:animate-nav-content-out">
+                    <NavigationMenu.Content className="w-full pointer-events-auto bg-white/95 backdrop-blur-sm dark:bg-neutral-950/95 data-[state=open]:animate-nav-content-in data-[state=closed]:animate-nav-content-out data-[motion=from-start]:animate-nav-enter-from-left data-[motion=from-end]:animate-nav-enter-from-right data-[motion=to-start]:animate-nav-exit-to-left data-[motion=to-end]:animate-nav-exit-to-right">
                       <div className="mx-auto w-full max-w-7xl px-4 md:px-6 lg:px-8 py-8 lg:py-10">
                         <div className="grid grid-cols-1 gap-8 md:grid-cols-3 md:gap-10">
                             {/* Column 1: Description */}
@@ -293,7 +293,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                         <ChevronDown className="h-4 w-4" aria-hidden />
                       </motion.div>
                     </NavigationMenu.Trigger>
-                    <NavigationMenu.Content className="w-full pointer-events-auto bg-white/95 backdrop-blur-sm dark:bg-neutral-950/95 data-[state=open]:animate-nav-content-in data-[state=closed]:animate-nav-content-out">
+                    <NavigationMenu.Content className="w-full pointer-events-auto bg-white/95 backdrop-blur-sm dark:bg-neutral-950/95 data-[state=open]:animate-nav-content-in data-[state=closed]:animate-nav-content-out data-[motion=from-start]:animate-nav-enter-from-left data-[motion=from-end]:animate-nav-enter-from-right data-[motion=to-start]:animate-nav-exit-to-left data-[motion=to-end]:animate-nav-exit-to-right">
                       <div className="mx-auto w-full max-w-7xl px-4 md:px-6 lg:px-8 py-8 lg:py-10">
                         <div className="grid grid-cols-1 gap-8 md:grid-cols-3 md:gap-10">
                             {/* Column 1: Description */}

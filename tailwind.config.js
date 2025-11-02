@@ -94,6 +94,22 @@ module.exports = {
           '0%': { opacity: '1', transform: 'translateY(0) scaleX(1)' },
           '100%': { opacity: '0', transform: 'translateY(4px) scaleX(0.75)' },
         },
+        navEnterFromLeft: {
+          '0%': { opacity: '0', transform: 'translateX(-180px)' },
+          '100%': { opacity: '1', transform: 'translateX(0)' },
+        },
+        navEnterFromRight: {
+          '0%': { opacity: '0', transform: 'translateX(180px)' },
+          '100%': { opacity: '1', transform: 'translateX(0)' },
+        },
+        navExitToLeft: {
+          '0%': { opacity: '1', transform: 'translateX(0)' },
+          '100%': { opacity: '0', transform: 'translateX(-180px)' },
+        },
+        navExitToRight: {
+          '0%': { opacity: '1', transform: 'translateX(0)' },
+          '100%': { opacity: '0', transform: 'translateX(180px)' },
+        },
       },
       animation: {
         'nav-content-in': 'navContentIn 200ms cubic-bezier(.16,1,.3,1) forwards',
@@ -102,6 +118,10 @@ module.exports = {
         'nav-viewport-out': 'navViewportOut 180ms cubic-bezier(.16,1,.3,1) forwards',
         'nav-indicator-in': 'navIndicatorIn 160ms cubic-bezier(.16,1,.3,1) forwards',
         'nav-indicator-out': 'navIndicatorOut 140ms cubic-bezier(.16,1,.3,1) forwards',
+        'nav-enter-from-left': 'navEnterFromLeft 180ms cubic-bezier(.16,1,.3,1) forwards',
+        'nav-enter-from-right': 'navEnterFromRight 180ms cubic-bezier(.16,1,.3,1) forwards',
+        'nav-exit-to-left': 'navExitToLeft 160ms cubic-bezier(.16,1,.3,1) forwards',
+        'nav-exit-to-right': 'navExitToRight 160ms cubic-bezier(.16,1,.3,1) forwards',
       },
       textColor: {
         primary: '#e43c81',
