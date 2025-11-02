@@ -1,7 +1,7 @@
 // src/components/NavbarAlt.tsx
 'use client'
 
-import { useState, useEffect, useContext } from 'react'
+import { useState, useEffect, useContext, useRef } from 'react'
 import Link from 'next/link'
 import * as Dialog from '@radix-ui/react-dialog'
 import * as NavigationMenu from '@radix-ui/react-navigation-menu'
@@ -48,19 +48,36 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
   const [mobileSubMenu, setMobileSubMenu] = useState<'main' | 'gear' | 'races'>('main')
   const [mounted, setMounted] = useState(false)
   const [navValue, setNavValue] = useState('')
-  const [mouseDirection, setMouseDirection] = useState<'left' | 'right'>('left')
-  const [lastMouseX, setLastMouseX] = useState(0)
+  const [gearDirection, setGearDirection] = useState<'left' | 'right'>('left')
+  const [racesDirection, setRacesDirection] = useState<'left' | 'right'>('left')
+  const lastMouseXRef = useRef(0)
 
   useEffect(() => {
     setMounted(true)
   }, [])
 
-  const handleMouseEnter = (e: React.MouseEvent) => {
-    const currentX = e.clientX
-    if (lastMouseX !== 0) {
-      setMouseDirection(currentX > lastMouseX ? 'right' : 'left')
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      lastMouseXRef.current = e.clientX
     }
-    setLastMouseX(currentX)
+    window.addEventListener('mousemove', handleMouseMove)
+    return () => window.removeEventListener('mousemove', handleMouseMove)
+  }, [])
+
+  const handleGearMouseEnter = (e: React.MouseEvent) => {
+    const currentX = e.clientX
+    const prevX = lastMouseXRef.current
+    if (prevX !== 0 && Math.abs(currentX - prevX) > 5) {
+      setGearDirection(currentX > prevX ? 'right' : 'left')
+    }
+  }
+
+  const handleRacesMouseEnter = (e: React.MouseEvent) => {
+    const currentX = e.clientX
+    const prevX = lastMouseXRef.current
+    if (prevX !== 0 && Math.abs(currentX - prevX) > 5) {
+      setRacesDirection(currentX > prevX ? 'right' : 'left')
+    }
   }
 
   return (
@@ -135,7 +152,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                   <NavigationMenu.Item value="gear">
                     <NavigationMenu.Trigger
                       className="flex items-center gap-1 px-3 py-2 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 data-[state=open]:text-neutral-900 dark:data-[state=open]:text-white data-[state=open]:bg-neutral-100 dark:data-[state=open]:bg-neutral-800"
-                      onMouseEnter={handleMouseEnter}
+                      onMouseEnter={handleGearMouseEnter}
                     >
                       Gear
                       <motion.div
@@ -147,10 +164,10 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                     </NavigationMenu.Trigger>
                     <NavigationMenu.Content className="px-4 md:px-6 lg:px-8 py-8">
                       <motion.div
-                        key={`gear-${navValue}-${mouseDirection}`}
+                        key={`gear-${navValue}-${gearDirection}`}
                         initial={{
                           opacity: 0,
-                          x: mouseDirection === 'right' ? -20 : 20
+                          x: gearDirection === 'right' ? -20 : 20
                         }}
                         animate={{
                           opacity: 1,
@@ -158,7 +175,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                         }}
                         exit={{
                           opacity: 0,
-                          x: mouseDirection === 'right' ? -20 : 20
+                          x: gearDirection === 'right' ? -20 : 20
                         }}
                         transition={{
                           duration: 0.3,
@@ -293,7 +310,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                   <NavigationMenu.Item value="races">
                     <NavigationMenu.Trigger
                       className="flex items-center gap-1 px-3 py-2 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 data-[state=open]:text-neutral-900 dark:data-[state=open]:text-white data-[state=open]:bg-neutral-100 dark:data-[state=open]:bg-neutral-800"
-                      onMouseEnter={handleMouseEnter}
+                      onMouseEnter={handleRacesMouseEnter}
                     >
                       Races
                       <motion.div
@@ -305,10 +322,10 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                     </NavigationMenu.Trigger>
                     <NavigationMenu.Content className="px-4 md:px-6 lg:px-8 py-8">
                       <motion.div
-                        key={`races-${navValue}-${mouseDirection}`}
+                        key={`races-${navValue}-${racesDirection}`}
                         initial={{
                           opacity: 0,
-                          x: mouseDirection === 'right' ? -20 : 20
+                          x: racesDirection === 'right' ? -20 : 20
                         }}
                         animate={{
                           opacity: 1,
@@ -316,7 +333,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                         }}
                         exit={{
                           opacity: 0,
-                          x: mouseDirection === 'right' ? -20 : 20
+                          x: racesDirection === 'right' ? -20 : 20
                         }}
                         transition={{
                           duration: 0.3,
