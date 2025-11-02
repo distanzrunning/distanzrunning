@@ -147,6 +147,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                     </NavigationMenu.Trigger>
                     <NavigationMenu.Content className="px-4 md:px-6 lg:px-8 py-8">
                       <motion.div
+                        key={`gear-${navValue}-${mouseDirection}`}
                         initial={{
                           opacity: 0,
                           x: mouseDirection === 'right' ? -20 : 20
@@ -304,6 +305,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                     </NavigationMenu.Trigger>
                     <NavigationMenu.Content className="px-4 md:px-6 lg:px-8 py-8">
                       <motion.div
+                        key={`races-${navValue}-${mouseDirection}`}
                         initial={{
                           opacity: 0,
                           x: mouseDirection === 'right' ? -20 : 20
