@@ -62,19 +62,6 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
     setLastHoveredDropdown('races')
   }
 
-  // Determine animation direction based on last hovered dropdown
-  // If coming from Races to Gear, slide from right (was on right, moving left)
-  // If coming from Gear to Races, slide from left (was on left, moving right)
-  const getGearAnimationX = () => {
-    if (lastHoveredDropdown === 'races') return 20 // Coming from right, slide from right
-    return 0 // No animation or default
-  }
-
-  const getRacesAnimationX = () => {
-    if (lastHoveredDropdown === 'gear') return -20 // Coming from left, slide from left
-    return 0 // No animation or default
-  }
-
   return (
     <>
       {/* Desktop & Mobile Header - Fixed */}
@@ -159,10 +146,10 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                     </NavigationMenu.Trigger>
                     <NavigationMenu.Content className="px-4 md:px-6 lg:px-8 py-8">
                       <motion.div
-                        key={`gear-${navValue}`}
+                        key={`gear-${navValue}-${lastHoveredDropdown}`}
                         initial={{
                           opacity: 0,
-                          x: getGearAnimationX()
+                          x: lastHoveredDropdown === 'races' ? 20 : 0
                         }}
                         animate={{
                           opacity: 1,
@@ -313,10 +300,10 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                     </NavigationMenu.Trigger>
                     <NavigationMenu.Content className="px-4 md:px-6 lg:px-8 py-8">
                       <motion.div
-                        key={`races-${navValue}`}
+                        key={`races-${navValue}-${lastHoveredDropdown}`}
                         initial={{
                           opacity: 0,
-                          x: getRacesAnimationX()
+                          x: lastHoveredDropdown === 'gear' ? -20 : 0
                         }}
                         animate={{
                           opacity: 1,
