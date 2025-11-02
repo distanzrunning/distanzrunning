@@ -149,7 +149,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                     </NavigationMenu.Trigger>
                     <NavigationMenu.Content className="mega-menu-content absolute left-0 top-0 w-full">
                       <div className="mx-auto w-full max-w-7xl px-4 md:px-6 lg:px-8 py-8 lg:py-10">
-                        <div className="grid grid-cols-1 gap-8 md:grid-cols-3 md:gap-10">
+                        <div className="grid grid-cols-1 gap-8 md:grid-cols-[180px_1fr_1.5fr] md:gap-10">
                             {/* Column 1: Description */}
                             <div className="md:border-r md:border-neutral-200/70 md:pr-6 dark:md:border-neutral-800/70">
                               <h3 className="font-playfair text-2xl font-semibold text-neutral-900 dark:text-white mb-3">
@@ -242,7 +242,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                                   className="group block rounded-lg overflow-hidden transition-transform hover:scale-[1.02]"
                                 >
                                   <div className="relative w-full overflow-hidden bg-neutral-100 dark:bg-neutral-800">
-                                    <div className="relative aspect-[4/3]">
+                                    <div className="relative aspect-[16/9]">
                                       {featuredGear.mainImage ? (
                                         <Image
                                           src={urlFor(featuredGear.mainImage).width(640).height(480).fit('crop').url()}
@@ -292,7 +292,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                     </NavigationMenu.Trigger>
                     <NavigationMenu.Content className="mega-menu-content absolute left-0 top-0 w-full">
                       <div className="mx-auto w-full max-w-7xl px-4 md:px-6 lg:px-8 py-8 lg:py-10">
-                        <div className="grid grid-cols-1 gap-8 md:grid-cols-3 md:gap-10">
+                        <div className="grid grid-cols-1 gap-8 md:grid-cols-[180px_1fr_1.5fr] md:gap-10">
                             {/* Column 1: Description */}
                             <div className="md:border-r md:border-neutral-200/70 md:pr-6 dark:md:border-neutral-800/70">
                               <h3 className="font-playfair text-2xl font-semibold text-neutral-900 dark:text-white mb-3">
@@ -335,7 +335,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                                   className="group block rounded-lg overflow-hidden transition-transform hover:scale-[1.02]"
                                 >
                                   <div className="relative w-full overflow-hidden bg-neutral-100 dark:bg-neutral-800">
-                                    <div className="relative aspect-[4/3]">
+                                    <div className="relative aspect-[16/9]">
                                       {featuredRace.mainImage ? (
                                         <Image
                                           src={urlFor(featuredRace.mainImage).width(640).height(480).fit('crop').url()}
