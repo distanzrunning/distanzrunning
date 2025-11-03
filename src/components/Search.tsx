@@ -37,7 +37,7 @@ function getCategoryGroup(hit: HitType): string {
   return 'Other'
 }
 
-function SearchResults({ query }: { query: string }) {
+function SearchResults({ query, onClearQuery }: { query: string; onClearQuery: () => void }) {
   const { hits } = useHits<HitType>()
   const [isOpen, setIsOpen] = useState(false)
 
@@ -56,6 +56,11 @@ function SearchResults({ query }: { query: string }) {
   useEffect(() => {
     setIsOpen(query.length > 0 && hits.length > 0)
   }, [hits.length, query])
+
+  const handleResultClick = () => {
+    setIsOpen(false)
+    onClearQuery()
+  }
 
   if (!isOpen || hits.length === 0) return null
 
@@ -89,7 +94,7 @@ function SearchResults({ query }: { query: string }) {
                     key={hit.objectID}
                     href={href}
                     className="block px-4 py-2 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors border-b border-neutral-100 dark:border-neutral-800 last:border-b-0"
-                    onClick={() => setIsOpen(false)}
+                    onClick={handleResultClick}
                   >
                     <h4 className="font-semibold text-sm text-neutral-900 dark:text-white">
                       {hit.title}
@@ -161,6 +166,12 @@ function SearchInput({ onQueryChange }: { onQueryChange: (query: string) => void
     return () => document.removeEventListener('keydown', handleKeyDown)
   }, [])
 
+  const handleBlur = () => {
+    setIsFocused(false)
+    // Clear search when input loses focus
+    setLocalQuery('')
+  }
+
   return (
     <div className="relative flex items-center">
       <SearchIcon className="absolute left-3 h-4 w-4 text-neutral-400 pointer-events-none" />
@@ -170,7 +181,7 @@ function SearchInput({ onQueryChange }: { onQueryChange: (query: string) => void
         value={localQuery}
         onChange={(e) => setLocalQuery(e.target.value)}
         onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
+        onBlur={handleBlur}
         placeholder="Search"
         className={`w-full pl-10 pr-4 py-2 text-sm bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white placeholder:text-neutral-500 dark:placeholder:text-neutral-400 border border-transparent focus:border-neutral-300 dark:focus:border-neutral-600 rounded-md focus:outline-none focus:ring-2 focus:ring-electric-pink/20 transition-all ${isFocused ? 'min-w-[400px]' : 'min-w-[240px]'}`}
       />
@@ -184,10 +195,14 @@ function SearchInput({ onQueryChange }: { onQueryChange: (query: string) => void
 function SearchContent() {
   const [currentQuery, setCurrentQuery] = useState('')
 
+  const handleClearQuery = () => {
+    setCurrentQuery('')
+  }
+
   return (
     <>
       <SearchInput onQueryChange={setCurrentQuery} />
-      <SearchResults query={currentQuery} />
+      <SearchResults query={currentQuery} onClearQuery={handleClearQuery} />
     </>
   )
 }
