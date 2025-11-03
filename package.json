@@ -30,6 +30,7 @@
     "@tailwindcss/typography": "^0.5.16",
     "@vercel/analytics": "^1.5.0",
     "@vercel/speed-insights": "^1.2.0",
+    "algoliasearch": "^5.42.0",
     "chart.js": "^4.4.9",
     "critters": "^0.0.23",
     "date-fns": "^4.1.0",
@@ -43,6 +44,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^5.5.0",
+    "react-instantsearch": "^7.17.0",
     "sanity": "^3.85.1",
     "styled-components": "^6.1.17"
   },

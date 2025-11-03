@@ -27,6 +27,7 @@ import { motion } from 'framer-motion'
 import { DarkModeContext } from './DarkModeProvider'
 import { urlFor } from '@/sanity/lib/image'
 import type { SanityImageSource } from '@sanity/image-url/lib/types/types'
+import Search from './Search'
 
 type SanitySlug = {
   current: string
@@ -384,8 +385,11 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
               </NavigationMenu.Root>
           </div>
 
-          {/* Right: Newsletter CTA + Dark Mode + Mobile Menu */}
+          {/* Right: Search + Newsletter CTA + Dark Mode + Mobile Menu */}
           <div className="flex items-center gap-3">
+            {/* Search */}
+            <Search />
+
             {/* Newsletter Button - Desktop - Subtle hover like Quartr */}
             <Link
               href="/newsletter"
