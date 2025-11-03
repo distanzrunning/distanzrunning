@@ -1,6 +1,6 @@
 // src/app/api/algolia-sync/route.ts
 import { NextRequest, NextResponse } from 'next/server'
-import algoliasearch from 'algoliasearch'
+import { algoliasearch } from 'algoliasearch'
 import { createClient } from 'next-sanity'
 
 const sanityClient = createClient({
@@ -15,7 +15,7 @@ const algoliaClient = algoliasearch(
   process.env.ALGOLIA_ADMIN_API_KEY!
 )
 
-const index = algoliaClient.initIndex(process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME || 'distanz_content')
+const indexName = process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME || 'distanz_content'
 
 // Define what gets indexed from each document type
 async function transformDocument(doc: any) {
@@ -55,8 +55,8 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
 
-    // Sanity webhook sends the document ID and type
-    const { _id, _type } = body
+    // Sanity webhook sends the document ID
+    const { _id } = body
 
     if (!_id) {
       return NextResponse.json({ error: 'No document ID provided' }, { status: 400 })
@@ -83,13 +83,19 @@ export async function POST(request: NextRequest) {
 
     if (!document) {
       // Document was deleted, remove from Algolia
-      await index.deleteObject(_id)
+      await algoliaClient.deleteObject({
+        indexName,
+        objectID: _id
+      })
       return NextResponse.json({ message: 'Document removed from index' })
     }
 
     // Transform and index the document
     const algoliaObject = await transformDocument(document)
-    await index.saveObject(algoliaObject)
+    await algoliaClient.saveObject({
+      indexName,
+      body: algoliaObject
+    })
 
     return NextResponse.json({
       message: 'Document indexed successfully',
@@ -139,7 +145,10 @@ export async function GET(request: NextRequest) {
       documents.map((doc: any) => transformDocument(doc))
     )
 
-    await index.saveObjects(algoliaObjects)
+    await algoliaClient.saveObjects({
+      indexName,
+      objects: algoliaObjects
+    })
 
     return NextResponse.json({
       message: 'Full reindex completed',

@@ -3,7 +3,8 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { InstantSearch, SearchBox, Hits, Highlight, Configure } from 'react-instantsearch'
-import algoliasearch from 'algoliasearch/lite'
+import type { Hit as AlgoliaHit } from 'instantsearch.js'
+import { liteClient as algoliasearch } from 'algoliasearch/lite'
 import Link from 'next/link'
 import { Search as SearchIcon, X } from 'lucide-react'
 import * as Dialog from '@radix-ui/react-dialog'
@@ -13,16 +14,18 @@ const searchClient = algoliasearch(
   process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_API_KEY!
 )
 
+type HitType = AlgoliaHit<{
+  objectID: string
+  title: string
+  slug: string
+  _type: string
+  excerpt?: string
+  category?: string
+  location?: string
+}>
+
 type HitProps = {
-  hit: {
-    objectID: string
-    title: string
-    slug: string
-    _type: string
-    excerpt?: string
-    category?: string
-    location?: string
-  }
+  hit: HitType
 }
 
 function Hit({ hit }: HitProps) {
