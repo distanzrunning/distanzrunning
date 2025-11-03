@@ -6,7 +6,7 @@ import { InstantSearch, useSearchBox, useHits, Configure } from 'react-instantse
 import type { Hit as AlgoliaHit } from 'instantsearch.js'
 import { liteClient as algoliasearch } from 'algoliasearch/lite'
 import Link from 'next/link'
-import { Search as SearchIcon } from 'lucide-react'
+import { Search as SearchIcon, ArrowRight } from 'lucide-react'
 
 const searchClient = algoliasearch(
   process.env.NEXT_PUBLIC_ALGOLIA_APP_ID!,
@@ -65,19 +65,19 @@ function SearchResults({ query, onClearQuery }: { query: string; onClearQuery: (
   if (!isOpen || hits.length === 0) return null
 
   return (
-    <div className="absolute top-full left-0 mt-2 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg shadow-2xl max-h-[70vh] overflow-y-auto z-50 min-w-[500px] w-auto">
-      <div className="py-2">
+    <div className="absolute top-full left-0 mt-2 bg-white/90 dark:bg-neutral-900/90 backdrop-blur-xl border border-black/35 dark:border-white/20 rounded-2xl shadow-2xl max-h-[70vh] overflow-y-auto z-50 min-w-[600px] w-auto">
+      <div className="py-2 px-2">
         {orderedGroups.map((group) => (
           <div key={group} className="mb-4 last:mb-0">
             {/* Group Header */}
-            <div className="px-4 py-2 bg-neutral-50 dark:bg-neutral-800/50 border-b border-neutral-200 dark:border-neutral-700">
-              <h3 className="text-xs font-semibold uppercase tracking-wider text-neutral-600 dark:text-neutral-400">
+            <div className="px-3 py-2 border-b border-neutral-200/50 dark:border-neutral-700/50">
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
                 {group} ({groupedHits[group].length})
               </h3>
             </div>
 
             {/* Group Results - limit to 5 per category */}
-            <div>
+            <div className="mt-2">
               {groupedHits[group].slice(0, 5).map((hit) => {
                 // Determine URL
                 let href = '/'
@@ -93,12 +93,17 @@ function SearchResults({ query, onClearQuery }: { query: string; onClearQuery: (
                   <Link
                     key={hit.objectID}
                     href={href}
-                    className="block px-4 py-2 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors border-b border-neutral-100 dark:border-neutral-800 last:border-b-0"
+                    className="group flex cursor-pointer items-center justify-between gap-2 rounded-lg px-3 py-4 text-neutral-600 dark:text-neutral-400 text-sm hover:bg-neutral-100/50 dark:hover:bg-neutral-800/50 hover:text-neutral-900 dark:hover:text-white transition-all"
                     onClick={handleResultClick}
                   >
-                    <h4 className="font-semibold text-sm text-neutral-900 dark:text-white">
-                      {hit.title}
-                    </h4>
+                    <div className="flex basis-2/3 overflow-hidden">
+                      <h4 className="font-semibold truncate">
+                        {hit.title}
+                      </h4>
+                    </div>
+                    <div>
+                      <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
+                    </div>
                   </Link>
                 )
               })}
@@ -106,27 +111,12 @@ function SearchResults({ query, onClearQuery }: { query: string; onClearQuery: (
 
             {/* Show "View more" if there are more results */}
             {groupedHits[group].length > 5 && (
-              <div className="px-4 py-2 text-xs text-neutral-500 dark:text-neutral-400">
+              <div className="px-3 py-2 text-xs text-neutral-500 dark:text-neutral-400">
                 + {groupedHits[group].length - 5} more results
               </div>
             )}
           </div>
         ))}
-      </div>
-
-      {/* Footer */}
-      <div className="border-t border-neutral-200 dark:border-neutral-700 px-4 py-2 bg-neutral-50 dark:bg-neutral-800/50">
-        <div className="flex items-center justify-between text-xs text-neutral-500 dark:text-neutral-400">
-          <span>{hits.length} results found</span>
-          <a
-            href="https://www.algolia.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-neutral-700 dark:hover:text-neutral-300"
-          >
-            Search by Algolia
-          </a>
-        </div>
       </div>
     </div>
   )
