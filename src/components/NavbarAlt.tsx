@@ -152,10 +152,10 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                         <div className="grid grid-cols-1 gap-4 md:grid-cols-[300px_0.75fr_1fr] md:gap-4">
                             {/* Column 1: Description */}
                             <div className="md:border-r md:border-neutral-200/70 md:pr-5 dark:md:border-neutral-800/70">
-                              <h3 className="font-playfair text-3xl font-semibold text-neutral-900 dark:text-white mb-3">
+                              <h3 className="font-playfair text-2xl font-semibold text-neutral-900 dark:text-white mb-3">
                                 Gear
                               </h3>
-                              <p className="text-base text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                              <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
                                 From carbon-plated race shoes to GPS watches and nutrition, we review the latest running gear to help you find the perfect equipment for your training and racing goals.
                               </p>
                             </div>
@@ -164,72 +164,72 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                             <div className="flex flex-col gap-0.5 md:px-2">
                               <Link
                                 href="/gear/category/race-day-shoes"
-                                className="flex items-center gap-3 px-3 py-2 text-base text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-colors"
+                                className="flex items-center gap-3 px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-colors"
                               >
                                 <Flag className="h-4 w-4 flex-shrink-0" />
                                 <div className="flex-1">
                                   <div className="font-semibold">Race Day Shoes</div>
-                                  <div className="text-sm text-neutral-500 dark:text-neutral-400">Carbon plate shoes for PRs</div>
+                                  <div className="text-xs text-neutral-500 dark:text-neutral-400">Carbon plate shoes for PRs</div>
                                 </div>
                               </Link>
                               <Link
                                 href="/gear/category/daily-trainers"
-                                className="flex items-center gap-3 px-3 py-2 text-base text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-colors"
+                                className="flex items-center gap-3 px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-colors"
                               >
                                 <Calendar className="h-4 w-4 flex-shrink-0" />
                                 <div className="flex-1">
                                   <div className="font-semibold">Daily Trainers</div>
-                                  <div className="text-sm text-neutral-500 dark:text-neutral-400">Everyday runners</div>
+                                  <div className="text-xs text-neutral-500 dark:text-neutral-400">Everyday runners</div>
                                 </div>
                               </Link>
                               <Link
                                 href="/gear/category/max-cushion-shoes"
-                                className="flex items-center gap-3 px-3 py-2 text-base text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-colors"
+                                className="flex items-center gap-3 px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-colors"
                               >
                                 <Footprints className="h-4 w-4 flex-shrink-0" />
                                 <div className="flex-1">
                                   <div className="font-semibold">Max Cushion</div>
-                                  <div className="text-sm text-neutral-500 dark:text-neutral-400">Recovery and long runs</div>
+                                  <div className="text-xs text-neutral-500 dark:text-neutral-400">Recovery and long runs</div>
                                 </div>
                               </Link>
                               <Link
                                 href="/gear/category/tempo-shoes"
-                                className="flex items-center gap-3 px-3 py-2 text-base text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-colors"
+                                className="flex items-center gap-3 px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-colors"
                               >
                                 <Zap className="h-4 w-4 flex-shrink-0" />
                                 <div className="flex-1">
                                   <div className="font-semibold">Tempo Shoes</div>
-                                  <div className="text-sm text-neutral-500 dark:text-neutral-400">Speed work essentials</div>
+                                  <div className="text-xs text-neutral-500 dark:text-neutral-400">Speed work essentials</div>
                                 </div>
                               </Link>
                               <Link
                                 href="/gear/category/trail-shoes"
-                                className="flex items-center gap-3 px-3 py-2 text-base text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-colors"
+                                className="flex items-center gap-3 px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-colors"
                               >
                                 <MountainSnow className="h-4 w-4 flex-shrink-0" />
                                 <div className="flex-1">
                                   <div className="font-semibold">Trail Shoes</div>
-                                  <div className="text-sm text-neutral-500 dark:text-neutral-400">Off-road adventures</div>
+                                  <div className="text-xs text-neutral-500 dark:text-neutral-400">Off-road adventures</div>
                                 </div>
                               </Link>
                               <Link
                                 href="/gear/category/gps-watches"
-                                className="flex items-center gap-3 px-3 py-2 text-base text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-colors"
+                                className="flex items-center gap-3 px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-colors"
                               >
                                 <Watch className="h-4 w-4 flex-shrink-0" />
                                 <div className="flex-1">
                                   <div className="font-semibold">GPS Watches</div>
-                                  <div className="text-sm text-neutral-500 dark:text-neutral-400">Track every mile</div>
+                                  <div className="text-xs text-neutral-500 dark:text-neutral-400">Track every mile</div>
                                 </div>
                               </Link>
                               <Link
                                 href="/gear/category/nutrition"
-                                className="flex items-center gap-3 px-3 py-2 text-base text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-colors"
+                                className="flex items-center gap-3 px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-colors"
                               >
                                 <UtensilsCrossed className="h-4 w-4 flex-shrink-0" />
                                 <div className="flex-1">
                                   <div className="font-semibold">Nutrition</div>
-                                  <div className="text-sm text-neutral-500 dark:text-neutral-400">Fuel for distance</div>
+                                  <div className="text-xs text-neutral-500 dark:text-neutral-400">Fuel for distance</div>
                                 </div>
                               </Link>
                             </div>
@@ -258,10 +258,10 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                                       )}
                                       {/* Text overlay */}
                                       <div className="absolute inset-0 bg-gradient-to-t from-black/95 from-10% via-black/50 via-30% to-transparent to-50% flex flex-col justify-end p-4">
-                                        <div className="mb-1 text-sm font-semibold uppercase tracking-wider text-white/80">
+                                        <div className="mb-1 text-xs font-semibold uppercase tracking-wider text-white/80">
                                           Featured article
                                         </div>
-                                        <h4 className="text-lg font-semibold text-white line-clamp-2">
+                                        <h4 className="text-base font-semibold text-white line-clamp-2">
                                           {featuredGear.title}
                                         </h4>
                                       </div>
@@ -295,10 +295,10 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                         <div className="grid grid-cols-1 gap-4 md:grid-cols-[300px_0.75fr_1fr] md:gap-4">
                             {/* Column 1: Description */}
                             <div className="md:border-r md:border-neutral-200/70 md:pr-5 dark:md:border-neutral-800/70">
-                              <h3 className="font-playfair text-3xl font-semibold text-neutral-900 dark:text-white mb-3">
+                              <h3 className="font-playfair text-2xl font-semibold text-neutral-900 dark:text-white mb-3">
                                 Races
                               </h3>
-                              <p className="text-base text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                              <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
                                 Explore the world&apos;s greatest marathons with detailed race guides, course analysis, and insider tips to help you prepare for your next race.
                               </p>
                             </div>
@@ -307,22 +307,22 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                             <div className="flex flex-col gap-0.5 md:px-2">
                               <Link
                                 href="/races"
-                                className="flex items-center gap-3 px-3 py-2 text-base text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-colors"
+                                className="flex items-center gap-3 px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-colors"
                               >
                                 <FileText className="h-4 w-4 flex-shrink-0" />
                                 <div className="flex-1">
                                   <div className="font-semibold">Race Profiles</div>
-                                  <div className="text-sm text-neutral-500 dark:text-neutral-400">Marathon guides & analysis</div>
+                                  <div className="text-xs text-neutral-500 dark:text-neutral-400">Marathon guides & analysis</div>
                                 </div>
                               </Link>
                               <Link
                                 href="/races/database"
-                                className="flex items-center gap-3 px-3 py-2 text-base text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-colors"
+                                className="flex items-center gap-3 px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-colors"
                               >
                                 <Database className="h-4 w-4 flex-shrink-0" />
                                 <div className="flex-1">
                                   <div className="font-semibold">Race Database</div>
-                                  <div className="text-sm text-neutral-500 dark:text-neutral-400">Search races worldwide</div>
+                                  <div className="text-xs text-neutral-500 dark:text-neutral-400">Search races worldwide</div>
                                 </div>
                               </Link>
                             </div>
@@ -351,10 +351,10 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                                       )}
                                       {/* Text overlay */}
                                       <div className="absolute inset-0 bg-gradient-to-t from-black/95 from-10% via-black/50 via-30% to-transparent to-50% flex flex-col justify-end p-4">
-                                        <div className="mb-1 text-sm font-semibold uppercase tracking-wider text-white/80">
+                                        <div className="mb-1 text-xs font-semibold uppercase tracking-wider text-white/80">
                                           Featured race
                                         </div>
-                                        <h4 className="text-lg font-semibold text-white line-clamp-2">
+                                        <h4 className="text-base font-semibold text-white line-clamp-2">
                                           {featuredRace.title}
                                         </h4>
                                       </div>
