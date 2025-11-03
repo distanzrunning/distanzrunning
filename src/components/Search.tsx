@@ -37,7 +37,7 @@ function getCategoryGroup(hit: HitType): string {
   return 'Other'
 }
 
-function SearchResults() {
+function SearchResults({ query }: { query: string }) {
   const { hits } = useHits<HitType>()
   const [isOpen, setIsOpen] = useState(false)
 
@@ -54,13 +54,13 @@ function SearchResults() {
   const orderedGroups = groupOrder.filter(group => groupedHits[group]?.length > 0)
 
   useEffect(() => {
-    setIsOpen(hits.length > 0)
-  }, [hits.length])
+    setIsOpen(query.length > 0 && hits.length > 0)
+  }, [hits.length, query])
 
   if (!isOpen || hits.length === 0) return null
 
   return (
-    <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg shadow-2xl max-h-[70vh] overflow-y-auto z-50">
+    <div className="absolute top-full left-0 mt-2 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg shadow-2xl max-h-[70vh] overflow-y-auto z-50 min-w-[500px] w-auto">
       <div className="py-2">
         {orderedGroups.map((group) => (
           <div key={group} className="mb-4 last:mb-0">
@@ -88,26 +88,12 @@ function SearchResults() {
                   <Link
                     key={hit.objectID}
                     href={href}
-                    className="block px-4 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors border-b border-neutral-100 dark:border-neutral-800 last:border-b-0"
+                    className="block px-4 py-2 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors border-b border-neutral-100 dark:border-neutral-800 last:border-b-0"
                     onClick={() => setIsOpen(false)}
                   >
-                    <div className="flex items-start gap-3">
-                      <div className="flex-1 min-w-0">
-                        <h4 className="font-semibold text-sm text-neutral-900 dark:text-white truncate mb-1">
-                          {hit.title}
-                        </h4>
-                        {hit.excerpt && (
-                          <p className="text-xs text-neutral-600 dark:text-neutral-400 line-clamp-1">
-                            {hit.excerpt}
-                          </p>
-                        )}
-                        {hit.location && (
-                          <p className="text-xs text-neutral-500 dark:text-neutral-500 mt-1">
-                            📍 {hit.location}
-                          </p>
-                        )}
-                      </div>
-                    </div>
+                    <h4 className="font-semibold text-sm text-neutral-900 dark:text-white">
+                      {hit.title}
+                    </h4>
                   </Link>
                 )
               })}
@@ -141,19 +127,21 @@ function SearchResults() {
   )
 }
 
-function SearchInput() {
+function SearchInput({ onQueryChange }: { onQueryChange: (query: string) => void }) {
   const { query, refine } = useSearchBox()
   const [localQuery, setLocalQuery] = useState(query)
+  const [isFocused, setIsFocused] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
 
   // Debounce search
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       refine(localQuery)
+      onQueryChange(localQuery)
     }, 300)
 
     return () => clearTimeout(timeoutId)
-  }, [localQuery, refine])
+  }, [localQuery, refine, onQueryChange])
 
   // Handle keyboard shortcut (Cmd/Ctrl + K)
   useEffect(() => {
@@ -181,13 +169,26 @@ function SearchInput() {
         type="search"
         value={localQuery}
         onChange={(e) => setLocalQuery(e.target.value)}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
         placeholder="Search"
-        className="w-full pl-10 pr-4 py-2 text-sm bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white placeholder:text-neutral-500 dark:placeholder:text-neutral-400 border border-transparent focus:border-neutral-300 dark:focus:border-neutral-600 rounded-md focus:outline-none focus:ring-2 focus:ring-electric-pink/20 transition-all"
+        className={`w-full pl-10 pr-4 py-2 text-sm bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white placeholder:text-neutral-500 dark:placeholder:text-neutral-400 border border-transparent focus:border-neutral-300 dark:focus:border-neutral-600 rounded-md focus:outline-none focus:ring-2 focus:ring-electric-pink/20 transition-all ${isFocused ? 'min-w-[400px]' : 'min-w-[240px]'}`}
       />
       <kbd className="absolute right-3 hidden md:inline-flex items-center gap-1 px-2 py-0.5 text-xs font-mono text-neutral-500 dark:text-neutral-400 bg-neutral-200 dark:bg-neutral-700 rounded pointer-events-none">
         ⌘K
       </kbd>
     </div>
+  )
+}
+
+function SearchContent() {
+  const [currentQuery, setCurrentQuery] = useState('')
+
+  return (
+    <>
+      <SearchInput onQueryChange={setCurrentQuery} />
+      <SearchResults query={currentQuery} />
+    </>
   )
 }
 
@@ -199,8 +200,7 @@ export default function Search() {
         indexName={process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME || 'distanz_content'}
       >
         <Configure hitsPerPage={50} />
-        <SearchInput />
-        <SearchResults />
+        <SearchContent />
       </InstantSearch>
     </div>
   )
