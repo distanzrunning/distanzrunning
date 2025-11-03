@@ -386,14 +386,16 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
           </div>
 
           {/* Right: Search + Newsletter CTA + Dark Mode + Mobile Menu */}
-          <div className="flex items-center gap-3">
-            {/* Search */}
-            <Search />
+          <div className="flex items-center gap-4">
+            {/* Search - Wider inline search bar with dropdown results */}
+            <div className="hidden md:block flex-1 max-w-lg">
+              <Search />
+            </div>
 
             {/* Newsletter Button - Desktop - Subtle hover like Quartr */}
             <Link
               href="/newsletter"
-              className="hidden md:inline-flex items-center px-4 h-9 text-base font-semibold text-white bg-neutral-900 dark:bg-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-100 rounded-md transition-all duration-200 ease-out active:scale-[0.98]"
+              className="hidden md:inline-flex items-center px-4 h-9 text-base font-semibold text-white bg-neutral-900 dark:bg-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-100 rounded-md transition-all duration-200 ease-out active:scale-[0.98] whitespace-nowrap"
             >
               Newsletter
             </Link>
