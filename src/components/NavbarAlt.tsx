@@ -82,17 +82,17 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
               <Image
                 src="/images/logo.svg"
                 alt="Distanz Running Logo"
-                className="h-8 w-auto dark:hidden"
-                width={120}
-                height={32}
+                className="h-9 w-auto dark:hidden"
+                width={135}
+                height={36}
                 priority
               />
               <Image
                 src="/images/logo_white.svg"
                 alt="Distanz Running Logo"
-                className="hidden h-8 w-auto dark:block"
-                width={120}
-                height={32}
+                className="hidden h-9 w-auto dark:block"
+                width={135}
+                height={36}
                 priority
               />
             </Link>
@@ -105,7 +105,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                     <NavigationMenu.Link asChild>
                       <Link
                         href="/articles/category/road"
-                        className="px-3 py-2 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                        className="px-3 py-2 text-base font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800"
                       >
                         Road
                       </Link>
@@ -117,7 +117,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                     <NavigationMenu.Link asChild>
                       <Link
                         href="/articles/category/track"
-                        className="px-3 py-2 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                        className="px-3 py-2 text-base font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800"
                       >
                         Track
                       </Link>
@@ -129,7 +129,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                     <NavigationMenu.Link asChild>
                       <Link
                         href="/articles/category/trail"
-                        className="px-3 py-2 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                        className="px-3 py-2 text-base font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800"
                       >
                         Trail
                       </Link>
@@ -138,7 +138,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
 
                   {/* Gear Dropdown */}
                   <NavigationMenu.Item value="gear">
-                    <NavigationMenu.Trigger className="group relative flex items-center gap-1 px-3 py-2 text-sm font-semibold text-neutral-700 dark:text-neutral-300 transition-colors duration-200 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:text-neutral-900 dark:hover:text-white data-[state=open]:bg-neutral-100 dark:data-[state=open]:bg-neutral-800 data-[state=open]:text-neutral-900 dark:data-[state=open]:text-white">
+                    <NavigationMenu.Trigger className="group relative flex items-center gap-1 px-3 py-2 text-base font-semibold text-neutral-700 dark:text-neutral-300 transition-colors duration-200 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:text-neutral-900 dark:hover:text-white data-[state=open]:bg-neutral-100 dark:data-[state=open]:bg-neutral-800 data-[state=open]:text-neutral-900 dark:data-[state=open]:text-white">
                       Gear
                       <motion.div
                         animate={{ rotate: navValue === 'gear' ? 180 : 0 }}
@@ -281,7 +281,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
 
                   {/* Races Dropdown */}
                   <NavigationMenu.Item value="races">
-                    <NavigationMenu.Trigger className="group relative flex items-center gap-1 px-3 py-2 text-sm font-semibold text-neutral-700 dark:text-neutral-300 transition-colors duration-200 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:text-neutral-900 dark:hover:text-white data-[state=open]:bg-neutral-100 dark:data-[state=open]:bg-neutral-800 data-[state=open]:text-neutral-900 dark:data-[state=open]:text-white">
+                    <NavigationMenu.Trigger className="group relative flex items-center gap-1 px-3 py-2 text-base font-semibold text-neutral-700 dark:text-neutral-300 transition-colors duration-200 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:text-neutral-900 dark:hover:text-white data-[state=open]:bg-neutral-100 dark:data-[state=open]:bg-neutral-800 data-[state=open]:text-neutral-900 dark:data-[state=open]:text-white">
                       Races
                       <motion.div
                         animate={{ rotate: navValue === 'races' ? 180 : 0 }}
@@ -389,7 +389,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
             {/* Newsletter Button - Desktop - Subtle hover like Quartr */}
             <Link
               href="/newsletter"
-              className="hidden md:inline-flex items-center px-4 h-9 text-sm font-semibold text-white bg-neutral-900 dark:bg-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-100 rounded-md transition-all duration-200 ease-out active:scale-[0.98]"
+              className="hidden md:inline-flex items-center px-4 h-9 text-base font-semibold text-white bg-neutral-900 dark:bg-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-100 rounded-md transition-all duration-200 ease-out active:scale-[0.98]"
             >
               Newsletter
             </Link>
