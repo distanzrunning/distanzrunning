@@ -257,7 +257,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                                         </div>
                                       )}
                                       {/* Text overlay */}
-                                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent flex flex-col justify-end p-4">
+                                      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent flex flex-col justify-end p-4">
                                         <div className="mb-1 text-xs font-semibold uppercase tracking-wider text-white/80">
                                           Featured article
                                         </div>
@@ -350,7 +350,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                                         </div>
                                       )}
                                       {/* Text overlay */}
-                                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent flex flex-col justify-end p-4">
+                                      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent flex flex-col justify-end p-4">
                                         <div className="mb-1 text-xs font-semibold uppercase tracking-wider text-white/80">
                                           Featured race
                                         </div>
