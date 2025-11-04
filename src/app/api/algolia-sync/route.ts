@@ -28,11 +28,23 @@ async function transformDocument(doc: any) {
   }
 
   // Add type-specific fields
-  if (doc._type === 'post' || doc._type === 'gearPost') {
+  if (doc._type === 'post') {
     return {
       ...baseObject,
       excerpt: doc.excerpt,
-      category: doc.category?.title,
+      category: doc.category?.title,           // Main category (Road, Track, Trail)
+      tags: doc.tags || [],                     // Tags for subcategory pills
+      author: doc.author?.name,
+      mainImage: doc.mainImage?.asset?._ref,
+    }
+  }
+
+  if (doc._type === 'gearPost') {
+    return {
+      ...baseObject,
+      excerpt: doc.excerpt,
+      category: doc.category?.title,           // Main category
+      gearCategory: doc.gearCategory?.title,   // Gear category for subcategory pill
       author: doc.author?.name,
       mainImage: doc.mainImage?.asset?._ref,
     }
@@ -44,7 +56,7 @@ async function transformDocument(doc: any) {
       location: doc.location,
       eventDate: doc.eventDate,
       distance: doc.distance,
-      category: doc.category?.title,
+      raceCategory: doc.raceCategory?.title,   // Race category for subcategory pill
     }
   }
 
@@ -62,22 +74,53 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'No document ID provided' }, { status: 400 })
     }
 
-    // Fetch the full document from Sanity
-    const query = `*[_id == $id][0]{
-      _id,
-      _type,
-      _createdAt,
-      title,
-      slug,
-      excerpt,
-      publishedAt,
-      category->{title},
-      author->{name},
-      mainImage,
-      location,
-      eventDate,
-      distance
-    }`
+    // Fetch the full document from Sanity with type-specific fields
+    let query = ''
+
+    if (body._type === 'post') {
+      query = `*[_id == $id][0]{
+        _id,
+        _type,
+        _createdAt,
+        title,
+        slug,
+        excerpt,
+        publishedAt,
+        category->{title},
+        author->{name},
+        mainImage,
+        tags
+      }`
+    } else if (body._type === 'gearPost') {
+      query = `*[_id == $id][0]{
+        _id,
+        _type,
+        _createdAt,
+        title,
+        slug,
+        excerpt,
+        publishedAt,
+        category->{title},
+        gearCategory->{title},
+        author->{name},
+        mainImage
+      }`
+    } else if (body._type === 'raceGuide') {
+      query = `*[_id == $id][0]{
+        _id,
+        _type,
+        _createdAt,
+        title,
+        slug,
+        publishedAt,
+        raceCategory->{title},
+        location,
+        eventDate,
+        distance
+      }`
+    } else {
+      return NextResponse.json({ message: 'Unsupported document type' }, { status: 200 })
+    }
 
     const document = await sanityClient.fetch(query, { id: _id })
 
@@ -132,6 +175,9 @@ export async function GET(request: NextRequest) {
       excerpt,
       publishedAt,
       category->{title},
+      gearCategory->{title},
+      raceCategory->{title},
+      tags,
       author->{name},
       mainImage,
       location,

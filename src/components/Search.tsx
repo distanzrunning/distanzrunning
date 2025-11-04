@@ -20,6 +20,9 @@ type HitType = AlgoliaHit<{
   _type: string
   excerpt?: string
   category?: string
+  tags?: string[]
+  gearCategory?: string
+  raceCategory?: string
   location?: string
 }>
 
@@ -69,8 +72,18 @@ function SearchResults({ query, onClearQuery }: { query: string; onClearQuery: (
           // Get main category
           const mainCategory = getCategoryGroup(hit)
 
-          // Get subcategory (the actual category from Sanity)
-          const subCategory = hit.category
+          // Get subcategory based on content type
+          let subCategories: string[] = []
+          if (hit._type === 'post' && hit.tags && hit.tags.length > 0) {
+            // For articles, show first tag only
+            subCategories = [hit.tags[0]]
+          } else if (hit._type === 'gearPost' && hit.gearCategory) {
+            // For gear, show gear category
+            subCategories = [hit.gearCategory]
+          } else if (hit._type === 'raceGuide' && hit.raceCategory) {
+            // For races, show race category
+            subCategories = [hit.raceCategory]
+          }
 
           return (
             <Link
@@ -88,12 +101,12 @@ function SearchResults({ query, onClearQuery }: { query: string; onClearQuery: (
                   <span className="inline-flex items-center px-2 py-0.5 text-xs font-semibold text-neutral-700 dark:text-neutral-300 bg-neutral-200/70 dark:bg-neutral-700/70 rounded-full">
                     {mainCategory}
                   </span>
-                  {/* Subcategory pill (if exists) */}
-                  {subCategory && (
-                    <span className="inline-flex items-center px-2 py-0.5 text-xs font-medium text-neutral-600 dark:text-neutral-400 bg-neutral-100/70 dark:bg-neutral-800/70 rounded-full">
-                      {subCategory}
+                  {/* Subcategory pills */}
+                  {subCategories.map((subCat, idx) => (
+                    <span key={idx} className="inline-flex items-center px-2 py-0.5 text-xs font-medium text-neutral-600 dark:text-neutral-400 bg-neutral-100/70 dark:bg-neutral-800/70 rounded-full">
+                      {subCat}
                     </span>
-                  )}
+                  ))}
                 </div>
               </div>
               <div className="flex-shrink-0 mt-1">
