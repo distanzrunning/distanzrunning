@@ -41,18 +41,6 @@ function SearchResults({ query, onClearQuery }: { query: string; onClearQuery: (
   const { hits } = useHits<HitType>()
   const [isOpen, setIsOpen] = useState(false)
 
-  // Group hits by category
-  const groupedHits = hits.reduce((acc, hit) => {
-    const group = getCategoryGroup(hit)
-    if (!acc[group]) acc[group] = []
-    acc[group].push(hit)
-    return acc
-  }, {} as Record<string, HitType[]>)
-
-  // Order groups
-  const groupOrder = ['Road', 'Trail', 'Track', 'Gear', 'Races']
-  const orderedGroups = groupOrder.filter(group => groupedHits[group]?.length > 0)
-
   useEffect(() => {
     setIsOpen(query.length > 0 && hits.length > 0)
   }, [hits.length, query])
@@ -65,58 +53,55 @@ function SearchResults({ query, onClearQuery }: { query: string; onClearQuery: (
   if (!isOpen || hits.length === 0) return null
 
   return (
-    <div className="absolute top-full left-0 mt-2 bg-white/90 dark:bg-neutral-900/90 backdrop-blur-xl border border-black/35 dark:border-white/20 rounded-2xl shadow-2xl max-h-[70vh] overflow-y-auto z-50 min-w-[600px] w-auto">
+    <div className="absolute top-full left-0 mt-2 bg-white/90 dark:bg-neutral-900/90 backdrop-blur-xl border border-black/35 dark:border-white/20 rounded-2xl shadow-2xl max-h-[70vh] overflow-y-auto z-50 min-w-[650px] w-auto">
       <div className="py-4 px-2">
-        {orderedGroups.map((group) => (
-          <div key={group} className="mb-6 last:mb-0">
-            {/* Group Header - Pill Style */}
-            <div className="px-3 mb-2">
-              <span className="inline-flex items-center px-3 py-1 text-xs font-semibold uppercase tracking-wider text-neutral-700 dark:text-neutral-300 bg-neutral-200/60 dark:bg-neutral-700/60 rounded-full">
-                {group} · {groupedHits[group].length}
-              </span>
-            </div>
+        {hits.slice(0, 20).map((hit) => {
+          // Determine URL
+          let href = '/'
+          if (hit._type === 'post') {
+            href = `/articles/post/${hit.slug}`
+          } else if (hit._type === 'gearPost') {
+            href = `/gear/${hit.slug}`
+          } else if (hit._type === 'raceGuide') {
+            href = `/races/${hit.slug}`
+          }
 
-            {/* Group Results - limit to 5 per category */}
-            <div>
-              {groupedHits[group].slice(0, 5).map((hit) => {
-                // Determine URL
-                let href = '/'
-                if (hit._type === 'post') {
-                  href = `/articles/post/${hit.slug}`
-                } else if (hit._type === 'gearPost') {
-                  href = `/gear/${hit.slug}`
-                } else if (hit._type === 'raceGuide') {
-                  href = `/races/${hit.slug}`
-                }
+          // Get main category
+          const mainCategory = getCategoryGroup(hit)
 
-                return (
-                  <Link
-                    key={hit.objectID}
-                    href={href}
-                    className="group flex cursor-pointer items-center justify-between gap-2 rounded-lg px-3 py-4 text-neutral-600 dark:text-neutral-400 text-sm hover:bg-neutral-100/50 dark:hover:bg-neutral-800/50 hover:text-neutral-900 dark:hover:text-white transition-all"
-                    onClick={handleResultClick}
-                  >
-                    <div className="flex basis-2/3 overflow-hidden">
-                      <h4 className="font-semibold truncate">
-                        {hit.title}
-                      </h4>
-                    </div>
-                    <div>
-                      <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
-                    </div>
-                  </Link>
-                )
-              })}
-            </div>
+          // Get subcategory (the actual category from Sanity)
+          const subCategory = hit.category
 
-            {/* Show "View more" if there are more results */}
-            {groupedHits[group].length > 5 && (
-              <div className="px-3 py-2 text-xs text-neutral-500 dark:text-neutral-400">
-                + {groupedHits[group].length - 5} more results
+          return (
+            <Link
+              key={hit.objectID}
+              href={href}
+              className="group flex cursor-pointer items-start justify-between gap-3 rounded-lg px-3 py-3 text-neutral-600 dark:text-neutral-400 text-sm hover:bg-neutral-100/50 dark:hover:bg-neutral-800/50 hover:text-neutral-900 dark:hover:text-white transition-all"
+              onClick={handleResultClick}
+            >
+              <div className="flex flex-col gap-2 flex-1 min-w-0">
+                <h4 className="font-semibold truncate text-neutral-900 dark:text-white">
+                  {hit.title}
+                </h4>
+                <div className="flex items-center gap-2 flex-wrap">
+                  {/* Main category pill */}
+                  <span className="inline-flex items-center px-2 py-0.5 text-xs font-semibold text-neutral-700 dark:text-neutral-300 bg-neutral-200/70 dark:bg-neutral-700/70 rounded-full">
+                    {mainCategory}
+                  </span>
+                  {/* Subcategory pill (if exists) */}
+                  {subCategory && (
+                    <span className="inline-flex items-center px-2 py-0.5 text-xs font-medium text-neutral-600 dark:text-neutral-400 bg-neutral-100/70 dark:bg-neutral-800/70 rounded-full">
+                      {subCategory}
+                    </span>
+                  )}
+                </div>
               </div>
-            )}
-          </div>
-        ))}
+              <div className="flex-shrink-0 mt-1">
+                <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
+              </div>
+            </Link>
+          )
+        })}
       </div>
     </div>
   )
