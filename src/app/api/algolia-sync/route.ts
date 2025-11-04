@@ -220,14 +220,146 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// Health check endpoint
-export async function GET() {
-  return NextResponse.json(
-    {
-      status: 'ok',
-      message: 'Algolia sync webhook endpoint is running',
-      supportedTypes: ['post', 'gearPost', 'raceGuide']
-    },
-    { status: 200 }
-  );
+// Full reindex endpoint (protected by secret)
+export async function GET(request: NextRequest) {
+  try {
+    const searchParams = request.nextUrl.searchParams;
+    const action = searchParams.get('action');
+    const secret = searchParams.get('secret');
+
+    // Health check - no auth needed
+    if (!action || action === 'health') {
+      return NextResponse.json(
+        {
+          status: 'ok',
+          message: 'Algolia sync webhook endpoint is running',
+          supportedTypes: ['post', 'gearPost', 'raceGuide']
+        },
+        { status: 200 }
+      );
+    }
+
+    // Reindex requires authentication
+    if (action === 'reindex') {
+      // Protect this endpoint with a secret
+      if (secret !== process.env.ALGOLIA_REINDEX_SECRET) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      }
+
+      console.log('Starting full reindex...');
+
+      // Fetch all published posts
+      const postsQuery = `*[_type == "post" && !(_id in path("drafts.**"))]{
+        _id,
+        _type,
+        title,
+        slug,
+        excerpt,
+        publishedAt,
+        tags,
+        "mainImageUrl": mainImage.asset->url,
+        "authorName": author->name,
+        "categoryTitle": category->title,
+        "categorySlug": category->slug.current,
+        body
+      }`;
+
+      // Fetch all published gear posts
+      const gearQuery = `*[_type == "gearPost" && !(_id in path("drafts.**"))]{
+        _id,
+        _type,
+        title,
+        slug,
+        excerpt,
+        publishedAt,
+        tags,
+        "mainImageUrl": mainImage.asset->url,
+        "authorName": author->name,
+        "gearCategoryTitle": gearCategory->title,
+        "gearCategorySlug": gearCategory->slug.current,
+        body
+      }`;
+
+      // Fetch all published race guides
+      const racesQuery = `*[_type == "raceGuide" && !(_id in path("drafts.**"))]{
+        _id,
+        _type,
+        title,
+        slug,
+        excerpt,
+        publishedAt,
+        location,
+        eventDate,
+        "mainImageUrl": mainImage.asset->url,
+        "authorName": author->name,
+        "raceCategoryTitle": raceCategory->title,
+        "raceCategorySlug": raceCategory->slug.current,
+        body
+      }`;
+
+      // Fetch all documents in parallel
+      const [posts, gearPosts, raceGuides] = await Promise.all([
+        client.fetch(postsQuery),
+        client.fetch(gearQuery),
+        client.fetch(racesQuery),
+      ]);
+
+      console.log(`Found ${posts.length} posts, ${gearPosts.length} gear posts, ${raceGuides.length} race guides`);
+
+      // Transform and index posts
+      const postsToIndex = posts.map(transformForAlgolia).filter(Boolean);
+      if (postsToIndex.length > 0) {
+        await algoliaClient.saveObjects({
+          indexName: 'posts',
+          objects: postsToIndex,
+        });
+        console.log(`Indexed ${postsToIndex.length} posts`);
+      }
+
+      // Transform and index gear posts
+      const gearToIndex = gearPosts.map(transformForAlgolia).filter(Boolean);
+      if (gearToIndex.length > 0) {
+        await algoliaClient.saveObjects({
+          indexName: 'gear',
+          objects: gearToIndex,
+        });
+        console.log(`Indexed ${gearToIndex.length} gear posts`);
+      }
+
+      // Transform and index race guides
+      const racesToIndex = raceGuides.map(transformForAlgolia).filter(Boolean);
+      if (racesToIndex.length > 0) {
+        await algoliaClient.saveObjects({
+          indexName: 'races',
+          objects: racesToIndex,
+        });
+        console.log(`Indexed ${racesToIndex.length} race guides`);
+      }
+
+      return NextResponse.json(
+        {
+          message: 'Full reindex completed',
+          counts: {
+            posts: postsToIndex.length,
+            gear: gearToIndex.length,
+            races: racesToIndex.length,
+            total: postsToIndex.length + gearToIndex.length + racesToIndex.length,
+          }
+        },
+        { status: 200 }
+      );
+    }
+
+    return NextResponse.json(
+      { error: 'Invalid action. Use ?action=health or ?action=reindex' },
+      { status: 400 }
+    );
+
+  } catch (error) {
+    console.error('Reindex error:', error);
+    return NextResponse.json(
+      { error: 'Failed to reindex', details: error instanceof Error ? error.message : 'Unknown error' },
+      { status: 500 }
+    );
+  }
 }
