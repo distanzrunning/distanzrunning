@@ -35,6 +35,7 @@ async function fetchDocument(id: string, type: string) {
         slug,
         excerpt,
         publishedAt,
+        tags,
         "mainImageUrl": mainImage.asset->url,
         "authorName": author->name,
         "categoryTitle": category->title,
@@ -51,10 +52,11 @@ async function fetchDocument(id: string, type: string) {
         slug,
         excerpt,
         publishedAt,
+        tags,
         "mainImageUrl": mainImage.asset->url,
         "authorName": author->name,
-        "categoryTitle": gearCategory->title,
-        "categorySlug": gearCategory->slug.current,
+        "gearCategoryTitle": gearCategory->title,
+        "gearCategorySlug": gearCategory->slug.current,
         body
       }`;
       break;
@@ -67,10 +69,12 @@ async function fetchDocument(id: string, type: string) {
         slug,
         excerpt,
         publishedAt,
+        location,
+        eventDate,
         "mainImageUrl": mainImage.asset->url,
         "authorName": author->name,
-        "categoryTitle": raceCategory->title,
-        "categorySlug": raceCategory->slug.current,
+        "raceCategoryTitle": raceCategory->title,
+        "raceCategorySlug": raceCategory->slug.current,
         body
       }`;
       break;
@@ -99,7 +103,8 @@ function transformForAlgolia(doc: any) {
     .join(' ')
     .slice(0, 8000); // Limit body text to 8000 chars for Algolia
 
-  return {
+  // Base object with common fields
+  const baseObject = {
     objectID: doc._id,
     _type: doc._type,
     title: doc.title,
@@ -108,11 +113,40 @@ function transformForAlgolia(doc: any) {
     publishedAt: doc.publishedAt,
     mainImageUrl: doc.mainImageUrl,
     authorName: doc.authorName,
-    categoryTitle: doc.categoryTitle,
-    categorySlug: doc.categorySlug,
     bodyText,
     _updatedAt: new Date().toISOString(),
   };
+
+  // Add type-specific fields for filtering
+  if (doc._type === 'post') {
+    return {
+      ...baseObject,
+      tags: doc.tags || [],                    // Array of tags for subfilters
+      categoryTitle: doc.categoryTitle,        // Main category (Road, Track, Trail)
+      categorySlug: doc.categorySlug,
+    };
+  }
+
+  if (doc._type === 'gearPost') {
+    return {
+      ...baseObject,
+      tags: doc.tags || [],                    // Array of tags
+      gearCategoryTitle: doc.gearCategoryTitle,  // Gear category for subfilters
+      gearCategorySlug: doc.gearCategorySlug,
+    };
+  }
+
+  if (doc._type === 'raceGuide') {
+    return {
+      ...baseObject,
+      location: doc.location,
+      eventDate: doc.eventDate,
+      raceCategoryTitle: doc.raceCategoryTitle,  // Race category for subfilters
+      raceCategorySlug: doc.raceCategorySlug,
+    };
+  }
+
+  return baseObject;
 }
 
 // Main webhook handler
