@@ -75,8 +75,8 @@ function SearchResults({ query, onClearQuery }: { query: string; onClearQuery: (
           // Get subcategory based on content type
           let subCategories: string[] = []
           if (hit._type === 'post' && hit.tags && hit.tags.length > 0) {
-            // For articles, show first tag only
-            subCategories = [hit.tags[0]]
+            // For articles, show all tags
+            subCategories = hit.tags
           } else if (hit._type === 'gearPost' && hit.gearCategory) {
             // For gear, show gear category
             subCategories = [hit.gearCategory]
