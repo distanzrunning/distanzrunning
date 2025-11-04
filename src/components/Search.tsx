@@ -66,18 +66,18 @@ function SearchResults({ query, onClearQuery }: { query: string; onClearQuery: (
 
   return (
     <div className="absolute top-full left-0 mt-2 bg-white/90 dark:bg-neutral-900/90 backdrop-blur-xl border border-black/35 dark:border-white/20 rounded-2xl shadow-2xl max-h-[70vh] overflow-y-auto z-50 min-w-[600px] w-auto">
-      <div className="py-2 px-2">
+      <div className="py-4 px-2">
         {orderedGroups.map((group) => (
-          <div key={group} className="mb-4 last:mb-0">
-            {/* Group Header */}
-            <div className="px-3 py-2 border-b border-neutral-200/50 dark:border-neutral-700/50">
-              <h3 className="text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
-                {group} ({groupedHits[group].length})
-              </h3>
+          <div key={group} className="mb-6 last:mb-0">
+            {/* Group Header - Pill Style */}
+            <div className="px-3 mb-2">
+              <span className="inline-flex items-center px-3 py-1 text-xs font-semibold uppercase tracking-wider text-neutral-700 dark:text-neutral-300 bg-neutral-200/60 dark:bg-neutral-700/60 rounded-full">
+                {group} · {groupedHits[group].length}
+              </span>
             </div>
 
             {/* Group Results - limit to 5 per category */}
-            <div className="mt-2">
+            <div>
               {groupedHits[group].slice(0, 5).map((hit) => {
                 // Determine URL
                 let href = '/'
@@ -126,7 +126,13 @@ function SearchInput({ onQueryChange }: { onQueryChange: (query: string) => void
   const { query, refine } = useSearchBox()
   const [localQuery, setLocalQuery] = useState(query)
   const [isFocused, setIsFocused] = useState(false)
+  const [isMac, setIsMac] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
+
+  // Detect OS on mount
+  useEffect(() => {
+    setIsMac(navigator.platform.toUpperCase().indexOf('MAC') >= 0)
+  }, [])
 
   // Debounce search
   useEffect(() => {
@@ -173,10 +179,10 @@ function SearchInput({ onQueryChange }: { onQueryChange: (query: string) => void
         onFocus={() => setIsFocused(true)}
         onBlur={handleBlur}
         placeholder="Search"
-        className={`w-full pl-10 pr-4 py-2 text-sm bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white placeholder:text-neutral-500 dark:placeholder:text-neutral-400 border border-transparent focus:border-neutral-300 dark:focus:border-neutral-600 rounded-md focus:outline-none focus:ring-2 focus:ring-electric-pink/20 transition-all ${isFocused ? 'min-w-[400px]' : 'min-w-[240px]'}`}
+        className={`w-full pl-10 pr-20 py-2 text-sm bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white placeholder:text-neutral-500 dark:placeholder:text-neutral-400 border border-transparent focus:border-neutral-300 dark:focus:border-neutral-600 rounded-md focus:outline-none focus:ring-2 focus:ring-electric-pink/20 transition-all ${isFocused ? 'min-w-[400px]' : 'min-w-[240px]'}`}
       />
       <kbd className="absolute right-3 hidden md:inline-flex items-center gap-1 px-2 py-0.5 text-xs font-mono text-neutral-500 dark:text-neutral-400 bg-neutral-200 dark:bg-neutral-700 rounded pointer-events-none">
-        ⌘K
+        {isMac ? '⌘K' : 'Ctrl+K'}
       </kbd>
     </div>
   )
