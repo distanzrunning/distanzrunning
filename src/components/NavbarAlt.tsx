@@ -59,13 +59,33 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
   const [mobileSubMenu, setMobileSubMenu] = useState<'main' | 'gear' | 'races'>('main')
   const [mounted, setMounted] = useState(false)
   const [navValue, setNavValue] = useState('')
+  const [searchExpanded, setSearchExpanded] = useState(false)
 
   useEffect(() => {
     setMounted(true)
   }, [])
 
+  // Close mega menus when search expands
+  useEffect(() => {
+    if (searchExpanded) {
+      setNavValue('')
+    }
+  }, [searchExpanded])
+
   return (
     <>
+      {/* Page Backdrop Overlay - Only show when search is expanded */}
+      <motion.div
+        initial={false}
+        animate={{
+          opacity: searchExpanded ? 1 : 0,
+          pointerEvents: searchExpanded ? 'auto' : 'none'
+        }}
+        transition={{ duration: 0.3, ease: 'easeInOut' }}
+        className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40"
+        onClick={() => setSearchExpanded(false)}
+      />
+
       {/* Desktop & Mobile Header - Fixed */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-white dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-700 transition-colors duration-300 overflow-visible" role="banner">
 
@@ -98,9 +118,16 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
               />
             </Link>
 
-            {/* Desktop Navigation - Radix UI */}
-            <NavigationMenu.Root className="relative z-10 hidden lg:block" value={navValue} onValueChange={setNavValue}>
-              <NavigationMenu.List className="flex items-center gap-1">
+            {/* Desktop Navigation - Radix UI - Hide when search expanded */}
+            <motion.div
+              animate={{
+                opacity: searchExpanded ? 0 : 1,
+                pointerEvents: searchExpanded ? 'none' : 'auto'
+              }}
+              transition={{ duration: 0.2 }}
+            >
+              <NavigationMenu.Root className="relative z-10 hidden lg:block" value={navValue} onValueChange={setNavValue}>
+                <NavigationMenu.List className="flex items-center gap-1">
                   {/* Road Link */}
                   <NavigationMenu.Item>
                     <NavigationMenu.Link asChild>
@@ -383,28 +410,52 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                   <NavigationMenu.Viewport className="pointer-events-auto relative w-full h-[var(--radix-navigation-menu-viewport-height)] origin-top bg-white dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-800 shadow-[0_30px_60px_-40px_rgba(15,23,42,0.45)] overflow-hidden transition-[height,transform,opacity] duration-300 ease-out data-[state=open]:animate-slideDown data-[state=closed]:animate-slideUp" />
                 </div>
               </NavigationMenu.Root>
+            </motion.div>
           </div>
 
           {/* Right: Search + Newsletter CTA + Dark Mode + Mobile Menu */}
-          <div className="flex items-center gap-4">
-            {/* Search - Wider inline search bar with dropdown results */}
-            <div className="hidden md:block flex-1 max-w-lg">
-              <Search />
-            </div>
-
-            {/* Newsletter Button - Desktop - Subtle hover like Quartr */}
-            <Link
-              href="/newsletter"
-              className="hidden md:inline-flex items-center px-4 h-9 text-base font-semibold text-white bg-neutral-900 dark:bg-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-100 rounded-md transition-all duration-200 ease-out active:scale-[0.98] whitespace-nowrap"
+          <div className="flex items-center gap-4 relative">
+            {/* Search Container - Expands to cover nav links when active */}
+            <motion.div
+              initial={false}
+              animate={{
+                position: searchExpanded ? 'absolute' : 'relative',
+                right: searchExpanded ? '0' : 'auto',
+                left: searchExpanded ? '-650px' : 'auto',
+                width: searchExpanded ? '900px' : 'auto',
+                zIndex: searchExpanded ? 60 : 'auto'
+              }}
+              transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
+              className="hidden md:block"
+              style={{ maxWidth: searchExpanded ? '900px' : '320px' }}
             >
-              Newsletter
-            </Link>
+              <Search
+                isExpanded={searchExpanded}
+                onExpandChange={setSearchExpanded}
+              />
+            </motion.div>
 
-            {/* Dark Mode Toggle */}
+            {/* Newsletter Button - Desktop - Hide when search expanded */}
+            <motion.div
+              animate={{
+                opacity: searchExpanded ? 0 : 1,
+                pointerEvents: searchExpanded ? 'none' : 'auto'
+              }}
+              transition={{ duration: 0.2 }}
+            >
+              <Link
+                href="/newsletter"
+                className="hidden md:inline-flex items-center px-4 h-9 text-base font-semibold text-white bg-neutral-900 dark:bg-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-100 rounded-md transition-all duration-200 ease-out active:scale-[0.98] whitespace-nowrap"
+              >
+                Newsletter
+              </Link>
+            </motion.div>
+
+            {/* Dark Mode Toggle - Keep visible */}
             {mounted && (
               <button
                 onClick={toggleDarkMode}
-                className="p-2 text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors duration-200"
+                className="p-2 text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors duration-200 relative z-[61]"
                 aria-label="Toggle dark mode"
                 title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
               >
