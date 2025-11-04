@@ -29,6 +29,7 @@
     "@tailwindcss/typography": "^0.5.16",
     "@vercel/analytics": "^1.5.0",
     "@vercel/speed-insights": "^1.2.0",
+    "algoliasearch": "^5.42.0",
     "chart.js": "^4.4.9",
     "critters": "^0.0.23",
     "date-fns": "^4.1.0",

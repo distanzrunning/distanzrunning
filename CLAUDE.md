@@ -175,6 +175,14 @@ npm run lint         # Run ESLint (note: ignoreDuringBuilds: true in next.config
 **Authentication:**
 - `/api/auth` - POST: Login with password, GET: Check auth status
 
+**Search & Indexing:**
+- `/api/algolia-sync` - POST: Webhook endpoint for Sanity to sync content to Algolia
+  - Receives `_id` and `_type` from Sanity webhook
+  - Fetches full document from Sanity
+  - Indexes posts, gearPosts, and raceGuides to separate Algolia indices
+  - Handles document deletions automatically
+  - GET: Health check endpoint
+
 ### Analytics & Tracking
 
 **PostHog Web Analytics:**
@@ -250,6 +258,11 @@ AUTH_SECRET
 GTM_ID (Google Tag Manager, referenced in layout.tsx)
 NEXT_PUBLIC_POSTHOG_KEY (PostHog project API key)
 NEXT_PUBLIC_POSTHOG_HOST (PostHog host URL - EU: https://eu.i.posthog.com)
+
+# Search (Algolia)
+NEXT_PUBLIC_ALGOLIA_APP_ID (Algolia application ID)
+ALGOLIA_ADMIN_API_KEY (Algolia admin API key - keep secret, used for indexing)
+NEXT_PUBLIC_ALGOLIA_SEARCH_API_KEY (Algolia search-only API key - safe for client-side)
 
 # Preview Mode
 PREVIEW_MODE (set to 'true' to disable navbar/footer)
