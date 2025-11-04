@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { client } from '@/sanity/lib/client';
-import algoliasearch from 'algoliasearch';
+import { algoliasearch } from 'algoliasearch';
 
 // Initialize Algolia client
 const algoliaClient = algoliasearch(
@@ -8,15 +8,15 @@ const algoliaClient = algoliasearch(
   process.env.ALGOLIA_ADMIN_API_KEY!
 );
 
-// Get the appropriate index based on document type
-function getIndexForType(type: string) {
+// Get the appropriate index name based on document type
+function getIndexNameForType(type: string): string | null {
   switch (type) {
     case 'post':
-      return algoliaClient.initIndex('posts');
+      return 'posts';
     case 'gearPost':
-      return algoliaClient.initIndex('gear');
+      return 'gear';
     case 'raceGuide':
-      return algoliaClient.initIndex('races');
+      return 'races';
     default:
       return null;
   }
@@ -38,7 +38,7 @@ async function fetchDocument(id: string, type: string) {
         "mainImageUrl": mainImage.asset->url,
         "authorName": author->name,
         "categoryTitle": category->title,
-        "categorySlugs": category->slug.current,
+        "categorySlug": category->slug.current,
         body
       }`;
       break;
@@ -53,8 +53,8 @@ async function fetchDocument(id: string, type: string) {
         publishedAt,
         "mainImageUrl": mainImage.asset->url,
         "authorName": author->name,
-        "gearCategoryTitle": gearCategory->title,
-        "gearCategorySlugs": gearCategory->slug.current,
+        "categoryTitle": gearCategory->title,
+        "categorySlug": gearCategory->slug.current,
         body
       }`;
       break;
@@ -69,8 +69,8 @@ async function fetchDocument(id: string, type: string) {
         publishedAt,
         "mainImageUrl": mainImage.asset->url,
         "authorName": author->name,
-        "raceCategoryTitle": raceCategory->title,
-        "raceCategorySlugs": raceCategory->slug.current,
+        "categoryTitle": raceCategory->title,
+        "categorySlug": raceCategory->slug.current,
         body
       }`;
       break;
@@ -108,8 +108,8 @@ function transformForAlgolia(doc: any) {
     publishedAt: doc.publishedAt,
     mainImageUrl: doc.mainImageUrl,
     authorName: doc.authorName,
-    categoryTitle: doc.categoryTitle || doc.gearCategoryTitle || doc.raceCategoryTitle,
-    categorySlug: doc.categorySlugs || doc.gearCategorySlugs || doc.raceCategorySlugs,
+    categoryTitle: doc.categoryTitle,
+    categorySlug: doc.categorySlug,
     bodyText,
     _updatedAt: new Date().toISOString(),
   };
@@ -132,9 +132,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Get the appropriate Algolia index
-    const index = getIndexForType(_type);
-    if (!index) {
+    // Get the appropriate Algolia index name
+    const indexName = getIndexNameForType(_type);
+    if (!indexName) {
       console.log(`Skipping indexing for unsupported type: ${_type}`);
       return NextResponse.json(
         { message: `Type ${_type} not configured for indexing` },
@@ -148,7 +148,10 @@ export async function POST(request: NextRequest) {
     if (!document) {
       // Document might have been deleted, remove from Algolia
       console.log(`Document ${_id} not found, removing from Algolia`);
-      await index.deleteObject(_id);
+      await algoliaClient.deleteObject({
+        indexName,
+        objectID: _id
+      });
       return NextResponse.json(
         { message: 'Document removed from index' },
         { status: 200 }
@@ -158,7 +161,10 @@ export async function POST(request: NextRequest) {
     // Transform and index the document
     const algoliaDoc = transformForAlgolia(document);
     if (algoliaDoc) {
-      await index.saveObject(algoliaDoc);
+      await algoliaClient.saveObject({
+        indexName,
+        body: algoliaDoc
+      });
       console.log(`Successfully indexed ${_type}: ${document.title}`);
       return NextResponse.json(
         { message: 'Document indexed successfully', objectID: _id },
