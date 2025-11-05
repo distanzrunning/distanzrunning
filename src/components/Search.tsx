@@ -41,6 +41,115 @@ function getCategoryGroup(hit: HitType): string {
   return 'Other'
 }
 
+// Category navigation when search is open but no query
+function CategoryNavigation({ onNavigate }: { onNavigate: () => void }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: -10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      transition={{ duration: 0.2, ease: 'easeOut' }}
+      className="absolute top-full left-0 right-0 mt-4 bg-white/95 dark:bg-neutral-900/95 backdrop-blur-xl border border-neutral-200/50 dark:border-neutral-700/50 rounded-2xl shadow-2xl max-h-[60vh] overflow-y-auto"
+    >
+      <div className="py-4 px-2">
+        {/* Main Categories */}
+        <div className="mb-4">
+          <Link
+            href="/articles/category/road"
+            onClick={onNavigate}
+            className="group flex cursor-pointer items-center justify-between gap-4 rounded-lg px-3 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
+          >
+            <h4 className="font-semibold text-base text-neutral-900 dark:text-white">Road</h4>
+            <ArrowRight className="size-5 transition-transform group-hover:translate-x-1 flex-shrink-0 text-neutral-600 dark:text-neutral-400" />
+          </Link>
+          <Link
+            href="/articles/category/track"
+            onClick={onNavigate}
+            className="group flex cursor-pointer items-center justify-between gap-4 rounded-lg px-3 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
+          >
+            <h4 className="font-semibold text-base text-neutral-900 dark:text-white">Track</h4>
+            <ArrowRight className="size-5 transition-transform group-hover:translate-x-1 flex-shrink-0 text-neutral-600 dark:text-neutral-400" />
+          </Link>
+          <Link
+            href="/articles/category/trail"
+            onClick={onNavigate}
+            className="group flex cursor-pointer items-center justify-between gap-4 rounded-lg px-3 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
+          >
+            <h4 className="font-semibold text-base text-neutral-900 dark:text-white">Trail</h4>
+            <ArrowRight className="size-5 transition-transform group-hover:translate-x-1 flex-shrink-0 text-neutral-600 dark:text-neutral-400" />
+          </Link>
+        </div>
+
+        {/* Gear Categories */}
+        <div className="mb-4">
+          <h5 className="px-3 py-2 text-xs font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">Gear</h5>
+          <Link
+            href="/gear/category/racing-shoes"
+            onClick={onNavigate}
+            className="group flex cursor-pointer items-center justify-between gap-4 rounded-lg px-3 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
+          >
+            <h4 className="font-semibold text-base text-neutral-900 dark:text-white">Racing Shoes</h4>
+            <ArrowRight className="size-5 transition-transform group-hover:translate-x-1 flex-shrink-0 text-neutral-600 dark:text-neutral-400" />
+          </Link>
+          <Link
+            href="/gear/category/max-cushion"
+            onClick={onNavigate}
+            className="group flex cursor-pointer items-center justify-between gap-4 rounded-lg px-3 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
+          >
+            <h4 className="font-semibold text-base text-neutral-900 dark:text-white">Max Cushion</h4>
+            <ArrowRight className="size-5 transition-transform group-hover:translate-x-1 flex-shrink-0 text-neutral-600 dark:text-neutral-400" />
+          </Link>
+          <Link
+            href="/gear/category/tempo-shoes"
+            onClick={onNavigate}
+            className="group flex cursor-pointer items-center justify-between gap-4 rounded-lg px-3 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
+          >
+            <h4 className="font-semibold text-base text-neutral-900 dark:text-white">Tempo Shoes</h4>
+            <ArrowRight className="size-5 transition-transform group-hover:translate-x-1 flex-shrink-0 text-neutral-600 dark:text-neutral-400" />
+          </Link>
+          <Link
+            href="/gear/category/trail-shoes"
+            onClick={onNavigate}
+            className="group flex cursor-pointer items-center justify-between gap-4 rounded-lg px-3 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
+          >
+            <h4 className="font-semibold text-base text-neutral-900 dark:text-white">Trail Shoes</h4>
+            <ArrowRight className="size-5 transition-transform group-hover:translate-x-1 flex-shrink-0 text-neutral-600 dark:text-neutral-400" />
+          </Link>
+        </div>
+
+        {/* Race Categories */}
+        <div>
+          <h5 className="px-3 py-2 text-xs font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">Races</h5>
+          <Link
+            href="/races/category/marathon"
+            onClick={onNavigate}
+            className="group flex cursor-pointer items-center justify-between gap-4 rounded-lg px-3 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
+          >
+            <h4 className="font-semibold text-base text-neutral-900 dark:text-white">Marathon</h4>
+            <ArrowRight className="size-5 transition-transform group-hover:translate-x-1 flex-shrink-0 text-neutral-600 dark:text-neutral-400" />
+          </Link>
+          <Link
+            href="/races/category/half-marathon"
+            onClick={onNavigate}
+            className="group flex cursor-pointer items-center justify-between gap-4 rounded-lg px-3 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
+          >
+            <h4 className="font-semibold text-base text-neutral-900 dark:text-white">Half Marathon</h4>
+            <ArrowRight className="size-5 transition-transform group-hover:translate-x-1 flex-shrink-0 text-neutral-600 dark:text-neutral-400" />
+          </Link>
+          <Link
+            href="/races/category/ultra"
+            onClick={onNavigate}
+            className="group flex cursor-pointer items-center justify-between gap-4 rounded-lg px-3 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
+          >
+            <h4 className="font-semibold text-base text-neutral-900 dark:text-white">Ultra</h4>
+            <ArrowRight className="size-5 transition-transform group-hover:translate-x-1 flex-shrink-0 text-neutral-600 dark:text-neutral-400" />
+          </Link>
+        </div>
+      </div>
+    </motion.div>
+  )
+}
+
 function SearchResults({ query, onClearQuery, isExpanded }: {
   query: string
   onClearQuery: () => void
@@ -237,6 +346,11 @@ function SearchContent({
     onExpandChange(false)
   }
 
+  const handleNavigate = () => {
+    setCurrentQuery('')
+    onExpandChange(false)
+  }
+
   return (
     <div className="relative w-full">
       <SearchInput
@@ -244,6 +358,13 @@ function SearchContent({
         isExpanded={isExpanded}
         onExpandChange={onExpandChange}
       />
+      {/* Show category navigation when expanded but no query */}
+      <AnimatePresence>
+        {isExpanded && currentQuery.length === 0 && (
+          <CategoryNavigation onNavigate={handleNavigate} />
+        )}
+      </AnimatePresence>
+      {/* Show search results when there's a query */}
       <SearchResults
         query={currentQuery}
         onClearQuery={handleClearQuery}
