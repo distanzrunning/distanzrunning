@@ -417,7 +417,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
           {/* Right: Search + Newsletter CTA + Dark Mode + Mobile Menu */}
           <div className="flex items-center gap-4">
             {/* Search - Icon button when not expanded, full search when expanded */}
-            <div className="hidden md:block relative">
+            <div className="hidden md:block relative flex items-center h-10">
               {!searchExpanded ? (
                 // Search icon button
                 <button
@@ -431,10 +431,10 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                 // Expanded search bar - positioned absolutely to expand leftward
                 <motion.div
                   initial={{ opacity: 0, width: 0 }}
-                  animate={{ opacity: 1, width: 'calc(100vw - 500px)', maxWidth: '900px' }}
+                  animate={{ opacity: 1, width: 'calc(100vw - 350px)', maxWidth: '1100px' }}
                   exit={{ opacity: 0, width: 0 }}
                   transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
-                  className="absolute right-0 top-0"
+                  className="absolute right-0 top-1/2 -translate-y-1/2"
                   style={{ zIndex: 60 }}
                 >
                   <Search
