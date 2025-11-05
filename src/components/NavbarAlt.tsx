@@ -437,7 +437,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
           {/* Right: Search + Newsletter CTA + Dark Mode + Mobile Menu */}
           <div className="flex items-center gap-4">
             {/* Search - Small bar when collapsed, expands leftward when active */}
-            <div ref={searchContainerRef} className="hidden md:block relative flex items-center h-10">
+            <div ref={searchContainerRef} className="hidden md:block relative flex items-center">
               <motion.div
                 initial={false}
                 animate={{
