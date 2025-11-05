@@ -94,7 +94,7 @@ function SearchResults({ query, onClearQuery, isExpanded }: {
             <Link
               key={hit.objectID}
               href={href}
-              className="group flex cursor-pointer items-center justify-between gap-4 rounded-lg px-3 py-3 text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100/50 dark:hover:bg-neutral-800/50 hover:text-neutral-900 dark:hover:text-white transition-all"
+              className="group flex cursor-pointer items-center justify-between gap-4 rounded-lg px-3 py-3 text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:text-neutral-900 dark:hover:text-white transition-all"
               onClick={handleResultClick}
             >
               {/* Left: Title */}
