@@ -6,7 +6,7 @@ import { InstantSearch, useSearchBox, useHits, Configure } from 'react-instantse
 import type { Hit as AlgoliaHit } from 'instantsearch.js'
 import { liteClient as algoliasearch } from 'algoliasearch/lite'
 import Link from 'next/link'
-import { Search as SearchIcon, ArrowRight, BookOpen, Wrench, Trophy } from 'lucide-react'
+import { Search as SearchIcon, ArrowRight } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 
 const searchClient = algoliasearch(
@@ -44,7 +44,6 @@ function getCategoryGroup(hit: HitType): string {
 // Category navigation when search is open but no query
 function CategoryNavigation({ onNavigate }: { onNavigate: () => void }) {
   const [activeView, setActiveView] = useState<'trending' | 'category'>('trending')
-  const [activeSection, setActiveSection] = useState<'articles' | 'gear' | 'races'>('articles')
   const [categoryCounts, setCategoryCounts] = useState<Record<string, number>>({})
   const [loading, setLoading] = useState(true)
 
@@ -157,124 +156,114 @@ function CategoryNavigation({ onNavigate }: { onNavigate: () => void }) {
           )}
 
           {activeView === 'category' && (
-            <div className="flex h-full">
-              {/* Category type selector (Articles/Gear/Races) */}
-              <div className="w-32 border-r border-neutral-200 dark:border-neutral-700 pr-2">
-                <button
-                  onClick={() => setActiveSection('articles')}
-                  className={`w-full flex items-center gap-2 px-2 py-2 text-xs font-medium transition-colors rounded ${
-                    activeSection === 'articles'
-                      ? 'bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white'
-                      : 'text-neutral-600 dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-800/50'
-                  }`}
-                >
-                  <BookOpen className="size-4" />
-                  <span>Articles</span>
-                </button>
-                <button
-                  onClick={() => setActiveSection('gear')}
-                  className={`w-full flex items-center gap-2 px-2 py-2 text-xs font-medium transition-colors rounded ${
-                    activeSection === 'gear'
-                      ? 'bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white'
-                      : 'text-neutral-600 dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-800/50'
-                  }`}
-                >
-                  <Wrench className="size-4" />
-                  <span>Gear</span>
-                </button>
-                <button
-                  onClick={() => setActiveSection('races')}
-                  className={`w-full flex items-center gap-2 px-2 py-2 text-xs font-medium transition-colors rounded ${
-                    activeSection === 'races'
-                      ? 'bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white'
-                      : 'text-neutral-600 dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-800/50'
-                  }`}
-                >
-                  <Trophy className="size-4" />
-                  <span>Races</span>
-                </button>
-              </div>
+            <div>
+              {/* Road */}
+              <Link
+                href="/articles/category/road"
+                onClick={onNavigate}
+                className="group flex cursor-pointer items-center justify-between gap-4 rounded-lg px-3 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
+              >
+                <h4 className="font-semibold text-base text-neutral-900 dark:text-white">Road</h4>
+                <span className="text-sm text-neutral-500 dark:text-neutral-400">
+                  {loading ? '...' : categoryCounts['Road'] || 0}
+                </span>
+              </Link>
 
-              {/* Categories list */}
-              <div className="flex-1 pl-2">
-                {activeSection === 'articles' && (
-                  <div>
-                    <Link
-                      href="/articles/category/road"
-                      onClick={onNavigate}
-                      className="group flex cursor-pointer items-center justify-between gap-4 rounded-lg px-3 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
-                    >
-                      <h4 className="font-semibold text-base text-neutral-900 dark:text-white">Road</h4>
-                      <span className="text-sm text-neutral-500 dark:text-neutral-400">
-                        {loading ? '...' : categoryCounts['Road'] || 0}
-                      </span>
-                    </Link>
-                    <Link
-                      href="/articles/category/track"
-                      onClick={onNavigate}
-                      className="group flex cursor-pointer items-center justify-between gap-4 rounded-lg px-3 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
-                    >
-                      <h4 className="font-semibold text-base text-neutral-900 dark:text-white">Track</h4>
-                      <span className="text-sm text-neutral-500 dark:text-neutral-400">
-                        {loading ? '...' : categoryCounts['Track'] || 0}
-                      </span>
-                    </Link>
-                    <Link
-                      href="/articles/category/trail"
-                      onClick={onNavigate}
-                      className="group flex cursor-pointer items-center justify-between gap-4 rounded-lg px-3 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
-                    >
-                      <h4 className="font-semibold text-base text-neutral-900 dark:text-white">Trail</h4>
-                      <span className="text-sm text-neutral-500 dark:text-neutral-400">
-                        {loading ? '...' : categoryCounts['Trail'] || 0}
-                      </span>
-                    </Link>
-                  </div>
-                )}
+              {/* Track */}
+              <Link
+                href="/articles/category/track"
+                onClick={onNavigate}
+                className="group flex cursor-pointer items-center justify-between gap-4 rounded-lg px-3 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
+              >
+                <h4 className="font-semibold text-base text-neutral-900 dark:text-white">Track</h4>
+                <span className="text-sm text-neutral-500 dark:text-neutral-400">
+                  {loading ? '...' : categoryCounts['Track'] || 0}
+                </span>
+              </Link>
 
-                {activeSection === 'gear' && (
-                  <div>
-                    {Object.entries(categoryCounts)
-                      .filter(([key]) => !['Road', 'Track', 'Trail', 'Marathon', 'Half Marathon', 'Ultra', '5K', '10K'].includes(key))
-                      .map(([category, count]) => (
-                        <Link
-                          key={category}
-                          href={`/gear/category/${category.toLowerCase().replace(/\s+/g, '-')}`}
-                          onClick={onNavigate}
-                          className="group flex cursor-pointer items-center justify-between gap-4 rounded-lg px-3 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
-                        >
-                          <h4 className="font-semibold text-base text-neutral-900 dark:text-white">{category}</h4>
-                          <span className="text-sm text-neutral-500 dark:text-neutral-400">
-                            {loading ? '...' : count}
-                          </span>
-                        </Link>
-                      ))}
-                  </div>
-                )}
+              {/* Trail */}
+              <Link
+                href="/articles/category/trail"
+                onClick={onNavigate}
+                className="group flex cursor-pointer items-center justify-between gap-4 rounded-lg px-3 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
+              >
+                <h4 className="font-semibold text-base text-neutral-900 dark:text-white">Trail</h4>
+                <span className="text-sm text-neutral-500 dark:text-neutral-400">
+                  {loading ? '...' : categoryCounts['Trail'] || 0}
+                </span>
+              </Link>
 
-                {activeSection === 'races' && (
-                  <div>
-                    {['Marathon', 'Half Marathon', 'Ultra', '5K', '10K'].map((category) => {
-                      const count = categoryCounts[category]
-                      if (!count && !loading) return null
+              {/* Gear - Race Day Shoes */}
+              <Link
+                href="/gear/category/race-day-shoes"
+                onClick={onNavigate}
+                className="group flex cursor-pointer items-center justify-between gap-4 rounded-lg px-3 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
+              >
+                <h4 className="font-semibold text-base text-neutral-900 dark:text-white">Race Day Shoes</h4>
+                <span className="text-sm text-neutral-500 dark:text-neutral-400">
+                  {loading ? '...' : categoryCounts['Race Day Shoes'] || 0}
+                </span>
+              </Link>
 
-                      return (
-                        <Link
-                          key={category}
-                          href={`/races/category/${category.toLowerCase().replace(/\s+/g, '-')}`}
-                          onClick={onNavigate}
-                          className="group flex cursor-pointer items-center justify-between gap-4 rounded-lg px-3 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
-                        >
-                          <h4 className="font-semibold text-base text-neutral-900 dark:text-white">{category}</h4>
-                          <span className="text-sm text-neutral-500 dark:text-neutral-400">
-                            {loading ? '...' : count || 0}
-                          </span>
-                        </Link>
-                      )
-                    })}
-                  </div>
-                )}
-              </div>
+              {/* Gear - Daily Trainers */}
+              <Link
+                href="/gear/category/daily-trainers"
+                onClick={onNavigate}
+                className="group flex cursor-pointer items-center justify-between gap-4 rounded-lg px-3 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
+              >
+                <h4 className="font-semibold text-base text-neutral-900 dark:text-white">Daily Trainers</h4>
+                <span className="text-sm text-neutral-500 dark:text-neutral-400">
+                  {loading ? '...' : categoryCounts['Daily Trainers'] || 0}
+                </span>
+              </Link>
+
+              {/* Gear - Max Cushion */}
+              <Link
+                href="/gear/category/max-cushion-shoes"
+                onClick={onNavigate}
+                className="group flex cursor-pointer items-center justify-between gap-4 rounded-lg px-3 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
+              >
+                <h4 className="font-semibold text-base text-neutral-900 dark:text-white">Max Cushion</h4>
+                <span className="text-sm text-neutral-500 dark:text-neutral-400">
+                  {loading ? '...' : categoryCounts['Max Cushion Shoes'] || 0}
+                </span>
+              </Link>
+
+              {/* Gear - Tempo Shoes */}
+              <Link
+                href="/gear/category/tempo-shoes"
+                onClick={onNavigate}
+                className="group flex cursor-pointer items-center justify-between gap-4 rounded-lg px-3 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
+              >
+                <h4 className="font-semibold text-base text-neutral-900 dark:text-white">Tempo Shoes</h4>
+                <span className="text-sm text-neutral-500 dark:text-neutral-400">
+                  {loading ? '...' : categoryCounts['Tempo Shoes'] || 0}
+                </span>
+              </Link>
+
+              {/* Gear - Trail Shoes */}
+              <Link
+                href="/gear/category/trail-shoes"
+                onClick={onNavigate}
+                className="group flex cursor-pointer items-center justify-between gap-4 rounded-lg px-3 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
+              >
+                <h4 className="font-semibold text-base text-neutral-900 dark:text-white">Trail Shoes</h4>
+                <span className="text-sm text-neutral-500 dark:text-neutral-400">
+                  {loading ? '...' : categoryCounts['Trail Shoes'] || 0}
+                </span>
+              </Link>
+
+              {/* Races */}
+              <Link
+                href="/races"
+                onClick={onNavigate}
+                className="group flex cursor-pointer items-center justify-between gap-4 rounded-lg px-3 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
+              >
+                <h4 className="font-semibold text-base text-neutral-900 dark:text-white">Races</h4>
+                <span className="text-sm text-neutral-500 dark:text-neutral-400">
+                  {loading ? '...' : (categoryCounts['Marathon'] || 0) + (categoryCounts['Half Marathon'] || 0) + (categoryCounts['Ultra'] || 0) + (categoryCounts['5K'] || 0) + (categoryCounts['10K'] || 0)}
+                </span>
+              </Link>
             </div>
           )}
         </div>
