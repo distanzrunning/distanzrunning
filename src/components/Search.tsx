@@ -6,7 +6,7 @@ import { InstantSearch, useSearchBox, useHits, Configure } from 'react-instantse
 import type { Hit as AlgoliaHit } from 'instantsearch.js'
 import { liteClient as algoliasearch } from 'algoliasearch/lite'
 import Link from 'next/link'
-import { Search as SearchIcon, ArrowRight } from 'lucide-react'
+import { Search as SearchIcon, ArrowRight, BookOpen, Wrench, Trophy } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 
 const searchClient = algoliasearch(
@@ -43,107 +43,150 @@ function getCategoryGroup(hit: HitType): string {
 
 // Category navigation when search is open but no query
 function CategoryNavigation({ onNavigate }: { onNavigate: () => void }) {
+  const [activeSection, setActiveSection] = useState<'articles' | 'gear' | 'races'>('articles')
+
   return (
     <motion.div
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -10 }}
       transition={{ duration: 0.2, ease: 'easeOut' }}
-      className="absolute top-full left-0 right-0 mt-4 bg-white/95 dark:bg-neutral-900/95 backdrop-blur-xl border border-neutral-200/50 dark:border-neutral-700/50 rounded-2xl shadow-2xl max-h-[60vh] overflow-y-auto"
+      className="absolute top-full left-0 right-0 mt-4 bg-white/95 dark:bg-neutral-900/95 backdrop-blur-xl border border-neutral-200/50 dark:border-neutral-700/50 rounded-2xl shadow-2xl overflow-hidden"
     >
-      <div className="py-4 px-2">
-        {/* Main Categories */}
-        <div className="mb-4">
-          <Link
-            href="/articles/category/road"
-            onClick={onNavigate}
-            className="group flex cursor-pointer items-center justify-between gap-4 rounded-lg px-3 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
+      <div className="flex">
+        {/* Left sidebar menu */}
+        <div className="w-48 border-r border-neutral-200 dark:border-neutral-700 py-2">
+          <button
+            onClick={() => setActiveSection('articles')}
+            className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-medium transition-colors ${
+              activeSection === 'articles'
+                ? 'bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white'
+                : 'text-neutral-600 dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-800/50'
+            }`}
           >
-            <h4 className="font-semibold text-base text-neutral-900 dark:text-white">Road</h4>
-            <ArrowRight className="size-5 transition-transform group-hover:translate-x-1 flex-shrink-0 text-neutral-600 dark:text-neutral-400" />
-          </Link>
-          <Link
-            href="/articles/category/track"
-            onClick={onNavigate}
-            className="group flex cursor-pointer items-center justify-between gap-4 rounded-lg px-3 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
+            <BookOpen className="size-5" />
+            <span>Articles</span>
+          </button>
+          <button
+            onClick={() => setActiveSection('gear')}
+            className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-medium transition-colors ${
+              activeSection === 'gear'
+                ? 'bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white'
+                : 'text-neutral-600 dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-800/50'
+            }`}
           >
-            <h4 className="font-semibold text-base text-neutral-900 dark:text-white">Track</h4>
-            <ArrowRight className="size-5 transition-transform group-hover:translate-x-1 flex-shrink-0 text-neutral-600 dark:text-neutral-400" />
-          </Link>
-          <Link
-            href="/articles/category/trail"
-            onClick={onNavigate}
-            className="group flex cursor-pointer items-center justify-between gap-4 rounded-lg px-3 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
+            <Wrench className="size-5" />
+            <span>Gear</span>
+          </button>
+          <button
+            onClick={() => setActiveSection('races')}
+            className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-medium transition-colors ${
+              activeSection === 'races'
+                ? 'bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white'
+                : 'text-neutral-600 dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-800/50'
+            }`}
           >
-            <h4 className="font-semibold text-base text-neutral-900 dark:text-white">Trail</h4>
-            <ArrowRight className="size-5 transition-transform group-hover:translate-x-1 flex-shrink-0 text-neutral-600 dark:text-neutral-400" />
-          </Link>
+            <Trophy className="size-5" />
+            <span>Races</span>
+          </button>
         </div>
 
-        {/* Gear Categories */}
-        <div className="mb-4">
-          <h5 className="px-3 py-2 text-xs font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">Gear</h5>
-          <Link
-            href="/gear/category/racing-shoes"
-            onClick={onNavigate}
-            className="group flex cursor-pointer items-center justify-between gap-4 rounded-lg px-3 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
-          >
-            <h4 className="font-semibold text-base text-neutral-900 dark:text-white">Racing Shoes</h4>
-            <ArrowRight className="size-5 transition-transform group-hover:translate-x-1 flex-shrink-0 text-neutral-600 dark:text-neutral-400" />
-          </Link>
-          <Link
-            href="/gear/category/max-cushion"
-            onClick={onNavigate}
-            className="group flex cursor-pointer items-center justify-between gap-4 rounded-lg px-3 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
-          >
-            <h4 className="font-semibold text-base text-neutral-900 dark:text-white">Max Cushion</h4>
-            <ArrowRight className="size-5 transition-transform group-hover:translate-x-1 flex-shrink-0 text-neutral-600 dark:text-neutral-400" />
-          </Link>
-          <Link
-            href="/gear/category/tempo-shoes"
-            onClick={onNavigate}
-            className="group flex cursor-pointer items-center justify-between gap-4 rounded-lg px-3 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
-          >
-            <h4 className="font-semibold text-base text-neutral-900 dark:text-white">Tempo Shoes</h4>
-            <ArrowRight className="size-5 transition-transform group-hover:translate-x-1 flex-shrink-0 text-neutral-600 dark:text-neutral-400" />
-          </Link>
-          <Link
-            href="/gear/category/trail-shoes"
-            onClick={onNavigate}
-            className="group flex cursor-pointer items-center justify-between gap-4 rounded-lg px-3 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
-          >
-            <h4 className="font-semibold text-base text-neutral-900 dark:text-white">Trail Shoes</h4>
-            <ArrowRight className="size-5 transition-transform group-hover:translate-x-1 flex-shrink-0 text-neutral-600 dark:text-neutral-400" />
-          </Link>
-        </div>
+        {/* Right content area */}
+        <div className="flex-1 py-4 px-2 max-h-[60vh] overflow-y-auto">
+          {activeSection === 'articles' && (
+            <div>
+              <Link
+                href="/articles/category/road"
+                onClick={onNavigate}
+                className="group flex cursor-pointer items-center justify-between gap-4 rounded-lg px-3 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
+              >
+                <h4 className="font-semibold text-base text-neutral-900 dark:text-white">Road</h4>
+                <span className="text-sm text-neutral-500 dark:text-neutral-400">24</span>
+              </Link>
+              <Link
+                href="/articles/category/track"
+                onClick={onNavigate}
+                className="group flex cursor-pointer items-center justify-between gap-4 rounded-lg px-3 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
+              >
+                <h4 className="font-semibold text-base text-neutral-900 dark:text-white">Track</h4>
+                <span className="text-sm text-neutral-500 dark:text-neutral-400">18</span>
+              </Link>
+              <Link
+                href="/articles/category/trail"
+                onClick={onNavigate}
+                className="group flex cursor-pointer items-center justify-between gap-4 rounded-lg px-3 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
+              >
+                <h4 className="font-semibold text-base text-neutral-900 dark:text-white">Trail</h4>
+                <span className="text-sm text-neutral-500 dark:text-neutral-400">15</span>
+              </Link>
+            </div>
+          )}
 
-        {/* Race Categories */}
-        <div>
-          <h5 className="px-3 py-2 text-xs font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">Races</h5>
-          <Link
-            href="/races/category/marathon"
-            onClick={onNavigate}
-            className="group flex cursor-pointer items-center justify-between gap-4 rounded-lg px-3 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
-          >
-            <h4 className="font-semibold text-base text-neutral-900 dark:text-white">Marathon</h4>
-            <ArrowRight className="size-5 transition-transform group-hover:translate-x-1 flex-shrink-0 text-neutral-600 dark:text-neutral-400" />
-          </Link>
-          <Link
-            href="/races/category/half-marathon"
-            onClick={onNavigate}
-            className="group flex cursor-pointer items-center justify-between gap-4 rounded-lg px-3 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
-          >
-            <h4 className="font-semibold text-base text-neutral-900 dark:text-white">Half Marathon</h4>
-            <ArrowRight className="size-5 transition-transform group-hover:translate-x-1 flex-shrink-0 text-neutral-600 dark:text-neutral-400" />
-          </Link>
-          <Link
-            href="/races/category/ultra"
-            onClick={onNavigate}
-            className="group flex cursor-pointer items-center justify-between gap-4 rounded-lg px-3 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
-          >
-            <h4 className="font-semibold text-base text-neutral-900 dark:text-white">Ultra</h4>
-            <ArrowRight className="size-5 transition-transform group-hover:translate-x-1 flex-shrink-0 text-neutral-600 dark:text-neutral-400" />
-          </Link>
+          {activeSection === 'gear' && (
+            <div>
+              <Link
+                href="/gear/category/racing-shoes"
+                onClick={onNavigate}
+                className="group flex cursor-pointer items-center justify-between gap-4 rounded-lg px-3 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
+              >
+                <h4 className="font-semibold text-base text-neutral-900 dark:text-white">Racing Shoes</h4>
+                <span className="text-sm text-neutral-500 dark:text-neutral-400">12</span>
+              </Link>
+              <Link
+                href="/gear/category/max-cushion"
+                onClick={onNavigate}
+                className="group flex cursor-pointer items-center justify-between gap-4 rounded-lg px-3 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
+              >
+                <h4 className="font-semibold text-base text-neutral-900 dark:text-white">Max Cushion</h4>
+                <span className="text-sm text-neutral-500 dark:text-neutral-400">10</span>
+              </Link>
+              <Link
+                href="/gear/category/tempo-shoes"
+                onClick={onNavigate}
+                className="group flex cursor-pointer items-center justify-between gap-4 rounded-lg px-3 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
+              >
+                <h4 className="font-semibold text-base text-neutral-900 dark:text-white">Tempo Shoes</h4>
+                <span className="text-sm text-neutral-500 dark:text-neutral-400">8</span>
+              </Link>
+              <Link
+                href="/gear/category/trail-shoes"
+                onClick={onNavigate}
+                className="group flex cursor-pointer items-center justify-between gap-4 rounded-lg px-3 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
+              >
+                <h4 className="font-semibold text-base text-neutral-900 dark:text-white">Trail Shoes</h4>
+                <span className="text-sm text-neutral-500 dark:text-neutral-400">7</span>
+              </Link>
+            </div>
+          )}
+
+          {activeSection === 'races' && (
+            <div>
+              <Link
+                href="/races/category/marathon"
+                onClick={onNavigate}
+                className="group flex cursor-pointer items-center justify-between gap-4 rounded-lg px-3 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
+              >
+                <h4 className="font-semibold text-base text-neutral-900 dark:text-white">Marathon</h4>
+                <span className="text-sm text-neutral-500 dark:text-neutral-400">32</span>
+              </Link>
+              <Link
+                href="/races/category/half-marathon"
+                onClick={onNavigate}
+                className="group flex cursor-pointer items-center justify-between gap-4 rounded-lg px-3 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
+              >
+                <h4 className="font-semibold text-base text-neutral-900 dark:text-white">Half Marathon</h4>
+                <span className="text-sm text-neutral-500 dark:text-neutral-400">28</span>
+              </Link>
+              <Link
+                href="/races/category/ultra"
+                onClick={onNavigate}
+                className="group flex cursor-pointer items-center justify-between gap-4 rounded-lg px-3 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
+              >
+                <h4 className="font-semibold text-base text-neutral-900 dark:text-white">Ultra</h4>
+                <span className="text-sm text-neutral-500 dark:text-neutral-400">19</span>
+              </Link>
+            </div>
+          )}
         </div>
       </div>
     </motion.div>
