@@ -194,7 +194,7 @@ function SearchInput({
         onChange={(e) => setLocalQuery(e.target.value)}
         onFocus={handleFocus}
         placeholder="Search..."
-        className="w-full pl-11 pr-24 py-3 text-base bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white placeholder:text-neutral-500 dark:placeholder:text-neutral-400 border border-transparent focus:border-neutral-300 dark:focus:border-neutral-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-electric-pink/20 transition-all"
+        className="w-full h-9 pl-11 pr-24 text-base bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white placeholder:text-neutral-500 dark:placeholder:text-neutral-400 border border-transparent focus:border-neutral-300 dark:focus:border-neutral-600 rounded-md focus:outline-none focus:ring-2 focus:ring-electric-pink/20 transition-all [&::-webkit-search-cancel-button]:appearance-none"
       />
 
       {/* Clear button - only show when expanded and has query */}
