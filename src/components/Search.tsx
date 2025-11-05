@@ -43,6 +43,7 @@ function getCategoryGroup(hit: HitType): string {
 
 // Category navigation when search is open but no query
 function CategoryNavigation({ onNavigate }: { onNavigate: () => void }) {
+  const [activeView, setActiveView] = useState<'trending' | 'category'>('trending')
   const [activeSection, setActiveSection] = useState<'articles' | 'gear' | 'races'>('articles')
   const [categoryCounts, setCategoryCounts] = useState<Record<string, number>>({})
   const [loading, setLoading] = useState(true)
@@ -53,7 +54,7 @@ function CategoryNavigation({ onNavigate }: { onNavigate: () => void }) {
       try {
         const indexName = process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME || 'distanz_content'
 
-        // Query for article categories (Road, Track, Trail)
+        // Use search() with multiple requests
         const results = await searchClient.search({
           requests: [
             {
@@ -63,7 +64,6 @@ function CategoryNavigation({ onNavigate }: { onNavigate: () => void }) {
               facets: ['category'],
               hitsPerPage: 0,
             },
-            // Query for gear categories
             {
               indexName,
               query: '',
@@ -71,7 +71,6 @@ function CategoryNavigation({ onNavigate }: { onNavigate: () => void }) {
               facets: ['gearCategory'],
               hitsPerPage: 0,
             },
-            // Query for race categories
             {
               indexName,
               query: '',
@@ -84,27 +83,27 @@ function CategoryNavigation({ onNavigate }: { onNavigate: () => void }) {
 
         const counts: Record<string, number> = {}
 
-        // Extract article category counts
+        // Extract facets from each result
         const result0 = results.results[0] as any
-        const articleFacets = result0?.facets?.category || {}
-        Object.entries(articleFacets).forEach(([category, count]) => {
-          counts[category] = count as number
-        })
-
-        // Extract gear category counts
         const result1 = results.results[1] as any
-        const gearFacets = result1?.facets?.gearCategory || {}
-        Object.entries(gearFacets).forEach(([category, count]) => {
-          counts[category] = count as number
-        })
-
-        // Extract race category counts
         const result2 = results.results[2] as any
+
+        const articleFacets = result0?.facets?.category || {}
+        const gearFacets = result1?.facets?.gearCategory || {}
         const raceFacets = result2?.facets?.raceCategory || {}
-        Object.entries(raceFacets).forEach(([category, count]) => {
-          counts[category] = count as number
+
+        // Merge all counts
+        Object.entries(articleFacets).forEach(([cat, count]) => {
+          counts[cat] = count as number
+        })
+        Object.entries(gearFacets).forEach(([cat, count]) => {
+          counts[cat] = count as number
+        })
+        Object.entries(raceFacets).forEach(([cat, count]) => {
+          counts[cat] = count as number
         })
 
+        console.log('Category counts:', counts)
         setCategoryCounts(counts)
         setLoading(false)
       } catch (error) {
@@ -125,120 +124,157 @@ function CategoryNavigation({ onNavigate }: { onNavigate: () => void }) {
       className="absolute top-full left-0 right-0 mt-4 bg-white/95 dark:bg-neutral-900/95 backdrop-blur-xl border border-neutral-200/50 dark:border-neutral-700/50 rounded-2xl shadow-2xl overflow-hidden"
     >
       <div className="flex">
-        {/* Left sidebar menu */}
+        {/* Left sidebar menu - View selector (Trending / By Category) */}
         <div className="w-48 border-r border-neutral-200 dark:border-neutral-700 py-2">
           <button
-            onClick={() => setActiveSection('articles')}
+            onClick={() => setActiveView('trending')}
             className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-medium transition-colors ${
-              activeSection === 'articles'
+              activeView === 'trending'
                 ? 'bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white'
                 : 'text-neutral-600 dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-800/50'
             }`}
           >
-            <BookOpen className="size-5" />
-            <span>Articles</span>
+            <span>Trending</span>
           </button>
           <button
-            onClick={() => setActiveSection('gear')}
+            onClick={() => setActiveView('category')}
             className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-medium transition-colors ${
-              activeSection === 'gear'
+              activeView === 'category'
                 ? 'bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white'
                 : 'text-neutral-600 dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-800/50'
             }`}
           >
-            <Wrench className="size-5" />
-            <span>Gear</span>
-          </button>
-          <button
-            onClick={() => setActiveSection('races')}
-            className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-medium transition-colors ${
-              activeSection === 'races'
-                ? 'bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white'
-                : 'text-neutral-600 dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-800/50'
-            }`}
-          >
-            <Trophy className="size-5" />
-            <span>Races</span>
+            <span>By Category</span>
           </button>
         </div>
 
         {/* Right content area */}
         <div className="flex-1 py-4 px-2 max-h-[60vh] overflow-y-auto">
-          {activeSection === 'articles' && (
-            <div>
-              <Link
-                href="/articles/category/road"
-                onClick={onNavigate}
-                className="group flex cursor-pointer items-center justify-between gap-4 rounded-lg px-3 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
-              >
-                <h4 className="font-semibold text-base text-neutral-900 dark:text-white">Road</h4>
-                <span className="text-sm text-neutral-500 dark:text-neutral-400">
-                  {loading ? '...' : categoryCounts['Road'] || 0}
-                </span>
-              </Link>
-              <Link
-                href="/articles/category/track"
-                onClick={onNavigate}
-                className="group flex cursor-pointer items-center justify-between gap-4 rounded-lg px-3 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
-              >
-                <h4 className="font-semibold text-base text-neutral-900 dark:text-white">Track</h4>
-                <span className="text-sm text-neutral-500 dark:text-neutral-400">
-                  {loading ? '...' : categoryCounts['Track'] || 0}
-                </span>
-              </Link>
-              <Link
-                href="/articles/category/trail"
-                onClick={onNavigate}
-                className="group flex cursor-pointer items-center justify-between gap-4 rounded-lg px-3 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
-              >
-                <h4 className="font-semibold text-base text-neutral-900 dark:text-white">Trail</h4>
-                <span className="text-sm text-neutral-500 dark:text-neutral-400">
-                  {loading ? '...' : categoryCounts['Trail'] || 0}
-                </span>
-              </Link>
+          {activeView === 'trending' && (
+            <div className="px-3 py-8 text-center text-neutral-500 dark:text-neutral-400">
+              <p className="text-sm">Trending content coming soon</p>
             </div>
           )}
 
-          {activeSection === 'gear' && (
-            <div>
-              {Object.entries(categoryCounts)
-                .filter(([key]) => !['Road', 'Track', 'Trail', 'Marathon', 'Half Marathon', 'Ultra', '5K', '10K'].includes(key))
-                .map(([category, count]) => (
-                  <Link
-                    key={category}
-                    href={`/gear/category/${category.toLowerCase().replace(/\s+/g, '-')}`}
-                    onClick={onNavigate}
-                    className="group flex cursor-pointer items-center justify-between gap-4 rounded-lg px-3 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
-                  >
-                    <h4 className="font-semibold text-base text-neutral-900 dark:text-white">{category}</h4>
-                    <span className="text-sm text-neutral-500 dark:text-neutral-400">
-                      {loading ? '...' : count}
-                    </span>
-                  </Link>
-                ))}
-            </div>
-          )}
+          {activeView === 'category' && (
+            <div className="flex h-full">
+              {/* Category type selector (Articles/Gear/Races) */}
+              <div className="w-32 border-r border-neutral-200 dark:border-neutral-700 pr-2">
+                <button
+                  onClick={() => setActiveSection('articles')}
+                  className={`w-full flex items-center gap-2 px-2 py-2 text-xs font-medium transition-colors rounded ${
+                    activeSection === 'articles'
+                      ? 'bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white'
+                      : 'text-neutral-600 dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-800/50'
+                  }`}
+                >
+                  <BookOpen className="size-4" />
+                  <span>Articles</span>
+                </button>
+                <button
+                  onClick={() => setActiveSection('gear')}
+                  className={`w-full flex items-center gap-2 px-2 py-2 text-xs font-medium transition-colors rounded ${
+                    activeSection === 'gear'
+                      ? 'bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white'
+                      : 'text-neutral-600 dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-800/50'
+                  }`}
+                >
+                  <Wrench className="size-4" />
+                  <span>Gear</span>
+                </button>
+                <button
+                  onClick={() => setActiveSection('races')}
+                  className={`w-full flex items-center gap-2 px-2 py-2 text-xs font-medium transition-colors rounded ${
+                    activeSection === 'races'
+                      ? 'bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white'
+                      : 'text-neutral-600 dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-800/50'
+                  }`}
+                >
+                  <Trophy className="size-4" />
+                  <span>Races</span>
+                </button>
+              </div>
 
-          {activeSection === 'races' && (
-            <div>
-              {['Marathon', 'Half Marathon', 'Ultra', '5K', '10K'].map((category) => {
-                const count = categoryCounts[category]
-                if (!count && !loading) return null
+              {/* Categories list */}
+              <div className="flex-1 pl-2">
+                {activeSection === 'articles' && (
+                  <div>
+                    <Link
+                      href="/articles/category/road"
+                      onClick={onNavigate}
+                      className="group flex cursor-pointer items-center justify-between gap-4 rounded-lg px-3 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
+                    >
+                      <h4 className="font-semibold text-base text-neutral-900 dark:text-white">Road</h4>
+                      <span className="text-sm text-neutral-500 dark:text-neutral-400">
+                        {loading ? '...' : categoryCounts['Road'] || 0}
+                      </span>
+                    </Link>
+                    <Link
+                      href="/articles/category/track"
+                      onClick={onNavigate}
+                      className="group flex cursor-pointer items-center justify-between gap-4 rounded-lg px-3 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
+                    >
+                      <h4 className="font-semibold text-base text-neutral-900 dark:text-white">Track</h4>
+                      <span className="text-sm text-neutral-500 dark:text-neutral-400">
+                        {loading ? '...' : categoryCounts['Track'] || 0}
+                      </span>
+                    </Link>
+                    <Link
+                      href="/articles/category/trail"
+                      onClick={onNavigate}
+                      className="group flex cursor-pointer items-center justify-between gap-4 rounded-lg px-3 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
+                    >
+                      <h4 className="font-semibold text-base text-neutral-900 dark:text-white">Trail</h4>
+                      <span className="text-sm text-neutral-500 dark:text-neutral-400">
+                        {loading ? '...' : categoryCounts['Trail'] || 0}
+                      </span>
+                    </Link>
+                  </div>
+                )}
 
-                return (
-                  <Link
-                    key={category}
-                    href={`/races/category/${category.toLowerCase().replace(/\s+/g, '-')}`}
-                    onClick={onNavigate}
-                    className="group flex cursor-pointer items-center justify-between gap-4 rounded-lg px-3 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
-                  >
-                    <h4 className="font-semibold text-base text-neutral-900 dark:text-white">{category}</h4>
-                    <span className="text-sm text-neutral-500 dark:text-neutral-400">
-                      {loading ? '...' : count || 0}
-                    </span>
-                  </Link>
-                )
-              })}
+                {activeSection === 'gear' && (
+                  <div>
+                    {Object.entries(categoryCounts)
+                      .filter(([key]) => !['Road', 'Track', 'Trail', 'Marathon', 'Half Marathon', 'Ultra', '5K', '10K'].includes(key))
+                      .map(([category, count]) => (
+                        <Link
+                          key={category}
+                          href={`/gear/category/${category.toLowerCase().replace(/\s+/g, '-')}`}
+                          onClick={onNavigate}
+                          className="group flex cursor-pointer items-center justify-between gap-4 rounded-lg px-3 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
+                        >
+                          <h4 className="font-semibold text-base text-neutral-900 dark:text-white">{category}</h4>
+                          <span className="text-sm text-neutral-500 dark:text-neutral-400">
+                            {loading ? '...' : count}
+                          </span>
+                        </Link>
+                      ))}
+                  </div>
+                )}
+
+                {activeSection === 'races' && (
+                  <div>
+                    {['Marathon', 'Half Marathon', 'Ultra', '5K', '10K'].map((category) => {
+                      const count = categoryCounts[category]
+                      if (!count && !loading) return null
+
+                      return (
+                        <Link
+                          key={category}
+                          href={`/races/category/${category.toLowerCase().replace(/\s+/g, '-')}`}
+                          onClick={onNavigate}
+                          className="group flex cursor-pointer items-center justify-between gap-4 rounded-lg px-3 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
+                        >
+                          <h4 className="font-semibold text-base text-neutral-900 dark:text-white">{category}</h4>
+                          <span className="text-sm text-neutral-500 dark:text-neutral-400">
+                            {loading ? '...' : count || 0}
+                          </span>
+                        </Link>
+                      )
+                    })}
+                  </div>
+                )}
+              </div>
             </div>
           )}
         </div>
