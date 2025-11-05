@@ -193,7 +193,7 @@ function SearchInput({
         value={localQuery}
         onChange={(e) => setLocalQuery(e.target.value)}
         onFocus={handleFocus}
-        placeholder="Search articles, gear, races..."
+        placeholder="Search..."
         className="w-full pl-11 pr-24 py-3 text-base bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white placeholder:text-neutral-500 dark:placeholder:text-neutral-400 border border-transparent focus:border-neutral-300 dark:focus:border-neutral-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-electric-pink/20 transition-all"
       />
 
