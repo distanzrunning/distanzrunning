@@ -44,6 +44,77 @@ function getCategoryGroup(hit: HitType): string {
 // Category navigation when search is open but no query
 function CategoryNavigation({ onNavigate }: { onNavigate: () => void }) {
   const [activeSection, setActiveSection] = useState<'articles' | 'gear' | 'races'>('articles')
+  const [categoryCounts, setCategoryCounts] = useState<Record<string, number>>({})
+  const [loading, setLoading] = useState(true)
+
+  // Fetch category counts from Algolia on mount
+  useEffect(() => {
+    const fetchCategoryCounts = async () => {
+      try {
+        const indexName = process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME || 'distanz_content'
+
+        // Query for article categories (Road, Track, Trail)
+        const results = await searchClient.search({
+          requests: [
+            {
+              indexName,
+              query: '',
+              filters: '_type:post',
+              facets: ['category'],
+              hitsPerPage: 0,
+            },
+            // Query for gear categories
+            {
+              indexName,
+              query: '',
+              filters: '_type:gearPost',
+              facets: ['gearCategory'],
+              hitsPerPage: 0,
+            },
+            // Query for race categories
+            {
+              indexName,
+              query: '',
+              filters: '_type:raceGuide',
+              facets: ['raceCategory'],
+              hitsPerPage: 0,
+            }
+          ]
+        })
+
+        const counts: Record<string, number> = {}
+
+        // Extract article category counts
+        const result0 = results.results[0] as any
+        const articleFacets = result0?.facets?.category || {}
+        Object.entries(articleFacets).forEach(([category, count]) => {
+          counts[category] = count as number
+        })
+
+        // Extract gear category counts
+        const result1 = results.results[1] as any
+        const gearFacets = result1?.facets?.gearCategory || {}
+        Object.entries(gearFacets).forEach(([category, count]) => {
+          counts[category] = count as number
+        })
+
+        // Extract race category counts
+        const result2 = results.results[2] as any
+        const raceFacets = result2?.facets?.raceCategory || {}
+        Object.entries(raceFacets).forEach(([category, count]) => {
+          counts[category] = count as number
+        })
+
+        setCategoryCounts(counts)
+        setLoading(false)
+      } catch (error) {
+        console.error('Error fetching category counts:', error)
+        setLoading(false)
+      }
+    }
+
+    fetchCategoryCounts()
+  }, [])
 
   return (
     <motion.div
@@ -101,7 +172,9 @@ function CategoryNavigation({ onNavigate }: { onNavigate: () => void }) {
                 className="group flex cursor-pointer items-center justify-between gap-4 rounded-lg px-3 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
               >
                 <h4 className="font-semibold text-base text-neutral-900 dark:text-white">Road</h4>
-                <span className="text-sm text-neutral-500 dark:text-neutral-400">24</span>
+                <span className="text-sm text-neutral-500 dark:text-neutral-400">
+                  {loading ? '...' : categoryCounts['Road'] || 0}
+                </span>
               </Link>
               <Link
                 href="/articles/category/track"
@@ -109,7 +182,9 @@ function CategoryNavigation({ onNavigate }: { onNavigate: () => void }) {
                 className="group flex cursor-pointer items-center justify-between gap-4 rounded-lg px-3 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
               >
                 <h4 className="font-semibold text-base text-neutral-900 dark:text-white">Track</h4>
-                <span className="text-sm text-neutral-500 dark:text-neutral-400">18</span>
+                <span className="text-sm text-neutral-500 dark:text-neutral-400">
+                  {loading ? '...' : categoryCounts['Track'] || 0}
+                </span>
               </Link>
               <Link
                 href="/articles/category/trail"
@@ -117,74 +192,53 @@ function CategoryNavigation({ onNavigate }: { onNavigate: () => void }) {
                 className="group flex cursor-pointer items-center justify-between gap-4 rounded-lg px-3 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
               >
                 <h4 className="font-semibold text-base text-neutral-900 dark:text-white">Trail</h4>
-                <span className="text-sm text-neutral-500 dark:text-neutral-400">15</span>
+                <span className="text-sm text-neutral-500 dark:text-neutral-400">
+                  {loading ? '...' : categoryCounts['Trail'] || 0}
+                </span>
               </Link>
             </div>
           )}
 
           {activeSection === 'gear' && (
             <div>
-              <Link
-                href="/gear/category/racing-shoes"
-                onClick={onNavigate}
-                className="group flex cursor-pointer items-center justify-between gap-4 rounded-lg px-3 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
-              >
-                <h4 className="font-semibold text-base text-neutral-900 dark:text-white">Racing Shoes</h4>
-                <span className="text-sm text-neutral-500 dark:text-neutral-400">12</span>
-              </Link>
-              <Link
-                href="/gear/category/max-cushion"
-                onClick={onNavigate}
-                className="group flex cursor-pointer items-center justify-between gap-4 rounded-lg px-3 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
-              >
-                <h4 className="font-semibold text-base text-neutral-900 dark:text-white">Max Cushion</h4>
-                <span className="text-sm text-neutral-500 dark:text-neutral-400">10</span>
-              </Link>
-              <Link
-                href="/gear/category/tempo-shoes"
-                onClick={onNavigate}
-                className="group flex cursor-pointer items-center justify-between gap-4 rounded-lg px-3 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
-              >
-                <h4 className="font-semibold text-base text-neutral-900 dark:text-white">Tempo Shoes</h4>
-                <span className="text-sm text-neutral-500 dark:text-neutral-400">8</span>
-              </Link>
-              <Link
-                href="/gear/category/trail-shoes"
-                onClick={onNavigate}
-                className="group flex cursor-pointer items-center justify-between gap-4 rounded-lg px-3 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
-              >
-                <h4 className="font-semibold text-base text-neutral-900 dark:text-white">Trail Shoes</h4>
-                <span className="text-sm text-neutral-500 dark:text-neutral-400">7</span>
-              </Link>
+              {Object.entries(categoryCounts)
+                .filter(([key]) => !['Road', 'Track', 'Trail', 'Marathon', 'Half Marathon', 'Ultra', '5K', '10K'].includes(key))
+                .map(([category, count]) => (
+                  <Link
+                    key={category}
+                    href={`/gear/category/${category.toLowerCase().replace(/\s+/g, '-')}`}
+                    onClick={onNavigate}
+                    className="group flex cursor-pointer items-center justify-between gap-4 rounded-lg px-3 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
+                  >
+                    <h4 className="font-semibold text-base text-neutral-900 dark:text-white">{category}</h4>
+                    <span className="text-sm text-neutral-500 dark:text-neutral-400">
+                      {loading ? '...' : count}
+                    </span>
+                  </Link>
+                ))}
             </div>
           )}
 
           {activeSection === 'races' && (
             <div>
-              <Link
-                href="/races/category/marathon"
-                onClick={onNavigate}
-                className="group flex cursor-pointer items-center justify-between gap-4 rounded-lg px-3 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
-              >
-                <h4 className="font-semibold text-base text-neutral-900 dark:text-white">Marathon</h4>
-                <span className="text-sm text-neutral-500 dark:text-neutral-400">32</span>
-              </Link>
-              <Link
-                href="/races/category/half-marathon"
-                onClick={onNavigate}
-                className="group flex cursor-pointer items-center justify-between gap-4 rounded-lg px-3 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
-              >
-                <h4 className="font-semibold text-base text-neutral-900 dark:text-white">Half Marathon</h4>
-                <span className="text-sm text-neutral-500 dark:text-neutral-400">28</span>
-              </Link>
-              <Link
-                href="/races/category/ultra"
-                onClick={onNavigate}
-                className="group flex cursor-pointer items-center justify-between gap-4 rounded-lg px-3 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
-              >
-                <h4 className="font-semibold text-base text-neutral-900 dark:text-white">Ultra</h4>
-                <span className="text-sm text-neutral-500 dark:text-neutral-400">19</span>
-              </Link>
+              {['Marathon', 'Half Marathon', 'Ultra', '5K', '10K'].map((category) => {
+                const count = categoryCounts[category]
+                if (!count && !loading) return null
+
+                return (
+                  <Link
+                    key={category}
+                    href={`/races/category/${category.toLowerCase().replace(/\s+/g, '-')}`}
+                    onClick={onNavigate}
+                    className="group flex cursor-pointer items-center justify-between gap-4 rounded-lg px-3 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
+                  >
+                    <h4 className="font-semibold text-base text-neutral-900 dark:text-white">{category}</h4>
+                    <span className="text-sm text-neutral-500 dark:text-neutral-400">
+                      {loading ? '...' : count || 0}
+                    </span>
+                  </Link>
+                )
+              })}
             </div>
           )}
         </div>
