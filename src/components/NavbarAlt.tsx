@@ -414,26 +414,26 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
           </div>
 
           {/* Right: Search + Newsletter CTA + Dark Mode + Mobile Menu */}
-          <div className="flex items-center gap-4 relative">
+          <div className="flex items-center gap-4">
             {/* Search Container - Expands to cover nav links when active */}
-            <motion.div
-              initial={false}
-              animate={{
-                position: searchExpanded ? 'absolute' : 'relative',
-                right: searchExpanded ? '0' : 'auto',
-                left: searchExpanded ? '-650px' : 'auto',
-                width: searchExpanded ? '900px' : 'auto',
-                zIndex: searchExpanded ? 60 : 'auto'
-              }}
-              transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
-              className="hidden md:block"
-              style={{ maxWidth: searchExpanded ? '900px' : '320px' }}
-            >
-              <Search
-                isExpanded={searchExpanded}
-                onExpandChange={setSearchExpanded}
-              />
-            </motion.div>
+            <div className="hidden md:block relative">
+              <motion.div
+                initial={false}
+                animate={{
+                  width: searchExpanded ? '900px' : '320px'
+                }}
+                transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
+                className="relative"
+                style={{
+                  zIndex: searchExpanded ? 60 : 'auto'
+                }}
+              >
+                <Search
+                  isExpanded={searchExpanded}
+                  onExpandChange={setSearchExpanded}
+                />
+              </motion.div>
+            </div>
 
             {/* Newsletter Button - Desktop - Hide when search expanded */}
             <motion.div
