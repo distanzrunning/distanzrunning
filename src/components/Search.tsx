@@ -6,7 +6,7 @@ import { InstantSearch, useSearchBox, useHits, Configure } from 'react-instantse
 import type { Hit as AlgoliaHit } from 'instantsearch.js'
 import { liteClient as algoliasearch } from 'algoliasearch/lite'
 import Link from 'next/link'
-import { Search as SearchIcon, ArrowRight, X } from 'lucide-react'
+import { Search as SearchIcon, ArrowRight } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 
 const searchClient = algoliasearch(
@@ -197,18 +197,18 @@ function SearchInput({
         className="w-full h-9 pl-11 pr-24 text-base bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white placeholder:text-neutral-500 dark:placeholder:text-neutral-400 border border-transparent focus:border-neutral-300 dark:focus:border-neutral-600 rounded-md focus:outline-none focus:ring-2 focus:ring-electric-pink/20 transition-all [&::-webkit-search-cancel-button]:appearance-none"
       />
 
-      {/* Clear button - only show when expanded and has query */}
+      {/* Esc button - only show when expanded */}
       <AnimatePresence>
-        {isExpanded && localQuery.length > 0 && (
+        {isExpanded && (
           <motion.button
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.8 }}
             onClick={handleClear}
-            className="absolute right-3 p-1.5 rounded-full hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors"
-            aria-label="Clear search"
+            className="absolute right-3 inline-flex items-center gap-1 px-2 py-0.5 text-xs font-mono text-neutral-500 dark:text-neutral-400 bg-neutral-200 dark:bg-neutral-700 rounded hover:bg-neutral-300 dark:hover:bg-neutral-600 transition-colors cursor-pointer"
+            aria-label="Clear search (Esc)"
           >
-            <X className="h-4 w-4 text-neutral-500" />
+            Esc
           </motion.button>
         )}
       </AnimatePresence>
