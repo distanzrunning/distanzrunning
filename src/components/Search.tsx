@@ -205,7 +205,7 @@ function SearchInput({
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.8 }}
             onClick={handleClear}
-            className="absolute right-16 p-1.5 rounded-full hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors"
+            className="absolute right-3 p-1.5 rounded-full hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors"
             aria-label="Clear search"
           >
             <X className="h-4 w-4 text-neutral-500" />
