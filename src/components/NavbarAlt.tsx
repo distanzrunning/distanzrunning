@@ -421,8 +421,8 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
               <motion.div
                 initial={false}
                 animate={{
-                  width: searchExpanded ? 'calc(100vw - 250px)' : '200px',
-                  maxWidth: searchExpanded ? '1200px' : '200px'
+                  width: searchExpanded ? 'calc(100vw - 200px)' : '240px',
+                  maxWidth: searchExpanded ? '1400px' : '240px'
                 }}
                 transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
                 className={searchExpanded ? "absolute right-0 top-1/2 -translate-y-1/2" : "relative"}
