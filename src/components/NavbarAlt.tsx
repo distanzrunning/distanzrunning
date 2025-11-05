@@ -1,7 +1,7 @@
 // src/components/NavbarAlt.tsx
 'use client'
 
-import { useState, useEffect, useContext } from 'react'
+import { useState, useEffect, useContext, useRef } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import * as Dialog from '@radix-ui/react-dialog'
@@ -21,8 +21,7 @@ import {
   Database,
   ArrowLeft,
   Moon,
-  Sun,
-  Search as SearchIcon
+  Sun
 } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { DarkModeContext } from './DarkModeProvider'
@@ -61,9 +60,28 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
   const [mounted, setMounted] = useState(false)
   const [navValue, setNavValue] = useState('')
   const [searchExpanded, setSearchExpanded] = useState(false)
+  const [maxSearchWidth, setMaxSearchWidth] = useState('1400px')
+  const navLinksRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     setMounted(true)
+  }, [])
+
+  // Calculate max search width based on Road button position
+  useEffect(() => {
+    const calculateMaxWidth = () => {
+      if (navLinksRef.current) {
+        const navLinksRect = navLinksRef.current.getBoundingClientRect()
+        const viewportWidth = window.innerWidth
+        // Calculate from right edge of viewport to left edge of nav links (Road button)
+        const maxWidth = viewportWidth - navLinksRect.left
+        setMaxSearchWidth(`${maxWidth - 20}px`) // Subtract 20px for padding
+      }
+    }
+
+    calculateMaxWidth()
+    window.addEventListener('resize', calculateMaxWidth)
+    return () => window.removeEventListener('resize', calculateMaxWidth)
   }, [])
 
   // Close mega menus when search expands
@@ -121,6 +139,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
 
             {/* Desktop Navigation - Radix UI - Hide when search expanded */}
             <motion.div
+              ref={navLinksRef}
               animate={{
                 opacity: searchExpanded ? 0 : 1,
                 pointerEvents: searchExpanded ? 'none' : 'auto'
@@ -421,8 +440,8 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
               <motion.div
                 initial={false}
                 animate={{
-                  width: searchExpanded ? 'calc(100vw - 200px)' : '240px',
-                  maxWidth: searchExpanded ? '1400px' : '240px'
+                  width: searchExpanded ? maxSearchWidth : '240px',
+                  maxWidth: searchExpanded ? maxSearchWidth : '240px'
                 }}
                 transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
                 className={searchExpanded ? "absolute right-0 top-1/2 -translate-y-1/2" : "relative"}
