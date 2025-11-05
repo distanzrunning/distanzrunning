@@ -414,13 +414,29 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
           </div>
 
           {/* Right: Search + Newsletter CTA + Dark Mode + Mobile Menu */}
-          <div className="flex items-center gap-4">
-            {/* Search Container - Expands to cover nav links when active */}
+          <div className="flex items-center gap-4 relative">
+            {/* Newsletter Button - Desktop - Keep in layout but fade out */}
+            <Link
+              href="/newsletter"
+              className="hidden md:inline-flex items-center px-4 h-9 text-base font-semibold text-white bg-neutral-900 dark:bg-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-100 rounded-md transition-all duration-200 ease-out active:scale-[0.98] whitespace-nowrap"
+              style={{
+                opacity: searchExpanded ? 0 : 1,
+                pointerEvents: searchExpanded ? 'none' : 'auto',
+                transition: 'opacity 0.2s ease'
+              }}
+            >
+              Newsletter
+            </Link>
+
+            {/* Search Container - Positioned absolutely when expanded */}
             <div className="hidden md:block relative">
               <motion.div
                 initial={false}
                 animate={{
-                  width: searchExpanded ? '900px' : '320px'
+                  position: searchExpanded ? 'absolute' : 'relative',
+                  right: searchExpanded ? 0 : 'auto',
+                  width: searchExpanded ? 'calc(100vw - 400px)' : '320px',
+                  maxWidth: searchExpanded ? '1000px' : '320px'
                 }}
                 transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
                 className="relative"
@@ -434,22 +450,6 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                 />
               </motion.div>
             </div>
-
-            {/* Newsletter Button - Desktop - Hide when search expanded */}
-            <motion.div
-              animate={{
-                opacity: searchExpanded ? 0 : 1,
-                pointerEvents: searchExpanded ? 'none' : 'auto'
-              }}
-              transition={{ duration: 0.2 }}
-            >
-              <Link
-                href="/newsletter"
-                className="hidden md:inline-flex items-center px-4 h-9 text-base font-semibold text-white bg-neutral-900 dark:bg-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-100 rounded-md transition-all duration-200 ease-out active:scale-[0.98] whitespace-nowrap"
-              >
-                Newsletter
-              </Link>
-            </motion.div>
 
             {/* Dark Mode Toggle - Keep visible */}
             {mounted && (
