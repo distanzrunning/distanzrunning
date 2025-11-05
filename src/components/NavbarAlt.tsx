@@ -62,6 +62,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
   const [searchExpanded, setSearchExpanded] = useState(false)
   const [maxSearchWidth, setMaxSearchWidth] = useState('1400px')
   const navLinksRef = useRef<HTMLDivElement>(null)
+  const searchContainerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     setMounted(true)
@@ -70,12 +71,12 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
   // Calculate max search width based on Road button position
   useEffect(() => {
     const calculateMaxWidth = () => {
-      if (navLinksRef.current) {
+      if (navLinksRef.current && searchContainerRef.current) {
         const navLinksRect = navLinksRef.current.getBoundingClientRect()
-        const viewportWidth = window.innerWidth
-        // Calculate from right edge of viewport to left edge of nav links (Road button)
-        const maxWidth = viewportWidth - navLinksRect.left
-        setMaxSearchWidth(`${maxWidth - 20}px`) // Subtract 20px for padding
+        const searchContainerRect = searchContainerRef.current.getBoundingClientRect()
+        // Calculate distance from search container's right edge to nav links' left edge
+        const maxWidth = searchContainerRect.right - navLinksRect.left - 20 // Subtract 20px for padding
+        setMaxSearchWidth(`${maxWidth}px`)
       }
     }
 
@@ -436,7 +437,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
           {/* Right: Search + Newsletter CTA + Dark Mode + Mobile Menu */}
           <div className="flex items-center gap-4">
             {/* Search - Small bar when collapsed, expands leftward when active */}
-            <div className="hidden md:block relative flex items-center h-10">
+            <div ref={searchContainerRef} className="hidden md:block relative flex items-center h-10">
               <motion.div
                 initial={false}
                 animate={{
