@@ -185,7 +185,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
         </motion.div>
 
         {/* Bottom Section: Centered Navigation Links */}
-        <div className="border-b border-neutral-200 dark:border-neutral-700 relative z-50">
+        <div className="border-b border-neutral-200 dark:border-neutral-700 relative z-40">
           <div className="hidden lg:flex items-center justify-between px-4 md:px-6 lg:px-8 h-12">
 
             {/* Small Logo - Shows when scrolled */}
@@ -218,7 +218,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
             </motion.div>
 
             {/* Desktop Navigation - Radix UI */}
-            <NavigationMenu.Root className="relative z-10" value={navValue} onValueChange={setNavValue}>
+            <NavigationMenu.Root className="relative z-50" value={navValue} onValueChange={setNavValue}>
               <NavigationMenu.List className="flex items-center gap-1">
                 {/* Road Link */}
                 <NavigationMenu.Item>
@@ -498,7 +498,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                 <span className="h-[2px] w-full rounded-full bg-neutral-900/80 dark:bg-white/80" />
               </NavigationMenu.Indicator>
 
-              <div className="perspective-[2000px] absolute left-1/2 -translate-x-1/2 top-full w-screen pointer-events-none z-[-1]">
+              <div className="perspective-[2000px] absolute left-1/2 -translate-x-1/2 top-full w-screen pointer-events-none z-40">
                 <NavigationMenu.Viewport className="pointer-events-auto relative w-full h-[var(--radix-navigation-menu-viewport-height)] origin-top bg-white dark:bg-neutral-900 border-t border-b border-neutral-200 dark:border-neutral-800 shadow-[0_30px_60px_-40px_rgba(15,23,42,0.45)] overflow-hidden transition-[height,transform,opacity] duration-300 ease-out data-[state=open]:animate-slideDown data-[state=closed]:animate-slideUp" />
               </div>
             </NavigationMenu.Root>
