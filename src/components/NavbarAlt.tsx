@@ -78,8 +78,9 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
 
         if (logoElement) {
           const logoRect = logoElement.getBoundingClientRect()
-          // Calculate: from logo right edge to search container right edge, minus gap-4 (16px) for symmetry
-          const maxWidth = searchContainerRect.right - logoRect.right - 16
+          // Calculate: from logo right edge + gap-4 (16px) to search container right edge, minus another gap-4 (16px) for symmetry
+          // Total: logo right edge + 16px gap
+          const maxWidth = searchContainerRect.right - logoRect.right - 32
           setMaxSearchWidth(`${maxWidth}px`)
         } else {
           // Fallback to old calculation
