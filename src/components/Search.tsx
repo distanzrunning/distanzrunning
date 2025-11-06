@@ -47,7 +47,7 @@ function SearchResults({
   if (!isExpanded || query.length === 0) {
     return (
       <div className="flex items-center justify-center h-full">
-        <SearchIconLucide className="w-16 h-16 text-neutral-300 dark:text-neutral-700" strokeWidth={1.5} />
+        <SearchIconLucide className="w-8 h-8 text-neutral-300 dark:text-neutral-700" strokeWidth={1.5} />
       </div>
     )
   }
@@ -201,7 +201,7 @@ function SearchContent({
   }
 
   return (
-    <div className="flex w-full max-w-xl flex-col overflow-hidden rounded-2xl border border-neutral-200/35 dark:border-neutral-700/35 bg-white/90 dark:bg-neutral-900/90 shadow-2xl backdrop-blur-xl h-[500px]">
+    <div className="flex w-full max-w-xl flex-col overflow-hidden rounded-2xl border border-neutral-200/35 dark:border-neutral-700/35 bg-white/90 dark:bg-neutral-900/90 shadow-2xl backdrop-blur-xl min-h-64">
       <SearchInput
         onQueryChange={setCurrentQuery}
         isExpanded={isExpanded}
