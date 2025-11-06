@@ -499,7 +499,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
               </NavigationMenu.Indicator>
 
               <div className="perspective-[2000px] absolute left-1/2 -translate-x-1/2 top-full w-screen pointer-events-none z-[-1]">
-                <NavigationMenu.Viewport className="pointer-events-auto relative w-full h-[var(--radix-navigation-menu-viewport-height)] origin-top bg-white dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-800 shadow-[0_30px_60px_-40px_rgba(15,23,42,0.45)] overflow-hidden transition-[height,transform,opacity] duration-300 ease-out data-[state=open]:animate-slideDown data-[state=closed]:animate-slideUp" />
+                <NavigationMenu.Viewport className="pointer-events-auto relative w-full h-[var(--radix-navigation-menu-viewport-height)] origin-top bg-white dark:bg-neutral-900 border-t border-b border-neutral-200 dark:border-neutral-800 shadow-[0_30px_60px_-40px_rgba(15,23,42,0.45)] overflow-hidden transition-[height,transform,opacity] duration-300 ease-out data-[state=open]:animate-slideDown data-[state=closed]:animate-slideUp" />
               </div>
             </NavigationMenu.Root>
 
