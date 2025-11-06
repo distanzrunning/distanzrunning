@@ -74,9 +74,18 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
       if (navLinksRef.current && searchContainerRef.current) {
         const navLinksRect = navLinksRef.current.getBoundingClientRect()
         const searchContainerRect = searchContainerRef.current.getBoundingClientRect()
-        // Calculate distance from search container's right edge to nav links' left edge
-        const maxWidth = searchContainerRect.right - navLinksRect.left - 32 // Subtract 32px for padding (reduced from 20px due to pr-16 input)
-        setMaxSearchWidth(`${maxWidth}px`)
+        const logoElement = document.querySelector('a[title="Home"]') as HTMLElement
+
+        if (logoElement) {
+          const logoRect = logoElement.getBoundingClientRect()
+          // Calculate: from logo right edge to search container right edge, minus gap-4 (16px) for symmetry
+          const maxWidth = searchContainerRect.right - logoRect.right - 16
+          setMaxSearchWidth(`${maxWidth}px`)
+        } else {
+          // Fallback to old calculation
+          const maxWidth = searchContainerRect.right - navLinksRect.left - 32
+          setMaxSearchWidth(`${maxWidth}px`)
+        }
       }
     }
 
