@@ -61,9 +61,24 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
   const [mounted, setMounted] = useState(false)
   const [navValue, setNavValue] = useState('')
   const [searchDialogOpen, setSearchDialogOpen] = useState(false)
+  const [isScrolled, setIsScrolled] = useState(false)
 
   useEffect(() => {
     setMounted(true)
+  }, [])
+
+  // Handle scroll to shrink navbar
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 50) {
+        setIsScrolled(true)
+      } else {
+        setIsScrolled(false)
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
   // Handle keyboard shortcut (Cmd/Ctrl + K) for search
@@ -82,7 +97,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
   return (
     <>
       {/* Desktop & Mobile Header - Fixed */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-white dark:bg-neutral-900 transition-colors duration-300" role="banner">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-white dark:bg-neutral-900 transition-all duration-300" role="banner">
 
         {/* Skip Links for Accessibility */}
         <a href="#content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-white px-4 py-2 rounded-md shadow-lg z-[100]">
@@ -90,7 +105,15 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
         </a>
 
         {/* Top Section: Logo, Search Icon, Newsletter, Dark Mode */}
-        <div className="border-b border-neutral-200 dark:border-neutral-700">
+        <motion.div
+          className="border-b border-neutral-200 dark:border-neutral-700 overflow-hidden"
+          initial={false}
+          animate={{
+            height: isScrolled ? 0 : 'auto',
+            opacity: isScrolled ? 0 : 1
+          }}
+          transition={{ duration: 0.2, ease: 'easeInOut' }}
+        >
           <div className="flex items-center justify-between px-4 md:px-6 lg:px-8 h-20">
 
             {/* Mobile Menu Button - Left (Mobile Only) */}
@@ -102,22 +125,22 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
               <Menu className="h-6 w-6" />
             </button>
 
-            {/* Centered Logo */}
+            {/* Centered Logo - Larger when unscrolled */}
             <Link href="/" className="absolute left-1/2 -translate-x-1/2 flex items-center flex-shrink-0" title="Home">
               <Image
                 src="/images/logo.svg"
                 alt="Distanz Running Logo"
-                className="h-12 w-auto dark:hidden"
-                width={180}
-                height={48}
+                className="h-14 w-auto dark:hidden"
+                width={210}
+                height={56}
                 priority
               />
               <Image
                 src="/images/logo_white.svg"
                 alt="Distanz Running Logo"
-                className="hidden h-12 w-auto dark:block"
-                width={180}
-                height={48}
+                className="hidden h-14 w-auto dark:block"
+                width={210}
+                height={56}
                 priority
               />
             </Link>
@@ -159,11 +182,40 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
               )}
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Bottom Section: Centered Navigation Links */}
         <div className="border-b border-neutral-200 dark:border-neutral-700">
-          <div className="hidden lg:flex items-center justify-center px-4 md:px-6 lg:px-8 h-12">
+          <div className="hidden lg:flex items-center justify-between px-4 md:px-6 lg:px-8 h-12">
+
+            {/* Small Logo - Shows when scrolled */}
+            <motion.div
+              initial={false}
+              animate={{
+                opacity: isScrolled ? 1 : 0,
+                pointerEvents: isScrolled ? 'auto' : 'none'
+              }}
+              transition={{ duration: 0.2, ease: 'easeInOut' }}
+            >
+              <Link href="/" className="flex items-center" title="Home">
+                <Image
+                  src="/images/logo.svg"
+                  alt="Distanz Running Logo"
+                  className="h-8 w-auto dark:hidden"
+                  width={120}
+                  height={32}
+                  priority
+                />
+                <Image
+                  src="/images/logo_white.svg"
+                  alt="Distanz Running Logo"
+                  className="hidden h-8 w-auto dark:block"
+                  width={120}
+                  height={32}
+                  priority
+                />
+              </Link>
+            </motion.div>
 
             {/* Desktop Navigation - Radix UI */}
             <NavigationMenu.Root className="relative z-10" value={navValue} onValueChange={setNavValue}>
@@ -446,10 +498,47 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                 <span className="h-[2px] w-full rounded-full bg-neutral-900/80 dark:bg-white/80" />
               </NavigationMenu.Indicator>
 
-              <div className="perspective-[2000px] fixed left-0 right-0 top-[calc(5rem+1px)] w-full pointer-events-none">
+              <div className={`perspective-[2000px] fixed left-0 right-0 w-full pointer-events-none transition-all duration-300 ${isScrolled ? 'top-[calc(3rem+1px)]' : 'top-[calc(5rem+1px)]'}`}>
                 <NavigationMenu.Viewport className="pointer-events-auto relative w-full h-[var(--radix-navigation-menu-viewport-height)] origin-top bg-white dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-800 shadow-[0_30px_60px_-40px_rgba(15,23,42,0.45)] overflow-hidden transition-[height,transform,opacity] duration-300 ease-out data-[state=open]:animate-slideDown data-[state=closed]:animate-slideUp" />
               </div>
             </NavigationMenu.Root>
+
+            {/* Utility Buttons - Shows when scrolled */}
+            <motion.div
+              className="flex items-center gap-3"
+              initial={false}
+              animate={{
+                opacity: isScrolled ? 1 : 0,
+                pointerEvents: isScrolled ? 'auto' : 'none'
+              }}
+              transition={{ duration: 0.2, ease: 'easeInOut' }}
+            >
+              {/* Search Icon Button */}
+              <button
+                onClick={() => setSearchDialogOpen(true)}
+                className="p-2 text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors duration-200"
+                aria-label="Open search"
+                title="Search (⌘K / Ctrl+K)"
+              >
+                <SearchIcon className="h-5 w-5" />
+              </button>
+
+              {/* Dark Mode Toggle */}
+              {mounted && (
+                <button
+                  onClick={toggleDarkMode}
+                  className="p-2 text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors duration-200"
+                  aria-label="Toggle dark mode"
+                  title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+                >
+                  {isDark ? (
+                    <Sun className="h-5 w-5" />
+                  ) : (
+                    <Moon className="h-5 w-5" />
+                  )}
+                </button>
+              )}
+            </motion.div>
           </div>
         </div>
 
