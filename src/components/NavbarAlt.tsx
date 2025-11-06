@@ -106,7 +106,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
 
         {/* Top Section: Logo, Search Icon, Newsletter, Dark Mode */}
         <motion.div
-          className="border-b border-neutral-200 dark:border-neutral-700 overflow-hidden"
+          className="border-b border-neutral-200 dark:border-neutral-700 overflow-hidden relative z-50"
           initial={false}
           animate={{
             height: isScrolled ? 0 : 'auto',
