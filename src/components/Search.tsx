@@ -201,7 +201,7 @@ function SearchContent({
   }
 
   return (
-    <div className="flex w-full max-w-3xl flex-col overflow-hidden rounded-2xl border border-neutral-200/35 dark:border-neutral-700/35 bg-white/90 dark:bg-neutral-900/90 shadow-2xl backdrop-blur-xl h-[500px]">
+    <div className="flex w-full max-w-6xl flex-col overflow-hidden rounded-2xl border border-neutral-200/35 dark:border-neutral-700/35 bg-white/90 dark:bg-neutral-900/90 shadow-2xl backdrop-blur-xl h-[500px]">
       <SearchInput
         onQueryChange={setCurrentQuery}
         isExpanded={isExpanded}
