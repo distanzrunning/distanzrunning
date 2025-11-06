@@ -6,7 +6,7 @@ import { InstantSearch, useSearchBox, useHits, Configure } from 'react-instantse
 import type { Hit as AlgoliaHit } from 'instantsearch.js'
 import { liteClient as algoliasearch } from 'algoliasearch/lite'
 import Link from 'next/link'
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight, Search as SearchIconLucide, Loader2 } from 'lucide-react'
 
 const searchClient = algoliasearch(
   process.env.NEXT_PUBLIC_ALGOLIA_APP_ID!,
@@ -26,47 +26,16 @@ type HitType = AlgoliaHit<{
   location?: string
 }>
 
-// Category navigation when search is open but no query
-function CategoryNavigation({ onNavigate }: { onNavigate: () => void }) {
-  const categories = [
-    { name: 'Road', href: '/articles/category/road' },
-    { name: 'Track', href: '/articles/category/track' },
-    { name: 'Trail', href: '/articles/category/trail' },
-    { name: 'Race Day Shoes', href: '/gear/category/race-day-shoes' },
-    { name: 'Daily Trainers', href: '/gear/category/daily-trainers' },
-    { name: 'Max Cushion', href: '/gear/category/max-cushion-shoes' },
-    { name: 'Tempo Shoes', href: '/gear/category/tempo-shoes' },
-    { name: 'Trail Shoes', href: '/gear/category/trail-shoes' },
-    { name: 'Races', href: '/races' },
-  ]
-
-  return (
-    <div className="relative min-h-64 flex-grow scroll-py-2 overflow-y-auto overflow-x-hidden">
-      <div className="my-2 w-full px-2">
-        {categories.map((category) => (
-          <Link
-            key={category.href}
-            href={category.href}
-            onClick={onNavigate}
-            className="group flex cursor-pointer items-center justify-between gap-2 rounded-lg px-3 py-4 text-neutral-500 dark:text-neutral-400 text-sm hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:text-neutral-900 dark:hover:text-white transition-all"
-          >
-            <div className="flex basis-2/3 overflow-hidden">
-              <span className="font-semibold truncate">{category.name}</span>
-            </div>
-            <div>
-              <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
-            </div>
-          </Link>
-        ))}
-      </div>
-    </div>
-  )
-}
-
-function SearchResults({ query, onClearQuery, isExpanded }: {
+function SearchResults({
+  query,
+  onClearQuery,
+  isExpanded,
+  isSearching
+}: {
   query: string
   onClearQuery: () => void
   isExpanded: boolean
+  isSearching: boolean
 }) {
   const { hits } = useHits<HitType>()
 
@@ -74,13 +43,30 @@ function SearchResults({ query, onClearQuery, isExpanded }: {
     onClearQuery()
   }
 
-  if (!isExpanded || query.length === 0) return null
+  // Show empty state with search icon when no query
+  if (!isExpanded || query.length === 0) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <SearchIconLucide className="w-16 h-16 text-neutral-300 dark:text-neutral-700" strokeWidth={1.5} />
+      </div>
+    )
+  }
 
+  // Show loading spinner while searching
+  if (isSearching) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <Loader2 className="w-8 h-8 text-neutral-400 dark:text-neutral-600 animate-spin" />
+      </div>
+    )
+  }
+
+  // Show results
   return (
-    <div className="relative min-h-64 flex-grow scroll-py-2 overflow-y-auto overflow-x-hidden">
-      <div className="my-2 w-full px-2">
+    <div className="h-full overflow-y-auto overflow-x-hidden scroll-py-2">
+      <div className="py-2 px-2">
         {hits.length === 0 ? (
-          <div className="flex items-center justify-center py-8 text-neutral-500 dark:text-neutral-400">
+          <div className="flex items-center justify-center py-8 text-neutral-500 dark:text-neutral-400 text-sm">
             No results found
           </div>
         ) : (
@@ -120,25 +106,32 @@ function SearchResults({ query, onClearQuery, isExpanded }: {
 function SearchInput({
   onQueryChange,
   isExpanded,
-  onExpandChange
+  onExpandChange,
+  onSearchingChange
 }: {
   onQueryChange: (query: string) => void
   isExpanded: boolean
   onExpandChange: (expanded: boolean) => void
+  onSearchingChange: (searching: boolean) => void
 }) {
   const { query, refine } = useSearchBox()
   const [localQuery, setLocalQuery] = useState(query)
   const inputRef = useRef<HTMLInputElement>(null)
 
-  // Debounce search
+  // Debounce search with loading state
   useEffect(() => {
+    if (localQuery.length > 0) {
+      onSearchingChange(true)
+    }
+
     const timeoutId = setTimeout(() => {
       refine(localQuery)
       onQueryChange(localQuery)
+      onSearchingChange(false)
     }, 300)
 
     return () => clearTimeout(timeoutId)
-  }, [localQuery, refine, onQueryChange])
+  }, [localQuery, refine, onQueryChange, onSearchingChange])
 
   // Handle Escape key
   useEffect(() => {
@@ -200,36 +193,29 @@ function SearchContent({
   onExpandChange: (expanded: boolean) => void
 }) {
   const [currentQuery, setCurrentQuery] = useState('')
+  const [isSearching, setIsSearching] = useState(false)
 
   const handleClearQuery = () => {
     setCurrentQuery('')
     onExpandChange(false)
   }
 
-  const handleNavigate = () => {
-    setCurrentQuery('')
-    onExpandChange(false)
-  }
-
   return (
-    <div className="flex w-full max-w-xl flex-col overflow-hidden rounded-2xl border border-neutral-200/35 dark:border-neutral-700/35 bg-white/90 dark:bg-neutral-900/90 shadow-2xl backdrop-blur-xl">
+    <div className="flex w-full max-w-xl flex-col overflow-hidden rounded-2xl border border-neutral-200/35 dark:border-neutral-700/35 bg-white/90 dark:bg-neutral-900/90 shadow-2xl backdrop-blur-xl h-[500px]">
       <SearchInput
         onQueryChange={setCurrentQuery}
         isExpanded={isExpanded}
         onExpandChange={onExpandChange}
+        onSearchingChange={setIsSearching}
       />
-      {/* Show category navigation when expanded but no query */}
-      {isExpanded && currentQuery.length === 0 && (
-        <CategoryNavigation onNavigate={handleNavigate} />
-      )}
-      {/* Show search results when there's a query */}
-      {currentQuery.length > 0 && (
+      <div className="flex-1 min-h-0">
         <SearchResults
           query={currentQuery}
           onClearQuery={handleClearQuery}
           isExpanded={isExpanded}
+          isSearching={isSearching}
         />
-      )}
+      </div>
     </div>
   )
 }
