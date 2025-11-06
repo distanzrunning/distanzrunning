@@ -779,18 +779,16 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
       <Dialog.Root open={searchDialogOpen} onOpenChange={setSearchDialogOpen}>
         <Dialog.Portal>
           <Dialog.Overlay className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[60]" />
-          <Dialog.Content className="fixed left-[50%] top-[50%] z-[70] max-h-[85vh] w-[90vw] max-w-[800px] translate-x-[-50%] translate-y-[-50%] rounded-2xl bg-white dark:bg-neutral-900 shadow-2xl focus:outline-none overflow-hidden">
+          <Dialog.Content className="fixed left-[50%] top-[50%] z-[70] translate-x-[-50%] translate-y-[-50%] focus:outline-none">
             <Dialog.Title className="sr-only">Search</Dialog.Title>
             <Dialog.Description className="sr-only">
               Search Distanz Running content
             </Dialog.Description>
 
-            <div className="p-6">
-              <Search
-                isExpanded={searchDialogOpen}
-                onExpandChange={setSearchDialogOpen}
-              />
-            </div>
+            <Search
+              isExpanded={searchDialogOpen}
+              onExpandChange={setSearchDialogOpen}
+            />
           </Dialog.Content>
         </Dialog.Portal>
       </Dialog.Root>
