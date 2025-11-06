@@ -94,16 +94,13 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
           <div className="flex items-center justify-between px-4 md:px-6 lg:px-8 h-20">
 
             {/* Mobile Menu Button - Left (Mobile Only) */}
-            <Dialog.Root open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
-              <Dialog.Trigger asChild>
-                <button
-                  className="lg:hidden p-2 text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors duration-200"
-                  title="Menu"
-                >
-                  <Menu className="h-6 w-6" />
-                </button>
-              </Dialog.Trigger>
-            </Dialog.Root>
+            <button
+              onClick={() => setMobileMenuOpen(true)}
+              className="lg:hidden p-2 text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors duration-200"
+              title="Menu"
+            >
+              <Menu className="h-6 w-6" />
+            </button>
 
             {/* Centered Logo */}
             <Link href="/" className="absolute left-1/2 -translate-x-1/2 flex items-center flex-shrink-0" title="Home">
@@ -457,9 +454,10 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
         </div>
 
         {/* Mobile Menu Dialog */}
-        <Dialog.Portal>
-          <Dialog.Overlay className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40" />
-          <Dialog.Content className="fixed top-0 left-0 right-0 bottom-0 z-50 bg-white dark:bg-neutral-900 p-6 overflow-y-auto transition-colors duration-300">
+        <Dialog.Root open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+          <Dialog.Portal>
+            <Dialog.Overlay className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40" />
+            <Dialog.Content className="fixed top-0 left-0 right-0 bottom-0 z-50 bg-white dark:bg-neutral-900 p-6 overflow-y-auto transition-colors duration-300">
             <Dialog.Title className="sr-only">Navigation Menu</Dialog.Title>
             <Dialog.Description className="sr-only">
               Main navigation menu for Distanz Running
@@ -685,6 +683,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
             )}
           </Dialog.Content>
         </Dialog.Portal>
+        </Dialog.Root>
       </header>
 
       {/* Search Dialog Modal */}
