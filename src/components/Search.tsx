@@ -7,6 +7,7 @@ import type { Hit as AlgoliaHit } from 'instantsearch.js'
 import { liteClient as algoliasearch } from 'algoliasearch/lite'
 import Link from 'next/link'
 import { ArrowRight, Search as SearchIconLucide, Loader2 } from 'lucide-react'
+import * as Tooltip from '@radix-ui/react-tooltip'
 
 const searchClient = algoliasearch(
   process.env.NEXT_PUBLIC_ALGOLIA_APP_ID!,
@@ -171,16 +172,31 @@ function SearchInput({
         spellCheck="false"
         className="placeholder:text-neutral-400 h-9 w-full bg-transparent outline-none text-[1rem] md:text-base text-neutral-900 dark:text-white"
       />
-      <button
-        onClick={handleClear}
-        className="group whitespace-nowrap font-medium text-sm relative m-0 flex cursor-pointer select-none items-center rounded-lg border-none p-1 no-underline outline-none transition ease-out focus-visible:outline-none active:scale-[0.98] active:duration-100 h-6 gap-1 bg-transparent hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-200 dark:hover:bg-neutral-800 px-1 shrink-0 justify-center text-neutral-600 dark:text-neutral-400"
-        aria-label="Close"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-x size-4" aria-hidden="true">
-          <path d="M18 6 6 18"></path>
-          <path d="m6 6 12 12"></path>
-        </svg>
-      </button>
+      <Tooltip.Provider delayDuration={300}>
+        <Tooltip.Root>
+          <Tooltip.Trigger asChild>
+            <button
+              onClick={handleClear}
+              className="group whitespace-nowrap font-medium text-sm relative m-0 flex cursor-pointer select-none items-center rounded-lg border-none p-1 no-underline outline-none transition ease-out focus-visible:outline-none active:scale-[0.98] active:duration-100 h-6 gap-1 bg-transparent hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-200 dark:hover:bg-neutral-800 px-1 shrink-0 justify-center text-neutral-600 dark:text-neutral-400"
+              aria-label="Close"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-x size-4" aria-hidden="true">
+                <path d="M18 6 6 18"></path>
+                <path d="m6 6 12 12"></path>
+              </svg>
+            </button>
+          </Tooltip.Trigger>
+          <Tooltip.Portal>
+            <Tooltip.Content
+              className="bg-neutral-900 text-white text-sm px-3 py-1.5 rounded-lg shadow-lg"
+              sideOffset={5}
+            >
+              Close search
+              <Tooltip.Arrow className="fill-neutral-900" />
+            </Tooltip.Content>
+          </Tooltip.Portal>
+        </Tooltip.Root>
+      </Tooltip.Provider>
     </div>
   )
 }
