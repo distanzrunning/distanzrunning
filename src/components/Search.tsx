@@ -63,11 +63,14 @@ function SearchResults({
       try {
         const counts: Record<string, number> = {}
 
+        // First, let's get total counts by type
         for (const cat of categories) {
-          let filters = `_type:${cat.type}`
+          let filters = `_type:"${cat.type}"`
           if (cat.category) {
             filters += ` AND category:"${cat.category}"`
           }
+
+          console.log('Fetching count for', cat.name, 'with filters:', filters)
 
           const result = await searchClient.search({
             requests: [
@@ -82,11 +85,14 @@ function SearchResults({
           })
 
           const searchResult = result.results[0]
+          console.log('Result for', cat.name, ':', searchResult)
+
           if ('nbHits' in searchResult) {
             counts[cat.name] = searchResult.nbHits || 0
           }
         }
 
+        console.log('Final counts:', counts)
         setCategoryCounts(counts)
         setCountsLoading(false)
       } catch (error) {
