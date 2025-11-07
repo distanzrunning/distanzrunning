@@ -189,6 +189,7 @@ function SearchInput({
           <Tooltip.Portal>
             <Tooltip.Content
               className="bg-neutral-900 text-white text-sm px-3 py-2.5 rounded-lg shadow-lg z-[100]"
+              side="bottom"
               sideOffset={5}
             >
               Close search
