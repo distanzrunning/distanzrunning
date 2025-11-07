@@ -61,6 +61,20 @@ function SearchResults({
   useEffect(() => {
     async function fetchCategoryCounts() {
       try {
+        // First check if there's ANY data in the index
+        const totalResult = await searchClient.search({
+          requests: [
+            {
+              indexName,
+              query: '',
+              hitsPerPage: 5,
+              attributesToRetrieve: ['_type', 'category', 'title']
+            }
+          ]
+        })
+        console.log('Total items in index:', totalResult.results[0])
+        console.log('Sample records:', totalResult.results[0].hits)
+
         const counts: Record<string, number> = {}
 
         // First, let's get total counts by type
