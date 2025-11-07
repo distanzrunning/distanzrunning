@@ -63,14 +63,14 @@ function SearchResults({
 
   // Show results
   return (
-    <div className="h-full overflow-y-auto overflow-x-hidden scroll-py-2">
+    <div className="h-full overflow-x-hidden">
       <div className="py-2 px-2">
         {hits.length === 0 ? (
           <div className="flex items-center justify-center py-8 text-neutral-500 dark:text-neutral-400 text-sm">
             No results found
           </div>
         ) : (
-          hits.slice(0, 20).map((hit) => {
+          hits.slice(0, 6).map((hit) => {
             // Determine URL
             let href = '/'
             if (hit._type === 'post') {
@@ -201,14 +201,14 @@ function SearchContent({
   }
 
   return (
-    <div className="flex w-full max-w-xl flex-col overflow-hidden rounded-2xl border border-neutral-200/35 dark:border-neutral-700/35 bg-white/90 dark:bg-neutral-900/90 shadow-2xl backdrop-blur-xl h-64">
+    <div className="flex w-full max-w-xl flex-col overflow-hidden rounded-2xl border border-neutral-200/35 dark:border-neutral-700/35 bg-white/90 dark:bg-neutral-900/90 shadow-2xl backdrop-blur-xl">
       <SearchInput
         onQueryChange={setCurrentQuery}
         isExpanded={isExpanded}
         onExpandChange={onExpandChange}
         onSearchingChange={setIsSearching}
       />
-      <div className="flex-1 min-h-0">
+      <div className="relative min-h-64 flex-grow">
         <SearchResults
           query={currentQuery}
           onClearQuery={handleClearQuery}
