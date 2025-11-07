@@ -6,13 +6,24 @@ import { InstantSearch, useSearchBox, useHits, Configure } from 'react-instantse
 import type { Hit as AlgoliaHit } from 'instantsearch.js'
 import { liteClient as algoliasearch } from 'algoliasearch/lite'
 import Link from 'next/link'
-import { ArrowRight, Search as SearchIconLucide, Loader2 } from 'lucide-react'
+import { ArrowRight, Loader2 } from 'lucide-react'
 import * as Tooltip from '@radix-ui/react-tooltip'
 
 const searchClient = algoliasearch(
   process.env.NEXT_PUBLIC_ALGOLIA_APP_ID!,
   process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_API_KEY!
 )
+
+const indexName = process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME || 'distanz_content'
+
+// Define categories to display
+const categories = [
+  { name: 'Road', path: '/articles/category/road', type: 'post', category: 'Road' },
+  { name: 'Track & Field', path: '/articles/category/track', type: 'post', category: 'Track' },
+  { name: 'Trail', path: '/articles/category/trail', type: 'post', category: 'Trail' },
+  { name: 'Gear', path: '/gear', type: 'gearPost' },
+  { name: 'Races', path: '/races', type: 'raceGuide' },
+]
 
 type HitType = AlgoliaHit<{
   objectID: string
@@ -39,16 +50,83 @@ function SearchResults({
   isSearching: boolean
 }) {
   const { hits } = useHits<HitType>()
+  const [categoryCounts, setCategoryCounts] = useState<Record<string, number>>({})
+  const [countsLoading, setCountsLoading] = useState(true)
 
   const handleResultClick = () => {
     onClearQuery()
   }
 
-  // Show empty state with search icon when no query
+  // Fetch category counts when component mounts
+  useEffect(() => {
+    async function fetchCategoryCounts() {
+      try {
+        const counts: Record<string, number> = {}
+
+        for (const cat of categories) {
+          let filters = `_type:${cat.type}`
+          if (cat.category) {
+            filters += ` AND category:"${cat.category}"`
+          }
+
+          const result = await searchClient.search({
+            requests: [
+              {
+                indexName,
+                query: '',
+                filters,
+                hitsPerPage: 0,
+                attributesToRetrieve: []
+              }
+            ]
+          })
+
+          const searchResult = result.results[0]
+          if ('nbHits' in searchResult) {
+            counts[cat.name] = searchResult.nbHits || 0
+          }
+        }
+
+        setCategoryCounts(counts)
+        setCountsLoading(false)
+      } catch (error) {
+        console.error('Error fetching category counts:', error)
+        setCountsLoading(false)
+      }
+    }
+
+    fetchCategoryCounts()
+  }, [])
+
+  // Show category listing when no query
   if (!isExpanded || query.length === 0) {
     return (
-      <div className="absolute inset-0 flex items-center justify-center">
-        <SearchIconLucide className="w-8 h-8 text-neutral-300 dark:text-neutral-700" strokeWidth={1.5} />
+      <div className="h-full overflow-x-hidden">
+        <div className="py-2 px-2">
+          {countsLoading ? (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <Loader2 className="w-8 h-8 text-neutral-400 dark:text-neutral-600 animate-spin" />
+            </div>
+          ) : (
+            categories.map((cat) => (
+              <Link
+                key={cat.name}
+                href={cat.path}
+                className="group flex cursor-pointer items-center justify-between gap-2 rounded-lg px-3 py-4 text-neutral-600 dark:text-neutral-400 text-sm hover:bg-neutral-200 dark:hover:bg-neutral-800 hover:text-neutral-900 dark:hover:text-white transition-all"
+                onClick={onClearQuery}
+              >
+                <div className="flex basis-2/3 overflow-hidden">
+                  <span className="font-semibold truncate">{cat.name}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-neutral-500 dark:text-neutral-500">
+                    {categoryCounts[cat.name] || 0}
+                  </span>
+                </div>
+              </Link>
+            ))
+          )}
+        </div>
       </div>
     )
   }
