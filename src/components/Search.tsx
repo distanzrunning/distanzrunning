@@ -46,7 +46,7 @@ function SearchResults({
   // Show empty state with search icon when no query
   if (!isExpanded || query.length === 0) {
     return (
-      <div className="flex items-center justify-center h-full">
+      <div className="absolute inset-0 flex items-center justify-center">
         <SearchIconLucide className="w-8 h-8 text-neutral-300 dark:text-neutral-700" strokeWidth={1.5} />
       </div>
     )
@@ -55,7 +55,7 @@ function SearchResults({
   // Show loading spinner while searching
   if (isSearching) {
     return (
-      <div className="flex items-center justify-center h-full">
+      <div className="absolute inset-0 flex items-center justify-center">
         <Loader2 className="w-8 h-8 text-neutral-400 dark:text-neutral-600 animate-spin" />
       </div>
     )
