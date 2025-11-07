@@ -173,7 +173,7 @@ function SearchInput({
       />
       <button
         onClick={handleClear}
-        className="group whitespace-nowrap font-medium text-sm relative m-0 flex cursor-pointer select-none items-center rounded-lg border-none p-1 no-underline outline-none transition ease-out focus-visible:outline-none active:scale-[0.98] active:duration-100 h-6 gap-1 bg-transparent hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 px-1 shrink-0 justify-center text-neutral-600 dark:text-neutral-400"
+        className="group whitespace-nowrap font-medium text-sm relative m-0 flex cursor-pointer select-none items-center rounded-lg border-none p-1 no-underline outline-none transition ease-out focus-visible:outline-none active:scale-[0.98] active:duration-100 h-6 gap-1 bg-transparent hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-200 dark:hover:bg-neutral-800 px-1 shrink-0 justify-center text-neutral-600 dark:text-neutral-400"
         aria-label="Close"
       >
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-x size-4" aria-hidden="true">
