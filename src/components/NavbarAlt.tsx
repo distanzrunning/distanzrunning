@@ -499,14 +499,14 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
               </NavigationMenu.Indicator>
 
               <div
-                className={`perspective-[2000px] fixed left-0 right-0 w-screen transition-all duration-300 ease-in-out origin-top ${
+                className={`perspective-[2000px] fixed left-0 right-0 w-screen transition-all duration-300 ease-out origin-top ${
                   navValue
                     ? 'opacity-100 translate-y-0 scale-y-100 pointer-events-auto'
-                    : 'opacity-0 -translate-y-8 scale-y-90 pointer-events-none'
+                    : 'opacity-0 -translate-y-12 scale-y-85 pointer-events-none'
                 }`}
                 style={{ top: isScrolled ? '3rem' : '8rem' }}
               >
-                <NavigationMenu.Viewport className="pointer-events-auto relative w-full h-[var(--radix-navigation-menu-viewport-height)] origin-top bg-white dark:bg-neutral-900 border-t border-b border-neutral-200 dark:border-neutral-800 shadow-[0_30px_60px_-40px_rgba(15,23,42,0.45)] overflow-hidden transition-all duration-300 ease-in-out" />
+                <NavigationMenu.Viewport className="pointer-events-auto relative w-full h-[var(--radix-navigation-menu-viewport-height)] origin-top bg-white dark:bg-neutral-900 border-t border-b border-neutral-200 dark:border-neutral-800 shadow-[0_30px_60px_-40px_rgba(15,23,42,0.45)] overflow-hidden transition-[height] duration-300 ease-out" />
               </div>
             </NavigationMenu.Root>
 
