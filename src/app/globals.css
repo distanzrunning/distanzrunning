@@ -863,6 +863,23 @@
     animation: fadeIn 200ms ease-out;
   }
 
+  /* Radix Navigation Menu Viewport animations - controls the container itself */
+  [data-radix-navigation-menu-viewport] {
+    transform-origin: top center;
+  }
+
+  /* When viewport is open, it should be at full opacity and scale */
+  [data-radix-navigation-menu-viewport][data-state="open"] {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+
+  /* When viewport is closed, it should be hidden and scaled down */
+  [data-radix-navigation-menu-viewport][data-state="closed"] {
+    opacity: 0;
+    transform: scaleY(0.95);
+  }
+
   /* Radix Navigation Menu Content animations - these animate the individual dropdown contents */
   [data-radix-navigation-menu-viewport] > div {
     position: absolute;
