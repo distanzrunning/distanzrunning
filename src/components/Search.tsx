@@ -162,12 +162,13 @@ function SearchResults({
   if (!isExpanded || query.length === 0) {
     return (
       <div className="h-full overflow-x-hidden relative">
-        <div className="py-2 px-2">
-          {countsLoading ? (
-            <div className="flex items-center justify-center py-12">
-              <Loader2 className="w-6 h-6 text-neutral-900 dark:text-white animate-spin" />
-            </div>
-          ) : showGearSubcategories ? (
+        {countsLoading ? (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <Loader2 className="w-6 h-6 text-neutral-900 dark:text-white animate-spin" />
+          </div>
+        ) : (
+          <div className="py-2 px-2">
+            {showGearSubcategories ? (
             <>
               {/* Back button */}
               <button
@@ -238,7 +239,8 @@ function SearchResults({
               )
             })
           )}
-        </div>
+          </div>
+        )}
       </div>
     )
   }
