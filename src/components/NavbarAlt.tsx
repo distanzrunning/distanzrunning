@@ -32,7 +32,7 @@ import Search from './Search'
 
 const GARAGE_DOOR_DURATION_MS = 220
 const garageDoorTransition = { duration: GARAGE_DOOR_DURATION_MS / 1000, ease: [0.45, 0, 0.2, 1] as const }
-const contentTransition = { duration: 0.3, ease: [0.16, 1, 0.3, 1] as const }
+const contentTransition = { duration: 0.18, ease: [0.16, 1, 0.3, 1] as const }
 const megaMenuContentVariants = {
   closed: { opacity: 0 },
   open: { opacity: 1 }
