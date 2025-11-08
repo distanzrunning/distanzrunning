@@ -30,6 +30,13 @@ import { urlFor } from '@/sanity/lib/image'
 import type { SanityImageSource } from '@sanity/image-url/lib/types/types'
 import Search from './Search'
 
+const GARAGE_DOOR_DURATION_MS = 260
+const garageDoorTransition = { duration: GARAGE_DOOR_DURATION_MS / 1000, ease: [0.45, 0, 0.2, 1] as const }
+const megaMenuContentVariants = {
+  closed: { y: -18, opacity: 0 },
+  open: { y: 0, opacity: 1 }
+}
+
 type SanitySlug = {
   current: string
 }
@@ -124,10 +131,12 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
       setNavValue('')
       setIsClosingMegaMenu(false)
       megaMenuCloseTimeoutRef.current = null
-    }, 350)
+    }, GARAGE_DOOR_DURATION_MS)
   }
 
+  const megaMenuIsVisible = navValue !== '' || isClosingMegaMenu
   const megaMenuIsInteractive = navValue !== '' && !isClosingMegaMenu
+  const megaMenuContentState = navValue !== '' && !isClosingMegaMenu ? 'open' : 'closed'
 
   return (
     <>
@@ -537,17 +546,25 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                 className="perspective-[2000px] fixed left-0 right-0 w-screen origin-top overflow-hidden max-h-[600px]"
                 initial={false}
                 animate={{
-                  opacity: megaMenuIsInteractive ? 1 : 0,
-                  scaleY: megaMenuIsInteractive ? 1 : 0
+                  opacity: megaMenuIsVisible ? 1 : 0,
+                  scaleY: megaMenuIsVisible ? 1 : 0
                 }}
-                transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
+                transition={garageDoorTransition}
                 style={{
                   top: isScrolled ? '3rem' : '8rem',
                   pointerEvents: megaMenuIsInteractive ? 'auto' : 'none',
                   transformOrigin: 'top'
                 }}
               >
-                <NavigationMenu.Viewport className="pointer-events-auto relative w-full h-[var(--radix-navigation-menu-viewport-height)] origin-top bg-white dark:bg-neutral-900 border-t border-b border-neutral-200 dark:border-neutral-800 shadow-[0_30px_60px_-40px_rgba(15,23,42,0.45)] overflow-hidden transition-[height] duration-300 ease-out" />
+                <NavigationMenu.Viewport asChild>
+                  <motion.div
+                    className="pointer-events-auto relative w-full h-[var(--radix-navigation-menu-viewport-height)] origin-top bg-white dark:bg-neutral-900 border-t border-b border-neutral-200 dark:border-neutral-800 shadow-[0_30px_60px_-40px_rgba(15,23,42,0.45)] overflow-hidden transition-[height] duration-300 ease-out"
+                    initial={false}
+                    variants={megaMenuContentVariants}
+                    animate={megaMenuContentState}
+                    transition={garageDoorTransition}
+                  />
+                </NavigationMenu.Viewport>
               </motion.div>
             </NavigationMenu.Root>
 
