@@ -21,8 +21,19 @@ const categories = [
   { name: 'Road', path: '/articles/category/road', type: 'post', category: 'Road' },
   { name: 'Track & Field', path: '/articles/category/track', type: 'post', category: 'Track' },
   { name: 'Trail', path: '/articles/category/trail', type: 'post', category: 'Trail' },
-  { name: 'Gear', path: '/gear', type: 'gearPost' },
+  { name: 'Gear', type: 'gearPost', hasSubcategories: true },
   { name: 'Races', path: '/races', type: 'raceGuide' },
+]
+
+// Define gear subcategories
+const gearSubcategories = [
+  { name: 'Race Day Shoes', path: '/gear/category/race-day-shoes', gearCategory: 'Race Day Shoes' },
+  { name: 'Daily Trainers', path: '/gear/category/daily-trainers', gearCategory: 'Daily Trainers' },
+  { name: 'Max Cushion Shoes', path: '/gear/category/max-cushion-shoes', gearCategory: 'Max Cushion Shoes' },
+  { name: 'Tempo Shoes', path: '/gear/category/tempo-shoes', gearCategory: 'Tempo Shoes' },
+  { name: 'Trail Shoes', path: '/gear/category/trail-shoes', gearCategory: 'Trail Shoes' },
+  { name: 'GPS Watches', path: '/gear/category/gps-watches', gearCategory: 'GPS Watches' },
+  { name: 'Nutrition', path: '/gear/category/nutrition', gearCategory: 'Nutrition' },
 ]
 
 type HitType = AlgoliaHit<{
@@ -51,7 +62,9 @@ function SearchResults({
 }) {
   const { hits } = useHits<HitType>()
   const [categoryCounts, setCategoryCounts] = useState<Record<string, number>>({})
+  const [gearSubcategoryCounts, setGearSubcategoryCounts] = useState<Record<string, number>>({})
   const [countsLoading, setCountsLoading] = useState(true)
+  const [showGearSubcategories, setShowGearSubcategories] = useState(false)
 
   const handleResultClick = () => {
     onClearQuery()
@@ -108,6 +121,33 @@ function SearchResults({
 
         console.log('Final counts:', counts)
         setCategoryCounts(counts)
+
+        // Also fetch gear subcategory counts
+        const gearCounts: Record<string, number> = {}
+        for (const subcat of gearSubcategories) {
+          const filters = `_type:"gearPost" AND gearCategory:"${subcat.gearCategory}"`
+          console.log('Fetching gear subcat count for', subcat.name, 'with filters:', filters)
+
+          const result = await searchClient.search({
+            requests: [
+              {
+                indexName,
+                query: '',
+                filters,
+                hitsPerPage: 0,
+                attributesToRetrieve: []
+              }
+            ]
+          })
+
+          const searchResult = result.results[0]
+          if ('nbHits' in searchResult) {
+            gearCounts[subcat.name] = searchResult.nbHits || 0
+          }
+        }
+        console.log('Gear subcategory counts:', gearCounts)
+        setGearSubcategoryCounts(gearCounts)
+
         setCountsLoading(false)
       } catch (error) {
         console.error('Error fetching category counts:', error)
@@ -127,24 +167,77 @@ function SearchResults({
             <div className="absolute inset-0 flex items-center justify-center">
               <Loader2 className="w-8 h-8 text-neutral-400 dark:text-neutral-600 animate-spin" />
             </div>
-          ) : (
-            categories.map((cat) => (
-              <Link
-                key={cat.name}
-                href={cat.path}
-                className="group flex cursor-pointer items-center justify-between gap-2 rounded-lg px-3 py-4 text-neutral-600 dark:text-neutral-400 text-sm hover:bg-neutral-200 dark:hover:bg-neutral-800 hover:text-neutral-900 dark:hover:text-white transition-all"
-                onClick={onClearQuery}
+          ) : showGearSubcategories ? (
+            <>
+              {/* Back button */}
+              <button
+                onClick={() => setShowGearSubcategories(false)}
+                className="group flex cursor-pointer items-center gap-2 rounded-lg px-3 py-4 text-neutral-600 dark:text-neutral-400 text-sm hover:bg-neutral-200 dark:hover:bg-neutral-800 hover:text-neutral-900 dark:hover:text-white transition-all w-full"
               >
-                <div className="flex basis-2/3 overflow-hidden">
-                  <span className="font-semibold truncate">{cat.name}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-xs text-neutral-500 dark:text-neutral-500">
-                    {categoryCounts[cat.name] || 0}
-                  </span>
-                </div>
-              </Link>
-            ))
+                <ArrowRight className="size-4 rotate-180" />
+                <span className="font-semibold">Back</span>
+              </button>
+              {/* Gear subcategories */}
+              {gearSubcategories.map((subcat) => (
+                <Link
+                  key={subcat.name}
+                  href={subcat.path}
+                  className="group flex cursor-pointer items-center justify-between gap-2 rounded-lg px-3 py-4 text-neutral-600 dark:text-neutral-400 text-sm hover:bg-neutral-200 dark:hover:bg-neutral-800 hover:text-neutral-900 dark:hover:text-white transition-all"
+                  onClick={onClearQuery}
+                >
+                  <div className="flex basis-2/3 overflow-hidden">
+                    <span className="font-semibold truncate">{subcat.name}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-neutral-500 dark:text-neutral-500">
+                      {gearSubcategoryCounts[subcat.name] || 0}
+                    </span>
+                  </div>
+                </Link>
+              ))}
+            </>
+          ) : (
+            categories.map((cat) => {
+              const isGear = cat.hasSubcategories
+
+              if (isGear) {
+                return (
+                  <button
+                    key={cat.name}
+                    onClick={() => setShowGearSubcategories(true)}
+                    className="group flex cursor-pointer items-center justify-between gap-2 rounded-lg px-3 py-4 text-neutral-600 dark:text-neutral-400 text-sm hover:bg-neutral-200 dark:hover:bg-neutral-800 hover:text-neutral-900 dark:hover:text-white transition-all w-full"
+                  >
+                    <div className="flex basis-2/3 overflow-hidden">
+                      <span className="font-semibold truncate">{cat.name}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs text-neutral-500 dark:text-neutral-500">
+                        {categoryCounts[cat.name] || 0}
+                      </span>
+                      <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
+                    </div>
+                  </button>
+                )
+              }
+
+              return (
+                <Link
+                  key={cat.name}
+                  href={cat.path!}
+                  className="group flex cursor-pointer items-center justify-between gap-2 rounded-lg px-3 py-4 text-neutral-600 dark:text-neutral-400 text-sm hover:bg-neutral-200 dark:hover:bg-neutral-800 hover:text-neutral-900 dark:hover:text-white transition-all"
+                  onClick={onClearQuery}
+                >
+                  <div className="flex basis-2/3 overflow-hidden">
+                    <span className="font-semibold truncate">{cat.name}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-neutral-500 dark:text-neutral-500">
+                      {categoryCounts[cat.name] || 0}
+                    </span>
+                  </div>
+                </Link>
+              )
+            })
           )}
         </div>
       </div>
