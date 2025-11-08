@@ -30,10 +30,10 @@ import { urlFor } from '@/sanity/lib/image'
 import type { SanityImageSource } from '@sanity/image-url/lib/types/types'
 import Search from './Search'
 
-const GARAGE_DOOR_DURATION_MS = 260
+const GARAGE_DOOR_DURATION_MS = 220
 const garageDoorTransition = { duration: GARAGE_DOOR_DURATION_MS / 1000, ease: [0.45, 0, 0.2, 1] as const }
 const megaMenuContentVariants = {
-  closed: { y: -18, opacity: 0 },
+  closed: { y: -12, opacity: 0 },
   open: { y: 0, opacity: 1 }
 }
 
@@ -553,7 +553,8 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                 style={{
                   top: isScrolled ? '3rem' : '8rem',
                   pointerEvents: megaMenuIsInteractive ? 'auto' : 'none',
-                  transformOrigin: 'top'
+                  transformOrigin: 'top',
+                  willChange: 'transform, opacity'
                 }}
               >
                 <motion.div
@@ -561,7 +562,10 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                   variants={megaMenuContentVariants}
                   animate={megaMenuContentState}
                   transition={garageDoorTransition}
-                  style={{ transformOrigin: 'top' }}
+                  style={{
+                    transformOrigin: 'top',
+                    willChange: 'transform, opacity'
+                  }}
                 >
                   <NavigationMenu.Viewport className="pointer-events-auto relative w-full h-[var(--radix-navigation-menu-viewport-height)] origin-top bg-white dark:bg-neutral-900 border-t border-b border-neutral-200 dark:border-neutral-800 shadow-[0_30px_60px_-40px_rgba(15,23,42,0.45)] overflow-hidden transition-[height] duration-300 ease-out" />
                 </motion.div>
