@@ -639,35 +639,35 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                 <div className="space-y-4">
                   <Link
                     href="/articles/category/road"
-                    className="block text-xl font-semibold text-neutral-900 dark:text-white hover:text-electric-pink dark:hover:text-electric-pink transition-colors py-2"
+                    className="block text-xl font-semibold text-neutral-900 dark:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors py-2 px-3 rounded-lg"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     Road
                   </Link>
                   <Link
                     href="/articles/category/track"
-                    className="block text-xl font-semibold text-neutral-900 dark:text-white hover:text-electric-pink dark:hover:text-electric-pink transition-colors py-2"
+                    className="block text-xl font-semibold text-neutral-900 dark:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors py-2 px-3 rounded-lg"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     Track
                   </Link>
                   <Link
                     href="/articles/category/trail"
-                    className="block text-xl font-semibold text-neutral-900 dark:text-white hover:text-electric-pink dark:hover:text-electric-pink transition-colors py-2"
+                    className="block text-xl font-semibold text-neutral-900 dark:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors py-2 px-3 rounded-lg"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     Trail
                   </Link>
                   <button
                     onClick={() => setMobileSubMenu('gear')}
-                    className="flex items-center justify-between w-full text-xl font-semibold text-neutral-900 dark:text-white hover:text-electric-pink dark:hover:text-electric-pink transition-colors py-2"
+                    className="flex items-center justify-between w-full text-xl font-semibold text-neutral-900 dark:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors py-2 px-3 rounded-lg"
                   >
                     Gear
                     <ChevronDown className="h-5 w-5" />
                   </button>
                   <button
                     onClick={() => setMobileSubMenu('races')}
-                    className="flex items-center justify-between w-full text-xl font-semibold text-neutral-900 dark:text-white hover:text-electric-pink dark:hover:text-electric-pink transition-colors py-2"
+                    className="flex items-center justify-between w-full text-xl font-semibold text-neutral-900 dark:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors py-2 px-3 rounded-lg"
                   >
                     Races
                     <ChevronDown className="h-5 w-5" />
