@@ -498,16 +498,22 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                 <span className="h-[2px] w-full rounded-full bg-neutral-900/80 dark:bg-white/80" />
               </NavigationMenu.Indicator>
 
-              <div
-                className={`perspective-[2000px] fixed left-0 right-0 w-screen origin-top overflow-hidden transition-all duration-300 ease-out ${
-                  navValue
-                    ? 'opacity-100 max-h-[600px] pointer-events-auto'
-                    : 'opacity-0 max-h-0 pointer-events-none'
-                }`}
-                style={{ top: isScrolled ? '3rem' : '8rem' }}
+              <motion.div
+                className="perspective-[2000px] fixed left-0 right-0 w-screen origin-top overflow-hidden max-h-[600px]"
+                initial={false}
+                animate={{
+                  opacity: navValue ? 1 : 0,
+                  scaleY: navValue ? 1 : 0
+                }}
+                transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
+                style={{
+                  top: isScrolled ? '3rem' : '8rem',
+                  pointerEvents: navValue ? 'auto' : 'none',
+                  transformOrigin: 'top'
+                }}
               >
                 <NavigationMenu.Viewport className="pointer-events-auto relative w-full h-[var(--radix-navigation-menu-viewport-height)] origin-top bg-white dark:bg-neutral-900 border-t border-b border-neutral-200 dark:border-neutral-800 shadow-[0_30px_60px_-40px_rgba(15,23,42,0.45)] overflow-hidden transition-[height] duration-300 ease-out" />
-              </div>
+              </motion.div>
             </NavigationMenu.Root>
 
             {/* Utility Buttons - Shows when scrolled */}
