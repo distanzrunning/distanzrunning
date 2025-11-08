@@ -863,6 +863,20 @@
     animation: fadeIn 200ms ease-out;
   }
 
+  /* Radix Navigation Menu Viewport animations */
+  [data-radix-navigation-menu-viewport] {
+    animation-duration: 250ms !important;
+    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1) !important;
+  }
+
+  [data-radix-navigation-menu-viewport][data-state="open"] {
+    animation-name: slideDown !important;
+  }
+
+  [data-radix-navigation-menu-viewport][data-state="closed"] {
+    animation-name: slideUp !important;
+  }
+
   .fade-out {
     animation: fadeOut 200ms ease-in;
   }
