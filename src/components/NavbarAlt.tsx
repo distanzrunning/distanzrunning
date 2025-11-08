@@ -501,8 +501,8 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
               <div
                 className={`perspective-[2000px] fixed left-0 right-0 w-screen transition-all duration-300 ease-out origin-top ${
                   navValue
-                    ? 'opacity-100 translate-y-0 scale-y-100 pointer-events-auto'
-                    : 'opacity-0 -translate-y-12 scale-y-85 pointer-events-none'
+                    ? 'opacity-100 scale-y-100 pointer-events-auto'
+                    : 'opacity-0 scale-y-0 pointer-events-none'
                 }`}
                 style={{ top: isScrolled ? '3rem' : '8rem' }}
               >
