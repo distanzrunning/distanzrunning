@@ -31,15 +31,9 @@ import type { SanityImageSource } from '@sanity/image-url/lib/types/types'
 import Search from './Search'
 
 const GARAGE_DOOR_DURATION_MS = 220
-const CONTENT_FADE_DURATION_MS = 220
 const MEGA_MENU_EXIT_DURATION_MS = GARAGE_DOOR_DURATION_MS
 const garageDoorOpenTransition = { duration: GARAGE_DOOR_DURATION_MS / 1000, ease: [0.45, 0, 0.2, 1] as const }
 const garageDoorCloseTransition = { duration: GARAGE_DOOR_DURATION_MS / 1000, ease: [0.45, 0, 0.2, 1] as const }
-const contentTransition = { duration: CONTENT_FADE_DURATION_MS / 1000, ease: [0.16, 1, 0.3, 1] as const }
-const megaMenuContentVariants = {
-  closed: { opacity: 0 },
-  open: { opacity: 1 }
-}
 
 type SanitySlug = {
   current: string
@@ -141,7 +135,6 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
   const megaMenuIsOpen = navValue !== '' && !isClosingMegaMenu
   const megaMenuShouldRender = navValue !== '' || isClosingMegaMenu
   const megaMenuIsInteractive = megaMenuIsOpen
-  const megaMenuContentState = megaMenuIsOpen ? 'open' : 'closed'
 
   return (
     <>
@@ -561,17 +554,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                   willChange: 'transform'
                 }}
               >
-                <motion.div
-                  initial={false}
-                  variants={megaMenuContentVariants}
-                  animate={megaMenuContentState}
-                  transition={contentTransition}
-                  style={{
-                    willChange: 'opacity'
-                  }}
-                >
-                  <NavigationMenu.Viewport className="pointer-events-auto relative w-full h-[var(--radix-navigation-menu-viewport-height)] origin-top bg-white dark:bg-neutral-900 border-t border-b border-neutral-200 dark:border-neutral-800 shadow-[0_30px_60px_-40px_rgba(15,23,42,0.45)] overflow-hidden transition-[height] duration-300 ease-out" />
-                </motion.div>
+                <NavigationMenu.Viewport className="pointer-events-auto relative w-full h-[var(--radix-navigation-menu-viewport-height)] origin-top bg-white dark:bg-neutral-900 border-t border-b border-neutral-200 dark:border-neutral-800 shadow-[0_30px_60px_-40px_rgba(15,23,42,0.45)] overflow-hidden transition-[height] duration-300 ease-out" />
               </motion.div>
             </NavigationMenu.Root>
 
