@@ -111,12 +111,12 @@ module.exports = {
           '100%': { opacity: '0', transform: 'translateX(180px)' },
         },
         megaMenuIn: {
-          '0%': { opacity: '0', transform: 'scaleY(0.95) translateY(-10px)' },
+          '0%': { opacity: '0', transform: 'scaleY(0.95) translateY(-20px)' },
           '100%': { opacity: '1', transform: 'scaleY(1) translateY(0)' },
         },
         megaMenuOut: {
           '0%': { opacity: '1', transform: 'scaleY(1) translateY(0)' },
-          '100%': { opacity: '0', transform: 'scaleY(0.95) translateY(-10px)' },
+          '100%': { opacity: '0', transform: 'scaleY(0.95) translateY(-20px)' },
         },
         slideDown: {
           '0%': { opacity: '0', transform: 'translateY(-20px) scaleY(0.95)' },
