@@ -210,12 +210,6 @@ function SearchResults({
                     <div className="flex basis-2/3 overflow-hidden">
                       <span className="font-semibold truncate">{cat.name}</span>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs text-neutral-500 dark:text-neutral-500">
-                        {categoryCounts[cat.name] || 0}
-                      </span>
-                      <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
-                    </div>
                   </button>
                 )
               }
@@ -262,7 +256,7 @@ function SearchResults({
             No results found
           </div>
         ) : (
-          hits.slice(0, 6).map((hit) => {
+          hits.slice(0, 8).map((hit) => {
             // Determine URL
             let href = '/'
             if (hit._type === 'post') {
@@ -415,7 +409,7 @@ function SearchContent({
         onExpandChange={onExpandChange}
         onSearchingChange={setIsSearching}
       />
-      <div className="relative min-h-64 flex-grow">
+      <div className="relative h-[432px]">
         <SearchResults
           query={currentQuery}
           onClearQuery={handleClearQuery}
