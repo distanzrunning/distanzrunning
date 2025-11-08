@@ -863,40 +863,43 @@
     animation: fadeIn 200ms ease-out;
   }
 
-  /* Radix Navigation Menu Viewport animations - controls the container itself */
+  /* Radix Navigation Menu Viewport animations - based on official Radix documentation */
   [data-radix-navigation-menu-viewport] {
     transform-origin: top center;
+    transition: width, height, 300ms ease;
   }
 
-  /* Animate viewport when opening */
+  /* Animate viewport when opening - use Radix's scaleIn pattern */
   [data-radix-navigation-menu-viewport][data-state="open"] {
-    animation: viewportSlideDown 300ms cubic-bezier(0.16, 1, 0.3, 1);
+    animation: scaleIn 200ms ease;
   }
 
-  /* Animate viewport when closing */
+  /* Animate viewport when closing - use Radix's scaleOut pattern */
   [data-radix-navigation-menu-viewport][data-state="closed"] {
-    animation: viewportSlideUp 200ms cubic-bezier(0.16, 1, 0.3, 1);
+    animation: scaleOut 200ms ease;
   }
 
-  @keyframes viewportSlideDown {
+  /* Official Radix scaleIn animation with perspective transform */
+  @keyframes scaleIn {
     from {
       opacity: 0;
-      transform: scaleY(0.95);
+      transform: rotateX(-30deg) scale(0.9);
     }
     to {
       opacity: 1;
-      transform: scaleY(1);
+      transform: rotateX(0deg) scale(1);
     }
   }
 
-  @keyframes viewportSlideUp {
+  /* Official Radix scaleOut animation with perspective transform */
+  @keyframes scaleOut {
     from {
       opacity: 1;
-      transform: scaleY(1);
+      transform: rotateX(0deg) scale(1);
     }
     to {
       opacity: 0;
-      transform: scaleY(0.95);
+      transform: rotateX(-10deg) scale(0.95);
     }
   }
 
