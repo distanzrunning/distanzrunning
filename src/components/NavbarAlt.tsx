@@ -780,6 +780,38 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                       <div className="text-sm text-neutral-500">Fuel for distance</div>
                     </div>
                   </Link>
+
+                  {/* Featured Gear Article */}
+                  {featuredGear && (
+                    <>
+                      <div className="h-px bg-neutral-200 dark:bg-neutral-700 my-3" />
+                      <div className="px-3 py-2">
+                        <div className="text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-3">
+                          Featured Article
+                        </div>
+                        <Link
+                          href={`/gear/${featuredGear.slug.current}`}
+                          className="block rounded-lg overflow-hidden hover:opacity-80 transition-opacity"
+                          onClick={() => setMobileMenuOpen(false)}
+                        >
+                          {featuredGear.mainImage && (
+                            <div className="relative w-full aspect-[16/9] bg-neutral-100 dark:bg-neutral-800 mb-2">
+                              <Image
+                                src={urlFor(featuredGear.mainImage).width(640).height(360).fit('crop').url()}
+                                alt={featuredGear.title}
+                                fill
+                                sizes="100vw"
+                                className="object-cover"
+                              />
+                            </div>
+                          )}
+                          <h4 className="font-semibold text-neutral-900 dark:text-white text-sm">
+                            {featuredGear.title}
+                          </h4>
+                        </Link>
+                      </div>
+                    </>
+                  )}
                 </div>
               </>
             )}
@@ -822,6 +854,38 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                       <div className="text-sm text-neutral-500">Search and compare races worldwide</div>
                     </div>
                   </Link>
+
+                  {/* Featured Race */}
+                  {featuredRace && (
+                    <>
+                      <div className="h-px bg-neutral-200 dark:bg-neutral-700 my-3" />
+                      <div className="px-3 py-2">
+                        <div className="text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-3">
+                          Featured Race
+                        </div>
+                        <Link
+                          href={`/races/${featuredRace.slug.current}`}
+                          className="block rounded-lg overflow-hidden hover:opacity-80 transition-opacity"
+                          onClick={() => setMobileMenuOpen(false)}
+                        >
+                          {featuredRace.mainImage && (
+                            <div className="relative w-full aspect-[16/9] bg-neutral-100 dark:bg-neutral-800 mb-2">
+                              <Image
+                                src={urlFor(featuredRace.mainImage).width(640).height(360).fit('crop').url()}
+                                alt={featuredRace.title}
+                                fill
+                                sizes="100vw"
+                                className="object-cover"
+                              />
+                            </div>
+                          )}
+                          <h4 className="font-semibold text-neutral-900 dark:text-white text-sm">
+                            {featuredRace.title}
+                          </h4>
+                        </Link>
+                      </div>
+                    </>
+                  )}
                 </div>
               </>
             )}
