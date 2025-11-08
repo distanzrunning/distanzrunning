@@ -246,11 +246,9 @@ function SearchResults({
   // Show loading spinner while searching
   if (isSearching) {
     return (
-      <div className="h-full overflow-x-hidden">
-        <div className="py-2 px-2">
-          <div className="flex items-center justify-center py-12">
-            <Loader2 className="w-6 h-6 text-neutral-900 dark:text-white animate-spin" />
-          </div>
+      <div className="h-full overflow-x-hidden relative">
+        <div className="absolute inset-0 flex items-center justify-center">
+          <Loader2 className="w-6 h-6 text-neutral-900 dark:text-white animate-spin" />
         </div>
       </div>
     )
