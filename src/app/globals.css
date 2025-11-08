@@ -863,18 +863,78 @@
     animation: fadeIn 200ms ease-out;
   }
 
-  /* Radix Navigation Menu Viewport animations */
-  [data-radix-navigation-menu-viewport] {
-    animation-duration: 250ms !important;
-    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1) !important;
+  /* Radix Navigation Menu Content animations - these animate the individual dropdown contents */
+  [data-radix-navigation-menu-viewport] > div {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    animation-duration: 300ms;
+    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
   }
 
-  [data-radix-navigation-menu-viewport][data-state="open"] {
-    animation-name: slideDown !important;
+  /* Animate content when entering from left (moving from Gear to Road/Track) */
+  [data-radix-navigation-menu-viewport] > div[data-motion="from-start"] {
+    animation-name: slideDownFromLeft;
   }
 
-  [data-radix-navigation-menu-viewport][data-state="closed"] {
-    animation-name: slideUp !important;
+  /* Animate content when entering from right (moving from Road/Track to Gear) */
+  [data-radix-navigation-menu-viewport] > div[data-motion="from-end"] {
+    animation-name: slideDownFromRight;
+  }
+
+  /* Animate content when exiting to left */
+  [data-radix-navigation-menu-viewport] > div[data-motion="to-start"] {
+    animation-name: slideUpToLeft;
+  }
+
+  /* Animate content when exiting to right */
+  [data-radix-navigation-menu-viewport] > div[data-motion="to-end"] {
+    animation-name: slideUpToRight;
+  }
+
+  @keyframes slideDownFromLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-20px) translateY(-20px) scaleY(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0) translateY(0) scaleY(1);
+    }
+  }
+
+  @keyframes slideDownFromRight {
+    from {
+      opacity: 0;
+      transform: translateX(20px) translateY(-20px) scaleY(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0) translateY(0) scaleY(1);
+    }
+  }
+
+  @keyframes slideUpToLeft {
+    from {
+      opacity: 1;
+      transform: translateX(0) translateY(0) scaleY(1);
+    }
+    to {
+      opacity: 0;
+      transform: translateX(-20px) translateY(-20px) scaleY(0.95);
+    }
+  }
+
+  @keyframes slideUpToRight {
+    from {
+      opacity: 1;
+      transform: translateX(0) translateY(0) scaleY(1);
+    }
+    to {
+      opacity: 0;
+      transform: translateX(20px) translateY(-20px) scaleY(0.95);
+    }
   }
 
   .fade-out {
