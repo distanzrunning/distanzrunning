@@ -137,9 +137,10 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
     }, CONTENT_FADE_DURATION_MS + GARAGE_DOOR_DURATION_MS)
   }
 
-  const megaMenuIsVisible = navValue !== '' || isClosingMegaMenu
-  const megaMenuIsInteractive = navValue !== '' && !isClosingMegaMenu
-  const megaMenuContentState = navValue !== '' && !isClosingMegaMenu ? 'open' : 'closed'
+  const megaMenuIsOpen = navValue !== '' && !isClosingMegaMenu
+  const megaMenuShouldRender = navValue !== '' || isClosingMegaMenu
+  const megaMenuIsInteractive = megaMenuIsOpen
+  const megaMenuContentState = megaMenuIsOpen ? 'open' : 'closed'
 
   return (
     <>
@@ -549,10 +550,11 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                 className="perspective-[2000px] fixed left-0 right-0 w-screen origin-top overflow-hidden max-h-[600px]"
                 initial={false}
                 animate={{
-                  scaleY: megaMenuIsVisible ? 1 : 0
+                  scaleY: megaMenuIsOpen ? 1 : 0
                 }}
-                transition={megaMenuIsVisible ? garageDoorOpenTransition : garageDoorCloseTransition}
+                transition={megaMenuIsOpen ? garageDoorOpenTransition : garageDoorCloseTransition}
                 style={{
+                  display: megaMenuShouldRender ? 'block' : 'none',
                   top: isScrolled ? '3rem' : '8rem',
                   pointerEvents: megaMenuIsInteractive ? 'auto' : 'none',
                   transformOrigin: 'top',
