@@ -165,7 +165,7 @@ function SearchResults({
         <div className="py-2 px-2">
           {countsLoading ? (
             <div className="absolute inset-0 flex items-center justify-center">
-              <Loader2 className="w-8 h-8 text-neutral-400 dark:text-neutral-600 animate-spin" />
+              <Loader2 className="w-5 h-5 text-neutral-900 dark:text-white animate-spin" />
             </div>
           ) : showGearSubcategories ? (
             <>
@@ -247,7 +247,7 @@ function SearchResults({
   if (isSearching) {
     return (
       <div className="absolute inset-0 flex items-center justify-center">
-        <Loader2 className="w-8 h-8 text-neutral-400 dark:text-neutral-600 animate-spin" />
+        <Loader2 className="w-5 h-5 text-neutral-900 dark:text-white animate-spin" />
       </div>
     )
   }
