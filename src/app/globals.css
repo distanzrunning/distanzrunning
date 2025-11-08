@@ -915,7 +915,7 @@
   }
 
   /* Default slide down animation for content when viewport opens (no directional motion) */
-  [data-radix-navigation-menu-viewport][data-state="open"] > div:not([data-motion]) {
+  [data-radix-navigation-menu-viewport] > div:not([data-motion]) {
     animation-name: slideDownFromTop;
   }
 
