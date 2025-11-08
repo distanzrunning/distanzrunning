@@ -119,12 +119,12 @@ module.exports = {
           '100%': { opacity: '0', transform: 'scaleY(0.95) translateY(-10px)' },
         },
         slideDown: {
-          '0%': { opacity: '0', transform: 'translateY(-10px)' },
-          '100%': { opacity: '1', transform: 'translateY(0)' },
+          '0%': { opacity: '0', transform: 'translateY(-20px) scaleY(0.95)' },
+          '100%': { opacity: '1', transform: 'translateY(0) scaleY(1)' },
         },
         slideUp: {
-          '0%': { opacity: '1', transform: 'translateY(0)' },
-          '100%': { opacity: '0', transform: 'translateY(-10px)' },
+          '0%': { opacity: '1', transform: 'translateY(0) scaleY(1)' },
+          '100%': { opacity: '0', transform: 'translateY(-20px) scaleY(0.95)' },
         },
       },
       animation: {
