@@ -31,8 +31,8 @@ import type { SanityImageSource } from '@sanity/image-url/lib/types/types'
 import Search from './Search'
 
 const GARAGE_DOOR_DURATION_MS = 220
-const CONTENT_FADE_DURATION_MS = 180
-const MEGA_MENU_EXIT_DURATION_MS = Math.max(GARAGE_DOOR_DURATION_MS, CONTENT_FADE_DURATION_MS)
+const CONTENT_FADE_DURATION_MS = 220
+const MEGA_MENU_EXIT_DURATION_MS = GARAGE_DOOR_DURATION_MS
 const garageDoorOpenTransition = { duration: GARAGE_DOOR_DURATION_MS / 1000, ease: [0.45, 0, 0.2, 1] as const }
 const garageDoorCloseTransition = { duration: GARAGE_DOOR_DURATION_MS / 1000, ease: [0.45, 0, 0.2, 1] as const }
 const contentTransition = { duration: CONTENT_FADE_DURATION_MS / 1000, ease: [0.16, 1, 0.3, 1] as const }
