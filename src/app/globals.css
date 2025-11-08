@@ -911,6 +911,14 @@
     width: 100%;
     animation-duration: 300ms;
     animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+    animation-fill-mode: both;
+  }
+
+  /* Default fade in animation for content when viewport opens */
+  [data-radix-navigation-menu-viewport][data-state="open"] > div:not([data-motion]) {
+    animation-name: contentFadeIn;
+    animation-duration: 350ms;
+    animation-delay: 50ms;
   }
 
   /* Animate content when entering from left (moving from Gear to Road/Track) */
@@ -974,6 +982,18 @@
     to {
       opacity: 0;
       transform: translateX(20px) translateY(-20px) scaleY(0.95);
+    }
+  }
+
+  /* Content fade in animation - syncs with garage door opening */
+  @keyframes contentFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
     }
   }
 
