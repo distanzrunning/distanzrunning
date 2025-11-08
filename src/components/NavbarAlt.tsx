@@ -1,7 +1,7 @@
 // src/components/NavbarAlt.tsx
 'use client'
 
-import { useState, useEffect, useContext } from 'react'
+import { useState, useEffect, useContext, useRef } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import * as Dialog from '@radix-ui/react-dialog'
@@ -60,8 +60,10 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
   const [mobileSubMenu, setMobileSubMenu] = useState<'main' | 'gear' | 'races'>('main')
   const [mounted, setMounted] = useState(false)
   const [navValue, setNavValue] = useState('')
+  const [isClosingMegaMenu, setIsClosingMegaMenu] = useState(false)
   const [searchDialogOpen, setSearchDialogOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
+  const megaMenuCloseTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
     setMounted(true)
@@ -93,6 +95,39 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
     document.addEventListener('keydown', handleKeyDown)
     return () => document.removeEventListener('keydown', handleKeyDown)
   }, [])
+
+  useEffect(() => {
+    return () => {
+      if (megaMenuCloseTimeoutRef.current) {
+        clearTimeout(megaMenuCloseTimeoutRef.current)
+      }
+    }
+  }, [])
+
+  const handleNavValueChange = (value: string) => {
+    if (value) {
+      if (megaMenuCloseTimeoutRef.current) {
+        clearTimeout(megaMenuCloseTimeoutRef.current)
+        megaMenuCloseTimeoutRef.current = null
+      }
+      setIsClosingMegaMenu(false)
+      setNavValue(value)
+      return
+    }
+
+    if (!navValue || isClosingMegaMenu) {
+      return
+    }
+
+    setIsClosingMegaMenu(true)
+    megaMenuCloseTimeoutRef.current = setTimeout(() => {
+      setNavValue('')
+      setIsClosingMegaMenu(false)
+      megaMenuCloseTimeoutRef.current = null
+    }, 350)
+  }
+
+  const megaMenuIsInteractive = navValue !== '' && !isClosingMegaMenu
 
   return (
     <>
@@ -218,7 +253,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
             </motion.div>
 
             {/* Desktop Navigation - Radix UI */}
-            <NavigationMenu.Root className="relative z-50" value={navValue} onValueChange={setNavValue}>
+            <NavigationMenu.Root className="relative z-50" value={navValue} onValueChange={handleNavValueChange}>
               <NavigationMenu.List className="flex items-center gap-1">
                 {/* Road Link */}
                 <NavigationMenu.Item>
@@ -502,13 +537,13 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                 className="perspective-[2000px] fixed left-0 right-0 w-screen origin-top overflow-hidden max-h-[600px]"
                 initial={false}
                 animate={{
-                  opacity: navValue ? 1 : 0,
-                  scaleY: navValue ? 1 : 0
+                  opacity: megaMenuIsInteractive ? 1 : 0,
+                  scaleY: megaMenuIsInteractive ? 1 : 0
                 }}
                 transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
                 style={{
                   top: isScrolled ? '3rem' : '8rem',
-                  pointerEvents: navValue ? 'auto' : 'none',
+                  pointerEvents: megaMenuIsInteractive ? 'auto' : 'none',
                   transformOrigin: 'top'
                 }}
               >
