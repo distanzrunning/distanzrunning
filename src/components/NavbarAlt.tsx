@@ -786,28 +786,37 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                     <>
                       <div className="h-px bg-neutral-200 dark:bg-neutral-700 my-3" />
                       <div className="px-3 py-2">
-                        <div className="text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-3">
-                          Featured Article
-                        </div>
                         <Link
                           href={`/gear/${featuredGear.slug.current}`}
-                          className="block rounded-lg overflow-hidden hover:opacity-80 transition-opacity"
+                          className="block rounded-lg overflow-hidden hover:opacity-90 transition-opacity"
                           onClick={() => setMobileMenuOpen(false)}
                         >
-                          {featuredGear.mainImage && (
-                            <div className="relative w-full aspect-[16/9] bg-neutral-100 dark:bg-neutral-800 mb-2">
-                              <Image
-                                src={urlFor(featuredGear.mainImage).width(640).height(360).fit('crop').url()}
-                                alt={featuredGear.title}
-                                fill
-                                sizes="100vw"
-                                className="object-cover"
-                              />
+                          <div className="relative w-full overflow-hidden bg-neutral-100 dark:bg-neutral-800">
+                            <div className="relative aspect-[16/9]">
+                              {featuredGear.mainImage ? (
+                                <Image
+                                  src={urlFor(featuredGear.mainImage).width(640).height(360).fit('crop').url()}
+                                  alt={featuredGear.title}
+                                  fill
+                                  sizes="100vw"
+                                  className="object-cover"
+                                />
+                              ) : (
+                                <div className="absolute inset-0 flex items-center justify-center text-xs text-neutral-400 dark:text-neutral-500">
+                                  Image coming soon
+                                </div>
+                              )}
+                              {/* Text overlay with gradient */}
+                              <div className="absolute inset-0 bg-gradient-to-t from-black/95 from-10% via-black/50 via-30% to-transparent to-50% flex flex-col justify-end p-4">
+                                <div className="mb-1 text-xs font-semibold uppercase tracking-wider text-white/80">
+                                  Featured article
+                                </div>
+                                <h4 className="text-base font-semibold text-white line-clamp-2">
+                                  {featuredGear.title}
+                                </h4>
+                              </div>
                             </div>
-                          )}
-                          <h4 className="font-semibold text-neutral-900 dark:text-white text-sm">
-                            {featuredGear.title}
-                          </h4>
+                          </div>
                         </Link>
                       </div>
                     </>
@@ -860,28 +869,37 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                     <>
                       <div className="h-px bg-neutral-200 dark:bg-neutral-700 my-3" />
                       <div className="px-3 py-2">
-                        <div className="text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-3">
-                          Featured Race
-                        </div>
                         <Link
                           href={`/races/${featuredRace.slug.current}`}
-                          className="block rounded-lg overflow-hidden hover:opacity-80 transition-opacity"
+                          className="block rounded-lg overflow-hidden hover:opacity-90 transition-opacity"
                           onClick={() => setMobileMenuOpen(false)}
                         >
-                          {featuredRace.mainImage && (
-                            <div className="relative w-full aspect-[16/9] bg-neutral-100 dark:bg-neutral-800 mb-2">
-                              <Image
-                                src={urlFor(featuredRace.mainImage).width(640).height(360).fit('crop').url()}
-                                alt={featuredRace.title}
-                                fill
-                                sizes="100vw"
-                                className="object-cover"
-                              />
+                          <div className="relative w-full overflow-hidden bg-neutral-100 dark:bg-neutral-800">
+                            <div className="relative aspect-[16/9]">
+                              {featuredRace.mainImage ? (
+                                <Image
+                                  src={urlFor(featuredRace.mainImage).width(640).height(360).fit('crop').url()}
+                                  alt={featuredRace.title}
+                                  fill
+                                  sizes="100vw"
+                                  className="object-cover"
+                                />
+                              ) : (
+                                <div className="absolute inset-0 flex items-center justify-center text-xs text-neutral-400 dark:text-neutral-500">
+                                  Image coming soon
+                                </div>
+                              )}
+                              {/* Text overlay with gradient */}
+                              <div className="absolute inset-0 bg-gradient-to-t from-black/95 from-10% via-black/50 via-30% to-transparent to-50% flex flex-col justify-end p-4">
+                                <div className="mb-1 text-xs font-semibold uppercase tracking-wider text-white/80">
+                                  Featured race
+                                </div>
+                                <h4 className="text-base font-semibold text-white line-clamp-2">
+                                  {featuredRace.title}
+                                </h4>
+                              </div>
                             </div>
-                          )}
-                          <h4 className="font-semibold text-neutral-900 dark:text-white text-sm">
-                            {featuredRace.title}
-                          </h4>
+                          </div>
                         </Link>
                       </div>
                     </>
