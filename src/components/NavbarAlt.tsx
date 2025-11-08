@@ -498,9 +498,19 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                 <span className="h-[2px] w-full rounded-full bg-neutral-900/80 dark:bg-white/80" />
               </NavigationMenu.Indicator>
 
-              <div className="perspective-[2000px] fixed left-0 right-0 w-screen pointer-events-none" style={{ top: isScrolled ? '3rem' : '8rem' }}>
+              <motion.div
+                className="perspective-[2000px] fixed left-0 right-0 w-screen pointer-events-none"
+                style={{ top: isScrolled ? '3rem' : '8rem' }}
+                initial={false}
+                animate={{
+                  opacity: navValue ? 1 : 0,
+                  y: navValue ? 0 : -20,
+                  scaleY: navValue ? 1 : 0.95
+                }}
+                transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              >
                 <NavigationMenu.Viewport className="pointer-events-auto relative w-full h-[var(--radix-navigation-menu-viewport-height)] origin-top bg-white dark:bg-neutral-900 border-t border-b border-neutral-200 dark:border-neutral-800 shadow-[0_30px_60px_-40px_rgba(15,23,42,0.45)] overflow-hidden" />
-              </div>
+              </motion.div>
             </NavigationMenu.Root>
 
             {/* Utility Buttons - Shows when scrolled */}
