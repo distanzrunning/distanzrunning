@@ -31,8 +31,10 @@ import type { SanityImageSource } from '@sanity/image-url/lib/types/types'
 import Search from './Search'
 
 const GARAGE_DOOR_DURATION_MS = 220
-const garageDoorTransition = { duration: GARAGE_DOOR_DURATION_MS / 1000, ease: [0.45, 0, 0.2, 1] as const }
-const contentTransition = { duration: 0.18, ease: [0.16, 1, 0.3, 1] as const }
+const CONTENT_FADE_DURATION_MS = 180
+const garageDoorOpenTransition = { duration: GARAGE_DOOR_DURATION_MS / 1000, ease: [0.45, 0, 0.2, 1] as const }
+const garageDoorCloseTransition = { duration: GARAGE_DOOR_DURATION_MS / 1000, delay: CONTENT_FADE_DURATION_MS / 1000, ease: [0.45, 0, 0.2, 1] as const }
+const contentTransition = { duration: CONTENT_FADE_DURATION_MS / 1000, ease: [0.16, 1, 0.3, 1] as const }
 const megaMenuContentVariants = {
   closed: { opacity: 0 },
   open: { opacity: 1 }
@@ -132,7 +134,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
       setNavValue('')
       setIsClosingMegaMenu(false)
       megaMenuCloseTimeoutRef.current = null
-    }, GARAGE_DOOR_DURATION_MS)
+    }, CONTENT_FADE_DURATION_MS + GARAGE_DOOR_DURATION_MS)
   }
 
   const megaMenuIsVisible = navValue !== '' || isClosingMegaMenu
@@ -549,7 +551,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                 animate={{
                   scaleY: megaMenuIsVisible ? 1 : 0
                 }}
-                transition={garageDoorTransition}
+                transition={megaMenuIsVisible ? garageDoorOpenTransition : garageDoorCloseTransition}
                 style={{
                   top: isScrolled ? '3rem' : '8rem',
                   pointerEvents: megaMenuIsInteractive ? 'auto' : 'none',
