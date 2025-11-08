@@ -983,15 +983,15 @@
     }
   }
 
-  /* Content slide down from top - matches pattern of directional animations */
+  /* Content slide down from top - slides independently of container scale */
   @keyframes slideDownFromTop {
     from {
       opacity: 0;
-      transform: translateY(-20px) scaleY(0.95);
+      transform: translateY(-20px);
     }
     to {
       opacity: 1;
-      transform: translateY(0) scaleY(1);
+      transform: translateY(0);
     }
   }
 
