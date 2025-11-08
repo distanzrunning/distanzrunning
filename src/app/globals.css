@@ -866,18 +866,21 @@
   /* Radix Navigation Menu Viewport animations - controls the container itself */
   [data-radix-navigation-menu-viewport] {
     transform-origin: top center;
+    /* Force visibility even when Radix tries to hide it, so transitions work */
+    visibility: visible !important;
   }
 
   /* When viewport is open, it should be at full opacity and scale */
   [data-radix-navigation-menu-viewport][data-state="open"] {
-    opacity: 1;
-    transform: scaleY(1);
+    opacity: 1 !important;
+    transform: scaleY(1) !important;
   }
 
   /* When viewport is closed, it should be hidden and scaled down */
   [data-radix-navigation-menu-viewport][data-state="closed"] {
-    opacity: 0;
-    transform: scaleY(0.95);
+    opacity: 0 !important;
+    transform: scaleY(0.95) !important;
+    pointer-events: none !important;
   }
 
   /* Radix Navigation Menu Content animations - these animate the individual dropdown contents */
