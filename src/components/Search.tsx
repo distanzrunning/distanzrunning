@@ -161,11 +161,11 @@ function SearchResults({
   // Show category listing when no query
   if (!isExpanded || query.length === 0) {
     return (
-      <div className="h-full overflow-x-hidden">
+      <div className="h-full overflow-x-hidden relative">
         <div className="py-2 px-2">
           {countsLoading ? (
-            <div className="absolute inset-0 flex items-center justify-center">
-              <Loader2 className="w-5 h-5 text-neutral-900 dark:text-white animate-spin" />
+            <div className="flex items-center justify-center py-12">
+              <Loader2 className="w-6 h-6 text-neutral-900 dark:text-white animate-spin" />
             </div>
           ) : showGearSubcategories ? (
             <>
