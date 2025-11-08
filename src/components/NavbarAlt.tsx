@@ -32,9 +32,10 @@ import Search from './Search'
 
 const GARAGE_DOOR_DURATION_MS = 220
 const garageDoorTransition = { duration: GARAGE_DOOR_DURATION_MS / 1000, ease: [0.45, 0, 0.2, 1] as const }
+const contentTransition = { duration: 0.3, ease: [0.16, 1, 0.3, 1] as const }
 const megaMenuContentVariants = {
-  closed: { y: -12, opacity: 0 },
-  open: { y: 0, opacity: 1 }
+  closed: { opacity: 0 },
+  open: { opacity: 1 }
 }
 
 type SanitySlug = {
@@ -546,7 +547,6 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                 className="perspective-[2000px] fixed left-0 right-0 w-screen origin-top overflow-hidden max-h-[600px]"
                 initial={false}
                 animate={{
-                  opacity: megaMenuIsVisible ? 1 : 0,
                   scaleY: megaMenuIsVisible ? 1 : 0
                 }}
                 transition={garageDoorTransition}
@@ -554,17 +554,16 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                   top: isScrolled ? '3rem' : '8rem',
                   pointerEvents: megaMenuIsInteractive ? 'auto' : 'none',
                   transformOrigin: 'top',
-                  willChange: 'transform, opacity'
+                  willChange: 'transform'
                 }}
               >
                 <motion.div
                   initial={false}
                   variants={megaMenuContentVariants}
                   animate={megaMenuContentState}
-                  transition={garageDoorTransition}
+                  transition={contentTransition}
                   style={{
-                    transformOrigin: 'top',
-                    willChange: 'transform, opacity'
+                    willChange: 'opacity'
                   }}
                 >
                   <NavigationMenu.Viewport className="pointer-events-auto relative w-full h-[var(--radix-navigation-menu-viewport-height)] origin-top bg-white dark:bg-neutral-900 border-t border-b border-neutral-200 dark:border-neutral-800 shadow-[0_30px_60px_-40px_rgba(15,23,42,0.45)] overflow-hidden transition-[height] duration-300 ease-out" />
