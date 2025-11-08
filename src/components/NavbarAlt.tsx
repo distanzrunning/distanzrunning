@@ -499,10 +499,10 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
               </NavigationMenu.Indicator>
 
               <div
-                className={`perspective-[2000px] fixed left-0 right-0 w-screen transition-all duration-300 ease-out origin-top ${
+                className={`perspective-[2000px] fixed left-0 right-0 w-screen origin-top ${
                   navValue
-                    ? 'opacity-100 scale-y-100 pointer-events-auto'
-                    : 'opacity-0 scale-y-0 pointer-events-none'
+                    ? 'animate-mega-menu-open pointer-events-auto'
+                    : 'animate-mega-menu-close pointer-events-none'
                 }`}
                 style={{ top: isScrolled ? '3rem' : '8rem' }}
               >

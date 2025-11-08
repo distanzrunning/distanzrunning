@@ -995,6 +995,30 @@
     }
   }
 
+  /* Mega menu garage door open animation */
+  @keyframes megaMenuOpen {
+    from {
+      opacity: 0;
+      transform: scaleY(0);
+    }
+    to {
+      opacity: 1;
+      transform: scaleY(1);
+    }
+  }
+
+  /* Mega menu garage door close animation */
+  @keyframes megaMenuClose {
+    from {
+      opacity: 1;
+      transform: scaleY(1);
+    }
+    to {
+      opacity: 0;
+      transform: scaleY(0);
+    }
+  }
+
   .fade-out {
     animation: fadeOut 200ms ease-in;
   }

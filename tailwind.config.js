@@ -126,6 +126,14 @@ module.exports = {
           '0%': { opacity: '1', transform: 'translateY(0) scaleY(1)' },
           '100%': { opacity: '0', transform: 'translateY(-20px) scaleY(0.95)' },
         },
+        megaMenuOpen: {
+          '0%': { opacity: '0', transform: 'scaleY(0)' },
+          '100%': { opacity: '1', transform: 'scaleY(1)' },
+        },
+        megaMenuClose: {
+          '0%': { opacity: '1', transform: 'scaleY(1)' },
+          '100%': { opacity: '0', transform: 'scaleY(0)' },
+        },
       },
       animation: {
         'nav-content-in': 'navContentIn 200ms cubic-bezier(.16,1,.3,1) forwards',
@@ -142,6 +150,8 @@ module.exports = {
         'mega-menu-out': 'megaMenuOut 200ms cubic-bezier(.16,1,.3,1) forwards',
         'slideDown': 'slideDown 250ms cubic-bezier(.16,1,.3,1) forwards',
         'slideUp': 'slideUp 200ms cubic-bezier(.16,1,.3,1) forwards',
+        'mega-menu-open': 'megaMenuOpen 300ms cubic-bezier(.16,1,.3,1) forwards',
+        'mega-menu-close': 'megaMenuClose 300ms cubic-bezier(.16,1,.3,1) forwards',
       },
       textColor: {
         primary: '#e43c81',
