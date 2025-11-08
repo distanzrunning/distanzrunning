@@ -551,11 +551,10 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                 className="perspective-[2000px] fixed left-0 right-0 w-screen origin-top overflow-hidden max-h-[600px]"
                 initial={false}
                 animate={{
-                  scaleY: megaMenuIsOpen ? 1 : 0
+                  scaleY: megaMenuShouldRender ? (megaMenuIsOpen ? 1 : 0) : 0
                 }}
                 transition={megaMenuIsOpen ? garageDoorOpenTransition : garageDoorCloseTransition}
                 style={{
-                  display: megaMenuShouldRender ? 'block' : 'none',
                   top: isScrolled ? '3rem' : '8rem',
                   pointerEvents: megaMenuIsInteractive ? 'auto' : 'none',
                   transformOrigin: 'top',
