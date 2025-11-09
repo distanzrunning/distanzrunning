@@ -17,7 +17,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-12 md:gap-16">
           {/* Left: Logo, About, Social Icons */}
           <div className="max-w-md">
-            <Link href="/" className="inline-block mb-3">
+            <Link href="/" className="inline-block mb-6">
               <Image
                 src={isDark ? "/images/logo_white.svg" : "/images/logo.svg"}
                 alt="Distanz Running"
@@ -27,7 +27,7 @@ export default function Footer() {
                 priority
               />
             </Link>
-            <p className="text-[15px] leading-[21px] text-neutral-600 dark:text-neutral-400 mb-8">
+            <p className="text-[15px] leading-[21px] text-neutral-600 dark:text-neutral-400 mb-10">
               Distanz Running delivers in-depth gear reviews, race guides, and expert insights for runners of all levels. From carbon-plated shoes to marathon majors, we help you go the distance.
             </p>
 
