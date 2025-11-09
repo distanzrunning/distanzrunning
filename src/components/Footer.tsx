@@ -13,33 +13,26 @@ export default function Footer() {
     <footer className="bg-white dark:bg-neutral-900 border-t border-neutral-200 dark:border-neutral-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
         {/* Main Footer Content */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-16">
-          {/* Left: Logo */}
-          <div>
-            <Link href="/" className="inline-block">
+        <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-12 md:gap-16">
+          {/* Left: Logo & About */}
+          <div className="flex flex-col md:flex-row gap-8 md:gap-12 items-start">
+            <Link href="/" className="inline-block shrink-0">
               <Image
                 src={isDark ? "/images/logo_white.svg" : "/images/logo.svg"}
                 alt="Distanz Running"
-                width={210}
-                height={56}
-                className="h-12 md:h-14 w-auto"
+                width={280}
+                height={74}
+                className="h-16 md:h-[74px] w-auto"
                 priority
               />
             </Link>
-          </div>
-
-          {/* Center: About Us */}
-          <div>
-            <h3 className="font-playfair text-lg font-semibold text-neutral-900 dark:text-white mb-4">
-              About Us
-            </h3>
-            <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
+            <p className="text-body-distanz text-neutral-600 dark:text-neutral-400 leading-relaxed max-w-md">
               Distanz Running delivers in-depth gear reviews, race guides, and expert insights for runners of all levels. From carbon-plated shoes to marathon majors, we help you go the distance.
             </p>
           </div>
 
           {/* Right: Two Columns */}
-          <div className="grid grid-cols-2 gap-8">
+          <div className="grid grid-cols-2 gap-8 md:gap-12">
             {/* Connect Column */}
             <div>
               <h3 className="font-playfair text-lg font-semibold text-neutral-900 dark:text-white mb-4">
