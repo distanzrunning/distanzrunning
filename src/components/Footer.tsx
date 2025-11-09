@@ -14,9 +14,9 @@ export default function Footer() {
     <footer className="bg-white dark:bg-neutral-900 border-t border-neutral-200 dark:border-neutral-800">
       {/* Main Footer Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 md:pb-20 pt-16 md:pt-20">
-        <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-16 md:gap-24">
+        <div className="flex flex-col md:flex-row gap-16 md:gap-24">
           {/* Left: Logo, About, Social Icons */}
-          <div className="max-w-sm">
+          <div className="flex-shrink-0 max-w-sm">
             <Link href="/" className="inline-block mb-6">
               <Image
                 src={isDark ? "/images/logo_white.svg" : "/images/logo.svg"}
@@ -81,9 +81,9 @@ export default function Footer() {
           </div>
 
           {/* Right: Category and Company Columns */}
-          <div className="grid grid-cols-2 gap-8 md:gap-12">
+          <div className="flex flex-row gap-8 md:gap-12 flex-grow">
             {/* Category Column */}
-            <div>
+            <div className="flex-1">
               <h3 className="text-footer-heading text-neutral-900 dark:text-neutral-900 mb-4">
                 Category
               </h3>
@@ -132,7 +132,7 @@ export default function Footer() {
             </div>
 
             {/* Company Column */}
-            <div>
+            <div className="flex-1">
               <h3 className="text-footer-heading text-neutral-900 dark:text-neutral-900 mb-4">
                 Company
               </h3>
