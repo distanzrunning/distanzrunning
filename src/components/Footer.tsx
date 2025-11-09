@@ -14,9 +14,9 @@ export default function Footer() {
     <footer className="bg-white dark:bg-neutral-900 border-t border-neutral-200 dark:border-neutral-800">
       {/* Main Footer Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 md:pb-20 pt-16 md:pt-20">
-        <div className="flex flex-col gap-16 md:flex-row md:gap-24">
+        <div className="flex flex-col gap-16 md:flex-row md:justify-between md:gap-32">
           {/* Left: Logo, About, Social Icons */}
-          <div className="flex max-w-48 flex-col gap-8">
+          <div className="flex max-w-48 md:max-w-md flex-col gap-8">
             <Link href="/" className="inline-block">
               <Image
                 src={isDark ? "/images/logo_white.svg" : "/images/logo.svg"}
