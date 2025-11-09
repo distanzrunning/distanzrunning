@@ -84,7 +84,7 @@ export default function Footer() {
           <div className="grid grid-cols-2 gap-8 md:gap-12">
             {/* Category Column */}
             <div>
-              <h3 className="font-playfair text-lg font-semibold text-neutral-900 dark:text-white mb-4">
+              <h3 className="text-lg font-semibold text-neutral-900 dark:text-white mb-4">
                 Category
               </h3>
               <ul className="space-y-3">
@@ -133,7 +133,7 @@ export default function Footer() {
 
             {/* Company Column */}
             <div>
-              <h3 className="font-playfair text-lg font-semibold text-neutral-900 dark:text-white mb-4">
+              <h3 className="text-lg font-semibold text-neutral-900 dark:text-white mb-4">
                 Company
               </h3>
               <ul className="space-y-3">
