@@ -27,7 +27,7 @@ export default function Footer() {
                 priority
               />
             </Link>
-            <p className="text-[15px] leading-[21px] text-neutral-600 dark:text-neutral-400 mb-10">
+            <p className="text-footer-link text-neutral-600 dark:text-neutral-400 mb-10">
               Distanz Running delivers in-depth gear reviews, race guides, and expert insights for runners of all levels. From carbon-plated shoes to marathon majors, we help you go the distance.
             </p>
 
@@ -84,14 +84,14 @@ export default function Footer() {
           <div className="grid grid-cols-2 gap-8 md:gap-12">
             {/* Category Column */}
             <div>
-              <h3 className="text-[19px] leading-[19px] font-medium text-neutral-900 dark:text-neutral-900 mb-4 tracking-tight">
+              <h3 className="text-footer-heading text-neutral-900 dark:text-neutral-900 mb-4">
                 Category
               </h3>
               <ul className="space-y-4">
                 <li>
                   <Link
                     href="/articles/category/road"
-                    className="text-[15px] leading-[21px] text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors"
+                    className="text-footer-link text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors"
                   >
                     Road
                   </Link>
@@ -99,7 +99,7 @@ export default function Footer() {
                 <li>
                   <Link
                     href="/articles/category/track"
-                    className="text-[15px] leading-[21px] text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors"
+                    className="text-footer-link text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors"
                   >
                     Track
                   </Link>
@@ -107,7 +107,7 @@ export default function Footer() {
                 <li>
                   <Link
                     href="/articles/category/trail"
-                    className="text-[15px] leading-[21px] text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors"
+                    className="text-footer-link text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors"
                   >
                     Trail
                   </Link>
@@ -115,7 +115,7 @@ export default function Footer() {
                 <li>
                   <Link
                     href="/gear"
-                    className="text-[15px] leading-[21px] text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors"
+                    className="text-footer-link text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors"
                   >
                     Gear
                   </Link>
@@ -123,7 +123,7 @@ export default function Footer() {
                 <li>
                   <Link
                     href="/races"
-                    className="text-[15px] leading-[21px] text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors"
+                    className="text-footer-link text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors"
                   >
                     Races
                   </Link>
@@ -133,14 +133,14 @@ export default function Footer() {
 
             {/* Company Column */}
             <div>
-              <h3 className="text-[19px] leading-[19px] font-medium text-neutral-900 dark:text-neutral-900 mb-4 tracking-tight">
+              <h3 className="text-footer-heading text-neutral-900 dark:text-neutral-900 mb-4">
                 Company
               </h3>
               <ul className="space-y-4">
                 <li>
                   <Link
                     href="/about"
-                    className="text-[15px] leading-[21px] text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors"
+                    className="text-footer-link text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors"
                   >
                     About
                   </Link>
@@ -148,7 +148,7 @@ export default function Footer() {
                 <li>
                   <Link
                     href="/partner"
-                    className="text-[15px] leading-[21px] text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors"
+                    className="text-footer-link text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors"
                   >
                     Partner with us
                   </Link>
@@ -156,7 +156,7 @@ export default function Footer() {
                 <li>
                   <Link
                     href="/write"
-                    className="text-[15px] leading-[21px] text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors"
+                    className="text-footer-link text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors"
                   >
                     Write for us
                   </Link>
@@ -164,7 +164,7 @@ export default function Footer() {
                 <li>
                   <Link
                     href="/contact"
-                    className="text-[15px] leading-[21px] text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors"
+                    className="text-footer-link text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors"
                   >
                     Contact us
                   </Link>
@@ -178,7 +178,7 @@ export default function Footer() {
       {/* Legal Section - Separate Container */}
       <div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-          <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 text-[15px] leading-[21px] text-neutral-900 dark:text-neutral-900">
+          <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 text-footer-link text-neutral-900 dark:text-neutral-900">
             <div className="flex flex-wrap items-center gap-x-2">
               <Link
                 href="/terms"

@@ -566,6 +566,22 @@
     margin-top: calc(((var(--descent-scale)) - var(--line-height-offset)) * -0.8em);
   }
 
+  /* Footer text utilities */
+  .text-footer-link {
+    font-family: var(--base-font);
+    font-weight: 400;
+    font-size: clamp(14px, 1.5vw, 15px);
+    line-height: 1.4;
+  }
+
+  .text-footer-heading {
+    font-family: var(--base-font);
+    font-weight: 500;
+    font-size: clamp(17px, 2vw, 19px);
+    line-height: 1;
+    letter-spacing: -0.025em;
+  }
+
   /* Legacy Quartr utility classes for backwards compatibility */
   .text-meta-quartr {
     font-family: var(--base-font);
