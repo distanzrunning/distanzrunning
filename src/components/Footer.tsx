@@ -16,7 +16,7 @@ export default function Footer() {
         {/* Main Footer Content */}
         <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-12 md:gap-16">
           {/* Left: Logo, About, Social Icons */}
-          <div className="max-w-md">
+          <div className="max-w-sm">
             <Link href="/" className="inline-block mb-6">
               <Image
                 src={isDark ? "/images/logo_white.svg" : "/images/logo.svg"}
@@ -81,7 +81,7 @@ export default function Footer() {
           </div>
 
           {/* Right: Category and Company Columns */}
-          <div className="grid grid-cols-2 gap-6 md:gap-10">
+          <div className="grid grid-cols-2 gap-8 md:gap-12">
             {/* Category Column */}
             <div>
               <h3 className="text-[19px] leading-[19px] font-medium text-neutral-900 dark:text-neutral-900 mb-4 tracking-tight">
