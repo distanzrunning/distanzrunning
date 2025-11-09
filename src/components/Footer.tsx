@@ -176,7 +176,7 @@ export default function Footer() {
       </div>
 
       {/* Legal Section - Separate Container */}
-      <div className="border-t border-neutral-200 dark:border-neutral-800">
+      <div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
           <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 text-[15px] leading-[21px] text-neutral-900 dark:text-neutral-900">
             <div className="flex flex-wrap items-center gap-x-2">
@@ -196,7 +196,7 @@ export default function Footer() {
               </Link>
             </div>
             <div>
-              <span>© {new Date().getFullYear()} Distanz Running.</span>
+              <span className="text-neutral-500 dark:text-neutral-500">© {new Date().getFullYear()} Distanz Running Ltd</span>
             </div>
           </div>
         </div>
