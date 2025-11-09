@@ -11,7 +11,7 @@ export default function Footer() {
   const { isDark } = useContext(DarkModeContext)
 
   return (
-    <footer className="bg-white dark:bg-neutral-900 border-t border-neutral-200 dark:border-neutral-800">
+    <footer aria-label="Site footer" className="bg-white dark:bg-neutral-900 border-t border-neutral-200 dark:border-neutral-800">
       {/* Main Footer Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 md:pb-20 pt-16 md:pt-20">
         <div className="flex flex-col gap-16 md:flex-row md:justify-between md:gap-32">
@@ -28,7 +28,7 @@ export default function Footer() {
               />
             </Link>
             <p className="text-footer-link text-neutral-600 dark:text-neutral-400">
-              Distanz Running delivers in-depth gear reviews, race guides, and expert insights for runners of all levels. From carbon-plated shoes to marathon majors, we help you go the distance.
+              We're creating a hub for runners with in-depth stories and analysis from the world of running, gear and races.
             </p>
             <div className="flex items-center gap-4">
               <Link
