@@ -1,6 +1,6 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
-import Image from 'next/image'
+import FeatureShowcase from '@/components/FeatureShowcase'
 
 export const metadata: Metadata = {
   title: 'About Us | Distanz Running - Your Hub for Running Stories, Gear Reviews & Race Guides',
@@ -44,45 +44,13 @@ export default function AboutPage() {
             </p>
           </div>
         </section>
+      </div>
 
-        {/* What We Cover Section */}
-        <section className="mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-neutral-900 dark:text-white mb-8 font-playfair">
-            What We Cover
-          </h2>
-          <div className="grid md:grid-cols-3 gap-8">
-            {/* Stories */}
-            <div className="bg-neutral-50 dark:bg-neutral-800 rounded-lg p-6">
-              <h3 className="text-xl font-bold text-neutral-900 dark:text-white mb-3">
-                Stories & Analysis
-              </h3>
-              <p className="text-neutral-700 dark:text-neutral-300 leading-relaxed">
-                From road racing to track & field to trail running, we deliver compelling stories and expert analysis from the world of distance running.
-              </p>
-            </div>
+      {/* Feature Showcase - What We Cover */}
+      <FeatureShowcase />
 
-            {/* Gear */}
-            <div className="bg-neutral-50 dark:bg-neutral-800 rounded-lg p-6">
-              <h3 className="text-xl font-bold text-neutral-900 dark:text-white mb-3">
-                Gear Reviews
-              </h3>
-              <p className="text-neutral-700 dark:text-neutral-300 leading-relaxed">
-                Honest, detailed reviews of running shoes, GPS watches, nutrition, and more—helping you find the right gear for your training and racing.
-              </p>
-            </div>
-
-            {/* Races */}
-            <div className="bg-neutral-50 dark:bg-neutral-800 rounded-lg p-6">
-              <h3 className="text-xl font-bold text-neutral-900 dark:text-white mb-3">
-                Race Guides
-              </h3>
-              <p className="text-neutral-700 dark:text-neutral-300 leading-relaxed">
-                Comprehensive guides to races worldwide, from the marathon majors to hidden gem trail ultras, with course maps, tips, and insights.
-              </p>
-            </div>
-          </div>
-        </section>
-
+      {/* Continue Main Content */}
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
         {/* Our Approach Section */}
         <section className="mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-neutral-900 dark:text-white mb-6 font-playfair">
