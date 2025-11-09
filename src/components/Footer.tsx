@@ -27,7 +27,7 @@ export default function Footer() {
                 priority
               />
             </Link>
-            <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed mb-6">
+            <p className="text-[15px] leading-[21px] text-neutral-600 dark:text-neutral-400 mb-6">
               Distanz Running delivers in-depth gear reviews, race guides, and expert insights for runners of all levels. From carbon-plated shoes to marathon majors, we help you go the distance.
             </p>
 
@@ -91,7 +91,7 @@ export default function Footer() {
                 <li>
                   <Link
                     href="/articles/category/road"
-                    className="text-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors"
+                    className="text-[15px] leading-[21px] text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors"
                   >
                     Road
                   </Link>
@@ -99,7 +99,7 @@ export default function Footer() {
                 <li>
                   <Link
                     href="/articles/category/track"
-                    className="text-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors"
+                    className="text-[15px] leading-[21px] text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors"
                   >
                     Track
                   </Link>
@@ -107,7 +107,7 @@ export default function Footer() {
                 <li>
                   <Link
                     href="/articles/category/trail"
-                    className="text-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors"
+                    className="text-[15px] leading-[21px] text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors"
                   >
                     Trail
                   </Link>
@@ -115,7 +115,7 @@ export default function Footer() {
                 <li>
                   <Link
                     href="/gear"
-                    className="text-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors"
+                    className="text-[15px] leading-[21px] text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors"
                   >
                     Gear
                   </Link>
@@ -123,7 +123,7 @@ export default function Footer() {
                 <li>
                   <Link
                     href="/races"
-                    className="text-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors"
+                    className="text-[15px] leading-[21px] text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors"
                   >
                     Races
                   </Link>
@@ -140,7 +140,7 @@ export default function Footer() {
                 <li>
                   <Link
                     href="/about"
-                    className="text-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors"
+                    className="text-[15px] leading-[21px] text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors"
                   >
                     About
                   </Link>
@@ -148,7 +148,7 @@ export default function Footer() {
                 <li>
                   <Link
                     href="/partner"
-                    className="text-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors"
+                    className="text-[15px] leading-[21px] text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors"
                   >
                     Partner with us
                   </Link>
@@ -156,7 +156,7 @@ export default function Footer() {
                 <li>
                   <Link
                     href="/write"
-                    className="text-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors"
+                    className="text-[15px] leading-[21px] text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors"
                   >
                     Write for us
                   </Link>
@@ -164,7 +164,7 @@ export default function Footer() {
                 <li>
                   <Link
                     href="/contact"
-                    className="text-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors"
+                    className="text-[15px] leading-[21px] text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors"
                   >
                     Contact
                   </Link>
@@ -176,18 +176,18 @@ export default function Footer() {
 
         {/* Legal Line */}
         <div className="mt-12">
-          <p className="text-sm text-neutral-500 dark:text-neutral-500 flex flex-wrap items-center gap-x-2">
+          <p className="text-base leading-6 text-neutral-900 dark:text-neutral-900 flex flex-wrap items-center gap-x-2">
             <span>© {new Date().getFullYear()} Distanz Running. All rights reserved.</span>
             <Link
               href="/terms"
-              className="inline-flex items-center gap-1 hover:text-neutral-900 dark:hover:text-white transition-colors"
+              className="inline-flex items-center gap-1 hover:text-neutral-600 dark:hover:text-neutral-600 transition-colors"
             >
               Terms of Service
               <ChevronRight className="w-3 h-3" />
             </Link>
             <Link
               href="/privacy"
-              className="inline-flex items-center gap-1 hover:text-neutral-900 dark:hover:text-white transition-colors"
+              className="inline-flex items-center gap-1 hover:text-neutral-600 dark:hover:text-neutral-600 transition-colors"
             >
               Privacy Policy
               <ChevronRight className="w-3 h-3" />
