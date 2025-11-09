@@ -190,7 +190,7 @@ function SearchResults({
                     <span className="font-semibold truncate">{subcat.name}</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="text-xs text-neutral-500 dark:text-neutral-500">
+                    <span className="text-sm text-neutral-500 dark:text-neutral-500">
                       {gearSubcategoryCounts[subcat.name] || 0}
                     </span>
                   </div>
@@ -212,7 +212,7 @@ function SearchResults({
                       <span className="font-semibold truncate">{cat.name}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-xs text-neutral-500 dark:text-neutral-500">
+                      <span className="text-sm text-neutral-500 dark:text-neutral-500">
                         {categoryCounts[cat.name] || 0}
                       </span>
                     </div>
@@ -231,7 +231,7 @@ function SearchResults({
                     <span className="font-semibold truncate">{cat.name}</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="text-xs text-neutral-500 dark:text-neutral-500">
+                    <span className="text-sm text-neutral-500 dark:text-neutral-500">
                       {categoryCounts[cat.name] || 0}
                     </span>
                   </div>

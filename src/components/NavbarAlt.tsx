@@ -267,7 +267,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                   <NavigationMenu.Link asChild>
                     <Link
                       href="/articles/category/road"
-                      className="px-3 py-2 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                      className="inline-flex items-center px-3 py-2 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800"
                     >
                       Road
                     </Link>
@@ -279,7 +279,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                   <NavigationMenu.Link asChild>
                     <Link
                       href="/articles/category/track"
-                      className="px-3 py-2 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                      className="inline-flex items-center px-3 py-2 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800"
                     >
                       Track
                     </Link>
@@ -291,7 +291,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                   <NavigationMenu.Link asChild>
                     <Link
                       href="/articles/category/trail"
-                      className="px-3 py-2 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                      className="inline-flex items-center px-3 py-2 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800"
                     >
                       Trail
                     </Link>
