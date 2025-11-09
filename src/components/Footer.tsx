@@ -12,9 +12,9 @@ export default function Footer() {
 
   return (
     <footer className="bg-white dark:bg-neutral-900 border-t border-neutral-200 dark:border-neutral-800">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
         {/* Main Footer Content */}
-        <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-12 md:gap-16">
+        <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-16 md:gap-24">
           {/* Left: Logo, About, Social Icons */}
           <div className="max-w-sm">
             <Link href="/" className="inline-block mb-6">
@@ -175,8 +175,8 @@ export default function Footer() {
         </div>
 
         {/* Legal Line */}
-        <div className="mt-12 pt-8 border-t border-neutral-200 dark:border-neutral-800">
-          <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 text-sm md:text-base leading-6 text-neutral-900 dark:text-neutral-900">
+        <div className="mt-20 md:mt-24 pt-10 border-t border-neutral-200 dark:border-neutral-800">
+          <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 text-[15px] leading-[21px] text-neutral-900 dark:text-neutral-900">
             <div className="flex flex-wrap items-center gap-x-2">
               <Link
                 href="/terms"
