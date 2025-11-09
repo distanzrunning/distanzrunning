@@ -12,8 +12,8 @@ export default function Footer() {
 
   return (
     <footer className="bg-white dark:bg-neutral-900 border-t border-neutral-200 dark:border-neutral-800">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
-        {/* Main Footer Content */}
+      {/* Main Footer Content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 md:pb-20 pt-16 md:pt-20">
         <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-16 md:gap-24">
           {/* Left: Logo, About, Social Icons */}
           <div className="max-w-sm">
@@ -173,9 +173,11 @@ export default function Footer() {
             </div>
           </div>
         </div>
+      </div>
 
-        {/* Legal Line */}
-        <div className="mt-20 md:mt-24 pt-10 border-t border-neutral-200 dark:border-neutral-800">
+      {/* Legal Section - Separate Container */}
+      <div className="border-t border-neutral-200 dark:border-neutral-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
           <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 text-[15px] leading-[21px] text-neutral-900 dark:text-neutral-900">
             <div className="flex flex-wrap items-center gap-x-2">
               <Link
