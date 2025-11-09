@@ -79,9 +79,9 @@ export default function Footer() {
           </div>
 
           {/* Right: Category and Company Columns */}
-          <div className="grid grid-cols-2 gap-x-8 gap-y-20 md:flex md:flex-row md:gap-16 md:shrink-0">
+          <div className="grid grid-cols-2 gap-x-8 gap-y-20 md:flex md:flex-row md:gap-12 md:shrink-0">
             {/* Category Column */}
-            <div className="flex flex-col gap-6 md:min-w-[180px]">
+            <div className="flex flex-col gap-6 md:min-w-[160px]">
               <h3 className="text-footer-heading text-neutral-900 dark:text-neutral-900">
                 Category
               </h3>
@@ -130,7 +130,7 @@ export default function Footer() {
             </div>
 
             {/* Company Column */}
-            <div className="flex flex-col gap-6 md:min-w-[180px]">
+            <div className="flex flex-col gap-6 md:min-w-[160px]">
               <h3 className="text-footer-heading text-neutral-900 dark:text-neutral-900">
                 Company
               </h3>
