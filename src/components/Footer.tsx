@@ -182,14 +182,14 @@ export default function Footer() {
             <div className="flex flex-wrap items-center gap-x-2">
               <Link
                 href="/terms"
-                className="inline-flex items-center gap-1 hover:text-neutral-600 dark:hover:text-neutral-600 transition-colors"
+                className="inline-flex items-center gap-1 hover:text-neutral-600 dark:hover:text-neutral-600 hover:underline transition-colors"
               >
                 Terms of Service
                 <ChevronRight className="w-3 h-3" />
               </Link>
               <Link
                 href="/privacy"
-                className="inline-flex items-center gap-1 hover:text-neutral-600 dark:hover:text-neutral-600 transition-colors"
+                className="inline-flex items-center gap-1 hover:text-neutral-600 dark:hover:text-neutral-600 hover:underline transition-colors"
               >
                 Privacy Policy
                 <ChevronRight className="w-3 h-3" />
