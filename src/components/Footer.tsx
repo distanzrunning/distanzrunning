@@ -176,23 +176,27 @@ export default function Footer() {
 
         {/* Legal Line */}
         <div className="mt-12">
-          <p className="text-base leading-6 text-neutral-900 dark:text-neutral-900 flex flex-wrap items-center gap-x-2">
-            <span>© {new Date().getFullYear()} Distanz Running. All rights reserved.</span>
-            <Link
-              href="/terms"
-              className="inline-flex items-center gap-1 hover:text-neutral-600 dark:hover:text-neutral-600 transition-colors"
-            >
-              Terms of Service
-              <ChevronRight className="w-3 h-3" />
-            </Link>
-            <Link
-              href="/privacy"
-              className="inline-flex items-center gap-1 hover:text-neutral-600 dark:hover:text-neutral-600 transition-colors"
-            >
-              Privacy Policy
-              <ChevronRight className="w-3 h-3" />
-            </Link>
-          </p>
+          <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 text-base leading-6 text-neutral-900 dark:text-neutral-900">
+            <div className="flex flex-wrap items-center gap-x-2">
+              <Link
+                href="/terms"
+                className="inline-flex items-center gap-1 hover:text-neutral-600 dark:hover:text-neutral-600 transition-colors"
+              >
+                Terms of Service
+                <ChevronRight className="w-3 h-3" />
+              </Link>
+              <Link
+                href="/privacy"
+                className="inline-flex items-center gap-1 hover:text-neutral-600 dark:hover:text-neutral-600 transition-colors"
+              >
+                Privacy Policy
+                <ChevronRight className="w-3 h-3" />
+              </Link>
+            </div>
+            <div>
+              <span>© {new Date().getFullYear()} Distanz Running.</span>
+            </div>
+          </div>
         </div>
       </div>
     </footer>
