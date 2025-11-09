@@ -17,7 +17,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-12 md:gap-16">
           {/* Left: Logo, About, Social Icons */}
           <div className="max-w-sm">
-            <Link href="/" className="inline-block mb-6">
+            <Link href="/" className="inline-block mb-3">
               <Image
                 src={isDark ? "/images/logo_white.svg" : "/images/logo.svg"}
                 alt="Distanz Running"
