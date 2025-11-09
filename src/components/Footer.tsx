@@ -83,7 +83,7 @@ export default function Footer() {
           {/* Right: Category and Company Columns */}
           <div className="flex flex-row gap-8 md:gap-12">
             {/* Category Column */}
-            <div className="min-w-[120px]">
+            <div className="w-[160px]">
               <h3 className="text-footer-heading text-neutral-900 dark:text-neutral-900 mb-4">
                 Category
               </h3>
@@ -132,7 +132,7 @@ export default function Footer() {
             </div>
 
             {/* Company Column */}
-            <div className="min-w-[120px]">
+            <div className="w-[160px]">
               <h3 className="text-footer-heading text-neutral-900 dark:text-neutral-900 mb-4">
                 Company
               </h3>
