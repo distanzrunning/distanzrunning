@@ -1,6 +1,6 @@
 // src/app/layout.tsx
 import type { Metadata } from "next";
-import { Montserrat, Lora, Hind_Madurai, JetBrains_Mono } from "next/font/google";
+import { Playfair_Display, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import NavbarAltWrapper from "@/components/NavbarAltWrapper";
 import Footer from "@/components/Footer";
@@ -9,25 +9,17 @@ import { DarkModeProvider } from "@/components/DarkModeProvider";
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 
-// Distanz headline font (sans-serif) - used for main headings
-const montserrat = Montserrat({
+// Distanz headline font (serif) - Playfair Display for elegant headings
+const playfairDisplay = Playfair_Display({
   subsets: ["latin"],
   variable: "--font-headline",
-  weight: ["300", "400", "500", "600", "700", "800", "900"],
+  weight: ["400", "500", "600", "700", "800", "900"],
   display: 'swap',
   adjustFontFallback: false,
 });
 
-// Distanz subheading font (serif) - used for subheadings
-const lora = Lora({
-  subsets: ["latin"],
-  variable: "--font-subheading",
-  weight: ["400", "500", "600", "700"],
-  display: 'swap',
-});
-
-// Distanz body font (sans-serif) - used for body text
-const hindMadurai = Hind_Madurai({
+// Distanz body font (sans-serif) - Inter for clean, readable body text
+const inter = Inter({
   subsets: ["latin"],
   variable: "--font-body",
   weight: ["300", "400", "500", "600", "700"],
@@ -68,7 +60,7 @@ export default function RootLayout({
   const isPreviewMode = process.env.PREVIEW_MODE === 'true';
 
   return (
-    <html lang="en" className={`${montserrat.variable} ${lora.variable} ${hindMadurai.variable} ${jetbrainsMono.variable}`}>
+    <html lang="en" className={`${playfairDisplay.variable} ${inter.variable} ${jetbrainsMono.variable}`}>
       <head>
         {/* Prevent flash of dark mode - ensure light mode by default */}
         <script

@@ -67,10 +67,10 @@
 
 @layer base {
   :root {
-    /* Distanz font system - Three Font Pairing */
-    --headline-font: var(--font-headline), "Montserrat", sans-serif;
-    --subheading-font: var(--font-subheading), "Lora", Georgia, serif;
-    --body-font: var(--font-body), "Hind Madurai", sans-serif;
+    /* Distanz font system - Two Font Pairing */
+    --headline-font: var(--font-headline), "Playfair Display", Georgia, serif;
+    --subheading-font: var(--font-headline), "Playfair Display", Georgia, serif;
+    --body-font: var(--font-body), "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
     --mono-font: var(--font-mono), "JetBrains Mono", "Courier New", monospace;
 
     /* Legacy font variables for backwards compatibility */

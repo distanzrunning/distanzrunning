@@ -181,28 +181,28 @@ module.exports = {
         'borderNeutralSubtle': 'rgb(var(--color-borderNeutralSubtle))',
       },
       fontFamily: {
-        // Default sans (body font)
+        // Default sans (body font) - Inter
         sans: [
           'var(--body-font)',
-          'Hind Madurai',
+          'Inter',
+          '-apple-system',
+          'BlinkMacSystemFont',
           'system-ui',
           'sans-serif'
         ],
-        // Headline font (Montserrat - sans-serif for main headings)
-        headline: ['var(--headline-font)', 'Montserrat', 'sans-serif'],
-        montserrat: ['var(--headline-font)', 'Montserrat', 'sans-serif'],
-        // Subheading font (Lora - serif for subheadings)
-        subheading: ['var(--subheading-font)', 'Lora', 'Georgia', 'serif'],
-        lora: ['var(--subheading-font)', 'Lora', 'Georgia', 'serif'],
-        // Body font (Hind Madurai - sans-serif for body text)
-        body: ['var(--body-font)', 'Hind Madurai', 'sans-serif'],
-        hind: ['var(--body-font)', 'Hind Madurai', 'sans-serif'],
+        // Headline font (Playfair Display - serif for elegant headings)
+        headline: ['var(--headline-font)', 'Playfair Display', 'Georgia', 'serif'],
+        playfair: ['var(--headline-font)', 'Playfair Display', 'Georgia', 'serif'],
+        // Subheading font (same as headline)
+        subheading: ['var(--subheading-font)', 'Playfair Display', 'Georgia', 'serif'],
+        // Body font (Inter - sans-serif for body text)
+        body: ['var(--body-font)', 'Inter', 'sans-serif'],
+        inter: ['var(--body-font)', 'Inter', 'sans-serif'],
         // Monospace font (JetBrains Mono - for data/stats)
         mono: ['var(--font-mono)', 'JetBrains Mono', 'Courier New', 'monospace'],
 
         // Legacy aliases for backwards compatibility
-        playfair: ['var(--headline-font)', 'Montserrat', 'sans-serif'],
-        serif: ['var(--subheading-font)', 'Lora', 'Georgia', 'serif'],
+        serif: ['var(--headline-font)', 'Playfair Display', 'Georgia', 'serif'],
       },
       fontSize: {
         // Tighter font sizing system with reduced line heights
