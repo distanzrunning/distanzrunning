@@ -29,6 +29,8 @@ import { DarkModeContext } from './DarkModeProvider'
 import { urlFor } from '@/sanity/lib/image'
 import type { SanityImageSource } from '@sanity/image-url/lib/types/types'
 import Search from './Search'
+import { NewsletterModal } from './NewsletterModal'
+import posthog from 'posthog-js'
 
 const GARAGE_DOOR_DURATION_MS = 220
 const MEGA_MENU_EXIT_DURATION_MS = GARAGE_DOOR_DURATION_MS
@@ -67,6 +69,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
   const [navValue, setNavValue] = useState('')
   const [isClosingMegaMenu, setIsClosingMegaMenu] = useState(false)
   const [searchDialogOpen, setSearchDialogOpen] = useState(false)
+  const [newsletterModalOpen, setNewsletterModalOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
   const megaMenuCloseTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
@@ -200,12 +203,18 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
               </button>
 
               {/* Newsletter Button - Desktop */}
-              <Link
-                href="/newsletter"
+              <button
+                onClick={() => {
+                  posthog.capture('newsletter_modal_opened', {
+                    location: 'navbar_desktop'
+                  })
+                  setNewsletterModalOpen(true)
+                }}
                 className="hidden md:inline-flex items-center px-4 h-9 text-sm font-semibold text-white bg-neutral-900 dark:bg-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-100 rounded-md transition-all duration-200 ease-out active:scale-[0.98] whitespace-nowrap"
+                data-attr="newsletter-modal-open-desktop"
               >
                 Newsletter
-              </Link>
+              </button>
 
               {/* Dark Mode Toggle */}
               {mounted && (
@@ -674,13 +683,19 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                   </button>
 
                   <div className="pt-6 border-t border-neutral-200 dark:border-neutral-700">
-                    <Link
-                      href="/newsletter"
+                    <button
+                      onClick={() => {
+                        posthog.capture('newsletter_modal_opened', {
+                          location: 'navbar_mobile'
+                        })
+                        setNewsletterModalOpen(true)
+                        setMobileMenuOpen(false)
+                      }}
                       className="block w-full text-center px-6 py-3 text-base font-semibold text-white bg-neutral-900 dark:bg-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-100 rounded-md transition-all duration-200 ease-out active:scale-[0.98]"
-                      onClick={() => setMobileMenuOpen(false)}
+                      data-attr="newsletter-modal-open-mobile"
                     >
                       Subscribe to Newsletter
-                    </Link>
+                    </button>
                   </div>
                 </div>
               </>
@@ -929,6 +944,12 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
           </Dialog.Content>
         </Dialog.Portal>
       </Dialog.Root>
+
+      {/* Newsletter Modal */}
+      <NewsletterModal
+        isOpen={newsletterModalOpen}
+        onClose={() => setNewsletterModalOpen(false)}
+      />
 
       {/* Spacer to prevent content from hiding under fixed header - Updated height */}
       <div className="h-[8rem]" />
