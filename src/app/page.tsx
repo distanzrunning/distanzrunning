@@ -3,7 +3,6 @@ import { client as sanity } from '@/sanity/lib/client'
 import { urlFor } from '@/sanity/lib/image'
 import Link from 'next/link'
 import { format } from 'date-fns'
-import NewsletterSignup from '@/components/NewsletterSignup'
 import ResponsiveMarathonShowcase from '@/components/ResponsiveMarathonShowcase'
 import { TypewriterText } from '@/components/TypewriterText'
 import { ExploreButton } from '@/components/ExploreButton'
@@ -267,9 +266,6 @@ async function DevelopmentHomePage() {
             )}
           </div>
         </section>
-
-        {/* Newsletter Signup - Only if component exists */}
-        {NewsletterSignup && <NewsletterSignup />}
       </div>
     </DarkModeProvider>
   )
