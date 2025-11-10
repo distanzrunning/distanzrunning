@@ -323,7 +323,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                       <div className="grid grid-cols-1 gap-4 md:grid-cols-[300px_0.75fr_1fr] md:gap-4">
                           {/* Column 1: Description */}
                           <div className="md:border-r md:border-neutral-200/70 md:pr-5 dark:md:border-neutral-800/70">
-                            <h3 className="font-playfair text-2xl font-semibold text-neutral-900 dark:text-white mb-3">
+                            <h3 className="font-headline text-2xl font-bold text-neutral-900 dark:text-white mb-3">
                               Gear
                             </h3>
                             <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
@@ -466,7 +466,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                       <div className="grid grid-cols-1 gap-4 md:grid-cols-[300px_0.75fr_1fr] md:gap-4">
                           {/* Column 1: Description */}
                           <div className="md:border-r md:border-neutral-200/70 md:pr-5 dark:md:border-neutral-800/70">
-                            <h3 className="font-playfair text-2xl font-semibold text-neutral-900 dark:text-white mb-3">
+                            <h3 className="font-headline text-2xl font-bold text-neutral-900 dark:text-white mb-3">
                               Races
                             </h3>
                             <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">

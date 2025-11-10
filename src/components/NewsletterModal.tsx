@@ -208,7 +208,7 @@ export function NewsletterModal({ isOpen, onClose }: NewsletterModalProps) {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="Email Address"
-                        className="w-full px-4 py-3 border border-gray-200 dark:border-neutral-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-neutral-300 dark:focus:ring-neutral-500 focus:border-transparent text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-neutral-400 bg-white dark:bg-neutral-700 font-['InterVariable','Inter',-apple-system,BlinkMacSystemFont,'Segoe_UI',Roboto,sans-serif] transition-colors duration-300"
+                        className="w-full px-4 py-3 border border-gray-200 dark:border-neutral-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-neutral-300 dark:focus:ring-neutral-500 focus:border-transparent text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-neutral-400 bg-white dark:bg-neutral-700 font-sans transition-colors duration-300"
                         style={{ fontSize: '15px', lineHeight: '1.5' }}
                         required
                         disabled={isSubmitting}
@@ -229,7 +229,7 @@ export function NewsletterModal({ isOpen, onClose }: NewsletterModalProps) {
                       type="submit"
                       disabled={isSubmitting}
                       data-attr="newsletter-modal-submit"
-                      className="w-full bg-black dark:bg-white text-white dark:text-gray-900 font-medium py-3 px-4 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors focus:outline-none font-['InterVariable','Inter',-apple-system,BlinkMacSystemFont,'Segue_UI',Roboto,sans-serif] disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="w-full bg-black dark:bg-white text-white dark:text-gray-900 font-medium py-3 px-4 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors focus:outline-none font-sans disabled:opacity-50 disabled:cursor-not-allowed"
                       style={{ fontSize: '15px', lineHeight: '1.5' }}
                     >
                       {isSubmitting ? 'Subscribing...' : 'Subscribe'}

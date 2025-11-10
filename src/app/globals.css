@@ -65,32 +65,17 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0');
 
-/* Load InterVariable font exactly like Quartr */
-@font-face {
-  font-display: swap;
-  font-family: 'InterVariable';
-  font-style: normal;
-  font-weight: 100 900;
-  src: url('https://rsms.me/inter/font-files/InterVariable.woff2?v=4.0') format('woff2');
-  font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
-}
-
-@font-face {
-  font-display: swap;
-  font-family: 'InterVariable';
-  font-style: italic;
-  font-weight: 100 900;
-  src: url('https://rsms.me/inter/font-files/InterVariable-Italic.woff2?v=4.0') format('woff2');
-  font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
-}
-
 @layer base {
   :root {
-    /* Distanz font system - Modern Editorial Stack */
-    --base-font: "InterVariable", "Inter", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif;
-    --brand-font: var(--font-playfair), "Playfair Display", Georgia, serif;
-    --body-font: var(--font-body), "Source Serif 4", Georgia, serif;
+    /* Distanz font system - Three Font Pairing */
+    --headline-font: var(--font-headline), "Montserrat", sans-serif;
+    --subheading-font: var(--font-subheading), "Lora", Georgia, serif;
+    --body-font: var(--font-body), "Hind Madurai", sans-serif;
     --mono-font: var(--font-mono), "JetBrains Mono", "Courier New", monospace;
+
+    /* Legacy font variables for backwards compatibility */
+    --base-font: var(--body-font);
+    --brand-font: var(--headline-font);
 
     /* Tighter font metrics for more squared typography */
     --ascent-scale: 0.9688;
@@ -214,7 +199,7 @@
   }
 
   html {
-    font-family: var(--base-font);
+    font-family: var(--body-font);
     font-feature-settings: normal;
     font-variation-settings: normal;
     -webkit-text-size-adjust: 100%;
@@ -224,10 +209,10 @@
   }
 
   body {
-    font-family: var(--base-font);
+    font-family: var(--body-font);
     font-synthesis: none;
-    -webkit-font-smoothing: subpixel-antialiased;
-    -moz-osx-font-smoothing: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
     margin: 0;
     line-height: inherit;
@@ -273,9 +258,11 @@
     @apply col-span-full;
   }
 
-  /* Distanz font features */
+  /* Distanz font features - enable OpenType features for better readability */
   .distanz-font-features {
-    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+    font-feature-settings: normal;
+    font-variant-ligatures: common-ligatures;
+    font-variant-numeric: oldstyle-nums proportional-nums;
   }
 
   /* Legacy Quartr classes for backwards compatibility */
@@ -306,7 +293,7 @@
     @apply col-span-full;
   }
 
-  /* Quartr's exact font features */
+  /* Legacy Quartr font features (Inter-specific, kept for backwards compatibility) */
   .quartr-font-features {
     font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
   }
@@ -473,7 +460,7 @@
   /* Distanz utility classes (Quartr-inspired with tight spacing) */
 
   .text-meta-distanz {
-    font-family: var(--base-font);
+    font-family: var(--body-font);
     color: rgb(var(--color-textSubtle));
     font-weight: 400;
     font-size: 0.9375rem; /* text-base */
@@ -481,7 +468,7 @@
   }
 
   .text-intro-distanz {
-    font-family: var(--base-font);
+    font-family: var(--subheading-font);
     color: rgb(var(--color-textSubtle));
     font-weight: 500;
     font-size: 21px;
@@ -511,7 +498,7 @@
   }
 
   .text-h2-distanz {
-    font-family: var(--base-font);
+    font-family: var(--subheading-font);
     font-weight: 600;
     font-size: 1.875rem;
     line-height: 1.15;
@@ -519,7 +506,7 @@
   }
 
   .text-h3-distanz {
-    font-family: var(--base-font);
+    font-family: var(--subheading-font);
     font-weight: 600;
     font-size: 1.5rem;
     line-height: 1.15;
@@ -527,8 +514,8 @@
   }
 
   .text-title-distanz {
-    font-family: var(--brand-font);
-    font-weight: 600;
+    font-family: var(--headline-font);
+    font-weight: 700;
     letter-spacing: -0.025em;
     font-size: 35px;
     line-height: 36px;
@@ -543,7 +530,7 @@
   }
 
   .text-breadcrumb-distanz {
-    font-family: var(--base-font);
+    font-family: var(--body-font);
     color: rgb(var(--color-textSubtle));
     font-weight: 400;
     font-size: 1.0625rem;
@@ -568,15 +555,15 @@
 
   /* Footer text utilities */
   .text-footer-link {
-    font-family: var(--base-font);
+    font-family: var(--body-font);
     font-weight: 400;
     font-size: clamp(14px, 1.5vw, 15px);
     line-height: 1.4;
   }
 
   .text-footer-heading {
-    font-family: var(--base-font);
-    font-weight: 500;
+    font-family: var(--body-font);
+    font-weight: 600;
     font-size: clamp(17px, 2vw, 19px);
     line-height: 1;
     letter-spacing: -0.025em;
@@ -589,23 +576,26 @@
     font-weight: 400;
     font-size: 0.9375rem; /* text-base */
     line-height: 1.25;   /* Reduced from 1.375 */
-  
+  }
+
   .text-heading {
-    font-weight: 600;
+    font-family: var(--headline-font);
+    font-weight: 700;
     letter-spacing: -0.01em;
   }
 
   .text-meta {
+    font-family: var(--body-font);
     font-size: 0.9375rem;
     line-height: 1.25;
     color: rgb(var(--color-textSubtle));
   }
 
   .text-title {
-    font-family: var(--brand-font);
+    font-family: var(--headline-font);
     font-size: 35px;
     line-height: 36px;
-    font-weight: 600;
+    font-weight: 700;
   }
 
   @media (min-width: 768px) {
@@ -614,7 +604,6 @@
       line-height: 52px;
     }
   }
-}
 
   .text-intro-quartr {
     font-family: var(--base-font);

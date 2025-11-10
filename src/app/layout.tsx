@@ -1,6 +1,6 @@
 // src/app/layout.tsx
 import type { Metadata } from "next";
-import { Playfair_Display, Source_Serif_4, JetBrains_Mono } from "next/font/google";
+import { Montserrat, Lora, Hind_Madurai, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import NavbarAltWrapper from "@/components/NavbarAltWrapper";
 import Footer from "@/components/Footer";
@@ -9,20 +9,28 @@ import { DarkModeProvider } from "@/components/DarkModeProvider";
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 
-// Distanz headline font (serif) - used for article headlines and display text
-const playfair = Playfair_Display({
+// Distanz headline font (sans-serif) - used for main headings
+const montserrat = Montserrat({
   subsets: ["latin"],
-  variable: "--font-playfair",
-  weight: ["400", "500", "600", "700", "800", "900"],
+  variable: "--font-headline",
+  weight: ["300", "400", "500", "600", "700", "800", "900"],
   display: 'swap',
   adjustFontFallback: false,
 });
 
-// Distanz body font (serif) - used for long-form articles and feature content
-const sourceSerif = Source_Serif_4({
+// Distanz subheading font (serif) - used for subheadings
+const lora = Lora({
+  subsets: ["latin"],
+  variable: "--font-subheading",
+  weight: ["400", "500", "600", "700"],
+  display: 'swap',
+});
+
+// Distanz body font (sans-serif) - used for body text
+const hindMadurai = Hind_Madurai({
   subsets: ["latin"],
   variable: "--font-body",
-  weight: ["400", "600", "700"],
+  weight: ["300", "400", "500", "600", "700"],
   display: 'swap',
 });
 
@@ -60,7 +68,7 @@ export default function RootLayout({
   const isPreviewMode = process.env.PREVIEW_MODE === 'true';
 
   return (
-    <html lang="en" className={`${playfair.variable} ${sourceSerif.variable} ${jetbrainsMono.variable}`}>
+    <html lang="en" className={`${montserrat.variable} ${lora.variable} ${hindMadurai.variable} ${jetbrainsMono.variable}`}>
       <head>
         {/* Prevent flash of dark mode - ensure light mode by default */}
         <script

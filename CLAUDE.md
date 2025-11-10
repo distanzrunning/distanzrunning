@@ -91,16 +91,28 @@ npm run lint         # Run ESLint (note: ignoreDuringBuilds: true in next.config
 - Custom font feature settings: `.distanz-font-features`
 - Legacy `.quartr-*` classes maintained for backwards compatibility
 
-**Typography (Modern Editorial Stack):**
-- **Headline font**: Playfair Display (serif, loaded via `next/font/google`) - CSS var: `--font-playfair`
-- **Body font**: Source Serif 4 (serif, loaded via `next/font/google`) - CSS var: `--font-body`
-- **UI font**: Inter Variable (sans-serif, loaded via CDN with OpenType features) - CSS var: `--base-font`
+**Typography (Three Font Pairing):**
+- **Headline font**: Montserrat (sans-serif, loaded via `next/font/google`) - CSS var: `--font-headline` / `--headline-font`
+  - Use for: Main headings (H1), hero sections, article titles
+  - Tailwind: `font-headline` or `font-montserrat`
+  - Utility: `.text-title-distanz`
+- **Subheading font**: Lora (serif, loaded via `next/font/google`) - CSS var: `--font-subheading` / `--subheading-font`
+  - Use for: Subheadings (H2, H3), section headers, intro text
+  - Tailwind: `font-subheading` or `font-lora`
+  - Utility: `.text-h2-distanz`, `.text-h3-distanz`, `.text-intro-distanz`
+- **Body font**: Hind Madurai (sans-serif, loaded via `next/font/google`) - CSS var: `--font-body` / `--body-font`
+  - Use for: Body text, navigation, UI elements, metadata
+  - Tailwind: `font-body` or `font-hind`
+  - Utility: `.text-body-distanz`
 - **Monospace font**: JetBrains Mono (loaded via `next/font/google`) - CSS var: `--font-mono`
+  - Use for: Race times, statistics, code blocks
+  - Tailwind: `font-mono`
 - **Icons**: Material Symbols Outlined (loaded from Google Fonts CDN)
 - All fonts free via Google Fonts (zero licensing costs)
 - Extensive custom font sizes with pixel-perfect specifications (`[17px]`, `[56px]`, etc.)
-- Pre-built text utilities: `.text-title-distanz`, `.text-body-distanz`, `.text-h2-distanz`, etc.
+- Pre-built text utilities follow the three-font hierarchy
 - Font loading: Configured in `src/app/layout.tsx` with `font-display: swap` for optimal performance
+- **Legacy support**: `--base-font` and `--brand-font` variables point to new fonts for backwards compatibility
 
 **Color System:**
 - **Electric Pink** (`#e43c81`) - Primary brand color, CTAs, links, interactive elements

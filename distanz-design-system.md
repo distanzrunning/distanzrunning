@@ -18,39 +18,47 @@ The Distanz logo's playful yet bold character—with its flowing 'S' curve mimic
 
 ## 2. Typography System
 
-### Primary Typefaces
+### Primary Typefaces (Three Font Pairing)
 
-#### Display & Headlines
-**Font Family**: "JG Jayagiri Sans" (for brand consistency with logo)
-- Use for: Hero headlines, section headers, special features
-- Fallback: "Helvetica Neue", "Arial", sans-serif
-- Note: Limited use to maintain impact
+#### Headlines
+**Font Family**: "Montserrat"
+- Use for: Main article headlines, hero sections, primary headings (H1)
+- Character: Clean, modern sans-serif with geometric proportions
+- Weights: Regular (400), Medium (500), Semi-Bold (600), Bold (700), Extra-Bold (800), Black (900)
+- Variable: `--font-headline` or `--headline-font`
+- Tailwind: `font-headline` or `font-montserrat`
+- Utility class: `.text-title-distanz`
+- Fallback: sans-serif
 
-#### Editorial Headlines
-**Font Family**: "Tiempos Headline" or "GT Sectra Display"
-- Use for: Article headlines, feature stories
-- Character: Sharp serifs with athletic tension
-- Weights: Light (300), Regular (400), Bold (700)
-- Fallback: "Georgia", "Times New Roman", serif
-
-#### Body Text
-**Font Family**: "Tiempos Text" or "Source Serif Pro"
-- Use for: Long-form articles, race guides, features
-- Character: Highly readable with contemporary serifs
-- Size: 18-20px on desktop, 16-18px on mobile
-- Line height: 1.6-1.75
+#### Subheadings
+**Font Family**: "Lora"
+- Use for: Subheadings (H2, H3), section headers, pull quotes, intro text
+- Character: Contemporary serif with calligraphic details, provides elegant contrast
+- Weights: Regular (400), Medium (500), Semi-Bold (600), Bold (700)
+- Variable: `--font-subheading` or `--subheading-font`
+- Tailwind: `font-subheading` or `font-lora`
+- Utility class: `.text-h2-distanz`, `.text-h3-distanz`, `.text-intro-distanz`
 - Fallback: "Georgia", serif
 
-#### Supporting Text
-**Font Family**: "Inter" or "Source Sans Pro"
-- Use for: Navigation, metadata, captions, UI elements
-- Weights: Regular (400), Medium (500), Semi-Bold (600), Bold (700)
-- Fallback: system-ui, -apple-system, sans-serif
+#### Body Text
+**Font Family**: "Hind Madurai"
+- Use for: All body text, navigation, metadata, captions, UI elements
+- Character: Highly readable sans-serif optimized for screen reading
+- Weights: Light (300), Regular (400), Medium (500), Semi-Bold (600), Bold (700)
+- Variable: `--font-body` or `--body-font`
+- Tailwind: `font-body` or `font-hind`
+- Utility class: `.text-body-distanz`
+- Size: 17-19px on desktop, 17px on mobile
+- Line height: 1.3-1.5 (22-25px)
+- Fallback: sans-serif
 
 #### Data & Statistics
-**Font Family**: "Roboto Mono" or "JetBrains Mono"
-- Use for: Race times, statistics, data tables
+**Font Family**: "JetBrains Mono"
+- Use for: Race times, statistics, data tables, code blocks
 - Character: Monospaced for numerical alignment
+- Weights: Regular (400), Medium (500), Bold (700)
+- Variable: `--font-mono`
+- Tailwind: `font-mono`
 - Fallback: "Courier New", monospace
 
 ### Type Scale (Desktop)

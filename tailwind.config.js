@@ -181,22 +181,28 @@ module.exports = {
         'borderNeutralSubtle': 'rgb(var(--color-borderNeutralSubtle))',
       },
       fontFamily: {
-        // UI font (Inter - sans-serif)
+        // Default sans (body font)
         sans: [
-          'var(--base-font)',
-          'InterVariable',
-          'Inter',
+          'var(--body-font)',
+          'Hind Madurai',
           'system-ui',
           'sans-serif'
         ],
-        // Headline font (Playfair Display - serif)
-        playfair: ['var(--font-playfair)', 'Playfair Display', 'serif'],
-        headline: ['var(--font-playfair)', 'Playfair Display', 'Georgia', 'Times New Roman', 'serif'],
-        // Body font (Source Serif 4 - serif for articles)
-        body: ['var(--font-body)', 'Source Serif 4', 'Georgia', 'serif'],
-        serif: ['var(--font-body)', 'Source Serif 4', 'Georgia', 'serif'],
+        // Headline font (Montserrat - sans-serif for main headings)
+        headline: ['var(--headline-font)', 'Montserrat', 'sans-serif'],
+        montserrat: ['var(--headline-font)', 'Montserrat', 'sans-serif'],
+        // Subheading font (Lora - serif for subheadings)
+        subheading: ['var(--subheading-font)', 'Lora', 'Georgia', 'serif'],
+        lora: ['var(--subheading-font)', 'Lora', 'Georgia', 'serif'],
+        // Body font (Hind Madurai - sans-serif for body text)
+        body: ['var(--body-font)', 'Hind Madurai', 'sans-serif'],
+        hind: ['var(--body-font)', 'Hind Madurai', 'sans-serif'],
         // Monospace font (JetBrains Mono - for data/stats)
         mono: ['var(--font-mono)', 'JetBrains Mono', 'Courier New', 'monospace'],
+
+        // Legacy aliases for backwards compatibility
+        playfair: ['var(--headline-font)', 'Montserrat', 'sans-serif'],
+        serif: ['var(--subheading-font)', 'Lora', 'Georgia', 'serif'],
       },
       fontSize: {
         // Tighter font sizing system with reduced line heights
@@ -451,12 +457,14 @@ module.exports = {
           },
         },
 
-        // Distanz font features (Inter variable font)
+        // Distanz font features - enable OpenType features for better readability
         '.distanz-font-features': {
-          fontFeatureSettings: "'cv02', 'cv03', 'cv04', 'cv11'",
+          fontFeatureSettings: "normal",
+          fontVariantLigatures: "common-ligatures",
+          fontVariantNumeric: "oldstyle-nums proportional-nums",
         },
 
-        // Legacy
+        // Legacy (Inter-specific, kept for backwards compatibility)
         '.quartr-font-features': {
           fontFeatureSettings: "'cv02', 'cv03', 'cv04', 'cv11'",
         },
