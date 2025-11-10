@@ -106,7 +106,7 @@ export default function NewsletterSignup() {
               </span>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="flex w-full flex-col items-start gap-4 sm:gap-2">
+            <form onSubmit={handleSubmit} className="flex w-full flex-col items-start">
               <div className="flex w-full flex-col items-center justify-center gap-4 sm:flex-row sm:justify-start">
                 <div className="flex w-full flex-col gap-2">
                   <label htmlFor="email" className="sr-only">Email</label>
