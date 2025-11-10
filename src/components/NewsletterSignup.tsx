@@ -78,7 +78,7 @@ export default function NewsletterSignup() {
           <span className="text-xl md:text-2xl font-headline font-bold text-neutral-900 dark:text-white">
             Subscribe to the <i className="italic text-neutral-900 dark:text-white">Shakeout</i>
           </span>
-          <span className="text-base text-neutral-600 dark:text-neutral-400 max-w-[500px]">
+          <span className="text-base text-neutral-600 dark:text-neutral-400 max-w-[400px]">
             Curated set of running stories, gear reviews, and race profiles every other week.
           </span>
         </div>
