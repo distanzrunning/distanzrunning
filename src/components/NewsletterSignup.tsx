@@ -95,7 +95,7 @@ export default function NewsletterSignup() {
         </div>
 
         {/* Right: Form */}
-        <div className="flex w-full sm:max-w-md">
+        <div className="flex w-full sm:max-w-md min-h-[180px] items-start">
           {isSubmitted ? (
             <div className="w-full flex items-center gap-3 px-5 py-3 bg-volt-green/10 dark:bg-volt-green/20 border border-volt-green/30 dark:border-volt-green/40 rounded-lg">
               <svg className="w-5 h-5 text-volt-green dark:text-volt-green flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -135,11 +135,13 @@ export default function NewsletterSignup() {
                   </div>
                 </button>
               </div>
-              {error && (
-                <p className="text-xs text-red-600 dark:text-red-400 w-full">
-                  {error}
-                </p>
-              )}
+              <div className="w-full min-h-[20px]">
+                {error && (
+                  <p className="text-xs text-red-600 dark:text-red-400 w-full">
+                    {error}
+                  </p>
+                )}
+              </div>
               <div className="flex w-full flex-col gap-4 items-center sm:items-start">
                 <div className="max-w-sm text-center sm:text-start">
                   <div className="text-balance text-neutral-500 dark:text-neutral-400 text-xs">
