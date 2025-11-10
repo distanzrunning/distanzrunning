@@ -140,6 +140,21 @@ export default function NewsletterSignup() {
                   {error}
                 </p>
               )}
+              <div className="flex w-full flex-col gap-4 items-center sm:items-start">
+                <div className="max-w-sm text-center sm:text-start">
+                  <div className="text-balance text-neutral-500 dark:text-neutral-400 text-xs">
+                    This site is protected by reCAPTCHA and the Google{' '}
+                    <a href="https://policies.google.com/privacy" className="underline hover:text-neutral-700 dark:hover:text-neutral-300 transition-colors" target="_blank" rel="noopener noreferrer">
+                      Privacy Policy
+                    </a>{' '}
+                    and{' '}
+                    <a href="https://policies.google.com/terms" className="underline hover:text-neutral-700 dark:hover:text-neutral-300 transition-colors" target="_blank" rel="noopener noreferrer">
+                      Terms of Service
+                    </a>{' '}
+                    apply.
+                  </div>
+                </div>
+              </div>
             </form>
           )}
         </div>
