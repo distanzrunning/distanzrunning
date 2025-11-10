@@ -244,6 +244,25 @@ posthog.identify('user_id', { email: 'user@example.com' });
 - Configured in main layout
 - GTM ID: GTM-K3W2LWHM
 
+### Bot Protection (reCAPTCHA v3)
+
+**Newsletter Signup Protection:**
+- Integrated Google reCAPTCHA v3 (invisible) to prevent bot signups
+- Automatically scores user interactions (0.0 = bot, 1.0 = human)
+- Threshold set to 0.5 - submissions below this score are rejected
+
+**Implementation:**
+- `ReCaptchaProvider` wraps the app in `layout.tsx`
+- `NewsletterSignup` component uses `useGoogleReCaptcha` hook
+- Token generated on form submission and verified server-side
+- API endpoint `/api/subscribe` verifies token with Google's API
+
+**Configuration:**
+1. Get reCAPTCHA v3 keys from [Google reCAPTCHA Admin](https://www.google.com/recaptcha/admin)
+2. Add `NEXT_PUBLIC_RECAPTCHA_SITE_KEY` to Vercel environment variables
+3. Add `RECAPTCHA_SECRET_KEY` to Vercel environment variables
+4. The implementation automatically handles token generation and verification
+
 ## Environment Variables
 
 Environment variables are managed in Vercel (not stored in local `.env` files):
@@ -262,6 +281,10 @@ AUTH_SECRET
 GTM_ID (Google Tag Manager, referenced in layout.tsx)
 NEXT_PUBLIC_POSTHOG_KEY (PostHog project API key)
 NEXT_PUBLIC_POSTHOG_HOST (PostHog host URL - EU: https://eu.i.posthog.com)
+
+# reCAPTCHA (Bot Protection)
+NEXT_PUBLIC_RECAPTCHA_SITE_KEY (reCAPTCHA v3 site key - public)
+RECAPTCHA_SECRET_KEY (reCAPTCHA v3 secret key - server-side only)
 
 # Preview Mode
 PREVIEW_MODE (set to 'true' to disable navbar/footer)

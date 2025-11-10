@@ -2,9 +2,11 @@
 'use client'
 
 import { useState } from 'react'
+import { useGoogleReCaptcha } from 'react-google-recaptcha-v3'
 import posthog from 'posthog-js'
 
 export default function NewsletterSignup() {
+  const { executeRecaptcha } = useGoogleReCaptcha()
   const [email, setEmail] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
@@ -18,17 +20,26 @@ export default function NewsletterSignup() {
       return
     }
 
+    if (!executeRecaptcha) {
+      setError('reCAPTCHA not loaded. Please try again.')
+      return
+    }
+
     setIsSubmitting(true)
     setError('')
 
     try {
+      // Get reCAPTCHA token
+      const recaptchaToken = await executeRecaptcha('newsletter_signup')
+
       const response = await fetch('/api/subscribe', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          email: email
+          email: email,
+          recaptchaToken: recaptchaToken
         })
       })
 

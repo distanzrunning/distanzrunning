@@ -4,7 +4,7 @@ import crypto from 'crypto'
 
 export async function POST(request: NextRequest) {
   try {
-    const { email } = await request.json()
+    const { email, recaptchaToken } = await request.json()
 
     if (!email) {
       return NextResponse.json(
@@ -20,6 +20,36 @@ export async function POST(request: NextRequest) {
         { error: 'Please enter a valid email address' },
         { status: 400 }
       )
+    }
+
+    // Verify reCAPTCHA token
+    if (recaptchaToken) {
+      const recaptchaSecretKey = process.env.RECAPTCHA_SECRET_KEY
+
+      if (recaptchaSecretKey) {
+        const recaptchaResponse = await fetch(
+          `https://www.google.com/recaptcha/api/siteverify`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams({
+              secret: recaptchaSecretKey,
+              response: recaptchaToken,
+            }),
+          }
+        )
+
+        const recaptchaData = await recaptchaResponse.json()
+
+        if (!recaptchaData.success || recaptchaData.score < 0.5) {
+          return NextResponse.json(
+            { error: 'reCAPTCHA verification failed. Please try again.' },
+            { status: 400 }
+          )
+        }
+      }
     }
 
     // Generate confirmation token
