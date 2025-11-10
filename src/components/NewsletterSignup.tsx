@@ -70,20 +70,23 @@ export default function NewsletterSignup() {
   }
 
   return (
-    <section className="border-t border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 py-16 md:py-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
-          <div className="max-w-md">
-            <h2 className="text-2xl md:text-3xl font-semibold text-neutral-900 dark:text-white mb-3 leading-tight">
-              Sign up to <span className="font-playfair italic text-electric-pink">The Cooldown</span>
-            </h2>
-            <p className="text-neutral-600 dark:text-neutral-400 text-base leading-relaxed">
-              A curated selection of the latest running stories, gear reviews, and race profiles every other week direct in your inbox.
-            </p>
-          </div>
+    <div className="flex border-y border-neutral-200 dark:border-neutral-800 bg-gradient-to-t from-neutral-50 dark:from-neutral-800/50 to-transparent py-12 lg:px-28">
+      <div className="mx-auto flex w-full max-w-screen-xl flex-col justify-center gap-7 px-4 sm:flex-row sm:items-center sm:justify-between">
 
+        {/* Left: Heading and description */}
+        <div className="flex flex-col gap-2">
+          <span className="text-2xl md:text-3xl font-semibold text-neutral-900 dark:text-white">
+            Sign up for <i className="font-playfair text-electric-pink">The Cooldown</i>
+          </span>
+          <span className="text-sm text-neutral-600 dark:text-neutral-400 max-w-[250px]">
+            Get curated quality running stories, gear reviews, and race profiles every other week.
+          </span>
+        </div>
+
+        {/* Right: Form */}
+        <div className="flex w-full sm:max-w-md">
           {isSubmitted ? (
-            <div className="w-full md:w-auto flex items-center gap-3 px-5 py-3 bg-volt-green/10 dark:bg-volt-green/20 border border-volt-green/30 dark:border-volt-green/40 rounded-lg">
+            <div className="w-full flex items-center gap-3 px-5 py-3 bg-volt-green/10 dark:bg-volt-green/20 border border-volt-green/30 dark:border-volt-green/40 rounded-lg">
               <svg className="w-5 h-5 text-volt-green dark:text-volt-green flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
@@ -92,28 +95,37 @@ export default function NewsletterSignup() {
               </span>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="w-full md:w-auto flex flex-col gap-3 md:min-w-[400px]">
-              <div className="flex flex-col sm:flex-row gap-3">
-                <input
-                  type="email"
-                  placeholder="your@email.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="flex-1 sm:min-w-[240px] px-4 py-3 border border-neutral-300 dark:border-neutral-700 rounded-lg text-base placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-electric-pink focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white transition-colors"
-                  required
-                  disabled={isSubmitting}
-                />
+            <form onSubmit={handleSubmit} className="flex w-full flex-col items-start gap-4 sm:gap-2">
+              <div className="flex w-full flex-col items-center justify-center gap-4 sm:flex-row sm:justify-start">
+                <div className="flex w-full flex-col gap-2">
+                  <label htmlFor="email" className="sr-only">Email</label>
+                  <input
+                    id="email"
+                    type="email"
+                    autoComplete="email"
+                    placeholder="Enter your email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full min-h-12 rounded-lg pl-3 pr-3 text-base placeholder:font-medium placeholder:text-neutral-400 dark:placeholder:text-neutral-500 text-neutral-900 dark:text-white border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-600 focus:border-neutral-400 dark:focus:border-neutral-600 focus:outline-none focus:ring-2 focus:ring-neutral-300 dark:focus:ring-neutral-700 disabled:opacity-40 transition-all"
+                    required
+                    disabled={isSubmitting}
+                  />
+                </div>
                 <button
                   type="submit"
                   data-attr="newsletter-footer-submit"
                   disabled={isSubmitting}
-                  className="inline-flex items-center justify-center px-6 py-3 rounded-lg bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 text-base font-semibold hover:bg-neutral-800 dark:hover:bg-neutral-100 transition-all duration-200 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+                  className="group whitespace-nowrap font-medium text-lg relative m-0 flex cursor-pointer select-none items-center rounded-lg border-none p-0 no-underline outline-none transition ease-out focus-visible:outline-none active:scale-[0.98] active:duration-100 h-12 gap-2 px-5 bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-100 justify-center disabled:opacity-40 disabled:cursor-not-allowed"
                 >
-                  {isSubmitting ? 'Subscribing...' : 'Subscribe'}
+                  <div className="flex min-w-0 transition-opacity opacity-100">
+                    <div className="font-sans font-medium text-lg leading-snug">
+                      {isSubmitting ? 'Subscribing...' : 'Subscribe'}
+                    </div>
+                  </div>
                 </button>
               </div>
               {error && (
-                <p className="text-sm text-red-600 dark:text-red-400 leading-tight">
+                <p className="text-xs text-red-600 dark:text-red-400 w-full">
                   {error}
                 </p>
               )}
@@ -121,6 +133,6 @@ export default function NewsletterSignup() {
           )}
         </div>
       </div>
-    </section>
+    </div>
   )
 }

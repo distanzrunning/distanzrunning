@@ -6,6 +6,7 @@ import Image from 'next/image'
 import { useContext } from 'react'
 import { DarkModeContext } from './DarkModeProvider'
 import { ChevronRight } from 'lucide-react'
+import NewsletterSignup from './NewsletterSignup'
 
 export default function Footer() {
   const { isDark } = useContext(DarkModeContext)
@@ -172,6 +173,9 @@ export default function Footer() {
           </div>
         </div>
       </div>
+
+      {/* Newsletter Signup Section */}
+      <NewsletterSignup />
 
       {/* Legal Section - Separate Container */}
       <div>
