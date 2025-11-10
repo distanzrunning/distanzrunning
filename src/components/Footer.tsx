@@ -13,6 +13,9 @@ export default function Footer() {
 
   return (
     <footer aria-label="Site footer" className="bg-white dark:bg-neutral-900 border-t border-neutral-200 dark:border-neutral-800">
+      {/* Newsletter Signup Section */}
+      <NewsletterSignup />
+
       {/* Main Footer Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 md:pb-20 pt-16 md:pt-20">
         <div className="flex flex-col gap-16 md:flex-row md:justify-between md:gap-32">
@@ -173,9 +176,6 @@ export default function Footer() {
           </div>
         </div>
       </div>
-
-      {/* Newsletter Signup Section */}
-      <NewsletterSignup />
 
       {/* Legal Section - Separate Container */}
       <div>
