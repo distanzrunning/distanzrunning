@@ -142,7 +142,7 @@ export default function NewsletterSignup() {
                   </p>
                 )}
               </div>
-              <div className="flex w-full flex-col gap-4 items-center sm:items-start">
+              <div className="flex w-full flex-col items-center sm:items-start">
                 <div className="max-w-sm text-center sm:text-start">
                   <div className="text-balance text-neutral-500 dark:text-neutral-400 text-xs">
                     This site is protected by reCAPTCHA and the Google{' '}
