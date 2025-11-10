@@ -70,36 +70,36 @@ export default function NewsletterSignup() {
   }
 
   return (
-    <section className="border-t border-gray-200 dark:border-neutral-700 bg-transparent py-16">
+    <section className="border-t border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 py-16 md:py-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between">
-          <div className="mb-8 md:mb-0 max-w-md">
-            <h2 className="text-2xl font-bold text-neutral-900 dark:text-white">
-              Go the <span className="text-electric-pink italic">Distanz</span>
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
+          <div className="max-w-md">
+            <h2 className="text-2xl md:text-3xl font-semibold text-neutral-900 dark:text-white mb-3 leading-tight">
+              Sign up to <span className="font-playfair italic text-electric-pink">The Cooldown</span>
             </h2>
-            <p className="text-neutral-600 dark:text-neutral-400 text-sm md:text-base mt-1">
-              Get a curated selection of the latest running news, gear reviews, and race profiles every week.
+            <p className="text-neutral-600 dark:text-neutral-400 text-base leading-relaxed">
+              A curated selection of the latest running stories, gear reviews, and race profiles every other week direct in your inbox.
             </p>
           </div>
 
           {isSubmitted ? (
-            <div className="w-full md:w-auto flex items-center gap-2 px-4 py-2 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-md">
-              <svg className="w-5 h-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="w-full md:w-auto flex items-center gap-3 px-5 py-3 bg-volt-green/10 dark:bg-volt-green/20 border border-volt-green/30 dark:border-volt-green/40 rounded-lg">
+              <svg className="w-5 h-5 text-volt-green dark:text-volt-green flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
-              <span className="text-sm text-green-800 dark:text-green-300 font-medium">
+              <span className="text-sm text-neutral-900 dark:text-white font-medium">
                 Check your email to confirm!
               </span>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="w-full md:w-auto flex flex-col gap-3">
+            <form onSubmit={handleSubmit} className="w-full md:w-auto flex flex-col gap-3 md:min-w-[400px]">
               <div className="flex flex-col sm:flex-row gap-3">
                 <input
                   type="email"
-                  placeholder="Enter your email"
+                  placeholder="your@email.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full sm:w-64 px-4 py-2 border border-gray-300 dark:border-neutral-600 rounded-md text-sm placeholder-gray-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-electric-pink dark:focus:ring-electric-pink bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white"
+                  className="flex-1 sm:min-w-[240px] px-4 py-3 border border-neutral-300 dark:border-neutral-700 rounded-lg text-base placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-electric-pink focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white transition-colors"
                   required
                   disabled={isSubmitting}
                 />
@@ -107,13 +107,13 @@ export default function NewsletterSignup() {
                   type="submit"
                   data-attr="newsletter-footer-submit"
                   disabled={isSubmitting}
-                  className="inline-flex items-center justify-center px-4 py-2 rounded-md bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 text-sm font-semibold hover:bg-neutral-800 dark:hover:bg-neutral-100 transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="inline-flex items-center justify-center px-6 py-3 rounded-lg bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 text-base font-semibold hover:bg-neutral-800 dark:hover:bg-neutral-100 transition-all duration-200 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
                 >
                   {isSubmitting ? 'Subscribing...' : 'Subscribe'}
                 </button>
               </div>
               {error && (
-                <p className="text-sm text-red-600 dark:text-red-400">
+                <p className="text-sm text-red-600 dark:text-red-400 leading-tight">
                   {error}
                 </p>
               )}
