@@ -75,11 +75,11 @@ export default function NewsletterSignup() {
 
         {/* Left: Heading and description */}
         <div className="flex flex-col gap-2">
-          <span className="text-2xl md:text-3xl font-headline font-bold text-neutral-900 dark:text-white">
+          <span className="text-xl md:text-2xl font-headline font-bold text-neutral-900 dark:text-white">
             Subscribe to the <i className="italic text-neutral-900 dark:text-white">Shakeout</i>
           </span>
           <span className="text-sm text-neutral-600 dark:text-neutral-400 max-w-[250px]">
-            Get curated quality running stories, gear reviews, and race profiles every other week.
+            Curated set of running stories, gear reviews, and race profiles every other week.
           </span>
         </div>
 
