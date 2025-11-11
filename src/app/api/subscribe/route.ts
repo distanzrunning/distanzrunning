@@ -179,7 +179,7 @@ export async function POST(request: NextRequest) {
 
           /* Logo styling - White logo on dark background */
           .logo {
-            height: 56px;
+            height: 60px;
             width: auto;
             display: block;
             margin: 0 auto;
@@ -336,12 +336,12 @@ export async function POST(request: NextRequest) {
                   <!-- Header with logo -->
                   <div class="header-section" style="background-color: #2d2d2d !important;">
                     <img
-                      src="https://res.cloudinary.com/dbzirtpem/image/upload/v1747671551/Distanz_Logo_White_400x112.png"
+                      src="https://distanzrunning.vercel.app/images/Distanz_Logo_1600_600_White.png"
                       alt="Distanz Running"
                       class="logo"
-                      width="200"
-                      height="56"
-                      style="height: 56px; width: auto; display: block; margin: 0 auto;"
+                      width="320"
+                      height="120"
+                      style="height: 60px; width: auto; display: block; margin: 0 auto;"
                     />
                   </div>
                   
