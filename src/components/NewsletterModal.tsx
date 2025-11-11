@@ -131,47 +131,46 @@ export function NewsletterModal({ isOpen, onClose }: NewsletterModalProps) {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="border border-neutral-200 dark:border-neutral-700 bg-white/95 dark:bg-neutral-800/95 backdrop-blur-sm backdrop-saturate-150 rounded-2xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-hidden relative transition-colors duration-300">
+              {/* Loading spinner - covers entire modal until image loads */}
+              {!imageLoaded && (
+                <div className="absolute inset-0 flex items-center justify-center z-50 bg-neutral-900 rounded-2xl">
+                  <Loader2 className="w-8 h-8 text-white animate-spin" />
+                </div>
+              )}
+
               {/* Close button */}
               <button
                 onClick={onClose}
                 className="absolute top-4 right-4 z-30 p-2 text-white hover:text-gray-200 transition-colors bg-black/20 dark:bg-white/20 rounded-full backdrop-blur-sm"
                 aria-label="Close newsletter signup"
               >
-                <svg 
-                  className="w-5 h-5" 
-                  fill="none" 
-                  stroke="currentColor" 
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
                   viewBox="0 0 24 24"
                 >
-                  <path 
-                    strokeLinecap="round" 
-                    strokeLinejoin="round" 
-                    strokeWidth={2} 
-                    d="M6 18L18 6M6 6l12 12" 
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
                   />
                 </svg>
               </button>
 
               {/* Hero section with optimized background image and white logo */}
               <div className="relative h-48 bg-neutral-900 overflow-hidden">
-                {/* Loading spinner */}
-                {!imageLoaded && (
-                  <div className="absolute inset-0 flex items-center justify-center z-30">
-                    <Loader2 className="w-8 h-8 text-white animate-spin" />
-                  </div>
-                )}
 
                 {/* Optimized background image - Using JPEG (337KB vs 1.6MB PNG) */}
                 <Image
                   src="/images/berlin_cover.jpg"
                   alt="Berlin Marathon Background"
                   fill
-                  className="object-cover transition-opacity duration-300"
+                  className="object-cover"
                   priority
                   quality={85}
                   sizes="(max-width: 448px) 100vw, 448px"
-                  placeholder="blur"
-                  blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAb/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWEREiMxUf/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
                   onLoad={() => setImageLoaded(true)}
                 />
 
