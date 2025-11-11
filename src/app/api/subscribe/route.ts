@@ -268,8 +268,8 @@ export async function POST(request: NextRequest) {
                             <img
                               src="https://distanzrunning.vercel.app/images/distanz_icon_black_round.png"
                               alt="Distanz Running"
-                              width="36"
-                              height="36"
+                              width="48"
+                              height="48"
                               style="display:block;height:auto;border:0" />
                           </a>
                         </td>
