@@ -271,33 +271,21 @@ export async function POST(request: NextRequest) {
           
           .social-links a {
             display: inline-block;
-            padding: 8px;
-            border-radius: 50%;
-            background-color: rgba(0, 0, 0, 0.05) !important;
             text-decoration: none;
-            width: 36px;
-            height: 36px;
-            text-align: center;
           }
-          
-          /* Company info */
-          .company-info {
+
+          .social-links img {
+            opacity: 0.6;
+            display: block;
+          }
+
+          /* Copyright text */
+          .copyright {
             font-size: 14px;
-            color: #666666 !important;
+            color: #737373 !important;
             font-family: 'Hind Madurai', sans-serif !important;
-            margin-bottom: 16px;
-            line-height: 1.5;
-          }
-
-          .company-info p {
-            margin-bottom: 4px;
             text-align: center;
-            color: #666666 !important;
-          }
-
-          .company-name {
-            font-weight: 600;
-            color: #1a1a1a !important;
+            line-height: 1.5;
           }
           
           /* Mobile responsive */
@@ -382,13 +370,13 @@ export async function POST(request: NextRequest) {
                             target="_blank"
                             rel="noopener noreferrer"
                             aria-label="X / Twitter"
-                            style="display: inline-block; padding: 8px; border-radius: 50%; background-color: rgba(0, 0, 0, 0.05) !important; text-decoration: none; width: 36px; height: 36px; text-align: center;">
+                            style="text-decoration: none;">
                             <img
                               src="https://res.cloudinary.com/dbzirtpem/image/upload/v1757799203/x_40_40.png"
                               alt="X / Twitter"
-                              width="20"
-                              height="20"
-                              style="display: block; border: 0; outline: none; text-decoration: none; margin: auto;" />
+                              width="24"
+                              height="24"
+                              style="display: block; border: 0; outline: none; opacity: 0.6;" />
                           </a>
                         </td>
 
@@ -397,13 +385,13 @@ export async function POST(request: NextRequest) {
                             target="_blank"
                             rel="noopener noreferrer"
                             aria-label="LinkedIn"
-                            style="display: inline-block; padding: 8px; border-radius: 50%; background-color: rgba(0, 0, 0, 0.05) !important; text-decoration: none; width: 36px; height: 36px; text-align: center;">
+                            style="text-decoration: none;">
                             <img
                               src="https://res.cloudinary.com/dbzirtpem/image/upload/v1757799149/linkedin_40_40.png"
                               alt="LinkedIn"
-                              width="20"
-                              height="20"
-                              style="display: block; border: 0; outline: none; text-decoration: none; margin: auto;" />
+                              width="24"
+                              height="24"
+                              style="display: block; border: 0; outline: none; opacity: 0.6;" />
                           </a>
                         </td>
 
@@ -412,13 +400,13 @@ export async function POST(request: NextRequest) {
                             target="_blank"
                             rel="noopener noreferrer"
                             aria-label="Instagram"
-                            style="display: inline-block; padding: 8px; border-radius: 50%; background-color: rgba(0, 0, 0, 0.05) !important; text-decoration: none; width: 36px; height: 36px; text-align: center;">
+                            style="text-decoration: none;">
                             <img
                               src="https://res.cloudinary.com/dbzirtpem/image/upload/v1757799237/instagram_40_40.png"
                               alt="Instagram"
-                              width="20"
-                              height="20"
-                              style="display: block; border: 0; outline: none; text-decoration: none; margin: auto;" />
+                              width="24"
+                              height="24"
+                              style="display: block; border: 0; outline: none; opacity: 0.6;" />
                           </a>
                         </td>
 
@@ -427,26 +415,22 @@ export async function POST(request: NextRequest) {
                             target="_blank"
                             rel="noopener noreferrer"
                             aria-label="Strava"
-                            style="display: inline-block; padding: 8px; border-radius: 50%; background-color: rgba(0, 0, 0, 0.05) !important; text-decoration: none; width: 36px; height: 36px; text-align: center;">
+                            style="text-decoration: none;">
                             <img
                               src="https://res.cloudinary.com/dbzirtpem/image/upload/v1757799275/strava_40_40.png"
                               alt="Strava"
-                              width="20"
-                              height="20"
-                              style="display: block; border: 0; outline: none; text-decoration: none; margin: auto;" />
+                              width="24"
+                              height="24"
+                              style="display: block; border: 0; outline: none; opacity: 0.6;" />
                           </a>
                         </td>
                       </tr>
                     </table>
                   </div>
-                  
-                  <!-- Company info -->
-                  <div class="company-info" style="color: #666666 !important;">
-                    <p class="company-name" style="color: #1a1a1a !important;"><strong>Distanz Running Ltd</strong></p>
-                    <p style="color: #666666 !important;">10 Northumberland Place, Richmond TW10 6TS</p>
-                    <p style="margin-top: 12px; color: #888888;">
-                      © 2025 Distanz Running. All rights reserved.
-                    </p>
+
+                  <!-- Copyright -->
+                  <div class="copyright" style="color: #737373 !important;">
+                    © 2025 Distanz Running.
                   </div>
                 </div>
               </div>
