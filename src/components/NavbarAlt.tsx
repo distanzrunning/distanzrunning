@@ -243,20 +243,12 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
           </div>
         </motion.div>
 
-        {/* Bottom Section: Centered Navigation Links */}
-        <div className="border-b border-neutral-200 dark:border-neutral-700 relative z-40">
+        {/* Bottom Section: Centered Navigation Links - Desktop Only */}
+        <div className="hidden lg:block border-b border-neutral-200 dark:border-neutral-700 relative z-40">
           <div className="flex items-center justify-between px-4 md:px-6 lg:px-8 h-12">
 
-            {/* Small Logo - Shows when scrolled (mobile) or always visible (desktop) */}
-            <motion.div
-              initial={false}
-              animate={{
-                opacity: isScrolled ? 1 : 0,
-                pointerEvents: isScrolled ? 'auto' : 'none'
-              }}
-              transition={{ duration: 0.2, ease: 'easeInOut' }}
-              className="lg:opacity-100 lg:pointer-events-auto"
-            >
+            {/* Small Logo - Always visible on desktop */}
+            <div>
               <Link href="/" className="flex items-center" title="Home">
                 <Image
                   src="/images/logo.svg"
@@ -275,7 +267,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                   priority
                 />
               </Link>
-            </motion.div>
+            </div>
 
             {/* Desktop Navigation - Radix UI (hidden on mobile) */}
             <NavigationMenu.Root className="relative z-50 hidden lg:block" value={navValue} onValueChange={handleNavValueChange}>
@@ -579,43 +571,6 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                 <NavigationMenu.Viewport className="pointer-events-auto relative w-full h-[var(--radix-navigation-menu-viewport-height)] origin-top bg-white dark:bg-neutral-900 border-t border-b border-neutral-200 dark:border-neutral-800 shadow-[0_30px_60px_-40px_rgba(15,23,42,0.45)] overflow-hidden transition-[height] duration-300 ease-out" />
               </motion.div>
             </NavigationMenu.Root>
-
-            {/* Utility Buttons - Mobile only (shows when scrolled) */}
-            <motion.div
-              className="flex items-center gap-3 lg:hidden"
-              initial={false}
-              animate={{
-                opacity: isScrolled ? 1 : 0,
-                pointerEvents: isScrolled ? 'auto' : 'none'
-              }}
-              transition={{ duration: 0.2, ease: 'easeInOut' }}
-            >
-              {/* Search Icon Button */}
-              <button
-                onClick={() => setSearchDialogOpen(true)}
-                className="p-2 text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors duration-200"
-                aria-label="Open search"
-                title="Search (⌘K / Ctrl+K)"
-              >
-                <SearchIcon className="h-5 w-5" />
-              </button>
-
-              {/* Dark Mode Toggle */}
-              {mounted && (
-                <button
-                  onClick={toggleDarkMode}
-                  className="p-2 text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors duration-200"
-                  aria-label="Toggle dark mode"
-                  title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
-                >
-                  {isDark ? (
-                    <Sun className="h-5 w-5" />
-                  ) : (
-                    <Moon className="h-5 w-5" />
-                  )}
-                </button>
-              )}
-            </motion.div>
 
             {/* Utility Buttons - Desktop only (shows when scrolled) */}
             <motion.div
@@ -1001,8 +956,8 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
         onClose={() => setNewsletterModalOpen(false)}
       />
 
-      {/* Spacer to prevent content from hiding under fixed header - Updated height */}
-      <div className="h-[8rem]" />
+      {/* Spacer to prevent content from hiding under fixed header - Responsive height */}
+      <div className="h-[5rem] lg:h-[8rem]" />
     </>
   )
 }
