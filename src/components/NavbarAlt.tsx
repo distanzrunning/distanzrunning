@@ -247,8 +247,15 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
         <div className="hidden lg:block border-b border-neutral-200 dark:border-neutral-700 relative z-40">
           <div className="flex items-center justify-between px-4 md:px-6 lg:px-8 h-12">
 
-            {/* Small Logo - Always visible on desktop */}
-            <div>
+            {/* Small Logo - Shows when scrolled on desktop */}
+            <motion.div
+              initial={false}
+              animate={{
+                opacity: isScrolled ? 1 : 0,
+                pointerEvents: isScrolled ? 'auto' : 'none'
+              }}
+              transition={{ duration: 0.2, ease: 'easeInOut' }}
+            >
               <Link href="/" className="flex items-center" title="Home">
                 <Image
                   src="/images/logo.svg"
@@ -267,7 +274,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                   priority
                 />
               </Link>
-            </div>
+            </motion.div>
 
             {/* Desktop Navigation - Radix UI (hidden on mobile) */}
             <NavigationMenu.Root className="relative z-50 hidden lg:block" value={navValue} onValueChange={handleNavValueChange}>
