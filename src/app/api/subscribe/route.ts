@@ -170,9 +170,9 @@ export async function POST(request: NextRequest) {
             border: 1px solid #e5e5e5;
           }
 
-          /* Header section - Dark background for white logo */
+          /* Header section - Dark grey background for white logo */
           .header-section {
-            background: #1a1a1a !important;
+            background: #2d2d2d !important;
             padding: 48px 40px;
             text-align: center;
           }
@@ -334,9 +334,9 @@ export async function POST(request: NextRequest) {
                 <div class="content-container" style="background-color: #ffffff !important;">
                   
                   <!-- Header with logo -->
-                  <div class="header-section" style="background-color: #1a1a1a !important;">
+                  <div class="header-section" style="background-color: #2d2d2d !important;">
                     <img
-                      src="https://distanzrunning.com/images/logo_white.svg"
+                      src="https://res.cloudinary.com/dbzirtpem/image/upload/v1747671551/Distanz_Logo_White_400x112.png"
                       alt="Distanz Running"
                       class="logo"
                       width="200"
