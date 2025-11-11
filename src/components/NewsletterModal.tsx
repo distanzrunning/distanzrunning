@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
 import posthog from 'posthog-js'
+import { Loader2 } from 'lucide-react'
 
 type NewsletterModalProps = {
   isOpen: boolean
@@ -15,6 +16,7 @@ export function NewsletterModal({ isOpen, onClose }: NewsletterModalProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [error, setError] = useState('')
+  const [imageLoaded, setImageLoaded] = useState(false)
 
   // Combined effect: handle body scroll lock, escape key, and form reset
   useEffect(() => {
@@ -28,6 +30,7 @@ export function NewsletterModal({ isOpen, onClose }: NewsletterModalProps) {
     setIsSubmitted(false)
     setError('')
     setIsSubmitting(false)
+    setImageLoaded(false)
 
     // Setup escape key handler
     const handleEscape = (e: KeyboardEvent) => {
@@ -151,6 +154,13 @@ export function NewsletterModal({ isOpen, onClose }: NewsletterModalProps) {
 
               {/* Hero section with optimized background image and white logo */}
               <div className="relative h-48 bg-neutral-900 overflow-hidden">
+                {/* Loading spinner */}
+                {!imageLoaded && (
+                  <div className="absolute inset-0 flex items-center justify-center z-30">
+                    <Loader2 className="w-8 h-8 text-white animate-spin" />
+                  </div>
+                )}
+
                 {/* Optimized background image - Using JPEG (337KB vs 1.6MB PNG) */}
                 <Image
                   src="/images/berlin_cover.jpg"
@@ -162,11 +172,12 @@ export function NewsletterModal({ isOpen, onClose }: NewsletterModalProps) {
                   sizes="(max-width: 448px) 100vw, 448px"
                   placeholder="blur"
                   blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAb/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWEREiMxUf/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
+                  onLoad={() => setImageLoaded(true)}
                 />
-                
+
                 {/* Dark overlay for better text readability */}
                 <div className="absolute inset-0 bg-black/30 z-10"></div>
-                
+
                 {/* White logo centered */}
                 <div className="absolute inset-0 flex items-center justify-center z-20 px-6">
                   <Image
