@@ -106,8 +106,8 @@ export async function POST(request: NextRequest) {
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <title>Confirm Your Subscription - Distanz Running</title>
-        <meta name="color-scheme" content="light">
-        <meta name="supported-color-schemes" content="light">
+        <meta name="color-scheme" content="light dark">
+        <meta name="supported-color-schemes" content="light dark">
         <!--[if mso]>
         <noscript>
           <xml>
@@ -119,26 +119,21 @@ export async function POST(request: NextRequest) {
         </noscript>
         <![endif]-->
         <style>
-          /* Import Inter font */
-          @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
-          
-          /* Force light mode */
-          :root {
-            color-scheme: light !important;
-          }
-          
+          /* Import Distanz fonts: Montserrat (headline), Hind Madurai (body) */
+          @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Hind+Madurai:wght@400;500;600&display=swap');
+
           /* Reset and base styles */
-          * { 
-            margin: 0; 
-            padding: 0; 
-            box-sizing: border-box; 
+          * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
           }
-          
-          body { 
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
-            line-height: 1.6;
+
+          body {
+            font-family: 'Hind Madurai', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+            line-height: 1.5;
             color: #1a1a1a !important;
-            background-color: #fafafa !important;
+            background-color: #f5f5f5 !important;
             margin: 0;
             padding: 0;
             width: 100% !important;
@@ -146,46 +141,45 @@ export async function POST(request: NextRequest) {
             -webkit-text-size-adjust: 100%;
             -ms-text-size-adjust: 100%;
           }
-          
+
           /* Gmail and client-specific fixes */
-          u + #body .email-wrapper { background-color: #fafafa !important; }
+          u + #body .email-wrapper { background-color: #f5f5f5 !important; }
           u + #body .content-container { background-color: #ffffff !important; }
           
           /* Full width structure */
           .email-wrapper {
             width: 100% !important;
-            background-color: #fafafa !important;
+            background-color: #f5f5f5 !important;
             margin: 0;
-            padding: 48px 16px;
+            padding: 40px 16px;
           }
-          
+
           .email-container {
             width: 100%;
             max-width: 600px;
             margin: 0 auto;
-            background-color: #fafafa !important;
+            background-color: #f5f5f5 !important;
           }
-          
+
           .content-container {
             background-color: #ffffff !important;
-            border-radius: 12px;
+            border-radius: 16px;
             margin: 0 auto;
             overflow: hidden;
-            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
-            border: 1px solid #f0f0f0;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e5e5e5;
           }
-          
-          /* Header section */
+
+          /* Header section - Dark background for white logo */
           .header-section {
-            background-color: #ffffff !important;
-            padding: 48px 40px 32px 40px;
+            background: #1a1a1a !important;
+            padding: 48px 40px;
             text-align: center;
-            border-bottom: 1px solid #f5f5f5;
           }
-          
-          /* Logo styling */
+
+          /* Logo styling - White logo on dark background */
           .logo {
-            height: 64px;
+            height: 56px;
             width: auto;
             display: block;
             margin: 0 auto;
@@ -197,53 +191,54 @@ export async function POST(request: NextRequest) {
             background-color: #ffffff !important;
             padding: 40px;
           }
-          
-          /* Typography */
+
+          /* Typography - Distanz design system */
           .greeting {
-            font-family: 'Inter', sans-serif !important;
+            font-family: 'Montserrat', sans-serif !important;
             color: #1a1a1a !important;
-            font-size: 24px;
-            font-weight: 600;
-            line-height: 1.3;
-            margin-bottom: 16px;
+            font-size: 28px;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 20px;
             text-align: left;
+            letter-spacing: -0.02em;
           }
-          
+
           .intro-text {
-            font-family: 'Inter', sans-serif !important;
-            color: #4a4a4a !important;
-            font-size: 16px;
+            font-family: 'Hind Madurai', sans-serif !important;
+            color: #525252 !important;
+            font-size: 17px;
             font-weight: 400;
             line-height: 1.5;
             margin-bottom: 16px;
             text-align: left;
           }
-          
+
           .instruction-text {
-            font-family: 'Inter', sans-serif !important;
+            font-family: 'Hind Madurai', sans-serif !important;
             color: #1a1a1a !important;
-            font-size: 16px;
+            font-size: 17px;
             font-weight: 500;
             line-height: 1.5;
-            margin-bottom: 32px;
+            margin-bottom: 28px;
             text-align: left;
           }
           
-          /* Button styling - no hover states */
+          /* Button styling - matches design system */
           .button-container {
             text-align: left;
             margin: 32px 0 24px 0;
           }
-          
+
           .button {
             display: inline-block !important;
             padding: 16px 32px !important;
-            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%) !important;
+            background: #1a1a1a !important;
             color: #ffffff !important;
             text-decoration: none !important;
             border-radius: 8px;
-            font-weight: 500;
-            font-family: 'Inter', sans-serif !important;
+            font-weight: 600;
+            font-family: 'Hind Madurai', sans-serif !important;
             font-size: 16px;
             line-height: 1;
             border: none;
@@ -253,25 +248,25 @@ export async function POST(request: NextRequest) {
           
           /* Footer */
           .footer-section {
-            background-color: #fafafa !important;
+            background-color: #f5f5f5 !important;
             padding: 32px 20px 20px 20px;
             text-align: center;
           }
-          
+
           /* Social links - simple styling */
           .social-links {
             margin-bottom: 24px;
-            background-color: #fafafa !important;
+            background-color: #f5f5f5 !important;
           }
-          
+
           .social-links table {
             margin: 0 auto;
-            background-color: #fafafa !important;
+            background-color: #f5f5f5 !important;
           }
-          
+
           .social-links td {
             padding: 0 8px;
-            background-color: #fafafa !important;
+            background-color: #f5f5f5 !important;
           }
           
           .social-links a {
@@ -289,17 +284,17 @@ export async function POST(request: NextRequest) {
           .company-info {
             font-size: 14px;
             color: #666666 !important;
-            font-family: 'Inter', sans-serif !important;
+            font-family: 'Hind Madurai', sans-serif !important;
             margin-bottom: 16px;
-            line-height: 1.4;
+            line-height: 1.5;
           }
-          
+
           .company-info p {
             margin-bottom: 4px;
             text-align: center;
             color: #666666 !important;
           }
-          
+
           .company-name {
             font-weight: 600;
             color: #1a1a1a !important;
@@ -332,21 +327,21 @@ export async function POST(request: NextRequest) {
         </style>
       </head>
       <body id="body">
-        <table class="email-wrapper" cellpadding="0" cellspacing="0" border="0" style="background-color: #fafafa !important;">
+        <table class="email-wrapper" cellpadding="0" cellspacing="0" border="0" style="background-color: #f5f5f5 !important;">
           <tr>
-            <td align="center" style="background-color: #fafafa !important;">
+            <td align="center" style="background-color: #f5f5f5 !important;">
               <div class="email-container">
                 <div class="content-container" style="background-color: #ffffff !important;">
                   
                   <!-- Header with logo -->
-                  <div class="header-section" style="background-color: #ffffff !important;">
-                    <img 
-                      src="https://res.cloudinary.com/dbzirtpem/image/upload/v1757880131/Logo_400_x_128_px_9.png" 
-                      alt="Distanz Running" 
+                  <div class="header-section" style="background-color: #1a1a1a !important;">
+                    <img
+                      src="https://distanzrunning.com/images/logo_white.svg"
+                      alt="Distanz Running"
                       class="logo"
                       width="200"
-                      height="64"
-                      style="height: 64px; width: auto; display: block; margin: 0 auto;"
+                      height="56"
+                      style="height: 56px; width: auto; display: block; margin: 0 auto;"
                     />
                   </div>
                   
@@ -364,25 +359,25 @@ export async function POST(request: NextRequest) {
                     
                     <div class="button-container">
                       <!--[if mso]>
-                      <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${confirmationUrl}" style="height:48px;v-text-anchor:middle;width:200px;" arcsize="17%" stroke="f" fillcolor="#000000">
+                      <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${confirmationUrl}" style="height:48px;v-text-anchor:middle;width:200px;" arcsize="17%" stroke="f" fillcolor="#1a1a1a">
                         <w:anchorlock/>
-                        <center style="color:#ffffff;font-family:'Inter',sans-serif;font-size:16px;font-weight:500;">Confirm Your Email</center>
+                        <center style="color:#ffffff;font-family:'Hind Madurai',sans-serif;font-size:16px;font-weight:600;">Confirm Your Email</center>
                       </v:roundrect>
                       <![endif]-->
                       <!--[if !mso]><!-->
-                      <a href="${confirmationUrl}" class="button" style="background: #000000 !important; color: #ffffff !important; text-decoration: none !important; display: inline-block; padding: 16px 32px; border-radius: 8px; font-weight: 500; font-family: 'Inter', sans-serif; font-size: 16px; border: 2px solid #000000 !important;">Confirm Your Email</a>
+                      <a href="${confirmationUrl}" class="button" style="background: #1a1a1a !important; color: #ffffff !important; text-decoration: none !important; display: inline-block; padding: 16px 32px; border-radius: 8px; font-weight: 600; font-family: 'Hind Madurai', sans-serif; font-size: 16px;">Confirm Your Email</a>
                       <!--<![endif]-->
                     </div>
                   </div>
                 </div>
                 
                 <!-- Footer -->
-                <div class="footer-section" style="background-color: #fafafa !important;">
+                <div class="footer-section" style="background-color: #f5f5f5 !important;">
                   <!-- Social links using the exact same code as your original working version -->
-                  <div class="social-links" style="background-color: #fafafa !important;">
-                    <table cellpadding="0" cellspacing="0" border="0" style="background-color: #fafafa !important;">
+                  <div class="social-links" style="background-color: #f5f5f5 !important;">
+                    <table cellpadding="0" cellspacing="0" border="0" style="background-color: #f5f5f5 !important;">
                       <tr>
-                        <td style="background-color: #fafafa !important;">
+                        <td style="background-color: #f5f5f5 !important;">
                           <a href="https://x.com/DistanzRunning"
                             target="_blank"
                             rel="noopener noreferrer"
@@ -397,7 +392,7 @@ export async function POST(request: NextRequest) {
                           </a>
                         </td>
 
-                        <td style="background-color: #fafafa !important;">
+                        <td style="background-color: #f5f5f5 !important;">
                           <a href="https://www.linkedin.com/company/distanz-running"
                             target="_blank"
                             rel="noopener noreferrer"
@@ -412,7 +407,7 @@ export async function POST(request: NextRequest) {
                           </a>
                         </td>
 
-                        <td style="background-color: #fafafa !important;">
+                        <td style="background-color: #f5f5f5 !important;">
                           <a href="https://www.instagram.com/distanzrunning/"
                             target="_blank"
                             rel="noopener noreferrer"
@@ -427,7 +422,7 @@ export async function POST(request: NextRequest) {
                           </a>
                         </td>
 
-                        <td style="background-color: #fafafa !important;">
+                        <td style="background-color: #f5f5f5 !important;">
                           <a href="https://www.strava.com/clubs/distanzrunning"
                             target="_blank"
                             rel="noopener noreferrer"
