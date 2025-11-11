@@ -72,10 +72,20 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
   const [newsletterModalOpen, setNewsletterModalOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
   const [isNavHovered, setIsNavHovered] = useState(false)
+  const [isDesktop, setIsDesktop] = useState(false)
   const megaMenuCloseTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
     setMounted(true)
+    // Check if desktop on mount
+    setIsDesktop(window.innerWidth >= 1024)
+
+    // Update on resize
+    const handleResize = () => {
+      setIsDesktop(window.innerWidth >= 1024)
+    }
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
   }, [])
 
   // Handle scroll to shrink navbar
@@ -159,11 +169,15 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
 
         {/* Top Section: Logo, Search Icon, Newsletter, Dark Mode */}
         <motion.div
-          className="border-b border-neutral-200 dark:border-neutral-700 overflow-hidden relative z-50"
+          className="border-b border-neutral-200 dark:border-neutral-700 relative z-50"
           initial={false}
           animate={{
-            height: isScrolled ? 0 : 'auto',
-            opacity: isScrolled ? 0 : 1
+            // Only animate on desktop
+            height: isDesktop && isScrolled ? 0 : 'auto',
+            opacity: isDesktop && isScrolled ? 0 : 1
+          }}
+          style={{
+            overflow: isDesktop ? 'hidden' : 'visible'
           }}
           transition={{ duration: 0.2, ease: 'easeInOut' }}
         >
