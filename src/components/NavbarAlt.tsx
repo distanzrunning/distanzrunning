@@ -71,6 +71,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
   const [searchDialogOpen, setSearchDialogOpen] = useState(false)
   const [newsletterModalOpen, setNewsletterModalOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
+  const [isNavHovered, setIsNavHovered] = useState(false)
   const megaMenuCloseTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
@@ -144,7 +145,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
       {/* Desktop & Mobile Header - Fixed */}
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          isScrolled && navValue === ''
+          isScrolled && !isNavHovered && navValue === ''
             ? 'bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md backdrop-saturate-150'
             : 'bg-white dark:bg-neutral-900'
         }`}
@@ -278,7 +279,11 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
 
             {/* Desktop Navigation - Radix UI (hidden on mobile) */}
             <NavigationMenu.Root className="relative z-50 hidden lg:block" value={navValue} onValueChange={handleNavValueChange}>
-              <NavigationMenu.List className="flex items-center gap-1">
+              <NavigationMenu.List
+                className="flex items-center gap-1"
+                onMouseEnter={() => setIsNavHovered(true)}
+                onMouseLeave={() => setIsNavHovered(false)}
+              >
                 {/* Road Link */}
                 <NavigationMenu.Item>
                   <NavigationMenu.Link asChild>
