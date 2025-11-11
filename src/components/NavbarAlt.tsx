@@ -508,8 +508,8 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                             >
                               <FileText className="h-4 w-4 flex-shrink-0" />
                               <div className="flex-1">
-                                <div className="font-semibold">Race Profiles</div>
-                                <div className="text-xs text-neutral-500 dark:text-neutral-400">Marathon guides & analysis</div>
+                                <div className="font-semibold">Race Guides</div>
+                                <div className="text-xs text-neutral-500 dark:text-neutral-400">Race profiles & analysis</div>
                               </div>
                             </Link>
                             <Link
@@ -889,8 +889,8 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                   >
                     <FileText className="h-5 w-5 text-neutral-500" />
                     <div>
-                      <div className="font-semibold text-neutral-900 dark:text-white">Race Profiles</div>
-                      <div className="text-sm text-neutral-500">Marathon guides and course analysis</div>
+                      <div className="font-semibold text-neutral-900 dark:text-white">Race Guides</div>
+                      <div className="text-sm text-neutral-500">Race profiles & analysis</div>
                     </div>
                   </Link>
                   <Link
