@@ -82,10 +82,10 @@ export default function NewsletterSignup() {
 
   return (
     <div className="border-y border-neutral-200 dark:border-neutral-800 bg-gradient-to-t from-neutral-50 dark:from-neutral-800/50 to-transparent">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex w-full flex-col justify-center gap-7 sm:flex-row sm:items-start sm:justify-between">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex w-full flex-col justify-center gap-7 sm:flex-row sm:items-center sm:justify-between">
 
         {/* Left: Heading and description */}
-        <div className="flex flex-col gap-2 justify-center">
+        <div className="flex flex-col gap-2">
           <span className="text-xl md:text-2xl font-headline font-bold text-neutral-900 dark:text-white">
             Subscribe to the <i className="italic text-neutral-900 dark:text-white">Shakeout</i>
           </span>
