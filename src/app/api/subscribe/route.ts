@@ -150,6 +150,10 @@ export async function POST(request: NextRequest) {
             max-width: 560px;
             margin: 0 auto;
             background-color: #ffffff;
+          }
+
+          /* Content padding */
+          .content-cell {
             padding: 0 16px;
           }
 
@@ -254,7 +258,7 @@ export async function POST(request: NextRequest) {
             <td>
               <table class="email-container" align="center" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="background-color:#fff;max-width:560px;margin:0 auto">
                 <tr>
-                  <td>
+                  <td class="content-cell" style="padding:0 16px">
 
                     <!-- Header Row: Icon only -->
                     <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" class="header-row">
