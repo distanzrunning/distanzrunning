@@ -496,7 +496,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                               Races
                             </h3>
                             <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
-                              Explore the world&apos;s greatest marathons with detailed race guides, course analysis, and insider tips to help you prepare for your next race.
+                              Find your next race with detailed race guides, course analysis, and insider tips on thousands of the world&apos;s greatest races
                             </p>
                           </div>
 
