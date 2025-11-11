@@ -144,7 +144,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
       {/* Desktop & Mobile Header - Fixed */}
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          isScrolled
+          isScrolled && !megaMenuIsOpen
             ? 'bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md backdrop-saturate-150'
             : 'bg-white dark:bg-neutral-900'
         }`}
