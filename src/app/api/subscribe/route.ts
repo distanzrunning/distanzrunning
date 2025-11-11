@@ -150,6 +150,7 @@ export async function POST(request: NextRequest) {
             max-width: 560px;
             margin: 0 auto;
             background-color: #ffffff;
+            padding: 0 16px;
           }
 
           /* Header with icon and text */
@@ -241,9 +242,6 @@ export async function POST(request: NextRequest) {
 
           /* Mobile responsive */
           @media only screen and (max-width: 600px) {
-            .email-container {
-              padding: 0 16px;
-            }
             .heading {
               font-size: 24px;
             }
