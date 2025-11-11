@@ -173,7 +173,7 @@ function SearchResults({
               {/* Back button */}
               <button
                 onClick={() => setShowGearSubcategories(false)}
-                className="group flex cursor-pointer items-center gap-2 rounded-lg px-3 py-4 text-neutral-600 dark:text-neutral-400 text-sm hover:bg-neutral-200 dark:hover:bg-neutral-800 hover:text-neutral-900 dark:hover:text-white transition-all w-full"
+                className="group flex cursor-pointer items-center gap-2 rounded-lg px-3 py-4 text-neutral-600 dark:text-neutral-400 text-sm hover:bg-neutral-200 dark:hover:bg-neutral-700 hover:text-neutral-900 dark:hover:text-white transition-all w-full"
               >
                 <ArrowRight className="size-4 rotate-180" />
                 <span className="font-semibold">Back</span>
@@ -183,7 +183,7 @@ function SearchResults({
                 <Link
                   key={subcat.name}
                   href={subcat.path}
-                  className="group flex cursor-pointer items-center justify-between gap-2 rounded-lg px-3 py-4 text-neutral-600 dark:text-neutral-400 text-sm hover:bg-neutral-200 dark:hover:bg-neutral-800 hover:text-neutral-900 dark:hover:text-white transition-all"
+                  className="group flex cursor-pointer items-center justify-between gap-2 rounded-lg px-3 py-4 text-neutral-600 dark:text-neutral-400 text-sm hover:bg-neutral-200 dark:hover:bg-neutral-700 hover:text-neutral-900 dark:hover:text-white transition-all"
                   onClick={onClearQuery}
                 >
                   <div className="flex basis-2/3 overflow-hidden">
@@ -206,7 +206,7 @@ function SearchResults({
                   <button
                     key={cat.name}
                     onClick={() => setShowGearSubcategories(true)}
-                    className="group flex cursor-pointer items-center justify-between gap-2 rounded-lg px-3 py-4 text-neutral-600 dark:text-neutral-400 text-sm hover:bg-neutral-200 dark:hover:bg-neutral-800 hover:text-neutral-900 dark:hover:text-white transition-all w-full"
+                    className="group flex cursor-pointer items-center justify-between gap-2 rounded-lg px-3 py-4 text-neutral-600 dark:text-neutral-400 text-sm hover:bg-neutral-200 dark:hover:bg-neutral-700 hover:text-neutral-900 dark:hover:text-white transition-all w-full"
                   >
                     <div className="flex basis-2/3 overflow-hidden">
                       <span className="font-semibold truncate">{cat.name}</span>
@@ -224,7 +224,7 @@ function SearchResults({
                 <Link
                   key={cat.name}
                   href={cat.path!}
-                  className="group flex cursor-pointer items-center justify-between gap-2 rounded-lg px-3 py-4 text-neutral-600 dark:text-neutral-400 text-sm hover:bg-neutral-200 dark:hover:bg-neutral-800 hover:text-neutral-900 dark:hover:text-white transition-all"
+                  className="group flex cursor-pointer items-center justify-between gap-2 rounded-lg px-3 py-4 text-neutral-600 dark:text-neutral-400 text-sm hover:bg-neutral-200 dark:hover:bg-neutral-700 hover:text-neutral-900 dark:hover:text-white transition-all"
                   onClick={onClearQuery}
                 >
                   <div className="flex basis-2/3 overflow-hidden">
@@ -280,7 +280,7 @@ function SearchResults({
               <Link
                 key={hit.objectID}
                 href={href}
-                className="group flex cursor-pointer items-center justify-between gap-2 rounded-lg px-3 py-4 text-neutral-600 dark:text-neutral-400 text-sm hover:bg-neutral-200 dark:hover:bg-neutral-800 hover:text-neutral-900 dark:hover:text-white transition-all"
+                className="group flex cursor-pointer items-center justify-between gap-2 rounded-lg px-3 py-4 text-neutral-600 dark:text-neutral-400 text-sm hover:bg-neutral-200 dark:hover:bg-neutral-700 hover:text-neutral-900 dark:hover:text-white transition-all"
                 onClick={handleResultClick}
               >
                 <div className="flex basis-2/3 overflow-hidden">
