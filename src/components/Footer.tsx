@@ -17,7 +17,7 @@ export default function Footer() {
       <NewsletterSignup />
 
       {/* Main Footer Content */}
-      <div className="max-w-7xl mx-auto pb-16 md:pb-20 pt-16 md:pt-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 md:pb-20 pt-16 md:pt-20">
         <div className="flex flex-col gap-16 md:flex-row md:justify-between md:gap-32">
           {/* Left: Logo, About, Social Icons */}
           <div className="flex max-w-48 md:max-w-xs flex-col gap-8">
@@ -179,7 +179,7 @@ export default function Footer() {
 
       {/* Legal Section - Separate Container */}
       <div>
-        <div className="max-w-7xl mx-auto py-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
           <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 text-footer-link text-neutral-900 dark:text-white">
             <div className="flex flex-wrap items-center gap-x-2">
               <Link

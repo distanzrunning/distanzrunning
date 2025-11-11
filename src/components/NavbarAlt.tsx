@@ -237,9 +237,9 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
 
         {/* Bottom Section: Centered Navigation Links */}
         <div className="border-b border-neutral-200 dark:border-neutral-700 relative z-40">
-          <div className="hidden lg:flex items-center justify-between px-4 md:px-6 lg:px-8 h-12">
+          <div className="flex items-center justify-between px-4 md:px-6 lg:px-8 h-12">
 
-            {/* Small Logo - Shows when scrolled */}
+            {/* Small Logo - Shows when scrolled (mobile) or always visible (desktop) */}
             <motion.div
               initial={false}
               animate={{
@@ -247,6 +247,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                 pointerEvents: isScrolled ? 'auto' : 'none'
               }}
               transition={{ duration: 0.2, ease: 'easeInOut' }}
+              className="lg:opacity-100 lg:pointer-events-auto"
             >
               <Link href="/" className="flex items-center" title="Home">
                 <Image
@@ -268,8 +269,8 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
               </Link>
             </motion.div>
 
-            {/* Desktop Navigation - Radix UI */}
-            <NavigationMenu.Root className="relative z-50" value={navValue} onValueChange={handleNavValueChange}>
+            {/* Desktop Navigation - Radix UI (hidden on mobile) */}
+            <NavigationMenu.Root className="relative z-50 hidden lg:block" value={navValue} onValueChange={handleNavValueChange}>
               <NavigationMenu.List className="flex items-center gap-1">
                 {/* Road Link */}
                 <NavigationMenu.Item>
@@ -567,9 +568,46 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
               </motion.div>
             </NavigationMenu.Root>
 
-            {/* Utility Buttons - Shows when scrolled */}
+            {/* Utility Buttons - Mobile only (shows when scrolled) */}
             <motion.div
-              className="flex items-center gap-3"
+              className="flex items-center gap-3 lg:hidden"
+              initial={false}
+              animate={{
+                opacity: isScrolled ? 1 : 0,
+                pointerEvents: isScrolled ? 'auto' : 'none'
+              }}
+              transition={{ duration: 0.2, ease: 'easeInOut' }}
+            >
+              {/* Search Icon Button */}
+              <button
+                onClick={() => setSearchDialogOpen(true)}
+                className="p-2 text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors duration-200"
+                aria-label="Open search"
+                title="Search (⌘K / Ctrl+K)"
+              >
+                <SearchIcon className="h-5 w-5" />
+              </button>
+
+              {/* Dark Mode Toggle */}
+              {mounted && (
+                <button
+                  onClick={toggleDarkMode}
+                  className="p-2 text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors duration-200"
+                  aria-label="Toggle dark mode"
+                  title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+                >
+                  {isDark ? (
+                    <Sun className="h-5 w-5" />
+                  ) : (
+                    <Moon className="h-5 w-5" />
+                  )}
+                </button>
+              )}
+            </motion.div>
+
+            {/* Utility Buttons - Desktop only (shows when scrolled) */}
+            <motion.div
+              className="hidden lg:flex items-center gap-3"
               initial={false}
               animate={{
                 opacity: isScrolled ? 1 : 0,
