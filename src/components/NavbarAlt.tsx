@@ -142,7 +142,14 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
   return (
     <>
       {/* Desktop & Mobile Header - Fixed */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-white dark:bg-neutral-900 transition-all duration-300" role="banner">
+      <header
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+          isScrolled
+            ? 'bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md backdrop-saturate-150'
+            : 'bg-white dark:bg-neutral-900'
+        }`}
+        role="banner"
+      >
 
         {/* Skip Links for Accessibility */}
         <a href="#content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-white px-4 py-2 rounded-md shadow-lg z-[100]">
