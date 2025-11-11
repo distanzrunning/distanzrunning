@@ -32,7 +32,7 @@ export default function Footer() {
               />
             </Link>
             <p className="text-footer-link text-neutral-600 dark:text-neutral-400">
-              We're creating a hub for runners with in-depth stories and analysis from the world of running, gear and races.
+              Curated, In-depth running stories, gear reviews, and races guides
             </p>
             <div className="flex items-center gap-4">
               <Link
