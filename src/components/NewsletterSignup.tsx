@@ -85,7 +85,7 @@ export default function NewsletterSignup() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex w-full flex-col justify-center gap-7 sm:flex-row sm:items-start sm:justify-between">
 
         {/* Left: Heading and description */}
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 justify-center">
           <span className="text-xl md:text-2xl font-headline font-bold text-neutral-900 dark:text-white">
             Subscribe to the <i className="italic text-neutral-900 dark:text-white">Shakeout</i>
           </span>
@@ -95,7 +95,7 @@ export default function NewsletterSignup() {
         </div>
 
         {/* Right: Form */}
-        <div className="flex w-full sm:max-w-md min-h-[160px] items-start">
+        <div className="flex w-full sm:max-w-md min-h-[160px] items-center">
           {isSubmitted ? (
             <div className="w-full flex items-center gap-3 px-5 py-3 bg-volt-green/10 dark:bg-volt-green/20 border border-volt-green/30 dark:border-volt-green/40 rounded-lg">
               <svg className="w-5 h-5 text-volt-green dark:text-volt-green flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
