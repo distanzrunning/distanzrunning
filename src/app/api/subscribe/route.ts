@@ -117,8 +117,8 @@ export async function POST(request: NextRequest) {
         </noscript>
         <![endif]-->
         <style>
-          /* Import Distanz fonts: Montserrat (headline), Hind Madurai (body) */
-          @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Hind+Madurai:wght@400;500;600;700&display=swap');
+          /* Import Distanz fonts: Playfair Display (headline), Hind Madurai (body) */
+          @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Hind+Madurai:wght@400;500;600;700&display=swap');
 
           /* Reset and base styles */
           * {
@@ -177,7 +177,7 @@ export async function POST(request: NextRequest) {
 
           /* Main heading */
           .heading {
-            font-family: 'Montserrat', sans-serif;
+            font-family: 'Playfair Display', serif;
             font-size: 32px;
             font-weight: 700;
             line-height: 1.2;
@@ -256,10 +256,10 @@ export async function POST(request: NextRequest) {
                 <tr>
                   <td>
 
-                    <!-- Header Row: Icon left, text right -->
+                    <!-- Header Row: Icon only -->
                     <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" class="header-row">
                       <tr>
-                        <td class="icon-cell" style="width:50%;vertical-align:middle">
+                        <td style="vertical-align:middle">
                           <a href="https://distanzrunning.com" style="text-decoration:none">
                             <img
                               src="https://distanzrunning.vercel.app/images/distanz_icon_black_round.png"
@@ -269,9 +269,6 @@ export async function POST(request: NextRequest) {
                               style="display:block;height:auto;border:0" />
                           </a>
                         </td>
-                        <td class="header-text-cell" style="width:50%;vertical-align:middle;text-align:right">
-                          <a href="https://distanzrunning.com" class="header-link" style="text-decoration:none;color:#696a6f;font-size:14px;font-weight:600">Open Distanz</a>
-                        </td>
                       </tr>
                     </table>
 
@@ -279,7 +276,7 @@ export async function POST(request: NextRequest) {
                     <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
                       <tr>
                         <td>
-                          <h1 class="heading" style="font-family:'Montserrat',sans-serif;font-size:32px;font-weight:700;line-height:1.2;color:#23242c;margin:24px 0 16px 0">Confirm your subscription</h1>
+                          <h1 class="heading" style="font-family:'Playfair Display',serif;font-size:32px;font-weight:700;line-height:1.2;color:#23242c;margin:24px 0 16px 0">Welcome to the <i style="font-style:italic">Shakeout</i></h1>
                         </td>
                       </tr>
                       <tr>
@@ -296,7 +293,7 @@ export async function POST(request: NextRequest) {
                       <tr>
                         <td align="center">
                           <a href="${confirmationUrl}" class="button" style="display:inline-block;width:100%;padding:12px 8px;background-color:#05060f;color:#ffffff;text-decoration:none;border-radius:12px;font-size:18px;font-weight:700;text-align:center;font-family:'Hind Madurai',sans-serif">
-                            Confirm Your Email
+                            Confirm your subscription
                           </a>
                         </td>
                       </tr>
@@ -315,10 +312,10 @@ export async function POST(request: NextRequest) {
                         <td style="padding-bottom:12px">
                           <a href="https://distanzrunning.com" style="text-decoration:none">
                             <img
-                              src="https://distanzrunning.vercel.app/images/distanz_icon_black_round.png"
+                              src="https://distanzrunning.vercel.app/images/Distanz_Logo_1600_600_Email.png"
                               alt="Distanz Running"
-                              width="30"
-                              height="30"
+                              width="120"
+                              height="45"
                               style="display:block;height:auto;border:0" />
                           </a>
                         </td>
