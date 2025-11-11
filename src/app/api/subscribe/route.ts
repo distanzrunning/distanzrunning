@@ -106,8 +106,6 @@ export async function POST(request: NextRequest) {
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <title>Confirm Your Subscription - Distanz Running</title>
-        <meta name="color-scheme" content="light dark">
-        <meta name="supported-color-schemes" content="light dark">
         <!--[if mso]>
         <noscript>
           <xml>
@@ -120,7 +118,7 @@ export async function POST(request: NextRequest) {
         <![endif]-->
         <style>
           /* Import Distanz fonts: Montserrat (headline), Hind Madurai (body) */
-          @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Hind+Madurai:wght@400;500;600&display=swap');
+          @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Hind+Madurai:wght@400;500;600;700&display=swap');
 
           /* Reset and base styles */
           * {
@@ -130,310 +128,218 @@ export async function POST(request: NextRequest) {
           }
 
           body {
-            font-family: 'Hind Madurai', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
-            line-height: 1.5;
-            color: #1a1a1a !important;
-            background-color: #f5f5f5 !important;
+            font-family: 'Hind Madurai', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.7;
+            color: #37383f;
+            background-color: #ffffff;
             margin: 0;
             padding: 0;
-            width: 100% !important;
-            min-width: 100%;
+            width: 100%;
             -webkit-text-size-adjust: 100%;
             -ms-text-size-adjust: 100%;
           }
 
-          /* Gmail and client-specific fixes */
-          u + #body .email-wrapper { background-color: #f5f5f5 !important; }
-          u + #body .content-container { background-color: #ffffff !important; }
-          
-          /* Full width structure */
-          .email-wrapper {
-            width: 100% !important;
-            background-color: #f5f5f5 !important;
-            margin: 0;
-            padding: 40px 16px;
+          table {
+            border-collapse: collapse;
+            border-spacing: 0;
           }
 
+          /* Email container */
           .email-container {
             width: 100%;
-            max-width: 600px;
+            max-width: 560px;
             margin: 0 auto;
-            background-color: #f5f5f5 !important;
+            background-color: #ffffff;
           }
 
-          .content-container {
-            background-color: #ffffff !important;
-            border-radius: 16px;
-            margin: 0 auto;
-            overflow: hidden;
-            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
-            border: 1px solid #e5e5e5;
+          /* Header with icon and text */
+          .header-row {
+            padding: 40px 0 24px 0;
           }
 
-          /* Header section - Dark grey background for white logo */
-          .header-section {
-            background: #2d2d2d !important;
-            padding: 48px 40px;
-            text-align: center;
+          .icon-cell {
+            width: 36px;
+            vertical-align: middle;
           }
 
-          /* Logo styling - White logo on dark background */
-          .logo {
-            height: 60px;
-            width: auto;
-            display: block;
-            margin: 0 auto;
-            max-width: 100%;
-          }
-          
-          /* Content section */
-          .content-section {
-            background-color: #ffffff !important;
-            padding: 40px;
+          .header-text-cell {
+            vertical-align: middle;
+            text-align: right;
+            padding-left: 16px;
           }
 
-          /* Typography - Distanz design system */
-          .greeting {
-            font-family: 'Montserrat', sans-serif !important;
-            color: #1a1a1a !important;
-            font-size: 28px;
+          .header-link {
+            text-decoration: none;
+            color: #696a6f;
+            font-size: 14px;
+            font-weight: 600;
+          }
+
+          /* Main heading */
+          .heading {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 32px;
             font-weight: 700;
             line-height: 1.2;
-            margin-bottom: 20px;
-            text-align: left;
-            letter-spacing: -0.02em;
+            color: #23242c;
+            margin: 24px 0 16px 0;
           }
 
-          .intro-text {
-            font-family: 'Hind Madurai', sans-serif !important;
-            color: #525252 !important;
-            font-size: 17px;
-            font-weight: 400;
-            line-height: 1.5;
-            margin-bottom: 16px;
-            text-align: left;
-          }
-
-          .instruction-text {
-            font-family: 'Hind Madurai', sans-serif !important;
-            color: #1a1a1a !important;
-            font-size: 17px;
-            font-weight: 500;
-            line-height: 1.5;
-            margin-bottom: 28px;
-            text-align: left;
-          }
-          
-          /* Button styling - matches design system */
-          .button-container {
-            text-align: left;
-            margin: 32px 0 24px 0;
-          }
-
-          .button {
-            display: inline-block !important;
-            padding: 16px 32px !important;
-            background: #1a1a1a !important;
-            color: #ffffff !important;
-            text-decoration: none !important;
-            border-radius: 8px;
-            font-weight: 600;
-            font-family: 'Hind Madurai', sans-serif !important;
+          /* Body text */
+          .body-text {
             font-size: 16px;
-            line-height: 1;
-            border: none;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
-            text-align: center;
-          }
-          
-          /* Footer */
-          .footer-section {
-            background-color: #f5f5f5 !important;
-            padding: 32px 20px 20px 20px;
-            text-align: center;
+            line-height: 1.7;
+            color: #37383f;
+            margin-bottom: 16px;
           }
 
-          /* Social links - simple styling */
-          .social-links {
-            margin-bottom: 24px;
-            background-color: #f5f5f5 !important;
-          }
-
-          .social-links table {
-            margin: 0 auto;
-            background-color: #f5f5f5 !important;
-          }
-
-          .social-links td {
-            padding: 0 8px;
-            background-color: #f5f5f5 !important;
-          }
-          
-          .social-links a {
+          /* Button */
+          .button {
             display: inline-block;
+            width: 100%;
+            padding: 12px 8px;
+            background-color: #05060f;
+            color: #ffffff;
             text-decoration: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 700;
+            text-align: center;
+            letter-spacing: normal;
+            line-height: 28.8px;
           }
 
-          .social-links img {
-            opacity: 0.6;
-            display: block;
+          /* Divider */
+          .divider {
+            border-top: 1px solid #e6e6e7;
+            margin: 48px 0;
           }
 
-          /* Copyright text */
+          /* Footer icon */
+          .footer-icon {
+            margin-bottom: 12px;
+          }
+
+          /* Footer tagline */
+          .footer-tagline {
+            font-size: 14px;
+            font-weight: 700;
+            color: #05060f;
+            line-height: 1.2;
+            margin-bottom: 24px;
+          }
+
+          /* Copyright */
           .copyright {
             font-size: 14px;
-            color: #737373 !important;
-            font-family: 'Hind Madurai', sans-serif !important;
-            text-align: center;
             line-height: 1.5;
+            color: #696a6f;
+            margin-bottom: 40px;
           }
-          
+
           /* Mobile responsive */
           @media only screen and (max-width: 600px) {
-            .email-wrapper {
-              padding: 24px 12px !important;
+            .email-container {
+              padding: 0 16px;
             }
-            .header-section {
-              padding: 32px 24px 24px 24px !important;
-            }
-            .content-section {
-              padding: 32px 24px !important;
-            }
-            .greeting {
-              font-size: 22px !important;
-            }
-            .button {
-              padding: 16px 28px !important;
-              font-size: 15px !important;
-              width: 100%;
-              text-align: center;
-            }
-            .button-container {
-              text-align: center;
+            .heading {
+              font-size: 24px;
             }
           }
         </style>
       </head>
-      <body id="body">
-        <table class="email-wrapper" cellpadding="0" cellspacing="0" border="0" style="background-color: #f5f5f5 !important;">
+      <body>
+        <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="background-color:#fff">
           <tr>
-            <td align="center" style="background-color: #f5f5f5 !important;">
-              <div class="email-container">
-                <div class="content-container" style="background-color: #ffffff !important;">
-                  
-                  <!-- Header with logo -->
-                  <div class="header-section" style="background-color: #2d2d2d !important;">
-                    <img
-                      src="https://distanzrunning.vercel.app/images/Distanz_Logo_1600_600_White.png"
-                      alt="Distanz Running"
-                      class="logo"
-                      width="320"
-                      height="120"
-                      style="height: 60px; width: auto; display: block; margin: 0 auto;"
-                    />
-                  </div>
-                  
-                  <!-- Content -->
-                  <div class="content-section" style="background-color: #ffffff !important;">
-                    <h1 class="greeting">Welcome to Distanz Running!</h1>
-                    
-                    <p class="intro-text">
-                      Thank you for subscribing to our newsletter. We will keep you updated on our progress to bring you comprehensive running content, gear reviews, and interactive race guides.
-                    </p>
-                    
-                    <p class="instruction-text">
-                      To complete your subscription, please confirm your email address:
-                    </p>
-                    
-                    <div class="button-container">
-                      <!--[if mso]>
-                      <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${confirmationUrl}" style="height:48px;v-text-anchor:middle;width:200px;" arcsize="17%" stroke="f" fillcolor="#1a1a1a">
-                        <w:anchorlock/>
-                        <center style="color:#ffffff;font-family:'Hind Madurai',sans-serif;font-size:16px;font-weight:600;">Confirm Your Email</center>
-                      </v:roundrect>
-                      <![endif]-->
-                      <!--[if !mso]><!-->
-                      <a href="${confirmationUrl}" class="button" style="background: #1a1a1a !important; color: #ffffff !important; text-decoration: none !important; display: inline-block; padding: 16px 32px; border-radius: 8px; font-weight: 600; font-family: 'Hind Madurai', sans-serif; font-size: 16px;">Confirm Your Email</a>
-                      <!--<![endif]-->
-                    </div>
-                  </div>
-                </div>
-                
-                <!-- Footer -->
-                <div class="footer-section" style="background-color: #f5f5f5 !important;">
-                  <!-- Social links using the exact same code as your original working version -->
-                  <div class="social-links" style="background-color: #f5f5f5 !important;">
-                    <table cellpadding="0" cellspacing="0" border="0" style="background-color: #f5f5f5 !important;">
+            <td>
+              <table class="email-container" align="center" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="background-color:#fff;max-width:560px;margin:0 auto">
+                <tr>
+                  <td>
+
+                    <!-- Header Row: Icon left, text right -->
+                    <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" class="header-row">
                       <tr>
-                        <td style="background-color: #f5f5f5 !important;">
-                          <a href="https://x.com/DistanzRunning"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            aria-label="X / Twitter"
-                            style="text-decoration: none;">
+                        <td class="icon-cell" style="width:50%;vertical-align:middle">
+                          <a href="https://distanzrunning.com" style="text-decoration:none">
                             <img
-                              src="https://res.cloudinary.com/dbzirtpem/image/upload/v1757799203/x_40_40.png"
-                              alt="X / Twitter"
-                              width="24"
-                              height="24"
-                              style="display: block; border: 0; outline: none; opacity: 0.6;" />
+                              src="https://distanzrunning.vercel.app/images/distanz_icon_black_round.png"
+                              alt="Distanz Running"
+                              width="36"
+                              height="36"
+                              style="display:block;height:auto;border:0" />
                           </a>
                         </td>
-
-                        <td style="background-color: #f5f5f5 !important;">
-                          <a href="https://www.linkedin.com/company/distanz-running"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            aria-label="LinkedIn"
-                            style="text-decoration: none;">
-                            <img
-                              src="https://res.cloudinary.com/dbzirtpem/image/upload/v1757799149/linkedin_40_40.png"
-                              alt="LinkedIn"
-                              width="24"
-                              height="24"
-                              style="display: block; border: 0; outline: none; opacity: 0.6;" />
-                          </a>
+                        <td class="header-text-cell" style="width:50%;vertical-align:middle;text-align:right">
+                          <a href="https://distanzrunning.com" class="header-link" style="text-decoration:none;color:#696a6f;font-size:14px;font-weight:600">Open Distanz</a>
                         </td>
+                      </tr>
+                    </table>
 
-                        <td style="background-color: #f5f5f5 !important;">
-                          <a href="https://www.instagram.com/distanzrunning/"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            aria-label="Instagram"
-                            style="text-decoration: none;">
-                            <img
-                              src="https://res.cloudinary.com/dbzirtpem/image/upload/v1757799237/instagram_40_40.png"
-                              alt="Instagram"
-                              width="24"
-                              height="24"
-                              style="display: block; border: 0; outline: none; opacity: 0.6;" />
-                          </a>
+                    <!-- Main Content -->
+                    <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
+                      <tr>
+                        <td>
+                          <h1 class="heading" style="font-family:'Montserrat',sans-serif;font-size:32px;font-weight:700;line-height:1.2;color:#23242c;margin:24px 0 16px 0">Confirm your subscription</h1>
                         </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <p class="body-text" style="font-family:'Hind Madurai',sans-serif;font-size:16px;line-height:1.7;color:#37383f;margin-bottom:16px">
+                            Thank you for subscribing to our newsletter. To complete your subscription, please confirm your email address by clicking the button below.
+                          </p>
+                        </td>
+                      </tr>
+                    </table>
 
-                        <td style="background-color: #f5f5f5 !important;">
-                          <a href="https://www.strava.com/clubs/distanzrunning"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            aria-label="Strava"
-                            style="text-decoration: none;">
-                            <img
-                              src="https://res.cloudinary.com/dbzirtpem/image/upload/v1757799275/strava_40_40.png"
-                              alt="Strava"
-                              width="24"
-                              height="24"
-                              style="display: block; border: 0; outline: none; opacity: 0.6;" />
+                    <!-- Button -->
+                    <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="margin:24px 0">
+                      <tr>
+                        <td align="center">
+                          <a href="${confirmationUrl}" class="button" style="display:inline-block;width:100%;padding:12px 8px;background-color:#05060f;color:#ffffff;text-decoration:none;border-radius:12px;font-size:18px;font-weight:700;text-align:center;font-family:'Hind Madurai',sans-serif">
+                            Confirm Your Email
                           </a>
                         </td>
                       </tr>
                     </table>
-                  </div>
 
-                  <!-- Copyright -->
-                  <div class="copyright" style="color: #737373 !important;">
-                    © 2025 Distanz Running.
-                  </div>
-                </div>
-              </div>
+                    <!-- Divider -->
+                    <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
+                      <tr>
+                        <td class="divider" style="border-top:1px solid #e6e6e7;margin:48px 0;padding:48px 0 0 0"></td>
+                      </tr>
+                    </table>
+
+                    <!-- Footer -->
+                    <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
+                      <tr>
+                        <td style="padding-bottom:12px">
+                          <a href="https://distanzrunning.com" style="text-decoration:none">
+                            <img
+                              src="https://distanzrunning.vercel.app/images/distanz_icon_black_round.png"
+                              alt="Distanz Running"
+                              width="30"
+                              height="30"
+                              style="display:block;height:auto;border:0" />
+                          </a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <p class="footer-tagline" style="font-family:'Hind Madurai',sans-serif;font-size:14px;font-weight:700;color:#05060f;line-height:1.2;margin-bottom:24px">Running stories, gear, races</p>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <p class="copyright" style="font-family:'Hind Madurai',sans-serif;font-size:14px;line-height:1.5;color:#696a6f;margin-bottom:40px">
+                            Copyright © 2025 Distanz Running, All rights reserved.
+                          </p>
+                        </td>
+                      </tr>
+                    </table>
+
+                  </td>
+                </tr>
+              </table>
             </td>
           </tr>
         </table>
