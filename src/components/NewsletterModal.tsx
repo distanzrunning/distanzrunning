@@ -127,7 +127,7 @@ export function NewsletterModal({ isOpen, onClose }: NewsletterModalProps) {
             className="fixed inset-0 z-50 flex items-center justify-center p-6 sm:p-4"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="bg-white/95 dark:bg-neutral-800/95 backdrop-blur-sm backdrop-saturate-150 rounded-2xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-hidden relative transition-colors duration-300">
+            <div className="border border-neutral-200 dark:border-neutral-700 bg-white/95 dark:bg-neutral-800/95 backdrop-blur-sm backdrop-saturate-150 rounded-2xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-hidden relative transition-colors duration-300">
               {/* Close button */}
               <button
                 onClick={onClose}
