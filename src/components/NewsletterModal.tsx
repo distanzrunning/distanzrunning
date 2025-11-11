@@ -234,6 +234,18 @@ export function NewsletterModal({ isOpen, onClose }: NewsletterModalProps) {
                     >
                       {isSubmitting ? 'Subscribing...' : 'Subscribe'}
                     </button>
+
+                    <p className="text-xs text-gray-500 dark:text-neutral-400 text-center mt-3">
+                      This site is protected by reCAPTCHA and the Google{' '}
+                      <a href="https://policies.google.com/privacy" className="underline hover:text-gray-700 dark:hover:text-neutral-300 transition-colors" target="_blank" rel="noopener noreferrer">
+                        Privacy Policy
+                      </a>{' '}
+                      and{' '}
+                      <a href="https://policies.google.com/terms" className="underline hover:text-gray-700 dark:hover:text-neutral-300 transition-colors" target="_blank" rel="noopener noreferrer">
+                        Terms of Service
+                      </a>{' '}
+                      apply.
+                    </p>
                   </form>
                 )}
               </div>
