@@ -353,7 +353,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                               Gear
                             </h3>
                             <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
-                              From carbon-plated race shoes to GPS watches and nutrition, we review the latest running gear to help you find the perfect equipment for your training and racing goals.
+                              From carbon-plated race shoes to GPS watches and nutrition, we review the latest running tech to uncover the top must-haves for runners
                             </p>
                           </div>
 
