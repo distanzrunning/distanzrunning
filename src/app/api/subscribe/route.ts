@@ -117,8 +117,8 @@ export async function POST(request: NextRequest) {
         </noscript>
         <![endif]-->
         <style>
-          /* Import Distanz fonts: Playfair Display (headline), Hind Madurai (body) */
-          @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Hind+Madurai:wght@400;500;600;700&display=swap');
+          /* Import Inter font */
+          @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
           /* Reset and base styles */
           * {
@@ -128,7 +128,7 @@ export async function POST(request: NextRequest) {
           }
 
           body {
-            font-family: 'Hind Madurai', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             line-height: 1.7;
             color: #37383f;
             background-color: #ffffff;
@@ -177,7 +177,7 @@ export async function POST(request: NextRequest) {
 
           /* Main heading */
           .heading {
-            font-family: 'Playfair Display', serif;
+            font-family: 'Inter', sans-serif;
             font-size: 32px;
             font-weight: 700;
             line-height: 1.2;
@@ -222,6 +222,7 @@ export async function POST(request: NextRequest) {
 
           /* Footer tagline */
           .footer-tagline {
+            font-family: 'Inter', sans-serif;
             font-size: 14px;
             font-weight: 700;
             color: #05060f;
@@ -231,6 +232,7 @@ export async function POST(request: NextRequest) {
 
           /* Copyright */
           .copyright {
+            font-family: 'Inter', sans-serif;
             font-size: 14px;
             line-height: 1.5;
             color: #696a6f;
@@ -276,12 +278,12 @@ export async function POST(request: NextRequest) {
                     <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
                       <tr>
                         <td>
-                          <h1 class="heading" style="font-family:'Playfair Display',serif;font-size:32px;font-weight:700;line-height:1.2;color:#23242c;margin:24px 0 16px 0">Welcome to the <i style="font-style:italic">Shakeout</i></h1>
+                          <h1 class="heading" style="font-family:'Inter',sans-serif;font-size:32px;font-weight:700;line-height:1.2;color:#23242c;margin:24px 0 16px 0">Welcome to the <i style="font-style:italic">Shakeout</i></h1>
                         </td>
                       </tr>
                       <tr>
                         <td>
-                          <p class="body-text" style="font-family:'Hind Madurai',sans-serif;font-size:16px;line-height:1.7;color:#37383f;margin-bottom:16px">
+                          <p class="body-text" style="font-family:'Inter',sans-serif;font-size:16px;line-height:1.7;color:#37383f;margin-bottom:16px">
                             Thank you for subscribing to our newsletter. To complete your subscription, please confirm your email address by clicking the button below.
                           </p>
                         </td>
@@ -292,7 +294,7 @@ export async function POST(request: NextRequest) {
                     <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="margin:24px 0">
                       <tr>
                         <td align="center">
-                          <a href="${confirmationUrl}" class="button" style="display:inline-block;width:100%;padding:12px 8px;background-color:#05060f;color:#ffffff;text-decoration:none;border-radius:12px;font-size:18px;font-weight:700;text-align:center;font-family:'Hind Madurai',sans-serif">
+                          <a href="${confirmationUrl}" class="button" style="display:inline-block;width:100%;padding:12px 8px;background-color:#05060f;color:#ffffff;text-decoration:none;border-radius:12px;font-size:18px;font-weight:700;text-align:center;font-family:'Inter',sans-serif">
                             Confirm your subscription
                           </a>
                         </td>
@@ -322,12 +324,12 @@ export async function POST(request: NextRequest) {
                       </tr>
                       <tr>
                         <td>
-                          <p class="footer-tagline" style="font-family:'Hind Madurai',sans-serif;font-size:14px;font-weight:700;color:#05060f;line-height:1.2;margin-bottom:24px">Running stories, gear, races</p>
+                          <p class="footer-tagline" style="font-family:'Inter',sans-serif;font-size:14px;font-weight:700;color:#05060f;line-height:1.2;margin-bottom:24px">Running stories, gear, races</p>
                         </td>
                       </tr>
                       <tr>
                         <td>
-                          <p class="copyright" style="font-family:'Hind Madurai',sans-serif;font-size:14px;line-height:1.5;color:#696a6f;margin-bottom:40px">
+                          <p class="copyright" style="font-family:'Inter',sans-serif;font-size:14px;line-height:1.5;color:#696a6f;margin-bottom:40px">
                             Copyright © 2025 Distanz Running, All rights reserved.
                           </p>
                         </td>
