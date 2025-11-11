@@ -196,7 +196,7 @@ export function NewsletterModal({ isOpen, onClose }: NewsletterModalProps) {
                   Stay in the Loop
                 </h2>
                 <p className="text-gray-600 dark:text-neutral-300 text-sm leading-relaxed mb-6 transition-colors duration-300">
-                  Be the first to know when we launch with exclusive running content, gear reviews, and interactive race guides.
+                  A curated set of running stories, gear reviews, and race guides every other week.
                 </p>
 
                 {isSubmitted ? (
