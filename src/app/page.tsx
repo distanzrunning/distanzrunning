@@ -12,6 +12,7 @@ import SocialLinks from '@/components/SocialLinks'
 import FeatureShowcase from '@/components/FeatureShowcase'
 import WriteForUs from '@/components/WriteForUs'
 import ScrollIndicator from '@/components/ScrollIndicator'
+import BreakingNewsCard from '@/components/BreakingNewsCard'
 import { Metadata } from 'next'
 
 type Post = {
@@ -145,9 +146,22 @@ function PreviewPage() {
 
 // Development Homepage Component
 async function DevelopmentHomePage() {
+  let breakingNews: Post[] = [];
   let posts: Post[] = [];
-  
+
   try {
+    // Fetch breaking news posts
+    breakingNews = await sanity.fetch(`
+      *[_type == "post" && isBreaking == true] | order(publishedAt desc)[0...4]{
+        _id,
+        title,
+        slug,
+        mainImage,
+        publishedAt
+      }
+    `);
+
+    // Fetch regular posts
     posts = await sanity.fetch(`
       *[_type == "post"] | order(publishedAt desc)[0...6]{
         _id,
@@ -162,6 +176,7 @@ async function DevelopmentHomePage() {
   } catch (error) {
     console.error('Error fetching posts:', error);
     // Return a fallback if Sanity is not available
+    breakingNews = [];
     posts = [];
   }
 
@@ -171,19 +186,28 @@ async function DevelopmentHomePage() {
   return (
     <DarkModeProvider>
       <div className="min-h-screen bg-white dark:bg-[#0c0c0d] transition-colors duration-300">
-        {/* Hero Section */}
-        <section className="bg-neutral-50 dark:bg-neutral-900/50 py-16 transition-colors duration-300">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center">
-              <h1 className="text-4xl font-bold tracking-tight text-neutral-900 dark:text-white sm:text-5xl md:text-6xl transition-colors duration-300">
-                Distanz <span className="text-electric-pink">Running</span>
-              </h1>
-              <p className="mt-3 max-w-md mx-auto text-base text-neutral-600 dark:text-neutral-300 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl transition-colors duration-300">
-                The latest running news, marathon guides and gear reviews for passionate runners.
-              </p>
+        {/* Breaking News Section */}
+        {breakingNews.length > 0 && (
+          <section className="bg-neutral-50 dark:bg-neutral-900/50 py-12 transition-colors duration-300">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="inline-flex items-center px-3 py-1 bg-signal-orange/10 dark:bg-signal-orange/20 rounded-full">
+                  <span className="text-signal-orange font-semibold text-sm uppercase tracking-wide">
+                    Breaking News
+                  </span>
+                </div>
+                <h2 className="text-2xl font-bold text-neutral-900 dark:text-white transition-colors duration-300">
+                  Latest Updates
+                </h2>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                {breakingNews.map((post) => (
+                  <BreakingNewsCard key={post._id} post={post} />
+                ))}
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
+        )}
 
         {/* Featured Post */}
         {featuredPost && (
