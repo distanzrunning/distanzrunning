@@ -62,7 +62,7 @@ export default function RootLayout({
   const isPreviewMode = process.env.PREVIEW_MODE === 'true';
 
   return (
-    <html lang="en" className={`${playfairDisplay.variable} ${inter.variable} ${jetbrainsMono.variable}`}>
+    <html lang="en" className={`${playfairDisplay.variable} ${inter.variable} ${jetbrainsMono.variable} bg-white dark:bg-[#0c0c0d] transition-colors duration-300`}>
       <head>
         {/* Prevent flash of dark mode - ensure light mode by default */}
         <script
@@ -125,7 +125,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="font-sans antialiased bg-white text-textDefault min-h-screen flex flex-col distanz-font-features">
+      <body className="font-sans antialiased bg-white dark:bg-[#0c0c0d] text-textDefault min-h-screen flex flex-col distanz-font-features transition-colors duration-300">
         <ReCaptchaProvider>
           <DarkModeProvider>
             <AuthProtection>
