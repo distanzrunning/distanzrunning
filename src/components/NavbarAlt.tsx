@@ -172,7 +172,8 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
           className="border-b border-neutral-200 dark:border-neutral-700 relative z-50"
           initial={false}
           animate={{
-            // Only animate on desktop
+            // On desktop: collapse completely when scrolled
+            // On mobile: reduce height when scrolled
             height: isDesktop && isScrolled ? 0 : 'auto',
             opacity: isDesktop && isScrolled ? 0 : 1
           }}
@@ -181,7 +182,14 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
           }}
           transition={{ duration: 0.2, ease: 'easeInOut' }}
         >
-          <div className="flex items-center justify-between px-4 md:px-6 lg:px-8 h-20">
+          <motion.div
+            className="flex items-center justify-between px-4 md:px-6 lg:px-8"
+            initial={false}
+            animate={{
+              height: !isDesktop && isScrolled ? '3.5rem' : '5rem' // Mobile: 56px -> 64px when scrolled, Desktop: 80px
+            }}
+            transition={{ duration: 0.2, ease: 'easeInOut' }}
+          >
 
             {/* Mobile Menu Button - Left (Mobile Only) */}
             <button
@@ -192,24 +200,32 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
               <Menu className="h-6 w-6" />
             </button>
 
-            {/* Centered Logo - Larger when unscrolled */}
+            {/* Centered Logo - Shrinks on mobile scroll */}
             <Link href="/" className="absolute left-1/2 -translate-x-1/2 flex items-center flex-shrink-0" title="Home">
-              <Image
-                src="/images/logo.svg"
-                alt="Distanz Running Logo"
-                className="h-14 w-auto dark:hidden"
-                width={210}
-                height={56}
-                priority
-              />
-              <Image
-                src="/images/logo_white.svg"
-                alt="Distanz Running Logo"
-                className="hidden h-14 w-auto dark:block"
-                width={210}
-                height={56}
-                priority
-              />
+              <motion.div
+                initial={false}
+                animate={{
+                  scale: !isDesktop && isScrolled ? 0.85 : 1
+                }}
+                transition={{ duration: 0.2, ease: 'easeInOut' }}
+              >
+                <Image
+                  src="/images/logo.svg"
+                  alt="Distanz Running Logo"
+                  className="h-14 w-auto dark:hidden"
+                  width={210}
+                  height={56}
+                  priority
+                />
+                <Image
+                  src="/images/logo_white.svg"
+                  alt="Distanz Running Logo"
+                  className="hidden h-14 w-auto dark:block"
+                  width={210}
+                  height={56}
+                  priority
+                />
+              </motion.div>
             </Link>
 
             {/* Right: Search Icon + Newsletter + Dark Mode */}
@@ -254,7 +270,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                 </button>
               )}
             </div>
-          </div>
+          </motion.div>
         </motion.div>
 
         {/* Bottom Section: Centered Navigation Links - Desktop Only */}
@@ -266,7 +282,6 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
               initial={false}
               animate={{
                 opacity: isScrolled ? 1 : 0,
-                scale: isScrolled ? 1 : 0.95,
                 pointerEvents: isScrolled ? 'auto' : 'none'
               }}
               transition={{ duration: 0.2, ease: 'easeInOut' }}
@@ -275,17 +290,17 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                 <Image
                   src="/images/logo.svg"
                   alt="Distanz Running Logo"
-                  className="h-7 w-auto dark:hidden"
-                  width={105}
-                  height={28}
+                  className="h-8 w-auto dark:hidden"
+                  width={120}
+                  height={32}
                   priority
                 />
                 <Image
                   src="/images/logo_white.svg"
                   alt="Distanz Running Logo"
-                  className="hidden h-7 w-auto dark:block"
-                  width={105}
-                  height={28}
+                  className="hidden h-8 w-auto dark:block"
+                  width={120}
+                  height={32}
                   priority
                 />
               </Link>
