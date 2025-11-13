@@ -206,6 +206,8 @@
     -webkit-tap-highlight-color: transparent;
     line-height: 1.5;
     tab-size: 4;
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: touch;
   }
 
   body {
@@ -218,6 +220,8 @@
     line-height: inherit;
     scroll-behavior: smooth;
     color: rgb(var(--color-textDefault));
+    overscroll-behavior: none;
+    position: relative;
   }
 }
 
