@@ -266,6 +266,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
               initial={false}
               animate={{
                 opacity: isScrolled ? 1 : 0,
+                scale: isScrolled ? 1 : 0.95,
                 pointerEvents: isScrolled ? 'auto' : 'none'
               }}
               transition={{ duration: 0.2, ease: 'easeInOut' }}
@@ -274,17 +275,17 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                 <Image
                   src="/images/logo.svg"
                   alt="Distanz Running Logo"
-                  className="h-8 w-auto dark:hidden"
-                  width={120}
-                  height={32}
+                  className="h-7 w-auto dark:hidden"
+                  width={105}
+                  height={28}
                   priority
                 />
                 <Image
                   src="/images/logo_white.svg"
                   alt="Distanz Running Logo"
-                  className="hidden h-8 w-auto dark:block"
-                  width={120}
-                  height={32}
+                  className="hidden h-7 w-auto dark:block"
+                  width={105}
+                  height={28}
                   priority
                 />
               </Link>
