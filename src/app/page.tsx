@@ -213,6 +213,15 @@ async function DevelopmentHomePage() {
                 {/* Featured Post - Takes up 3 columns */}
                 {featuredPost && (
                   <div className="lg:col-span-3 lg:sticky lg:top-20 lg:self-start">
+                    {/* Featured Pill - Above Image */}
+                    <div className="flex gap-3 mb-4">
+                      <div className="flex items-center gap-2 self-start rounded-full border border-neutral-200 dark:border-neutral-700 backdrop-blur-md px-2.5 py-1.5 md:px-3 md:py-2">
+                        <span className="text-xs md:text-sm text-neutral-900 dark:text-white font-medium">
+                          Featured
+                        </span>
+                      </div>
+                    </div>
+
                     <Link href={`/articles/post/${featuredPost.slug.current}`} className="group flex flex-col w-full">
                       {/* Image */}
                       <div className="relative w-full overflow-hidden rounded-xl">
@@ -240,8 +249,8 @@ async function DevelopmentHomePage() {
                           <span>{format(new Date(featuredPost.publishedAt), 'd MMM yyyy')}</span>
                         </div>
 
-                        {/* Title */}
-                        <h3 className="text-2xl md:text-3xl lg:text-4xl font-semibold leading-tight text-neutral-900 dark:text-white line-clamp-2 md:line-clamp-3">
+                        {/* Title - Using Playfair Display */}
+                        <h3 className="text-2xl md:text-3xl lg:text-4xl font-headline font-semibold leading-tight text-neutral-900 dark:text-white line-clamp-2 md:line-clamp-3">
                           {featuredPost.title}
                         </h3>
 
@@ -258,12 +267,12 @@ async function DevelopmentHomePage() {
 
                 {/* Breaking News - Takes up 1 column */}
                 {breakingNews.length > 0 && (
-                  <div className="lg:col-span-1 flex flex-col gap-6">
+                  <div className="lg:col-span-1 flex flex-col gap-6 lg:bg-neutral-50 lg:dark:bg-neutral-900/30 lg:rounded-xl lg:p-4">
                     {/* Header */}
                     <div className="flex items-center gap-3 px-1">
                       <div className="inline-flex items-center px-3 py-1.5 bg-electric-pink/10 dark:bg-electric-pink/20 rounded-full">
                         <span className="text-electric-pink dark:text-electric-pink font-medium text-xs tracking-wide uppercase leading-none">
-                          Breaking
+                          News
                         </span>
                       </div>
                     </div>
