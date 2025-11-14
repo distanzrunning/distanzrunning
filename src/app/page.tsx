@@ -608,45 +608,60 @@ async function DevelopmentHomePage() {
                       href={`/races/${race.slug.current}`}
                       className="group flex-shrink-0 w-[280px] md:w-[320px]"
                     >
-                      {/* Image with overlay tag */}
-                      <div className="relative w-full overflow-hidden rounded-lg mb-4">
-                        <div style={{ paddingBottom: '65%' }} className="relative">
-                          {race.mainImage && (
-                            <img
-                              src={urlFor(race.mainImage).width(640).height(416).url()}
-                              alt={race.title}
-                              className="absolute inset-0 w-full h-full object-cover"
-                            />
-                          )}
-                          {/* Distance/Category Tag - Top Right */}
+                      <div className="flex flex-col gap-0">
+                        {/* Image Container */}
+                        <div className="relative w-full">
+                          {/* Image Wrapper */}
+                          <div className="relative overflow-hidden rounded-t-lg">
+                            <div style={{ paddingBottom: '65%' }} className="relative">
+                              {race.mainImage && (
+                                <img
+                                  src={urlFor(race.mainImage).width(640).height(416).url()}
+                                  alt={race.title}
+                                  className="absolute inset-0 w-full h-full object-cover object-center block z-[1]"
+                                  loading="eager"
+                                />
+                              )}
+                            </div>
+                          </div>
+
+                          {/* Distance/Category Badge - Overlaid at bottom */}
                           {race.raceCategoryName && (
-                            <div className="absolute top-3 right-3 bg-white/95 dark:bg-neutral-900/95 backdrop-blur-sm px-2.5 py-1 rounded-sm">
-                              <span className="font-body text-xs font-semibold text-neutral-900 dark:text-white">
-                                {race.raceCategoryName}
-                              </span>
+                            <div className="absolute bottom-0 left-0 right-0 z-[2]">
+                              <div className="px-3 py-2 bg-white/95 dark:bg-neutral-900/95 backdrop-blur-sm">
+                                <p className="font-body text-xs font-medium text-neutral-900 dark:text-white">
+                                  {race.raceCategoryName}
+                                </p>
+                              </div>
                             </div>
                           )}
                         </div>
-                      </div>
 
-                      {/* Content below image */}
-                      <div className="flex flex-col gap-2">
-                        {/* Title */}
-                        <h3 className="font-body text-base md:text-lg font-semibold leading-tight text-neutral-900 dark:text-white line-clamp-2">
-                          {race.title}
-                        </h3>
+                        {/* Content Card */}
+                        <div className="bg-neutral-50 dark:bg-neutral-900 rounded-b-lg px-4 py-4">
+                          <div className="flex items-start justify-between gap-3">
+                            {/* Title and Location */}
+                            <div className="flex flex-col gap-1 flex-1">
+                              <h3 className="font-body text-base font-semibold leading-tight text-neutral-900 dark:text-white line-clamp-2">
+                                {race.title}
+                              </h3>
+                              {race.location && (
+                                <p className="font-body text-sm font-normal text-neutral-600 dark:text-neutral-400">
+                                  {race.location}
+                                </p>
+                              )}
+                            </div>
 
-                        {/* Location and Date */}
-                        <div className="flex items-center gap-2 text-sm font-body font-medium text-neutral-600 dark:text-neutral-400">
-                          {race.location && (
-                            <>
-                              <span>{race.location}</span>
-                              <span>•</span>
-                            </>
-                          )}
-                          <span suppressHydrationWarning>
-                            {format(new Date(race.eventDate), 'MMM dd')}
-                          </span>
+                            {/* Date - Right Side */}
+                            <div className="flex flex-col items-center gap-0 flex-shrink-0">
+                              <p className="font-body text-xs font-medium uppercase text-neutral-900 dark:text-white" suppressHydrationWarning>
+                                {format(new Date(race.eventDate), 'MMM')}
+                              </p>
+                              <p className="font-body text-2xl font-semibold leading-tight text-neutral-900 dark:text-white" suppressHydrationWarning>
+                                {format(new Date(race.eventDate), 'dd')}
+                              </p>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </Link>
