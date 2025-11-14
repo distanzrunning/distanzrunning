@@ -238,28 +238,29 @@ async function DevelopmentHomePage() {
 
                       {/* Content below image */}
                       <div className="flex flex-col gap-2 px-1 mt-4 lg:mt-6">
-                        {/* Metadata */}
-                        <div className="flex items-center gap-1.5 text-xs text-neutral-600 dark:text-neutral-400">
-                          {featuredPost.categoryName && (
-                            <>
-                              <span className="font-medium">{featuredPost.categoryName}</span>
-                              <span className="text-neutral-400 dark:text-neutral-500">•</span>
-                            </>
-                          )}
-                          <span>{format(new Date(featuredPost.publishedAt), 'd MMM yyyy')}</span>
-                        </div>
-
                         {/* Title - Using Playfair Display */}
-                        <h3 className="text-2xl md:text-3xl lg:text-4xl font-headline font-semibold leading-tight text-neutral-900 dark:text-white line-clamp-2 md:line-clamp-3">
+                        <h3 className="text-2xl md:text-3xl lg:text-4xl font-headline font-semibold leading-tight text-neutral-900 dark:text-white line-clamp-2 md:line-clamp-3 mb-3">
                           {featuredPost.title}
                         </h3>
 
                         {/* Excerpt */}
                         {featuredPost.excerpt && (
-                          <p className="text-sm md:text-base text-neutral-600 dark:text-neutral-300 line-clamp-2 max-w-3xl lg:w-4/5">
+                          <p className="text-sm md:text-base text-neutral-600 dark:text-neutral-300 line-clamp-2 max-w-3xl lg:w-4/5 mb-4">
                             {featuredPost.excerpt}
                           </p>
                         )}
+
+                        {/* Tag and Date - Category page style */}
+                        <div className="flex items-center gap-3 text-[10px] font-medium leading-[14px] text-gray-500 dark:text-gray-400">
+                          {featuredPost.categoryName && (
+                            <span className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded-sm">
+                              {featuredPost.categoryName}
+                            </span>
+                          )}
+                          <span suppressHydrationWarning>
+                            {format(new Date(featuredPost.publishedAt), 'yyyy-MM-dd')}
+                          </span>
+                        </div>
                       </div>
                     </Link>
                   </div>
@@ -300,21 +301,22 @@ async function DevelopmentHomePage() {
 
                           {/* Content */}
                           <div className="flex-1 flex flex-col-reverse md:flex-col gap-2 px-1">
-                            {/* Metadata */}
-                            <div className="flex items-center gap-1.5 text-xs text-neutral-600 dark:text-neutral-400">
-                              {post.tags?.[0] && (
-                                <>
-                                  <span className="font-medium">{post.tags[0]}</span>
-                                  <span className="text-neutral-400 dark:text-neutral-500">•</span>
-                                </>
-                              )}
-                              <span>{format(new Date(post.publishedAt), 'd MMM yyyy')}</span>
-                            </div>
-
                             {/* Title */}
-                            <h3 className="text-sm md:text-base font-semibold text-neutral-900 dark:text-white line-clamp-2 md:line-clamp-3">
+                            <h3 className="text-sm md:text-base font-semibold text-neutral-900 dark:text-white line-clamp-2 md:line-clamp-3 mb-2 md:mb-3">
                               {post.title}
                             </h3>
+
+                            {/* Tag and Date - Category page style */}
+                            <div className="flex items-center gap-3 text-[10px] font-medium leading-[14px] text-gray-500 dark:text-gray-400">
+                              {post.tags?.[0] && (
+                                <span className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded-sm">
+                                  {post.tags[0]}
+                                </span>
+                              )}
+                              <span suppressHydrationWarning>
+                                {format(new Date(post.publishedAt), 'yyyy-MM-dd')}
+                              </span>
+                            </div>
                           </div>
                         </Link>
                       ))}
