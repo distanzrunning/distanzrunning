@@ -193,14 +193,11 @@ async function DevelopmentHomePage() {
           <section className="bg-neutral-50 dark:bg-neutral-900/50 py-12 transition-colors duration-300">
             <div className="max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8">
               <div className="flex items-center gap-3 mb-8">
-                <div className="inline-flex items-center px-3 py-1 bg-signal-orange/10 dark:bg-signal-orange/20 rounded-full">
-                  <span className="text-signal-orange font-semibold text-sm uppercase tracking-wide">
-                    Breaking News
+                <div className="inline-flex items-center self-start px-3 py-1.5 bg-electric-pink/10 dark:bg-electric-pink/20 rounded-full">
+                  <span className="text-electric-pink dark:text-electric-pink font-medium text-xs tracking-wide uppercase leading-none">
+                    Breaking
                   </span>
                 </div>
-                <h2 className="text-2xl font-bold text-neutral-900 dark:text-white transition-colors duration-300">
-                  Latest Updates
-                </h2>
               </div>
               <div className="w-full max-w-[1800px] mx-auto grid grid-cols-1 lg:grid-cols-4 gap-x-3 gap-y-8">
                 {breakingNews.map((post) => (
