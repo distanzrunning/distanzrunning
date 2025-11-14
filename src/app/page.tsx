@@ -392,13 +392,34 @@ async function DevelopmentHomePage() {
         {(featuredGearPost || secondFeaturedGear || recentGear.length > 0) && (
           <section className="py-12 bg-neutral-50 dark:bg-neutral-900/50 transition-colors duration-300">
             <div className="w-[90%] max-w-[2000px] mx-auto px-4 sm:px-6">
-              {/* Section Heading Pill */}
-              <div className="flex items-center gap-3 mb-8">
-                <div className="inline-flex items-center px-3 py-1.5 bg-electric-pink/10 dark:bg-electric-pink/20 rounded-full">
-                  <span className="text-electric-pink dark:text-electric-pink font-medium text-xs tracking-wide uppercase leading-none">
-                    Gear
-                  </span>
+              {/* Section Header */}
+              <div className="flex items-end justify-between gap-8 mb-8 md:mb-11">
+                <div className="flex flex-col gap-3">
+                  {/* Pill */}
+                  <div className="inline-flex items-center self-start px-3 py-1.5 bg-electric-pink/10 dark:bg-electric-pink/20 rounded-full mb-1">
+                    <span className="text-electric-pink dark:text-electric-pink font-medium text-xs tracking-wide uppercase leading-none">
+                      Gear
+                    </span>
+                  </div>
+                  {/* Title */}
+                  <h2 className="font-body text-2xl md:text-4xl font-semibold text-neutral-900 dark:text-white">
+                    Gear Reviews
+                  </h2>
+                  {/* Subtitle */}
+                  <p className="font-body text-sm md:text-base font-medium text-neutral-600 dark:text-neutral-400 max-w-3xl">
+                    From race day shoes to GPS watches and nutrition. In-depth reviews and comparisons to help you find the perfect gear for every run.
+                  </p>
                 </div>
+                {/* All Gear Articles Link - Hidden on mobile */}
+                <Link
+                  href="/gear"
+                  className="hidden md:flex items-center gap-1.5 px-4 h-9 rounded-lg bg-transparent hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors"
+                >
+                  <span className="font-body text-sm font-medium text-neutral-900 dark:text-white">All gear articles</span>
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </Link>
               </div>
 
               {/* Two Main Featured Articles */}
@@ -498,48 +519,63 @@ async function DevelopmentHomePage() {
 
               {/* Four Smaller Articles Below */}
               {recentGear.length > 0 && (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                  {recentGear.map((gear) => (
-                    <Link
-                      key={gear._id}
-                      href={`/gear/${gear.slug.current}`}
-                      className="group flex flex-col w-full"
-                    >
-                      {/* Image */}
-                      <div className="relative w-full overflow-hidden rounded-lg">
-                        <div style={{ paddingBottom: '65%' }} className="relative">
-                          {gear.mainImage && (
-                            <img
-                              src={urlFor(gear.mainImage).width(600).height(390).url()}
-                              alt={gear.title}
-                              className="absolute inset-0 w-full h-full object-cover"
-                            />
-                          )}
+                <>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    {recentGear.map((gear) => (
+                      <Link
+                        key={gear._id}
+                        href={`/gear/${gear.slug.current}`}
+                        className="group flex flex-col w-full"
+                      >
+                        {/* Image */}
+                        <div className="relative w-full overflow-hidden rounded-lg">
+                          <div style={{ paddingBottom: '65%' }} className="relative">
+                            {gear.mainImage && (
+                              <img
+                                src={urlFor(gear.mainImage).width(600).height(390).url()}
+                                alt={gear.title}
+                                className="absolute inset-0 w-full h-full object-cover"
+                              />
+                            )}
+                          </div>
                         </div>
-                      </div>
 
-                      {/* Content below image */}
-                      <div className="flex flex-col gap-2 px-1 mt-4">
-                        {/* Title */}
-                        <h3 className="text-base md:text-lg font-semibold leading-tight text-neutral-900 dark:text-white line-clamp-2 mb-3">
-                          {gear.title}
-                        </h3>
+                        {/* Content below image */}
+                        <div className="flex flex-col gap-2 px-1 mt-4">
+                          {/* Title */}
+                          <h3 className="text-base md:text-lg font-semibold leading-tight text-neutral-900 dark:text-white line-clamp-2 mb-3">
+                            {gear.title}
+                          </h3>
 
-                        {/* Tag and Date - Category page style */}
-                        <div className="flex items-center gap-3 text-[10px] font-medium leading-[14px] text-gray-500 dark:text-gray-400">
-                          {gear.tags?.[0] && (
-                            <span className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded-sm">
-                              {gear.tags[0]}
+                          {/* Tag and Date - Category page style */}
+                          <div className="flex items-center gap-3 text-[10px] font-medium leading-[14px] text-gray-500 dark:text-gray-400">
+                            {gear.tags?.[0] && (
+                              <span className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded-sm">
+                                {gear.tags[0]}
+                              </span>
+                            )}
+                            <span suppressHydrationWarning>
+                              {format(new Date(gear.publishedAt), 'yyyy-MM-dd')}
                             </span>
-                          )}
-                          <span suppressHydrationWarning>
-                            {format(new Date(gear.publishedAt), 'yyyy-MM-dd')}
-                          </span>
+                          </div>
                         </div>
-                      </div>
+                      </Link>
+                    ))}
+                  </div>
+
+                  {/* All Gear Articles Link - Mobile only */}
+                  <div className="block md:hidden mt-8">
+                    <Link
+                      href="/gear"
+                      className="flex items-center justify-center gap-1.5 px-4 h-9 rounded-lg bg-transparent hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors w-full"
+                    >
+                      <span className="font-body text-sm font-medium text-neutral-900 dark:text-white">All gear articles</span>
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
                     </Link>
-                  ))}
-                </div>
+                  </div>
+                </>
               )}
             </div>
           </section>
