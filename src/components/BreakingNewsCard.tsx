@@ -1,6 +1,7 @@
 // src/components/BreakingNewsCard.tsx
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { urlFor } from '@/sanity/lib/image';
 import { format } from 'date-fns';
 
@@ -18,24 +19,37 @@ interface BreakingNewsCardProps {
 
 const BreakingNewsCard = React.memo(function BreakingNewsCard({ post }: BreakingNewsCardProps) {
   return (
-    <Link href={`/articles/post/${post.slug.current}`}>
-      <div className="bg-white dark:bg-neutral-800 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 h-full">
+    <Link
+      href={`/articles/post/${post.slug.current}`}
+      className="group flex flex-col h-full w-full transition"
+    >
+      {/* Image - 16:9 ratio */}
+      <div className="relative w-full aspect-[16/9] overflow-hidden rounded-lg bg-gray-100 dark:bg-neutral-800">
         {post.mainImage && (
-          <div className="relative h-48">
-            <img
-              src={urlFor(post.mainImage).width(400).height(250).url()}
-              alt={post.title}
-              className="w-full h-full object-cover"
-            />
-          </div>
+          <Image
+            src={urlFor(post.mainImage).width(1000).auto("format").url()}
+            alt={post.title}
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 100vw, 25vw"
+            loading="lazy"
+            placeholder="blur"
+            blurDataURL={urlFor(post.mainImage).width(10).height(7).blur(20).auto("format").url()}
+          />
         )}
-        <div className="p-4">
-          <div className="text-xs text-neutral-600 dark:text-neutral-400 mb-2 transition-colors duration-300">
-            {format(new Date(post.publishedAt), 'MMMM d, yyyy')}
-          </div>
-          <h3 className="text-base font-bold text-neutral-900 dark:text-white transition-colors duration-300 line-clamp-2">
-            {post.title}
-          </h3>
+      </div>
+
+      {/* Content */}
+      <div className="flex flex-col flex-1 mt-4 lg:mt-6">
+        <h3 className="text-[21px] font-semibold leading-[25px] text-dark dark:text-white mb-3 lg:mb-5 transition-colors duration-300">
+          {post.title}
+        </h3>
+
+        {/* Date - Pinned to bottom with mt-auto */}
+        <div className="flex items-center gap-3 mt-auto text-[10px] font-medium leading-[14px] text-gray-500 dark:text-gray-400 transition-colors duration-300">
+          <span suppressHydrationWarning>
+            {format(new Date(post.publishedAt), "yyyy-MM-dd")}
+          </span>
         </div>
       </div>
     </Link>

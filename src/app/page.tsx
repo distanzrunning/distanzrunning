@@ -189,8 +189,8 @@ async function DevelopmentHomePage() {
         {/* Breaking News Section */}
         {breakingNews.length > 0 && (
           <section className="bg-neutral-50 dark:bg-neutral-900/50 py-12 transition-colors duration-300">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="flex items-center gap-3 mb-6">
+            <div className="max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="flex items-center gap-3 mb-8">
                 <div className="inline-flex items-center px-3 py-1 bg-signal-orange/10 dark:bg-signal-orange/20 rounded-full">
                   <span className="text-signal-orange font-semibold text-sm uppercase tracking-wide">
                     Breaking News
@@ -200,7 +200,7 @@ async function DevelopmentHomePage() {
                   Latest Updates
                 </h2>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="w-full max-w-[1800px] mx-auto grid grid-cols-1 lg:grid-cols-4 gap-x-3 gap-y-8">
                 {breakingNews.map((post) => (
                   <BreakingNewsCard key={post._id} post={post} />
                 ))}
