@@ -12,7 +12,6 @@ import SocialLinks from '@/components/SocialLinks'
 import FeatureShowcase from '@/components/FeatureShowcase'
 import WriteForUs from '@/components/WriteForUs'
 import ScrollIndicator from '@/components/ScrollIndicator'
-import BreakingNewsCard from '@/components/BreakingNewsCard'
 import { Metadata } from 'next'
 
 type Post = {
@@ -210,49 +209,76 @@ async function DevelopmentHomePage() {
         {(featuredPost || breakingNews.length > 0) && (
           <section className="py-12 bg-white dark:bg-[#0c0c0d] transition-colors duration-300">
             <div className="max-w-[1800px] mx-auto px-6">
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {/* Featured Post - Takes up 2 columns */}
+              <div className="flex flex-col lg:flex-row gap-6">
+                {/* Featured Post - Takes up ~60% width */}
                 {featuredPost && (
-                  <Link href={`/articles/post/${featuredPost.slug.current}`} className="lg:col-span-2 block">
-                    <div className="relative h-[600px] rounded-lg overflow-hidden group cursor-pointer">
-                      {featuredPost.mainImage && (
-                        <img
-                          src={urlFor(featuredPost.mainImage).width(1200).height(800).url()}
-                          alt={featuredPost.title}
-                          className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
-                        />
-                      )}
-
-                      {/* Content overlay - top left */}
-                      <div className="absolute top-6 left-6 max-w-md flex flex-col items-start text-left">
-                        {/* Category tag - pink pill */}
-                        {featuredPost.categoryName && (
-                          <div className="inline-flex items-center px-3 py-1.5 bg-white/90 backdrop-blur-sm rounded-full mb-4 border border-neutral-200/50">
-                            <span className="text-electric-pink font-medium text-xs tracking-wide uppercase leading-none">
-                              {featuredPost.categoryName}
-                            </span>
-                          </div>
+                  <div className="lg:w-[60%] flex-shrink-0">
+                    <Link href={`/articles/post/${featuredPost.slug.current}`} className="block group">
+                      <div className="relative aspect-[4/5] rounded-lg overflow-hidden cursor-pointer">
+                        {featuredPost.mainImage && (
+                          <img
+                            src={urlFor(featuredPost.mainImage).width(1200).height(1500).url()}
+                            alt={featuredPost.title}
+                            className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
+                          />
                         )}
-                        <h3 className="text-3xl font-bold mb-3 text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">{featuredPost.title}</h3>
-                        <p className="text-white text-base drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">{featuredPost.excerpt}</p>
+
+                        {/* Content overlay - bottom left */}
+                        <div className="absolute bottom-6 left-6 right-6 flex flex-col items-start text-left">
+                          {/* Category tag - pink pill */}
+                          {featuredPost.categoryName && (
+                            <div className="inline-flex items-center px-3 py-1.5 bg-white/90 backdrop-blur-sm rounded-full mb-4 border border-neutral-200/50">
+                              <span className="text-electric-pink font-medium text-xs tracking-wide uppercase leading-none">
+                                {featuredPost.categoryName}
+                              </span>
+                            </div>
+                          )}
+                          <h3 className="text-3xl lg:text-4xl font-bold mb-3 text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">{featuredPost.title}</h3>
+                        </div>
                       </div>
-                    </div>
-                  </Link>
+                    </Link>
+                  </div>
                 )}
 
-                {/* Breaking News - Takes up 1 column, vertical stack */}
+                {/* Breaking News - Takes up remaining width */}
                 {breakingNews.length > 0 && (
-                  <div className="lg:col-span-1 flex flex-col">
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="inline-flex items-center self-start px-3 py-1.5 bg-electric-pink/10 dark:bg-electric-pink/20 rounded-full">
+                  <div className="lg:flex-1 flex flex-col gap-6">
+                    <div className="flex items-center gap-3">
+                      <div className="inline-flex items-center px-3 py-1.5 bg-electric-pink/10 dark:bg-electric-pink/20 rounded-full">
                         <span className="text-electric-pink dark:text-electric-pink font-medium text-xs tracking-wide uppercase leading-none">
                           Breaking
                         </span>
                       </div>
                     </div>
-                    <div className="flex flex-col gap-4 flex-1">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-6">
                       {breakingNews.map((post) => (
-                        <BreakingNewsCard key={post._id} post={post} />
+                        <Link
+                          key={post._id}
+                          href={`/articles/post/${post.slug.current}`}
+                          className="group flex flex-col"
+                        >
+                          <div className="relative aspect-[4/3] overflow-hidden rounded-lg bg-gray-100 dark:bg-neutral-800">
+                            {post.mainImage && (
+                              <img
+                                src={urlFor(post.mainImage).width(600).height(450).url()}
+                                alt={post.title}
+                                className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
+                              />
+                            )}
+                          </div>
+                          <div className="mt-3">
+                            {post.tags?.[0] && (
+                              <div className="inline-flex items-center px-2 py-1 bg-white/90 backdrop-blur-sm rounded-full mb-2 border border-neutral-200/50">
+                                <span className="text-electric-pink font-medium text-[10px] tracking-wide uppercase leading-none">
+                                  {post.tags[0]}
+                                </span>
+                              </div>
+                            )}
+                            <h3 className="text-lg font-semibold text-neutral-900 dark:text-white transition-colors duration-300">
+                              {post.title}
+                            </h3>
+                          </div>
+                        </Link>
                       ))}
                     </div>
                   </div>
