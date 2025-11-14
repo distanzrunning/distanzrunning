@@ -224,7 +224,7 @@ async function DevelopmentHomePage() {
 
                     <Link href={`/articles/post/${featuredPost.slug.current}`} className="group flex flex-col w-full">
                       {/* Image */}
-                      <div className="relative w-full overflow-hidden rounded-xl">
+                      <div className="relative w-full overflow-hidden rounded-lg">
                         <div style={{ paddingBottom: '56.25%' }} className="relative">
                           {featuredPost.mainImage && (
                             <img
@@ -268,7 +268,7 @@ async function DevelopmentHomePage() {
 
                 {/* Breaking News - Takes up 1 column */}
                 {breakingNews.length > 0 && (
-                  <div className="lg:col-span-1 flex flex-col gap-6 lg:bg-neutral-50 lg:dark:bg-neutral-800/50 lg:rounded-xl lg:p-4">
+                  <div className="lg:col-span-1 flex flex-col gap-6 lg:bg-neutral-50 lg:dark:bg-neutral-800/50 lg:rounded-lg lg:p-4">
                     {/* Header */}
                     <div className="flex items-center gap-3 px-1">
                       <div className="inline-flex items-center px-3 py-1.5 bg-electric-pink/10 dark:bg-electric-pink/20 rounded-full">
@@ -287,7 +287,7 @@ async function DevelopmentHomePage() {
                           className="group flex flex-row md:flex-col items-center md:items-start gap-6 md:gap-4 relative before:absolute before:-bottom-4 before:left-0 before:right-0 before:h-px before:bg-neutral-200 dark:before:bg-neutral-800 last:before:hidden md:before:hidden"
                         >
                           {/* Image */}
-                          <div className="w-1/3 max-w-36 shrink-0 md:w-full md:max-w-none overflow-hidden rounded-xl">
+                          <div className="w-1/3 max-w-36 shrink-0 md:w-full md:max-w-none overflow-hidden rounded-lg">
                             <div style={{ paddingBottom: '56.25%' }} className="relative">
                               {post.mainImage && (
                                 <img
