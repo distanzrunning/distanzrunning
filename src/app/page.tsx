@@ -22,7 +22,7 @@ type Post = {
   mainImage: any // Keep as any for Sanity image objects
   publishedAt: string
   excerpt: string
-  categories: Array<{ title: string }>
+  categories: string[] | Array<{ title: string }>
   tags?: string[]
 }
 
@@ -191,46 +191,52 @@ async function DevelopmentHomePage() {
         {/* Featured Post and Breaking News Section */}
         {(featuredPost || breakingNews.length > 0) && (
           <section className="py-12 bg-white dark:bg-[#0c0c0d] transition-colors duration-300">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="max-w-[1800px] mx-auto px-6">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Featured Post - Takes up 2 columns */}
                 {featuredPost && (
-                  <div className="lg:col-span-2 flex flex-col">
-                    <div className="relative h-64 md:h-96 mb-6">
+                  <Link href={`/articles/post/${featuredPost.slug.current}`} className="lg:col-span-2 block">
+                    <div className="relative h-[600px] rounded-lg overflow-hidden group cursor-pointer">
                       {featuredPost.mainImage && (
                         <img
-                          src={urlFor(featuredPost.mainImage).width(800).height(500).url()}
+                          src={urlFor(featuredPost.mainImage).width(1200).height(800).url()}
                           alt={featuredPost.title}
-                          className="rounded-lg object-cover w-full h-full"
+                          className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
                         />
                       )}
-                    </div>
-                    <div className="flex flex-col">
-                      <div className="text-sm text-neutral-600 dark:text-neutral-400 mb-2 transition-colors duration-300">
-                        {format(new Date(featuredPost.publishedAt), 'MMMM d, yyyy')}
+                      {/* Gradient overlay */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+
+                      {/* Content overlay - top right */}
+                      <div className="absolute top-6 right-6 max-w-md flex flex-col items-end text-right">
+                        {/* Category tag - pink pill */}
+                        {featuredPost.categories && featuredPost.categories.length > 0 && (
+                          <div className="inline-flex items-center px-3 py-1.5 bg-electric-pink rounded-full mb-4">
+                            <span className="text-white font-medium text-xs tracking-wide uppercase leading-none">
+                              {typeof featuredPost.categories[0] === 'string'
+                                ? featuredPost.categories[0]
+                                : featuredPost.categories[0].title}
+                            </span>
+                          </div>
+                        )}
+                        <h3 className="text-3xl font-bold mb-3 text-white drop-shadow-lg">{featuredPost.title}</h3>
+                        <p className="text-white/90 text-base drop-shadow-md">{featuredPost.excerpt}</p>
                       </div>
-                      <h3 className="text-3xl font-bold mb-3 text-neutral-900 dark:text-white transition-colors duration-300">{featuredPost.title}</h3>
-                      <p className="text-neutral-600 dark:text-neutral-300 mb-4 transition-colors duration-300">{featuredPost.excerpt}</p>
-                      <Link href={`/articles/post/${featuredPost.slug.current}`}>
-                        <div className="inline-flex items-center px-4 py-2 border border-electric-pink text-sm font-medium rounded-md text-white bg-electric-pink hover:bg-electric-pink/90 transition-colors duration-300">
-                          Read Article
-                        </div>
-                      </Link>
                     </div>
-                  </div>
+                  </Link>
                 )}
 
                 {/* Breaking News - Takes up 1 column, vertical stack */}
                 {breakingNews.length > 0 && (
-                  <div className="lg:col-span-1 flex flex-col gap-6">
-                    <div className="flex items-center gap-3 mb-2">
+                  <div className="lg:col-span-1 flex flex-col">
+                    <div className="flex items-center gap-3 mb-4">
                       <div className="inline-flex items-center self-start px-3 py-1.5 bg-electric-pink/10 dark:bg-electric-pink/20 rounded-full">
                         <span className="text-electric-pink dark:text-electric-pink font-medium text-xs tracking-wide uppercase leading-none">
                           Breaking
                         </span>
                       </div>
                     </div>
-                    <div className="flex flex-col gap-6">
+                    <div className="flex flex-col gap-4 flex-1">
                       {breakingNews.map((post) => (
                         <BreakingNewsCard key={post._id} post={post} />
                       ))}
