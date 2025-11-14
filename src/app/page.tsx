@@ -170,6 +170,7 @@ async function DevelopmentHomePage() {
   let breakingNews: Post[] = [];
   let featuredPost: Post | null = null;
   let featuredGearPost: GearPost | null = null;
+  let secondFeaturedGear: GearPost | null = null;
   let recentGear: GearPost[] = [];
   let featuredRaceGuide: RaceGuide | null = null;
   let recentRaces: RaceGuide[] = [];
@@ -200,28 +201,34 @@ async function DevelopmentHomePage() {
       }
     `);
 
-    // Fetch featured gear post
-    featuredGearPost = await sanity.fetch(`
-      *[_type == "gearPost" && featuredGear == true] | order(publishedAt desc)[0]{
+    // Fetch top 2 featured gear posts for main display
+    const topGear = await sanity.fetch(`
+      *[_type == "gearPost"] | order(publishedAt desc)[0...2]{
         _id,
         title,
         slug,
         mainImage,
         publishedAt,
         excerpt,
-        "gearCategoryName": gearCategory->title
+        "gearCategoryName": gearCategory->title,
+        tags
       }
     `);
 
-    // Fetch recent gear posts
+    // Split into main gear posts
+    featuredGearPost = topGear[0] || null;
+    secondFeaturedGear = topGear[1] || null;
+
+    // Fetch 4 smaller gear posts (skip the first 2)
     recentGear = await sanity.fetch(`
-      *[_type == "gearPost"] | order(publishedAt desc)[0...4]{
+      *[_type == "gearPost"] | order(publishedAt desc)[2...6]{
         _id,
         title,
         slug,
         mainImage,
         publishedAt,
-        tags
+        tags,
+        "gearCategoryName": gearCategory->title
       }
     `);
 
@@ -382,29 +389,26 @@ async function DevelopmentHomePage() {
         )}
 
         {/* Gear Section */}
-        {(featuredGearPost || recentGear.length > 0) && (
+        {(featuredGearPost || secondFeaturedGear || recentGear.length > 0) && (
           <section className="py-12 bg-neutral-50 dark:bg-neutral-900/50 transition-colors duration-300">
             <div className="w-[90%] max-w-[2000px] mx-auto px-4 sm:px-6">
-              <div className="grid grid-cols-1 gap-6 md:gap-4 lg:grid-cols-4">
-                {/* Featured Gear - Takes up 3 columns */}
-                {featuredGearPost && (
-                  <div className="lg:col-span-3 lg:sticky lg:top-20 lg:self-start">
-                    {/* Gear Pill - Above Image */}
-                    <div className="flex gap-3 mb-4">
-                      <div className="flex items-center gap-2 self-start rounded-full border border-neutral-200 dark:border-neutral-700 backdrop-blur-md px-2.5 py-1.5 md:px-3 md:py-2">
-                        <span className="text-xs md:text-sm text-neutral-900 dark:text-white font-medium">
-                          Featured Gear
-                        </span>
-                      </div>
-                    </div>
+              {/* Section Heading */}
+              <h2 className="text-3xl md:text-4xl font-headline font-semibold text-neutral-900 dark:text-white mb-8">
+                Gear
+              </h2>
 
+              {/* Two Main Featured Articles */}
+              {(featuredGearPost || secondFeaturedGear) && (
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                  {/* First Featured Gear */}
+                  {featuredGearPost && (
                     <Link href={`/gear/${featuredGearPost.slug.current}`} className="group flex flex-col w-full">
                       {/* Image */}
                       <div className="relative w-full overflow-hidden rounded-lg">
-                        <div style={{ paddingBottom: '56.25%' }} className="relative">
+                        <div style={{ paddingBottom: '65%' }} className="relative">
                           {featuredGearPost.mainImage && (
                             <img
-                              src={urlFor(featuredGearPost.mainImage).width(1200).height(675).url()}
+                              src={urlFor(featuredGearPost.mainImage).width(1000).height(650).url()}
                               alt={featuredGearPost.title}
                               className="absolute inset-0 w-full h-full object-cover"
                             />
@@ -413,93 +417,123 @@ async function DevelopmentHomePage() {
                       </div>
 
                       {/* Content below image */}
-                      <div className="flex flex-col gap-2 px-1 mt-4 lg:mt-6">
-                        {/* Title - Using Playfair Display */}
-                        <h3 className="text-2xl md:text-3xl lg:text-4xl font-headline font-semibold leading-tight text-neutral-900 dark:text-white line-clamp-2 md:line-clamp-3 mb-3">
+                      <div className="flex flex-col gap-2 px-1 mt-4">
+                        {/* Tags */}
+                        {featuredGearPost.tags && featuredGearPost.tags.length > 0 && (
+                          <div className="flex gap-2 flex-wrap">
+                            {featuredGearPost.tags.slice(0, 2).map((tag) => (
+                              <span key={tag} className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-2 py-1 rounded-sm text-[10px] font-medium">
+                                {tag}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+
+                        {/* Title */}
+                        <h3 className="text-xl md:text-2xl font-headline font-semibold leading-tight text-neutral-900 dark:text-white line-clamp-2">
                           {featuredGearPost.title}
                         </h3>
 
                         {/* Excerpt */}
                         {featuredGearPost.excerpt && (
-                          <p className="text-sm md:text-base text-neutral-600 dark:text-neutral-300 line-clamp-2 max-w-3xl lg:w-4/5 mb-4">
+                          <p className="text-sm text-neutral-600 dark:text-neutral-300 line-clamp-2">
                             {featuredGearPost.excerpt}
                           </p>
                         )}
-
-                        {/* Tag and Date - Category page style */}
-                        <div className="flex items-center gap-3 text-[10px] font-medium leading-[14px] text-gray-500 dark:text-gray-400">
-                          {featuredGearPost.gearCategoryName && (
-                            <span className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded-sm">
-                              {featuredGearPost.gearCategoryName}
-                            </span>
-                          )}
-                          <span suppressHydrationWarning>
-                            {format(new Date(featuredGearPost.publishedAt), 'yyyy-MM-dd')}
-                          </span>
-                        </div>
                       </div>
                     </Link>
-                  </div>
-                )}
+                  )}
 
-                {/* Recent Gear - Takes up 1 column */}
-                {recentGear.length > 0 && (
-                  <div className="lg:col-span-1 flex flex-col gap-6 lg:bg-white lg:dark:bg-neutral-800/50 lg:rounded-lg lg:p-4">
-                    {/* Header */}
-                    <div className="flex items-center gap-3 px-1">
-                      <div className="inline-flex items-center px-3 py-1.5 bg-electric-pink/10 dark:bg-electric-pink/20 rounded-full">
-                        <span className="text-electric-pink dark:text-electric-pink font-medium text-xs tracking-wide uppercase leading-none">
-                          Gear
-                        </span>
+                  {/* Second Featured Gear */}
+                  {secondFeaturedGear && (
+                    <Link href={`/gear/${secondFeaturedGear.slug.current}`} className="group flex flex-col w-full">
+                      {/* Image */}
+                      <div className="relative w-full overflow-hidden rounded-lg">
+                        <div style={{ paddingBottom: '65%' }} className="relative">
+                          {secondFeaturedGear.mainImage && (
+                            <img
+                              src={urlFor(secondFeaturedGear.mainImage).width(1000).height(650).url()}
+                              alt={secondFeaturedGear.title}
+                              className="absolute inset-0 w-full h-full object-cover"
+                            />
+                          )}
+                        </div>
                       </div>
-                    </div>
 
-                    {/* Gear Posts */}
-                    <div className="flex flex-col gap-6">
-                      {recentGear.map((gear) => (
-                        <Link
-                          key={gear._id}
-                          href={`/gear/${gear.slug.current}`}
-                          className="group flex flex-row md:flex-col items-center md:items-start gap-6 md:gap-4 relative before:absolute before:-bottom-4 before:left-0 before:right-0 before:h-px before:bg-neutral-200 dark:before:bg-neutral-800 last:before:hidden md:before:hidden"
-                        >
-                          {/* Image */}
-                          <div className="w-1/3 max-w-36 shrink-0 md:w-full md:max-w-none overflow-hidden rounded-lg">
-                            <div style={{ paddingBottom: '56.25%' }} className="relative">
-                              {gear.mainImage && (
-                                <img
-                                  src={urlFor(gear.mainImage).width(600).height(338).url()}
-                                  alt={gear.title}
-                                  className="absolute inset-0 w-full h-full object-cover"
-                                />
-                              )}
-                            </div>
-                          </div>
-
-                          {/* Content */}
-                          <div className="flex-1 flex flex-col-reverse md:flex-col gap-2 px-1">
-                            {/* Title */}
-                            <h3 className="text-sm md:text-base font-semibold text-neutral-900 dark:text-white line-clamp-2 md:line-clamp-3 mb-2 md:mb-3">
-                              {gear.title}
-                            </h3>
-
-                            {/* Tag and Date - Category page style */}
-                            <div className="flex items-center gap-3 text-[10px] font-medium leading-[14px] text-gray-500 dark:text-gray-400">
-                              {gear.tags?.[0] && (
-                                <span className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded-sm">
-                                  {gear.tags[0]}
-                                </span>
-                              )}
-                              <span suppressHydrationWarning>
-                                {format(new Date(gear.publishedAt), 'yyyy-MM-dd')}
+                      {/* Content below image */}
+                      <div className="flex flex-col gap-2 px-1 mt-4">
+                        {/* Tags */}
+                        {secondFeaturedGear.tags && secondFeaturedGear.tags.length > 0 && (
+                          <div className="flex gap-2 flex-wrap">
+                            {secondFeaturedGear.tags.slice(0, 2).map((tag) => (
+                              <span key={tag} className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-2 py-1 rounded-sm text-[10px] font-medium">
+                                {tag}
                               </span>
-                            </div>
+                            ))}
                           </div>
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
+                        )}
+
+                        {/* Title */}
+                        <h3 className="text-xl md:text-2xl font-headline font-semibold leading-tight text-neutral-900 dark:text-white line-clamp-2">
+                          {secondFeaturedGear.title}
+                        </h3>
+
+                        {/* Excerpt */}
+                        {secondFeaturedGear.excerpt && (
+                          <p className="text-sm text-neutral-600 dark:text-neutral-300 line-clamp-2">
+                            {secondFeaturedGear.excerpt}
+                          </p>
+                        )}
+                      </div>
+                    </Link>
+                  )}
+                </div>
+              )}
+
+              {/* Four Smaller Articles Below */}
+              {recentGear.length > 0 && (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                  {recentGear.map((gear) => (
+                    <Link
+                      key={gear._id}
+                      href={`/gear/${gear.slug.current}`}
+                      className="group flex flex-col w-full"
+                    >
+                      {/* Image */}
+                      <div className="relative w-full overflow-hidden rounded-lg">
+                        <div style={{ paddingBottom: '65%' }} className="relative">
+                          {gear.mainImage && (
+                            <img
+                              src={urlFor(gear.mainImage).width(600).height(390).url()}
+                              alt={gear.title}
+                              className="absolute inset-0 w-full h-full object-cover"
+                            />
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Content below image */}
+                      <div className="flex flex-col gap-2 px-1 mt-4">
+                        {/* Tags */}
+                        {gear.tags && gear.tags.length > 0 && (
+                          <div className="flex gap-2 flex-wrap">
+                            {gear.tags.slice(0, 2).map((tag) => (
+                              <span key={tag} className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-2 py-1 rounded-sm text-[10px] font-medium">
+                                {tag}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+
+                        {/* Title */}
+                        <h3 className="text-base md:text-lg font-semibold leading-tight text-neutral-900 dark:text-white line-clamp-2">
+                          {gear.title}
+                        </h3>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              )}
             </div>
           </section>
         )}
