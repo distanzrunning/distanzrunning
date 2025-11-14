@@ -392,10 +392,14 @@ async function DevelopmentHomePage() {
         {(featuredGearPost || secondFeaturedGear || recentGear.length > 0) && (
           <section className="py-12 bg-neutral-50 dark:bg-neutral-900/50 transition-colors duration-300">
             <div className="w-[90%] max-w-[2000px] mx-auto px-4 sm:px-6">
-              {/* Section Heading */}
-              <h2 className="text-3xl md:text-4xl font-headline font-semibold text-neutral-900 dark:text-white mb-8">
-                Gear
-              </h2>
+              {/* Section Heading Pill */}
+              <div className="flex items-center gap-3 mb-8">
+                <div className="inline-flex items-center px-3 py-1.5 bg-electric-pink/10 dark:bg-electric-pink/20 rounded-full">
+                  <span className="text-electric-pink dark:text-electric-pink font-medium text-xs tracking-wide uppercase leading-none">
+                    Gear
+                  </span>
+                </div>
+              </div>
 
               {/* Two Main Featured Articles */}
               {(featuredGearPost || secondFeaturedGear) && (
