@@ -11,6 +11,7 @@ type Post = {
   slug: { current: string };
   mainImage: any;
   publishedAt: string;
+  tags?: string[];
 };
 
 interface BreakingNewsCardProps {
@@ -45,8 +46,13 @@ const BreakingNewsCard = React.memo(function BreakingNewsCard({ post }: Breaking
           {post.title}
         </h3>
 
-        {/* Date - Pinned to bottom with mt-auto */}
+        {/* Tags and Date - Pinned to bottom with mt-auto */}
         <div className="flex items-center gap-3 mt-auto text-[10px] font-medium leading-[14px] text-gray-500 dark:text-gray-400 transition-colors duration-300">
+          {post.tags?.[0] && (
+            <span className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded-sm transition-colors duration-300">
+              {post.tags[0]}
+            </span>
+          )}
           <span suppressHydrationWarning>
             {format(new Date(post.publishedAt), "yyyy-MM-dd")}
           </span>

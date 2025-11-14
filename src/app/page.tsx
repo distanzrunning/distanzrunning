@@ -23,6 +23,7 @@ type Post = {
   publishedAt: string
   excerpt: string
   categories: Array<{ title: string }>
+  tags?: string[]
 }
 
 // Generate metadata based on preview mode
@@ -157,7 +158,8 @@ async function DevelopmentHomePage() {
         title,
         slug,
         mainImage,
-        publishedAt
+        publishedAt,
+        tags
       }
     `);
 
