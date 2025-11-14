@@ -36,6 +36,16 @@ type GearPost = {
   tags?: string[]
 }
 
+type RaceGuide = {
+  _id: string
+  title: string
+  slug: { current: string }
+  mainImage: any
+  eventDate: string
+  location?: string
+  raceCategoryName?: string
+}
+
 // Generate metadata based on preview mode
 export async function generateMetadata(): Promise<Metadata> {
   const isPreviewMode = process.env.PREVIEW_MODE === 'true';
@@ -162,6 +172,8 @@ async function DevelopmentHomePage() {
   let featuredPost: Post | null = null;
   let featuredGearPost: GearPost | null = null;
   let recentGear: GearPost[] = [];
+  let featuredRaceGuide: RaceGuide | null = null;
+  let recentRaces: RaceGuide[] = [];
 
   try {
     // Fetch breaking news posts
@@ -224,6 +236,31 @@ async function DevelopmentHomePage() {
         mainImage,
         publishedAt,
         tags
+      }
+    `);
+
+    // Fetch featured race guide
+    featuredRaceGuide = await sanity.fetch(`
+      *[_type == "raceGuide" && featuredRace == true] | order(eventDate desc)[0]{
+        _id,
+        title,
+        slug,
+        mainImage,
+        eventDate,
+        location,
+        "raceCategoryName": raceCategory->title
+      }
+    `);
+
+    // Fetch recent race guides
+    recentRaces = await sanity.fetch(`
+      *[_type == "raceGuide"] | order(eventDate desc)[0...4]{
+        _id,
+        title,
+        slug,
+        mainImage,
+        eventDate,
+        location
       }
     `);
 
@@ -476,6 +513,129 @@ async function DevelopmentHomePage() {
                               )}
                               <span suppressHydrationWarning>
                                 {format(new Date(gear.publishedAt), 'yyyy-MM-dd')}
+                              </span>
+                            </div>
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* Races Section */}
+        {(featuredRaceGuide || recentRaces.length > 0) && (
+          <section className="py-12 bg-white dark:bg-[#0c0c0d] transition-colors duration-300">
+            <div className="w-[90%] max-w-[2000px] mx-auto px-4 sm:px-6">
+              <div className="grid grid-cols-1 gap-6 md:gap-4 lg:grid-cols-4">
+                {/* Featured Race - Takes up 3 columns */}
+                {featuredRaceGuide && (
+                  <div className="lg:col-span-3 lg:sticky lg:top-20 lg:self-start">
+                    {/* Race Pill - Above Image */}
+                    <div className="flex gap-3 mb-4">
+                      <div className="flex items-center gap-2 self-start rounded-full border border-neutral-200 dark:border-neutral-700 backdrop-blur-md px-2.5 py-1.5 md:px-3 md:py-2">
+                        <span className="text-xs md:text-sm text-neutral-900 dark:text-white font-medium">
+                          Featured Race
+                        </span>
+                      </div>
+                    </div>
+
+                    <Link href={`/races/${featuredRaceGuide.slug.current}`} className="group flex flex-col w-full">
+                      {/* Image */}
+                      <div className="relative w-full overflow-hidden rounded-lg">
+                        <div style={{ paddingBottom: '56.25%' }} className="relative">
+                          {featuredRaceGuide.mainImage && (
+                            <img
+                              src={urlFor(featuredRaceGuide.mainImage).width(1200).height(675).url()}
+                              alt={featuredRaceGuide.title}
+                              className="absolute inset-0 w-full h-full object-cover"
+                            />
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Content below image */}
+                      <div className="flex flex-col gap-2 px-1 mt-4 lg:mt-6">
+                        {/* Title - Using Playfair Display */}
+                        <h3 className="text-2xl md:text-3xl lg:text-4xl font-headline font-semibold leading-tight text-neutral-900 dark:text-white line-clamp-2 md:line-clamp-3 mb-3">
+                          {featuredRaceGuide.title}
+                        </h3>
+
+                        {/* Location */}
+                        {featuredRaceGuide.location && (
+                          <p className="text-sm md:text-base text-neutral-600 dark:text-neutral-300 mb-4">
+                            📍 {featuredRaceGuide.location}
+                          </p>
+                        )}
+
+                        {/* Category and Event Date */}
+                        <div className="flex items-center gap-3 text-[10px] font-medium leading-[14px] text-gray-500 dark:text-gray-400">
+                          {featuredRaceGuide.raceCategoryName && (
+                            <span className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded-sm">
+                              {featuredRaceGuide.raceCategoryName}
+                            </span>
+                          )}
+                          <span suppressHydrationWarning>
+                            {format(new Date(featuredRaceGuide.eventDate), 'yyyy-MM-dd')}
+                          </span>
+                        </div>
+                      </div>
+                    </Link>
+                  </div>
+                )}
+
+                {/* Recent Races - Takes up 1 column */}
+                {recentRaces.length > 0 && (
+                  <div className="lg:col-span-1 flex flex-col gap-6 lg:bg-neutral-50 lg:dark:bg-neutral-800/50 lg:rounded-lg lg:p-4">
+                    {/* Header */}
+                    <div className="flex items-center gap-3 px-1">
+                      <div className="inline-flex items-center px-3 py-1.5 bg-electric-pink/10 dark:bg-electric-pink/20 rounded-full">
+                        <span className="text-electric-pink dark:text-electric-pink font-medium text-xs tracking-wide uppercase leading-none">
+                          Races
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Race Guides */}
+                    <div className="flex flex-col gap-6">
+                      {recentRaces.map((race) => (
+                        <Link
+                          key={race._id}
+                          href={`/races/${race.slug.current}`}
+                          className="group flex flex-row md:flex-col items-center md:items-start gap-6 md:gap-4 relative before:absolute before:-bottom-4 before:left-0 before:right-0 before:h-px before:bg-neutral-200 dark:before:bg-neutral-800 last:before:hidden md:before:hidden"
+                        >
+                          {/* Image */}
+                          <div className="w-1/3 max-w-36 shrink-0 md:w-full md:max-w-none overflow-hidden rounded-lg">
+                            <div style={{ paddingBottom: '56.25%' }} className="relative">
+                              {race.mainImage && (
+                                <img
+                                  src={urlFor(race.mainImage).width(600).height(338).url()}
+                                  alt={race.title}
+                                  className="absolute inset-0 w-full h-full object-cover"
+                                />
+                              )}
+                            </div>
+                          </div>
+
+                          {/* Content */}
+                          <div className="flex-1 flex flex-col-reverse md:flex-col gap-2 px-1">
+                            {/* Title */}
+                            <h3 className="text-sm md:text-base font-semibold text-neutral-900 dark:text-white line-clamp-2 md:line-clamp-3 mb-2 md:mb-3">
+                              {race.title}
+                            </h3>
+
+                            {/* Location and Event Date */}
+                            <div className="flex items-center gap-3 text-[10px] font-medium leading-[14px] text-gray-500 dark:text-gray-400">
+                              {race.location && (
+                                <span className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded-sm">
+                                  {race.location}
+                                </span>
+                              )}
+                              <span suppressHydrationWarning>
+                                {format(new Date(race.eventDate), 'yyyy-MM-dd')}
                               </span>
                             </div>
                           </div>
