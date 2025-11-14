@@ -269,7 +269,7 @@ async function DevelopmentHomePage() {
                       </div>
                     </div>
 
-                    <Link href={`/articles/post/${featuredPost.slug.current}`} className="group flex flex-col w-full">
+                    <Link href={`/articles/post/${featuredPost.slug.current}`} className="group flex flex-col w-full transition-opacity duration-200 hover:opacity-80">
                       {/* Image */}
                       <div className="relative w-full overflow-hidden rounded-lg">
                         <div style={{ paddingBottom: '56.25%' }} className="relative">
@@ -331,7 +331,7 @@ async function DevelopmentHomePage() {
                         <Link
                           key={post._id}
                           href={`/articles/post/${post.slug.current}`}
-                          className="group flex flex-row md:flex-col items-center md:items-start gap-6 md:gap-4 relative before:absolute before:-bottom-4 before:left-0 before:right-0 before:h-px before:bg-neutral-200 dark:before:bg-neutral-800 last:before:hidden md:before:hidden"
+                          className="group flex flex-row md:flex-col items-center md:items-start gap-6 md:gap-4 relative before:absolute before:-bottom-4 before:left-0 before:right-0 before:h-px before:bg-neutral-200 dark:before:bg-neutral-800 last:before:hidden md:before:hidden transition-opacity duration-200 hover:opacity-80"
                         >
                           {/* Image */}
                           <div className="w-1/3 max-w-36 shrink-0 md:w-full md:max-w-none overflow-hidden rounded-lg">
@@ -414,7 +414,7 @@ async function DevelopmentHomePage() {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
                   {/* First Featured Gear */}
                   {featuredGearPost && (
-                    <Link href={`/gear/${featuredGearPost.slug.current}`} className="group flex flex-col w-full">
+                    <Link href={`/gear/${featuredGearPost.slug.current}`} className="group flex flex-col w-full transition-opacity duration-200 hover:opacity-80">
                       {/* Image */}
                       <div className="relative w-full overflow-hidden rounded-lg">
                         <div style={{ paddingBottom: '65%' }} className="relative">
@@ -459,7 +459,7 @@ async function DevelopmentHomePage() {
 
                   {/* Second Featured Gear */}
                   {secondFeaturedGear && (
-                    <Link href={`/gear/${secondFeaturedGear.slug.current}`} className="group flex flex-col w-full">
+                    <Link href={`/gear/${secondFeaturedGear.slug.current}`} className="group flex flex-col w-full transition-opacity duration-200 hover:opacity-80">
                       {/* Image */}
                       <div className="relative w-full overflow-hidden rounded-lg">
                         <div style={{ paddingBottom: '65%' }} className="relative">
@@ -512,7 +512,7 @@ async function DevelopmentHomePage() {
                       <Link
                         key={gear._id}
                         href={`/gear/${gear.slug.current}`}
-                        className="group flex flex-col w-full"
+                        className="group flex flex-col w-full transition-opacity duration-200 hover:opacity-80"
                       >
                         {/* Image */}
                         <div className="relative w-full overflow-hidden rounded-lg">
@@ -606,7 +606,7 @@ async function DevelopmentHomePage() {
                     <Link
                       key={race._id}
                       href={`/races/${race.slug.current}`}
-                      className="group flex-shrink-0 w-[340px] md:w-[400px]"
+                      className="group flex-shrink-0 w-[340px] md:w-[400px] transition-opacity duration-200 hover:opacity-80"
                     >
                       <div className="flex flex-col gap-0">
                         {/* Image Container */}
