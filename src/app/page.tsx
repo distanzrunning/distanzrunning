@@ -222,21 +222,19 @@ async function DevelopmentHomePage() {
                           className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
                         />
                       )}
-                      {/* Gradient overlay */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
 
                       {/* Content overlay - top left */}
                       <div className="absolute top-6 left-6 max-w-md flex flex-col items-start text-left">
                         {/* Category tag - pink pill */}
                         {featuredPost.categoryName && (
-                          <div className="inline-flex items-center px-3 py-1.5 bg-electric-pink rounded-full mb-4">
-                            <span className="text-white font-medium text-xs tracking-wide uppercase leading-none">
+                          <div className="inline-flex items-center px-3 py-1.5 bg-electric-pink/10 dark:bg-electric-pink/20 rounded-full mb-4">
+                            <span className="text-electric-pink dark:text-electric-pink font-medium text-xs tracking-wide uppercase leading-none">
                               {featuredPost.categoryName}
                             </span>
                           </div>
                         )}
-                        <h3 className="text-3xl font-bold mb-3 text-white drop-shadow-lg">{featuredPost.title}</h3>
-                        <p className="text-white/90 text-base drop-shadow-md">{featuredPost.excerpt}</p>
+                        <h3 className="text-3xl font-bold mb-3 text-neutral-900 dark:text-white drop-shadow-lg">{featuredPost.title}</h3>
+                        <p className="text-neutral-700 dark:text-neutral-300 text-base drop-shadow-md">{featuredPost.excerpt}</p>
                       </div>
                     </div>
                   </Link>
