@@ -606,7 +606,7 @@ async function DevelopmentHomePage() {
                     <Link
                       key={race._id}
                       href={`/races/${race.slug.current}`}
-                      className="group flex-shrink-0 w-[280px] md:w-[320px]"
+                      className="group flex-shrink-0 w-[340px] md:w-[400px]"
                     >
                       <div className="flex flex-col gap-0">
                         {/* Image Container */}
@@ -616,7 +616,7 @@ async function DevelopmentHomePage() {
                             <div style={{ paddingBottom: '65%' }} className="relative">
                               {race.mainImage && (
                                 <img
-                                  src={urlFor(race.mainImage).width(640).height(416).url()}
+                                  src={urlFor(race.mainImage).width(800).height(520).url()}
                                   alt={race.title}
                                   className="absolute inset-0 w-full h-full object-cover object-center block z-[1]"
                                   loading="eager"
@@ -625,10 +625,10 @@ async function DevelopmentHomePage() {
                             </div>
                           </div>
 
-                          {/* Distance/Category Badge - Overlaid at bottom */}
+                          {/* Distance/Category Pill - Top Right */}
                           {race.raceCategoryName && (
-                            <div className="absolute bottom-0 left-0 right-0 z-[2]">
-                              <div className="px-3 py-2 bg-white/95 dark:bg-neutral-900/95 backdrop-blur-sm">
+                            <div className="absolute top-3 right-3 z-[2]">
+                              <div className="px-3 py-1.5 bg-white/95 dark:bg-neutral-900/95 backdrop-blur-sm rounded-full">
                                 <p className="font-body text-xs font-medium text-neutral-900 dark:text-white">
                                   {race.raceCategoryName}
                                 </p>
@@ -642,7 +642,7 @@ async function DevelopmentHomePage() {
                           <div className="flex items-start justify-between gap-3">
                             {/* Title and Location */}
                             <div className="flex flex-col gap-1 flex-1">
-                              <h3 className="font-body text-base font-semibold leading-tight text-neutral-900 dark:text-white line-clamp-2">
+                              <h3 className="font-body text-lg font-semibold leading-tight text-neutral-900 dark:text-white line-clamp-2">
                                 {race.title}
                               </h3>
                               {race.location && (
@@ -652,8 +652,8 @@ async function DevelopmentHomePage() {
                               )}
                             </div>
 
-                            {/* Date - Right Side */}
-                            <div className="flex flex-col items-center gap-0 flex-shrink-0">
+                            {/* Date Container - Right Side */}
+                            <div className="flex flex-col items-center gap-0 flex-shrink-0 bg-neutral-200 dark:bg-neutral-800 rounded-lg px-3 py-2">
                               <p className="font-body text-xs font-medium uppercase text-neutral-900 dark:text-white" suppressHydrationWarning>
                                 {format(new Date(race.eventDate), 'MMM')}
                               </p>
