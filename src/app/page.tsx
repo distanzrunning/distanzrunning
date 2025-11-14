@@ -22,7 +22,7 @@ type Post = {
   mainImage: any // Keep as any for Sanity image objects
   publishedAt: string
   excerpt: string
-  categories: string[] | Array<{ title: string }>
+  categoryName?: string
   tags?: string[]
 }
 
@@ -149,6 +149,7 @@ function PreviewPage() {
 async function DevelopmentHomePage() {
   let breakingNews: Post[] = [];
   let posts: Post[] = [];
+  let featuredPost: Post | null = null;
 
   try {
     // Fetch breaking news posts
@@ -163,6 +164,19 @@ async function DevelopmentHomePage() {
       }
     `);
 
+    // Fetch featured post
+    featuredPost = await sanity.fetch(`
+      *[_type == "post" && featuredPost == true] | order(publishedAt desc)[0]{
+        _id,
+        title,
+        slug,
+        mainImage,
+        publishedAt,
+        excerpt,
+        "categoryName": category->title
+      }
+    `);
+
     // Fetch regular posts
     posts = await sanity.fetch(`
       *[_type == "post"] | order(publishedAt desc)[0...6]{
@@ -172,9 +186,14 @@ async function DevelopmentHomePage() {
         mainImage,
         publishedAt,
         excerpt,
-        "categories": categories[]->title
+        "categoryName": category->title
       }
     `);
+
+    // Use featured post if available, otherwise use first post
+    if (!featuredPost) {
+      featuredPost = posts[0];
+    }
   } catch (error) {
     console.error('Error fetching posts:', error);
     // Return a fallback if Sanity is not available
@@ -182,7 +201,6 @@ async function DevelopmentHomePage() {
     posts = [];
   }
 
-  const featuredPost = posts[0];
   const recentPosts = posts.slice(1);
 
   return (
@@ -207,15 +225,13 @@ async function DevelopmentHomePage() {
                       {/* Gradient overlay */}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
 
-                      {/* Content overlay - top right */}
-                      <div className="absolute top-6 right-6 max-w-md flex flex-col items-end text-right">
+                      {/* Content overlay - top left */}
+                      <div className="absolute top-6 left-6 max-w-md flex flex-col items-start text-left">
                         {/* Category tag - pink pill */}
-                        {featuredPost.categories && featuredPost.categories.length > 0 && (
+                        {featuredPost.categoryName && (
                           <div className="inline-flex items-center px-3 py-1.5 bg-electric-pink rounded-full mb-4">
                             <span className="text-white font-medium text-xs tracking-wide uppercase leading-none">
-                              {typeof featuredPost.categories[0] === 'string'
-                                ? featuredPost.categories[0]
-                                : featuredPost.categories[0].title}
+                              {featuredPost.categoryName}
                             </span>
                           </div>
                         )}
