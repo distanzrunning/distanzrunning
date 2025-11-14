@@ -227,14 +227,14 @@ async function DevelopmentHomePage() {
                       <div className="absolute top-6 left-6 max-w-md flex flex-col items-start text-left">
                         {/* Category tag - pink pill */}
                         {featuredPost.categoryName && (
-                          <div className="inline-flex items-center px-3 py-1.5 bg-electric-pink/10 dark:bg-electric-pink/20 rounded-full mb-4">
-                            <span className="text-electric-pink dark:text-electric-pink font-medium text-xs tracking-wide uppercase leading-none">
+                          <div className="inline-flex items-center px-3 py-1.5 bg-white/90 backdrop-blur-sm rounded-full mb-4 border border-neutral-200/50">
+                            <span className="text-electric-pink font-medium text-xs tracking-wide uppercase leading-none">
                               {featuredPost.categoryName}
                             </span>
                           </div>
                         )}
-                        <h3 className="text-3xl font-bold mb-3 text-neutral-900 dark:text-white drop-shadow-lg">{featuredPost.title}</h3>
-                        <p className="text-neutral-700 dark:text-neutral-300 text-base drop-shadow-md">{featuredPost.excerpt}</p>
+                        <h3 className="text-3xl font-bold mb-3 text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">{featuredPost.title}</h3>
+                        <p className="text-white text-base drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">{featuredPost.excerpt}</p>
                       </div>
                     </div>
                   </Link>
