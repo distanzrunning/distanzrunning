@@ -639,7 +639,7 @@ async function DevelopmentHomePage() {
 
                         {/* Content Card */}
                         <div className="bg-neutral-50 dark:bg-neutral-900 rounded-b-lg px-4 py-4">
-                          <div className="flex items-start justify-between gap-3">
+                          <div className="flex items-center justify-between gap-3">
                             {/* Title and Location */}
                             <div className="flex flex-col gap-1 flex-1">
                               <h3 className="font-body text-lg font-semibold leading-tight text-neutral-900 dark:text-white line-clamp-2">
@@ -652,8 +652,8 @@ async function DevelopmentHomePage() {
                               )}
                             </div>
 
-                            {/* Date Container - Right Side */}
-                            <div className="flex flex-col items-center gap-0 flex-shrink-0 bg-neutral-200 dark:bg-neutral-800 rounded-lg px-3 py-2">
+                            {/* Date Container - Right Side (Square) */}
+                            <div className="flex flex-col items-center justify-center gap-0 flex-shrink-0 bg-neutral-200 dark:bg-neutral-800 rounded-lg w-16 h-16">
                               <p className="font-body text-xs font-medium uppercase text-neutral-900 dark:text-white" suppressHydrationWarning>
                                 {format(new Date(race.eventDate), 'MMM')}
                               </p>
