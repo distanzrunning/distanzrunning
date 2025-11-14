@@ -444,7 +444,7 @@ async function DevelopmentHomePage() {
                       {/* Content below image */}
                       <div className="flex flex-col gap-2 px-1 mt-4">
                         {/* Title */}
-                        <h3 className="text-xl md:text-2xl font-headline font-semibold leading-tight text-neutral-900 dark:text-white line-clamp-2 mb-3">
+                        <h3 className="text-xl md:text-2xl font-body font-semibold leading-tight text-neutral-900 dark:text-white line-clamp-2 mb-3">
                           {featuredGearPost.title}
                         </h3>
 
@@ -489,7 +489,7 @@ async function DevelopmentHomePage() {
                       {/* Content below image */}
                       <div className="flex flex-col gap-2 px-1 mt-4">
                         {/* Title */}
-                        <h3 className="text-xl md:text-2xl font-headline font-semibold leading-tight text-neutral-900 dark:text-white line-clamp-2 mb-3">
+                        <h3 className="text-xl md:text-2xl font-body font-semibold leading-tight text-neutral-900 dark:text-white line-clamp-2 mb-3">
                           {secondFeaturedGear.title}
                         </h3>
 
@@ -543,7 +543,7 @@ async function DevelopmentHomePage() {
                         {/* Content below image */}
                         <div className="flex flex-col gap-2 px-1 mt-4">
                           {/* Title */}
-                          <h3 className="text-base md:text-lg font-semibold leading-tight text-neutral-900 dark:text-white line-clamp-2 mb-3">
+                          <h3 className="text-base md:text-lg font-body font-semibold leading-tight text-neutral-900 dark:text-white line-clamp-2 mb-3">
                             {gear.title}
                           </h3>
 
