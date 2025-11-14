@@ -422,28 +422,29 @@ async function DevelopmentHomePage() {
 
                       {/* Content below image */}
                       <div className="flex flex-col gap-2 px-1 mt-4">
-                        {/* Tags as pills */}
-                        {featuredGearPost.tags && featuredGearPost.tags.length > 0 && (
-                          <div className="flex gap-2 flex-wrap mb-2">
-                            {featuredGearPost.tags.slice(0, 2).map((tag) => (
-                              <span key={tag} className="inline-flex items-center px-3 py-1.5 bg-neutral-100 dark:bg-neutral-800 rounded-full text-[11px] font-medium text-neutral-700 dark:text-neutral-300">
-                                {tag}
-                              </span>
-                            ))}
-                          </div>
-                        )}
-
                         {/* Title */}
-                        <h3 className="text-xl md:text-2xl font-headline font-semibold leading-tight text-neutral-900 dark:text-white line-clamp-2">
+                        <h3 className="text-xl md:text-2xl font-headline font-semibold leading-tight text-neutral-900 dark:text-white line-clamp-2 mb-3">
                           {featuredGearPost.title}
                         </h3>
 
                         {/* Excerpt */}
                         {featuredGearPost.excerpt && (
-                          <p className="text-sm text-neutral-600 dark:text-neutral-300 line-clamp-2">
+                          <p className="text-sm text-neutral-600 dark:text-neutral-300 line-clamp-2 mb-4">
                             {featuredGearPost.excerpt}
                           </p>
                         )}
+
+                        {/* Tag and Date - Category page style */}
+                        <div className="flex items-center gap-3 text-[10px] font-medium leading-[14px] text-gray-500 dark:text-gray-400">
+                          {featuredGearPost.tags?.[0] && (
+                            <span className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded-sm">
+                              {featuredGearPost.tags[0]}
+                            </span>
+                          )}
+                          <span suppressHydrationWarning>
+                            {format(new Date(featuredGearPost.publishedAt), 'yyyy-MM-dd')}
+                          </span>
+                        </div>
                       </div>
                     </Link>
                   )}
@@ -466,28 +467,29 @@ async function DevelopmentHomePage() {
 
                       {/* Content below image */}
                       <div className="flex flex-col gap-2 px-1 mt-4">
-                        {/* Tags as pills */}
-                        {secondFeaturedGear.tags && secondFeaturedGear.tags.length > 0 && (
-                          <div className="flex gap-2 flex-wrap mb-2">
-                            {secondFeaturedGear.tags.slice(0, 2).map((tag) => (
-                              <span key={tag} className="inline-flex items-center px-3 py-1.5 bg-neutral-100 dark:bg-neutral-800 rounded-full text-[11px] font-medium text-neutral-700 dark:text-neutral-300">
-                                {tag}
-                              </span>
-                            ))}
-                          </div>
-                        )}
-
                         {/* Title */}
-                        <h3 className="text-xl md:text-2xl font-headline font-semibold leading-tight text-neutral-900 dark:text-white line-clamp-2">
+                        <h3 className="text-xl md:text-2xl font-headline font-semibold leading-tight text-neutral-900 dark:text-white line-clamp-2 mb-3">
                           {secondFeaturedGear.title}
                         </h3>
 
                         {/* Excerpt */}
                         {secondFeaturedGear.excerpt && (
-                          <p className="text-sm text-neutral-600 dark:text-neutral-300 line-clamp-2">
+                          <p className="text-sm text-neutral-600 dark:text-neutral-300 line-clamp-2 mb-4">
                             {secondFeaturedGear.excerpt}
                           </p>
                         )}
+
+                        {/* Tag and Date - Category page style */}
+                        <div className="flex items-center gap-3 text-[10px] font-medium leading-[14px] text-gray-500 dark:text-gray-400">
+                          {secondFeaturedGear.tags?.[0] && (
+                            <span className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded-sm">
+                              {secondFeaturedGear.tags[0]}
+                            </span>
+                          )}
+                          <span suppressHydrationWarning>
+                            {format(new Date(secondFeaturedGear.publishedAt), 'yyyy-MM-dd')}
+                          </span>
+                        </div>
                       </div>
                     </Link>
                   )}
@@ -518,21 +520,22 @@ async function DevelopmentHomePage() {
 
                       {/* Content below image */}
                       <div className="flex flex-col gap-2 px-1 mt-4">
-                        {/* Tags as pills */}
-                        {gear.tags && gear.tags.length > 0 && (
-                          <div className="flex gap-2 flex-wrap mb-2">
-                            {gear.tags.slice(0, 2).map((tag) => (
-                              <span key={tag} className="inline-flex items-center px-3 py-1.5 bg-neutral-100 dark:bg-neutral-800 rounded-full text-[11px] font-medium text-neutral-700 dark:text-neutral-300">
-                                {tag}
-                              </span>
-                            ))}
-                          </div>
-                        )}
-
                         {/* Title */}
-                        <h3 className="text-base md:text-lg font-semibold leading-tight text-neutral-900 dark:text-white line-clamp-2">
+                        <h3 className="text-base md:text-lg font-semibold leading-tight text-neutral-900 dark:text-white line-clamp-2 mb-3">
                           {gear.title}
                         </h3>
+
+                        {/* Tag and Date - Category page style */}
+                        <div className="flex items-center gap-3 text-[10px] font-medium leading-[14px] text-gray-500 dark:text-gray-400">
+                          {gear.tags?.[0] && (
+                            <span className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded-sm">
+                              {gear.tags[0]}
+                            </span>
+                          )}
+                          <span suppressHydrationWarning>
+                            {format(new Date(gear.publishedAt), 'yyyy-MM-dd')}
+                          </span>
+                        </div>
                       </div>
                     </Link>
                   ))}
