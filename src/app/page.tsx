@@ -418,11 +418,11 @@ async function DevelopmentHomePage() {
 
                       {/* Content below image */}
                       <div className="flex flex-col gap-2 px-1 mt-4">
-                        {/* Tags */}
+                        {/* Tags as pills */}
                         {featuredGearPost.tags && featuredGearPost.tags.length > 0 && (
-                          <div className="flex gap-2 flex-wrap">
+                          <div className="flex gap-2 flex-wrap mb-2">
                             {featuredGearPost.tags.slice(0, 2).map((tag) => (
-                              <span key={tag} className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-2 py-1 rounded-sm text-[10px] font-medium">
+                              <span key={tag} className="inline-flex items-center px-3 py-1.5 bg-neutral-100 dark:bg-neutral-800 rounded-full text-[11px] font-medium text-neutral-700 dark:text-neutral-300">
                                 {tag}
                               </span>
                             ))}
@@ -462,11 +462,11 @@ async function DevelopmentHomePage() {
 
                       {/* Content below image */}
                       <div className="flex flex-col gap-2 px-1 mt-4">
-                        {/* Tags */}
+                        {/* Tags as pills */}
                         {secondFeaturedGear.tags && secondFeaturedGear.tags.length > 0 && (
-                          <div className="flex gap-2 flex-wrap">
+                          <div className="flex gap-2 flex-wrap mb-2">
                             {secondFeaturedGear.tags.slice(0, 2).map((tag) => (
-                              <span key={tag} className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-2 py-1 rounded-sm text-[10px] font-medium">
+                              <span key={tag} className="inline-flex items-center px-3 py-1.5 bg-neutral-100 dark:bg-neutral-800 rounded-full text-[11px] font-medium text-neutral-700 dark:text-neutral-300">
                                 {tag}
                               </span>
                             ))}
@@ -514,11 +514,11 @@ async function DevelopmentHomePage() {
 
                       {/* Content below image */}
                       <div className="flex flex-col gap-2 px-1 mt-4">
-                        {/* Tags */}
+                        {/* Tags as pills */}
                         {gear.tags && gear.tags.length > 0 && (
-                          <div className="flex gap-2 flex-wrap">
+                          <div className="flex gap-2 flex-wrap mb-2">
                             {gear.tags.slice(0, 2).map((tag) => (
-                              <span key={tag} className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-2 py-1 rounded-sm text-[10px] font-medium">
+                              <span key={tag} className="inline-flex items-center px-3 py-1.5 bg-neutral-100 dark:bg-neutral-800 rounded-full text-[11px] font-medium text-neutral-700 dark:text-neutral-300">
                                 {tag}
                               </span>
                             ))}
