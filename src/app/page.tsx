@@ -168,7 +168,6 @@ function PreviewPage() {
 // Development Homepage Component
 async function DevelopmentHomePage() {
   let breakingNews: Post[] = [];
-  let posts: Post[] = [];
   let featuredPost: Post | null = null;
   let featuredGearPost: GearPost | null = null;
   let recentGear: GearPost[] = [];
@@ -191,19 +190,6 @@ async function DevelopmentHomePage() {
     // Fetch featured post
     featuredPost = await sanity.fetch(`
       *[_type == "post" && featuredPost == true] | order(publishedAt desc)[0]{
-        _id,
-        title,
-        slug,
-        mainImage,
-        publishedAt,
-        excerpt,
-        "categoryName": category->title
-      }
-    `);
-
-    // Fetch regular posts
-    posts = await sanity.fetch(`
-      *[_type == "post"] | order(publishedAt desc)[0...6]{
         _id,
         title,
         slug,
@@ -263,19 +249,11 @@ async function DevelopmentHomePage() {
         location
       }
     `);
-
-    // Use featured post if available, otherwise use first post
-    if (!featuredPost) {
-      featuredPost = posts[0];
-    }
   } catch (error) {
     console.error('Error fetching posts:', error);
     // Return a fallback if Sanity is not available
     breakingNews = [];
-    posts = [];
   }
-
-  const recentPosts = posts.slice(1);
 
   return (
     <DarkModeProvider>
@@ -649,55 +627,6 @@ async function DevelopmentHomePage() {
           </section>
         )}
 
-        {/* Recent Posts */}
-        <section className="py-12 bg-white dark:bg-[#0c0c0d] transition-colors duration-300">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-2xl font-bold mb-8 text-neutral-900 dark:text-white transition-colors duration-300">Recent Articles</h2>
-            {recentPosts.length > 0 ? (
-              <>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                  {recentPosts.map((post) => (
-                    <div
-                      key={post._id}
-                      className="bg-white dark:bg-neutral-800 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-300"
-                    >
-                      {post.mainImage && (
-                        <img
-                          src={urlFor(post.mainImage).width(400).height(250).url()}
-                          alt={post.title}
-                          className="w-full h-48 object-cover"
-                        />
-                      )}
-                      <div className="p-6">
-                        <div className="text-sm text-neutral-600 dark:text-neutral-400 mb-2 transition-colors duration-300">
-                          {format(new Date(post.publishedAt), 'MMMM d, yyyy')}
-                        </div>
-                        <h3 className="text-xl font-bold mb-2 text-neutral-900 dark:text-white transition-colors duration-300">{post.title}</h3>
-                        <p className="text-neutral-600 dark:text-neutral-300 mb-4 line-clamp-3 transition-colors duration-300">{post.excerpt}</p>
-                        <Link href={`/articles/post/${post.slug.current}`}>
-                          <div className="text-sm font-medium text-electric-pink hover:text-electric-pink/80 transition-colors duration-300">
-                            Read More →
-                          </div>
-                        </Link>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <div className="mt-8 text-center">
-                  <Link href="/articles">
-                    <div className="inline-flex items-center px-4 py-2 border border-electric-pink text-sm font-medium rounded-md text-white bg-electric-pink hover:bg-electric-pink/90 transition-colors duration-300">
-                      View All Articles
-                    </div>
-                  </Link>
-                </div>
-              </>
-            ) : (
-              <div className="text-center py-12">
-                <p className="text-neutral-600 dark:text-neutral-300 text-lg transition-colors duration-300">Content coming soon...</p>
-              </div>
-            )}
-          </div>
-        </section>
       </div>
     </DarkModeProvider>
   )
