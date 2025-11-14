@@ -230,7 +230,7 @@ async function DevelopmentHomePage() {
                             <img
                               src={urlFor(featuredPost.mainImage).width(1200).height(675).url()}
                               alt={featuredPost.title}
-                              className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 scale-[1.04] group-hover:scale-100"
+                              className="absolute inset-0 w-full h-full object-cover"
                             />
                           )}
                         </div>
@@ -293,7 +293,7 @@ async function DevelopmentHomePage() {
                                 <img
                                   src={urlFor(post.mainImage).width(600).height(338).url()}
                                   alt={post.title}
-                                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 scale-[1.04] group-hover:scale-100"
+                                  className="absolute inset-0 w-full h-full object-cover"
                                 />
                               )}
                             </div>
