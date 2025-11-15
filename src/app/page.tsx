@@ -274,7 +274,7 @@ async function DevelopmentHomePage() {
                     <div className="flex flex-col w-full">
                       <Link href={`/articles/post/${featuredPost.slug.current}`} className="group transition-opacity duration-200 hover:opacity-80">
                         {/* Image */}
-                        <div className="relative w-full overflow-hidden rounded-lg">
+                        <div className="relative w-full overflow-hidden rounded-sm">
                           <div style={{ paddingBottom: '56.25%' }} className="relative">
                             {featuredPost.mainImage && (
                               <img
@@ -357,7 +357,7 @@ async function DevelopmentHomePage() {
                             className="flex flex-row md:flex-col items-center md:items-start gap-6 md:gap-4 transition-opacity duration-200 hover:opacity-80"
                           >
                             {/* Image */}
-                            <div className="w-1/3 max-w-36 shrink-0 md:w-full md:max-w-none overflow-hidden rounded-lg">
+                            <div className="w-1/3 max-w-36 shrink-0 md:w-full md:max-w-none overflow-hidden rounded-sm">
                               <div style={{ paddingBottom: '56.25%' }} className="relative">
                                 {post.mainImage && (
                                   <img
@@ -446,7 +446,7 @@ async function DevelopmentHomePage() {
                     <div className="flex flex-col w-full">
                       <Link href={`/gear/${featuredGearPost.slug.current}`} className="group transition-opacity duration-200 hover:opacity-80">
                         {/* Image */}
-                        <div className="relative w-full overflow-hidden rounded-lg">
+                        <div className="relative w-full overflow-hidden rounded-sm">
                           <div style={{ paddingBottom: '65%' }} className="relative">
                             {featuredGearPost.mainImage && (
                               <img
@@ -499,7 +499,7 @@ async function DevelopmentHomePage() {
                     <div className="flex flex-col w-full">
                       <Link href={`/gear/${secondFeaturedGear.slug.current}`} className="group transition-opacity duration-200 hover:opacity-80">
                         {/* Image */}
-                        <div className="relative w-full overflow-hidden rounded-lg">
+                        <div className="relative w-full overflow-hidden rounded-sm">
                           <div style={{ paddingBottom: '65%' }} className="relative">
                             {secondFeaturedGear.mainImage && (
                               <img
@@ -560,7 +560,7 @@ async function DevelopmentHomePage() {
                           className="group transition-opacity duration-200 hover:opacity-80"
                         >
                           {/* Image */}
-                          <div className="relative w-full overflow-hidden rounded-lg">
+                          <div className="relative w-full overflow-hidden rounded-sm">
                             <div style={{ paddingBottom: '65%' }} className="relative">
                               {gear.mainImage && (
                                 <img
@@ -689,7 +689,7 @@ async function DevelopmentHomePage() {
                         </div>
 
                         {/* Content Card */}
-                        <div className="bg-neutral-50 dark:bg-neutral-900 rounded-b-lg px-4 py-4">
+                        <div className="bg-neutral-50 dark:bg-neutral-900 rounded-b-sm px-4 py-4">
                           <div className="flex items-center justify-between gap-3">
                             {/* Title and Location */}
                             <div className="flex flex-col gap-1 flex-1">
@@ -704,7 +704,7 @@ async function DevelopmentHomePage() {
                             </div>
 
                             {/* Date Container - Right Side (Square) */}
-                            <div className="flex flex-col items-center justify-center gap-0 flex-shrink-0 bg-neutral-200 dark:bg-neutral-800 rounded-lg w-16 h-16">
+                            <div className="flex flex-col items-center justify-center gap-0 flex-shrink-0 bg-neutral-200 dark:bg-neutral-800 rounded-sm w-16 h-16">
                               <p className="font-body text-xs font-medium uppercase text-neutral-900 dark:text-white" suppressHydrationWarning>
                                 {format(new Date(race.eventDate), 'MMM')}
                               </p>
