@@ -12,6 +12,7 @@ import SocialLinks from '@/components/SocialLinks'
 import FeatureShowcase from '@/components/FeatureShowcase'
 import WriteForUs from '@/components/WriteForUs'
 import ScrollIndicator from '@/components/ScrollIndicator'
+import ExpandableTags from '@/components/ExpandableTags'
 import { Metadata } from 'next'
 
 type Post = {
@@ -312,18 +313,8 @@ async function DevelopmentHomePage() {
                             {featuredPost.categoryName}
                           </Link>
                         )}
-                        {/* Secondary Tag (hollow with border, more rounded) */}
-                        {featuredPost.tags?.[0] && (
-                          <span className="border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded-md">
-                            {featuredPost.tags[0]}
-                          </span>
-                        )}
-                        {/* More tags indicator - if there are more than 1 tag */}
-                        {featuredPost.tags && featuredPost.tags.length > 1 && (
-                          <button className="flex items-center justify-center w-5 h-5 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
-                            <span className="text-xs leading-none">...</span>
-                          </button>
-                        )}
+                        {/* Secondary Tags - Expandable */}
+                        {featuredPost.tags && <ExpandableTags tags={featuredPost.tags} />}
                         <span suppressHydrationWarning>
                           {format(new Date(featuredPost.publishedAt), 'yyyy-MM-dd')}
                         </span>
@@ -397,18 +388,8 @@ async function DevelopmentHomePage() {
                                 {post.categoryName}
                               </Link>
                             )}
-                            {/* Secondary Tag (hollow with border, more rounded) */}
-                            {post.tags?.[0] && (
-                              <span className="border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded-md">
-                                {post.tags[0]}
-                              </span>
-                            )}
-                            {/* More tags indicator */}
-                            {post.tags && post.tags.length > 1 && (
-                              <button className="flex items-center justify-center w-5 h-5 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
-                                <span className="text-xs leading-none">...</span>
-                              </button>
-                            )}
+                            {/* Secondary Tags - Expandable */}
+                            {post.tags && <ExpandableTags tags={post.tags} />}
                             <span suppressHydrationWarning>
                               {format(new Date(post.publishedAt), 'yyyy-MM-dd')}
                             </span>
@@ -504,18 +485,8 @@ async function DevelopmentHomePage() {
                             {featuredGearPost.gearCategoryName}
                           </Link>
                         )}
-                        {/* Secondary Tag (hollow with border, more rounded) */}
-                        {featuredGearPost.tags?.[0] && (
-                          <span className="border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded-md">
-                            {featuredGearPost.tags[0]}
-                          </span>
-                        )}
-                        {/* More tags indicator */}
-                        {featuredGearPost.tags && featuredGearPost.tags.length > 1 && (
-                          <button className="flex items-center justify-center w-5 h-5 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
-                            <span className="text-xs leading-none">...</span>
-                          </button>
-                        )}
+                        {/* Secondary Tags - Expandable */}
+                        {featuredGearPost.tags && <ExpandableTags tags={featuredGearPost.tags} />}
                         <span suppressHydrationWarning>
                           {format(new Date(featuredGearPost.publishedAt), 'yyyy-MM-dd')}
                         </span>
@@ -567,18 +538,8 @@ async function DevelopmentHomePage() {
                             {secondFeaturedGear.gearCategoryName}
                           </Link>
                         )}
-                        {/* Secondary Tag (hollow with border, more rounded) */}
-                        {secondFeaturedGear.tags?.[0] && (
-                          <span className="border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded-md">
-                            {secondFeaturedGear.tags[0]}
-                          </span>
-                        )}
-                        {/* More tags indicator */}
-                        {secondFeaturedGear.tags && secondFeaturedGear.tags.length > 1 && (
-                          <button className="flex items-center justify-center w-5 h-5 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
-                            <span className="text-xs leading-none">...</span>
-                          </button>
-                        )}
+                        {/* Secondary Tags - Expandable */}
+                        {secondFeaturedGear.tags && <ExpandableTags tags={secondFeaturedGear.tags} />}
                         <span suppressHydrationWarning>
                           {format(new Date(secondFeaturedGear.publishedAt), 'yyyy-MM-dd')}
                         </span>
@@ -630,18 +591,8 @@ async function DevelopmentHomePage() {
                               {gear.gearCategoryName}
                             </Link>
                           )}
-                          {/* Secondary Tag (hollow with border, more rounded) */}
-                          {gear.tags?.[0] && (
-                            <span className="border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded-md">
-                              {gear.tags[0]}
-                            </span>
-                          )}
-                          {/* More tags indicator */}
-                          {gear.tags && gear.tags.length > 1 && (
-                            <button className="flex items-center justify-center w-5 h-5 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
-                              <span className="text-xs leading-none">...</span>
-                            </button>
-                          )}
+                          {/* Secondary Tags - Expandable */}
+                          {gear.tags && <ExpandableTags tags={gear.tags} />}
                           <span suppressHydrationWarning>
                             {format(new Date(gear.publishedAt), 'yyyy-MM-dd')}
                           </span>
