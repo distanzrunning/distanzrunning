@@ -306,9 +306,9 @@ async function DevelopmentHomePage() {
                               {featuredPost.categoryName}
                             </span>
                           )}
-                          {/* Secondary Tag (more rounded) */}
+                          {/* Secondary Tag (hollow with border, more rounded) */}
                           {featuredPost.tags?.[0] && (
-                            <span className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded">
+                            <span className="border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded-md">
                               {featuredPost.tags[0]}
                             </span>
                           )}
@@ -385,9 +385,9 @@ async function DevelopmentHomePage() {
                                   {post.categoryName}
                                 </span>
                               )}
-                              {/* Secondary Tag (more rounded) */}
+                              {/* Secondary Tag (hollow with border, more rounded) */}
                               {post.tags?.[0] && (
-                                <span className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded">
+                                <span className="border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded-md">
                                   {post.tags[0]}
                                 </span>
                               )}
@@ -487,9 +487,9 @@ async function DevelopmentHomePage() {
                               {featuredGearPost.gearCategoryName}
                             </span>
                           )}
-                          {/* Secondary Tag (more rounded) */}
+                          {/* Secondary Tag (hollow with border, more rounded) */}
                           {featuredGearPost.tags?.[0] && (
-                            <span className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded">
+                            <span className="border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded-md">
                               {featuredGearPost.tags[0]}
                             </span>
                           )}
@@ -545,9 +545,9 @@ async function DevelopmentHomePage() {
                               {secondFeaturedGear.gearCategoryName}
                             </span>
                           )}
-                          {/* Secondary Tag (more rounded) */}
+                          {/* Secondary Tag (hollow with border, more rounded) */}
                           {secondFeaturedGear.tags?.[0] && (
-                            <span className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded">
+                            <span className="border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded-md">
                               {secondFeaturedGear.tags[0]}
                             </span>
                           )}
@@ -605,9 +605,9 @@ async function DevelopmentHomePage() {
                                 {gear.gearCategoryName}
                               </span>
                             )}
-                            {/* Secondary Tag (more rounded) */}
+                            {/* Secondary Tag (hollow with border, more rounded) */}
                             {gear.tags?.[0] && (
-                              <span className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded">
+                              <span className="border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded-md">
                                 {gear.tags[0]}
                               </span>
                             )}
