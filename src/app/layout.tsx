@@ -4,6 +4,8 @@ import { Playfair_Display, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import AuthProtection from "@/components/AuthProtection";
 import LayoutContent from "@/components/LayoutContent";
+import NavbarAltWrapper from "@/components/NavbarAltWrapper";
+import Footer from "@/components/Footer";
 import { DarkModeProvider } from "@/components/DarkModeProvider";
 import ReCaptchaProvider from "@/components/ReCaptchaProvider";
 import { Analytics } from '@vercel/analytics/react';
@@ -126,7 +128,7 @@ export default function RootLayout({
         <ReCaptchaProvider>
           <DarkModeProvider>
             <AuthProtection>
-              <LayoutContent>
+              <LayoutContent navbar={<NavbarAltWrapper />} footer={<Footer />}>
                 {children}
               </LayoutContent>
             </AuthProtection>

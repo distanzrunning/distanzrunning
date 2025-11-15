@@ -2,14 +2,15 @@
 'use client'
 
 import { usePathname } from 'next/navigation'
-import NavbarAltWrapper from '@/components/NavbarAltWrapper'
-import Footer from '@/components/Footer'
+import { ReactNode } from 'react'
 
 interface LayoutContentProps {
-  children: React.ReactNode
+  children: ReactNode
+  navbar: ReactNode
+  footer: ReactNode
 }
 
-export default function LayoutContent({ children }: LayoutContentProps) {
+export default function LayoutContent({ children, navbar, footer }: LayoutContentProps) {
   const pathname = usePathname()
   const isPreviewMode = process.env.NEXT_PUBLIC_PREVIEW_MODE === 'true'
 
@@ -22,9 +23,9 @@ export default function LayoutContent({ children }: LayoutContentProps) {
 
   return (
     <>
-      <NavbarAltWrapper />
+      {navbar}
       <main className="flex-grow">{children}</main>
-      <Footer />
+      {footer}
     </>
   )
 }
