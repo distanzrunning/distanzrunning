@@ -736,6 +736,9 @@ async function DevelopmentHomePage() {
           </section>
         )}
 
+        {/* Write For Us Section */}
+        <WriteForUs />
+
       </div>
     </DarkModeProvider>
   )
