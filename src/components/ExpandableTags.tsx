@@ -32,7 +32,7 @@ export default function ExpandableTags({ tags }: ExpandableTagsProps) {
       {tags.length > 1 && (
         <button
           onClick={() => setIsExpanded(!isExpanded)}
-          className="border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors flex items-center justify-center min-w-[20px]"
+          className="border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 w-5 h-5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors flex items-center justify-center"
           aria-label={isExpanded ? 'Hide tags' : 'Show more tags'}
         >
           {isExpanded ? (
