@@ -47,7 +47,7 @@ export default function ExpandableTags({ tags }: ExpandableTagsProps) {
       {tags.length > 1 && (
         <motion.li
           layout
-          transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+          transition={{ type: 'spring', stiffness: 200, damping: 25, mass: 0.8 }}
         >
           <motion.button
             onClick={() => setIsExpanded(!isExpanded)}
