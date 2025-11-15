@@ -36,9 +36,9 @@ export default function ExpandableTags({ tags }: ExpandableTagsProps) {
           aria-label={isExpanded ? 'Hide tags' : 'Show more tags'}
         >
           {isExpanded ? (
-            <span className="text-xs leading-none">×</span>
+            <span className="text-[10px] leading-none font-medium flex items-center justify-center">×</span>
           ) : (
-            <span className="text-xs leading-none">...</span>
+            <span className="text-[10px] leading-none font-medium flex items-center justify-center -mt-[1px]">...</span>
           )}
         </button>
       )}
