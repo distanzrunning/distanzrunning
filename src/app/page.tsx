@@ -76,7 +76,7 @@ function PreviewPage() {
         <div className="min-h-screen flex flex-col bg-white dark:bg-[#0c0c0d] transition-colors duration-300">
           
           {/* Coming Soon Section */}
-          <div className="pt-12 pb-8 px-6">
+          <div className="pt-12 pb-8 px-3 sm:px-6">
             <div className="flex flex-col items-center text-center">
 
               {/* Coming Soon Pill - Using Distanz Electric Pink */}
@@ -115,7 +115,7 @@ function PreviewPage() {
               </div>
 
               {/* Combined blurb and typewriter text */}
-              <div className="max-w-3xl mx-auto text-center mb-16 px-4">
+              <div className="max-w-3xl mx-auto text-center mb-16 px-3 sm:px-4">
                 <div className="font-body text-[19px] sm:text-[20px] text-textSubtle dark:text-neutral-300 leading-snug font-normal mb-3 transition-colors duration-300">
                   We're building the ultimate destination for
                 </div>
@@ -134,7 +134,7 @@ function PreviewPage() {
           </div>
 
           {/* Marathon Showcase - takes up remaining space */}
-          <main id="marathon-showcase" className="flex-1 flex flex-col px-6 pb-4">
+          <main id="marathon-showcase" className="flex-1 flex flex-col px-3 sm:px-6 pb-4">
             <div className="flex-1 max-w-6xl mx-auto w-full flex flex-col min-h-0">
               <div className="flex-1 min-h-0">
                 <ResponsiveMarathonShowcase />
@@ -156,7 +156,7 @@ function PreviewPage() {
           <WriteForUs />
 
           {/* Social links moved to bottom */}
-          <div className="px-6 py-8">
+          <div className="px-3 sm:px-6 py-8">
             <div className="max-w-6xl mx-auto text-center">
               <SocialLinks />
             </div>
@@ -257,7 +257,7 @@ async function DevelopmentHomePage() {
         {/* Featured Post and Breaking News Section */}
         {(featuredPost || breakingNews.length > 0) && (
           <section className="py-12 bg-white dark:bg-[#0c0c0d] transition-colors duration-300">
-            <div className="w-[90%] max-w-[2000px] mx-auto px-2 sm:px-3">
+            <div className="w-[96%] sm:w-[90%] max-w-[2000px] mx-auto px-2 sm:px-3">
               <div className="grid grid-cols-1 gap-6 md:gap-4 lg:grid-cols-4">
                 {/* Featured Post - Takes up 3 columns */}
                 {featuredPost && (
@@ -407,7 +407,7 @@ async function DevelopmentHomePage() {
         {/* Gear Section */}
         {(featuredGearPost || secondFeaturedGear || recentGear.length > 0) && (
           <section className="py-12 bg-neutral-50 dark:bg-neutral-900/50 transition-colors duration-300">
-            <div className="w-[90%] max-w-[2000px] mx-auto px-2 sm:px-3">
+            <div className="w-[96%] sm:w-[90%] max-w-[2000px] mx-auto px-2 sm:px-3">
               {/* Section Header */}
               <div className="flex items-end justify-between gap-8 mb-8 md:mb-11">
                 <div className="flex flex-col gap-3">
@@ -622,7 +622,7 @@ async function DevelopmentHomePage() {
         {/* Races Section - Horizontal Scrolling Carousel */}
         {recentRaces.length > 0 && (
           <section className="py-12 bg-white dark:bg-[#0c0c0d] transition-colors duration-300">
-            <div className="w-[90%] max-w-[2000px] mx-auto px-2 sm:px-3">
+            <div className="w-[96%] sm:w-[90%] max-w-[2000px] mx-auto px-2 sm:px-3">
               {/* Section Header */}
               <div className="flex items-end justify-between gap-8 mb-8 md:mb-11">
                 <div className="flex flex-col gap-3">
@@ -651,7 +651,7 @@ async function DevelopmentHomePage() {
               </div>
 
               {/* Horizontal Scrolling Container */}
-              <div className="overflow-x-auto -mx-4 px-4 sm:-mx-6 sm:px-6 scrollbar-hide">
+              <div className="overflow-x-auto -mx-2 px-2 sm:-mx-3 sm:px-3 scrollbar-hide">
                 <div className="flex gap-4 md:gap-6 pb-4">
                   {recentRaces.map((race) => (
                     <Link
