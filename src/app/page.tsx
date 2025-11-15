@@ -257,7 +257,7 @@ async function DevelopmentHomePage() {
         {/* Featured Post and Breaking News Section */}
         {(featuredPost || breakingNews.length > 0) && (
           <section className="py-12 bg-white dark:bg-[#0c0c0d] transition-colors duration-300">
-            <div className="w-[90%] max-w-[2000px] mx-auto px-4 sm:px-6">
+            <div className="w-[90%] max-w-[2000px] mx-auto px-2 sm:px-3">
               <div className="grid grid-cols-1 gap-6 md:gap-4 lg:grid-cols-4">
                 {/* Featured Post - Takes up 3 columns */}
                 {featuredPost && (
@@ -407,7 +407,7 @@ async function DevelopmentHomePage() {
         {/* Gear Section */}
         {(featuredGearPost || secondFeaturedGear || recentGear.length > 0) && (
           <section className="py-12 bg-neutral-50 dark:bg-neutral-900/50 transition-colors duration-300">
-            <div className="w-[90%] max-w-[2000px] mx-auto px-4 sm:px-6">
+            <div className="w-[90%] max-w-[2000px] mx-auto px-2 sm:px-3">
               {/* Section Header */}
               <div className="flex items-end justify-between gap-8 mb-8 md:mb-11">
                 <div className="flex flex-col gap-3">
@@ -622,7 +622,7 @@ async function DevelopmentHomePage() {
         {/* Races Section - Horizontal Scrolling Carousel */}
         {recentRaces.length > 0 && (
           <section className="py-12 bg-white dark:bg-[#0c0c0d] transition-colors duration-300">
-            <div className="w-[90%] max-w-[2000px] mx-auto px-4 sm:px-6">
+            <div className="w-[90%] max-w-[2000px] mx-auto px-2 sm:px-3">
               {/* Section Header */}
               <div className="flex items-end justify-between gap-8 mb-8 md:mb-11">
                 <div className="flex flex-col gap-3">
