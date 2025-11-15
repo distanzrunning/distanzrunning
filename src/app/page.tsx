@@ -270,64 +270,65 @@ async function DevelopmentHomePage() {
                       </div>
                     </div>
 
-                    <Link href={`/articles/post/${featuredPost.slug.current}`} className="group flex flex-col w-full transition-opacity duration-200 hover:opacity-80">
-                      {/* Image */}
-                      <div className="relative w-full overflow-hidden rounded-lg">
-                        <div style={{ paddingBottom: '56.25%' }} className="relative">
-                          {featuredPost.mainImage && (
-                            <img
-                              src={urlFor(featuredPost.mainImage).width(1200).height(675).url()}
-                              alt={featuredPost.title}
-                              className="absolute inset-0 w-full h-full object-cover"
-                            />
+                    <div className="flex flex-col w-full">
+                      <Link href={`/articles/post/${featuredPost.slug.current}`} className="group transition-opacity duration-200 hover:opacity-80">
+                        {/* Image */}
+                        <div className="relative w-full overflow-hidden rounded-lg">
+                          <div style={{ paddingBottom: '56.25%' }} className="relative">
+                            {featuredPost.mainImage && (
+                              <img
+                                src={urlFor(featuredPost.mainImage).width(1200).height(675).url()}
+                                alt={featuredPost.title}
+                                className="absolute inset-0 w-full h-full object-cover"
+                              />
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Title and Excerpt */}
+                        <div className="flex flex-col gap-2 px-1 mt-4 lg:mt-6">
+                          {/* Title - Using Playfair Display */}
+                          <h3 className="text-2xl md:text-3xl lg:text-4xl font-headline font-semibold leading-tight text-neutral-900 dark:text-white line-clamp-2 md:line-clamp-3 mb-3">
+                            {featuredPost.title}
+                          </h3>
+
+                          {/* Excerpt */}
+                          {featuredPost.excerpt && (
+                            <p className="text-sm md:text-base text-neutral-600 dark:text-neutral-300 line-clamp-2 max-w-3xl lg:w-4/5 mb-4">
+                              {featuredPost.excerpt}
+                            </p>
                           )}
                         </div>
-                      </div>
+                      </Link>
 
-                      {/* Content below image */}
-                      <div className="flex flex-col gap-2 px-1 mt-4 lg:mt-6">
-                        {/* Title - Using Playfair Display */}
-                        <h3 className="text-2xl md:text-3xl lg:text-4xl font-headline font-semibold leading-tight text-neutral-900 dark:text-white line-clamp-2 md:line-clamp-3 mb-3">
-                          {featuredPost.title}
-                        </h3>
-
-                        {/* Excerpt */}
-                        {featuredPost.excerpt && (
-                          <p className="text-sm md:text-base text-neutral-600 dark:text-neutral-300 line-clamp-2 max-w-3xl lg:w-4/5 mb-4">
-                            {featuredPost.excerpt}
-                          </p>
+                      {/* Tags and Date - Outside article link */}
+                      <div className="flex items-center gap-2 text-[10px] font-medium leading-[14px] text-gray-500 dark:text-gray-400 px-1">
+                        {/* Primary Category Tag - Linked */}
+                        {featuredPost.categoryName && (
+                          <Link
+                            href={`/articles/category/${featuredPost.categoryName.toLowerCase()}`}
+                            className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded-sm hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+                          >
+                            {featuredPost.categoryName}
+                          </Link>
                         )}
-
-                        {/* Tags and Date */}
-                        <div className="flex items-center gap-2 text-[10px] font-medium leading-[14px] text-gray-500 dark:text-gray-400">
-                          {/* Primary Category Tag - Linked */}
-                          {featuredPost.categoryName && (
-                            <Link
-                              href={`/articles/category/${featuredPost.categoryName.toLowerCase()}`}
-                              className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded-sm hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
-                              onClick={(e) => e.stopPropagation()}
-                            >
-                              {featuredPost.categoryName}
-                            </Link>
-                          )}
-                          {/* Secondary Tag (hollow with border, more rounded) */}
-                          {featuredPost.tags?.[0] && (
-                            <span className="border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded-md">
-                              {featuredPost.tags[0]}
-                            </span>
-                          )}
-                          {/* More tags indicator - if there are more than 1 tag */}
-                          {featuredPost.tags && featuredPost.tags.length > 1 && (
-                            <button className="flex items-center justify-center w-5 h-5 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
-                              <span className="text-xs leading-none">...</span>
-                            </button>
-                          )}
-                          <span suppressHydrationWarning>
-                            {format(new Date(featuredPost.publishedAt), 'yyyy-MM-dd')}
+                        {/* Secondary Tag (hollow with border, more rounded) */}
+                        {featuredPost.tags?.[0] && (
+                          <span className="border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded-md">
+                            {featuredPost.tags[0]}
                           </span>
-                        </div>
+                        )}
+                        {/* More tags indicator - if there are more than 1 tag */}
+                        {featuredPost.tags && featuredPost.tags.length > 1 && (
+                          <button className="flex items-center justify-center w-5 h-5 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
+                            <span className="text-xs leading-none">...</span>
+                          </button>
+                        )}
+                        <span suppressHydrationWarning>
+                          {format(new Date(featuredPost.publishedAt), 'yyyy-MM-dd')}
+                        </span>
                       </div>
-                    </Link>
+                    </div>
                   </div>
                 )}
 
@@ -356,61 +357,63 @@ async function DevelopmentHomePage() {
                     {/* Articles */}
                     <div className="flex flex-col gap-6">
                       {breakingNews.map((post) => (
-                        <Link
+                        <div
                           key={post._id}
-                          href={`/articles/post/${post.slug.current}`}
-                          className="group flex flex-row md:flex-col items-center md:items-start gap-6 md:gap-4 relative before:absolute before:-bottom-4 before:left-0 before:right-0 before:h-px before:bg-neutral-200 dark:before:bg-neutral-800 last:before:hidden md:before:hidden transition-opacity duration-200 hover:opacity-80"
+                          className="group flex flex-col gap-2 relative before:absolute before:-bottom-4 before:left-0 before:right-0 before:h-px before:bg-neutral-200 dark:before:bg-neutral-800 last:before:hidden md:before:hidden"
                         >
-                          {/* Image */}
-                          <div className="w-1/3 max-w-36 shrink-0 md:w-full md:max-w-none overflow-hidden rounded-lg">
-                            <div style={{ paddingBottom: '56.25%' }} className="relative">
-                              {post.mainImage && (
-                                <img
-                                  src={urlFor(post.mainImage).width(600).height(338).url()}
-                                  alt={post.title}
-                                  className="absolute inset-0 w-full h-full object-cover"
-                                />
-                              )}
+                          <Link
+                            href={`/articles/post/${post.slug.current}`}
+                            className="flex flex-row md:flex-col items-center md:items-start gap-6 md:gap-4 transition-opacity duration-200 hover:opacity-80"
+                          >
+                            {/* Image */}
+                            <div className="w-1/3 max-w-36 shrink-0 md:w-full md:max-w-none overflow-hidden rounded-lg">
+                              <div style={{ paddingBottom: '56.25%' }} className="relative">
+                                {post.mainImage && (
+                                  <img
+                                    src={urlFor(post.mainImage).width(600).height(338).url()}
+                                    alt={post.title}
+                                    className="absolute inset-0 w-full h-full object-cover"
+                                  />
+                                )}
+                              </div>
                             </div>
-                          </div>
 
-                          {/* Content */}
-                          <div className="flex-1 flex flex-col-reverse md:flex-col gap-2 px-1">
                             {/* Title */}
-                            <h3 className="text-sm md:text-base font-semibold text-neutral-900 dark:text-white line-clamp-2 md:line-clamp-3 mb-2 md:mb-3">
-                              {post.title}
-                            </h3>
-
-                            {/* Tags and Date */}
-                            <div className="flex items-center gap-2 text-[10px] font-medium leading-[14px] text-gray-500 dark:text-gray-400">
-                              {/* Primary Category Tag - Linked */}
-                              {post.categoryName && (
-                                <Link
-                                  href={`/articles/category/${post.categoryName.toLowerCase()}`}
-                                  className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded-sm hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
-                                  onClick={(e) => e.stopPropagation()}
-                                >
-                                  {post.categoryName}
-                                </Link>
-                              )}
-                              {/* Secondary Tag (hollow with border, more rounded) */}
-                              {post.tags?.[0] && (
-                                <span className="border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded-md">
-                                  {post.tags[0]}
-                                </span>
-                              )}
-                              {/* More tags indicator */}
-                              {post.tags && post.tags.length > 1 && (
-                                <button className="flex items-center justify-center w-5 h-5 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
-                                  <span className="text-xs leading-none">...</span>
-                                </button>
-                              )}
-                              <span suppressHydrationWarning>
-                                {format(new Date(post.publishedAt), 'yyyy-MM-dd')}
-                              </span>
+                            <div className="flex-1 px-1">
+                              <h3 className="text-sm md:text-base font-semibold text-neutral-900 dark:text-white line-clamp-2 md:line-clamp-3">
+                                {post.title}
+                              </h3>
                             </div>
+                          </Link>
+
+                          {/* Tags and Date - Outside article link */}
+                          <div className="flex items-center gap-2 text-[10px] font-medium leading-[14px] text-gray-500 dark:text-gray-400 px-1">
+                            {/* Primary Category Tag - Linked */}
+                            {post.categoryName && (
+                              <Link
+                                href={`/articles/category/${post.categoryName.toLowerCase()}`}
+                                className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded-sm hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+                              >
+                                {post.categoryName}
+                              </Link>
+                            )}
+                            {/* Secondary Tag (hollow with border, more rounded) */}
+                            {post.tags?.[0] && (
+                              <span className="border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded-md">
+                                {post.tags[0]}
+                              </span>
+                            )}
+                            {/* More tags indicator */}
+                            {post.tags && post.tags.length > 1 && (
+                              <button className="flex items-center justify-center w-5 h-5 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
+                                <span className="text-xs leading-none">...</span>
+                              </button>
+                            )}
+                            <span suppressHydrationWarning>
+                              {format(new Date(post.publishedAt), 'yyyy-MM-dd')}
+                            </span>
                           </div>
-                        </Link>
+                        </div>
                       ))}
                     </div>
                   </div>
@@ -459,126 +462,128 @@ async function DevelopmentHomePage() {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
                   {/* First Featured Gear */}
                   {featuredGearPost && (
-                    <Link href={`/gear/${featuredGearPost.slug.current}`} className="group flex flex-col w-full transition-opacity duration-200 hover:opacity-80">
-                      {/* Image */}
-                      <div className="relative w-full overflow-hidden rounded-lg">
-                        <div style={{ paddingBottom: '65%' }} className="relative">
-                          {featuredGearPost.mainImage && (
-                            <img
-                              src={urlFor(featuredGearPost.mainImage).width(1000).height(650).url()}
-                              alt={featuredGearPost.title}
-                              className="absolute inset-0 w-full h-full object-cover"
-                            />
+                    <div className="flex flex-col w-full">
+                      <Link href={`/gear/${featuredGearPost.slug.current}`} className="group transition-opacity duration-200 hover:opacity-80">
+                        {/* Image */}
+                        <div className="relative w-full overflow-hidden rounded-lg">
+                          <div style={{ paddingBottom: '65%' }} className="relative">
+                            {featuredGearPost.mainImage && (
+                              <img
+                                src={urlFor(featuredGearPost.mainImage).width(1000).height(650).url()}
+                                alt={featuredGearPost.title}
+                                className="absolute inset-0 w-full h-full object-cover"
+                              />
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Title and Excerpt */}
+                        <div className="flex flex-col gap-2 px-1 mt-4">
+                          {/* Title */}
+                          <h3 className="text-xl md:text-2xl font-body font-semibold leading-tight text-neutral-900 dark:text-white line-clamp-2 mb-3">
+                            {featuredGearPost.title}
+                          </h3>
+
+                          {/* Excerpt */}
+                          {featuredGearPost.excerpt && (
+                            <p className="text-sm text-neutral-600 dark:text-neutral-300 line-clamp-2 mb-4">
+                              {featuredGearPost.excerpt}
+                            </p>
                           )}
                         </div>
-                      </div>
+                      </Link>
 
-                      {/* Content below image */}
-                      <div className="flex flex-col gap-2 px-1 mt-4">
-                        {/* Title */}
-                        <h3 className="text-xl md:text-2xl font-body font-semibold leading-tight text-neutral-900 dark:text-white line-clamp-2 mb-3">
-                          {featuredGearPost.title}
-                        </h3>
-
-                        {/* Excerpt */}
-                        {featuredGearPost.excerpt && (
-                          <p className="text-sm text-neutral-600 dark:text-neutral-300 line-clamp-2 mb-4">
-                            {featuredGearPost.excerpt}
-                          </p>
+                      {/* Tags and Date - Outside gear link */}
+                      <div className="flex items-center gap-2 text-[10px] font-medium leading-[14px] text-gray-500 dark:text-gray-400 px-1">
+                        {/* Primary Category Tag - Linked */}
+                        {featuredGearPost.gearCategoryName && (
+                          <Link
+                            href={`/gear/category/${featuredGearPost.gearCategoryName.toLowerCase().replace(/\s+/g, '-')}`}
+                            className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded-sm hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+                          >
+                            {featuredGearPost.gearCategoryName}
+                          </Link>
                         )}
-
-                        {/* Tags and Date */}
-                        <div className="flex items-center gap-2 text-[10px] font-medium leading-[14px] text-gray-500 dark:text-gray-400">
-                          {/* Primary Category Tag - Linked */}
-                          {featuredGearPost.gearCategoryName && (
-                            <Link
-                              href={`/gear/category/${featuredGearPost.gearCategoryName.toLowerCase().replace(/\s+/g, '-')}`}
-                              className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded-sm hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
-                              onClick={(e) => e.stopPropagation()}
-                            >
-                              {featuredGearPost.gearCategoryName}
-                            </Link>
-                          )}
-                          {/* Secondary Tag (hollow with border, more rounded) */}
-                          {featuredGearPost.tags?.[0] && (
-                            <span className="border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded-md">
-                              {featuredGearPost.tags[0]}
-                            </span>
-                          )}
-                          {/* More tags indicator */}
-                          {featuredGearPost.tags && featuredGearPost.tags.length > 1 && (
-                            <button className="flex items-center justify-center w-5 h-5 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
-                              <span className="text-xs leading-none">...</span>
-                            </button>
-                          )}
-                          <span suppressHydrationWarning>
-                            {format(new Date(featuredGearPost.publishedAt), 'yyyy-MM-dd')}
+                        {/* Secondary Tag (hollow with border, more rounded) */}
+                        {featuredGearPost.tags?.[0] && (
+                          <span className="border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded-md">
+                            {featuredGearPost.tags[0]}
                           </span>
-                        </div>
+                        )}
+                        {/* More tags indicator */}
+                        {featuredGearPost.tags && featuredGearPost.tags.length > 1 && (
+                          <button className="flex items-center justify-center w-5 h-5 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
+                            <span className="text-xs leading-none">...</span>
+                          </button>
+                        )}
+                        <span suppressHydrationWarning>
+                          {format(new Date(featuredGearPost.publishedAt), 'yyyy-MM-dd')}
+                        </span>
                       </div>
-                    </Link>
+                    </div>
                   )}
 
                   {/* Second Featured Gear */}
                   {secondFeaturedGear && (
-                    <Link href={`/gear/${secondFeaturedGear.slug.current}`} className="group flex flex-col w-full transition-opacity duration-200 hover:opacity-80">
-                      {/* Image */}
-                      <div className="relative w-full overflow-hidden rounded-lg">
-                        <div style={{ paddingBottom: '65%' }} className="relative">
-                          {secondFeaturedGear.mainImage && (
-                            <img
-                              src={urlFor(secondFeaturedGear.mainImage).width(1000).height(650).url()}
-                              alt={secondFeaturedGear.title}
-                              className="absolute inset-0 w-full h-full object-cover"
-                            />
+                    <div className="flex flex-col w-full">
+                      <Link href={`/gear/${secondFeaturedGear.slug.current}`} className="group transition-opacity duration-200 hover:opacity-80">
+                        {/* Image */}
+                        <div className="relative w-full overflow-hidden rounded-lg">
+                          <div style={{ paddingBottom: '65%' }} className="relative">
+                            {secondFeaturedGear.mainImage && (
+                              <img
+                                src={urlFor(secondFeaturedGear.mainImage).width(1000).height(650).url()}
+                                alt={secondFeaturedGear.title}
+                                className="absolute inset-0 w-full h-full object-cover"
+                              />
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Title and Excerpt */}
+                        <div className="flex flex-col gap-2 px-1 mt-4">
+                          {/* Title */}
+                          <h3 className="text-xl md:text-2xl font-body font-semibold leading-tight text-neutral-900 dark:text-white line-clamp-2 mb-3">
+                            {secondFeaturedGear.title}
+                          </h3>
+
+                          {/* Excerpt */}
+                          {secondFeaturedGear.excerpt && (
+                            <p className="text-sm text-neutral-600 dark:text-neutral-300 line-clamp-2 mb-4">
+                              {secondFeaturedGear.excerpt}
+                            </p>
                           )}
                         </div>
-                      </div>
+                      </Link>
 
-                      {/* Content below image */}
-                      <div className="flex flex-col gap-2 px-1 mt-4">
-                        {/* Title */}
-                        <h3 className="text-xl md:text-2xl font-body font-semibold leading-tight text-neutral-900 dark:text-white line-clamp-2 mb-3">
-                          {secondFeaturedGear.title}
-                        </h3>
-
-                        {/* Excerpt */}
-                        {secondFeaturedGear.excerpt && (
-                          <p className="text-sm text-neutral-600 dark:text-neutral-300 line-clamp-2 mb-4">
-                            {secondFeaturedGear.excerpt}
-                          </p>
+                      {/* Tags and Date - Outside gear link */}
+                      <div className="flex items-center gap-2 text-[10px] font-medium leading-[14px] text-gray-500 dark:text-gray-400 px-1">
+                        {/* Primary Category Tag - Linked */}
+                        {secondFeaturedGear.gearCategoryName && (
+                          <Link
+                            href={`/gear/category/${secondFeaturedGear.gearCategoryName.toLowerCase().replace(/\s+/g, '-')}`}
+                            className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded-sm hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+                          >
+                            {secondFeaturedGear.gearCategoryName}
+                          </Link>
                         )}
-
-                        {/* Tags and Date */}
-                        <div className="flex items-center gap-2 text-[10px] font-medium leading-[14px] text-gray-500 dark:text-gray-400">
-                          {/* Primary Category Tag - Linked */}
-                          {secondFeaturedGear.gearCategoryName && (
-                            <Link
-                              href={`/gear/category/${secondFeaturedGear.gearCategoryName.toLowerCase().replace(/\s+/g, '-')}`}
-                              className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded-sm hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
-                              onClick={(e) => e.stopPropagation()}
-                            >
-                              {secondFeaturedGear.gearCategoryName}
-                            </Link>
-                          )}
-                          {/* Secondary Tag (hollow with border, more rounded) */}
-                          {secondFeaturedGear.tags?.[0] && (
-                            <span className="border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded-md">
-                              {secondFeaturedGear.tags[0]}
-                            </span>
-                          )}
-                          {/* More tags indicator */}
-                          {secondFeaturedGear.tags && secondFeaturedGear.tags.length > 1 && (
-                            <button className="flex items-center justify-center w-5 h-5 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
-                              <span className="text-xs leading-none">...</span>
-                            </button>
-                          )}
-                          <span suppressHydrationWarning>
-                            {format(new Date(secondFeaturedGear.publishedAt), 'yyyy-MM-dd')}
+                        {/* Secondary Tag (hollow with border, more rounded) */}
+                        {secondFeaturedGear.tags?.[0] && (
+                          <span className="border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded-md">
+                            {secondFeaturedGear.tags[0]}
                           </span>
-                        </div>
+                        )}
+                        {/* More tags indicator */}
+                        {secondFeaturedGear.tags && secondFeaturedGear.tags.length > 1 && (
+                          <button className="flex items-center justify-center w-5 h-5 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
+                            <span className="text-xs leading-none">...</span>
+                          </button>
+                        )}
+                        <span suppressHydrationWarning>
+                          {format(new Date(secondFeaturedGear.publishedAt), 'yyyy-MM-dd')}
+                        </span>
                       </div>
-                    </Link>
+                    </div>
                   )}
                 </div>
               )}
@@ -588,61 +593,60 @@ async function DevelopmentHomePage() {
                 <>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     {recentGear.map((gear) => (
-                      <Link
-                        key={gear._id}
-                        href={`/gear/${gear.slug.current}`}
-                        className="group flex flex-col w-full transition-opacity duration-200 hover:opacity-80"
-                      >
-                        {/* Image */}
-                        <div className="relative w-full overflow-hidden rounded-lg">
-                          <div style={{ paddingBottom: '65%' }} className="relative">
-                            {gear.mainImage && (
-                              <img
-                                src={urlFor(gear.mainImage).width(600).height(390).url()}
-                                alt={gear.title}
-                                className="absolute inset-0 w-full h-full object-cover"
-                              />
-                            )}
+                      <div key={gear._id} className="flex flex-col w-full">
+                        <Link
+                          href={`/gear/${gear.slug.current}`}
+                          className="group transition-opacity duration-200 hover:opacity-80"
+                        >
+                          {/* Image */}
+                          <div className="relative w-full overflow-hidden rounded-lg">
+                            <div style={{ paddingBottom: '65%' }} className="relative">
+                              {gear.mainImage && (
+                                <img
+                                  src={urlFor(gear.mainImage).width(600).height(390).url()}
+                                  alt={gear.title}
+                                  className="absolute inset-0 w-full h-full object-cover"
+                                />
+                              )}
+                            </div>
                           </div>
-                        </div>
 
-                        {/* Content below image */}
-                        <div className="flex flex-col gap-2 px-1 mt-4">
                           {/* Title */}
-                          <h3 className="text-base md:text-lg font-body font-semibold leading-tight text-neutral-900 dark:text-white line-clamp-2 mb-3">
-                            {gear.title}
-                          </h3>
-
-                          {/* Tags and Date */}
-                          <div className="flex items-center gap-2 text-[10px] font-medium leading-[14px] text-gray-500 dark:text-gray-400">
-                            {/* Primary Category Tag - Linked */}
-                            {gear.gearCategoryName && (
-                              <Link
-                                href={`/gear/category/${gear.gearCategoryName.toLowerCase().replace(/\s+/g, '-')}`}
-                                className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded-sm hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
-                                onClick={(e) => e.stopPropagation()}
-                              >
-                                {gear.gearCategoryName}
-                              </Link>
-                            )}
-                            {/* Secondary Tag (hollow with border, more rounded) */}
-                            {gear.tags?.[0] && (
-                              <span className="border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded-md">
-                                {gear.tags[0]}
-                              </span>
-                            )}
-                            {/* More tags indicator */}
-                            {gear.tags && gear.tags.length > 1 && (
-                              <button className="flex items-center justify-center w-5 h-5 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
-                                <span className="text-xs leading-none">...</span>
-                              </button>
-                            )}
-                            <span suppressHydrationWarning>
-                              {format(new Date(gear.publishedAt), 'yyyy-MM-dd')}
-                            </span>
+                          <div className="px-1 mt-4">
+                            <h3 className="text-base md:text-lg font-body font-semibold leading-tight text-neutral-900 dark:text-white line-clamp-2 mb-3">
+                              {gear.title}
+                            </h3>
                           </div>
+                        </Link>
+
+                        {/* Tags and Date - Outside gear link */}
+                        <div className="flex items-center gap-2 text-[10px] font-medium leading-[14px] text-gray-500 dark:text-gray-400 px-1">
+                          {/* Primary Category Tag - Linked */}
+                          {gear.gearCategoryName && (
+                            <Link
+                              href={`/gear/category/${gear.gearCategoryName.toLowerCase().replace(/\s+/g, '-')}`}
+                              className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded-sm hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+                            >
+                              {gear.gearCategoryName}
+                            </Link>
+                          )}
+                          {/* Secondary Tag (hollow with border, more rounded) */}
+                          {gear.tags?.[0] && (
+                            <span className="border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded-md">
+                              {gear.tags[0]}
+                            </span>
+                          )}
+                          {/* More tags indicator */}
+                          {gear.tags && gear.tags.length > 1 && (
+                            <button className="flex items-center justify-center w-5 h-5 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
+                              <span className="text-xs leading-none">...</span>
+                            </button>
+                          )}
+                          <span suppressHydrationWarning>
+                            {format(new Date(gear.publishedAt), 'yyyy-MM-dd')}
+                          </span>
                         </div>
-                      </Link>
+                      </div>
                     ))}
                   </div>
 
