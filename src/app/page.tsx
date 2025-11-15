@@ -423,7 +423,7 @@ async function DevelopmentHomePage() {
                   </h2>
                   {/* Subtitle */}
                   <p className="font-body text-sm md:text-base font-medium text-neutral-600 dark:text-neutral-400 max-w-3xl">
-                    From race day shoes to GPS watches and nutrition. In-depth reviews and comparisons to help you find the perfect gear for every run.
+                    From carbon-plated race shoes to GPS watches and nutrition, we review the latest running tech to uncover the top must-haves for runners
                   </p>
                 </div>
                 {/* All Gear Articles Link - Hidden on mobile */}
@@ -638,7 +638,7 @@ async function DevelopmentHomePage() {
                   </h2>
                   {/* Subtitle */}
                   <p className="font-body text-sm md:text-base font-medium text-neutral-600 dark:text-neutral-400 max-w-3xl">
-                    In-depth marathon guides and course analysis. Use our race database and tools to find your perfect next race.
+                    Find your next race with detailed race guides, course analysis, and insider tips on thousands of the world&apos;s greatest races
                   </p>
                 </div>
                 {/* All Races Link - Hidden on mobile */}
