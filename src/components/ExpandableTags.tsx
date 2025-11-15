@@ -23,17 +23,19 @@ export default function ExpandableTags({ tags }: ExpandableTagsProps) {
       </motion.li>
 
       {/* Additional tags - shown when expanded */}
-      <AnimatePresence>
+      <AnimatePresence mode="sync">
         {isExpanded && tags.slice(1).map((tag, index) => (
           <motion.li
             key={tag}
-            initial={{ opacity: 0, scale: 0.8, y: -10 }}
+            initial={{ opacity: 0, scale: 0.85, y: -8 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.8, y: -10 }}
+            exit={{ opacity: 0, scale: 0.85, y: -8 }}
             transition={{
-              duration: 0.3,
-              delay: index * 0.05,
-              ease: [0.34, 1.56, 0.64, 1]
+              duration: 0.4,
+              delay: index * 0.04,
+              ease: [0.25, 0.46, 0.45, 0.94],
+              opacity: { duration: 0.3 },
+              scale: { duration: 0.35 }
             }}
             style={{ transformOrigin: '50% 50% 0px' }}
           >
