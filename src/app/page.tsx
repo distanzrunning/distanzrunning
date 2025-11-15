@@ -183,7 +183,8 @@ async function DevelopmentHomePage() {
         slug,
         mainImage,
         publishedAt,
-        tags
+        tags,
+        "categoryName": category->title
       }
     `);
 
@@ -297,12 +298,25 @@ async function DevelopmentHomePage() {
                           </p>
                         )}
 
-                        {/* Tag and Date - Category page style */}
-                        <div className="flex items-center gap-3 text-[10px] font-medium leading-[14px] text-gray-500 dark:text-gray-400">
+                        {/* Tags and Date */}
+                        <div className="flex items-center gap-2 text-[10px] font-medium leading-[14px] text-gray-500 dark:text-gray-400">
+                          {/* Primary Category Tag */}
                           {featuredPost.categoryName && (
                             <span className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded-sm">
                               {featuredPost.categoryName}
                             </span>
+                          )}
+                          {/* Secondary Tag (more rounded) */}
+                          {featuredPost.tags?.[0] && (
+                            <span className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded">
+                              {featuredPost.tags[0]}
+                            </span>
+                          )}
+                          {/* More tags indicator - if there are more than 1 tag */}
+                          {featuredPost.tags && featuredPost.tags.length > 1 && (
+                            <button className="flex items-center justify-center w-5 h-5 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
+                              <span className="text-xs leading-none">...</span>
+                            </button>
                           )}
                           <span suppressHydrationWarning>
                             {format(new Date(featuredPost.publishedAt), 'yyyy-MM-dd')}
@@ -363,12 +377,25 @@ async function DevelopmentHomePage() {
                               {post.title}
                             </h3>
 
-                            {/* Tag and Date - Category page style */}
-                            <div className="flex items-center gap-3 text-[10px] font-medium leading-[14px] text-gray-500 dark:text-gray-400">
-                              {post.tags?.[0] && (
+                            {/* Tags and Date */}
+                            <div className="flex items-center gap-2 text-[10px] font-medium leading-[14px] text-gray-500 dark:text-gray-400">
+                              {/* Primary Category Tag */}
+                              {post.categoryName && (
                                 <span className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded-sm">
+                                  {post.categoryName}
+                                </span>
+                              )}
+                              {/* Secondary Tag (more rounded) */}
+                              {post.tags?.[0] && (
+                                <span className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded">
                                   {post.tags[0]}
                                 </span>
+                              )}
+                              {/* More tags indicator */}
+                              {post.tags && post.tags.length > 1 && (
+                                <button className="flex items-center justify-center w-5 h-5 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
+                                  <span className="text-xs leading-none">...</span>
+                                </button>
                               )}
                               <span suppressHydrationWarning>
                                 {format(new Date(post.publishedAt), 'yyyy-MM-dd')}
@@ -452,12 +479,25 @@ async function DevelopmentHomePage() {
                           </p>
                         )}
 
-                        {/* Tag and Date - Category page style */}
-                        <div className="flex items-center gap-3 text-[10px] font-medium leading-[14px] text-gray-500 dark:text-gray-400">
-                          {featuredGearPost.tags?.[0] && (
+                        {/* Tags and Date */}
+                        <div className="flex items-center gap-2 text-[10px] font-medium leading-[14px] text-gray-500 dark:text-gray-400">
+                          {/* Primary Category Tag */}
+                          {featuredGearPost.gearCategoryName && (
                             <span className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded-sm">
+                              {featuredGearPost.gearCategoryName}
+                            </span>
+                          )}
+                          {/* Secondary Tag (more rounded) */}
+                          {featuredGearPost.tags?.[0] && (
+                            <span className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded">
                               {featuredGearPost.tags[0]}
                             </span>
+                          )}
+                          {/* More tags indicator */}
+                          {featuredGearPost.tags && featuredGearPost.tags.length > 1 && (
+                            <button className="flex items-center justify-center w-5 h-5 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
+                              <span className="text-xs leading-none">...</span>
+                            </button>
                           )}
                           <span suppressHydrationWarning>
                             {format(new Date(featuredGearPost.publishedAt), 'yyyy-MM-dd')}
@@ -497,12 +537,25 @@ async function DevelopmentHomePage() {
                           </p>
                         )}
 
-                        {/* Tag and Date - Category page style */}
-                        <div className="flex items-center gap-3 text-[10px] font-medium leading-[14px] text-gray-500 dark:text-gray-400">
-                          {secondFeaturedGear.tags?.[0] && (
+                        {/* Tags and Date */}
+                        <div className="flex items-center gap-2 text-[10px] font-medium leading-[14px] text-gray-500 dark:text-gray-400">
+                          {/* Primary Category Tag */}
+                          {secondFeaturedGear.gearCategoryName && (
                             <span className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded-sm">
+                              {secondFeaturedGear.gearCategoryName}
+                            </span>
+                          )}
+                          {/* Secondary Tag (more rounded) */}
+                          {secondFeaturedGear.tags?.[0] && (
+                            <span className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded">
                               {secondFeaturedGear.tags[0]}
                             </span>
+                          )}
+                          {/* More tags indicator */}
+                          {secondFeaturedGear.tags && secondFeaturedGear.tags.length > 1 && (
+                            <button className="flex items-center justify-center w-5 h-5 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
+                              <span className="text-xs leading-none">...</span>
+                            </button>
                           )}
                           <span suppressHydrationWarning>
                             {format(new Date(secondFeaturedGear.publishedAt), 'yyyy-MM-dd')}
@@ -544,12 +597,25 @@ async function DevelopmentHomePage() {
                             {gear.title}
                           </h3>
 
-                          {/* Tag and Date - Category page style */}
-                          <div className="flex items-center gap-3 text-[10px] font-medium leading-[14px] text-gray-500 dark:text-gray-400">
-                            {gear.tags?.[0] && (
+                          {/* Tags and Date */}
+                          <div className="flex items-center gap-2 text-[10px] font-medium leading-[14px] text-gray-500 dark:text-gray-400">
+                            {/* Primary Category Tag */}
+                            {gear.gearCategoryName && (
                               <span className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded-sm">
+                                {gear.gearCategoryName}
+                              </span>
+                            )}
+                            {/* Secondary Tag (more rounded) */}
+                            {gear.tags?.[0] && (
+                              <span className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded">
                                 {gear.tags[0]}
                               </span>
+                            )}
+                            {/* More tags indicator */}
+                            {gear.tags && gear.tags.length > 1 && (
+                              <button className="flex items-center justify-center w-5 h-5 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
+                                <span className="text-xs leading-none">...</span>
+                              </button>
                             )}
                             <span suppressHydrationWarning>
                               {format(new Date(gear.publishedAt), 'yyyy-MM-dd')}
