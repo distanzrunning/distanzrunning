@@ -317,12 +317,22 @@ async function DevelopmentHomePage() {
                 {breakingNews.length > 0 && (
                   <div className="lg:col-span-1 flex flex-col gap-6 lg:bg-neutral-50 lg:dark:bg-neutral-800/50 lg:rounded-lg lg:p-4">
                     {/* Header */}
-                    <div className="flex items-center gap-3 px-1">
+                    <div className="flex items-center justify-between gap-3 px-1">
                       <div className="inline-flex items-center px-3 py-1.5 bg-electric-pink/10 dark:bg-electric-pink/20 rounded-full">
                         <span className="text-electric-pink dark:text-electric-pink font-medium text-xs tracking-wide uppercase leading-none">
                           News
                         </span>
                       </div>
+                      {/* All Articles Button - Top Right */}
+                      <Link
+                        href="/articles"
+                        className="flex items-center gap-1.5 px-3 h-8 rounded-lg bg-transparent hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors"
+                      >
+                        <span className="font-body text-xs font-medium text-neutral-900 dark:text-white">All articles</span>
+                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                      </Link>
                     </div>
 
                     {/* Articles */}
@@ -368,17 +378,6 @@ async function DevelopmentHomePage() {
                         </Link>
                       ))}
                     </div>
-
-                    {/* All Articles Button */}
-                    <Link
-                      href="/articles"
-                      className="flex items-center justify-center gap-1.5 px-4 h-9 rounded-lg bg-transparent hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors"
-                    >
-                      <span className="font-body text-sm font-medium text-neutral-900 dark:text-white">All articles</span>
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                      </svg>
-                    </Link>
                   </div>
                 )}
               </div>
