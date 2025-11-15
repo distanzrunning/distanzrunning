@@ -289,13 +289,13 @@ async function DevelopmentHomePage() {
                         {/* Title and Excerpt */}
                         <div className="flex flex-col gap-2 px-1 mt-4 lg:mt-6">
                           {/* Title - Using Playfair Display */}
-                          <h3 className="text-2xl md:text-3xl lg:text-4xl font-headline font-semibold leading-tight text-neutral-900 dark:text-white line-clamp-2 md:line-clamp-3 mb-3">
+                          <h3 className="text-3xl md:text-3xl lg:text-4xl font-headline font-semibold leading-tight text-neutral-900 dark:text-white line-clamp-3 md:line-clamp-3 mb-3">
                             {featuredPost.title}
                           </h3>
 
                           {/* Excerpt */}
                           {featuredPost.excerpt && (
-                            <p className="text-sm md:text-base text-neutral-600 dark:text-neutral-300 line-clamp-2 max-w-3xl lg:w-4/5 mb-4">
+                            <p className="text-base md:text-base text-neutral-600 dark:text-neutral-300 line-clamp-3 max-w-3xl lg:w-4/5 mb-4">
                               {featuredPost.excerpt}
                             </p>
                           )}
@@ -371,7 +371,7 @@ async function DevelopmentHomePage() {
 
                             {/* Title */}
                             <div className="flex-1 px-1">
-                              <h3 className="text-base md:text-base font-semibold text-neutral-900 dark:text-white line-clamp-2 md:line-clamp-3">
+                              <h3 className="text-base md:text-base font-semibold text-neutral-900 dark:text-white line-clamp-3 md:line-clamp-3">
                                 {post.title}
                               </h3>
                             </div>
