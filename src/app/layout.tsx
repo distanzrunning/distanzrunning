@@ -2,9 +2,8 @@
 import type { Metadata } from "next";
 import { Playfair_Display, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
-import NavbarAltWrapper from "@/components/NavbarAltWrapper";
-import Footer from "@/components/Footer";
 import AuthProtection from "@/components/AuthProtection";
+import LayoutContent from "@/components/LayoutContent";
 import { DarkModeProvider } from "@/components/DarkModeProvider";
 import ReCaptchaProvider from "@/components/ReCaptchaProvider";
 import { Analytics } from '@vercel/analytics/react';
@@ -59,8 +58,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const isPreviewMode = process.env.PREVIEW_MODE === 'true';
-
   return (
     <html lang="en" className={`${playfairDisplay.variable} ${inter.variable} ${jetbrainsMono.variable} bg-white dark:bg-[#0c0c0d] transition-colors duration-300`}>
       <head>
@@ -129,15 +126,9 @@ export default function RootLayout({
         <ReCaptchaProvider>
           <DarkModeProvider>
             <AuthProtection>
-              {isPreviewMode ? (
-                <main className="min-h-screen">{children}</main>
-              ) : (
-                <>
-                  <NavbarAltWrapper />
-                  <main className="flex-grow">{children}</main>
-                  <Footer />
-                </>
-              )}
+              <LayoutContent>
+                {children}
+              </LayoutContent>
             </AuthProtection>
 
             <Analytics />
