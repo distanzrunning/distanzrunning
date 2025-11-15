@@ -23,21 +23,18 @@ export default function ExpandableTags({ tags }: ExpandableTagsProps) {
       </motion.li>
 
       {/* Additional tags - shown when expanded */}
-      <AnimatePresence mode="sync">
+      <AnimatePresence>
         {isExpanded && tags.slice(1).map((tag, index) => (
           <motion.li
             key={tag}
-            initial={{ opacity: 0, scale: 0.85, y: -8 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.85, y: -8 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             transition={{
-              duration: 0.4,
-              delay: index * 0.04,
-              ease: [0.25, 0.46, 0.45, 0.94],
-              opacity: { duration: 0.3 },
-              scale: { duration: 0.35 }
+              duration: 0.3,
+              delay: index * 0.05,
+              ease: 'easeOut'
             }}
-            style={{ transformOrigin: '50% 50% 0px' }}
           >
             <span className="border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded-md hover:bg-black hover:text-white hover:border-black dark:hover:bg-white dark:hover:text-black dark:hover:border-white transition-colors cursor-pointer">
               {tag}
@@ -48,7 +45,10 @@ export default function ExpandableTags({ tags }: ExpandableTagsProps) {
 
       {/* Toggle button - only show if there are more than 1 tag */}
       {tags.length > 1 && (
-        <motion.li style={{ opacity: 1, transformOrigin: '50% 50% 0px' }}>
+        <motion.li
+          layout
+          transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+        >
           <motion.button
             onClick={() => setIsExpanded(!isExpanded)}
             title={isExpanded ? 'Hide tags' : 'View more tags'}
