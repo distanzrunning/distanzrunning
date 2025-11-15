@@ -27,12 +27,13 @@ export default function ExpandableTags({ tags }: ExpandableTagsProps) {
         {isExpanded && tags.slice(1).map((tag, index) => (
           <motion.li
             key={tag}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+            initial={{ opacity: 0, scale: 0.8, y: -10 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.8, y: -10 }}
             transition={{
-              duration: 0.2,
-              delay: index * 0.05
+              duration: 0.3,
+              delay: index * 0.05,
+              ease: [0.34, 1.56, 0.64, 1]
             }}
             style={{ transformOrigin: '50% 50% 0px' }}
           >
@@ -46,18 +47,37 @@ export default function ExpandableTags({ tags }: ExpandableTagsProps) {
       {/* Toggle button - only show if there are more than 1 tag */}
       {tags.length > 1 && (
         <motion.li style={{ opacity: 1, transformOrigin: '50% 50% 0px' }}>
-          <button
+          <motion.button
             onClick={() => setIsExpanded(!isExpanded)}
             title={isExpanded ? 'Hide tags' : 'View more tags'}
             className="border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 w-5 h-5 rounded-full hover:bg-black hover:text-white hover:border-black dark:hover:bg-white dark:hover:text-black dark:hover:border-white transition-all duration-200 flex items-center justify-center"
             aria-label={isExpanded ? 'Hide tags' : 'View more tags'}
+            whileTap={{ scale: 0.9 }}
           >
-            {isExpanded ? (
-              <X size={12} strokeWidth={2} />
-            ) : (
-              <Ellipsis size={12} strokeWidth={2} />
-            )}
-          </button>
+            <AnimatePresence mode="wait">
+              {isExpanded ? (
+                <motion.span
+                  key="x"
+                  initial={{ rotate: -90, opacity: 0 }}
+                  animate={{ rotate: 0, opacity: 1 }}
+                  exit={{ rotate: 90, opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <X size={12} strokeWidth={2} />
+                </motion.span>
+              ) : (
+                <motion.span
+                  key="ellipsis"
+                  initial={{ rotate: -90, opacity: 0 }}
+                  animate={{ rotate: 0, opacity: 1 }}
+                  exit={{ rotate: 90, opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <Ellipsis size={12} strokeWidth={2} />
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </motion.button>
         </motion.li>
       )}
     </motion.ul>
