@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { Ellipsis, X } from 'lucide-react'
 
 interface ExpandableTagsProps {
   tags: string[]
@@ -36,9 +37,9 @@ export default function ExpandableTags({ tags }: ExpandableTagsProps) {
           aria-label={isExpanded ? 'Hide tags' : 'Show more tags'}
         >
           {isExpanded ? (
-            <span className="text-[10px] leading-none font-medium flex items-center justify-center">×</span>
+            <X size={12} strokeWidth={2} />
           ) : (
-            <span className="text-[10px] leading-none font-medium flex items-center justify-center -mt-[1px]">...</span>
+            <Ellipsis size={12} strokeWidth={2} />
           )}
         </button>
       )}
