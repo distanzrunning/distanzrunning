@@ -300,11 +300,15 @@ async function DevelopmentHomePage() {
 
                         {/* Tags and Date */}
                         <div className="flex items-center gap-2 text-[10px] font-medium leading-[14px] text-gray-500 dark:text-gray-400">
-                          {/* Primary Category Tag */}
+                          {/* Primary Category Tag - Linked */}
                           {featuredPost.categoryName && (
-                            <span className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded-sm">
+                            <Link
+                              href={`/articles/category/${featuredPost.categoryName.toLowerCase()}`}
+                              className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded-sm hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+                              onClick={(e) => e.stopPropagation()}
+                            >
                               {featuredPost.categoryName}
-                            </span>
+                            </Link>
                           )}
                           {/* Secondary Tag (hollow with border, more rounded) */}
                           {featuredPost.tags?.[0] && (
@@ -379,11 +383,15 @@ async function DevelopmentHomePage() {
 
                             {/* Tags and Date */}
                             <div className="flex items-center gap-2 text-[10px] font-medium leading-[14px] text-gray-500 dark:text-gray-400">
-                              {/* Primary Category Tag */}
+                              {/* Primary Category Tag - Linked */}
                               {post.categoryName && (
-                                <span className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded-sm">
+                                <Link
+                                  href={`/articles/category/${post.categoryName.toLowerCase()}`}
+                                  className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded-sm hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+                                  onClick={(e) => e.stopPropagation()}
+                                >
                                   {post.categoryName}
-                                </span>
+                                </Link>
                               )}
                               {/* Secondary Tag (hollow with border, more rounded) */}
                               {post.tags?.[0] && (
@@ -481,11 +489,15 @@ async function DevelopmentHomePage() {
 
                         {/* Tags and Date */}
                         <div className="flex items-center gap-2 text-[10px] font-medium leading-[14px] text-gray-500 dark:text-gray-400">
-                          {/* Primary Category Tag */}
+                          {/* Primary Category Tag - Linked */}
                           {featuredGearPost.gearCategoryName && (
-                            <span className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded-sm">
+                            <Link
+                              href={`/gear/category/${featuredGearPost.gearCategoryName.toLowerCase().replace(/\s+/g, '-')}`}
+                              className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded-sm hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+                              onClick={(e) => e.stopPropagation()}
+                            >
                               {featuredGearPost.gearCategoryName}
-                            </span>
+                            </Link>
                           )}
                           {/* Secondary Tag (hollow with border, more rounded) */}
                           {featuredGearPost.tags?.[0] && (
@@ -539,11 +551,15 @@ async function DevelopmentHomePage() {
 
                         {/* Tags and Date */}
                         <div className="flex items-center gap-2 text-[10px] font-medium leading-[14px] text-gray-500 dark:text-gray-400">
-                          {/* Primary Category Tag */}
+                          {/* Primary Category Tag - Linked */}
                           {secondFeaturedGear.gearCategoryName && (
-                            <span className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded-sm">
+                            <Link
+                              href={`/gear/category/${secondFeaturedGear.gearCategoryName.toLowerCase().replace(/\s+/g, '-')}`}
+                              className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded-sm hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+                              onClick={(e) => e.stopPropagation()}
+                            >
                               {secondFeaturedGear.gearCategoryName}
-                            </span>
+                            </Link>
                           )}
                           {/* Secondary Tag (hollow with border, more rounded) */}
                           {secondFeaturedGear.tags?.[0] && (
@@ -599,11 +615,15 @@ async function DevelopmentHomePage() {
 
                           {/* Tags and Date */}
                           <div className="flex items-center gap-2 text-[10px] font-medium leading-[14px] text-gray-500 dark:text-gray-400">
-                            {/* Primary Category Tag */}
+                            {/* Primary Category Tag - Linked */}
                             {gear.gearCategoryName && (
-                              <span className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded-sm">
+                              <Link
+                                href={`/gear/category/${gear.gearCategoryName.toLowerCase().replace(/\s+/g, '-')}`}
+                                className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded-sm hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+                                onClick={(e) => e.stopPropagation()}
+                              >
                                 {gear.gearCategoryName}
-                              </span>
+                              </Link>
                             )}
                             {/* Secondary Tag (hollow with border, more rounded) */}
                             {gear.tags?.[0] && (
