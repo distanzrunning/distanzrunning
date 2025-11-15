@@ -265,7 +265,7 @@ async function DevelopmentHomePage() {
                     {/* Featured Pill - Above Image */}
                     <div className="flex gap-3 mb-4">
                       <div className="flex items-center gap-2 self-start rounded-full border border-neutral-200 dark:border-neutral-700 backdrop-blur-md px-2.5 py-1.5 md:px-3 md:py-2">
-                        <span className="text-xs md:text-sm text-neutral-900 dark:text-white font-medium">
+                        <span className="text-sm md:text-sm text-neutral-900 dark:text-white font-medium">
                           Featured
                         </span>
                       </div>
@@ -303,7 +303,7 @@ async function DevelopmentHomePage() {
                       </Link>
 
                       {/* Tags and Date - Outside article link */}
-                      <div className="flex items-center gap-2 text-[10px] font-medium leading-[14px] text-gray-500 dark:text-gray-400 px-1">
+                      <div className="flex items-center gap-2 text-xs md:text-[10px] font-medium leading-[14px] text-gray-500 dark:text-gray-400 px-1">
                         {/* Primary Category Tag - Linked */}
                         {featuredPost.categoryName && (
                           <Link
@@ -371,14 +371,14 @@ async function DevelopmentHomePage() {
 
                             {/* Title */}
                             <div className="flex-1 px-1">
-                              <h3 className="text-sm md:text-base font-semibold text-neutral-900 dark:text-white line-clamp-2 md:line-clamp-3">
+                              <h3 className="text-base md:text-base font-semibold text-neutral-900 dark:text-white line-clamp-2 md:line-clamp-3">
                                 {post.title}
                               </h3>
                             </div>
                           </Link>
 
                           {/* Tags and Date - Outside article link */}
-                          <div className="flex items-center gap-2 text-[10px] font-medium leading-[14px] text-gray-500 dark:text-gray-400 px-1">
+                          <div className="flex items-center gap-2 text-xs md:text-[10px] font-medium leading-[14px] text-gray-500 dark:text-gray-400 px-1">
                             {/* Primary Category Tag - Linked */}
                             {post.categoryName && (
                               <Link
@@ -475,7 +475,7 @@ async function DevelopmentHomePage() {
                       </Link>
 
                       {/* Tags and Date - Outside gear link */}
-                      <div className="flex items-center gap-2 text-[10px] font-medium leading-[14px] text-gray-500 dark:text-gray-400 px-1">
+                      <div className="flex items-center gap-2 text-xs md:text-[10px] font-medium leading-[14px] text-gray-500 dark:text-gray-400 px-1">
                         {/* Primary Category Tag - Linked */}
                         {featuredGearPost.gearCategoryName && (
                           <Link
@@ -528,7 +528,7 @@ async function DevelopmentHomePage() {
                       </Link>
 
                       {/* Tags and Date - Outside gear link */}
-                      <div className="flex items-center gap-2 text-[10px] font-medium leading-[14px] text-gray-500 dark:text-gray-400 px-1">
+                      <div className="flex items-center gap-2 text-xs md:text-[10px] font-medium leading-[14px] text-gray-500 dark:text-gray-400 px-1">
                         {/* Primary Category Tag - Linked */}
                         {secondFeaturedGear.gearCategoryName && (
                           <Link
@@ -574,14 +574,14 @@ async function DevelopmentHomePage() {
 
                           {/* Title */}
                           <div className="px-1 mt-4">
-                            <h3 className="text-base md:text-lg font-body font-semibold leading-tight text-neutral-900 dark:text-white line-clamp-2 mb-3">
+                            <h3 className="text-lg md:text-lg font-body font-semibold leading-tight text-neutral-900 dark:text-white line-clamp-2 mb-3">
                               {gear.title}
                             </h3>
                           </div>
                         </Link>
 
                         {/* Tags and Date - Outside gear link */}
-                        <div className="flex items-center gap-2 text-[10px] font-medium leading-[14px] text-gray-500 dark:text-gray-400 px-1">
+                        <div className="flex items-center gap-2 text-xs md:text-[10px] font-medium leading-[14px] text-gray-500 dark:text-gray-400 px-1">
                           {/* Primary Category Tag - Linked */}
                           {gear.gearCategoryName && (
                             <Link
@@ -693,7 +693,7 @@ async function DevelopmentHomePage() {
                           <div className="flex items-center justify-between gap-3">
                             {/* Title and Location */}
                             <div className="flex flex-col gap-1 flex-1">
-                              <h3 className="font-body text-lg font-semibold leading-tight text-neutral-900 dark:text-white line-clamp-2">
+                              <h3 className="font-body text-xl md:text-lg font-semibold leading-tight text-neutral-900 dark:text-white line-clamp-2">
                                 {race.title}
                               </h3>
                               {race.location && (
