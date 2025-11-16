@@ -32,7 +32,7 @@ export default async function RaceGuidesPage() {
 
   return (
     <div className="py-12 bg-white dark:bg-[#0c0c0d] min-h-screen transition-colors duration-300">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="w-[96%] sm:w-[90%] max-w-[2000px] mx-auto px-2 sm:px-3">
         <h1 className="text-3xl md:text-4xl font-bold mb-8 text-neutral-900 dark:text-white">Race Guides</h1>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
