@@ -12,6 +12,7 @@ type RaceGuide = {
   location: string
   eventDate: string
   mainImage: any
+  raceCategoryName?: string
 }
 
 export const revalidate = 60 // Incremental Static Regeneration - refresh every 60s
@@ -24,36 +25,77 @@ export default async function RaceGuidesPage() {
       slug,
       location,
       eventDate,
-      mainImage
+      mainImage,
+      "raceCategoryName": raceCategory->title
     }
   `)
 
   return (
-    <div className="py-12">
+    <div className="py-12 bg-white dark:bg-[#0c0c0d] min-h-screen transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 className="text-3xl font-bold mb-8 text-dark">Race Guides</h1>
+        <h1 className="text-3xl md:text-4xl font-bold mb-8 text-neutral-900 dark:text-white">Race Guides</h1>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {raceGuides.map((race) => (
             <Link
               key={race._id}
               href={`/races/${race.slug.current}`}
-              className="group bg-white border rounded-lg overflow-hidden shadow hover:shadow-md transition-shadow duration-300"
+              className="group transition-opacity duration-200 hover:opacity-80"
             >
-              {race.mainImage && (
-                <img
-                  src={urlFor(race.mainImage).width(600).height(400).url()}
-                  alt={race.title}
-                  className="w-full h-48 object-cover"
-                />
-              )}
-              <div className="p-6">
-                <div className="text-sm text-muted mb-2">
-                  {race.location} — {format(new Date(race.eventDate), 'MMMM d, yyyy')}
+              <div className="flex flex-col">
+                {/* Image Container */}
+                <div className="relative w-full">
+                  {/* Image Wrapper */}
+                  <div className="relative overflow-hidden rounded-t-lg">
+                    <div style={{ paddingBottom: '65%' }} className="relative">
+                      {race.mainImage && (
+                        <img
+                          src={urlFor(race.mainImage).width(800).height(520).url()}
+                          alt={race.title}
+                          className="absolute inset-0 w-full h-full object-cover object-center"
+                        />
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Distance/Category Pill - Top Right */}
+                  {race.raceCategoryName && (
+                    <div className="absolute top-3 right-3 z-[2]">
+                      <div className="px-3 py-1.5 bg-white/95 dark:bg-neutral-900/95 backdrop-blur-sm rounded-full">
+                        <p className="font-body text-xs font-medium text-neutral-900 dark:text-white">
+                          {race.raceCategoryName}
+                        </p>
+                      </div>
+                    </div>
+                  )}
                 </div>
-                <h2 className="text-xl font-bold text-dark group-hover:text-primary transition">
-                  {race.title}
-                </h2>
+
+                {/* Content Card */}
+                <div className="bg-neutral-50 dark:bg-neutral-900 rounded-b-lg px-4 py-4">
+                  <div className="flex items-center justify-between gap-3">
+                    {/* Title and Location */}
+                    <div className="flex flex-col gap-1 flex-1">
+                      <h3 className="font-body text-xl font-semibold leading-tight text-neutral-900 dark:text-white line-clamp-2">
+                        {race.title}
+                      </h3>
+                      {race.location && (
+                        <p className="font-body text-sm font-normal text-neutral-600 dark:text-neutral-400">
+                          {race.location}
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Date Container - Right Side (Rounded) */}
+                    <div className="flex flex-col items-center justify-center gap-0 flex-shrink-0 bg-neutral-200 dark:bg-neutral-800 rounded-lg w-16 h-16">
+                      <p className="font-body text-xs font-medium uppercase text-neutral-900 dark:text-white" suppressHydrationWarning>
+                        {format(new Date(race.eventDate), 'MMM')}
+                      </p>
+                      <p className="font-body text-2xl font-semibold leading-tight text-neutral-900 dark:text-white" suppressHydrationWarning>
+                        {format(new Date(race.eventDate), 'dd')}
+                      </p>
+                    </div>
+                  </div>
+                </div>
               </div>
             </Link>
           ))}
