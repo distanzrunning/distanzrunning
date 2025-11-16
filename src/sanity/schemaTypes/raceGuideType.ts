@@ -50,20 +50,6 @@ export const raceGuideType = defineType({
       options: { hotspot: true },
     }),
     defineField({
-      name: 'courseMap',
-      type: 'image',
-      options: { hotspot: true },
-    }),
-    defineField({
-      name: 'elevationGraph',
-      type: 'image',
-      options: { hotspot: true },
-    }),
-    defineField({
-      name: 'statsTable',
-      type: 'text',
-    }),
-    defineField({
       name: 'raceCategory',
       title: 'Race Category',
       type: 'reference',
