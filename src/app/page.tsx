@@ -325,7 +325,7 @@ async function DevelopmentHomePage() {
 
                 {/* Breaking News - Takes up 1 column */}
                 {breakingNews.length > 0 && (
-                  <div className="lg:col-span-1 flex flex-col gap-6 lg:bg-neutral-50 lg:dark:bg-neutral-800/50 lg:rounded-lg lg:p-4">
+                  <div className="lg:col-span-1 flex flex-col gap-6 lg:border-l lg:border-neutral-200 lg:dark:border-neutral-800 lg:pl-6">
                     {/* Header */}
                     <div className="flex items-center justify-between gap-3 px-1">
                       <div className="inline-flex items-center px-3 py-1.5 bg-electric-pink/10 dark:bg-electric-pink/20 rounded-full">
