@@ -84,6 +84,20 @@ export const raceGuideType = defineType({
       },
     }),
     defineField({
+      name: 'profile',
+      title: 'Profile',
+      type: 'string',
+      description: 'Course elevation profile - consider both distance and net elevation when classifying',
+      options: {
+        list: [
+          { title: 'Flat', value: 'flat' },
+          { title: 'Rolling', value: 'rolling' },
+          { title: 'Hilly', value: 'hilly' },
+          { title: 'Mountainous', value: 'mountainous' },
+        ],
+      },
+    }),
+    defineField({
       name: 'netElevation',
       title: 'Net Elevation',
       type: 'number',
