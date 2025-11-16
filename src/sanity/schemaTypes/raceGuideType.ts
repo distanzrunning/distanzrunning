@@ -25,6 +25,21 @@ export const raceGuideType = defineType({
       type: 'string',
     }),
     defineField({
+      name: 'city',
+      title: 'City',
+      type: 'string',
+    }),
+    defineField({
+      name: 'stateRegion',
+      title: 'State/Region',
+      type: 'string',
+    }),
+    defineField({
+      name: 'country',
+      title: 'Country',
+      type: 'string',
+    }),
+    defineField({
       name: 'eventDate',
       type: 'datetime',
     }),
@@ -53,6 +68,84 @@ export const raceGuideType = defineType({
       type: 'reference',
       to: [{ type: 'raceCategory' }],
       validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'surface',
+      title: 'Surface',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Road', value: 'road' },
+          { title: 'Trail', value: 'trail' },
+          { title: 'Track', value: 'track' },
+          { title: 'Mixed', value: 'mixed' },
+        ],
+      },
+    }),
+    defineField({
+      name: 'profile',
+      title: 'Profile',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Flat', value: 'flat' },
+          { title: 'Rolling', value: 'rolling' },
+          { title: 'Hilly', value: 'hilly' },
+          { title: 'Mountainous', value: 'mountainous' },
+        ],
+      },
+    }),
+    defineField({
+      name: 'elevationGain',
+      title: 'Elevation Gain (meters)',
+      type: 'number',
+    }),
+    defineField({
+      name: 'elevationLoss',
+      title: 'Elevation Loss (meters)',
+      type: 'number',
+    }),
+    defineField({
+      name: 'worldAthleticsLabel',
+      title: 'World Athletics Label',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Platinum', value: 'platinum' },
+          { title: 'Gold', value: 'gold' },
+          { title: 'Silver', value: 'silver' },
+          { title: 'Bronze', value: 'bronze' },
+          { title: 'Elite', value: 'elite' },
+          { title: 'None', value: 'none' },
+        ],
+      },
+    }),
+    defineField({
+      name: 'finishers',
+      title: 'Average Number of Finishers',
+      type: 'number',
+    }),
+    defineField({
+      name: 'price',
+      title: 'Entry Price (USD)',
+      type: 'number',
+    }),
+    defineField({
+      name: 'avgTemperature',
+      title: 'Average Temperature (°C)',
+      type: 'number',
+    }),
+    defineField({
+      name: 'mensCourseRecord',
+      title: "Men's Course Record",
+      type: 'string',
+      description: 'Format: HH:MM:SS',
+    }),
+    defineField({
+      name: 'womensCourseRecord',
+      title: "Women's Course Record",
+      type: 'string',
+      description: 'Format: HH:MM:SS',
     }),
     defineField({
       name: 'featuredRace',
