@@ -1,23 +1,13 @@
 // src/sanity/components/NetElevationInput.tsx
 
-import { useEffect } from 'react'
-import { NumberInputProps, set, unset } from 'sanity'
+import { StringInputProps } from 'sanity'
 import { useFormValue } from 'sanity'
 
-export function NetElevationInput(props: NumberInputProps) {
+export function NetElevationInput(_props: StringInputProps) {
   const elevationGain = useFormValue(['elevationGain']) as number | undefined
   const elevationLoss = useFormValue(['elevationLoss']) as number | undefined
 
   const calculatedNetElevation = Math.abs((elevationGain || 0) - (elevationLoss || 0))
-
-  useEffect(() => {
-    // Auto-update the net elevation field when elevation values change
-    if (elevationGain !== undefined || elevationLoss !== undefined) {
-      props.onChange(set(calculatedNetElevation))
-    } else {
-      props.onChange(unset())
-    }
-  }, [elevationGain, elevationLoss, calculatedNetElevation, props])
 
   // Don't show the field if no elevation data
   if (!elevationGain && !elevationLoss) {
@@ -27,22 +17,22 @@ export function NetElevationInput(props: NumberInputProps) {
   return (
     <div>
       <div style={{ marginBottom: '0.5rem' }}>
-        <label style={{ fontWeight: 600, fontSize: '0.9375rem' }}>
+        <label style={{ fontWeight: 600, fontSize: '0.9375rem', color: '#1f2937' }}>
           Net Elevation (Auto-calculated)
         </label>
       </div>
       <div
         style={{
-          padding: '0.75rem 1rem',
-          backgroundColor: '#f1f3f4',
-          borderRadius: '4px',
-          border: '1px solid #d4d8dd',
+          padding: '1rem 1.25rem',
+          backgroundColor: '#e0f2fe',
+          borderRadius: '6px',
+          border: '2px solid #0ea5e9',
         }}
       >
-        <div style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '0.25rem' }}>
+        <div style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '0.5rem', color: '#0c4a6e' }}>
           {calculatedNetElevation}m
         </div>
-        <div style={{ fontSize: '0.875rem', color: '#66758d' }}>
+        <div style={{ fontSize: '0.875rem', color: '#075985', fontWeight: 500 }}>
           |{elevationGain || 0}m - {elevationLoss || 0}m|
         </div>
       </div>

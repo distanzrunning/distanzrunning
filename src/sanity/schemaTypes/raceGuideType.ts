@@ -84,15 +84,6 @@ export const raceGuideType = defineType({
       },
     }),
     defineField({
-      name: 'netElevation',
-      title: 'Net Elevation',
-      type: 'number',
-      description: 'Automatically calculated as |Elevation Gain - Elevation Loss|',
-      components: {
-        input: NetElevationInput,
-      },
-    }),
-    defineField({
       name: 'elevationGain',
       title: 'Elevation Gain (meters)',
       type: 'number',
@@ -101,6 +92,16 @@ export const raceGuideType = defineType({
       name: 'elevationLoss',
       title: 'Elevation Loss (meters)',
       type: 'number',
+    }),
+    defineField({
+      name: 'netElevationDisplay',
+      title: 'Net Elevation Calculator',
+      type: 'string',
+      description: 'Visual display of net elevation calculation',
+      readOnly: true,
+      components: {
+        input: NetElevationInput,
+      },
     }),
     defineField({
       name: 'worldAthleticsLabel',
