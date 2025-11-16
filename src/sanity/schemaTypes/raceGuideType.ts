@@ -2,17 +2,7 @@
 
 import { defineType, defineField } from 'sanity'
 import { PinIcon } from '@sanity/icons'
-import { ProfileInput } from '../components/ProfileInput'
-
-// Helper function to calculate profile based on net elevation
-export function calculateProfile(elevationGain: number = 0, elevationLoss: number = 0): string {
-  const netElevation = Math.abs(elevationGain - elevationLoss)
-
-  if (netElevation < 50) return 'flat'
-  if (netElevation < 200) return 'rolling'
-  if (netElevation < 500) return 'hilly'
-  return 'mountainous'
-}
+import { NetElevationInput } from '../components/NetElevationInput'
 
 export const raceGuideType = defineType({
   name: 'raceGuide',
@@ -94,12 +84,12 @@ export const raceGuideType = defineType({
       },
     }),
     defineField({
-      name: 'profile',
-      title: 'Profile',
-      type: 'string',
-      description: 'Automatically calculated based on net elevation (gain - loss)',
+      name: 'netElevation',
+      title: 'Net Elevation',
+      type: 'number',
+      description: 'Automatically calculated as |Elevation Gain - Elevation Loss|',
       components: {
-        input: ProfileInput,
+        input: NetElevationInput,
       },
     }),
     defineField({
