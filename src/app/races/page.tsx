@@ -71,7 +71,7 @@ export default async function RaceGuidesPage() {
                 </div>
 
                 {/* Content Card */}
-                <div className="bg-neutral-50 dark:bg-neutral-900 rounded-b-lg px-4 py-4">
+                <div className="bg-neutral-50 dark:bg-neutral-900 rounded-b-lg px-5 py-5">
                   <div className="flex items-center justify-between gap-3">
                     {/* Title and Location */}
                     <div className="flex flex-col gap-1 flex-1">
