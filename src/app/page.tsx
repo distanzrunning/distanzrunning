@@ -262,15 +262,6 @@ async function DevelopmentHomePage() {
                 {/* Featured Post - Takes up 3 columns */}
                 {featuredPost && (
                   <div className="lg:col-span-3 lg:sticky lg:top-20 lg:self-start">
-                    {/* Featured Pill - Above Image */}
-                    <div className="flex gap-3 mb-4">
-                      <div className="flex items-center gap-2 self-start rounded-full border border-neutral-200 dark:border-neutral-700 backdrop-blur-md px-2.5 py-1.5 md:px-3 md:py-2">
-                        <span className="text-sm md:text-sm text-neutral-900 dark:text-white font-medium">
-                          Featured
-                        </span>
-                      </div>
-                    </div>
-
                     <div className="flex flex-col w-full">
                       <Link href={`/articles/post/${featuredPost.slug.current}`} className="group transition-opacity duration-200 hover:opacity-80">
                         {/* Image */}
@@ -283,6 +274,15 @@ async function DevelopmentHomePage() {
                                 className="absolute inset-0 w-full h-full object-cover"
                               />
                             )}
+                          </div>
+
+                          {/* Featured Pill - Overlaid on top left of image */}
+                          <div className="absolute top-4 left-4 md:top-6 md:left-6">
+                            <div className="flex items-center gap-2 rounded-full border border-white/30 backdrop-blur-md px-3 py-2 bg-white/10">
+                              <span className="text-sm text-white font-medium">
+                                Featured
+                              </span>
+                            </div>
                           </div>
                         </div>
 
