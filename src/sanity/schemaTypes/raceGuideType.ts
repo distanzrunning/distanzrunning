@@ -2,7 +2,6 @@
 
 import { defineType, defineField } from 'sanity'
 import { PinIcon } from '@sanity/icons'
-import { NetElevationInput } from '../components/NetElevationInput'
 
 export const raceGuideType = defineType({
   name: 'raceGuide',
@@ -92,16 +91,6 @@ export const raceGuideType = defineType({
       name: 'elevationLoss',
       title: 'Elevation Loss (meters)',
       type: 'number',
-    }),
-    defineField({
-      name: 'netElevationDisplay',
-      title: 'Net Elevation Calculator',
-      type: 'string',
-      description: 'Visual display of net elevation calculation',
-      readOnly: true,
-      components: {
-        input: NetElevationInput,
-      },
     }),
     defineField({
       name: 'worldAthleticsLabel',
