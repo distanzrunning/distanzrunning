@@ -133,7 +133,7 @@ export const raceGuideType = defineType({
     }),
     defineField({
       name: 'finishers',
-      title: 'Average Number of Finishers',
+      title: 'Number of Finishers 2025',
       type: 'number',
     }),
     defineField({
