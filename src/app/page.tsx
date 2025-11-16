@@ -703,8 +703,8 @@ async function DevelopmentHomePage() {
                               )}
                             </div>
 
-                            {/* Date Container - Right Side (Square) */}
-                            <div className="flex flex-col items-center justify-center gap-0 flex-shrink-0 bg-neutral-200 dark:bg-neutral-800 rounded-sm w-16 h-16">
+                            {/* Date Container - Right Side (Rounded) */}
+                            <div className="flex flex-col items-center justify-center gap-0 flex-shrink-0 bg-neutral-200 dark:bg-neutral-800 rounded-lg w-16 h-16">
                               <p className="font-body text-xs font-medium uppercase text-neutral-900 dark:text-white" suppressHydrationWarning>
                                 {format(new Date(race.eventDate), 'MMM')}
                               </p>
