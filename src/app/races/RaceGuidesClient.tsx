@@ -35,7 +35,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
   // Distance filter states
   const [isDistanceFilterOpen, setIsDistanceFilterOpen] = useState(false)
   const [distanceFilterMode, setDistanceFilterMode] = useState<'distance' | 'custom'>('distance')
-  const [distanceUnit, setDistanceUnit] = useState<'km' | 'mi'>('km')
+  const [distanceUnit, setDistanceUnit] = useState<'km' | 'mi'>('mi')
   const [appliedDistanceFilter, setAppliedDistanceFilter] = useState<string | null>(null) // e.g., 'marathon', 'ultra', or 'custom'
   const [tempDistanceFilter, setTempDistanceFilter] = useState<string | null>(null)
   // For custom range (in km)
