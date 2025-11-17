@@ -269,8 +269,22 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                     transition={{ duration: 0.2 }}
                     className="absolute top-full mt-2 left-0 z-50 bg-white dark:bg-neutral-900 rounded-lg shadow-xl border border-neutral-200 dark:border-neutral-800 p-4 min-w-[600px]"
                   >
-                    {/* Toggle between Dates and Months */}
-                    <div className="flex items-center justify-center mb-6">
+                    {/* Top Bar: Action Buttons and Toggle */}
+                    <div className="flex items-center justify-between mb-6">
+                      {/* Clear Button - Left */}
+                      <button
+                        onClick={() => {
+                          setTempDateRange({ start: null, end: null })
+                        }}
+                        className="p-2 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-200 dark:hover:bg-neutral-800 rounded-lg transition-colors"
+                        aria-label="Clear selection"
+                      >
+                        <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
+
+                      {/* Toggle between Dates and Months - Center */}
                       <div className="inline-flex bg-neutral-200 dark:bg-neutral-800 rounded-lg p-1">
                         <button
                           onClick={() => setDateFilterMode('dates')}
@@ -293,6 +307,20 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                           Months
                         </button>
                       </div>
+
+                      {/* Apply Button - Right */}
+                      <button
+                        onClick={() => {
+                          setAppliedDateRange(tempDateRange)
+                          setIsDateFilterOpen(false)
+                        }}
+                        className="p-2 text-neutral-900 dark:text-white hover:bg-neutral-200 dark:hover:bg-neutral-800 rounded-lg transition-colors"
+                        aria-label="Apply filter"
+                      >
+                        <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                      </button>
                     </div>
 
                     {dateFilterMode === 'dates' ? (
@@ -445,27 +473,6 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                         </div>
                       </>
                     )}
-
-                    {/* Action Buttons */}
-                    <div className="flex items-center justify-between mt-6 pt-4 border-t border-neutral-200 dark:border-neutral-800">
-                      <button
-                        onClick={() => {
-                          setTempDateRange({ start: null, end: null })
-                        }}
-                        className="px-4 py-2 text-base text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors"
-                      >
-                        Clear
-                      </button>
-                      <button
-                        onClick={() => {
-                          setAppliedDateRange(tempDateRange)
-                          setIsDateFilterOpen(false)
-                        }}
-                        className="px-6 py-2.5 bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 rounded-lg text-base font-medium hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors"
-                      >
-                        Apply
-                      </button>
-                    </div>
                   </motion.div>
                 )}
               </AnimatePresence>
