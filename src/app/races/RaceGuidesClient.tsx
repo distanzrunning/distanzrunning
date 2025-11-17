@@ -105,6 +105,14 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
   const distanceCategories = [
     { id: '5k', label: '5k', km: 5 },
     { id: '10k', label: '10k', km: 10 },
+    { id: 'half-marathon', label: 'Half Marathon', km: 21.0975 },
+    { id: 'marathon', label: 'Marathon', km: 42.195 },
+  ]
+
+  // All categories for filtering (includes 10 Miles and Ultra)
+  const allDistanceCategories = [
+    { id: '5k', label: '5k', km: 5 },
+    { id: '10k', label: '10k', km: 10 },
     { id: '10-miles', label: '10 Miles', km: 16.09344 },
     { id: 'half-marathon', label: 'Half Marathon', km: 21.0975 },
     { id: 'marathon', label: 'Marathon', km: 42.195 },
@@ -152,7 +160,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
       return `${Math.round(min)}-${Math.round(max)}${unit}`
     }
 
-    const category = distanceCategories.find(c => c.id === appliedDistanceFilter)
+    const category = allDistanceCategories.find(c => c.id === appliedDistanceFilter)
     return category?.label || 'Distance'
   }
 
@@ -680,7 +688,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                       <>
                         {/* Predefined Distance Categories */}
                         <div className="grid grid-cols-3 gap-3 mb-6">
-                          {distanceCategories.map((category) => {
+                          {allDistanceCategories.map((category) => {
                             const isSelected = tempDistanceFilter === category.id
 
                             return (
@@ -706,7 +714,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                         <div className="mb-6">
                           {/* Min/Max Input Fields */}
                           <div className="flex items-center gap-3 mb-8">
-                            <div className="flex-1">
+                            <div className="flex-1 relative">
                               <input
                                 type="number"
                                 value={distanceUnit === 'km' ? Math.round(tempCustomRange.min) : Math.round(kmToMiles(tempCustomRange.min))}
@@ -716,11 +724,17 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                   setTempCustomRange(prev => ({ ...prev, min: Math.min(kmValue, prev.max) }))
                                   setTempDistanceFilter('custom')
                                 }}
-                                className="w-full px-4 py-3 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white text-base font-medium outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-600"
-                                placeholder={distanceUnit === 'km' ? '0 km' : '0 mi'}
+                                className="w-full px-4 py-3 pr-12 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white text-base font-medium outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-600"
+                                placeholder="0"
                               />
+                              <span className="absolute right-4 top-1/2 -translate-y-1/2 text-neutral-500 dark:text-neutral-400 text-base font-medium pointer-events-none">
+                                {distanceUnit}
+                              </span>
                             </div>
-                            <div className="flex-1">
+                            <div className="flex-1 relative">
+                              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-500 dark:text-neutral-400 text-base font-medium pointer-events-none">
+                                &gt;
+                              </span>
                               <input
                                 type="number"
                                 value={distanceUnit === 'km' ? Math.round(tempCustomRange.max) : Math.round(kmToMiles(tempCustomRange.max))}
@@ -730,9 +744,12 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                   setTempCustomRange(prev => ({ ...prev, max: Math.max(kmValue, prev.min) }))
                                   setTempDistanceFilter('custom')
                                 }}
-                                className="w-full px-4 py-3 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white text-base font-medium outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-600"
-                                placeholder={distanceUnit === 'km' ? '100 km' : '62 mi'}
+                                className="w-full px-4 py-3 pl-10 pr-12 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white text-base font-medium outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-600"
+                                placeholder={distanceUnit === 'km' ? '100' : '62'}
                               />
+                              <span className="absolute right-4 top-1/2 -translate-y-1/2 text-neutral-500 dark:text-neutral-400 text-base font-medium pointer-events-none">
+                                {distanceUnit}
+                              </span>
                             </div>
                           </div>
 
@@ -761,7 +778,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                 return (
                                   <div
                                     key={category.id}
-                                    className="absolute w-12 h-12 rounded-full border-2 border-dashed border-neutral-400 dark:border-neutral-500 pointer-events-none z-10"
+                                    className="absolute w-8 h-8 rounded-full border-2 border-dashed border-neutral-400 dark:border-neutral-500 pointer-events-none z-10"
                                     style={{
                                       left: `${position}%`,
                                       transform: 'translateX(-50%)'
