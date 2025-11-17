@@ -4,6 +4,7 @@ import { useState, useMemo } from 'react'
 import Link from 'next/link'
 import { format } from 'date-fns'
 import { urlFor } from '@/sanity/lib/image'
+import { motion, AnimatePresence } from 'framer-motion'
 import type { RaceGuide } from './page'
 
 // Helper function to format location from city, state/region, and country
@@ -52,31 +53,20 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
 
           {/* Search Bar */}
           <div className="relative w-full max-w-2xl h-[52px]">
-            {!isSearchExpanded ? (
-              <button
-                onClick={() => setIsSearchExpanded(true)}
-                className="flex items-center justify-center w-[52px] h-[52px] p-3 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:border-neutral-400 dark:hover:border-neutral-600 transition-colors"
-                aria-label="Expand search"
-              >
-                <svg
-                  className="h-5 w-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
+            <AnimatePresence mode="wait">
+              {!isSearchExpanded ? (
+                <motion.button
+                  key="search-button"
+                  initial={{ opacity: 0, width: 0 }}
+                  animate={{ opacity: 1, width: 52 }}
+                  exit={{ opacity: 0, width: 0 }}
+                  transition={{ duration: 0.2, ease: 'easeInOut' }}
+                  onClick={() => setIsSearchExpanded(true)}
+                  className="flex items-center justify-center h-[52px] p-3 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:border-neutral-400 dark:hover:border-neutral-600 transition-colors"
+                  aria-label="Expand search"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                  />
-                </svg>
-              </button>
-            ) : (
-              <>
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                   <svg
-                    className="h-5 w-5 text-neutral-400"
+                    className="h-5 w-5"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -88,37 +78,62 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                       d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
                     />
                   </svg>
-                </div>
-                <input
-                  type="text"
-                  placeholder="Search"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onBlur={() => {
-                    if (!searchQuery) setIsSearchExpanded(false)
-                  }}
-                  autoFocus
-                  className="w-full h-[52px] pl-12 pr-12 py-3 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white placeholder-neutral-500 dark:placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-600 focus:border-transparent transition-colors"
-                />
-                <button
-                  onClick={() => {
-                    setSearchQuery('')
-                    setIsSearchExpanded(false)
-                  }}
-                  className="absolute inset-y-0 right-0 pr-4 flex items-center text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300"
-                  aria-label="Clear search"
+                </motion.button>
+              ) : (
+                <motion.div
+                  key="search-input"
+                  initial={{ opacity: 0, width: 52 }}
+                  animate={{ opacity: 1, width: '100%' }}
+                  exit={{ opacity: 0, width: 52 }}
+                  transition={{ duration: 0.2, ease: 'easeInOut' }}
+                  className="relative"
                 >
-                  <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  </svg>
-                </button>
-              </>
-            )}
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <svg
+                      className="h-5 w-5 text-neutral-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                      />
+                    </svg>
+                  </div>
+                  <input
+                    type="text"
+                    placeholder="Search"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onBlur={() => {
+                      if (!searchQuery) setIsSearchExpanded(false)
+                    }}
+                    autoFocus
+                    className="w-full h-[52px] pl-12 pr-12 py-3 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white placeholder-neutral-500 dark:placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-600 focus:border-transparent transition-colors"
+                  />
+                  <button
+                    onClick={() => {
+                      setSearchQuery('')
+                      setIsSearchExpanded(false)
+                    }}
+                    className="absolute inset-y-0 right-0 pr-4 flex items-center text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300"
+                    aria-label="Clear search"
+                  >
+                    <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M6 18L18 6M6 6l12 12"
+                      />
+                    </svg>
+                  </button>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </div>
 
