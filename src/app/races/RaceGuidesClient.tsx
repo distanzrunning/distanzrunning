@@ -22,6 +22,8 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
     end: null,
   })
   const [currentMonth, setCurrentMonth] = useState(new Date())
+  const [currentYear, setCurrentYear] = useState(new Date().getFullYear())
+  const [dateFilterMode, setDateFilterMode] = useState<'dates' | 'months'>('dates')
   const dateFilterRef = useRef<HTMLDivElement>(null)
 
   // Close date filter on click outside
@@ -200,8 +202,36 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                     transition={{ duration: 0.2 }}
                     className="absolute top-full mt-2 left-0 z-50 bg-neutral-900 rounded-lg shadow-xl border border-neutral-800 p-4 min-w-[600px]"
                   >
-                    {/* Calendar Header Controls */}
-                    <div className="flex items-center justify-between mb-4 px-2">
+                    {/* Toggle between Dates and Months */}
+                    <div className="flex items-center justify-center mb-6">
+                      <div className="inline-flex bg-neutral-800 rounded-lg p-1">
+                        <button
+                          onClick={() => setDateFilterMode('dates')}
+                          className={`px-6 py-2 rounded-md text-sm font-medium transition-colors ${
+                            dateFilterMode === 'dates'
+                              ? 'bg-white text-neutral-900'
+                              : 'text-neutral-400 hover:text-white'
+                          }`}
+                        >
+                          Dates
+                        </button>
+                        <button
+                          onClick={() => setDateFilterMode('months')}
+                          className={`px-6 py-2 rounded-md text-sm font-medium transition-colors ${
+                            dateFilterMode === 'months'
+                              ? 'bg-white text-neutral-900'
+                              : 'text-neutral-400 hover:text-white'
+                          }`}
+                        >
+                          Months
+                        </button>
+                      </div>
+                    </div>
+
+                    {dateFilterMode === 'dates' ? (
+                      <>
+                        {/* Calendar Header Controls */}
+                        <div className="flex items-center justify-between mb-4 px-2">
                       <button
                         onClick={() => setCurrentMonth(subMonths(currentMonth, 1))}
                         className="p-2 hover:bg-neutral-800 rounded-lg transition-colors"
@@ -291,6 +321,63 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                         )
                       })}
                     </div>
+
+                      </>
+                    ) : (
+                      <>
+                        {/* Months View */}
+                        <div className="flex items-center justify-between mb-6 px-2">
+                          <button
+                            onClick={() => setCurrentYear(currentYear - 1)}
+                            className="p-2 hover:bg-neutral-800 rounded-lg transition-colors"
+                          >
+                            <svg className="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                            </svg>
+                          </button>
+                          <h3 className="text-white font-semibold text-lg">{currentYear}</h3>
+                          <button
+                            onClick={() => setCurrentYear(currentYear + 1)}
+                            className="p-2 hover:bg-neutral-800 rounded-lg transition-colors"
+                          >
+                            <svg className="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                            </svg>
+                          </button>
+                        </div>
+
+                        {/* Month Buttons Grid */}
+                        <div className="grid grid-cols-4 gap-3 mb-6">
+                          {[
+                            'January', 'February', 'March', 'April',
+                            'May', 'June', 'July', 'August',
+                            'September', 'October', 'November', 'December'
+                          ].map((monthName, index) => {
+                            const isSelected =
+                              dateRange.start &&
+                              dateRange.start.getMonth() === index &&
+                              dateRange.start.getFullYear() === currentYear
+
+                            return (
+                              <button
+                                key={monthName}
+                                onClick={() => {
+                                  const startOfMonthDate = new Date(currentYear, index, 1)
+                                  const endOfMonthDate = new Date(currentYear, index + 1, 0, 23, 59, 59)
+                                  setDateRange({ start: startOfMonthDate, end: endOfMonthDate })
+                                }}
+                                className={`
+                                  py-3 px-4 rounded-lg text-sm font-medium transition-colors
+                                  ${isSelected ? 'bg-white text-neutral-900' : 'bg-neutral-800 text-neutral-400 hover:bg-neutral-700 hover:text-white'}
+                                `}
+                              >
+                                {monthName}
+                              </button>
+                            )
+                          })}
+                        </div>
+                      </>
+                    )}
 
                     {/* Action Buttons */}
                     <div className="flex items-center justify-between mt-6 pt-4 border-t border-neutral-800">
