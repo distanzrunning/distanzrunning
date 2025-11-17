@@ -39,8 +39,8 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
   const [appliedDistanceFilter, setAppliedDistanceFilter] = useState<string | null>(null) // e.g., 'marathon', 'ultra', or 'custom'
   const [tempDistanceFilter, setTempDistanceFilter] = useState<string | null>(null)
   // For custom range (in km)
-  const [appliedCustomRange, setAppliedCustomRange] = useState<{ min: number; max: number }>({ min: 0, max: 200 })
-  const [tempCustomRange, setTempCustomRange] = useState<{ min: number; max: number }>({ min: 0, max: 200 })
+  const [appliedCustomRange, setAppliedCustomRange] = useState<{ min: number; max: number }>({ min: 0, max: 100 })
+  const [tempCustomRange, setTempCustomRange] = useState<{ min: number; max: number }>({ min: 0, max: 100 })
   const distanceFilterRef = useRef<HTMLDivElement>(null)
 
   // Close date filter on click outside
@@ -586,8 +586,8 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                       e.stopPropagation()
                       setAppliedDistanceFilter(null)
                       setTempDistanceFilter(null)
-                      setAppliedCustomRange({ min: 0, max: 200 })
-                      setTempCustomRange({ min: 0, max: 200 })
+                      setAppliedCustomRange({ min: 0, max: 100 })
+                      setTempCustomRange({ min: 0, max: 100 })
                     }}
                     className="text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300 transition-colors"
                     aria-label="Clear distance filter"
@@ -626,7 +626,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                       <button
                         onClick={() => {
                           setTempDistanceFilter(null)
-                          setTempCustomRange({ min: 0, max: 200 })
+                          setTempCustomRange({ min: 0, max: 100 })
                         }}
                         className="p-2 bg-neutral-200 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-300 dark:hover:bg-neutral-700 hover:text-neutral-900 dark:hover:text-white rounded-lg transition-colors"
                         aria-label="Clear selection"
@@ -731,7 +731,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                   setTempDistanceFilter('custom')
                                 }}
                                 className="w-full px-4 py-3 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white text-base font-medium outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-600"
-                                placeholder={distanceUnit === 'km' ? '200 km' : '124 mi'}
+                                placeholder={distanceUnit === 'km' ? '100 km' : '62 mi'}
                               />
                             </div>
                           </div>
@@ -740,21 +740,21 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                           <div className="px-2 mb-8">
                             {/* Range Slider with integrated marks */}
                             <div className="relative h-12 flex items-center mb-3">
-                              {/* Slider track - thick track same height as thumbs */}
-                              <div className="absolute w-full h-12 bg-neutral-200 dark:bg-neutral-800 rounded-full">
+                              {/* Slider track - thinner track */}
+                              <div className="absolute w-full h-3 bg-neutral-200 dark:bg-neutral-800 rounded-full" style={{ top: '50%', transform: 'translateY(-50%)' }}>
                                 {/* Filled portion */}
                                 <div
-                                  className="absolute h-12 bg-neutral-300 dark:bg-neutral-700 rounded-full"
+                                  className="absolute h-3 bg-neutral-300 dark:bg-neutral-700 rounded-full"
                                   style={{
-                                    left: `${distanceUnit === 'km' ? (tempCustomRange.min / 200) * 100 : (kmToMiles(tempCustomRange.min) / kmToMiles(200)) * 100}%`,
-                                    width: `${distanceUnit === 'km' ? ((tempCustomRange.max - tempCustomRange.min) / 200) * 100 : ((kmToMiles(tempCustomRange.max) - kmToMiles(tempCustomRange.min)) / kmToMiles(200)) * 100}%`
+                                    left: `${distanceUnit === 'km' ? (tempCustomRange.min / 100) * 100 : (kmToMiles(tempCustomRange.min) / kmToMiles(100)) * 100}%`,
+                                    width: `${distanceUnit === 'km' ? ((tempCustomRange.max - tempCustomRange.min) / 100) * 100 : ((kmToMiles(tempCustomRange.max) - kmToMiles(tempCustomRange.min)) / kmToMiles(100)) * 100}%`
                                   }}
                                 />
                               </div>
 
                               {/* Distance Markers - dotted circles on the track */}
                               {distanceCategories.map((category) => {
-                                const maxValue = distanceUnit === 'km' ? 200 : kmToMiles(200)
+                                const maxValue = distanceUnit === 'km' ? 100 : kmToMiles(100)
                                 const categoryValue = distanceUnit === 'km' ? category.km : kmToMiles(category.km)
                                 const position = (categoryValue / maxValue) * 100
 
@@ -774,7 +774,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                               <input
                                 type="range"
                                 min={0}
-                                max={distanceUnit === 'km' ? 200 : Math.round(kmToMiles(200))}
+                                max={distanceUnit === 'km' ? 100 : Math.round(kmToMiles(100))}
                                 value={distanceUnit === 'km' ? tempCustomRange.min : Math.round(kmToMiles(tempCustomRange.min))}
                                 onChange={(e) => {
                                   let value = Number(e.target.value)
@@ -801,7 +801,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                               <input
                                 type="range"
                                 min={0}
-                                max={distanceUnit === 'km' ? 200 : Math.round(kmToMiles(200))}
+                                max={distanceUnit === 'km' ? 100 : Math.round(kmToMiles(100))}
                                 value={distanceUnit === 'km' ? tempCustomRange.max : Math.round(kmToMiles(tempCustomRange.max))}
                                 onChange={(e) => {
                                   let value = Number(e.target.value)
@@ -828,7 +828,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                               <div
                                 className="absolute w-12 h-12 bg-white dark:bg-neutral-900 border-2 border-neutral-900 dark:border-white rounded-full pointer-events-none z-40 shadow-lg"
                                 style={{
-                                  left: `${distanceUnit === 'km' ? (tempCustomRange.min / 200) * 100 : (kmToMiles(tempCustomRange.min) / kmToMiles(200)) * 100}%`,
+                                  left: `${distanceUnit === 'km' ? (tempCustomRange.min / 100) * 100 : (kmToMiles(tempCustomRange.min) / kmToMiles(100)) * 100}%`,
                                   transform: 'translateX(-50%)'
                                 }}
                               />
@@ -837,7 +837,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                               <div
                                 className="absolute w-12 h-12 bg-white dark:bg-neutral-900 border-2 border-neutral-900 dark:border-white rounded-full pointer-events-none z-40 shadow-lg"
                                 style={{
-                                  left: `${distanceUnit === 'km' ? (tempCustomRange.max / 200) * 100 : (kmToMiles(tempCustomRange.max) / kmToMiles(200)) * 100}%`,
+                                  left: `${distanceUnit === 'km' ? (tempCustomRange.max / 100) * 100 : (kmToMiles(tempCustomRange.max) / kmToMiles(100)) * 100}%`,
                                   transform: 'translateX(-50%)'
                                 }}
                               />
@@ -846,7 +846,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                             {/* Distance Labels Below Slider */}
                             <div className="relative h-6">
                               {distanceCategories.map((category) => {
-                                const maxValue = distanceUnit === 'km' ? 200 : kmToMiles(200)
+                                const maxValue = distanceUnit === 'km' ? 100 : kmToMiles(100)
                                 const categoryValue = distanceUnit === 'km' ? category.km : kmToMiles(category.km)
                                 const position = (categoryValue / maxValue) * 100
 
