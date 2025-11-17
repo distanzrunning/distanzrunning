@@ -886,7 +886,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                           </div>
 
                           {/* Unit Toggle Below Slider */}
-                          <div className="flex items-center justify-center gap-2 mt-6">
+                          <div className="flex items-center justify-center gap-2 mt-6 relative z-50">
                             <div className="inline-flex bg-neutral-200 dark:bg-neutral-800 rounded-lg p-1">
                               <button
                                 onClick={() => setDistanceUnit('km')}
