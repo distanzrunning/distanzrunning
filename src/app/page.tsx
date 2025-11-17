@@ -43,7 +43,9 @@ type RaceGuide = {
   slug: { current: string }
   mainImage: any
   eventDate: string
-  location?: string
+  city?: string
+  stateRegion?: string
+  country?: string
   raceCategoryName?: string
 }
 
@@ -241,7 +243,9 @@ async function DevelopmentHomePage() {
         slug,
         mainImage,
         eventDate,
-        location,
+        city,
+        stateRegion,
+        country,
         "raceCategoryName": raceCategory->title
       }
     `);
@@ -696,9 +700,9 @@ async function DevelopmentHomePage() {
                               <h3 className="font-body text-xl md:text-lg font-semibold leading-tight text-neutral-900 dark:text-white line-clamp-2">
                                 {race.title}
                               </h3>
-                              {race.location && (
+                              {(race.city || race.stateRegion || race.country) && (
                                 <p className="font-body text-sm font-normal text-neutral-600 dark:text-neutral-400">
-                                  {race.location}
+                                  {[race.city, race.stateRegion, race.country].filter(Boolean).join(', ')}
                                 </p>
                               )}
                             </div>

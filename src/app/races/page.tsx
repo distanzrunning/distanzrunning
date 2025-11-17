@@ -9,7 +9,9 @@ type RaceGuide = {
   _id: string
   title: string
   slug: { current: string }
-  location: string
+  city?: string
+  stateRegion?: string
+  country?: string
   eventDate: string
   mainImage: any
   raceCategoryName?: string
@@ -17,13 +19,21 @@ type RaceGuide = {
 
 export const revalidate = 60 // Incremental Static Regeneration - refresh every 60s
 
+// Helper function to format location from city, state/region, and country
+function formatLocation(city?: string, stateRegion?: string, country?: string): string {
+  const parts = [city, stateRegion, country].filter(Boolean)
+  return parts.join(', ')
+}
+
 export default async function RaceGuidesPage() {
   const raceGuides: RaceGuide[] = await sanity.fetch(`
     *[_type == "raceGuide"] | order(eventDate asc) {
       _id,
       title,
       slug,
-      location,
+      city,
+      stateRegion,
+      country,
       eventDate,
       mainImage,
       "raceCategoryName": raceCategory->title
@@ -83,9 +93,9 @@ export default async function RaceGuidesPage() {
                       <h3 className="font-body text-xl font-semibold leading-tight text-neutral-900 dark:text-white line-clamp-2">
                         {race.title}
                       </h3>
-                      {race.location && (
+                      {(race.city || race.stateRegion || race.country) && (
                         <p className="font-body text-sm font-normal text-neutral-600 dark:text-neutral-400">
-                          {race.location}
+                          {formatLocation(race.city, race.stateRegion, race.country)}
                         </p>
                       )}
                     </div>

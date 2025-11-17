@@ -21,10 +21,6 @@ export const raceGuideType = defineType({
       },
     }),
     defineField({
-      name: 'location',
-      type: 'string',
-    }),
-    defineField({
       name: 'city',
       title: 'City',
       type: 'string',
