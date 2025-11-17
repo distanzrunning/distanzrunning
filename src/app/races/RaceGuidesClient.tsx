@@ -704,45 +704,42 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                       <>
                         {/* Custom Range Slider */}
                         <div className="mb-6">
-                          {/* Unit Toggle */}
-                          <div className="flex items-center justify-center gap-2 mb-6">
-                            <button
-                              onClick={() => setDistanceUnit('km')}
-                              className={`px-6 py-2 rounded-lg text-base font-medium transition-colors ${
-                                distanceUnit === 'km'
-                                  ? 'bg-neutral-900 dark:bg-white text-white dark:text-neutral-900'
-                                  : 'bg-neutral-200 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-400 hover:bg-neutral-300 dark:hover:bg-neutral-700'
-                              }`}
-                            >
-                              km
-                            </button>
-                            <button
-                              onClick={() => setDistanceUnit('mi')}
-                              className={`px-6 py-2 rounded-lg text-base font-medium transition-colors ${
-                                distanceUnit === 'mi'
-                                  ? 'bg-neutral-900 dark:bg-white text-white dark:text-neutral-900'
-                                  : 'bg-neutral-200 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-400 hover:bg-neutral-300 dark:hover:bg-neutral-700'
-                              }`}
-                            >
-                              mi
-                            </button>
+                          {/* Min/Max Input Fields */}
+                          <div className="flex items-center gap-3 mb-6">
+                            <div className="flex-1 flex items-center gap-2 px-4 py-3 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900">
+                              <input
+                                type="number"
+                                value={distanceUnit === 'km' ? Math.round(tempCustomRange.min) : Math.round(kmToMiles(tempCustomRange.min))}
+                                onChange={(e) => {
+                                  const value = Number(e.target.value)
+                                  const kmValue = distanceUnit === 'km' ? value : milesToKm(value)
+                                  setTempCustomRange(prev => ({ ...prev, min: Math.min(kmValue, prev.max) }))
+                                  setTempDistanceFilter('custom')
+                                }}
+                                className="w-full bg-transparent text-neutral-900 dark:text-white text-base font-medium outline-none"
+                              />
+                              <span className="text-neutral-600 dark:text-neutral-400 text-sm">{distanceUnit}</span>
+                            </div>
+                            <div className="flex-1 flex items-center gap-2 px-4 py-3 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900">
+                              <span className="text-neutral-600 dark:text-neutral-400 text-sm">&gt;</span>
+                              <input
+                                type="number"
+                                value={distanceUnit === 'km' ? Math.round(tempCustomRange.max) : Math.round(kmToMiles(tempCustomRange.max))}
+                                onChange={(e) => {
+                                  const value = Number(e.target.value)
+                                  const kmValue = distanceUnit === 'km' ? value : milesToKm(value)
+                                  setTempCustomRange(prev => ({ ...prev, max: Math.max(kmValue, prev.min) }))
+                                  setTempDistanceFilter('custom')
+                                }}
+                                className="w-full bg-transparent text-neutral-900 dark:text-white text-base font-medium outline-none"
+                              />
+                              <span className="text-neutral-600 dark:text-neutral-400 text-sm">{distanceUnit}</span>
+                            </div>
                           </div>
 
-                          {/* Range Display */}
-                          <div className="flex items-center justify-between mb-4 px-2">
-                            <span className="text-neutral-900 dark:text-white font-semibold text-lg">
-                              {distanceUnit === 'km' ? `${Math.round(tempCustomRange.min)}km` : `${Math.round(kmToMiles(tempCustomRange.min))}mi`}
-                            </span>
-                            <span className="text-neutral-600 dark:text-neutral-400">to</span>
-                            <span className="text-neutral-900 dark:text-white font-semibold text-lg">
-                              {distanceUnit === 'km' ? `>${Math.round(tempCustomRange.max)}km` : `>${Math.round(kmToMiles(tempCustomRange.max))}mi`}
-                            </span>
-                          </div>
-
-                          {/* Range Slider with Markers */}
-                          <div className="relative px-8">
-                            {/* Distance markers (circles on the line) */}
-                            <div className="absolute top-1/2 left-8 right-8 -translate-y-1/2 flex justify-between pointer-events-none">
+                          {/* Distance Markers Above Slider */}
+                          <div className="relative px-4 mb-2">
+                            <div className="flex justify-between text-xs text-neutral-600 dark:text-neutral-400">
                               {distanceCategories.map((category) => {
                                 const position = distanceUnit === 'km'
                                   ? (category.km / 200) * 100
@@ -751,18 +748,24 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                 return (
                                   <div
                                     key={category.id}
-                                    className="absolute w-3 h-3 bg-neutral-400 dark:bg-neutral-600 rounded-full -translate-x-1/2"
+                                    className="absolute flex flex-col items-center gap-1 -translate-x-1/2"
                                     style={{ left: `${position}%` }}
-                                  />
+                                  >
+                                    <div className="w-2 h-2 bg-neutral-400 dark:bg-neutral-600 rounded-full" />
+                                    <span className="whitespace-nowrap text-xs">{category.label}</span>
+                                  </div>
                                 )
                               })}
                             </div>
+                          </div>
 
+                          {/* Range Slider */}
+                          <div className="relative px-4 pt-8">
                             {/* Slider track */}
-                            <div className="relative h-3 bg-neutral-200 dark:bg-neutral-700 rounded-full">
+                            <div className="relative h-1 bg-neutral-200 dark:bg-neutral-700 rounded-full">
                               {/* Filled portion */}
                               <div
-                                className="absolute h-3 bg-neutral-400 dark:bg-neutral-600 rounded-full"
+                                className="absolute h-1 bg-neutral-900 dark:bg-white rounded-full"
                                 style={{
                                   left: `${distanceUnit === 'km' ? (tempCustomRange.min / 200) * 100 : (kmToMiles(tempCustomRange.min) / kmToMiles(200)) * 100}%`,
                                   width: `${distanceUnit === 'km' ? ((tempCustomRange.max - tempCustomRange.min) / 200) * 100 : ((kmToMiles(tempCustomRange.max) - kmToMiles(tempCustomRange.min)) / kmToMiles(200)) * 100}%`
@@ -793,7 +796,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                 setTempCustomRange(prev => ({ ...prev, min: Math.min(kmValue, prev.max) }))
                                 setTempDistanceFilter('custom')
                               }}
-                              className="absolute top-0 left-0 w-full h-3 opacity-0 cursor-pointer z-10"
+                              className="absolute top-0 left-0 w-full h-1 opacity-0 cursor-pointer z-10"
                               style={{ pointerEvents: 'auto' }}
                             />
 
@@ -820,34 +823,51 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                 setTempCustomRange(prev => ({ ...prev, max: Math.max(kmValue, prev.min) }))
                                 setTempDistanceFilter('custom')
                               }}
-                              className="absolute top-0 left-0 w-full h-3 opacity-0 cursor-pointer z-20"
+                              className="absolute top-0 left-0 w-full h-1 opacity-0 cursor-pointer z-20"
                               style={{ pointerEvents: 'auto' }}
                             />
 
                             {/* Min handle */}
                             <div
-                              className="absolute top-1/2 -translate-y-1/2 w-6 h-6 bg-white dark:bg-neutral-900 border-2 border-neutral-900 dark:border-white rounded-full pointer-events-none z-30"
+                              className="absolute top-1/2 -translate-y-1/2 w-5 h-5 bg-white dark:bg-neutral-900 border-2 border-neutral-900 dark:border-white rounded-full pointer-events-none z-30 shadow-md"
                               style={{
-                                left: `calc(${distanceUnit === 'km' ? (tempCustomRange.min / 200) * 100 : (kmToMiles(tempCustomRange.min) / kmToMiles(200)) * 100}% - 12px)`
+                                left: `calc(${distanceUnit === 'km' ? (tempCustomRange.min / 200) * 100 : (kmToMiles(tempCustomRange.min) / kmToMiles(200)) * 100}% - 10px)`
                               }}
                             />
 
                             {/* Max handle */}
                             <div
-                              className="absolute top-1/2 -translate-y-1/2 w-6 h-6 bg-white dark:bg-neutral-900 border-2 border-neutral-900 dark:border-white rounded-full pointer-events-none z-30"
+                              className="absolute top-1/2 -translate-y-1/2 w-5 h-5 bg-white dark:bg-neutral-900 border-2 border-neutral-900 dark:border-white rounded-full pointer-events-none z-30 shadow-md"
                               style={{
-                                left: `calc(${distanceUnit === 'km' ? (tempCustomRange.max / 200) * 100 : (kmToMiles(tempCustomRange.max) / kmToMiles(200)) * 100}% - 12px)`
+                                left: `calc(${distanceUnit === 'km' ? (tempCustomRange.max / 200) * 100 : (kmToMiles(tempCustomRange.max) / kmToMiles(200)) * 100}% - 10px)`
                               }}
                             />
                           </div>
 
-                          {/* Distance labels below slider */}
-                          <div className="flex justify-between px-8 mt-4 text-xs text-neutral-600 dark:text-neutral-400">
-                            <span>0{distanceUnit}</span>
-                            <span>5k</span>
-                            <span>10k</span>
-                            <span>Half</span>
-                            <span>Marathon</span>
+                          {/* Unit Toggle Below Slider */}
+                          <div className="flex items-center justify-center gap-2 mt-8">
+                            <div className="inline-flex bg-neutral-200 dark:bg-neutral-800 rounded-lg p-1">
+                              <button
+                                onClick={() => setDistanceUnit('km')}
+                                className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                                  distanceUnit === 'km'
+                                    ? 'bg-neutral-900 dark:bg-white text-white dark:text-neutral-900'
+                                    : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
+                                }`}
+                              >
+                                km
+                              </button>
+                              <button
+                                onClick={() => setDistanceUnit('mi')}
+                                className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                                  distanceUnit === 'mi'
+                                    ? 'bg-neutral-900 dark:bg-white text-white dark:text-neutral-900'
+                                    : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
+                                }`}
+                              >
+                                mi
+                              </button>
+                            </div>
                           </div>
                         </div>
                       </>
