@@ -14,11 +14,11 @@ export function calculateNetElevation(
 }
 
 /**
- * Approximate exchange rates (relative to USD)
- * These should ideally be fetched from an API, but this provides a fallback
+ * Fallback exchange rates (relative to USD)
+ * Used when API is unavailable
  * Last updated: January 2025
  */
-const EXCHANGE_RATES: Record<string, number> = {
+const FALLBACK_RATES: Record<string, number> = {
   USD: 1.0,
   EUR: 0.92,
   GBP: 0.79,
@@ -40,22 +40,81 @@ const EXCHANGE_RATES: Record<string, number> = {
   ZAR: 18.5,
 }
 
+// Cache for exchange rates (client-side only)
+let cachedRates: Record<string, number> | null = null
+let cacheTimestamp: number = 0
+const CACHE_DURATION = 7 * 24 * 60 * 60 * 1000 // 7 days
+
 /**
- * Convert a price from one currency to another
+ * Fetch exchange rates from API or use cached/fallback rates
+ * @returns Exchange rates object
+ */
+async function getExchangeRates(): Promise<Record<string, number>> {
+  // Return cached rates if still valid
+  if (cachedRates && Date.now() - cacheTimestamp < CACHE_DURATION) {
+    return cachedRates
+  }
+
+  // Only fetch on client-side
+  if (typeof window !== 'undefined') {
+    try {
+      const response = await fetch('/api/exchange-rates')
+      const data = await response.json()
+
+      if (data.rates) {
+        cachedRates = data.rates
+        cacheTimestamp = Date.now()
+        return data.rates as Record<string, number>
+      }
+    } catch (error) {
+      console.warn('Failed to fetch exchange rates, using fallback:', error)
+    }
+  }
+
+  // Use fallback rates
+  return FALLBACK_RATES
+}
+
+/**
+ * Convert a price from one currency to another (async version with live rates)
  * @param amount - The amount to convert
  * @param fromCurrency - The source currency code (e.g., 'EUR')
  * @param toCurrency - The target currency code (e.g., 'USD')
  * @returns The converted amount
  */
-export function convertCurrency(
+export async function convertCurrency(
+  amount: number,
+  fromCurrency: string,
+  toCurrency: string
+): Promise<number> {
+  if (fromCurrency === toCurrency) return amount
+
+  const rates = await getExchangeRates()
+  const fromRate = rates[fromCurrency] || 1
+  const toRate = rates[toCurrency] || 1
+
+  // Convert to USD first, then to target currency
+  const amountInUSD = amount / fromRate
+  return amountInUSD * toRate
+}
+
+/**
+ * Convert a price from one currency to another (synchronous version with fallback rates)
+ * Use this for server-side rendering or when you need immediate results
+ * @param amount - The amount to convert
+ * @param fromCurrency - The source currency code (e.g., 'EUR')
+ * @param toCurrency - The target currency code (e.g., 'USD')
+ * @returns The converted amount
+ */
+export function convertCurrencySync(
   amount: number,
   fromCurrency: string,
   toCurrency: string
 ): number {
   if (fromCurrency === toCurrency) return amount
 
-  const fromRate = EXCHANGE_RATES[fromCurrency] || 1
-  const toRate = EXCHANGE_RATES[toCurrency] || 1
+  const fromRate = FALLBACK_RATES[fromCurrency] || 1
+  const toRate = FALLBACK_RATES[toCurrency] || 1
 
   // Convert to USD first, then to target currency
   const amountInUSD = amount / fromRate
