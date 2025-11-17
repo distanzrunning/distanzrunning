@@ -91,46 +91,24 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
             race guides, course analysis, insider tips and recommendations
           </p>
 
-          {/* Search Bar */}
-          <div className="relative w-full max-w-2xl h-[52px]">
-            <AnimatePresence mode="wait" initial={false}>
-              {!isSearchExpanded ? (
-                <motion.button
-                  key="search-button"
-                  initial={{ opacity: 0, width: 52 }}
-                  animate={{ opacity: 1, width: 52 }}
-                  exit={{ opacity: 0, width: 52 }}
-                  transition={{ duration: 0.15, ease: 'easeInOut' }}
-                  onClick={() => setIsSearchExpanded(true)}
-                  className="flex items-center justify-center h-[52px] p-3 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:border-neutral-400 dark:hover:border-neutral-600 transition-colors"
-                  aria-label="Expand search"
-                >
-                  <svg
-                    className="h-5 w-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
+          {/* Search and Filters Row */}
+          <div className="flex items-center gap-3 flex-wrap">
+            {/* Search Bar */}
+            <div className="relative h-[44px] flex-shrink-0">
+              <AnimatePresence mode="wait" initial={false}>
+                {!isSearchExpanded ? (
+                  <motion.button
+                    key="search-button"
+                    initial={{ opacity: 0, width: 44 }}
+                    animate={{ opacity: 1, width: 44 }}
+                    exit={{ opacity: 0, width: 44 }}
+                    transition={{ duration: 0.15, ease: 'easeInOut' }}
+                    onClick={() => setIsSearchExpanded(true)}
+                    className="flex items-center justify-center h-[44px] p-2.5 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:border-neutral-400 dark:hover:border-neutral-600 transition-colors"
+                    aria-label="Expand search"
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                    />
-                  </svg>
-                </motion.button>
-              ) : (
-                <motion.div
-                  key="search-input"
-                  initial={{ opacity: 0, width: 52 }}
-                  animate={{ opacity: 1, width: '100%' }}
-                  exit={{ opacity: 0, width: 52 }}
-                  transition={{ duration: 0.25, ease: 'easeInOut' }}
-                  className="relative"
-                >
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                     <svg
-                      className="h-5 w-5 text-neutral-400"
+                      className="h-5 w-5"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -142,47 +120,69 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                         d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
                       />
                     </svg>
-                  </div>
-                  <input
-                    type="text"
-                    placeholder="Search"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    onBlur={() => {
-                      if (!searchQuery) setIsSearchExpanded(false)
-                    }}
-                    autoFocus
-                    className="w-full h-[52px] pl-12 pr-12 py-3 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white placeholder-neutral-500 dark:placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-600 focus:border-transparent transition-colors"
-                  />
-                  <button
-                    onClick={() => {
-                      setSearchQuery('')
-                      setIsSearchExpanded(false)
-                    }}
-                    className="absolute inset-y-0 right-0 pr-4 flex items-center text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300"
-                    aria-label="Clear search"
+                  </motion.button>
+                ) : (
+                  <motion.div
+                    key="search-input"
+                    initial={{ opacity: 0, width: 44 }}
+                    animate={{ opacity: 1, width: 400 }}
+                    exit={{ opacity: 0, width: 44 }}
+                    transition={{ duration: 0.25, ease: 'easeInOut' }}
+                    className="relative"
                   >
-                    <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M6 18L18 6M6 6l12 12"
-                      />
-                    </svg>
-                  </button>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <svg
+                        className="h-5 w-5 text-neutral-400"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                        />
+                      </svg>
+                    </div>
+                    <input
+                      type="text"
+                      placeholder="Search"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      onBlur={() => {
+                        if (!searchQuery) setIsSearchExpanded(false)
+                      }}
+                      autoFocus
+                      className="w-full h-[44px] pl-10 pr-10 py-2.5 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white placeholder-neutral-500 dark:placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-600 focus:border-transparent transition-colors"
+                    />
+                    <button
+                      onClick={() => {
+                        setSearchQuery('')
+                        setIsSearchExpanded(false)
+                      }}
+                      className="absolute inset-y-0 right-0 pr-3 flex items-center text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300"
+                      aria-label="Clear search"
+                    >
+                      <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M6 18L18 6M6 6l12 12"
+                        />
+                      </svg>
+                    </button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
 
-          {/* Filters Row */}
-          <div className="mt-6 flex items-center gap-3 flex-wrap">
             {/* Date Filter */}
             <div className="relative" ref={dateFilterRef}>
               <button
                 onClick={() => setIsDateFilterOpen(!isDateFilterOpen)}
-                className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white hover:border-neutral-400 dark:hover:border-neutral-600 transition-colors text-sm font-medium"
+                className="flex items-center gap-2 px-4 h-[44px] rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white hover:border-neutral-400 dark:hover:border-neutral-600 transition-colors text-sm font-medium whitespace-nowrap"
               >
                 Dates
                 <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
