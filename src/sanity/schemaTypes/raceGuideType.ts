@@ -52,6 +52,12 @@ export const raceGuideType = defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
+      name: 'distance',
+      title: 'Distance (km)',
+      type: 'number',
+      description: 'Exact race distance in kilometers (e.g., 42.195 for marathon, 21.0975 for half marathon)',
+    }),
+    defineField({
       name: 'surface',
       title: 'Surface',
       type: 'string',

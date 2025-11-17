@@ -32,6 +32,17 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
   const [dateFilterMode, setDateFilterMode] = useState<'dates' | 'months'>('dates')
   const dateFilterRef = useRef<HTMLDivElement>(null)
 
+  // Distance filter states
+  const [isDistanceFilterOpen, setIsDistanceFilterOpen] = useState(false)
+  const [distanceFilterMode, setDistanceFilterMode] = useState<'distance' | 'custom'>('distance')
+  const [distanceUnit, setDistanceUnit] = useState<'km' | 'mi'>('km')
+  const [appliedDistanceFilter, setAppliedDistanceFilter] = useState<string | null>(null) // e.g., 'marathon', 'ultra', or 'custom'
+  const [tempDistanceFilter, setTempDistanceFilter] = useState<string | null>(null)
+  // For custom range (in km)
+  const [appliedCustomRange, setAppliedCustomRange] = useState<{ min: number; max: number }>({ min: 0, max: 200 })
+  const [tempCustomRange, setTempCustomRange] = useState<{ min: number; max: number }>({ min: 0, max: 200 })
+  const distanceFilterRef = useRef<HTMLDivElement>(null)
+
   // Close date filter on click outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -51,6 +62,54 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
       setTempDateRange(appliedDateRange)
     }
   }, [isDateFilterOpen, appliedDateRange])
+
+  // Close distance filter on click outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (distanceFilterRef.current && !distanceFilterRef.current.contains(event.target as Node)) {
+        setIsDistanceFilterOpen(false)
+      }
+    }
+    if (isDistanceFilterOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+      return () => document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [isDistanceFilterOpen])
+
+  // Initialize temp distance filter when opening dropdown
+  useEffect(() => {
+    if (isDistanceFilterOpen) {
+      setTempDistanceFilter(appliedDistanceFilter)
+      setTempCustomRange(appliedCustomRange)
+    }
+  }, [isDistanceFilterOpen, appliedDistanceFilter, appliedCustomRange])
+
+  // Helper: Convert km to miles
+  const kmToMiles = (km: number) => km * 0.621371
+
+  // Helper: Convert miles to km
+  const milesToKm = (miles: number) => miles / 0.621371
+
+  // Helper: Get distance category from km
+  const getDistanceCategory = (distanceKm: number): string | null => {
+    if (distanceKm >= 42.195 && distanceKm < 50) return 'marathon' // Standard marathon
+    if (distanceKm >= 50) return 'ultra' // Ultra (50km+)
+    if (distanceKm >= 21.0 && distanceKm < 21.2) return 'half-marathon' // Half marathon
+    if (distanceKm >= 16.0 && distanceKm < 16.2) return '10-miles' // 10 miles
+    if (distanceKm >= 10.0 && distanceKm < 10.1) return '10k' // 10k
+    if (distanceKm >= 5.0 && distanceKm < 5.1) return '5k' // 5k
+    return null
+  }
+
+  // Distance categories with km values
+  const distanceCategories = [
+    { id: '5k', label: '5k', km: 5 },
+    { id: '10k', label: '10k', km: 10 },
+    { id: '10-miles', label: '10 Miles', km: 16.09344 },
+    { id: 'half-marathon', label: 'Half Marathon', km: 21.0975 },
+    { id: 'marathon', label: 'Marathon', km: 42.195 },
+    { id: 'ultra', label: 'Ultra', km: 50 }, // 50km+ for ultras
+  ]
 
   // Format date filter display text
   const getDateFilterText = () => {
@@ -78,6 +137,23 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
     }
 
     return 'Dates'
+  }
+
+  // Format distance filter display text
+  const getDistanceFilterText = () => {
+    if (!appliedDistanceFilter) {
+      return 'Distance'
+    }
+
+    if (appliedDistanceFilter === 'custom') {
+      const unit = distanceUnit
+      const min = unit === 'km' ? appliedCustomRange.min : kmToMiles(appliedCustomRange.min)
+      const max = unit === 'km' ? appliedCustomRange.max : kmToMiles(appliedCustomRange.max)
+      return `${Math.round(min)}-${Math.round(max)}${unit}`
+    }
+
+    const category = distanceCategories.find(c => c.id === appliedDistanceFilter)
+    return category?.label || 'Distance'
   }
 
   // Filter races based on search query and date range
@@ -119,8 +195,24 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
       })
     }
 
+    // Apply distance filter
+    if (appliedDistanceFilter) {
+      filtered = filtered.filter((race) => {
+        if (!race.distance) return false
+
+        if (appliedDistanceFilter === 'custom') {
+          // Custom range filter
+          return race.distance >= appliedCustomRange.min && race.distance <= appliedCustomRange.max
+        } else {
+          // Category filter
+          const category = getDistanceCategory(race.distance)
+          return category === appliedDistanceFilter
+        }
+      })
+    }
+
     return filtered
-  }, [races, searchQuery, appliedDateRange])
+  }, [races, searchQuery, appliedDateRange, appliedDistanceFilter, appliedCustomRange])
 
   return (
     <div className="py-12 bg-white dark:bg-[#0c0c0d] min-h-screen transition-colors duration-300">
@@ -470,6 +562,212 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                               </button>
                             )
                           })}
+                        </div>
+                      </>
+                    )}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {/* Distance Filter */}
+            <div className="relative" ref={distanceFilterRef}>
+              {appliedDistanceFilter ? (
+                // Filter is active - show filter value with X button
+                <div className="flex items-center gap-2 px-4 h-[44px] rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white text-sm font-medium">
+                  <button
+                    onClick={() => setIsDistanceFilterOpen(!isDistanceFilterOpen)}
+                    className="hover:text-neutral-600 dark:hover:text-neutral-400 transition-colors"
+                  >
+                    {getDistanceFilterText()}
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      setAppliedDistanceFilter(null)
+                      setTempDistanceFilter(null)
+                      setAppliedCustomRange({ min: 0, max: 200 })
+                      setTempCustomRange({ min: 0, max: 200 })
+                    }}
+                    className="text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300 transition-colors"
+                    aria-label="Clear distance filter"
+                  >
+                    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+              ) : (
+                // No filter - show default button
+                <button
+                  onClick={() => setIsDistanceFilterOpen(!isDistanceFilterOpen)}
+                  className="flex items-center gap-2 px-4 h-[44px] rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white hover:border-neutral-400 dark:hover:border-neutral-600 transition-colors text-sm font-medium whitespace-nowrap"
+                >
+                  Distance
+                  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+              )}
+
+              {/* Distance Dropdown */}
+              <AnimatePresence>
+                {isDistanceFilterOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                    className="absolute top-full mt-2 left-0 z-50 bg-white dark:bg-neutral-900 rounded-lg shadow-xl border border-neutral-200 dark:border-neutral-800 p-4 min-w-[600px]"
+                  >
+                    {/* Top Bar: Action Buttons and Toggle */}
+                    <div className="flex items-center justify-between mb-6">
+                      {/* Clear Button - Left */}
+                      <button
+                        onClick={() => {
+                          setTempDistanceFilter(null)
+                          setTempCustomRange({ min: 0, max: 200 })
+                        }}
+                        className="p-2 bg-neutral-200 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-300 dark:hover:bg-neutral-700 hover:text-neutral-900 dark:hover:text-white rounded-lg transition-colors"
+                        aria-label="Clear selection"
+                      >
+                        <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
+
+                      {/* Toggle between Distance and Custom - Center */}
+                      <div className="inline-flex bg-neutral-200 dark:bg-neutral-800 rounded-lg p-1">
+                        <button
+                          onClick={() => setDistanceFilterMode('distance')}
+                          className={`px-6 py-2.5 rounded-md text-base font-medium transition-colors ${
+                            distanceFilterMode === 'distance'
+                              ? 'bg-neutral-900 dark:bg-white text-white dark:text-neutral-900'
+                              : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
+                          }`}
+                        >
+                          Distance
+                        </button>
+                        <button
+                          onClick={() => setDistanceFilterMode('custom')}
+                          className={`px-6 py-2.5 rounded-md text-base font-medium transition-colors ${
+                            distanceFilterMode === 'custom'
+                              ? 'bg-neutral-900 dark:bg-white text-white dark:text-neutral-900'
+                              : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
+                          }`}
+                        >
+                          Custom
+                        </button>
+                      </div>
+
+                      {/* Apply Button - Right */}
+                      <button
+                        onClick={() => {
+                          setAppliedDistanceFilter(tempDistanceFilter)
+                          setAppliedCustomRange(tempCustomRange)
+                          setIsDistanceFilterOpen(false)
+                        }}
+                        className="p-2 bg-neutral-200 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-300 dark:hover:bg-neutral-700 hover:text-neutral-900 dark:hover:text-white rounded-lg transition-colors"
+                        aria-label="Apply filter"
+                      >
+                        <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                      </button>
+                    </div>
+
+                    {distanceFilterMode === 'distance' ? (
+                      <>
+                        {/* Predefined Distance Categories */}
+                        <div className="grid grid-cols-3 gap-3 mb-6">
+                          {distanceCategories.map((category) => {
+                            const isSelected = tempDistanceFilter === category.id
+
+                            return (
+                              <button
+                                key={category.id}
+                                onClick={() => {
+                                  setTempDistanceFilter(category.id)
+                                }}
+                                className={`
+                                  py-3 px-4 rounded-lg text-base font-medium transition-colors
+                                  ${isSelected ? 'bg-neutral-900 dark:bg-white text-white dark:text-neutral-900' : 'bg-neutral-200 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-400 hover:bg-neutral-300 dark:hover:bg-neutral-700 hover:text-neutral-900 dark:hover:text-white'}
+                                `}
+                              >
+                                {category.label}
+                              </button>
+                            )
+                          })}
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        {/* Custom Range Slider */}
+                        <div className="mb-6">
+                          {/* Unit Toggle */}
+                          <div className="flex items-center justify-center gap-2 mb-6">
+                            <button
+                              onClick={() => setDistanceUnit('km')}
+                              className={`px-6 py-2 rounded-lg text-base font-medium transition-colors ${
+                                distanceUnit === 'km'
+                                  ? 'bg-neutral-900 dark:bg-white text-white dark:text-neutral-900'
+                                  : 'bg-neutral-200 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-400 hover:bg-neutral-300 dark:hover:bg-neutral-700'
+                              }`}
+                            >
+                              km
+                            </button>
+                            <button
+                              onClick={() => setDistanceUnit('mi')}
+                              className={`px-6 py-2 rounded-lg text-base font-medium transition-colors ${
+                                distanceUnit === 'mi'
+                                  ? 'bg-neutral-900 dark:bg-white text-white dark:text-neutral-900'
+                                  : 'bg-neutral-200 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-400 hover:bg-neutral-300 dark:hover:bg-neutral-700'
+                              }`}
+                            >
+                              mi
+                            </button>
+                          </div>
+
+                          {/* Range Display */}
+                          <div className="flex items-center justify-between mb-4 px-2">
+                            <span className="text-neutral-900 dark:text-white font-semibold text-lg">
+                              {distanceUnit === 'km' ? `${Math.round(tempCustomRange.min)}km` : `${Math.round(kmToMiles(tempCustomRange.min))}mi`}
+                            </span>
+                            <span className="text-neutral-600 dark:text-neutral-400">to</span>
+                            <span className="text-neutral-900 dark:text-white font-semibold text-lg">
+                              {distanceUnit === 'km' ? `${Math.round(tempCustomRange.max)}km` : `${Math.round(kmToMiles(tempCustomRange.max))}mi`}
+                            </span>
+                          </div>
+
+                          {/* Range Slider */}
+                          <div className="px-2">
+                            <input
+                              type="range"
+                              min={distanceUnit === 'km' ? 0 : 0}
+                              max={distanceUnit === 'km' ? 200 : Math.round(kmToMiles(200))}
+                              value={distanceUnit === 'km' ? tempCustomRange.min : Math.round(kmToMiles(tempCustomRange.min))}
+                              onChange={(e) => {
+                                const value = Number(e.target.value)
+                                const kmValue = distanceUnit === 'km' ? value : milesToKm(value)
+                                setTempCustomRange(prev => ({ ...prev, min: Math.min(kmValue, prev.max) }))
+                                setTempDistanceFilter('custom')
+                              }}
+                              className="w-full h-2 bg-neutral-200 dark:bg-neutral-700 rounded-lg appearance-none cursor-pointer mb-4"
+                            />
+                            <input
+                              type="range"
+                              min={distanceUnit === 'km' ? 0 : 0}
+                              max={distanceUnit === 'km' ? 200 : Math.round(kmToMiles(200))}
+                              value={distanceUnit === 'km' ? tempCustomRange.max : Math.round(kmToMiles(tempCustomRange.max))}
+                              onChange={(e) => {
+                                const value = Number(e.target.value)
+                                const kmValue = distanceUnit === 'km' ? value : milesToKm(value)
+                                setTempCustomRange(prev => ({ ...prev, max: Math.max(kmValue, prev.min) }))
+                                setTempDistanceFilter('custom')
+                              }}
+                              className="w-full h-2 bg-neutral-200 dark:bg-neutral-700 rounded-lg appearance-none cursor-pointer"
+                            />
+                          </div>
                         </div>
                       </>
                     )}
