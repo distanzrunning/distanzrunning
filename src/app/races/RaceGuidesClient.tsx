@@ -1,8 +1,8 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useRef, useEffect } from 'react'
 import Link from 'next/link'
-import { format } from 'date-fns'
+import { format, addMonths, subMonths, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay, isWithinInterval, startOfDay } from 'date-fns'
 import { urlFor } from '@/sanity/lib/image'
 import { motion, AnimatePresence } from 'framer-motion'
 import type { RaceGuide } from './page'
@@ -16,28 +16,68 @@ function formatLocation(city?: string, stateRegion?: string, country?: string): 
 export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
   const [searchQuery, setSearchQuery] = useState('')
   const [isSearchExpanded, setIsSearchExpanded] = useState(false)
+  const [isDateFilterOpen, setIsDateFilterOpen] = useState(false)
+  const [dateRange, setDateRange] = useState<{ start: Date | null; end: Date | null }>({
+    start: null,
+    end: null,
+  })
+  const [currentMonth, setCurrentMonth] = useState(new Date())
+  const dateFilterRef = useRef<HTMLDivElement>(null)
 
-  // Filter races based on search query
+  // Close date filter on click outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dateFilterRef.current && !dateFilterRef.current.contains(event.target as Node)) {
+        setIsDateFilterOpen(false)
+      }
+    }
+    if (isDateFilterOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+      return () => document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [isDateFilterOpen])
+
+  // Filter races based on search query and date range
   const filteredRaces = useMemo(() => {
-    if (!searchQuery.trim()) return races
+    let filtered = races
 
-    const query = searchQuery.toLowerCase()
-    return races.filter((race) => {
-      const title = race.title?.toLowerCase() || ''
-      const city = race.city?.toLowerCase() || ''
-      const stateRegion = race.stateRegion?.toLowerCase() || ''
-      const country = race.country?.toLowerCase() || ''
-      const category = race.raceCategoryName?.toLowerCase() || ''
+    // Apply search filter
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase()
+      filtered = filtered.filter((race) => {
+        const title = race.title?.toLowerCase() || ''
+        const city = race.city?.toLowerCase() || ''
+        const stateRegion = race.stateRegion?.toLowerCase() || ''
+        const country = race.country?.toLowerCase() || ''
+        const category = race.raceCategoryName?.toLowerCase() || ''
 
-      return (
-        title.includes(query) ||
-        city.includes(query) ||
-        stateRegion.includes(query) ||
-        country.includes(query) ||
-        category.includes(query)
-      )
-    })
-  }, [races, searchQuery])
+        return (
+          title.includes(query) ||
+          city.includes(query) ||
+          stateRegion.includes(query) ||
+          country.includes(query) ||
+          category.includes(query)
+        )
+      })
+    }
+
+    // Apply date range filter
+    if (dateRange.start || dateRange.end) {
+      filtered = filtered.filter((race) => {
+        const raceDate = new Date(race.eventDate)
+        if (dateRange.start && dateRange.end) {
+          return raceDate >= dateRange.start && raceDate <= dateRange.end
+        } else if (dateRange.start) {
+          return raceDate >= dateRange.start
+        } else if (dateRange.end) {
+          return raceDate <= dateRange.end
+        }
+        return true
+      })
+    }
+
+    return filtered
+  }, [races, searchQuery, dateRange])
 
   return (
     <div className="py-12 bg-white dark:bg-[#0c0c0d] min-h-screen transition-colors duration-300">
@@ -134,6 +174,145 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                 </motion.div>
               )}
             </AnimatePresence>
+          </div>
+
+          {/* Filters Row */}
+          <div className="mt-6 flex items-center gap-3 flex-wrap">
+            {/* Date Filter */}
+            <div className="relative" ref={dateFilterRef}>
+              <button
+                onClick={() => setIsDateFilterOpen(!isDateFilterOpen)}
+                className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white hover:border-neutral-400 dark:hover:border-neutral-600 transition-colors text-sm font-medium"
+              >
+                Dates
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+
+              {/* Date Dropdown */}
+              <AnimatePresence>
+                {isDateFilterOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                    className="absolute top-full mt-2 left-0 z-50 bg-neutral-900 rounded-lg shadow-xl border border-neutral-800 p-4 min-w-[600px]"
+                  >
+                    {/* Calendar Header Controls */}
+                    <div className="flex items-center justify-between mb-4 px-2">
+                      <button
+                        onClick={() => setCurrentMonth(subMonths(currentMonth, 1))}
+                        className="p-2 hover:bg-neutral-800 rounded-lg transition-colors"
+                      >
+                        <svg className="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                        </svg>
+                      </button>
+                      <button
+                        onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}
+                        className="p-2 hover:bg-neutral-800 rounded-lg transition-colors"
+                      >
+                        <svg className="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                      </button>
+                    </div>
+
+                    {/* Two Month Calendar Grid */}
+                    <div className="grid grid-cols-2 gap-6">
+                      {[currentMonth, addMonths(currentMonth, 1)].map((month, monthIndex) => {
+                        const monthStart = startOfMonth(month)
+                        const monthEnd = endOfMonth(month)
+                        const daysInMonth = eachDayOfInterval({ start: monthStart, end: monthEnd })
+
+                        return (
+                          <div key={monthIndex}>
+                            {/* Month Name */}
+                            <div className="text-center mb-4">
+                              <h3 className="text-white font-semibold text-base">
+                                {format(month, 'MMMM yyyy')}
+                              </h3>
+                            </div>
+
+                            {/* Day Headers */}
+                            <div className="grid grid-cols-7 gap-1 mb-2">
+                              {['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'].map((day) => (
+                                <div key={day} className="text-center text-neutral-500 text-xs font-medium py-1">
+                                  {day}
+                                </div>
+                              ))}
+                            </div>
+
+                            {/* Calendar Days */}
+                            <div className="grid grid-cols-7 gap-1">
+                              {/* Add empty cells for days before month starts */}
+                              {Array.from({ length: (monthStart.getDay() + 6) % 7 }).map((_, i) => (
+                                <div key={`empty-${i}`} />
+                              ))}
+
+                              {daysInMonth.map((day) => {
+                                const dayStart = startOfDay(day)
+                                const isSelected =
+                                  (dateRange.start && isSameDay(dayStart, dateRange.start)) ||
+                                  (dateRange.end && isSameDay(dayStart, dateRange.end))
+                                const isInRange =
+                                  dateRange.start && dateRange.end &&
+                                  isWithinInterval(dayStart, { start: dateRange.start, end: dateRange.end })
+
+                                return (
+                                  <button
+                                    key={day.toString()}
+                                    onClick={() => {
+                                      if (!dateRange.start || (dateRange.start && dateRange.end)) {
+                                        setDateRange({ start: dayStart, end: null })
+                                      } else {
+                                        if (dayStart < dateRange.start) {
+                                          setDateRange({ start: dayStart, end: dateRange.start })
+                                        } else {
+                                          setDateRange({ ...dateRange, end: dayStart })
+                                        }
+                                      }
+                                    }}
+                                    className={`
+                                      h-9 flex items-center justify-center rounded-lg text-sm font-medium transition-colors
+                                      ${isSelected ? 'bg-white text-neutral-900' : ''}
+                                      ${isInRange && !isSelected ? 'bg-neutral-700 text-white' : ''}
+                                      ${!isSelected && !isInRange ? 'text-neutral-400 hover:bg-neutral-800 hover:text-white' : ''}
+                                    `}
+                                  >
+                                    {format(day, 'd')}
+                                  </button>
+                                )
+                              })}
+                            </div>
+                          </div>
+                        )
+                      })}
+                    </div>
+
+                    {/* Action Buttons */}
+                    <div className="flex items-center justify-between mt-6 pt-4 border-t border-neutral-800">
+                      <button
+                        onClick={() => {
+                          setDateRange({ start: null, end: null })
+                        }}
+                        className="px-4 py-2 text-sm text-neutral-400 hover:text-white transition-colors"
+                      >
+                        Clear
+                      </button>
+                      <button
+                        onClick={() => setIsDateFilterOpen(false)}
+                        className="px-6 py-2 bg-white text-neutral-900 rounded-lg text-sm font-medium hover:bg-neutral-200 transition-colors"
+                      >
+                        Apply
+                      </button>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
           </div>
         </div>
 
