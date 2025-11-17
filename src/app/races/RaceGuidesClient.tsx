@@ -276,7 +276,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                         onClick={() => {
                           setTempDateRange({ start: null, end: null })
                         }}
-                        className="p-2 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-200 dark:hover:bg-neutral-800 rounded-lg transition-colors"
+                        className="p-2 bg-neutral-200 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-300 dark:hover:bg-neutral-700 hover:text-neutral-900 dark:hover:text-white rounded-lg transition-colors"
                         aria-label="Clear selection"
                       >
                         <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -314,7 +314,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                           setAppliedDateRange(tempDateRange)
                           setIsDateFilterOpen(false)
                         }}
-                        className="p-2 text-neutral-900 dark:text-white hover:bg-neutral-200 dark:hover:bg-neutral-800 rounded-lg transition-colors"
+                        className="p-2 bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-100 rounded-lg transition-colors"
                         aria-label="Apply filter"
                       >
                         <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
