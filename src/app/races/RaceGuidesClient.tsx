@@ -53,14 +53,14 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
 
           {/* Search Bar */}
           <div className="relative w-full max-w-2xl h-[52px]">
-            <AnimatePresence mode="wait">
+            <AnimatePresence mode="wait" initial={false}>
               {!isSearchExpanded ? (
                 <motion.button
                   key="search-button"
-                  initial={{ opacity: 0, width: 0 }}
+                  initial={{ opacity: 0, width: 52 }}
                   animate={{ opacity: 1, width: 52 }}
-                  exit={{ opacity: 0, width: 0 }}
-                  transition={{ duration: 0.2, ease: 'easeInOut' }}
+                  exit={{ opacity: 0, width: 52 }}
+                  transition={{ duration: 0.15, ease: 'easeInOut' }}
                   onClick={() => setIsSearchExpanded(true)}
                   className="flex items-center justify-center h-[52px] p-3 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:border-neutral-400 dark:hover:border-neutral-600 transition-colors"
                   aria-label="Expand search"
@@ -85,7 +85,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                   initial={{ opacity: 0, width: 52 }}
                   animate={{ opacity: 1, width: '100%' }}
                   exit={{ opacity: 0, width: 52 }}
-                  transition={{ duration: 0.2, ease: 'easeInOut' }}
+                  transition={{ duration: 0.25, ease: 'easeInOut' }}
                   className="relative"
                 >
                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
