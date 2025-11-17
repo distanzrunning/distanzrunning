@@ -735,38 +735,119 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                             </span>
                             <span className="text-neutral-600 dark:text-neutral-400">to</span>
                             <span className="text-neutral-900 dark:text-white font-semibold text-lg">
-                              {distanceUnit === 'km' ? `${Math.round(tempCustomRange.max)}km` : `${Math.round(kmToMiles(tempCustomRange.max))}mi`}
+                              {distanceUnit === 'km' ? `>${Math.round(tempCustomRange.max)}km` : `>${Math.round(kmToMiles(tempCustomRange.max))}mi`}
                             </span>
                           </div>
 
-                          {/* Range Slider */}
-                          <div className="px-2">
+                          {/* Range Slider with Markers */}
+                          <div className="relative px-8">
+                            {/* Distance markers (circles on the line) */}
+                            <div className="absolute top-1/2 left-8 right-8 -translate-y-1/2 flex justify-between pointer-events-none">
+                              {distanceCategories.map((category) => {
+                                const position = distanceUnit === 'km'
+                                  ? (category.km / 200) * 100
+                                  : (kmToMiles(category.km) / kmToMiles(200)) * 100
+
+                                return (
+                                  <div
+                                    key={category.id}
+                                    className="absolute w-3 h-3 bg-neutral-400 dark:bg-neutral-600 rounded-full -translate-x-1/2"
+                                    style={{ left: `${position}%` }}
+                                  />
+                                )
+                              })}
+                            </div>
+
+                            {/* Slider track */}
+                            <div className="relative h-3 bg-neutral-200 dark:bg-neutral-700 rounded-full">
+                              {/* Filled portion */}
+                              <div
+                                className="absolute h-3 bg-neutral-400 dark:bg-neutral-600 rounded-full"
+                                style={{
+                                  left: `${distanceUnit === 'km' ? (tempCustomRange.min / 200) * 100 : (kmToMiles(tempCustomRange.min) / kmToMiles(200)) * 100}%`,
+                                  width: `${distanceUnit === 'km' ? ((tempCustomRange.max - tempCustomRange.min) / 200) * 100 : ((kmToMiles(tempCustomRange.max) - kmToMiles(tempCustomRange.min)) / kmToMiles(200)) * 100}%`
+                                }}
+                              />
+                            </div>
+
+                            {/* Min slider */}
                             <input
                               type="range"
-                              min={distanceUnit === 'km' ? 0 : 0}
+                              min={0}
                               max={distanceUnit === 'km' ? 200 : Math.round(kmToMiles(200))}
                               value={distanceUnit === 'km' ? tempCustomRange.min : Math.round(kmToMiles(tempCustomRange.min))}
                               onChange={(e) => {
-                                const value = Number(e.target.value)
-                                const kmValue = distanceUnit === 'km' ? value : milesToKm(value)
+                                let value = Number(e.target.value)
+                                let kmValue = distanceUnit === 'km' ? value : milesToKm(value)
+
+                                // Snap to nearby markers (within 5km or 3mi)
+                                const snapThreshold = distanceUnit === 'km' ? 5 : 3
+                                for (const category of distanceCategories) {
+                                  const categoryValue = distanceUnit === 'km' ? category.km : kmToMiles(category.km)
+                                  if (Math.abs(value - categoryValue) < snapThreshold) {
+                                    kmValue = category.km
+                                    break
+                                  }
+                                }
+
                                 setTempCustomRange(prev => ({ ...prev, min: Math.min(kmValue, prev.max) }))
                                 setTempDistanceFilter('custom')
                               }}
-                              className="w-full h-2 bg-neutral-200 dark:bg-neutral-700 rounded-lg appearance-none cursor-pointer mb-4"
+                              className="absolute top-0 left-0 w-full h-3 opacity-0 cursor-pointer z-10"
+                              style={{ pointerEvents: 'auto' }}
                             />
+
+                            {/* Max slider */}
                             <input
                               type="range"
-                              min={distanceUnit === 'km' ? 0 : 0}
+                              min={0}
                               max={distanceUnit === 'km' ? 200 : Math.round(kmToMiles(200))}
                               value={distanceUnit === 'km' ? tempCustomRange.max : Math.round(kmToMiles(tempCustomRange.max))}
                               onChange={(e) => {
-                                const value = Number(e.target.value)
-                                const kmValue = distanceUnit === 'km' ? value : milesToKm(value)
+                                let value = Number(e.target.value)
+                                let kmValue = distanceUnit === 'km' ? value : milesToKm(value)
+
+                                // Snap to nearby markers (within 5km or 3mi)
+                                const snapThreshold = distanceUnit === 'km' ? 5 : 3
+                                for (const category of distanceCategories) {
+                                  const categoryValue = distanceUnit === 'km' ? category.km : kmToMiles(category.km)
+                                  if (Math.abs(value - categoryValue) < snapThreshold) {
+                                    kmValue = category.km
+                                    break
+                                  }
+                                }
+
                                 setTempCustomRange(prev => ({ ...prev, max: Math.max(kmValue, prev.min) }))
                                 setTempDistanceFilter('custom')
                               }}
-                              className="w-full h-2 bg-neutral-200 dark:bg-neutral-700 rounded-lg appearance-none cursor-pointer"
+                              className="absolute top-0 left-0 w-full h-3 opacity-0 cursor-pointer z-20"
+                              style={{ pointerEvents: 'auto' }}
                             />
+
+                            {/* Min handle */}
+                            <div
+                              className="absolute top-1/2 -translate-y-1/2 w-6 h-6 bg-white dark:bg-neutral-900 border-2 border-neutral-900 dark:border-white rounded-full pointer-events-none z-30"
+                              style={{
+                                left: `calc(${distanceUnit === 'km' ? (tempCustomRange.min / 200) * 100 : (kmToMiles(tempCustomRange.min) / kmToMiles(200)) * 100}% - 12px)`
+                              }}
+                            />
+
+                            {/* Max handle */}
+                            <div
+                              className="absolute top-1/2 -translate-y-1/2 w-6 h-6 bg-white dark:bg-neutral-900 border-2 border-neutral-900 dark:border-white rounded-full pointer-events-none z-30"
+                              style={{
+                                left: `calc(${distanceUnit === 'km' ? (tempCustomRange.max / 200) * 100 : (kmToMiles(tempCustomRange.max) / kmToMiles(200)) * 100}% - 12px)`
+                              }}
+                            />
+                          </div>
+
+                          {/* Distance labels below slider */}
+                          <div className="flex justify-between px-8 mt-4 text-xs text-neutral-600 dark:text-neutral-400">
+                            <span>0{distanceUnit}</span>
+                            <span>5k</span>
+                            <span>10k</span>
+                            <span>Half</span>
+                            <span>Marathon</span>
                           </div>
                         </div>
                       </>
