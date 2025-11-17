@@ -705,8 +705,8 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                         {/* Custom Range Slider */}
                         <div className="mb-6">
                           {/* Min/Max Input Fields */}
-                          <div className="flex items-center gap-3 mb-6">
-                            <div className="flex-1 flex items-center gap-2 px-4 py-3 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900">
+                          <div className="flex items-center gap-3 mb-8">
+                            <div className="flex-1">
                               <input
                                 type="number"
                                 value={distanceUnit === 'km' ? Math.round(tempCustomRange.min) : Math.round(kmToMiles(tempCustomRange.min))}
@@ -716,12 +716,11 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                   setTempCustomRange(prev => ({ ...prev, min: Math.min(kmValue, prev.max) }))
                                   setTempDistanceFilter('custom')
                                 }}
-                                className="w-full bg-transparent text-neutral-900 dark:text-white text-base font-medium outline-none"
+                                className="w-full px-4 py-3 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white text-base font-medium outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-600"
+                                placeholder={distanceUnit === 'km' ? '0 km' : '0 mi'}
                               />
-                              <span className="text-neutral-600 dark:text-neutral-400 text-sm">{distanceUnit}</span>
                             </div>
-                            <div className="flex-1 flex items-center gap-2 px-4 py-3 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900">
-                              <span className="text-neutral-600 dark:text-neutral-400 text-sm">&gt;</span>
+                            <div className="flex-1">
                               <input
                                 type="number"
                                 value={distanceUnit === 'km' ? Math.round(tempCustomRange.max) : Math.round(kmToMiles(tempCustomRange.max))}
@@ -731,121 +730,131 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                   setTempCustomRange(prev => ({ ...prev, max: Math.max(kmValue, prev.min) }))
                                   setTempDistanceFilter('custom')
                                 }}
-                                className="w-full bg-transparent text-neutral-900 dark:text-white text-base font-medium outline-none"
+                                className="w-full px-4 py-3 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white text-base font-medium outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-600"
+                                placeholder={distanceUnit === 'km' ? '200 km' : '124 mi'}
                               />
-                              <span className="text-neutral-600 dark:text-neutral-400 text-sm">{distanceUnit}</span>
                             </div>
                           </div>
 
-                          {/* Distance Markers Above Slider */}
-                          <div className="relative px-4 mb-2">
-                            <div className="flex justify-between text-xs text-neutral-600 dark:text-neutral-400">
+                          {/* Slider Container with proper padding */}
+                          <div className="px-2 mb-8">
+                            {/* Distance Markers Above Slider */}
+                            <div className="relative h-12 mb-3">
                               {distanceCategories.map((category) => {
-                                const position = distanceUnit === 'km'
-                                  ? (category.km / 200) * 100
-                                  : (kmToMiles(category.km) / kmToMiles(200)) * 100
+                                const maxValue = distanceUnit === 'km' ? 200 : kmToMiles(200)
+                                const categoryValue = distanceUnit === 'km' ? category.km : kmToMiles(category.km)
+                                const position = (categoryValue / maxValue) * 100
 
                                 return (
                                   <div
                                     key={category.id}
-                                    className="absolute flex flex-col items-center gap-1 -translate-x-1/2"
-                                    style={{ left: `${position}%` }}
+                                    className="absolute flex flex-col items-center gap-1.5"
+                                    style={{
+                                      left: `${position}%`,
+                                      transform: 'translateX(-50%)'
+                                    }}
                                   >
-                                    <div className="w-2 h-2 bg-neutral-400 dark:bg-neutral-600 rounded-full" />
-                                    <span className="whitespace-nowrap text-xs">{category.label}</span>
+                                    <span className="text-xs font-medium text-neutral-600 dark:text-neutral-400 whitespace-nowrap">
+                                      {category.label}
+                                    </span>
+                                    <div className="w-2.5 h-2.5 bg-neutral-400 dark:bg-neutral-600 rounded-full border-2 border-white dark:border-neutral-900" />
                                   </div>
                                 )
                               })}
                             </div>
-                          </div>
 
-                          {/* Range Slider */}
-                          <div className="relative px-4 pt-8">
-                            {/* Slider track */}
-                            <div className="relative h-1 bg-neutral-200 dark:bg-neutral-700 rounded-full">
-                              {/* Filled portion */}
+                            {/* Range Slider */}
+                            <div className="relative h-8 flex items-center">
+                              {/* Slider track */}
+                              <div className="absolute w-full h-1.5 bg-neutral-300 dark:bg-neutral-700 rounded-full">
+                                {/* Filled portion */}
+                                <div
+                                  className="absolute h-1.5 bg-neutral-500 dark:bg-neutral-500 rounded-full"
+                                  style={{
+                                    left: `${distanceUnit === 'km' ? (tempCustomRange.min / 200) * 100 : (kmToMiles(tempCustomRange.min) / kmToMiles(200)) * 100}%`,
+                                    width: `${distanceUnit === 'km' ? ((tempCustomRange.max - tempCustomRange.min) / 200) * 100 : ((kmToMiles(tempCustomRange.max) - kmToMiles(tempCustomRange.min)) / kmToMiles(200)) * 100}%`
+                                  }}
+                                />
+                              </div>
+
+                              {/* Min slider */}
+                              <input
+                                type="range"
+                                min={0}
+                                max={distanceUnit === 'km' ? 200 : Math.round(kmToMiles(200))}
+                                value={distanceUnit === 'km' ? tempCustomRange.min : Math.round(kmToMiles(tempCustomRange.min))}
+                                onChange={(e) => {
+                                  let value = Number(e.target.value)
+                                  let kmValue = distanceUnit === 'km' ? value : milesToKm(value)
+
+                                  // Snap to nearby markers (within 5km or 3mi)
+                                  const snapThreshold = distanceUnit === 'km' ? 5 : 3
+                                  for (const category of distanceCategories) {
+                                    const categoryValue = distanceUnit === 'km' ? category.km : kmToMiles(category.km)
+                                    if (Math.abs(value - categoryValue) < snapThreshold) {
+                                      kmValue = category.km
+                                      break
+                                    }
+                                  }
+
+                                  setTempCustomRange(prev => ({ ...prev, min: Math.min(kmValue, prev.max) }))
+                                  setTempDistanceFilter('custom')
+                                }}
+                                className="absolute w-full h-8 opacity-0 cursor-pointer z-10"
+                                style={{ pointerEvents: 'auto' }}
+                              />
+
+                              {/* Max slider */}
+                              <input
+                                type="range"
+                                min={0}
+                                max={distanceUnit === 'km' ? 200 : Math.round(kmToMiles(200))}
+                                value={distanceUnit === 'km' ? tempCustomRange.max : Math.round(kmToMiles(tempCustomRange.max))}
+                                onChange={(e) => {
+                                  let value = Number(e.target.value)
+                                  let kmValue = distanceUnit === 'km' ? value : milesToKm(value)
+
+                                  // Snap to nearby markers (within 5km or 3mi)
+                                  const snapThreshold = distanceUnit === 'km' ? 5 : 3
+                                  for (const category of distanceCategories) {
+                                    const categoryValue = distanceUnit === 'km' ? category.km : kmToMiles(category.km)
+                                    if (Math.abs(value - categoryValue) < snapThreshold) {
+                                      kmValue = category.km
+                                      break
+                                    }
+                                  }
+
+                                  setTempCustomRange(prev => ({ ...prev, max: Math.max(kmValue, prev.min) }))
+                                  setTempDistanceFilter('custom')
+                                }}
+                                className="absolute w-full h-8 opacity-0 cursor-pointer z-20"
+                                style={{ pointerEvents: 'auto' }}
+                              />
+
+                              {/* Min handle */}
                               <div
-                                className="absolute h-1 bg-neutral-900 dark:bg-white rounded-full"
+                                className="absolute w-6 h-6 bg-white dark:bg-neutral-900 border-2 border-neutral-900 dark:border-white rounded-full pointer-events-none z-30 shadow-lg"
                                 style={{
-                                  left: `${distanceUnit === 'km' ? (tempCustomRange.min / 200) * 100 : (kmToMiles(tempCustomRange.min) / kmToMiles(200)) * 100}%`,
-                                  width: `${distanceUnit === 'km' ? ((tempCustomRange.max - tempCustomRange.min) / 200) * 100 : ((kmToMiles(tempCustomRange.max) - kmToMiles(tempCustomRange.min)) / kmToMiles(200)) * 100}%`
+                                  left: `calc(${distanceUnit === 'km' ? (tempCustomRange.min / 200) * 100 : (kmToMiles(tempCustomRange.min) / kmToMiles(200)) * 100}% - 12px)`,
+                                  top: '50%',
+                                  transform: 'translateY(-50%)'
+                                }}
+                              />
+
+                              {/* Max handle */}
+                              <div
+                                className="absolute w-6 h-6 bg-white dark:bg-neutral-900 border-2 border-neutral-900 dark:border-white rounded-full pointer-events-none z-30 shadow-lg"
+                                style={{
+                                  left: `calc(${distanceUnit === 'km' ? (tempCustomRange.max / 200) * 100 : (kmToMiles(tempCustomRange.max) / kmToMiles(200)) * 100}% - 12px)`,
+                                  top: '50%',
+                                  transform: 'translateY(-50%)'
                                 }}
                               />
                             </div>
-
-                            {/* Min slider */}
-                            <input
-                              type="range"
-                              min={0}
-                              max={distanceUnit === 'km' ? 200 : Math.round(kmToMiles(200))}
-                              value={distanceUnit === 'km' ? tempCustomRange.min : Math.round(kmToMiles(tempCustomRange.min))}
-                              onChange={(e) => {
-                                let value = Number(e.target.value)
-                                let kmValue = distanceUnit === 'km' ? value : milesToKm(value)
-
-                                // Snap to nearby markers (within 5km or 3mi)
-                                const snapThreshold = distanceUnit === 'km' ? 5 : 3
-                                for (const category of distanceCategories) {
-                                  const categoryValue = distanceUnit === 'km' ? category.km : kmToMiles(category.km)
-                                  if (Math.abs(value - categoryValue) < snapThreshold) {
-                                    kmValue = category.km
-                                    break
-                                  }
-                                }
-
-                                setTempCustomRange(prev => ({ ...prev, min: Math.min(kmValue, prev.max) }))
-                                setTempDistanceFilter('custom')
-                              }}
-                              className="absolute top-0 left-0 w-full h-1 opacity-0 cursor-pointer z-10"
-                              style={{ pointerEvents: 'auto' }}
-                            />
-
-                            {/* Max slider */}
-                            <input
-                              type="range"
-                              min={0}
-                              max={distanceUnit === 'km' ? 200 : Math.round(kmToMiles(200))}
-                              value={distanceUnit === 'km' ? tempCustomRange.max : Math.round(kmToMiles(tempCustomRange.max))}
-                              onChange={(e) => {
-                                let value = Number(e.target.value)
-                                let kmValue = distanceUnit === 'km' ? value : milesToKm(value)
-
-                                // Snap to nearby markers (within 5km or 3mi)
-                                const snapThreshold = distanceUnit === 'km' ? 5 : 3
-                                for (const category of distanceCategories) {
-                                  const categoryValue = distanceUnit === 'km' ? category.km : kmToMiles(category.km)
-                                  if (Math.abs(value - categoryValue) < snapThreshold) {
-                                    kmValue = category.km
-                                    break
-                                  }
-                                }
-
-                                setTempCustomRange(prev => ({ ...prev, max: Math.max(kmValue, prev.min) }))
-                                setTempDistanceFilter('custom')
-                              }}
-                              className="absolute top-0 left-0 w-full h-1 opacity-0 cursor-pointer z-20"
-                              style={{ pointerEvents: 'auto' }}
-                            />
-
-                            {/* Min handle */}
-                            <div
-                              className="absolute top-1/2 -translate-y-1/2 w-5 h-5 bg-white dark:bg-neutral-900 border-2 border-neutral-900 dark:border-white rounded-full pointer-events-none z-30 shadow-md"
-                              style={{
-                                left: `calc(${distanceUnit === 'km' ? (tempCustomRange.min / 200) * 100 : (kmToMiles(tempCustomRange.min) / kmToMiles(200)) * 100}% - 10px)`
-                              }}
-                            />
-
-                            {/* Max handle */}
-                            <div
-                              className="absolute top-1/2 -translate-y-1/2 w-5 h-5 bg-white dark:bg-neutral-900 border-2 border-neutral-900 dark:border-white rounded-full pointer-events-none z-30 shadow-md"
-                              style={{
-                                left: `calc(${distanceUnit === 'km' ? (tempCustomRange.max / 200) * 100 : (kmToMiles(tempCustomRange.max) / kmToMiles(200)) * 100}% - 10px)`
-                              }}
-                            />
                           </div>
 
                           {/* Unit Toggle Below Slider */}
-                          <div className="flex items-center justify-center gap-2 mt-8">
+                          <div className="flex items-center justify-center gap-2 mt-6">
                             <div className="inline-flex bg-neutral-200 dark:bg-neutral-800 rounded-lg p-1">
                               <button
                                 onClick={() => setDistanceUnit('km')}
