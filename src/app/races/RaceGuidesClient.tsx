@@ -200,17 +200,17 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
                     transition={{ duration: 0.2 }}
-                    className="absolute top-full mt-2 left-0 z-50 bg-neutral-900 rounded-lg shadow-xl border border-neutral-800 p-4 min-w-[600px]"
+                    className="absolute top-full mt-2 left-0 z-50 bg-white dark:bg-neutral-900 rounded-lg shadow-xl border border-neutral-200 dark:border-neutral-800 p-4 min-w-[600px]"
                   >
                     {/* Toggle between Dates and Months */}
                     <div className="flex items-center justify-center mb-6">
-                      <div className="inline-flex bg-neutral-800 rounded-lg p-1">
+                      <div className="inline-flex bg-neutral-200 dark:bg-neutral-800 rounded-lg p-1">
                         <button
                           onClick={() => setDateFilterMode('dates')}
                           className={`px-6 py-2 rounded-md text-sm font-medium transition-colors ${
                             dateFilterMode === 'dates'
-                              ? 'bg-white text-neutral-900'
-                              : 'text-neutral-400 hover:text-white'
+                              ? 'bg-neutral-900 dark:bg-white text-white dark:text-neutral-900'
+                              : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
                           }`}
                         >
                           Dates
@@ -219,8 +219,8 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                           onClick={() => setDateFilterMode('months')}
                           className={`px-6 py-2 rounded-md text-sm font-medium transition-colors ${
                             dateFilterMode === 'months'
-                              ? 'bg-white text-neutral-900'
-                              : 'text-neutral-400 hover:text-white'
+                              ? 'bg-neutral-900 dark:bg-white text-white dark:text-neutral-900'
+                              : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
                           }`}
                         >
                           Months
@@ -234,17 +234,17 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                         <div className="flex items-center justify-between mb-4 px-2">
                       <button
                         onClick={() => setCurrentMonth(subMonths(currentMonth, 1))}
-                        className="p-2 hover:bg-neutral-800 rounded-lg transition-colors"
+                        className="p-2 hover:bg-neutral-200 dark:hover:bg-neutral-800 rounded-lg transition-colors"
                       >
-                        <svg className="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="h-5 w-5 text-neutral-900 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                         </svg>
                       </button>
                       <button
                         onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}
-                        className="p-2 hover:bg-neutral-800 rounded-lg transition-colors"
+                        className="p-2 hover:bg-neutral-200 dark:hover:bg-neutral-800 rounded-lg transition-colors"
                       >
-                        <svg className="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="h-5 w-5 text-neutral-900 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                         </svg>
                       </button>
@@ -261,7 +261,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                           <div key={monthIndex}>
                             {/* Month Name */}
                             <div className="text-center mb-4">
-                              <h3 className="text-white font-semibold text-base">
+                              <h3 className="text-neutral-900 dark:text-white font-semibold text-base">
                                 {format(month, 'MMMM yyyy')}
                               </h3>
                             </div>
@@ -269,7 +269,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                             {/* Day Headers */}
                             <div className="grid grid-cols-7 gap-1 mb-2">
                               {['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'].map((day) => (
-                                <div key={day} className="text-center text-neutral-500 text-xs font-medium py-1">
+                                <div key={day} className="text-center text-neutral-500 dark:text-neutral-500 text-xs font-medium py-1">
                                   {day}
                                 </div>
                               ))}
@@ -307,9 +307,9 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                     }}
                                     className={`
                                       h-9 flex items-center justify-center rounded-lg text-sm font-medium transition-colors
-                                      ${isSelected ? 'bg-white text-neutral-900' : ''}
-                                      ${isInRange && !isSelected ? 'bg-neutral-700 text-white' : ''}
-                                      ${!isSelected && !isInRange ? 'text-neutral-400 hover:bg-neutral-800 hover:text-white' : ''}
+                                      ${isSelected ? 'bg-neutral-900 dark:bg-white text-white dark:text-neutral-900' : ''}
+                                      ${isInRange && !isSelected ? 'bg-neutral-300 dark:bg-neutral-700 text-neutral-900 dark:text-white' : ''}
+                                      ${!isSelected && !isInRange ? 'text-neutral-600 dark:text-neutral-400 hover:bg-neutral-200 dark:hover:bg-neutral-800 hover:text-neutral-900 dark:hover:text-white' : ''}
                                     `}
                                   >
                                     {format(day, 'd')}
@@ -329,18 +329,18 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                         <div className="flex items-center justify-between mb-6 px-2">
                           <button
                             onClick={() => setCurrentYear(currentYear - 1)}
-                            className="p-2 hover:bg-neutral-800 rounded-lg transition-colors"
+                            className="p-2 hover:bg-neutral-200 dark:hover:bg-neutral-800 rounded-lg transition-colors"
                           >
-                            <svg className="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg className="h-5 w-5 text-neutral-900 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                             </svg>
                           </button>
-                          <h3 className="text-white font-semibold text-lg">{currentYear}</h3>
+                          <h3 className="text-neutral-900 dark:text-white font-semibold text-lg">{currentYear}</h3>
                           <button
                             onClick={() => setCurrentYear(currentYear + 1)}
-                            className="p-2 hover:bg-neutral-800 rounded-lg transition-colors"
+                            className="p-2 hover:bg-neutral-200 dark:hover:bg-neutral-800 rounded-lg transition-colors"
                           >
-                            <svg className="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg className="h-5 w-5 text-neutral-900 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                             </svg>
                           </button>
@@ -368,7 +368,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                 }}
                                 className={`
                                   py-3 px-4 rounded-lg text-sm font-medium transition-colors
-                                  ${isSelected ? 'bg-white text-neutral-900' : 'bg-neutral-800 text-neutral-400 hover:bg-neutral-700 hover:text-white'}
+                                  ${isSelected ? 'bg-neutral-900 dark:bg-white text-white dark:text-neutral-900' : 'bg-neutral-200 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-400 hover:bg-neutral-300 dark:hover:bg-neutral-700 hover:text-neutral-900 dark:hover:text-white'}
                                 `}
                               >
                                 {monthName}
@@ -380,18 +380,18 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                     )}
 
                     {/* Action Buttons */}
-                    <div className="flex items-center justify-between mt-6 pt-4 border-t border-neutral-800">
+                    <div className="flex items-center justify-between mt-6 pt-4 border-t border-neutral-200 dark:border-neutral-800">
                       <button
                         onClick={() => {
                           setDateRange({ start: null, end: null })
                         }}
-                        className="px-4 py-2 text-sm text-neutral-400 hover:text-white transition-colors"
+                        className="px-4 py-2 text-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors"
                       >
                         Clear
                       </button>
                       <button
                         onClick={() => setIsDateFilterOpen(false)}
-                        className="px-6 py-2 bg-white text-neutral-900 rounded-lg text-sm font-medium hover:bg-neutral-200 transition-colors"
+                        className="px-6 py-2 bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 rounded-lg text-sm font-medium hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors"
                       >
                         Apply
                       </button>
