@@ -51,11 +51,11 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
           </p>
 
           {/* Search Bar */}
-          <div className="relative max-w-2xl">
+          <div className="relative w-full max-w-2xl h-[52px]">
             {!isSearchExpanded ? (
               <button
                 onClick={() => setIsSearchExpanded(true)}
-                className="flex items-center gap-2 px-4 py-3 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:border-neutral-400 dark:hover:border-neutral-600 transition-colors"
+                className="flex items-center justify-center w-[52px] h-[52px] p-3 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:border-neutral-400 dark:hover:border-neutral-600 transition-colors"
                 aria-label="Expand search"
               >
                 <svg
@@ -98,27 +98,25 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                     if (!searchQuery) setIsSearchExpanded(false)
                   }}
                   autoFocus
-                  className="w-full pl-12 pr-4 py-3 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white placeholder-neutral-500 dark:placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-600 focus:border-transparent transition-colors"
+                  className="w-full h-[52px] pl-12 pr-12 py-3 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white placeholder-neutral-500 dark:placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-600 focus:border-transparent transition-colors"
                 />
-                {searchQuery && (
-                  <button
-                    onClick={() => {
-                      setSearchQuery('')
-                      setIsSearchExpanded(false)
-                    }}
-                    className="absolute inset-y-0 right-0 pr-4 flex items-center text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300"
-                    aria-label="Clear search"
-                  >
-                    <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M6 18L18 6M6 6l12 12"
-                      />
-                    </svg>
-                  </button>
-                )}
+                <button
+                  onClick={() => {
+                    setSearchQuery('')
+                    setIsSearchExpanded(false)
+                  }}
+                  className="absolute inset-y-0 right-0 pr-4 flex items-center text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300"
+                  aria-label="Clear search"
+                >
+                  <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
               </>
             )}
           </div>
