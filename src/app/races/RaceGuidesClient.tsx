@@ -721,7 +721,13 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                 onChange={(e) => {
                                   const value = Number(e.target.value)
                                   const kmValue = distanceUnit === 'km' ? value : milesToKm(value)
-                                  setTempCustomRange(prev => ({ ...prev, min: Math.min(kmValue, prev.max) }))
+                                  // Allow swapping: if new min > max, swap them
+                                  setTempCustomRange(prev => {
+                                    if (kmValue > prev.max) {
+                                      return { min: prev.max, max: kmValue }
+                                    }
+                                    return { ...prev, min: kmValue }
+                                  })
                                   setTempDistanceFilter('custom')
                                 }}
                                 className="w-full px-4 py-3 pr-12 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white text-base font-medium outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-600"
@@ -741,7 +747,13 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                 onChange={(e) => {
                                   const value = Number(e.target.value)
                                   const kmValue = distanceUnit === 'km' ? value : milesToKm(value)
-                                  setTempCustomRange(prev => ({ ...prev, max: Math.max(kmValue, prev.min) }))
+                                  // Allow swapping: if new max < min, swap them
+                                  setTempCustomRange(prev => {
+                                    if (kmValue < prev.min) {
+                                      return { min: kmValue, max: prev.min }
+                                    }
+                                    return { ...prev, max: kmValue }
+                                  })
                                   setTempDistanceFilter('custom')
                                 }}
                                 className="w-full px-4 py-3 pl-10 pr-12 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white text-base font-medium outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-600"
@@ -807,7 +819,13 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                     }
                                   }
 
-                                  setTempCustomRange(prev => ({ ...prev, min: Math.min(kmValue, prev.max) }))
+                                  // Allow swapping: if new min > max, swap them
+                                  setTempCustomRange(prev => {
+                                    if (kmValue > prev.max) {
+                                      return { min: prev.max, max: kmValue }
+                                    }
+                                    return { ...prev, min: kmValue }
+                                  })
                                   setTempDistanceFilter('custom')
                                 }}
                                 className="absolute w-full h-12 opacity-0 cursor-pointer z-20"
@@ -834,7 +852,13 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                     }
                                   }
 
-                                  setTempCustomRange(prev => ({ ...prev, max: Math.max(kmValue, prev.min) }))
+                                  // Allow swapping: if new max < min, swap them
+                                  setTempCustomRange(prev => {
+                                    if (kmValue < prev.min) {
+                                      return { min: kmValue, max: prev.min }
+                                    }
+                                    return { ...prev, max: kmValue }
+                                  })
                                   setTempDistanceFilter('custom')
                                 }}
                                 className="absolute w-full h-12 opacity-0 cursor-pointer z-30"
