@@ -773,7 +773,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                           </div>
 
                           {/* Slider Container */}
-                          <div className="px-3 mb-2">
+                          <div className="px-3 mb-6">
                             <Box sx={{ width: '100%' }}>
                               <Slider
                                 value={[
@@ -794,43 +794,6 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                 disableSwap={false}
                               />
                             </Box>
-                          </div>
-
-                          {/* Distance Anchor Buttons with Icons - Below Slider */}
-                          <div className="relative mb-6 px-3">
-                            <div className="relative h-12 mt-3">
-                              {distanceCategories.map((category) => {
-                                const maxValue = distanceUnit === 'km' ? 100 : kmToMiles(100)
-                                const categoryValue = distanceUnit === 'km' ? category.km : kmToMiles(category.km)
-                                const position = (categoryValue / maxValue) * 100
-
-                                return (
-                                  <button
-                                    key={category.id}
-                                    onClick={() => {
-                                      // Set slider to this exact distance
-                                      const kmValue = category.km
-                                      setTempCustomRange({ min: kmValue - 1, max: kmValue + 1 })
-                                      setTempDistanceFilter('custom')
-                                    }}
-                                    className="absolute flex flex-col items-center gap-1 group"
-                                    style={{
-                                      left: `calc(${position}% + 12px)`,
-                                      transform: 'translateX(-50%)',
-                                      top: 0
-                                    }}
-                                    aria-label={`Set slider to ${category.label}`}
-                                  >
-                                    {/* Circular Icon */}
-                                    <div className="w-6 h-6 rounded-full border-2 border-dashed border-neutral-400 dark:border-neutral-600 group-hover:border-neutral-600 dark:group-hover:border-neutral-400 transition-colors" />
-                                    {/* Label */}
-                                    <p className="text-[11px] font-medium whitespace-nowrap leading-tight text-neutral-600 dark:text-neutral-400 group-hover:text-neutral-900 dark:group-hover:text-white transition-colors">
-                                      {category.label}
-                                    </p>
-                                  </button>
-                                )
-                              })}
-                            </div>
                           </div>
 
                           {/* Unit Toggle Below Distance Anchors */}
