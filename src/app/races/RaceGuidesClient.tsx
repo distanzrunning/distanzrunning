@@ -838,7 +838,29 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                   distanceUnit === 'km' ? tempCustomRange.max : kmToMiles(tempCustomRange.max)
                                 ]}
                                 onChange={(_, newValue) => {
-                                  const [min, max] = newValue as number[]
+                                  let [min, max] = newValue as number[]
+
+                                  // Snap to nearby markers
+                                  const snapThreshold = distanceUnit === 'km' ? 3 : 2
+
+                                  // Check min value for snapping
+                                  for (const category of distanceCategories) {
+                                    const markerValue = distanceUnit === 'km' ? category.km : kmToMiles(category.km)
+                                    if (Math.abs(min - markerValue) < snapThreshold) {
+                                      min = markerValue
+                                      break
+                                    }
+                                  }
+
+                                  // Check max value for snapping
+                                  for (const category of distanceCategories) {
+                                    const markerValue = distanceUnit === 'km' ? category.km : kmToMiles(category.km)
+                                    if (Math.abs(max - markerValue) < snapThreshold) {
+                                      max = markerValue
+                                      break
+                                    }
+                                  }
+
                                   const minKm = distanceUnit === 'km' ? min : milesToKm(min)
                                   const maxKm = distanceUnit === 'km' ? max : milesToKm(max)
                                   setTempCustomRange({ min: minKm, max: maxKm })
