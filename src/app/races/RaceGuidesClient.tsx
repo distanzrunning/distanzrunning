@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import type { RaceGuide } from './page'
 import Slider from '@mui/material/Slider'
 import { ThemeProvider, createTheme } from '@mui/material/styles'
+import Box from '@mui/material/Box'
 
 // Helper function to format location from city, state/region, and country
 function formatLocation(city?: string, stateRegion?: string, country?: string): string {
@@ -31,17 +32,12 @@ const sliderTheme = createTheme({
           borderRadius: 12,
           backgroundColor: '#c0c0c0', // grey - track
           border: 'none',
-          left: '12px !important',
-          right: '12px',
         },
         rail: {
           height: 24,
           borderRadius: 12,
           backgroundColor: '#e5e5e5', // neutral-200 - light grey rail
           opacity: 1,
-          left: '12px',
-          right: '12px',
-          width: 'auto',
         },
         thumb: {
           height: 24,
@@ -54,6 +50,9 @@ const sliderTheme = createTheme({
           },
           '&.Mui-active': {
             boxShadow: 'none',
+          },
+          '&.Mui-focusVisible': {
+            boxShadow: '0 0 0 3px rgba(228, 60, 129, 0.3)', // electric-pink focus ring for accessibility
           },
           '&:before': {
             display: 'none',
@@ -141,14 +140,14 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
   // Helper: Convert miles to km
   const milesToKm = (miles: number) => miles / 0.621371
 
-  // Helper: Get distance category from km
+  // Helper: Get distance category from km (with more forgiving tolerance)
   const getDistanceCategory = (distanceKm: number): string | null => {
-    if (distanceKm >= 42.195 && distanceKm < 50) return 'marathon' // Standard marathon
+    if (distanceKm >= 40 && distanceKm < 50) return 'marathon' // Marathon (±2km tolerance)
     if (distanceKm >= 50) return 'ultra' // Ultra (50km+)
-    if (distanceKm >= 21.0 && distanceKm < 21.2) return 'half-marathon' // Half marathon
-    if (distanceKm >= 16.0 && distanceKm < 16.2) return '10-miles' // 10 miles
-    if (distanceKm >= 10.0 && distanceKm < 10.1) return '10k' // 10k
-    if (distanceKm >= 5.0 && distanceKm < 5.1) return '5k' // 5k
+    if (distanceKm >= 20 && distanceKm < 23) return 'half-marathon' // Half marathon (±1km tolerance)
+    if (distanceKm >= 15 && distanceKm < 17.5) return '10-miles' // 10 miles (~16km ±1km tolerance)
+    if (distanceKm >= 9 && distanceKm < 11) return '10k' // 10k (±1km tolerance)
+    if (distanceKm >= 4.5 && distanceKm < 5.5) return '5k' // 5k (±0.5km tolerance)
     return null
   }
 
@@ -208,6 +207,11 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
       const unit = distanceUnit
       const min = unit === 'km' ? appliedCustomRange.min : kmToMiles(appliedCustomRange.min)
       const max = unit === 'km' ? appliedCustomRange.max : kmToMiles(appliedCustomRange.max)
+      // Show decimal if values are close together (< 2 units apart)
+      const diff = max - min
+      if (diff < 2) {
+        return `${min.toFixed(1)}-${max.toFixed(1)}${unit}`
+      }
       return `${Math.round(min)}-${Math.round(max)}${unit}`
     }
 
@@ -825,6 +829,13 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                 const categoryValue = distanceUnit === 'km' ? category.km : kmToMiles(category.km)
                                 const position = (categoryValue / maxValue) * 100
 
+                                // Check if marker is near slider thumbs for visual feedback
+                                const minValue = distanceUnit === 'km' ? tempCustomRange.min : kmToMiles(tempCustomRange.min)
+                                const maxValue2 = distanceUnit === 'km' ? tempCustomRange.max : kmToMiles(tempCustomRange.max)
+                                const snapThreshold = distanceUnit === 'km' ? 3 : 2
+                                const isNearThumb = Math.abs(minValue - categoryValue) < snapThreshold ||
+                                                   Math.abs(maxValue2 - categoryValue) < snapThreshold
+
                                 return (
                                   <div
                                     key={category.id}
@@ -835,11 +846,18 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                       top: 0
                                     }}
                                   >
-                                    {/* SVG circle marker */}
-                                    <svg width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-neutral-500 dark:text-neutral-400">
+                                    {/* SVG circle marker with color feedback */}
+                                    <svg
+                                      width="24"
+                                      height="24"
+                                      viewBox="0 0 48 48"
+                                      fill="none"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      className={`transition-colors ${isNearThumb ? 'text-electric-pink' : 'text-neutral-500 dark:text-neutral-400'}`}
+                                    >
                                       <path d="M22.5579 42.278C23.0333 42.3149 23.5145 42.3333 24 42.3333V44C23.4714 44 22.9476 43.9784 22.4294 43.9382L22.5579 42.278ZM25.5511 43.6875L25.569 43.9382C25.0513 43.9783 24.5281 44 24 44V42.3333C24.4855 42.3333 24.9667 42.3149 25.4421 42.278L25.5511 43.6875ZM16.9834 40.9434C17.8619 41.3076 18.775 41.6052 19.7161 41.8304L19.3288 43.445C18.3012 43.199 17.3045 42.876 16.3454 42.4782L16.9834 40.9434ZM31.0166 40.9434L31.653 42.4782C30.6938 42.8759 29.6973 43.1991 28.6696 43.445L28.2839 41.8304C29.225 41.6052 30.1381 41.3076 31.0166 40.9434ZM12.0941 37.9421C12.8227 38.5649 13.6012 39.131 14.4215 39.6348L13.5492 41.0524C12.6542 40.5027 11.8079 39.8828 11.0133 39.2034L12.0941 37.9421ZM36.985 39.2034C36.1904 39.8828 35.3443 40.5028 34.4492 41.0524L33.5784 39.6348C34.3988 39.131 35.1773 38.5649 35.9059 37.9421L36.985 39.2034ZM8.36523 33.5784C8.86897 34.3988 9.43509 35.1773 10.0579 35.9059L8.79492 36.985C8.1157 36.1904 7.49553 35.3442 6.94596 34.4492L8.36523 33.5784ZM41.0524 34.4492C40.5028 35.3443 39.8828 36.1904 39.2034 36.985L37.9421 35.9059C38.5649 35.1773 39.131 34.3988 39.6348 33.5784L41.0524 34.4492ZM6.1696 28.2839C6.39482 29.225 6.69238 30.1381 7.05664 31.0166L6.28516 31.3356L6.28678 31.3372L5.52018 31.653C5.12253 30.6939 4.79923 29.6972 4.55339 28.6696L6.1696 28.2839ZM43.445 28.6696C43.1991 29.6973 42.8759 30.6938 42.4782 31.653L41.7132 31.3372L40.9434 31.0166C41.3076 30.1381 41.6052 29.225 41.8304 28.2839L43.445 28.6696ZM4 24C4 23.4714 4.01996 22.9476 4.06022 22.4294L5.72201 22.5579C5.68507 23.0333 5.66667 23.5145 5.66667 24C5.66667 24.4855 5.68507 24.9667 5.72201 25.4421L4.06022 25.569C4.02005 25.0513 4 24.528 4 24ZM44 24C44 24.5281 43.9783 25.0513 43.9382 25.569L42.278 25.4421C42.3149 24.9667 42.3333 24.4855 42.3333 24C42.3333 23.5145 42.3149 23.0333 42.278 22.5579L43.9382 22.4294C43.9784 22.9476 44 23.4714 44 24ZM6.28678 16.6628L7.05664 16.9834C6.69238 17.8619 6.39482 18.775 6.1696 19.7161L4.55339 19.3288C4.79931 18.3012 5.12247 17.3045 5.52018 16.3454L6.28678 16.6628ZM42.4782 16.3454C42.876 17.3045 43.199 18.3012 43.445 19.3288L41.8304 19.7161C41.6052 18.775 41.3076 17.8619 40.9434 16.9834L41.7132 16.6628L42.4782 16.3454ZM10.0579 12.0941C9.43508 12.8227 8.86897 13.6012 8.36523 14.4215L7.65397 13.9837L6.94596 13.5492C7.49556 12.6542 8.11568 11.8079 8.79492 11.0133L10.0579 12.0941ZM39.2034 11.0133C39.8828 11.8079 40.5027 12.6542 41.0524 13.5492L40.346 13.9854L40.3444 13.9837L39.6348 14.4215C39.131 13.6012 38.5649 12.8227 37.9421 12.0941L39.2034 11.0133ZM14.4215 8.36523C13.6012 8.86897 12.8227 9.43509 12.0941 10.0579L11.0133 8.79492C11.8079 8.11568 12.6542 7.49556 13.5492 6.94596L14.4215 8.36523ZM34.4492 6.94596C35.3442 7.49553 36.1904 8.1157 36.985 8.79492L35.9059 10.0579C35.1773 9.43508 34.3988 8.86897 33.5784 8.36523L34.4492 6.94596ZM19.7161 6.1696C18.775 6.39482 17.8619 6.69238 16.9834 7.05664L16.6628 6.28516L16.3454 5.52018C17.3045 5.12247 18.3012 4.79931 19.3288 4.55339L19.7161 6.1696ZM28.6696 4.55339C29.6972 4.79923 30.6939 5.12253 31.653 5.52018L31.3372 6.28678L31.3356 6.28516L31.0166 7.05664C30.1381 6.69238 29.225 6.39482 28.2839 6.1696L28.6696 4.55339ZM24 4C24.528 4 25.0513 4.02005 25.569 4.06022L25.4421 5.72201C24.9667 5.68507 24.4855 5.66667 24 5.66667C23.5145 5.66667 23.0333 5.68507 22.5579 5.72201L22.4294 4.06022C22.9476 4.01996 23.4714 4 24 4Z" fill="currentColor"/>
                                     </svg>
-                                    <p className="text-[10px] font-medium text-neutral-600 dark:text-neutral-400 whitespace-nowrap leading-tight">
+                                    <p className={`text-[10px] font-medium whitespace-nowrap leading-tight transition-colors ${isNearThumb ? 'text-electric-pink' : 'text-neutral-600 dark:text-neutral-400'}`}>
                                       {category.label}
                                     </p>
                                   </div>
@@ -848,46 +866,66 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                             </div>
 
                             <ThemeProvider theme={sliderTheme}>
-                              <Slider
-                                value={[
-                                  distanceUnit === 'km' ? tempCustomRange.min : kmToMiles(tempCustomRange.min),
-                                  distanceUnit === 'km' ? tempCustomRange.max : kmToMiles(tempCustomRange.max)
-                                ]}
-                                onChange={(_, newValue) => {
-                                  let [min, max] = newValue as number[]
+                              <Box sx={{ px: 1.5, position: 'relative' }}>
+                                <Slider
+                                  value={[
+                                    distanceUnit === 'km' ? tempCustomRange.min : kmToMiles(tempCustomRange.min),
+                                    distanceUnit === 'km' ? tempCustomRange.max : kmToMiles(tempCustomRange.max)
+                                  ]}
+                                  onChange={(_, newValue) => {
+                                    // Just update values, no snapping during drag for smooth UX
+                                    const [min, max] = newValue as number[]
+                                    const minKm = distanceUnit === 'km' ? min : milesToKm(min)
+                                    const maxKm = distanceUnit === 'km' ? max : milesToKm(max)
+                                    setTempCustomRange({ min: minKm, max: maxKm })
+                                    setTempDistanceFilter('custom')
+                                  }}
+                                  onChangeCommitted={(_, newValue) => {
+                                    // Snap to markers only when user releases slider
+                                    let [min, max] = newValue as number[]
+                                    const snapThreshold = distanceUnit === 'km' ? 3 : 2
 
-                                  // Snap to nearby markers
-                                  const snapThreshold = distanceUnit === 'km' ? 3 : 2
-
-                                  // Check min value for snapping
-                                  for (const category of distanceCategories) {
-                                    const markerValue = distanceUnit === 'km' ? category.km : kmToMiles(category.km)
-                                    if (Math.abs(min - markerValue) < snapThreshold) {
-                                      min = markerValue
-                                      break
+                                    // Check min value for snapping
+                                    for (const category of distanceCategories) {
+                                      const markerValue = distanceUnit === 'km' ? category.km : kmToMiles(category.km)
+                                      if (Math.abs(min - markerValue) < snapThreshold) {
+                                        min = markerValue
+                                        break
+                                      }
                                     }
-                                  }
 
-                                  // Check max value for snapping
-                                  for (const category of distanceCategories) {
-                                    const markerValue = distanceUnit === 'km' ? category.km : kmToMiles(category.km)
-                                    if (Math.abs(max - markerValue) < snapThreshold) {
-                                      max = markerValue
-                                      break
+                                    // Check max value for snapping
+                                    for (const category of distanceCategories) {
+                                      const markerValue = distanceUnit === 'km' ? category.km : kmToMiles(category.km)
+                                      if (Math.abs(max - markerValue) < snapThreshold) {
+                                        max = markerValue
+                                        break
+                                      }
                                     }
-                                  }
 
-                                  const minKm = distanceUnit === 'km' ? min : milesToKm(min)
-                                  const maxKm = distanceUnit === 'km' ? max : milesToKm(max)
-                                  setTempCustomRange({ min: minKm, max: maxKm })
-                                  setTempDistanceFilter('custom')
-                                }}
-                                min={0}
-                                max={distanceUnit === 'km' ? 100 : Math.round(kmToMiles(100))}
-                                step={0.1}
-                                valueLabelDisplay="off"
-                                disableSwap={false}
-                              />
+                                    const minKm = distanceUnit === 'km' ? min : milesToKm(min)
+                                    const maxKm = distanceUnit === 'km' ? max : milesToKm(max)
+                                    setTempCustomRange({ min: minKm, max: maxKm })
+                                    setTempDistanceFilter('custom')
+                                  }}
+                                  min={0}
+                                  max={distanceUnit === 'km' ? 100 : Math.round(kmToMiles(100))}
+                                  step={distanceUnit === 'km' ? 1 : 0.5}
+                                  valueLabelDisplay="off"
+                                  disableSwap={false}
+                                  sx={{
+                                    '& .MuiSlider-rail': {
+                                      left: 0,
+                                      right: 0,
+                                      width: '100%',
+                                      margin: 0,
+                                    },
+                                    '& .MuiSlider-track': {
+                                      left: '0 !important',
+                                    },
+                                  }}
+                                />
+                              </Box>
                             </ThemeProvider>
                           </div>
 
