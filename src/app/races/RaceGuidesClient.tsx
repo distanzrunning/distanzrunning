@@ -23,7 +23,7 @@ const sliderTheme = createTheme({
         root: {
           color: '#171717', // neutral-900 for primary color
           height: 24,
-          padding: '13px 0',
+          padding: '13px 12px',
           boxSizing: 'border-box',
         },
         track: {
@@ -31,15 +31,12 @@ const sliderTheme = createTheme({
           borderRadius: 12,
           backgroundColor: '#c0c0c0', // grey - track
           border: 'none',
-          left: '0 !important',
         },
         rail: {
           height: 24,
           borderRadius: 12,
           backgroundColor: '#e5e5e5', // neutral-200 - light grey rail
           opacity: 1,
-          left: '0',
-          width: '100%',
         },
         thumb: {
           height: 24,
@@ -47,7 +44,6 @@ const sliderTheme = createTheme({
           backgroundColor: '#ededed',
           border: 'none',
           boxShadow: 'none',
-          marginLeft: '-12px',
           '&:hover': {
             boxShadow: 'none',
           },
