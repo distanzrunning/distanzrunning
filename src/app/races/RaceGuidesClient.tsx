@@ -849,6 +849,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                     backgroundColor: '#FFFFFF', // white thumb
                                     border: 'none',
                                     boxShadow: 'none',
+                                    zIndex: 2, // Thumbs below marks
                                     '&:hover, &.Mui-active': {
                                       boxShadow: 'none',
                                     },
@@ -865,6 +866,8 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                     top: '50%',
                                     transform: 'translate(-50%, -50%)',
                                     opacity: 1,
+                                    zIndex: 3, // Marks above thumbs
+                                    pointerEvents: 'none', // Don't interfere with thumb dragging
                                     '&.MuiSlider-markActive': {
                                       backgroundColor: 'transparent',
                                       border: '1px dashed #404040', // gray-700 when active
