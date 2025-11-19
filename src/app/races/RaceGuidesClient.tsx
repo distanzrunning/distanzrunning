@@ -773,7 +773,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                           </div>
 
                           {/* Slider Container */}
-                          <div className="px-3 mb-6">
+                          <div className="px-3 mb-2">
                             <Box sx={{ width: '100%', px: 1 }}>
                               <Slider
                                 value={[
@@ -876,6 +876,39 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                 }}
                               />
                             </Box>
+                          </div>
+
+                          {/* Distance Labels Below Slider */}
+                          <div className="relative px-3 mb-6">
+                            <div className="relative h-8" style={{ paddingLeft: '12px', paddingRight: '12px' }}>
+                              {distanceCategories.map((category) => {
+                                const maxValue = distanceUnit === 'km' ? 100 : kmToMiles(100)
+                                const categoryValue = distanceUnit === 'km' ? category.km : kmToMiles(category.km)
+                                const position = (categoryValue / maxValue) * 100
+
+                                return (
+                                  <div
+                                    key={category.id}
+                                    className="absolute flex flex-col items-center"
+                                    style={{
+                                      left: `${position}%`,
+                                      transform: 'translateX(-50%)',
+                                      top: 0
+                                    }}
+                                  >
+                                    <p className="text-[10px] font-medium text-center leading-tight text-neutral-600 dark:text-neutral-400">
+                                      {category.id === 'half-marathon' ? (
+                                        <>
+                                          Half<br />Marathon
+                                        </>
+                                      ) : (
+                                        category.label
+                                      )}
+                                    </p>
+                                  </div>
+                                )
+                              })}
+                            </div>
                           </div>
 
                           {/* Unit Toggle Below Distance Anchors */}
