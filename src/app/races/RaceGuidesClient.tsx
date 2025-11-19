@@ -787,6 +787,34 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                   setTempCustomRange({ min: minKm, max: maxKm })
                                   setTempDistanceFilter('custom')
                                 }}
+                                onChangeCommitted={(_, newValue) => {
+                                  // Snap to markers when user releases slider
+                                  let [min, max] = newValue as number[]
+                                  const snapThreshold = distanceUnit === 'km' ? 3 : 2
+
+                                  // Check min value for snapping
+                                  for (const category of distanceCategories) {
+                                    const markerValue = distanceUnit === 'km' ? category.km : kmToMiles(category.km)
+                                    if (Math.abs(min - markerValue) < snapThreshold) {
+                                      min = markerValue
+                                      break
+                                    }
+                                  }
+
+                                  // Check max value for snapping
+                                  for (const category of distanceCategories) {
+                                    const markerValue = distanceUnit === 'km' ? category.km : kmToMiles(category.km)
+                                    if (Math.abs(max - markerValue) < snapThreshold) {
+                                      max = markerValue
+                                      break
+                                    }
+                                  }
+
+                                  const minKm = distanceUnit === 'km' ? min : milesToKm(min)
+                                  const maxKm = distanceUnit === 'km' ? max : milesToKm(max)
+                                  setTempCustomRange({ min: minKm, max: maxKm })
+                                  setTempDistanceFilter('custom')
+                                }}
                                 min={0}
                                 max={distanceUnit === 'km' ? 100 : Math.round(kmToMiles(100))}
                                 step={distanceUnit === 'km' ? 1 : 0.5}
