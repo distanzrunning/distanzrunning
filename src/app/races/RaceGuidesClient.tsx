@@ -722,7 +722,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                           {/* Min/Max Input Fields */}
                           <div className="px-3 mb-6">
                             <div className="flex items-center justify-between" style={{ paddingLeft: '12px', paddingRight: '12px' }}>
-                              <div className="flex items-center bg-neutral-100 dark:bg-neutral-800 rounded-lg px-3 py-2 min-w-[80px]">
+                              <div className="flex items-center gap-0 bg-neutral-100 dark:bg-neutral-800 rounded-lg px-3 py-2 min-w-[80px]">
                                 <input
                                   type="number"
                                   value={distanceUnit === 'km' ? Math.round(tempCustomRange.min) : Math.round(kmToMiles(tempCustomRange.min))}
@@ -742,12 +742,12 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                   className="w-10 text-right bg-transparent text-neutral-900 dark:text-white text-sm font-medium outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                                   placeholder="0"
                                 />
-                                <span className="text-neutral-900 dark:text-white text-sm font-medium ml-0.5">
+                                <span className="text-neutral-900 dark:text-white text-sm font-medium">
                                   {distanceUnit}
                                 </span>
                               </div>
-                              <div className="flex items-center bg-neutral-100 dark:bg-neutral-800 rounded-lg px-3 py-2 min-w-[90px]">
-                                <span className="text-neutral-900 dark:text-white text-sm font-medium mr-0.5">
+                              <div className="flex items-center gap-0 bg-neutral-100 dark:bg-neutral-800 rounded-lg px-3 py-2 min-w-[100px]">
+                                <span className="text-neutral-900 dark:text-white text-sm font-medium">
                                   &gt;
                                 </span>
                                 <input
@@ -769,7 +769,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                   className="w-10 text-right bg-transparent text-neutral-900 dark:text-white text-sm font-medium outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                                   placeholder={distanceUnit === 'km' ? '100' : '62'}
                                 />
-                                <span className="text-neutral-900 dark:text-white text-sm font-medium ml-0.5">
+                                <span className="text-neutral-900 dark:text-white text-sm font-medium">
                                   {distanceUnit}
                                 </span>
                               </div>
