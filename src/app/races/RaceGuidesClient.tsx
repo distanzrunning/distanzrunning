@@ -720,55 +720,56 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                         {/* Custom Range Slider */}
                         <div className="mb-6">
                           {/* Min/Max Input Fields */}
-                          <div className="flex items-center justify-between mb-6">
-                            <div className="w-24 relative">
-                              <input
-                                type="number"
-                                value={distanceUnit === 'km' ? Math.round(tempCustomRange.min) : Math.round(kmToMiles(tempCustomRange.min))}
-                                onChange={(e) => {
-                                  const value = Number(e.target.value)
-                                  const kmValue = distanceUnit === 'km' ? value : milesToKm(value)
-                                  // Allow swapping: if new min > max, swap them
-                                  setTempCustomRange(prev => {
-                                    if (kmValue > prev.max) {
-                                      return { min: prev.max, max: kmValue }
-                                    }
-                                    return { ...prev, min: kmValue }
-                                  })
-                                  setTempDistanceFilter('custom')
-                                }}
-                                className="w-full px-2 py-2 pr-8 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white text-sm font-medium outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-600"
-                                placeholder="0"
-                              />
-                              <span className="absolute right-2 top-1/2 -translate-y-1/2 text-neutral-500 dark:text-neutral-400 text-xs font-medium pointer-events-none">
-                                {distanceUnit}
-                              </span>
-                            </div>
-                            <div className="w-24 relative">
-                              <span className="absolute left-2 top-1/2 -translate-y-1/2 text-neutral-500 dark:text-neutral-400 text-sm font-medium pointer-events-none z-10">
-                                &gt;
-                              </span>
-                              <input
-                                type="number"
-                                value={distanceUnit === 'km' ? Math.round(tempCustomRange.max) : Math.round(kmToMiles(tempCustomRange.max))}
-                                onChange={(e) => {
-                                  const value = Number(e.target.value)
-                                  const kmValue = distanceUnit === 'km' ? value : milesToKm(value)
-                                  // Allow swapping: if new max < min, swap them
-                                  setTempCustomRange(prev => {
-                                    if (kmValue < prev.min) {
-                                      return { min: kmValue, max: prev.min }
-                                    }
-                                    return { ...prev, max: kmValue }
-                                  })
-                                  setTempDistanceFilter('custom')
-                                }}
-                                className="w-full px-2 py-2 pl-7 pr-8 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white text-sm font-medium outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-600"
-                                placeholder={distanceUnit === 'km' ? '100' : '62'}
-                              />
-                              <span className="absolute right-2 top-1/2 -translate-y-1/2 text-neutral-500 dark:text-neutral-400 text-xs font-medium pointer-events-none">
-                                {distanceUnit}
-                              </span>
+                          <div className="px-3 mb-6">
+                            <div className="flex items-center justify-between" style={{ paddingLeft: '12px', paddingRight: '12px' }}>
+                              <div className="flex items-center gap-1">
+                                <input
+                                  type="number"
+                                  value={distanceUnit === 'km' ? Math.round(tempCustomRange.min) : Math.round(kmToMiles(tempCustomRange.min))}
+                                  onChange={(e) => {
+                                    const value = Number(e.target.value)
+                                    const kmValue = distanceUnit === 'km' ? value : milesToKm(value)
+                                    // Allow swapping: if new min > max, swap them
+                                    setTempCustomRange(prev => {
+                                      if (kmValue > prev.max) {
+                                        return { min: prev.max, max: kmValue }
+                                      }
+                                      return { ...prev, min: kmValue }
+                                    })
+                                    setTempDistanceFilter('custom')
+                                  }}
+                                  onFocus={(e) => e.target.select()}
+                                  className="w-16 py-1 text-center bg-transparent text-neutral-900 dark:text-white text-sm font-medium outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                  placeholder="0"
+                                />
+                                <span className="text-neutral-400 dark:text-neutral-500 text-xs font-medium">
+                                  {distanceUnit}
+                                </span>
+                              </div>
+                              <div className="flex items-center gap-1">
+                                <input
+                                  type="number"
+                                  value={distanceUnit === 'km' ? Math.round(tempCustomRange.max) : Math.round(kmToMiles(tempCustomRange.max))}
+                                  onChange={(e) => {
+                                    const value = Number(e.target.value)
+                                    const kmValue = distanceUnit === 'km' ? value : milesToKm(value)
+                                    // Allow swapping: if new max < min, swap them
+                                    setTempCustomRange(prev => {
+                                      if (kmValue < prev.min) {
+                                        return { min: kmValue, max: prev.min }
+                                      }
+                                      return { ...prev, max: kmValue }
+                                    })
+                                    setTempDistanceFilter('custom')
+                                  }}
+                                  onFocus={(e) => e.target.select()}
+                                  className="w-16 py-1 text-center bg-transparent text-neutral-900 dark:text-white text-sm font-medium outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                  placeholder={distanceUnit === 'km' ? '100' : '62'}
+                                />
+                                <span className="text-neutral-400 dark:text-neutral-500 text-xs font-medium">
+                                  {distanceUnit}
+                                </span>
+                              </div>
                             </div>
                           </div>
 
