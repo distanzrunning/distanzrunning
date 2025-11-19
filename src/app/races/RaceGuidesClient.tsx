@@ -830,7 +830,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                           </div>
 
                           {/* Slider Container with proper padding */}
-                          <div className="px-2 mb-8">
+                          <div className="px-6 mb-8">
                             <ThemeProvider theme={sliderTheme}>
                               <Slider
                                 value={[
