@@ -6,12 +6,74 @@ import { format, addMonths, subMonths, startOfMonth, endOfMonth, eachDayOfInterv
 import { urlFor } from '@/sanity/lib/image'
 import { motion, AnimatePresence } from 'framer-motion'
 import type { RaceGuide } from './page'
+import Slider from '@mui/material/Slider'
+import { ThemeProvider, createTheme } from '@mui/material/styles'
 
 // Helper function to format location from city, state/region, and country
 function formatLocation(city?: string, stateRegion?: string, country?: string): string {
   const parts = [city, stateRegion, country].filter(Boolean)
   return parts.join(', ')
 }
+
+// Create MUI theme for the slider
+const sliderTheme = createTheme({
+  components: {
+    MuiSlider: {
+      styleOverrides: {
+        root: {
+          color: '#737373', // neutral-500 for track
+          height: 12,
+          padding: '24px 0',
+        },
+        track: {
+          height: 12,
+          borderRadius: 9999,
+          backgroundColor: '#a3a3a3', // neutral-400
+          border: 'none',
+        },
+        rail: {
+          height: 12,
+          borderRadius: 9999,
+          backgroundColor: '#e5e5e5', // neutral-200
+          opacity: 1,
+        },
+        thumb: {
+          height: 48,
+          width: 48,
+          backgroundColor: '#ffffff',
+          border: '2px solid #171717',
+          boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)',
+          '&:hover': {
+            boxShadow: '0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)',
+          },
+          '&.Mui-active': {
+            boxShadow: '0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)',
+          },
+        },
+        mark: {
+          height: 32,
+          width: 32,
+          borderRadius: '50%',
+          backgroundColor: 'transparent',
+          border: '2px dashed #a3a3a3', // neutral-400
+          transform: 'translateX(-50%)',
+          top: '50%',
+          marginTop: -16,
+        },
+        markActive: {
+          backgroundColor: 'transparent',
+          border: '2px dashed #737373', // neutral-500
+        },
+        markLabel: {
+          fontSize: '12px',
+          fontWeight: 500,
+          color: '#525252', // neutral-600
+          top: 60,
+        },
+      },
+    },
+  },
+})
 
 export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
   const [searchQuery, setSearchQuery] = useState('')
@@ -767,146 +829,30 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
 
                           {/* Slider Container with proper padding */}
                           <div className="px-2 mb-8">
-                            {/* Range Slider with integrated marks */}
-                            <div className="relative h-12 flex items-center mb-3">
-                              {/* Slider track - thinner track */}
-                              <div className="absolute w-full h-3 bg-neutral-200 dark:bg-neutral-800 rounded-full" style={{ top: '50%', transform: 'translateY(-50%)' }}>
-                                {/* Filled portion */}
-                                <div
-                                  className="absolute h-3 bg-neutral-300 dark:bg-neutral-700 rounded-full"
-                                  style={{
-                                    left: `${distanceUnit === 'km' ? (tempCustomRange.min / 100) * 100 : (kmToMiles(tempCustomRange.min) / kmToMiles(100)) * 100}%`,
-                                    width: `${distanceUnit === 'km' ? ((tempCustomRange.max - tempCustomRange.min) / 100) * 100 : ((kmToMiles(tempCustomRange.max) - kmToMiles(tempCustomRange.min)) / kmToMiles(100)) * 100}%`
-                                  }}
-                                />
-                              </div>
-
-                              {/* Distance Markers - dotted circles on the track */}
-                              {distanceCategories.map((category) => {
-                                const maxValue = distanceUnit === 'km' ? 100 : kmToMiles(100)
-                                const categoryValue = distanceUnit === 'km' ? category.km : kmToMiles(category.km)
-                                const position = (categoryValue / maxValue) * 100
-
-                                return (
-                                  <div
-                                    key={category.id}
-                                    className="absolute w-8 h-8 rounded-full border-2 border-dashed border-neutral-400 dark:border-neutral-500 pointer-events-none z-10"
-                                    style={{
-                                      left: `${position}%`,
-                                      transform: 'translateX(-50%)'
-                                    }}
-                                  />
-                                )
-                              })}
-
-                              {/* Min slider */}
-                              <input
-                                type="range"
-                                min={0}
-                                max={distanceUnit === 'km' ? 100 : Math.round(kmToMiles(100))}
-                                value={distanceUnit === 'km' ? tempCustomRange.min : Math.round(kmToMiles(tempCustomRange.min))}
-                                onChange={(e) => {
-                                  let value = Number(e.target.value)
-                                  let kmValue = distanceUnit === 'km' ? value : milesToKm(value)
-
-                                  // Snap to nearby markers (within 5km or 3mi)
-                                  const snapThreshold = distanceUnit === 'km' ? 5 : 3
-                                  for (const category of distanceCategories) {
-                                    const categoryValue = distanceUnit === 'km' ? category.km : kmToMiles(category.km)
-                                    if (Math.abs(value - categoryValue) < snapThreshold) {
-                                      kmValue = category.km
-                                      break
-                                    }
-                                  }
-
-                                  // Allow swapping: if new min > max, swap them
-                                  setTempCustomRange(prev => {
-                                    if (kmValue > prev.max) {
-                                      return { min: prev.max, max: kmValue }
-                                    }
-                                    return { ...prev, min: kmValue }
-                                  })
+                            <ThemeProvider theme={sliderTheme}>
+                              <Slider
+                                value={[
+                                  distanceUnit === 'km' ? tempCustomRange.min : kmToMiles(tempCustomRange.min),
+                                  distanceUnit === 'km' ? tempCustomRange.max : kmToMiles(tempCustomRange.max)
+                                ]}
+                                onChange={(_, newValue) => {
+                                  const [min, max] = newValue as number[]
+                                  const minKm = distanceUnit === 'km' ? min : milesToKm(min)
+                                  const maxKm = distanceUnit === 'km' ? max : milesToKm(max)
+                                  setTempCustomRange({ min: minKm, max: maxKm })
                                   setTempDistanceFilter('custom')
                                 }}
-                                className="absolute w-full h-12 opacity-0 cursor-pointer z-20"
-                                style={{ pointerEvents: 'auto' }}
-                              />
-
-                              {/* Max slider */}
-                              <input
-                                type="range"
                                 min={0}
                                 max={distanceUnit === 'km' ? 100 : Math.round(kmToMiles(100))}
-                                value={distanceUnit === 'km' ? tempCustomRange.max : Math.round(kmToMiles(tempCustomRange.max))}
-                                onChange={(e) => {
-                                  let value = Number(e.target.value)
-                                  let kmValue = distanceUnit === 'km' ? value : milesToKm(value)
-
-                                  // Snap to nearby markers (within 5km or 3mi)
-                                  const snapThreshold = distanceUnit === 'km' ? 5 : 3
-                                  for (const category of distanceCategories) {
-                                    const categoryValue = distanceUnit === 'km' ? category.km : kmToMiles(category.km)
-                                    if (Math.abs(value - categoryValue) < snapThreshold) {
-                                      kmValue = category.km
-                                      break
-                                    }
-                                  }
-
-                                  // Allow swapping: if new max < min, swap them
-                                  setTempCustomRange(prev => {
-                                    if (kmValue < prev.min) {
-                                      return { min: kmValue, max: prev.min }
-                                    }
-                                    return { ...prev, max: kmValue }
-                                  })
-                                  setTempDistanceFilter('custom')
-                                }}
-                                className="absolute w-full h-12 opacity-0 cursor-pointer z-30"
-                                style={{ pointerEvents: 'auto' }}
+                                step={0.1}
+                                marks={distanceCategories.map((category) => ({
+                                  value: distanceUnit === 'km' ? category.km : kmToMiles(category.km),
+                                  label: category.label
+                                }))}
+                                valueLabelDisplay="off"
+                                disableSwap={false}
                               />
-
-                              {/* Min handle - same size as track height */}
-                              <div
-                                className="absolute w-12 h-12 bg-white dark:bg-neutral-900 border-2 border-neutral-900 dark:border-white rounded-full pointer-events-none z-40 shadow-lg"
-                                style={{
-                                  left: `${distanceUnit === 'km' ? (tempCustomRange.min / 100) * 100 : (kmToMiles(tempCustomRange.min) / kmToMiles(100)) * 100}%`,
-                                  transform: 'translateX(-50%)'
-                                }}
-                              />
-
-                              {/* Max handle - same size as track height */}
-                              <div
-                                className="absolute w-12 h-12 bg-white dark:bg-neutral-900 border-2 border-neutral-900 dark:border-white rounded-full pointer-events-none z-40 shadow-lg"
-                                style={{
-                                  left: `${distanceUnit === 'km' ? (tempCustomRange.max / 100) * 100 : (kmToMiles(tempCustomRange.max) / kmToMiles(100)) * 100}%`,
-                                  transform: 'translateX(-50%)'
-                                }}
-                              />
-                            </div>
-
-                            {/* Distance Labels Below Slider */}
-                            <div className="relative h-6">
-                              {distanceCategories.map((category) => {
-                                const maxValue = distanceUnit === 'km' ? 100 : kmToMiles(100)
-                                const categoryValue = distanceUnit === 'km' ? category.km : kmToMiles(category.km)
-                                const position = (categoryValue / maxValue) * 100
-
-                                return (
-                                  <div
-                                    key={category.id}
-                                    className="absolute"
-                                    style={{
-                                      left: `${position}%`,
-                                      transform: 'translateX(-50%)'
-                                    }}
-                                  >
-                                    <span className="text-xs font-medium text-neutral-600 dark:text-neutral-400 whitespace-nowrap">
-                                      {category.label}
-                                    </span>
-                                  </div>
-                                )
-                              })}
-                            </div>
+                            </ThemeProvider>
                           </div>
 
                           {/* Unit Toggle Below Slider */}
