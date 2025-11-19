@@ -862,7 +862,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                     height: 20,
                                     borderRadius: '50%',
                                     backgroundColor: 'transparent',
-                                    border: '1px dashed #737373', // gray-500 with thinner border
+                                    border: '1px dashed #A3A3A3', // gray-400 - more subtle
                                     top: '50%',
                                     transform: 'translate(-50%, -50%)',
                                     opacity: 1,
@@ -870,7 +870,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                     pointerEvents: 'none', // Don't interfere with thumb dragging
                                     '&.MuiSlider-markActive': {
                                       backgroundColor: 'transparent',
-                                      border: '1px dashed #404040', // gray-700 when active
+                                      border: '1px dashed #A3A3A3', // gray-400 when active
                                     },
                                   },
                                 }}
@@ -894,7 +894,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                       top: 0
                                     }}
                                   >
-                                    <p className="text-sm font-medium text-center leading-tight text-neutral-600 dark:text-neutral-400">
+                                    <p className="text-sm font-medium text-center leading-tight text-neutral-400 dark:text-neutral-500">
                                       {category.id === 'half-marathon' ? (
                                         <>
                                           Half<br />Marathon
@@ -910,7 +910,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                           </div>
 
                           {/* Unit Toggle Below Distance Anchors */}
-                          <div className="flex items-center justify-center gap-2 mt-2 relative z-50">
+                          <div className="flex items-center justify-center gap-2 mt-8 relative z-50">
                             <div className="inline-flex bg-neutral-200 dark:bg-neutral-800 rounded-lg p-0.5">
                               <button
                                 onClick={() => setDistanceUnit('km')}
