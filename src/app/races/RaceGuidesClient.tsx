@@ -817,7 +817,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                           </div>
 
                           {/* Slider Container with proper padding */}
-                          <div className="px-6 mb-6">
+                          <div className="px-3 mb-6">
                             {/* Distance markers above slider */}
                             <div className="relative mb-2 h-12">
                               {distanceCategories.map((category) => {
