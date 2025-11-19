@@ -827,7 +827,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                 sx={{
                                   color: '#1A1A1A', // gray-900
                                   height: 24,
-                                  padding: '13px 0',
+                                  padding: 0,
                                   '& .MuiSlider-rail': {
                                     height: 24,
                                     borderRadius: 12,
