@@ -822,38 +822,6 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
 
                           {/* Slider Container with proper padding */}
                           <div className="px-3 mb-6">
-                            {/* Distance labels above slider */}
-                            <div className="relative mb-3 h-6">
-                              {distanceCategories.map((category) => {
-                                const maxValue = distanceUnit === 'km' ? 100 : kmToMiles(100)
-                                const categoryValue = distanceUnit === 'km' ? category.km : kmToMiles(category.km)
-                                const position = (categoryValue / maxValue) * 100
-
-                                // Check if marker is near slider thumbs for visual feedback
-                                const minValue = distanceUnit === 'km' ? tempCustomRange.min : kmToMiles(tempCustomRange.min)
-                                const maxValue2 = distanceUnit === 'km' ? tempCustomRange.max : kmToMiles(tempCustomRange.max)
-                                const snapThreshold = distanceUnit === 'km' ? 3 : 2
-                                const isNearThumb = Math.abs(minValue - categoryValue) < snapThreshold ||
-                                                   Math.abs(maxValue2 - categoryValue) < snapThreshold
-
-                                return (
-                                  <div
-                                    key={category.id}
-                                    className="absolute"
-                                    style={{
-                                      left: `calc(${position}% + 12px)`,
-                                      transform: 'translateX(-50%)',
-                                      top: 0
-                                    }}
-                                  >
-                                    <p className={`text-[10px] font-medium whitespace-nowrap leading-tight transition-colors ${isNearThumb ? 'text-electric-pink' : 'text-neutral-600 dark:text-neutral-400'}`}>
-                                      {category.label}
-                                    </p>
-                                  </div>
-                                )
-                              })}
-                            </div>
-
                             <ThemeProvider theme={sliderTheme}>
                               <Box sx={{ px: 1.5, position: 'relative' }}>
                                 <Slider
@@ -935,6 +903,31 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                 />
                               </Box>
                             </ThemeProvider>
+
+                            {/* Distance labels below slider */}
+                            <div className="relative mt-3 h-6">
+                              {distanceCategories.map((category) => {
+                                const maxValue = distanceUnit === 'km' ? 100 : kmToMiles(100)
+                                const categoryValue = distanceUnit === 'km' ? category.km : kmToMiles(category.km)
+                                const position = (categoryValue / maxValue) * 100
+
+                                return (
+                                  <div
+                                    key={category.id}
+                                    className="absolute"
+                                    style={{
+                                      left: `calc(${position}% + 12px)`,
+                                      transform: 'translateX(-50%)',
+                                      top: 0
+                                    }}
+                                  >
+                                    <p className="text-[10px] font-medium whitespace-nowrap leading-tight text-neutral-500 dark:text-neutral-400">
+                                      {category.label}
+                                    </p>
+                                  </div>
+                                )
+                              })}
+                            </div>
                           </div>
 
                           {/* Unit Toggle Below Slider */}
