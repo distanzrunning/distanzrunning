@@ -37,7 +37,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
   // Distance filter states
   const [isDistanceFilterOpen, setIsDistanceFilterOpen] = useState(false)
   const [distanceFilterMode, setDistanceFilterMode] = useState<'distance' | 'custom'>('distance')
-  const [distanceUnit, setDistanceUnit] = useState<'km' | 'mi'>('mi')
+  const [distanceUnit, setDistanceUnit] = useState<'km' | 'mi'>('km')
   const [appliedDistanceFilter, setAppliedDistanceFilter] = useState<string | null>(null) // e.g., 'marathon', 'ultra', or 'custom'
   const [tempDistanceFilter, setTempDistanceFilter] = useState<string | null>(null)
   // For custom range (in km)
@@ -720,8 +720,8 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                         {/* Custom Range Slider */}
                         <div className="mb-6">
                           {/* Min/Max Input Fields */}
-                          <div className="flex items-center gap-3 mb-6">
-                            <div className="flex-1 relative">
+                          <div className="flex items-center justify-between mb-6">
+                            <div className="w-24 relative">
                               <input
                                 type="number"
                                 value={distanceUnit === 'km' ? Math.round(tempCustomRange.min) : Math.round(kmToMiles(tempCustomRange.min))}
@@ -737,15 +737,15 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                   })
                                   setTempDistanceFilter('custom')
                                 }}
-                                className="w-full px-3 py-2.5 pr-10 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white text-sm font-medium outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-600"
+                                className="w-full px-2 py-2 pr-8 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white text-sm font-medium outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-600"
                                 placeholder="0"
                               />
-                              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-500 dark:text-neutral-400 text-sm font-medium pointer-events-none">
+                              <span className="absolute right-2 top-1/2 -translate-y-1/2 text-neutral-500 dark:text-neutral-400 text-xs font-medium pointer-events-none">
                                 {distanceUnit}
                               </span>
                             </div>
-                            <div className="flex-1 relative">
-                              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500 dark:text-neutral-400 text-sm font-medium pointer-events-none z-10">
+                            <div className="w-24 relative">
+                              <span className="absolute left-2 top-1/2 -translate-y-1/2 text-neutral-500 dark:text-neutral-400 text-sm font-medium pointer-events-none z-10">
                                 &gt;
                               </span>
                               <input
@@ -763,10 +763,10 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                   })
                                   setTempDistanceFilter('custom')
                                 }}
-                                className="w-full px-3 py-2.5 pl-8 pr-10 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white text-sm font-medium outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-600"
+                                className="w-full px-2 py-2 pl-7 pr-8 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white text-sm font-medium outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-600"
                                 placeholder={distanceUnit === 'km' ? '100' : '62'}
                               />
-                              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-500 dark:text-neutral-400 text-sm font-medium pointer-events-none">
+                              <span className="absolute right-2 top-1/2 -translate-y-1/2 text-neutral-500 dark:text-neutral-400 text-xs font-medium pointer-events-none">
                                 {distanceUnit}
                               </span>
                             </div>
