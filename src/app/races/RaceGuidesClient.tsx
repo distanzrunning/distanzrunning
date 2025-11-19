@@ -917,13 +917,15 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                       left: '0 !important',
                                     },
                                     '& .MuiSlider-mark': {
-                                      width: '12px',
-                                      height: '12px',
+                                      width: '24px',
+                                      height: '24px',
                                       borderRadius: '50%',
                                       backgroundColor: 'transparent',
                                       opacity: 1,
                                       transform: 'translateX(-50%)',
                                       border: '2px dashed #737373',
+                                      top: '50%',
+                                      marginTop: '-12px',
                                       '&.MuiSlider-markActive': {
                                         backgroundColor: 'transparent',
                                         border: '2px dashed #525252',
