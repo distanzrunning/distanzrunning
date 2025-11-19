@@ -30,13 +30,13 @@ const sliderTheme = createTheme({
         track: {
           height: 24,
           borderRadius: 12,
-          backgroundColor: '#c0c0c0', // grey - track
+          backgroundColor: '#292929', // dark grey - track (where thumb has passed)
           border: 'none',
         },
         rail: {
           height: 24,
           borderRadius: 12,
-          backgroundColor: '#e5e5e5', // neutral-200 - light grey rail
+          backgroundColor: '#bfbfbf', // light grey rail (where thumb hasn't passed)
           opacity: 1,
         },
         thumb: {
