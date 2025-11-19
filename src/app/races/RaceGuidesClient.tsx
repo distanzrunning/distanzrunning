@@ -910,7 +910,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                           </div>
 
                           {/* Unit Toggle Below Distance Anchors */}
-                          <div className="flex items-center justify-center gap-2 mt-8 relative z-50">
+                          <div className="flex items-center justify-center gap-2 mt-12 relative z-50">
                             <div className="inline-flex bg-neutral-200 dark:bg-neutral-800 rounded-lg p-0.5">
                               <button
                                 onClick={() => setDistanceUnit('km')}
