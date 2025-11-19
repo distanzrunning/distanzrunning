@@ -879,7 +879,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                           </div>
 
                           {/* Distance Labels Below Slider */}
-                          <div className="relative px-3 mb-6">
+                          <div className="relative px-3 mb-6 mt-2">
                             <div className="relative h-8" style={{ paddingLeft: '12px', paddingRight: '12px' }}>
                               {distanceCategories.map((category) => {
                                 const maxValue = distanceUnit === 'km' ? 100 : kmToMiles(100)
@@ -896,7 +896,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                       top: 0
                                     }}
                                   >
-                                    <p className="text-[10px] font-medium text-center leading-tight text-neutral-600 dark:text-neutral-400">
+                                    <p className="text-xs font-medium text-center leading-tight text-neutral-600 dark:text-neutral-400">
                                       {category.id === 'half-marathon' ? (
                                         <>
                                           Half<br />Marathon
