@@ -22,32 +22,32 @@ const sliderTheme = createTheme({
       styleOverrides: {
         root: {
           color: '#171717', // neutral-900 for primary color
-          height: 4,
+          height: 24,
           padding: '13px 0',
         },
         track: {
-          height: 4,
-          borderRadius: 2,
-          backgroundColor: '#171717', // neutral-900 - dark track
+          height: 24,
+          borderRadius: 12,
+          backgroundColor: '#c0c0c0', // grey - track
           border: 'none',
         },
         rail: {
-          height: 4,
-          borderRadius: 2,
+          height: 24,
+          borderRadius: 12,
           backgroundColor: '#e5e5e5', // neutral-200 - light grey rail
           opacity: 1,
         },
         thumb: {
-          height: 20,
-          width: 20,
-          backgroundColor: '#ffffff',
-          border: '2px solid #171717',
-          boxShadow: '0 0 0 0px rgba(0, 0, 0, 0)',
+          height: 24,
+          width: 24,
+          backgroundColor: '#ededed',
+          border: 'none',
+          boxShadow: 'none',
           '&:hover': {
-            boxShadow: '0 0 0 8px rgba(23, 23, 23, 0.08)',
+            boxShadow: 'none',
           },
           '&.Mui-active': {
-            boxShadow: '0 0 0 12px rgba(23, 23, 23, 0.12)',
+            boxShadow: 'none',
           },
           '&:before': {
             display: 'none',
