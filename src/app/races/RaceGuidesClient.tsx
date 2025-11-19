@@ -31,15 +31,15 @@ const sliderTheme = createTheme({
           borderRadius: 12,
           backgroundColor: '#c0c0c0', // grey - track
           border: 'none',
+          left: '0 !important',
         },
         rail: {
           height: 24,
           borderRadius: 12,
           backgroundColor: '#e5e5e5', // neutral-200 - light grey rail
           opacity: 1,
-          left: '12px',
-          right: '12px',
-          width: 'calc(100% - 24px)',
+          left: '0',
+          width: '100%',
         },
         thumb: {
           height: 24,
@@ -47,6 +47,7 @@ const sliderTheme = createTheme({
           backgroundColor: '#ededed',
           border: 'none',
           boxShadow: 'none',
+          marginLeft: '-12px',
           '&:hover': {
             boxShadow: 'none',
           },
