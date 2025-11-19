@@ -803,13 +803,13 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                   '& .MuiSlider-rail': {
                                     height: 24,
                                     borderRadius: 12,
-                                    backgroundColor: '#E6E6E6', // gray-200 - light rail
+                                    backgroundColor: '#404040', // gray-700 - dark rail
                                     opacity: 1,
                                   },
                                   '& .MuiSlider-track': {
                                     height: 24,
                                     borderRadius: 12,
-                                    backgroundColor: '#404040', // gray-700 - dark track
+                                    backgroundColor: '#E6E6E6', // gray-200 - light track
                                     border: 'none',
                                   },
                                   '& .MuiSlider-thumb': {
