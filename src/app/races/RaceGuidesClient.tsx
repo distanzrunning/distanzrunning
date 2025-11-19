@@ -23,7 +23,7 @@ const sliderTheme = createTheme({
         root: {
           color: '#737373', // neutral-500 for track
           height: 20,
-          padding: '20px 0',
+          padding: '13px 0',
         },
         track: {
           height: 20,
@@ -51,26 +51,6 @@ const sliderTheme = createTheme({
           '&.Mui-active': {
             boxShadow: '0 2px 4px rgb(0 0 0 / 0.15)',
           },
-        },
-        mark: {
-          height: 20,
-          width: 20,
-          borderRadius: '50%',
-          backgroundColor: 'transparent',
-          border: '2px dashed #a3a3a3', // neutral-400
-          transform: 'translateX(-50%)',
-          top: '50%',
-          marginTop: -10,
-        },
-        markActive: {
-          backgroundColor: 'transparent',
-          border: '2px dashed #737373', // neutral-500
-        },
-        markLabel: {
-          fontSize: '11px',
-          fontWeight: 500,
-          color: '#525252', // neutral-600
-          top: 40,
         },
       },
     },
@@ -830,7 +810,34 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                           </div>
 
                           {/* Slider Container with proper padding */}
-                          <div className="px-6 mb-8">
+                          <div className="px-6 mb-6">
+                            {/* Distance markers above slider */}
+                            <div className="relative mb-2">
+                              <div className="flex justify-between items-center h-12">
+                                {distanceCategories.map((category) => {
+                                  const maxValue = distanceUnit === 'km' ? 100 : kmToMiles(100)
+                                  const categoryValue = distanceUnit === 'km' ? category.km : kmToMiles(category.km)
+                                  const position = (categoryValue / maxValue) * 100
+
+                                  return (
+                                    <div
+                                      key={category.id}
+                                      className="absolute flex flex-col items-center"
+                                      style={{
+                                        left: `${position}%`,
+                                        transform: 'translateX(-50%)'
+                                      }}
+                                    >
+                                      <div className="w-5 h-5 rounded-full border-2 border-dashed border-neutral-400 dark:border-neutral-500 mb-1" />
+                                      <p className="text-xs font-medium text-neutral-600 dark:text-neutral-400 whitespace-nowrap">
+                                        {category.label}
+                                      </p>
+                                    </div>
+                                  )
+                                })}
+                              </div>
+                            </div>
+
                             <ThemeProvider theme={sliderTheme}>
                               <Slider
                                 value={[
@@ -869,10 +876,6 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                 min={0}
                                 max={distanceUnit === 'km' ? 100 : Math.round(kmToMiles(100))}
                                 step={0.1}
-                                marks={distanceCategories.map((category) => ({
-                                  value: distanceUnit === 'km' ? category.km : kmToMiles(category.km),
-                                  label: category.label
-                                }))}
                                 valueLabelDisplay="off"
                                 disableSwap={false}
                               />
