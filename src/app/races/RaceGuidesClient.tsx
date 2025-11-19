@@ -645,7 +645,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                       </button>
 
                       {/* Toggle between Distance and Custom - Center */}
-                      <div className="inline-flex bg-neutral-200 dark:bg-neutral-800 rounded-lg p-1">
+                      <div className="inline-flex bg-neutral-200 dark:bg-neutral-800 rounded-lg p-1 relative z-10">
                         <button
                           onClick={() => setDistanceFilterMode('distance')}
                           className={`px-6 py-2.5 rounded-md text-base font-medium transition-colors ${
