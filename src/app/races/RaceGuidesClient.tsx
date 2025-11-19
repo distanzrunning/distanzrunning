@@ -21,35 +21,36 @@ const sliderTheme = createTheme({
     MuiSlider: {
       styleOverrides: {
         root: {
-          color: '#737373', // neutral-500 for track
-          height: 20,
+          color: '#171717', // neutral-900 for primary color
+          height: 4,
           padding: '13px 0',
         },
         track: {
-          height: 20,
-          borderRadius: 9999,
-          backgroundColor: '#d4d4d4', // neutral-300 - lighter grey
+          height: 4,
+          borderRadius: 2,
+          backgroundColor: '#171717', // neutral-900 - dark track
           border: 'none',
         },
         rail: {
-          height: 20,
-          borderRadius: 9999,
-          backgroundColor: '#a3a3a3', // neutral-400 - grey
+          height: 4,
+          borderRadius: 2,
+          backgroundColor: '#e5e5e5', // neutral-200 - light grey rail
           opacity: 1,
         },
         thumb: {
           height: 20,
           width: 20,
-          backgroundColor: '#f5f5f5', // neutral-100 - light shade
-          border: '2px solid #d4d4d4',
-          boxShadow: '0 1px 2px rgb(0 0 0 / 0.1)',
-          marginTop: 0,
-          marginLeft: 0,
+          backgroundColor: '#ffffff',
+          border: '2px solid #171717',
+          boxShadow: '0 0 0 0px rgba(0, 0, 0, 0)',
           '&:hover': {
-            boxShadow: '0 2px 4px rgb(0 0 0 / 0.15)',
+            boxShadow: '0 0 0 8px rgba(23, 23, 23, 0.08)',
           },
           '&.Mui-active': {
-            boxShadow: '0 2px 4px rgb(0 0 0 / 0.15)',
+            boxShadow: '0 0 0 12px rgba(23, 23, 23, 0.12)',
+          },
+          '&:before': {
+            display: 'none',
           },
         },
       },
