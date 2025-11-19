@@ -24,6 +24,7 @@ const sliderTheme = createTheme({
           color: '#171717', // neutral-900 for primary color
           height: 24,
           padding: '13px 0',
+          boxSizing: 'border-box',
         },
         track: {
           height: 24,
@@ -36,6 +37,9 @@ const sliderTheme = createTheme({
           borderRadius: 12,
           backgroundColor: '#e5e5e5', // neutral-200 - light grey rail
           opacity: 1,
+          left: '12px',
+          right: '12px',
+          width: 'calc(100% - 24px)',
         },
         thumb: {
           height: 24,
