@@ -844,10 +844,10 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                     height: 24,
                                     width: 24,
                                     backgroundColor: '#FFFFFF', // white thumb
-                                    border: '2px solid #1A1A1A', // gray-900 border
+                                    border: 'none',
                                     boxShadow: 'none',
                                     '&:hover, &.Mui-active': {
-                                      boxShadow: '0 0 0 4px rgba(26, 26, 26, 0.1)', // subtle hover
+                                      boxShadow: 'none',
                                     },
                                     '&.Mui-focusVisible': {
                                       boxShadow: '0 0 0 4px rgba(228, 60, 129, 0.2)', // electric-pink focus
