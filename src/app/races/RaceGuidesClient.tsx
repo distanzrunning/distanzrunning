@@ -7,7 +7,6 @@ import { urlFor } from '@/sanity/lib/image'
 import { motion, AnimatePresence } from 'framer-motion'
 import type { RaceGuide } from './page'
 import Slider from '@mui/material/Slider'
-import { ThemeProvider, createTheme } from '@mui/material/styles'
 import Box from '@mui/material/Box'
 
 // Helper function to format location from city, state/region, and country
@@ -15,53 +14,6 @@ function formatLocation(city?: string, stateRegion?: string, country?: string): 
   const parts = [city, stateRegion, country].filter(Boolean)
   return parts.join(', ')
 }
-
-// Create MUI theme for the slider
-const sliderTheme = createTheme({
-  components: {
-    MuiSlider: {
-      styleOverrides: {
-        root: {
-          color: '#171717', // neutral-900 for primary color
-          height: 24,
-          padding: '13px 0',
-          boxSizing: 'border-box',
-        },
-        track: {
-          height: 24,
-          borderRadius: 12,
-          backgroundColor: '#292929', // dark grey - track (where thumb has passed)
-          border: 'none',
-        },
-        rail: {
-          height: 24,
-          borderRadius: 12,
-          backgroundColor: '#bfbfbf', // light grey rail (where thumb hasn't passed)
-          opacity: 1,
-        },
-        thumb: {
-          height: 24,
-          width: 24,
-          backgroundColor: '#ededed',
-          border: 'none',
-          boxShadow: 'none',
-          '&:hover': {
-            boxShadow: 'none',
-          },
-          '&.Mui-active': {
-            boxShadow: 'none',
-          },
-          '&.Mui-focusVisible': {
-            boxShadow: '0 0 0 3px rgba(228, 60, 129, 0.3)', // electric-pink focus ring for accessibility
-          },
-          '&:before': {
-            display: 'none',
-          },
-        },
-      },
-    },
-  },
-})
 
 export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
   const [searchQuery, setSearchQuery] = useState('')
@@ -820,90 +772,28 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                             </div>
                           </div>
 
-                          {/* Slider Container with proper padding */}
+                          {/* Slider Container */}
                           <div className="px-3 mb-2">
-                            <ThemeProvider theme={sliderTheme}>
-                              <Box sx={{ px: 1.5, position: 'relative' }}>
-                                <Slider
-                                  value={[
-                                    distanceUnit === 'km' ? tempCustomRange.min : kmToMiles(tempCustomRange.min),
-                                    distanceUnit === 'km' ? tempCustomRange.max : kmToMiles(tempCustomRange.max)
-                                  ]}
-                                  onChange={(_, newValue) => {
-                                    // Just update values, no snapping during drag for smooth UX
-                                    const [min, max] = newValue as number[]
-                                    const minKm = distanceUnit === 'km' ? min : milesToKm(min)
-                                    const maxKm = distanceUnit === 'km' ? max : milesToKm(max)
-                                    setTempCustomRange({ min: minKm, max: maxKm })
-                                    setTempDistanceFilter('custom')
-                                  }}
-                                  onChangeCommitted={(_, newValue) => {
-                                    // Snap to markers only when user releases slider
-                                    let [min, max] = newValue as number[]
-                                    const snapThreshold = distanceUnit === 'km' ? 3 : 2
-
-                                    // Check min value for snapping
-                                    for (const category of distanceCategories) {
-                                      const markerValue = distanceUnit === 'km' ? category.km : kmToMiles(category.km)
-                                      if (Math.abs(min - markerValue) < snapThreshold) {
-                                        min = markerValue
-                                        break
-                                      }
-                                    }
-
-                                    // Check max value for snapping
-                                    for (const category of distanceCategories) {
-                                      const markerValue = distanceUnit === 'km' ? category.km : kmToMiles(category.km)
-                                      if (Math.abs(max - markerValue) < snapThreshold) {
-                                        max = markerValue
-                                        break
-                                      }
-                                    }
-
-                                    const minKm = distanceUnit === 'km' ? min : milesToKm(min)
-                                    const maxKm = distanceUnit === 'km' ? max : milesToKm(max)
-                                    setTempCustomRange({ min: minKm, max: maxKm })
-                                    setTempDistanceFilter('custom')
-                                  }}
-                                  min={0}
-                                  max={distanceUnit === 'km' ? 100 : Math.round(kmToMiles(100))}
-                                  step={distanceUnit === 'km' ? 1 : 0.5}
-                                  valueLabelDisplay="off"
-                                  disableSwap={false}
-                                  marks={distanceCategories.map(category => ({
-                                    value: distanceUnit === 'km' ? category.km : kmToMiles(category.km),
-                                    label: ''
-                                  }))}
-                                  sx={{
-                                    '& .MuiSlider-rail': {
-                                      left: 0,
-                                      right: 0,
-                                      width: '100%',
-                                      margin: 0,
-                                    },
-                                    '& .MuiSlider-track': {
-                                      left: '0 !important',
-                                    },
-                                    '& .MuiSlider-mark': {
-                                      width: '16px',
-                                      height: '16px',
-                                      borderRadius: '50%',
-                                      backgroundColor: 'transparent',
-                                      opacity: 1,
-                                      transform: 'translateX(-50%)',
-                                      border: '2px dashed #737373',
-                                      top: '50%',
-                                      marginTop: '-8px',
-                                      zIndex: 1,
-                                      '&.MuiSlider-markActive': {
-                                        backgroundColor: 'transparent',
-                                        border: '2px dashed #404040',
-                                      }
-                                    },
-                                  }}
-                                />
-                              </Box>
-                            </ThemeProvider>
+                            <Box sx={{ width: '100%' }}>
+                              <Slider
+                                value={[
+                                  distanceUnit === 'km' ? tempCustomRange.min : kmToMiles(tempCustomRange.min),
+                                  distanceUnit === 'km' ? tempCustomRange.max : kmToMiles(tempCustomRange.max)
+                                ]}
+                                onChange={(_, newValue) => {
+                                  const [min, max] = newValue as number[]
+                                  const minKm = distanceUnit === 'km' ? min : milesToKm(min)
+                                  const maxKm = distanceUnit === 'km' ? max : milesToKm(max)
+                                  setTempCustomRange({ min: minKm, max: maxKm })
+                                  setTempDistanceFilter('custom')
+                                }}
+                                min={0}
+                                max={distanceUnit === 'km' ? 100 : Math.round(kmToMiles(100))}
+                                step={distanceUnit === 'km' ? 1 : 0.5}
+                                valueLabelDisplay="off"
+                                disableSwap={false}
+                              />
+                            </Box>
                           </div>
 
                           {/* Distance Anchor Buttons with Icons - Below Slider */}
