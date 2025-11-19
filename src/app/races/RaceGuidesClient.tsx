@@ -774,7 +774,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
 
                           {/* Slider Container */}
                           <div className="px-3 mb-6">
-                            <Box sx={{ width: '100%' }}>
+                            <Box sx={{ width: '100%', px: 1 }}>
                               <Slider
                                 value={[
                                   distanceUnit === 'km' ? tempCustomRange.min : kmToMiles(tempCustomRange.min),
@@ -792,6 +792,54 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                 step={distanceUnit === 'km' ? 1 : 0.5}
                                 valueLabelDisplay="off"
                                 disableSwap={false}
+                                marks={distanceCategories.map(category => ({
+                                  value: distanceUnit === 'km' ? category.km : kmToMiles(category.km),
+                                  label: ''
+                                }))}
+                                sx={{
+                                  color: '#1A1A1A', // gray-900
+                                  height: 24,
+                                  padding: '13px 0',
+                                  '& .MuiSlider-rail': {
+                                    height: 24,
+                                    borderRadius: 12,
+                                    backgroundColor: '#E6E6E6', // gray-200 - light rail
+                                    opacity: 1,
+                                  },
+                                  '& .MuiSlider-track': {
+                                    height: 24,
+                                    borderRadius: 12,
+                                    backgroundColor: '#404040', // gray-700 - dark track
+                                    border: 'none',
+                                  },
+                                  '& .MuiSlider-thumb': {
+                                    height: 24,
+                                    width: 24,
+                                    backgroundColor: '#FFFFFF', // white thumb
+                                    border: '2px solid #1A1A1A', // gray-900 border
+                                    boxShadow: 'none',
+                                    '&:hover, &.Mui-active': {
+                                      boxShadow: '0 0 0 4px rgba(26, 26, 26, 0.1)', // subtle hover
+                                    },
+                                    '&.Mui-focusVisible': {
+                                      boxShadow: '0 0 0 4px rgba(228, 60, 129, 0.2)', // electric-pink focus
+                                    },
+                                  },
+                                  '& .MuiSlider-mark': {
+                                    width: 16,
+                                    height: 16,
+                                    borderRadius: '50%',
+                                    backgroundColor: 'transparent',
+                                    border: '2px dashed #737373', // gray-500
+                                    top: '50%',
+                                    transform: 'translate(-50%, -50%)',
+                                    opacity: 1,
+                                    '&.MuiSlider-markActive': {
+                                      backgroundColor: 'transparent',
+                                      border: '2px dashed #404040', // gray-700 when active
+                                    },
+                                  },
+                                }}
                               />
                             </Box>
                           </div>
