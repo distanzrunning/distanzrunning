@@ -885,18 +885,19 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                       left: '0 !important',
                                     },
                                     '& .MuiSlider-mark': {
-                                      width: '12px',
-                                      height: '12px',
+                                      width: '16px',
+                                      height: '16px',
                                       borderRadius: '50%',
                                       backgroundColor: 'transparent',
                                       opacity: 1,
                                       transform: 'translateX(-50%)',
-                                      border: '2px dashed #a3a3a3',
+                                      border: '2px dashed #737373',
                                       top: '50%',
-                                      marginTop: '-6px',
+                                      marginTop: '-8px',
+                                      zIndex: 1,
                                       '&.MuiSlider-markActive': {
                                         backgroundColor: 'transparent',
-                                        border: '2px dashed #737373',
+                                        border: '2px dashed #404040',
                                       }
                                     },
                                   }}
