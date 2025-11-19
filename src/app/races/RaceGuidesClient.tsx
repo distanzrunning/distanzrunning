@@ -22,53 +22,55 @@ const sliderTheme = createTheme({
       styleOverrides: {
         root: {
           color: '#737373', // neutral-500 for track
-          height: 32,
-          padding: '24px 0',
+          height: 20,
+          padding: '20px 0',
         },
         track: {
-          height: 32,
+          height: 20,
           borderRadius: 9999,
           backgroundColor: '#d4d4d4', // neutral-300 - lighter grey
           border: 'none',
         },
         rail: {
-          height: 32,
+          height: 20,
           borderRadius: 9999,
           backgroundColor: '#a3a3a3', // neutral-400 - grey
           opacity: 1,
         },
         thumb: {
-          height: 32,
-          width: 32,
+          height: 20,
+          width: 20,
           backgroundColor: '#f5f5f5', // neutral-100 - light shade
           border: '2px solid #d4d4d4',
-          boxShadow: '0 2px 4px rgb(0 0 0 / 0.1)',
+          boxShadow: '0 1px 2px rgb(0 0 0 / 0.1)',
+          marginTop: 0,
+          marginLeft: 0,
           '&:hover': {
-            boxShadow: '0 4px 6px rgb(0 0 0 / 0.15)',
+            boxShadow: '0 2px 4px rgb(0 0 0 / 0.15)',
           },
           '&.Mui-active': {
-            boxShadow: '0 4px 6px rgb(0 0 0 / 0.15)',
+            boxShadow: '0 2px 4px rgb(0 0 0 / 0.15)',
           },
         },
         mark: {
-          height: 32,
-          width: 32,
+          height: 20,
+          width: 20,
           borderRadius: '50%',
           backgroundColor: 'transparent',
           border: '2px dashed #a3a3a3', // neutral-400
           transform: 'translateX(-50%)',
           top: '50%',
-          marginTop: -16,
+          marginTop: -10,
         },
         markActive: {
           backgroundColor: 'transparent',
           border: '2px dashed #737373', // neutral-500
         },
         markLabel: {
-          fontSize: '12px',
+          fontSize: '11px',
           fontWeight: 500,
           color: '#525252', // neutral-600
-          top: 60,
+          top: 40,
         },
       },
     },
