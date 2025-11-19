@@ -917,18 +917,18 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                       left: '0 !important',
                                     },
                                     '& .MuiSlider-mark': {
-                                      width: '24px',
-                                      height: '24px',
+                                      width: '20px',
+                                      height: '20px',
                                       borderRadius: '50%',
                                       backgroundColor: 'transparent',
                                       opacity: 1,
                                       transform: 'translateX(-50%)',
-                                      border: '2px dashed #737373',
+                                      border: '2px dashed #d4d4d4',
                                       top: '50%',
-                                      marginTop: '-12px',
+                                      marginTop: '-10px',
                                       '&.MuiSlider-markActive': {
                                         backgroundColor: 'transparent',
-                                        border: '2px dashed #525252',
+                                        border: '2px dashed #a3a3a3',
                                       }
                                     },
                                   }}
