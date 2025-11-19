@@ -768,7 +768,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                         {/* Custom Range Slider */}
                         <div className="mb-6">
                           {/* Min/Max Input Fields */}
-                          <div className="flex items-center gap-3 mb-8">
+                          <div className="flex items-center gap-3 mb-6">
                             <div className="flex-1 relative">
                               <input
                                 type="number"
@@ -785,15 +785,15 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                   })
                                   setTempDistanceFilter('custom')
                                 }}
-                                className="w-full px-4 py-3 pr-12 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white text-base font-medium outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-600"
+                                className="w-full px-3 py-2.5 pr-10 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white text-sm font-medium outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-600"
                                 placeholder="0"
                               />
-                              <span className="absolute right-4 top-1/2 -translate-y-1/2 text-neutral-500 dark:text-neutral-400 text-base font-medium pointer-events-none">
+                              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-500 dark:text-neutral-400 text-sm font-medium pointer-events-none">
                                 {distanceUnit}
                               </span>
                             </div>
                             <div className="flex-1 relative">
-                              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-500 dark:text-neutral-400 text-base font-medium pointer-events-none">
+                              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500 dark:text-neutral-400 text-sm font-medium pointer-events-none z-10">
                                 &gt;
                               </span>
                               <input
@@ -811,17 +811,17 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                   })
                                   setTempDistanceFilter('custom')
                                 }}
-                                className="w-full px-4 py-3 pl-10 pr-12 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white text-base font-medium outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-600"
+                                className="w-full px-3 py-2.5 pl-8 pr-10 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white text-sm font-medium outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-600"
                                 placeholder={distanceUnit === 'km' ? '100' : '62'}
                               />
-                              <span className="absolute right-4 top-1/2 -translate-y-1/2 text-neutral-500 dark:text-neutral-400 text-base font-medium pointer-events-none">
+                              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-500 dark:text-neutral-400 text-sm font-medium pointer-events-none">
                                 {distanceUnit}
                               </span>
                             </div>
                           </div>
 
                           {/* Slider Container with proper padding */}
-                          <div className="px-3 mb-6">
+                          <div className="px-3 mb-2">
                             <ThemeProvider theme={sliderTheme}>
                               <Box sx={{ px: 1.5, position: 'relative' }}>
                                 <Slider
@@ -885,57 +885,69 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                       left: '0 !important',
                                     },
                                     '& .MuiSlider-mark': {
-                                      width: '20px',
-                                      height: '20px',
+                                      width: '12px',
+                                      height: '12px',
                                       borderRadius: '50%',
                                       backgroundColor: 'transparent',
                                       opacity: 1,
                                       transform: 'translateX(-50%)',
-                                      border: '2px dashed #d4d4d4',
+                                      border: '2px dashed #a3a3a3',
                                       top: '50%',
-                                      marginTop: '-10px',
+                                      marginTop: '-6px',
                                       '&.MuiSlider-markActive': {
                                         backgroundColor: 'transparent',
-                                        border: '2px dashed #a3a3a3',
+                                        border: '2px dashed #737373',
                                       }
                                     },
                                   }}
                                 />
                               </Box>
                             </ThemeProvider>
+                          </div>
 
-                            {/* Distance labels below slider */}
-                            <div className="relative mt-3 h-6">
+                          {/* Distance Anchor Buttons with Icons - Below Slider */}
+                          <div className="relative mb-6 px-3">
+                            <div className="relative h-12 mt-3">
                               {distanceCategories.map((category) => {
                                 const maxValue = distanceUnit === 'km' ? 100 : kmToMiles(100)
                                 const categoryValue = distanceUnit === 'km' ? category.km : kmToMiles(category.km)
                                 const position = (categoryValue / maxValue) * 100
 
                                 return (
-                                  <div
+                                  <button
                                     key={category.id}
-                                    className="absolute"
+                                    onClick={() => {
+                                      // Set slider to this exact distance
+                                      const kmValue = category.km
+                                      setTempCustomRange({ min: kmValue - 1, max: kmValue + 1 })
+                                      setTempDistanceFilter('custom')
+                                    }}
+                                    className="absolute flex flex-col items-center gap-1 group"
                                     style={{
                                       left: `calc(${position}% + 12px)`,
                                       transform: 'translateX(-50%)',
                                       top: 0
                                     }}
+                                    aria-label={`Set slider to ${category.label}`}
                                   >
-                                    <p className="text-[10px] font-medium whitespace-nowrap leading-tight text-neutral-500 dark:text-neutral-400">
+                                    {/* Circular Icon */}
+                                    <div className="w-6 h-6 rounded-full border-2 border-dashed border-neutral-400 dark:border-neutral-600 group-hover:border-neutral-600 dark:group-hover:border-neutral-400 transition-colors" />
+                                    {/* Label */}
+                                    <p className="text-[11px] font-medium whitespace-nowrap leading-tight text-neutral-600 dark:text-neutral-400 group-hover:text-neutral-900 dark:group-hover:text-white transition-colors">
                                       {category.label}
                                     </p>
-                                  </div>
+                                  </button>
                                 )
                               })}
                             </div>
                           </div>
 
-                          {/* Unit Toggle Below Slider */}
-                          <div className="flex items-center justify-center gap-2 mt-6 relative z-50">
-                            <div className="inline-flex bg-neutral-200 dark:bg-neutral-800 rounded-lg p-1">
+                          {/* Unit Toggle Below Distance Anchors */}
+                          <div className="flex items-center justify-center gap-2 mt-2 relative z-50">
+                            <div className="inline-flex bg-neutral-200 dark:bg-neutral-800 rounded-lg p-0.5">
                               <button
                                 onClick={() => setDistanceUnit('km')}
-                                className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                                className={`px-6 py-2 rounded-md text-sm font-medium transition-colors ${
                                   distanceUnit === 'km'
                                     ? 'bg-neutral-900 dark:bg-white text-white dark:text-neutral-900'
                                     : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
@@ -945,7 +957,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                               </button>
                               <button
                                 onClick={() => setDistanceUnit('mi')}
-                                className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                                className={`px-6 py-2 rounded-md text-sm font-medium transition-colors ${
                                   distanceUnit === 'mi'
                                     ? 'bg-neutral-900 dark:bg-white text-white dark:text-neutral-900'
                                     : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
