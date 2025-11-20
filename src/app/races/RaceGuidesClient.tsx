@@ -47,6 +47,9 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
   // Track which input is focused
   const [isMinInputFocused, setIsMinInputFocused] = useState(false)
   const [isMaxInputFocused, setIsMaxInputFocused] = useState(false)
+  // Track input values while typing
+  const [minInputValue, setMinInputValue] = useState('')
+  const [maxInputValue, setMaxInputValue] = useState('')
 
   // Close date filter on click outside
   useEffect(() => {
@@ -729,20 +732,26 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                 {isMinInputFocused ? (
                                   <input
                                     type="number"
-                                    value=""
+                                    value={minInputValue}
                                     onChange={(e) => {
+                                      setMinInputValue(e.target.value)
                                       const value = Number(e.target.value)
-                                      const kmValue = distanceUnit === 'km' ? value : milesToKm(value)
-                                      // Allow swapping: if new min > max, swap them
-                                      setTempCustomRange(prev => {
-                                        if (kmValue > prev.max) {
-                                          return { min: prev.max, max: kmValue }
-                                        }
-                                        return { ...prev, min: kmValue }
-                                      })
-                                      setTempDistanceFilter('custom')
+                                      if (!isNaN(value) && e.target.value !== '') {
+                                        const kmValue = distanceUnit === 'km' ? value : milesToKm(value)
+                                        // Allow swapping: if new min > max, swap them
+                                        setTempCustomRange(prev => {
+                                          if (kmValue > prev.max) {
+                                            return { min: prev.max, max: kmValue }
+                                          }
+                                          return { ...prev, min: kmValue }
+                                        })
+                                        setTempDistanceFilter('custom')
+                                      }
                                     }}
-                                    onBlur={() => setIsMinInputFocused(false)}
+                                    onBlur={() => {
+                                      setIsMinInputFocused(false)
+                                      setMinInputValue('')
+                                    }}
                                     autoFocus
                                     className="w-full bg-transparent text-neutral-900 dark:text-white text-sm font-medium outline-none border-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none text-center"
                                     placeholder=""
@@ -762,20 +771,26 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                 {isMaxInputFocused ? (
                                   <input
                                     type="number"
-                                    value=""
+                                    value={maxInputValue}
                                     onChange={(e) => {
+                                      setMaxInputValue(e.target.value)
                                       const value = Number(e.target.value)
-                                      const kmValue = distanceUnit === 'km' ? value : milesToKm(value)
-                                      // Allow swapping: if new max < min, swap them
-                                      setTempCustomRange(prev => {
-                                        if (kmValue < prev.min) {
-                                          return { min: kmValue, max: prev.min }
-                                        }
-                                        return { ...prev, max: kmValue }
-                                      })
-                                      setTempDistanceFilter('custom')
+                                      if (!isNaN(value) && e.target.value !== '') {
+                                        const kmValue = distanceUnit === 'km' ? value : milesToKm(value)
+                                        // Allow swapping: if new max < min, swap them
+                                        setTempCustomRange(prev => {
+                                          if (kmValue < prev.min) {
+                                            return { min: kmValue, max: prev.min }
+                                          }
+                                          return { ...prev, max: kmValue }
+                                        })
+                                        setTempDistanceFilter('custom')
+                                      }
                                     }}
-                                    onBlur={() => setIsMaxInputFocused(false)}
+                                    onBlur={() => {
+                                      setIsMaxInputFocused(false)
+                                      setMaxInputValue('')
+                                    }}
                                     autoFocus
                                     className="w-full bg-transparent text-neutral-900 dark:text-white text-sm font-medium outline-none border-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none text-center"
                                     placeholder=""
