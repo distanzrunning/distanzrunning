@@ -726,10 +726,10 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                           <div className="px-3 mb-6">
                             <div className="flex items-center justify-between" style={{ paddingLeft: '12px', paddingRight: '12px' }}>
                               <div className="flex items-center justify-center bg-neutral-100 dark:bg-neutral-800 rounded-lg px-3 py-2 min-w-[80px]">
-                                <div className="flex items-center gap-0">
+                                {isMinInputFocused ? (
                                   <input
                                     type="number"
-                                    value={isMinInputFocused ? '' : (distanceUnit === 'km' ? Math.round(tempCustomRange.min) : Math.round(kmToMiles(tempCustomRange.min)))}
+                                    value=""
                                     onChange={(e) => {
                                       const value = Number(e.target.value)
                                       const kmValue = distanceUnit === 'km' ? value : milesToKm(value)
@@ -744,26 +744,25 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                     }}
                                     onFocus={() => setIsMinInputFocused(true)}
                                     onBlur={() => setIsMinInputFocused(false)}
-                                    className={`w-auto bg-transparent text-neutral-900 dark:text-white text-sm font-medium outline-none border-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${isMinInputFocused ? 'text-center w-full' : 'text-right'}`}
-                                    placeholder={isMinInputFocused ? '' : '0'}
+                                    className="w-full bg-transparent text-neutral-900 dark:text-white text-sm font-medium outline-none border-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none text-center"
+                                    placeholder=""
                                   />
-                                  {!isMinInputFocused && (
-                                    <span className="text-neutral-900 dark:text-white text-sm font-medium whitespace-nowrap ml-0">
+                                ) : (
+                                  <div className="flex items-center gap-0" onClick={() => setIsMinInputFocused(true)}>
+                                    <span className="text-neutral-900 dark:text-white text-sm font-medium">
+                                      {distanceUnit === 'km' ? Math.round(tempCustomRange.min) : Math.round(kmToMiles(tempCustomRange.min))}
+                                    </span>
+                                    <span className="text-neutral-900 dark:text-white text-sm font-medium">
                                       {distanceUnit}
                                     </span>
-                                  )}
-                                </div>
+                                  </div>
+                                )}
                               </div>
                               <div className="flex items-center justify-center bg-neutral-100 dark:bg-neutral-800 rounded-lg px-3 py-2 min-w-[100px]">
-                                <div className="flex items-center gap-0">
-                                  {!isMaxInputFocused && (
-                                    <span className="text-neutral-900 dark:text-white text-sm font-medium mr-0">
-                                      &gt;
-                                    </span>
-                                  )}
+                                {isMaxInputFocused ? (
                                   <input
                                     type="number"
-                                    value={isMaxInputFocused ? '' : (distanceUnit === 'km' ? Math.round(tempCustomRange.max) : Math.round(kmToMiles(tempCustomRange.max)))}
+                                    value=""
                                     onChange={(e) => {
                                       const value = Number(e.target.value)
                                       const kmValue = distanceUnit === 'km' ? value : milesToKm(value)
@@ -778,15 +777,22 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                     }}
                                     onFocus={() => setIsMaxInputFocused(true)}
                                     onBlur={() => setIsMaxInputFocused(false)}
-                                    className={`w-auto bg-transparent text-neutral-900 dark:text-white text-sm font-medium outline-none border-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${isMaxInputFocused ? 'text-center w-full' : 'text-right'}`}
-                                    placeholder={isMaxInputFocused ? '' : (distanceUnit === 'km' ? '100' : '62')}
+                                    className="w-full bg-transparent text-neutral-900 dark:text-white text-sm font-medium outline-none border-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none text-center"
+                                    placeholder=""
                                   />
-                                  {!isMaxInputFocused && (
-                                    <span className="text-neutral-900 dark:text-white text-sm font-medium whitespace-nowrap ml-0">
+                                ) : (
+                                  <div className="flex items-center gap-0" onClick={() => setIsMaxInputFocused(true)}>
+                                    <span className="text-neutral-900 dark:text-white text-sm font-medium">
+                                      &gt;
+                                    </span>
+                                    <span className="text-neutral-900 dark:text-white text-sm font-medium">
+                                      {distanceUnit === 'km' ? Math.round(tempCustomRange.max) : Math.round(kmToMiles(tempCustomRange.max))}
+                                    </span>
+                                    <span className="text-neutral-900 dark:text-white text-sm font-medium">
                                       {distanceUnit}
                                     </span>
-                                  )}
-                                </div>
+                                  </div>
+                                )}
                               </div>
                             </div>
                           </div>
