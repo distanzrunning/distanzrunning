@@ -730,32 +730,39 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                             <div className="flex items-center justify-between" style={{ paddingLeft: '12px', paddingRight: '12px' }}>
                               <div className="flex items-center justify-center bg-neutral-100 dark:bg-neutral-800 rounded-lg px-3 py-2 min-w-[80px] w-[80px]">
                                 {isMinInputFocused ? (
-                                  <input
-                                    type="number"
-                                    value={minInputValue}
-                                    onChange={(e) => {
-                                      setMinInputValue(e.target.value)
-                                      const value = Number(e.target.value)
-                                      if (!isNaN(value) && e.target.value !== '') {
-                                        const kmValue = distanceUnit === 'km' ? value : milesToKm(value)
-                                        // Allow swapping: if new min > max, swap them
-                                        setTempCustomRange(prev => {
-                                          if (kmValue > prev.max) {
-                                            return { min: prev.max, max: kmValue }
-                                          }
-                                          return { ...prev, min: kmValue }
-                                        })
-                                        setTempDistanceFilter('custom')
-                                      }
-                                    }}
-                                    onBlur={() => {
-                                      setIsMinInputFocused(false)
-                                      setMinInputValue('')
-                                    }}
-                                    autoFocus
-                                    className="w-full bg-transparent text-neutral-900 dark:text-white text-sm font-medium outline-none border-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none text-center"
-                                    placeholder=""
-                                  />
+                                  <div className="flex items-center gap-0">
+                                    <input
+                                      type="number"
+                                      value={minInputValue}
+                                      onChange={(e) => {
+                                        setMinInputValue(e.target.value)
+                                        const value = Number(e.target.value)
+                                        if (!isNaN(value) && e.target.value !== '') {
+                                          const kmValue = distanceUnit === 'km' ? value : milesToKm(value)
+                                          // Allow swapping: if new min > max, swap them
+                                          setTempCustomRange(prev => {
+                                            if (kmValue > prev.max) {
+                                              return { min: prev.max, max: kmValue }
+                                            }
+                                            return { ...prev, min: kmValue }
+                                          })
+                                          setTempDistanceFilter('custom')
+                                        }
+                                      }}
+                                      onBlur={() => {
+                                        setIsMinInputFocused(false)
+                                        setMinInputValue('')
+                                      }}
+                                      autoFocus
+                                      className="w-auto bg-transparent text-neutral-900 dark:text-white text-sm font-medium outline-none border-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none text-center"
+                                      placeholder=""
+                                    />
+                                    {minInputValue && (
+                                      <span className="text-neutral-900 dark:text-white text-sm font-medium">
+                                        {distanceUnit}
+                                      </span>
+                                    )}
+                                  </div>
                                 ) : (
                                   <div className="flex items-center gap-0 cursor-pointer" onClick={() => setIsMinInputFocused(true)}>
                                     <span className="text-neutral-900 dark:text-white text-sm font-medium">
@@ -769,32 +776,44 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                               </div>
                               <div className="flex items-center justify-center bg-neutral-100 dark:bg-neutral-800 rounded-lg px-3 py-2 min-w-[100px] w-[100px]">
                                 {isMaxInputFocused ? (
-                                  <input
-                                    type="number"
-                                    value={maxInputValue}
-                                    onChange={(e) => {
-                                      setMaxInputValue(e.target.value)
-                                      const value = Number(e.target.value)
-                                      if (!isNaN(value) && e.target.value !== '') {
-                                        const kmValue = distanceUnit === 'km' ? value : milesToKm(value)
-                                        // Allow swapping: if new max < min, swap them
-                                        setTempCustomRange(prev => {
-                                          if (kmValue < prev.min) {
-                                            return { min: kmValue, max: prev.min }
-                                          }
-                                          return { ...prev, max: kmValue }
-                                        })
-                                        setTempDistanceFilter('custom')
-                                      }
-                                    }}
-                                    onBlur={() => {
-                                      setIsMaxInputFocused(false)
-                                      setMaxInputValue('')
-                                    }}
-                                    autoFocus
-                                    className="w-full bg-transparent text-neutral-900 dark:text-white text-sm font-medium outline-none border-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none text-center"
-                                    placeholder=""
-                                  />
+                                  <div className="flex items-center gap-0">
+                                    {maxInputValue && (
+                                      <span className="text-neutral-900 dark:text-white text-sm font-medium">
+                                        &gt;
+                                      </span>
+                                    )}
+                                    <input
+                                      type="number"
+                                      value={maxInputValue}
+                                      onChange={(e) => {
+                                        setMaxInputValue(e.target.value)
+                                        const value = Number(e.target.value)
+                                        if (!isNaN(value) && e.target.value !== '') {
+                                          const kmValue = distanceUnit === 'km' ? value : milesToKm(value)
+                                          // Allow swapping: if new max < min, swap them
+                                          setTempCustomRange(prev => {
+                                            if (kmValue < prev.min) {
+                                              return { min: kmValue, max: prev.min }
+                                            }
+                                            return { ...prev, max: kmValue }
+                                          })
+                                          setTempDistanceFilter('custom')
+                                        }
+                                      }}
+                                      onBlur={() => {
+                                        setIsMaxInputFocused(false)
+                                        setMaxInputValue('')
+                                      }}
+                                      autoFocus
+                                      className="w-auto bg-transparent text-neutral-900 dark:text-white text-sm font-medium outline-none border-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none text-center"
+                                      placeholder=""
+                                    />
+                                    {maxInputValue && (
+                                      <span className="text-neutral-900 dark:text-white text-sm font-medium">
+                                        {distanceUnit}
+                                      </span>
+                                    )}
+                                  </div>
                                 ) : (
                                   <div className="flex items-center gap-0 cursor-pointer" onClick={() => setIsMaxInputFocused(true)}>
                                     <span className="text-neutral-900 dark:text-white text-sm font-medium">
