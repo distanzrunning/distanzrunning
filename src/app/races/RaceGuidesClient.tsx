@@ -731,7 +731,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                               {/* Min Value Box */}
                               <div className="flex items-center justify-center bg-neutral-100 dark:bg-neutral-800 rounded-lg px-3 py-2 w-[80px]">
                                 {isMinInputFocused ? (
-                                  <div className="inline-flex items-center gap-0">
+                                  <div className="flex items-center justify-center gap-0 w-full">
                                     <input
                                       type="number"
                                       value={minInputValue}
@@ -755,11 +755,12 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                         setMinInputValue('')
                                       }}
                                       autoFocus
-                                      className="w-[40px] bg-transparent text-neutral-900 dark:text-white text-sm font-medium outline-none border-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none text-right pr-0"
+                                      className="flex-shrink-0 w-auto min-w-0 bg-transparent text-neutral-900 dark:text-white text-sm font-medium outline-none border-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none text-center"
+                                      style={{ width: `${Math.max(1, minInputValue.length)}ch` }}
                                       placeholder=""
                                     />
                                     {minInputValue && (
-                                      <span className="text-neutral-900 dark:text-white text-sm font-medium pl-0">
+                                      <span className="text-neutral-900 dark:text-white text-sm font-medium flex-shrink-0">
                                         {distanceUnit}
                                       </span>
                                     )}
@@ -779,12 +780,12 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                               {/* Max Value Box with ">" prefix (only shown at max 100km/62mi) */}
                               <div className="flex items-center justify-center bg-neutral-100 dark:bg-neutral-800 rounded-lg px-3 py-2 w-[80px]">
                                 {isMaxInputFocused ? (
-                                  <div className="inline-flex items-center gap-0">
+                                  <div className="flex items-center justify-center gap-0 w-full">
                                     {(() => {
                                       const maxValue = distanceUnit === 'km' ? 100 : Math.round(kmToMiles(100))
                                       const currentValue = maxInputValue ? Number(maxInputValue) : (distanceUnit === 'km' ? tempCustomRange.max : Math.round(kmToMiles(tempCustomRange.max)))
                                       return currentValue >= maxValue && maxInputValue && (
-                                        <span className="text-neutral-900 dark:text-white text-sm font-medium pr-0">
+                                        <span className="text-neutral-900 dark:text-white text-sm font-medium flex-shrink-0">
                                           &gt;
                                         </span>
                                       )
@@ -812,11 +813,12 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                         setMaxInputValue('')
                                       }}
                                       autoFocus
-                                      className="w-[40px] bg-transparent text-neutral-900 dark:text-white text-sm font-medium outline-none border-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none text-right pr-0"
+                                      className="flex-shrink-0 w-auto min-w-0 bg-transparent text-neutral-900 dark:text-white text-sm font-medium outline-none border-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none text-center"
+                                      style={{ width: `${Math.max(1, maxInputValue.length)}ch` }}
                                       placeholder=""
                                     />
                                     {maxInputValue && (
-                                      <span className="text-neutral-900 dark:text-white text-sm font-medium pl-0">
+                                      <span className="text-neutral-900 dark:text-white text-sm font-medium flex-shrink-0">
                                         {distanceUnit}
                                       </span>
                                     )}
