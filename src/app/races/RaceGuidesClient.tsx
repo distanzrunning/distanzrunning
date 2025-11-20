@@ -727,7 +727,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                         <div className="mb-6">
                           {/* Min/Max Input Fields */}
                           <div className="px-3 mb-6">
-                            <div className="flex items-center gap-3 justify-center" style={{ paddingLeft: '12px', paddingRight: '12px' }}>
+                            <div className="flex items-center justify-between" style={{ paddingLeft: '12px', paddingRight: '12px' }}>
                               {/* Min Value Box */}
                               <div className="flex items-center justify-center bg-neutral-100 dark:bg-neutral-800 rounded-lg px-3 py-2 w-[80px]">
                                 {isMinInputFocused ? (
