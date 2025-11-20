@@ -726,7 +726,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                           <div className="px-3 mb-6">
                             <div className="flex items-center justify-between" style={{ paddingLeft: '12px', paddingRight: '12px' }}>
                               <div className="flex items-center justify-center bg-neutral-100 dark:bg-neutral-800 rounded-lg px-3 py-2 min-w-[80px]">
-                                <div className="flex items-center">
+                                <div className="flex items-center gap-0">
                                   <input
                                     type="number"
                                     value={isMinInputFocused ? '' : (distanceUnit === 'km' ? Math.round(tempCustomRange.min) : Math.round(kmToMiles(tempCustomRange.min)))}
@@ -744,20 +744,20 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                     }}
                                     onFocus={() => setIsMinInputFocused(true)}
                                     onBlur={() => setIsMinInputFocused(false)}
-                                    className={`w-[32px] bg-transparent text-neutral-900 dark:text-white text-sm font-medium outline-none border-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${isMinInputFocused ? 'text-center' : 'text-right'}`}
+                                    className={`w-auto bg-transparent text-neutral-900 dark:text-white text-sm font-medium outline-none border-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${isMinInputFocused ? 'text-center w-full' : 'text-right'}`}
                                     placeholder={isMinInputFocused ? '' : '0'}
                                   />
                                   {!isMinInputFocused && (
-                                    <span className="text-neutral-900 dark:text-white text-sm font-medium whitespace-nowrap">
+                                    <span className="text-neutral-900 dark:text-white text-sm font-medium whitespace-nowrap ml-0">
                                       {distanceUnit}
                                     </span>
                                   )}
                                 </div>
                               </div>
                               <div className="flex items-center justify-center bg-neutral-100 dark:bg-neutral-800 rounded-lg px-3 py-2 min-w-[100px]">
-                                <div className="flex items-center">
+                                <div className="flex items-center gap-0">
                                   {!isMaxInputFocused && (
-                                    <span className="text-neutral-900 dark:text-white text-sm font-medium">
+                                    <span className="text-neutral-900 dark:text-white text-sm font-medium mr-0">
                                       &gt;
                                     </span>
                                   )}
@@ -778,11 +778,11 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                     }}
                                     onFocus={() => setIsMaxInputFocused(true)}
                                     onBlur={() => setIsMaxInputFocused(false)}
-                                    className={`w-[32px] bg-transparent text-neutral-900 dark:text-white text-sm font-medium outline-none border-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${isMaxInputFocused ? 'text-center' : 'text-right'}`}
+                                    className={`w-auto bg-transparent text-neutral-900 dark:text-white text-sm font-medium outline-none border-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${isMaxInputFocused ? 'text-center w-full' : 'text-right'}`}
                                     placeholder={isMaxInputFocused ? '' : (distanceUnit === 'km' ? '100' : '62')}
                                   />
                                   {!isMaxInputFocused && (
-                                    <span className="text-neutral-900 dark:text-white text-sm font-medium whitespace-nowrap">
+                                    <span className="text-neutral-900 dark:text-white text-sm font-medium whitespace-nowrap ml-0">
                                       {distanceUnit}
                                     </span>
                                   )}
