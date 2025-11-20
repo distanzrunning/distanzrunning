@@ -727,8 +727,9 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                         <div className="mb-6">
                           {/* Min/Max Input Fields */}
                           <div className="px-3 mb-6">
-                            <div className="flex items-center justify-between" style={{ paddingLeft: '12px', paddingRight: '12px' }}>
-                              <div className="flex items-center justify-center bg-neutral-100 dark:bg-neutral-800 rounded-lg px-3 py-2 min-w-[80px] w-[80px]">
+                            <div className="flex items-center gap-3 justify-center" style={{ paddingLeft: '12px', paddingRight: '12px' }}>
+                              {/* Min Value Box */}
+                              <div className="flex items-center justify-center bg-neutral-100 dark:bg-neutral-800 rounded-lg px-3 py-2">
                                 {isMinInputFocused ? (
                                   <div className="flex items-center gap-0">
                                     <input
@@ -774,7 +775,9 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                   </div>
                                 )}
                               </div>
-                              <div className="flex items-center justify-center bg-neutral-100 dark:bg-neutral-800 rounded-lg px-3 py-2 min-w-[100px] w-[100px]">
+
+                              {/* Max Value Box with ">" prefix */}
+                              <div className="flex items-center justify-center bg-neutral-100 dark:bg-neutral-800 rounded-lg px-3 py-2">
                                 {isMaxInputFocused ? (
                                   <div className="flex items-center gap-0">
                                     {maxInputValue && (
