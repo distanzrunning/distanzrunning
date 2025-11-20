@@ -44,6 +44,9 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
   const [appliedCustomRange, setAppliedCustomRange] = useState<{ min: number; max: number }>({ min: 0, max: 100 })
   const [tempCustomRange, setTempCustomRange] = useState<{ min: number; max: number }>({ min: 0, max: 100 })
   const distanceFilterRef = useRef<HTMLDivElement>(null)
+  // Track which input is focused
+  const [isMinInputFocused, setIsMinInputFocused] = useState(false)
+  const [isMaxInputFocused, setIsMaxInputFocused] = useState(false)
 
   // Close date filter on click outside
   useEffect(() => {
@@ -739,20 +742,28 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                       })
                                       setTempDistanceFilter('custom')
                                     }}
-                                    onFocus={(e) => e.target.value = ''}
-                                    className="w-[32px] text-right bg-transparent text-neutral-900 dark:text-white text-sm font-medium outline-none border-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                    onFocus={(e) => {
+                                      e.target.value = ''
+                                      setIsMinInputFocused(true)
+                                    }}
+                                    onBlur={() => setIsMinInputFocused(false)}
+                                    className={`w-[32px] bg-transparent text-neutral-900 dark:text-white text-sm font-medium outline-none border-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${isMinInputFocused ? 'text-center' : 'text-right'}`}
                                     placeholder="0"
                                   />
-                                  <span className="text-neutral-900 dark:text-white text-sm font-medium whitespace-nowrap">
-                                    {distanceUnit}
-                                  </span>
+                                  {!isMinInputFocused && (
+                                    <span className="text-neutral-900 dark:text-white text-sm font-medium whitespace-nowrap">
+                                      {distanceUnit}
+                                    </span>
+                                  )}
                                 </div>
                               </div>
                               <div className="flex items-center justify-center bg-neutral-100 dark:bg-neutral-800 rounded-lg px-3 py-2 min-w-[100px]">
                                 <div className="flex items-center">
-                                  <span className="text-neutral-900 dark:text-white text-sm font-medium">
-                                    &gt;
-                                  </span>
+                                  {!isMaxInputFocused && (
+                                    <span className="text-neutral-900 dark:text-white text-sm font-medium">
+                                      &gt;
+                                    </span>
+                                  )}
                                   <input
                                     type="number"
                                     value={distanceUnit === 'km' ? Math.round(tempCustomRange.max) : Math.round(kmToMiles(tempCustomRange.max))}
@@ -768,13 +779,19 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                       })
                                       setTempDistanceFilter('custom')
                                     }}
-                                    onFocus={(e) => e.target.value = ''}
-                                    className="w-[32px] text-right bg-transparent text-neutral-900 dark:text-white text-sm font-medium outline-none border-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                    onFocus={(e) => {
+                                      e.target.value = ''
+                                      setIsMaxInputFocused(true)
+                                    }}
+                                    onBlur={() => setIsMaxInputFocused(false)}
+                                    className={`w-[32px] bg-transparent text-neutral-900 dark:text-white text-sm font-medium outline-none border-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${isMaxInputFocused ? 'text-center' : 'text-right'}`}
                                     placeholder={distanceUnit === 'km' ? '100' : '62'}
                                   />
-                                  <span className="text-neutral-900 dark:text-white text-sm font-medium whitespace-nowrap">
-                                    {distanceUnit}
-                                  </span>
+                                  {!isMaxInputFocused && (
+                                    <span className="text-neutral-900 dark:text-white text-sm font-medium whitespace-nowrap">
+                                      {distanceUnit}
+                                    </span>
+                                  )}
                                 </div>
                               </div>
                             </div>
