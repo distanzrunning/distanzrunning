@@ -725,7 +725,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                           {/* Min/Max Input Fields */}
                           <div className="px-3 mb-6">
                             <div className="flex items-center justify-between" style={{ paddingLeft: '12px', paddingRight: '12px' }}>
-                              <div className="flex items-center justify-center bg-neutral-100 dark:bg-neutral-800 rounded-lg px-3 py-2 min-w-[80px]">
+                              <div className="flex items-center justify-center bg-neutral-100 dark:bg-neutral-800 rounded-lg px-3 py-2 min-w-[80px] w-[80px]">
                                 {isMinInputFocused ? (
                                   <input
                                     type="number"
@@ -742,13 +742,13 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                       })
                                       setTempDistanceFilter('custom')
                                     }}
-                                    onFocus={() => setIsMinInputFocused(true)}
                                     onBlur={() => setIsMinInputFocused(false)}
+                                    autoFocus
                                     className="w-full bg-transparent text-neutral-900 dark:text-white text-sm font-medium outline-none border-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none text-center"
                                     placeholder=""
                                   />
                                 ) : (
-                                  <div className="flex items-center gap-0" onClick={() => setIsMinInputFocused(true)}>
+                                  <div className="flex items-center gap-0 cursor-pointer" onClick={() => setIsMinInputFocused(true)}>
                                     <span className="text-neutral-900 dark:text-white text-sm font-medium">
                                       {distanceUnit === 'km' ? Math.round(tempCustomRange.min) : Math.round(kmToMiles(tempCustomRange.min))}
                                     </span>
@@ -758,7 +758,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                   </div>
                                 )}
                               </div>
-                              <div className="flex items-center justify-center bg-neutral-100 dark:bg-neutral-800 rounded-lg px-3 py-2 min-w-[100px]">
+                              <div className="flex items-center justify-center bg-neutral-100 dark:bg-neutral-800 rounded-lg px-3 py-2 min-w-[100px] w-[100px]">
                                 {isMaxInputFocused ? (
                                   <input
                                     type="number"
@@ -775,13 +775,13 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                       })
                                       setTempDistanceFilter('custom')
                                     }}
-                                    onFocus={() => setIsMaxInputFocused(true)}
                                     onBlur={() => setIsMaxInputFocused(false)}
+                                    autoFocus
                                     className="w-full bg-transparent text-neutral-900 dark:text-white text-sm font-medium outline-none border-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none text-center"
                                     placeholder=""
                                   />
                                 ) : (
-                                  <div className="flex items-center gap-0" onClick={() => setIsMaxInputFocused(true)}>
+                                  <div className="flex items-center gap-0 cursor-pointer" onClick={() => setIsMaxInputFocused(true)}>
                                     <span className="text-neutral-900 dark:text-white text-sm font-medium">
                                       &gt;
                                     </span>
