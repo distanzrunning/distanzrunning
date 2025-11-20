@@ -745,7 +745,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                     onFocus={() => setIsMinInputFocused(true)}
                                     onBlur={() => setIsMinInputFocused(false)}
                                     className={`w-[32px] bg-transparent text-neutral-900 dark:text-white text-sm font-medium outline-none border-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${isMinInputFocused ? 'text-center' : 'text-right'}`}
-                                    placeholder="0"
+                                    placeholder={isMinInputFocused ? '' : '0'}
                                   />
                                   {!isMinInputFocused && (
                                     <span className="text-neutral-900 dark:text-white text-sm font-medium whitespace-nowrap">
@@ -779,7 +779,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                     onFocus={() => setIsMaxInputFocused(true)}
                                     onBlur={() => setIsMaxInputFocused(false)}
                                     className={`w-[32px] bg-transparent text-neutral-900 dark:text-white text-sm font-medium outline-none border-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${isMaxInputFocused ? 'text-center' : 'text-right'}`}
-                                    placeholder={distanceUnit === 'km' ? '100' : '62'}
+                                    placeholder={isMaxInputFocused ? '' : (distanceUnit === 'km' ? '100' : '62')}
                                   />
                                   {!isMaxInputFocused && (
                                     <span className="text-neutral-900 dark:text-white text-sm font-medium whitespace-nowrap">
