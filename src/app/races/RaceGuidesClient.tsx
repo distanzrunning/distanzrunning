@@ -392,8 +392,8 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                         disabled={!tempDateRange.start && !tempDateRange.end}
                         className={`p-2 rounded-lg transition-colors ${
                           tempDateRange.start || tempDateRange.end
-                            ? 'bg-neutral-200 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-300 dark:hover:bg-neutral-700 hover:text-neutral-900 dark:hover:text-white cursor-pointer'
-                            : 'bg-neutral-100 dark:bg-neutral-900 text-neutral-400 dark:text-neutral-600 cursor-not-allowed opacity-50'
+                            ? 'bg-neutral-200 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-300 dark:hover:bg-neutral-600 cursor-pointer'
+                            : 'text-neutral-400 dark:text-neutral-600 cursor-not-allowed opacity-50'
                         }`}
                         aria-label="Clear selection"
                       >
@@ -435,8 +435,8 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                         disabled={!tempDateRange.start && !tempDateRange.end}
                         className={`p-2 rounded-lg transition-colors ${
                           tempDateRange.start || tempDateRange.end
-                            ? 'bg-neutral-200 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-300 dark:hover:bg-neutral-700 hover:text-neutral-900 dark:hover:text-white cursor-pointer'
-                            : 'bg-neutral-100 dark:bg-neutral-900 text-neutral-400 dark:text-neutral-600 cursor-not-allowed opacity-50'
+                            ? 'bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-100 cursor-pointer'
+                            : 'bg-neutral-200 dark:bg-neutral-800 text-neutral-400 dark:text-neutral-600 cursor-not-allowed opacity-50'
                         }`}
                         aria-label="Apply filter"
                       >
@@ -662,8 +662,8 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                         disabled={!tempDistanceFilter && tempCustomRange.min === 0 && tempCustomRange.max === 100}
                         className={`p-2 rounded-lg transition-colors ${
                           tempDistanceFilter || tempCustomRange.min !== 0 || tempCustomRange.max !== 100
-                            ? 'bg-neutral-200 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-300 dark:hover:bg-neutral-700 hover:text-neutral-900 dark:hover:text-white cursor-pointer'
-                            : 'bg-neutral-100 dark:bg-neutral-900 text-neutral-400 dark:text-neutral-600 cursor-not-allowed opacity-50'
+                            ? 'bg-neutral-200 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-300 dark:hover:bg-neutral-600 cursor-pointer'
+                            : 'text-neutral-400 dark:text-neutral-600 cursor-not-allowed opacity-50'
                         }`}
                         aria-label="Clear selection"
                       >
@@ -706,8 +706,8 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                         disabled={!tempDistanceFilter && tempCustomRange.min === 0 && tempCustomRange.max === 100}
                         className={`p-2 rounded-lg transition-colors ${
                           tempDistanceFilter || tempCustomRange.min !== 0 || tempCustomRange.max !== 100
-                            ? 'bg-neutral-200 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-300 dark:hover:bg-neutral-700 hover:text-neutral-900 dark:hover:text-white cursor-pointer'
-                            : 'bg-neutral-100 dark:bg-neutral-900 text-neutral-400 dark:text-neutral-600 cursor-not-allowed opacity-50'
+                            ? 'bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-100 cursor-pointer'
+                            : 'bg-neutral-200 dark:bg-neutral-800 text-neutral-400 dark:text-neutral-600 cursor-not-allowed opacity-50'
                         }`}
                         aria-label="Apply filter"
                       >
