@@ -389,7 +389,12 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                         onClick={() => {
                           setTempDateRange({ start: null, end: null })
                         }}
-                        className="p-2 bg-neutral-200 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-300 dark:hover:bg-neutral-700 hover:text-neutral-900 dark:hover:text-white rounded-lg transition-colors"
+                        disabled={!tempDateRange.start && !tempDateRange.end}
+                        className={`p-2 rounded-lg transition-colors ${
+                          tempDateRange.start || tempDateRange.end
+                            ? 'bg-neutral-200 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-300 dark:hover:bg-neutral-700 hover:text-neutral-900 dark:hover:text-white cursor-pointer'
+                            : 'bg-neutral-100 dark:bg-neutral-900 text-neutral-400 dark:text-neutral-600 cursor-not-allowed opacity-50'
+                        }`}
                         aria-label="Clear selection"
                       >
                         <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -427,7 +432,12 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                           setAppliedDateRange(tempDateRange)
                           setIsDateFilterOpen(false)
                         }}
-                        className="p-2 bg-neutral-200 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-300 dark:hover:bg-neutral-700 hover:text-neutral-900 dark:hover:text-white rounded-lg transition-colors"
+                        disabled={!tempDateRange.start && !tempDateRange.end}
+                        className={`p-2 rounded-lg transition-colors ${
+                          tempDateRange.start || tempDateRange.end
+                            ? 'bg-neutral-200 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-300 dark:hover:bg-neutral-700 hover:text-neutral-900 dark:hover:text-white cursor-pointer'
+                            : 'bg-neutral-100 dark:bg-neutral-900 text-neutral-400 dark:text-neutral-600 cursor-not-allowed opacity-50'
+                        }`}
                         aria-label="Apply filter"
                       >
                         <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -649,7 +659,12 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                           setTempDistanceFilter(null)
                           setTempCustomRange({ min: 0, max: 100 })
                         }}
-                        className="p-2 bg-neutral-200 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-300 dark:hover:bg-neutral-700 hover:text-neutral-900 dark:hover:text-white rounded-lg transition-colors"
+                        disabled={!tempDistanceFilter && tempCustomRange.min === 0 && tempCustomRange.max === 100}
+                        className={`p-2 rounded-lg transition-colors ${
+                          tempDistanceFilter || tempCustomRange.min !== 0 || tempCustomRange.max !== 100
+                            ? 'bg-neutral-200 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-300 dark:hover:bg-neutral-700 hover:text-neutral-900 dark:hover:text-white cursor-pointer'
+                            : 'bg-neutral-100 dark:bg-neutral-900 text-neutral-400 dark:text-neutral-600 cursor-not-allowed opacity-50'
+                        }`}
                         aria-label="Clear selection"
                       >
                         <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -688,7 +703,12 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                           setAppliedCustomRange(tempCustomRange)
                           setIsDistanceFilterOpen(false)
                         }}
-                        className="p-2 bg-neutral-200 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-300 dark:hover:bg-neutral-700 hover:text-neutral-900 dark:hover:text-white rounded-lg transition-colors"
+                        disabled={!tempDistanceFilter && tempCustomRange.min === 0 && tempCustomRange.max === 100}
+                        className={`p-2 rounded-lg transition-colors ${
+                          tempDistanceFilter || tempCustomRange.min !== 0 || tempCustomRange.max !== 100
+                            ? 'bg-neutral-200 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-300 dark:hover:bg-neutral-700 hover:text-neutral-900 dark:hover:text-white cursor-pointer'
+                            : 'bg-neutral-100 dark:bg-neutral-900 text-neutral-400 dark:text-neutral-600 cursor-not-allowed opacity-50'
+                        }`}
                         aria-label="Apply filter"
                       >
                         <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
