@@ -928,7 +928,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                       boxShadow: 'none',
                                     },
                                     '&.Mui-focusVisible': {
-                                      boxShadow: '0 0 0 4px rgba(228, 60, 129, 0.2)', // electric-pink focus
+                                      boxShadow: 'none',
                                     },
                                   },
                                   '& .MuiSlider-mark': {
