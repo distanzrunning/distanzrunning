@@ -739,7 +739,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                       })
                                       setTempDistanceFilter('custom')
                                     }}
-                                    onFocus={(e) => e.target.select()}
+                                    onFocus={(e) => e.target.value = ''}
                                     className="w-[32px] text-right bg-transparent text-neutral-900 dark:text-white text-sm font-medium outline-none border-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                                     placeholder="0"
                                   />
@@ -768,7 +768,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                       })
                                       setTempDistanceFilter('custom')
                                     }}
-                                    onFocus={(e) => e.target.select()}
+                                    onFocus={(e) => e.target.value = ''}
                                     className="w-[32px] text-right bg-transparent text-neutral-900 dark:text-white text-sm font-medium outline-none border-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                                     placeholder={distanceUnit === 'km' ? '100' : '62'}
                                   />
