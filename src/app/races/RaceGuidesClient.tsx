@@ -890,7 +890,12 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                   const minKm = distanceUnit === 'km' ? min : milesToKm(min)
                                   const maxKm = distanceUnit === 'km' ? max : milesToKm(max)
                                   setTempCustomRange({ min: minKm, max: maxKm })
-                                  setTempDistanceFilter('custom')
+                                  // Only set to 'custom' if not at default min/max
+                                  if (minKm === 0 && maxKm === 100) {
+                                    setTempDistanceFilter(null)
+                                  } else {
+                                    setTempDistanceFilter('custom')
+                                  }
                                 }}
                                 onChangeCommitted={(_, newValue) => {
                                   // Snap to markers when user releases slider
@@ -918,7 +923,12 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                   const minKm = distanceUnit === 'km' ? min : milesToKm(min)
                                   const maxKm = distanceUnit === 'km' ? max : milesToKm(max)
                                   setTempCustomRange({ min: minKm, max: maxKm })
-                                  setTempDistanceFilter('custom')
+                                  // Only set to 'custom' if not at default min/max
+                                  if (minKm === 0 && maxKm === 100) {
+                                    setTempDistanceFilter(null)
+                                  } else {
+                                    setTempDistanceFilter('custom')
+                                  }
                                 }}
                                 min={0}
                                 max={distanceUnit === 'km' ? 100 : Math.round(kmToMiles(100))}
