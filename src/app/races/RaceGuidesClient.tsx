@@ -435,7 +435,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                         disabled={!tempDateRange.start && !tempDateRange.end}
                         className={`p-2 rounded-lg transition-colors ${
                           tempDateRange.start || tempDateRange.end
-                            ? 'bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-100 cursor-pointer'
+                            ? 'bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 hover:bg-neutral-700 dark:hover:bg-neutral-200 cursor-pointer'
                             : 'bg-neutral-200 dark:bg-neutral-800 text-neutral-400 dark:text-neutral-600 cursor-not-allowed opacity-50'
                         }`}
                         aria-label="Apply filter"
@@ -706,7 +706,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                         disabled={!tempDistanceFilter && tempCustomRange.min === 0 && tempCustomRange.max === 100}
                         className={`p-2 rounded-lg transition-colors ${
                           tempDistanceFilter || tempCustomRange.min !== 0 || tempCustomRange.max !== 100
-                            ? 'bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-100 cursor-pointer'
+                            ? 'bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 hover:bg-neutral-700 dark:hover:bg-neutral-200 cursor-pointer'
                             : 'bg-neutral-200 dark:bg-neutral-800 text-neutral-400 dark:text-neutral-600 cursor-not-allowed opacity-50'
                         }`}
                         aria-label="Apply filter"
