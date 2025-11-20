@@ -729,7 +729,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                 <div className="flex items-center">
                                   <input
                                     type="number"
-                                    value={distanceUnit === 'km' ? Math.round(tempCustomRange.min) : Math.round(kmToMiles(tempCustomRange.min))}
+                                    value={isMinInputFocused ? '' : (distanceUnit === 'km' ? Math.round(tempCustomRange.min) : Math.round(kmToMiles(tempCustomRange.min)))}
                                     onChange={(e) => {
                                       const value = Number(e.target.value)
                                       const kmValue = distanceUnit === 'km' ? value : milesToKm(value)
@@ -742,10 +742,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                       })
                                       setTempDistanceFilter('custom')
                                     }}
-                                    onFocus={(e) => {
-                                      e.target.value = ''
-                                      setIsMinInputFocused(true)
-                                    }}
+                                    onFocus={() => setIsMinInputFocused(true)}
                                     onBlur={() => setIsMinInputFocused(false)}
                                     className={`w-[32px] bg-transparent text-neutral-900 dark:text-white text-sm font-medium outline-none border-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${isMinInputFocused ? 'text-center' : 'text-right'}`}
                                     placeholder="0"
@@ -766,7 +763,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                   )}
                                   <input
                                     type="number"
-                                    value={distanceUnit === 'km' ? Math.round(tempCustomRange.max) : Math.round(kmToMiles(tempCustomRange.max))}
+                                    value={isMaxInputFocused ? '' : (distanceUnit === 'km' ? Math.round(tempCustomRange.max) : Math.round(kmToMiles(tempCustomRange.max)))}
                                     onChange={(e) => {
                                       const value = Number(e.target.value)
                                       const kmValue = distanceUnit === 'km' ? value : milesToKm(value)
@@ -779,10 +776,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                       })
                                       setTempDistanceFilter('custom')
                                     }}
-                                    onFocus={(e) => {
-                                      e.target.value = ''
-                                      setIsMaxInputFocused(true)
-                                    }}
+                                    onFocus={() => setIsMaxInputFocused(true)}
                                     onBlur={() => setIsMaxInputFocused(false)}
                                     className={`w-[32px] bg-transparent text-neutral-900 dark:text-white text-sm font-medium outline-none border-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${isMaxInputFocused ? 'text-center' : 'text-right'}`}
                                     placeholder={distanceUnit === 'km' ? '100' : '62'}
