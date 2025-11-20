@@ -514,7 +514,12 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                     key={day.toString()}
                                     onClick={() => {
                                       if (!tempDateRange.start || (tempDateRange.start && tempDateRange.end)) {
-                                        setTempDateRange({ start: dayStart, end: null })
+                                        // If clicking the same date that's already selected as start (and no end), deselect it
+                                        if (tempDateRange.start && !tempDateRange.end && isSameDay(dayStart, tempDateRange.start)) {
+                                          setTempDateRange({ start: null, end: null })
+                                        } else {
+                                          setTempDateRange({ start: dayStart, end: null })
+                                        }
                                       } else {
                                         if (dayStart < tempDateRange.start) {
                                           setTempDateRange({ start: dayStart, end: tempDateRange.start })
@@ -582,7 +587,12 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                 onClick={() => {
                                   const startOfMonthDate = new Date(currentYear, index, 1)
                                   const endOfMonthDate = new Date(currentYear, index + 1, 0, 23, 59, 59)
-                                  setTempDateRange({ start: startOfMonthDate, end: endOfMonthDate })
+                                  // Toggle: if already selected, deselect it
+                                  if (isSelected) {
+                                    setTempDateRange({ start: null, end: null })
+                                  } else {
+                                    setTempDateRange({ start: startOfMonthDate, end: endOfMonthDate })
+                                  }
                                 }}
                                 className={`
                                   py-3 px-4 rounded-lg text-base font-medium transition-colors
@@ -728,7 +738,8 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                               <button
                                 key={category.id}
                                 onClick={() => {
-                                  setTempDistanceFilter(category.id)
+                                  // Toggle: if already selected, deselect it
+                                  setTempDistanceFilter(isSelected ? null : category.id)
                                 }}
                                 className={`
                                   py-3 px-4 rounded-lg text-base font-medium transition-colors
