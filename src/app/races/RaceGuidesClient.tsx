@@ -2132,8 +2132,8 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                   )
                                 case 'mountainous':
                                   return (
-                                    <svg width="60" height="20" viewBox="0 0 120 40" xmlns="http://www.w3.org/2000/svg">
-                                      <path d="M10 28 Q 25 5 40 28 T 70 28 Q 85 5 100 28"
+                                    <svg width="60" height="25" viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg" className="mx-auto">
+                                      <path d="M10 55 Q 30 15 50 55 T 90 55 Q 110 15 130 55"
                                             stroke={strokeColor} strokeWidth="6" fill="none" strokeLinecap="round"/>
                                     </svg>
                                   )
