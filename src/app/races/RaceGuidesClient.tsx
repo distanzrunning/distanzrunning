@@ -60,8 +60,29 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
   const [countrySearchQuery, setCountrySearchQuery] = useState('')
   const countryFilterRef = useRef<HTMLDivElement>(null)
 
+  // City filter states
+  const [isCityFilterOpen, setIsCityFilterOpen] = useState(false)
+  const [appliedCityFilter, setAppliedCityFilter] = useState<string | null>(null)
+  const [tempCityFilter, setTempCityFilter] = useState<string | null>(null)
+  const [citySearchQuery, setCitySearchQuery] = useState('')
+  const cityFilterRef = useRef<HTMLDivElement>(null)
+
   // Loading state for filtering
   const [isFiltering, setIsFiltering] = useState(false)
+
+  // Get unique cities from races with their country
+  const availableCities = useMemo(() => {
+    const cityCountryMap = new Map<string, string>()
+    races.forEach(race => {
+      if (race.city && race.country) {
+        cityCountryMap.set(race.city, race.country)
+      }
+    })
+    // Convert to array and sort alphabetically by city name
+    return Array.from(cityCountryMap.entries())
+      .map(([city, country]) => ({ city, country }))
+      .sort((a, b) => a.city.localeCompare(b.city))
+  }, [races])
 
   // All countries list (sorted alphabetically)
   const allCountries = [
@@ -221,6 +242,31 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
     }
   }, [isCountryFilterOpen, appliedCountryFilter])
 
+  // Click outside to close city filter dropdown
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (cityFilterRef.current && !cityFilterRef.current.contains(event.target as Node)) {
+        setIsCityFilterOpen(false)
+      }
+    }
+
+    if (isCityFilterOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [isCityFilterOpen])
+
+  // Initialize city filter temp state when dropdown opens
+  useEffect(() => {
+    if (isCityFilterOpen) {
+      setTempCityFilter(appliedCityFilter)
+      setCitySearchQuery('')
+    }
+  }, [isCityFilterOpen, appliedCityFilter])
+
   // Helper: Convert km to miles
   const kmToMiles = (km: number) => km * 0.621371
 
@@ -311,7 +357,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
     setIsFiltering(true)
     const timer = setTimeout(() => setIsFiltering(false), 300)
     return () => clearTimeout(timer)
-  }, [searchQuery, appliedDateRange, appliedDistanceFilter, appliedCustomRange, appliedCountryFilter])
+  }, [searchQuery, appliedDateRange, appliedDistanceFilter, appliedCustomRange, appliedCountryFilter, appliedCityFilter])
 
   // Filter races based on search query and date range
   const filteredRaces = useMemo(() => {
@@ -373,8 +419,13 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
       filtered = filtered.filter((race) => race.country === appliedCountryFilter)
     }
 
+    // Apply city filter
+    if (appliedCityFilter) {
+      filtered = filtered.filter((race) => race.city === appliedCityFilter)
+    }
+
     return filtered
-  }, [races, searchQuery, appliedDateRange, appliedDistanceFilter, appliedCustomRange, appliedCountryFilter])
+  }, [races, searchQuery, appliedDateRange, appliedDistanceFilter, appliedCustomRange, appliedCountryFilter, appliedCityFilter])
 
   return (
     <div className="py-12 bg-white dark:bg-[#0c0c0d] min-h-screen transition-colors duration-300">
@@ -1332,6 +1383,148 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                       ).length === 0 && (
                         <p className="text-center py-4 text-neutral-500 dark:text-neutral-400 text-base">
                           No countries found
+                        </p>
+                      )}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {/* City Filter */}
+            <div className="relative" ref={cityFilterRef}>
+              {appliedCityFilter ? (
+                // Filter is active - show filter value with X button
+                <div className="flex items-center gap-2 px-4 h-[44px] rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white text-sm font-medium">
+                  <button
+                    onClick={() => setIsCityFilterOpen(!isCityFilterOpen)}
+                    className="flex items-center gap-2 hover:text-neutral-600 dark:hover:text-neutral-400 transition-colors"
+                  >
+                    <span>{appliedCityFilter}</span>
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      setAppliedCityFilter(null)
+                      setTempCityFilter(null)
+                    }}
+                    className="text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300 transition-colors"
+                    aria-label="Clear city filter"
+                  >
+                    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+              ) : (
+                // No filter - show default button
+                <button
+                  onClick={() => setIsCityFilterOpen(!isCityFilterOpen)}
+                  className="flex items-center gap-2 px-4 h-[44px] rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white hover:border-neutral-400 dark:hover:border-neutral-600 transition-colors text-sm font-medium whitespace-nowrap"
+                >
+                  City
+                  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+              )}
+
+              {/* City Dropdown */}
+              <AnimatePresence>
+                {isCityFilterOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                    className="absolute top-full mt-2 left-0 z-50 bg-white dark:bg-neutral-900 rounded-lg shadow-xl border border-neutral-200 dark:border-neutral-800 p-4 min-w-[600px]"
+                  >
+                    {/* Top Bar: Clear, Search, Apply */}
+                    <div className="flex items-center justify-between gap-4 mb-4">
+                      {/* Clear Button - Left */}
+                      <button
+                        onClick={() => {
+                          setTempCityFilter(null)
+                        }}
+                        disabled={!tempCityFilter}
+                        className={`p-2 rounded-lg transition-colors flex-shrink-0 ${
+                          tempCityFilter
+                            ? 'bg-neutral-200 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-300 dark:hover:bg-neutral-600 cursor-pointer'
+                            : 'text-neutral-400 dark:text-neutral-600 cursor-not-allowed opacity-50'
+                        }`}
+                        aria-label="Clear selection"
+                      >
+                        <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
+
+                      {/* Search Input - Center */}
+                      <div className="relative flex-grow">
+                        <input
+                          type="text"
+                          value={citySearchQuery}
+                          onChange={(e) => setCitySearchQuery(e.target.value)}
+                          placeholder="Search"
+                          className="w-full px-3 py-2 pl-9 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white text-sm placeholder-neutral-500 focus:outline-none focus:border-neutral-400 dark:focus:border-neutral-600"
+                        />
+                        <svg className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                      </div>
+
+                      {/* Apply Button - Right */}
+                      <button
+                        onClick={() => {
+                          setAppliedCityFilter(tempCityFilter)
+                          setIsCityFilterOpen(false)
+                        }}
+                        disabled={!tempCityFilter}
+                        className={`p-2 rounded-lg transition-colors flex-shrink-0 ${
+                          tempCityFilter
+                            ? 'bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 hover:bg-neutral-700 dark:hover:bg-neutral-200 cursor-pointer'
+                            : 'bg-neutral-200 dark:bg-neutral-800 text-neutral-400 dark:text-neutral-600 cursor-not-allowed opacity-50'
+                        }`}
+                        aria-label="Apply filter"
+                      >
+                        <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                      </button>
+                    </div>
+
+                    {/* City List - Scrollable */}
+                    <div className="max-h-[400px] overflow-y-auto scrollbar-hide">
+                      {availableCities
+                        .filter(({ city }) =>
+                          city.toLowerCase().includes(citySearchQuery.toLowerCase())
+                        )
+                        .map(({ city, country }) => {
+                          const isSelected = tempCityFilter === city
+                          return (
+                            <button
+                              key={city}
+                              onClick={() => {
+                                // Toggle: if already selected, deselect
+                                setTempCityFilter(isSelected ? null : city)
+                              }}
+                              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-colors mb-1 ${
+                                isSelected
+                                  ? 'bg-neutral-900 dark:bg-white text-white dark:text-neutral-900'
+                                  : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700'
+                              }`}
+                            >
+                              <span className="text-base font-medium">
+                                {city} <span className="text-neutral-500 dark:text-neutral-400">• {country}</span>
+                              </span>
+                            </button>
+                          )
+                        })}
+                      {availableCities.filter(({ city }) =>
+                        city.toLowerCase().includes(citySearchQuery.toLowerCase())
+                      ).length === 0 && (
+                        <p className="text-center py-4 text-neutral-500 dark:text-neutral-400 text-base">
+                          No cities found
                         </p>
                       )}
                     </div>
