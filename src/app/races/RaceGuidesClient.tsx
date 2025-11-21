@@ -60,6 +60,9 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
   const [countrySearchQuery, setCountrySearchQuery] = useState('')
   const countryFilterRef = useRef<HTMLDivElement>(null)
 
+  // Loading state for filtering
+  const [isFiltering, setIsFiltering] = useState(false)
+
   // All countries list (sorted alphabetically)
   const allCountries = [
     'Argentina', 'Australia', 'Austria', 'Belgium', 'Brazil', 'Canada', 'Chile',
@@ -302,6 +305,13 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
     const category = allDistanceCategories.find(c => c.id === appliedDistanceFilter)
     return category?.label || 'Distance'
   }
+
+  // Trigger loading state when filters change
+  useEffect(() => {
+    setIsFiltering(true)
+    const timer = setTimeout(() => setIsFiltering(false), 300)
+    return () => clearTimeout(timer)
+  }, [searchQuery, appliedDateRange, appliedDistanceFilter, appliedCustomRange, appliedCountryFilter])
 
   // Filter races based on search query and date range
   const filteredRaces = useMemo(() => {
@@ -1333,7 +1343,33 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
         </div>
 
         {/* Race Cards Grid */}
-        {filteredRaces.length === 0 ? (
+        {isFiltering ? (
+          // Show skeleton cards while filtering
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[...Array(6)].map((_, i) => (
+              <div key={i} className="animate-pulse">
+                <div className="flex flex-col">
+                  {/* Image Skeleton */}
+                  <div className="relative w-full">
+                    <div className="relative overflow-hidden rounded-t-lg">
+                      <div style={{ paddingBottom: '65%' }} className="relative bg-neutral-200 dark:bg-neutral-800"></div>
+                    </div>
+                  </div>
+                  {/* Content Skeleton */}
+                  <div className="bg-neutral-50 dark:bg-neutral-900 rounded-b-lg px-5 py-5">
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="flex flex-col gap-2 flex-1">
+                        <div className="h-6 bg-neutral-200 dark:bg-neutral-800 rounded w-3/4"></div>
+                        <div className="h-4 bg-neutral-200 dark:bg-neutral-800 rounded w-1/2"></div>
+                      </div>
+                      <div className="flex-shrink-0 bg-neutral-200 dark:bg-neutral-800 rounded-lg w-16 h-16"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : filteredRaces.length === 0 ? (
           <div className="text-center py-12">
             <p className="text-lg text-neutral-600 dark:text-neutral-400">
               No races found matching &quot;{searchQuery}&quot;
