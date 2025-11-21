@@ -2106,7 +2106,9 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
 
                             // Get SVG icon for each category
                             const getSvgIcon = () => {
-                              const strokeColor = isSelected ? (category.id === 'flat' ? '#fff' : '#fff') : '#777'
+                              // When selected: white in light mode (dark bg), dark in dark mode (white bg)
+                              // When not selected: gray in both modes
+                              const strokeColor = isSelected ? 'currentColor' : '#777'
 
                               switch (category.id) {
                                 case 'flat':
