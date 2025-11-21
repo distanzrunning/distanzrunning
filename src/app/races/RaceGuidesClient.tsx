@@ -67,6 +67,13 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
   const [citySearchQuery, setCitySearchQuery] = useState('')
   const cityFilterRef = useRef<HTMLDivElement>(null)
 
+  // State filter states
+  const [isStateFilterOpen, setIsStateFilterOpen] = useState(false)
+  const [appliedStateFilter, setAppliedStateFilter] = useState<string | null>(null)
+  const [tempStateFilter, setTempStateFilter] = useState<string | null>(null)
+  const [stateSearchQuery, setStateSearchQuery] = useState('')
+  const stateFilterRef = useRef<HTMLDivElement>(null)
+
   // Loading state for filtering
   const [isFiltering, setIsFiltering] = useState(false)
 
@@ -83,6 +90,75 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
       .map(([city, country]) => ({ city, country }))
       .sort((a, b) => a.city.localeCompare(b.city))
   }, [races])
+
+  // All US states list (52 total: 50 states + DC + Puerto Rico) - sorted alphabetically
+  const allStates = [
+    'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado',
+    'Connecticut', 'Delaware', 'District of Columbia', 'Florida', 'Georgia',
+    'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky',
+    'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota',
+    'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire',
+    'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota',
+    'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Puerto Rico', 'Rhode Island',
+    'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont',
+    'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'
+  ]
+
+  // US State flag emojis mapping
+  const stateFlagEmojis: Record<string, string> = {
+    'Alabama': '🏴',
+    'Alaska': '🏴',
+    'Arizona': '🏴',
+    'Arkansas': '🏴',
+    'California': '🏴',
+    'Colorado': '🏴',
+    'Connecticut': '🏴',
+    'Delaware': '🏴',
+    'Florida': '🏴',
+    'Georgia': '🏴',
+    'Hawaii': '🏴',
+    'Idaho': '🏴',
+    'Illinois': '🏴',
+    'Indiana': '🏴',
+    'Iowa': '🏴',
+    'Kansas': '🏴',
+    'Kentucky': '🏴',
+    'Louisiana': '🏴',
+    'Maine': '🏴',
+    'Maryland': '🏴',
+    'Massachusetts': '🏴',
+    'Michigan': '🏴',
+    'Minnesota': '🏴',
+    'Mississippi': '🏴',
+    'Missouri': '🏴',
+    'Montana': '🏴',
+    'Nebraska': '🏴',
+    'Nevada': '🏴',
+    'New Hampshire': '🏴',
+    'New Jersey': '🏴',
+    'New Mexico': '🏴',
+    'New York': '🏴',
+    'North Carolina': '🏴',
+    'North Dakota': '🏴',
+    'Ohio': '🏴',
+    'Oklahoma': '🏴',
+    'Oregon': '🏴',
+    'Pennsylvania': '🏴',
+    'Rhode Island': '🏴',
+    'South Carolina': '🏴',
+    'South Dakota': '🏴',
+    'Tennessee': '🏴',
+    'Texas': '🏴',
+    'Utah': '🏴',
+    'Vermont': '🏴',
+    'Virginia': '🏴',
+    'Washington': '🏴',
+    'West Virginia': '🏴',
+    'Wisconsin': '🏴',
+    'Wyoming': '🏴',
+    'District of Columbia': '🏴',
+    'Puerto Rico': '🏴',
+  }
 
   // All countries list (sorted alphabetically)
   const allCountries = [
@@ -267,6 +343,31 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
     }
   }, [isCityFilterOpen, appliedCityFilter])
 
+  // Click outside to close state filter dropdown
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (stateFilterRef.current && !stateFilterRef.current.contains(event.target as Node)) {
+        setIsStateFilterOpen(false)
+      }
+    }
+
+    if (isStateFilterOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [isStateFilterOpen])
+
+  // Initialize state filter temp state when dropdown opens
+  useEffect(() => {
+    if (isStateFilterOpen) {
+      setTempStateFilter(appliedStateFilter)
+      setStateSearchQuery('')
+    }
+  }, [isStateFilterOpen, appliedStateFilter])
+
   // Helper: Convert km to miles
   const kmToMiles = (km: number) => km * 0.621371
 
@@ -357,7 +458,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
     setIsFiltering(true)
     const timer = setTimeout(() => setIsFiltering(false), 300)
     return () => clearTimeout(timer)
-  }, [searchQuery, appliedDateRange, appliedDistanceFilter, appliedCustomRange, appliedCountryFilter, appliedCityFilter])
+  }, [searchQuery, appliedDateRange, appliedDistanceFilter, appliedCustomRange, appliedCountryFilter, appliedCityFilter, appliedStateFilter])
 
   // Filter races based on search query and date range
   const filteredRaces = useMemo(() => {
@@ -424,8 +525,13 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
       filtered = filtered.filter((race) => race.city === appliedCityFilter)
     }
 
+    // Apply state filter
+    if (appliedStateFilter) {
+      filtered = filtered.filter((race) => race.stateRegion === appliedStateFilter)
+    }
+
     return filtered
-  }, [races, searchQuery, appliedDateRange, appliedDistanceFilter, appliedCustomRange, appliedCountryFilter, appliedCityFilter])
+  }, [races, searchQuery, appliedDateRange, appliedDistanceFilter, appliedCustomRange, appliedCountryFilter, appliedCityFilter, appliedStateFilter])
 
   return (
     <div className="py-12 bg-white dark:bg-[#0c0c0d] min-h-screen transition-colors duration-300">
@@ -1525,6 +1631,150 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                       ).length === 0 && (
                         <p className="text-center py-4 text-neutral-500 dark:text-neutral-400 text-base">
                           No cities found
+                        </p>
+                      )}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {/* State Filter */}
+            <div className="relative" ref={stateFilterRef}>
+              {appliedStateFilter ? (
+                // Filter is active - show filter value with X button
+                <div className="flex items-center gap-2 px-4 h-[44px] rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white text-sm font-medium">
+                  <button
+                    onClick={() => setIsStateFilterOpen(!isStateFilterOpen)}
+                    className="flex items-center gap-2 hover:text-neutral-600 dark:hover:text-neutral-400 transition-colors"
+                  >
+                    <span className="text-lg">{stateFlagEmojis[appliedStateFilter]}</span>
+                    <span>{appliedStateFilter}</span>
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      setAppliedStateFilter(null)
+                      setTempStateFilter(null)
+                    }}
+                    className="text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300 transition-colors"
+                    aria-label="Clear state filter"
+                  >
+                    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+              ) : (
+                // No filter - show default button
+                <button
+                  onClick={() => setIsStateFilterOpen(!isStateFilterOpen)}
+                  className="flex items-center gap-2 px-4 h-[44px] rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white hover:border-neutral-400 dark:hover:border-neutral-600 transition-colors text-sm font-medium whitespace-nowrap"
+                >
+                  State
+                  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+              )}
+
+              {/* State Dropdown */}
+              <AnimatePresence>
+                {isStateFilterOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                    className="absolute top-full mt-2 left-0 z-50 bg-white dark:bg-neutral-900 rounded-lg shadow-xl border border-neutral-200 dark:border-neutral-800 p-4 min-w-[600px]"
+                  >
+                    {/* Top Bar: Clear, Search, Apply */}
+                    <div className="flex items-center justify-between gap-4 mb-4">
+                      {/* Clear Button - Left */}
+                      <button
+                        onClick={() => {
+                          setTempStateFilter(null)
+                        }}
+                        disabled={!tempStateFilter}
+                        className={`p-2 rounded-lg transition-colors flex-shrink-0 ${
+                          tempStateFilter
+                            ? 'bg-neutral-200 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-300 dark:hover:bg-neutral-600 cursor-pointer'
+                            : 'text-neutral-400 dark:text-neutral-600 cursor-not-allowed opacity-50'
+                        }`}
+                        aria-label="Clear selection"
+                      >
+                        <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
+
+                      {/* Search Input - Center */}
+                      <div className="relative flex-grow">
+                        <input
+                          type="text"
+                          value={stateSearchQuery}
+                          onChange={(e) => setStateSearchQuery(e.target.value)}
+                          placeholder="Search"
+                          className="w-full px-3 py-2 pl-9 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white text-sm placeholder-neutral-500 focus:outline-none focus:border-neutral-400 dark:focus:border-neutral-600"
+                        />
+                        <svg className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                      </div>
+
+                      {/* Apply Button - Right */}
+                      <button
+                        onClick={() => {
+                          setAppliedStateFilter(tempStateFilter)
+                          setIsStateFilterOpen(false)
+                        }}
+                        disabled={!tempStateFilter}
+                        className={`p-2 rounded-lg transition-colors flex-shrink-0 ${
+                          tempStateFilter
+                            ? 'bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 hover:bg-neutral-700 dark:hover:bg-neutral-200 cursor-pointer'
+                            : 'bg-neutral-200 dark:bg-neutral-800 text-neutral-400 dark:text-neutral-600 cursor-not-allowed opacity-50'
+                        }`}
+                        aria-label="Apply filter"
+                      >
+                        <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                      </button>
+                    </div>
+
+                    {/* State List - Scrollable */}
+                    <div className="max-h-[400px] overflow-y-auto scrollbar-hide">
+                      {allStates
+                        .filter((state: string) =>
+                          state.toLowerCase().includes(stateSearchQuery.toLowerCase())
+                        )
+                        .map((state: string) => {
+                          const isSelected = tempStateFilter === state
+                          return (
+                            <button
+                              key={state}
+                              onClick={() => {
+                                // Toggle: if already selected, deselect
+                                setTempStateFilter(isSelected ? null : state)
+                              }}
+                              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-colors mb-1 ${
+                                isSelected
+                                  ? 'bg-neutral-900 dark:bg-white text-white dark:text-neutral-900'
+                                  : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700'
+                              }`}
+                            >
+                              <span className="text-lg flex-shrink-0">{stateFlagEmojis[state]}</span>
+                              <span className="text-base font-medium">
+                                {state} <span className="text-neutral-500 dark:text-neutral-400">• United States</span>
+                              </span>
+                            </button>
+                          )
+                        })}
+                      {allStates.filter((state: string) =>
+                        state.toLowerCase().includes(stateSearchQuery.toLowerCase())
+                      ).length === 0 && (
+                        <p className="text-center py-4 text-neutral-500 dark:text-neutral-400 text-base">
+                          No states found
                         </p>
                       )}
                     </div>
