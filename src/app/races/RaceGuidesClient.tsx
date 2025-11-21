@@ -10,6 +10,8 @@ import Slider from '@mui/material/Slider'
 import Box from '@mui/material/Box'
 // @ts-ignore - country-flag-icons doesn't have perfect TypeScript types
 import * as flags from 'country-flag-icons/react/3x2'
+// @ts-ignore - us-state-flags component
+import { USStateFlags } from 'us-state-flags/USStateFlags'
 
 // Helper function to format location from city, state/region, and country
 function formatLocation(city?: string, stateRegion?: string, country?: string): string {
@@ -165,14 +167,13 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
     const abbr = stateToAbbreviation[stateName]
     if (!abbr) return null
 
-    // Dynamically import the flag component using require
-    try {
-      // @ts-ignore
-      const FlagComponent = require(`us-state-flags/src/components/flags/Flag${abbr}.js`).default
-      return <FlagComponent width={24} height={16} style={{ borderRadius: '2px' }} />
-    } catch {
-      return null
-    }
+    return (
+      <USStateFlags
+        state={abbr}
+        showFlag={true}
+        flagSize="md"
+      />
+    )
   }
 
   // All countries list (sorted alphabetically)
