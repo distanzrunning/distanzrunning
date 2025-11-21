@@ -2271,6 +2271,11 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                 step={elevationUnit === 'm' ? 10 : 50}
                                 valueLabelDisplay="off"
                                 disableSwap={false}
+                                marks={[
+                                  { value: elevationUnit === 'm' ? 250 : 820, label: '' },
+                                  { value: elevationUnit === 'm' ? 500 : 1640, label: '' },
+                                  { value: elevationUnit === 'm' ? 750 : 2460, label: '' }
+                                ]}
                                 sx={{
                                   color: '#1A1A1A', // gray-900
                                   height: 24,
@@ -2304,13 +2309,58 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                       boxShadow: 'none',
                                     },
                                   },
+                                  '& .MuiSlider-mark': {
+                                    width: 20,
+                                    height: 20,
+                                    borderRadius: '50%',
+                                    backgroundColor: 'transparent',
+                                    border: '1px dashed #A3A3A3', // gray-400 - more subtle
+                                    top: '50%',
+                                    transform: 'translate(-50%, -50%)',
+                                    opacity: 1,
+                                    zIndex: 3, // Marks above thumbs
+                                    pointerEvents: 'none', // Don't interfere with thumb dragging
+                                    '&.MuiSlider-markActive': {
+                                      backgroundColor: 'transparent',
+                                      border: '1px dashed #A3A3A3', // gray-400 when active
+                                    },
+                                  },
                                 }}
                               />
                             </Box>
+
+                            {/* Elevation Labels Below Slider */}
+                            <div className="relative mt-1" style={{ paddingLeft: '12px', paddingRight: '12px' }}>
+                              {[
+                                { valueM: 250, valueFt: 820, label: elevationUnit === 'm' ? '250m' : '820ft' },
+                                { valueM: 500, valueFt: 1640, label: elevationUnit === 'm' ? '500m' : '1640ft' },
+                                { valueM: 750, valueFt: 2460, label: elevationUnit === 'm' ? '750m' : '2460ft' }
+                              ].map((marker, index) => {
+                                const maxValue = elevationUnit === 'm' ? 1000 : 3280
+                                const markerValue = elevationUnit === 'm' ? marker.valueM : marker.valueFt
+                                const position = (markerValue / maxValue) * 100
+
+                                return (
+                                  <div
+                                    key={index}
+                                    className="absolute flex flex-col items-center"
+                                    style={{
+                                      left: `${position}%`,
+                                      transform: 'translateX(-50%)',
+                                      top: 0
+                                    }}
+                                  >
+                                    <p className="text-sm font-medium text-center leading-tight text-neutral-400 dark:text-neutral-500">
+                                      {marker.label}
+                                    </p>
+                                  </div>
+                                )
+                              })}
+                            </div>
                           </div>
 
-                          {/* Unit Toggle */}
-                          <div className="flex items-center justify-center gap-2 mt-4 relative z-50">
+                          {/* Unit Toggle Below Elevation Anchors */}
+                          <div className="flex items-center justify-center gap-2 mt-12 relative z-50">
                             <div className="inline-flex bg-neutral-200 dark:bg-neutral-800 rounded-lg p-0.5">
                               <button
                                 onClick={() => setElevationUnit('m')}
