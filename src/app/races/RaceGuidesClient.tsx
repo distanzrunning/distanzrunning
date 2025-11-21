@@ -10,8 +10,6 @@ import Slider from '@mui/material/Slider'
 import Box from '@mui/material/Box'
 // @ts-ignore - country-flag-icons doesn't have perfect TypeScript types
 import * as flags from 'country-flag-icons/react/3x2'
-// @ts-ignore - us-state-flags component
-import { USStateFlags } from 'us-state-flags/USStateFlags'
 
 // Helper function to format location from city, state/region, and country
 function formatLocation(city?: string, stateRegion?: string, country?: string): string {
@@ -162,17 +160,15 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
     'Puerto Rico': 'PR',
   }
 
-  // Helper function to get state flag component
-  const getStateFlag = (stateName: string) => {
+  // Helper function to get state badge (styled box with abbreviation)
+  const getStateBadge = (stateName: string) => {
     const abbr = stateToAbbreviation[stateName]
     if (!abbr) return null
 
     return (
-      <USStateFlags
-        state={abbr}
-        showFlag={true}
-        flagSize="md"
-      />
+      <div className="flex items-center justify-center w-7 h-5 bg-gradient-to-br from-blue-600 to-blue-800 dark:from-blue-500 dark:to-blue-700 text-white text-[10px] font-bold rounded-sm shadow-sm border border-blue-900/20">
+        {abbr}
+      </div>
     )
   }
 
@@ -1664,7 +1660,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                     onClick={() => setIsStateFilterOpen(!isStateFilterOpen)}
                     className="flex items-center gap-2 hover:text-neutral-600 dark:hover:text-neutral-400 transition-colors"
                   >
-                    {getStateFlag(appliedStateFilter)}
+                    {getStateBadge(appliedStateFilter)}
                     <span>{appliedStateFilter}</span>
                   </button>
                   <button
@@ -1779,7 +1775,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                   : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700'
                               }`}
                             >
-                              <span className="flex-shrink-0">{getStateFlag(state)}</span>
+                              <span className="flex-shrink-0">{getStateBadge(state)}</span>
                               <span className="text-base font-medium">
                                 {state} <span className="text-neutral-500 dark:text-neutral-400">• United States</span>
                               </span>
