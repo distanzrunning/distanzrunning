@@ -2103,6 +2103,45 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                         <div className="grid grid-cols-2 gap-3 mb-4">
                           {elevationCategories.map((category) => {
                             const isSelected = tempElevationFilter === category.id
+
+                            // Get SVG icon for each category
+                            const getSvgIcon = () => {
+                              const strokeColor = isSelected ? (category.id === 'flat' ? '#fff' : '#fff') : '#777'
+
+                              switch (category.id) {
+                                case 'flat':
+                                  return (
+                                    <svg width="120" height="40" viewBox="0 0 120 40" xmlns="http://www.w3.org/2000/svg">
+                                      <path d="M10 20 Q 40 22 70 20 T 110 20"
+                                            stroke={strokeColor} strokeWidth="6" fill="none" strokeLinecap="round"/>
+                                    </svg>
+                                  )
+                                case 'rolling':
+                                  return (
+                                    <svg width="120" height="40" viewBox="0 0 120 40" xmlns="http://www.w3.org/2000/svg">
+                                      <path d="M10 22 Q 30 15 50 22 T 90 22 T 110 22"
+                                            stroke={strokeColor} strokeWidth="6" fill="none" strokeLinecap="round"/>
+                                    </svg>
+                                  )
+                                case 'hilly':
+                                  return (
+                                    <svg width="120" height="40" viewBox="0 0 120 40" xmlns="http://www.w3.org/2000/svg">
+                                      <path d="M10 25 Q 30 10 50 25 T 90 25 T 110 25"
+                                            stroke={strokeColor} strokeWidth="6" fill="none" strokeLinecap="round"/>
+                                    </svg>
+                                  )
+                                case 'mountainous':
+                                  return (
+                                    <svg width="120" height="40" viewBox="0 0 120 40" xmlns="http://www.w3.org/2000/svg">
+                                      <path d="M10 28 Q 25 5 40 28 T 70 28 Q 85 5 100 28"
+                                            stroke={strokeColor} strokeWidth="6" fill="none" strokeLinecap="round"/>
+                                    </svg>
+                                  )
+                                default:
+                                  return null
+                              }
+                            }
+
                             return (
                               <button
                                 key={category.id}
@@ -2111,11 +2150,12 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                   setTempElevationFilter(isSelected ? null : category.id)
                                 }}
                                 className={`
-                                  py-4 px-4 rounded-lg text-base font-medium transition-colors
+                                  py-4 px-4 rounded-lg text-base font-medium transition-colors flex flex-col items-center gap-2
                                   ${isSelected ? 'bg-neutral-900 dark:bg-white text-white dark:text-neutral-900' : 'bg-neutral-200 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-400 hover:bg-neutral-300 dark:hover:bg-neutral-700 hover:text-neutral-900 dark:hover:text-white'}
                                 `}
                               >
-                                {category.label}
+                                {getSvgIcon()}
+                                <span>{category.label}</span>
                               </button>
                             )
                           })}
