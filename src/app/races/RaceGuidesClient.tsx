@@ -2246,52 +2246,68 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                             </div>
                           </div>
 
-                          {/* Slider */}
-                          <Box sx={{ width: '100%', px: 3 }}>
-                            <Slider
-                              value={[
-                                elevationUnit === 'm' ? tempCustomElevationRange.min : metersToFeet(tempCustomElevationRange.min),
-                                elevationUnit === 'm' ? tempCustomElevationRange.max : metersToFeet(tempCustomElevationRange.max)
-                              ]}
-                              onChange={(_, newValue) => {
-                                const [min, max] = newValue as number[]
-                                const minM = elevationUnit === 'm' ? min : feetToMeters(min)
-                                const maxM = elevationUnit === 'm' ? max : feetToMeters(max)
-                                setTempCustomElevationRange({ min: minM, max: maxM })
-                                // Only set to 'custom' if not at default min/max
-                                if (minM === 0 && maxM === 1000) {
-                                  setTempElevationFilter(null)
-                                } else {
-                                  setTempElevationFilter('custom')
-                                }
-                              }}
-                              min={0}
-                              max={elevationUnit === 'm' ? 1000 : Math.round(metersToFeet(1000))}
-                              step={elevationUnit === 'm' ? 10 : 50}
-                              valueLabelDisplay="off"
-                              disableSwap={false}
-                              sx={{
-                                color: 'rgb(23, 23, 23)',
-                                '.MuiSlider-thumb': {
-                                  width: 20,
-                                  height: 20,
-                                  backgroundColor: 'rgb(23, 23, 23)',
-                                  '&:hover, &.Mui-focusVisible': {
-                                    boxShadow: '0 0 0 8px rgba(23, 23, 23, 0.16)',
+                          {/* Slider Container */}
+                          <div className="px-3 mb-6">
+                            <Box sx={{ width: '100%', px: 1 }}>
+                              <Slider
+                                value={[
+                                  elevationUnit === 'm' ? tempCustomElevationRange.min : metersToFeet(tempCustomElevationRange.min),
+                                  elevationUnit === 'm' ? tempCustomElevationRange.max : metersToFeet(tempCustomElevationRange.max)
+                                ]}
+                                onChange={(_, newValue) => {
+                                  const [min, max] = newValue as number[]
+                                  const minM = elevationUnit === 'm' ? min : feetToMeters(min)
+                                  const maxM = elevationUnit === 'm' ? max : feetToMeters(max)
+                                  setTempCustomElevationRange({ min: minM, max: maxM })
+                                  // Only set to 'custom' if not at default min/max
+                                  if (minM === 0 && maxM === 1000) {
+                                    setTempElevationFilter(null)
+                                  } else {
+                                    setTempElevationFilter('custom')
+                                  }
+                                }}
+                                min={0}
+                                max={elevationUnit === 'm' ? 1000 : Math.round(metersToFeet(1000))}
+                                step={elevationUnit === 'm' ? 10 : 50}
+                                valueLabelDisplay="off"
+                                disableSwap={false}
+                                sx={{
+                                  color: '#1A1A1A', // gray-900
+                                  height: 24,
+                                  padding: 0,
+                                  '& .MuiSlider-rail': {
+                                    height: 24,
+                                    borderRadius: 12,
+                                    backgroundColor: '#404040', // gray-700 - dark rail
+                                    opacity: 1,
+                                    left: 0,
+                                    right: 0,
+                                    width: '100%',
                                   },
-                                },
-                                '.MuiSlider-track': {
-                                  backgroundColor: 'rgb(23, 23, 23)',
-                                  border: 'none',
-                                  height: 4,
-                                },
-                                '.MuiSlider-rail': {
-                                  backgroundColor: 'rgb(212, 212, 212)',
-                                  height: 4,
-                                },
-                              }}
-                            />
-                          </Box>
+                                  '& .MuiSlider-track': {
+                                    height: 24,
+                                    borderRadius: 0, // Remove rounded ends to touch thumbs
+                                    backgroundColor: '#E6E6E6', // gray-200 - light track
+                                    border: 'none',
+                                  },
+                                  '& .MuiSlider-thumb': {
+                                    height: 24,
+                                    width: 24,
+                                    backgroundColor: '#FFFFFF', // white thumb
+                                    border: 'none',
+                                    boxShadow: 'none',
+                                    zIndex: 2,
+                                    '&:hover, &.Mui-active': {
+                                      boxShadow: 'none',
+                                    },
+                                    '&.Mui-focusVisible': {
+                                      boxShadow: 'none',
+                                    },
+                                  },
+                                }}
+                              />
+                            </Box>
+                          </div>
 
                           {/* Unit Toggle */}
                           <div className="flex justify-center mt-4">
