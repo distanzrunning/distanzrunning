@@ -104,74 +104,6 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
     'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'
   ]
 
-  // US State abbreviation mapping
-  const stateToAbbreviation: Record<string, string> = {
-    'Alabama': 'AL',
-    'Alaska': 'AK',
-    'Arizona': 'AZ',
-    'Arkansas': 'AR',
-    'California': 'CA',
-    'Colorado': 'CO',
-    'Connecticut': 'CT',
-    'Delaware': 'DE',
-    'Florida': 'FL',
-    'Georgia': 'GA',
-    'Hawaii': 'HI',
-    'Idaho': 'ID',
-    'Illinois': 'IL',
-    'Indiana': 'IN',
-    'Iowa': 'IA',
-    'Kansas': 'KS',
-    'Kentucky': 'KY',
-    'Louisiana': 'LA',
-    'Maine': 'ME',
-    'Maryland': 'MD',
-    'Massachusetts': 'MA',
-    'Michigan': 'MI',
-    'Minnesota': 'MN',
-    'Mississippi': 'MS',
-    'Missouri': 'MO',
-    'Montana': 'MT',
-    'Nebraska': 'NE',
-    'Nevada': 'NV',
-    'New Hampshire': 'NH',
-    'New Jersey': 'NJ',
-    'New Mexico': 'NM',
-    'New York': 'NY',
-    'North Carolina': 'NC',
-    'North Dakota': 'ND',
-    'Ohio': 'OH',
-    'Oklahoma': 'OK',
-    'Oregon': 'OR',
-    'Pennsylvania': 'PA',
-    'Rhode Island': 'RI',
-    'South Carolina': 'SC',
-    'South Dakota': 'SD',
-    'Tennessee': 'TN',
-    'Texas': 'TX',
-    'Utah': 'UT',
-    'Vermont': 'VT',
-    'Virginia': 'VA',
-    'Washington': 'WA',
-    'West Virginia': 'WV',
-    'Wisconsin': 'WI',
-    'Wyoming': 'WY',
-    'District of Columbia': 'DC',
-    'Puerto Rico': 'PR',
-  }
-
-  // Helper function to get state badge (styled box with abbreviation)
-  const getStateBadge = (stateName: string) => {
-    const abbr = stateToAbbreviation[stateName]
-    if (!abbr) return null
-
-    return (
-      <div className="flex items-center justify-center w-7 h-5 bg-gradient-to-br from-blue-600 to-blue-800 dark:from-blue-500 dark:to-blue-700 text-white text-[10px] font-bold rounded-sm shadow-sm border border-blue-900/20">
-        {abbr}
-      </div>
-    )
-  }
-
   // All countries list (sorted alphabetically)
   const allCountries = [
     'Argentina', 'Australia', 'Austria', 'Belgium', 'Brazil', 'Canada', 'Chile',
@@ -1660,7 +1592,6 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                     onClick={() => setIsStateFilterOpen(!isStateFilterOpen)}
                     className="flex items-center gap-2 hover:text-neutral-600 dark:hover:text-neutral-400 transition-colors"
                   >
-                    {getStateBadge(appliedStateFilter)}
                     <span>{appliedStateFilter}</span>
                   </button>
                   <button
@@ -1775,7 +1706,6 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                   : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700'
                               }`}
                             >
-                              <span className="flex-shrink-0">{getStateBadge(state)}</span>
                               <span className="text-base font-medium">
                                 {state} <span className="text-neutral-500 dark:text-neutral-400">• United States</span>
                               </span>
