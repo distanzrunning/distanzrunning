@@ -880,7 +880,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                   }
                                 }}
                                 className={`
-                                  py-3 px-4 rounded-lg text-base font-medium transition-colors
+                                  py-4 px-4 rounded-lg text-base font-medium transition-colors
                                   ${isSelected ? 'bg-neutral-900 dark:bg-white text-white dark:text-neutral-900' : 'bg-neutral-200 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-400 hover:bg-neutral-300 dark:hover:bg-neutral-700 hover:text-neutral-900 dark:hover:text-white'}
                                 `}
                               >
@@ -1027,7 +1027,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                   setTempDistanceFilter(isSelected ? null : category.id)
                                 }}
                                 className={`
-                                  py-3 px-4 rounded-lg text-base font-medium transition-colors
+                                  py-4 px-4 rounded-lg text-base font-medium transition-colors
                                   ${isSelected ? 'bg-neutral-900 dark:bg-white text-white dark:text-neutral-900' : 'bg-neutral-200 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-400 hover:bg-neutral-300 dark:hover:bg-neutral-700 hover:text-neutral-900 dark:hover:text-white'}
                                 `}
                               >
@@ -1460,7 +1460,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                 // Toggle: if already selected, deselect
                                 setTempCountryFilter(isSelected ? null : country)
                               }}
-                              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-colors mb-1 ${
+                              className={`w-full flex items-center gap-3 px-4 py-4 rounded-lg text-left transition-colors mb-1 ${
                                 isSelected
                                   ? 'bg-neutral-900 dark:bg-white text-white dark:text-neutral-900'
                                   : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700'
@@ -1601,7 +1601,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                 // Toggle: if already selected, deselect
                                 setTempCityFilter(isSelected ? null : city)
                               }}
-                              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-colors mb-1 ${
+                              className={`w-full flex items-center gap-3 px-4 py-4 rounded-lg text-left transition-colors mb-1 ${
                                 isSelected
                                   ? 'bg-neutral-900 dark:bg-white text-white dark:text-neutral-900'
                                   : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700'
@@ -1743,7 +1743,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                 // Toggle: if already selected, deselect
                                 setTempStateFilter(isSelected ? null : state)
                               }}
-                              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-colors mb-1 ${
+                              className={`w-full flex items-center gap-3 px-4 py-4 rounded-lg text-left transition-colors mb-1 ${
                                 isSelected
                                   ? 'bg-neutral-900 dark:bg-white text-white dark:text-neutral-900'
                                   : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700'
@@ -1857,7 +1857,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                     </div>
 
                     {/* Surface List */}
-                    <div className="space-y-1">
+                    <div className="grid grid-cols-2 gap-2">
                       {surfaceOptions.map((surface) => {
                         const isSelected = tempSurfaceFilter === surface
                         return (
@@ -1867,7 +1867,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                               // Toggle: if already selected, deselect
                               setTempSurfaceFilter(isSelected ? null : surface)
                             }}
-                            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                            className={`flex items-center justify-center px-4 py-4 rounded-lg text-center transition-colors ${
                               isSelected
                                 ? 'bg-neutral-900 dark:bg-white text-white dark:text-neutral-900'
                                 : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700'
