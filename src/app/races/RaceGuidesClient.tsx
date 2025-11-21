@@ -2310,13 +2310,13 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                           </div>
 
                           {/* Unit Toggle */}
-                          <div className="flex justify-center mt-4">
-                            <div className="flex items-center gap-2 bg-neutral-100 dark:bg-neutral-800 p-1 rounded-lg">
+                          <div className="flex items-center justify-center gap-2 mt-4 relative z-50">
+                            <div className="inline-flex bg-neutral-200 dark:bg-neutral-800 rounded-lg p-0.5">
                               <button
                                 onClick={() => setElevationUnit('m')}
-                                className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
+                                className={`px-6 py-2 rounded-md text-sm font-medium transition-colors ${
                                   elevationUnit === 'm'
-                                    ? 'bg-white dark:bg-neutral-700 text-neutral-900 dark:text-white shadow-sm'
+                                    ? 'bg-neutral-900 dark:bg-white text-white dark:text-neutral-900'
                                     : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
                                 }`}
                               >
@@ -2324,9 +2324,9 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                               </button>
                               <button
                                 onClick={() => setElevationUnit('ft')}
-                                className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
+                                className={`px-6 py-2 rounded-md text-sm font-medium transition-colors ${
                                   elevationUnit === 'ft'
-                                    ? 'bg-white dark:bg-neutral-700 text-neutral-900 dark:text-white shadow-sm'
+                                    ? 'bg-neutral-900 dark:bg-white text-white dark:text-neutral-900'
                                     : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
                                 }`}
                               >
