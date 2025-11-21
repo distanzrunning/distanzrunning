@@ -1236,7 +1236,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                     className="absolute top-full mt-2 left-0 z-50 bg-white dark:bg-neutral-900 rounded-lg shadow-xl border border-neutral-200 dark:border-neutral-800 p-4 min-w-[600px]"
                   >
                     {/* Top Bar: Clear, Search, Apply */}
-                    <div className="flex items-center justify-between gap-3 mb-4">
+                    <div className="flex items-center justify-between gap-4 mb-4">
                       {/* Clear Button - Left */}
                       <button
                         onClick={() => {
@@ -1261,7 +1261,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                           type="text"
                           value={countrySearchQuery}
                           onChange={(e) => setCountrySearchQuery(e.target.value)}
-                          placeholder="Search countries..."
+                          placeholder="Search"
                           className="w-full px-3 py-2 pl-9 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white text-sm placeholder-neutral-500 focus:outline-none focus:border-neutral-400 dark:focus:border-neutral-600"
                         />
                         <svg className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
