@@ -8,6 +8,8 @@ import { motion, AnimatePresence } from 'framer-motion'
 import type { RaceGuide } from './page'
 import Slider from '@mui/material/Slider'
 import Box from '@mui/material/Box'
+// @ts-ignore - country-flag-icons doesn't have perfect TypeScript types
+import * as flags from 'country-flag-icons/react/3x2'
 
 // Helper function to format location from city, state/region, and country
 function formatLocation(city?: string, stateRegion?: string, country?: string): string {
@@ -139,19 +141,19 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
 
   const getCountryFlag = (country: string) => {
     const code = countryToCode[country]
-    if (code) {
-      // Use flag emoji via regional indicator symbols
-      if (code.includes('-')) {
-        // Handle sub-national flags (Scotland, Wales) - just show the country emoji
-        return code === 'GB-SCT' ? '🏴󠁧󠁢󠁳󠁣󠁴󠁿' : code === 'GB-WLS' ? '🏴󠁧󠁢󠁷󠁬󠁳󠁿' : '🏳️'
-      }
-      const codePoints = code
-        .toUpperCase()
-        .split('')
-        .map(char => 127397 + char.charCodeAt(0))
-      return String.fromCodePoint(...codePoints)
+    if (!code) return null
+
+    // Handle sub-national flags (use parent country flag)
+    const flagCode = code.includes('-') ? code.split('-')[0] : code
+
+    // Get the flag component from the flags object
+    const FlagComponent = (flags as any)[flagCode]
+
+    if (FlagComponent) {
+      return <FlagComponent className="w-6 h-4 rounded-sm" />
     }
-    return '🏳️' // Default flag
+
+    return null
   }
 
   // Close date filter on click outside
@@ -1195,7 +1197,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                     onClick={() => setIsCountryFilterOpen(!isCountryFilterOpen)}
                     className="flex items-center gap-2 hover:text-neutral-600 dark:hover:text-neutral-400 transition-colors"
                   >
-                    <span>{getCountryFlag(appliedCountryFilter)}</span>
+                    {getCountryFlag(appliedCountryFilter)}
                     <span>{appliedCountryFilter}</span>
                   </button>
                   <button
@@ -1310,7 +1312,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                   : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700'
                               }`}
                             >
-                              <span className="text-xl">{getCountryFlag(country)}</span>
+                              <div className="flex-shrink-0">{getCountryFlag(country)}</div>
                               <span className="text-base font-medium">{country}</span>
                             </button>
                           )
