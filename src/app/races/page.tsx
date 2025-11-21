@@ -15,6 +15,7 @@ export type RaceGuide = {
   raceCategoryName?: string
   distance?: number
   surface?: string
+  elevationGain?: number
 }
 
 export const revalidate = 60 // Incremental Static Regeneration - refresh every 60s
@@ -32,6 +33,7 @@ export default async function RaceGuidesPage() {
       mainImage,
       distance,
       surface,
+      elevationGain,
       "raceCategoryName": raceCategory->title
     }
   `)

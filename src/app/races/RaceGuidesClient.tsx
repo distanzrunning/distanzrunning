@@ -80,6 +80,23 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
   const [tempSurfaceFilter, setTempSurfaceFilter] = useState<string | null>(null)
   const surfaceFilterRef = useRef<HTMLDivElement>(null)
 
+  // Elevation filter states
+  const [isElevationFilterOpen, setIsElevationFilterOpen] = useState(false)
+  const [elevationFilterMode, setElevationFilterMode] = useState<'elevation' | 'custom'>('elevation')
+  const [elevationUnit, setElevationUnit] = useState<'m' | 'ft'>('m')
+  const [appliedElevationFilter, setAppliedElevationFilter] = useState<string | null>(null) // e.g., 'flat', 'rolling', or 'custom'
+  const [tempElevationFilter, setTempElevationFilter] = useState<string | null>(null)
+  // For custom elevation range (in meters)
+  const [appliedCustomElevationRange, setAppliedCustomElevationRange] = useState<{ min: number; max: number }>({ min: 0, max: 1000 })
+  const [tempCustomElevationRange, setTempCustomElevationRange] = useState<{ min: number; max: number }>({ min: 0, max: 1000 })
+  const elevationFilterRef = useRef<HTMLDivElement>(null)
+  // Track which elevation input is focused
+  const [isMinElevationInputFocused, setIsMinElevationInputFocused] = useState(false)
+  const [isMaxElevationInputFocused, setIsMaxElevationInputFocused] = useState(false)
+  // Track elevation input values while typing
+  const [minElevationInputValue, setMinElevationInputValue] = useState('')
+  const [maxElevationInputValue, setMaxElevationInputValue] = useState('')
+
   // Loading state for filtering
   const [isFiltering, setIsFiltering] = useState(false)
 
@@ -116,6 +133,14 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
     'Trail',
     'Track',
     'Mixed'
+  ]
+
+  // Elevation categories
+  const elevationCategories = [
+    { id: 'flat', label: 'Flat', minM: 0, maxM: 100 },
+    { id: 'rolling', label: 'Rolling', minM: 100, maxM: 300 },
+    { id: 'hilly', label: 'Hilly', minM: 300, maxM: 600 },
+    { id: 'mountainous', label: 'Mountainous', minM: 600, maxM: 1000 }
   ]
 
   // All countries list (sorted alphabetically)
@@ -350,11 +375,44 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
     }
   }, [isSurfaceFilterOpen, appliedSurfaceFilter])
 
+  // Click outside to close elevation filter dropdown
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (elevationFilterRef.current && !elevationFilterRef.current.contains(event.target as Node)) {
+        setIsElevationFilterOpen(false)
+      }
+    }
+
+    if (isElevationFilterOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [isElevationFilterOpen])
+
+  // Initialize elevation filter temp state when dropdown opens
+  useEffect(() => {
+    if (isElevationFilterOpen) {
+      setTempElevationFilter(appliedElevationFilter)
+      setTempCustomElevationRange(appliedCustomElevationRange)
+      setMinElevationInputValue('')
+      setMaxElevationInputValue('')
+    }
+  }, [isElevationFilterOpen, appliedElevationFilter, appliedCustomElevationRange])
+
   // Helper: Convert km to miles
   const kmToMiles = (km: number) => km * 0.621371
 
   // Helper: Convert miles to km
   const milesToKm = (miles: number) => miles / 0.621371
+
+  // Helper: Convert meters to feet
+  const metersToFeet = (m: number) => m * 3.28084
+
+  // Helper: Convert feet to meters
+  const feetToMeters = (ft: number) => ft / 3.28084
 
   // Helper: Get distance category from km (with more forgiving tolerance)
   const getDistanceCategory = (distanceKm: number): string | null => {
@@ -435,12 +493,33 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
     return category?.label || 'Distance'
   }
 
+  const getElevationFilterText = () => {
+    if (!appliedElevationFilter) {
+      return 'Elevation'
+    }
+
+    if (appliedElevationFilter === 'custom') {
+      const unit = elevationUnit
+      const min = unit === 'm' ? appliedCustomElevationRange.min : metersToFeet(appliedCustomElevationRange.min)
+      const max = unit === 'm' ? appliedCustomElevationRange.max : metersToFeet(appliedCustomElevationRange.max)
+      const maxValue = unit === 'm' ? 1000 : Math.round(metersToFeet(1000))
+
+      if (max >= maxValue) {
+        return `${Math.round(min)}->${Math.round(max)}${unit}`
+      }
+      return `${Math.round(min)}-${Math.round(max)}${unit}`
+    }
+
+    const category = elevationCategories.find(c => c.id === appliedElevationFilter)
+    return category?.label || 'Elevation'
+  }
+
   // Trigger loading state when filters change
   useEffect(() => {
     setIsFiltering(true)
     const timer = setTimeout(() => setIsFiltering(false), 300)
     return () => clearTimeout(timer)
-  }, [searchQuery, appliedDateRange, appliedDistanceFilter, appliedCustomRange, appliedCountryFilter, appliedCityFilter, appliedStateFilter, appliedSurfaceFilter])
+  }, [searchQuery, appliedDateRange, appliedDistanceFilter, appliedCustomRange, appliedCountryFilter, appliedCityFilter, appliedStateFilter, appliedSurfaceFilter, appliedElevationFilter, appliedCustomElevationRange])
 
   // Filter races based on search query and date range
   const filteredRaces = useMemo(() => {
@@ -517,8 +596,26 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
       filtered = filtered.filter((race) => race.surface === appliedSurfaceFilter)
     }
 
+    // Apply elevation filter
+    if (appliedElevationFilter) {
+      if (appliedElevationFilter === 'custom') {
+        filtered = filtered.filter((race) => {
+          if (!race.elevationGain) return false
+          return race.elevationGain >= appliedCustomElevationRange.min && race.elevationGain <= appliedCustomElevationRange.max
+        })
+      } else {
+        const category = elevationCategories.find(c => c.id === appliedElevationFilter)
+        if (category) {
+          filtered = filtered.filter((race) => {
+            if (!race.elevationGain) return false
+            return race.elevationGain >= category.minM && race.elevationGain < category.maxM
+          })
+        }
+      }
+    }
+
     return filtered
-  }, [races, searchQuery, appliedDateRange, appliedDistanceFilter, appliedCustomRange, appliedCountryFilter, appliedCityFilter, appliedStateFilter, appliedSurfaceFilter])
+  }, [races, searchQuery, appliedDateRange, appliedDistanceFilter, appliedCustomRange, appliedCountryFilter, appliedCityFilter, appliedStateFilter, appliedSurfaceFilter, appliedElevationFilter, appliedCustomElevationRange])
 
   return (
     <div className="py-12 bg-white dark:bg-[#0c0c0d] min-h-screen transition-colors duration-300">
@@ -1878,6 +1975,352 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                         )
                       })}
                     </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {/* Elevation Filter */}
+            <div className="relative" ref={elevationFilterRef}>
+              {appliedElevationFilter ? (
+                // Filter is active - show filter value with X button
+                <div className="flex items-center gap-2 px-4 h-[44px] rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white text-sm font-medium">
+                  <button
+                    onClick={() => setIsElevationFilterOpen(!isElevationFilterOpen)}
+                    className="hover:text-neutral-600 dark:hover:text-neutral-400 transition-colors"
+                  >
+                    {getElevationFilterText()}
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      setAppliedElevationFilter(null)
+                      setTempElevationFilter(null)
+                      setAppliedCustomElevationRange({ min: 0, max: 1000 })
+                      setTempCustomElevationRange({ min: 0, max: 1000 })
+                    }}
+                    className="text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300 transition-colors"
+                    aria-label="Clear elevation filter"
+                  >
+                    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+              ) : (
+                // No filter - show default button
+                <button
+                  onClick={() => setIsElevationFilterOpen(!isElevationFilterOpen)}
+                  className="flex items-center gap-2 px-4 h-[44px] rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white hover:border-neutral-400 dark:hover:border-neutral-600 transition-colors text-sm font-medium whitespace-nowrap"
+                >
+                  Elevation
+                  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+              )}
+
+              {/* Elevation Dropdown */}
+              <AnimatePresence>
+                {isElevationFilterOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                    className="absolute top-full mt-2 left-0 z-50 bg-white dark:bg-neutral-900 rounded-lg shadow-xl border border-neutral-200 dark:border-neutral-800 p-4 min-w-[600px]"
+                  >
+                    {/* Top Bar: Action Buttons and Toggle */}
+                    <div className="flex items-center justify-between mb-6">
+                      {/* Clear Button - Left */}
+                      <button
+                        onClick={() => {
+                          setTempElevationFilter(null)
+                          setTempCustomElevationRange({ min: 0, max: 1000 })
+                        }}
+                        disabled={!tempElevationFilter && tempCustomElevationRange.min === 0 && tempCustomElevationRange.max === 1000}
+                        className={`p-2 rounded-lg transition-colors ${
+                          tempElevationFilter || tempCustomElevationRange.min !== 0 || tempCustomElevationRange.max !== 1000
+                            ? 'bg-neutral-200 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-300 dark:hover:bg-neutral-600 cursor-pointer'
+                            : 'text-neutral-400 dark:text-neutral-600 cursor-not-allowed opacity-50'
+                        }`}
+                        aria-label="Clear selection"
+                      >
+                        <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
+
+                      {/* Tab Toggle - Center */}
+                      <div className="flex items-center gap-2 bg-neutral-100 dark:bg-neutral-800 p-1 rounded-lg">
+                        <button
+                          onClick={() => setElevationFilterMode('elevation')}
+                          className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                            elevationFilterMode === 'elevation'
+                              ? 'bg-white dark:bg-neutral-700 text-neutral-900 dark:text-white shadow-sm'
+                              : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
+                          }`}
+                        >
+                          Elevation
+                        </button>
+                        <button
+                          onClick={() => setElevationFilterMode('custom')}
+                          className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                            elevationFilterMode === 'custom'
+                              ? 'bg-white dark:bg-neutral-700 text-neutral-900 dark:text-white shadow-sm'
+                              : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
+                          }`}
+                        >
+                          Custom
+                        </button>
+                      </div>
+
+                      {/* Apply Button - Right */}
+                      <button
+                        onClick={() => {
+                          setAppliedElevationFilter(tempElevationFilter)
+                          setAppliedCustomElevationRange(tempCustomElevationRange)
+                          setIsElevationFilterOpen(false)
+                        }}
+                        disabled={!tempElevationFilter && (tempCustomElevationRange.min === 0 && tempCustomElevationRange.max === 1000)}
+                        className={`p-2 rounded-lg transition-colors ${
+                          tempElevationFilter || tempCustomElevationRange.min !== 0 || tempCustomElevationRange.max !== 1000
+                            ? 'bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 hover:bg-neutral-700 dark:hover:bg-neutral-200 cursor-pointer'
+                            : 'bg-neutral-200 dark:bg-neutral-800 text-neutral-400 dark:text-neutral-600 cursor-not-allowed opacity-50'
+                        }`}
+                        aria-label="Apply filter"
+                      >
+                        <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                      </button>
+                    </div>
+
+                    {/* Tab Content */}
+                    {elevationFilterMode === 'elevation' ? (
+                      <>
+                        {/* Elevation Categories Grid */}
+                        <div className="grid grid-cols-2 gap-3 mb-4">
+                          {elevationCategories.map((category) => {
+                            const isSelected = tempElevationFilter === category.id
+                            return (
+                              <button
+                                key={category.id}
+                                onClick={() => {
+                                  // Toggle: if already selected, deselect
+                                  setTempElevationFilter(isSelected ? null : category.id)
+                                }}
+                                className={`
+                                  py-4 px-4 rounded-lg text-base font-medium transition-colors
+                                  ${isSelected ? 'bg-neutral-900 dark:bg-white text-white dark:text-neutral-900' : 'bg-neutral-200 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-400 hover:bg-neutral-300 dark:hover:bg-neutral-700 hover:text-neutral-900 dark:hover:text-white'}
+                                `}
+                              >
+                                {category.label}
+                              </button>
+                            )
+                          })}
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        {/* Custom Range Slider */}
+                        <div className="mb-6">
+                          {/* Min/Max Input Fields */}
+                          <div className="px-3 mb-6">
+                            <div className="flex items-center justify-between" style={{ paddingLeft: '12px', paddingRight: '12px' }}>
+                              {/* Min Value Box */}
+                              <div className="flex items-center justify-center bg-neutral-100 dark:bg-neutral-800 rounded-lg px-3 py-2 w-[80px]">
+                                {isMinElevationInputFocused ? (
+                                  <div className="flex items-center justify-center gap-0 w-full">
+                                    <input
+                                      type="number"
+                                      value={minElevationInputValue}
+                                      onChange={(e) => {
+                                        setMinElevationInputValue(e.target.value)
+                                        const value = Number(e.target.value)
+                                        if (!isNaN(value) && e.target.value !== '') {
+                                          const mValue = elevationUnit === 'm' ? value : feetToMeters(value)
+                                          // Allow swapping: if new min > max, swap them
+                                          setTempCustomElevationRange(prev => {
+                                            if (mValue > prev.max) {
+                                              return { min: prev.max, max: mValue }
+                                            }
+                                            return { ...prev, min: mValue }
+                                          })
+                                          setTempElevationFilter('custom')
+                                        }
+                                      }}
+                                      onBlur={() => {
+                                        setIsMinElevationInputFocused(false)
+                                        setMinElevationInputValue('')
+                                      }}
+                                      autoFocus
+                                      className="flex-shrink-0 w-auto min-w-0 bg-transparent text-neutral-900 dark:text-white text-sm font-medium outline-none border-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none text-center"
+                                      style={{ width: `${Math.max(1, minElevationInputValue.length)}ch` }}
+                                      placeholder=""
+                                    />
+                                    {minElevationInputValue && (
+                                      <span className="text-neutral-900 dark:text-white text-sm font-medium flex-shrink-0">
+                                        {elevationUnit}
+                                      </span>
+                                    )}
+                                  </div>
+                                ) : (
+                                  <div className="inline-flex items-center gap-0 cursor-pointer" onClick={() => setIsMinElevationInputFocused(true)}>
+                                    <span className="text-neutral-900 dark:text-white text-sm font-medium">
+                                      {elevationUnit === 'm' ? Math.round(tempCustomElevationRange.min) : Math.round(metersToFeet(tempCustomElevationRange.min))}
+                                    </span>
+                                    <span className="text-neutral-900 dark:text-white text-sm font-medium">
+                                      {elevationUnit}
+                                    </span>
+                                  </div>
+                                )}
+                              </div>
+
+                              {/* Max Value Box with ">" prefix (only shown at max 1000m/3280ft) */}
+                              <div className="flex items-center justify-center bg-neutral-100 dark:bg-neutral-800 rounded-lg px-3 py-2 w-[80px]">
+                                {isMaxElevationInputFocused ? (
+                                  <div className="flex items-center justify-center gap-0 w-full">
+                                    {(() => {
+                                      const maxValue = elevationUnit === 'm' ? 1000 : Math.round(metersToFeet(1000))
+                                      const currentValue = maxElevationInputValue ? Number(maxElevationInputValue) : (elevationUnit === 'm' ? tempCustomElevationRange.max : Math.round(metersToFeet(tempCustomElevationRange.max)))
+                                      return currentValue >= maxValue && maxElevationInputValue && (
+                                        <span className="text-neutral-900 dark:text-white text-sm font-medium flex-shrink-0">
+                                          &gt;
+                                        </span>
+                                      )
+                                    })()}
+                                    <input
+                                      type="number"
+                                      value={maxElevationInputValue}
+                                      onChange={(e) => {
+                                        setMaxElevationInputValue(e.target.value)
+                                        const value = Number(e.target.value)
+                                        if (!isNaN(value) && e.target.value !== '') {
+                                          const mValue = elevationUnit === 'm' ? value : feetToMeters(value)
+                                          // Allow swapping: if new max < min, swap them
+                                          setTempCustomElevationRange(prev => {
+                                            if (mValue < prev.min) {
+                                              return { min: mValue, max: prev.min }
+                                            }
+                                            return { ...prev, max: mValue }
+                                          })
+                                          setTempElevationFilter('custom')
+                                        }
+                                      }}
+                                      onBlur={() => {
+                                        setIsMaxElevationInputFocused(false)
+                                        setMaxElevationInputValue('')
+                                      }}
+                                      autoFocus
+                                      className="flex-shrink-0 w-auto min-w-0 bg-transparent text-neutral-900 dark:text-white text-sm font-medium outline-none border-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none text-center"
+                                      style={{ width: `${Math.max(1, maxElevationInputValue.length)}ch` }}
+                                      placeholder=""
+                                    />
+                                    {maxElevationInputValue && (
+                                      <span className="text-neutral-900 dark:text-white text-sm font-medium flex-shrink-0">
+                                        {elevationUnit}
+                                      </span>
+                                    )}
+                                  </div>
+                                ) : (
+                                  <div className="inline-flex items-center gap-0 cursor-pointer" onClick={() => setIsMaxElevationInputFocused(true)}>
+                                    {(() => {
+                                      const maxValue = elevationUnit === 'm' ? 1000 : Math.round(metersToFeet(1000))
+                                      const currentValue = elevationUnit === 'm' ? tempCustomElevationRange.max : Math.round(metersToFeet(tempCustomElevationRange.max))
+                                      return currentValue >= maxValue && (
+                                        <span className="text-neutral-900 dark:text-white text-sm font-medium">
+                                          &gt;
+                                        </span>
+                                      )
+                                    })()}
+                                    <span className="text-neutral-900 dark:text-white text-sm font-medium">
+                                      {elevationUnit === 'm' ? Math.round(tempCustomElevationRange.max) : Math.round(metersToFeet(tempCustomElevationRange.max))}
+                                    </span>
+                                    <span className="text-neutral-900 dark:text-white text-sm font-medium">
+                                      {elevationUnit}
+                                    </span>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Slider */}
+                          <Box sx={{ width: '100%', px: 3 }}>
+                            <Slider
+                              value={[
+                                elevationUnit === 'm' ? tempCustomElevationRange.min : metersToFeet(tempCustomElevationRange.min),
+                                elevationUnit === 'm' ? tempCustomElevationRange.max : metersToFeet(tempCustomElevationRange.max)
+                              ]}
+                              onChange={(_, newValue) => {
+                                const [min, max] = newValue as number[]
+                                const minM = elevationUnit === 'm' ? min : feetToMeters(min)
+                                const maxM = elevationUnit === 'm' ? max : feetToMeters(max)
+                                setTempCustomElevationRange({ min: minM, max: maxM })
+                                // Only set to 'custom' if not at default min/max
+                                if (minM === 0 && maxM === 1000) {
+                                  setTempElevationFilter(null)
+                                } else {
+                                  setTempElevationFilter('custom')
+                                }
+                              }}
+                              min={0}
+                              max={elevationUnit === 'm' ? 1000 : Math.round(metersToFeet(1000))}
+                              step={elevationUnit === 'm' ? 10 : 50}
+                              valueLabelDisplay="off"
+                              disableSwap={false}
+                              sx={{
+                                color: 'rgb(23, 23, 23)',
+                                '.MuiSlider-thumb': {
+                                  width: 20,
+                                  height: 20,
+                                  backgroundColor: 'rgb(23, 23, 23)',
+                                  '&:hover, &.Mui-focusVisible': {
+                                    boxShadow: '0 0 0 8px rgba(23, 23, 23, 0.16)',
+                                  },
+                                },
+                                '.MuiSlider-track': {
+                                  backgroundColor: 'rgb(23, 23, 23)',
+                                  border: 'none',
+                                  height: 4,
+                                },
+                                '.MuiSlider-rail': {
+                                  backgroundColor: 'rgb(212, 212, 212)',
+                                  height: 4,
+                                },
+                              }}
+                            />
+                          </Box>
+
+                          {/* Unit Toggle */}
+                          <div className="flex justify-center mt-4">
+                            <div className="flex items-center gap-2 bg-neutral-100 dark:bg-neutral-800 p-1 rounded-lg">
+                              <button
+                                onClick={() => setElevationUnit('m')}
+                                className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
+                                  elevationUnit === 'm'
+                                    ? 'bg-white dark:bg-neutral-700 text-neutral-900 dark:text-white shadow-sm'
+                                    : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
+                                }`}
+                              >
+                                m
+                              </button>
+                              <button
+                                onClick={() => setElevationUnit('ft')}
+                                className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
+                                  elevationUnit === 'ft'
+                                    ? 'bg-white dark:bg-neutral-700 text-neutral-900 dark:text-white shadow-sm'
+                                    : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
+                                }`}
+                              >
+                                ft
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </>
+                    )}
                   </motion.div>
                 )}
               </AnimatePresence>
