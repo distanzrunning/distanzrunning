@@ -2052,12 +2052,12 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                       </button>
 
                       {/* Tab Toggle - Center */}
-                      <div className="flex items-center gap-2 bg-neutral-100 dark:bg-neutral-800 p-1 rounded-lg">
+                      <div className="inline-flex bg-neutral-200 dark:bg-neutral-800 rounded-lg p-1 relative z-10">
                         <button
                           onClick={() => setElevationFilterMode('elevation')}
-                          className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                          className={`px-6 py-2.5 rounded-md text-base font-medium transition-colors ${
                             elevationFilterMode === 'elevation'
-                              ? 'bg-white dark:bg-neutral-700 text-neutral-900 dark:text-white shadow-sm'
+                              ? 'bg-neutral-900 dark:bg-white text-white dark:text-neutral-900'
                               : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
                           }`}
                         >
@@ -2065,9 +2065,9 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                         </button>
                         <button
                           onClick={() => setElevationFilterMode('custom')}
-                          className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                          className={`px-6 py-2.5 rounded-md text-base font-medium transition-colors ${
                             elevationFilterMode === 'custom'
-                              ? 'bg-white dark:bg-neutral-700 text-neutral-900 dark:text-white shadow-sm'
+                              ? 'bg-neutral-900 dark:bg-white text-white dark:text-neutral-900'
                               : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
                           }`}
                         >
