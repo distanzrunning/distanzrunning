@@ -58,13 +58,19 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
   const [countrySearchQuery, setCountrySearchQuery] = useState('')
   const countryFilterRef = useRef<HTMLDivElement>(null)
 
-  // Get unique countries from races
-  const availableCountries = useMemo(() => {
-    const countries = races
-      .map(race => race.country)
-      .filter((country): country is string => !!country)
-    return [...new Set(countries)].sort((a, b) => a.localeCompare(b))
-  }, [races])
+  // All countries list (sorted alphabetically)
+  const allCountries = [
+    'Argentina', 'Australia', 'Austria', 'Belgium', 'Brazil', 'Canada', 'Chile',
+    'China', 'Colombia', 'Czech Republic', 'Denmark', 'Egypt', 'Ethiopia',
+    'Finland', 'France', 'Germany', 'Greece', 'Hong Kong', 'Hungary', 'Iceland',
+    'India', 'Indonesia', 'Ireland', 'Israel', 'Italy', 'Japan', 'Kenya',
+    'Luxembourg', 'Malaysia', 'Mexico', 'Monaco', 'Morocco', 'Netherlands',
+    'New Zealand', 'Norway', 'Peru', 'Philippines', 'Poland', 'Portugal',
+    'Qatar', 'Russia', 'Saudi Arabia', 'Scotland', 'Singapore', 'South Africa',
+    'South Korea', 'Spain', 'Sweden', 'Switzerland', 'Taiwan', 'Thailand',
+    'Turkey', 'Ukraine', 'United Arab Emirates', 'United Kingdom', 'United States',
+    'Vietnam', 'Wales'
+  ]
 
   // Country code mapping for flags (ISO 3166-1 alpha-2)
   const countryToCode: Record<string, string> = {
@@ -1227,7 +1233,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
                     transition={{ duration: 0.2 }}
-                    className="absolute top-full mt-2 left-0 z-50 bg-white dark:bg-neutral-900 rounded-lg shadow-xl border border-neutral-200 dark:border-neutral-800 p-4 min-w-[300px]"
+                    className="absolute top-full mt-2 left-0 z-50 bg-white dark:bg-neutral-900 rounded-lg shadow-xl border border-neutral-200 dark:border-neutral-800 p-4 min-w-[600px]"
                   >
                     {/* Top Bar: Clear, Search, Apply */}
                     <div className="flex items-center justify-between gap-3 mb-4">
@@ -1284,12 +1290,12 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                     </div>
 
                     {/* Country List - Scrollable */}
-                    <div className="max-h-[300px] overflow-y-auto scrollbar-hide">
-                      {availableCountries
-                        .filter(country =>
+                    <div className="max-h-[400px] overflow-y-auto scrollbar-hide">
+                      {allCountries
+                        .filter((country: string) =>
                           country.toLowerCase().includes(countrySearchQuery.toLowerCase())
                         )
-                        .map((country) => {
+                        .map((country: string) => {
                           const isSelected = tempCountryFilter === country
                           return (
                             <button
@@ -1298,21 +1304,21 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                 // Toggle: if already selected, deselect
                                 setTempCountryFilter(isSelected ? null : country)
                               }}
-                              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-colors ${
+                              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-colors mb-1 ${
                                 isSelected
                                   ? 'bg-neutral-900 dark:bg-white text-white dark:text-neutral-900'
-                                  : 'text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800'
+                                  : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700'
                               }`}
                             >
-                              <span className="text-lg">{getCountryFlag(country)}</span>
-                              <span className="text-sm font-medium">{country}</span>
+                              <span className="text-xl">{getCountryFlag(country)}</span>
+                              <span className="text-base font-medium">{country}</span>
                             </button>
                           )
                         })}
-                      {availableCountries.filter(country =>
+                      {allCountries.filter((country: string) =>
                         country.toLowerCase().includes(countrySearchQuery.toLowerCase())
                       ).length === 0 && (
-                        <p className="text-center py-4 text-neutral-500 dark:text-neutral-400 text-sm">
+                        <p className="text-center py-4 text-neutral-500 dark:text-neutral-400 text-base">
                           No countries found
                         </p>
                       )}
