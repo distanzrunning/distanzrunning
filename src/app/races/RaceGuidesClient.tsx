@@ -502,10 +502,10 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
       const unit = elevationUnit
       const min = unit === 'm' ? appliedCustomElevationRange.min : metersToFeet(appliedCustomElevationRange.min)
       const max = unit === 'm' ? appliedCustomElevationRange.max : metersToFeet(appliedCustomElevationRange.max)
-      const maxValue = unit === 'm' ? 1000 : Math.round(metersToFeet(1000))
+      const maxValue = unit === 'm' ? 1000 : 3280
 
       if (max >= maxValue) {
-        return `${Math.round(min)}->${Math.round(max)}${unit}`
+        return `${Math.round(min)}->${Math.round(max >= maxValue ? maxValue : max)}${unit}`
       }
       return `${Math.round(min)}-${Math.round(max)}${unit}`
     }
@@ -2182,7 +2182,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                 {isMaxElevationInputFocused ? (
                                   <div className="flex items-center justify-center gap-0 w-full">
                                     {(() => {
-                                      const maxValue = elevationUnit === 'm' ? 1000 : Math.round(metersToFeet(1000))
+                                      const maxValue = elevationUnit === 'm' ? 1000 : 3280
                                       const currentValue = maxElevationInputValue ? Number(maxElevationInputValue) : (elevationUnit === 'm' ? tempCustomElevationRange.max : Math.round(metersToFeet(tempCustomElevationRange.max)))
                                       return currentValue >= maxValue && maxElevationInputValue && (
                                         <span className="text-neutral-900 dark:text-white text-sm font-medium flex-shrink-0">
@@ -2226,7 +2226,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                 ) : (
                                   <div className="inline-flex items-center gap-0 cursor-pointer" onClick={() => setIsMaxElevationInputFocused(true)}>
                                     {(() => {
-                                      const maxValue = elevationUnit === 'm' ? 1000 : Math.round(metersToFeet(1000))
+                                      const maxValue = elevationUnit === 'm' ? 1000 : 3280
                                       const currentValue = elevationUnit === 'm' ? tempCustomElevationRange.max : Math.round(metersToFeet(tempCustomElevationRange.max))
                                       return currentValue >= maxValue && (
                                         <span className="text-neutral-900 dark:text-white text-sm font-medium">
@@ -2235,7 +2235,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                       )
                                     })()}
                                     <span className="text-neutral-900 dark:text-white text-sm font-medium">
-                                      {elevationUnit === 'm' ? Math.round(tempCustomElevationRange.max) : Math.round(metersToFeet(tempCustomElevationRange.max))}
+                                      {elevationUnit === 'm' ? Math.round(tempCustomElevationRange.max) : Math.min(3280, Math.round(metersToFeet(tempCustomElevationRange.max)))}
                                     </span>
                                     <span className="text-neutral-900 dark:text-white text-sm font-medium">
                                       {elevationUnit}
@@ -2267,7 +2267,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                   }
                                 }}
                                 min={0}
-                                max={elevationUnit === 'm' ? 1000 : Math.round(metersToFeet(1000))}
+                                max={elevationUnit === 'm' ? 1000 : 3280}
                                 step={elevationUnit === 'm' ? 10 : 50}
                                 valueLabelDisplay="off"
                                 disableSwap={false}
