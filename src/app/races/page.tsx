@@ -14,6 +14,7 @@ export type RaceGuide = {
   mainImage: any
   raceCategoryName?: string
   distance?: number
+  surface?: string
 }
 
 export const revalidate = 60 // Incremental Static Regeneration - refresh every 60s
@@ -30,6 +31,7 @@ export default async function RaceGuidesPage() {
       eventDate,
       mainImage,
       distance,
+      surface,
       "raceCategoryName": raceCategory->title
     }
   `)
