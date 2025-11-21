@@ -51,6 +51,103 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
   const [minInputValue, setMinInputValue] = useState('')
   const [maxInputValue, setMaxInputValue] = useState('')
 
+  // Country filter states
+  const [isCountryFilterOpen, setIsCountryFilterOpen] = useState(false)
+  const [appliedCountryFilter, setAppliedCountryFilter] = useState<string | null>(null)
+  const [tempCountryFilter, setTempCountryFilter] = useState<string | null>(null)
+  const [countrySearchQuery, setCountrySearchQuery] = useState('')
+  const countryFilterRef = useRef<HTMLDivElement>(null)
+
+  // Get unique countries from races
+  const availableCountries = useMemo(() => {
+    const countries = races
+      .map(race => race.country)
+      .filter((country): country is string => !!country)
+    return [...new Set(countries)].sort((a, b) => a.localeCompare(b))
+  }, [races])
+
+  // Country code mapping for flags (ISO 3166-1 alpha-2)
+  const countryToCode: Record<string, string> = {
+    'United States': 'US',
+    'USA': 'US',
+    'United Kingdom': 'GB',
+    'UK': 'GB',
+    'Germany': 'DE',
+    'France': 'FR',
+    'Spain': 'ES',
+    'Italy': 'IT',
+    'Netherlands': 'NL',
+    'Belgium': 'BE',
+    'Switzerland': 'CH',
+    'Austria': 'AT',
+    'Portugal': 'PT',
+    'Greece': 'GR',
+    'Japan': 'JP',
+    'China': 'CN',
+    'Australia': 'AU',
+    'New Zealand': 'NZ',
+    'Canada': 'CA',
+    'Mexico': 'MX',
+    'Brazil': 'BR',
+    'Argentina': 'AR',
+    'South Africa': 'ZA',
+    'Kenya': 'KE',
+    'Ethiopia': 'ET',
+    'Morocco': 'MA',
+    'Ireland': 'IE',
+    'Scotland': 'GB-SCT',
+    'Wales': 'GB-WLS',
+    'Sweden': 'SE',
+    'Norway': 'NO',
+    'Denmark': 'DK',
+    'Finland': 'FI',
+    'Poland': 'PL',
+    'Czech Republic': 'CZ',
+    'Hungary': 'HU',
+    'Turkey': 'TR',
+    'India': 'IN',
+    'Singapore': 'SG',
+    'Hong Kong': 'HK',
+    'South Korea': 'KR',
+    'Thailand': 'TH',
+    'Vietnam': 'VN',
+    'Malaysia': 'MY',
+    'Indonesia': 'ID',
+    'Philippines': 'PH',
+    'Taiwan': 'TW',
+    'Russia': 'RU',
+    'Ukraine': 'UA',
+    'Israel': 'IL',
+    'United Arab Emirates': 'AE',
+    'UAE': 'AE',
+    'Qatar': 'QA',
+    'Saudi Arabia': 'SA',
+    'Egypt': 'EG',
+    'Chile': 'CL',
+    'Colombia': 'CO',
+    'Peru': 'PE',
+    'Iceland': 'IS',
+    'Luxembourg': 'LU',
+    'Monaco': 'MC',
+  }
+
+  const getCountryFlag = (country: string) => {
+    const code = countryToCode[country]
+    if (code) {
+      // Use flag emoji via regional indicator symbols
+      if (code.includes('-')) {
+        // Handle sub-national flags (Scotland, Wales) - just show the country emoji
+        return code === 'GB-SCT' ? '🏴󠁧󠁢󠁳󠁣󠁴󠁿' : code === 'GB-WLS' ? '🏴󠁧󠁢󠁷󠁬󠁳󠁿' : '🏳️'
+      }
+      const codePoints = code
+        .toUpperCase()
+        .split('')
+        .map(char => 127397 + char.charCodeAt(0))
+      return String.fromCodePoint(...codePoints)
+    }
+    return '🏳️' // Default flag
+  }
+
   // Close date filter on click outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -91,6 +188,27 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
       setTempCustomRange(appliedCustomRange)
     }
   }, [isDistanceFilterOpen, appliedDistanceFilter, appliedCustomRange])
+
+  // Close country filter on click outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (countryFilterRef.current && !countryFilterRef.current.contains(event.target as Node)) {
+        setIsCountryFilterOpen(false)
+      }
+    }
+    if (isCountryFilterOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+      return () => document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [isCountryFilterOpen])
+
+  // Initialize temp country filter when opening dropdown
+  useEffect(() => {
+    if (isCountryFilterOpen) {
+      setTempCountryFilter(appliedCountryFilter)
+      setCountrySearchQuery('')
+    }
+  }, [isCountryFilterOpen, appliedCountryFilter])
 
   // Helper: Convert km to miles
   const kmToMiles = (km: number) => km * 0.621371
@@ -232,8 +350,13 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
       })
     }
 
+    // Apply country filter
+    if (appliedCountryFilter) {
+      filtered = filtered.filter((race) => race.country === appliedCountryFilter)
+    }
+
     return filtered
-  }, [races, searchQuery, appliedDateRange, appliedDistanceFilter, appliedCustomRange])
+  }, [races, searchQuery, appliedDateRange, appliedDistanceFilter, appliedCustomRange, appliedCountryFilter])
 
   return (
     <div className="py-12 bg-white dark:bg-[#0c0c0d] min-h-screen transition-colors duration-300">
@@ -1052,6 +1175,148 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                         </div>
                       </>
                     )}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {/* Country Filter */}
+            <div className="relative" ref={countryFilterRef}>
+              {appliedCountryFilter ? (
+                // Filter is active - show filter value with X button
+                <div className="flex items-center gap-2 px-4 h-[44px] rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white text-sm font-medium">
+                  <button
+                    onClick={() => setIsCountryFilterOpen(!isCountryFilterOpen)}
+                    className="flex items-center gap-2 hover:text-neutral-600 dark:hover:text-neutral-400 transition-colors"
+                  >
+                    <span>{getCountryFlag(appliedCountryFilter)}</span>
+                    <span>{appliedCountryFilter}</span>
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      setAppliedCountryFilter(null)
+                      setTempCountryFilter(null)
+                    }}
+                    className="text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300 transition-colors"
+                    aria-label="Clear country filter"
+                  >
+                    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+              ) : (
+                // No filter - show default button
+                <button
+                  onClick={() => setIsCountryFilterOpen(!isCountryFilterOpen)}
+                  className="flex items-center gap-2 px-4 h-[44px] rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white hover:border-neutral-400 dark:hover:border-neutral-600 transition-colors text-sm font-medium whitespace-nowrap"
+                >
+                  Country
+                  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+              )}
+
+              {/* Country Dropdown */}
+              <AnimatePresence>
+                {isCountryFilterOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                    className="absolute top-full mt-2 left-0 z-50 bg-white dark:bg-neutral-900 rounded-lg shadow-xl border border-neutral-200 dark:border-neutral-800 p-4 min-w-[300px]"
+                  >
+                    {/* Top Bar: Clear, Search, Apply */}
+                    <div className="flex items-center justify-between gap-3 mb-4">
+                      {/* Clear Button - Left */}
+                      <button
+                        onClick={() => {
+                          setTempCountryFilter(null)
+                        }}
+                        disabled={!tempCountryFilter}
+                        className={`p-2 rounded-lg transition-colors flex-shrink-0 ${
+                          tempCountryFilter
+                            ? 'bg-neutral-200 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-300 dark:hover:bg-neutral-600 cursor-pointer'
+                            : 'text-neutral-400 dark:text-neutral-600 cursor-not-allowed opacity-50'
+                        }`}
+                        aria-label="Clear selection"
+                      >
+                        <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
+
+                      {/* Search Input - Center */}
+                      <div className="relative flex-grow">
+                        <input
+                          type="text"
+                          value={countrySearchQuery}
+                          onChange={(e) => setCountrySearchQuery(e.target.value)}
+                          placeholder="Search countries..."
+                          className="w-full px-3 py-2 pl-9 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white text-sm placeholder-neutral-500 focus:outline-none focus:border-neutral-400 dark:focus:border-neutral-600"
+                        />
+                        <svg className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                      </div>
+
+                      {/* Apply Button - Right */}
+                      <button
+                        onClick={() => {
+                          setAppliedCountryFilter(tempCountryFilter)
+                          setIsCountryFilterOpen(false)
+                        }}
+                        disabled={!tempCountryFilter}
+                        className={`p-2 rounded-lg transition-colors flex-shrink-0 ${
+                          tempCountryFilter
+                            ? 'bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 hover:bg-neutral-700 dark:hover:bg-neutral-200 cursor-pointer'
+                            : 'bg-neutral-200 dark:bg-neutral-800 text-neutral-400 dark:text-neutral-600 cursor-not-allowed opacity-50'
+                        }`}
+                        aria-label="Apply filter"
+                      >
+                        <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                      </button>
+                    </div>
+
+                    {/* Country List - Scrollable */}
+                    <div className="max-h-[300px] overflow-y-auto scrollbar-hide">
+                      {availableCountries
+                        .filter(country =>
+                          country.toLowerCase().includes(countrySearchQuery.toLowerCase())
+                        )
+                        .map((country) => {
+                          const isSelected = tempCountryFilter === country
+                          return (
+                            <button
+                              key={country}
+                              onClick={() => {
+                                // Toggle: if already selected, deselect
+                                setTempCountryFilter(isSelected ? null : country)
+                              }}
+                              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-colors ${
+                                isSelected
+                                  ? 'bg-neutral-900 dark:bg-white text-white dark:text-neutral-900'
+                                  : 'text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800'
+                              }`}
+                            >
+                              <span className="text-lg">{getCountryFlag(country)}</span>
+                              <span className="text-sm font-medium">{country}</span>
+                            </button>
+                          )
+                        })}
+                      {availableCountries.filter(country =>
+                        country.toLowerCase().includes(countrySearchQuery.toLowerCase())
+                      ).length === 0 && (
+                        <p className="text-center py-4 text-neutral-500 dark:text-neutral-400 text-sm">
+                          No countries found
+                        </p>
+                      )}
+                    </div>
                   </motion.div>
                 )}
               </AnimatePresence>
