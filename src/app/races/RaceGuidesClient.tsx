@@ -68,10 +68,10 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
     'India', 'Indonesia', 'Ireland', 'Israel', 'Italy', 'Japan', 'Kenya',
     'Luxembourg', 'Malaysia', 'Mexico', 'Monaco', 'Morocco', 'Netherlands',
     'New Zealand', 'Norway', 'Peru', 'Philippines', 'Poland', 'Portugal',
-    'Qatar', 'Russia', 'Saudi Arabia', 'Scotland', 'Singapore', 'South Africa',
+    'Qatar', 'Russia', 'Saudi Arabia', 'Singapore', 'South Africa',
     'South Korea', 'Spain', 'Sweden', 'Switzerland', 'Taiwan', 'Thailand',
     'Turkey', 'Ukraine', 'United Arab Emirates', 'United Kingdom', 'United States',
-    'Vietnam', 'Wales'
+    'Vietnam'
   ]
 
   // Country code mapping for flags (ISO 3166-1 alpha-2)
