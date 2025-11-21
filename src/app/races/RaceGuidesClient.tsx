@@ -104,60 +104,75 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
     'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'
   ]
 
-  // US State flag emojis mapping
-  const stateFlagEmojis: Record<string, string> = {
-    'Alabama': '🏴',
-    'Alaska': '🏴',
-    'Arizona': '🏴',
-    'Arkansas': '🏴',
-    'California': '🏴',
-    'Colorado': '🏴',
-    'Connecticut': '🏴',
-    'Delaware': '🏴',
-    'Florida': '🏴',
-    'Georgia': '🏴',
-    'Hawaii': '🏴',
-    'Idaho': '🏴',
-    'Illinois': '🏴',
-    'Indiana': '🏴',
-    'Iowa': '🏴',
-    'Kansas': '🏴',
-    'Kentucky': '🏴',
-    'Louisiana': '🏴',
-    'Maine': '🏴',
-    'Maryland': '🏴',
-    'Massachusetts': '🏴',
-    'Michigan': '🏴',
-    'Minnesota': '🏴',
-    'Mississippi': '🏴',
-    'Missouri': '🏴',
-    'Montana': '🏴',
-    'Nebraska': '🏴',
-    'Nevada': '🏴',
-    'New Hampshire': '🏴',
-    'New Jersey': '🏴',
-    'New Mexico': '🏴',
-    'New York': '🏴',
-    'North Carolina': '🏴',
-    'North Dakota': '🏴',
-    'Ohio': '🏴',
-    'Oklahoma': '🏴',
-    'Oregon': '🏴',
-    'Pennsylvania': '🏴',
-    'Rhode Island': '🏴',
-    'South Carolina': '🏴',
-    'South Dakota': '🏴',
-    'Tennessee': '🏴',
-    'Texas': '🏴',
-    'Utah': '🏴',
-    'Vermont': '🏴',
-    'Virginia': '🏴',
-    'Washington': '🏴',
-    'West Virginia': '🏴',
-    'Wisconsin': '🏴',
-    'Wyoming': '🏴',
-    'District of Columbia': '🏴',
-    'Puerto Rico': '🏴',
+  // US State abbreviation mapping
+  const stateToAbbreviation: Record<string, string> = {
+    'Alabama': 'AL',
+    'Alaska': 'AK',
+    'Arizona': 'AZ',
+    'Arkansas': 'AR',
+    'California': 'CA',
+    'Colorado': 'CO',
+    'Connecticut': 'CT',
+    'Delaware': 'DE',
+    'Florida': 'FL',
+    'Georgia': 'GA',
+    'Hawaii': 'HI',
+    'Idaho': 'ID',
+    'Illinois': 'IL',
+    'Indiana': 'IN',
+    'Iowa': 'IA',
+    'Kansas': 'KS',
+    'Kentucky': 'KY',
+    'Louisiana': 'LA',
+    'Maine': 'ME',
+    'Maryland': 'MD',
+    'Massachusetts': 'MA',
+    'Michigan': 'MI',
+    'Minnesota': 'MN',
+    'Mississippi': 'MS',
+    'Missouri': 'MO',
+    'Montana': 'MT',
+    'Nebraska': 'NE',
+    'Nevada': 'NV',
+    'New Hampshire': 'NH',
+    'New Jersey': 'NJ',
+    'New Mexico': 'NM',
+    'New York': 'NY',
+    'North Carolina': 'NC',
+    'North Dakota': 'ND',
+    'Ohio': 'OH',
+    'Oklahoma': 'OK',
+    'Oregon': 'OR',
+    'Pennsylvania': 'PA',
+    'Rhode Island': 'RI',
+    'South Carolina': 'SC',
+    'South Dakota': 'SD',
+    'Tennessee': 'TN',
+    'Texas': 'TX',
+    'Utah': 'UT',
+    'Vermont': 'VT',
+    'Virginia': 'VA',
+    'Washington': 'WA',
+    'West Virginia': 'WV',
+    'Wisconsin': 'WI',
+    'Wyoming': 'WY',
+    'District of Columbia': 'DC',
+    'Puerto Rico': 'PR',
+  }
+
+  // Helper function to get state flag component
+  const getStateFlag = (stateName: string) => {
+    const abbr = stateToAbbreviation[stateName]
+    if (!abbr) return null
+
+    // Dynamically import the flag component using require
+    try {
+      // @ts-ignore
+      const FlagComponent = require(`us-state-flags/src/components/flags/Flag${abbr}.js`).default
+      return <FlagComponent width={24} height={16} style={{ borderRadius: '2px' }} />
+    } catch {
+      return null
+    }
   }
 
   // All countries list (sorted alphabetically)
@@ -1648,7 +1663,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                     onClick={() => setIsStateFilterOpen(!isStateFilterOpen)}
                     className="flex items-center gap-2 hover:text-neutral-600 dark:hover:text-neutral-400 transition-colors"
                   >
-                    <span className="text-lg">{stateFlagEmojis[appliedStateFilter]}</span>
+                    {getStateFlag(appliedStateFilter)}
                     <span>{appliedStateFilter}</span>
                   </button>
                   <button
@@ -1763,7 +1778,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                   : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700'
                               }`}
                             >
-                              <span className="text-lg flex-shrink-0">{stateFlagEmojis[state]}</span>
+                              <span className="flex-shrink-0">{getStateFlag(state)}</span>
                               <span className="text-base font-medium">
                                 {state} <span className="text-neutral-500 dark:text-neutral-400">• United States</span>
                               </span>
