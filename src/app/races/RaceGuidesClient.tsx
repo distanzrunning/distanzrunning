@@ -2134,7 +2134,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                   return (
                                     <svg width="60" height="25" viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg" className="mx-auto">
                                       <path d="M10 55 Q 30 15 50 55 T 90 55 Q 110 15 130 55"
-                                            stroke={strokeColor} strokeWidth="6" fill="none" strokeLinecap="round"/>
+                                            stroke={strokeColor} strokeWidth="12" fill="none" strokeLinecap="round"/>
                                     </svg>
                                   )
                                 default:
