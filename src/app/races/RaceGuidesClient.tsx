@@ -1936,7 +1936,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                               }`}
                             >
                               <span className="text-base font-medium">
-                                {city} <span className="text-neutral-500 dark:text-neutral-400">• {country}</span>
+                                {city} <span className="text-sm text-neutral-500 dark:text-neutral-400">• {country}</span>
                               </span>
                             </button>
                           )
@@ -2078,7 +2078,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                               }`}
                             >
                               <span className="text-base font-medium">
-                                {state} <span className="text-neutral-500 dark:text-neutral-400">• United States</span>
+                                {state} <span className="text-sm text-neutral-500 dark:text-neutral-400">• United States</span>
                               </span>
                             </button>
                           )
