@@ -3663,13 +3663,15 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
 
                         {/* Frosted Glass Overlay on Hover */}
                         <div className="absolute inset-0 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                          <div className="flex flex-row gap-4 px-6 flex-wrap justify-center">
+                          <div className="flex flex-row gap-6 px-6 flex-wrap justify-center">
                             {/* Surface Pill */}
                             {race.surface && (
-                              <div className="px-4 py-2.5 bg-neutral-800/80 dark:bg-neutral-700/80 backdrop-blur-sm rounded-full flex flex-col items-center gap-0.5">
-                                <p className="font-body text-[10px] font-medium text-white/80">
-                                  Terrain
-                                </p>
+                              <div className="flex flex-col items-center gap-2">
+                                <div className="px-4 py-2 bg-neutral-800/80 dark:bg-neutral-700/80 backdrop-blur-sm rounded-full">
+                                  <p className="font-body text-[10px] font-medium text-white/80">
+                                    Terrain
+                                  </p>
+                                </div>
                                 <p className="font-body text-base font-bold text-white">
                                   {race.surface}
                                 </p>
@@ -3681,10 +3683,12 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
 
                             {/* Price Pill */}
                             {race.price !== undefined && race.price !== null && (
-                              <div className="px-4 py-2.5 bg-neutral-800/80 dark:bg-neutral-700/80 backdrop-blur-sm rounded-full flex flex-col items-center gap-0.5">
-                                <p className="font-body text-[10px] font-medium text-white/80">
-                                  Price
-                                </p>
+                              <div className="flex flex-col items-center gap-2">
+                                <div className="px-4 py-2 bg-neutral-800/80 dark:bg-neutral-700/80 backdrop-blur-sm rounded-full">
+                                  <p className="font-body text-[10px] font-medium text-white/80">
+                                    Price
+                                  </p>
+                                </div>
                                 <p className="font-body text-base font-bold text-white">
                                   {formatPrice(convertCurrencySync(race.price, race.currency || 'USD', 'USD'), 'USD').replace('$', '€')}
                                 </p>
@@ -3696,10 +3700,12 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
 
                             {/* Elevation Pill */}
                             {race.elevationGain !== undefined && race.elevationGain !== null && (
-                              <div className="px-4 py-2.5 bg-neutral-800/80 dark:bg-neutral-700/80 backdrop-blur-sm rounded-full flex flex-col items-center gap-0.5">
-                                <p className="font-body text-[10px] font-medium text-white/80">
-                                  Elevation
-                                </p>
+                              <div className="flex flex-col items-center gap-2">
+                                <div className="px-4 py-2 bg-neutral-800/80 dark:bg-neutral-700/80 backdrop-blur-sm rounded-full">
+                                  <p className="font-body text-[10px] font-medium text-white/80">
+                                    Elevation
+                                  </p>
+                                </div>
                                 <p className="font-body text-base font-bold text-white">
                                   Flat
                                 </p>
