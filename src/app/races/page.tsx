@@ -17,7 +17,7 @@ export type RaceGuide = {
   surface?: string
   elevationGain?: number
   averageTemperature?: number
-  worldAthleticsLabel?: string
+  tags?: string[]
 }
 
 export const revalidate = 60 // Incremental Static Regeneration - refresh every 60s
@@ -37,7 +37,7 @@ export default async function RaceGuidesPage() {
       surface,
       elevationGain,
       averageTemperature,
-      worldAthleticsLabel,
+      tags,
       "raceCategoryName": raceCategory->title
     }
   `)

@@ -114,11 +114,11 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
   const [minTemperatureInputValue, setMinTemperatureInputValue] = useState('')
   const [maxTemperatureInputValue, setMaxTemperatureInputValue] = useState('')
 
-  // World Athletics Label filter states
-  const [isLabelFilterOpen, setIsLabelFilterOpen] = useState(false)
-  const [appliedLabelFilter, setAppliedLabelFilter] = useState<string | null>(null)
-  const [tempLabelFilter, setTempLabelFilter] = useState<string | null>(null)
-  const labelFilterRef = useRef<HTMLDivElement>(null)
+  // Tags filter states
+  const [isTagsFilterOpen, setIsTagsFilterOpen] = useState(false)
+  const [appliedTagsFilter, setAppliedTagsFilter] = useState<string>('')
+  const [tempTagsFilter, setTempTagsFilter] = useState<string>('')
+  const tagsFilterRef = useRef<HTMLDivElement>(null)
 
   // Loading state for filtering
   const [isFiltering, setIsFiltering] = useState(false)
@@ -176,15 +176,6 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
     { id: 'very-hot', label: 'Very Hot', minC: 32, maxC: 45, fillPercent: 100, color: '#EF4444' }
   ]
 
-  // World Athletics Label options
-  const worldAthleticsLabelOptions = [
-    'Platinum',
-    'Gold',
-    'Silver',
-    'Bronze',
-    'Elite',
-    'World Athletics Certified Course'
-  ]
 
   // All countries list (sorted alphabetically)
   const allCountries = [
@@ -472,29 +463,29 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
     }
   }, [isTemperatureFilterOpen, appliedTemperatureFilter, appliedCustomTemperatureRange])
 
-  // Click outside to close label filter dropdown
+  // Click outside to close tags filter dropdown
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (labelFilterRef.current && !labelFilterRef.current.contains(event.target as Node)) {
-        setIsLabelFilterOpen(false)
+      if (tagsFilterRef.current && !tagsFilterRef.current.contains(event.target as Node)) {
+        setIsTagsFilterOpen(false)
       }
     }
 
-    if (isLabelFilterOpen) {
+    if (isTagsFilterOpen) {
       document.addEventListener('mousedown', handleClickOutside)
     }
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
-  }, [isLabelFilterOpen])
+  }, [isTagsFilterOpen])
 
-  // Initialize label filter temp state when dropdown opens
+  // Initialize tags filter temp state when dropdown opens
   useEffect(() => {
-    if (isLabelFilterOpen) {
-      setTempLabelFilter(appliedLabelFilter)
+    if (isTagsFilterOpen) {
+      setTempTagsFilter(appliedTagsFilter)
     }
-  }, [isLabelFilterOpen, appliedLabelFilter])
+  }, [isTagsFilterOpen, appliedTagsFilter])
 
   // Helper: Convert km to miles
   const kmToMiles = (km: number) => km * 0.621371
@@ -760,13 +751,17 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
       }
     }
 
-    // Apply World Athletics Label filter
-    if (appliedLabelFilter) {
-      filtered = filtered.filter((race) => race.worldAthleticsLabel === appliedLabelFilter)
+    // Apply Tags filter
+    if (appliedTagsFilter) {
+      filtered = filtered.filter((race) => {
+        if (!race.tags || race.tags.length === 0) return false
+        // Check if any tag includes the search term (case-insensitive)
+        return race.tags.some(tag => tag.toLowerCase().includes(appliedTagsFilter.toLowerCase()))
+      })
     }
 
     return filtered
-  }, [races, searchQuery, appliedDateRange, appliedDistanceFilter, appliedCustomRange, appliedCountryFilter, appliedCityFilter, appliedStateFilter, appliedSurfaceFilter, appliedElevationFilter, appliedCustomElevationRange, appliedTemperatureFilter, appliedCustomTemperatureRange, appliedLabelFilter])
+  }, [races, searchQuery, appliedDateRange, appliedDistanceFilter, appliedCustomRange, appliedCountryFilter, appliedCityFilter, appliedStateFilter, appliedSurfaceFilter, appliedElevationFilter, appliedCustomElevationRange, appliedTemperatureFilter, appliedCustomTemperatureRange, appliedTagsFilter])
 
   return (
     <div className="py-12 bg-white dark:bg-[#0c0c0d] min-h-screen transition-colors duration-300">
@@ -3072,25 +3067,25 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
               </AnimatePresence>
             </div>
 
-            {/* World Athletics Label Filter */}
-            <div className="relative" ref={labelFilterRef}>
-              {appliedLabelFilter ? (
+            {/* Tags Filter */}
+            <div className="relative" ref={tagsFilterRef}>
+              {appliedTagsFilter ? (
                 // Filter is active - show filter value with X button
                 <div className="flex items-center gap-2 px-4 h-[44px] rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white text-sm font-medium">
                   <button
-                    onClick={() => setIsLabelFilterOpen(!isLabelFilterOpen)}
+                    onClick={() => setIsTagsFilterOpen(!isTagsFilterOpen)}
                     className="flex items-center gap-2 hover:text-neutral-600 dark:hover:text-neutral-400 transition-colors"
                   >
-                    <span>{appliedLabelFilter}</span>
+                    <span>{appliedTagsFilter}</span>
                   </button>
                   <button
                     onClick={(e) => {
                       e.stopPropagation()
-                      setAppliedLabelFilter(null)
-                      setTempLabelFilter(null)
+                      setAppliedTagsFilter('')
+                      setTempTagsFilter('')
                     }}
                     className="text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300 transition-colors"
-                    aria-label="Clear label filter"
+                    aria-label="Clear tags filter"
                   >
                     <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -3100,36 +3095,36 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
               ) : (
                 // No filter - show default button
                 <button
-                  onClick={() => setIsLabelFilterOpen(!isLabelFilterOpen)}
+                  onClick={() => setIsTagsFilterOpen(!isTagsFilterOpen)}
                   className="flex items-center gap-2 px-4 h-[44px] rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white hover:border-neutral-400 dark:hover:border-neutral-600 transition-colors text-sm font-medium whitespace-nowrap"
                 >
-                  WA Label
+                  Tags
                   <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
                 </button>
               )}
 
-              {/* Label Dropdown */}
+              {/* Tags Dropdown */}
               <AnimatePresence>
-                {isLabelFilterOpen && (
+                {isTagsFilterOpen && (
                   <motion.div
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
                     transition={{ duration: 0.2 }}
-                    className="absolute top-full mt-2 left-0 z-50 bg-white dark:bg-neutral-900 rounded-lg shadow-xl border border-neutral-200 dark:border-neutral-800 p-4 min-w-[600px]"
+                    className="absolute top-full mt-2 left-0 z-50 bg-white dark:bg-neutral-900 rounded-lg shadow-xl border border-neutral-200 dark:border-neutral-800 p-4 min-w-[300px]"
                   >
                     {/* Top Bar: Clear and Apply */}
                     <div className="flex items-center justify-between gap-4 mb-4">
                       {/* Clear Button - Left */}
                       <button
                         onClick={() => {
-                          setTempLabelFilter(null)
+                          setTempTagsFilter('')
                         }}
-                        disabled={!tempLabelFilter}
+                        disabled={!tempTagsFilter}
                         className={`p-2 rounded-lg transition-colors flex-shrink-0 ${
-                          tempLabelFilter
+                          tempTagsFilter
                             ? 'bg-neutral-200 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-300 dark:hover:bg-neutral-600 cursor-pointer'
                             : 'text-neutral-400 dark:text-neutral-600 cursor-not-allowed opacity-50'
                         }`}
@@ -3143,12 +3138,12 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                       {/* Apply Button - Right */}
                       <button
                         onClick={() => {
-                          setAppliedLabelFilter(tempLabelFilter)
-                          setIsLabelFilterOpen(false)
+                          setAppliedTagsFilter(tempTagsFilter)
+                          setIsTagsFilterOpen(false)
                         }}
-                        disabled={!tempLabelFilter}
+                        disabled={!tempTagsFilter}
                         className={`p-2 rounded-lg transition-colors flex-shrink-0 ${
-                          tempLabelFilter
+                          tempTagsFilter
                             ? 'bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 hover:bg-neutral-700 dark:hover:bg-neutral-200 cursor-pointer'
                             : 'bg-neutral-200 dark:bg-neutral-800 text-neutral-400 dark:text-neutral-600 cursor-not-allowed opacity-50'
                         }`}
@@ -3160,27 +3155,15 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                       </button>
                     </div>
 
-                    {/* Label List */}
-                    <div className="grid grid-cols-3 gap-3 mb-4">
-                      {worldAthleticsLabelOptions.map((label) => {
-                        const isSelected = tempLabelFilter === label
-
-                        return (
-                          <button
-                            key={label}
-                            onClick={() => {
-                              // Toggle: if already selected, deselect
-                              setTempLabelFilter(isSelected ? null : label)
-                            }}
-                            className={`
-                              py-4 px-4 rounded-lg text-base font-medium transition-colors flex flex-col items-center gap-1
-                              ${isSelected ? 'bg-neutral-900 dark:bg-white text-white dark:text-neutral-900' : 'bg-neutral-200 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-400 hover:bg-neutral-300 dark:hover:bg-neutral-700 hover:text-neutral-900 dark:hover:text-white'}
-                            `}
-                          >
-                            <span className="text-center">{label}</span>
-                          </button>
-                        )
-                      })}
+                    {/* Search Input */}
+                    <div className="mb-4">
+                      <input
+                        type="text"
+                        value={tempTagsFilter}
+                        onChange={(e) => setTempTagsFilter(e.target.value)}
+                        placeholder="Search tags..."
+                        className="w-full px-4 py-3 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-600 text-base"
+                      />
                     </div>
                   </motion.div>
                 )}
