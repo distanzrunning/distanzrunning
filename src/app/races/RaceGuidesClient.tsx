@@ -2144,15 +2144,8 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                     transition={{ duration: 0.2 }}
                     className="absolute top-full mt-2 left-0 z-50 bg-white dark:bg-neutral-900 rounded-lg shadow-xl border border-neutral-200 dark:border-neutral-800 p-4 min-w-[600px]"
                   >
-                    {/* Single Tab */}
-                    <div className="flex gap-2 mb-4">
-                      <button className="px-6 py-2 rounded-lg bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 text-sm font-medium cursor-default">
-                        Surface
-                      </button>
-                    </div>
-
-                    {/* Top Bar: Clear and Apply */}
-                    <div className="flex items-center justify-between gap-4 mb-4">
+                    {/* Top Bar: Action Buttons and Tab */}
+                    <div className="flex items-center justify-between mb-6">
                       {/* Clear Button - Left */}
                       <button
                         onClick={() => {
@@ -2170,6 +2163,13 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                         </svg>
                       </button>
+
+                      {/* Tab - Center */}
+                      <div className="inline-flex bg-neutral-200 dark:bg-neutral-800 rounded-lg p-1 relative z-10">
+                        <button className="px-6 py-2.5 rounded-md text-base font-medium bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 cursor-default">
+                          Surface
+                        </button>
+                      </div>
 
                       {/* Apply Button - Right */}
                       <button
@@ -3207,15 +3207,8 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                     transition={{ duration: 0.2 }}
                     className="absolute top-full mt-2 left-0 z-50 bg-white dark:bg-neutral-900 rounded-lg shadow-xl border border-neutral-200 dark:border-neutral-800 p-4 min-w-[600px]"
                   >
-                    {/* Single Tab */}
-                    <div className="flex gap-2 mb-4">
-                      <button className="px-6 py-2 rounded-lg bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 text-sm font-medium cursor-default">
-                        Price
-                      </button>
-                    </div>
-
-                    {/* Top Bar: Clear and Apply */}
-                    <div className="flex items-center justify-between gap-4 mb-4">
+                    {/* Top Bar: Action Buttons and Tab */}
+                    <div className="flex items-center justify-between mb-6">
                       {/* Clear Button - Left */}
                       <button
                         onClick={() => {
@@ -3233,6 +3226,13 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                         </svg>
                       </button>
+
+                      {/* Tab - Center */}
+                      <div className="inline-flex bg-neutral-200 dark:bg-neutral-800 rounded-lg p-1 relative z-10">
+                        <button className="px-6 py-2.5 rounded-md text-base font-medium bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 cursor-default">
+                          Price
+                        </button>
+                      </div>
 
                       {/* Apply Button - Right */}
                       <button
@@ -3499,15 +3499,8 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                     transition={{ duration: 0.2 }}
                     className="absolute top-full mt-2 left-0 z-50 bg-white dark:bg-neutral-900 rounded-lg shadow-xl border border-neutral-200 dark:border-neutral-800 p-4 min-w-[600px]"
                   >
-                    {/* Single Tab */}
-                    <div className="flex gap-2 mb-4">
-                      <button className="px-6 py-2 rounded-lg bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 text-sm font-medium cursor-default">
-                        Tags
-                      </button>
-                    </div>
-
-                    {/* Top Bar: Clear and Apply */}
-                    <div className="flex items-center justify-between gap-4 mb-4">
+                    {/* Top Bar: Action Buttons and Tab */}
+                    <div className="flex items-center justify-between mb-6">
                       {/* Clear Button - Left */}
                       <button
                         onClick={() => {
@@ -3525,6 +3518,13 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                         </svg>
                       </button>
+
+                      {/* Tab - Center */}
+                      <div className="inline-flex bg-neutral-200 dark:bg-neutral-800 rounded-lg p-1 relative z-10">
+                        <button className="px-6 py-2.5 rounded-md text-base font-medium bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 cursor-default">
+                          Tags
+                        </button>
+                      </div>
 
                       {/* Apply Button - Right */}
                       <button
