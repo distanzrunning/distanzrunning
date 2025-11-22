@@ -3669,7 +3669,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                               <div className="flex flex-col items-center gap-2">
                                 <div className="w-20 px-3 py-1.5 bg-white/95 dark:bg-neutral-900/95 backdrop-blur-sm rounded-full flex items-center justify-center">
                                   <p className="font-body text-xs font-medium text-neutral-900 dark:text-white">
-                                    Terrain
+                                    Surface
                                   </p>
                                 </div>
                                 <p className="font-body text-base font-bold text-white">
