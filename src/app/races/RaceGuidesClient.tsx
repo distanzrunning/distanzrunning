@@ -2761,6 +2761,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                               <div className="flex items-center justify-center bg-neutral-100 dark:bg-neutral-800 rounded-lg px-3 py-2 w-[80px]">
                                 {isMinTemperatureInputFocused ? (
                                   <div className="flex items-center justify-center gap-0 w-full">
+                                    <span className="text-sm font-medium text-neutral-600 dark:text-neutral-400">&lt;</span>
                                     <input
                                       type="number"
                                       value={minTemperatureInputValue}
@@ -2800,9 +2801,17 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                     onClick={() => setIsMinTemperatureInputFocused(true)}
                                     className="flex items-center justify-center gap-0 w-full text-sm font-medium text-neutral-900 dark:text-white hover:text-neutral-600 dark:hover:text-neutral-300 transition-colors"
                                   >
-                                    {temperatureUnit === 'c'
-                                      ? `${Math.round(tempCustomTemperatureRange.min)}°C`
-                                      : `${Math.round(celsiusToFahrenheit(tempCustomTemperatureRange.min))}°F`}
+                                    {(() => {
+                                      const minValue = temperatureUnit === 'c' ? 0 : 32
+                                      const displayMin = temperatureUnit === 'c'
+                                        ? tempCustomTemperatureRange.min
+                                        : celsiusToFahrenheit(tempCustomTemperatureRange.min)
+
+                                      if (displayMin <= minValue) {
+                                        return `<${Math.round(minValue)}°${temperatureUnit.toUpperCase()}`
+                                      }
+                                      return `${Math.round(displayMin)}°${temperatureUnit.toUpperCase()}`
+                                    })()}
                                   </button>
                                 )}
                               </div>
@@ -2893,8 +2902,9 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                               valueLabelDisplay="off"
                               disableSwap={false}
                               marks={[
-                                { value: temperatureUnit === 'c' ? 12 : 53, label: '' },
-                                { value: temperatureUnit === 'c' ? 23 : 74, label: '' },
+                                { value: temperatureUnit === 'c' ? 9 : 48, label: '' },
+                                { value: temperatureUnit === 'c' ? 18 : 64, label: '' },
+                                { value: temperatureUnit === 'c' ? 27 : 81, label: '' },
                               ]}
                               sx={{
                                 color: '#1A1A1A',
@@ -2940,8 +2950,9 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                             {temperatureUnit === 'c' ? (
                               <>
                                 {[
-                                  { valueC: 12, label: '12°C' },
-                                  { valueC: 23, label: '23°C' }
+                                  { valueC: 9, label: '9°C' },
+                                  { valueC: 18, label: '18°C' },
+                                  { valueC: 27, label: '27°C' }
                                 ].map((marker, index) => {
                                   const maxValue = 35
                                   const position = (marker.valueC / maxValue) * 100
@@ -2963,8 +2974,9 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                             ) : (
                               <>
                                 {[
-                                  { valueF: 53, label: '53°F' },
-                                  { valueF: 74, label: '74°F' }
+                                  { valueF: 48, label: '48°F' },
+                                  { valueF: 64, label: '64°F' },
+                                  { valueF: 81, label: '81°F' }
                                 ].map((marker, index) => {
                                   const maxValue = 95
                                   const minValue = 32
