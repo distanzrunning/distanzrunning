@@ -3707,7 +3707,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                   </p>
                                 </div>
                                 <p className="font-body text-base font-bold text-white">
-                                  Flat
+                                  {race.profile ? race.profile.charAt(0).toUpperCase() + race.profile.slice(1) : 'N/A'}
                                 </p>
                                 <p className="font-body text-xs font-normal text-white">
                                   {Math.round(race.elevationGain * 3.28084).toLocaleString()}ft
