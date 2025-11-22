@@ -164,7 +164,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
   const temperatureCategories = [
     { id: 'very-cold', label: 'Very Cold', minC: -10, maxC: 0, fillPercent: 15, color: '#3B82F6' },
     { id: 'cold', label: 'Cold', minC: 0, maxC: 10, fillPercent: 35, color: '#60A5FA' },
-    { id: 'mild', label: 'Mild', minC: 10, maxC: 18, fillPercent: 50, color: '#D4D4D8' },
+    { id: 'mild', label: 'Mild', minC: 10, maxC: 18, fillPercent: 50, color: '#FEF3C7' },
     { id: 'warm', label: 'Warm', minC: 18, maxC: 25, fillPercent: 65, color: '#FCD34D' },
     { id: 'hot', label: 'Hot', minC: 25, maxC: 32, fillPercent: 85, color: '#FB923C' },
     { id: 'very-hot', label: 'Very Hot', minC: 32, maxC: 45, fillPercent: 100, color: '#EF4444' }
