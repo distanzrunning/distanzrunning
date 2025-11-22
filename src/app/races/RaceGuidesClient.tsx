@@ -3342,6 +3342,31 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                               const [min, max] = newValue as number[]
                               setTempPriceRange({ min, max })
                             }}
+                            onChangeCommitted={(_, newValue) => {
+                              const [min, max] = newValue as number[]
+                              const snapThreshold = 15
+                              const marks = [0, 125, 250, 375, 500]
+
+                              // Snap min to nearest mark if within threshold
+                              let snappedMin = min
+                              for (const mark of marks) {
+                                if (Math.abs(min - mark) <= snapThreshold) {
+                                  snappedMin = mark
+                                  break
+                                }
+                              }
+
+                              // Snap max to nearest mark if within threshold
+                              let snappedMax = max
+                              for (const mark of marks) {
+                                if (Math.abs(max - mark) <= snapThreshold) {
+                                  snappedMax = mark
+                                  break
+                                }
+                              }
+
+                              setTempPriceRange({ min: snappedMin, max: snappedMax })
+                            }}
                             min={0}
                             max={500}
                             step={10}
@@ -3559,7 +3584,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                               setTempTagsFilter(isSelected ? '' : tag)
                             }}
                             className={`
-                              py-4 px-4 rounded-lg text-base font-medium transition-colors flex flex-col items-center justify-center
+                              h-[84px] px-4 rounded-lg text-base font-medium transition-colors flex flex-col items-center justify-center
                               ${isSelected ? 'bg-neutral-900 dark:bg-white text-white dark:text-neutral-900' : 'bg-neutral-200 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-400 hover:bg-neutral-300 dark:hover:bg-neutral-700 hover:text-neutral-900 dark:hover:text-white'}
                             `}
                           >
