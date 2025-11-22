@@ -3180,11 +3180,11 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                               setTempTagsFilter(isSelected ? '' : tag)
                             }}
                             className={`
-                              py-4 px-4 rounded-lg text-base font-medium transition-colors flex flex-col items-center gap-1
+                              h-[84px] px-4 rounded-lg text-base font-medium transition-colors flex items-center justify-center
                               ${isSelected ? 'bg-neutral-900 dark:bg-white text-white dark:text-neutral-900' : 'bg-neutral-200 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-400 hover:bg-neutral-300 dark:hover:bg-neutral-700 hover:text-neutral-900 dark:hover:text-white'}
                             `}
                           >
-                            <span className="text-center">{tag}</span>
+                            <span className="text-center leading-snug">{tag}</span>
                           </button>
                         )
                       })}
