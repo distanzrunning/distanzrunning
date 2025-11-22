@@ -861,8 +861,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
           </p>
 
           {/* Search and Filters Row */}
-          <div className="overflow-x-auto scrollbar-hide -mx-2 px-2">
-            <div className="flex items-center gap-3 py-2">
+          <div className="flex items-center gap-3 py-2">
             {/* Search Bar */}
             <div className="relative flex-shrink-0">
               <AnimatePresence mode="wait" initial={false}>
@@ -3598,7 +3597,6 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                 )}
               </AnimatePresence>
             </div>
-          </div>
           </div>
         </div>
 
