@@ -2144,6 +2144,13 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                     transition={{ duration: 0.2 }}
                     className="absolute top-full mt-2 left-0 z-50 bg-white dark:bg-neutral-900 rounded-lg shadow-xl border border-neutral-200 dark:border-neutral-800 p-4 min-w-[600px]"
                   >
+                    {/* Single Tab */}
+                    <div className="flex gap-2 mb-4">
+                      <button className="px-6 py-2 rounded-lg bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 text-sm font-medium cursor-default">
+                        Surface
+                      </button>
+                    </div>
+
                     {/* Top Bar: Clear and Apply */}
                     <div className="flex items-center justify-between gap-4 mb-4">
                       {/* Clear Button - Left */}
@@ -3200,6 +3207,13 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                     transition={{ duration: 0.2 }}
                     className="absolute top-full mt-2 left-0 z-50 bg-white dark:bg-neutral-900 rounded-lg shadow-xl border border-neutral-200 dark:border-neutral-800 p-4 min-w-[600px]"
                   >
+                    {/* Single Tab */}
+                    <div className="flex gap-2 mb-4">
+                      <button className="px-6 py-2 rounded-lg bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 text-sm font-medium cursor-default">
+                        Price
+                      </button>
+                    </div>
+
                     {/* Top Bar: Clear and Apply */}
                     <div className="flex items-center justify-between gap-4 mb-4">
                       {/* Clear Button - Left */}
@@ -3485,6 +3499,13 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                     transition={{ duration: 0.2 }}
                     className="absolute top-full mt-2 left-0 z-50 bg-white dark:bg-neutral-900 rounded-lg shadow-xl border border-neutral-200 dark:border-neutral-800 p-4 min-w-[600px]"
                   >
+                    {/* Single Tab */}
+                    <div className="flex gap-2 mb-4">
+                      <button className="px-6 py-2 rounded-lg bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 text-sm font-medium cursor-default">
+                        Tags
+                      </button>
+                    </div>
+
                     {/* Top Bar: Clear and Apply */}
                     <div className="flex items-center justify-between gap-4 mb-4">
                       {/* Clear Button - Left */}
