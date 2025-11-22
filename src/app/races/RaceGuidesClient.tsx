@@ -3200,62 +3200,128 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                     transition={{ duration: 0.2 }}
                     className="absolute top-full mt-2 left-0 z-50 bg-white dark:bg-neutral-900 rounded-lg shadow-xl border border-neutral-200 dark:border-neutral-800 p-4 min-w-[600px]"
                   >
-                    {/* Top Bar: Currency Selector, Clear and Apply */}
+                    {/* Top Bar: Clear and Apply */}
                     <div className="flex items-center justify-between gap-4 mb-4">
-                      {/* Currency Dropdown - Left */}
-                      <select
-                        value={tempSelectedCurrency}
-                        onChange={(e) => setTempSelectedCurrency(e.target.value)}
-                        className="px-4 py-2 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white text-sm font-medium focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-600"
+                      {/* Clear Button - Left */}
+                      <button
+                        onClick={() => {
+                          setTempPriceRange({ min: 0, max: 500 })
+                        }}
+                        disabled={tempPriceRange.min === 0 && tempPriceRange.max === 500}
+                        className={`p-2 rounded-lg transition-colors flex-shrink-0 ${
+                          tempPriceRange.min !== 0 || tempPriceRange.max !== 500
+                            ? 'bg-neutral-200 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-300 dark:hover:bg-neutral-600 cursor-pointer'
+                            : 'text-neutral-400 dark:text-neutral-600 cursor-not-allowed opacity-50'
+                        }`}
+                        aria-label="Clear selection"
                       >
-                        {currencyOptions.map((currency) => (
-                          <option key={currency.code} value={currency.code}>
-                            {currency.code}
-                          </option>
-                        ))}
-                      </select>
+                        <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
 
-                      {/* Right side: Clear and Apply buttons */}
-                      <div className="flex items-center gap-2">
-                        {/* Clear Button */}
-                        <button
-                          onClick={() => {
-                            setTempPriceRange({ min: 0, max: 500 })
-                          }}
-                          disabled={tempPriceRange.min === 0 && tempPriceRange.max === 500}
-                          className={`p-2 rounded-lg transition-colors flex-shrink-0 ${
-                            tempPriceRange.min !== 0 || tempPriceRange.max !== 500
-                              ? 'bg-neutral-200 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-300 dark:hover:bg-neutral-600 cursor-pointer'
-                              : 'text-neutral-400 dark:text-neutral-600 cursor-not-allowed opacity-50'
-                          }`}
-                          aria-label="Clear selection"
-                        >
-                          <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                          </svg>
-                        </button>
-
-                        {/* Apply Button */}
-                        <button
-                          onClick={() => {
-                            setAppliedPriceRange(tempPriceRange)
-                            setSelectedCurrency(tempSelectedCurrency)
-                            setIsPriceFilterOpen(false)
-                          }}
-                          className="p-2 rounded-lg transition-colors flex-shrink-0 bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 hover:bg-neutral-700 dark:hover:bg-neutral-200 cursor-pointer"
-                          aria-label="Apply filter"
-                        >
-                          <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                          </svg>
-                        </button>
-                      </div>
+                      {/* Apply Button - Right */}
+                      <button
+                        onClick={() => {
+                          setAppliedPriceRange(tempPriceRange)
+                          setSelectedCurrency(tempSelectedCurrency)
+                          setIsPriceFilterOpen(false)
+                        }}
+                        className="p-2 rounded-lg transition-colors flex-shrink-0 bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 hover:bg-neutral-700 dark:hover:bg-neutral-200 cursor-pointer"
+                        aria-label="Apply filter"
+                      >
+                        <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                      </button>
                     </div>
 
                     {/* Price Range Slider */}
                     <div className="mb-6">
-                      <div className="relative px-2">
-                        <Box sx={{ width: '100%' }}>
+                      {/* Min/Max Input Fields */}
+                      <div className="px-3 mb-6">
+                        <div className="flex items-center justify-between" style={{ paddingLeft: '12px', paddingRight: '12px' }}>
+                          {/* Min Value Box */}
+                          <div className="flex items-center justify-center bg-neutral-100 dark:bg-neutral-800 rounded-lg px-3 py-2 w-[80px]">
+                            {isMinPriceInputFocused ? (
+                              <div className="flex items-center justify-center gap-0 w-full">
+                                <input
+                                  type="number"
+                                  value={minPriceInputValue}
+                                  onChange={(e) => {
+                                    setMinPriceInputValue(e.target.value)
+                                    const value = Number(e.target.value)
+                                    if (!isNaN(value) && e.target.value !== '') {
+                                      setTempPriceRange({ ...tempPriceRange, min: Math.min(value, tempPriceRange.max) })
+                                    }
+                                  }}
+                                  onBlur={() => {
+                                    setIsMinPriceInputFocused(false)
+                                    setMinPriceInputValue('')
+                                  }}
+                                  autoFocus
+                                  className="flex-shrink-0 w-auto min-w-0 bg-transparent text-neutral-900 dark:text-white text-sm font-medium outline-none border-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none text-center"
+                                  style={{ width: `${Math.max(1, minPriceInputValue.length)}ch` }}
+                                  placeholder=""
+                                />
+                                {minPriceInputValue && (
+                                  <span className="text-neutral-900 dark:text-white text-sm font-medium flex-shrink-0">
+                                    {formatPrice(0, tempSelectedCurrency).replace(/[0-9]/g, '')}
+                                  </span>
+                                )}
+                              </div>
+                            ) : (
+                              <div className="inline-flex items-center gap-0 cursor-pointer" onClick={() => setIsMinPriceInputFocused(true)}>
+                                <span className="text-neutral-900 dark:text-white text-sm font-medium">
+                                  {formatPrice(tempPriceRange.min, tempSelectedCurrency)}
+                                </span>
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Max Value Box */}
+                          <div className="flex items-center justify-center bg-neutral-100 dark:bg-neutral-800 rounded-lg px-3 py-2 w-[80px]">
+                            {isMaxPriceInputFocused ? (
+                              <div className="flex items-center justify-center gap-0 w-full">
+                                <input
+                                  type="number"
+                                  value={maxPriceInputValue}
+                                  onChange={(e) => {
+                                    setMaxPriceInputValue(e.target.value)
+                                    const value = Number(e.target.value)
+                                    if (!isNaN(value) && e.target.value !== '') {
+                                      setTempPriceRange({ ...tempPriceRange, max: Math.max(value, tempPriceRange.min) })
+                                    }
+                                  }}
+                                  onBlur={() => {
+                                    setIsMaxPriceInputFocused(false)
+                                    setMaxPriceInputValue('')
+                                  }}
+                                  autoFocus
+                                  className="flex-shrink-0 w-auto min-w-0 bg-transparent text-neutral-900 dark:text-white text-sm font-medium outline-none border-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none text-center"
+                                  style={{ width: `${Math.max(1, maxPriceInputValue.length)}ch` }}
+                                  placeholder=""
+                                />
+                                {maxPriceInputValue && (
+                                  <span className="text-neutral-900 dark:text-white text-sm font-medium flex-shrink-0">
+                                    {formatPrice(0, tempSelectedCurrency).replace(/[0-9]/g, '')}
+                                  </span>
+                                )}
+                              </div>
+                            ) : (
+                              <div className="inline-flex items-center gap-0 cursor-pointer" onClick={() => setIsMaxPriceInputFocused(true)}>
+                                <span className="text-neutral-900 dark:text-white text-sm font-medium">
+                                  {tempPriceRange.max >= 500 ? `${formatPrice(500, tempSelectedCurrency)}+` : formatPrice(tempPriceRange.max, tempSelectedCurrency)}
+                                </span>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Slider Container */}
+                      <div className="px-3 mb-6">
+                        <Box sx={{ width: '100%', px: 1 }}>
                           <Slider
                             value={[tempPriceRange.min, tempPriceRange.max]}
                             onChange={(_, newValue) => {
@@ -3265,139 +3331,105 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                             min={0}
                             max={500}
                             step={10}
-                            disableSwap
+                            valueLabelDisplay="off"
+                            disableSwap={false}
+                            marks={[
+                              { value: 125, label: '' },
+                              { value: 250, label: '' },
+                              { value: 375, label: '' }
+                            ]}
                             sx={{
-                              color: '#171717',
-                              height: 6,
-                              padding: '13px 0',
-                              '& .MuiSlider-thumb': {
-                                height: 20,
-                                width: 20,
-                                backgroundColor: '#171717',
-                                border: '3px solid #fff',
-                                boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
-                                '&:hover, &.Mui-focusVisible': {
-                                  boxShadow: '0 0 0 6px rgba(23, 23, 23, 0.1)',
-                                },
+                              color: '#1A1A1A',
+                              height: 24,
+                              padding: 0,
+                              '& .MuiSlider-rail': {
+                                height: 24,
+                                borderRadius: 12,
+                                backgroundColor: '#404040',
+                                opacity: 1,
+                                left: 0,
+                                right: 0,
+                                width: '100%',
                               },
                               '& .MuiSlider-track': {
-                                height: 6,
+                                height: 24,
+                                borderRadius: 0,
+                                backgroundColor: '#E6E6E6',
                                 border: 'none',
-                                backgroundColor: '#171717',
                               },
-                              '& .MuiSlider-rail': {
-                                height: 6,
+                              '& .MuiSlider-thumb': {
+                                height: 24,
+                                width: 24,
+                                backgroundColor: '#FFFFFF',
+                                border: 'none',
+                                boxShadow: 'none',
+                                zIndex: 2,
+                                '&:hover, &.Mui-active': {
+                                  boxShadow: 'none',
+                                },
+                                '&.Mui-focusVisible': {
+                                  boxShadow: 'none',
+                                },
+                              },
+                              '& .MuiSlider-mark': {
+                                width: 20,
+                                height: 20,
+                                borderRadius: '50%',
+                                backgroundColor: 'transparent',
+                                border: '1px dashed #A3A3A3',
+                                top: '50%',
+                                transform: 'translate(-50%, -50%)',
                                 opacity: 1,
-                                backgroundColor: '#e5e5e5',
-                              },
-                              '.dark &': {
-                                color: '#fff',
-                                '& .MuiSlider-thumb': {
-                                  backgroundColor: '#fff',
-                                  border: '3px solid #171717',
-                                  '&:hover, &.Mui-focusVisible': {
-                                    boxShadow: '0 0 0 6px rgba(255, 255, 255, 0.1)',
-                                  },
-                                },
-                                '& .MuiSlider-track': {
-                                  backgroundColor: '#fff',
-                                },
-                                '& .MuiSlider-rail': {
-                                  backgroundColor: '#404040',
+                                zIndex: 3,
+                                pointerEvents: 'none',
+                                '&.MuiSlider-markActive': {
+                                  backgroundColor: 'transparent',
+                                  border: '1px dashed #A3A3A3',
                                 },
                               },
                             }}
                           />
                         </Box>
+
+                        {/* Price Labels Below Slider */}
+                        <div className="relative mt-1" style={{ paddingLeft: '12px', paddingRight: '12px' }}>
+                          {[
+                            { value: 125, label: formatPrice(125, tempSelectedCurrency) },
+                            { value: 250, label: formatPrice(250, tempSelectedCurrency) },
+                            { value: 375, label: formatPrice(375, tempSelectedCurrency) }
+                          ].map((marker, index) => {
+                            const totalRange = 500
+                            const position = (marker.value / totalRange) * 100
+
+                            return (
+                              <div
+                                key={index}
+                                className="absolute text-xs text-neutral-600 dark:text-neutral-400 font-medium"
+                                style={{
+                                  left: `${position}%`,
+                                  transform: 'translateX(-50%)',
+                                }}
+                              >
+                                {marker.label}
+                              </div>
+                            )
+                          })}
+                        </div>
                       </div>
 
-                      {/* Min and Max Value Display with Input Boxes */}
-                      <div className="flex items-center justify-between mt-2 px-2">
-                        {/* Min Value */}
-                        <div className="flex items-center gap-2 bg-neutral-100 dark:bg-neutral-800 rounded-lg px-3 py-2">
-                          {isMinPriceInputFocused ? (
-                            <div className="flex items-center justify-center gap-0 w-full">
-                              <input
-                                type="number"
-                                value={minPriceInputValue}
-                                onChange={(e) => {
-                                  const value = e.target.value
-                                  setMinPriceInputValue(value)
-                                  const numValue = parseInt(value) || 0
-                                  setTempPriceRange({ ...tempPriceRange, min: Math.min(numValue, tempPriceRange.max) })
-                                }}
-                                onBlur={() => setIsMinPriceInputFocused(false)}
-                                onKeyDown={(e) => {
-                                  if (e.key === 'Enter') {
-                                    setIsMinPriceInputFocused(false)
-                                  }
-                                }}
-                                autoFocus
-                                className="flex-shrink-0 w-auto min-w-0 bg-transparent text-neutral-900 dark:text-white text-sm font-medium outline-none border-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none text-center"
-                                style={{ width: `${Math.max(1, minPriceInputValue.length)}ch` }}
-                                placeholder=""
-                              />
-                              {minPriceInputValue && (
-                                <span className="text-neutral-900 dark:text-white text-sm font-medium flex-shrink-0">
-                                  {formatPrice(0, tempSelectedCurrency).replace(/[0-9]/g, '')}
-                                </span>
-                              )}
-                            </div>
-                          ) : (
-                            <button
-                              onClick={() => {
-                                setIsMinPriceInputFocused(true)
-                                setMinPriceInputValue(tempPriceRange.min.toString())
-                              }}
-                              className="text-neutral-900 dark:text-white text-sm font-medium hover:text-neutral-600 dark:hover:text-neutral-400 transition-colors"
-                            >
-                              {formatPrice(tempPriceRange.min, tempSelectedCurrency)}
-                            </button>
-                          )}
-                        </div>
-
-                        {/* Max Value */}
-                        <div className="flex items-center gap-2 bg-neutral-100 dark:bg-neutral-800 rounded-lg px-3 py-2">
-                          {isMaxPriceInputFocused ? (
-                            <div className="flex items-center justify-center gap-0 w-full">
-                              <input
-                                type="number"
-                                value={maxPriceInputValue}
-                                onChange={(e) => {
-                                  const value = e.target.value
-                                  setMaxPriceInputValue(value)
-                                  const numValue = parseInt(value) || 500
-                                  setTempPriceRange({ ...tempPriceRange, max: Math.max(numValue, tempPriceRange.min) })
-                                }}
-                                onBlur={() => setIsMaxPriceInputFocused(false)}
-                                onKeyDown={(e) => {
-                                  if (e.key === 'Enter') {
-                                    setIsMaxPriceInputFocused(false)
-                                  }
-                                }}
-                                autoFocus
-                                className="flex-shrink-0 w-auto min-w-0 bg-transparent text-neutral-900 dark:text-white text-sm font-medium outline-none border-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none text-center"
-                                style={{ width: `${Math.max(1, maxPriceInputValue.length)}ch` }}
-                                placeholder=""
-                              />
-                              {maxPriceInputValue && (
-                                <span className="text-neutral-900 dark:text-white text-sm font-medium flex-shrink-0">
-                                  {formatPrice(0, tempSelectedCurrency).replace(/[0-9]/g, '')}
-                                </span>
-                              )}
-                            </div>
-                          ) : (
-                            <button
-                              onClick={() => {
-                                setIsMaxPriceInputFocused(true)
-                                setMaxPriceInputValue(tempPriceRange.max.toString())
-                              }}
-                              className="text-neutral-900 dark:text-white text-sm font-medium hover:text-neutral-600 dark:hover:text-neutral-400 transition-colors"
-                            >
-                              {tempPriceRange.max >= 500 ? `${formatPrice(500, tempSelectedCurrency)}+` : formatPrice(tempPriceRange.max, tempSelectedCurrency)}
-                            </button>
-                          )}
-                        </div>
+                      {/* Currency Toggle Below Slider */}
+                      <div className="flex items-center justify-center gap-2 mt-12">
+                        <select
+                          value={tempSelectedCurrency}
+                          onChange={(e) => setTempSelectedCurrency(e.target.value)}
+                          className="px-4 py-2 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white text-sm font-medium focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-600"
+                        >
+                          {currencyOptions.map((currency) => (
+                            <option key={currency.code} value={currency.code}>
+                              {currency.code}
+                            </option>
+                          ))}
+                        </select>
                       </div>
                     </div>
                   </motion.div>
