@@ -3675,7 +3675,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                 <p className="font-body text-base font-bold text-white">
                                   {race.surface}
                                 </p>
-                                <p className="font-body text-[10px] font-normal text-white/70">
+                                <p className="font-body text-xs font-normal text-white">
                                   100% Paved
                                 </p>
                               </div>
@@ -3692,7 +3692,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                 <p className="font-body text-base font-bold text-white">
                                   {formatPrice(convertCurrencySync(race.price, race.currency || 'USD', 'USD'), 'USD')}
                                 </p>
-                                <p className="font-body text-[10px] font-normal text-white/70">
+                                <p className="font-body text-xs font-normal text-white">
                                   Variable
                                 </p>
                               </div>
@@ -3709,7 +3709,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                 <p className="font-body text-base font-bold text-white">
                                   Flat
                                 </p>
-                                <p className="font-body text-[10px] font-normal text-white/70">
+                                <p className="font-body text-xs font-normal text-white">
                                   {Math.round(race.elevationGain * 3.28084).toLocaleString()}ft
                                 </p>
                               </div>
