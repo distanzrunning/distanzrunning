@@ -1957,6 +1957,64 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                     <div className="grid grid-cols-2 gap-2">
                       {surfaceOptions.map((surface) => {
                         const isSelected = tempSurfaceFilter === surface
+
+                        // Get SVG icon for each surface
+                        const getSurfaceSvgIcon = () => {
+                          const strokeColor = isSelected ? 'currentColor' : '#777'
+
+                          switch (surface) {
+                            case 'Road':
+                              return (
+                                <svg width="60" height="20" viewBox="0 0 120 40" xmlns="http://www.w3.org/2000/svg">
+                                  {/* road edges */}
+                                  <path d="M25 14 H95"
+                                        stroke={strokeColor} strokeWidth="4" strokeLinecap="round" fill="none" />
+                                  <path d="M25 26 H95"
+                                        stroke={strokeColor} strokeWidth="4" strokeLinecap="round" fill="none" />
+                                  {/* dashed center line */}
+                                  <path d="M28 20 H92"
+                                        stroke={strokeColor} strokeWidth="3" strokeLinecap="round" fill="none"
+                                        strokeDasharray="6 6" />
+                                </svg>
+                              )
+                            case 'Trail':
+                              return (
+                                <svg width="60" height="20" viewBox="0 0 120 40" xmlns="http://www.w3.org/2000/svg">
+                                  {/* upper edge */}
+                                  <path d="M15 18 C 30 6, 50 6, 65 18 S 100 30, 105 22"
+                                        stroke={strokeColor} strokeWidth="4" strokeLinecap="round" fill="none" />
+                                  {/* lower edge (upper edge + 8px vertical offset) */}
+                                  <path d="M15 26 C 30 14, 50 14, 65 26 S 100 38, 105 30"
+                                        stroke={strokeColor} strokeWidth="4" strokeLinecap="round" fill="none" />
+                                </svg>
+                              )
+                            case 'Track':
+                              return (
+                                <svg width="60" height="20" viewBox="0 0 120 40" xmlns="http://www.w3.org/2000/svg">
+                                  <rect x="12" y="8" width="96" height="24" rx="12" ry="12"
+                                        stroke={strokeColor} strokeWidth="6" fill="none" strokeLinecap="round"/>
+                                </svg>
+                              )
+                            case 'Mixed':
+                              return (
+                                <svg width="60" height="20" viewBox="0 0 120 40" xmlns="http://www.w3.org/2000/svg">
+                                  {/* left side: road */}
+                                  <path d="M15 14 H50"
+                                        stroke={strokeColor} strokeWidth="3" strokeLinecap="round" fill="none" />
+                                  <path d="M15 26 H50"
+                                        stroke={strokeColor} strokeWidth="3" strokeLinecap="round" fill="none" />
+                                  {/* right side: trail */}
+                                  <path d="M65 18 C 75 12, 85 12, 95 18"
+                                        stroke={strokeColor} strokeWidth="3" strokeLinecap="round" fill="none" />
+                                  <path d="M65 26 C 75 20, 85 20, 95 26"
+                                        stroke={strokeColor} strokeWidth="3" strokeLinecap="round" fill="none" />
+                                </svg>
+                              )
+                            default:
+                              return null
+                          }
+                        }
+
                         return (
                           <button
                             key={surface}
@@ -1964,13 +2022,14 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                               // Toggle: if already selected, deselect
                               setTempSurfaceFilter(isSelected ? null : surface)
                             }}
-                            className={`flex items-center justify-center px-4 py-4 rounded-lg text-center transition-colors ${
+                            className={`flex flex-col items-center justify-center px-4 py-4 rounded-lg text-center transition-colors gap-1 ${
                               isSelected
                                 ? 'bg-neutral-900 dark:bg-white text-white dark:text-neutral-900'
                                 : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700'
                             }`}
                           >
                             <span className="text-base font-medium">{surface}</span>
+                            {getSurfaceSvgIcon()}
                           </button>
                         )
                       })}
