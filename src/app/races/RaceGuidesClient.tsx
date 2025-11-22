@@ -2022,13 +2022,12 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                               // Toggle: if already selected, deselect
                               setTempSurfaceFilter(isSelected ? null : surface)
                             }}
-                            className={`flex flex-col items-center justify-center px-4 py-4 rounded-lg text-center transition-colors gap-1 ${
-                              isSelected
-                                ? 'bg-neutral-900 dark:bg-white text-white dark:text-neutral-900'
-                                : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700'
-                            }`}
+                            className={`
+                              py-4 px-4 rounded-lg text-base font-medium transition-colors flex flex-col items-center gap-1
+                              ${isSelected ? 'bg-neutral-900 dark:bg-white text-white dark:text-neutral-900' : 'bg-neutral-200 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-400 hover:bg-neutral-300 dark:hover:bg-neutral-700 hover:text-neutral-900 dark:hover:text-white'}
+                            `}
                           >
-                            <span className="text-base font-medium">{surface}</span>
+                            <span>{surface}</span>
                             {getSurfaceSvgIcon()}
                           </button>
                         )
