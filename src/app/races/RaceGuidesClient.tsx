@@ -2761,7 +2761,6 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                               <div className="flex items-center justify-center bg-neutral-100 dark:bg-neutral-800 rounded-lg px-3 py-2 w-[80px]">
                                 {isMinTemperatureInputFocused ? (
                                   <div className="flex items-center justify-center gap-0 w-full">
-                                    <span className="text-sm font-medium text-neutral-600 dark:text-neutral-400">&lt;</span>
                                     <input
                                       type="number"
                                       value={minTemperatureInputValue}
