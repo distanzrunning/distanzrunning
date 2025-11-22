@@ -123,6 +123,18 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
   // Loading state for filtering
   const [isFiltering, setIsFiltering] = useState(false)
 
+  // Get unique tags from all races
+  const availableTags = useMemo(() => {
+    const tagsSet = new Set<string>()
+    races.forEach(race => {
+      if (race.tags && race.tags.length > 0) {
+        race.tags.forEach(tag => tagsSet.add(tag))
+      }
+    })
+    // Convert to array and sort alphabetically
+    return Array.from(tagsSet).sort((a, b) => a.localeCompare(b))
+  }, [races])
+
   // Get unique cities from races with their country
   const availableCities = useMemo(() => {
     const cityCountryMap = new Map<string, string>()
@@ -755,8 +767,8 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
     if (appliedTagsFilter) {
       filtered = filtered.filter((race) => {
         if (!race.tags || race.tags.length === 0) return false
-        // Check if any tag includes the search term (case-insensitive)
-        return race.tags.some(tag => tag.toLowerCase().includes(appliedTagsFilter.toLowerCase()))
+        // Check if the race has the selected tag
+        return race.tags.includes(appliedTagsFilter)
       })
     }
 
@@ -3113,7 +3125,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
                     transition={{ duration: 0.2 }}
-                    className="absolute top-full mt-2 left-0 z-50 bg-white dark:bg-neutral-900 rounded-lg shadow-xl border border-neutral-200 dark:border-neutral-800 p-4 min-w-[300px]"
+                    className="absolute top-full mt-2 left-0 z-50 bg-white dark:bg-neutral-900 rounded-lg shadow-xl border border-neutral-200 dark:border-neutral-800 p-4 min-w-[600px]"
                   >
                     {/* Top Bar: Clear and Apply */}
                     <div className="flex items-center justify-between gap-4 mb-4">
@@ -3155,15 +3167,27 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                       </button>
                     </div>
 
-                    {/* Search Input */}
-                    <div className="mb-4">
-                      <input
-                        type="text"
-                        value={tempTagsFilter}
-                        onChange={(e) => setTempTagsFilter(e.target.value)}
-                        placeholder="Search tags..."
-                        className="w-full px-4 py-3 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-600 text-base"
-                      />
+                    {/* Tag Buttons */}
+                    <div className="grid grid-cols-3 gap-3 mb-4">
+                      {availableTags.map((tag) => {
+                        const isSelected = tempTagsFilter === tag
+
+                        return (
+                          <button
+                            key={tag}
+                            onClick={() => {
+                              // Toggle: if already selected, deselect
+                              setTempTagsFilter(isSelected ? '' : tag)
+                            }}
+                            className={`
+                              py-4 px-4 rounded-lg text-base font-medium transition-colors flex flex-col items-center gap-1
+                              ${isSelected ? 'bg-neutral-900 dark:bg-white text-white dark:text-neutral-900' : 'bg-neutral-200 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-400 hover:bg-neutral-300 dark:hover:bg-neutral-700 hover:text-neutral-900 dark:hover:text-white'}
+                            `}
+                          >
+                            <span className="text-center">{tag}</span>
+                          </button>
+                        )
+                      })}
                     </div>
                   </motion.div>
                 )}
