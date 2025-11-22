@@ -1911,7 +1911,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
                     transition={{ duration: 0.2 }}
-                    className="absolute top-full mt-2 left-0 z-50 bg-white dark:bg-neutral-900 rounded-lg shadow-xl border border-neutral-200 dark:border-neutral-800 p-4 min-w-[300px]"
+                    className="absolute top-full mt-2 left-0 z-50 bg-white dark:bg-neutral-900 rounded-lg shadow-xl border border-neutral-200 dark:border-neutral-800 p-4 min-w-[600px]"
                   >
                     {/* Top Bar: Clear and Apply */}
                     <div className="flex items-center justify-between gap-4 mb-4">
@@ -1954,7 +1954,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                     </div>
 
                     {/* Surface List */}
-                    <div className="grid grid-cols-2 gap-2">
+                    <div className="grid grid-cols-2 gap-3 mb-4">
                       {surfaceOptions.map((surface) => {
                         const isSelected = tempSurfaceFilter === surface
 
