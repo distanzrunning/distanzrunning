@@ -2783,17 +2783,16 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                         setIsMinTemperatureInputFocused(false)
                                         setMinTemperatureInputValue('')
                                       }}
-                                      onFocus={(e) => {
-                                        const currentMin = temperatureUnit === 'c'
-                                          ? tempCustomTemperatureRange.min
-                                          : celsiusToFahrenheit(tempCustomTemperatureRange.min)
-                                        setMinTemperatureInputValue(Math.round(currentMin).toString())
-                                        e.target.select()
-                                      }}
-                                      className="w-full bg-transparent text-center text-sm font-medium text-neutral-900 dark:text-white outline-none [-moz-appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                                       autoFocus
+                                      className="flex-shrink-0 w-auto min-w-0 bg-transparent text-neutral-900 dark:text-white text-sm font-medium outline-none border-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none text-center"
+                                      style={{ width: `${Math.max(1, minTemperatureInputValue.length)}ch` }}
+                                      placeholder=""
                                     />
-                                    <span className="text-sm font-medium text-neutral-600 dark:text-neutral-400">°{temperatureUnit.toUpperCase()}</span>
+                                    {minTemperatureInputValue && (
+                                      <span className="text-neutral-900 dark:text-white text-sm font-medium flex-shrink-0">
+                                        °{temperatureUnit.toUpperCase()}
+                                      </span>
+                                    )}
                                   </div>
                                 ) : (
                                   <button
@@ -2819,7 +2818,6 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                               <div className="flex items-center justify-center bg-neutral-100 dark:bg-neutral-800 rounded-lg px-3 py-2 w-[80px]">
                                 {isMaxTemperatureInputFocused ? (
                                   <div className="flex items-center justify-center gap-0 w-full">
-                                    <span className="text-sm font-medium text-neutral-600 dark:text-neutral-400">&gt;</span>
                                     <input
                                       type="number"
                                       value={maxTemperatureInputValue}
@@ -2842,18 +2840,16 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                         setIsMaxTemperatureInputFocused(false)
                                         setMaxTemperatureInputValue('')
                                       }}
-                                      onFocus={(e) => {
-                                        const currentMax = temperatureUnit === 'c'
-                                          ? tempCustomTemperatureRange.max
-                                          : celsiusToFahrenheit(tempCustomTemperatureRange.max)
-                                        const maxValue = temperatureUnit === 'c' ? 35 : 95
-                                        setMaxTemperatureInputValue(Math.min(maxValue, Math.round(currentMax)).toString())
-                                        e.target.select()
-                                      }}
-                                      className="w-full bg-transparent text-center text-sm font-medium text-neutral-900 dark:text-white outline-none [-moz-appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                                       autoFocus
+                                      className="flex-shrink-0 w-auto min-w-0 bg-transparent text-neutral-900 dark:text-white text-sm font-medium outline-none border-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none text-center"
+                                      style={{ width: `${Math.max(1, maxTemperatureInputValue.length)}ch` }}
+                                      placeholder=""
                                     />
-                                    <span className="text-sm font-medium text-neutral-600 dark:text-neutral-400">°{temperatureUnit.toUpperCase()}</span>
+                                    {maxTemperatureInputValue && (
+                                      <span className="text-neutral-900 dark:text-white text-sm font-medium flex-shrink-0">
+                                        °{temperatureUnit.toUpperCase()}
+                                      </span>
+                                    )}
                                   </div>
                                 ) : (
                                   <button
