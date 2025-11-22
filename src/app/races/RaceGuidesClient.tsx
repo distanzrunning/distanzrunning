@@ -3667,7 +3667,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                             {/* Surface Pill */}
                             {race.surface && (
                               <div className="flex flex-col items-center gap-2">
-                                <div className="px-3 py-1.5 bg-white/95 dark:bg-neutral-900/95 backdrop-blur-sm rounded-full">
+                                <div className="w-20 px-3 py-1.5 bg-white/95 dark:bg-neutral-900/95 backdrop-blur-sm rounded-full flex items-center justify-center">
                                   <p className="font-body text-xs font-medium text-neutral-900 dark:text-white">
                                     Terrain
                                   </p>
@@ -3684,7 +3684,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                             {/* Price Pill */}
                             {race.price !== undefined && race.price !== null && (
                               <div className="flex flex-col items-center gap-2">
-                                <div className="px-3 py-1.5 bg-white/95 dark:bg-neutral-900/95 backdrop-blur-sm rounded-full">
+                                <div className="w-20 px-3 py-1.5 bg-white/95 dark:bg-neutral-900/95 backdrop-blur-sm rounded-full flex items-center justify-center">
                                   <p className="font-body text-xs font-medium text-neutral-900 dark:text-white">
                                     Price
                                   </p>
@@ -3701,7 +3701,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                             {/* Elevation Pill */}
                             {race.elevationGain !== undefined && race.elevationGain !== null && (
                               <div className="flex flex-col items-center gap-2">
-                                <div className="px-3 py-1.5 bg-white/95 dark:bg-neutral-900/95 backdrop-blur-sm rounded-full">
+                                <div className="w-20 px-3 py-1.5 bg-white/95 dark:bg-neutral-900/95 backdrop-blur-sm rounded-full flex items-center justify-center">
                                   <p className="font-body text-xs font-medium text-neutral-900 dark:text-white">
                                     Elevation
                                   </p>
