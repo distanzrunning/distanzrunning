@@ -97,6 +97,23 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
   const [minElevationInputValue, setMinElevationInputValue] = useState('')
   const [maxElevationInputValue, setMaxElevationInputValue] = useState('')
 
+  // Temperature filter states
+  const [isTemperatureFilterOpen, setIsTemperatureFilterOpen] = useState(false)
+  const [temperatureFilterMode, setTemperatureFilterMode] = useState<'temperature' | 'custom'>('temperature')
+  const [temperatureUnit, setTemperatureUnit] = useState<'c' | 'f'>('c')
+  const [appliedTemperatureFilter, setAppliedTemperatureFilter] = useState<string | null>(null) // e.g., 'very-cold', 'cold', or 'custom'
+  const [tempTemperatureFilter, setTempTemperatureFilter] = useState<string | null>(null)
+  // For custom temperature range (in Celsius)
+  const [appliedCustomTemperatureRange, setAppliedCustomTemperatureRange] = useState<{ min: number; max: number }>({ min: 0, max: 35 })
+  const [tempCustomTemperatureRange, setTempCustomTemperatureRange] = useState<{ min: number; max: number }>({ min: 0, max: 35 })
+  const temperatureFilterRef = useRef<HTMLDivElement>(null)
+  // Track which temperature input is focused
+  const [isMinTemperatureInputFocused, setIsMinTemperatureInputFocused] = useState(false)
+  const [isMaxTemperatureInputFocused, setIsMaxTemperatureInputFocused] = useState(false)
+  // Track temperature input values while typing
+  const [minTemperatureInputValue, setMinTemperatureInputValue] = useState('')
+  const [maxTemperatureInputValue, setMaxTemperatureInputValue] = useState('')
+
   // Loading state for filtering
   const [isFiltering, setIsFiltering] = useState(false)
 
@@ -141,6 +158,16 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
     { id: 'rolling', label: 'Rolling', minM: 100, maxM: 300 },
     { id: 'hilly', label: 'Hilly', minM: 300, maxM: 600 },
     { id: 'mountainous', label: 'Mountainous', minM: 600, maxM: 1000 }
+  ]
+
+  // Temperature categories (in Celsius)
+  const temperatureCategories = [
+    { id: 'very-cold', label: 'Very Cold', minC: -10, maxC: 0, fillPercent: 15, color: '#3B82F6' },
+    { id: 'cold', label: 'Cold', minC: 0, maxC: 10, fillPercent: 35, color: '#60A5FA' },
+    { id: 'mild', label: 'Mild', minC: 10, maxC: 18, fillPercent: 50, color: '#A3A3A3' },
+    { id: 'warm', label: 'Warm', minC: 18, maxC: 25, fillPercent: 65, color: '#FCD34D' },
+    { id: 'hot', label: 'Hot', minC: 25, maxC: 32, fillPercent: 85, color: '#FB923C' },
+    { id: 'very-hot', label: 'Very Hot', minC: 32, maxC: 45, fillPercent: 100, color: '#EF4444' }
   ]
 
   // All countries list (sorted alphabetically)
@@ -402,6 +429,33 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
     }
   }, [isElevationFilterOpen, appliedElevationFilter, appliedCustomElevationRange])
 
+  // Click outside to close temperature filter dropdown
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (temperatureFilterRef.current && !temperatureFilterRef.current.contains(event.target as Node)) {
+        setIsTemperatureFilterOpen(false)
+      }
+    }
+
+    if (isTemperatureFilterOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [isTemperatureFilterOpen])
+
+  // Initialize temperature filter temp state when dropdown opens
+  useEffect(() => {
+    if (isTemperatureFilterOpen) {
+      setTempTemperatureFilter(appliedTemperatureFilter)
+      setTempCustomTemperatureRange(appliedCustomTemperatureRange)
+      setMinTemperatureInputValue('')
+      setMaxTemperatureInputValue('')
+    }
+  }, [isTemperatureFilterOpen, appliedTemperatureFilter, appliedCustomTemperatureRange])
+
   // Helper: Convert km to miles
   const kmToMiles = (km: number) => km * 0.621371
 
@@ -413,6 +467,12 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
 
   // Helper: Convert feet to meters
   const feetToMeters = (ft: number) => ft / 3.28084
+
+  // Helper: Convert Celsius to Fahrenheit
+  const celsiusToFahrenheit = (c: number) => (c * 9/5) + 32
+
+  // Helper: Convert Fahrenheit to Celsius
+  const fahrenheitToCelsius = (f: number) => (f - 32) * 5/9
 
   // Helper: Get distance category from km (with more forgiving tolerance)
   const getDistanceCategory = (distanceKm: number): string | null => {
@@ -512,6 +572,34 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
 
     const category = elevationCategories.find(c => c.id === appliedElevationFilter)
     return category?.label || 'Elevation'
+  }
+
+  const getTemperatureFilterText = () => {
+    if (!appliedTemperatureFilter) {
+      return 'Temperature'
+    }
+
+    if (appliedTemperatureFilter === 'custom') {
+      const unit = temperatureUnit
+      const min = unit === 'c' ? appliedCustomTemperatureRange.min : celsiusToFahrenheit(appliedCustomTemperatureRange.min)
+      const max = unit === 'c' ? appliedCustomTemperatureRange.max : celsiusToFahrenheit(appliedCustomTemperatureRange.max)
+      const minValue = unit === 'c' ? 0 : 32
+      const maxValue = unit === 'c' ? 35 : 95
+
+      if (min <= minValue && max >= maxValue) {
+        return `<${minValue}->${maxValue}°${unit.toUpperCase()}`
+      }
+      if (min <= minValue) {
+        return `<${minValue}-${Math.round(max)}°${unit.toUpperCase()}`
+      }
+      if (max >= maxValue) {
+        return `${Math.round(min)}->${maxValue}°${unit.toUpperCase()}`
+      }
+      return `${Math.round(min)}-${Math.round(max)}°${unit.toUpperCase()}`
+    }
+
+    const category = temperatureCategories.find(c => c.id === appliedTemperatureFilter)
+    return category?.label || 'Temperature'
   }
 
   // Trigger loading state when filters change
@@ -2481,6 +2569,428 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                 }`}
                               >
                                 ft
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </>
+                    )}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {/* Temperature Filter */}
+            <div className="relative" ref={temperatureFilterRef}>
+              {appliedTemperatureFilter ? (
+                // Filter is active - show filter value with X button
+                <div className="flex items-center gap-2 px-4 h-[44px] rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white text-sm font-medium">
+                  <button
+                    onClick={() => setIsTemperatureFilterOpen(!isTemperatureFilterOpen)}
+                    className="hover:text-neutral-600 dark:hover:text-neutral-400 transition-colors"
+                  >
+                    {getTemperatureFilterText()}
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      setAppliedTemperatureFilter(null)
+                      setTempTemperatureFilter(null)
+                      setAppliedCustomTemperatureRange({ min: 0, max: 35 })
+                      setTempCustomTemperatureRange({ min: 0, max: 35 })
+                    }}
+                    className="text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300 transition-colors"
+                    aria-label="Clear temperature filter"
+                  >
+                    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+              ) : (
+                // No filter - show default button
+                <button
+                  onClick={() => setIsTemperatureFilterOpen(!isTemperatureFilterOpen)}
+                  className="flex items-center gap-2 px-4 h-[44px] rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white hover:border-neutral-400 dark:hover:border-neutral-600 transition-colors text-sm font-medium whitespace-nowrap"
+                >
+                  Temperature
+                  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+              )}
+
+              {/* Temperature Dropdown */}
+              <AnimatePresence>
+                {isTemperatureFilterOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                    className="absolute top-full mt-2 left-0 z-50 bg-white dark:bg-neutral-900 rounded-lg shadow-xl border border-neutral-200 dark:border-neutral-800 p-4 min-w-[600px]"
+                  >
+                    {/* Top Bar: Action Buttons and Toggle */}
+                    <div className="flex items-center justify-between mb-6">
+                      {/* Clear Button - Left */}
+                      <button
+                        onClick={() => {
+                          setTempTemperatureFilter(null)
+                          setTempCustomTemperatureRange({ min: 0, max: 35 })
+                        }}
+                        disabled={!tempTemperatureFilter && tempCustomTemperatureRange.min === 0 && tempCustomTemperatureRange.max === 35}
+                        className={`p-2 rounded-lg transition-colors ${
+                          tempTemperatureFilter || tempCustomTemperatureRange.min !== 0 || tempCustomTemperatureRange.max !== 35
+                            ? 'bg-neutral-200 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-300 dark:hover:bg-neutral-600 cursor-pointer'
+                            : 'text-neutral-400 dark:text-neutral-600 cursor-not-allowed opacity-50'
+                        }`}
+                        aria-label="Clear selection"
+                      >
+                        <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
+
+                      {/* Tab Toggle - Center */}
+                      <div className="inline-flex bg-neutral-200 dark:bg-neutral-800 rounded-lg p-1 relative z-10">
+                        <button
+                          onClick={() => setTemperatureFilterMode('temperature')}
+                          className={`px-6 py-2.5 rounded-md text-base font-medium transition-colors ${
+                            temperatureFilterMode === 'temperature'
+                              ? 'bg-neutral-900 dark:bg-white text-white dark:text-neutral-900'
+                              : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
+                          }`}
+                        >
+                          Temperature
+                        </button>
+                        <button
+                          onClick={() => setTemperatureFilterMode('custom')}
+                          className={`px-6 py-2.5 rounded-md text-base font-medium transition-colors ${
+                            temperatureFilterMode === 'custom'
+                              ? 'bg-neutral-900 dark:bg-white text-white dark:text-neutral-900'
+                              : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
+                          }`}
+                        >
+                          Custom
+                        </button>
+                      </div>
+
+                      {/* Apply Button - Right */}
+                      <button
+                        onClick={() => {
+                          setAppliedTemperatureFilter(tempTemperatureFilter)
+                          setAppliedCustomTemperatureRange(tempCustomTemperatureRange)
+                          setIsTemperatureFilterOpen(false)
+                        }}
+                        disabled={!tempTemperatureFilter && (tempCustomTemperatureRange.min === 0 && tempCustomTemperatureRange.max === 35)}
+                        className={`p-2 rounded-lg transition-colors ${
+                          tempTemperatureFilter || tempCustomTemperatureRange.min !== 0 || tempCustomTemperatureRange.max !== 35
+                            ? 'bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 hover:bg-neutral-700 dark:hover:bg-neutral-200 cursor-pointer'
+                            : 'bg-neutral-200 dark:bg-neutral-800 text-neutral-400 dark:text-neutral-600 cursor-not-allowed opacity-50'
+                        }`}
+                        aria-label="Apply filter"
+                      >
+                        <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                      </button>
+                    </div>
+
+                    {/* Tab Content */}
+                    {temperatureFilterMode === 'temperature' ? (
+                      <>
+                        {/* Temperature Categories Grid */}
+                        <div className="grid grid-cols-2 gap-3 mb-4">
+                          {temperatureCategories.map((category) => {
+                            const isSelected = tempTemperatureFilter === category.id
+
+                            return (
+                              <button
+                                key={category.id}
+                                onClick={() => {
+                                  // Toggle: if already selected, deselect
+                                  setTempTemperatureFilter(isSelected ? null : category.id)
+                                }}
+                                className={`
+                                  py-4 px-4 rounded-lg text-base font-medium transition-colors flex flex-col items-center gap-2
+                                  ${isSelected ? 'bg-neutral-900 dark:bg-white text-white dark:text-neutral-900' : 'bg-neutral-200 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-400 hover:bg-neutral-300 dark:hover:bg-neutral-700 hover:text-neutral-900 dark:hover:text-white'}
+                                `}
+                              >
+                                <span>{category.label}</span>
+                                {/* Temperature Gauge */}
+                                <div className="w-24 h-2 bg-neutral-400 dark:bg-neutral-600 rounded-full overflow-hidden">
+                                  <div
+                                    className="h-full rounded-full transition-all"
+                                    style={{
+                                      width: `${category.fillPercent}%`,
+                                      backgroundColor: category.color
+                                    }}
+                                  />
+                                </div>
+                              </button>
+                            )
+                          })}
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        {/* Custom Range Slider */}
+                        <div className="mb-6">
+                          {/* Min/Max Input Fields */}
+                          <div className="px-3 mb-6">
+                            <div className="flex items-center justify-between" style={{ paddingLeft: '12px', paddingRight: '12px' }}>
+                              {/* Min Value Box */}
+                              <div className="flex items-center justify-center bg-neutral-100 dark:bg-neutral-800 rounded-lg px-3 py-2 w-[80px]">
+                                {isMinTemperatureInputFocused ? (
+                                  <div className="flex items-center justify-center gap-0 w-full">
+                                    <input
+                                      type="number"
+                                      value={minTemperatureInputValue}
+                                      onChange={(e) => {
+                                        setMinTemperatureInputValue(e.target.value)
+                                        const value = Number(e.target.value)
+                                        if (!isNaN(value) && e.target.value !== '') {
+                                          const cValue = temperatureUnit === 'c' ? value : fahrenheitToCelsius(value)
+                                          // Allow swapping: if new min > max, swap them
+                                          setTempCustomTemperatureRange(prev => {
+                                            if (cValue > prev.max) {
+                                              return { min: prev.max, max: cValue }
+                                            }
+                                            return { ...prev, min: cValue }
+                                          })
+                                          setTempTemperatureFilter('custom')
+                                        }
+                                      }}
+                                      onBlur={() => {
+                                        setIsMinTemperatureInputFocused(false)
+                                        setMinTemperatureInputValue('')
+                                      }}
+                                      onFocus={(e) => {
+                                        const currentMin = temperatureUnit === 'c'
+                                          ? tempCustomTemperatureRange.min
+                                          : celsiusToFahrenheit(tempCustomTemperatureRange.min)
+                                        setMinTemperatureInputValue(Math.round(currentMin).toString())
+                                        e.target.select()
+                                      }}
+                                      className="w-full bg-transparent text-center text-sm font-medium text-neutral-900 dark:text-white outline-none [-moz-appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                      autoFocus
+                                    />
+                                    <span className="text-sm font-medium text-neutral-600 dark:text-neutral-400">°{temperatureUnit.toUpperCase()}</span>
+                                  </div>
+                                ) : (
+                                  <button
+                                    onClick={() => setIsMinTemperatureInputFocused(true)}
+                                    className="flex items-center justify-center gap-0 w-full text-sm font-medium text-neutral-900 dark:text-white hover:text-neutral-600 dark:hover:text-neutral-300 transition-colors"
+                                  >
+                                    {temperatureUnit === 'c'
+                                      ? `${Math.round(tempCustomTemperatureRange.min)}°C`
+                                      : `${Math.round(celsiusToFahrenheit(tempCustomTemperatureRange.min))}°F`}
+                                  </button>
+                                )}
+                              </div>
+
+                              {/* Max Value Box */}
+                              <div className="flex items-center justify-center bg-neutral-100 dark:bg-neutral-800 rounded-lg px-3 py-2 w-[80px]">
+                                {isMaxTemperatureInputFocused ? (
+                                  <div className="flex items-center justify-center gap-0 w-full">
+                                    <span className="text-sm font-medium text-neutral-600 dark:text-neutral-400">&gt;</span>
+                                    <input
+                                      type="number"
+                                      value={maxTemperatureInputValue}
+                                      onChange={(e) => {
+                                        setMaxTemperatureInputValue(e.target.value)
+                                        const value = Number(e.target.value)
+                                        if (!isNaN(value) && e.target.value !== '') {
+                                          const cValue = temperatureUnit === 'c' ? value : fahrenheitToCelsius(value)
+                                          // Allow swapping: if new max < min, swap them
+                                          setTempCustomTemperatureRange(prev => {
+                                            if (cValue < prev.min) {
+                                              return { min: cValue, max: prev.min }
+                                            }
+                                            return { ...prev, max: cValue }
+                                          })
+                                          setTempTemperatureFilter('custom')
+                                        }
+                                      }}
+                                      onBlur={() => {
+                                        setIsMaxTemperatureInputFocused(false)
+                                        setMaxTemperatureInputValue('')
+                                      }}
+                                      onFocus={(e) => {
+                                        const currentMax = temperatureUnit === 'c'
+                                          ? tempCustomTemperatureRange.max
+                                          : celsiusToFahrenheit(tempCustomTemperatureRange.max)
+                                        const maxValue = temperatureUnit === 'c' ? 35 : 95
+                                        setMaxTemperatureInputValue(Math.min(maxValue, Math.round(currentMax)).toString())
+                                        e.target.select()
+                                      }}
+                                      className="w-full bg-transparent text-center text-sm font-medium text-neutral-900 dark:text-white outline-none [-moz-appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                      autoFocus
+                                    />
+                                    <span className="text-sm font-medium text-neutral-600 dark:text-neutral-400">°{temperatureUnit.toUpperCase()}</span>
+                                  </div>
+                                ) : (
+                                  <button
+                                    onClick={() => setIsMaxTemperatureInputFocused(true)}
+                                    className="flex items-center justify-center gap-0 w-full text-sm font-medium text-neutral-900 dark:text-white hover:text-neutral-600 dark:hover:text-neutral-300 transition-colors"
+                                  >
+                                    {(() => {
+                                      const maxValue = temperatureUnit === 'c' ? 35 : 95
+                                      const displayMax = temperatureUnit === 'c'
+                                        ? tempCustomTemperatureRange.max
+                                        : celsiusToFahrenheit(tempCustomTemperatureRange.max)
+
+                                      if (displayMax >= maxValue) {
+                                        return `>${Math.round(maxValue)}°${temperatureUnit.toUpperCase()}`
+                                      }
+                                      return `${Math.round(displayMax)}°${temperatureUnit.toUpperCase()}`
+                                    })()}
+                                  </button>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Slider */}
+                          <Box sx={{ width: '100%', px: 1.5 }}>
+                            <Slider
+                              value={[
+                                temperatureUnit === 'c' ? tempCustomTemperatureRange.min : celsiusToFahrenheit(tempCustomTemperatureRange.min),
+                                temperatureUnit === 'c' ? tempCustomTemperatureRange.max : celsiusToFahrenheit(tempCustomTemperatureRange.max)
+                              ]}
+                              onChange={(_, newValue) => {
+                                const [min, max] = newValue as number[]
+                                const minC = temperatureUnit === 'c' ? min : fahrenheitToCelsius(min)
+                                const maxC = temperatureUnit === 'c' ? max : fahrenheitToCelsius(max)
+                                setTempCustomTemperatureRange({ min: minC, max: maxC })
+                                if (minC === 0 && maxC === 35) {
+                                  setTempTemperatureFilter(null)
+                                } else {
+                                  setTempTemperatureFilter('custom')
+                                }
+                              }}
+                              min={temperatureUnit === 'c' ? 0 : 32}
+                              max={temperatureUnit === 'c' ? 35 : 95}
+                              step={temperatureUnit === 'c' ? 1 : 2}
+                              valueLabelDisplay="off"
+                              disableSwap={false}
+                              marks={[
+                                { value: temperatureUnit === 'c' ? 12 : 53, label: '' },
+                                { value: temperatureUnit === 'c' ? 23 : 74, label: '' },
+                              ]}
+                              sx={{
+                                color: '#1A1A1A',
+                                height: 24,
+                                padding: 0,
+                                '& .MuiSlider-rail': {
+                                  height: 24,
+                                  borderRadius: 12,
+                                  backgroundColor: '#404040',
+                                  opacity: 1,
+                                },
+                                '& .MuiSlider-track': {
+                                  height: 24,
+                                  borderRadius: 0,
+                                  backgroundColor: '#E6E6E6',
+                                  border: 'none',
+                                },
+                                '& .MuiSlider-thumb': {
+                                  height: 24,
+                                  width: 24,
+                                  backgroundColor: '#FFFFFF',
+                                  border: 'none',
+                                  boxShadow: 'none',
+                                  zIndex: 2,
+                                },
+                                '& .MuiSlider-mark': {
+                                  width: 20,
+                                  height: 20,
+                                  borderRadius: '50%',
+                                  backgroundColor: 'transparent',
+                                  border: '1px dashed #A3A3A3',
+                                  top: '50%',
+                                  transform: 'translate(-50%, -50%)',
+                                  opacity: 1,
+                                  zIndex: 3,
+                                },
+                              }}
+                            />
+                          </Box>
+
+                          {/* Temperature Labels Below Slider */}
+                          <div className="relative mt-1" style={{ paddingLeft: '12px', paddingRight: '12px' }}>
+                            {temperatureUnit === 'c' ? (
+                              <>
+                                {[
+                                  { valueC: 12, label: '12°C' },
+                                  { valueC: 23, label: '23°C' }
+                                ].map((marker, index) => {
+                                  const maxValue = 35
+                                  const position = (marker.valueC / maxValue) * 100
+
+                                  return (
+                                    <div
+                                      key={index}
+                                      className="absolute text-xs text-neutral-600 dark:text-neutral-400 font-medium"
+                                      style={{
+                                        left: `${position}%`,
+                                        transform: 'translateX(-50%)',
+                                      }}
+                                    >
+                                      {marker.label}
+                                    </div>
+                                  )
+                                })}
+                              </>
+                            ) : (
+                              <>
+                                {[
+                                  { valueF: 53, label: '53°F' },
+                                  { valueF: 74, label: '74°F' }
+                                ].map((marker, index) => {
+                                  const maxValue = 95
+                                  const minValue = 32
+                                  const position = ((marker.valueF - minValue) / (maxValue - minValue)) * 100
+
+                                  return (
+                                    <div
+                                      key={index}
+                                      className="absolute text-xs text-neutral-600 dark:text-neutral-400 font-medium"
+                                      style={{
+                                        left: `${position}%`,
+                                        transform: 'translateX(-50%)',
+                                      }}
+                                    >
+                                      {marker.label}
+                                    </div>
+                                  )
+                                })}
+                              </>
+                            )}
+                          </div>
+
+                          {/* Unit Toggle Below Temperature Anchors */}
+                          <div className="flex items-center justify-center gap-2 mt-12 relative z-50">
+                            <div className="inline-flex bg-neutral-200 dark:bg-neutral-800 rounded-lg p-0.5">
+                              <button
+                                onClick={() => setTemperatureUnit('c')}
+                                className={`px-6 py-2 rounded-md text-sm font-medium transition-colors ${
+                                  temperatureUnit === 'c'
+                                    ? 'bg-neutral-900 dark:bg-white text-white dark:text-neutral-900'
+                                    : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
+                                }`}
+                              >
+                                °C
+                              </button>
+                              <button
+                                onClick={() => setTemperatureUnit('f')}
+                                className={`px-6 py-2 rounded-md text-sm font-medium transition-colors ${
+                                  temperatureUnit === 'f'
+                                    ? 'bg-neutral-900 dark:bg-white text-white dark:text-neutral-900'
+                                    : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
+                                }`}
+                              >
+                                °F
                               </button>
                             </div>
                           </div>
