@@ -3657,9 +3657,56 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                           <img
                             src={urlFor(race.mainImage).width(800).height(520).url()}
                             alt={race.title}
-                            className="absolute inset-0 w-full h-full object-cover object-center"
+                            className="absolute inset-0 w-full h-full object-cover object-center transition-transform duration-300 group-hover:scale-105"
                           />
                         )}
+
+                        {/* Frosted Glass Overlay on Hover */}
+                        <div className="absolute inset-0 bg-white/80 dark:bg-black/80 backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                          <div className="flex flex-col gap-4 px-6">
+                            {/* Surface Pill */}
+                            {race.surface && (
+                              <div className="flex flex-col items-center gap-2">
+                                <div className="px-4 py-2 bg-neutral-900/90 dark:bg-white/90 backdrop-blur-sm rounded-full">
+                                  <p className="font-body text-xs font-semibold uppercase tracking-wide text-white dark:text-neutral-900">
+                                    Surface
+                                  </p>
+                                </div>
+                                <p className="font-body text-base font-medium text-neutral-900 dark:text-white">
+                                  {race.surface}
+                                </p>
+                              </div>
+                            )}
+
+                            {/* Elevation Pill */}
+                            {race.elevationGain !== undefined && race.elevationGain !== null && (
+                              <div className="flex flex-col items-center gap-2">
+                                <div className="px-4 py-2 bg-neutral-900/90 dark:bg-white/90 backdrop-blur-sm rounded-full">
+                                  <p className="font-body text-xs font-semibold uppercase tracking-wide text-white dark:text-neutral-900">
+                                    Elevation
+                                  </p>
+                                </div>
+                                <p className="font-body text-base font-medium text-neutral-900 dark:text-white">
+                                  {Math.round(race.elevationGain * 3.28084).toLocaleString()} ft
+                                </p>
+                              </div>
+                            )}
+
+                            {/* Price Pill */}
+                            {race.price !== undefined && race.price !== null && (
+                              <div className="flex flex-col items-center gap-2">
+                                <div className="px-4 py-2 bg-neutral-900/90 dark:bg-white/90 backdrop-blur-sm rounded-full">
+                                  <p className="font-body text-xs font-semibold uppercase tracking-wide text-white dark:text-neutral-900">
+                                    Price
+                                  </p>
+                                </div>
+                                <p className="font-body text-base font-medium text-neutral-900 dark:text-white">
+                                  {formatPrice(convertCurrencySync(race.price, race.currency || 'USD', 'USD'), 'USD')}
+                                </p>
+                              </div>
+                            )}
+                          </div>
+                        </div>
                       </div>
                     </div>
 
