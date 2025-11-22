@@ -3657,13 +3657,13 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                           <img
                             src={urlFor(race.mainImage).width(800).height(520).url()}
                             alt={race.title}
-                            className="absolute inset-0 w-full h-full object-cover object-center transition-transform duration-300 group-hover:scale-105"
+                            className="absolute inset-0 w-full h-full object-cover object-center"
                           />
                         )}
 
                         {/* Frosted Glass Overlay on Hover */}
-                        <div className="absolute inset-0 bg-white/80 dark:bg-black/80 backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                          <div className="flex flex-col gap-4 px-6">
+                        <div className="absolute inset-0 bg-white/40 dark:bg-black/40 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                          <div className="flex flex-row gap-6 px-6 flex-wrap justify-center">
                             {/* Surface Pill */}
                             {race.surface && (
                               <div className="flex flex-col items-center gap-2">
