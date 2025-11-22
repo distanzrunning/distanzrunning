@@ -17,6 +17,8 @@ export type RaceGuide = {
   surface?: string
   elevationGain?: number
   averageTemperature?: number
+  price?: number
+  currency?: string
   tags?: string[]
 }
 
@@ -37,6 +39,8 @@ export default async function RaceGuidesPage() {
       surface,
       elevationGain,
       averageTemperature,
+      price,
+      currency,
       tags,
       "raceCategoryName": raceCategory->title
     }

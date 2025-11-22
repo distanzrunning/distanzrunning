@@ -10,6 +10,7 @@ import Slider from '@mui/material/Slider'
 import Box from '@mui/material/Box'
 // @ts-ignore - country-flag-icons doesn't have perfect TypeScript types
 import * as flags from 'country-flag-icons/react/3x2'
+import { convertCurrencySync, formatPrice } from '@/lib/raceUtils'
 
 // Helper function to format location from city, state/region, and country
 function formatLocation(city?: string, stateRegion?: string, country?: string): string {
@@ -114,6 +115,18 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
   const [minTemperatureInputValue, setMinTemperatureInputValue] = useState('')
   const [maxTemperatureInputValue, setMaxTemperatureInputValue] = useState('')
 
+  // Price filter states
+  const [isPriceFilterOpen, setIsPriceFilterOpen] = useState(false)
+  const [selectedCurrency, setSelectedCurrency] = useState<string>('USD')
+  const [tempSelectedCurrency, setTempSelectedCurrency] = useState<string>('USD')
+  const [appliedPriceRange, setAppliedPriceRange] = useState<{ min: number; max: number }>({ min: 0, max: 500 })
+  const [tempPriceRange, setTempPriceRange] = useState<{ min: number; max: number }>({ min: 0, max: 500 })
+  const priceFilterRef = useRef<HTMLDivElement>(null)
+  const [isMinPriceInputFocused, setIsMinPriceInputFocused] = useState(false)
+  const [isMaxPriceInputFocused, setIsMaxPriceInputFocused] = useState(false)
+  const [minPriceInputValue, setMinPriceInputValue] = useState('')
+  const [maxPriceInputValue, setMaxPriceInputValue] = useState('')
+
   // Tags filter states
   const [isTagsFilterOpen, setIsTagsFilterOpen] = useState(false)
   const [appliedTagsFilter, setAppliedTagsFilter] = useState<string>('')
@@ -186,6 +199,29 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
     { id: 'warm', label: 'Warm', minC: 18, maxC: 25, fillPercent: 65, color: '#FCD34D' },
     { id: 'hot', label: 'Hot', minC: 25, maxC: 32, fillPercent: 85, color: '#FB923C' },
     { id: 'very-hot', label: 'Very Hot', minC: 32, maxC: 45, fillPercent: 100, color: '#EF4444' }
+  ]
+
+  // Currency options (matching Sanity schema)
+  const currencyOptions = [
+    { code: 'USD', label: 'USD - US Dollar' },
+    { code: 'EUR', label: 'EUR - Euro' },
+    { code: 'GBP', label: 'GBP - British Pound' },
+    { code: 'JPY', label: 'JPY - Japanese Yen' },
+    { code: 'AUD', label: 'AUD - Australian Dollar' },
+    { code: 'CAD', label: 'CAD - Canadian Dollar' },
+    { code: 'CHF', label: 'CHF - Swiss Franc' },
+    { code: 'CNY', label: 'CNY - Chinese Yuan' },
+    { code: 'SEK', label: 'SEK - Swedish Krona' },
+    { code: 'NZD', label: 'NZD - New Zealand Dollar' },
+    { code: 'MXN', label: 'MXN - Mexican Peso' },
+    { code: 'SGD', label: 'SGD - Singapore Dollar' },
+    { code: 'HKD', label: 'HKD - Hong Kong Dollar' },
+    { code: 'NOK', label: 'NOK - Norwegian Krone' },
+    { code: 'KRW', label: 'KRW - South Korean Won' },
+    { code: 'TRY', label: 'TRY - Turkish Lira' },
+    { code: 'INR', label: 'INR - Indian Rupee' },
+    { code: 'BRL', label: 'BRL - Brazilian Real' },
+    { code: 'ZAR', label: 'ZAR - South African Rand' }
   ]
 
 
@@ -492,6 +528,33 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
     }
   }, [isTagsFilterOpen])
 
+  // Click outside to close price filter dropdown
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (priceFilterRef.current && !priceFilterRef.current.contains(event.target as Node)) {
+        setIsPriceFilterOpen(false)
+      }
+    }
+
+    if (isPriceFilterOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [isPriceFilterOpen])
+
+  // Initialize price filter temp state when dropdown opens
+  useEffect(() => {
+    if (isPriceFilterOpen) {
+      setTempPriceRange(appliedPriceRange)
+      setTempSelectedCurrency(selectedCurrency)
+      setMinPriceInputValue('')
+      setMaxPriceInputValue('')
+    }
+  }, [isPriceFilterOpen, appliedPriceRange, selectedCurrency])
+
   // Initialize tags filter temp state when dropdown opens
   useEffect(() => {
     if (isTagsFilterOpen) {
@@ -650,7 +713,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
     setIsFiltering(true)
     const timer = setTimeout(() => setIsFiltering(false), 300)
     return () => clearTimeout(timer)
-  }, [searchQuery, appliedDateRange, appliedDistanceFilter, appliedCustomRange, appliedCountryFilter, appliedCityFilter, appliedStateFilter, appliedSurfaceFilter, appliedElevationFilter, appliedCustomElevationRange, appliedTemperatureFilter, appliedCustomTemperatureRange, appliedTagsFilter])
+  }, [searchQuery, appliedDateRange, appliedDistanceFilter, appliedCustomRange, appliedCountryFilter, appliedCityFilter, appliedStateFilter, appliedSurfaceFilter, appliedElevationFilter, appliedCustomElevationRange, appliedTemperatureFilter, appliedCustomTemperatureRange, appliedPriceRange, selectedCurrency, appliedTagsFilter])
 
   // Filter races based on search query and date range
   const filteredRaces = useMemo(() => {
@@ -763,6 +826,16 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
       }
     }
 
+    // Apply Price filter
+    if (appliedPriceRange.min > 0 || appliedPriceRange.max < 500) {
+      filtered = filtered.filter((race) => {
+        if (!race.price || !race.currency) return false
+        // Convert race price to selected currency
+        const convertedPrice = convertCurrencySync(race.price, race.currency, selectedCurrency)
+        return convertedPrice >= appliedPriceRange.min && convertedPrice <= appliedPriceRange.max
+      })
+    }
+
     // Apply Tags filter
     if (appliedTagsFilter) {
       filtered = filtered.filter((race) => {
@@ -773,7 +846,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
     }
 
     return filtered
-  }, [races, searchQuery, appliedDateRange, appliedDistanceFilter, appliedCustomRange, appliedCountryFilter, appliedCityFilter, appliedStateFilter, appliedSurfaceFilter, appliedElevationFilter, appliedCustomElevationRange, appliedTemperatureFilter, appliedCustomTemperatureRange, appliedTagsFilter])
+  }, [races, searchQuery, appliedDateRange, appliedDistanceFilter, appliedCustomRange, appliedCountryFilter, appliedCityFilter, appliedStateFilter, appliedSurfaceFilter, appliedElevationFilter, appliedCustomElevationRange, appliedTemperatureFilter, appliedCustomTemperatureRange, appliedPriceRange, selectedCurrency, appliedTagsFilter])
 
   return (
     <div className="py-12 bg-white dark:bg-[#0c0c0d] min-h-screen transition-colors duration-300">
@@ -3074,6 +3147,259 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                         </div>
                       </>
                     )}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {/* Price Filter */}
+            <div className="relative" ref={priceFilterRef}>
+              {(appliedPriceRange.min > 0 || appliedPriceRange.max < 500) ? (
+                // Filter is active - show price range with X button
+                <div className="flex items-center gap-2 px-4 h-[44px] rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white text-sm font-medium">
+                  <button
+                    onClick={() => setIsPriceFilterOpen(!isPriceFilterOpen)}
+                    className="flex items-center gap-2 hover:text-neutral-600 dark:hover:text-neutral-400 transition-colors"
+                  >
+                    <span>{formatPrice(appliedPriceRange.min, selectedCurrency)} - {formatPrice(appliedPriceRange.max, selectedCurrency)}</span>
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      setAppliedPriceRange({ min: 0, max: 500 })
+                      setTempPriceRange({ min: 0, max: 500 })
+                    }}
+                    className="text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300 transition-colors"
+                    aria-label="Clear price filter"
+                  >
+                    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+              ) : (
+                // No filter - show default button
+                <button
+                  onClick={() => setIsPriceFilterOpen(!isPriceFilterOpen)}
+                  className="flex items-center gap-2 px-4 h-[44px] rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white hover:border-neutral-400 dark:hover:border-neutral-600 transition-colors text-sm font-medium whitespace-nowrap"
+                >
+                  Price
+                  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+              )}
+
+              {/* Price Dropdown */}
+              <AnimatePresence>
+                {isPriceFilterOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                    className="absolute top-full mt-2 left-0 z-50 bg-white dark:bg-neutral-900 rounded-lg shadow-xl border border-neutral-200 dark:border-neutral-800 p-4 min-w-[600px]"
+                  >
+                    {/* Top Bar: Currency Selector, Clear and Apply */}
+                    <div className="flex items-center justify-between gap-4 mb-4">
+                      {/* Currency Dropdown - Left */}
+                      <select
+                        value={tempSelectedCurrency}
+                        onChange={(e) => setTempSelectedCurrency(e.target.value)}
+                        className="px-4 py-2 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white text-sm font-medium focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-600"
+                      >
+                        {currencyOptions.map((currency) => (
+                          <option key={currency.code} value={currency.code}>
+                            {currency.code}
+                          </option>
+                        ))}
+                      </select>
+
+                      {/* Right side: Clear and Apply buttons */}
+                      <div className="flex items-center gap-2">
+                        {/* Clear Button */}
+                        <button
+                          onClick={() => {
+                            setTempPriceRange({ min: 0, max: 500 })
+                          }}
+                          disabled={tempPriceRange.min === 0 && tempPriceRange.max === 500}
+                          className={`p-2 rounded-lg transition-colors flex-shrink-0 ${
+                            tempPriceRange.min !== 0 || tempPriceRange.max !== 500
+                              ? 'bg-neutral-200 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-300 dark:hover:bg-neutral-600 cursor-pointer'
+                              : 'text-neutral-400 dark:text-neutral-600 cursor-not-allowed opacity-50'
+                          }`}
+                          aria-label="Clear selection"
+                        >
+                          <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                        </button>
+
+                        {/* Apply Button */}
+                        <button
+                          onClick={() => {
+                            setAppliedPriceRange(tempPriceRange)
+                            setSelectedCurrency(tempSelectedCurrency)
+                            setIsPriceFilterOpen(false)
+                          }}
+                          className="p-2 rounded-lg transition-colors flex-shrink-0 bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 hover:bg-neutral-700 dark:hover:bg-neutral-200 cursor-pointer"
+                          aria-label="Apply filter"
+                        >
+                          <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Price Range Slider */}
+                    <div className="mb-6">
+                      <div className="relative px-2">
+                        <Box sx={{ width: '100%' }}>
+                          <Slider
+                            value={[tempPriceRange.min, tempPriceRange.max]}
+                            onChange={(_, newValue) => {
+                              const [min, max] = newValue as number[]
+                              setTempPriceRange({ min, max })
+                            }}
+                            min={0}
+                            max={500}
+                            step={10}
+                            disableSwap
+                            sx={{
+                              color: '#171717',
+                              height: 6,
+                              padding: '13px 0',
+                              '& .MuiSlider-thumb': {
+                                height: 20,
+                                width: 20,
+                                backgroundColor: '#171717',
+                                border: '3px solid #fff',
+                                boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+                                '&:hover, &.Mui-focusVisible': {
+                                  boxShadow: '0 0 0 6px rgba(23, 23, 23, 0.1)',
+                                },
+                              },
+                              '& .MuiSlider-track': {
+                                height: 6,
+                                border: 'none',
+                                backgroundColor: '#171717',
+                              },
+                              '& .MuiSlider-rail': {
+                                height: 6,
+                                opacity: 1,
+                                backgroundColor: '#e5e5e5',
+                              },
+                              '.dark &': {
+                                color: '#fff',
+                                '& .MuiSlider-thumb': {
+                                  backgroundColor: '#fff',
+                                  border: '3px solid #171717',
+                                  '&:hover, &.Mui-focusVisible': {
+                                    boxShadow: '0 0 0 6px rgba(255, 255, 255, 0.1)',
+                                  },
+                                },
+                                '& .MuiSlider-track': {
+                                  backgroundColor: '#fff',
+                                },
+                                '& .MuiSlider-rail': {
+                                  backgroundColor: '#404040',
+                                },
+                              },
+                            }}
+                          />
+                        </Box>
+                      </div>
+
+                      {/* Min and Max Value Display with Input Boxes */}
+                      <div className="flex items-center justify-between mt-2 px-2">
+                        {/* Min Value */}
+                        <div className="flex items-center gap-2 bg-neutral-100 dark:bg-neutral-800 rounded-lg px-3 py-2">
+                          {isMinPriceInputFocused ? (
+                            <div className="flex items-center justify-center gap-0 w-full">
+                              <input
+                                type="number"
+                                value={minPriceInputValue}
+                                onChange={(e) => {
+                                  const value = e.target.value
+                                  setMinPriceInputValue(value)
+                                  const numValue = parseInt(value) || 0
+                                  setTempPriceRange({ ...tempPriceRange, min: Math.min(numValue, tempPriceRange.max) })
+                                }}
+                                onBlur={() => setIsMinPriceInputFocused(false)}
+                                onKeyDown={(e) => {
+                                  if (e.key === 'Enter') {
+                                    setIsMinPriceInputFocused(false)
+                                  }
+                                }}
+                                autoFocus
+                                className="flex-shrink-0 w-auto min-w-0 bg-transparent text-neutral-900 dark:text-white text-sm font-medium outline-none border-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none text-center"
+                                style={{ width: `${Math.max(1, minPriceInputValue.length)}ch` }}
+                                placeholder=""
+                              />
+                              {minPriceInputValue && (
+                                <span className="text-neutral-900 dark:text-white text-sm font-medium flex-shrink-0">
+                                  {formatPrice(0, tempSelectedCurrency).replace(/[0-9]/g, '')}
+                                </span>
+                              )}
+                            </div>
+                          ) : (
+                            <button
+                              onClick={() => {
+                                setIsMinPriceInputFocused(true)
+                                setMinPriceInputValue(tempPriceRange.min.toString())
+                              }}
+                              className="text-neutral-900 dark:text-white text-sm font-medium hover:text-neutral-600 dark:hover:text-neutral-400 transition-colors"
+                            >
+                              {formatPrice(tempPriceRange.min, tempSelectedCurrency)}
+                            </button>
+                          )}
+                        </div>
+
+                        {/* Max Value */}
+                        <div className="flex items-center gap-2 bg-neutral-100 dark:bg-neutral-800 rounded-lg px-3 py-2">
+                          {isMaxPriceInputFocused ? (
+                            <div className="flex items-center justify-center gap-0 w-full">
+                              <input
+                                type="number"
+                                value={maxPriceInputValue}
+                                onChange={(e) => {
+                                  const value = e.target.value
+                                  setMaxPriceInputValue(value)
+                                  const numValue = parseInt(value) || 500
+                                  setTempPriceRange({ ...tempPriceRange, max: Math.max(numValue, tempPriceRange.min) })
+                                }}
+                                onBlur={() => setIsMaxPriceInputFocused(false)}
+                                onKeyDown={(e) => {
+                                  if (e.key === 'Enter') {
+                                    setIsMaxPriceInputFocused(false)
+                                  }
+                                }}
+                                autoFocus
+                                className="flex-shrink-0 w-auto min-w-0 bg-transparent text-neutral-900 dark:text-white text-sm font-medium outline-none border-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none text-center"
+                                style={{ width: `${Math.max(1, maxPriceInputValue.length)}ch` }}
+                                placeholder=""
+                              />
+                              {maxPriceInputValue && (
+                                <span className="text-neutral-900 dark:text-white text-sm font-medium flex-shrink-0">
+                                  {formatPrice(0, tempSelectedCurrency).replace(/[0-9]/g, '')}
+                                </span>
+                              )}
+                            </div>
+                          ) : (
+                            <button
+                              onClick={() => {
+                                setIsMaxPriceInputFocused(true)
+                                setMaxPriceInputValue(tempPriceRange.max.toString())
+                              }}
+                              className="text-neutral-900 dark:text-white text-sm font-medium hover:text-neutral-600 dark:hover:text-neutral-400 transition-colors"
+                            >
+                              {tempPriceRange.max >= 500 ? `${formatPrice(500, tempSelectedCurrency)}+` : formatPrice(tempPriceRange.max, tempSelectedCurrency)}
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    </div>
                   </motion.div>
                 )}
               </AnimatePresence>
