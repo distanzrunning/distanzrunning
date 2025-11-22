@@ -71,6 +71,19 @@ export const raceGuideType = defineType({
       },
     }),
     defineField({
+      name: 'surfaceBreakdown',
+      title: 'Surface Breakdown',
+      type: 'string',
+      description: 'Detailed surface composition of the course',
+      options: {
+        list: [
+          { title: '100% Paved', value: '100% Paved' },
+          { title: 'Unpaved', value: 'Unpaved' },
+          { title: 'Mixed', value: 'Mixed' },
+        ],
+      },
+    }),
+    defineField({
       name: 'profile',
       title: 'Profile',
       type: 'string',

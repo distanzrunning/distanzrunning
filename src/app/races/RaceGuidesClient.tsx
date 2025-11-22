@@ -3676,7 +3676,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                   {race.surface}
                                 </p>
                                 <p className="font-body text-xs font-normal text-white">
-                                  100% Paved
+                                  {race.surfaceBreakdown || 'N/A'}
                                 </p>
                               </div>
                             )}

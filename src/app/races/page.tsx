@@ -15,6 +15,7 @@ export type RaceGuide = {
   raceCategoryName?: string
   distance?: number
   surface?: string
+  surfaceBreakdown?: string
   profile?: string
   elevationGain?: number
   averageTemperature?: number
@@ -38,6 +39,7 @@ export default async function RaceGuidesPage() {
       mainImage,
       distance,
       surface,
+      surfaceBreakdown,
       profile,
       elevationGain,
       averageTemperature,
