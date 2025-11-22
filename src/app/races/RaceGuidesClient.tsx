@@ -114,6 +114,12 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
   const [minTemperatureInputValue, setMinTemperatureInputValue] = useState('')
   const [maxTemperatureInputValue, setMaxTemperatureInputValue] = useState('')
 
+  // World Athletics Label filter states
+  const [isLabelFilterOpen, setIsLabelFilterOpen] = useState(false)
+  const [appliedLabelFilter, setAppliedLabelFilter] = useState<string | null>(null)
+  const [tempLabelFilter, setTempLabelFilter] = useState<string | null>(null)
+  const labelFilterRef = useRef<HTMLDivElement>(null)
+
   // Loading state for filtering
   const [isFiltering, setIsFiltering] = useState(false)
 
@@ -168,6 +174,16 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
     { id: 'warm', label: 'Warm', minC: 18, maxC: 25, fillPercent: 65, color: '#FCD34D' },
     { id: 'hot', label: 'Hot', minC: 25, maxC: 32, fillPercent: 85, color: '#FB923C' },
     { id: 'very-hot', label: 'Very Hot', minC: 32, maxC: 45, fillPercent: 100, color: '#EF4444' }
+  ]
+
+  // World Athletics Label options
+  const worldAthleticsLabelOptions = [
+    'Platinum',
+    'Gold',
+    'Silver',
+    'Bronze',
+    'Elite',
+    'World Athletics Certified Course'
   ]
 
   // All countries list (sorted alphabetically)
@@ -456,6 +472,30 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
     }
   }, [isTemperatureFilterOpen, appliedTemperatureFilter, appliedCustomTemperatureRange])
 
+  // Click outside to close label filter dropdown
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (labelFilterRef.current && !labelFilterRef.current.contains(event.target as Node)) {
+        setIsLabelFilterOpen(false)
+      }
+    }
+
+    if (isLabelFilterOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [isLabelFilterOpen])
+
+  // Initialize label filter temp state when dropdown opens
+  useEffect(() => {
+    if (isLabelFilterOpen) {
+      setTempLabelFilter(appliedLabelFilter)
+    }
+  }, [isLabelFilterOpen, appliedLabelFilter])
+
   // Helper: Convert km to miles
   const kmToMiles = (km: number) => km * 0.621371
 
@@ -607,7 +647,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
     setIsFiltering(true)
     const timer = setTimeout(() => setIsFiltering(false), 300)
     return () => clearTimeout(timer)
-  }, [searchQuery, appliedDateRange, appliedDistanceFilter, appliedCustomRange, appliedCountryFilter, appliedCityFilter, appliedStateFilter, appliedSurfaceFilter, appliedElevationFilter, appliedCustomElevationRange, appliedTemperatureFilter, appliedCustomTemperatureRange])
+  }, [searchQuery, appliedDateRange, appliedDistanceFilter, appliedCustomRange, appliedCountryFilter, appliedCityFilter, appliedStateFilter, appliedSurfaceFilter, appliedElevationFilter, appliedCustomElevationRange, appliedTemperatureFilter, appliedCustomTemperatureRange, appliedLabelFilter])
 
   // Filter races based on search query and date range
   const filteredRaces = useMemo(() => {
@@ -720,8 +760,13 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
       }
     }
 
+    // Apply World Athletics Label filter
+    if (appliedLabelFilter) {
+      filtered = filtered.filter((race) => race.worldAthleticsLabel === appliedLabelFilter)
+    }
+
     return filtered
-  }, [races, searchQuery, appliedDateRange, appliedDistanceFilter, appliedCustomRange, appliedCountryFilter, appliedCityFilter, appliedStateFilter, appliedSurfaceFilter, appliedElevationFilter, appliedCustomElevationRange, appliedTemperatureFilter, appliedCustomTemperatureRange])
+  }, [races, searchQuery, appliedDateRange, appliedDistanceFilter, appliedCustomRange, appliedCountryFilter, appliedCityFilter, appliedStateFilter, appliedSurfaceFilter, appliedElevationFilter, appliedCustomElevationRange, appliedTemperatureFilter, appliedCustomTemperatureRange, appliedLabelFilter])
 
   return (
     <div className="py-12 bg-white dark:bg-[#0c0c0d] min-h-screen transition-colors duration-300">
@@ -3022,6 +3067,121 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                         </div>
                       </>
                     )}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {/* World Athletics Label Filter */}
+            <div className="relative" ref={labelFilterRef}>
+              {appliedLabelFilter ? (
+                // Filter is active - show filter value with X button
+                <div className="flex items-center gap-2 px-4 h-[44px] rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white text-sm font-medium">
+                  <button
+                    onClick={() => setIsLabelFilterOpen(!isLabelFilterOpen)}
+                    className="flex items-center gap-2 hover:text-neutral-600 dark:hover:text-neutral-400 transition-colors"
+                  >
+                    <span>{appliedLabelFilter}</span>
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      setAppliedLabelFilter(null)
+                      setTempLabelFilter(null)
+                    }}
+                    className="text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300 transition-colors"
+                    aria-label="Clear label filter"
+                  >
+                    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+              ) : (
+                // No filter - show default button
+                <button
+                  onClick={() => setIsLabelFilterOpen(!isLabelFilterOpen)}
+                  className="flex items-center gap-2 px-4 h-[44px] rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white hover:border-neutral-400 dark:hover:border-neutral-600 transition-colors text-sm font-medium whitespace-nowrap"
+                >
+                  WA Label
+                  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+              )}
+
+              {/* Label Dropdown */}
+              <AnimatePresence>
+                {isLabelFilterOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                    className="absolute top-full mt-2 left-0 z-50 bg-white dark:bg-neutral-900 rounded-lg shadow-xl border border-neutral-200 dark:border-neutral-800 p-4 min-w-[600px]"
+                  >
+                    {/* Top Bar: Clear and Apply */}
+                    <div className="flex items-center justify-between gap-4 mb-4">
+                      {/* Clear Button - Left */}
+                      <button
+                        onClick={() => {
+                          setTempLabelFilter(null)
+                        }}
+                        disabled={!tempLabelFilter}
+                        className={`p-2 rounded-lg transition-colors flex-shrink-0 ${
+                          tempLabelFilter
+                            ? 'bg-neutral-200 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-300 dark:hover:bg-neutral-600 cursor-pointer'
+                            : 'text-neutral-400 dark:text-neutral-600 cursor-not-allowed opacity-50'
+                        }`}
+                        aria-label="Clear selection"
+                      >
+                        <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
+
+                      {/* Apply Button - Right */}
+                      <button
+                        onClick={() => {
+                          setAppliedLabelFilter(tempLabelFilter)
+                          setIsLabelFilterOpen(false)
+                        }}
+                        disabled={!tempLabelFilter}
+                        className={`p-2 rounded-lg transition-colors flex-shrink-0 ${
+                          tempLabelFilter
+                            ? 'bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 hover:bg-neutral-700 dark:hover:bg-neutral-200 cursor-pointer'
+                            : 'bg-neutral-200 dark:bg-neutral-800 text-neutral-400 dark:text-neutral-600 cursor-not-allowed opacity-50'
+                        }`}
+                        aria-label="Apply filter"
+                      >
+                        <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                      </button>
+                    </div>
+
+                    {/* Label List */}
+                    <div className="grid grid-cols-3 gap-3 mb-4">
+                      {worldAthleticsLabelOptions.map((label) => {
+                        const isSelected = tempLabelFilter === label
+
+                        return (
+                          <button
+                            key={label}
+                            onClick={() => {
+                              // Toggle: if already selected, deselect
+                              setTempLabelFilter(isSelected ? null : label)
+                            }}
+                            className={`
+                              py-4 px-4 rounded-lg text-base font-medium transition-colors flex flex-col items-center gap-1
+                              ${isSelected ? 'bg-neutral-900 dark:bg-white text-white dark:text-neutral-900' : 'bg-neutral-200 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-400 hover:bg-neutral-300 dark:hover:bg-neutral-700 hover:text-neutral-900 dark:hover:text-white'}
+                            `}
+                          >
+                            <span className="text-center">{label}</span>
+                          </button>
+                        )
+                      })}
+                    </div>
                   </motion.div>
                 )}
               </AnimatePresence>
