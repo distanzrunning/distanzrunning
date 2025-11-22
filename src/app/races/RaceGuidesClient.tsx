@@ -3628,15 +3628,37 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
             ))}
           </div>
         ) : filteredRaces.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-lg text-neutral-600 dark:text-neutral-400">
-              No races found matching &quot;{searchQuery}&quot;
+          <div className="flex flex-col items-center justify-center py-16 px-4">
+            <p className="font-body text-lg text-neutral-600 dark:text-neutral-400 mb-6 text-center">
+              No races found matching your criteria
             </p>
             <button
-              onClick={() => setSearchQuery('')}
-              className="mt-4 px-4 py-2 bg-electric-pink text-white rounded-lg hover:bg-electric-pink/90 transition-colors"
+              onClick={() => {
+                setSearchQuery('')
+                setAppliedDateRange({ start: null, end: null })
+                setTempDateRange({ start: null, end: null })
+                setAppliedDistanceFilter(null)
+                setTempDistanceFilter(null)
+                setAppliedCountryFilter(null)
+                setTempCountryFilter(null)
+                setAppliedCityFilter(null)
+                setTempCityFilter(null)
+                setAppliedStateFilter(null)
+                setTempStateFilter(null)
+                setAppliedSurfaceFilter(null)
+                setTempSurfaceFilter(null)
+                setAppliedElevationFilter(null)
+                setTempElevationFilter(null)
+                setAppliedTemperatureFilter(null)
+                setTempTemperatureFilter(null)
+                setAppliedPriceFilter(null)
+                setTempPriceFilter(null)
+                setAppliedTagsFilter([])
+                setTempTagsFilter([])
+              }}
+              className="inline-flex items-center justify-center px-6 py-3 bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 rounded-lg font-medium text-sm hover:bg-neutral-700 dark:hover:bg-neutral-200 transition-colors"
             >
-              Clear search
+              Clear all filters
             </button>
           </div>
         ) : (
