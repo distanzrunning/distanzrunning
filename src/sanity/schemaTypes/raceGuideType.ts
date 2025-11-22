@@ -63,10 +63,10 @@ export const raceGuideType = defineType({
       type: 'string',
       options: {
         list: [
-          { title: 'Road', value: 'road' },
-          { title: 'Trail', value: 'trail' },
-          { title: 'Track', value: 'track' },
-          { title: 'Mixed', value: 'mixed' },
+          { title: 'Road', value: 'Road' },
+          { title: 'Trail', value: 'Trail' },
+          { title: 'Track', value: 'Track' },
+          { title: 'Mixed', value: 'Mixed' },
         ],
       },
     }),
@@ -95,19 +95,11 @@ export const raceGuideType = defineType({
       type: 'number',
     }),
     defineField({
-      name: 'worldAthleticsLabel',
-      title: 'World Athletics Label',
-      type: 'string',
-      options: {
-        list: [
-          { title: 'Platinum', value: 'platinum' },
-          { title: 'Gold', value: 'gold' },
-          { title: 'Silver', value: 'silver' },
-          { title: 'Bronze', value: 'bronze' },
-          { title: 'Elite', value: 'elite' },
-          { title: 'None', value: 'none' },
-        ],
-      },
+      name: 'tags',
+      title: 'Tags',
+      type: 'array',
+      of: [{ type: 'string' }],
+      description: 'Add multiple tags to categorize this race (e.g., "World Athletics Gold", "Major Marathon", "Fast Course")',
     }),
     defineField({
       name: 'finishers',
@@ -151,7 +143,7 @@ export const raceGuideType = defineType({
       initialValue: 'USD',
     }),
     defineField({
-      name: 'avgTemperature',
+      name: 'averageTemperature',
       title: 'Average Temperature (°C)',
       type: 'number',
     }),
