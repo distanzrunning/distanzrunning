@@ -607,7 +607,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
     setIsFiltering(true)
     const timer = setTimeout(() => setIsFiltering(false), 300)
     return () => clearTimeout(timer)
-  }, [searchQuery, appliedDateRange, appliedDistanceFilter, appliedCustomRange, appliedCountryFilter, appliedCityFilter, appliedStateFilter, appliedSurfaceFilter, appliedElevationFilter, appliedCustomElevationRange])
+  }, [searchQuery, appliedDateRange, appliedDistanceFilter, appliedCustomRange, appliedCountryFilter, appliedCityFilter, appliedStateFilter, appliedSurfaceFilter, appliedElevationFilter, appliedCustomElevationRange, appliedTemperatureFilter, appliedCustomTemperatureRange])
 
   // Filter races based on search query and date range
   const filteredRaces = useMemo(() => {
@@ -702,8 +702,26 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
       }
     }
 
+    // Apply temperature filter
+    if (appliedTemperatureFilter) {
+      if (appliedTemperatureFilter === 'custom') {
+        filtered = filtered.filter((race) => {
+          if (race.averageTemperature === undefined) return false
+          return race.averageTemperature >= appliedCustomTemperatureRange.min && race.averageTemperature <= appliedCustomTemperatureRange.max
+        })
+      } else {
+        const category = temperatureCategories.find(c => c.id === appliedTemperatureFilter)
+        if (category) {
+          filtered = filtered.filter((race) => {
+            if (race.averageTemperature === undefined) return false
+            return race.averageTemperature >= category.minC && race.averageTemperature <= category.maxC
+          })
+        }
+      }
+    }
+
     return filtered
-  }, [races, searchQuery, appliedDateRange, appliedDistanceFilter, appliedCustomRange, appliedCountryFilter, appliedCityFilter, appliedStateFilter, appliedSurfaceFilter, appliedElevationFilter, appliedCustomElevationRange])
+  }, [races, searchQuery, appliedDateRange, appliedDistanceFilter, appliedCustomRange, appliedCountryFilter, appliedCityFilter, appliedStateFilter, appliedSurfaceFilter, appliedElevationFilter, appliedCustomElevationRange, appliedTemperatureFilter, appliedCustomTemperatureRange])
 
   return (
     <div className="py-12 bg-white dark:bg-[#0c0c0d] min-h-screen transition-colors duration-300">

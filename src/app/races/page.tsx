@@ -16,6 +16,7 @@ export type RaceGuide = {
   distance?: number
   surface?: string
   elevationGain?: number
+  averageTemperature?: number
 }
 
 export const revalidate = 60 // Incremental Static Regeneration - refresh every 60s
@@ -34,6 +35,7 @@ export default async function RaceGuidesPage() {
       distance,
       surface,
       elevationGain,
+      averageTemperature,
       "raceCategoryName": raceCategory->title
     }
   `)
