@@ -109,7 +109,7 @@ export default function TagFilterGrid({ articles, basePath = "/articles/post/" }
       </div>
 
       {/* Grid */}
-      <div className="w-full max-w-[1800px] mx-auto grid grid-cols-1 lg:grid-cols-4 gap-x-3 gap-y-8">
+      <div className="w-[95%] mx-auto grid grid-cols-1 lg:grid-cols-4 gap-x-3 gap-y-8">
         {visibleArticles.map((article) => (
           <Link
             key={article.slug.current}

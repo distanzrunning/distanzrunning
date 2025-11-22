@@ -303,11 +303,11 @@ module.exports = {
         18: 'repeat(18, minmax(0, 1fr))',
       },
       maxWidth: {
-        'distanz': '1042px', // Maintain Quartr-inspired container width
-        'quartr': '1042px', // Legacy
-        'text': '720px', // Optimal reading width for articles
-        'content': '1200px', // Standard content width
-        'wide': '1440px', // Wide layouts
+        'distanz': '95%', // Wide container width for consistent layouts
+        'quartr': '95%', // Legacy - updated to match new width
+        'text': '720px', // Optimal reading width for articles (unchanged)
+        'content': '95%', // Standard content width
+        'wide': '95%', // Wide layouts
       },
       spacing: {
         '18': '4.5rem',
@@ -366,7 +366,7 @@ module.exports = {
           gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
           marginLeft: 'auto',
           marginRight: 'auto',
-          maxWidth: '1042px',
+          maxWidth: '95%',
           width: '100%',
           columnGap: '1.25rem',
           paddingLeft: '1.5rem',
@@ -384,7 +384,7 @@ module.exports = {
           gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
           marginLeft: 'auto',
           marginRight: 'auto',
-          maxWidth: '1042px',
+          maxWidth: '95%',
           width: '100%',
           columnGap: '1.25rem',
           paddingLeft: '1.5rem',
@@ -415,7 +415,7 @@ module.exports = {
           gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
           marginLeft: 'auto',
           marginRight: 'auto',
-          maxWidth: '1042px',
+          maxWidth: '95%',
           width: '100%',
           columnGap: '1.25rem',
           paddingLeft: '1.5rem',
@@ -432,7 +432,7 @@ module.exports = {
           gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
           marginLeft: 'auto',
           marginRight: 'auto',
-          maxWidth: '1042px',
+          maxWidth: '95%',
           width: '100%',
           columnGap: '1.25rem',
           paddingLeft: '1.5rem',

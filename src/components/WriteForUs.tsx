@@ -7,7 +7,7 @@ import { ChevronRight } from 'lucide-react'
 export default function WriteForUs() {
   return (
     <section className="w-full overflow-x-clip px-6">
-      <div className="pt-24 pb-32 max-w-[calc(1024px+2rem)] mx-auto flex w-full flex-col px-4">
+      <div className="pt-24 pb-32 w-[95%] mx-auto flex flex-col px-4">
         <div className="flex min-h-56 w-full items-center gap-6 overflow-hidden rounded-2xl bg-gray-900 dark:bg-white p-10">
           <div className="flex grow flex-col gap-6 items-center">
             <div className="flex flex-col items-center gap-6">

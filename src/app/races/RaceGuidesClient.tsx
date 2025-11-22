@@ -850,7 +850,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
 
   return (
     <div className="py-12 bg-white dark:bg-[#0c0c0d] min-h-screen transition-colors duration-300">
-      <div className="w-[96%] sm:w-[90%] max-w-[2000px] mx-auto px-2 sm:px-3">
+      <div className="w-[95%] mx-auto px-2 sm:px-3">
         <div className="mb-12">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-headline font-bold mb-4 text-neutral-900 dark:text-white">
             Race Guides

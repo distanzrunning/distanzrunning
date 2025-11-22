@@ -14,7 +14,7 @@ export default function ContactUsPage() {
       <div className="min-h-screen bg-white dark:bg-[#0c0c0d] transition-colors duration-300">
         {/* Main Content */}
         <div className="relative w-full pt-16 md:pt-24 pb-16 px-3">
-          <div className="relative mx-auto grid items-start max-w-[900px] md:grid-cols-2 gap-8">
+          <div className="relative mx-auto grid items-start w-[95%] md:grid-cols-2 gap-8">
         {/* Left Column - Info */}
         <div className="relative pt-8 md:pt-12 pb-8 md:pr-16">
           <div className="relative">
