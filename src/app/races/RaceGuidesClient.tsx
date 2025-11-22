@@ -3690,7 +3690,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                   </p>
                                 </div>
                                 <p className="font-body text-base font-bold text-white">
-                                  {formatPrice(convertCurrencySync(race.price, race.currency || 'USD', 'USD'), 'USD').replace('$', '€')}
+                                  {formatPrice(convertCurrencySync(race.price, race.currency || 'USD', 'USD'), 'USD')}
                                 </p>
                                 <p className="font-body text-[10px] font-normal text-white/70">
                                   Variable
