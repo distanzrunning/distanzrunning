@@ -934,7 +934,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
           {/* Search and Filters Row */}
           <div className="flex items-center gap-3 py-2">
             {/* Search Bar */}
-            <div className="relative flex-shrink-0">
+            <div className="relative flex-shrink-0" style={{ order: -100 }}>
               <AnimatePresence mode="wait" initial={false}>
                 {!isSearchExpanded ? (
                   <motion.button
@@ -1019,7 +1019,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
             </div>
 
             {/* Date Filter */}
-            <div className="relative" ref={dateFilterRef} style={{ order: appliedDateRange.start || appliedDateRange.end ? -1 : 0 }}>
+            <div className="relative" ref={dateFilterRef} style={{ order: appliedDateRange.start || appliedDateRange.end ? -10 : 0 }}>
               {appliedDateRange.start || appliedDateRange.end ? (
                 // Filter is active - show filter value with X button
                 <div className="flex items-center gap-2 px-4 h-[44px] rounded-lg border border-neutral-900 dark:border-white bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 text-sm font-medium">
@@ -1296,7 +1296,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
             </div>
 
             {/* Distance Filter */}
-            <div className="relative" ref={distanceFilterRef} style={{ order: appliedDistanceFilter ? -1 : 0 }}>
+            <div className="relative" ref={distanceFilterRef} style={{ order: appliedDistanceFilter ? -10 : 0 }}>
               {appliedDistanceFilter ? (
                 // Filter is active - show filter value with X button
                 <div className="flex items-center gap-2 px-4 h-[44px] rounded-lg border border-neutral-900 dark:border-white bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 text-sm font-medium">
@@ -1742,7 +1742,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
             </div>
 
             {/* Country Filter */}
-            <div className="relative" ref={countryFilterRef} style={{ order: appliedCountryFilter ? -1 : 0 }}>
+            <div className="relative" ref={countryFilterRef} style={{ order: appliedCountryFilter ? -10 : 0 }}>
               {appliedCountryFilter ? (
                 // Filter is active - show filter value with X button
                 <div className="flex items-center gap-2 px-4 h-[44px] rounded-lg border border-neutral-900 dark:border-white bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 text-sm font-medium">
@@ -1884,7 +1884,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
             </div>
 
             {/* City Filter */}
-            <div className="relative" ref={cityFilterRef} style={{ order: appliedCityFilter ? -1 : 0 }}>
+            <div className="relative" ref={cityFilterRef} style={{ order: appliedCityFilter ? -10 : 0 }}>
               {appliedCityFilter ? (
                 // Filter is active - show filter value with X button
                 <div className="flex items-center gap-2 px-4 h-[44px] rounded-lg border border-neutral-900 dark:border-white bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 text-sm font-medium">
@@ -2026,7 +2026,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
             </div>
 
             {/* State Filter */}
-            <div className="relative" ref={stateFilterRef} style={{ order: appliedStateFilter ? -1 : 0 }}>
+            <div className="relative" ref={stateFilterRef} style={{ order: appliedStateFilter ? -10 : 0 }}>
               {appliedStateFilter ? (
                 // Filter is active - show filter value with X button
                 <div className="flex items-center gap-2 px-4 h-[44px] rounded-lg border border-neutral-900 dark:border-white bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 text-sm font-medium">
@@ -2168,7 +2168,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
             </div>
 
             {/* Surface Filter */}
-            <div className="relative" ref={surfaceFilterRef} style={{ order: appliedSurfaceFilter ? -1 : 0 }}>
+            <div className="relative" ref={surfaceFilterRef} style={{ order: appliedSurfaceFilter ? -10 : 0 }}>
               {appliedSurfaceFilter ? (
                 // Filter is active - show filter value with X button
                 <div className="flex items-center gap-2 px-4 h-[44px] rounded-lg border border-neutral-900 dark:border-white bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 text-sm font-medium">
@@ -2348,7 +2348,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
             </div>
 
             {/* Elevation Filter */}
-            <div className="relative" ref={elevationFilterRef} style={{ order: appliedElevationFilter ? -1 : 0 }}>
+            <div className="relative" ref={elevationFilterRef} style={{ order: appliedElevationFilter ? -10 : 0 }}>
               {appliedElevationFilter ? (
                 // Filter is active - show filter value with X button
                 <div className="flex items-center gap-2 px-4 h-[44px] rounded-lg border border-neutral-900 dark:border-white bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 text-sm font-medium">
@@ -2802,7 +2802,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
             </div>
 
             {/* Temperature Filter */}
-            <div className="relative" ref={temperatureFilterRef} style={{ order: appliedTemperatureFilter ? -1 : 0 }}>
+            <div className="relative" ref={temperatureFilterRef} style={{ order: appliedTemperatureFilter ? -10 : 0 }}>
               {appliedTemperatureFilter ? (
                 // Filter is active - show filter value with X button
                 <div className="flex items-center gap-2 px-4 h-[44px] rounded-lg border border-neutral-900 dark:border-white bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 text-sm font-medium">
@@ -3548,7 +3548,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
             </div>
 
             {/* Tags Filter */}
-            <div className="relative" ref={tagsFilterRef} style={{ order: appliedTagsFilter ? -1 : 0 }}>
+            <div className="relative" ref={tagsFilterRef} style={{ order: appliedTagsFilter ? -10 : 0 }}>
               {appliedTagsFilter ? (
                 // Filter is active - show filter value with X button
                 <div className="flex items-center gap-2 px-4 h-[44px] rounded-lg border border-neutral-900 dark:border-white bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 text-sm font-medium">
@@ -3670,7 +3670,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
             </div>
 
             {/* Sort Dropdown */}
-            <div className="relative ml-auto" ref={sortRef}>
+            <div className="relative ml-auto" ref={sortRef} style={{ order: 100 }}>
               <button
                 onClick={() => setIsSortOpen(!isSortOpen)}
                 className="flex items-center gap-2 px-4 h-[44px] rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white hover:border-neutral-400 dark:hover:border-neutral-600 transition-colors text-sm font-medium whitespace-nowrap"
