@@ -136,6 +136,11 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
   // Loading state for filtering
   const [isFiltering, setIsFiltering] = useState(false)
 
+  // Sort states
+  const [sortBy, setSortBy] = useState<string>('date-asc')
+  const [isSortOpen, setIsSortOpen] = useState(false)
+  const sortRef = useRef<HTMLDivElement>(null)
+
   // Get unique tags from all races
   const availableTags = useMemo(() => {
     const tagsSet = new Set<string>()
@@ -562,6 +567,23 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
     }
   }, [isTagsFilterOpen, appliedTagsFilter])
 
+  // Close sort dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (sortRef.current && !sortRef.current.contains(event.target as Node)) {
+        setIsSortOpen(false)
+      }
+    }
+
+    if (isSortOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [isSortOpen])
+
   // Helper: Convert km to miles
   const kmToMiles = (km: number) => km * 0.621371
 
@@ -847,6 +869,44 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
 
     return filtered
   }, [races, searchQuery, appliedDateRange, appliedDistanceFilter, appliedCustomRange, appliedCountryFilter, appliedCityFilter, appliedStateFilter, appliedSurfaceFilter, appliedElevationFilter, appliedCustomElevationRange, appliedTemperatureFilter, appliedCustomTemperatureRange, appliedPriceRange, selectedCurrency, appliedTagsFilter])
+
+  // Sort the filtered races
+  const sortedRaces = useMemo(() => {
+    const sorted = [...filteredRaces]
+
+    switch (sortBy) {
+      case 'date-asc':
+        return sorted.sort((a, b) => new Date(a.eventDate).getTime() - new Date(b.eventDate).getTime())
+      case 'date-desc':
+        return sorted.sort((a, b) => new Date(b.eventDate).getTime() - new Date(a.eventDate).getTime())
+      case 'distance-asc':
+        return sorted.sort((a, b) => (a.distance || 0) - (b.distance || 0))
+      case 'distance-desc':
+        return sorted.sort((a, b) => (b.distance || 0) - (a.distance || 0))
+      case 'elevation-asc':
+        return sorted.sort((a, b) => (a.elevationGain || 0) - (b.elevationGain || 0))
+      case 'elevation-desc':
+        return sorted.sort((a, b) => (b.elevationGain || 0) - (a.elevationGain || 0))
+      case 'price-asc':
+        return sorted.sort((a, b) => {
+          const priceA = a.price ? convertCurrencySync(a.price, a.currency || 'USD', 'USD') : 0
+          const priceB = b.price ? convertCurrencySync(b.price, b.currency || 'USD', 'USD') : 0
+          return priceA - priceB
+        })
+      case 'price-desc':
+        return sorted.sort((a, b) => {
+          const priceA = a.price ? convertCurrencySync(a.price, a.currency || 'USD', 'USD') : 0
+          const priceB = b.price ? convertCurrencySync(b.price, b.currency || 'USD', 'USD') : 0
+          return priceB - priceA
+        })
+      case 'name-asc':
+        return sorted.sort((a, b) => a.title.localeCompare(b.title))
+      case 'name-desc':
+        return sorted.sort((a, b) => b.title.localeCompare(a.title))
+      default:
+        return sorted
+    }
+  }, [filteredRaces, sortBy])
 
   return (
     <div className="py-12 bg-white dark:bg-[#0c0c0d] min-h-screen transition-colors duration-300">
@@ -3597,6 +3657,63 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                 )}
               </AnimatePresence>
             </div>
+
+            {/* Sort Dropdown */}
+            <div className="relative ml-auto" ref={sortRef}>
+              <button
+                onClick={() => setIsSortOpen(!isSortOpen)}
+                className="flex items-center gap-2 px-4 h-[44px] rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white hover:border-neutral-400 dark:hover:border-neutral-600 transition-colors text-sm font-medium whitespace-nowrap"
+              >
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12" />
+                </svg>
+                Sort
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+
+              {/* Sort Dropdown Menu */}
+              <AnimatePresence>
+                {isSortOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                    className="absolute top-full mt-2 right-0 z-40 bg-white dark:bg-neutral-900 rounded-lg shadow-xl border border-neutral-200 dark:border-neutral-800 p-2 min-w-[220px]"
+                  >
+                    {[
+                      { value: 'date-asc', label: 'Date (Earliest First)' },
+                      { value: 'date-desc', label: 'Date (Latest First)' },
+                      { value: 'name-asc', label: 'Name (A-Z)' },
+                      { value: 'name-desc', label: 'Name (Z-A)' },
+                      { value: 'distance-asc', label: 'Distance (Shortest First)' },
+                      { value: 'distance-desc', label: 'Distance (Longest First)' },
+                      { value: 'elevation-asc', label: 'Elevation (Lowest First)' },
+                      { value: 'elevation-desc', label: 'Elevation (Highest First)' },
+                      { value: 'price-asc', label: 'Price (Low to High)' },
+                      { value: 'price-desc', label: 'Price (High to Low)' },
+                    ].map((option) => (
+                      <button
+                        key={option.value}
+                        onClick={() => {
+                          setSortBy(option.value)
+                          setIsSortOpen(false)
+                        }}
+                        className={`w-full text-left px-3 py-2 rounded-md text-sm transition-colors ${
+                          sortBy === option.value
+                            ? 'bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 font-medium'
+                            : 'text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800'
+                        }`}
+                      >
+                        {option.label}
+                      </button>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
           </div>
         </div>
 
@@ -3627,7 +3744,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
               </div>
             ))}
           </div>
-        ) : filteredRaces.length === 0 ? (
+        ) : sortedRaces.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16 px-4">
             <p className="font-body text-lg text-neutral-600 dark:text-neutral-400 mb-6 text-center">
               No races found matching your criteria
@@ -3663,7 +3780,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredRaces.map((race) => (
+            {sortedRaces.map((race) => (
               <Link
                 key={race._id}
                 href={`/races/${race.slug.current}`}
