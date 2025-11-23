@@ -824,13 +824,10 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
           return race.elevationGain >= appliedCustomElevationRange.min && race.elevationGain <= appliedCustomElevationRange.max
         })
       } else {
-        const category = elevationCategories.find(c => c.id === appliedElevationFilter)
-        if (category) {
-          filtered = filtered.filter((race) => {
-            if (!race.elevationGain) return false
-            return race.elevationGain >= category.minM && race.elevationGain < category.maxM
-          })
-        }
+        // Use the profile field from Sanity (manually set by editors)
+        filtered = filtered.filter((race) => {
+          return race.profile === appliedElevationFilter
+        })
       }
     }
 
