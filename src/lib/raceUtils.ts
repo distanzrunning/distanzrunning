@@ -39,6 +39,7 @@ const FALLBACK_RATES: Record<string, number> = {
   BRL: 5.9,
   ZAR: 18.5,
   THB: 35.5,
+  QAR: 3.64,
 }
 
 // Cache for exchange rates (client-side only)
@@ -150,6 +151,7 @@ export function formatPrice(amount: number, currency: string): string {
     BRL: 'R$',
     ZAR: 'R',
     THB: '฿',
+    QAR: 'QR',
   }
 
   const symbol = currencySymbols[currency] || currency

@@ -152,6 +152,7 @@ export const raceGuideType = defineType({
           { title: 'BRL - Brazilian Real', value: 'BRL' },
           { title: 'ZAR - South African Rand', value: 'ZAR' },
           { title: 'THB - Thai Baht', value: 'THB' },
+          { title: 'QAR - Qatari Riyal', value: 'QAR' },
         ],
       },
       initialValue: 'USD',
