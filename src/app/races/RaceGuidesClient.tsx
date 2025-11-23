@@ -141,6 +141,10 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
   const [isSortOpen, setIsSortOpen] = useState(false)
   const sortRef = useRef<HTMLDivElement>(null)
 
+  // Pagination state
+  const [displayCount, setDisplayCount] = useState(12)
+  const ITEMS_PER_PAGE = 12
+
   // Get unique tags from all races
   const availableTags = useMemo(() => {
     const tagsSet = new Set<string>()
@@ -907,6 +911,16 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
         return sorted
     }
   }, [filteredRaces, sortBy])
+
+  // Get the races to display (paginated)
+  const displayedRaces = useMemo(() => {
+    return sortedRaces.slice(0, displayCount)
+  }, [sortedRaces, displayCount])
+
+  // Reset display count when filters or sort changes
+  useEffect(() => {
+    setDisplayCount(12)
+  }, [searchQuery, appliedDateRange, appliedDistanceFilter, appliedCountryFilter, appliedCityFilter, appliedStateFilter, appliedSurfaceFilter, appliedElevationFilter, appliedTemperatureFilter, appliedPriceRange, appliedTagsFilter, sortBy])
 
   return (
     <div className="py-12 bg-white dark:bg-[#0c0c0d] min-h-screen transition-colors duration-300">
@@ -3780,7 +3794,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {sortedRaces.map((race) => (
+            {displayedRaces.map((race) => (
               <Link
                 key={race._id}
                 href={`/races/${race.slug.current}`}
@@ -3905,6 +3919,26 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                 </div>
               </Link>
             ))}
+          </div>
+        )}
+
+        {/* Load More Button and Count */}
+        {!isFiltering && sortedRaces.length > 0 && (
+          <div className="mt-12 flex flex-col items-center gap-4">
+            {/* Race Count */}
+            <p className="font-body text-sm text-neutral-600 dark:text-neutral-400">
+              Showing {displayedRaces.length} of {sortedRaces.length} races
+            </p>
+
+            {/* Load More Button */}
+            {displayCount < sortedRaces.length && (
+              <button
+                onClick={() => setDisplayCount(prev => prev + ITEMS_PER_PAGE)}
+                className="inline-flex items-center justify-center px-8 py-3 bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 rounded-lg font-medium text-sm hover:bg-neutral-700 dark:hover:bg-neutral-200 transition-colors"
+              >
+                Load More
+              </button>
+            )}
           </div>
         )}
       </div>
