@@ -1019,13 +1019,13 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
             </div>
 
             {/* Date Filter */}
-            <div className="relative" ref={dateFilterRef}>
+            <div className="relative" ref={dateFilterRef} style={{ order: appliedDateRange.start || appliedDateRange.end ? -1 : 0 }}>
               {appliedDateRange.start || appliedDateRange.end ? (
                 // Filter is active - show filter value with X button
-                <div className="flex items-center gap-2 px-4 h-[44px] rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white text-sm font-medium">
+                <div className="flex items-center gap-2 px-4 h-[44px] rounded-lg border border-neutral-900 dark:border-white bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 text-sm font-medium">
                   <button
                     onClick={() => setIsDateFilterOpen(!isDateFilterOpen)}
-                    className="hover:text-neutral-600 dark:hover:text-neutral-400 transition-colors"
+                    className="hover:text-neutral-300 dark:hover:text-neutral-600 transition-colors"
                   >
                     {getDateFilterText()}
                   </button>
@@ -1296,13 +1296,13 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
             </div>
 
             {/* Distance Filter */}
-            <div className="relative" ref={distanceFilterRef}>
+            <div className="relative" ref={distanceFilterRef} style={{ order: appliedDistanceFilter ? -1 : 0 }}>
               {appliedDistanceFilter ? (
                 // Filter is active - show filter value with X button
-                <div className="flex items-center gap-2 px-4 h-[44px] rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white text-sm font-medium">
+                <div className="flex items-center gap-2 px-4 h-[44px] rounded-lg border border-neutral-900 dark:border-white bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 text-sm font-medium">
                   <button
                     onClick={() => setIsDistanceFilterOpen(!isDistanceFilterOpen)}
-                    className="hover:text-neutral-600 dark:hover:text-neutral-400 transition-colors"
+                    className="hover:text-neutral-300 dark:hover:text-neutral-600 transition-colors"
                   >
                     {getDistanceFilterText()}
                   </button>
@@ -1742,13 +1742,13 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
             </div>
 
             {/* Country Filter */}
-            <div className="relative" ref={countryFilterRef}>
+            <div className="relative" ref={countryFilterRef} style={{ order: appliedCountryFilter ? -1 : 0 }}>
               {appliedCountryFilter ? (
                 // Filter is active - show filter value with X button
-                <div className="flex items-center gap-2 px-4 h-[44px] rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white text-sm font-medium">
+                <div className="flex items-center gap-2 px-4 h-[44px] rounded-lg border border-neutral-900 dark:border-white bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 text-sm font-medium">
                   <button
                     onClick={() => setIsCountryFilterOpen(!isCountryFilterOpen)}
-                    className="flex items-center gap-2 hover:text-neutral-600 dark:hover:text-neutral-400 transition-colors"
+                    className="flex items-center gap-2 hover:text-neutral-300 dark:hover:text-neutral-600 transition-colors"
                   >
                     {getCountryFlag(appliedCountryFilter)}
                     <span>{appliedCountryFilter}</span>
@@ -1884,13 +1884,13 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
             </div>
 
             {/* City Filter */}
-            <div className="relative" ref={cityFilterRef}>
+            <div className="relative" ref={cityFilterRef} style={{ order: appliedCityFilter ? -1 : 0 }}>
               {appliedCityFilter ? (
                 // Filter is active - show filter value with X button
-                <div className="flex items-center gap-2 px-4 h-[44px] rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white text-sm font-medium">
+                <div className="flex items-center gap-2 px-4 h-[44px] rounded-lg border border-neutral-900 dark:border-white bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 text-sm font-medium">
                   <button
                     onClick={() => setIsCityFilterOpen(!isCityFilterOpen)}
-                    className="flex items-center gap-2 hover:text-neutral-600 dark:hover:text-neutral-400 transition-colors"
+                    className="flex items-center gap-2 hover:text-neutral-300 dark:hover:text-neutral-600 transition-colors"
                   >
                     <span>{appliedCityFilter}</span>
                   </button>
@@ -2026,13 +2026,13 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
             </div>
 
             {/* State Filter */}
-            <div className="relative" ref={stateFilterRef}>
+            <div className="relative" ref={stateFilterRef} style={{ order: appliedStateFilter ? -1 : 0 }}>
               {appliedStateFilter ? (
                 // Filter is active - show filter value with X button
-                <div className="flex items-center gap-2 px-4 h-[44px] rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white text-sm font-medium">
+                <div className="flex items-center gap-2 px-4 h-[44px] rounded-lg border border-neutral-900 dark:border-white bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 text-sm font-medium">
                   <button
                     onClick={() => setIsStateFilterOpen(!isStateFilterOpen)}
-                    className="flex items-center gap-2 hover:text-neutral-600 dark:hover:text-neutral-400 transition-colors"
+                    className="flex items-center gap-2 hover:text-neutral-300 dark:hover:text-neutral-600 transition-colors"
                   >
                     <span>{appliedStateFilter}</span>
                   </button>
@@ -2168,13 +2168,13 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
             </div>
 
             {/* Surface Filter */}
-            <div className="relative" ref={surfaceFilterRef}>
+            <div className="relative" ref={surfaceFilterRef} style={{ order: appliedSurfaceFilter ? -1 : 0 }}>
               {appliedSurfaceFilter ? (
                 // Filter is active - show filter value with X button
-                <div className="flex items-center gap-2 px-4 h-[44px] rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white text-sm font-medium">
+                <div className="flex items-center gap-2 px-4 h-[44px] rounded-lg border border-neutral-900 dark:border-white bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 text-sm font-medium">
                   <button
                     onClick={() => setIsSurfaceFilterOpen(!isSurfaceFilterOpen)}
-                    className="flex items-center gap-2 hover:text-neutral-600 dark:hover:text-neutral-400 transition-colors"
+                    className="flex items-center gap-2 hover:text-neutral-300 dark:hover:text-neutral-600 transition-colors"
                   >
                     <span>{appliedSurfaceFilter}</span>
                   </button>
@@ -2348,13 +2348,13 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
             </div>
 
             {/* Elevation Filter */}
-            <div className="relative" ref={elevationFilterRef}>
+            <div className="relative" ref={elevationFilterRef} style={{ order: appliedElevationFilter ? -1 : 0 }}>
               {appliedElevationFilter ? (
                 // Filter is active - show filter value with X button
-                <div className="flex items-center gap-2 px-4 h-[44px] rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white text-sm font-medium">
+                <div className="flex items-center gap-2 px-4 h-[44px] rounded-lg border border-neutral-900 dark:border-white bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 text-sm font-medium">
                   <button
                     onClick={() => setIsElevationFilterOpen(!isElevationFilterOpen)}
-                    className="hover:text-neutral-600 dark:hover:text-neutral-400 transition-colors"
+                    className="hover:text-neutral-300 dark:hover:text-neutral-600 transition-colors"
                   >
                     {getElevationFilterText()}
                   </button>
@@ -2802,13 +2802,13 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
             </div>
 
             {/* Temperature Filter */}
-            <div className="relative" ref={temperatureFilterRef}>
+            <div className="relative" ref={temperatureFilterRef} style={{ order: appliedTemperatureFilter ? -1 : 0 }}>
               {appliedTemperatureFilter ? (
                 // Filter is active - show filter value with X button
-                <div className="flex items-center gap-2 px-4 h-[44px] rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white text-sm font-medium">
+                <div className="flex items-center gap-2 px-4 h-[44px] rounded-lg border border-neutral-900 dark:border-white bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 text-sm font-medium">
                   <button
                     onClick={() => setIsTemperatureFilterOpen(!isTemperatureFilterOpen)}
-                    className="hover:text-neutral-600 dark:hover:text-neutral-400 transition-colors"
+                    className="hover:text-neutral-300 dark:hover:text-neutral-600 transition-colors"
                   >
                     {getTemperatureFilterText()}
                   </button>
@@ -3237,7 +3237,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                 <div className="flex items-center gap-2 px-4 h-[44px] rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white text-sm font-medium">
                   <button
                     onClick={() => setIsPriceFilterOpen(!isPriceFilterOpen)}
-                    className="flex items-center gap-2 hover:text-neutral-600 dark:hover:text-neutral-400 transition-colors"
+                    className="flex items-center gap-2 hover:text-neutral-300 dark:hover:text-neutral-600 transition-colors"
                   >
                     <span>{formatPrice(appliedPriceRange.min, selectedCurrency)} - {formatPrice(appliedPriceRange.max, selectedCurrency)}</span>
                   </button>
@@ -3548,13 +3548,13 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
             </div>
 
             {/* Tags Filter */}
-            <div className="relative" ref={tagsFilterRef}>
+            <div className="relative" ref={tagsFilterRef} style={{ order: appliedTagsFilter ? -1 : 0 }}>
               {appliedTagsFilter ? (
                 // Filter is active - show filter value with X button
-                <div className="flex items-center gap-2 px-4 h-[44px] rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white text-sm font-medium">
+                <div className="flex items-center gap-2 px-4 h-[44px] rounded-lg border border-neutral-900 dark:border-white bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 text-sm font-medium">
                   <button
                     onClick={() => setIsTagsFilterOpen(!isTagsFilterOpen)}
-                    className="flex items-center gap-2 hover:text-neutral-600 dark:hover:text-neutral-400 transition-colors"
+                    className="flex items-center gap-2 hover:text-neutral-300 dark:hover:text-neutral-600 transition-colors"
                   >
                     <span>{appliedTagsFilter}</span>
                   </button>
