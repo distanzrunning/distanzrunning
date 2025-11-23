@@ -230,7 +230,8 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
     { code: 'TRY', label: 'TRY - Turkish Lira' },
     { code: 'INR', label: 'INR - Indian Rupee' },
     { code: 'BRL', label: 'BRL - Brazilian Real' },
-    { code: 'ZAR', label: 'ZAR - South African Rand' }
+    { code: 'ZAR', label: 'ZAR - South African Rand' },
+    { code: 'THB', label: 'THB - Thai Baht' }
   ]
 
 
