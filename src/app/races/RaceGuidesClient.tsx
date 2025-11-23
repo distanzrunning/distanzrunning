@@ -784,18 +784,21 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
 
     // Apply distance filter
     if (appliedDistanceFilter) {
-      filtered = filtered.filter((race) => {
-        if (!race.distance) return false
-
-        if (appliedDistanceFilter === 'custom') {
-          // Custom range filter
+      if (appliedDistanceFilter === 'custom') {
+        // Custom range filter - uses distance field
+        filtered = filtered.filter((race) => {
+          if (!race.distance) return false
           return race.distance >= appliedCustomRange.min && race.distance <= appliedCustomRange.max
-        } else {
-          // Category filter
-          const category = getDistanceCategory(race.distance)
-          return category === appliedDistanceFilter
-        }
-      })
+        })
+      } else {
+        // Category filter - uses raceCategoryName from Sanity
+        filtered = filtered.filter((race) => {
+          if (!race.raceCategoryName) return false
+          // Normalize category names for comparison
+          const normalizedCategory = race.raceCategoryName.toLowerCase().replace(/\s+/g, '-')
+          return normalizedCategory === appliedDistanceFilter
+        })
+      }
     }
 
     // Apply country filter
