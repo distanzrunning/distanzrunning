@@ -48,7 +48,14 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
 
   // Custom event content
   const renderEventContent = (eventInfo: any) => {
-    const eventDate = new Date(eventInfo.event.start)
+    // Get the race from extendedProps to access the full eventDate
+    const race = races.find(r => r._id === eventInfo.event.id)
+
+    if (!race) {
+      return <div className="px-1 py-0.5 font-medium text-xs">{eventInfo.event.title}</div>
+    }
+
+    const eventDate = new Date(race.eventDate)
     const timeStr = eventDate.toLocaleTimeString('en-US', {
       hour: 'numeric',
       minute: '2-digit',
