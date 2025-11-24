@@ -191,7 +191,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
             events={events}
             startAccessor="start"
             endAccessor="end"
-            style={{ height: 700 }}
+            style={{ height: 900 }}
             eventPropGetter={eventStyleGetter}
             components={{
               event: EventComponent,
