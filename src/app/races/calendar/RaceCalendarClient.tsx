@@ -280,7 +280,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
         /* Date cell numbers */
         .calendar-wrapper .rbc-date-cell {
           padding: 8px;
-          text-align: right;
+          text-align: left;
         }
 
         .calendar-wrapper .rbc-date-cell > a {
@@ -293,6 +293,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
         }
 
         /* Today's date with circle */
+        .calendar-wrapper .rbc-today .rbc-date-cell > a,
         .calendar-wrapper .rbc-now .rbc-date-cell > a {
           display: inline-flex;
           align-items: center;
@@ -304,6 +305,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
           color: rgb(255, 255, 255) !important;
         }
 
+        .dark .calendar-wrapper .rbc-today .rbc-date-cell > a,
         .dark .calendar-wrapper .rbc-now .rbc-date-cell > a {
           background-color: rgb(255, 255, 255);
           color: rgb(23, 23, 23) !important;
