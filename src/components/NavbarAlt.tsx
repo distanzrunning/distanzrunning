@@ -529,6 +529,16 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                               </div>
                             </Link>
                             <Link
+                              href="/races/calendar"
+                              className="flex items-center gap-3 px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-colors"
+                            >
+                              <Calendar className="h-4 w-4 flex-shrink-0" />
+                              <div className="flex-1">
+                                <div className="font-semibold">Race Calendar</div>
+                                <div className="text-xs text-neutral-500 dark:text-neutral-400">View races by date</div>
+                              </div>
+                            </Link>
+                            <Link
                               href="/races/database"
                               className="flex items-center gap-3 px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-colors"
                             >
@@ -907,6 +917,17 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                     <div>
                       <div className="font-semibold text-neutral-900 dark:text-white">Race Guides</div>
                       <div className="text-sm text-neutral-500">Race profiles & analysis</div>
+                    </div>
+                  </Link>
+                  <Link
+                    href="/races/calendar"
+                    className="flex items-center gap-3 p-3 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <Calendar className="h-5 w-5 text-neutral-500" />
+                    <div>
+                      <div className="font-semibold text-neutral-900 dark:text-white">Race Calendar</div>
+                      <div className="text-sm text-neutral-500">View races by date</div>
                     </div>
                   </Link>
                   <Link
