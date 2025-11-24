@@ -294,20 +294,22 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
 
         /* Today's date with circle */
         .calendar-wrapper .rbc-today .rbc-date-cell > a,
-        .calendar-wrapper .rbc-now .rbc-date-cell > a {
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          width: 32px;
-          height: 32px;
-          border-radius: 50%;
-          background-color: rgb(23, 23, 23);
+        .calendar-wrapper .rbc-now .rbc-date-cell > a,
+        .calendar-wrapper .rbc-day-bg.rbc-today + .rbc-row-content .rbc-date-cell > a {
+          display: inline-flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          width: 32px !important;
+          height: 32px !important;
+          border-radius: 50% !important;
+          background-color: rgb(23, 23, 23) !important;
           color: rgb(255, 255, 255) !important;
         }
 
         .dark .calendar-wrapper .rbc-today .rbc-date-cell > a,
-        .dark .calendar-wrapper .rbc-now .rbc-date-cell > a {
-          background-color: rgb(255, 255, 255);
+        .dark .calendar-wrapper .rbc-now .rbc-date-cell > a,
+        .dark .calendar-wrapper .rbc-day-bg.rbc-today + .rbc-row-content .rbc-date-cell > a {
+          background-color: rgb(255, 255, 255) !important;
           color: rgb(23, 23, 23) !important;
         }
 
