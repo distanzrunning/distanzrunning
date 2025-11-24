@@ -283,32 +283,44 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
           text-align: left;
         }
 
-        .calendar-wrapper .rbc-date-cell > a {
+        .calendar-wrapper .rbc-date-cell > a,
+        .calendar-wrapper .rbc-date-cell > button {
           font-weight: 500;
           color: rgb(23, 23, 23);
+          cursor: default;
+          pointer-events: none;
         }
 
-        .dark .calendar-wrapper .rbc-date-cell > a {
+        .dark .calendar-wrapper .rbc-date-cell > a,
+        .dark .calendar-wrapper .rbc-date-cell > button {
           color: rgb(245, 245, 245);
         }
 
-        /* Today's date with circle */
-        .calendar-wrapper .rbc-today .rbc-date-cell > a,
-        .calendar-wrapper .rbc-now .rbc-date-cell > a,
-        .calendar-wrapper .rbc-day-bg.rbc-today + .rbc-row-content .rbc-date-cell > a {
+        /* Style all date numbers with circle shape */
+        .calendar-wrapper .rbc-date-cell > a,
+        .calendar-wrapper .rbc-date-cell > button {
           display: inline-flex !important;
           align-items: center !important;
           justify-content: center !important;
           width: 32px !important;
           height: 32px !important;
           border-radius: 50% !important;
+          background-color: transparent !important;
+        }
+
+        /* Today's date - add filled circle background */
+        .calendar-wrapper .rbc-today .rbc-date-cell > a,
+        .calendar-wrapper .rbc-today .rbc-date-cell > button,
+        .calendar-wrapper .rbc-now .rbc-date-cell > a,
+        .calendar-wrapper .rbc-now .rbc-date-cell > button {
           background-color: rgb(23, 23, 23) !important;
           color: rgb(255, 255, 255) !important;
         }
 
         .dark .calendar-wrapper .rbc-today .rbc-date-cell > a,
+        .dark .calendar-wrapper .rbc-today .rbc-date-cell > button,
         .dark .calendar-wrapper .rbc-now .rbc-date-cell > a,
-        .dark .calendar-wrapper .rbc-day-bg.rbc-today + .rbc-row-content .rbc-date-cell > a {
+        .dark .calendar-wrapper .rbc-now .rbc-date-cell > button {
           background-color: rgb(255, 255, 255) !important;
           color: rgb(23, 23, 23) !important;
         }
