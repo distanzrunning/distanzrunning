@@ -25,15 +25,18 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
 
   // Convert races to FullCalendar events
   const events = useMemo<CalendarEvent[]>(() => {
-    return races.map((race) => ({
-      id: race._id,
-      title: race.title,
-      start: new Date(race.eventDate).toISOString().split('T')[0],
-      slug: race.slug.current,
-      city: race.city,
-      country: race.country,
-      raceCategoryName: race.raceCategoryName,
-    }))
+    return races.map((race) => {
+      const eventDate = new Date(race.eventDate)
+      return {
+        id: race._id,
+        title: race.title,
+        start: eventDate.toISOString().split('T')[0],
+        slug: race.slug.current,
+        city: race.city,
+        country: race.country,
+        raceCategoryName: race.raceCategoryName,
+      }
+    })
   }, [races])
 
   const handleEventClick = (info: EventClickArg) => {
@@ -41,6 +44,27 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
     if (slug) {
       router.push(`/races/${slug}`)
     }
+  }
+
+  // Custom event content
+  const renderEventContent = (eventInfo: any) => {
+    const eventDate = new Date(eventInfo.event.start)
+    const timeStr = eventDate.toLocaleTimeString('en-US', {
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+    })
+
+    return (
+      <div className="px-1 py-0.5">
+        <div className="font-medium text-neutral-900 dark:text-white text-xs truncate">
+          {eventInfo.event.title}
+        </div>
+        <div className="text-[10px] text-neutral-500 dark:text-neutral-400">
+          {timeStr}
+        </div>
+      </div>
+    )
   }
 
   // Custom day cell content to add today indicator
@@ -178,11 +202,11 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
             initialDate={currentDate}
             events={events}
             eventClick={handleEventClick}
+            eventContent={renderEventContent}
             dayCellContent={dayCellContent}
             headerToolbar={false}
             height={900}
             eventClassNames="cursor-pointer"
-            eventColor="#e43c81"
           />
         </div>
       </div>
@@ -278,23 +302,25 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
           color: rgb(115, 115, 115);
         }
 
-        /* Event styling */
+        /* Event styling - no background */
         .calendar-wrapper .fc-event {
-          background-color: #e43c81;
-          border: none;
+          background-color: transparent !important;
+          border: none !important;
           border-radius: 4px;
-          padding: 2px 4px;
-          margin: 1px;
-          font-size: 13px;
-          font-weight: 500;
+          padding: 0;
+          margin: 1px 0;
         }
 
         .calendar-wrapper .fc-event:hover {
-          opacity: 0.8;
+          background-color: rgb(245, 245, 245) !important;
         }
 
-        .calendar-wrapper .fc-event-title {
-          font-weight: 500;
+        .dark .calendar-wrapper .fc-event:hover {
+          background-color: rgb(38, 38, 38) !important;
+        }
+
+        .calendar-wrapper .fc-event-main {
+          color: inherit;
         }
 
         /* More link */
