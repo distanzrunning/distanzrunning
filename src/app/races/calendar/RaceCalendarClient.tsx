@@ -218,17 +218,29 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
         /* Day cells */
         .calendar-wrapper .fc-daygrid-day {
           border-color: rgb(229, 229, 229);
+          background-color: transparent;
         }
 
         .dark .calendar-wrapper .fc-daygrid-day {
           border-color: rgb(38, 38, 38);
+          background-color: transparent;
         }
 
-        /* Date numbers */
+        /* Remove today's cell background */
+        .calendar-wrapper .fc-day-today {
+          background-color: transparent !important;
+        }
+
+        .dark .calendar-wrapper .fc-day-today {
+          background-color: transparent !important;
+        }
+
+        /* Date numbers - align left */
         .calendar-wrapper .fc-daygrid-day-top {
           padding: 8px;
-          text-align: left;
+          display: flex;
           justify-content: flex-start;
+          align-items: flex-start;
         }
 
         .calendar-wrapper .fc-daygrid-day-number {
