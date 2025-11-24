@@ -48,17 +48,15 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
     const today = new Date()
     const isToday = arg.date.toDateString() === today.toDateString()
 
-    return (
-      <div className="fc-daygrid-day-top">
-        {isToday ? (
-          <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 font-medium">
-            {arg.dayNumberText}
-          </span>
-        ) : (
-          <span className="fc-daygrid-day-number font-medium">{arg.dayNumberText}</span>
-        )}
-      </div>
-    )
+    if (isToday) {
+      return (
+        <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 font-medium">
+          {arg.dayNumberText}
+        </span>
+      )
+    }
+
+    return <span className="font-medium">{arg.dayNumberText}</span>
   }
 
   const handleMonthChange = (direction: 'prev' | 'next') => {
@@ -235,12 +233,13 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
           background-color: transparent !important;
         }
 
-        /* Date numbers - align left */
+        /* Date numbers - align top-left */
         .calendar-wrapper .fc-daygrid-day-top {
           padding: 8px;
-          display: flex;
-          justify-content: flex-start;
-          align-items: flex-start;
+          display: flex !important;
+          flex-direction: row !important;
+          justify-content: flex-start !important;
+          align-items: flex-start !important;
         }
 
         .calendar-wrapper .fc-daygrid-day-number {
@@ -250,6 +249,15 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
         }
 
         .dark .calendar-wrapper .fc-daygrid-day-number {
+          color: rgb(245, 245, 245);
+        }
+
+        /* Ensure date numbers have correct text color */
+        .calendar-wrapper .fc-daygrid-day-top > span {
+          color: rgb(23, 23, 23);
+        }
+
+        .dark .calendar-wrapper .fc-daygrid-day-top > span {
           color: rgb(245, 245, 245);
         }
 
