@@ -251,13 +251,13 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
           border-top-color: rgb(38, 38, 38);
         }
 
-        /* Today highlighting */
+        /* Today highlighting - remove background */
         .calendar-wrapper .rbc-today {
-          background-color: rgb(250, 250, 250);
+          background-color: transparent;
         }
 
         .dark .calendar-wrapper .rbc-today {
-          background-color: rgb(23, 23, 23);
+          background-color: transparent;
         }
 
         /* Off-range days */
@@ -290,6 +290,23 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
 
         .dark .calendar-wrapper .rbc-date-cell > a {
           color: rgb(245, 245, 245);
+        }
+
+        /* Today's date with circle */
+        .calendar-wrapper .rbc-now .rbc-date-cell > a {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 32px;
+          height: 32px;
+          border-radius: 50%;
+          background-color: rgb(23, 23, 23);
+          color: rgb(255, 255, 255) !important;
+        }
+
+        .dark .calendar-wrapper .rbc-now .rbc-date-cell > a {
+          background-color: rgb(255, 255, 255);
+          color: rgb(23, 23, 23) !important;
         }
 
         /* Event styling */
