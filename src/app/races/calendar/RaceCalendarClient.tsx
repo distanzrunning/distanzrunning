@@ -1,156 +1,34 @@
 'use client'
 
-import { useMemo } from 'react'
-import { Calendar, dateFnsLocalizer, ToolbarProps } from 'react-big-calendar'
-import { format, parse, startOfWeek, getDay } from 'date-fns'
-import { enUS } from 'date-fns/locale'
-import Link from 'next/link'
+import { useState, useMemo } from 'react'
+import FullCalendar from '@fullcalendar/react'
+import dayGridPlugin from '@fullcalendar/daygrid'
+import interactionPlugin from '@fullcalendar/interaction'
+import type { EventClickArg, DayCellContentArg } from '@fullcalendar/core'
+import { useRouter } from 'next/navigation'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import type { RaceGuide } from '../page'
-import 'react-big-calendar/lib/css/react-big-calendar.css'
 
-// Setup the localizer for react-big-calendar
-const locales = {
-  'en-US': enUS,
-}
-
-const localizer = dateFnsLocalizer({
-  format,
-  parse,
-  startOfWeek,
-  getDay,
-  locales,
-})
-
-// Extend Event type to include race details
-interface RaceEvent {
+interface CalendarEvent {
   id: string
   title: string
-  start: Date
-  end: Date
+  start: string
   slug: string
   city?: string
   country?: string
   raceCategoryName?: string
 }
 
-// Custom Toolbar Component
-const CustomToolbar = ({ label, onNavigate, date }: ToolbarProps<RaceEvent>) => {
-  const currentMonth = date.getMonth()
-  const currentYear = date.getFullYear()
-
-  const months = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
-  ]
-
-  // Generate year options (current year +/- 5 years)
-  const years = Array.from({ length: 11 }, (_, i) => currentYear - 5 + i)
-
-  const handleMonthChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const newMonth = parseInt(e.target.value)
-    const newDate = new Date(date)
-    newDate.setMonth(newMonth)
-    onNavigate('DATE', newDate)
-  }
-
-  const handleYearChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const newYear = parseInt(e.target.value)
-    const newDate = new Date(date)
-    newDate.setFullYear(newYear)
-    onNavigate('DATE', newDate)
-  }
-
-  return (
-    <div className="flex items-center justify-between mb-6 pb-4 border-b border-neutral-200 dark:border-neutral-800">
-      {/* Left: Navigation */}
-      <div className="flex items-center gap-4">
-        <button
-          onClick={() => onNavigate('PREV')}
-          className="p-3 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors text-neutral-700 dark:text-neutral-300"
-          aria-label="Previous month"
-        >
-          <ChevronLeft className="h-5 w-5" />
-        </button>
-
-        <h2 className="text-xl font-semibold text-neutral-900 dark:text-white min-w-[180px] text-center">
-          {label}
-        </h2>
-
-        <button
-          onClick={() => onNavigate('NEXT')}
-          className="p-3 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors text-neutral-700 dark:text-neutral-300"
-          aria-label="Next month"
-        >
-          <ChevronRight className="h-5 w-5" />
-        </button>
-      </div>
-
-      {/* Right: Dropdowns */}
-      <div className="flex items-center gap-3">
-        <select
-          value={currentMonth}
-          onChange={handleMonthChange}
-          className="pl-3 pr-10 py-2 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white text-sm font-medium cursor-pointer hover:border-neutral-400 dark:hover:border-neutral-600 focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-600 focus:border-transparent transition-colors appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22rgb(64%2C64%2C64)%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E')] dark:bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22rgb(212%2C212%2C212)%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E')] bg-[length:16px] bg-[right_12px_center] bg-no-repeat"
-        >
-          {months.map((month, index) => (
-            <option key={month} value={index}>
-              {month}
-            </option>
-          ))}
-        </select>
-
-        <select
-          value={currentYear}
-          onChange={handleYearChange}
-          className="pl-3 pr-10 py-2 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white text-sm font-medium cursor-pointer hover:border-neutral-400 dark:hover:border-neutral-600 focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-600 focus:border-transparent transition-colors appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22rgb(64%2C64%2C64)%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E')] dark:bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22rgb(212%2C212%2C212)%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E')] bg-[length:16px] bg-[right_12px_center] bg-no-repeat"
-        >
-          {years.map((year) => (
-            <option key={year} value={year}>
-              {year}
-            </option>
-          ))}
-        </select>
-
-        <button
-          onClick={() => onNavigate('TODAY')}
-          className="px-4 py-2 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white text-sm font-medium hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
-        >
-          Today
-        </button>
-      </div>
-    </div>
-  )
-}
-
-// Custom DateCellWrapper to control date rendering
-const DateCellWrapper = ({ value, children }: { value: Date; children: React.ReactNode }) => {
-  const today = new Date()
-  const isToday = value.toDateString() === today.toDateString()
-
-  return (
-    <div className="rbc-date-cell">
-      {isToday ? (
-        <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 font-medium">
-          {value.getDate()}
-        </span>
-      ) : (
-        <span className="inline-flex items-center justify-center w-8 h-8 font-medium">
-          {value.getDate()}
-        </span>
-      )}
-    </div>
-  )
-}
-
 export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
-  // Convert races to calendar events
-  const events = useMemo<RaceEvent[]>(() => {
+  const router = useRouter()
+  const [currentDate, setCurrentDate] = useState(new Date())
+
+  // Convert races to FullCalendar events
+  const events = useMemo<CalendarEvent[]>(() => {
     return races.map((race) => ({
       id: race._id,
       title: race.title,
-      start: new Date(race.eventDate),
-      end: new Date(race.eventDate),
+      start: new Date(race.eventDate).toISOString().split('T')[0],
       slug: race.slug.current,
       city: race.city,
       country: race.country,
@@ -158,37 +36,64 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
     }))
   }, [races])
 
-  // Custom event style
-  const eventStyleGetter = () => {
-    return {
-      style: {
-        backgroundColor: '#e43c81', // Electric Pink
-        borderRadius: '4px',
-        opacity: 0.9,
-        color: 'white',
-        border: 'none',
-        display: 'block',
-        fontSize: '13px',
-        fontWeight: '500',
-      },
+  const handleEventClick = (info: EventClickArg) => {
+    const slug = info.event.extendedProps.slug
+    if (slug) {
+      router.push(`/races/${slug}`)
     }
   }
 
-  // Custom event component
-  const EventComponent = ({ event }: { event: RaceEvent }) => {
+  // Custom day cell content to add today indicator
+  const dayCellContent = (arg: DayCellContentArg) => {
+    const today = new Date()
+    const isToday = arg.date.toDateString() === today.toDateString()
+
     return (
-      <Link
-        href={`/races/${event.slug}`}
-        className="block hover:opacity-80 transition-opacity"
-      >
-        <div className="truncate">
-          <div className="font-medium">{event.title}</div>
-          {event.raceCategoryName && (
-            <div className="text-xs opacity-90">{event.raceCategoryName}</div>
-          )}
-        </div>
-      </Link>
+      <div className="fc-daygrid-day-top">
+        {isToday ? (
+          <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 font-medium">
+            {arg.dayNumberText}
+          </span>
+        ) : (
+          <span className="fc-daygrid-day-number font-medium">{arg.dayNumberText}</span>
+        )}
+      </div>
     )
+  }
+
+  const handleMonthChange = (direction: 'prev' | 'next') => {
+    const newDate = new Date(currentDate)
+    if (direction === 'prev') {
+      newDate.setMonth(newDate.getMonth() - 1)
+    } else {
+      newDate.setMonth(newDate.getMonth() + 1)
+    }
+    setCurrentDate(newDate)
+  }
+
+  const months = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ]
+
+  const currentMonth = currentDate.getMonth()
+  const currentYear = currentDate.getFullYear()
+  const years = Array.from({ length: 11 }, (_, i) => currentYear - 5 + i)
+
+  const handleMonthSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newDate = new Date(currentDate)
+    newDate.setMonth(parseInt(e.target.value))
+    setCurrentDate(newDate)
+  }
+
+  const handleYearSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newDate = new Date(currentDate)
+    newDate.setFullYear(parseInt(e.target.value))
+    setCurrentDate(newDate)
+  }
+
+  const handleToday = () => {
+    setCurrentDate(new Date())
   }
 
   return (
@@ -204,22 +109,82 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
           </p>
         </div>
 
+        {/* Custom Toolbar */}
+        <div className="mb-6">
+          <div className="flex items-center justify-between pb-4 border-b border-neutral-200 dark:border-neutral-800">
+            {/* Left: Navigation */}
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => handleMonthChange('prev')}
+                className="p-3 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors text-neutral-700 dark:text-neutral-300"
+                aria-label="Previous month"
+              >
+                <ChevronLeft className="h-5 w-5" />
+              </button>
+
+              <h2 className="text-xl font-semibold text-neutral-900 dark:text-white min-w-[180px] text-center">
+                {months[currentMonth]} {currentYear}
+              </h2>
+
+              <button
+                onClick={() => handleMonthChange('next')}
+                className="p-3 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors text-neutral-700 dark:text-neutral-300"
+                aria-label="Next month"
+              >
+                <ChevronRight className="h-5 w-5" />
+              </button>
+            </div>
+
+            {/* Right: Dropdowns */}
+            <div className="flex items-center gap-3">
+              <select
+                value={currentMonth}
+                onChange={handleMonthSelect}
+                className="pl-3 pr-10 py-2 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white text-sm font-medium cursor-pointer hover:border-neutral-400 dark:hover:border-neutral-600 focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-600 focus:border-transparent transition-colors appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22rgb(64%2C64%2C64)%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E')] dark:bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22rgb(212%2C212%2C212)%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E')] bg-[length:16px] bg-[right_12px_center] bg-no-repeat"
+              >
+                {months.map((month, index) => (
+                  <option key={month} value={index}>
+                    {month}
+                  </option>
+                ))}
+              </select>
+
+              <select
+                value={currentYear}
+                onChange={handleYearSelect}
+                className="pl-3 pr-10 py-2 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white text-sm font-medium cursor-pointer hover:border-neutral-400 dark:hover:border-neutral-600 focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-600 focus:border-transparent transition-colors appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22rgb(64%2C64%2C64)%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E')] dark:bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22rgb(212%2C212%2C212)%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E')] bg-[length:16px] bg-[right_12px_center] bg-no-repeat"
+              >
+                {years.map((year) => (
+                  <option key={year} value={year}>
+                    {year}
+                  </option>
+                ))}
+              </select>
+
+              <button
+                onClick={handleToday}
+                className="px-4 py-2 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white text-sm font-medium hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
+              >
+                Today
+              </button>
+            </div>
+          </div>
+        </div>
+
         {/* Calendar */}
         <div className="bg-white dark:bg-neutral-900 rounded-xl border border-neutral-200 dark:border-neutral-800 p-6 shadow-sm calendar-wrapper">
-          <Calendar
-            localizer={localizer}
+          <FullCalendar
+            key={currentDate.toISOString()}
+            plugins={[dayGridPlugin, interactionPlugin]}
+            initialView="dayGridMonth"
+            initialDate={currentDate}
             events={events}
-            startAccessor="start"
-            endAccessor="end"
-            style={{ height: 900 }}
-            eventPropGetter={eventStyleGetter}
-            components={{
-              event: EventComponent,
-              toolbar: CustomToolbar,
-              dateCellWrapper: DateCellWrapper,
-            }}
-            views={['month']}
-            defaultView="month"
+            eventClick={handleEventClick}
+            dayCellContent={dayCellContent}
+            headerToolbar={false}
+            height={900}
+            eventClassNames="cursor-pointer"
+            eventColor="#e43c81"
           />
         </div>
       </div>
@@ -227,12 +192,17 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
       {/* Custom Calendar Styles */}
       <style jsx global>{`
         /* Calendar container styling */
-        .calendar-wrapper .rbc-calendar {
+        .calendar-wrapper .fc {
           font-family: var(--font-body), sans-serif;
         }
 
+        /* Hide default header */
+        .calendar-wrapper .fc-header-toolbar {
+          display: none;
+        }
+
         /* Header styling */
-        .calendar-wrapper .rbc-header {
+        .calendar-wrapper .fc-col-header-cell {
           padding: 12px 8px;
           font-weight: 600;
           font-size: 14px;
@@ -240,97 +210,80 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
           border-bottom: 1px solid rgb(229, 229, 229);
         }
 
-        .dark .calendar-wrapper .rbc-header {
+        .dark .calendar-wrapper .fc-col-header-cell {
           color: rgb(245, 245, 245);
           border-bottom-color: rgb(38, 38, 38);
         }
 
-        /* Month view cells */
-        .calendar-wrapper .rbc-month-view {
-          border: 1px solid rgb(229, 229, 229);
-          border-radius: 8px;
-          overflow: hidden;
+        /* Day cells */
+        .calendar-wrapper .fc-daygrid-day {
+          border-color: rgb(229, 229, 229);
         }
 
-        .dark .calendar-wrapper .rbc-month-view {
+        .dark .calendar-wrapper .fc-daygrid-day {
           border-color: rgb(38, 38, 38);
         }
 
-        .calendar-wrapper .rbc-day-bg {
-          border-left: 1px solid rgb(229, 229, 229);
-        }
-
-        .dark .calendar-wrapper .rbc-day-bg {
-          border-left-color: rgb(38, 38, 38);
-        }
-
-        .calendar-wrapper .rbc-month-row {
-          border-top: 1px solid rgb(229, 229, 229);
-        }
-
-        .dark .calendar-wrapper .rbc-month-row {
-          border-top-color: rgb(38, 38, 38);
-        }
-
-        /* Today highlighting - remove background */
-        .calendar-wrapper .rbc-today {
-          background-color: transparent;
-        }
-
-        .dark .calendar-wrapper .rbc-today {
-          background-color: transparent;
-        }
-
-        /* Off-range days */
-        .calendar-wrapper .rbc-off-range-bg {
-          background-color: rgb(250, 250, 250);
-        }
-
-        .dark .calendar-wrapper .rbc-off-range-bg {
-          background-color: rgb(12, 12, 13);
-        }
-
-        .calendar-wrapper .rbc-off-range {
-          color: rgb(163, 163, 163);
-        }
-
-        .dark .calendar-wrapper .rbc-off-range {
-          color: rgb(115, 115, 115);
-        }
-
-        /* Date cell numbers */
-        .calendar-wrapper .rbc-date-cell {
+        /* Date numbers */
+        .calendar-wrapper .fc-daygrid-day-top {
           padding: 8px;
           text-align: left;
+          justify-content: flex-start;
         }
 
-        .calendar-wrapper .rbc-date-cell span {
+        .calendar-wrapper .fc-daygrid-day-number {
           color: rgb(23, 23, 23);
+          font-weight: 500;
+          padding: 0;
         }
 
-        .dark .calendar-wrapper .rbc-date-cell span {
+        .dark .calendar-wrapper .fc-daygrid-day-number {
           color: rgb(245, 245, 245);
         }
 
+        /* Off-range days */
+        .calendar-wrapper .fc-day-other {
+          background-color: rgb(250, 250, 250);
+        }
+
+        .dark .calendar-wrapper .fc-day-other {
+          background-color: rgb(12, 12, 13);
+        }
+
+        .calendar-wrapper .fc-day-other .fc-daygrid-day-number {
+          color: rgb(163, 163, 163);
+        }
+
+        .dark .calendar-wrapper .fc-day-other .fc-daygrid-day-number {
+          color: rgb(115, 115, 115);
+        }
+
         /* Event styling */
-        .calendar-wrapper .rbc-event {
+        .calendar-wrapper .fc-event {
+          background-color: #e43c81;
+          border: none;
+          border-radius: 4px;
           padding: 2px 4px;
           margin: 1px;
-        }
-
-        .calendar-wrapper .rbc-event:focus {
-          outline: 2px solid rgb(228, 60, 129);
-        }
-
-        /* Show more link */
-        .calendar-wrapper .rbc-show-more {
-          color: rgb(228, 60, 129);
+          font-size: 13px;
           font-weight: 500;
-          cursor: pointer;
-          padding: 4px;
         }
 
-        .calendar-wrapper .rbc-show-more:hover {
+        .calendar-wrapper .fc-event:hover {
+          opacity: 0.8;
+        }
+
+        .calendar-wrapper .fc-event-title {
+          font-weight: 500;
+        }
+
+        /* More link */
+        .calendar-wrapper .fc-more-link {
+          color: #e43c81;
+          font-weight: 500;
+        }
+
+        .calendar-wrapper .fc-more-link:hover {
           text-decoration: underline;
         }
       `}</style>
