@@ -1,10 +1,11 @@
 'use client'
 
 import { useMemo } from 'react'
-import { Calendar, dateFnsLocalizer, Event } from 'react-big-calendar'
+import { Calendar, dateFnsLocalizer, ToolbarProps } from 'react-big-calendar'
 import { format, parse, startOfWeek, getDay } from 'date-fns'
 import { enUS } from 'date-fns/locale'
 import Link from 'next/link'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 import type { RaceGuide } from '../page'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 
@@ -22,12 +23,104 @@ const localizer = dateFnsLocalizer({
 })
 
 // Extend Event type to include race details
-interface RaceEvent extends Event {
+interface RaceEvent {
   id: string
+  title: string
+  start: Date
+  end: Date
   slug: string
   city?: string
   country?: string
   raceCategoryName?: string
+}
+
+// Custom Toolbar Component
+const CustomToolbar = ({ label, onNavigate, date }: ToolbarProps<RaceEvent>) => {
+  const currentMonth = date.getMonth()
+  const currentYear = date.getFullYear()
+
+  const months = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ]
+
+  // Generate year options (current year +/- 5 years)
+  const years = Array.from({ length: 11 }, (_, i) => currentYear - 5 + i)
+
+  const handleMonthChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newMonth = parseInt(e.target.value)
+    const newDate = new Date(date)
+    newDate.setMonth(newMonth)
+    onNavigate('DATE', newDate)
+  }
+
+  const handleYearChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newYear = parseInt(e.target.value)
+    const newDate = new Date(date)
+    newDate.setFullYear(newYear)
+    onNavigate('DATE', newDate)
+  }
+
+  return (
+    <div className="flex items-center justify-between mb-6 pb-4 border-b border-neutral-200 dark:border-neutral-800">
+      {/* Left: Navigation */}
+      <div className="flex items-center gap-3">
+        <button
+          onClick={() => onNavigate('PREV')}
+          className="p-2 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors text-neutral-700 dark:text-neutral-300"
+          aria-label="Previous month"
+        >
+          <ChevronLeft className="h-5 w-5" />
+        </button>
+
+        <h2 className="text-xl font-semibold text-neutral-900 dark:text-white min-w-[180px] text-center">
+          {label}
+        </h2>
+
+        <button
+          onClick={() => onNavigate('NEXT')}
+          className="p-2 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors text-neutral-700 dark:text-neutral-300"
+          aria-label="Next month"
+        >
+          <ChevronRight className="h-5 w-5" />
+        </button>
+      </div>
+
+      {/* Right: Dropdowns */}
+      <div className="flex items-center gap-3">
+        <select
+          value={currentMonth}
+          onChange={handleMonthChange}
+          className="px-3 py-2 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white text-sm font-medium cursor-pointer hover:border-neutral-400 dark:hover:border-neutral-600 transition-colors"
+        >
+          {months.map((month, index) => (
+            <option key={month} value={index}>
+              {month}
+            </option>
+          ))}
+        </select>
+
+        <select
+          value={currentYear}
+          onChange={handleYearChange}
+          className="px-3 py-2 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white text-sm font-medium cursor-pointer hover:border-neutral-400 dark:hover:border-neutral-600 transition-colors"
+        >
+          {years.map((year) => (
+            <option key={year} value={year}>
+              {year}
+            </option>
+          ))}
+        </select>
+
+        <button
+          onClick={() => onNavigate('TODAY')}
+          className="px-4 py-2 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white text-sm font-medium hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
+        >
+          Today
+        </button>
+      </div>
+    </div>
+  )
 }
 
 export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
@@ -102,8 +195,9 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
             eventPropGetter={eventStyleGetter}
             components={{
               event: EventComponent,
+              toolbar: CustomToolbar,
             }}
-            views={['month', 'agenda']}
+            views={['month']}
             defaultView="month"
           />
         </div>
@@ -198,65 +292,6 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
           color: rgb(245, 245, 245);
         }
 
-        /* Toolbar styling */
-        .calendar-wrapper .rbc-toolbar {
-          padding: 16px 0;
-          margin-bottom: 16px;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-        }
-
-        .calendar-wrapper .rbc-toolbar button {
-          padding: 8px 16px;
-          border: 1px solid rgb(212, 212, 212);
-          background: white;
-          border-radius: 6px;
-          font-weight: 500;
-          font-size: 14px;
-          color: rgb(23, 23, 23);
-          cursor: pointer;
-          transition: all 0.2s;
-        }
-
-        .dark .calendar-wrapper .rbc-toolbar button {
-          background: rgb(38, 38, 38);
-          border-color: rgb(64, 64, 64);
-          color: rgb(245, 245, 245);
-        }
-
-        .calendar-wrapper .rbc-toolbar button:hover {
-          background: rgb(245, 245, 245);
-          border-color: rgb(163, 163, 163);
-        }
-
-        .dark .calendar-wrapper .rbc-toolbar button:hover {
-          background: rgb(64, 64, 64);
-          border-color: rgb(115, 115, 115);
-        }
-
-        .calendar-wrapper .rbc-toolbar button.rbc-active {
-          background: rgb(23, 23, 23);
-          color: white;
-          border-color: rgb(23, 23, 23);
-        }
-
-        .dark .calendar-wrapper .rbc-toolbar button.rbc-active {
-          background: white;
-          color: rgb(23, 23, 23);
-          border-color: white;
-        }
-
-        .calendar-wrapper .rbc-toolbar-label {
-          font-weight: 600;
-          font-size: 18px;
-          color: rgb(23, 23, 23);
-        }
-
-        .dark .calendar-wrapper .rbc-toolbar-label {
-          color: rgb(245, 245, 245);
-        }
-
         /* Event styling */
         .calendar-wrapper .rbc-event {
           padding: 2px 4px;
@@ -265,36 +300,6 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
 
         .calendar-wrapper .rbc-event:focus {
           outline: 2px solid rgb(228, 60, 129);
-        }
-
-        /* Agenda view */
-        .calendar-wrapper .rbc-agenda-view {
-          border: 1px solid rgb(229, 229, 229);
-          border-radius: 8px;
-          overflow: hidden;
-        }
-
-        .dark .calendar-wrapper .rbc-agenda-view {
-          border-color: rgb(38, 38, 38);
-        }
-
-        .calendar-wrapper .rbc-agenda-table {
-          border: none;
-        }
-
-        .calendar-wrapper .rbc-agenda-date-cell,
-        .calendar-wrapper .rbc-agenda-time-cell {
-          padding: 12px;
-          color: rgb(23, 23, 23);
-        }
-
-        .dark .calendar-wrapper .rbc-agenda-date-cell,
-        .dark .calendar-wrapper .rbc-agenda-time-cell {
-          color: rgb(245, 245, 245);
-        }
-
-        .calendar-wrapper .rbc-agenda-event-cell {
-          padding: 12px;
         }
 
         /* Show more link */
