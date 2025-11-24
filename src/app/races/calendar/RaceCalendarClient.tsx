@@ -64,10 +64,10 @@ const CustomToolbar = ({ label, onNavigate, date }: ToolbarProps<RaceEvent>) => 
   return (
     <div className="flex items-center justify-between mb-6 pb-4 border-b border-neutral-200 dark:border-neutral-800">
       {/* Left: Navigation */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-4">
         <button
           onClick={() => onNavigate('PREV')}
-          className="p-2 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors text-neutral-700 dark:text-neutral-300"
+          className="p-3 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors text-neutral-700 dark:text-neutral-300"
           aria-label="Previous month"
         >
           <ChevronLeft className="h-5 w-5" />
@@ -79,7 +79,7 @@ const CustomToolbar = ({ label, onNavigate, date }: ToolbarProps<RaceEvent>) => 
 
         <button
           onClick={() => onNavigate('NEXT')}
-          className="p-2 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors text-neutral-700 dark:text-neutral-300"
+          className="p-3 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors text-neutral-700 dark:text-neutral-300"
           aria-label="Next month"
         >
           <ChevronRight className="h-5 w-5" />
