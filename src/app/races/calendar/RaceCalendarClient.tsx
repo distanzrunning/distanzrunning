@@ -123,6 +123,26 @@ const CustomToolbar = ({ label, onNavigate, date }: ToolbarProps<RaceEvent>) => 
   )
 }
 
+// Custom DateCellWrapper to control date rendering
+const DateCellWrapper = ({ value, children }: { value: Date; children: React.ReactNode }) => {
+  const today = new Date()
+  const isToday = value.toDateString() === today.toDateString()
+
+  return (
+    <div className="rbc-date-cell">
+      {isToday ? (
+        <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 font-medium">
+          {value.getDate()}
+        </span>
+      ) : (
+        <span className="inline-flex items-center justify-center w-8 h-8 font-medium">
+          {value.getDate()}
+        </span>
+      )}
+    </div>
+  )
+}
+
 export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
   // Convert races to calendar events
   const events = useMemo<RaceEvent[]>(() => {
@@ -196,6 +216,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
             components={{
               event: EventComponent,
               toolbar: CustomToolbar,
+              dateCellWrapper: DateCellWrapper,
             }}
             views={['month']}
             defaultView="month"
@@ -283,46 +304,12 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
           text-align: left;
         }
 
-        .calendar-wrapper .rbc-date-cell > a,
-        .calendar-wrapper .rbc-date-cell > button {
-          font-weight: 500;
+        .calendar-wrapper .rbc-date-cell span {
           color: rgb(23, 23, 23);
-          cursor: default;
-          pointer-events: none;
         }
 
-        .dark .calendar-wrapper .rbc-date-cell > a,
-        .dark .calendar-wrapper .rbc-date-cell > button {
+        .dark .calendar-wrapper .rbc-date-cell span {
           color: rgb(245, 245, 245);
-        }
-
-        /* Style all date numbers with circle shape */
-        .calendar-wrapper .rbc-date-cell > a,
-        .calendar-wrapper .rbc-date-cell > button {
-          display: inline-flex !important;
-          align-items: center !important;
-          justify-content: center !important;
-          width: 32px !important;
-          height: 32px !important;
-          border-radius: 50% !important;
-          background-color: transparent !important;
-        }
-
-        /* Today's date - add filled circle background */
-        .calendar-wrapper .rbc-today .rbc-date-cell > a,
-        .calendar-wrapper .rbc-today .rbc-date-cell > button,
-        .calendar-wrapper .rbc-now .rbc-date-cell > a,
-        .calendar-wrapper .rbc-now .rbc-date-cell > button {
-          background-color: rgb(23, 23, 23) !important;
-          color: rgb(255, 255, 255) !important;
-        }
-
-        .dark .calendar-wrapper .rbc-today .rbc-date-cell > a,
-        .dark .calendar-wrapper .rbc-today .rbc-date-cell > button,
-        .dark .calendar-wrapper .rbc-now .rbc-date-cell > a,
-        .dark .calendar-wrapper .rbc-now .rbc-date-cell > button {
-          background-color: rgb(255, 255, 255) !important;
-          color: rgb(23, 23, 23) !important;
         }
 
         /* Event styling */
