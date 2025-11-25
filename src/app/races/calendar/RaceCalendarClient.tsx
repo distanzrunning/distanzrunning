@@ -240,11 +240,13 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
           font-size: 14px;
           color: rgb(23, 23, 23);
           border-bottom: 1px solid rgb(229, 229, 229);
+          border-right: 1px solid rgb(229, 229, 229);
         }
 
         .dark .calendar-wrapper .fc-col-header-cell {
           color: rgb(245, 245, 245);
           border-bottom-color: rgb(38, 38, 38);
+          border-right-color: rgb(38, 38, 38);
         }
 
         /* Month view - remove outer border */
