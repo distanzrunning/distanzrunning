@@ -270,6 +270,17 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
           background-color: transparent;
         }
 
+        /* Fixed row heights */
+        .calendar-wrapper .fc-daygrid-day-frame {
+          height: 100%;
+          overflow: hidden;
+        }
+
+        .calendar-wrapper .fc-daygrid-day-events {
+          overflow-y: auto;
+          max-height: 100px;
+        }
+
         /* Remove today's cell background */
         .calendar-wrapper .fc-day-today {
           background-color: transparent !important;
