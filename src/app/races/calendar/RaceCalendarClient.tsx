@@ -203,7 +203,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
           </div>
 
           {/* Calendar Grid */}
-          <div className="p-6">
+          <div>
             <FullCalendar
               key={currentDate.toISOString()}
               plugins={[dayGridPlugin, interactionPlugin]}
