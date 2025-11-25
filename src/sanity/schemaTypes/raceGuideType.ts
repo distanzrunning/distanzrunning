@@ -141,6 +141,7 @@ export const raceGuideType = defineType({
           { title: 'CHF - Swiss Franc', value: 'CHF' },
           { title: 'CNY - Chinese Yuan', value: 'CNY' },
           { title: 'SEK - Swedish Krona', value: 'SEK' },
+          { title: 'DKK - Danish Krone', value: 'DKK' },
           { title: 'NZD - New Zealand Dollar', value: 'NZD' },
           { title: 'MXN - Mexican Peso', value: 'MXN' },
           { title: 'SGD - Singapore Dollar', value: 'SGD' },

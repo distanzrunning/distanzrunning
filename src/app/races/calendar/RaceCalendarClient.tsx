@@ -215,6 +215,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
               dayCellContent={dayCellContent}
               headerToolbar={false}
               height={900}
+              dayMaxEvents={false}
               eventClassNames="cursor-pointer"
             />
           </div>
