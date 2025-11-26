@@ -6,7 +6,7 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import type { EventClickArg, DayCellContentArg } from '@fullcalendar/core'
 import { useRouter } from 'next/navigation'
-import { ChevronLeft, ChevronRight, X, MoveUpRight, MoveDownRight } from 'lucide-react'
+import { ChevronLeft, ChevronRight, X, MoveUpRight, MoveDownRight, Thermometer } from 'lucide-react'
 import { format } from 'date-fns'
 import { urlFor } from '@/sanity/lib/image'
 import { convertCurrencySync, formatPrice } from '@/lib/raceUtils'
@@ -496,11 +496,14 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                       <p className="font-body text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">
                         Avg. Temp
                       </p>
-                      <p className="font-body text-lg font-semibold text-neutral-900 dark:text-white">
-                        {selectedRace.averageTemperature !== undefined && selectedRace.averageTemperature !== null
-                          ? `${Math.round((selectedRace.averageTemperature * 9) / 5 + 32)}°F`
-                          : 'N/A'}
-                      </p>
+                      <div className="flex items-center gap-2">
+                        <p className="font-body text-lg font-semibold text-neutral-900 dark:text-white">
+                          {selectedRace.averageTemperature !== undefined && selectedRace.averageTemperature !== null
+                            ? `${Math.round((selectedRace.averageTemperature * 9) / 5 + 32)}°F`
+                            : 'N/A'}
+                        </p>
+                        <Thermometer className="h-5 w-5 text-neutral-400 dark:text-neutral-500" />
+                      </div>
                     </div>
 
                     {/* Entry Price */}
@@ -540,7 +543,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                       <p className="font-body text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">
                         Elevation Gain
                       </p>
-                      <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
                         <p className="font-body text-lg font-semibold text-neutral-900 dark:text-white">
                           {selectedRace.elevationGain !== undefined && selectedRace.elevationGain !== null
                             ? `${Math.round(selectedRace.elevationGain)}m`
@@ -555,7 +558,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                       <p className="font-body text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">
                         Elevation Loss
                       </p>
-                      <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
                         <p className="font-body text-lg font-semibold text-neutral-900 dark:text-white">
                           {selectedRace.elevationLoss !== undefined && selectedRace.elevationLoss !== null
                             ? `${Math.round(selectedRace.elevationLoss)}m`
