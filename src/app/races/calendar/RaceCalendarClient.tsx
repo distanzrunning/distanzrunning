@@ -477,9 +477,53 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                   </div>
                 </div>
 
-                {/* Stats Grid - 4 rows */}
+                {/* Stats Grid - 3 rows of 3 */}
                 <div className="space-y-4">
-                  {/* Row 1: Surface, Elevation Gain, Elevation Loss */}
+                  {/* Row 1: Start Time, Avg. Temp, Entry Price */}
+                  <div className="grid grid-cols-3 gap-4">
+                    {/* Start Time */}
+                    <div className="bg-neutral-50 dark:bg-neutral-800 rounded-lg p-4">
+                      <p className="font-body text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">
+                        Start Time
+                      </p>
+                      <p className="font-mono text-lg font-semibold text-neutral-900 dark:text-white">
+                        {format(new Date(selectedRace.eventDate), 'h:mm a')}
+                      </p>
+                    </div>
+
+                    {/* Average Temperature */}
+                    <div className="bg-neutral-50 dark:bg-neutral-800 rounded-lg p-4">
+                      <p className="font-body text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">
+                        Avg. Temp
+                      </p>
+                      <p className="font-body text-lg font-semibold text-neutral-900 dark:text-white">
+                        {selectedRace.averageTemperature !== undefined && selectedRace.averageTemperature !== null
+                          ? `${Math.round((selectedRace.averageTemperature * 9) / 5 + 32)}°F`
+                          : 'N/A'}
+                      </p>
+                    </div>
+
+                    {/* Entry Price */}
+                    <div className="bg-neutral-50 dark:bg-neutral-800 rounded-lg p-4">
+                      <p className="font-body text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">
+                        Entry Price
+                      </p>
+                      <p className="font-body text-lg font-semibold text-neutral-900 dark:text-white">
+                        {selectedRace.price !== undefined && selectedRace.price !== null
+                          ? formatPrice(
+                              convertCurrencySync(
+                                selectedRace.price,
+                                selectedRace.currency || 'USD',
+                                'USD'
+                              ),
+                              'USD'
+                            )
+                          : 'N/A'}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Row 2: Surface, Elevation Gain, Elevation Loss */}
                   <div className="grid grid-cols-3 gap-4">
                     {/* Surface */}
                     <div className="bg-neutral-50 dark:bg-neutral-800 rounded-lg p-4">
@@ -516,8 +560,8 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                     </div>
                   </div>
 
-                  {/* Row 2: Men's CR, Women's CR */}
-                  <div className="grid grid-cols-2 gap-4">
+                  {/* Row 3: Men's CR, Women's CR, Finishers 2025 */}
+                  <div className="grid grid-cols-3 gap-4">
                     {/* Men's Course Record */}
                     <div className="bg-neutral-50 dark:bg-neutral-800 rounded-lg p-4">
                       <p className="font-body text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">
@@ -563,19 +607,6 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                         <p className="font-mono text-lg font-semibold text-neutral-900 dark:text-white">N/A</p>
                       )}
                     </div>
-                  </div>
-
-                  {/* Row 3: Start Time, Finishers, Price */}
-                  <div className="grid grid-cols-3 gap-4">
-                    {/* Start Time */}
-                    <div className="bg-neutral-50 dark:bg-neutral-800 rounded-lg p-4">
-                      <p className="font-body text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">
-                        Start Time
-                      </p>
-                      <p className="font-mono text-lg font-semibold text-neutral-900 dark:text-white">
-                        {format(new Date(selectedRace.eventDate), 'h:mm a')}
-                      </p>
-                    </div>
 
                     {/* Number of Finishers */}
                     <div className="bg-neutral-50 dark:bg-neutral-800 rounded-lg p-4">
@@ -585,40 +616,6 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                       <p className="font-body text-lg font-semibold text-neutral-900 dark:text-white">
                         {selectedRace.finishers !== undefined && selectedRace.finishers !== null
                           ? selectedRace.finishers.toLocaleString()
-                          : 'N/A'}
-                      </p>
-                    </div>
-
-                    {/* Price */}
-                    <div className="bg-neutral-50 dark:bg-neutral-800 rounded-lg p-4">
-                      <p className="font-body text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">
-                        Entry Price
-                      </p>
-                      <p className="font-body text-lg font-semibold text-neutral-900 dark:text-white">
-                        {selectedRace.price !== undefined && selectedRace.price !== null
-                          ? formatPrice(
-                              convertCurrencySync(
-                                selectedRace.price,
-                                selectedRace.currency || 'USD',
-                                'USD'
-                              ),
-                              'USD'
-                            )
-                          : 'N/A'}
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Row 4: Average Temperature (single item, but maintains grid) */}
-                  <div className="grid grid-cols-3 gap-4">
-                    {/* Average Temperature */}
-                    <div className="bg-neutral-50 dark:bg-neutral-800 rounded-lg p-4">
-                      <p className="font-body text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">
-                        Avg. Temp
-                      </p>
-                      <p className="font-body text-lg font-semibold text-neutral-900 dark:text-white">
-                        {selectedRace.averageTemperature !== undefined && selectedRace.averageTemperature !== null
-                          ? `${Math.round((selectedRace.averageTemperature * 9) / 5 + 32)}°F`
                           : 'N/A'}
                       </p>
                     </div>
