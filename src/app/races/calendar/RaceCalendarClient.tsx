@@ -602,7 +602,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                     onClick={() => router.push(`/races/${selectedRace.slug.current}`)}
                     className="w-full py-3 px-6 bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 rounded-lg font-medium hover:bg-neutral-700 dark:hover:bg-neutral-200 transition-colors"
                   >
-                    View Full Race Guide
+                    Full Race Guide
                   </button>
                   {selectedRace.officialWebsite && (
                     <a
@@ -611,7 +611,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                       rel="noopener noreferrer"
                       className="w-full py-3 px-6 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white border border-neutral-300 dark:border-neutral-700 rounded-lg font-medium hover:bg-neutral-50 dark:hover:bg-neutral-700 transition-colors text-center"
                     >
-                      Visit Official Website
+                      Official Website
                     </a>
                   )}
                 </div>
