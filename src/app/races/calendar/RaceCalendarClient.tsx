@@ -444,20 +444,41 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
               <div className="p-6">
                 {/* Title, Location, Date */}
                 <div className="mb-6">
-                  <h2 className="font-headline text-2xl md:text-3xl font-semibold text-neutral-900 dark:text-white mb-2">
-                    {selectedRace.title}
-                  </h2>
-                  {(selectedRace.city || selectedRace.stateRegion || selectedRace.country) && (
-                    <p className="font-body text-base text-neutral-600 dark:text-neutral-400 mb-2">
-                      {[selectedRace.city, selectedRace.stateRegion, selectedRace.country]
-                        .filter(Boolean)
-                        .join(', ')}
-                    </p>
-                  )}
-                  <p className="font-body text-sm text-neutral-500 dark:text-neutral-500">
-                    {format(new Date(selectedRace.eventDate), 'EEEE, MMMM d, yyyy')} at{' '}
-                    {format(new Date(selectedRace.eventDate), 'h:mm a')}
-                  </p>
+                  <div className="flex items-start justify-between gap-4">
+                    {/* Title and Location */}
+                    <div className="flex-1">
+                      <h2 className="font-headline text-2xl md:text-3xl font-semibold text-neutral-900 dark:text-white mb-2">
+                        {selectedRace.title}
+                      </h2>
+                      {(selectedRace.city || selectedRace.stateRegion || selectedRace.country) && (
+                        <p className="font-body text-base text-neutral-600 dark:text-neutral-400 mb-1">
+                          {[selectedRace.city, selectedRace.stateRegion, selectedRace.country]
+                            .filter(Boolean)
+                            .join(', ')}
+                        </p>
+                      )}
+                      <p className="font-body text-sm text-neutral-500 dark:text-neutral-500">
+                        {format(new Date(selectedRace.eventDate), 'EEEE, MMMM d, yyyy')} at{' '}
+                        {format(new Date(selectedRace.eventDate), 'h:mm a')}
+                      </p>
+                    </div>
+
+                    {/* Date Container - Right Side (Rounded) */}
+                    <div className="flex flex-col items-center justify-center gap-0 flex-shrink-0 bg-neutral-200 dark:bg-neutral-800 rounded-lg w-16 h-16">
+                      <p
+                        className="font-body text-xs font-medium uppercase text-neutral-900 dark:text-white"
+                        suppressHydrationWarning
+                      >
+                        {format(new Date(selectedRace.eventDate), 'MMM')}
+                      </p>
+                      <p
+                        className="font-body text-2xl font-semibold leading-tight text-neutral-900 dark:text-white"
+                        suppressHydrationWarning
+                      >
+                        {format(new Date(selectedRace.eventDate), 'dd')}
+                      </p>
+                    </div>
+                  </div>
                 </div>
 
                 {/* Stats Grid - 3, 2, 2 layout */}
