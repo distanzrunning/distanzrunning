@@ -6,7 +6,7 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import type { EventClickArg, DayCellContentArg } from '@fullcalendar/core'
 import { useRouter } from 'next/navigation'
-import { ChevronLeft, ChevronRight, X, MoveUpRight, MoveDownRight, Thermometer } from 'lucide-react'
+import { ChevronLeft, ChevronRight, X, MoveUpRight, MoveDownRight, Thermometer, Clock, Banknote, Users } from 'lucide-react'
 import { format } from 'date-fns'
 import { urlFor } from '@/sanity/lib/image'
 import { convertCurrencySync, formatPrice } from '@/lib/raceUtils'
@@ -486,9 +486,12 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                       <p className="font-body text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">
                         Start Time
                       </p>
-                      <p className="font-mono text-lg font-semibold text-neutral-900 dark:text-white">
-                        {format(new Date(selectedRace.eventDate), 'h:mm a')}
-                      </p>
+                      <div className="flex items-center gap-2">
+                        <p className="font-mono text-lg font-semibold text-neutral-900 dark:text-white">
+                          {format(new Date(selectedRace.eventDate), 'h:mm a')}
+                        </p>
+                        <Clock className="h-5 w-5 text-neutral-400 dark:text-neutral-500" />
+                      </div>
                     </div>
 
                     {/* Average Temperature */}
@@ -511,18 +514,21 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                       <p className="font-body text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">
                         Entry Price
                       </p>
-                      <p className="font-body text-lg font-semibold text-neutral-900 dark:text-white">
-                        {selectedRace.price !== undefined && selectedRace.price !== null
-                          ? formatPrice(
-                              convertCurrencySync(
-                                selectedRace.price,
-                                selectedRace.currency || 'USD',
+                      <div className="flex items-center gap-2">
+                        <p className="font-body text-lg font-semibold text-neutral-900 dark:text-white">
+                          {selectedRace.price !== undefined && selectedRace.price !== null
+                            ? formatPrice(
+                                convertCurrencySync(
+                                  selectedRace.price,
+                                  selectedRace.currency || 'USD',
+                                  'USD'
+                                ),
                                 'USD'
-                              ),
-                              'USD'
-                            )
-                          : 'N/A'}
-                      </p>
+                              )
+                            : 'N/A'}
+                        </p>
+                        <Banknote className="h-5 w-5 text-neutral-400 dark:text-neutral-500" />
+                      </div>
                     </div>
                   </div>
 
@@ -622,11 +628,14 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                       <p className="font-body text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">
                         Finishers 2025
                       </p>
-                      <p className="font-body text-lg font-semibold text-neutral-900 dark:text-white">
-                        {selectedRace.finishers !== undefined && selectedRace.finishers !== null
-                          ? selectedRace.finishers.toLocaleString()
-                          : 'N/A'}
-                      </p>
+                      <div className="flex items-center gap-2">
+                        <p className="font-body text-lg font-semibold text-neutral-900 dark:text-white">
+                          {selectedRace.finishers !== undefined && selectedRace.finishers !== null
+                            ? selectedRace.finishers.toLocaleString()
+                            : 'N/A'}
+                        </p>
+                        <Users className="h-5 w-5 text-neutral-400 dark:text-neutral-500" />
+                      </div>
                     </div>
                   </div>
                 </div>
