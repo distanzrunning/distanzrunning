@@ -66,6 +66,7 @@ export const raceGuideType = defineType({
           { title: 'Road', value: 'Road' },
           { title: 'Trail', value: 'Trail' },
           { title: 'Track', value: 'Track' },
+          { title: 'Mountain', value: 'Mountain' },
           { title: 'Mixed', value: 'Mixed' },
         ],
       },

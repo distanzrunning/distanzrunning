@@ -6,7 +6,7 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import type { EventClickArg, DayCellContentArg } from '@fullcalendar/core'
 import { useRouter } from 'next/navigation'
-import { ChevronLeft, ChevronRight, X, MoveUpRight, MoveDownRight, Thermometer, Clock, Banknote, Users } from 'lucide-react'
+import { ChevronLeft, ChevronRight, X, MoveUpRight, MoveDownRight, Thermometer, Clock, Banknote, Users, Medal } from 'lucide-react'
 import { format } from 'date-fns'
 import { urlFor } from '@/sanity/lib/image'
 import { convertCurrencySync, formatPrice } from '@/lib/raceUtils'
@@ -584,9 +584,12 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                       </p>
                       {selectedRace.mensCourseRecord ? (
                         <div>
-                          <p className="font-mono text-lg font-semibold text-neutral-900 dark:text-white">
-                            {selectedRace.mensCourseRecord}
-                          </p>
+                          <div className="flex items-center gap-2">
+                            <p className="font-mono text-lg font-semibold text-neutral-900 dark:text-white">
+                              {selectedRace.mensCourseRecord}
+                            </p>
+                            <Medal className="h-5 w-5 text-neutral-400 dark:text-neutral-500" />
+                          </div>
                           {(selectedRace.mensCourseRecordAthlete || selectedRace.mensCourseRecordCountry) && (
                             <p className="font-body text-xs text-neutral-600 dark:text-neutral-400 mt-1">
                               {selectedRace.mensCourseRecordAthlete}
@@ -607,9 +610,12 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                       </p>
                       {selectedRace.womensCourseRecord ? (
                         <div>
-                          <p className="font-mono text-lg font-semibold text-neutral-900 dark:text-white">
-                            {selectedRace.womensCourseRecord}
-                          </p>
+                          <div className="flex items-center gap-2">
+                            <p className="font-mono text-lg font-semibold text-neutral-900 dark:text-white">
+                              {selectedRace.womensCourseRecord}
+                            </p>
+                            <Medal className="h-5 w-5 text-neutral-400 dark:text-neutral-500" />
+                          </div>
                           {(selectedRace.womensCourseRecordAthlete || selectedRace.womensCourseRecordCountry) && (
                             <p className="font-body text-xs text-neutral-600 dark:text-neutral-400 mt-1">
                               {selectedRace.womensCourseRecordAthlete}
