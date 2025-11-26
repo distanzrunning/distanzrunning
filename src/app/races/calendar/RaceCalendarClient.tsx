@@ -477,7 +477,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                   </div>
                 </div>
 
-                {/* Stats Grid - 3 rows of 3 */}
+                {/* Stats Grid - 4 rows */}
                 <div className="space-y-4">
                   {/* Row 1: Surface, Elevation Gain, Elevation Loss */}
                   <div className="grid grid-cols-3 gap-4">
@@ -516,8 +516,8 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                     </div>
                   </div>
 
-                  {/* Row 2: Men's CR, Women's CR, Start Time */}
-                  <div className="grid grid-cols-3 gap-4">
+                  {/* Row 2: Men's CR, Women's CR */}
+                  <div className="grid grid-cols-2 gap-4">
                     {/* Men's Course Record */}
                     <div className="bg-neutral-50 dark:bg-neutral-800 rounded-lg p-4">
                       <p className="font-body text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">
@@ -563,7 +563,10 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                         <p className="font-mono text-lg font-semibold text-neutral-900 dark:text-white">N/A</p>
                       )}
                     </div>
+                  </div>
 
+                  {/* Row 3: Start Time, Finishers, Price */}
+                  <div className="grid grid-cols-3 gap-4">
                     {/* Start Time */}
                     <div className="bg-neutral-50 dark:bg-neutral-800 rounded-lg p-4">
                       <p className="font-body text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">
@@ -573,10 +576,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                         {format(new Date(selectedRace.eventDate), 'h:mm a')}
                       </p>
                     </div>
-                  </div>
 
-                  {/* Row 3: Finishers, Price, Average Temperature */}
-                  <div className="grid grid-cols-3 gap-4">
                     {/* Number of Finishers */}
                     <div className="bg-neutral-50 dark:bg-neutral-800 rounded-lg p-4">
                       <p className="font-body text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">
@@ -607,7 +607,10 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                           : 'N/A'}
                       </p>
                     </div>
+                  </div>
 
+                  {/* Row 4: Average Temperature (single item, but maintains grid) */}
+                  <div className="grid grid-cols-3 gap-4">
                     {/* Average Temperature */}
                     <div className="bg-neutral-50 dark:bg-neutral-800 rounded-lg p-4">
                       <p className="font-body text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">
