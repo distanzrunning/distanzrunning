@@ -6,11 +6,12 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import type { EventClickArg, DayCellContentArg } from '@fullcalendar/core'
 import { useRouter } from 'next/navigation'
-import { ChevronLeft, ChevronRight, X, MoveUpRight, MoveDownRight, Thermometer, Clock, Banknote, Users, Medal } from 'lucide-react'
+import { ChevronLeft, ChevronRight, X, MoveUpRight, MoveDownRight, Thermometer, Clock, Banknote, Users, Medal, MountainSnow } from 'lucide-react'
 import { format } from 'date-fns'
 import { urlFor } from '@/sanity/lib/image'
 import { convertCurrencySync, formatPrice } from '@/lib/raceUtils'
 import { motion, AnimatePresence } from 'framer-motion'
+import Image from 'next/image'
 import type { RaceGuide } from '../page'
 
 interface CalendarEvent {
@@ -539,9 +540,23 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                       <p className="font-body text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">
                         Surface
                       </p>
-                      <p className="font-body text-lg font-semibold text-neutral-900 dark:text-white">
-                        {selectedRace.surface || 'N/A'}
-                      </p>
+                      <div className="flex items-center gap-2">
+                        <p className="font-body text-lg font-semibold text-neutral-900 dark:text-white">
+                          {selectedRace.surface || 'N/A'}
+                        </p>
+                        {selectedRace.surface === 'Road' && (
+                          <Image
+                            src="/images/icons/TablerRoad.svg"
+                            alt="Road"
+                            width={20}
+                            height={20}
+                            className="text-neutral-400 dark:text-neutral-500"
+                          />
+                        )}
+                        {selectedRace.surface === 'Mountain' && (
+                          <MountainSnow className="h-5 w-5 text-neutral-400 dark:text-neutral-500" />
+                        )}
+                      </div>
                     </div>
 
                     {/* Elevation Gain */}
