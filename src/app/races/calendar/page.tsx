@@ -35,6 +35,7 @@ export default async function RaceCalendarPage() {
       mensCourseRecord,
       womensCourseRecord,
       finishers,
+      officialWebsite,
       "raceCategoryName": raceCategory->title
     }
   `)

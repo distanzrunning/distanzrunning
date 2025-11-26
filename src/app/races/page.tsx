@@ -26,6 +26,7 @@ export type RaceGuide = {
   mensCourseRecord?: string
   womensCourseRecord?: string
   finishers?: number
+  officialWebsite?: string
 }
 
 export const revalidate = 60 // Incremental Static Regeneration - refresh every 60s
@@ -50,6 +51,7 @@ export default async function RaceGuidesPage() {
       price,
       currency,
       tags,
+      officialWebsite,
       "raceCategoryName": raceCategory->title
     }
   `)
