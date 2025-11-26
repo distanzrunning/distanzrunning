@@ -170,10 +170,40 @@ export const raceGuideType = defineType({
       description: 'Format: HH:MM:SS',
     }),
     defineField({
+      name: 'mensCourseRecordAthlete',
+      title: "Men's Course Record Athlete",
+      type: 'string',
+      description: 'Name of the athlete who holds the men\'s course record',
+    }),
+    defineField({
+      name: 'mensCourseRecordCountry',
+      title: "Men's Course Record Country",
+      type: 'string',
+      description: 'Country of the athlete (e.g., USA, KEN, ETH)',
+    }),
+    defineField({
       name: 'womensCourseRecord',
       title: "Women's Course Record",
       type: 'string',
       description: 'Format: HH:MM:SS',
+    }),
+    defineField({
+      name: 'womensCourseRecordAthlete',
+      title: "Women's Course Record Athlete",
+      type: 'string',
+      description: 'Name of the athlete who holds the women\'s course record',
+    }),
+    defineField({
+      name: 'womensCourseRecordCountry',
+      title: "Women's Course Record Country",
+      type: 'string',
+      description: 'Country of the athlete (e.g., USA, KEN, ETH)',
+    }),
+    defineField({
+      name: 'officialWebsite',
+      title: 'Official Race Website',
+      type: 'url',
+      description: 'URL to the official race website',
     }),
     defineField({
       name: 'featuredRace',
