@@ -242,12 +242,14 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
           color: rgb(23, 23, 23);
           border-bottom: 1px solid rgb(229, 229, 229);
           border-right: 1px solid rgb(229, 229, 229);
+          background-color: white;
         }
 
         .dark .calendar-wrapper .fc-col-header-cell {
           color: rgb(245, 245, 245);
           border-bottom-color: rgb(38, 38, 38);
           border-right-color: rgb(38, 38, 38);
+          background-color: rgb(23, 23, 23);
         }
 
         /* Month view - remove outer border */
@@ -271,13 +273,13 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
         /* Day cells */
         .calendar-wrapper .fc-daygrid-day {
           border-color: rgb(229, 229, 229);
-          background-color: transparent;
+          background-color: white;
           height: 150px !important;
         }
 
         .dark .calendar-wrapper .fc-daygrid-day {
           border-color: rgb(38, 38, 38);
-          background-color: transparent;
+          background-color: rgb(23, 23, 23);
         }
 
         /* Fixed row heights - constrain content */
