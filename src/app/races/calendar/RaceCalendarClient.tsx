@@ -6,7 +6,11 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import type { EventClickArg, DayCellContentArg } from '@fullcalendar/core'
 import { useRouter } from 'next/navigation'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { ChevronLeft, ChevronRight, X } from 'lucide-react'
+import { format } from 'date-fns'
+import { urlFor } from '@/sanity/lib/image'
+import { convertCurrencySync, formatPrice } from '@/lib/raceUtils'
+import { motion, AnimatePresence } from 'framer-motion'
 import type { RaceGuide } from '../page'
 
 interface CalendarEvent {
@@ -22,6 +26,7 @@ interface CalendarEvent {
 export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
   const router = useRouter()
   const [currentDate, setCurrentDate] = useState(new Date())
+  const [selectedRace, setSelectedRace] = useState<RaceGuide | null>(null)
 
   // Convert races to FullCalendar events
   const events = useMemo<CalendarEvent[]>(() => {
@@ -40,9 +45,9 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
   }, [races])
 
   const handleEventClick = (info: EventClickArg) => {
-    const slug = info.event.extendedProps.slug
-    if (slug) {
-      router.push(`/races/${slug}`)
+    const race = races.find(r => r._id === info.event.id)
+    if (race) {
+      setSelectedRace(race)
     }
   }
 
@@ -382,6 +387,188 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
           text-decoration: underline;
         }
       `}</style>
+
+      {/* Race Details Modal */}
+      <AnimatePresence>
+        {selectedRace && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+            onClick={() => setSelectedRace(null)}
+          >
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              className="relative w-full max-w-2xl bg-white dark:bg-neutral-900 rounded-xl shadow-2xl overflow-hidden max-h-[90vh] overflow-y-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Close Button */}
+              <button
+                onClick={() => setSelectedRace(null)}
+                className="absolute top-4 right-4 z-10 p-2 rounded-full bg-white/90 dark:bg-neutral-800/90 backdrop-blur-sm hover:bg-white dark:hover:bg-neutral-800 transition-colors"
+                aria-label="Close"
+              >
+                <X className="h-5 w-5 text-neutral-900 dark:text-white" />
+              </button>
+
+              {/* Race Image */}
+              <div className="relative w-full">
+                <div className="relative overflow-hidden">
+                  <div style={{ paddingBottom: '50%' }} className="relative">
+                    {selectedRace.mainImage && (
+                      <img
+                        src={urlFor(selectedRace.mainImage).width(800).height(400).url()}
+                        alt={selectedRace.title}
+                        className="absolute inset-0 w-full h-full object-cover object-center"
+                      />
+                    )}
+                  </div>
+                </div>
+
+                {/* Category Badge */}
+                {selectedRace.raceCategoryName && (
+                  <div className="absolute top-4 left-4">
+                    <div className="px-3 py-1.5 bg-white/95 dark:bg-neutral-900/95 backdrop-blur-sm rounded-full">
+                      <p className="font-body text-xs font-medium text-neutral-900 dark:text-white">
+                        {selectedRace.raceCategoryName}
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Content */}
+              <div className="p-6">
+                {/* Title, Location, Date */}
+                <div className="mb-6">
+                  <h2 className="font-headline text-2xl md:text-3xl font-semibold text-neutral-900 dark:text-white mb-2">
+                    {selectedRace.title}
+                  </h2>
+                  {(selectedRace.city || selectedRace.stateRegion || selectedRace.country) && (
+                    <p className="font-body text-base text-neutral-600 dark:text-neutral-400 mb-2">
+                      {[selectedRace.city, selectedRace.stateRegion, selectedRace.country]
+                        .filter(Boolean)
+                        .join(', ')}
+                    </p>
+                  )}
+                  <p className="font-body text-sm text-neutral-500 dark:text-neutral-500">
+                    {format(new Date(selectedRace.eventDate), 'EEEE, MMMM d, yyyy')} at{' '}
+                    {format(new Date(selectedRace.eventDate), 'h:mm a')}
+                  </p>
+                </div>
+
+                {/* Stats Grid - 3, 2, 2 layout */}
+                <div className="space-y-4">
+                  {/* Row 1: Surface, Elevation Gain, Elevation Loss */}
+                  <div className="grid grid-cols-3 gap-4">
+                    {/* Surface */}
+                    <div className="bg-neutral-50 dark:bg-neutral-800 rounded-lg p-4">
+                      <p className="font-body text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">
+                        Surface
+                      </p>
+                      <p className="font-body text-lg font-semibold text-neutral-900 dark:text-white">
+                        {selectedRace.surface || 'N/A'}
+                      </p>
+                    </div>
+
+                    {/* Elevation Gain */}
+                    <div className="bg-neutral-50 dark:bg-neutral-800 rounded-lg p-4">
+                      <p className="font-body text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">
+                        Elevation Gain
+                      </p>
+                      <p className="font-body text-lg font-semibold text-neutral-900 dark:text-white">
+                        {selectedRace.elevationGain !== undefined && selectedRace.elevationGain !== null
+                          ? `${Math.round(selectedRace.elevationGain)}m`
+                          : 'N/A'}
+                      </p>
+                    </div>
+
+                    {/* Elevation Loss */}
+                    <div className="bg-neutral-50 dark:bg-neutral-800 rounded-lg p-4">
+                      <p className="font-body text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">
+                        Elevation Loss
+                      </p>
+                      <p className="font-body text-lg font-semibold text-neutral-900 dark:text-white">
+                        {selectedRace.elevationLoss !== undefined && selectedRace.elevationLoss !== null
+                          ? `${Math.round(selectedRace.elevationLoss)}m`
+                          : 'N/A'}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Row 2: Men's CR, Women's CR */}
+                  <div className="grid grid-cols-2 gap-4">
+                    {/* Men's Course Record */}
+                    <div className="bg-neutral-50 dark:bg-neutral-800 rounded-lg p-4">
+                      <p className="font-body text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">
+                        Men's CR
+                      </p>
+                      <p className="font-mono text-lg font-semibold text-neutral-900 dark:text-white">
+                        {selectedRace.mensCourseRecord || 'N/A'}
+                      </p>
+                    </div>
+
+                    {/* Women's Course Record */}
+                    <div className="bg-neutral-50 dark:bg-neutral-800 rounded-lg p-4">
+                      <p className="font-body text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">
+                        Women's CR
+                      </p>
+                      <p className="font-mono text-lg font-semibold text-neutral-900 dark:text-white">
+                        {selectedRace.womensCourseRecord || 'N/A'}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Row 3: Finishers, Price */}
+                  <div className="grid grid-cols-2 gap-4">
+                    {/* Number of Finishers */}
+                    <div className="bg-neutral-50 dark:bg-neutral-800 rounded-lg p-4">
+                      <p className="font-body text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">
+                        Finishers 2025
+                      </p>
+                      <p className="font-body text-lg font-semibold text-neutral-900 dark:text-white">
+                        {selectedRace.finishers !== undefined && selectedRace.finishers !== null
+                          ? selectedRace.finishers.toLocaleString()
+                          : 'N/A'}
+                      </p>
+                    </div>
+
+                    {/* Price */}
+                    <div className="bg-neutral-50 dark:bg-neutral-800 rounded-lg p-4">
+                      <p className="font-body text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">
+                        Entry Price
+                      </p>
+                      <p className="font-body text-lg font-semibold text-neutral-900 dark:text-white">
+                        {selectedRace.price !== undefined && selectedRace.price !== null
+                          ? formatPrice(
+                              convertCurrencySync(
+                                selectedRace.price,
+                                selectedRace.currency || 'USD',
+                                'USD'
+                              ),
+                              'USD'
+                            )
+                          : 'N/A'}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* View Race Guide Button */}
+                <button
+                  onClick={() => router.push(`/races/${selectedRace.slug.current}`)}
+                  className="mt-6 w-full py-3 px-6 bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 rounded-lg font-medium hover:bg-neutral-700 dark:hover:bg-neutral-200 transition-colors"
+                >
+                  View Full Race Guide
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }

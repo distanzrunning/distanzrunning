@@ -27,10 +27,14 @@ export default async function RaceCalendarPage() {
       surfaceBreakdown,
       profile,
       elevationGain,
+      elevationLoss,
       averageTemperature,
       price,
       currency,
       tags,
+      mensCourseRecord,
+      womensCourseRecord,
+      finishers,
       "raceCategoryName": raceCategory->title
     }
   `)

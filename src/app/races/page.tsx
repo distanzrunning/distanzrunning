@@ -18,10 +18,14 @@ export type RaceGuide = {
   surfaceBreakdown?: string
   profile?: string
   elevationGain?: number
+  elevationLoss?: number
   averageTemperature?: number
   price?: number
   currency?: string
   tags?: string[]
+  mensCourseRecord?: string
+  womensCourseRecord?: string
+  finishers?: number
 }
 
 export const revalidate = 60 // Incremental Static Regeneration - refresh every 60s
