@@ -523,9 +523,22 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                       <p className="font-body text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">
                         Men's CR
                       </p>
-                      <p className="font-mono text-lg font-semibold text-neutral-900 dark:text-white">
-                        {selectedRace.mensCourseRecord || 'N/A'}
-                      </p>
+                      {selectedRace.mensCourseRecord ? (
+                        <div>
+                          <p className="font-mono text-lg font-semibold text-neutral-900 dark:text-white">
+                            {selectedRace.mensCourseRecord}
+                          </p>
+                          {(selectedRace.mensCourseRecordAthlete || selectedRace.mensCourseRecordCountry) && (
+                            <p className="font-body text-xs text-neutral-600 dark:text-neutral-400 mt-1">
+                              {selectedRace.mensCourseRecordAthlete}
+                              {selectedRace.mensCourseRecordAthlete && selectedRace.mensCourseRecordCountry && ' '}
+                              {selectedRace.mensCourseRecordCountry && `(${selectedRace.mensCourseRecordCountry})`}
+                            </p>
+                          )}
+                        </div>
+                      ) : (
+                        <p className="font-mono text-lg font-semibold text-neutral-900 dark:text-white">N/A</p>
+                      )}
                     </div>
 
                     {/* Women's Course Record */}
@@ -533,9 +546,22 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                       <p className="font-body text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">
                         Women's CR
                       </p>
-                      <p className="font-mono text-lg font-semibold text-neutral-900 dark:text-white">
-                        {selectedRace.womensCourseRecord || 'N/A'}
-                      </p>
+                      {selectedRace.womensCourseRecord ? (
+                        <div>
+                          <p className="font-mono text-lg font-semibold text-neutral-900 dark:text-white">
+                            {selectedRace.womensCourseRecord}
+                          </p>
+                          {(selectedRace.womensCourseRecordAthlete || selectedRace.womensCourseRecordCountry) && (
+                            <p className="font-body text-xs text-neutral-600 dark:text-neutral-400 mt-1">
+                              {selectedRace.womensCourseRecordAthlete}
+                              {selectedRace.womensCourseRecordAthlete && selectedRace.womensCourseRecordCountry && ' '}
+                              {selectedRace.womensCourseRecordCountry && `(${selectedRace.womensCourseRecordCountry})`}
+                            </p>
+                          )}
+                        </div>
+                      ) : (
+                        <p className="font-mono text-lg font-semibold text-neutral-900 dark:text-white">N/A</p>
+                      )}
                     </div>
 
                     {/* Start Time */}

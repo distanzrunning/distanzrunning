@@ -24,7 +24,11 @@ export type RaceGuide = {
   currency?: string
   tags?: string[]
   mensCourseRecord?: string
+  mensCourseRecordAthlete?: string
+  mensCourseRecordCountry?: string
   womensCourseRecord?: string
+  womensCourseRecordAthlete?: string
+  womensCourseRecordCountry?: string
   finishers?: number
   officialWebsite?: string
 }
