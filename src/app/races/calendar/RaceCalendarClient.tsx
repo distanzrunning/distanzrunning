@@ -6,12 +6,11 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import type { EventClickArg, DayCellContentArg } from '@fullcalendar/core'
 import { useRouter } from 'next/navigation'
-import { ChevronLeft, ChevronRight, X, MoveUpRight, MoveDownRight, Thermometer, Clock, Banknote, Users, Medal, MountainSnow } from 'lucide-react'
+import { ChevronLeft, ChevronRight, X, MoveUpRight, MoveDownRight, Thermometer, Clock, Banknote, Users, Medal } from 'lucide-react'
 import { format } from 'date-fns'
 import { urlFor } from '@/sanity/lib/image'
 import { convertCurrencySync, formatPrice } from '@/lib/raceUtils'
 import { motion, AnimatePresence } from 'framer-motion'
-import Image from 'next/image'
 import type { RaceGuide } from '../page'
 
 interface CalendarEvent {
@@ -544,17 +543,17 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                         <p className="font-body text-lg font-semibold text-neutral-900 dark:text-white">
                           {selectedRace.surface || 'N/A'}
                         </p>
-                        {selectedRace.surface === 'Road' && (
-                          <Image
-                            src="/images/icons/TablerRoad.svg"
-                            alt="Road"
-                            width={20}
-                            height={20}
-                            className="text-neutral-400 dark:text-neutral-500"
-                          />
-                        )}
-                        {selectedRace.surface === 'Mountain' && (
-                          <MountainSnow className="h-5 w-5 text-neutral-400 dark:text-neutral-500" />
+                        {selectedRace.surface && selectedRace.surface !== 'N/A' && (
+                          <svg width="20" height="20" viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg" className="flex-shrink-0">
+                            <path
+                              d="M10 55 Q 30 15 50 55 T 90 55 Q 110 15 130 55"
+                              stroke="currentColor"
+                              strokeWidth="12"
+                              fill="none"
+                              strokeLinecap="round"
+                              className="text-neutral-400 dark:text-neutral-500"
+                            />
+                          </svg>
                         )}
                       </div>
                     </div>
