@@ -6,11 +6,12 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import type { EventClickArg, DayCellContentArg } from '@fullcalendar/core'
 import { useRouter } from 'next/navigation'
-import { ChevronLeft, ChevronRight, X, MoveUpRight, MoveDownRight, Thermometer, Clock, Banknote, Users, Medal } from 'lucide-react'
+import { ChevronLeft, ChevronRight, MoveUpRight, MoveDownRight, Thermometer, Clock, Banknote, Users, Medal } from 'lucide-react'
 import { format } from 'date-fns'
 import { urlFor } from '@/sanity/lib/image'
 import { convertCurrencySync, formatPrice } from '@/lib/raceUtils'
 import { motion, AnimatePresence } from 'framer-motion'
+import Draggable from 'react-draggable'
 import type { RaceGuide } from '../page'
 
 interface CalendarEvent {
@@ -23,10 +24,19 @@ interface CalendarEvent {
   raceCategoryName?: string
 }
 
+interface RaceWindow {
+  id: string
+  race: RaceGuide
+  isMinimized: boolean
+  isFullscreen: boolean
+  position: { x: number; y: number }
+}
+
 export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
   const router = useRouter()
   const [currentDate, setCurrentDate] = useState(new Date())
-  const [selectedRace, setSelectedRace] = useState<RaceGuide | null>(null)
+  const [openWindows, setOpenWindows] = useState<RaceWindow[]>([])
+  const [isMobile, setIsMobile] = useState(false)
 
   // Convert races to FullCalendar events
   const events = useMemo<CalendarEvent[]>(() => {
@@ -44,11 +54,77 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
     })
   }, [races])
 
+  // Check if mobile on mount
+  useMemo(() => {
+    setIsMobile(window.innerWidth < 768)
+    const handleResize = () => setIsMobile(window.innerWidth < 768)
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
   const handleEventClick = (info: EventClickArg) => {
     const race = races.find(r => r._id === info.event.id)
-    if (race) {
-      setSelectedRace(race)
+    if (!race) return
+
+    // On mobile, only allow one fullscreen window
+    if (isMobile) {
+      setOpenWindows([{
+        id: race._id,
+        race,
+        isMinimized: false,
+        isFullscreen: true,
+        position: { x: 0, y: 0 }
+      }])
+      return
     }
+
+    // On desktop, check if window already exists
+    const existingWindow = openWindows.find(w => w.id === race._id)
+    if (existingWindow) {
+      // Bring to front by moving to end of array
+      setOpenWindows(prev => [...prev.filter(w => w.id !== race._id), existingWindow])
+      return
+    }
+
+    // Create new window with staggered position
+    const offset = openWindows.length * 30
+    setOpenWindows(prev => [...prev, {
+      id: race._id,
+      race,
+      isMinimized: false,
+      isFullscreen: false,
+      position: { x: 50 + offset, y: 50 + offset }
+    }])
+  }
+
+  const closeWindow = (id: string) => {
+    setOpenWindows(prev => prev.filter(w => w.id !== id))
+  }
+
+  const minimizeWindow = (id: string) => {
+    setOpenWindows(prev => prev.map(w =>
+      w.id === id ? { ...w, isMinimized: true } : w
+    ))
+  }
+
+  const restoreWindow = (id: string) => {
+    setOpenWindows(prev => prev.map(w =>
+      w.id === id ? { ...w, isMinimized: false } : w
+    ).sort((a, b) => a.id === id ? 1 : -1)) // Bring to front
+  }
+
+  const toggleFullscreen = (id: string) => {
+    setOpenWindows(prev => prev.map(w =>
+      w.id === id ? { ...w, isFullscreen: !w.isFullscreen } : w
+    ))
+  }
+
+  const bringToFront = (id: string) => {
+    setOpenWindows(prev => {
+      const window = prev.find(w => w.id === id)
+      if (!window) return prev
+      return [...prev.filter(w => w.id !== id), window]
+    })
   }
 
   // Custom event content
@@ -388,302 +464,403 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
         }
       `}</style>
 
-      {/* Race Details Modal */}
+      {/* Race Windows */}
       <AnimatePresence>
-        {selectedRace && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
-            onClick={() => setSelectedRace(null)}
-          >
+        {openWindows.map((window, index) => {
+          if (window.isMinimized) return null
+
+          const WindowContent = (
             <motion.div
+              key={window.id}
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
-              className="relative w-full max-w-2xl bg-white dark:bg-neutral-900 rounded-xl shadow-2xl overflow-hidden max-h-[90vh] overflow-y-auto"
-              onClick={(e) => e.stopPropagation()}
+              className={`
+                ${window.isFullscreen || isMobile
+                  ? 'fixed inset-0 z-50'
+                  : 'fixed z-50'
+                }
+                bg-white dark:bg-neutral-900 shadow-2xl
+                ${window.isFullscreen || isMobile ? '' : 'rounded-xl'}
+                overflow-hidden flex flex-col
+              `}
+              style={
+                window.isFullscreen || isMobile
+                  ? {}
+                  : {
+                      width: '640px',
+                      maxWidth: 'calc(100vw - 40px)',
+                      maxHeight: 'calc(100vh - 40px)',
+                      zIndex: 50 + index,
+                    }
+              }
+              onClick={() => bringToFront(window.id)}
             >
-              {/* Close Button */}
-              <button
-                onClick={() => setSelectedRace(null)}
-                className="absolute top-4 right-4 z-10 p-2 rounded-full bg-white/90 dark:bg-neutral-800/90 backdrop-blur-sm hover:bg-white dark:hover:bg-neutral-800 transition-colors"
-                aria-label="Close"
+              {/* macOS-style Title Bar */}
+              <div
+                className="flex items-center justify-between px-4 py-3 bg-neutral-100 dark:bg-neutral-800 border-b border-neutral-200 dark:border-neutral-700 cursor-move select-none"
+                style={{ cursor: isMobile ? 'default' : 'move' }}
               >
-                <X className="h-5 w-5 text-neutral-900 dark:text-white" />
-              </button>
-
-              {/* Race Image */}
-              <div className="relative w-full">
-                <div className="relative overflow-hidden">
-                  <div style={{ paddingBottom: '50%' }} className="relative">
-                    {selectedRace.mainImage && (
-                      <img
-                        src={urlFor(selectedRace.mainImage).width(800).height(400).url()}
-                        alt={selectedRace.title}
-                        className="absolute inset-0 w-full h-full object-cover object-center"
+                {/* Traffic Light Buttons */}
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      closeWindow(window.id)
+                    }}
+                    className="w-3 h-3 rounded-full bg-red-500 hover:bg-red-600 transition-colors"
+                    aria-label="Close"
+                  />
+                  {!isMobile && (
+                    <>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          minimizeWindow(window.id)
+                        }}
+                        className="w-3 h-3 rounded-full bg-yellow-500 hover:bg-yellow-600 transition-colors"
+                        aria-label="Minimize"
                       />
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          toggleFullscreen(window.id)
+                        }}
+                        className="w-3 h-3 rounded-full bg-green-500 hover:bg-green-600 transition-colors"
+                        aria-label="Fullscreen"
+                      />
+                    </>
+                  )}
+                </div>
+
+                {/* Window Title */}
+                <div className="flex-1 text-center px-4">
+                  <p className="font-body text-sm font-medium text-neutral-700 dark:text-neutral-300 truncate">
+                    {window.race.title}
+                  </p>
+                </div>
+
+                {/* Spacer for layout balance */}
+                <div className="w-[52px]" />
+              </div>
+
+              {/* Window Content - Scrollable */}
+              <div className="flex-1 overflow-y-auto">
+                {/* Race Image */}
+                <div className="relative w-full">
+                  <div className="relative overflow-hidden">
+                    <div style={{ paddingBottom: '50%' }} className="relative">
+                      {window.race.mainImage && (
+                        <img
+                          src={urlFor(window.race.mainImage).width(800).height(400).url()}
+                          alt={window.race.title}
+                          className="absolute inset-0 w-full h-full object-cover object-center"
+                        />
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Category Badge */}
+                  {window.race.raceCategoryName && (
+                    <div className="absolute top-4 left-4">
+                      <div className="px-3 py-1.5 bg-white/95 dark:bg-neutral-900/95 backdrop-blur-sm rounded-full">
+                        <p className="font-body text-xs font-medium text-neutral-900 dark:text-white">
+                          {window.race.raceCategoryName}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Content */}
+                <div className="p-6">
+                  {/* Title, Location, Date */}
+                  <div className="mb-6">
+                    <div className="flex items-start justify-between gap-4">
+                      {/* Title and Location */}
+                      <div className="flex-1">
+                        <h2 className="font-headline text-2xl md:text-3xl font-semibold text-neutral-900 dark:text-white mb-2">
+                          {window.race.title}
+                        </h2>
+                        {(window.race.city || window.race.stateRegion || window.race.country) && (
+                          <p className="font-body text-base text-neutral-600 dark:text-neutral-400">
+                            {[window.race.city, window.race.stateRegion, window.race.country]
+                              .filter(Boolean)
+                              .join(', ')}
+                          </p>
+                        )}
+                      </div>
+
+                      {/* Date Container - Right Side (Rounded) */}
+                      <div className="flex flex-col items-center justify-center gap-0 flex-shrink-0 bg-neutral-200 dark:bg-neutral-800 rounded-lg w-16 h-16">
+                        <p
+                          className="font-body text-xs font-medium uppercase text-neutral-900 dark:text-white"
+                          suppressHydrationWarning
+                        >
+                          {format(new Date(window.race.eventDate), 'MMM')}
+                        </p>
+                        <p
+                          className="font-body text-2xl font-semibold leading-tight text-neutral-900 dark:text-white"
+                          suppressHydrationWarning
+                        >
+                          {format(new Date(window.race.eventDate), 'dd')}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Stats Grid - 3 rows of 3 */}
+                  <div className="space-y-4">
+                    {/* Row 1: Start Time, Avg. Temp, Entry Price */}
+                    <div className="grid grid-cols-3 gap-4">
+                      {/* Start Time */}
+                      <div className="bg-neutral-50 dark:bg-neutral-800 rounded-lg p-4">
+                        <p className="font-body text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">
+                          Start Time
+                        </p>
+                        <div className="flex items-center gap-2">
+                          <p className="font-mono text-lg font-semibold text-neutral-900 dark:text-white">
+                            {format(new Date(window.race.eventDate), 'h:mm a')}
+                          </p>
+                          <Clock className="h-5 w-5 text-neutral-400 dark:text-neutral-500" />
+                        </div>
+                      </div>
+
+                      {/* Average Temperature */}
+                      <div className="bg-neutral-50 dark:bg-neutral-800 rounded-lg p-4">
+                        <p className="font-body text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">
+                          Avg. Temp
+                        </p>
+                        <div className="flex items-center gap-2">
+                          <p className="font-body text-lg font-semibold text-neutral-900 dark:text-white">
+                            {window.race.averageTemperature !== undefined && window.race.averageTemperature !== null
+                              ? `${Math.round((window.race.averageTemperature * 9) / 5 + 32)}°F`
+                              : 'N/A'}
+                          </p>
+                          <Thermometer className="h-5 w-5 text-neutral-400 dark:text-neutral-500" />
+                        </div>
+                      </div>
+
+                      {/* Entry Price */}
+                      <div className="bg-neutral-50 dark:bg-neutral-800 rounded-lg p-4">
+                        <p className="font-body text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">
+                          Entry Price
+                        </p>
+                        <div className="flex items-center gap-2">
+                          <p className="font-body text-lg font-semibold text-neutral-900 dark:text-white">
+                            {window.race.price !== undefined && window.race.price !== null
+                              ? formatPrice(
+                                  convertCurrencySync(
+                                    window.race.price,
+                                    window.race.currency || 'USD',
+                                    'USD'
+                                  ),
+                                  'USD'
+                                )
+                              : 'N/A'}
+                          </p>
+                          <Banknote className="h-5 w-5 text-neutral-400 dark:text-neutral-500" />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Row 2: Surface, Elevation Gain, Elevation Loss */}
+                    <div className="grid grid-cols-3 gap-4">
+                      {/* Surface */}
+                      <div className="bg-neutral-50 dark:bg-neutral-800 rounded-lg p-4">
+                        <p className="font-body text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">
+                          Surface
+                        </p>
+                        <div className="flex items-center gap-2">
+                          <p className="font-body text-lg font-semibold text-neutral-900 dark:text-white">
+                            {window.race.surface || 'N/A'}
+                          </p>
+                          {window.race.surface && window.race.surface !== 'N/A' && (
+                            <svg width="20" height="20" viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg" className="flex-shrink-0">
+                              <path
+                                d="M10 55 Q 30 15 50 55 T 90 55 Q 110 15 130 55"
+                                stroke="currentColor"
+                                strokeWidth="12"
+                                fill="none"
+                                strokeLinecap="round"
+                                className="text-neutral-400 dark:text-neutral-500"
+                              />
+                            </svg>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Elevation Gain */}
+                      <div className="bg-neutral-50 dark:bg-neutral-800 rounded-lg p-4">
+                        <p className="font-body text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">
+                          Elevation Gain
+                        </p>
+                        <div className="flex items-center gap-2">
+                          <p className="font-body text-lg font-semibold text-neutral-900 dark:text-white">
+                            {window.race.elevationGain !== undefined && window.race.elevationGain !== null
+                              ? `${Math.round(window.race.elevationGain)}m`
+                              : 'N/A'}
+                          </p>
+                          <MoveUpRight className="h-5 w-5 text-neutral-400 dark:text-neutral-500" />
+                        </div>
+                      </div>
+
+                      {/* Elevation Loss */}
+                      <div className="bg-neutral-50 dark:bg-neutral-800 rounded-lg p-4">
+                        <p className="font-body text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">
+                          Elevation Loss
+                        </p>
+                        <div className="flex items-center gap-2">
+                          <p className="font-body text-lg font-semibold text-neutral-900 dark:text-white">
+                            {window.race.elevationLoss !== undefined && window.race.elevationLoss !== null
+                              ? `${Math.round(window.race.elevationLoss)}m`
+                              : 'N/A'}
+                          </p>
+                          <MoveDownRight className="h-5 w-5 text-neutral-400 dark:text-neutral-500" />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Row 3: Men's CR, Women's CR, Finishers 2025 */}
+                    <div className="grid grid-cols-3 gap-4">
+                      {/* Men's Course Record */}
+                      <div className="bg-neutral-50 dark:bg-neutral-800 rounded-lg p-4">
+                        <p className="font-body text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">
+                          Men's CR
+                        </p>
+                        {window.race.mensCourseRecord ? (
+                          <div>
+                            <div className="flex items-center gap-2">
+                              <p className="font-mono text-lg font-semibold text-neutral-900 dark:text-white">
+                                {window.race.mensCourseRecord}
+                              </p>
+                              <Medal className="h-5 w-5 text-neutral-400 dark:text-neutral-500" />
+                            </div>
+                            {(window.race.mensCourseRecordAthlete || window.race.mensCourseRecordCountry) && (
+                              <p className="font-body text-xs text-neutral-600 dark:text-neutral-400 mt-1">
+                                {window.race.mensCourseRecordAthlete}
+                                {window.race.mensCourseRecordAthlete && window.race.mensCourseRecordCountry && ' '}
+                                {window.race.mensCourseRecordCountry && `(${window.race.mensCourseRecordCountry})`}
+                              </p>
+                            )}
+                          </div>
+                        ) : (
+                          <p className="font-mono text-lg font-semibold text-neutral-900 dark:text-white">N/A</p>
+                        )}
+                      </div>
+
+                      {/* Women's Course Record */}
+                      <div className="bg-neutral-50 dark:bg-neutral-800 rounded-lg p-4">
+                        <p className="font-body text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">
+                          Women's CR
+                        </p>
+                        {window.race.womensCourseRecord ? (
+                          <div>
+                            <div className="flex items-center gap-2">
+                              <p className="font-mono text-lg font-semibold text-neutral-900 dark:text-white">
+                                {window.race.womensCourseRecord}
+                              </p>
+                              <Medal className="h-5 w-5 text-neutral-400 dark:text-neutral-500" />
+                            </div>
+                            {(window.race.womensCourseRecordAthlete || window.race.womensCourseRecordCountry) && (
+                              <p className="font-body text-xs text-neutral-600 dark:text-neutral-400 mt-1">
+                                {window.race.womensCourseRecordAthlete}
+                                {window.race.womensCourseRecordAthlete && window.race.womensCourseRecordCountry && ' '}
+                                {window.race.womensCourseRecordCountry && `(${window.race.womensCourseRecordCountry})`}
+                              </p>
+                            )}
+                          </div>
+                        ) : (
+                          <p className="font-mono text-lg font-semibold text-neutral-900 dark:text-white">N/A</p>
+                        )}
+                      </div>
+
+                      {/* Number of Finishers */}
+                      <div className="bg-neutral-50 dark:bg-neutral-800 rounded-lg p-4">
+                        <p className="font-body text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">
+                          Finishers 2025
+                        </p>
+                        <div className="flex items-center gap-2">
+                          <p className="font-body text-lg font-semibold text-neutral-900 dark:text-white">
+                            {window.race.finishers !== undefined && window.race.finishers !== null
+                              ? window.race.finishers.toLocaleString()
+                              : 'N/A'}
+                          </p>
+                          <Users className="h-5 w-5 text-neutral-400 dark:text-neutral-500" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <button
+                      onClick={() => router.push(`/races/${window.race.slug.current}`)}
+                      className="w-full py-3 px-6 bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 rounded-lg font-medium hover:bg-neutral-700 dark:hover:bg-neutral-200 transition-colors"
+                    >
+                      Full Race Guide
+                    </button>
+                    {window.race.officialWebsite && (
+                      <a
+                        href={window.race.officialWebsite}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-full py-3 px-6 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white border border-neutral-300 dark:border-neutral-700 rounded-lg font-medium hover:bg-neutral-50 dark:hover:bg-neutral-700 transition-colors text-center"
+                      >
+                        Official Website
+                      </a>
                     )}
                   </div>
                 </div>
-
-                {/* Category Badge */}
-                {selectedRace.raceCategoryName && (
-                  <div className="absolute top-4 left-4">
-                    <div className="px-3 py-1.5 bg-white/95 dark:bg-neutral-900/95 backdrop-blur-sm rounded-full">
-                      <p className="font-body text-xs font-medium text-neutral-900 dark:text-white">
-                        {selectedRace.raceCategoryName}
-                      </p>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Content */}
-              <div className="p-6">
-                {/* Title, Location, Date */}
-                <div className="mb-6">
-                  <div className="flex items-start justify-between gap-4">
-                    {/* Title and Location */}
-                    <div className="flex-1">
-                      <h2 className="font-headline text-2xl md:text-3xl font-semibold text-neutral-900 dark:text-white mb-2">
-                        {selectedRace.title}
-                      </h2>
-                      {(selectedRace.city || selectedRace.stateRegion || selectedRace.country) && (
-                        <p className="font-body text-base text-neutral-600 dark:text-neutral-400">
-                          {[selectedRace.city, selectedRace.stateRegion, selectedRace.country]
-                            .filter(Boolean)
-                            .join(', ')}
-                        </p>
-                      )}
-                    </div>
-
-                    {/* Date Container - Right Side (Rounded) */}
-                    <div className="flex flex-col items-center justify-center gap-0 flex-shrink-0 bg-neutral-200 dark:bg-neutral-800 rounded-lg w-16 h-16">
-                      <p
-                        className="font-body text-xs font-medium uppercase text-neutral-900 dark:text-white"
-                        suppressHydrationWarning
-                      >
-                        {format(new Date(selectedRace.eventDate), 'MMM')}
-                      </p>
-                      <p
-                        className="font-body text-2xl font-semibold leading-tight text-neutral-900 dark:text-white"
-                        suppressHydrationWarning
-                      >
-                        {format(new Date(selectedRace.eventDate), 'dd')}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Stats Grid - 3 rows of 3 */}
-                <div className="space-y-4">
-                  {/* Row 1: Start Time, Avg. Temp, Entry Price */}
-                  <div className="grid grid-cols-3 gap-4">
-                    {/* Start Time */}
-                    <div className="bg-neutral-50 dark:bg-neutral-800 rounded-lg p-4">
-                      <p className="font-body text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">
-                        Start Time
-                      </p>
-                      <div className="flex items-center gap-2">
-                        <p className="font-mono text-lg font-semibold text-neutral-900 dark:text-white">
-                          {format(new Date(selectedRace.eventDate), 'h:mm a')}
-                        </p>
-                        <Clock className="h-5 w-5 text-neutral-400 dark:text-neutral-500" />
-                      </div>
-                    </div>
-
-                    {/* Average Temperature */}
-                    <div className="bg-neutral-50 dark:bg-neutral-800 rounded-lg p-4">
-                      <p className="font-body text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">
-                        Avg. Temp
-                      </p>
-                      <div className="flex items-center gap-2">
-                        <p className="font-body text-lg font-semibold text-neutral-900 dark:text-white">
-                          {selectedRace.averageTemperature !== undefined && selectedRace.averageTemperature !== null
-                            ? `${Math.round((selectedRace.averageTemperature * 9) / 5 + 32)}°F`
-                            : 'N/A'}
-                        </p>
-                        <Thermometer className="h-5 w-5 text-neutral-400 dark:text-neutral-500" />
-                      </div>
-                    </div>
-
-                    {/* Entry Price */}
-                    <div className="bg-neutral-50 dark:bg-neutral-800 rounded-lg p-4">
-                      <p className="font-body text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">
-                        Entry Price
-                      </p>
-                      <div className="flex items-center gap-2">
-                        <p className="font-body text-lg font-semibold text-neutral-900 dark:text-white">
-                          {selectedRace.price !== undefined && selectedRace.price !== null
-                            ? formatPrice(
-                                convertCurrencySync(
-                                  selectedRace.price,
-                                  selectedRace.currency || 'USD',
-                                  'USD'
-                                ),
-                                'USD'
-                              )
-                            : 'N/A'}
-                        </p>
-                        <Banknote className="h-5 w-5 text-neutral-400 dark:text-neutral-500" />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Row 2: Surface, Elevation Gain, Elevation Loss */}
-                  <div className="grid grid-cols-3 gap-4">
-                    {/* Surface */}
-                    <div className="bg-neutral-50 dark:bg-neutral-800 rounded-lg p-4">
-                      <p className="font-body text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">
-                        Surface
-                      </p>
-                      <div className="flex items-center gap-2">
-                        <p className="font-body text-lg font-semibold text-neutral-900 dark:text-white">
-                          {selectedRace.surface || 'N/A'}
-                        </p>
-                        {selectedRace.surface && selectedRace.surface !== 'N/A' && (
-                          <svg width="20" height="20" viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg" className="flex-shrink-0">
-                            <path
-                              d="M10 55 Q 30 15 50 55 T 90 55 Q 110 15 130 55"
-                              stroke="currentColor"
-                              strokeWidth="12"
-                              fill="none"
-                              strokeLinecap="round"
-                              className="text-neutral-400 dark:text-neutral-500"
-                            />
-                          </svg>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Elevation Gain */}
-                    <div className="bg-neutral-50 dark:bg-neutral-800 rounded-lg p-4">
-                      <p className="font-body text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">
-                        Elevation Gain
-                      </p>
-                      <div className="flex items-center gap-2">
-                        <p className="font-body text-lg font-semibold text-neutral-900 dark:text-white">
-                          {selectedRace.elevationGain !== undefined && selectedRace.elevationGain !== null
-                            ? `${Math.round(selectedRace.elevationGain)}m`
-                            : 'N/A'}
-                        </p>
-                        <MoveUpRight className="h-5 w-5 text-neutral-400 dark:text-neutral-500" />
-                      </div>
-                    </div>
-
-                    {/* Elevation Loss */}
-                    <div className="bg-neutral-50 dark:bg-neutral-800 rounded-lg p-4">
-                      <p className="font-body text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">
-                        Elevation Loss
-                      </p>
-                      <div className="flex items-center gap-2">
-                        <p className="font-body text-lg font-semibold text-neutral-900 dark:text-white">
-                          {selectedRace.elevationLoss !== undefined && selectedRace.elevationLoss !== null
-                            ? `${Math.round(selectedRace.elevationLoss)}m`
-                            : 'N/A'}
-                        </p>
-                        <MoveDownRight className="h-5 w-5 text-neutral-400 dark:text-neutral-500" />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Row 3: Men's CR, Women's CR, Finishers 2025 */}
-                  <div className="grid grid-cols-3 gap-4">
-                    {/* Men's Course Record */}
-                    <div className="bg-neutral-50 dark:bg-neutral-800 rounded-lg p-4">
-                      <p className="font-body text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">
-                        Men's CR
-                      </p>
-                      {selectedRace.mensCourseRecord ? (
-                        <div>
-                          <div className="flex items-center gap-2">
-                            <p className="font-mono text-lg font-semibold text-neutral-900 dark:text-white">
-                              {selectedRace.mensCourseRecord}
-                            </p>
-                            <Medal className="h-5 w-5 text-neutral-400 dark:text-neutral-500" />
-                          </div>
-                          {(selectedRace.mensCourseRecordAthlete || selectedRace.mensCourseRecordCountry) && (
-                            <p className="font-body text-xs text-neutral-600 dark:text-neutral-400 mt-1">
-                              {selectedRace.mensCourseRecordAthlete}
-                              {selectedRace.mensCourseRecordAthlete && selectedRace.mensCourseRecordCountry && ' '}
-                              {selectedRace.mensCourseRecordCountry && `(${selectedRace.mensCourseRecordCountry})`}
-                            </p>
-                          )}
-                        </div>
-                      ) : (
-                        <p className="font-mono text-lg font-semibold text-neutral-900 dark:text-white">N/A</p>
-                      )}
-                    </div>
-
-                    {/* Women's Course Record */}
-                    <div className="bg-neutral-50 dark:bg-neutral-800 rounded-lg p-4">
-                      <p className="font-body text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">
-                        Women's CR
-                      </p>
-                      {selectedRace.womensCourseRecord ? (
-                        <div>
-                          <div className="flex items-center gap-2">
-                            <p className="font-mono text-lg font-semibold text-neutral-900 dark:text-white">
-                              {selectedRace.womensCourseRecord}
-                            </p>
-                            <Medal className="h-5 w-5 text-neutral-400 dark:text-neutral-500" />
-                          </div>
-                          {(selectedRace.womensCourseRecordAthlete || selectedRace.womensCourseRecordCountry) && (
-                            <p className="font-body text-xs text-neutral-600 dark:text-neutral-400 mt-1">
-                              {selectedRace.womensCourseRecordAthlete}
-                              {selectedRace.womensCourseRecordAthlete && selectedRace.womensCourseRecordCountry && ' '}
-                              {selectedRace.womensCourseRecordCountry && `(${selectedRace.womensCourseRecordCountry})`}
-                            </p>
-                          )}
-                        </div>
-                      ) : (
-                        <p className="font-mono text-lg font-semibold text-neutral-900 dark:text-white">N/A</p>
-                      )}
-                    </div>
-
-                    {/* Number of Finishers */}
-                    <div className="bg-neutral-50 dark:bg-neutral-800 rounded-lg p-4">
-                      <p className="font-body text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">
-                        Finishers 2025
-                      </p>
-                      <div className="flex items-center gap-2">
-                        <p className="font-body text-lg font-semibold text-neutral-900 dark:text-white">
-                          {selectedRace.finishers !== undefined && selectedRace.finishers !== null
-                            ? selectedRace.finishers.toLocaleString()
-                            : 'N/A'}
-                        </p>
-                        <Users className="h-5 w-5 text-neutral-400 dark:text-neutral-500" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Action Buttons */}
-                <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-3">
-                  <button
-                    onClick={() => router.push(`/races/${selectedRace.slug.current}`)}
-                    className="w-full py-3 px-6 bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 rounded-lg font-medium hover:bg-neutral-700 dark:hover:bg-neutral-200 transition-colors"
-                  >
-                    Full Race Guide
-                  </button>
-                  {selectedRace.officialWebsite && (
-                    <a
-                      href={selectedRace.officialWebsite}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-full py-3 px-6 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white border border-neutral-300 dark:border-neutral-700 rounded-lg font-medium hover:bg-neutral-50 dark:hover:bg-neutral-700 transition-colors text-center"
-                    >
-                      Official Website
-                    </a>
-                  )}
-                </div>
               </div>
             </motion.div>
-          </motion.div>
-        )}
+          )
+
+          // Wrap in Draggable on desktop only
+          if (isMobile || window.isFullscreen) {
+            return WindowContent
+          }
+
+          return (
+            <Draggable
+              key={window.id}
+              handle=".cursor-move"
+              position={window.position}
+              onStop={(e, data) => {
+                setOpenWindows((prev) =>
+                  prev.map((w) =>
+                    w.id === window.id ? { ...w, position: { x: data.x, y: data.y } } : w
+                  )
+                )
+              }}
+              bounds="parent"
+            >
+              {WindowContent}
+            </Draggable>
+          )
+        })}
       </AnimatePresence>
+
+      {/* Minimized Windows Dock */}
+      {openWindows.some(w => w.isMinimized) && !isMobile && (
+        <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50 flex items-center gap-2 px-4 py-2 bg-neutral-100/90 dark:bg-neutral-800/90 backdrop-blur-md rounded-full shadow-xl border border-neutral-200 dark:border-neutral-700">
+          {openWindows.filter(w => w.isMinimized).map(window => (
+            <button
+              key={window.id}
+              onClick={() => restoreWindow(window.id)}
+              className="group relative px-4 py-2 bg-white dark:bg-neutral-700 rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-600 transition-colors shadow-sm"
+            >
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-green-500" />
+                <p className="font-body text-xs font-medium text-neutral-900 dark:text-white truncate max-w-[120px]">
+                  {window.race.title}
+                </p>
+              </div>
+            </button>
+          ))}
+        </div>
+      )}
+
     </div>
   )
 }
