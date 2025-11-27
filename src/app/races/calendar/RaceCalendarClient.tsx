@@ -29,7 +29,7 @@ interface RaceWindow {
   isMinimized: boolean
   isFullscreen: boolean
   position: { x: number; y: number }
-  isSnapped?: 'left' | 'right' | 'top' | null
+  isSnapped?: 'left' | 'right' | null
 }
 
 export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
@@ -37,7 +37,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
   const [currentDate, setCurrentDate] = useState(new Date())
   const [openWindows, setOpenWindows] = useState<RaceWindow[]>([])
   const [isMobile, setIsMobile] = useState(false)
-  const [snapPreview, setSnapPreview] = useState<'left' | 'right' | 'top' | null>(null)
+  const [snapPreview, setSnapPreview] = useState<'left' | 'right' | null>(null)
 
   // Convert races to FullCalendar events
   const events = useMemo<CalendarEvent[]>(() => {
@@ -154,15 +154,13 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
       const x = moveEvent.clientX - startX
       const y = moveEvent.clientY - startY
 
-      // Detect snap zones
-      let snapZone: 'left' | 'right' | 'top' | null = null
+      // Detect snap zones (only left and right)
+      let snapZone: 'left' | 'right' | null = null
 
       if (moveEvent.clientX < SNAP_THRESHOLD) {
         snapZone = 'left'
       } else if (moveEvent.clientX > window.innerWidth - SNAP_THRESHOLD) {
         snapZone = 'right'
-      } else if (moveEvent.clientY < SNAP_THRESHOLD) {
-        snapZone = 'top'
       }
 
       setSnapPreview(snapZone)
@@ -537,13 +535,11 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
       {/* Snap Preview Overlay */}
       {snapPreview && (
         <div
-          className="fixed z-40 bg-electric-pink/20 border-2 border-electric-pink pointer-events-none"
+          className="fixed z-40 bg-neutral-400/40 dark:bg-neutral-600/40 pointer-events-none"
           style={
             snapPreview === 'left'
-              ? { left: 0, top: 0, width: '50%', height: '100%' }
-              : snapPreview === 'right'
-              ? { right: 0, top: 0, width: '50%', height: '100%' }
-              : { left: 0, top: 0, width: '100%', height: '50%' }
+              ? { left: 0, top: 0, width: '8px', height: '100%' }
+              : { right: 0, top: 0, width: '8px', height: '100%' }
           }
         />
       )}
@@ -556,15 +552,15 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
           // Calculate window dimensions and position based on snap state
           const getWindowStyle = () => {
             if (window.isFullscreen || isMobile) {
-              return {}
+              return { inset: 0 }
             }
 
             if (window.isSnapped === 'left') {
               return {
                 left: 0,
                 top: 0,
-                width: '50%',
-                height: '100%',
+                width: '50vw',
+                height: '100vh',
                 zIndex: 50 + index,
                 boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(0, 0, 0, 0.05)',
               }
@@ -573,20 +569,10 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
             if (window.isSnapped === 'right') {
               return {
                 right: 0,
+                left: 'auto',
                 top: 0,
-                width: '50%',
-                height: '100%',
-                zIndex: 50 + index,
-                boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(0, 0, 0, 0.05)',
-              }
-            }
-
-            if (window.isSnapped === 'top') {
-              return {
-                left: 0,
-                top: 0,
-                width: '100%',
-                height: '50%',
+                width: '50vw',
+                height: '100vh',
                 zIndex: 50 + index,
                 boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(0, 0, 0, 0.05)',
               }
