@@ -151,8 +151,21 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
     const SNAP_THRESHOLD = 50 // pixels from edge to trigger snap
 
     const handleDrag = (moveEvent: MouseEvent) => {
-      const x = moveEvent.clientX - startX
-      const y = moveEvent.clientY - startY
+      let x = moveEvent.clientX - startX
+      let y = moveEvent.clientY - startY
+
+      // Allow slight overflow beyond viewport boundaries
+      const EDGE_BUFFER = 20 // pixels allowed beyond edges
+      const windowWidth = 640
+      const windowHeight = 500 // approximate height
+      const minX = -EDGE_BUFFER
+      const minY = -EDGE_BUFFER
+      const maxX = window.innerWidth - windowWidth + EDGE_BUFFER
+      const maxY = window.innerHeight - windowHeight + EDGE_BUFFER
+
+      // Constrain with buffer
+      x = Math.max(minX, Math.min(x, maxX))
+      y = Math.max(minY, Math.min(y, maxY))
 
       // Detect snap zones (only left and right)
       let snapZone: 'left' | 'right' | null = null
@@ -177,6 +190,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
     const handleDragEnd = () => {
       // Apply snap if in snap zone
       if (snapPreview) {
+        console.log('Snapping window to:', snapPreview)
         setOpenWindows(prev =>
           prev.map(w =>
             w.id === id
@@ -567,6 +581,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
             }
 
             if (window.isSnapped === 'left') {
+              console.log('Rendering LEFT snapped window')
               return {
                 ...baseStyle,
                 left: 0,
@@ -577,6 +592,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
             }
 
             if (window.isSnapped === 'right') {
+              console.log('Rendering RIGHT snapped window')
               return {
                 ...baseStyle,
                 left: '50vw',
@@ -592,35 +608,31 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
               left: window.position.x,
               top: window.position.y,
               width: 640,
-              height: 'auto',
+              maxWidth: 'calc(100vw - 40px)',
+              maxHeight: 'calc(100vh - 40px)',
             }
           }
 
           const isSnappedOrFullscreen = window.isFullscreen || isMobile || window.isSnapped
 
+          const windowStyle = getWindowStyle()
+          console.log(`Window ${window.id} style:`, windowStyle, 'isSnapped:', window.isSnapped)
+
           return (
             <motion.div
-              key={`${window.id}-${window.isSnapped || 'floating'}`}
-              initial={{ scale: 0.95, opacity: 0 }}
-              animate={{
-                ...getWindowStyle(),
-                scale: 1,
-                opacity: 1,
-                transition: {
-                  duration: 0.2,
-                  ease: 'easeOut'
-                }
+              key={window.id}
+              initial={false}
+              animate={windowStyle}
+              transition={{
+                duration: 0.2,
+                ease: 'easeOut',
+                layout: { duration: 0.2 }
               }}
-              exit={{ scale: 0.95, opacity: 0 }}
               className={`
                 bg-white dark:bg-neutral-900 shadow-2xl
                 ${isSnappedOrFullscreen ? '' : 'rounded-xl border border-neutral-200/60 dark:border-neutral-700/60'}
                 overflow-hidden flex flex-col
               `}
-              style={{
-                maxWidth: window.isSnapped || window.isFullscreen || isMobile ? 'none' : 'calc(100vw - 40px)',
-                maxHeight: window.isSnapped || window.isFullscreen || isMobile ? 'none' : 'calc(100vh - 40px)',
-              }}
               onClick={() => bringToFront(window.id)}
             >
               {/* macOS-style Title Bar */}
