@@ -551,51 +551,50 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
 
           // Calculate window dimensions and position based on snap state
           const getWindowStyle = (): React.CSSProperties => {
+            const baseStyle = {
+              zIndex: 50 + index,
+              boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(0, 0, 0, 0.05)',
+            }
+
             if (window.isFullscreen || isMobile) {
               return {
+                ...baseStyle,
                 inset: 0,
-                zIndex: 50 + index
               }
             }
 
             if (window.isSnapped === 'left') {
               return {
-                position: 'fixed',
+                ...baseStyle,
                 left: 0,
                 top: 0,
                 right: '50%',
                 bottom: 0,
                 width: '50vw',
                 height: '100vh',
-                zIndex: 50 + index,
-                boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(0, 0, 0, 0.05)',
               }
             }
 
             if (window.isSnapped === 'right') {
               return {
-                position: 'fixed',
+                ...baseStyle,
                 right: 0,
                 left: '50%',
                 top: 0,
                 bottom: 0,
                 width: '50vw',
                 height: '100vh',
-                zIndex: 50 + index,
-                boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(0, 0, 0, 0.05)',
               }
             }
 
             // Default floating window
             return {
-              position: 'fixed',
+              ...baseStyle,
               width: '640px',
               maxWidth: 'calc(100vw - 40px)',
               maxHeight: 'calc(100vh - 40px)',
-              zIndex: 50 + index,
               left: `${window.position.x}px`,
               top: `${window.position.y}px`,
-              boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(0, 0, 0, 0.05)',
             }
           }
 
@@ -603,17 +602,23 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
 
           return (
             <motion.div
-              key={window.id}
+              key={`${window.id}-${window.isSnapped || 'floating'}`}
               initial={{ scale: 0.95, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
+              animate={{
+                scale: 1,
+                opacity: 1,
+                transition: { duration: 0.2 }
+              }}
               exit={{ scale: 0.95, opacity: 0 }}
               className={`
-                fixed z-50
                 bg-white dark:bg-neutral-900 shadow-2xl
                 ${isSnappedOrFullscreen ? '' : 'rounded-xl border border-neutral-200/60 dark:border-neutral-700/60'}
                 overflow-hidden flex flex-col
               `}
-              style={getWindowStyle()}
+              style={{
+                ...getWindowStyle(),
+                position: 'fixed'
+              }}
               onClick={() => bringToFront(window.id)}
             >
               {/* macOS-style Title Bar */}
