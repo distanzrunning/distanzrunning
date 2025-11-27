@@ -29,6 +29,7 @@ interface RaceWindow {
   isMinimized: boolean
   isFullscreen: boolean
   position: { x: number; y: number }
+  isSnapped?: 'left' | 'right' | 'top' | null
 }
 
 export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
@@ -36,6 +37,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
   const [currentDate, setCurrentDate] = useState(new Date())
   const [openWindows, setOpenWindows] = useState<RaceWindow[]>([])
   const [isMobile, setIsMobile] = useState(false)
+  const [snapPreview, setSnapPreview] = useState<'left' | 'right' | 'top' | null>(null)
 
   // Convert races to FullCalendar events
   const events = useMemo<CalendarEvent[]>(() => {
@@ -72,7 +74,8 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
         race,
         isMinimized: false,
         isFullscreen: true,
-        position: { x: 0, y: 0 }
+        position: { x: 0, y: 0 },
+        isSnapped: null
       }])
       return
     }
@@ -92,7 +95,8 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
       race,
       isMinimized: false,
       isFullscreen: false,
-      position: { x: 50 + offset, y: 50 + offset }
+      position: { x: 50 + offset, y: 50 + offset },
+      isSnapped: null
     }])
   }
 
@@ -109,7 +113,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
   const restoreWindow = (id: string) => {
     setOpenWindows(prev => prev.map(w =>
       w.id === id ? { ...w, isMinimized: false } : w
-    ).sort((a, b) => a.id === id ? 1 : -1)) // Bring to front
+    ).sort((a) => a.id === id ? 1 : -1)) // Bring to front
   }
 
   const toggleFullscreen = (id: string) => {
@@ -126,27 +130,65 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
     })
   }
 
-  // Custom drag handling
+  // Custom drag handling with snap zones
   const handleDragStart = (id: string, e: React.MouseEvent) => {
     if (isMobile) return
 
-    const window = openWindows.find(w => w.id === id)
-    if (!window) return
+    const raceWindow = openWindows.find(w => w.id === id)
+    if (!raceWindow) return
 
-    const startX = e.clientX - window.position.x
-    const startY = e.clientY - window.position.y
+    // If window is snapped, unsnap it when drag starts
+    const wasSnapped = raceWindow.isSnapped
+    if (wasSnapped) {
+      setOpenWindows(prev =>
+        prev.map(w => w.id === id ? { ...w, isSnapped: null } : w)
+      )
+    }
+
+    const startX = e.clientX - raceWindow.position.x
+    const startY = e.clientY - raceWindow.position.y
+
+    const SNAP_THRESHOLD = 50 // pixels from edge to trigger snap
 
     const handleDrag = (moveEvent: MouseEvent) => {
+      const x = moveEvent.clientX - startX
+      const y = moveEvent.clientY - startY
+
+      // Detect snap zones
+      let snapZone: 'left' | 'right' | 'top' | null = null
+
+      if (moveEvent.clientX < SNAP_THRESHOLD) {
+        snapZone = 'left'
+      } else if (moveEvent.clientX > window.innerWidth - SNAP_THRESHOLD) {
+        snapZone = 'right'
+      } else if (moveEvent.clientY < SNAP_THRESHOLD) {
+        snapZone = 'top'
+      }
+
+      setSnapPreview(snapZone)
+
       setOpenWindows(prev =>
         prev.map(w =>
           w.id === id
-            ? { ...w, position: { x: moveEvent.clientX - startX, y: moveEvent.clientY - startY } }
+            ? { ...w, position: { x, y } }
             : w
         )
       )
     }
 
     const handleDragEnd = () => {
+      // Apply snap if in snap zone
+      if (snapPreview) {
+        setOpenWindows(prev =>
+          prev.map(w =>
+            w.id === id
+              ? { ...w, isSnapped: snapPreview, position: { x: 0, y: 0 } }
+              : w
+          )
+        )
+      }
+
+      setSnapPreview(null)
       document.removeEventListener('mousemove', handleDrag)
       document.removeEventListener('mouseup', handleDragEnd)
     }
@@ -492,10 +534,77 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
         }
       `}</style>
 
+      {/* Snap Preview Overlay */}
+      {snapPreview && (
+        <div
+          className="fixed z-40 bg-electric-pink/20 border-2 border-electric-pink pointer-events-none"
+          style={
+            snapPreview === 'left'
+              ? { left: 0, top: 0, width: '50%', height: '100%' }
+              : snapPreview === 'right'
+              ? { right: 0, top: 0, width: '50%', height: '100%' }
+              : { left: 0, top: 0, width: '100%', height: '50%' }
+          }
+        />
+      )}
+
       {/* Race Windows */}
       <AnimatePresence>
         {openWindows.map((window, index) => {
           if (window.isMinimized) return null
+
+          // Calculate window dimensions and position based on snap state
+          const getWindowStyle = () => {
+            if (window.isFullscreen || isMobile) {
+              return {}
+            }
+
+            if (window.isSnapped === 'left') {
+              return {
+                left: 0,
+                top: 0,
+                width: '50%',
+                height: '100%',
+                zIndex: 50 + index,
+                boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(0, 0, 0, 0.05)',
+              }
+            }
+
+            if (window.isSnapped === 'right') {
+              return {
+                right: 0,
+                top: 0,
+                width: '50%',
+                height: '100%',
+                zIndex: 50 + index,
+                boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(0, 0, 0, 0.05)',
+              }
+            }
+
+            if (window.isSnapped === 'top') {
+              return {
+                left: 0,
+                top: 0,
+                width: '100%',
+                height: '50%',
+                zIndex: 50 + index,
+                boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(0, 0, 0, 0.05)',
+              }
+            }
+
+            // Default floating window
+            return {
+              width: '640px',
+              maxWidth: 'calc(100vw - 40px)',
+              maxHeight: 'calc(100vh - 40px)',
+              zIndex: 50 + index,
+              left: `${window.position.x}px`,
+              top: `${window.position.y}px`,
+              boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(0, 0, 0, 0.05)',
+            }
+          }
+
+          const isSnappedOrFullscreen = window.isFullscreen || isMobile || window.isSnapped
 
           return (
             <motion.div
@@ -504,27 +613,12 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
               className={`
-                ${window.isFullscreen || isMobile
-                  ? 'fixed inset-0 z-50'
-                  : 'fixed z-50'
-                }
+                fixed z-50
                 bg-white dark:bg-neutral-900 shadow-2xl
-                ${window.isFullscreen || isMobile ? '' : 'rounded-xl border border-neutral-200/60 dark:border-neutral-700/60'}
+                ${isSnappedOrFullscreen ? '' : 'rounded-xl border border-neutral-200/60 dark:border-neutral-700/60'}
                 overflow-hidden flex flex-col
               `}
-              style={
-                window.isFullscreen || isMobile
-                  ? {}
-                  : {
-                      width: '640px',
-                      maxWidth: 'calc(100vw - 40px)',
-                      maxHeight: 'calc(100vh - 40px)',
-                      zIndex: 50 + index,
-                      left: `${window.position.x}px`,
-                      top: `${window.position.y}px`,
-                      boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(0, 0, 0, 0.05)',
-                    }
-              }
+              style={getWindowStyle()}
               onClick={() => bringToFront(window.id)}
             >
               {/* macOS-style Title Bar */}
