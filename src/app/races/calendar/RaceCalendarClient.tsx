@@ -11,7 +11,6 @@ import { format } from 'date-fns'
 import { urlFor } from '@/sanity/lib/image'
 import { convertCurrencySync, formatPrice } from '@/lib/raceUtils'
 import { motion, AnimatePresence } from 'framer-motion'
-import Draggable from 'react-draggable'
 import type { RaceGuide } from '../page'
 
 interface CalendarEvent {
@@ -125,6 +124,35 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
       if (!window) return prev
       return [...prev.filter(w => w.id !== id), window]
     })
+  }
+
+  // Custom drag handling
+  const handleDragStart = (id: string, e: React.MouseEvent) => {
+    if (isMobile) return
+
+    const window = openWindows.find(w => w.id === id)
+    if (!window) return
+
+    const startX = e.clientX - window.position.x
+    const startY = e.clientY - window.position.y
+
+    const handleDrag = (moveEvent: MouseEvent) => {
+      setOpenWindows(prev =>
+        prev.map(w =>
+          w.id === id
+            ? { ...w, position: { x: moveEvent.clientX - startX, y: moveEvent.clientY - startY } }
+            : w
+        )
+      )
+    }
+
+    const handleDragEnd = () => {
+      document.removeEventListener('mousemove', handleDrag)
+      document.removeEventListener('mouseup', handleDragEnd)
+    }
+
+    document.addEventListener('mousemove', handleDrag)
+    document.addEventListener('mouseup', handleDragEnd)
   }
 
   // Custom event content
@@ -469,7 +497,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
         {openWindows.map((window, index) => {
           if (window.isMinimized) return null
 
-          const WindowContent = (
+          return (
             <motion.div
               key={window.id}
               initial={{ scale: 0.95, opacity: 0 }}
@@ -492,14 +520,17 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                       maxWidth: 'calc(100vw - 40px)',
                       maxHeight: 'calc(100vh - 40px)',
                       zIndex: 50 + index,
+                      left: `${window.position.x}px`,
+                      top: `${window.position.y}px`,
                     }
               }
               onClick={() => bringToFront(window.id)}
             >
               {/* macOS-style Title Bar */}
               <div
-                className="flex items-center justify-between px-4 py-3 bg-neutral-100 dark:bg-neutral-800 border-b border-neutral-200 dark:border-neutral-700 cursor-move select-none"
+                className="flex items-center justify-between px-4 py-3 bg-neutral-100 dark:bg-neutral-800 border-b border-neutral-200 dark:border-neutral-700 select-none"
                 style={{ cursor: isMobile ? 'default' : 'move' }}
+                onMouseDown={(e) => !isMobile && handleDragStart(window.id, e)}
               >
                 {/* Traffic Light Buttons */}
                 <div className="flex items-center gap-2">
@@ -814,29 +845,6 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                 </div>
               </div>
             </motion.div>
-          )
-
-          // Wrap in Draggable on desktop only
-          if (isMobile || window.isFullscreen) {
-            return WindowContent
-          }
-
-          return (
-            <Draggable
-              key={window.id}
-              handle=".cursor-move"
-              position={window.position}
-              onStop={(e, data) => {
-                setOpenWindows((prev) =>
-                  prev.map((w) =>
-                    w.id === window.id ? { ...w, position: { x: data.x, y: data.y } } : w
-                  )
-                )
-              }}
-              bounds="parent"
-            >
-              {WindowContent}
-            </Draggable>
           )
         })}
       </AnimatePresence>
