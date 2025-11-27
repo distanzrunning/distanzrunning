@@ -535,11 +535,11 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
       {/* Snap Preview Overlay */}
       {snapPreview && (
         <div
-          className="fixed z-40 bg-neutral-400/40 dark:bg-neutral-600/40 pointer-events-none"
+          className="fixed z-40 border-4 border-neutral-400 dark:border-neutral-500 pointer-events-none"
           style={
             snapPreview === 'left'
-              ? { left: 0, top: 0, width: '60px', height: '100%' }
-              : { right: 0, top: 0, width: '60px', height: '100%' }
+              ? { left: 0, top: 0, width: '50%', height: '100%' }
+              : { right: 0, top: 0, width: '50%', height: '100%' }
           }
         />
       )}
@@ -550,16 +550,19 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
           if (window.isMinimized) return null
 
           // Calculate window dimensions and position based on snap state
-          const getWindowStyle = (): React.CSSProperties => {
+          const getWindowStyle = () => {
             const baseStyle = {
+              position: 'fixed' as const,
               zIndex: 50 + index,
-              boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(0, 0, 0, 0.05)',
             }
 
             if (window.isFullscreen || isMobile) {
               return {
                 ...baseStyle,
-                inset: 0,
+                left: 0,
+                top: 0,
+                width: '100vw',
+                height: '100vh',
               }
             }
 
@@ -568,8 +571,6 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                 ...baseStyle,
                 left: 0,
                 top: 0,
-                right: '50%',
-                bottom: 0,
                 width: '50vw',
                 height: '100vh',
               }
@@ -578,10 +579,8 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
             if (window.isSnapped === 'right') {
               return {
                 ...baseStyle,
-                right: 0,
-                left: '50%',
+                left: '50vw',
                 top: 0,
-                bottom: 0,
                 width: '50vw',
                 height: '100vh',
               }
@@ -590,11 +589,10 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
             // Default floating window
             return {
               ...baseStyle,
-              width: '640px',
-              maxWidth: 'calc(100vw - 40px)',
-              maxHeight: 'calc(100vh - 40px)',
-              left: `${window.position.x}px`,
-              top: `${window.position.y}px`,
+              left: window.position.x,
+              top: window.position.y,
+              width: 640,
+              height: 'auto',
             }
           }
 
@@ -605,9 +603,13 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
               key={`${window.id}-${window.isSnapped || 'floating'}`}
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{
+                ...getWindowStyle(),
                 scale: 1,
                 opacity: 1,
-                transition: { duration: 0.2 }
+                transition: {
+                  duration: 0.2,
+                  ease: 'easeOut'
+                }
               }}
               exit={{ scale: 0.95, opacity: 0 }}
               className={`
@@ -616,8 +618,8 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                 overflow-hidden flex flex-col
               `}
               style={{
-                ...getWindowStyle(),
-                position: 'fixed'
+                maxWidth: window.isSnapped || window.isFullscreen || isMobile ? 'none' : 'calc(100vw - 40px)',
+                maxHeight: window.isSnapped || window.isFullscreen || isMobile ? 'none' : 'calc(100vh - 40px)',
               }}
               onClick={() => bringToFront(window.id)}
             >
