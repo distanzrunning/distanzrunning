@@ -509,7 +509,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                   : 'fixed z-50'
                 }
                 bg-white dark:bg-neutral-900 shadow-2xl
-                ${window.isFullscreen || isMobile ? '' : 'rounded-xl'}
+                ${window.isFullscreen || isMobile ? '' : 'rounded-xl border border-neutral-200/60 dark:border-neutral-700/60'}
                 overflow-hidden flex flex-col
               `}
               style={
@@ -522,6 +522,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                       zIndex: 50 + index,
                       left: `${window.position.x}px`,
                       top: `${window.position.y}px`,
+                      boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(0, 0, 0, 0.05)',
                     }
               }
               onClick={() => bringToFront(window.id)}
