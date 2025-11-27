@@ -538,8 +538,8 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
           className="fixed z-40 bg-neutral-400/40 dark:bg-neutral-600/40 pointer-events-none"
           style={
             snapPreview === 'left'
-              ? { left: 0, top: 0, width: '8px', height: '100%' }
-              : { right: 0, top: 0, width: '8px', height: '100%' }
+              ? { left: 0, top: 0, width: '60px', height: '100%' }
+              : { right: 0, top: 0, width: '60px', height: '100%' }
           }
         />
       )}
@@ -550,15 +550,21 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
           if (window.isMinimized) return null
 
           // Calculate window dimensions and position based on snap state
-          const getWindowStyle = () => {
+          const getWindowStyle = (): React.CSSProperties => {
             if (window.isFullscreen || isMobile) {
-              return { inset: 0 }
+              return {
+                inset: 0,
+                zIndex: 50 + index
+              }
             }
 
             if (window.isSnapped === 'left') {
               return {
+                position: 'fixed',
                 left: 0,
                 top: 0,
+                right: '50%',
+                bottom: 0,
                 width: '50vw',
                 height: '100vh',
                 zIndex: 50 + index,
@@ -568,9 +574,11 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
 
             if (window.isSnapped === 'right') {
               return {
+                position: 'fixed',
                 right: 0,
-                left: 'auto',
+                left: '50%',
                 top: 0,
+                bottom: 0,
                 width: '50vw',
                 height: '100vh',
                 zIndex: 50 + index,
@@ -580,6 +588,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
 
             // Default floating window
             return {
+              position: 'fixed',
               width: '640px',
               maxWidth: 'calc(100vw - 40px)',
               maxHeight: 'calc(100vh - 40px)',
