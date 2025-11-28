@@ -1005,16 +1005,8 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
 
       {/* Minimal Footer */}
       <div className="fixed bottom-0 left-0 right-0 bg-neutral-100 dark:bg-neutral-800 border-t border-neutral-200 dark:border-neutral-700 py-2 px-4 z-30">
-        <div className="flex items-center justify-center gap-4 text-xs text-neutral-600 dark:text-neutral-400">
+        <div className="flex items-center justify-center text-xs text-neutral-600 dark:text-neutral-400">
           <span>© {new Date().getFullYear()} Distanz Running</span>
-          <span className="text-neutral-300 dark:text-neutral-600">•</span>
-          <a href="/privacy-policy" className="hover:text-neutral-900 dark:hover:text-white transition-colors">
-            Privacy
-          </a>
-          <span className="text-neutral-300 dark:text-neutral-600">•</span>
-          <a href="/terms-of-service" className="hover:text-neutral-900 dark:hover:text-white transition-colors">
-            Terms
-          </a>
         </div>
       </div>
 
