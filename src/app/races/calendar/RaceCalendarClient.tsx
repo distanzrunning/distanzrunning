@@ -6,7 +6,7 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import type { EventClickArg, DayCellContentArg } from '@fullcalendar/core'
 import { useRouter } from 'next/navigation'
-import { ChevronLeft, ChevronRight, MoveUpRight, MoveDownRight, Thermometer, Clock, Banknote, Users, Medal } from 'lucide-react'
+import { ChevronLeft, ChevronRight, MoveUpRight, MoveDownRight, Thermometer, Clock, Banknote, Users, Medal, Star } from 'lucide-react'
 import { format } from 'date-fns'
 import { urlFor } from '@/sanity/lib/image'
 import { convertCurrencySync, formatPrice } from '@/lib/raceUtils'
@@ -241,14 +241,22 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
       hour12: true,
     })
 
+    // Check if this is an Abbott World Marathon Major
+    const isWorldMajor = race.tags?.includes('Abbott World Marathon Major')
+
     return (
-      <div className="px-1 py-0.5">
-        <div className="font-medium text-neutral-900 dark:text-white text-xs truncate">
-          {eventInfo.event.title}
+      <div className="px-1 py-0.5 flex items-start justify-between gap-1">
+        <div className="flex-1 min-w-0">
+          <div className="font-medium text-neutral-900 dark:text-white text-xs truncate">
+            {eventInfo.event.title}
+          </div>
+          <div className="text-[10px] text-neutral-500 dark:text-neutral-400">
+            {timeStr}
+          </div>
         </div>
-        <div className="text-[10px] text-neutral-500 dark:text-neutral-400">
-          {timeStr}
-        </div>
+        {isWorldMajor && (
+          <Star className="w-3 h-3 text-yellow-500 fill-yellow-500 flex-shrink-0 mt-0.5" />
+        )}
       </div>
     )
   }
