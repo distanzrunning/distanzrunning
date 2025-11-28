@@ -316,8 +316,13 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
           <div className="px-6 py-4 border-b border-neutral-200 dark:border-neutral-800 flex-shrink-0">
             {/* Calendar Controls */}
             <div className="flex items-center justify-between">
-              {/* Left: Navigation */}
-              <div className="flex items-center gap-4">
+              {/* Left: Title */}
+              <h1 className="text-2xl font-semibold text-neutral-900 dark:text-white">
+                Race Calendar
+              </h1>
+
+              {/* Center: Month Navigation */}
+              <div className="flex items-center gap-4 absolute left-1/2 transform -translate-x-1/2">
                 <button
                   onClick={() => handleMonthChange('prev')}
                   className="p-3 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors text-neutral-700 dark:text-neutral-300"
