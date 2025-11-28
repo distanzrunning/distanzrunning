@@ -459,6 +459,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
           display: table-cell !important;
           vertical-align: top !important;
           position: relative !important;
+          height: 0 !important; /* Let table layout distribute height */
         }
 
         .dark .calendar-wrapper .fc-daygrid-day {
@@ -468,7 +469,11 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
 
         /* Flexible row heights - constrain content */
         .calendar-wrapper .fc-daygrid-day-frame {
-          height: 100% !important;
+          position: absolute !important;
+          top: 0 !important;
+          left: 0 !important;
+          right: 0 !important;
+          bottom: 0 !important;
           overflow: hidden !important;
           display: flex !important;
           flex-direction: column !important;
