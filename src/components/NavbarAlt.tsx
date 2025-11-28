@@ -4,6 +4,7 @@
 import { useState, useEffect, useContext, useRef } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
+import { usePathname } from 'next/navigation'
 import * as Dialog from '@radix-ui/react-dialog'
 import * as NavigationMenu from '@radix-ui/react-navigation-menu'
 import {
@@ -63,6 +64,7 @@ type NavbarAltProps = {
 
 export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps) {
   const { isDark, toggleDarkMode } = useContext(DarkModeContext)
+  const pathname = usePathname()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [mobileSubMenu, setMobileSubMenu] = useState<'main' | 'gear' | 'races'>('main')
   const [mounted, setMounted] = useState(false)
@@ -74,6 +76,9 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
   const [isNavHovered, setIsNavHovered] = useState(false)
   const [isDesktop, setIsDesktop] = useState(false)
   const megaMenuCloseTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  // Force compact mode on calendar page
+  const isCalendarPage = pathname === '/races/calendar'
 
   useEffect(() => {
     setMounted(true)
@@ -91,16 +96,22 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
   // Handle scroll to shrink navbar
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 50) {
+      // Always use compact mode on calendar page
+      if (isCalendarPage) {
+        setIsScrolled(true)
+      } else if (window.scrollY > 50) {
         setIsScrolled(true)
       } else {
         setIsScrolled(false)
       }
     }
 
+    // Set initial state
+    handleScroll()
+
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+  }, [isCalendarPage])
 
   // Handle keyboard shortcut (Cmd/Ctrl + K) for search
   useEffect(() => {

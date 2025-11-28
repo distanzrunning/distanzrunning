@@ -17,6 +17,9 @@ export default function LayoutContent({ children, navbar, footer }: LayoutConten
   // Hide navbar and footer on login page
   const isLoginPage = pathname === '/login'
 
+  // Hide footer on calendar page (fullscreen app-like view)
+  const isCalendarPage = pathname === '/races/calendar'
+
   if (isPreviewMode || isLoginPage) {
     return <main className="min-h-screen">{children}</main>
   }
@@ -25,7 +28,7 @@ export default function LayoutContent({ children, navbar, footer }: LayoutConten
     <>
       {navbar}
       <main className="flex-grow">{children}</main>
-      {footer}
+      {!isCalendarPage && footer}
     </>
   )
 }

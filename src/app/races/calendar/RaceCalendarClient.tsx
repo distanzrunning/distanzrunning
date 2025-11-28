@@ -307,19 +307,20 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
 
   return (
     <div className="fixed inset-0 overflow-hidden bg-white dark:bg-[#0c0c0d] transition-colors duration-300 pt-16">
-      <div className="h-full w-full px-6 flex flex-col">
-        {/* Compact Header */}
-        <div className="flex items-center justify-between py-4 border-b border-neutral-200 dark:border-neutral-800">
-          <h1 className="font-headline text-2xl md:text-3xl font-semibold tracking-tight text-neutral-900 dark:text-white">
-            Race Calendar
-          </h1>
-        </div>
+      <div className="h-full w-full flex flex-col">
+        {/* Calendar - Takes full remaining space */}
+        <div className="flex-1 overflow-auto">
+          <div className="bg-white dark:bg-neutral-900 h-full calendar-wrapper">
+          {/* Custom Toolbar with Heading - Inside Calendar */}
+          <div className="px-6 pt-6 pb-6 border-b border-neutral-200 dark:border-neutral-800">
+            {/* Page Heading */}
+            <div className="mb-6">
+              <h1 className="font-headline text-3xl md:text-4xl font-semibold tracking-tight text-neutral-900 dark:text-white">
+                Race Calendar
+              </h1>
+            </div>
 
-        {/* Calendar - Takes remaining space */}
-        <div className="flex-1 pt-6 pb-6 overflow-auto">
-          <div className="bg-white dark:bg-neutral-900 rounded-xl border border-neutral-200 dark:border-neutral-800 shadow-sm calendar-wrapper h-full">
-          {/* Custom Toolbar - Inside Calendar */}
-          <div className="px-6 pt-6 pb-4 border-b border-neutral-200 dark:border-neutral-800">
+            {/* Calendar Controls */}
             <div className="flex items-center justify-between">
               {/* Left: Navigation */}
               <div className="flex items-center gap-4">
