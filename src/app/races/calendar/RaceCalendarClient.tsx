@@ -306,20 +306,14 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
   }
 
   return (
-    <div className="fixed inset-0 overflow-hidden bg-white dark:bg-[#0c0c0d] transition-colors duration-300 pt-16">
-      <div className="h-full w-full flex flex-col">
+    <div className="fixed inset-0 overflow-hidden bg-white dark:bg-[#0c0c0d] transition-colors duration-300">
+      {/* Navbar height: 64px, so content starts at top: 64px */}
+      <div className="absolute inset-0 top-16 flex flex-col">
         {/* Calendar - Takes full remaining space */}
-        <div className="flex-1 overflow-auto">
-          <div className="bg-white dark:bg-neutral-900 h-full calendar-wrapper">
-          {/* Custom Toolbar with Heading - Inside Calendar */}
-          <div className="px-6 pt-6 pb-6 border-b border-neutral-200 dark:border-neutral-800">
-            {/* Page Heading */}
-            <div className="mb-6">
-              <h1 className="font-headline text-3xl md:text-4xl font-semibold tracking-tight text-neutral-900 dark:text-white">
-                Race Calendar
-              </h1>
-            </div>
-
+        <div className="flex-1 flex flex-col overflow-hidden">
+          <div className="bg-white dark:bg-neutral-900 flex-1 flex flex-col calendar-wrapper">
+          {/* Custom Toolbar - Compact */}
+          <div className="px-6 py-4 border-b border-neutral-200 dark:border-neutral-800 flex-shrink-0">
             {/* Calendar Controls */}
             <div className="flex items-center justify-between">
               {/* Left: Navigation */}
@@ -381,8 +375,8 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
             </div>
           </div>
 
-          {/* Calendar Grid */}
-          <div>
+          {/* Calendar Grid - Fills remaining space */}
+          <div className="flex-1 overflow-hidden p-6">
             <FullCalendar
               key={currentDate.toISOString()}
               plugins={[dayGridPlugin, interactionPlugin]}
@@ -393,13 +387,13 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
               eventContent={renderEventContent}
               dayCellContent={dayCellContent}
               headerToolbar={false}
-              height="auto"
+              height="100%"
               dayMaxEvents={false}
               eventClassNames="cursor-pointer"
             />
           </div>
         </div>
-          </div>
+        </div>
       </div>
 
       {/* Custom Calendar Styles */}
