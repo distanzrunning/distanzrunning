@@ -41,18 +41,17 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
 
   // Convert races to FullCalendar events
   const events = useMemo<CalendarEvent[]>(() => {
-    return races.map((race) => {
-      const eventDate = new Date(race.eventDate)
-      return {
+    return races
+      .map((race) => ({
         id: race._id,
         title: race.title,
-        start: eventDate.toISOString().split('T')[0],
+        start: race.eventDate, // Keep full ISO timestamp for sorting
         slug: race.slug.current,
         city: race.city,
         country: race.country,
         raceCategoryName: race.raceCategoryName,
-      }
-    })
+      }))
+      .sort((a, b) => new Date(a.start).getTime() - new Date(b.start).getTime()) // Sort by date/time
   }, [races])
 
   // Check if mobile on mount
