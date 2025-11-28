@@ -317,7 +317,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
             {/* Calendar Controls */}
             <div className="flex items-center justify-between">
               {/* Left: Title */}
-              <h1 className="text-2xl font-semibold text-neutral-900 dark:text-white">
+              <h1 className="text-2xl font-semibold text-neutral-900 dark:text-white font-playfair">
                 Race Calendar
               </h1>
 
