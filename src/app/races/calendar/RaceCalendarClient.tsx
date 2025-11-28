@@ -306,8 +306,8 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
   }
 
   return (
-    <div className="fixed inset-0 overflow-hidden bg-white dark:bg-[#0c0c0d] transition-colors duration-300 pt-12">
-      {/* Content fills viewport below navbar (48px compact height) */}
+    <div className="fixed inset-0 overflow-hidden bg-white dark:bg-[#0c0c0d] transition-colors duration-300 pt-12 pb-8">
+      {/* Content fills viewport below navbar (48px) and above footer (32px) */}
       <div className="h-full flex flex-col">
         {/* Calendar - Takes full remaining space */}
         <div className="flex-1 flex flex-col overflow-hidden">
@@ -1002,6 +1002,21 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
           ))}
         </div>
       )}
+
+      {/* Minimal Footer */}
+      <div className="fixed bottom-0 left-0 right-0 bg-neutral-100 dark:bg-neutral-800 border-t border-neutral-200 dark:border-neutral-700 py-2 px-4 z-30">
+        <div className="flex items-center justify-center gap-4 text-xs text-neutral-600 dark:text-neutral-400">
+          <span>© {new Date().getFullYear()} Distanz Running</span>
+          <span className="text-neutral-300 dark:text-neutral-600">•</span>
+          <a href="/privacy-policy" className="hover:text-neutral-900 dark:hover:text-white transition-colors">
+            Privacy
+          </a>
+          <span className="text-neutral-300 dark:text-neutral-600">•</span>
+          <a href="/terms-of-service" className="hover:text-neutral-900 dark:hover:text-white transition-colors">
+            Terms
+          </a>
+        </div>
+      </div>
 
     </div>
   )
