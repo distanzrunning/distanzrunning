@@ -172,12 +172,15 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
 
       if (moveEvent.clientX < SNAP_THRESHOLD) {
         snapZone = 'left'
+        console.log('In LEFT snap zone')
       } else if (moveEvent.clientX > window.innerWidth - SNAP_THRESHOLD) {
         snapZone = 'right'
+        console.log('In RIGHT snap zone')
       }
 
       setSnapPreview(snapZone)
 
+      // Update position during drag (keeping existing snap state)
       setOpenWindows(prev =>
         prev.map(w =>
           w.id === id
@@ -195,6 +198,15 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
           prev.map(w =>
             w.id === id
               ? { ...w, isSnapped: snapPreview, position: { x: 0, y: 0 } }
+              : w
+          )
+        )
+      } else {
+        // Not in snap zone, ensure window is unsnapped
+        setOpenWindows(prev =>
+          prev.map(w =>
+            w.id === id && w.isSnapped
+              ? { ...w, isSnapped: null }
               : w
           )
         )
