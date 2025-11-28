@@ -488,6 +488,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
           flex: 1 !important;
           overflow-y: auto !important;
           min-height: 0 !important;
+          padding: 0 8px 8px 8px !important;
         }
 
         /* Remove today's cell background */
