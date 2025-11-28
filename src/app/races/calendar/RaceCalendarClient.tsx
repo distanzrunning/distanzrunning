@@ -88,14 +88,14 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
       return
     }
 
-    // Create new window with staggered position
+    // Create new window with staggered position (accounting for navbar at 64px)
     const offset = openWindows.length * 30
     setOpenWindows(prev => [...prev, {
       id: race._id,
       race,
       isMinimized: false,
       isFullscreen: false,
-      position: { x: 50 + offset, y: 50 + offset },
+      position: { x: 50 + offset, y: 84 + offset },
       isSnapped: null
     }])
   }
@@ -306,20 +306,18 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
   }
 
   return (
-    <div className="min-h-screen bg-white dark:bg-[#0c0c0d] transition-colors duration-300">
-      <div className="w-[95%] mx-auto px-6 py-16 md:py-24">
-        {/* Header */}
-        <div className="mb-12">
-          <h1 className="font-headline text-[35px] md:text-[56px] leading-[1.1] md:leading-[1.05] font-semibold tracking-tight text-neutral-900 dark:text-white mb-4">
+    <div className="fixed inset-0 overflow-hidden bg-white dark:bg-[#0c0c0d] transition-colors duration-300 pt-16">
+      <div className="h-full w-full px-6 flex flex-col">
+        {/* Compact Header */}
+        <div className="flex items-center justify-between py-4 border-b border-neutral-200 dark:border-neutral-800">
+          <h1 className="font-headline text-2xl md:text-3xl font-semibold tracking-tight text-neutral-900 dark:text-white">
             Race Calendar
           </h1>
-          <p className="font-body text-base md:text-lg leading-relaxed text-neutral-600 dark:text-neutral-400 max-w-3xl">
-            Explore upcoming races on an interactive calendar. Click on any race to view detailed information, course analysis, and registration details.
-          </p>
         </div>
 
-        {/* Calendar */}
-        <div className="bg-white dark:bg-neutral-900 rounded-xl border border-neutral-200 dark:border-neutral-800 shadow-sm calendar-wrapper">
+        {/* Calendar - Takes remaining space */}
+        <div className="flex-1 pt-6 pb-6 overflow-auto">
+          <div className="bg-white dark:bg-neutral-900 rounded-xl border border-neutral-200 dark:border-neutral-800 shadow-sm calendar-wrapper h-full">
           {/* Custom Toolbar - Inside Calendar */}
           <div className="px-6 pt-6 pb-4 border-b border-neutral-200 dark:border-neutral-800">
             <div className="flex items-center justify-between">
@@ -400,6 +398,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
             />
           </div>
         </div>
+          </div>
       </div>
 
       {/* Custom Calendar Styles */}
@@ -569,8 +568,8 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
           className="fixed z-40 border-4 border-neutral-400 dark:border-neutral-500 pointer-events-none"
           style={
             snapPreview === 'left'
-              ? { left: 0, top: 0, width: '50%', height: '100%' }
-              : { right: 0, top: 0, width: '50%', height: '100%' }
+              ? { left: 0, top: '64px', width: '50%', height: 'calc(100vh - 64px)' }
+              : { right: 0, top: '64px', width: '50%', height: 'calc(100vh - 64px)' }
           }
         />
       )}
@@ -602,9 +601,9 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
               return {
                 ...baseStyle,
                 left: 0,
-                top: 0,
+                top: 64,
                 width: '50vw',
-                height: '100vh',
+                height: 'calc(100vh - 64px)',
               }
             }
 
@@ -613,9 +612,9 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
               return {
                 ...baseStyle,
                 left: '50vw',
-                top: 0,
+                top: 64,
                 width: '50vw',
-                height: '100vh',
+                height: 'calc(100vh - 64px)',
               }
             }
 
