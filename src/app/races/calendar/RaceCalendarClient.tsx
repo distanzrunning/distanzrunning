@@ -88,14 +88,14 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
       return
     }
 
-    // Create new window with staggered position (accounting for navbar at 64px)
+    // Create new window with staggered position (accounting for navbar at 48px)
     const offset = openWindows.length * 30
     setOpenWindows(prev => [...prev, {
       id: race._id,
       race,
       isMinimized: false,
       isFullscreen: false,
-      position: { x: 50 + offset, y: 84 + offset },
+      position: { x: 50 + offset, y: 68 + offset },
       isSnapped: null
     }])
   }
@@ -306,8 +306,8 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
   }
 
   return (
-    <div className="fixed inset-0 overflow-hidden bg-white dark:bg-[#0c0c0d] transition-colors duration-300 pt-16">
-      {/* Content fills viewport below navbar */}
+    <div className="fixed inset-0 overflow-hidden bg-white dark:bg-[#0c0c0d] transition-colors duration-300 pt-12">
+      {/* Content fills viewport below navbar (48px compact height) */}
       <div className="h-full flex flex-col">
         {/* Calendar - Takes full remaining space */}
         <div className="flex-1 flex flex-col overflow-hidden">
@@ -563,8 +563,8 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
           className="fixed z-40 border-4 border-neutral-400 dark:border-neutral-500 pointer-events-none"
           style={
             snapPreview === 'left'
-              ? { left: 0, top: '64px', width: '50%', height: 'calc(100vh - 64px)' }
-              : { right: 0, top: '64px', width: '50%', height: 'calc(100vh - 64px)' }
+              ? { left: 0, top: '48px', width: '50%', height: 'calc(100vh - 48px)' }
+              : { right: 0, top: '48px', width: '50%', height: 'calc(100vh - 48px)' }
           }
         />
       )}
@@ -596,9 +596,9 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
               return {
                 ...baseStyle,
                 left: 0,
-                top: 64,
+                top: 48,
                 width: '50vw',
-                height: 'calc(100vh - 64px)',
+                height: 'calc(100vh - 48px)',
               }
             }
 
@@ -607,9 +607,9 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
               return {
                 ...baseStyle,
                 left: '50vw',
-                top: 64,
+                top: 48,
                 width: '50vw',
-                height: 'calc(100vh - 64px)',
+                height: 'calc(100vh - 48px)',
               }
             }
 
