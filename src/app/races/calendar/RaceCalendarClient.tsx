@@ -435,20 +435,24 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
           border: none !important;
         }
 
-        /* Force equal row heights */
+        /* Force equal row heights - flexible to fit viewport */
         .calendar-wrapper .fc-scrollgrid-sync-table {
           height: 100% !important;
         }
 
-        .calendar-wrapper .fc-daygrid-body tr {
-          height: 150px !important;
+        .calendar-wrapper .fc-daygrid-body {
+          height: 100% !important;
         }
 
-        /* Day cells */
+        .calendar-wrapper .fc-daygrid-body tr {
+          height: auto !important;
+        }
+
+        /* Day cells - flexible height */
         .calendar-wrapper .fc-daygrid-day {
           border-color: rgb(229, 229, 229);
           background-color: white;
-          height: 150px !important;
+          min-height: 80px;
         }
 
         .dark .calendar-wrapper .fc-daygrid-day {
@@ -456,10 +460,9 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
           background-color: rgb(23, 23, 23);
         }
 
-        /* Fixed row heights - constrain content */
+        /* Flexible row heights - constrain content */
         .calendar-wrapper .fc-daygrid-day-frame {
           height: 100% !important;
-          max-height: 150px !important;
           overflow: hidden !important;
           display: flex !important;
           flex-direction: column !important;
