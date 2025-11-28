@@ -150,6 +150,9 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
 
     const SNAP_THRESHOLD = 50 // pixels from edge to trigger snap
 
+    // Store current snap zone in a ref to access in handleDragEnd
+    let currentSnapZone: 'left' | 'right' | null = null
+
     const handleDrag = (moveEvent: MouseEvent) => {
       let x = moveEvent.clientX - startX
       let y = moveEvent.clientY - startY
@@ -168,17 +171,17 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
       y = Math.max(minY, Math.min(y, maxY))
 
       // Detect snap zones (only left and right)
-      let snapZone: 'left' | 'right' | null = null
-
       if (moveEvent.clientX < SNAP_THRESHOLD) {
-        snapZone = 'left'
+        currentSnapZone = 'left'
         console.log('In LEFT snap zone')
       } else if (moveEvent.clientX > window.innerWidth - SNAP_THRESHOLD) {
-        snapZone = 'right'
+        currentSnapZone = 'right'
         console.log('In RIGHT snap zone')
+      } else {
+        currentSnapZone = null
       }
 
-      setSnapPreview(snapZone)
+      setSnapPreview(currentSnapZone)
 
       // Update position during drag (keeping existing snap state)
       setOpenWindows(prev =>
@@ -191,13 +194,15 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
     }
 
     const handleDragEnd = () => {
-      // Apply snap if in snap zone
-      if (snapPreview) {
-        console.log('Snapping window to:', snapPreview)
+      // Use the captured snap zone value
+      console.log('handleDragEnd called, currentSnapZone:', currentSnapZone)
+
+      if (currentSnapZone) {
+        console.log('Snapping window to:', currentSnapZone)
         setOpenWindows(prev =>
           prev.map(w =>
             w.id === id
-              ? { ...w, isSnapped: snapPreview, position: { x: 0, y: 0 } }
+              ? { ...w, isSnapped: currentSnapZone, position: { x: 0, y: 0 } }
               : w
           )
         )
