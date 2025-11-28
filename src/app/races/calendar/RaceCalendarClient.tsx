@@ -376,7 +376,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
           </div>
 
           {/* Calendar Grid - Fills remaining space */}
-          <div className="flex-1 overflow-hidden p-6">
+          <div className="flex-1 overflow-hidden">
             <FullCalendar
               key={currentDate.toISOString()}
               plugins={[dayGridPlugin, interactionPlugin]}
