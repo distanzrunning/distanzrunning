@@ -98,12 +98,23 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
     const offset = openWindows.length * 30
     const defaultWidth = 640
     const defaultHeight = 600
+
+    // Calculate safe position that fits within viewport
+    const NAVBAR_HEIGHT = 48
+    const FOOTER_HEIGHT = 37
+    const availableHeight = window.innerHeight - NAVBAR_HEIGHT - FOOTER_HEIGHT
+    const availableWidth = window.innerWidth
+
+    // Start position with some padding from top and left
+    const startX = Math.min(50 + offset, availableWidth - defaultWidth - 50)
+    const startY = Math.min(NAVBAR_HEIGHT + 20 + offset, NAVBAR_HEIGHT + availableHeight - defaultHeight - 20)
+
     setOpenWindows(prev => [...prev, {
       id: race._id,
       race,
       isMinimized: false,
       isFullscreen: false,
-      position: { x: 50 + offset, y: 68 + offset },
+      position: { x: Math.max(50, startX), y: Math.max(NAVBAR_HEIGHT + 20, startY) },
       size: { width: defaultWidth, height: defaultHeight },
       isSnapped: null
     }])
@@ -890,14 +901,23 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
             }
 
             // Default floating window
+            const NAVBAR_HEIGHT = 48
+            const FOOTER_HEIGHT = 37
+            const constrainedTop = Math.max(NAVBAR_HEIGHT, window.position.y)
+
+            // Calculate max available height from the constrained top position
+            const viewportHeight = typeof globalThis !== 'undefined' && globalThis.window ? globalThis.window.innerHeight : 900
+            const maxAvailableHeight = viewportHeight - constrainedTop - FOOTER_HEIGHT - 20 // 20px padding
+            const constrainedHeight = Math.min(window.size.height, maxAvailableHeight)
+
             return {
               ...baseStyle,
               left: window.position.x,
-              top: Math.max(48, window.position.y), // Never go under navbar (48px)
+              top: constrainedTop,
               width: window.size.width,
-              height: window.size.height,
+              height: constrainedHeight,
               maxWidth: 'calc(100vw - 40px)',
-              maxHeight: 'calc(100vh - 48px - 37px)', // Account for navbar and footer
+              maxHeight: `${maxAvailableHeight}px`,
             }
           }
 
