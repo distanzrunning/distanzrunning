@@ -94,34 +94,28 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
       return
     }
 
-    // Create new window with optimal size for content
+    // Create new window with fixed optimal size (PostHog-style)
     const NAVBAR_HEIGHT = 48
     const FOOTER_HEIGHT = 37
     const availableHeight = window.innerHeight - NAVBAR_HEIGHT - FOOTER_HEIGHT
     const availableWidth = window.innerWidth
 
-    // Optimal size: 800px wide, and height that fits content or 90% of available height
-    // Content breakdown: title bar (52px) + image (400px) + info (120px) + stats (400px) + buttons (60px) + padding (48px) = ~1080px
-    const optimalWidth = 800
-    const optimalHeight = Math.min(availableHeight * 0.85, 950) // 85% of available height or 950px max
+    // Fixed optimal size for consistency
+    const windowWidth = 850
+    const windowHeight = 700 // Fixed height, content scrolls
 
-    // Center the window
-    const centerX = (availableWidth - optimalWidth) / 2
-    const centerY = NAVBAR_HEIGHT + (availableHeight - optimalHeight) / 2
-
-    // Add slight offset for multiple windows
-    const offset = openWindows.length * 30
+    // Center the window with slight offset for multiple windows
+    const offset = openWindows.length * 40
+    const centerX = Math.max(40, Math.min((availableWidth - windowWidth) / 2 + offset, availableWidth - windowWidth - 40))
+    const centerY = Math.max(NAVBAR_HEIGHT + 40, Math.min(NAVBAR_HEIGHT + (availableHeight - windowHeight) / 2 + offset, NAVBAR_HEIGHT + availableHeight - windowHeight - 40))
 
     setOpenWindows(prev => [...prev, {
       id: race._id,
       race,
       isMinimized: false,
       isFullscreen: false,
-      position: {
-        x: Math.max(20, Math.min(centerX + offset, availableWidth - optimalWidth - 20)),
-        y: Math.max(NAVBAR_HEIGHT + 20, Math.min(centerY + offset, NAVBAR_HEIGHT + availableHeight - optimalHeight - 20))
-      },
-      size: { width: optimalWidth, height: optimalHeight },
+      position: { x: centerX, y: centerY },
+      size: { width: windowWidth, height: windowHeight },
       isSnapped: null
     }])
   }
@@ -145,8 +139,8 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
             ...w,
             isMinimized: false,
             isSnapped: null,
-            position: { x: 50, y: 68 }, // Safe position below navbar
-            size: w.previousState?.size || { width: 800, height: 950 }
+            position: { x: 100, y: 100 }, // Safe position below navbar
+            size: w.previousState?.size || { width: 850, height: 700 }
           }
         }
         // If position is at 0,0 (under navbar), move to safe position
@@ -154,8 +148,8 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
           return {
             ...w,
             isMinimized: false,
-            position: { x: 50, y: 68 },
-            size: w.size || { width: 800, height: 950 }
+            position: { x: 100, y: 100 },
+            size: w.size || { width: 850, height: 700 }
           }
         }
         return { ...w, isMinimized: false }
@@ -168,22 +162,22 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
     setOpenWindows(prev => prev.map(w => {
       if (w.id !== id) return w
 
-      // Option + Click: Zoom to fit content (smart resize)
+      // Option + Click: Zoom to optimal size
       if (isOptionClick) {
         if (w.isFullscreen) {
           // Exit fullscreen and zoom to optimal size
           return {
             ...w,
             isFullscreen: false,
-            position: w.previousState?.position || { x: 50, y: 68 },
-            size: { width: 800, height: 700 } // Optimal size for content
+            position: w.previousState?.position || { x: 100, y: 100 },
+            size: { width: 850, height: 700 } // Optimal size
           }
         } else {
           // Zoom to optimal size
           return {
             ...w,
             previousState: { position: w.position, size: w.size },
-            size: { width: 800, height: 700 }
+            size: { width: 850, height: 700 }
           }
         }
       }
@@ -194,8 +188,8 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
         return {
           ...w,
           isFullscreen: false,
-          position: w.previousState?.position || { x: 50, y: 68 },
-          size: w.previousState?.size || { width: 800, height: 950 },
+          position: w.previousState?.position || { x: 100, y: 100 },
+          size: w.previousState?.size || { width: 850, height: 700 },
           isSnapped: null
         }
       } else {
@@ -306,7 +300,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
     // If window is snapped, unsnap it and restore to previous size
     const wasSnapped = raceWindow.isSnapped
     if (wasSnapped) {
-      const restoredSize = raceWindow.previousState?.size || { width: 800, height: 950 }
+      const restoredSize = raceWindow.previousState?.size || { width: 850, height: 700 }
       const centerX = (window.innerWidth - restoredSize.width) / 2
       const centerY = (window.innerHeight - restoredSize.height) / 2 + 48 // Account for navbar
 
@@ -315,7 +309,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
           ...w,
           isSnapped: null,
           size: restoredSize,
-          position: { x: centerX, y: Math.max(68, centerY) } // Will update immediately in drag
+          position: { x: centerX, y: Math.max(100, centerY) } // Will update immediately in drag
         } : w)
       )
       return // Let the user start dragging from current mouse position next time
