@@ -449,22 +449,19 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
 
                   {/* Legend Content */}
                   <div className="absolute bottom-16 right-0 z-50 w-80 bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg shadow-xl p-4">
-                    <h3 className="font-semibold text-neutral-900 dark:text-white mb-3">Calendar Legend</h3>
+                    <h3 className="text-sm font-semibold text-neutral-900 dark:text-white mb-3">Legend</h3>
 
                     {/* Star Icon Explanation */}
-                    <div className="mb-4">
-                      <div className="flex items-center gap-2 mb-2">
+                    <div className="mb-3">
+                      <div className="flex items-center gap-2">
                         <Star className="w-4 h-4 text-yellow-500 fill-yellow-500 flex-shrink-0" />
-                        <span className="text-sm font-medium text-neutral-900 dark:text-white">Abbott World Marathon Major</span>
+                        <span className="text-xs text-neutral-700 dark:text-neutral-300">Abbott World Marathon Major</span>
                       </div>
-                      <p className="text-xs text-neutral-600 dark:text-neutral-400 ml-6">
-                        One of the six most prestigious marathons in the world
-                      </p>
                     </div>
 
                     {/* Color Legend */}
                     <div>
-                      <h4 className="text-sm font-medium text-neutral-900 dark:text-white mb-2">World Athletics Labels</h4>
+                      <h4 className="text-xs font-semibold text-neutral-900 dark:text-white mb-2">World Athletics Labels</h4>
                       <div className="space-y-2">
                         <div className="flex items-center gap-2">
                           <div className="w-4 h-4 rounded flex-shrink-0" style={{ backgroundColor: 'rgba(204, 204, 204, 0.3)' }}></div>
