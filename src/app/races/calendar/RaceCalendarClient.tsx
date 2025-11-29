@@ -1012,8 +1012,9 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                 <div className="w-[52px]" />
               </div>
 
-              {/* Window Content - Scrollable */}
+              {/* Window Content - Scrollable with fixed max-width */}
               <div className="flex-1 overflow-y-auto">
+                <div className="max-w-[850px] mx-auto">
                 {/* Race Image */}
                 <div className="relative w-full">
                   <div className="relative overflow-hidden">
@@ -1279,6 +1280,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                       </a>
                     )}
                   </div>
+                </div>
                 </div>
               </div>
 
