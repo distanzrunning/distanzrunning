@@ -577,7 +577,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
 
         /* Event styling - no background */
         .calendar-wrapper .fc-event {
-          background-color: transparent !important;
+          background-color: transparent;
           border: none !important;
           border-radius: 4px;
           padding: 0;
