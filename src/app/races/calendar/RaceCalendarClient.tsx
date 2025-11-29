@@ -29,7 +29,12 @@ interface RaceWindow {
   isMinimized: boolean
   isFullscreen: boolean
   position: { x: number; y: number }
+  size: { width: number; height: number }
   isSnapped?: 'left' | 'right' | null
+  previousState?: {
+    position: { x: number; y: number }
+    size: { width: number; height: number }
+  }
 }
 
 export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
@@ -75,6 +80,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
         isMinimized: false,
         isFullscreen: true,
         position: { x: 0, y: 0 },
+        size: { width: window.innerWidth, height: window.innerHeight - 48 - 37 },
         isSnapped: null
       }])
       return
@@ -90,12 +96,15 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
 
     // Create new window with staggered position (accounting for navbar at 48px)
     const offset = openWindows.length * 30
+    const defaultWidth = 640
+    const defaultHeight = 600
     setOpenWindows(prev => [...prev, {
       id: race._id,
       race,
       isMinimized: false,
       isFullscreen: false,
       position: { x: 50 + offset, y: 68 + offset },
+      size: { width: defaultWidth, height: defaultHeight },
       isSnapped: null
     }])
   }
@@ -119,7 +128,8 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
             ...w,
             isMinimized: false,
             isSnapped: null,
-            position: { x: 50, y: 68 } // Safe position below navbar
+            position: { x: 50, y: 68 }, // Safe position below navbar
+            size: w.previousState?.size || { width: 640, height: 600 }
           }
         }
         // If position is at 0,0 (under navbar), move to safe position
@@ -127,7 +137,8 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
           return {
             ...w,
             isMinimized: false,
-            position: { x: 50, y: 68 }
+            position: { x: 50, y: 68 },
+            size: w.size || { width: 640, height: 600 }
           }
         }
         return { ...w, isMinimized: false }
@@ -136,10 +147,50 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
     }).sort((a) => a.id === id ? 1 : -1)) // Bring to front
   }
 
-  const toggleFullscreen = (id: string) => {
-    setOpenWindows(prev => prev.map(w =>
-      w.id === id ? { ...w, isFullscreen: !w.isFullscreen } : w
-    ))
+  const toggleFullscreen = (id: string, isOptionClick: boolean = false) => {
+    setOpenWindows(prev => prev.map(w => {
+      if (w.id !== id) return w
+
+      // Option + Click: Zoom to fit content (smart resize)
+      if (isOptionClick) {
+        if (w.isFullscreen) {
+          // Exit fullscreen and zoom to optimal size
+          return {
+            ...w,
+            isFullscreen: false,
+            position: w.previousState?.position || { x: 50, y: 68 },
+            size: { width: 800, height: 700 } // Optimal size for content
+          }
+        } else {
+          // Zoom to optimal size
+          return {
+            ...w,
+            previousState: { position: w.position, size: w.size },
+            size: { width: 800, height: 700 }
+          }
+        }
+      }
+
+      // Regular click: Toggle fullscreen
+      if (w.isFullscreen) {
+        // Exit fullscreen, restore previous state
+        return {
+          ...w,
+          isFullscreen: false,
+          position: w.previousState?.position || { x: 50, y: 68 },
+          size: w.previousState?.size || { width: 640, height: 600 },
+          isSnapped: null
+        }
+      } else {
+        // Enter fullscreen, save current state
+        return {
+          ...w,
+          isFullscreen: true,
+          previousState: { position: w.position, size: w.size },
+          isSnapped: null
+        }
+      }
+    }))
   }
 
   const bringToFront = (id: string) => {
@@ -150,6 +201,84 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
     })
   }
 
+  // Window resize handler
+  const handleResizeStart = (id: string, direction: string, e: React.MouseEvent) => {
+    if (isMobile) return
+    e.stopPropagation()
+
+    const raceWindow = openWindows.find(w => w.id === id)
+    if (!raceWindow || raceWindow.isFullscreen || raceWindow.isSnapped) return
+
+    const startX = e.clientX
+    const startY = e.clientY
+    const startWidth = raceWindow.size.width
+    const startHeight = raceWindow.size.height
+    const startPosX = raceWindow.position.x
+    const startPosY = raceWindow.position.y
+
+    const MIN_WIDTH = 400
+    const MIN_HEIGHT = 300
+    const NAVBAR_HEIGHT = 48
+
+    const handleResize = (moveEvent: MouseEvent) => {
+      const deltaX = moveEvent.clientX - startX
+      const deltaY = moveEvent.clientY - startY
+
+      let newWidth = startWidth
+      let newHeight = startHeight
+      let newX = startPosX
+      let newY = startPosY
+
+      // Handle different resize directions
+      if (direction.includes('e')) {
+        newWidth = Math.max(MIN_WIDTH, startWidth + deltaX)
+      }
+      if (direction.includes('w')) {
+        const potentialWidth = startWidth - deltaX
+        if (potentialWidth >= MIN_WIDTH) {
+          newWidth = potentialWidth
+          newX = startPosX + deltaX
+        }
+      }
+      if (direction.includes('s')) {
+        newHeight = Math.max(MIN_HEIGHT, startHeight + deltaY)
+      }
+      if (direction.includes('n')) {
+        const potentialHeight = startHeight - deltaY
+        if (potentialHeight >= MIN_HEIGHT && startPosY + deltaY >= NAVBAR_HEIGHT) {
+          newHeight = potentialHeight
+          newY = startPosY + deltaY
+        }
+      }
+
+      setOpenWindows(prev =>
+        prev.map(w =>
+          w.id === id
+            ? {
+                ...w,
+                size: { width: newWidth, height: newHeight },
+                position: { x: newX, y: newY }
+              }
+            : w
+        )
+      )
+    }
+
+    const handleResizeEnd = () => {
+      document.removeEventListener('mousemove', handleResize)
+      document.removeEventListener('mouseup', handleResizeEnd)
+    }
+
+    document.addEventListener('mousemove', handleResize)
+    document.addEventListener('mouseup', handleResizeEnd)
+  }
+
+  // Double-click title bar to zoom
+  const handleTitleBarDoubleClick = (id: string) => {
+    if (isMobile) return
+    toggleFullscreen(id, true) // Use zoom behavior (Option+click)
+  }
+
   // Custom drag handling with snap zones
   const handleDragStart = (id: string, e: React.MouseEvent) => {
     if (isMobile) return
@@ -157,12 +286,22 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
     const raceWindow = openWindows.find(w => w.id === id)
     if (!raceWindow) return
 
-    // If window is snapped, unsnap it when drag starts
+    // If window is snapped, unsnap it and restore to previous size
     const wasSnapped = raceWindow.isSnapped
     if (wasSnapped) {
+      const restoredSize = raceWindow.previousState?.size || { width: 640, height: 600 }
+      const centerX = (window.innerWidth - restoredSize.width) / 2
+      const centerY = (window.innerHeight - restoredSize.height) / 2 + 48 // Account for navbar
+
       setOpenWindows(prev =>
-        prev.map(w => w.id === id ? { ...w, isSnapped: null } : w)
+        prev.map(w => w.id === id ? {
+          ...w,
+          isSnapped: null,
+          size: restoredSize,
+          position: { x: centerX, y: Math.max(68, centerY) } // Will update immediately in drag
+        } : w)
       )
+      return // Let the user start dragging from current mouse position next time
     }
 
     const startX = e.clientX - raceWindow.position.x
@@ -177,27 +316,29 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
       let x = moveEvent.clientX - startX
       let y = moveEvent.clientY - startY
 
+      // Get actual window dimensions
+      const currentWindow = raceWindow
+      const windowWidth = currentWindow.size.width
+      const windowHeight = currentWindow.size.height
+
       // Allow slight overflow beyond viewport boundaries
       const EDGE_BUFFER = 20 // pixels allowed beyond edges
       const NAVBAR_HEIGHT = 48 // navbar height - nothing can go under this
-      const windowWidth = 640
-      const windowHeight = 500 // approximate height
+      const FOOTER_HEIGHT = 37
       const minX = -EDGE_BUFFER
       const minY = NAVBAR_HEIGHT // Never go under navbar
       const maxX = window.innerWidth - windowWidth + EDGE_BUFFER
-      const maxY = window.innerHeight - windowHeight + EDGE_BUFFER
+      const maxY = window.innerHeight - FOOTER_HEIGHT - windowHeight + EDGE_BUFFER
 
       // Constrain with buffer
       x = Math.max(minX, Math.min(x, maxX))
       y = Math.max(minY, Math.min(y, maxY))
 
-      // Detect snap zones (only left and right)
+      // Detect snap zones (only left and right) - only show preview while dragging near edges
       if (moveEvent.clientX < SNAP_THRESHOLD) {
         currentSnapZone = 'left'
-        console.log('In LEFT snap zone')
       } else if (moveEvent.clientX > window.innerWidth - SNAP_THRESHOLD) {
         currentSnapZone = 'right'
-        console.log('In RIGHT snap zone')
       } else {
         currentSnapZone = null
       }
@@ -216,16 +357,23 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
 
     const handleDragEnd = () => {
       // Use the captured snap zone value
-      console.log('handleDragEnd called, currentSnapZone:', currentSnapZone)
-
       if (currentSnapZone) {
-        console.log('Snapping window to:', currentSnapZone)
         setOpenWindows(prev =>
-          prev.map(w =>
-            w.id === id
-              ? { ...w, isSnapped: currentSnapZone, position: { x: 0, y: 0 } }
-              : w
-          )
+          prev.map(w => {
+            if (w.id === id) {
+              // Save current state before snapping
+              return {
+                ...w,
+                isSnapped: currentSnapZone,
+                position: { x: 0, y: 0 },
+                previousState: {
+                  position: w.position,
+                  size: w.size
+                }
+              }
+            }
+            return w
+          })
         )
       } else {
         // Not in snap zone, ensure window is unsnapped
@@ -722,7 +870,6 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
             }
 
             if (window.isSnapped === 'left') {
-              console.log('Rendering LEFT snapped window')
               return {
                 ...baseStyle,
                 left: 0,
@@ -733,7 +880,6 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
             }
 
             if (window.isSnapped === 'right') {
-              console.log('Rendering RIGHT snapped window')
               return {
                 ...baseStyle,
                 left: '50vw',
@@ -748,31 +894,38 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
               ...baseStyle,
               left: window.position.x,
               top: Math.max(48, window.position.y), // Never go under navbar (48px)
-              width: 640,
+              width: window.size.width,
+              height: window.size.height,
               maxWidth: 'calc(100vw - 40px)',
-              maxHeight: 'calc(100vh - 40px)',
+              maxHeight: 'calc(100vh - 48px - 37px)', // Account for navbar and footer
             }
           }
 
           const isSnapped = window.isSnapped !== null && window.isSnapped !== undefined
 
           const windowStyle = getWindowStyle()
-          console.log(`Window ${window.id} style:`, windowStyle, 'isSnapped:', window.isSnapped)
 
           return (
             <motion.div
               key={window.id}
-              initial={false}
-              animate={windowStyle}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{
+                ...windowStyle,
+                opacity: 1,
+                scale: 1
+              }}
+              exit={{ opacity: 0, scale: 0.95 }}
               transition={{
-                duration: 0.2,
-                ease: 'easeOut',
-                layout: { duration: 0.2 }
+                type: 'spring',
+                stiffness: 300,
+                damping: 30,
+                mass: 0.8,
               }}
               className={`
-                bg-white dark:bg-neutral-900 shadow-2xl
+                bg-white dark:bg-neutral-900
+                ${index === openWindows.length - 1 ? 'shadow-2xl' : 'shadow-lg'}
                 ${isSnapped ? '' : 'rounded-xl border border-neutral-200/60 dark:border-neutral-700/60'}
-                overflow-hidden flex flex-col
+                overflow-hidden flex flex-col transition-shadow duration-200
               `}
               onClick={() => bringToFront(window.id)}
             >
@@ -781,17 +934,22 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                 className="flex items-center justify-between px-4 py-3 bg-neutral-100 dark:bg-neutral-800 border-b border-neutral-200 dark:border-neutral-700 select-none"
                 style={{ cursor: isMobile ? 'default' : 'move' }}
                 onMouseDown={(e) => !isMobile && handleDragStart(window.id, e)}
+                onDoubleClick={() => handleTitleBarDoubleClick(window.id)}
               >
                 {/* Traffic Light Buttons */}
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 group/buttons">
                   <button
                     onClick={(e) => {
                       e.stopPropagation()
                       closeWindow(window.id)
                     }}
-                    className="w-3 h-3 rounded-full bg-red-500 hover:bg-red-600 transition-colors"
+                    className="w-3 h-3 rounded-full bg-[#FF5F57] hover:bg-[#FF4136] transition-colors relative flex items-center justify-center group/close"
                     aria-label="Close"
-                  />
+                  >
+                    <svg className="w-2 h-2 text-[#7D0F0F] opacity-0 group-hover/close:opacity-100 transition-opacity" viewBox="0 0 12 12">
+                      <path d="M1 1L11 11M11 1L1 11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                    </svg>
+                  </button>
                   {!isMobile && (
                     <>
                       <button
@@ -799,17 +957,26 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                           e.stopPropagation()
                           minimizeWindow(window.id)
                         }}
-                        className="w-3 h-3 rounded-full bg-yellow-500 hover:bg-yellow-600 transition-colors"
+                        className="w-3 h-3 rounded-full bg-[#FFBD2E] hover:bg-[#FFB300] transition-colors relative flex items-center justify-center group/minimize"
                         aria-label="Minimize"
-                      />
+                      >
+                        <svg className="w-2 h-2 text-[#7D5B00] opacity-0 group-hover/minimize:opacity-100 transition-opacity" viewBox="0 0 12 12">
+                          <path d="M2 6H10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                        </svg>
+                      </button>
                       <button
                         onClick={(e) => {
                           e.stopPropagation()
-                          toggleFullscreen(window.id)
+                          toggleFullscreen(window.id, e.altKey) // Detect Option/Alt key
                         }}
-                        className="w-3 h-3 rounded-full bg-green-500 hover:bg-green-600 transition-colors"
+                        className="w-3 h-3 rounded-full bg-[#28CA42] hover:bg-[#1DB935] transition-colors relative flex items-center justify-center group/fullscreen"
                         aria-label="Fullscreen"
-                      />
+                        title={window.isFullscreen ? "Exit Full Screen" : "Enter Full Screen (Option+Click to Zoom)"}
+                      >
+                        <svg className="w-2 h-2 text-[#0D5520] opacity-0 group-hover/fullscreen:opacity-100 transition-opacity" viewBox="0 0 12 12">
+                          <path d="M3 3L9 9M9 3L3 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                        </svg>
+                      </button>
                     </>
                   )}
                 </div>
@@ -1094,6 +1261,47 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                   </div>
                 </div>
               </div>
+
+              {/* Resize Handles - Only show on floating windows */}
+              {!window.isFullscreen && !window.isSnapped && !isMobile && (
+                <>
+                  {/* Corner handles */}
+                  <div
+                    className="absolute top-0 left-0 w-4 h-4 cursor-nw-resize z-10"
+                    onMouseDown={(e) => handleResizeStart(window.id, 'nw', e)}
+                  />
+                  <div
+                    className="absolute top-0 right-0 w-4 h-4 cursor-ne-resize z-10"
+                    onMouseDown={(e) => handleResizeStart(window.id, 'ne', e)}
+                  />
+                  <div
+                    className="absolute bottom-0 left-0 w-4 h-4 cursor-sw-resize z-10"
+                    onMouseDown={(e) => handleResizeStart(window.id, 'sw', e)}
+                  />
+                  <div
+                    className="absolute bottom-0 right-0 w-4 h-4 cursor-se-resize z-10"
+                    onMouseDown={(e) => handleResizeStart(window.id, 'se', e)}
+                  />
+
+                  {/* Edge handles */}
+                  <div
+                    className="absolute top-0 left-4 right-4 h-2 cursor-n-resize z-10"
+                    onMouseDown={(e) => handleResizeStart(window.id, 'n', e)}
+                  />
+                  <div
+                    className="absolute bottom-0 left-4 right-4 h-2 cursor-s-resize z-10"
+                    onMouseDown={(e) => handleResizeStart(window.id, 's', e)}
+                  />
+                  <div
+                    className="absolute left-0 top-4 bottom-4 w-2 cursor-w-resize z-10"
+                    onMouseDown={(e) => handleResizeStart(window.id, 'w', e)}
+                  />
+                  <div
+                    className="absolute right-0 top-4 bottom-4 w-2 cursor-e-resize z-10"
+                    onMouseDown={(e) => handleResizeStart(window.id, 'e', e)}
+                  />
+                </>
+              )}
             </motion.div>
           )
         })}
