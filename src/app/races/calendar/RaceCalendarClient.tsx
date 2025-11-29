@@ -715,9 +715,9 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
               return {
                 ...baseStyle,
                 left: 0,
-                right: 0,
-                top: 48, // Respect navbar height
-                height: 'calc(100vh - 48px)',
+                top: 48, // Navbar height
+                width: '100vw',
+                height: 'calc(100vh - 48px - 37px)', // Subtract navbar (48px) and footer (37px)
               }
             }
 
@@ -728,7 +728,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                 left: 0,
                 top: 48,
                 width: '50vw',
-                height: 'calc(100vh - 48px)',
+                height: 'calc(100vh - 48px - 37px)', // Subtract navbar and footer
               }
             }
 
@@ -739,7 +739,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                 left: '50vw',
                 top: 48,
                 width: '50vw',
-                height: 'calc(100vh - 48px)',
+                height: 'calc(100vh - 48px - 37px)', // Subtract navbar and footer
               }
             }
 
@@ -754,7 +754,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
             }
           }
 
-          const isSnappedOrFullscreen = window.isFullscreen || isMobile || window.isSnapped
+          const isSnapped = window.isSnapped !== null && window.isSnapped !== undefined
 
           const windowStyle = getWindowStyle()
           console.log(`Window ${window.id} style:`, windowStyle, 'isSnapped:', window.isSnapped)
@@ -771,7 +771,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
               }}
               className={`
                 bg-white dark:bg-neutral-900 shadow-2xl
-                ${isSnappedOrFullscreen ? '' : 'rounded-xl border border-neutral-200/60 dark:border-neutral-700/60'}
+                ${isSnapped ? '' : 'rounded-xl border border-neutral-200/60 dark:border-neutral-700/60'}
                 overflow-hidden flex flex-col
               `}
               onClick={() => bringToFront(window.id)}
