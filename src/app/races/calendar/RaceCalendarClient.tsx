@@ -94,28 +94,34 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
       return
     }
 
-    // Create new window with staggered position (accounting for navbar at 48px)
-    const offset = openWindows.length * 30
-    const defaultWidth = 640
-    const defaultHeight = 600
-
-    // Calculate safe position that fits within viewport
+    // Create new window with optimal size for content
     const NAVBAR_HEIGHT = 48
     const FOOTER_HEIGHT = 37
     const availableHeight = window.innerHeight - NAVBAR_HEIGHT - FOOTER_HEIGHT
     const availableWidth = window.innerWidth
 
-    // Start position with some padding from top and left
-    const startX = Math.min(50 + offset, availableWidth - defaultWidth - 50)
-    const startY = Math.min(NAVBAR_HEIGHT + 20 + offset, NAVBAR_HEIGHT + availableHeight - defaultHeight - 20)
+    // Optimal size: 800px wide, and height that fits content or 90% of available height
+    // Content breakdown: title bar (52px) + image (400px) + info (120px) + stats (400px) + buttons (60px) + padding (48px) = ~1080px
+    const optimalWidth = 800
+    const optimalHeight = Math.min(availableHeight * 0.85, 950) // 85% of available height or 950px max
+
+    // Center the window
+    const centerX = (availableWidth - optimalWidth) / 2
+    const centerY = NAVBAR_HEIGHT + (availableHeight - optimalHeight) / 2
+
+    // Add slight offset for multiple windows
+    const offset = openWindows.length * 30
 
     setOpenWindows(prev => [...prev, {
       id: race._id,
       race,
       isMinimized: false,
       isFullscreen: false,
-      position: { x: Math.max(50, startX), y: Math.max(NAVBAR_HEIGHT + 20, startY) },
-      size: { width: defaultWidth, height: defaultHeight },
+      position: {
+        x: Math.max(20, Math.min(centerX + offset, availableWidth - optimalWidth - 20)),
+        y: Math.max(NAVBAR_HEIGHT + 20, Math.min(centerY + offset, NAVBAR_HEIGHT + availableHeight - optimalHeight - 20))
+      },
+      size: { width: optimalWidth, height: optimalHeight },
       isSnapped: null
     }])
   }
@@ -140,7 +146,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
             isMinimized: false,
             isSnapped: null,
             position: { x: 50, y: 68 }, // Safe position below navbar
-            size: w.previousState?.size || { width: 640, height: 600 }
+            size: w.previousState?.size || { width: 800, height: 950 }
           }
         }
         // If position is at 0,0 (under navbar), move to safe position
@@ -149,7 +155,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
             ...w,
             isMinimized: false,
             position: { x: 50, y: 68 },
-            size: w.size || { width: 640, height: 600 }
+            size: w.size || { width: 800, height: 950 }
           }
         }
         return { ...w, isMinimized: false }
@@ -189,7 +195,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
           ...w,
           isFullscreen: false,
           position: w.previousState?.position || { x: 50, y: 68 },
-          size: w.previousState?.size || { width: 640, height: 600 },
+          size: w.previousState?.size || { width: 800, height: 950 },
           isSnapped: null
         }
       } else {
@@ -227,8 +233,8 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
     const startPosX = raceWindow.position.x
     const startPosY = raceWindow.position.y
 
-    const MIN_WIDTH = 400
-    const MIN_HEIGHT = 300
+    const MIN_WIDTH = 600
+    const MIN_HEIGHT = 500
     const NAVBAR_HEIGHT = 48
 
     const handleResize = (moveEvent: MouseEvent) => {
@@ -300,7 +306,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
     // If window is snapped, unsnap it and restore to previous size
     const wasSnapped = raceWindow.isSnapped
     if (wasSnapped) {
-      const restoredSize = raceWindow.previousState?.size || { width: 640, height: 600 }
+      const restoredSize = raceWindow.previousState?.size || { width: 800, height: 950 }
       const centerX = (window.innerWidth - restoredSize.width) / 2
       const centerY = (window.innerHeight - restoredSize.height) / 2 + 48 // Account for navbar
 
