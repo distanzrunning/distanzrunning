@@ -1016,8 +1016,8 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
               <div className="flex-1 overflow-y-auto">
                 <div className="max-w-[850px] mx-auto">
                 {/* Race Image */}
-                <div className="relative w-full">
-                  <div className="relative overflow-hidden">
+                <div className="relative w-full p-4">
+                  <div className="relative overflow-hidden rounded-lg">
                     <div style={{ paddingBottom: '50%' }} className="relative">
                       {window.race.mainImage && (
                         <img
@@ -1031,7 +1031,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
 
                   {/* Category Badge */}
                   {window.race.raceCategoryName && (
-                    <div className="absolute top-4 left-4">
+                    <div className="absolute top-8 left-8">
                       <div className="px-3 py-1.5 bg-white/95 dark:bg-neutral-900/95 backdrop-blur-sm rounded-full">
                         <p className="font-body text-xs font-medium text-neutral-900 dark:text-white">
                           {window.race.raceCategoryName}
