@@ -6,7 +6,7 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import type { EventClickArg, DayCellContentArg } from '@fullcalendar/core'
 import { useRouter } from 'next/navigation'
-import { ChevronLeft, ChevronRight, MoveUpRight, MoveDownRight, Thermometer, Clock, Banknote, Users, Medal, Star } from 'lucide-react'
+import { ChevronLeft, ChevronRight, MoveUpRight, MoveDownRight, Thermometer, Clock, Banknote, Users, Medal, Star, Info } from 'lucide-react'
 import { format } from 'date-fns'
 import { urlFor } from '@/sanity/lib/image'
 import { convertCurrencySync, formatPrice } from '@/lib/raceUtils'
@@ -38,6 +38,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
   const [openWindows, setOpenWindows] = useState<RaceWindow[]>([])
   const [isMobile, setIsMobile] = useState(false)
   const [snapPreview, setSnapPreview] = useState<'left' | 'right' | null>(null)
+  const [showLegend, setShowLegend] = useState(false)
 
   // Convert races to FullCalendar events
   const events = useMemo<CalendarEvent[]>(() => {
@@ -405,6 +406,67 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                 >
                   Today
                 </button>
+              </div>
+
+              {/* Right: Legend Info Icon */}
+              <div className="relative">
+                <button
+                  onClick={() => setShowLegend(!showLegend)}
+                  className="p-2 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors text-neutral-700 dark:text-neutral-300"
+                  aria-label="Show legend"
+                >
+                  <Info className="h-5 w-5" />
+                </button>
+
+                {/* Legend Popover */}
+                {showLegend && (
+                  <>
+                    {/* Backdrop to close on click outside */}
+                    <div
+                      className="fixed inset-0 z-40"
+                      onClick={() => setShowLegend(false)}
+                    />
+
+                    {/* Legend Content */}
+                    <div className="absolute right-0 top-12 z-50 w-80 bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg shadow-xl p-4">
+                      <h3 className="font-semibold text-neutral-900 dark:text-white mb-3">Calendar Legend</h3>
+
+                      {/* Star Icon Explanation */}
+                      <div className="mb-4">
+                        <div className="flex items-center gap-2 mb-2">
+                          <Star className="w-4 h-4 text-yellow-500 fill-yellow-500 flex-shrink-0" />
+                          <span className="text-sm font-medium text-neutral-900 dark:text-white">Abbott World Marathon Major</span>
+                        </div>
+                        <p className="text-xs text-neutral-600 dark:text-neutral-400 ml-6">
+                          One of the six most prestigious marathons in the world
+                        </p>
+                      </div>
+
+                      {/* Color Legend */}
+                      <div>
+                        <h4 className="text-sm font-medium text-neutral-900 dark:text-white mb-2">World Athletics Labels</h4>
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-2">
+                            <div className="w-4 h-4 rounded flex-shrink-0" style={{ backgroundColor: 'rgba(204, 204, 204, 0.3)' }}></div>
+                            <span className="text-xs text-neutral-700 dark:text-neutral-300">Platinum Label</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <div className="w-4 h-4 rounded flex-shrink-0" style={{ backgroundColor: 'rgba(255, 217, 0, 0.25)' }}></div>
+                            <span className="text-xs text-neutral-700 dark:text-neutral-300">Gold Label</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <div className="w-4 h-4 rounded flex-shrink-0" style={{ backgroundColor: 'rgba(158, 140, 196, 0.25)' }}></div>
+                            <span className="text-xs text-neutral-700 dark:text-neutral-300">Elite Label</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <div className="w-4 h-4 rounded flex-shrink-0" style={{ backgroundColor: 'rgba(166, 251, 101, 0.25)' }}></div>
+                            <span className="text-xs text-neutral-700 dark:text-neutral-300">Label</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </div>
