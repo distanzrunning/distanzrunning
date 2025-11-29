@@ -464,19 +464,19 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                       <h4 className="text-xs font-semibold text-neutral-900 dark:text-white mb-2">World Athletics Labels</h4>
                       <div className="space-y-2">
                         <div className="flex items-center gap-2">
-                          <div className="w-4 h-4 rounded flex-shrink-0" style={{ backgroundColor: 'rgba(204, 204, 204, 0.3)' }}></div>
+                          <div className="w-4 h-4 rounded flex-shrink-0 border border-neutral-300 dark:border-neutral-600" style={{ backgroundColor: 'rgba(204, 204, 204, 0.3)' }}></div>
                           <span className="text-xs text-neutral-700 dark:text-neutral-300">Platinum Label</span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <div className="w-4 h-4 rounded flex-shrink-0" style={{ backgroundColor: 'rgba(255, 217, 0, 0.25)' }}></div>
+                          <div className="w-4 h-4 rounded flex-shrink-0 border border-neutral-300 dark:border-neutral-600" style={{ backgroundColor: 'rgba(255, 217, 0, 0.4)' }}></div>
                           <span className="text-xs text-neutral-700 dark:text-neutral-300">Gold Label</span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <div className="w-4 h-4 rounded flex-shrink-0" style={{ backgroundColor: 'rgba(158, 140, 196, 0.25)' }}></div>
+                          <div className="w-4 h-4 rounded flex-shrink-0 border border-neutral-300 dark:border-neutral-600" style={{ backgroundColor: 'rgba(158, 140, 196, 0.4)' }}></div>
                           <span className="text-xs text-neutral-700 dark:text-neutral-300">Elite Label</span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <div className="w-4 h-4 rounded flex-shrink-0" style={{ backgroundColor: 'rgba(166, 251, 101, 0.25)' }}></div>
+                          <div className="w-4 h-4 rounded flex-shrink-0 border border-neutral-300 dark:border-neutral-600" style={{ backgroundColor: 'rgba(166, 251, 101, 0.4)' }}></div>
                           <span className="text-xs text-neutral-700 dark:text-neutral-300">Label</span>
                         </div>
                       </div>
