@@ -715,8 +715,9 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
               return {
                 ...baseStyle,
                 left: 0,
+                right: 0,
                 top: 48, // Navbar height
-                width: '100vw',
+                width: '100%',
                 height: 'calc(100vh - 48px - 37px)', // Subtract navbar (48px) and footer (37px)
               }
             }
