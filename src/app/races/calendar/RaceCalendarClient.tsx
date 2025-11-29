@@ -111,9 +111,29 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
   }
 
   const restoreWindow = (id: string) => {
-    setOpenWindows(prev => prev.map(w =>
-      w.id === id ? { ...w, isMinimized: false } : w
-    ).sort((a) => a.id === id ? 1 : -1)) // Bring to front
+    setOpenWindows(prev => prev.map(w => {
+      if (w.id === id) {
+        // If window was snapped, reset to a safe floating position
+        if (w.isSnapped) {
+          return {
+            ...w,
+            isMinimized: false,
+            isSnapped: null,
+            position: { x: 50, y: 68 } // Safe position below navbar
+          }
+        }
+        // If position is at 0,0 (under navbar), move to safe position
+        if (w.position.x === 0 && w.position.y === 0) {
+          return {
+            ...w,
+            isMinimized: false,
+            position: { x: 50, y: 68 }
+          }
+        }
+        return { ...w, isMinimized: false }
+      }
+      return w
+    }).sort((a) => a.id === id ? 1 : -1)) // Bring to front
   }
 
   const toggleFullscreen = (id: string) => {
