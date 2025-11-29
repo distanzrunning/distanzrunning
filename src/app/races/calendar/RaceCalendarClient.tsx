@@ -225,6 +225,28 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
     document.addEventListener('mouseup', handleDragEnd)
   }
 
+  // Apply background color to event element based on World Athletics Label
+  const handleEventDidMount = (info: any) => {
+    const race = races.find(r => r._id === info.event.id)
+    if (!race) return
+
+    // Determine World Athletics Label background color (slightly muted versions)
+    let backgroundColor = ''
+    if (race.tags?.includes('World Athletics Platinum Label')) {
+      backgroundColor = 'rgba(204, 204, 204, 0.3)' // Muted platinum
+    } else if (race.tags?.includes('World Athletics Gold Label')) {
+      backgroundColor = 'rgba(255, 217, 0, 0.25)' // Muted gold
+    } else if (race.tags?.includes('World Athletics Elite Label')) {
+      backgroundColor = 'rgba(158, 140, 196, 0.25)' // Muted purple
+    } else if (race.tags?.includes('World Athletics Label')) {
+      backgroundColor = 'rgba(166, 251, 101, 0.25)' // Muted green
+    }
+
+    if (backgroundColor) {
+      info.el.style.backgroundColor = backgroundColor
+    }
+  }
+
   // Custom event content
   const renderEventContent = (eventInfo: any) => {
     // Get the race from extendedProps to access the full eventDate
@@ -244,23 +266,8 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
     // Check if this is an Abbott World Marathon Major
     const isWorldMajor = race.tags?.includes('Abbott World Marathon Major')
 
-    // Determine World Athletics Label background color (slightly muted versions)
-    let backgroundColor = 'transparent'
-    if (race.tags?.includes('World Athletics Platinum Label')) {
-      backgroundColor = 'rgba(204, 204, 204, 0.3)' // Muted platinum
-    } else if (race.tags?.includes('World Athletics Gold Label')) {
-      backgroundColor = 'rgba(255, 217, 0, 0.25)' // Muted gold
-    } else if (race.tags?.includes('World Athletics Elite Label')) {
-      backgroundColor = 'rgba(158, 140, 196, 0.25)' // Muted purple
-    } else if (race.tags?.includes('World Athletics Label')) {
-      backgroundColor = 'rgba(166, 251, 101, 0.25)' // Muted green
-    }
-
     return (
-      <div
-        className="px-1 py-0.5 flex items-start justify-between gap-1 rounded"
-        style={{ backgroundColor }}
-      >
+      <div className="px-1 py-0.5 flex items-start justify-between gap-1">
         <div className="flex-1 min-w-0">
           <div className="font-medium text-neutral-900 dark:text-white text-xs truncate">
             {eventInfo.event.title}
@@ -412,6 +419,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
               events={events}
               eventClick={handleEventClick}
               eventContent={renderEventContent}
+              eventDidMount={handleEventDidMount}
               dayCellContent={dayCellContent}
               headerToolbar={false}
               height="100%"
