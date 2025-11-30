@@ -418,6 +418,8 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
         /* Day number */
         .calendar-wrapper .fc-daygrid-day-top {
           padding: 4px 8px !important;
+          display: flex !important;
+          justify-content: flex-end !important;
         }
 
         .calendar-wrapper .fc-daygrid-day-number {
