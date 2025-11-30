@@ -1022,7 +1022,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                 position: 'fixed',
                 zIndex: 50 + index,
                 maxWidth: window.isFullscreen || window.isSnapped ? 'none' : 'calc(100vw - 40px)',
-                maxHeight: window.isFullscreen || window.isSnapped ? 'none' : 'calc(100vh - 48px)', // Only subtract navbar, can extend to footer
+                maxHeight: window.isFullscreen || window.isSnapped ? 'none' : 'calc(100vh - 48px - 37px)', // Subtract navbar and footer
               }}
               className={`
                 bg-white dark:bg-neutral-900
@@ -1104,7 +1104,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
               {/* Window Content - Auto-fit to content, scrollable only if needed */}
               <div
                 data-window-content={window.id}
-                className={`${window.isFullscreen || window.isSnapped ? 'flex-1 overflow-y-auto mac-scroll' : 'overflow-y-auto mac-scroll'} pb-[37px]`}
+                className={`${window.isFullscreen || window.isSnapped ? 'flex-1 overflow-y-auto mac-scroll' : 'overflow-y-auto mac-scroll'}`}
               >
                 <div className="max-w-[850px] mx-auto">
                 {/* Race Image */}
