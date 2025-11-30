@@ -990,12 +990,12 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
               }
             }
 
-            // Default floating window - height will be auto
+            // Default floating window - use explicit height from state
             return {
               left: window.position.x,
               top: Math.max(48, window.position.y),
               width: window.size.width,
-              height: 'auto',
+              height: window.size.height,
             }
           }
 
