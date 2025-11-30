@@ -6,7 +6,7 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import type { EventClickArg, DayCellContentArg } from '@fullcalendar/core'
 import { useRouter } from 'next/navigation'
-import { ChevronLeft, ChevronRight, Star } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Star, Info } from 'lucide-react'
 import type { RaceGuide } from '../page'
 
 interface CalendarEvent {
@@ -22,6 +22,7 @@ interface CalendarEvent {
 export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
   const router = useRouter()
   const [currentDate, setCurrentDate] = useState(new Date())
+  const [showLegend, setShowLegend] = useState(false)
 
   // Convert races to FullCalendar events
   const events = useMemo<CalendarEvent[]>(() => {
@@ -248,40 +249,59 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
             </div>
           </div>
 
-          {/* Legend - Bottom right corner over calendar */}
-          <div className="absolute bottom-4 right-4 z-50 w-64 bg-white/95 dark:bg-neutral-800/95 backdrop-blur-sm border border-neutral-200 dark:border-neutral-700 rounded-lg shadow-xl p-4">
-            <h3 className="text-sm font-semibold text-neutral-900 dark:text-white mb-3">Legend</h3>
+          {/* Legend Button - Bottom right corner */}
+          <div className="absolute bottom-4 right-4 z-50 group">
+            <button
+              onClick={() => setShowLegend(!showLegend)}
+              onMouseEnter={() => setShowLegend(true)}
+              onMouseLeave={() => setShowLegend(false)}
+              className="p-2 rounded-lg bg-white/95 dark:bg-neutral-800/95 backdrop-blur-sm border border-neutral-200 dark:border-neutral-700 shadow-lg hover:shadow-xl transition-all text-neutral-700 dark:text-neutral-300"
+              aria-label="Show legend"
+            >
+              <Info className="h-5 w-5" />
+            </button>
 
-            {/* Star Icon Explanation */}
-            <div className="mb-3">
-              <div className="flex items-center gap-2">
-                <Star className="w-3.5 h-3.5 text-yellow-500 fill-yellow-500 flex-shrink-0" />
-                <span className="text-xs text-neutral-900 dark:text-white">Abbott World Marathon Major</span>
-              </div>
-            </div>
+            {/* Legend Popover */}
+            {showLegend && (
+              <div
+                className="absolute bottom-full right-0 mb-2 w-64 bg-white/95 dark:bg-neutral-800/95 backdrop-blur-sm border border-neutral-200 dark:border-neutral-700 rounded-lg shadow-xl p-4"
+                onMouseEnter={() => setShowLegend(true)}
+                onMouseLeave={() => setShowLegend(false)}
+              >
+                <h3 className="text-sm font-semibold text-neutral-900 dark:text-white mb-3">Legend</h3>
 
-            {/* Color Legend */}
-            <div>
-              <h4 className="text-xs font-medium text-neutral-900 dark:text-white mb-2">World Athletics Labels</h4>
-              <div className="space-y-1.5">
-                <div className="flex items-center gap-2">
-                  <div className="w-3.5 h-3.5 rounded flex-shrink-0" style={{ backgroundColor: 'rgba(204, 204, 204, 0.3)' }}></div>
-                  <span className="text-xs text-neutral-700 dark:text-neutral-300">Platinum Label</span>
+                {/* Star Icon Explanation */}
+                <div className="mb-3">
+                  <div className="flex items-center gap-2">
+                    <Star className="w-3.5 h-3.5 text-yellow-500 fill-yellow-500 flex-shrink-0" />
+                    <span className="text-xs text-neutral-900 dark:text-white">Abbott World Marathon Major</span>
+                  </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-3.5 h-3.5 rounded flex-shrink-0" style={{ backgroundColor: 'rgba(255, 217, 0, 0.25)' }}></div>
-                  <span className="text-xs text-neutral-700 dark:text-neutral-300">Gold Label</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-3.5 h-3.5 rounded flex-shrink-0" style={{ backgroundColor: 'rgba(158, 140, 196, 0.25)' }}></div>
-                  <span className="text-xs text-neutral-700 dark:text-neutral-300">Elite Label</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-3.5 h-3.5 rounded flex-shrink-0" style={{ backgroundColor: 'rgba(166, 251, 101, 0.25)' }}></div>
-                  <span className="text-xs text-neutral-700 dark:text-neutral-300">Label</span>
+
+                {/* Color Legend */}
+                <div>
+                  <h4 className="text-xs font-medium text-neutral-900 dark:text-white mb-2">World Athletics Labels</h4>
+                  <div className="space-y-1.5">
+                    <div className="flex items-center gap-2">
+                      <div className="w-3.5 h-3.5 rounded flex-shrink-0" style={{ backgroundColor: 'rgba(204, 204, 204, 0.3)' }}></div>
+                      <span className="text-xs text-neutral-700 dark:text-neutral-300">Platinum Label</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-3.5 h-3.5 rounded flex-shrink-0" style={{ backgroundColor: 'rgba(255, 217, 0, 0.25)' }}></div>
+                      <span className="text-xs text-neutral-700 dark:text-neutral-300">Gold Label</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-3.5 h-3.5 rounded flex-shrink-0" style={{ backgroundColor: 'rgba(158, 140, 196, 0.25)' }}></div>
+                      <span className="text-xs text-neutral-700 dark:text-neutral-300">Elite Label</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-3.5 h-3.5 rounded flex-shrink-0" style={{ backgroundColor: 'rgba(166, 251, 101, 0.25)' }}></div>
+                      <span className="text-xs text-neutral-700 dark:text-neutral-300">Label</span>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </div>
