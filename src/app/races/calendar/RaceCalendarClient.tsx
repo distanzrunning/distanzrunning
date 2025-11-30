@@ -153,7 +153,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
     // Estimate content height (this will be refined after render)
     // Image: 425px (50% of 850px width), Stats: ~450px, Padding: ~50px
     const estimatedContentHeight = 925
-    const windowHeight = Math.min(estimatedContentHeight, availableHeight - 80)
+    const windowHeight = Math.min(estimatedContentHeight, availableHeight)
 
     // Center the window with slight offset for multiple windows
     const offset = openWindows.length * 40
