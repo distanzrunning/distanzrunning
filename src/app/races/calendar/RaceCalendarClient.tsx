@@ -13,6 +13,40 @@ import { convertCurrencySync, formatPrice } from '@/lib/raceUtils'
 import { AnimatePresence, motion } from 'framer-motion'
 import type { RaceGuide } from '../page'
 
+const NAVBAR_HEIGHT = 48
+const FOOTER_HEIGHT = 37
+const WINDOW_TOP_MARGIN = 24
+const WINDOW_BOTTOM_MARGIN = 24
+
+const getEffectiveMargins = (viewportHeight: number) => {
+  const spaceWithMargins =
+    viewportHeight - NAVBAR_HEIGHT - FOOTER_HEIGHT - WINDOW_TOP_MARGIN - WINDOW_BOTTOM_MARGIN
+  if (spaceWithMargins > 0) {
+    return {
+      topMargin: WINDOW_TOP_MARGIN,
+      bottomMargin: WINDOW_BOTTOM_MARGIN,
+    }
+  }
+  return { topMargin: 0, bottomMargin: 0 }
+}
+
+const clampHeightToViewport = (desiredHeight: number, viewportHeight: number) => {
+  const { topMargin, bottomMargin } = getEffectiveMargins(viewportHeight)
+  const maxHeight = Math.max(
+    0,
+    viewportHeight - NAVBAR_HEIGHT - FOOTER_HEIGHT - topMargin - bottomMargin
+  )
+  return Math.min(desiredHeight, maxHeight || desiredHeight)
+}
+
+const clampYToViewport = (desiredY: number, height: number, viewportHeight: number) => {
+  const { topMargin, bottomMargin } = getEffectiveMargins(viewportHeight)
+  const minY = NAVBAR_HEIGHT + topMargin
+  const maxY = viewportHeight - FOOTER_HEIGHT - bottomMargin - height
+  if (maxY < minY) return minY
+  return Math.min(Math.max(desiredY, minY), maxY)
+}
+
 interface CalendarEvent {
   id: string
   title: string
@@ -71,30 +105,35 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
 
   // Auto-resize windows to fit content on initial render
   useEffect(() => {
-    if (isMobile) return
+    if (isMobile || typeof window === 'undefined') return
 
     const timers: NodeJS.Timeout[] = []
 
-    openWindows.forEach(window => {
-      if (!window.isFullscreen && !window.isSnapped) {
+    openWindows.forEach(windowInstance => {
+      if (!windowInstance.isFullscreen && !windowInstance.isSnapped) {
         // Wait for DOM to settle and images to load
         const timer = setTimeout(() => {
-          const windowEl = document.querySelector(`[data-window-id="${window.id}"]`)
+          const windowEl = document.querySelector(`[data-window-id="${windowInstance.id}"]`)
           if (windowEl) {
-            const NAVBAR_HEIGHT = 48
-            const FOOTER_HEIGHT = 37
+            const viewportHeight = globalThis.window.innerHeight
+            const { topMargin, bottomMargin } = getEffectiveMargins(viewportHeight)
 
             // Get the actual rendered height of the entire window
             const windowHeight = windowEl.scrollHeight
-            const maxHeight = globalThis.window.innerHeight - NAVBAR_HEIGHT - FOOTER_HEIGHT
+            const windowTop = Math.max(windowInstance.position.y, NAVBAR_HEIGHT + topMargin)
+            const maxHeight = Math.max(
+              0,
+              viewportHeight - FOOTER_HEIGHT - bottomMargin - windowTop
+            )
+            if (maxHeight <= 0) return
 
             const optimalHeight = Math.min(windowHeight, maxHeight)
 
             // Only update if significantly different (avoid infinite loops)
-            if (Math.abs(window.size.height - optimalHeight) > 10) {
+            if (Math.abs(windowInstance.size.height - optimalHeight) > 10) {
               setOpenWindows(prev =>
                 prev.map(w =>
-                  w.id === window.id && !w.isFullscreen && !w.isSnapped
+                  w.id === windowInstance.id && !w.isFullscreen && !w.isSnapped
                     ? { ...w, size: { ...w.size, height: optimalHeight } }
                     : w
                 )
@@ -108,7 +147,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
     })
 
     return () => timers.forEach(timer => clearTimeout(timer))
-  }, [openWindows.map(w => w.id).join(','), isMobile]) // Re-run when window IDs change
+  }, [openWindows.map(w => `${w.id}-${w.size.height}-${w.position.y}`).join('|'), isMobile])
 
   const handleEventClick = (info: EventClickArg) => {
     const race = races.find(r => r._id === info.event.id)
@@ -140,12 +179,11 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
     }
 
     // Create new window with content-fit size
-    const NAVBAR_HEIGHT = 48
-    const FOOTER_HEIGHT = 37
-    const TITLE_BAR_HEIGHT = 48
-    const PADDING_BOTTOM = 37 // Footer clearance
-    const availableHeight = window.innerHeight - NAVBAR_HEIGHT - FOOTER_HEIGHT
-    const availableWidth = window.innerWidth
+    const viewportHeight = window.innerHeight
+    const viewportWidth = window.innerWidth
+    const { topMargin, bottomMargin } = getEffectiveMargins(viewportHeight)
+    const heightBudget =
+      viewportHeight - NAVBAR_HEIGHT - FOOTER_HEIGHT - topMargin - bottomMargin
 
     // Fixed width, height will be calculated from content
     const windowWidth = 850
@@ -153,12 +191,14 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
     // Estimate content height (this will be refined after render)
     // Image: 425px (50% of 850px width), Stats: ~450px, Padding: ~50px
     const estimatedContentHeight = 925
-    const windowHeight = Math.min(estimatedContentHeight, availableHeight)
+    const provisionalHeight = Math.min(estimatedContentHeight, Math.max(0, heightBudget))
+    const windowHeight = clampHeightToViewport(provisionalHeight || estimatedContentHeight, viewportHeight)
 
     // Center the window with slight offset for multiple windows
     const offset = openWindows.length * 40
-    const centerX = Math.max(40, Math.min((availableWidth - windowWidth) / 2 + offset, availableWidth - windowWidth - 40))
-    const centerY = Math.max(NAVBAR_HEIGHT + 40, NAVBAR_HEIGHT + 40 + offset)
+    const centerX = Math.max(40, Math.min((viewportWidth - windowWidth) / 2 + offset, viewportWidth - windowWidth - 40))
+    const desiredY = NAVBAR_HEIGHT + topMargin + offset
+    const centerY = clampYToViewport(desiredY, windowHeight, viewportHeight)
 
     const newWindow = {
       id: race._id,
@@ -189,21 +229,35 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
       if (w.id === id) {
         // If window was snapped, reset to a safe floating position
         if (w.isSnapped) {
+          const restoredSize = w.previousState?.size || { width: 850, height: 700 }
+          const safeY = typeof window !== 'undefined'
+            ? clampYToViewport(100, restoredSize.height, window.innerHeight)
+            : 100
           return {
             ...w,
             isMinimized: false,
             isSnapped: null,
-            position: { x: 100, y: 100 }, // Safe position below navbar
-            size: w.previousState?.size || { width: 850, height: 700 }
+            position: { x: 100, y: safeY },
+            size: restoredSize
           }
         }
         // If position is at 0,0 (under navbar), move to safe position
         if (w.position.x === 0 && w.position.y === 0) {
+          const safeHeight = w.size.height
+          const safeY = typeof window !== 'undefined'
+            ? clampYToViewport(100, safeHeight, window.innerHeight)
+            : 100
           return {
             ...w,
             isMinimized: false,
-            position: { x: 100, y: 100 },
+            position: { x: 100, y: safeY },
             size: w.size || { width: 850, height: 700 }
+          }
+        }
+        if (typeof window !== 'undefined') {
+          const adjustedY = clampYToViewport(w.position.y, w.size.height, window.innerHeight)
+          if (adjustedY !== w.position.y) {
+            return { ...w, isMinimized: false, position: { ...w.position, y: adjustedY } }
           }
         }
         return { ...w, isMinimized: false }
@@ -290,7 +344,6 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
 
     const MIN_WIDTH = 600
     const MIN_HEIGHT = 500
-    const NAVBAR_HEIGHT = 48
 
     // Disable transitions during resize for instant feedback
     windowEl.style.transition = 'none'
@@ -320,11 +373,26 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
       }
       if (direction.includes('n')) {
         const potentialHeight = startHeight - deltaY
-        if (potentialHeight >= MIN_HEIGHT && startPosY + deltaY >= NAVBAR_HEIGHT) {
+        if (potentialHeight >= 0) {
           newHeight = potentialHeight
           newY = startPosY + deltaY
         }
       }
+
+      const viewportHeight = window.innerHeight
+      const { topMargin, bottomMargin } = getEffectiveMargins(viewportHeight)
+      const minTop = NAVBAR_HEIGHT + topMargin
+      newY = Math.max(newY, minTop)
+      const maxHeightAtPosition = Math.max(
+        0,
+        viewportHeight - FOOTER_HEIGHT - bottomMargin - newY
+      )
+      const minHeightAtPosition = Math.min(MIN_HEIGHT, maxHeightAtPosition || MIN_HEIGHT)
+      newHeight = Math.max(
+        minHeightAtPosition,
+        Math.min(newHeight, maxHeightAtPosition || newHeight)
+      )
+      newY = clampYToViewport(newY, newHeight, viewportHeight)
 
       // Direct DOM manipulation for instant feedback
       windowEl.style.width = `${newWidth}px`
@@ -387,13 +455,16 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
       // Position window so title bar is under mouse cursor
       const newX = e.clientX - restoredSize.width / 2
       const newY = e.clientY - 20 // 20px from top of title bar
+      const clampedY = typeof window !== 'undefined'
+        ? clampYToViewport(newY, restoredSize.height, window.innerHeight)
+        : newY
 
       setOpenWindows(prev =>
         prev.map(w => w.id === id ? {
           ...w,
           isSnapped: null,
           size: restoredSize,
-          position: { x: Math.max(0, newX), y: Math.max(48, newY) }
+          position: { x: Math.max(0, newX), y: clampedY }
         } : w)
       )
       return // Let the user start dragging from current mouse position next time
@@ -416,33 +487,36 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
       const currentWindow = raceWindow
       const windowWidth = currentWindow.size.width
       const windowHeight = currentWindow.size.height
+      const viewportWidth = window.innerWidth
+      const viewportHeight = window.innerHeight
+      const { topMargin, bottomMargin } = getEffectiveMargins(viewportHeight)
 
       // Constrain to area between navbar and footer
-      const NAVBAR_HEIGHT = 48
-      const FOOTER_HEIGHT = 37
       const EDGE_BUFFER = 20 // pixels allowed beyond left/right edges
       const minX = -EDGE_BUFFER
-      const minY = NAVBAR_HEIGHT // Never go under navbar
-      const maxX = window.innerWidth - windowWidth + EDGE_BUFFER
-      const maxY = window.innerHeight - FOOTER_HEIGHT - windowHeight // Stop above footer
+      const minY = NAVBAR_HEIGHT + topMargin // Never go under navbar
+      const maxX = viewportWidth - windowWidth + EDGE_BUFFER
+      const maxY = viewportHeight - FOOTER_HEIGHT - bottomMargin - windowHeight // Stop above footer
 
       // Constrain with buffer
       x = Math.max(minX, Math.min(x, maxX))
       y = Math.max(minY, Math.min(y, maxY))
 
       // Apply edge magnetism (but not in snap zones)
-      if (moveEvent.clientX >= SNAP_THRESHOLD && moveEvent.clientX <= window.innerWidth - SNAP_THRESHOLD) {
+      if (moveEvent.clientX >= SNAP_THRESHOLD && moveEvent.clientX <= viewportWidth - SNAP_THRESHOLD) {
         if (Math.abs(x) < MAGNETIC_THRESHOLD) x = 0
-        if (Math.abs(x - (window.innerWidth - windowWidth)) < MAGNETIC_THRESHOLD) {
-          x = window.innerWidth - windowWidth
+        if (Math.abs(x - (viewportWidth - windowWidth)) < MAGNETIC_THRESHOLD) {
+          x = viewportWidth - windowWidth
         }
-        if (Math.abs(y - NAVBAR_HEIGHT) < MAGNETIC_THRESHOLD) y = NAVBAR_HEIGHT
+        if (Math.abs(y - (NAVBAR_HEIGHT + topMargin)) < MAGNETIC_THRESHOLD) y = NAVBAR_HEIGHT + topMargin
       }
+
+      y = clampYToViewport(y, windowHeight, viewportHeight)
 
       // Detect snap zones (only left and right) - only show preview while dragging near edges
       if (moveEvent.clientX < SNAP_THRESHOLD) {
         currentSnapZone = 'left'
-      } else if (moveEvent.clientX > window.innerWidth - SNAP_THRESHOLD) {
+      } else if (moveEvent.clientX > viewportWidth - SNAP_THRESHOLD) {
         currentSnapZone = 'right'
       } else {
         currentSnapZone = null
@@ -990,9 +1064,15 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
             }
 
             // Default floating window - use explicit height from state
+            const viewportHeight = typeof globalThis !== 'undefined' && globalThis.window
+              ? globalThis.window.innerHeight
+              : undefined
+            const safeTop = viewportHeight
+              ? clampYToViewport(window.position.y, window.size.height, viewportHeight)
+              : Math.max(NAVBAR_HEIGHT, window.position.y)
             return {
               left: window.position.x,
-              top: Math.max(48, window.position.y),
+              top: safeTop,
               width: window.size.width,
               height: window.size.height,
             }
