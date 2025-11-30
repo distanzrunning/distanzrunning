@@ -511,8 +511,6 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
         if (Math.abs(y - (NAVBAR_HEIGHT + topMargin)) < MAGNETIC_THRESHOLD) y = NAVBAR_HEIGHT + topMargin
       }
 
-      y = clampYToViewport(y, windowHeight, viewportHeight)
-
       // Detect snap zones (only left and right) - only show preview while dragging near edges
       if (moveEvent.clientX < SNAP_THRESHOLD) {
         currentSnapZone = 'left'
