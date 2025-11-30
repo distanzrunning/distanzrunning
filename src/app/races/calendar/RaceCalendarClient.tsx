@@ -1005,7 +1005,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
               </div>
 
               {/* Window Content - Scrollable with fixed max-width */}
-              <div className="flex-1 overflow-y-auto">
+              <div className={`flex-1 overflow-y-auto ${window.isFullscreen ? 'pb-[37px]' : ''}`}>
                 <div className="max-w-[850px] mx-auto">
                 {/* Race Image */}
                 <div className="relative w-full p-4">
