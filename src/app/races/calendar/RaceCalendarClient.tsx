@@ -1021,7 +1021,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                 position: 'fixed',
                 zIndex: 50 + index,
                 maxWidth: window.isFullscreen || window.isSnapped ? 'none' : 'calc(100vw - 40px)',
-                maxHeight: window.isFullscreen || window.isSnapped ? 'none' : 'calc(100vh - 48px - 37px - 40px)',
+                maxHeight: window.isFullscreen || window.isSnapped ? 'none' : 'calc(100vh - 48px)', // Only subtract navbar, can extend to footer
               }}
               className={`
                 bg-white dark:bg-neutral-900
