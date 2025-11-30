@@ -335,11 +335,10 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
       // Allow slight overflow beyond viewport boundaries
       const EDGE_BUFFER = 20 // pixels allowed beyond edges
       const NAVBAR_HEIGHT = 48 // navbar height - nothing can go under this
-      const FOOTER_HEIGHT = 37
       const minX = -EDGE_BUFFER
       const minY = NAVBAR_HEIGHT // Never go under navbar
       const maxX = window.innerWidth - windowWidth + EDGE_BUFFER
-      const maxY = window.innerHeight - FOOTER_HEIGHT - windowHeight + EDGE_BUFFER
+      const maxY = window.innerHeight - windowHeight + EDGE_BUFFER // Allow windows to extend behind footer
 
       // Constrain with buffer
       x = Math.max(minX, Math.min(x, maxX))
@@ -1004,7 +1003,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
               </div>
 
               {/* Window Content - Auto-fit to content, scrollable only if needed */}
-              <div className={`${window.isFullscreen || window.isSnapped ? 'flex-1 overflow-y-auto' : 'overflow-y-auto'} ${window.isFullscreen ? 'pb-[37px]' : ''}`}>
+              <div className={`${window.isFullscreen || window.isSnapped ? 'flex-1 overflow-y-auto' : 'overflow-y-auto'} pb-[37px]`}>
                 <div className="max-w-[850px] mx-auto">
                 {/* Race Image */}
                 <div className="relative w-full p-4">
