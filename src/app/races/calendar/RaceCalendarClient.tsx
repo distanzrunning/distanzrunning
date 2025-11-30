@@ -486,21 +486,20 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
       // Get actual window dimensions
       const currentWindow = raceWindow
       const windowWidth = currentWindow.size.width
-      const windowHeight = currentWindow.size.height
       const viewportWidth = window.innerWidth
       const viewportHeight = window.innerHeight
-      const { topMargin, bottomMargin } = getEffectiveMargins(viewportHeight)
+      const { topMargin } = getEffectiveMargins(viewportHeight)
 
       // Constrain to area between navbar and footer
       const EDGE_BUFFER = 20 // pixels allowed beyond left/right edges
       const minX = -EDGE_BUFFER
       const minY = NAVBAR_HEIGHT + topMargin // Never go under navbar
       const maxX = viewportWidth - windowWidth + EDGE_BUFFER
-      const maxY = viewportHeight - FOOTER_HEIGHT - bottomMargin - windowHeight // Stop above footer
 
       // Constrain with buffer
       x = Math.max(minX, Math.min(x, maxX))
-      y = Math.max(minY, Math.min(y, maxY))
+      // For Y: keep title bar visible (above navbar), no max constraint to allow tall windows
+      y = Math.max(minY, y)
 
       // Apply edge magnetism (but not in snap zones)
       if (moveEvent.clientX >= SNAP_THRESHOLD && moveEvent.clientX <= viewportWidth - SNAP_THRESHOLD) {
