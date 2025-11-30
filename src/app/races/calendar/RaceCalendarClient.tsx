@@ -945,23 +945,23 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
             >
               {/* macOS-style Title Bar */}
               <div
-                className="flex items-center justify-between px-4 py-3 bg-neutral-100 dark:bg-neutral-800 border-b border-neutral-200 dark:border-neutral-700 select-none"
+                className="flex items-center justify-between px-4 py-3 bg-neutral-100 dark:bg-neutral-800 border-b border-neutral-200 dark:border-neutral-700 select-none group/titlebar"
                 style={{ cursor: isMobile ? 'default' : 'move' }}
                 onMouseDown={(e) => !isMobile && handleDragStart(window.id, e)}
                 onDoubleClick={() => handleTitleBarDoubleClick(window.id)}
               >
                 {/* Traffic Light Buttons */}
-                <div className="flex items-center gap-2 group/buttons">
+                <div className="flex items-center gap-2">
                   <button
                     onClick={(e) => {
                       e.stopPropagation()
                       closeWindow(window.id)
                     }}
-                    className="w-3 h-3 rounded-full bg-[#FF5F57] hover:bg-[#FF4136] transition-colors relative flex items-center justify-center group/close"
+                    className="w-3 h-3 rounded-full bg-[#FF5F57] hover:bg-[#FF4136] transition-colors relative flex items-center justify-center"
                     aria-label="Close"
                   >
-                    <svg className="w-2 h-2 text-[#7D0F0F] opacity-0 group-hover/close:opacity-100 transition-opacity" viewBox="0 0 12 12">
-                      <path d="M1 1L11 11M11 1L1 11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                    <svg className="w-2 h-2 text-[#7D0F0F] opacity-0 group-hover/titlebar:opacity-100 transition-opacity" viewBox="0 0 12 12">
+                      <path d="M3 3L9 9M9 3L3 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
                     </svg>
                   </button>
                   {!isMobile && (
@@ -971,10 +971,10 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                           e.stopPropagation()
                           minimizeWindow(window.id)
                         }}
-                        className="w-3 h-3 rounded-full bg-[#FFBD2E] hover:bg-[#FFB300] transition-colors relative flex items-center justify-center group/minimize"
+                        className="w-3 h-3 rounded-full bg-[#FFBD2E] hover:bg-[#FFB300] transition-colors relative flex items-center justify-center"
                         aria-label="Minimize"
                       >
-                        <svg className="w-2 h-2 text-[#7D5B00] opacity-0 group-hover/minimize:opacity-100 transition-opacity" viewBox="0 0 12 12">
+                        <svg className="w-2 h-2 text-[#7D5B00] opacity-0 group-hover/titlebar:opacity-100 transition-opacity" viewBox="0 0 12 12">
                           <path d="M2 6H10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
                         </svg>
                       </button>
@@ -983,11 +983,11 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                           e.stopPropagation()
                           toggleFullscreen(window.id, e.altKey) // Detect Option/Alt key
                         }}
-                        className="w-3 h-3 rounded-full bg-[#28CA42] hover:bg-[#1DB935] transition-colors relative flex items-center justify-center group/fullscreen"
+                        className="w-3 h-3 rounded-full bg-[#28CA42] hover:bg-[#1DB935] transition-colors relative flex items-center justify-center"
                         aria-label="Fullscreen"
                         title={window.isFullscreen ? "Exit Full Screen" : "Enter Full Screen (Option+Click to Zoom)"}
                       >
-                        <Maximize2 className="w-2 h-2 text-[#0D5520] opacity-0 group-hover/fullscreen:opacity-100 transition-opacity" />
+                        <Maximize2 className="w-2 h-2 text-[#0D5520] opacity-0 group-hover/titlebar:opacity-100 transition-opacity" />
                       </button>
                     </>
                   )}
