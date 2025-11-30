@@ -6,7 +6,7 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import type { EventClickArg, DayCellContentArg } from '@fullcalendar/core'
 import { useRouter } from 'next/navigation'
-import { ChevronLeft, ChevronRight, MoveUpRight, MoveDownRight, Thermometer, Clock, Banknote, Users, Medal, Star, Info } from 'lucide-react'
+import { ChevronLeft, ChevronRight, MoveUpRight, MoveDownRight, Thermometer, Clock, Banknote, Users, Medal, Star, Info, Maximize2 } from 'lucide-react'
 import { format } from 'date-fns'
 import { urlFor } from '@/sanity/lib/image'
 import { convertCurrencySync, formatPrice } from '@/lib/raceUtils'
@@ -987,9 +987,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                         aria-label="Fullscreen"
                         title={window.isFullscreen ? "Exit Full Screen" : "Enter Full Screen (Option+Click to Zoom)"}
                       >
-                        <svg className="w-2 h-2 text-[#0D5520] opacity-0 group-hover/fullscreen:opacity-100 transition-opacity" viewBox="0 0 12 12">
-                          <path d="M3 3L9 9M9 3L3 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-                        </svg>
+                        <Maximize2 className="w-2 h-2 text-[#0D5520] opacity-0 group-hover/fullscreen:opacity-100 transition-opacity" />
                       </button>
                     </>
                   )}
