@@ -877,6 +877,8 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                 top: 48, // Navbar height
                 width: '100vw',
                 height: 'calc(100vh - 48px - 37px)', // Subtract navbar (48px) and footer (37px)
+                maxWidth: 'none',
+                maxHeight: 'none',
               }
             }
 
@@ -887,6 +889,8 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                 top: 48,
                 width: '50vw',
                 height: 'calc(100vh - 48px - 37px)', // Subtract navbar and footer
+                maxWidth: 'none',
+                maxHeight: 'none',
               }
             }
 
@@ -897,6 +901,8 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                 top: 48,
                 width: '50vw',
                 height: 'calc(100vh - 48px - 37px)', // Subtract navbar and footer
+                maxWidth: 'none',
+                maxHeight: 'none',
               }
             }
 
