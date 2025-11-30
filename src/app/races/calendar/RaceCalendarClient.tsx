@@ -10,7 +10,7 @@ import { ChevronLeft, ChevronRight, MoveUpRight, MoveDownRight, Thermometer, Clo
 import { format } from 'date-fns'
 import { urlFor } from '@/sanity/lib/image'
 import { convertCurrencySync, formatPrice } from '@/lib/raceUtils'
-import { motion, AnimatePresence } from 'framer-motion'
+import { AnimatePresence } from 'framer-motion'
 import type { RaceGuide } from '../page'
 
 interface CalendarEvent {
@@ -932,26 +932,14 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
           const windowStyle = getWindowStyle()
 
           return (
-            <motion.div
+            <div
               key={window.id}
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{
-                ...windowStyle,
-                opacity: 1,
-                scale: 1
-              }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              transition={{
-                type: 'spring',
-                stiffness: 300,
-                damping: 30,
-                mass: 0.8,
-              }}
+              style={windowStyle}
               className={`
                 bg-white dark:bg-neutral-900
                 ${index === openWindows.length - 1 ? 'shadow-2xl' : 'shadow-lg'}
                 ${isSnapped ? '' : 'rounded-xl border border-neutral-200/60 dark:border-neutral-700/60'}
-                overflow-hidden flex flex-col transition-shadow duration-200
+                overflow-hidden flex flex-col transition-all duration-300 ease-in-out
               `}
               onClick={() => bringToFront(window.id)}
             >
@@ -1330,7 +1318,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                   />
                 </>
               )}
-            </motion.div>
+            </div>
           )
         })}
       </AnimatePresence>
