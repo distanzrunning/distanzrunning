@@ -418,13 +418,14 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
       const windowWidth = currentWindow.size.width
       const windowHeight = currentWindow.size.height
 
-      // Allow slight overflow beyond viewport boundaries
-      const EDGE_BUFFER = 20 // pixels allowed beyond edges
-      const NAVBAR_HEIGHT = 48 // navbar height - nothing can go under this
+      // Constrain to area between navbar and footer
+      const NAVBAR_HEIGHT = 48
+      const FOOTER_HEIGHT = 37
+      const EDGE_BUFFER = 20 // pixels allowed beyond left/right edges
       const minX = -EDGE_BUFFER
       const minY = NAVBAR_HEIGHT // Never go under navbar
       const maxX = window.innerWidth - windowWidth + EDGE_BUFFER
-      const maxY = window.innerHeight - windowHeight + EDGE_BUFFER // Allow windows to extend behind footer
+      const maxY = window.innerHeight - FOOTER_HEIGHT - windowHeight // Stop above footer
 
       // Constrain with buffer
       x = Math.max(minX, Math.min(x, maxX))
