@@ -71,25 +71,28 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
 
   // Auto-resize windows to fit content on initial render
   useEffect(() => {
+    if (isMobile) return
+
+    const timers: NodeJS.Timeout[] = []
+
     openWindows.forEach(window => {
-      if (!window.isFullscreen && !window.isSnapped && !isMobile) {
-        // Wait for DOM to settle
+      if (!window.isFullscreen && !window.isSnapped) {
+        // Wait for DOM to settle and images to load
         const timer = setTimeout(() => {
-          const contentEl = document.querySelector(`[data-window-content="${window.id}"]`)
-          if (contentEl) {
-            const contentHeight = contentEl.scrollHeight
-            const TITLE_BAR_HEIGHT = 48
-            const FOOTER_CLEARANCE = 37
+          const windowEl = document.querySelector(`[data-window-id="${window.id}"]`)
+          if (windowEl) {
             const NAVBAR_HEIGHT = 48
+            const FOOTER_HEIGHT = 37
             const PADDING = 40
 
-            const totalHeight = contentHeight + TITLE_BAR_HEIGHT + FOOTER_CLEARANCE
-            const maxHeight = globalThis.window.innerHeight - NAVBAR_HEIGHT - FOOTER_CLEARANCE - PADDING
+            // Get the actual rendered height of the entire window
+            const windowHeight = windowEl.scrollHeight
+            const maxHeight = globalThis.window.innerHeight - NAVBAR_HEIGHT - FOOTER_HEIGHT - PADDING
 
-            const optimalHeight = Math.min(totalHeight, maxHeight)
+            const optimalHeight = Math.min(windowHeight, maxHeight)
 
-            // Only update if size is different (avoid infinite loops)
-            if (Math.abs(window.size.height - optimalHeight) > 5) {
+            // Only update if significantly different (avoid infinite loops)
+            if (Math.abs(window.size.height - optimalHeight) > 10) {
               setOpenWindows(prev =>
                 prev.map(w =>
                   w.id === window.id && !w.isFullscreen && !w.isSnapped
@@ -99,12 +102,14 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
               )
             }
           }
-        }, 100)
+        }, 200) // Increased timeout to let images load
 
-        return () => clearTimeout(timer)
+        timers.push(timer)
       }
     })
-  }, [openWindows.length, isMobile]) // Only run when windows are added
+
+    return () => timers.forEach(timer => clearTimeout(timer))
+  }, [openWindows.map(w => w.id).join(','), isMobile]) // Re-run when window IDs change
 
   const handleEventClick = (info: EventClickArg) => {
     const race = races.find(r => r._id === info.event.id)
@@ -263,13 +268,19 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
     setActiveWindowId(id)
   }
 
-  // Window resize handler
+  // Window resize handler - Direct DOM manipulation for performance
   const handleResizeStart = (id: string, direction: string, e: React.MouseEvent) => {
     if (isMobile) return
     e.stopPropagation()
 
     const raceWindow = openWindows.find(w => w.id === id)
     if (!raceWindow || raceWindow.isFullscreen || raceWindow.isSnapped) return
+
+    // Bring window to front when starting resize
+    setActiveWindowId(id)
+
+    const windowEl = document.querySelector(`[data-window-id="${id}"]`) as HTMLElement
+    if (!windowEl) return
 
     const startX = e.clientX
     const startY = e.clientY
@@ -281,6 +292,9 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
     const MIN_WIDTH = 600
     const MIN_HEIGHT = 500
     const NAVBAR_HEIGHT = 48
+
+    // Disable transitions during resize for instant feedback
+    windowEl.style.transition = 'none'
 
     const handleResize = (moveEvent: MouseEvent) => {
       const deltaX = moveEvent.clientX - startX
@@ -313,20 +327,36 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
         }
       }
 
+      // Direct DOM manipulation for instant feedback
+      windowEl.style.width = `${newWidth}px`
+      windowEl.style.height = `${newHeight}px`
+      windowEl.style.left = `${newX}px`
+      windowEl.style.top = `${newY}px`
+    }
+
+    const handleResizeEnd = () => {
+      // Re-enable transitions
+      windowEl.style.transition = ''
+
+      // Get final dimensions from DOM
+      const finalWidth = parseInt(windowEl.style.width)
+      const finalHeight = parseInt(windowEl.style.height)
+      const finalX = parseInt(windowEl.style.left)
+      const finalY = parseInt(windowEl.style.top)
+
+      // Update React state to match DOM
       setOpenWindows(prev =>
         prev.map(w =>
           w.id === id
             ? {
                 ...w,
-                size: { width: newWidth, height: newHeight },
-                position: { x: newX, y: newY }
+                size: { width: finalWidth, height: finalHeight },
+                position: { x: finalX, y: finalY }
               }
             : w
         )
       )
-    }
 
-    const handleResizeEnd = () => {
       document.removeEventListener('mousemove', handleResize)
       document.removeEventListener('mouseup', handleResizeEnd)
     }
@@ -973,6 +1003,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
           return (
             <motion.div
               key={window.id}
+              data-window-id={window.id}
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{
                 opacity: 1,
@@ -999,7 +1030,6 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                 overflow-hidden flex flex-col
               `}
               onClick={() => bringToFront(window.id)}
-              layout
             >
               {/* macOS-style Title Bar */}
               <div
