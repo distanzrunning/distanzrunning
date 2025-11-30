@@ -1133,7 +1133,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                 </div>
 
                 {/* Content */}
-                <div className="p-6">
+                <div className="p-4">
                   {/* Title, Location, Date */}
                   <div className="mb-6">
                     <div className="flex items-start justify-between gap-4">
