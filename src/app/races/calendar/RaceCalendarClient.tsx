@@ -12,6 +12,7 @@ import { urlFor } from '@/sanity/lib/image'
 import { convertCurrencySync, formatPrice } from '@/lib/raceUtils'
 import { AnimatePresence, motion } from 'framer-motion'
 import type { RaceGuide } from '../page'
+import * as ScrollArea from '@radix-ui/react-scroll-area'
 
 const NAVBAR_HEIGHT = 48
 const FOOTER_HEIGHT = 37
@@ -1177,12 +1178,15 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                 <div className="w-[52px]" />
               </div>
 
-              {/* Window Content - Auto-fit to content, scrollable only if needed */}
-              <div
-                data-window-content={window.id}
-                className={`${window.isFullscreen || window.isSnapped ? 'flex-1 overflow-y-auto mac-scroll' : 'overflow-y-auto mac-scroll'}`}
+              {/* Window Content - Radix Scroll Area with hidden scrollbars */}
+              <ScrollArea.Root
+                className={`${window.isFullscreen || window.isSnapped ? 'flex-1' : 'flex-1'}`}
               >
-                <div className="max-w-[850px] mx-auto">
+                <ScrollArea.Viewport
+                  data-window-content={window.id}
+                  className="h-full w-full"
+                >
+                  <div className="max-w-[850px] mx-auto">
                 {/* Race Image */}
                 <div className="relative w-full p-4">
                   <div className="relative overflow-hidden rounded-lg">
@@ -1449,47 +1453,64 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                     )}
                   </div>
                 </div>
-                </div>
-              </div>
+                  </div>
+                </ScrollArea.Viewport>
+              </ScrollArea.Root>
 
-              {/* Resize Handles - Only show on floating windows */}
+              {/* Resize Handles - Hover-based like PostHog */}
               {!window.isFullscreen && !window.isSnapped && !isMobile && (
                 <>
-                  {/* Corner handles */}
+                  {/* Corner handles - show on hover */}
                   <div
-                    className="absolute top-0 left-0 w-4 h-4 cursor-nw-resize z-10"
+                    className="group absolute top-0 left-0 w-6 h-6 cursor-nw-resize z-10"
                     onMouseDown={(e) => handleResizeStart(window.id, 'nw', e)}
-                  />
+                  >
+                    <div className="hidden group-hover:block w-3 h-3 bg-electric-pink/30 border border-electric-pink rounded-sm" />
+                  </div>
                   <div
-                    className="absolute top-0 right-0 w-4 h-4 cursor-ne-resize z-10"
+                    className="group absolute top-0 right-0 w-6 h-6 cursor-ne-resize z-10 flex justify-end"
                     onMouseDown={(e) => handleResizeStart(window.id, 'ne', e)}
-                  />
+                  >
+                    <div className="hidden group-hover:block w-3 h-3 bg-electric-pink/30 border border-electric-pink rounded-sm" />
+                  </div>
                   <div
-                    className="absolute bottom-0 left-0 w-4 h-4 cursor-sw-resize z-10"
+                    className="group absolute bottom-0 left-0 w-6 h-6 cursor-sw-resize z-10 flex items-end"
                     onMouseDown={(e) => handleResizeStart(window.id, 'sw', e)}
-                  />
+                  >
+                    <div className="hidden group-hover:block w-3 h-3 bg-electric-pink/30 border border-electric-pink rounded-sm" />
+                  </div>
                   <div
-                    className="absolute bottom-0 right-0 w-4 h-4 cursor-se-resize z-10"
+                    className="group absolute bottom-0 right-0 w-6 h-6 cursor-se-resize z-10 flex items-end justify-end"
                     onMouseDown={(e) => handleResizeStart(window.id, 'se', e)}
-                  />
+                  >
+                    <div className="hidden group-hover:block w-3 h-3 bg-electric-pink/30 border border-electric-pink rounded-sm" />
+                  </div>
 
-                  {/* Edge handles */}
+                  {/* Edge handles - show on hover */}
                   <div
-                    className="absolute top-0 left-4 right-4 h-2 cursor-n-resize z-10"
+                    className="group absolute top-0 left-6 right-6 h-3 cursor-n-resize z-10"
                     onMouseDown={(e) => handleResizeStart(window.id, 'n', e)}
-                  />
+                  >
+                    <div className="hidden group-hover:block w-full h-1 bg-electric-pink/20 mx-auto" />
+                  </div>
                   <div
-                    className="absolute bottom-0 left-4 right-4 h-2 cursor-s-resize z-10"
+                    className="group absolute bottom-0 left-6 right-6 h-3 cursor-s-resize z-10 flex items-end"
                     onMouseDown={(e) => handleResizeStart(window.id, 's', e)}
-                  />
+                  >
+                    <div className="hidden group-hover:block w-full h-1 bg-electric-pink/20 mx-auto" />
+                  </div>
                   <div
-                    className="absolute left-0 top-4 bottom-4 w-2 cursor-w-resize z-10"
+                    className="group absolute left-0 top-6 bottom-6 w-3 cursor-w-resize z-10"
                     onMouseDown={(e) => handleResizeStart(window.id, 'w', e)}
-                  />
+                  >
+                    <div className="hidden group-hover:block w-1 h-full bg-electric-pink/20" />
+                  </div>
                   <div
-                    className="absolute right-0 top-4 bottom-4 w-2 cursor-e-resize z-10"
+                    className="group absolute right-0 top-6 bottom-6 w-3 cursor-e-resize z-10 flex justify-end"
                     onMouseDown={(e) => handleResizeStart(window.id, 'e', e)}
-                  />
+                  >
+                    <div className="hidden group-hover:block w-1 h-full bg-electric-pink/20" />
+                  </div>
                 </>
               )}
             </motion.div>
