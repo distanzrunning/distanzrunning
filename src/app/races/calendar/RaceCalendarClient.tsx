@@ -94,20 +94,20 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
       return
     }
 
-    // Create new window with fixed optimal size (PostHog-style)
+    // Create new window with content-fit size
     const NAVBAR_HEIGHT = 48
     const FOOTER_HEIGHT = 37
     const availableHeight = window.innerHeight - NAVBAR_HEIGHT - FOOTER_HEIGHT
     const availableWidth = window.innerWidth
 
-    // Fixed optimal size for consistency
+    // Fixed width, max height based on viewport
     const windowWidth = 850
-    const windowHeight = 700 // Fixed height, content scrolls
+    const windowHeight = Math.min(900, availableHeight - 80) // Max height, will shrink to content
 
     // Center the window with slight offset for multiple windows
     const offset = openWindows.length * 40
     const centerX = Math.max(40, Math.min((availableWidth - windowWidth) / 2 + offset, availableWidth - windowWidth - 40))
-    const centerY = Math.max(NAVBAR_HEIGHT + 40, Math.min(NAVBAR_HEIGHT + (availableHeight - windowHeight) / 2 + offset, NAVBAR_HEIGHT + availableHeight - windowHeight - 40))
+    const centerY = Math.max(NAVBAR_HEIGHT + 40, NAVBAR_HEIGHT + 40 + offset)
 
     setOpenWindows(prev => [...prev, {
       id: race._id,
@@ -914,14 +914,13 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
             // Calculate max available height from the constrained top position
             const viewportHeight = typeof globalThis !== 'undefined' && globalThis.window ? globalThis.window.innerHeight : 900
             const maxAvailableHeight = viewportHeight - constrainedTop - FOOTER_HEIGHT - 20 // 20px padding
-            const constrainedHeight = Math.min(window.size.height, maxAvailableHeight)
 
             return {
               ...baseStyle,
               left: window.position.x,
               top: constrainedTop,
               width: window.size.width,
-              height: constrainedHeight,
+              height: 'auto',
               maxWidth: 'calc(100vw - 40px)',
               maxHeight: `${maxAvailableHeight}px`,
             }
@@ -1004,8 +1003,8 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                 <div className="w-[52px]" />
               </div>
 
-              {/* Window Content - Scrollable with fixed max-width */}
-              <div className={`flex-1 overflow-y-auto ${window.isFullscreen ? 'pb-[37px]' : ''}`}>
+              {/* Window Content - Auto-fit to content, scrollable only if needed */}
+              <div className={`${window.isFullscreen || window.isSnapped ? 'flex-1 overflow-y-auto' : 'overflow-y-auto'} ${window.isFullscreen ? 'pb-[37px]' : ''}`}>
                 <div className="max-w-[850px] mx-auto">
                 {/* Race Image */}
                 <div className="relative w-full p-4">
