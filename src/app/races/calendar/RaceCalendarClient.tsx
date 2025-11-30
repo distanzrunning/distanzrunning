@@ -384,13 +384,22 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
           background-color: rgb(23, 23, 23);
         }
 
-        /* Other month dates - darker but still visible */
-        .calendar-wrapper .fc-day-other .fc-daygrid-day-number {
-          color: rgb(163, 163, 163) !important;
+        /* Other month dates - darker background */
+        .calendar-wrapper .fc-day-other {
+          background-color: rgb(250, 250, 250) !important;
         }
 
-        .dark .calendar-wrapper .fc-day-other .fc-daygrid-day-number {
-          color: rgb(82, 82, 82) !important;
+        .dark .calendar-wrapper .fc-day-other {
+          background-color: rgb(15, 15, 15) !important;
+        }
+
+        /* Remove yellow highlight from today */
+        .calendar-wrapper .fc-day-today {
+          background-color: white !important;
+        }
+
+        .dark .calendar-wrapper .fc-day-today {
+          background-color: rgb(23, 23, 23) !important;
         }
 
         /* Day cell content */
