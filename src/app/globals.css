@@ -461,6 +461,69 @@
 }
 
 @layer utilities {
+  /* macOS-style Window Shadows */
+  .mac-window-shadow {
+    box-shadow:
+      0 25px 50px -12px rgba(0, 0, 0, 0.25),
+      0 10px 10px -5px rgba(0, 0, 0, 0.04),
+      0 0 0 1px rgba(0, 0, 0, 0.05);
+  }
+
+  .mac-window-shadow-active {
+    box-shadow:
+      0 40px 70px -20px rgba(0, 0, 0, 0.35),
+      0 20px 25px -5px rgba(0, 0, 0, 0.08),
+      0 0 0 1px rgba(0, 0, 0, 0.05);
+  }
+
+  /* Dark mode shadows */
+  .dark .mac-window-shadow {
+    box-shadow:
+      0 25px 50px -12px rgba(0, 0, 0, 0.5),
+      0 10px 10px -5px rgba(0, 0, 0, 0.1),
+      0 0 0 1px rgba(255, 255, 255, 0.05);
+  }
+
+  .dark .mac-window-shadow-active {
+    box-shadow:
+      0 40px 70px -20px rgba(0, 0, 0, 0.6),
+      0 20px 25px -5px rgba(0, 0, 0, 0.15),
+      0 0 0 1px rgba(255, 255, 255, 0.08);
+  }
+
+  /* macOS-style Scrollbar */
+  .mac-scroll {
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+
+  .mac-scroll::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .mac-scroll::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .mac-scroll::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+  }
+
+  .mac-scroll::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.3);
+  }
+
+  .dark .mac-scroll::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  .dark .mac-scroll::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+  }
+
   /* Distanz utility classes (Quartr-inspired with tight spacing) */
 
   .text-meta-distanz {

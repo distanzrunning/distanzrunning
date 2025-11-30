@@ -10,7 +10,7 @@ import { ChevronLeft, ChevronRight, MoveUpRight, MoveDownRight, Thermometer, Clo
 import { format } from 'date-fns'
 import { urlFor } from '@/sanity/lib/image'
 import { convertCurrencySync, formatPrice } from '@/lib/raceUtils'
-import { AnimatePresence } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 import type { RaceGuide } from '../page'
 
 interface CalendarEvent {
@@ -44,6 +44,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
   const [isMobile, setIsMobile] = useState(false)
   const [snapPreview, setSnapPreview] = useState<'left' | 'right' | null>(null)
   const [showLegend, setShowLegend] = useState(false)
+  const [activeWindowId, setActiveWindowId] = useState<string | null>(null)
 
   // Convert races to FullCalendar events
   const events = useMemo<CalendarEvent[]>(() => {
@@ -68,13 +69,50 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
+  // Auto-resize windows to fit content on initial render
+  useEffect(() => {
+    openWindows.forEach(window => {
+      if (!window.isFullscreen && !window.isSnapped && !isMobile) {
+        // Wait for DOM to settle
+        const timer = setTimeout(() => {
+          const contentEl = document.querySelector(`[data-window-content="${window.id}"]`)
+          if (contentEl) {
+            const contentHeight = contentEl.scrollHeight
+            const TITLE_BAR_HEIGHT = 48
+            const FOOTER_CLEARANCE = 37
+            const NAVBAR_HEIGHT = 48
+            const PADDING = 40
+
+            const totalHeight = contentHeight + TITLE_BAR_HEIGHT + FOOTER_CLEARANCE
+            const maxHeight = globalThis.window.innerHeight - NAVBAR_HEIGHT - FOOTER_CLEARANCE - PADDING
+
+            const optimalHeight = Math.min(totalHeight, maxHeight)
+
+            // Only update if size is different (avoid infinite loops)
+            if (Math.abs(window.size.height - optimalHeight) > 5) {
+              setOpenWindows(prev =>
+                prev.map(w =>
+                  w.id === window.id && !w.isFullscreen && !w.isSnapped
+                    ? { ...w, size: { ...w.size, height: optimalHeight } }
+                    : w
+                )
+              )
+            }
+          }
+        }, 100)
+
+        return () => clearTimeout(timer)
+      }
+    })
+  }, [openWindows.length, isMobile]) // Only run when windows are added
+
   const handleEventClick = (info: EventClickArg) => {
     const race = races.find(r => r._id === info.event.id)
     if (!race) return
 
     // On mobile, only allow one fullscreen window
     if (isMobile) {
-      setOpenWindows([{
+      const newWindow = {
         id: race._id,
         race,
         isMinimized: false,
@@ -82,7 +120,9 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
         position: { x: 0, y: 0 },
         size: { width: window.innerWidth, height: window.innerHeight - 48 - 37 },
         isSnapped: null
-      }])
+      }
+      setOpenWindows([newWindow])
+      setActiveWindowId(newWindow.id)
       return
     }
 
@@ -91,25 +131,32 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
     if (existingWindow) {
       // Bring to front by moving to end of array
       setOpenWindows(prev => [...prev.filter(w => w.id !== race._id), existingWindow])
+      setActiveWindowId(existingWindow.id)
       return
     }
 
     // Create new window with content-fit size
     const NAVBAR_HEIGHT = 48
     const FOOTER_HEIGHT = 37
+    const TITLE_BAR_HEIGHT = 48
+    const PADDING_BOTTOM = 37 // Footer clearance
     const availableHeight = window.innerHeight - NAVBAR_HEIGHT - FOOTER_HEIGHT
     const availableWidth = window.innerWidth
 
-    // Fixed width, max height based on viewport
+    // Fixed width, height will be calculated from content
     const windowWidth = 850
-    const windowHeight = Math.min(900, availableHeight - 80) // Max height, will shrink to content
+
+    // Estimate content height (this will be refined after render)
+    // Image: 425px (50% of 850px width), Stats: ~450px, Padding: ~50px
+    const estimatedContentHeight = 925
+    const windowHeight = Math.min(estimatedContentHeight, availableHeight - 80)
 
     // Center the window with slight offset for multiple windows
     const offset = openWindows.length * 40
     const centerX = Math.max(40, Math.min((availableWidth - windowWidth) / 2 + offset, availableWidth - windowWidth - 40))
     const centerY = Math.max(NAVBAR_HEIGHT + 40, NAVBAR_HEIGHT + 40 + offset)
 
-    setOpenWindows(prev => [...prev, {
+    const newWindow = {
       id: race._id,
       race,
       isMinimized: false,
@@ -117,7 +164,10 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
       position: { x: centerX, y: centerY },
       size: { width: windowWidth, height: windowHeight },
       isSnapped: null
-    }])
+    }
+
+    setOpenWindows(prev => [...prev, newWindow])
+    setActiveWindowId(newWindow.id)
   }
 
   const closeWindow = (id: string) => {
@@ -210,6 +260,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
       if (!window) return prev
       return [...prev.filter(w => w.id !== id), window]
     })
+    setActiveWindowId(id)
   }
 
   // Window resize handler
@@ -290,26 +341,30 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
     toggleFullscreen(id, true) // Use zoom behavior (Option+click)
   }
 
-  // Custom drag handling with snap zones
+  // Custom drag handling with snap zones and magnetism
   const handleDragStart = (id: string, e: React.MouseEvent) => {
     if (isMobile) return
 
     const raceWindow = openWindows.find(w => w.id === id)
     if (!raceWindow) return
 
-    // If window is snapped, unsnap it and restore to previous size
+    // Bring to front when starting drag
+    setActiveWindowId(id)
+
+    // If window is snapped, unsnap it and position under cursor
     const wasSnapped = raceWindow.isSnapped
     if (wasSnapped) {
       const restoredSize = raceWindow.previousState?.size || { width: 850, height: 700 }
-      const centerX = (window.innerWidth - restoredSize.width) / 2
-      const centerY = (window.innerHeight - restoredSize.height) / 2 + 48 // Account for navbar
+      // Position window so title bar is under mouse cursor
+      const newX = e.clientX - restoredSize.width / 2
+      const newY = e.clientY - 20 // 20px from top of title bar
 
       setOpenWindows(prev =>
         prev.map(w => w.id === id ? {
           ...w,
           isSnapped: null,
           size: restoredSize,
-          position: { x: centerX, y: Math.max(100, centerY) } // Will update immediately in drag
+          position: { x: Math.max(0, newX), y: Math.max(48, newY) }
         } : w)
       )
       return // Let the user start dragging from current mouse position next time
@@ -319,6 +374,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
     const startY = e.clientY - raceWindow.position.y
 
     const SNAP_THRESHOLD = 50 // pixels from edge to trigger snap
+    const MAGNETIC_THRESHOLD = 8 // pixels for edge magnetism
 
     // Store current snap zone in a ref to access in handleDragEnd
     let currentSnapZone: 'left' | 'right' | null = null
@@ -343,6 +399,15 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
       // Constrain with buffer
       x = Math.max(minX, Math.min(x, maxX))
       y = Math.max(minY, Math.min(y, maxY))
+
+      // Apply edge magnetism (but not in snap zones)
+      if (moveEvent.clientX >= SNAP_THRESHOLD && moveEvent.clientX <= window.innerWidth - SNAP_THRESHOLD) {
+        if (Math.abs(x) < MAGNETIC_THRESHOLD) x = 0
+        if (Math.abs(x - (window.innerWidth - windowWidth)) < MAGNETIC_THRESHOLD) {
+          x = window.innerWidth - windowWidth
+        }
+        if (Math.abs(y - NAVBAR_HEIGHT) < MAGNETIC_THRESHOLD) y = NAVBAR_HEIGHT
+      }
 
       // Detect snap zones (only left and right) - only show preview while dragging near edges
       if (moveEvent.clientX < SNAP_THRESHOLD) {
@@ -858,92 +923,95 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
       )}
 
       {/* Race Windows */}
-      <AnimatePresence>
+      <AnimatePresence mode="popLayout">
         {openWindows.map((window, index) => {
           if (window.isMinimized) return null
 
-          // Calculate window dimensions and position based on snap state
-          const getWindowStyle = () => {
-            const baseStyle = {
-              position: 'fixed' as const,
-              zIndex: 50 + index,
-            }
+          const isActive = window.id === activeWindowId
+          const isSnapped = window.isSnapped !== null && window.isSnapped !== undefined
 
+          // Calculate window dimensions and position based on snap state
+          const getWindowProps = () => {
             if (window.isFullscreen || isMobile) {
               return {
-                ...baseStyle,
                 left: 0,
-                top: 48, // Navbar height
+                top: 48,
                 width: '100vw',
-                height: 'calc(100vh - 48px)', // Subtract navbar only, extend behind footer
-                maxWidth: 'none',
-                maxHeight: 'none',
+                height: 'calc(100vh - 48px)',
               }
             }
 
             if (window.isSnapped === 'left') {
               return {
-                ...baseStyle,
                 left: 0,
                 top: 48,
                 width: '50vw',
-                height: 'calc(100vh - 48px - 37px)', // Subtract navbar and footer
-                maxWidth: 'none',
-                maxHeight: 'none',
+                height: 'calc(100vh - 48px - 37px)',
               }
             }
 
             if (window.isSnapped === 'right') {
               return {
-                ...baseStyle,
                 left: '50vw',
                 top: 48,
                 width: '50vw',
-                height: 'calc(100vh - 48px - 37px)', // Subtract navbar and footer
-                maxWidth: 'none',
-                maxHeight: 'none',
+                height: 'calc(100vh - 48px - 37px)',
               }
             }
 
-            // Default floating window
-            const NAVBAR_HEIGHT = 48
-            const FOOTER_HEIGHT = 37
-            const constrainedTop = Math.max(NAVBAR_HEIGHT, window.position.y)
-
-            // Calculate max available height from the constrained top position
-            const viewportHeight = typeof globalThis !== 'undefined' && globalThis.window ? globalThis.window.innerHeight : 900
-            const maxAvailableHeight = viewportHeight - constrainedTop - FOOTER_HEIGHT - 20 // 20px padding
-
+            // Default floating window - height will be auto
             return {
-              ...baseStyle,
               left: window.position.x,
-              top: constrainedTop,
+              top: Math.max(48, window.position.y),
               width: window.size.width,
               height: 'auto',
-              maxWidth: 'calc(100vw - 40px)',
-              maxHeight: `${maxAvailableHeight}px`,
             }
           }
 
-          const isSnapped = window.isSnapped !== null && window.isSnapped !== undefined
-
-          const windowStyle = getWindowStyle()
+          const windowProps = getWindowProps()
 
           return (
-            <div
+            <motion.div
               key={window.id}
-              style={windowStyle}
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{
+                opacity: 1,
+                scale: 1,
+                ...windowProps,
+              }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{
+                type: "spring",
+                stiffness: 300,
+                damping: 30,
+                mass: 0.8,
+              }}
+              style={{
+                position: 'fixed',
+                zIndex: 50 + index,
+                maxWidth: window.isFullscreen || window.isSnapped ? 'none' : 'calc(100vw - 40px)',
+                maxHeight: window.isFullscreen || window.isSnapped ? 'none' : 'calc(100vh - 48px - 37px - 40px)',
+              }}
               className={`
                 bg-white dark:bg-neutral-900
-                ${index === openWindows.length - 1 ? 'shadow-2xl' : 'shadow-lg'}
-                ${isSnapped ? '' : 'rounded-xl border border-neutral-200/60 dark:border-neutral-700/60'}
-                overflow-hidden flex flex-col transition-all duration-300 ease-in-out
+                ${isActive ? 'mac-window-shadow-active' : 'mac-window-shadow'}
+                ${isSnapped || window.isFullscreen ? '' : 'rounded-xl border border-neutral-200/60 dark:border-neutral-700/60'}
+                overflow-hidden flex flex-col
               `}
               onClick={() => bringToFront(window.id)}
+              layout
             >
               {/* macOS-style Title Bar */}
               <div
-                className="flex items-center justify-between px-4 py-3 bg-neutral-100 dark:bg-neutral-800 border-b border-neutral-200 dark:border-neutral-700 select-none group/titlebar"
+                className={`
+                  flex items-center justify-between px-4 py-3
+                  border-b border-neutral-200 dark:border-neutral-700
+                  select-none group/titlebar transition-colors duration-200
+                  ${isActive
+                    ? 'bg-neutral-100 dark:bg-neutral-800'
+                    : 'bg-neutral-200/80 dark:bg-neutral-850/80 opacity-95'
+                  }
+                `}
                 style={{ cursor: isMobile ? 'default' : 'move' }}
                 onMouseDown={(e) => !isMobile && handleDragStart(window.id, e)}
                 onDoubleClick={() => handleTitleBarDoubleClick(window.id)}
@@ -1003,7 +1071,10 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
               </div>
 
               {/* Window Content - Auto-fit to content, scrollable only if needed */}
-              <div className={`${window.isFullscreen || window.isSnapped ? 'flex-1 overflow-y-auto' : 'overflow-y-auto'} pb-[37px]`}>
+              <div
+                data-window-content={window.id}
+                className={`${window.isFullscreen || window.isSnapped ? 'flex-1 overflow-y-auto mac-scroll' : 'overflow-y-auto mac-scroll'} pb-[37px]`}
+              >
                 <div className="max-w-[850px] mx-auto">
                 {/* Race Image */}
                 <div className="relative w-full p-4">
@@ -1314,7 +1385,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                   />
                 </>
               )}
-            </div>
+            </motion.div>
           )
         })}
       </AnimatePresence>
