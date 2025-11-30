@@ -83,11 +83,10 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
           if (windowEl) {
             const NAVBAR_HEIGHT = 48
             const FOOTER_HEIGHT = 37
-            const PADDING = 40
 
             // Get the actual rendered height of the entire window
             const windowHeight = windowEl.scrollHeight
-            const maxHeight = globalThis.window.innerHeight - NAVBAR_HEIGHT - FOOTER_HEIGHT - PADDING
+            const maxHeight = globalThis.window.innerHeight - NAVBAR_HEIGHT - FOOTER_HEIGHT
 
             const optimalHeight = Math.min(windowHeight, maxHeight)
 
