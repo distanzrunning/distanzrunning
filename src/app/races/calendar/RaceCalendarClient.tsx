@@ -6,7 +6,7 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import type { EventClickArg, DayCellContentArg } from '@fullcalendar/core'
 import { useRouter } from 'next/navigation'
-import { ChevronLeft, ChevronRight, Star, Info } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Star } from 'lucide-react'
 import type { RaceGuide } from '../page'
 
 interface CalendarEvent {
@@ -22,7 +22,6 @@ interface CalendarEvent {
 export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
   const router = useRouter()
   const [currentDate, setCurrentDate] = useState(new Date())
-  const [showLegend, setShowLegend] = useState(false)
 
   // Convert races to FullCalendar events
   const events = useMemo<CalendarEvent[]>(() => {
@@ -160,7 +159,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
       {/* Content fills viewport below navbar (48px) and above footer (32px) */}
       <div className="h-full flex flex-col">
         {/* Calendar - Takes full remaining space */}
-        <div className="flex-1 flex flex-col overflow-hidden">
+        <div className="flex-1 flex flex-col overflow-hidden relative">
           <div className="bg-white dark:bg-neutral-900 flex-1 flex flex-col calendar-wrapper">
             {/* Custom Toolbar */}
             <div className="px-6 py-4 border-b border-neutral-200 dark:border-neutral-800 flex-shrink-0">
@@ -170,16 +169,31 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                   Race Calendar
                 </h1>
 
-                {/* Center: Month Navigation */}
-                <div className="flex items-center gap-4 absolute left-1/2 transform -translate-x-1/2">
+                {/* Center: Month Navigation with chevrons */}
+                <div className="flex items-center gap-2 absolute left-1/2 transform -translate-x-1/2">
                   <button
                     onClick={handlePrevMonth}
-                    className="p-3 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors text-neutral-700 dark:text-neutral-300"
+                    className="p-2 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors text-neutral-700 dark:text-neutral-300"
                     aria-label="Previous month"
                   >
                     <ChevronLeft className="h-5 w-5" />
                   </button>
 
+                  <span className="text-lg font-semibold text-neutral-900 dark:text-white min-w-[140px] text-center">
+                    {months[currentMonth]}
+                  </span>
+
+                  <button
+                    onClick={handleNextMonth}
+                    className="p-2 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors text-neutral-700 dark:text-neutral-300"
+                    aria-label="Next month"
+                  >
+                    <ChevronRight className="h-5 w-5" />
+                  </button>
+                </div>
+
+                {/* Right: Month/Year/Today controls */}
+                <div className="flex items-center gap-2">
                   <select
                     value={currentMonth}
                     onChange={handleMonthSelect}
@@ -210,72 +224,6 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                   >
                     Today
                   </button>
-
-                  <button
-                    onClick={handleNextMonth}
-                    className="p-3 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors text-neutral-700 dark:text-neutral-300"
-                    aria-label="Next month"
-                  >
-                    <ChevronRight className="h-5 w-5" />
-                  </button>
-                </div>
-
-                {/* Right: Legend Info Icon */}
-                <div className="relative">
-                  <button
-                    onClick={() => setShowLegend(!showLegend)}
-                    className="p-2 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors text-neutral-700 dark:text-neutral-300"
-                    aria-label="Show legend"
-                  >
-                    <Info className="h-5 w-5" />
-                  </button>
-
-                  {/* Legend Popover */}
-                  {showLegend && (
-                    <>
-                      <div
-                        className="fixed inset-0 z-40"
-                        onClick={() => setShowLegend(false)}
-                      />
-                      <div className="absolute right-0 top-12 z-50 w-80 bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg shadow-xl p-4">
-                        <h3 className="font-semibold text-neutral-900 dark:text-white mb-3">Calendar Legend</h3>
-
-                        {/* Star Icon Explanation */}
-                        <div className="mb-4">
-                          <div className="flex items-center gap-2 mb-2">
-                            <Star className="w-4 h-4 text-yellow-500 fill-yellow-500 flex-shrink-0" />
-                            <span className="text-sm font-medium text-neutral-900 dark:text-white">Abbott World Marathon Major</span>
-                          </div>
-                          <p className="text-xs text-neutral-600 dark:text-neutral-400 ml-6">
-                            One of the six most prestigious marathons in the world
-                          </p>
-                        </div>
-
-                        {/* Color Legend */}
-                        <div>
-                          <h4 className="text-sm font-medium text-neutral-900 dark:text-white mb-2">World Athletics Labels</h4>
-                          <div className="space-y-2">
-                            <div className="flex items-center gap-2">
-                              <div className="w-4 h-4 rounded flex-shrink-0" style={{ backgroundColor: 'rgba(204, 204, 204, 0.3)' }}></div>
-                              <span className="text-xs text-neutral-700 dark:text-neutral-300">Platinum Label</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <div className="w-4 h-4 rounded flex-shrink-0" style={{ backgroundColor: 'rgba(255, 217, 0, 0.25)' }}></div>
-                              <span className="text-xs text-neutral-700 dark:text-neutral-300">Gold Label</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <div className="w-4 h-4 rounded flex-shrink-0" style={{ backgroundColor: 'rgba(158, 140, 196, 0.25)' }}></div>
-                              <span className="text-xs text-neutral-700 dark:text-neutral-300">Elite Label</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <div className="w-4 h-4 rounded flex-shrink-0" style={{ backgroundColor: 'rgba(166, 251, 101, 0.25)' }}></div>
-                              <span className="text-xs text-neutral-700 dark:text-neutral-300">Label</span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </>
-                  )}
                 </div>
               </div>
             </div>
@@ -297,6 +245,42 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                 dayMaxEvents={false}
                 eventClassNames="cursor-pointer"
               />
+            </div>
+          </div>
+
+          {/* Legend - Bottom right corner over calendar */}
+          <div className="absolute bottom-4 right-4 z-50 w-64 bg-white/95 dark:bg-neutral-800/95 backdrop-blur-sm border border-neutral-200 dark:border-neutral-700 rounded-lg shadow-xl p-4">
+            <h3 className="text-sm font-semibold text-neutral-900 dark:text-white mb-3">Legend</h3>
+
+            {/* Star Icon Explanation */}
+            <div className="mb-3">
+              <div className="flex items-center gap-2">
+                <Star className="w-3.5 h-3.5 text-yellow-500 fill-yellow-500 flex-shrink-0" />
+                <span className="text-xs text-neutral-900 dark:text-white">Abbott World Marathon Major</span>
+              </div>
+            </div>
+
+            {/* Color Legend */}
+            <div>
+              <h4 className="text-xs font-medium text-neutral-900 dark:text-white mb-2">World Athletics Labels</h4>
+              <div className="space-y-1.5">
+                <div className="flex items-center gap-2">
+                  <div className="w-3.5 h-3.5 rounded flex-shrink-0" style={{ backgroundColor: 'rgba(204, 204, 204, 0.3)' }}></div>
+                  <span className="text-xs text-neutral-700 dark:text-neutral-300">Platinum Label</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-3.5 h-3.5 rounded flex-shrink-0" style={{ backgroundColor: 'rgba(255, 217, 0, 0.25)' }}></div>
+                  <span className="text-xs text-neutral-700 dark:text-neutral-300">Gold Label</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-3.5 h-3.5 rounded flex-shrink-0" style={{ backgroundColor: 'rgba(158, 140, 196, 0.25)' }}></div>
+                  <span className="text-xs text-neutral-700 dark:text-neutral-300">Elite Label</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-3.5 h-3.5 rounded flex-shrink-0" style={{ backgroundColor: 'rgba(166, 251, 101, 0.25)' }}></div>
+                  <span className="text-xs text-neutral-700 dark:text-neutral-300">Label</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
