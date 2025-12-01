@@ -42,8 +42,9 @@ export function RaceEventPopup({ race, onClose }: RaceEventPopupProps) {
         })
       } else if (isResizing === 'left') {
         const newWidth = Math.max(400, resizeRef.current.startWidth - deltaX)
+        const widthDelta = resizeRef.current.startWidth - newWidth
         setSize({ width: newWidth, height: resizeRef.current.startHeight })
-        setPosition({ x: position.x + (resizeRef.current.startWidth - newWidth), y: position.y })
+        setPosition(prev => ({ x: prev.x - widthDelta, y: prev.y }))
       } else if (isResizing === 'right') {
         setSize({
           width: Math.max(400, resizeRef.current.startWidth + deltaX),
@@ -51,11 +52,12 @@ export function RaceEventPopup({ race, onClose }: RaceEventPopupProps) {
         })
       } else if (isResizing === 'bottom-left') {
         const newWidth = Math.max(400, resizeRef.current.startWidth - deltaX)
+        const widthDelta = resizeRef.current.startWidth - newWidth
         setSize({
           width: newWidth,
           height: Math.max(300, resizeRef.current.startHeight + deltaY)
         })
-        setPosition({ x: position.x + (resizeRef.current.startWidth - newWidth), y: position.y })
+        setPosition(prev => ({ x: prev.x - widthDelta, y: prev.y }))
       } else if (isResizing === 'bottom-right') {
         setSize({
           width: Math.max(400, resizeRef.current.startWidth + deltaX),
@@ -63,7 +65,7 @@ export function RaceEventPopup({ race, onClose }: RaceEventPopupProps) {
         })
       }
     }
-  }, [isDragging, isResizing, position.x, position.y])
+  }, [isDragging, isResizing])
 
   const handleMouseUp = useCallback(() => {
     setIsDragging(false)
