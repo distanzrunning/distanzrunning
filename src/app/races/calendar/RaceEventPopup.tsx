@@ -377,28 +377,36 @@ export function RaceEventPopup({ race, onClose }: RaceEventPopupProps) {
               {/* Bottom */}
               <div
                 onMouseDown={(e) => handleResizeStart(e, 'bottom')}
-                className="absolute bottom-0 left-0 right-0 h-1 cursor-ns-resize hover:bg-electric-pink/20 transition-colors"
+                className="absolute bottom-0 left-0 right-0 h-1 cursor-ns-resize hover:border-b-2 hover:border-neutral-400 dark:hover:border-neutral-600 transition-all"
               />
               {/* Left */}
               <div
                 onMouseDown={(e) => handleResizeStart(e, 'left')}
-                className="absolute top-0 bottom-0 left-0 w-1 cursor-ew-resize hover:bg-electric-pink/20 transition-colors"
+                className="absolute top-0 bottom-0 left-0 w-1 cursor-ew-resize hover:border-l-2 hover:border-neutral-400 dark:hover:border-neutral-600 transition-all"
               />
               {/* Right */}
               <div
                 onMouseDown={(e) => handleResizeStart(e, 'right')}
-                className="absolute top-0 bottom-0 right-0 w-1 cursor-ew-resize hover:bg-electric-pink/20 transition-colors"
+                className="absolute top-0 bottom-0 right-0 w-1 cursor-ew-resize hover:border-r-2 hover:border-neutral-400 dark:hover:border-neutral-600 transition-all"
               />
               {/* Bottom-left corner */}
               <div
                 onMouseDown={(e) => handleResizeStart(e, 'bottom-left')}
-                className="absolute bottom-0 left-0 w-3 h-3 cursor-nesw-resize hover:bg-electric-pink/40 transition-colors"
-              />
+                className="absolute bottom-0 left-0 w-4 h-4 cursor-nesw-resize group"
+              >
+                <svg className="w-full h-full opacity-0 group-hover:opacity-100 transition-opacity" viewBox="0 0 16 16">
+                  <path d="M 0 16 L 16 16 L 0 0 Z" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-neutral-400 dark:text-neutral-600" />
+                </svg>
+              </div>
               {/* Bottom-right corner */}
               <div
                 onMouseDown={(e) => handleResizeStart(e, 'bottom-right')}
-                className="absolute bottom-0 right-0 w-3 h-3 cursor-nwse-resize hover:bg-electric-pink/40 transition-colors"
-              />
+                className="absolute bottom-0 right-0 w-4 h-4 cursor-nwse-resize group"
+              >
+                <svg className="w-full h-full opacity-0 group-hover:opacity-100 transition-opacity" viewBox="0 0 16 16">
+                  <path d="M 16 16 L 0 16 L 16 0 Z" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-neutral-400 dark:text-neutral-600" />
+                </svg>
+              </div>
             </div>
           </div>
         </Dialog.Content>
