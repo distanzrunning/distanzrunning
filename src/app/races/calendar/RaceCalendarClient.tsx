@@ -5,9 +5,9 @@ import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import type { EventClickArg, DayCellContentArg } from '@fullcalendar/core'
-import { useRouter } from 'next/navigation'
 import { ChevronLeft, ChevronRight, Star, Info } from 'lucide-react'
 import type { RaceGuide } from '../page'
+import { RaceEventPopup } from './RaceEventPopup'
 
 interface CalendarEvent {
   id: string
@@ -20,9 +20,9 @@ interface CalendarEvent {
 }
 
 export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
-  const router = useRouter()
   const [currentDate, setCurrentDate] = useState(new Date())
   const [showLegend, setShowLegend] = useState(false)
+  const [selectedRace, setSelectedRace] = useState<RaceGuide | null>(null)
 
   // Convert races to FullCalendar events
   const events = useMemo<CalendarEvent[]>(() => {
@@ -39,11 +39,11 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
       .sort((a, b) => new Date(a.start).getTime() - new Date(b.start).getTime())
   }, [races])
 
-  // Handle event click - navigate to race guide page
+  // Handle event click - show popup window
   const handleEventClick = (info: EventClickArg) => {
-    const event = events.find(e => e.id === info.event.id)
-    if (event) {
-      router.push(`/races/${event.slug}`)
+    const race = races.find(r => r._id === info.event.id)
+    if (race) {
+      setSelectedRace(race)
     }
   }
 
@@ -156,9 +156,13 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
   }
 
   return (
-    <div className="fixed inset-0 overflow-hidden bg-white dark:bg-[#0c0c0d] transition-colors duration-300 pt-12 pb-8">
-      {/* Content fills viewport below navbar (48px) and above footer (32px) */}
-      <div className="h-full flex flex-col">
+    <>
+      {/* Race Event Popup */}
+      <RaceEventPopup race={selectedRace} onClose={() => setSelectedRace(null)} />
+
+      <div className="fixed inset-0 overflow-hidden bg-white dark:bg-[#0c0c0d] transition-colors duration-300 pt-12 pb-8">
+        {/* Content fills viewport below navbar (48px) and above footer (32px) */}
+        <div className="h-full flex flex-col">
         {/* Calendar - Takes full remaining space */}
         <div className="flex-1 flex flex-col overflow-hidden relative">
           <div className="bg-white dark:bg-neutral-900 flex-1 flex flex-col calendar-wrapper">
@@ -444,6 +448,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
           padding: 2px !important;
         }
       `}</style>
-    </div>
+      </div>
+    </>
   )
 }
