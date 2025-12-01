@@ -2,6 +2,7 @@
 
 import { X, ExternalLink, MapPin, Calendar, DollarSign, Star, TrendingUp } from 'lucide-react'
 import * as Dialog from '@radix-ui/react-dialog'
+import Draggable from 'react-draggable'
 import type { RaceGuide } from '../page'
 import Image from 'next/image'
 import { urlFor } from '@/sanity/lib/image'
@@ -59,9 +60,9 @@ export function RaceEventPopup({ race, onClose }: RaceEventPopupProps) {
         {/* Backdrop/Overlay - No blur, no animations */}
         <Dialog.Overlay className="fixed inset-0 bg-black/40 z-50" />
 
-        {/* Dialog Content - No animations */}
+        {/* Dialog Content - Draggable */}
         <Dialog.Content
-          className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] max-w-2xl z-50"
+          asChild
           onPointerDownOutside={() => {
             // Close on backdrop click
             onClose()
@@ -71,10 +72,12 @@ export function RaceEventPopup({ race, onClose }: RaceEventPopupProps) {
             onClose()
           }}
         >
-          {/* Window Container */}
-          <div className="bg-white dark:bg-neutral-900 rounded-lg shadow-2xl border border-neutral-300 dark:border-neutral-700 overflow-hidden flex flex-col max-h-[85vh]">
-            {/* Title Bar */}
-            <div className="bg-neutral-100 dark:bg-neutral-800 border-b border-neutral-300 dark:border-neutral-700 px-4 py-3 flex items-center justify-between select-none">
+          <Draggable handle=".drag-handle" bounds="parent">
+            <div className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] max-w-2xl z-50">
+              {/* Window Container */}
+              <div className="bg-white dark:bg-neutral-900 rounded-lg shadow-2xl border border-neutral-300 dark:border-neutral-700 overflow-hidden flex flex-col max-h-[85vh]">
+                {/* Title Bar - Draggable Handle */}
+                <div className="drag-handle bg-neutral-100 dark:bg-neutral-800 border-b border-neutral-300 dark:border-neutral-700 px-4 py-3 flex items-center justify-between select-none cursor-move">
               <Dialog.Title className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
                 {race.title}
               </Dialog.Title>
@@ -253,7 +256,9 @@ export function RaceEventPopup({ race, onClose }: RaceEventPopupProps) {
                   </div>
                 </div>
               </div>
-          </div>
+              </div>
+            </div>
+          </Draggable>
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>
