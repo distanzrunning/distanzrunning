@@ -18,11 +18,20 @@ export function RaceEventPopup({ race, onClose }: RaceEventPopupProps) {
   const [isDragging, setIsDragging] = useState(false)
   const [isResizing, setIsResizing] = useState<'bottom' | 'left' | 'right' | 'bottom-left' | 'bottom-right' | null>(null)
   const dragRef = useRef<{ startX: number; startY: number }>({ startX: 0, startY: 0 })
-  const resizeRef = useRef<{ startX: number; startY: number; startWidth: number; startHeight: number }>({
+  const resizeRef = useRef<{
+    startX: number
+    startY: number
+    startWidth: number
+    startHeight: number
+    startPosX: number
+    startPosY: number
+  }>({
     startX: 0,
     startY: 0,
     startWidth: 0,
-    startHeight: 0
+    startHeight: 0,
+    startPosX: 0,
+    startPosY: 0
   })
 
   // Drag handlers with useCallback to prevent recreating on every render
@@ -42,9 +51,9 @@ export function RaceEventPopup({ race, onClose }: RaceEventPopupProps) {
         })
       } else if (isResizing === 'left') {
         const newWidth = Math.max(400, resizeRef.current.startWidth - deltaX)
-        const widthDelta = resizeRef.current.startWidth - newWidth
+        const widthChange = resizeRef.current.startWidth - newWidth
         setSize({ width: newWidth, height: resizeRef.current.startHeight })
-        setPosition(prev => ({ x: prev.x - widthDelta, y: prev.y }))
+        setPosition({ x: resizeRef.current.startPosX + widthChange, y: resizeRef.current.startPosY })
       } else if (isResizing === 'right') {
         setSize({
           width: Math.max(400, resizeRef.current.startWidth + deltaX),
@@ -52,12 +61,12 @@ export function RaceEventPopup({ race, onClose }: RaceEventPopupProps) {
         })
       } else if (isResizing === 'bottom-left') {
         const newWidth = Math.max(400, resizeRef.current.startWidth - deltaX)
-        const widthDelta = resizeRef.current.startWidth - newWidth
+        const widthChange = resizeRef.current.startWidth - newWidth
         setSize({
           width: newWidth,
           height: Math.max(300, resizeRef.current.startHeight + deltaY)
         })
-        setPosition(prev => ({ x: prev.x - widthDelta, y: prev.y }))
+        setPosition({ x: resizeRef.current.startPosX + widthChange, y: resizeRef.current.startPosY })
       } else if (isResizing === 'bottom-right') {
         setSize({
           width: Math.max(400, resizeRef.current.startWidth + deltaX),
@@ -87,7 +96,9 @@ export function RaceEventPopup({ race, onClose }: RaceEventPopupProps) {
       startX: e.clientX,
       startY: e.clientY,
       startWidth: size.width,
-      startHeight: size.height
+      startHeight: size.height,
+      startPosX: position.x,
+      startPosY: position.y
     }
   }
 
