@@ -1,8 +1,8 @@
 'use client'
 
+import { useState, useRef, useEffect } from 'react'
 import { X, ExternalLink, MapPin, Calendar, DollarSign, Star, TrendingUp } from 'lucide-react'
 import * as Dialog from '@radix-ui/react-dialog'
-import Draggable from 'react-draggable'
 import type { RaceGuide } from '../page'
 import Image from 'next/image'
 import { urlFor } from '@/sanity/lib/image'
@@ -13,6 +13,10 @@ interface RaceEventPopupProps {
 }
 
 export function RaceEventPopup({ race, onClose }: RaceEventPopupProps) {
+  const [position, setPosition] = useState({ x: 0, y: 0 })
+  const [isDragging, setIsDragging] = useState(false)
+  const dragRef = useRef<{ startX: number; startY: number }>({ startX: 0, startY: 0 })
+
   if (!race) return null
 
   const eventDate = race.eventDate ? new Date(race.eventDate) : null
@@ -54,13 +58,48 @@ export function RaceEventPopup({ race, onClose }: RaceEventPopupProps) {
 
   const imageUrl = race.mainImage ? urlFor(race.mainImage)?.width(600).height(400).url() : null
 
+  // Drag handlers
+  const handleMouseDown = (e: React.MouseEvent) => {
+    setIsDragging(true)
+    dragRef.current = {
+      startX: e.clientX - position.x,
+      startY: e.clientY - position.y,
+    }
+  }
+
+  const handleMouseMove = (e: MouseEvent) => {
+    if (!isDragging) return
+
+    const newX = e.clientX - dragRef.current.startX
+    const newY = e.clientY - dragRef.current.startY
+
+    setPosition({ x: newX, y: newY })
+  }
+
+  const handleMouseUp = () => {
+    setIsDragging(false)
+  }
+
+  // Add/remove event listeners
+  useEffect(() => {
+    if (isDragging) {
+      window.addEventListener('mousemove', handleMouseMove)
+      window.addEventListener('mouseup', handleMouseUp)
+    }
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove)
+      window.removeEventListener('mouseup', handleMouseUp)
+    }
+  }, [isDragging])
+
   return (
     <Dialog.Root open={!!race} onOpenChange={(open) => !open && onClose()}>
       <Dialog.Portal>
         {/* Backdrop/Overlay - No blur, no animations */}
         <Dialog.Overlay className="fixed inset-0 bg-black/40 z-50" />
 
-        {/* Dialog Content - Draggable */}
+        {/* Dialog Content - Custom Draggable */}
         <Dialog.Content
           asChild
           onPointerDownOutside={() => {
@@ -72,12 +111,21 @@ export function RaceEventPopup({ race, onClose }: RaceEventPopupProps) {
             onClose()
           }}
         >
-          <Draggable handle=".drag-handle" bounds="parent">
-            <div className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] max-w-2xl z-50">
-              {/* Window Container */}
-              <div className="bg-white dark:bg-neutral-900 rounded-lg shadow-2xl border border-neutral-300 dark:border-neutral-700 overflow-hidden flex flex-col max-h-[85vh]">
-                {/* Title Bar - Draggable Handle */}
-                <div className="drag-handle bg-neutral-100 dark:bg-neutral-800 border-b border-neutral-300 dark:border-neutral-700 px-4 py-3 flex items-center justify-between select-none cursor-move">
+          <div
+            className="fixed w-[90vw] max-w-2xl z-50"
+            style={{
+              left: '50%',
+              top: '50%',
+              transform: `translate(calc(-50% + ${position.x}px), calc(-50% + ${position.y}px))`,
+            }}
+          >
+            {/* Window Container */}
+            <div className="bg-white dark:bg-neutral-900 rounded-lg shadow-2xl border border-neutral-300 dark:border-neutral-700 overflow-hidden flex flex-col max-h-[85vh]">
+              {/* Title Bar - Draggable Handle */}
+              <div
+                onMouseDown={handleMouseDown}
+                className="bg-neutral-100 dark:bg-neutral-800 border-b border-neutral-300 dark:border-neutral-700 px-4 py-3 flex items-center justify-between select-none cursor-move"
+              >
               <Dialog.Title className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
                 {race.title}
               </Dialog.Title>
@@ -256,9 +304,8 @@ export function RaceEventPopup({ race, onClose }: RaceEventPopupProps) {
                   </div>
                 </div>
               </div>
-              </div>
             </div>
-          </Draggable>
+          </div>
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>
