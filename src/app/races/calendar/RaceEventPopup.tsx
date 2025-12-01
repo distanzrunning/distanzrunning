@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 import { X, ExternalLink, MapPin, Calendar, DollarSign, Star, TrendingUp } from 'lucide-react'
 import * as Dialog from '@radix-ui/react-dialog'
 import type { RaceGuide } from '../page'
@@ -58,26 +58,23 @@ export function RaceEventPopup({ race, onClose }: RaceEventPopupProps) {
 
   const imageUrl = race.mainImage ? urlFor(race.mainImage)?.width(600).height(400).url() : null
 
-  // Drag handlers
+  // Drag handlers with useCallback to prevent recreating on every render
+  const handleMouseMove = useCallback((e: MouseEvent) => {
+    const newX = e.clientX - dragRef.current.startX
+    const newY = e.clientY - dragRef.current.startY
+    setPosition({ x: newX, y: newY })
+  }, [])
+
+  const handleMouseUp = useCallback(() => {
+    setIsDragging(false)
+  }, [])
+
   const handleMouseDown = (e: React.MouseEvent) => {
     setIsDragging(true)
     dragRef.current = {
       startX: e.clientX - position.x,
       startY: e.clientY - position.y,
     }
-  }
-
-  const handleMouseMove = (e: MouseEvent) => {
-    if (!isDragging) return
-
-    const newX = e.clientX - dragRef.current.startX
-    const newY = e.clientY - dragRef.current.startY
-
-    setPosition({ x: newX, y: newY })
-  }
-
-  const handleMouseUp = () => {
-    setIsDragging(false)
   }
 
   // Add/remove event listeners
@@ -91,7 +88,7 @@ export function RaceEventPopup({ race, onClose }: RaceEventPopupProps) {
       window.removeEventListener('mousemove', handleMouseMove)
       window.removeEventListener('mouseup', handleMouseUp)
     }
-  }, [isDragging])
+  }, [isDragging, handleMouseMove, handleMouseUp])
 
   return (
     <Dialog.Root open={!!race} onOpenChange={(open) => !open && onClose()}>
