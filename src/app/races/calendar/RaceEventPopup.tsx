@@ -56,12 +56,12 @@ export function RaceEventPopup({ race, onClose }: RaceEventPopupProps) {
   return (
     <Dialog.Root open={!!race} onOpenChange={(open) => !open && onClose()}>
       <Dialog.Portal>
-        {/* Backdrop/Overlay */}
-        <Dialog.Overlay className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
+        {/* Backdrop/Overlay - No blur, no animations */}
+        <Dialog.Overlay className="fixed inset-0 bg-black/40 z-50" />
 
-        {/* Dialog Content */}
+        {/* Dialog Content - No animations */}
         <Dialog.Content
-          className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] max-w-2xl z-50 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-top-[2%] data-[state=open]:slide-in-from-top-[2%]"
+          className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] max-w-2xl z-50"
           onPointerDownOutside={() => {
             // Close on backdrop click
             onClose()
@@ -73,25 +73,11 @@ export function RaceEventPopup({ race, onClose }: RaceEventPopupProps) {
         >
           {/* Window Container */}
           <div className="bg-white dark:bg-neutral-900 rounded-lg shadow-2xl border border-neutral-300 dark:border-neutral-700 overflow-hidden flex flex-col max-h-[85vh]">
-            {/* Title Bar - Desktop OS Style */}
+            {/* Title Bar */}
             <div className="bg-neutral-100 dark:bg-neutral-800 border-b border-neutral-300 dark:border-neutral-700 px-4 py-3 flex items-center justify-between select-none">
-              <div className="flex items-center gap-2">
-                <div className="flex gap-1.5">
-                  <Dialog.Close asChild>
-                    <button
-                      className="w-3 h-3 rounded-full bg-red-500 hover:bg-red-600 transition-colors group"
-                      aria-label="Close"
-                    >
-                      <X className="h-2 w-2 text-red-900 opacity-0 group-hover:opacity-100 transition-opacity mx-auto" />
-                    </button>
-                  </Dialog.Close>
-                  <div className="w-3 h-3 rounded-full bg-yellow-500" />
-                  <div className="w-3 h-3 rounded-full bg-green-500" />
-                </div>
-                <Dialog.Title className="text-sm font-medium text-neutral-700 dark:text-neutral-300 ml-2">
-                  {race.title}
-                </Dialog.Title>
-              </div>
+              <Dialog.Title className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
+                {race.title}
+              </Dialog.Title>
               <Dialog.Close asChild>
                 <button
                   className="p-1 hover:bg-neutral-200 dark:hover:bg-neutral-700 rounded transition-colors"
