@@ -17,6 +17,38 @@ export function RaceEventPopup({ race, onClose }: RaceEventPopupProps) {
   const [isDragging, setIsDragging] = useState(false)
   const dragRef = useRef<{ startX: number; startY: number }>({ startX: 0, startY: 0 })
 
+  // Drag handlers with useCallback to prevent recreating on every render
+  const handleMouseMove = useCallback((e: MouseEvent) => {
+    const newX = e.clientX - dragRef.current.startX
+    const newY = e.clientY - dragRef.current.startY
+    setPosition({ x: newX, y: newY })
+  }, [])
+
+  const handleMouseUp = useCallback(() => {
+    setIsDragging(false)
+  }, [])
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    setIsDragging(true)
+    dragRef.current = {
+      startX: e.clientX - position.x,
+      startY: e.clientY - position.y,
+    }
+  }
+
+  // Add/remove event listeners
+  useEffect(() => {
+    if (isDragging) {
+      window.addEventListener('mousemove', handleMouseMove)
+      window.addEventListener('mouseup', handleMouseUp)
+    }
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove)
+      window.removeEventListener('mouseup', handleMouseUp)
+    }
+  }, [isDragging, handleMouseMove, handleMouseUp])
+
   if (!race) return null
 
   const eventDate = race.eventDate ? new Date(race.eventDate) : null
@@ -57,38 +89,6 @@ export function RaceEventPopup({ race, onClose }: RaceEventPopupProps) {
   }
 
   const imageUrl = race.mainImage ? urlFor(race.mainImage)?.width(600).height(400).url() : null
-
-  // Drag handlers with useCallback to prevent recreating on every render
-  const handleMouseMove = useCallback((e: MouseEvent) => {
-    const newX = e.clientX - dragRef.current.startX
-    const newY = e.clientY - dragRef.current.startY
-    setPosition({ x: newX, y: newY })
-  }, [])
-
-  const handleMouseUp = useCallback(() => {
-    setIsDragging(false)
-  }, [])
-
-  const handleMouseDown = (e: React.MouseEvent) => {
-    setIsDragging(true)
-    dragRef.current = {
-      startX: e.clientX - position.x,
-      startY: e.clientY - position.y,
-    }
-  }
-
-  // Add/remove event listeners
-  useEffect(() => {
-    if (isDragging) {
-      window.addEventListener('mousemove', handleMouseMove)
-      window.addEventListener('mouseup', handleMouseUp)
-    }
-
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove)
-      window.removeEventListener('mouseup', handleMouseUp)
-    }
-  }, [isDragging, handleMouseMove, handleMouseUp])
 
   return (
     <Dialog.Root open={!!race} onOpenChange={(open) => !open && onClose()}>
