@@ -14,18 +14,60 @@ interface RaceEventPopupProps {
 
 export function RaceEventPopup({ race, onClose }: RaceEventPopupProps) {
   const [position, setPosition] = useState({ x: 0, y: 0 })
+  const [size, setSize] = useState({ width: 672, height: 600 }) // Default: max-w-2xl = 672px
   const [isDragging, setIsDragging] = useState(false)
+  const [isResizing, setIsResizing] = useState<'bottom' | 'left' | 'right' | 'bottom-left' | 'bottom-right' | null>(null)
   const dragRef = useRef<{ startX: number; startY: number }>({ startX: 0, startY: 0 })
+  const resizeRef = useRef<{ startX: number; startY: number; startWidth: number; startHeight: number }>({
+    startX: 0,
+    startY: 0,
+    startWidth: 0,
+    startHeight: 0
+  })
 
   // Drag handlers with useCallback to prevent recreating on every render
   const handleMouseMove = useCallback((e: MouseEvent) => {
-    const newX = e.clientX - dragRef.current.startX
-    const newY = e.clientY - dragRef.current.startY
-    setPosition({ x: newX, y: newY })
-  }, [])
+    if (isDragging) {
+      const newX = e.clientX - dragRef.current.startX
+      const newY = e.clientY - dragRef.current.startY
+      setPosition({ x: newX, y: newY })
+    } else if (isResizing) {
+      const deltaX = e.clientX - resizeRef.current.startX
+      const deltaY = e.clientY - resizeRef.current.startY
+
+      if (isResizing === 'bottom') {
+        setSize({
+          width: resizeRef.current.startWidth,
+          height: Math.max(300, resizeRef.current.startHeight + deltaY)
+        })
+      } else if (isResizing === 'left') {
+        const newWidth = Math.max(400, resizeRef.current.startWidth - deltaX)
+        setSize({ width: newWidth, height: resizeRef.current.startHeight })
+        setPosition({ x: position.x + (resizeRef.current.startWidth - newWidth), y: position.y })
+      } else if (isResizing === 'right') {
+        setSize({
+          width: Math.max(400, resizeRef.current.startWidth + deltaX),
+          height: resizeRef.current.startHeight
+        })
+      } else if (isResizing === 'bottom-left') {
+        const newWidth = Math.max(400, resizeRef.current.startWidth - deltaX)
+        setSize({
+          width: newWidth,
+          height: Math.max(300, resizeRef.current.startHeight + deltaY)
+        })
+        setPosition({ x: position.x + (resizeRef.current.startWidth - newWidth), y: position.y })
+      } else if (isResizing === 'bottom-right') {
+        setSize({
+          width: Math.max(400, resizeRef.current.startWidth + deltaX),
+          height: Math.max(300, resizeRef.current.startHeight + deltaY)
+        })
+      }
+    }
+  }, [isDragging, isResizing, position.x, position.y])
 
   const handleMouseUp = useCallback(() => {
     setIsDragging(false)
+    setIsResizing(null)
   }, [])
 
   const handleMouseDown = (e: React.MouseEvent) => {
@@ -36,9 +78,20 @@ export function RaceEventPopup({ race, onClose }: RaceEventPopupProps) {
     }
   }
 
+  const handleResizeStart = (e: React.MouseEvent, direction: 'bottom' | 'left' | 'right' | 'bottom-left' | 'bottom-right') => {
+    e.stopPropagation()
+    setIsResizing(direction)
+    resizeRef.current = {
+      startX: e.clientX,
+      startY: e.clientY,
+      startWidth: size.width,
+      startHeight: size.height
+    }
+  }
+
   // Add/remove event listeners
   useEffect(() => {
-    if (isDragging) {
+    if (isDragging || isResizing) {
       window.addEventListener('mousemove', handleMouseMove)
       window.addEventListener('mouseup', handleMouseUp)
     }
@@ -47,7 +100,7 @@ export function RaceEventPopup({ race, onClose }: RaceEventPopupProps) {
       window.removeEventListener('mousemove', handleMouseMove)
       window.removeEventListener('mouseup', handleMouseUp)
     }
-  }, [isDragging, handleMouseMove, handleMouseUp])
+  }, [isDragging, isResizing, handleMouseMove, handleMouseUp])
 
   if (!race) return null
 
@@ -109,15 +162,17 @@ export function RaceEventPopup({ race, onClose }: RaceEventPopupProps) {
           }}
         >
           <div
-            className="fixed w-[90vw] max-w-2xl z-50"
+            className="fixed z-50"
             style={{
               left: '50%',
               top: '50%',
               transform: `translate(calc(-50% + ${position.x}px), calc(-50% + ${position.y}px))`,
+              width: `${size.width}px`,
+              height: `${size.height}px`,
             }}
           >
             {/* Window Container */}
-            <div className="bg-white dark:bg-neutral-900 rounded-lg shadow-2xl border border-neutral-300 dark:border-neutral-700 overflow-hidden flex flex-col max-h-[85vh]">
+            <div className="bg-white dark:bg-neutral-900 rounded-lg shadow-2xl border border-neutral-300 dark:border-neutral-700 overflow-hidden flex flex-col h-full relative">
               {/* Title Bar - Draggable Handle */}
               <div
                 onMouseDown={handleMouseDown}
@@ -126,6 +181,9 @@ export function RaceEventPopup({ race, onClose }: RaceEventPopupProps) {
               <Dialog.Title className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
                 {race.title}
               </Dialog.Title>
+              <Dialog.Description className="sr-only">
+                Race event details for {race.title}
+              </Dialog.Description>
               <Dialog.Close asChild>
                 <button
                   className="p-1 hover:bg-neutral-200 dark:hover:bg-neutral-700 rounded transition-colors"
@@ -301,6 +359,33 @@ export function RaceEventPopup({ race, onClose }: RaceEventPopupProps) {
                   </div>
                 </div>
               </div>
+
+              {/* Resize Handles */}
+              {/* Bottom */}
+              <div
+                onMouseDown={(e) => handleResizeStart(e, 'bottom')}
+                className="absolute bottom-0 left-0 right-0 h-1 cursor-ns-resize hover:bg-electric-pink/20 transition-colors"
+              />
+              {/* Left */}
+              <div
+                onMouseDown={(e) => handleResizeStart(e, 'left')}
+                className="absolute top-0 bottom-0 left-0 w-1 cursor-ew-resize hover:bg-electric-pink/20 transition-colors"
+              />
+              {/* Right */}
+              <div
+                onMouseDown={(e) => handleResizeStart(e, 'right')}
+                className="absolute top-0 bottom-0 right-0 w-1 cursor-ew-resize hover:bg-electric-pink/20 transition-colors"
+              />
+              {/* Bottom-left corner */}
+              <div
+                onMouseDown={(e) => handleResizeStart(e, 'bottom-left')}
+                className="absolute bottom-0 left-0 w-3 h-3 cursor-nesw-resize hover:bg-electric-pink/40 transition-colors"
+              />
+              {/* Bottom-right corner */}
+              <div
+                onMouseDown={(e) => handleResizeStart(e, 'bottom-right')}
+                className="absolute bottom-0 right-0 w-3 h-3 cursor-nwse-resize hover:bg-electric-pink/40 transition-colors"
+              />
             </div>
           </div>
         </Dialog.Content>
