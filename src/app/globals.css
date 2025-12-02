@@ -1340,10 +1340,12 @@
   z-index: 40 !important;
 }
 
-/* Maximized window positioning - below navbar */
+/* Maximized window positioning - starts at bottom of navbar (48px) */
 .k-window.k-window-maximized {
   top: 48px !important;
   left: 0 !important;
   width: 100vw !important;
   height: calc(100vh - 48px) !important;
+  transform: none !important;
+  margin: 0 !important;
 }
