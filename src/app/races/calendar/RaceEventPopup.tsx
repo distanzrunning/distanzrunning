@@ -64,19 +64,14 @@ export function RaceEventPopup({ race, onClose }: RaceEventPopupProps) {
         onClose={onClose}
         initialHeight={600}
         initialWidth={672}
+        initialTop={window.innerHeight / 2 - 300}
+        initialLeft={window.innerWidth / 2 - 336}
         minWidth={400}
         minHeight={300}
         stage="DEFAULT"
         draggable={true}
         resizable={true}
         modal={false}
-        style={{
-          position: 'fixed',
-          left: '50%',
-          top: '50%',
-          transform: 'translate(-50%, -50%)',
-          zIndex: 51,
-        }}
       >
         {/* Content */}
         <div className="overflow-y-auto h-full p-6">
