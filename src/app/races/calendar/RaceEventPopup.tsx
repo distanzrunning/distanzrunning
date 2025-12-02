@@ -1,8 +1,7 @@
 'use client'
 
-import { useState, useRef, useEffect, useCallback } from 'react'
-import { X, ExternalLink, MapPin, Calendar, DollarSign, Star, TrendingUp } from 'lucide-react'
-import * as Dialog from '@radix-ui/react-dialog'
+import { ExternalLink, MapPin, Calendar, DollarSign, Star, TrendingUp } from 'lucide-react'
+import { Window } from '@progress/kendo-react-dialogs'
 import type { RaceGuide } from '../page'
 import Image from 'next/image'
 import { urlFor } from '@/sanity/lib/image'
@@ -13,112 +12,6 @@ interface RaceEventPopupProps {
 }
 
 export function RaceEventPopup({ race, onClose }: RaceEventPopupProps) {
-  const [position, setPosition] = useState({ x: 0, y: 0 })
-  const [size, setSize] = useState({ width: 672, height: 600 }) // Default: max-w-2xl = 672px
-  const [isDragging, setIsDragging] = useState(false)
-  const [isResizing, setIsResizing] = useState<'bottom' | 'left' | 'right' | 'bottom-left' | 'bottom-right' | null>(null)
-  const dragRef = useRef<{ startX: number; startY: number }>({ startX: 0, startY: 0 })
-  const resizeRef = useRef<{
-    startX: number
-    startY: number
-    startWidth: number
-    startHeight: number
-    startPosX: number
-    startPosY: number
-  }>({
-    startX: 0,
-    startY: 0,
-    startWidth: 0,
-    startHeight: 0,
-    startPosX: 0,
-    startPosY: 0
-  })
-
-  // Drag handlers with useCallback to prevent recreating on every render
-  const handleMouseMove = useCallback((e: MouseEvent) => {
-    if (isDragging) {
-      const newX = e.clientX - dragRef.current.startX
-      const newY = e.clientY - dragRef.current.startY
-      setPosition({ x: newX, y: newY })
-    } else if (isResizing) {
-      const deltaX = e.clientX - resizeRef.current.startX
-      const deltaY = e.clientY - resizeRef.current.startY
-
-      if (isResizing === 'bottom') {
-        setSize({
-          width: resizeRef.current.startWidth,
-          height: Math.max(300, resizeRef.current.startHeight + deltaY)
-        })
-      } else if (isResizing === 'left') {
-        // Calculate new width and constrain it
-        const targetWidth = resizeRef.current.startWidth - deltaX
-        const newWidth = Math.max(400, targetWidth)
-        // Move left edge by the mouse delta
-        setSize({ width: newWidth, height: resizeRef.current.startHeight })
-        setPosition({ x: resizeRef.current.startPosX + deltaX, y: resizeRef.current.startPosY })
-      } else if (isResizing === 'right') {
-        setSize({
-          width: Math.max(400, resizeRef.current.startWidth + deltaX),
-          height: resizeRef.current.startHeight
-        })
-      } else if (isResizing === 'bottom-left') {
-        // Calculate new width and constrain it
-        const targetWidth = resizeRef.current.startWidth - deltaX
-        const newWidth = Math.max(400, targetWidth)
-        // Move left edge by the mouse delta
-        setSize({
-          width: newWidth,
-          height: Math.max(300, resizeRef.current.startHeight + deltaY)
-        })
-        setPosition({ x: resizeRef.current.startPosX + deltaX, y: resizeRef.current.startPosY })
-      } else if (isResizing === 'bottom-right') {
-        setSize({
-          width: Math.max(400, resizeRef.current.startWidth + deltaX),
-          height: Math.max(300, resizeRef.current.startHeight + deltaY)
-        })
-      }
-    }
-  }, [isDragging, isResizing])
-
-  const handleMouseUp = useCallback(() => {
-    setIsDragging(false)
-    setIsResizing(null)
-  }, [])
-
-  const handleMouseDown = (e: React.MouseEvent) => {
-    setIsDragging(true)
-    dragRef.current = {
-      startX: e.clientX - position.x,
-      startY: e.clientY - position.y,
-    }
-  }
-
-  const handleResizeStart = (e: React.MouseEvent, direction: 'bottom' | 'left' | 'right' | 'bottom-left' | 'bottom-right') => {
-    e.stopPropagation()
-    setIsResizing(direction)
-    resizeRef.current = {
-      startX: e.clientX,
-      startY: e.clientY,
-      startWidth: size.width,
-      startHeight: size.height,
-      startPosX: position.x,
-      startPosY: position.y
-    }
-  }
-
-  // Add/remove event listeners
-  useEffect(() => {
-    if (isDragging || isResizing) {
-      window.addEventListener('mousemove', handleMouseMove)
-      window.addEventListener('mouseup', handleMouseUp)
-    }
-
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove)
-      window.removeEventListener('mouseup', handleMouseUp)
-    }
-  }, [isDragging, isResizing, handleMouseMove, handleMouseUp])
-
   if (!race) return null
 
   const eventDate = race.eventDate ? new Date(race.eventDate) : null
@@ -161,259 +54,196 @@ export function RaceEventPopup({ race, onClose }: RaceEventPopupProps) {
   const imageUrl = race.mainImage ? urlFor(race.mainImage)?.width(600).height(400).url() : null
 
   return (
-    <Dialog.Root open={!!race} onOpenChange={(open) => !open && onClose()}>
-      <Dialog.Portal>
-        {/* Backdrop/Overlay - No blur, no animations */}
-        <Dialog.Overlay className="fixed inset-0 bg-black/40 z-50" />
+    <>
+      {/* Backdrop overlay */}
+      <div className="fixed inset-0 bg-black/40 z-50" onClick={onClose} />
 
-        {/* Dialog Content - Custom Draggable */}
-        <Dialog.Content
-          asChild
-          onPointerDownOutside={() => {
-            // Close on backdrop click
-            onClose()
-          }}
-          onEscapeKeyDown={() => {
-            // Close on Escape key
-            onClose()
-          }}
-        >
-          <div
-            className="fixed z-50"
-            style={{
-              left: `calc(50vw - ${size.width / 2}px + ${position.x}px)`,
-              top: `calc(50vh - ${size.height / 2}px + ${position.y}px)`,
-              width: `${size.width}px`,
-              height: `${size.height}px`,
-            }}
-          >
-            {/* Window Container */}
-            <div className="bg-white dark:bg-neutral-900 rounded-lg shadow-2xl border border-neutral-300 dark:border-neutral-700 overflow-hidden flex flex-col h-full relative">
-              {/* Title Bar - Draggable Handle */}
-              <div
-                onMouseDown={handleMouseDown}
-                className="bg-neutral-100 dark:bg-neutral-800 border-b border-neutral-300 dark:border-neutral-700 px-4 py-3 flex items-center justify-between select-none cursor-move"
-              >
-              <Dialog.Title className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
-                {race.title}
-              </Dialog.Title>
-              <Dialog.Description className="sr-only">
-                Race event details for {race.title}
-              </Dialog.Description>
-              <Dialog.Close asChild>
-                <button
-                  className="p-1 hover:bg-neutral-200 dark:hover:bg-neutral-700 rounded transition-colors"
-                  aria-label="Close window"
-                >
-                  <X className="h-4 w-4 text-neutral-600 dark:text-neutral-400" />
-                </button>
-              </Dialog.Close>
+      {/* KendoReact Window */}
+      <Window
+        title={race.title}
+        onClose={onClose}
+        initialHeight={600}
+        initialWidth={672}
+        minWidth={400}
+        minHeight={300}
+        stage="DEFAULT"
+        draggable={true}
+        resizable={true}
+        modal={false}
+        style={{
+          position: 'fixed',
+          left: '50%',
+          top: '50%',
+          transform: 'translate(-50%, -50%)',
+          zIndex: 51,
+        }}
+      >
+        {/* Content */}
+        <div className="overflow-y-auto h-full p-6">
+          {/* Hero Image */}
+          {imageUrl && (
+            <div className="relative w-full max-w-[600px] mx-auto h-48 mb-6 rounded-lg overflow-hidden bg-neutral-100 dark:bg-neutral-800">
+              <Image
+                src={imageUrl}
+                alt={race.title}
+                fill
+                className="object-cover"
+                sizes="600px"
+              />
+            </div>
+          )}
+
+          {/* Content Area */}
+          <div className="max-w-[600px] mx-auto">
+            {/* Title and Badges */}
+            <div className="mb-4">
+              <div className="flex items-start justify-between gap-4 mb-3">
+                <h2 className="text-2xl font-bold text-neutral-900 dark:text-white font-headline">
+                  {race.title}
+                </h2>
+                {isWorldMajor && (
+                  <Star className="w-6 h-6 text-yellow-500 fill-yellow-500 flex-shrink-0" />
+                )}
+              </div>
+
+              {/* Badges */}
+              <div className="flex flex-wrap gap-2">
+                {isWorldMajor && (
+                  <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-200">
+                    Abbott World Marathon Major
+                  </span>
+                )}
+                {labelText && (
+                  <span
+                    className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium text-neutral-900 dark:text-white"
+                    style={{ backgroundColor: labelColor || 'transparent' }}
+                  >
+                    {labelText}
+                  </span>
+                )}
+                {race.raceCategoryName && (
+                  <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200">
+                    {race.raceCategoryName}
+                  </span>
+                )}
+              </div>
             </div>
 
-              {/* Content */}
-              <div className="overflow-y-auto flex-1 p-6">
-                {/* Hero Image */}
-                {imageUrl && (
-                  <div className="relative w-full max-w-[600px] mx-auto h-48 mb-6 rounded-lg overflow-hidden bg-neutral-100 dark:bg-neutral-800">
-                    <Image
-                      src={imageUrl}
-                      alt={race.title}
-                      fill
-                      className="object-cover"
-                      sizes="600px"
-                    />
+            {/* Key Details Grid */}
+            <div className="space-y-3 mb-6">
+              {/* Date & Time */}
+              <div className="flex items-start gap-3">
+                <Calendar className="h-5 w-5 text-neutral-500 dark:text-neutral-400 flex-shrink-0 mt-0.5" />
+                <div>
+                  <div className="text-sm font-medium text-neutral-900 dark:text-white">
+                    {formattedDate}
                   </div>
-                )}
-
-                {/* Content Area */}
-                <div className="max-w-[600px] mx-auto">
-                  {/* Title and Badges */}
-                  <div className="mb-4">
-                    <div className="flex items-start justify-between gap-4 mb-3">
-                      <h2 className="text-2xl font-bold text-neutral-900 dark:text-white font-headline">
-                        {race.title}
-                      </h2>
-                      {isWorldMajor && (
-                        <Star className="w-6 h-6 text-yellow-500 fill-yellow-500 flex-shrink-0" />
-                      )}
-                    </div>
-
-                    {/* Badges */}
-                    <div className="flex flex-wrap gap-2">
-                      {isWorldMajor && (
-                        <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-200">
-                          Abbott World Marathon Major
-                        </span>
-                      )}
-                      {labelText && (
-                        <span
-                          className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium text-neutral-900 dark:text-white"
-                          style={{ backgroundColor: labelColor || 'transparent' }}
-                        >
-                          {labelText}
-                        </span>
-                      )}
-                      {race.raceCategoryName && (
-                        <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200">
-                          {race.raceCategoryName}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Key Details Grid */}
-                  <div className="space-y-3 mb-6">
-                    {/* Date & Time */}
-                    <div className="flex items-start gap-3">
-                      <Calendar className="h-5 w-5 text-neutral-500 dark:text-neutral-400 flex-shrink-0 mt-0.5" />
-                      <div>
-                        <div className="text-sm font-medium text-neutral-900 dark:text-white">
-                          {formattedDate}
-                        </div>
-                        {formattedTime && (
-                          <div className="text-xs text-neutral-600 dark:text-neutral-400">
-                            {formattedTime}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Location */}
-                    {(race.city || race.country) && (
-                      <div className="flex items-start gap-3">
-                        <MapPin className="h-5 w-5 text-neutral-500 dark:text-neutral-400 flex-shrink-0 mt-0.5" />
-                        <div className="text-sm text-neutral-900 dark:text-white">
-                          {[race.city, race.stateRegion, race.country].filter(Boolean).join(', ')}
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Distance */}
-                    {race.distance && (
-                      <div className="flex items-start gap-3">
-                        <TrendingUp className="h-5 w-5 text-neutral-500 dark:text-neutral-400 flex-shrink-0 mt-0.5" />
-                        <div className="text-sm text-neutral-900 dark:text-white">
-                          {race.distance}
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Price */}
-                    {race.price && (
-                      <div className="flex items-start gap-3">
-                        <DollarSign className="h-5 w-5 text-neutral-500 dark:text-neutral-400 flex-shrink-0 mt-0.5" />
-                        <div className="text-sm text-neutral-900 dark:text-white">
-                          {race.currency || '$'}{race.price}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Additional Info - Course Records */}
-                  {(race.mensCourseRecord || race.womensCourseRecord) && (
-                    <div className="border-t border-neutral-200 dark:border-neutral-800 pt-4 mb-6">
-                      <h3 className="text-sm font-semibold text-neutral-900 dark:text-white mb-3">
-                        Course Records
-                      </h3>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        {race.mensCourseRecord && (
-                          <div className="text-sm">
-                            <div className="text-neutral-600 dark:text-neutral-400 mb-1">Men's</div>
-                            <div className="font-mono font-medium text-neutral-900 dark:text-white">
-                              {race.mensCourseRecord}
-                            </div>
-                            {race.mensCourseRecordAthlete && (
-                              <div className="text-xs text-neutral-600 dark:text-neutral-400">
-                                {race.mensCourseRecordAthlete}
-                                {race.mensCourseRecordCountry && ` (${race.mensCourseRecordCountry})`}
-                              </div>
-                            )}
-                          </div>
-                        )}
-                        {race.womensCourseRecord && (
-                          <div className="text-sm">
-                            <div className="text-neutral-600 dark:text-neutral-400 mb-1">Women's</div>
-                            <div className="font-mono font-medium text-neutral-900 dark:text-white">
-                              {race.womensCourseRecord}
-                            </div>
-                            {race.womensCourseRecordAthlete && (
-                              <div className="text-xs text-neutral-600 dark:text-neutral-400">
-                                {race.womensCourseRecordAthlete}
-                                {race.womensCourseRecordCountry && ` (${race.womensCourseRecordCountry})`}
-                              </div>
-                            )}
-                          </div>
-                        )}
-                      </div>
+                  {formattedTime && (
+                    <div className="text-xs text-neutral-600 dark:text-neutral-400">
+                      {formattedTime}
                     </div>
                   )}
-
-                  {/* Action Buttons */}
-                  <div className="flex gap-3">
-                    <a
-                      href={`/races/${race.slug.current}`}
-                      className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-electric-pink hover:bg-electric-pink/90 text-white rounded-lg font-medium text-sm transition-colors"
-                      onClick={(e) => {
-                        e.preventDefault()
-                        window.location.href = `/races/${race.slug.current}`
-                      }}
-                    >
-                      View Full Guide
-                      <ExternalLink className="h-4 w-4" />
-                    </a>
-                    {race.officialWebsite && (
-                      <a
-                        href={race.officialWebsite}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 text-neutral-900 dark:text-white rounded-lg font-medium text-sm transition-colors"
-                      >
-                        Official Site
-                        <ExternalLink className="h-4 w-4" />
-                      </a>
-                    )}
-                  </div>
                 </div>
               </div>
 
-              {/* Resize Handles */}
-              {/* Bottom */}
-              <div
-                onMouseDown={(e) => handleResizeStart(e, 'bottom')}
-                className="absolute bottom-0 left-0 right-0 h-1 cursor-ns-resize hover:border-b-2 hover:border-neutral-400 dark:hover:border-neutral-600 transition-all"
-              />
-              {/* Left */}
-              <div
-                onMouseDown={(e) => handleResizeStart(e, 'left')}
-                className="absolute top-0 bottom-0 left-0 w-1 cursor-ew-resize hover:border-l-2 hover:border-neutral-400 dark:hover:border-neutral-600 transition-all"
-              />
-              {/* Right */}
-              <div
-                onMouseDown={(e) => handleResizeStart(e, 'right')}
-                className="absolute top-0 bottom-0 right-0 w-1 cursor-ew-resize hover:border-r-2 hover:border-neutral-400 dark:hover:border-neutral-600 transition-all"
-              />
-              {/* Bottom-left corner */}
-              <div
-                onMouseDown={(e) => handleResizeStart(e, 'bottom-left')}
-                className="absolute bottom-0 left-0 w-4 h-4 cursor-nesw-resize group"
-              >
-                <svg className="w-full h-full opacity-0 group-hover:opacity-100 transition-opacity" viewBox="0 0 16 16">
-                  <path d="M 0 16 L 16 16 L 0 0 Z" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-neutral-400 dark:text-neutral-600" />
-                </svg>
+              {/* Location */}
+              {(race.city || race.country) && (
+                <div className="flex items-start gap-3">
+                  <MapPin className="h-5 w-5 text-neutral-500 dark:text-neutral-400 flex-shrink-0 mt-0.5" />
+                  <div className="text-sm text-neutral-900 dark:text-white">
+                    {[race.city, race.stateRegion, race.country].filter(Boolean).join(', ')}
+                  </div>
+                </div>
+              )}
+
+              {/* Distance */}
+              {race.distance && (
+                <div className="flex items-start gap-3">
+                  <TrendingUp className="h-5 w-5 text-neutral-500 dark:text-neutral-400 flex-shrink-0 mt-0.5" />
+                  <div className="text-sm text-neutral-900 dark:text-white">
+                    {race.distance}
+                  </div>
+                </div>
+              )}
+
+              {/* Price */}
+              {race.price && (
+                <div className="flex items-start gap-3">
+                  <DollarSign className="h-5 w-5 text-neutral-500 dark:text-neutral-400 flex-shrink-0 mt-0.5" />
+                  <div className="text-sm text-neutral-900 dark:text-white">
+                    {race.currency || '$'}{race.price}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Additional Info - Course Records */}
+            {(race.mensCourseRecord || race.womensCourseRecord) && (
+              <div className="border-t border-neutral-200 dark:border-neutral-800 pt-4 mb-6">
+                <h3 className="text-sm font-semibold text-neutral-900 dark:text-white mb-3">
+                  Course Records
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {race.mensCourseRecord && (
+                    <div className="text-sm">
+                      <div className="text-neutral-600 dark:text-neutral-400 mb-1">Men's</div>
+                      <div className="font-mono font-medium text-neutral-900 dark:text-white">
+                        {race.mensCourseRecord}
+                      </div>
+                      {race.mensCourseRecordAthlete && (
+                        <div className="text-xs text-neutral-600 dark:text-neutral-400">
+                          {race.mensCourseRecordAthlete}
+                          {race.mensCourseRecordCountry && ` (${race.mensCourseRecordCountry})`}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                  {race.womensCourseRecord && (
+                    <div className="text-sm">
+                      <div className="text-neutral-600 dark:text-neutral-400 mb-1">Women's</div>
+                      <div className="font-mono font-medium text-neutral-900 dark:text-white">
+                        {race.womensCourseRecord}
+                      </div>
+                      {race.womensCourseRecordAthlete && (
+                        <div className="text-xs text-neutral-600 dark:text-neutral-400">
+                          {race.womensCourseRecordAthlete}
+                          {race.womensCourseRecordCountry && ` (${race.womensCourseRecordCountry})`}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
               </div>
-              {/* Bottom-right corner */}
-              <div
-                onMouseDown={(e) => handleResizeStart(e, 'bottom-right')}
-                className="absolute bottom-0 right-0 w-4 h-4 cursor-nwse-resize group"
+            )}
+
+            {/* Action Buttons */}
+            <div className="flex gap-3">
+              <a
+                href={`/races/${race.slug.current}`}
+                className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-electric-pink hover:bg-electric-pink/90 text-white rounded-lg font-medium text-sm transition-colors"
+                onClick={(e) => {
+                  e.preventDefault()
+                  window.location.href = `/races/${race.slug.current}`
+                }}
               >
-                <svg className="w-full h-full opacity-0 group-hover:opacity-100 transition-opacity" viewBox="0 0 16 16">
-                  <path d="M 16 16 L 0 16 L 16 0 Z" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-neutral-400 dark:text-neutral-600" />
-                </svg>
-              </div>
+                View Full Guide
+                <ExternalLink className="h-4 w-4" />
+              </a>
+              {race.officialWebsite && (
+                <a
+                  href={race.officialWebsite}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 text-neutral-900 dark:text-white rounded-lg font-medium text-sm transition-colors"
+                >
+                  Official Site
+                  <ExternalLink className="h-4 w-4" />
+                </a>
+              )}
             </div>
           </div>
-        </Dialog.Content>
-      </Dialog.Portal>
-    </Dialog.Root>
+        </div>
+      </Window>
+    </>
   )
 }

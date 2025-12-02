@@ -1,4 +1,6 @@
 /* src/app/globals.css */
+@import '@progress/kendo-theme-default/dist/all.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
