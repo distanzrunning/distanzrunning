@@ -1296,16 +1296,27 @@
   color: rgb(245, 245, 245) !important;
 }
 
-.dark .k-window-title {
-  color: rgb(245, 245, 245) !important;
-  text-align: center !important;
-  flex: 1 !important;
+/* Center window title - make titlebar use flex layout */
+.k-window-titlebar {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
 }
 
-/* Center window title */
 .k-window-title {
   text-align: center !important;
   flex: 1 !important;
+  margin: 0 auto !important;
+}
+
+.dark .k-window-title {
+  color: rgb(245, 245, 245) !important;
+}
+
+/* Position close button absolutely to not interfere with centered title */
+.k-window-titlebar-actions {
+  position: absolute !important;
+  right: 8px !important;
 }
 
 .dark .k-window-titlebar-action {
