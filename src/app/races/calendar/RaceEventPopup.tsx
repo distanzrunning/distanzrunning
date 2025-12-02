@@ -37,9 +37,9 @@ export function RaceEventPopup({ race, onClose }: RaceEventPopupProps) {
       resizable={true}
       modal={false}
     >
-      {/* Content - Styled like race guide cards */}
-      <div className="overflow-y-auto h-full">
-        <div className="flex flex-col">
+      {/* Content - Fixed width, scrollable */}
+      <div className="overflow-y-auto h-full flex justify-center">
+        <div className="w-full max-w-[600px] flex flex-col">
           {/* Image Container */}
           <div className="relative w-full">
             {/* Image Wrapper */}
@@ -52,62 +52,6 @@ export function RaceEventPopup({ race, onClose }: RaceEventPopupProps) {
                     className="absolute inset-0 w-full h-full object-cover object-center"
                   />
                 )}
-
-                {/* Frosted Glass Overlay - Always visible in popup (no hover) */}
-                <div className="absolute inset-0 backdrop-blur-md opacity-100 flex items-center justify-center">
-                  <div className="flex flex-row gap-6 px-6 flex-wrap justify-center">
-                    {/* Surface Pill */}
-                    {race.surface && (
-                      <div className="flex flex-col items-center gap-2">
-                        <div className="w-20 px-3 py-1.5 bg-white/95 dark:bg-neutral-900/95 backdrop-blur-sm rounded-full flex items-center justify-center">
-                          <p className="font-body text-xs font-medium text-neutral-900 dark:text-white">
-                            Surface
-                          </p>
-                        </div>
-                        <p className="font-body text-base font-bold text-white">
-                          {race.surface}
-                        </p>
-                        <p className="font-body text-xs font-normal text-white">
-                          {race.surfaceBreakdown || 'N/A'}
-                        </p>
-                      </div>
-                    )}
-
-                    {/* Price Pill */}
-                    {race.price !== undefined && race.price !== null && (
-                      <div className="flex flex-col items-center gap-2">
-                        <div className="w-20 px-3 py-1.5 bg-white/95 dark:bg-neutral-900/95 backdrop-blur-sm rounded-full flex items-center justify-center">
-                          <p className="font-body text-xs font-medium text-neutral-900 dark:text-white">
-                            Price
-                          </p>
-                        </div>
-                        <p className="font-body text-base font-bold text-white">
-                          {formatPrice(convertCurrencySync(race.price, race.currency || 'USD', 'USD'), 'USD')}
-                        </p>
-                        <p className="font-body text-xs font-normal text-white">
-                          Variable
-                        </p>
-                      </div>
-                    )}
-
-                    {/* Elevation Pill */}
-                    {race.elevationGain !== undefined && race.elevationGain !== null && (
-                      <div className="flex flex-col items-center gap-2">
-                        <div className="w-20 px-3 py-1.5 bg-white/95 dark:bg-neutral-900/95 backdrop-blur-sm rounded-full flex items-center justify-center">
-                          <p className="font-body text-xs font-medium text-neutral-900 dark:text-white">
-                            Elevation
-                          </p>
-                        </div>
-                        <p className="font-body text-base font-bold text-white">
-                          {race.profile ? race.profile.charAt(0).toUpperCase() + race.profile.slice(1) : 'N/A'}
-                        </p>
-                        <p className="font-body text-xs font-normal text-white">
-                          {Math.round(race.elevationGain * 3.28084).toLocaleString()}ft
-                        </p>
-                      </div>
-                    )}
-                  </div>
-                </div>
               </div>
             </div>
 
@@ -152,6 +96,83 @@ export function RaceEventPopup({ race, onClose }: RaceEventPopupProps) {
                 >
                   {format(new Date(race.eventDate), 'dd')}
                 </p>
+              </div>
+            </div>
+
+            {/* Stats Grid - 3 rows of 3 cards */}
+            <div className="space-y-2 mb-4">
+              {/* Row 1: Surface, Entry Price, Finishers */}
+              <div className="grid grid-cols-3 gap-2">
+                <div className="bg-neutral-100 dark:bg-neutral-800 rounded-lg px-3 py-2">
+                  <p className="font-body text-xs text-neutral-600 dark:text-neutral-400 mb-1">Surface</p>
+                  <p className="font-body text-sm font-semibold text-neutral-900 dark:text-white">
+                    {race.surface || 'N/A'}
+                  </p>
+                </div>
+                <div className="bg-neutral-100 dark:bg-neutral-800 rounded-lg px-3 py-2">
+                  <p className="font-body text-xs text-neutral-600 dark:text-neutral-400 mb-1">Entry Price</p>
+                  <p className="font-body text-sm font-semibold text-neutral-900 dark:text-white">
+                    {race.price !== undefined && race.price !== null
+                      ? formatPrice(convertCurrencySync(race.price, race.currency || 'USD', 'USD'), 'USD')
+                      : 'N/A'}
+                  </p>
+                </div>
+                <div className="bg-neutral-100 dark:bg-neutral-800 rounded-lg px-3 py-2">
+                  <p className="font-body text-xs text-neutral-600 dark:text-neutral-400 mb-1">Finishers</p>
+                  <p className="font-body text-sm font-semibold text-neutral-900 dark:text-white">
+                    {race.finishers ? race.finishers.toLocaleString() : 'N/A'}
+                  </p>
+                </div>
+              </div>
+
+              {/* Row 2: Elevation Gain, Elevation Loss, Profile */}
+              <div className="grid grid-cols-3 gap-2">
+                <div className="bg-neutral-100 dark:bg-neutral-800 rounded-lg px-3 py-2">
+                  <p className="font-body text-xs text-neutral-600 dark:text-neutral-400 mb-1">Elev. Gain</p>
+                  <p className="font-body text-sm font-semibold text-neutral-900 dark:text-white">
+                    {race.elevationGain !== undefined && race.elevationGain !== null
+                      ? `${Math.round(race.elevationGain * 3.28084).toLocaleString()}ft`
+                      : 'N/A'}
+                  </p>
+                </div>
+                <div className="bg-neutral-100 dark:bg-neutral-800 rounded-lg px-3 py-2">
+                  <p className="font-body text-xs text-neutral-600 dark:text-neutral-400 mb-1">Elev. Loss</p>
+                  <p className="font-body text-sm font-semibold text-neutral-900 dark:text-white">
+                    {race.elevationLoss !== undefined && race.elevationLoss !== null
+                      ? `${Math.round(race.elevationLoss * 3.28084).toLocaleString()}ft`
+                      : 'N/A'}
+                  </p>
+                </div>
+                <div className="bg-neutral-100 dark:bg-neutral-800 rounded-lg px-3 py-2">
+                  <p className="font-body text-xs text-neutral-600 dark:text-neutral-400 mb-1">Profile</p>
+                  <p className="font-body text-sm font-semibold text-neutral-900 dark:text-white">
+                    {race.profile ? race.profile.charAt(0).toUpperCase() + race.profile.slice(1) : 'N/A'}
+                  </p>
+                </div>
+              </div>
+
+              {/* Row 3: Average Temperature, Men's Course Record, Women's Course Record */}
+              <div className="grid grid-cols-3 gap-2">
+                <div className="bg-neutral-100 dark:bg-neutral-800 rounded-lg px-3 py-2">
+                  <p className="font-body text-xs text-neutral-600 dark:text-neutral-400 mb-1">Avg. Temp</p>
+                  <p className="font-body text-sm font-semibold text-neutral-900 dark:text-white">
+                    {race.averageTemperature !== undefined && race.averageTemperature !== null
+                      ? `${Math.round(race.averageTemperature * 9/5 + 32)}°F`
+                      : 'N/A'}
+                  </p>
+                </div>
+                <div className="bg-neutral-100 dark:bg-neutral-800 rounded-lg px-3 py-2">
+                  <p className="font-body text-xs text-neutral-600 dark:text-neutral-400 mb-1">Men's CR</p>
+                  <p className="font-mono text-sm font-semibold text-neutral-900 dark:text-white">
+                    {race.mensCourseRecord || 'N/A'}
+                  </p>
+                </div>
+                <div className="bg-neutral-100 dark:bg-neutral-800 rounded-lg px-3 py-2">
+                  <p className="font-body text-xs text-neutral-600 dark:text-neutral-400 mb-1">Women's CR</p>
+                  <p className="font-mono text-sm font-semibold text-neutral-900 dark:text-white">
+                    {race.womensCourseRecord || 'N/A'}
+                  </p>
+                </div>
               </div>
             </div>
 
