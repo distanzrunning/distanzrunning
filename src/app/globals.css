@@ -1334,3 +1334,11 @@
   background-color: rgb(23, 23, 23) !important;
   color: rgb(245, 245, 245) !important;
 }
+
+/* Maximized window positioning - below navbar */
+.k-window.k-window-maximized {
+  top: 48px !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: calc(100vh - 48px) !important;
+}

@@ -19,34 +19,14 @@ function formatLocation(city?: string, stateRegion?: string, country?: string): 
 }
 
 export function RaceEventPopup({ race, onClose }: RaceEventPopupProps) {
-  const [isMaximized, setIsMaximized] = useState(false)
-  const [restoreState, setRestoreState] = useState({
-    width: 672,
-    height: 600,
-    top: 0,
-    left: 0
-  })
+  const [windowStage, setWindowStage] = useState<'DEFAULT' | 'MAXIMIZED'>('DEFAULT')
 
   if (!race) return null
 
   const imageUrl = race.mainImage ? urlFor(race.mainImage)?.width(800).height(520).url() : null
 
-  // Calculate navbar height (48px) for proper positioning below it
-  const navbarHeight = 48
-
   const handleStageChange = (event: any) => {
-    if (event.state === 'MAXIMIZED') {
-      // Store current state before maximizing
-      setRestoreState({
-        width: event.width || 672,
-        height: event.height || 600,
-        top: event.top || window.innerHeight / 2 - 300,
-        left: event.left || window.innerWidth / 2 - 336
-      })
-      setIsMaximized(true)
-    } else if (event.state === 'DEFAULT') {
-      setIsMaximized(false)
-    }
+    setWindowStage(event.state)
   }
 
   return (
@@ -59,18 +39,11 @@ export function RaceEventPopup({ race, onClose }: RaceEventPopupProps) {
       initialLeft={window.innerWidth / 2 - 336}
       minWidth={400}
       minHeight={300}
-      stage={isMaximized ? 'MAXIMIZED' : 'DEFAULT'}
-      draggable={!isMaximized}
-      resizable={!isMaximized}
+      stage={windowStage}
+      draggable={windowStage !== 'MAXIMIZED'}
+      resizable={windowStage !== 'MAXIMIZED'}
       modal={false}
       onStageChange={handleStageChange}
-      style={isMaximized ? {
-        top: `${navbarHeight}px`,
-        left: 0,
-        width: '100vw',
-        height: `calc(100vh - ${navbarHeight}px)`,
-        position: 'fixed'
-      } : undefined}
     >
       {/* Content - Fixed width, scrollable */}
       <div className="overflow-y-auto h-full flex justify-center">
