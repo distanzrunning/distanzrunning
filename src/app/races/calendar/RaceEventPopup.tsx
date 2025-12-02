@@ -54,25 +54,20 @@ export function RaceEventPopup({ race, onClose }: RaceEventPopupProps) {
   const imageUrl = race.mainImage ? urlFor(race.mainImage)?.width(600).height(400).url() : null
 
   return (
-    <>
-      {/* Backdrop overlay */}
-      <div className="fixed inset-0 bg-black/40 z-50" onClick={onClose} />
-
-      {/* KendoReact Window */}
-      <Window
-        title={race.title}
-        onClose={onClose}
-        initialHeight={600}
-        initialWidth={672}
-        initialTop={window.innerHeight / 2 - 300}
-        initialLeft={window.innerWidth / 2 - 336}
-        minWidth={400}
-        minHeight={300}
-        stage="DEFAULT"
-        draggable={true}
-        resizable={true}
-        modal={false}
-      >
+    <Window
+      title={race.title}
+      onClose={onClose}
+      initialHeight={600}
+      initialWidth={672}
+      initialTop={window.innerHeight / 2 - 300}
+      initialLeft={window.innerWidth / 2 - 336}
+      minWidth={400}
+      minHeight={300}
+      stage="DEFAULT"
+      draggable={true}
+      resizable={true}
+      modal={false}
+    >
         {/* Content */}
         <div className="overflow-y-auto h-full p-6">
           {/* Hero Image */}
@@ -238,7 +233,6 @@ export function RaceEventPopup({ race, onClose }: RaceEventPopupProps) {
             </div>
           </div>
         </div>
-      </Window>
-    </>
+    </Window>
   )
 }
