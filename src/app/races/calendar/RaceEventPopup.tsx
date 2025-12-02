@@ -1,57 +1,26 @@
 'use client'
 
-import { ExternalLink, MapPin, Calendar, DollarSign, Star, TrendingUp } from 'lucide-react'
+import { format } from 'date-fns'
 import { Window } from '@progress/kendo-react-dialogs'
 import type { RaceGuide } from '../page'
-import Image from 'next/image'
 import { urlFor } from '@/sanity/lib/image'
+import { convertCurrencySync, formatPrice } from '@/lib/raceUtils'
 
 interface RaceEventPopupProps {
   race: RaceGuide | null
   onClose: () => void
 }
 
+// Helper function to format location from city, state/region, and country
+function formatLocation(city?: string, stateRegion?: string, country?: string): string {
+  const parts = [city, stateRegion, country].filter(Boolean)
+  return parts.join(', ')
+}
+
 export function RaceEventPopup({ race, onClose }: RaceEventPopupProps) {
   if (!race) return null
 
-  const eventDate = race.eventDate ? new Date(race.eventDate) : null
-  const formattedDate = eventDate
-    ? eventDate.toLocaleDateString('en-US', {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-      })
-    : 'Date TBA'
-
-  const formattedTime = eventDate
-    ? eventDate.toLocaleTimeString('en-US', {
-        hour: 'numeric',
-        minute: '2-digit',
-        hour12: true,
-      })
-    : ''
-
-  const isWorldMajor = race.tags?.includes('Abbott World Marathon Major')
-
-  // Determine World Athletics Label
-  let labelColor = null
-  let labelText = null
-  if (race.tags?.includes('World Athletics Platinum Label')) {
-    labelColor = 'rgba(204, 204, 204, 0.5)'
-    labelText = 'Platinum Label'
-  } else if (race.tags?.includes('World Athletics Gold Label')) {
-    labelColor = 'rgba(255, 217, 0, 0.4)'
-    labelText = 'Gold Label'
-  } else if (race.tags?.includes('World Athletics Elite Label')) {
-    labelColor = 'rgba(158, 140, 196, 0.4)'
-    labelText = 'Elite Label'
-  } else if (race.tags?.includes('World Athletics Label')) {
-    labelColor = 'rgba(166, 251, 101, 0.4)'
-    labelText = 'Label'
-  }
-
-  const imageUrl = race.mainImage ? urlFor(race.mainImage)?.width(600).height(400).url() : null
+  const imageUrl = race.mainImage ? urlFor(race.mainImage)?.width(800).height(520).url() : null
 
   return (
     <Window
@@ -68,143 +37,123 @@ export function RaceEventPopup({ race, onClose }: RaceEventPopupProps) {
       resizable={true}
       modal={false}
     >
-        {/* Content */}
-        <div className="overflow-y-auto h-full p-6">
-          {/* Hero Image */}
-          {imageUrl && (
-            <div className="relative w-full max-w-[600px] mx-auto h-48 mb-6 rounded-lg overflow-hidden bg-neutral-100 dark:bg-neutral-800">
-              <Image
-                src={imageUrl}
-                alt={race.title}
-                fill
-                className="object-cover"
-                sizes="600px"
-              />
-            </div>
-          )}
-
-          {/* Content Area */}
-          <div className="max-w-[600px] mx-auto">
-            {/* Title and Badges */}
-            <div className="mb-4">
-              <div className="flex items-start justify-between gap-4 mb-3">
-                <h2 className="text-2xl font-bold text-neutral-900 dark:text-white font-headline">
-                  {race.title}
-                </h2>
-                {isWorldMajor && (
-                  <Star className="w-6 h-6 text-yellow-500 fill-yellow-500 flex-shrink-0" />
+      {/* Content - Styled like race guide cards */}
+      <div className="overflow-y-auto h-full">
+        <div className="flex flex-col">
+          {/* Image Container */}
+          <div className="relative w-full">
+            {/* Image Wrapper */}
+            <div className="relative overflow-hidden rounded-t-lg">
+              <div style={{ paddingBottom: '65%' }} className="relative">
+                {imageUrl && (
+                  <img
+                    src={imageUrl}
+                    alt={race.title}
+                    className="absolute inset-0 w-full h-full object-cover object-center"
+                  />
                 )}
+
+                {/* Frosted Glass Overlay - Always visible in popup (no hover) */}
+                <div className="absolute inset-0 backdrop-blur-md opacity-100 flex items-center justify-center">
+                  <div className="flex flex-row gap-6 px-6 flex-wrap justify-center">
+                    {/* Surface Pill */}
+                    {race.surface && (
+                      <div className="flex flex-col items-center gap-2">
+                        <div className="w-20 px-3 py-1.5 bg-white/95 dark:bg-neutral-900/95 backdrop-blur-sm rounded-full flex items-center justify-center">
+                          <p className="font-body text-xs font-medium text-neutral-900 dark:text-white">
+                            Surface
+                          </p>
+                        </div>
+                        <p className="font-body text-base font-bold text-white">
+                          {race.surface}
+                        </p>
+                        <p className="font-body text-xs font-normal text-white">
+                          {race.surfaceBreakdown || 'N/A'}
+                        </p>
+                      </div>
+                    )}
+
+                    {/* Price Pill */}
+                    {race.price !== undefined && race.price !== null && (
+                      <div className="flex flex-col items-center gap-2">
+                        <div className="w-20 px-3 py-1.5 bg-white/95 dark:bg-neutral-900/95 backdrop-blur-sm rounded-full flex items-center justify-center">
+                          <p className="font-body text-xs font-medium text-neutral-900 dark:text-white">
+                            Price
+                          </p>
+                        </div>
+                        <p className="font-body text-base font-bold text-white">
+                          {formatPrice(convertCurrencySync(race.price, race.currency || 'USD', 'USD'), 'USD')}
+                        </p>
+                        <p className="font-body text-xs font-normal text-white">
+                          Variable
+                        </p>
+                      </div>
+                    )}
+
+                    {/* Elevation Pill */}
+                    {race.elevationGain !== undefined && race.elevationGain !== null && (
+                      <div className="flex flex-col items-center gap-2">
+                        <div className="w-20 px-3 py-1.5 bg-white/95 dark:bg-neutral-900/95 backdrop-blur-sm rounded-full flex items-center justify-center">
+                          <p className="font-body text-xs font-medium text-neutral-900 dark:text-white">
+                            Elevation
+                          </p>
+                        </div>
+                        <p className="font-body text-base font-bold text-white">
+                          {race.profile ? race.profile.charAt(0).toUpperCase() + race.profile.slice(1) : 'N/A'}
+                        </p>
+                        <p className="font-body text-xs font-normal text-white">
+                          {Math.round(race.elevationGain * 3.28084).toLocaleString()}ft
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
+            </div>
 
-              {/* Badges */}
-              <div className="flex flex-wrap gap-2">
-                {isWorldMajor && (
-                  <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-200">
-                    Abbott World Marathon Major
-                  </span>
-                )}
-                {labelText && (
-                  <span
-                    className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium text-neutral-900 dark:text-white"
-                    style={{ backgroundColor: labelColor || 'transparent' }}
-                  >
-                    {labelText}
-                  </span>
-                )}
-                {race.raceCategoryName && (
-                  <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200">
+            {/* Distance/Category Pill - Top Right */}
+            {race.raceCategoryName && (
+              <div className="absolute top-3 right-3 z-[2]">
+                <div className="px-3 py-1.5 bg-white/95 dark:bg-neutral-900/95 backdrop-blur-sm rounded-full">
+                  <p className="font-body text-xs font-medium text-neutral-900 dark:text-white">
                     {race.raceCategoryName}
-                  </span>
-                )}
-              </div>
-            </div>
-
-            {/* Key Details Grid */}
-            <div className="space-y-3 mb-6">
-              {/* Date & Time */}
-              <div className="flex items-start gap-3">
-                <Calendar className="h-5 w-5 text-neutral-500 dark:text-neutral-400 flex-shrink-0 mt-0.5" />
-                <div>
-                  <div className="text-sm font-medium text-neutral-900 dark:text-white">
-                    {formattedDate}
-                  </div>
-                  {formattedTime && (
-                    <div className="text-xs text-neutral-600 dark:text-neutral-400">
-                      {formattedTime}
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Location */}
-              {(race.city || race.country) && (
-                <div className="flex items-start gap-3">
-                  <MapPin className="h-5 w-5 text-neutral-500 dark:text-neutral-400 flex-shrink-0 mt-0.5" />
-                  <div className="text-sm text-neutral-900 dark:text-white">
-                    {[race.city, race.stateRegion, race.country].filter(Boolean).join(', ')}
-                  </div>
-                </div>
-              )}
-
-              {/* Distance */}
-              {race.distance && (
-                <div className="flex items-start gap-3">
-                  <TrendingUp className="h-5 w-5 text-neutral-500 dark:text-neutral-400 flex-shrink-0 mt-0.5" />
-                  <div className="text-sm text-neutral-900 dark:text-white">
-                    {race.distance}
-                  </div>
-                </div>
-              )}
-
-              {/* Price */}
-              {race.price && (
-                <div className="flex items-start gap-3">
-                  <DollarSign className="h-5 w-5 text-neutral-500 dark:text-neutral-400 flex-shrink-0 mt-0.5" />
-                  <div className="text-sm text-neutral-900 dark:text-white">
-                    {race.currency || '$'}{race.price}
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Additional Info - Course Records */}
-            {(race.mensCourseRecord || race.womensCourseRecord) && (
-              <div className="border-t border-neutral-200 dark:border-neutral-800 pt-4 mb-6">
-                <h3 className="text-sm font-semibold text-neutral-900 dark:text-white mb-3">
-                  Course Records
-                </h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {race.mensCourseRecord && (
-                    <div className="text-sm">
-                      <div className="text-neutral-600 dark:text-neutral-400 mb-1">Men's</div>
-                      <div className="font-mono font-medium text-neutral-900 dark:text-white">
-                        {race.mensCourseRecord}
-                      </div>
-                      {race.mensCourseRecordAthlete && (
-                        <div className="text-xs text-neutral-600 dark:text-neutral-400">
-                          {race.mensCourseRecordAthlete}
-                          {race.mensCourseRecordCountry && ` (${race.mensCourseRecordCountry})`}
-                        </div>
-                      )}
-                    </div>
-                  )}
-                  {race.womensCourseRecord && (
-                    <div className="text-sm">
-                      <div className="text-neutral-600 dark:text-neutral-400 mb-1">Women's</div>
-                      <div className="font-mono font-medium text-neutral-900 dark:text-white">
-                        {race.womensCourseRecord}
-                      </div>
-                      {race.womensCourseRecordAthlete && (
-                        <div className="text-xs text-neutral-600 dark:text-neutral-400">
-                          {race.womensCourseRecordAthlete}
-                          {race.womensCourseRecordCountry && ` (${race.womensCourseRecordCountry})`}
-                        </div>
-                      )}
-                    </div>
-                  )}
+                  </p>
                 </div>
               </div>
             )}
+          </div>
+
+          {/* Content Card */}
+          <div className="bg-neutral-50 dark:bg-neutral-900 rounded-b-lg px-5 py-5">
+            <div className="flex items-center justify-between gap-3 mb-4">
+              {/* Title and Location */}
+              <div className="flex flex-col gap-1 flex-1">
+                <h3 className="font-body text-xl font-semibold leading-tight text-neutral-900 dark:text-white line-clamp-2">
+                  {race.title}
+                </h3>
+                {(race.city || race.stateRegion || race.country) && (
+                  <p className="font-body text-sm font-normal text-neutral-600 dark:text-neutral-400">
+                    {formatLocation(race.city, race.stateRegion, race.country)}
+                  </p>
+                )}
+              </div>
+
+              {/* Date Container - Right Side (Rounded) */}
+              <div className="flex flex-col items-center justify-center gap-0 flex-shrink-0 bg-neutral-200 dark:bg-neutral-800 rounded-lg w-16 h-16">
+                <p
+                  className="font-body text-xs font-medium uppercase text-neutral-900 dark:text-white"
+                  suppressHydrationWarning
+                >
+                  {format(new Date(race.eventDate), 'MMM')}
+                </p>
+                <p
+                  className="font-body text-2xl font-semibold leading-tight text-neutral-900 dark:text-white"
+                  suppressHydrationWarning
+                >
+                  {format(new Date(race.eventDate), 'dd')}
+                </p>
+              </div>
+            </div>
 
             {/* Action Buttons */}
             <div className="flex gap-3">
@@ -217,7 +166,6 @@ export function RaceEventPopup({ race, onClose }: RaceEventPopupProps) {
                 }}
               >
                 View Full Guide
-                <ExternalLink className="h-4 w-4" />
               </a>
               {race.officialWebsite && (
                 <a
@@ -227,12 +175,12 @@ export function RaceEventPopup({ race, onClose }: RaceEventPopupProps) {
                   className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 text-neutral-900 dark:text-white rounded-lg font-medium text-sm transition-colors"
                 >
                   Official Site
-                  <ExternalLink className="h-4 w-4" />
                 </a>
               )}
             </div>
           </div>
         </div>
+      </div>
     </Window>
   )
 }
