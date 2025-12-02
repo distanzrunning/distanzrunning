@@ -53,10 +53,9 @@ export function RaceEventPopup({ race, onClose }: RaceEventPopupProps) {
         // Calculate new width and constrain it
         const targetWidth = resizeRef.current.startWidth - deltaX
         const newWidth = Math.max(400, targetWidth)
-        // Only move position if width actually changed (not constrained by min)
-        const actualDelta = resizeRef.current.startWidth - newWidth
+        // Move left edge by the mouse delta
         setSize({ width: newWidth, height: resizeRef.current.startHeight })
-        setPosition({ x: resizeRef.current.startPosX + actualDelta, y: resizeRef.current.startPosY })
+        setPosition({ x: resizeRef.current.startPosX + deltaX, y: resizeRef.current.startPosY })
       } else if (isResizing === 'right') {
         setSize({
           width: Math.max(400, resizeRef.current.startWidth + deltaX),
@@ -66,13 +65,12 @@ export function RaceEventPopup({ race, onClose }: RaceEventPopupProps) {
         // Calculate new width and constrain it
         const targetWidth = resizeRef.current.startWidth - deltaX
         const newWidth = Math.max(400, targetWidth)
-        // Only move position if width actually changed (not constrained by min)
-        const actualDelta = resizeRef.current.startWidth - newWidth
+        // Move left edge by the mouse delta
         setSize({
           width: newWidth,
           height: Math.max(300, resizeRef.current.startHeight + deltaY)
         })
-        setPosition({ x: resizeRef.current.startPosX + actualDelta, y: resizeRef.current.startPosY })
+        setPosition({ x: resizeRef.current.startPosX + deltaX, y: resizeRef.current.startPosY })
       } else if (isResizing === 'bottom-right') {
         setSize({
           width: Math.max(400, resizeRef.current.startWidth + deltaX),
@@ -183,9 +181,8 @@ export function RaceEventPopup({ race, onClose }: RaceEventPopupProps) {
           <div
             className="fixed z-50"
             style={{
-              left: '50%',
-              top: '50%',
-              transform: `translate(calc(-50% + ${position.x}px), calc(-50% + ${position.y}px))`,
+              left: `calc(50vw - ${size.width / 2}px + ${position.x}px)`,
+              top: `calc(50vh - ${size.height / 2}px + ${position.y}px)`,
               width: `${size.width}px`,
               height: `${size.height}px`,
             }}
