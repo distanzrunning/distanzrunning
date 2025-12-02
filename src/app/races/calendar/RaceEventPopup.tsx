@@ -176,11 +176,11 @@ export function RaceEventPopup({ race, onClose }: RaceEventPopupProps) {
               </div>
             </div>
 
-            {/* Action Buttons */}
-            <div className="flex gap-3">
+            {/* Action Buttons - Match stats card widths */}
+            <div className="grid grid-cols-3 gap-2">
               <a
                 href={`/races/${race.slug.current}`}
-                className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-electric-pink hover:bg-electric-pink/90 text-white rounded-lg font-medium text-sm transition-colors"
+                className="col-span-2 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-neutral-900 dark:bg-white hover:bg-neutral-700 dark:hover:bg-neutral-200 text-white dark:text-neutral-900 rounded-lg font-medium text-sm transition-colors"
                 onClick={(e) => {
                   e.preventDefault()
                   window.location.href = `/races/${race.slug.current}`
