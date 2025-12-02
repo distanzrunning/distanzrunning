@@ -211,22 +211,22 @@ export function RaceEventPopup({ race, onClose }: RaceEventPopupProps) {
             </div>
 
               {/* Content */}
-              <div className="overflow-y-auto flex-1">
+              <div className="overflow-y-auto flex-1 p-6">
                 {/* Hero Image */}
                 {imageUrl && (
-                  <div className="relative w-full h-48 bg-neutral-100 dark:bg-neutral-800">
+                  <div className="relative w-full max-w-[600px] mx-auto h-48 mb-6 rounded-lg overflow-hidden bg-neutral-100 dark:bg-neutral-800">
                     <Image
                       src={imageUrl}
                       alt={race.title}
                       fill
                       className="object-cover"
-                      sizes="(max-width: 768px) 90vw, 672px"
+                      sizes="600px"
                     />
                   </div>
                 )}
 
                 {/* Content Area */}
-                <div className="p-6">
+                <div className="max-w-[600px] mx-auto">
                   {/* Title and Badges */}
                   <div className="mb-4">
                     <div className="flex items-start justify-between gap-4 mb-3">
