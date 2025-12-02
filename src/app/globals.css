@@ -1335,6 +1335,11 @@
   color: rgb(245, 245, 245) !important;
 }
 
+/* Ensure all windows stay below navbar (navbar is z-50) */
+.k-window {
+  z-index: 40 !important;
+}
+
 /* Maximized window positioning - below navbar */
 .k-window.k-window-maximized {
   top: 48px !important;
