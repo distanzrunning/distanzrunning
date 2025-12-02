@@ -1283,3 +1283,41 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+/* KendoReact Window - Dark Mode Compatibility */
+.dark .k-window {
+  background-color: rgb(23, 23, 23) !important;
+  border-color: rgb(64, 64, 64) !important;
+  color: rgb(245, 245, 245) !important;
+}
+
+.dark .k-window-titlebar {
+  background-color: rgb(38, 38, 38) !important;
+  border-bottom-color: rgb(64, 64, 64) !important;
+  color: rgb(245, 245, 245) !important;
+}
+
+.dark .k-window-title {
+  color: rgb(245, 245, 245) !important;
+  text-align: center !important;
+  flex: 1 !important;
+}
+
+/* Center window title */
+.k-window-title {
+  text-align: center !important;
+  flex: 1 !important;
+}
+
+.dark .k-window-titlebar-action {
+  color: rgb(163, 163, 163) !important;
+}
+
+.dark .k-window-titlebar-action:hover {
+  background-color: rgb(64, 64, 64) !important;
+  color: rgb(245, 245, 245) !important;
+}
+
+.dark .k-window-content {
+  background-color: rgb(23, 23, 23) !important;
+  color: rgb(245, 245, 245) !important;
+}
