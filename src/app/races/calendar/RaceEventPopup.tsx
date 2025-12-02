@@ -50,23 +50,29 @@ export function RaceEventPopup({ race, onClose }: RaceEventPopupProps) {
           height: Math.max(300, resizeRef.current.startHeight + deltaY)
         })
       } else if (isResizing === 'left') {
-        const newWidth = Math.max(400, resizeRef.current.startWidth - deltaX)
-        const widthChange = resizeRef.current.startWidth - newWidth
+        // Calculate new width and constrain it
+        const targetWidth = resizeRef.current.startWidth - deltaX
+        const newWidth = Math.max(400, targetWidth)
+        // Only move position if width actually changed (not constrained by min)
+        const actualDelta = resizeRef.current.startWidth - newWidth
         setSize({ width: newWidth, height: resizeRef.current.startHeight })
-        setPosition({ x: resizeRef.current.startPosX + widthChange, y: resizeRef.current.startPosY })
+        setPosition({ x: resizeRef.current.startPosX + actualDelta, y: resizeRef.current.startPosY })
       } else if (isResizing === 'right') {
         setSize({
           width: Math.max(400, resizeRef.current.startWidth + deltaX),
           height: resizeRef.current.startHeight
         })
       } else if (isResizing === 'bottom-left') {
-        const newWidth = Math.max(400, resizeRef.current.startWidth - deltaX)
-        const widthChange = resizeRef.current.startWidth - newWidth
+        // Calculate new width and constrain it
+        const targetWidth = resizeRef.current.startWidth - deltaX
+        const newWidth = Math.max(400, targetWidth)
+        // Only move position if width actually changed (not constrained by min)
+        const actualDelta = resizeRef.current.startWidth - newWidth
         setSize({
           width: newWidth,
           height: Math.max(300, resizeRef.current.startHeight + deltaY)
         })
-        setPosition({ x: resizeRef.current.startPosX + widthChange, y: resizeRef.current.startPosY })
+        setPosition({ x: resizeRef.current.startPosX + actualDelta, y: resizeRef.current.startPosY })
       } else if (isResizing === 'bottom-right') {
         setSize({
           width: Math.max(400, resizeRef.current.startWidth + deltaX),
