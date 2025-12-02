@@ -1301,6 +1301,8 @@
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
+  padding: 6px 12px !important;
+  min-height: auto !important;
 }
 
 .k-window-title {
