@@ -1335,12 +1335,12 @@
   color: rgb(245, 245, 245) !important;
 }
 
-/* Ensure all windows stay below navbar (navbar is z-50) */
+/* Default windows stay below navbar (navbar is z-50) */
 .k-window {
   z-index: 40 !important;
 }
 
-/* Maximized window positioning - starts at bottom of navbar (48px) */
+/* Maximized window - flush against navbar, titlebar visible and clickable */
 .k-window.k-window-maximized {
   top: 48px !important;
   left: 0 !important;
@@ -1348,4 +1348,5 @@
   height: calc(100vh - 48px) !important;
   transform: none !important;
   margin: 0 !important;
+  z-index: 51 !important; /* Above navbar so titlebar is fully visible and clickable */
 }
