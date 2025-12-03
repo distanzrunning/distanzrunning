@@ -1298,20 +1298,21 @@
 
 /* Compact titlebar - PostHog style with backdrop blur */
 .k-window-titlebar {
-  display: grid !important;
-  grid-template-columns: auto 1fr auto !important;
+  display: flex !important;
   align-items: center !important;
-  padding: 4px 8px !important;
+  justify-content: center !important;
+  padding: 6px 12px !important;
   min-height: auto !important;
-  gap: 8px !important;
+  position: relative !important;
   backdrop-filter: blur(12px) !important;
   -webkit-backdrop-filter: blur(12px) !important;
 }
 
 .k-window-title {
   text-align: center !important;
+  flex: 1 !important;
   margin: 0 !important;
-  padding: 0 !important;
+  padding: 0 8px !important;
   font-size: 13px !important;
   font-weight: 600 !important;
   line-height: 1.4 !important;
@@ -1324,12 +1325,12 @@
   color: rgb(245, 245, 245) !important;
 }
 
-/* Compact action buttons on the right */
+/* Action buttons positioned absolutely on the right */
 .k-window-titlebar-actions {
-  position: relative !important;
+  position: absolute !important;
+  right: 8px !important;
   display: flex !important;
   gap: 2px !important;
-  right: 0 !important;
 }
 
 .dark .k-window-titlebar-action {
