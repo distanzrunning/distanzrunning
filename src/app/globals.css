@@ -1335,7 +1335,7 @@
   color: rgb(245, 245, 245) !important;
 }
 
-/* Default windows stay below navbar */
+/* Default windows stay below navbar (JavaScript enforces position constraint) */
 .k-window {
   z-index: 40 !important;
 }

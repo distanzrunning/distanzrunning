@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { format } from 'date-fns'
 import { Window } from '@progress/kendo-react-dialogs'
 import type { RaceGuide } from '../page'
@@ -20,6 +20,7 @@ function formatLocation(city?: string, stateRegion?: string, country?: string): 
 
 export function RaceEventPopup({ race, onClose }: RaceEventPopupProps) {
   const [windowStage, setWindowStage] = useState<'DEFAULT' | 'MAXIMIZED'>('DEFAULT')
+  const windowRef = useRef<HTMLDivElement>(null)
 
   if (!race) return null
 
@@ -33,12 +34,22 @@ export function RaceEventPopup({ race, onClose }: RaceEventPopupProps) {
   const navbarHeight = 48
   const initialTop = Math.max(navbarHeight, window.innerHeight / 2 - 300)
 
-  // Constrain window drag to stay below navbar
-  const handleDrag = (event: any) => {
-    if (event.top < navbarHeight) {
-      event.top = navbarHeight
-    }
-  }
+  // Monitor and constrain window position to stay below navbar
+  useEffect(() => {
+    if (!race) return
+
+    const interval = setInterval(() => {
+      const windowEl = document.querySelector('.k-window:not(.k-window-maximized)') as HTMLElement
+      if (windowEl) {
+        const currentTop = parseInt(windowEl.style.top || '0', 10)
+        if (currentTop < navbarHeight) {
+          windowEl.style.top = `${navbarHeight}px`
+        }
+      }
+    }, 50)
+
+    return () => clearInterval(interval)
+  }, [race])
 
   return (
     <Window
@@ -55,7 +66,6 @@ export function RaceEventPopup({ race, onClose }: RaceEventPopupProps) {
       resizable={windowStage !== 'MAXIMIZED'}
       modal={false}
       onStageChange={handleStageChange}
-      onDrag={handleDrag}
     >
       {/* Content - Fixed width, scrollable */}
       <div className="overflow-y-auto h-full flex justify-center">
