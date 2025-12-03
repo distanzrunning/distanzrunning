@@ -213,7 +213,7 @@ export function DraggableWindow({
     <div ref={containerRef} className="absolute inset-0 pointer-events-none" style={{ zIndex: 40 }}>
       <div
         ref={windowRef}
-        className="pointer-events-auto absolute bg-white dark:bg-neutral-900 rounded-lg shadow-2xl flex flex-col overflow-hidden"
+        className="pointer-events-auto absolute rounded-lg shadow-2xl flex flex-col overflow-hidden"
         style={
           isMaximized
             ? {
@@ -274,7 +274,7 @@ export function DraggableWindow({
         </div>
 
         {/* Content */}
-        <div className="flex-1 overflow-hidden">
+        <div className="flex-1 overflow-hidden bg-white dark:bg-neutral-900">
           {children}
         </div>
 
