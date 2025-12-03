@@ -233,7 +233,7 @@ export function DraggableWindow({
       >
         {/* Titlebar */}
         <div
-          className="flex items-center justify-center relative px-3 py-2 bg-neutral-100 dark:bg-neutral-800 border-b border-neutral-200 dark:border-neutral-700 cursor-move select-none backdrop-blur-sm"
+          className="flex items-center justify-center relative px-3 py-2 bg-neutral-100/80 dark:bg-neutral-800/80 border-b border-neutral-200 dark:border-neutral-700 cursor-move select-none backdrop-blur-md"
           onMouseDown={handleMouseDown}
           style={{ minHeight: '40px' }}
         >
