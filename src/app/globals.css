@@ -1296,30 +1296,39 @@
   color: rgb(245, 245, 245) !important;
 }
 
-/* Center window title - make titlebar use flex layout */
+/* Compact titlebar - PostHog style */
 .k-window-titlebar {
   display: flex !important;
   align-items: center !important;
-  justify-content: center !important;
-  padding: 3px 12px !important;
+  justify-content: space-between !important;
+  padding: 2px 6px !important;
   min-height: auto !important;
+  gap: 4px !important;
 }
 
 .k-window-title {
   text-align: center !important;
   flex: 1 !important;
-  margin: 0 auto !important;
-  padding: 0 !important;
+  margin: 0 !important;
+  padding: 2px 4px !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  line-height: 1.2 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
 }
 
 .dark .k-window-title {
   color: rgb(245, 245, 245) !important;
 }
 
-/* Position close button absolutely to not interfere with centered title */
+/* Compact action buttons on the right */
 .k-window-titlebar-actions {
-  position: absolute !important;
-  right: 8px !important;
+  position: relative !important;
+  display: flex !important;
+  gap: 2px !important;
+  right: 0 !important;
 }
 
 .dark .k-window-titlebar-action {
