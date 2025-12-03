@@ -248,7 +248,7 @@ export function DraggableWindow({
           <div className="absolute right-2 flex items-center gap-1">
             <button
               onClick={handleMaximize}
-              className="p-1.5 hover:bg-neutral-200 dark:hover:bg-neutral-700 rounded transition-colors group"
+              className="p-1.5 rounded transition-all border border-transparent hover:border-neutral-300 dark:hover:border-neutral-600 group"
               aria-label={isMaximized ? 'Restore' : 'Maximize'}
             >
               {isMaximized ? (
@@ -265,7 +265,7 @@ export function DraggableWindow({
             </button>
             <button
               onClick={onClose}
-              className="p-1.5 hover:bg-neutral-200 dark:hover:bg-neutral-700 rounded transition-colors"
+              className="p-1.5 rounded transition-all border border-transparent hover:border-neutral-300 dark:hover:border-neutral-600"
               aria-label="Close"
             >
               <X className="w-4 h-4 text-neutral-700 dark:text-neutral-300" />
