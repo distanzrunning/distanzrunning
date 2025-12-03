@@ -125,9 +125,14 @@ export function DraggableWindow({
         if (resizeDirection.includes('e')) {
           newWidth = Math.max(minWidth, resizeStart.width + deltaX)
         } else if (resizeDirection.includes('w')) {
-          newWidth = Math.max(minWidth, resizeStart.width - deltaX)
-          if (newWidth > minWidth) {
+          const targetWidth = resizeStart.width - deltaX
+          newWidth = Math.max(minWidth, targetWidth)
+          // Only adjust position if we're not constrained by minWidth
+          if (targetWidth >= minWidth) {
             newX = resizeStart.posX + deltaX
+          } else {
+            // Constrained by minWidth, adjust position to maintain right edge
+            newX = resizeStart.posX + (resizeStart.width - minWidth)
           }
         }
 
@@ -135,9 +140,14 @@ export function DraggableWindow({
         if (resizeDirection.includes('s')) {
           newHeight = Math.max(minHeight, resizeStart.height + deltaY)
         } else if (resizeDirection.includes('n')) {
-          newHeight = Math.max(minHeight, resizeStart.height - deltaY)
-          if (newHeight > minHeight) {
+          const targetHeight = resizeStart.height - deltaY
+          newHeight = Math.max(minHeight, targetHeight)
+          // Only adjust position if we're not constrained by minHeight
+          if (targetHeight >= minHeight) {
             newY = resizeStart.posY + deltaY
+          } else {
+            // Constrained by minHeight, adjust position to maintain bottom edge
+            newY = resizeStart.posY + (resizeStart.height - minHeight)
           }
         }
 
