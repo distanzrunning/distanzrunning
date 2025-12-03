@@ -55,14 +55,11 @@ export function DraggableWindow({
   const handleMouseDown = (e: React.MouseEvent) => {
     if (isMaximized) return
 
-    const rect = windowRef.current?.getBoundingClientRect()
-    if (rect) {
-      setDragOffset({
-        x: e.clientX - rect.left,
-        y: e.clientY - rect.top,
-      })
-      setIsDragging(true)
-    }
+    setDragOffset({
+      x: e.clientX - position.x,
+      y: e.clientY - position.y,
+    })
+    setIsDragging(true)
   }
 
   // Handle resize drag
