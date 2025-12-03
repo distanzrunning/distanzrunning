@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect, ReactNode } from 'react'
-import { Minimize2, Maximize2, X } from 'lucide-react'
+import { X, Square, ChevronsDownUp, ChevronsUpDown } from 'lucide-react'
 
 interface DraggableWindowProps {
   title: string
@@ -248,13 +248,19 @@ export function DraggableWindow({
           <div className="absolute right-2 flex items-center gap-1">
             <button
               onClick={handleMaximize}
-              className="p-1.5 hover:bg-neutral-200 dark:hover:bg-neutral-700 rounded transition-colors"
+              className="p-1.5 hover:bg-neutral-200 dark:hover:bg-neutral-700 rounded transition-colors group"
               aria-label={isMaximized ? 'Restore' : 'Maximize'}
             >
               {isMaximized ? (
-                <Minimize2 className="w-4 h-4 text-neutral-700 dark:text-neutral-300" />
+                <>
+                  <ChevronsDownUp className="w-4 h-4 text-neutral-700 dark:text-neutral-300 group-hover:hidden" />
+                  <ChevronsUpDown className="w-4 h-4 text-neutral-700 dark:text-neutral-300 hidden group-hover:block" />
+                </>
               ) : (
-                <Maximize2 className="w-4 h-4 text-neutral-700 dark:text-neutral-300" />
+                <>
+                  <Square className="w-4 h-4 text-neutral-700 dark:text-neutral-300 group-hover:hidden" />
+                  <ChevronsDownUp className="w-4 h-4 text-neutral-700 dark:text-neutral-300 hidden group-hover:block" />
+                </>
               )}
             </button>
             <button
