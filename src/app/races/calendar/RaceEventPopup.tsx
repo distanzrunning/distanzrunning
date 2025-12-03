@@ -34,21 +34,23 @@ export function RaceEventPopup({ race, onClose }: RaceEventPopupProps) {
   const initialLeft = typeof window !== 'undefined' ? window.innerWidth / 2 - 336 : 100
 
   return (
-    <Window
-      title={race.title}
-      onClose={onClose}
-      initialHeight={600}
-      initialWidth={672}
-      initialTop={initialTop}
-      initialLeft={initialLeft}
-      minWidth={400}
-      minHeight={300}
-      stage={windowStage}
-      draggable={windowStage !== 'MAXIMIZED'}
-      resizable={windowStage !== 'MAXIMIZED'}
-      modal={false}
-      onStageChange={handleStageChange}
-    >
+    <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 40 }}>
+      <Window
+        title={race.title}
+        onClose={onClose}
+        initialHeight={600}
+        initialWidth={672}
+        initialTop={initialTop}
+        initialLeft={initialLeft}
+        minWidth={400}
+        minHeight={300}
+        stage={windowStage}
+        draggable={windowStage !== 'MAXIMIZED'}
+        resizable={windowStage !== 'MAXIMIZED'}
+        modal={false}
+        onStageChange={handleStageChange}
+        className="pointer-events-auto"
+      >
       {/* Content - Fixed width, scrollable */}
       <div className="overflow-y-auto h-full flex justify-center">
         <div className="w-full max-w-[600px] flex flex-col">
@@ -215,5 +217,6 @@ export function RaceEventPopup({ race, onClose }: RaceEventPopupProps) {
         </div>
       </div>
     </Window>
+    </div>
   )
 }
