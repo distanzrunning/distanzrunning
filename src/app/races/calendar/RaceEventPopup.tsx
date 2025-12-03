@@ -196,7 +196,7 @@ export function RaceEventPopup({ race, onClose }: RaceEventPopupProps) {
             <div className="grid grid-cols-3 gap-2">
               <a
                 href={`/races/${race.slug.current}`}
-                className="col-span-2 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 rounded-lg font-medium text-sm transition-all border-2 border-transparent hover:border-neutral-400 dark:hover:border-neutral-600"
+                className="col-span-2 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-neutral-900 dark:bg-white hover:bg-neutral-900 dark:hover:bg-white text-white dark:text-neutral-900 rounded-lg font-medium text-sm transition-all border-2 border-transparent hover:border-neutral-400 dark:hover:border-neutral-600"
                 onClick={(e) => {
                   e.preventDefault()
                   window.location.href = `/races/${race.slug.current}`
@@ -209,7 +209,7 @@ export function RaceEventPopup({ race, onClose }: RaceEventPopupProps) {
                   href={race.officialWebsite}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white rounded-lg font-medium text-sm transition-all border-2 border-transparent hover:border-neutral-400 dark:hover:border-neutral-600"
+                  className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-900 dark:text-white rounded-lg font-medium text-sm transition-all border-2 border-transparent hover:border-neutral-400 dark:hover:border-neutral-600"
                 >
                   Official Site
                 </a>
