@@ -1,11 +1,10 @@
 'use client'
 
-import { useState, useRef } from 'react'
 import { format } from 'date-fns'
-import { Window } from '@progress/kendo-react-dialogs'
 import type { RaceGuide } from '../page'
 import { urlFor } from '@/sanity/lib/image'
 import { convertCurrencySync, formatPrice } from '@/lib/raceUtils'
+import { DraggableWindow } from '@/components/DraggableWindow'
 
 interface RaceEventPopupProps {
   race: RaceGuide | null
@@ -19,40 +18,19 @@ function formatLocation(city?: string, stateRegion?: string, country?: string): 
 }
 
 export function RaceEventPopup({ race, onClose }: RaceEventPopupProps) {
-  const [windowStage, setWindowStage] = useState<'DEFAULT' | 'MAXIMIZED'>('DEFAULT')
-  const containerRef = useRef<HTMLDivElement>(null)
-
   if (!race) return null
 
   const imageUrl = race.mainImage ? urlFor(race.mainImage)?.width(800).height(520).url() : null
 
-  const handleStageChange = (event: any) => {
-    setWindowStage(event.state)
-  }
-
-  // Position window in center of container (not viewport)
-  const initialTop = typeof window !== 'undefined' ? Math.max(50, window.innerHeight / 2 - 300 - 48) : 50
-  const initialLeft = typeof window !== 'undefined' ? window.innerWidth / 2 - 336 : 100
-
   return (
-    <div ref={containerRef} className="absolute inset-0 pointer-events-none" style={{ zIndex: 40 }}>
-      <Window
-        title={race.title}
-        onClose={onClose}
-        initialHeight={600}
-        initialWidth={672}
-        initialTop={initialTop}
-        initialLeft={initialLeft}
-        minWidth={400}
-        minHeight={300}
-        stage={windowStage}
-        draggable={windowStage !== 'MAXIMIZED'}
-        resizable={windowStage !== 'MAXIMIZED'}
-        modal={false}
-        onStageChange={handleStageChange}
-        className="pointer-events-auto"
-        appendTo={containerRef.current}
-      >
+    <DraggableWindow
+      title={race.title}
+      onClose={onClose}
+      initialWidth={672}
+      initialHeight={600}
+      minWidth={400}
+      minHeight={300}
+    >
       {/* Content - Fixed width, scrollable */}
       <div className="overflow-y-auto h-full flex justify-center">
         <div className="w-full max-w-[600px] flex flex-col">
@@ -197,15 +175,6 @@ export function RaceEventPopup({ race, onClose }: RaceEventPopupProps) {
               <a
                 href={`/races/${race.slug.current}`}
                 className="col-span-2 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 rounded-lg font-medium text-sm transition-all border-2 border-transparent hover:border-neutral-400 dark:hover:border-neutral-600"
-                style={{ backgroundColor: 'var(--tw-bg-opacity, 1)' }}
-                onMouseEnter={(e) => {
-                  const isDark = document.documentElement.classList.contains('dark')
-                  e.currentTarget.style.backgroundColor = isDark ? 'white' : 'rgb(23, 23, 23)'
-                }}
-                onMouseLeave={(e) => {
-                  const isDark = document.documentElement.classList.contains('dark')
-                  e.currentTarget.style.backgroundColor = isDark ? 'white' : 'rgb(23, 23, 23)'
-                }}
                 onClick={(e) => {
                   e.preventDefault()
                   window.location.href = `/races/${race.slug.current}`
@@ -219,14 +188,6 @@ export function RaceEventPopup({ race, onClose }: RaceEventPopupProps) {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white rounded-lg font-medium text-sm transition-all border-2 border-transparent hover:border-neutral-400 dark:hover:border-neutral-600"
-                  onMouseEnter={(e) => {
-                    const isDark = document.documentElement.classList.contains('dark')
-                    e.currentTarget.style.backgroundColor = isDark ? 'rgb(38, 38, 38)' : 'rgb(245, 245, 245)'
-                  }}
-                  onMouseLeave={(e) => {
-                    const isDark = document.documentElement.classList.contains('dark')
-                    e.currentTarget.style.backgroundColor = isDark ? 'rgb(38, 38, 38)' : 'rgb(245, 245, 245)'
-                  }}
                 >
                   Official Site
                 </a>
@@ -235,7 +196,6 @@ export function RaceEventPopup({ race, onClose }: RaceEventPopupProps) {
           </div>
         </div>
       </div>
-    </Window>
-    </div>
+    </DraggableWindow>
   )
 }
