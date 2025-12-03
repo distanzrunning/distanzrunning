@@ -1301,7 +1301,7 @@
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  padding: 6px 12px !important;
+  padding: 8px 12px !important;
   min-height: auto !important;
   position: relative !important;
   backdrop-filter: blur(12px) !important;
