@@ -1309,6 +1309,7 @@
   text-align: center !important;
   flex: 1 !important;
   margin: 0 auto !important;
+  padding: 0 !important;
 }
 
 .dark .k-window-title {
