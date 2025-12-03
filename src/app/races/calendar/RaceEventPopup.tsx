@@ -33,7 +33,7 @@ export function RaceEventPopup({ race, onClose }: RaceEventPopupProps) {
     >
       {/* Content - Fixed width, scrollable */}
       <div className="overflow-y-auto h-full flex justify-center">
-        <div className="w-full max-w-[600px] flex flex-col">
+        <div className="w-full max-w-[600px] flex flex-col pt-4">
           {/* Image Container */}
           <div className="relative w-full">
             {/* Image Wrapper */}
