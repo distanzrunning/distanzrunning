@@ -157,14 +157,13 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
 
   return (
     <>
-      {/* Race Event Popup */}
-      <RaceEventPopup race={selectedRace} onClose={() => setSelectedRace(null)} />
-
       <div className="fixed inset-0 overflow-hidden bg-white dark:bg-[#0c0c0d] transition-colors duration-300 pt-12 pb-8">
         {/* Content fills viewport below navbar (48px) and above footer (32px) */}
         <div className="h-full flex flex-col">
         {/* Calendar - Takes full remaining space */}
         <div className="flex-1 flex flex-col overflow-hidden relative">
+          {/* Race Event Popup - Constrained to this container */}
+          <RaceEventPopup race={selectedRace} onClose={() => setSelectedRace(null)} />
           <div className="bg-white dark:bg-neutral-900 flex-1 flex flex-col calendar-wrapper">
             {/* Custom Toolbar */}
             <div className="px-6 py-4 border-b border-neutral-200 dark:border-neutral-800 flex-shrink-0">

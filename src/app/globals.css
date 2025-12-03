@@ -1335,18 +1335,19 @@
   color: rgb(245, 245, 245) !important;
 }
 
-/* Default windows stay below navbar (JavaScript enforces position constraint) */
+/* Default windows - positioned within container */
 .k-window {
   z-index: 40 !important;
+  position: absolute !important; /* Position within container, not viewport */
 }
 
-/* Maximized window - flush against navbar, titlebar visible and clickable */
+/* Maximized window - fill parent container */
 .k-window.k-window-maximized {
-  top: 48px !important;
+  top: 0 !important;
   left: 0 !important;
-  width: 100vw !important;
-  height: calc(100vh - 48px) !important;
+  width: 100% !important;
+  height: 100% !important;
   transform: none !important;
   margin: 0 !important;
-  z-index: 51 !important; /* Above navbar so titlebar is fully visible and clickable */
+  z-index: 50 !important;
 }

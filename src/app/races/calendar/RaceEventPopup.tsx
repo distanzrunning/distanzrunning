@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState } from 'react'
 import { format } from 'date-fns'
 import { Window } from '@progress/kendo-react-dialogs'
 import type { RaceGuide } from '../page'
@@ -20,7 +20,6 @@ function formatLocation(city?: string, stateRegion?: string, country?: string): 
 
 export function RaceEventPopup({ race, onClose }: RaceEventPopupProps) {
   const [windowStage, setWindowStage] = useState<'DEFAULT' | 'MAXIMIZED'>('DEFAULT')
-  const windowRef = useRef<HTMLDivElement>(null)
 
   if (!race) return null
 
@@ -30,26 +29,9 @@ export function RaceEventPopup({ race, onClose }: RaceEventPopupProps) {
     setWindowStage(event.state)
   }
 
-  // Ensure initial position is below navbar (48px minimum top)
-  const navbarHeight = 48
-  const initialTop = Math.max(navbarHeight, window.innerHeight / 2 - 300)
-
-  // Monitor and constrain window position to stay below navbar
-  useEffect(() => {
-    if (!race) return
-
-    const interval = setInterval(() => {
-      const windowEl = document.querySelector('.k-window:not(.k-window-maximized)') as HTMLElement
-      if (windowEl) {
-        const currentTop = parseInt(windowEl.style.top || '0', 10)
-        if (currentTop < navbarHeight) {
-          windowEl.style.top = `${navbarHeight}px`
-        }
-      }
-    }, 50)
-
-    return () => clearInterval(interval)
-  }, [race])
+  // Position window in center of container (not viewport)
+  const initialTop = typeof window !== 'undefined' ? Math.max(50, window.innerHeight / 2 - 300 - 48) : 50
+  const initialLeft = typeof window !== 'undefined' ? window.innerWidth / 2 - 336 : 100
 
   return (
     <Window
@@ -58,7 +40,7 @@ export function RaceEventPopup({ race, onClose }: RaceEventPopupProps) {
       initialHeight={600}
       initialWidth={672}
       initialTop={initialTop}
-      initialLeft={window.innerWidth / 2 - 336}
+      initialLeft={initialLeft}
       minWidth={400}
       minHeight={300}
       stage={windowStage}
