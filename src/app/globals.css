@@ -1296,24 +1296,25 @@
   color: rgb(245, 245, 245) !important;
 }
 
-/* Compact titlebar - PostHog style */
+/* Compact titlebar - PostHog style with backdrop blur */
 .k-window-titlebar {
-  display: flex !important;
+  display: grid !important;
+  grid-template-columns: auto 1fr auto !important;
   align-items: center !important;
-  justify-content: space-between !important;
-  padding: 2px 6px !important;
+  padding: 4px 8px !important;
   min-height: auto !important;
-  gap: 4px !important;
+  gap: 8px !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
 }
 
 .k-window-title {
   text-align: center !important;
-  flex: 1 !important;
   margin: 0 !important;
-  padding: 2px 4px !important;
+  padding: 0 !important;
   font-size: 13px !important;
   font-weight: 600 !important;
-  line-height: 1.2 !important;
+  line-height: 1.4 !important;
   white-space: nowrap !important;
   overflow: hidden !important;
   text-overflow: ellipsis !important;
