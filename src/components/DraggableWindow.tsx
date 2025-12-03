@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect, ReactNode } from 'react'
-import { X, Square, ChevronsDownUp, ChevronsUpDown } from 'lucide-react'
+import { X, Square, Expand, Shrink } from 'lucide-react'
 
 interface DraggableWindowProps {
   title: string
@@ -253,13 +253,13 @@ export function DraggableWindow({
             >
               {isMaximized ? (
                 <>
-                  <ChevronsDownUp className="w-4 h-4 text-neutral-700 dark:text-neutral-300 group-hover:hidden" />
-                  <ChevronsUpDown className="w-4 h-4 text-neutral-700 dark:text-neutral-300 hidden group-hover:block" />
+                  <Square className="w-4 h-4 text-neutral-700 dark:text-neutral-300 group-hover:hidden" />
+                  <Shrink className="w-4 h-4 text-neutral-700 dark:text-neutral-300 hidden group-hover:block" />
                 </>
               ) : (
                 <>
                   <Square className="w-4 h-4 text-neutral-700 dark:text-neutral-300 group-hover:hidden" />
-                  <ChevronsDownUp className="w-4 h-4 text-neutral-700 dark:text-neutral-300 hidden group-hover:block" />
+                  <Expand className="w-4 h-4 text-neutral-700 dark:text-neutral-300 hidden group-hover:block" />
                 </>
               )}
             </button>
