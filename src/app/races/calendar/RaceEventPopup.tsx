@@ -29,13 +29,24 @@ export function RaceEventPopup({ race, onClose }: RaceEventPopupProps) {
     setWindowStage(event.state)
   }
 
+  // Ensure initial position is below navbar (48px minimum top)
+  const navbarHeight = 48
+  const initialTop = Math.max(navbarHeight, window.innerHeight / 2 - 300)
+
+  // Constrain window drag to stay below navbar
+  const handleDrag = (event: any) => {
+    if (event.top < navbarHeight) {
+      event.top = navbarHeight
+    }
+  }
+
   return (
     <Window
       title={race.title}
       onClose={onClose}
       initialHeight={600}
       initialWidth={672}
-      initialTop={window.innerHeight / 2 - 300}
+      initialTop={initialTop}
       initialLeft={window.innerWidth / 2 - 336}
       minWidth={400}
       minHeight={300}
@@ -44,6 +55,7 @@ export function RaceEventPopup({ race, onClose }: RaceEventPopupProps) {
       resizable={windowStage !== 'MAXIMIZED'}
       modal={false}
       onStageChange={handleStageChange}
+      onDrag={handleDrag}
     >
       {/* Content - Fixed width, scrollable */}
       <div className="overflow-y-auto h-full flex justify-center">

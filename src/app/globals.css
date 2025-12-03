@@ -1335,7 +1335,7 @@
   color: rgb(245, 245, 245) !important;
 }
 
-/* Default windows stay below navbar (navbar is z-50) */
+/* Default windows stay below navbar */
 .k-window {
   z-index: 40 !important;
 }
