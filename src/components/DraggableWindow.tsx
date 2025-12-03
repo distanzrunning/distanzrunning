@@ -78,6 +78,22 @@ export function DraggableWindow({
     })
   }
 
+  // Prevent text selection during drag/resize
+  useEffect(() => {
+    if (isDragging || resizeDirection) {
+      document.body.style.userSelect = 'none'
+      document.body.style.cursor = resizeDirection ? getCursorClass(resizeDirection).replace('cursor-', '') : 'move'
+    } else {
+      document.body.style.userSelect = ''
+      document.body.style.cursor = ''
+    }
+
+    return () => {
+      document.body.style.userSelect = ''
+      document.body.style.cursor = ''
+    }
+  }, [isDragging, resizeDirection])
+
   // Handle mouse move for dragging and resizing
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
