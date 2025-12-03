@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { format } from 'date-fns'
 import { Window } from '@progress/kendo-react-dialogs'
 import type { RaceGuide } from '../page'
@@ -20,6 +20,7 @@ function formatLocation(city?: string, stateRegion?: string, country?: string): 
 
 export function RaceEventPopup({ race, onClose }: RaceEventPopupProps) {
   const [windowStage, setWindowStage] = useState<'DEFAULT' | 'MAXIMIZED'>('DEFAULT')
+  const containerRef = useRef<HTMLDivElement>(null)
 
   if (!race) return null
 
@@ -34,7 +35,7 @@ export function RaceEventPopup({ race, onClose }: RaceEventPopupProps) {
   const initialLeft = typeof window !== 'undefined' ? window.innerWidth / 2 - 336 : 100
 
   return (
-    <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 40 }}>
+    <div ref={containerRef} className="absolute inset-0 pointer-events-none" style={{ zIndex: 40 }}>
       <Window
         title={race.title}
         onClose={onClose}
@@ -50,6 +51,7 @@ export function RaceEventPopup({ race, onClose }: RaceEventPopupProps) {
         modal={false}
         onStageChange={handleStageChange}
         className="pointer-events-auto"
+        appendTo={containerRef.current}
       >
       {/* Content - Fixed width, scrollable */}
       <div className="overflow-y-auto h-full flex justify-center">
