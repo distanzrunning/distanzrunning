@@ -29,7 +29,7 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
       onClose={onClose}
       onMinimize={onMinimize}
       initialWidth={672}
-      initialHeight={600}
+      initialHeight={700}
       minWidth={400}
       minHeight={300}
     >
@@ -189,7 +189,7 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
                   href={race.officialWebsite}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white rounded-lg font-medium text-sm transition-all border-2 border-transparent hover:border-neutral-400 dark:hover:border-neutral-600"
+                  className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-white dark:bg-neutral-950 text-neutral-900 dark:text-white rounded-lg font-medium text-sm transition-all border-2 border-neutral-300 dark:border-neutral-600 hover:border-neutral-400 dark:hover:border-neutral-500"
                 >
                   Official Site
                 </a>
