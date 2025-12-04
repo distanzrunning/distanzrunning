@@ -1,7 +1,8 @@
 'use client'
 
 import { useState, useRef, useEffect, ReactNode } from 'react'
-import { X, Square, Expand, Shrink, Minus } from 'lucide-react'
+import { X, Square, Expand, Shrink } from 'lucide-react'
+import Image from 'next/image'
 
 interface DraggableWindowProps {
   title: string
@@ -254,7 +255,13 @@ export function DraggableWindow({
                 className="p-1.5 rounded transition-all border border-transparent hover:border-neutral-300 dark:hover:border-neutral-600"
                 aria-label="Minimize"
               >
-                <Minus className="w-4 h-4 text-neutral-700 dark:text-neutral-300" />
+                <Image
+                  src="/images/icons/minus.svg"
+                  alt="Minimize"
+                  width={16}
+                  height={16}
+                  className="text-neutral-700 dark:text-neutral-300"
+                />
               </button>
             )}
             <button
