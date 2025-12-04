@@ -64,7 +64,7 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
           </div>
 
           {/* Content Card */}
-          <div className="bg-neutral-50 dark:bg-neutral-900 rounded-b-lg px-5 py-5">
+          <div className="rounded-b-lg px-5 py-5">
             <div className="flex items-center justify-between gap-3 mb-4">
               {/* Title and Location */}
               <div className="flex flex-col gap-1 flex-1">
@@ -79,7 +79,7 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
               </div>
 
               {/* Date Container - Right Side (Rounded) */}
-              <div className="flex flex-col items-center justify-center gap-0 flex-shrink-0 bg-neutral-200 dark:bg-neutral-800 rounded-lg w-16 h-16">
+              <div className="flex flex-col items-center justify-center gap-0 flex-shrink-0 border border-neutral-200 dark:border-neutral-700 rounded-lg w-16 h-16">
                 <p
                   className="font-body text-xs font-medium uppercase text-neutral-900 dark:text-white"
                   suppressHydrationWarning
@@ -99,13 +99,13 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
             <div className="space-y-2 mb-4">
               {/* Row 1: Surface, Entry Price, Finishers */}
               <div className="grid grid-cols-3 gap-2">
-                <div className="bg-neutral-100 dark:bg-neutral-800 rounded-lg px-3 py-2">
+                <div className="border border-neutral-200 dark:border-neutral-700 rounded-lg px-3 py-2">
                   <p className="font-body text-xs text-neutral-600 dark:text-neutral-400 mb-1">Surface</p>
                   <p className="font-body text-sm font-semibold text-neutral-900 dark:text-white">
                     {race.surface || 'N/A'}
                   </p>
                 </div>
-                <div className="bg-neutral-100 dark:bg-neutral-800 rounded-lg px-3 py-2">
+                <div className="border border-neutral-200 dark:border-neutral-700 rounded-lg px-3 py-2">
                   <p className="font-body text-xs text-neutral-600 dark:text-neutral-400 mb-1">Entry Price</p>
                   <p className="font-body text-sm font-semibold text-neutral-900 dark:text-white">
                     {race.price !== undefined && race.price !== null
@@ -113,7 +113,7 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
                       : 'N/A'}
                   </p>
                 </div>
-                <div className="bg-neutral-100 dark:bg-neutral-800 rounded-lg px-3 py-2">
+                <div className="border border-neutral-200 dark:border-neutral-700 rounded-lg px-3 py-2">
                   <p className="font-body text-xs text-neutral-600 dark:text-neutral-400 mb-1">Finishers</p>
                   <p className="font-body text-sm font-semibold text-neutral-900 dark:text-white">
                     {race.finishers ? race.finishers.toLocaleString() : 'N/A'}
@@ -123,7 +123,7 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
 
               {/* Row 2: Elevation Gain, Elevation Loss, Profile */}
               <div className="grid grid-cols-3 gap-2">
-                <div className="bg-neutral-100 dark:bg-neutral-800 rounded-lg px-3 py-2">
+                <div className="border border-neutral-200 dark:border-neutral-700 rounded-lg px-3 py-2">
                   <p className="font-body text-xs text-neutral-600 dark:text-neutral-400 mb-1">Elev. Gain</p>
                   <p className="font-body text-sm font-semibold text-neutral-900 dark:text-white">
                     {race.elevationGain !== undefined && race.elevationGain !== null
@@ -131,7 +131,7 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
                       : 'N/A'}
                   </p>
                 </div>
-                <div className="bg-neutral-100 dark:bg-neutral-800 rounded-lg px-3 py-2">
+                <div className="border border-neutral-200 dark:border-neutral-700 rounded-lg px-3 py-2">
                   <p className="font-body text-xs text-neutral-600 dark:text-neutral-400 mb-1">Elev. Loss</p>
                   <p className="font-body text-sm font-semibold text-neutral-900 dark:text-white">
                     {race.elevationLoss !== undefined && race.elevationLoss !== null
@@ -139,7 +139,7 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
                       : 'N/A'}
                   </p>
                 </div>
-                <div className="bg-neutral-100 dark:bg-neutral-800 rounded-lg px-3 py-2">
+                <div className="border border-neutral-200 dark:border-neutral-700 rounded-lg px-3 py-2">
                   <p className="font-body text-xs text-neutral-600 dark:text-neutral-400 mb-1">Profile</p>
                   <p className="font-body text-sm font-semibold text-neutral-900 dark:text-white">
                     {race.profile ? race.profile.charAt(0).toUpperCase() + race.profile.slice(1) : 'N/A'}
@@ -149,7 +149,7 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
 
               {/* Row 3: Average Temperature, Men's Course Record, Women's Course Record */}
               <div className="grid grid-cols-3 gap-2">
-                <div className="bg-neutral-100 dark:bg-neutral-800 rounded-lg px-3 py-2">
+                <div className="border border-neutral-200 dark:border-neutral-700 rounded-lg px-3 py-2">
                   <p className="font-body text-xs text-neutral-600 dark:text-neutral-400 mb-1">Avg. Temp</p>
                   <p className="font-body text-sm font-semibold text-neutral-900 dark:text-white">
                     {race.averageTemperature !== undefined && race.averageTemperature !== null
@@ -157,13 +157,13 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
                       : 'N/A'}
                   </p>
                 </div>
-                <div className="bg-neutral-100 dark:bg-neutral-800 rounded-lg px-3 py-2">
+                <div className="border border-neutral-200 dark:border-neutral-700 rounded-lg px-3 py-2">
                   <p className="font-body text-xs text-neutral-600 dark:text-neutral-400 mb-1">Men's CR</p>
                   <p className="font-mono text-sm font-semibold text-neutral-900 dark:text-white">
                     {race.mensCourseRecord || 'N/A'}
                   </p>
                 </div>
-                <div className="bg-neutral-100 dark:bg-neutral-800 rounded-lg px-3 py-2">
+                <div className="border border-neutral-200 dark:border-neutral-700 rounded-lg px-3 py-2">
                   <p className="font-body text-xs text-neutral-600 dark:text-neutral-400 mb-1">Women's CR</p>
                   <p className="font-mono text-sm font-semibold text-neutral-900 dark:text-white">
                     {race.womensCourseRecord || 'N/A'}
