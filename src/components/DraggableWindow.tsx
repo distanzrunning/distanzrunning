@@ -1,11 +1,12 @@
 'use client'
 
 import { useState, useRef, useEffect, ReactNode } from 'react'
-import { X, Square, Expand, Shrink } from 'lucide-react'
+import { X, Square, Expand, Shrink, Minus } from 'lucide-react'
 
 interface DraggableWindowProps {
   title: string
   onClose: () => void
+  onMinimize?: () => void
   children: ReactNode
   initialWidth?: number
   initialHeight?: number
@@ -18,6 +19,7 @@ type ResizeDirection = 'n' | 's' | 'e' | 'w' | 'ne' | 'nw' | 'se' | 'sw' | null
 export function DraggableWindow({
   title,
   onClose,
+  onMinimize,
   children,
   initialWidth = 672,
   initialHeight = 600,
@@ -246,6 +248,15 @@ export function DraggableWindow({
 
           {/* Action buttons - absolute positioned on right */}
           <div className="absolute right-2 flex items-center gap-1">
+            {onMinimize && (
+              <button
+                onClick={onMinimize}
+                className="p-1.5 rounded transition-all border border-transparent hover:border-neutral-300 dark:hover:border-neutral-600"
+                aria-label="Minimize"
+              >
+                <Minus className="w-4 h-4 text-neutral-700 dark:text-neutral-300" />
+              </button>
+            )}
             <button
               onClick={handleMaximize}
               className="p-1.5 rounded transition-all border border-transparent hover:border-neutral-300 dark:hover:border-neutral-600 group"

@@ -19,10 +19,16 @@ interface CalendarEvent {
   raceCategoryName?: string
 }
 
+interface WindowState {
+  race: RaceGuide
+  isMinimized: boolean
+}
+
 export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
   const [currentDate, setCurrentDate] = useState(new Date())
   const [showLegend, setShowLegend] = useState(false)
-  const [selectedRace, setSelectedRace] = useState<RaceGuide | null>(null)
+  const [windows, setWindows] = useState<WindowState[]>([])
+  const [showMinimizedList, setShowMinimizedList] = useState(false)
 
   // Convert races to FullCalendar events
   const events = useMemo<CalendarEvent[]>(() => {
@@ -43,9 +49,41 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
   const handleEventClick = (info: EventClickArg) => {
     const race = races.find(r => r._id === info.event.id)
     if (race) {
-      setSelectedRace(race)
+      // Check if window already exists
+      const existingWindow = windows.find(w => w.race._id === race._id)
+      if (existingWindow) {
+        // If minimized, restore it
+        if (existingWindow.isMinimized) {
+          setWindows(windows.map(w =>
+            w.race._id === race._id ? { ...w, isMinimized: false } : w
+          ))
+        }
+      } else {
+        // Add new window
+        setWindows([...windows, { race, isMinimized: false }])
+      }
     }
   }
+
+  const handleMinimize = (raceId: string) => {
+    setWindows(windows.map(w =>
+      w.race._id === raceId ? { ...w, isMinimized: true } : w
+    ))
+  }
+
+  const handleRestore = (raceId: string) => {
+    setWindows(windows.map(w =>
+      w.race._id === raceId ? { ...w, isMinimized: false } : w
+    ))
+    setShowMinimizedList(false)
+  }
+
+  const handleClose = (raceId: string) => {
+    setWindows(windows.filter(w => w.race._id !== raceId))
+  }
+
+  const minimizedWindows = windows.filter(w => w.isMinimized)
+  const activeWindows = windows.filter(w => !w.isMinimized)
 
   // Add World Athletics Label background colors
   const handleEventDidMount = (info: any) => {
@@ -162,8 +200,15 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
         <div className="h-full flex flex-col">
         {/* Calendar - Takes full remaining space - This container constrains popup windows */}
         <div className="flex-1 flex flex-col relative" style={{ overflow: 'hidden', position: 'relative' }}>
-          {/* Race Event Popup - Constrained to this container */}
-          <RaceEventPopup race={selectedRace} onClose={() => setSelectedRace(null)} />
+          {/* Active Race Event Popups - Constrained to this container */}
+          {activeWindows.map((window) => (
+            <RaceEventPopup
+              key={window.race._id}
+              race={window.race}
+              onClose={() => handleClose(window.race._id)}
+              onMinimize={() => handleMinimize(window.race._id)}
+            />
+          ))}
           <div className="bg-white dark:bg-neutral-900 flex-1 flex flex-col calendar-wrapper overflow-auto">
             {/* Custom Toolbar */}
             <div className="px-6 py-4 border-b border-neutral-200 dark:border-neutral-800 flex-shrink-0">
@@ -196,8 +241,41 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                   </button>
                 </div>
 
-                {/* Right: Month/Year/Today controls */}
+                {/* Right: Minimized Windows + Month/Year/Today controls */}
                 <div className="flex items-center gap-2">
+                  {/* Minimized Windows Button */}
+                  {minimizedWindows.length > 0 && (
+                    <div className="relative">
+                      <button
+                        onClick={() => setShowMinimizedList(!showMinimizedList)}
+                        className="px-3 py-2 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white text-sm font-medium cursor-pointer hover:border-neutral-400 dark:hover:border-neutral-600 transition-colors flex items-center gap-2"
+                        aria-label={`${minimizedWindows.length} minimized window${minimizedWindows.length > 1 ? 's' : ''}`}
+                      >
+                        <span className="font-mono">{minimizedWindows.length}</span>
+                      </button>
+                      {/* Minimized Windows Dropdown */}
+                      {showMinimizedList && (
+                        <div className="absolute right-0 top-full mt-2 w-64 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg shadow-lg z-50 max-h-80 overflow-y-auto">
+                          {minimizedWindows.map((window) => (
+                            <button
+                              key={window.race._id}
+                              onClick={() => handleRestore(window.race._id)}
+                              className="w-full px-4 py-3 text-left hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors border-b border-neutral-200 dark:border-neutral-700 last:border-b-0"
+                            >
+                              <div className="font-medium text-sm text-neutral-900 dark:text-white truncate">
+                                {window.race.title}
+                              </div>
+                              {window.race.city && (
+                                <div className="text-xs text-neutral-600 dark:text-neutral-400 mt-1">
+                                  {window.race.city}, {window.race.country}
+                                </div>
+                              )}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
                   <select
                     value={currentMonth}
                     onChange={handleMonthSelect}

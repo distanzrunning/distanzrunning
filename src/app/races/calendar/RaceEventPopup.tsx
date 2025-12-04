@@ -9,6 +9,7 @@ import { DraggableWindow } from '@/components/DraggableWindow'
 interface RaceEventPopupProps {
   race: RaceGuide | null
   onClose: () => void
+  onMinimize?: () => void
 }
 
 // Helper function to format location from city, state/region, and country
@@ -17,7 +18,7 @@ function formatLocation(city?: string, stateRegion?: string, country?: string): 
   return parts.join(', ')
 }
 
-export function RaceEventPopup({ race, onClose }: RaceEventPopupProps) {
+export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProps) {
   if (!race) return null
 
   const imageUrl = race.mainImage ? urlFor(race.mainImage)?.width(800).height(520).url() : null
@@ -26,6 +27,7 @@ export function RaceEventPopup({ race, onClose }: RaceEventPopupProps) {
     <DraggableWindow
       title={race.title}
       onClose={onClose}
+      onMinimize={onMinimize}
       initialWidth={672}
       initialHeight={600}
       minWidth={400}
