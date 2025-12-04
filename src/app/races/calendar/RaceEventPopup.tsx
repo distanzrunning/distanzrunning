@@ -34,7 +34,7 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
       minHeight={300}
     >
       {/* Content - Fixed width, scrollable */}
-      <div className="overflow-y-auto h-full flex justify-center">
+      <div className="overflow-y-auto h-full flex justify-center race-popup-scroll">
         <div className="w-full max-w-[600px] flex flex-col pt-4">
           {/* Image Container */}
           <div className="relative w-full">
@@ -198,6 +198,45 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
           </div>
         </div>
       </div>
+
+      {/* Custom scrollbar styles */}
+      <style jsx>{`
+        .race-popup-scroll::-webkit-scrollbar {
+          width: 8px;
+        }
+
+        .race-popup-scroll::-webkit-scrollbar-track {
+          background: transparent;
+        }
+
+        .race-popup-scroll::-webkit-scrollbar-thumb {
+          background: rgba(0, 0, 0, 0.2);
+          border-radius: 4px;
+        }
+
+        .race-popup-scroll::-webkit-scrollbar-thumb:hover {
+          background: rgba(0, 0, 0, 0.3);
+        }
+
+        /* Dark mode scrollbar */
+        :global(.dark) .race-popup-scroll::-webkit-scrollbar-thumb {
+          background: rgba(255, 255, 255, 0.2);
+        }
+
+        :global(.dark) .race-popup-scroll::-webkit-scrollbar-thumb:hover {
+          background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Firefox scrollbar */
+        .race-popup-scroll {
+          scrollbar-width: thin;
+          scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+        }
+
+        :global(.dark) .race-popup-scroll {
+          scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+        }
+      `}</style>
     </DraggableWindow>
   )
 }
