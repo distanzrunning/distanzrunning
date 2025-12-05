@@ -498,37 +498,45 @@ export function DraggableWindow({
       {showTooltip && maximizeButtonRef.current && (() => {
         const buttonRect = maximizeButtonRef.current.getBoundingClientRect()
         const tooltipWidth = 180 // Approximate width of tooltip text
+        const arrowSize = 6 // Height of the triangle arrow
+
+        // Center the tooltip horizontally on the button
         const left = buttonRect.left + (buttonRect.width / 2) - (tooltipWidth / 2)
+        // Position so arrow tip touches the top of button
+        const top = buttonRect.top - arrowSize
 
         return (
           <div
             className="fixed pointer-events-none"
             style={{
               zIndex: 10001,
-              top: `${buttonRect.top - 38}px`,
+              // Position the container so the arrow tip is at buttonRect.top
+              bottom: `${window.innerHeight - top}px`,
               left: `${left}px`
             }}
           >
             {/* Tooltip container with arrow */}
-            <div className="relative">
+            <div className="relative flex flex-col items-center">
               <div className="px-3 py-1.5 bg-neutral-900 dark:bg-neutral-700 text-white text-xs rounded whitespace-nowrap">
                 Right click for more options
               </div>
-              {/* Triangle pointer */}
+              {/* Triangle pointer - light mode */}
               <div
-                className="absolute left-1/2 -translate-x-1/2 w-0 h-0"
+                className="dark:hidden"
                 style={{
-                  top: '100%',
+                  width: 0,
+                  height: 0,
                   borderLeft: '6px solid transparent',
                   borderRight: '6px solid transparent',
                   borderTop: '6px solid rgb(23, 23, 23)' // neutral-900
                 }}
               />
-              {/* Dark mode triangle */}
+              {/* Triangle pointer - dark mode */}
               <div
-                className="absolute left-1/2 -translate-x-1/2 w-0 h-0 dark:block hidden"
+                className="hidden dark:block"
                 style={{
-                  top: '100%',
+                  width: 0,
+                  height: 0,
                   borderLeft: '6px solid transparent',
                   borderRight: '6px solid transparent',
                   borderTop: '6px solid rgb(64, 64, 64)' // neutral-700
