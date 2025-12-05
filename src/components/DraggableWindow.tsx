@@ -492,9 +492,8 @@ export function DraggableWindow({
       {/* Tooltip - rendered outside window to avoid overflow-hidden */}
       {showTooltip && maximizeButtonRef.current && (
         <div
-          className="fixed pointer-events-none"
+          className="fixed pointer-events-none z-[9999]"
           style={{
-            zIndex: 10002,
             top: `${maximizeButtonRef.current.getBoundingClientRect().top - 38}px`,
             left: `${maximizeButtonRef.current.getBoundingClientRect().left + maximizeButtonRef.current.getBoundingClientRect().width / 2}px`,
             transform: 'translateX(-50%)'
