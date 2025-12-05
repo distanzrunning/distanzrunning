@@ -495,18 +495,49 @@ export function DraggableWindow({
       </div>
 
       {/* Tooltip - rendered outside window to avoid overflow-hidden */}
-      {showTooltip && maximizeButtonRef.current && (
-        <div
-          className="fixed px-2 py-1 bg-neutral-900 dark:bg-neutral-700 text-white text-xs rounded whitespace-nowrap transition-opacity pointer-events-none"
-          style={{
-            zIndex: 10001,
-            top: `${maximizeButtonRef.current.getBoundingClientRect().top - 30}px`,
-            left: `${maximizeButtonRef.current.getBoundingClientRect().left + maximizeButtonRef.current.getBoundingClientRect().width / 2 - 90}px`
-          }}
-        >
-          Right click for more options
-        </div>
-      )}
+      {showTooltip && maximizeButtonRef.current && (() => {
+        const buttonRect = maximizeButtonRef.current.getBoundingClientRect()
+        const tooltipWidth = 180 // Approximate width of tooltip text
+        const left = buttonRect.left + (buttonRect.width / 2) - (tooltipWidth / 2)
+
+        return (
+          <div
+            className="fixed pointer-events-none"
+            style={{
+              zIndex: 10001,
+              top: `${buttonRect.top - 38}px`,
+              left: `${left}px`
+            }}
+          >
+            {/* Tooltip container with arrow */}
+            <div className="relative">
+              <div className="px-3 py-1.5 bg-neutral-900 dark:bg-neutral-700 text-white text-xs rounded whitespace-nowrap">
+                Right click for more options
+              </div>
+              {/* Triangle pointer */}
+              <div
+                className="absolute left-1/2 -translate-x-1/2 w-0 h-0"
+                style={{
+                  top: '100%',
+                  borderLeft: '6px solid transparent',
+                  borderRight: '6px solid transparent',
+                  borderTop: '6px solid rgb(23, 23, 23)' // neutral-900
+                }}
+              />
+              {/* Dark mode triangle */}
+              <div
+                className="absolute left-1/2 -translate-x-1/2 w-0 h-0 dark:block hidden"
+                style={{
+                  top: '100%',
+                  borderLeft: '6px solid transparent',
+                  borderRight: '6px solid transparent',
+                  borderTop: '6px solid rgb(64, 64, 64)' // neutral-700
+                }}
+              />
+            </div>
+          </div>
+        )
+      })()}
 
       {/* Snap Menu - rendered outside window to avoid overflow-hidden */}
       {showSnapMenu && maximizeButtonRef.current && (
