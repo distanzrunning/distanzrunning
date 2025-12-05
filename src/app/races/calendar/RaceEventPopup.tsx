@@ -189,7 +189,7 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
                   href={race.officialWebsite}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-neutral-300 dark:bg-neutral-700 text-neutral-900 dark:text-white rounded-lg font-medium text-sm transition-opacity hover:opacity-80"
+                  className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-600 text-neutral-900 dark:text-white rounded-lg font-medium text-sm transition-opacity hover:opacity-80"
                 >
                   Official Site
                 </a>
