@@ -425,8 +425,8 @@ export function DraggableWindow({
                 )}
               </button>
 
-              {/* Tooltip */}
-              <div className="absolute bottom-full right-0 mb-2 px-2 py-1 bg-neutral-900 dark:bg-neutral-700 text-white text-xs rounded whitespace-nowrap opacity-0 group-hover/maximize:opacity-100 transition-opacity pointer-events-none">
+              {/* Tooltip - positioned below button */}
+              <div className="absolute top-full right-0 mt-2 px-2 py-1 bg-neutral-900 dark:bg-neutral-700 text-white text-xs rounded whitespace-nowrap opacity-0 group-hover/maximize:opacity-100 transition-opacity pointer-events-none z-[100]">
                 Right click for more options
               </div>
 
@@ -434,8 +434,12 @@ export function DraggableWindow({
               {showSnapMenu && (
                 <div
                   ref={snapMenuRef}
-                  className="absolute top-full right-0 mt-1 w-44 bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg shadow-lg py-1"
-                  style={{ zIndex: 9999 }}
+                  className="fixed w-44 bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg shadow-lg py-1"
+                  style={{
+                    zIndex: 10000,
+                    top: '45px',
+                    right: '50px'
+                  }}
                 >
                   <div className="px-3 py-2 text-xs font-medium text-neutral-500 dark:text-neutral-400 border-b border-neutral-200 dark:border-neutral-700">
                     Snap to...
