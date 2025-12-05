@@ -49,6 +49,7 @@ export function DraggableWindow({
   const windowRef = useRef<HTMLDivElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const snapMenuRef = useRef<HTMLDivElement>(null)
+  const maximizeButtonRef = useRef<HTMLButtonElement>(null)
 
   // Initialize position to center of screen
   useEffect(() => {
@@ -407,6 +408,7 @@ export function DraggableWindow({
             )}
             <div className="relative">
               <button
+                ref={maximizeButtonRef}
                 onClick={handleMaximize}
                 onContextMenu={handleMaximizeContextMenu}
                 onMouseEnter={() => setShowTooltip(true)}
@@ -493,15 +495,13 @@ export function DraggableWindow({
       </div>
 
       {/* Tooltip - rendered outside window to avoid overflow-hidden */}
-      {showTooltip && (
+      {showTooltip && maximizeButtonRef.current && (
         <div
           className="fixed px-2 py-1 bg-neutral-900 dark:bg-neutral-700 text-white text-xs rounded whitespace-nowrap transition-opacity pointer-events-none"
           style={{
             zIndex: 10001,
-            top: isMaximized || isSnappedLeft || isSnappedRight
-              ? '10px'
-              : `${position.y - 30}px`,
-            right: '50px'
+            top: `${maximizeButtonRef.current.getBoundingClientRect().top - 30}px`,
+            left: `${maximizeButtonRef.current.getBoundingClientRect().left + maximizeButtonRef.current.getBoundingClientRect().width / 2 - 90}px`
           }}
         >
           Right click for more options
@@ -509,16 +509,14 @@ export function DraggableWindow({
       )}
 
       {/* Snap Menu - rendered outside window to avoid overflow-hidden */}
-      {showSnapMenu && (
+      {showSnapMenu && maximizeButtonRef.current && (
         <div
           ref={snapMenuRef}
           className="fixed w-44 bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg shadow-lg py-1"
           style={{
             zIndex: 10001,
-            top: isMaximized || isSnappedLeft || isSnappedRight
-              ? '45px'
-              : `${position.y + 45}px`,
-            right: '50px'
+            top: `${maximizeButtonRef.current.getBoundingClientRect().bottom + 5}px`,
+            left: `${maximizeButtonRef.current.getBoundingClientRect().right - 176}px`
           }}
         >
           <div className="px-3 py-2 text-xs font-medium text-neutral-500 dark:text-neutral-400 border-b border-neutral-200 dark:border-neutral-700">
