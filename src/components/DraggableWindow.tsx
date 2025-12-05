@@ -137,11 +137,12 @@ export function DraggableWindow({
             y: Math.max(0, Math.min(newY, maxY)),
           })
 
-          // Detect snap zones (50px from edge)
+          // Detect snap zones (50px from edge) - use position relative to container
           const snapThreshold = 50
-          if (e.clientX <= snapThreshold) {
+          const relativeX = e.clientX - containerRect.left
+          if (relativeX <= snapThreshold) {
             setSnapPreview('left')
-          } else if (e.clientX >= containerRect.width - snapThreshold) {
+          } else if (relativeX >= containerRect.width - snapThreshold) {
             setSnapPreview('right')
           } else {
             setSnapPreview(null)
