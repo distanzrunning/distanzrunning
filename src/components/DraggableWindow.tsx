@@ -429,7 +429,37 @@ export function DraggableWindow({
                 )}
               </button>
 
-              {/* Tooltip moved outside - see after window div */}
+              {/* Tooltip - positioned relative to button */}
+              {showTooltip && (
+                <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-1.5 pointer-events-none z-[100]">
+                  <div className="flex flex-col items-center">
+                    <div className="px-3 py-1.5 bg-neutral-900 dark:bg-neutral-700 text-white text-xs rounded whitespace-nowrap">
+                      Right click for more options
+                    </div>
+                    <div
+                      className="dark:hidden -mt-px"
+                      style={{
+                        width: 0,
+                        height: 0,
+                        borderLeft: '6px solid transparent',
+                        borderRight: '6px solid transparent',
+                        borderTop: '6px solid rgb(23, 23, 23)'
+                      }}
+                    />
+                    <div
+                      className="hidden dark:block -mt-px"
+                      style={{
+                        width: 0,
+                        height: 0,
+                        borderLeft: '6px solid transparent',
+                        borderRight: '6px solid transparent',
+                        borderTop: '6px solid rgb(64, 64, 64)'
+                      }}
+                    />
+                  </div>
+                </div>
+              )}
+
               {/* Snap Menu moved outside - see after window div */}
             </div>
             <button
@@ -493,59 +523,6 @@ export function DraggableWindow({
           </>
         )}
       </div>
-
-      {/* Tooltip - rendered outside window to avoid overflow-hidden */}
-      {showTooltip && maximizeButtonRef.current && (() => {
-        const buttonRect = maximizeButtonRef.current.getBoundingClientRect()
-        const tooltipWidth = 180 // Approximate width of tooltip text
-        const arrowSize = 6 // Height of the triangle arrow
-
-        // Center the tooltip horizontally on the button
-        const left = buttonRect.left + (buttonRect.width / 2) - (tooltipWidth / 2)
-        // Position so arrow tip touches the top of button
-        const top = buttonRect.top - arrowSize
-
-        return (
-          <div
-            className="fixed pointer-events-none"
-            style={{
-              zIndex: 10001,
-              // Position the container so the arrow tip is at buttonRect.top
-              bottom: `${window.innerHeight - top}px`,
-              left: `${left}px`
-            }}
-          >
-            {/* Tooltip container with arrow */}
-            <div className="relative flex flex-col items-center">
-              <div className="px-3 py-1.5 bg-neutral-900 dark:bg-neutral-700 text-white text-xs rounded whitespace-nowrap">
-                Right click for more options
-              </div>
-              {/* Triangle pointer - light mode */}
-              <div
-                className="dark:hidden"
-                style={{
-                  width: 0,
-                  height: 0,
-                  borderLeft: '6px solid transparent',
-                  borderRight: '6px solid transparent',
-                  borderTop: '6px solid rgb(23, 23, 23)' // neutral-900
-                }}
-              />
-              {/* Triangle pointer - dark mode */}
-              <div
-                className="hidden dark:block"
-                style={{
-                  width: 0,
-                  height: 0,
-                  borderLeft: '6px solid transparent',
-                  borderRight: '6px solid transparent',
-                  borderTop: '6px solid rgb(64, 64, 64)' // neutral-700
-                }}
-              />
-            </div>
-          </div>
-        )
-      })()}
 
       {/* Snap Menu - rendered outside window to avoid overflow-hidden */}
       {showSnapMenu && maximizeButtonRef.current && (
