@@ -532,7 +532,7 @@ export function DraggableWindow({
       {showSnapMenu && maximizeButtonRef.current && (
         <div
           ref={snapMenuRef}
-          className="fixed w-44 bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg shadow-lg py-1"
+          className="fixed w-44 bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg shadow-lg py-1 pointer-events-auto"
           style={{
             zIndex: 10001,
             top: `${maximizeButtonRef.current.getBoundingClientRect().bottom + 5}px`,
