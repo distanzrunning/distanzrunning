@@ -36,6 +36,7 @@ export function DraggableWindow({
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 })
   const [snapPreview, setSnapPreview] = useState<'left' | 'right' | null>(null)
   const [showSnapMenu, setShowSnapMenu] = useState(false)
+  const [showTooltip, setShowTooltip] = useState(false)
   const [resizeStart, setResizeStart] = useState({
     mouseX: 0,
     mouseY: 0,
@@ -404,13 +405,14 @@ export function DraggableWindow({
                 </svg>
               </button>
             )}
-            <div className="relative group/maximize">
+            <div className="relative">
               <button
                 onClick={handleMaximize}
                 onContextMenu={handleMaximizeContextMenu}
+                onMouseEnter={() => setShowTooltip(true)}
+                onMouseLeave={() => setShowTooltip(false)}
                 className="p-1.5 rounded transition-all border border-transparent hover:border-neutral-300 dark:hover:border-neutral-600 group"
                 aria-label={isMaximized ? 'Restore' : 'Maximize'}
-                title="Right click for more options"
               >
                 {isMaximized ? (
                   <>
@@ -425,50 +427,8 @@ export function DraggableWindow({
                 )}
               </button>
 
-              {/* Tooltip - positioned below button */}
-              <div className="absolute top-full right-0 mt-2 px-2 py-1 bg-neutral-900 dark:bg-neutral-700 text-white text-xs rounded whitespace-nowrap opacity-0 group-hover/maximize:opacity-100 transition-opacity pointer-events-none z-[100]">
-                Right click for more options
-              </div>
-
-              {/* Snap Menu */}
-              {showSnapMenu && (
-                <div
-                  ref={snapMenuRef}
-                  className="fixed w-44 bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg shadow-lg py-1"
-                  style={{
-                    zIndex: 10000,
-                    top: '45px',
-                    right: '50px'
-                  }}
-                >
-                  <div className="px-3 py-2 text-xs font-medium text-neutral-500 dark:text-neutral-400 border-b border-neutral-200 dark:border-neutral-700">
-                    Snap to...
-                  </div>
-                  <button
-                    onClick={handleSnapLeft}
-                    className="w-full px-3 py-2 text-left text-sm text-neutral-900 dark:text-white hover:bg-neutral-100 dark:hover:bg-neutral-700 flex items-center justify-between transition-colors"
-                  >
-                    <span>Left half</span>
-                    <span className="text-xs text-neutral-500 dark:text-neutral-400">Shift+←</span>
-                  </button>
-                  <button
-                    onClick={handleSnapRight}
-                    className="w-full px-3 py-2 text-left text-sm text-neutral-900 dark:text-white hover:bg-neutral-100 dark:hover:bg-neutral-700 flex items-center justify-between transition-colors"
-                  >
-                    <span>Right half</span>
-                    <span className="text-xs text-neutral-500 dark:text-neutral-400">Shift+→</span>
-                  </button>
-                  <div className="border-t border-neutral-200 dark:border-neutral-700 mt-1 pt-1">
-                    <button
-                      onClick={handleMaximize}
-                      className="w-full px-3 py-2 text-left text-sm text-neutral-900 dark:text-white hover:bg-neutral-100 dark:hover:bg-neutral-700 flex items-center justify-between transition-colors"
-                    >
-                      <span>Maximize</span>
-                      <span className="text-xs text-neutral-500 dark:text-neutral-400">Shift+↑</span>
-                    </button>
-                  </div>
-                </div>
-              )}
+              {/* Tooltip moved outside - see after window div */}
+              {/* Snap Menu moved outside - see after window div */}
             </div>
             <button
               onClick={onClose}
@@ -531,6 +491,64 @@ export function DraggableWindow({
           </>
         )}
       </div>
+
+      {/* Tooltip - rendered outside window to avoid overflow-hidden */}
+      {showTooltip && (
+        <div
+          className="fixed px-2 py-1 bg-neutral-900 dark:bg-neutral-700 text-white text-xs rounded whitespace-nowrap transition-opacity pointer-events-none"
+          style={{
+            zIndex: 10001,
+            top: isMaximized || isSnappedLeft || isSnappedRight
+              ? '10px'
+              : `${position.y - 30}px`,
+            right: '50px'
+          }}
+        >
+          Right click for more options
+        </div>
+      )}
+
+      {/* Snap Menu - rendered outside window to avoid overflow-hidden */}
+      {showSnapMenu && (
+        <div
+          ref={snapMenuRef}
+          className="fixed w-44 bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg shadow-lg py-1"
+          style={{
+            zIndex: 10001,
+            top: isMaximized || isSnappedLeft || isSnappedRight
+              ? '45px'
+              : `${position.y + 45}px`,
+            right: '50px'
+          }}
+        >
+          <div className="px-3 py-2 text-xs font-medium text-neutral-500 dark:text-neutral-400 border-b border-neutral-200 dark:border-neutral-700">
+            Snap to...
+          </div>
+          <button
+            onClick={handleSnapLeft}
+            className="w-full px-3 py-2 text-left text-sm text-neutral-900 dark:text-white hover:bg-neutral-100 dark:hover:bg-neutral-700 flex items-center justify-between transition-colors"
+          >
+            <span>Left half</span>
+            <span className="text-xs text-neutral-500 dark:text-neutral-400">Shift+←</span>
+          </button>
+          <button
+            onClick={handleSnapRight}
+            className="w-full px-3 py-2 text-left text-sm text-neutral-900 dark:text-white hover:bg-neutral-100 dark:hover:bg-neutral-700 flex items-center justify-between transition-colors"
+          >
+            <span>Right half</span>
+            <span className="text-xs text-neutral-500 dark:text-neutral-400">Shift+→</span>
+          </button>
+          <div className="border-t border-neutral-200 dark:border-neutral-700 mt-1 pt-1">
+            <button
+              onClick={handleMaximize}
+              className="w-full px-3 py-2 text-left text-sm text-neutral-900 dark:text-white hover:bg-neutral-100 dark:hover:bg-neutral-700 flex items-center justify-between transition-colors"
+            >
+              <span>Maximize</span>
+              <span className="text-xs text-neutral-500 dark:text-neutral-400">Shift+↑</span>
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
