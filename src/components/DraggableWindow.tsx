@@ -27,11 +27,14 @@ export function DraggableWindow({
   minHeight = 300,
 }: DraggableWindowProps) {
   const [isMaximized, setIsMaximized] = useState(false)
+  const [isSnappedLeft, setIsSnappedLeft] = useState(false)
+  const [isSnappedRight, setIsSnappedRight] = useState(false)
   const [position, setPosition] = useState({ x: 0, y: 0 })
   const [size, setSize] = useState({ width: initialWidth, height: initialHeight })
   const [isDragging, setIsDragging] = useState(false)
   const [resizeDirection, setResizeDirection] = useState<ResizeDirection>(null)
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 })
+  const [snapPreview, setSnapPreview] = useState<'left' | 'right' | null>(null)
   const [resizeStart, setResizeStart] = useState({
     mouseX: 0,
     mouseY: 0,
@@ -55,7 +58,27 @@ export function DraggableWindow({
 
   // Handle titlebar drag
   const handleMouseDown = (e: React.MouseEvent) => {
-    if (isMaximized) return
+    if (isMaximized || isSnappedLeft || isSnappedRight) {
+      // If snapped or maximized, unsnap first
+      if (isSnappedLeft || isSnappedRight) {
+        setIsSnappedLeft(false)
+        setIsSnappedRight(false)
+        // Center the window under cursor
+        const newWidth = initialWidth
+        const newHeight = initialHeight
+        setSize({ width: newWidth, height: newHeight })
+        setPosition({
+          x: e.clientX - newWidth / 2,
+          y: e.clientY - 20, // Offset for titlebar
+        })
+        setDragOffset({
+          x: newWidth / 2,
+          y: 20,
+        })
+        setIsDragging(true)
+      }
+      return
+    }
 
     setDragOffset({
       x: e.clientX - position.x,
@@ -113,6 +136,16 @@ export function DraggableWindow({
             x: Math.max(0, Math.min(newX, maxX)),
             y: Math.max(0, Math.min(newY, maxY)),
           })
+
+          // Detect snap zones (50px from edge)
+          const snapThreshold = 50
+          if (e.clientX <= snapThreshold) {
+            setSnapPreview('left')
+          } else if (e.clientX >= containerRect.width - snapThreshold) {
+            setSnapPreview('right')
+          } else {
+            setSnapPreview(null)
+          }
         }
       } else if (resizeDirection) {
         const deltaX = e.clientX - resizeStart.mouseX
@@ -173,6 +206,22 @@ export function DraggableWindow({
     }
 
     const handleMouseUp = () => {
+      // Handle snap on mouse up
+      if (isDragging && snapPreview) {
+        const containerRect = containerRef.current?.getBoundingClientRect()
+        if (containerRect) {
+          if (snapPreview === 'left') {
+            setIsSnappedLeft(true)
+            setPosition({ x: 0, y: 0 })
+            setSize({ width: containerRect.width / 2, height: containerRect.height })
+          } else if (snapPreview === 'right') {
+            setIsSnappedRight(true)
+            setPosition({ x: containerRect.width / 2, y: 0 })
+            setSize({ width: containerRect.width / 2, height: containerRect.height })
+          }
+        }
+        setSnapPreview(null)
+      }
       setIsDragging(false)
       setResizeDirection(null)
     }
@@ -213,6 +262,22 @@ export function DraggableWindow({
 
   return (
     <div ref={containerRef} className="absolute inset-0 pointer-events-none" style={{ zIndex: 40 }}>
+      {/* Snap Preview Overlay */}
+      {snapPreview && (
+        <div
+          className="pointer-events-none absolute transition-opacity duration-150"
+          style={{
+            top: 0,
+            left: snapPreview === 'left' ? 0 : '50%',
+            width: '50%',
+            height: '100%',
+            background: 'repeating-linear-gradient(45deg, rgba(228, 60, 129, 0.03), rgba(228, 60, 129, 0.03) 10px, rgba(228, 60, 129, 0.05) 10px, rgba(228, 60, 129, 0.05) 20px)',
+            border: '1px solid rgba(228, 60, 129, 0.3)',
+            zIndex: 39,
+          }}
+        />
+      )}
+
       <div
         ref={windowRef}
         className="pointer-events-auto absolute rounded-lg shadow-2xl flex flex-col overflow-hidden border-b border-neutral-200 dark:border-neutral-700"
@@ -222,6 +287,22 @@ export function DraggableWindow({
                 top: 0,
                 left: 0,
                 width: '100%',
+                height: '100%',
+                borderRadius: 0,
+              }
+            : isSnappedLeft
+            ? {
+                top: 0,
+                left: 0,
+                width: '50%',
+                height: '100%',
+                borderRadius: 0,
+              }
+            : isSnappedRight
+            ? {
+                top: 0,
+                left: '50%',
+                width: '50%',
                 height: '100%',
                 borderRadius: 0,
               }
@@ -303,8 +384,8 @@ export function DraggableWindow({
           {children}
         </div>
 
-        {/* Resize handles - only show when not maximized */}
-        {!isMaximized && (
+        {/* Resize handles - only show when not maximized or snapped */}
+        {!isMaximized && !isSnappedLeft && !isSnappedRight && (
           <>
             {/* Top */}
             <div
