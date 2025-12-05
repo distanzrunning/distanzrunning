@@ -404,12 +404,13 @@ export function DraggableWindow({
                 </svg>
               </button>
             )}
-            <div className="relative">
+            <div className="relative group/maximize">
               <button
                 onClick={handleMaximize}
                 onContextMenu={handleMaximizeContextMenu}
                 className="p-1.5 rounded transition-all border border-transparent hover:border-neutral-300 dark:hover:border-neutral-600 group"
                 aria-label={isMaximized ? 'Restore' : 'Maximize'}
+                title="Right click for more options"
               >
                 {isMaximized ? (
                   <>
@@ -424,11 +425,17 @@ export function DraggableWindow({
                 )}
               </button>
 
+              {/* Tooltip */}
+              <div className="absolute bottom-full right-0 mb-2 px-2 py-1 bg-neutral-900 dark:bg-neutral-700 text-white text-xs rounded whitespace-nowrap opacity-0 group-hover/maximize:opacity-100 transition-opacity pointer-events-none">
+                Right click for more options
+              </div>
+
               {/* Snap Menu */}
               {showSnapMenu && (
                 <div
                   ref={snapMenuRef}
-                  className="absolute top-full right-0 mt-1 w-44 bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg shadow-lg z-50 py-1"
+                  className="absolute top-full right-0 mt-1 w-44 bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg shadow-lg py-1"
+                  style={{ zIndex: 9999 }}
                 >
                   <div className="px-3 py-2 text-xs font-medium text-neutral-500 dark:text-neutral-400 border-b border-neutral-200 dark:border-neutral-700">
                     Snap to...
