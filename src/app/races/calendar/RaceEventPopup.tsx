@@ -79,7 +79,7 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
               </div>
 
               {/* Date Container - Right Side (Rounded) */}
-              <div className="flex flex-col items-center justify-center gap-0 flex-shrink-0 border border-neutral-200 dark:border-neutral-700 rounded-lg w-16 h-16">
+              <div className="flex flex-col items-center justify-center gap-0 flex-shrink-0 bg-neutral-200 dark:bg-neutral-800 rounded-lg w-16 h-16">
                 <p
                   className="font-body text-xs font-medium uppercase text-neutral-900 dark:text-white"
                   suppressHydrationWarning
