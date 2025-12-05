@@ -406,62 +406,27 @@ export function DraggableWindow({
                 </svg>
               </button>
             )}
-            <div className="relative">
-              <button
-                ref={maximizeButtonRef}
-                onClick={handleMaximize}
-                onContextMenu={handleMaximizeContextMenu}
-                onMouseEnter={() => setShowTooltip(true)}
-                onMouseLeave={() => setShowTooltip(false)}
-                className="p-1.5 rounded transition-all border border-transparent hover:border-neutral-300 dark:hover:border-neutral-600 group"
-                aria-label={isMaximized ? 'Restore' : 'Maximize'}
-              >
-                {isMaximized ? (
-                  <>
-                    <Square className="w-4 h-4 text-neutral-700 dark:text-neutral-300 group-hover:hidden" />
-                    <Shrink className="w-4 h-4 text-neutral-700 dark:text-neutral-300 hidden group-hover:block" />
-                  </>
-                ) : (
-                  <>
-                    <Square className="w-4 h-4 text-neutral-700 dark:text-neutral-300 group-hover:hidden" />
-                    <Expand className="w-4 h-4 text-neutral-700 dark:text-neutral-300 hidden group-hover:block" />
-                  </>
-                )}
-              </button>
-
-              {/* Tooltip - positioned relative to button */}
-              {showTooltip && (
-                <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-1.5 pointer-events-none z-[100]">
-                  <div className="flex flex-col items-center">
-                    <div className="px-3 py-1.5 bg-neutral-900 dark:bg-neutral-700 text-white text-xs rounded whitespace-nowrap">
-                      Right click for more options
-                    </div>
-                    <div
-                      className="dark:hidden -mt-px"
-                      style={{
-                        width: 0,
-                        height: 0,
-                        borderLeft: '6px solid transparent',
-                        borderRight: '6px solid transparent',
-                        borderTop: '6px solid rgb(23, 23, 23)'
-                      }}
-                    />
-                    <div
-                      className="hidden dark:block -mt-px"
-                      style={{
-                        width: 0,
-                        height: 0,
-                        borderLeft: '6px solid transparent',
-                        borderRight: '6px solid transparent',
-                        borderTop: '6px solid rgb(64, 64, 64)'
-                      }}
-                    />
-                  </div>
-                </div>
+            <button
+              ref={maximizeButtonRef}
+              onClick={handleMaximize}
+              onContextMenu={handleMaximizeContextMenu}
+              onMouseEnter={() => setShowTooltip(true)}
+              onMouseLeave={() => setShowTooltip(false)}
+              className="p-1.5 rounded transition-all border border-transparent hover:border-neutral-300 dark:hover:border-neutral-600 group"
+              aria-label={isMaximized ? 'Restore' : 'Maximize'}
+            >
+              {isMaximized ? (
+                <>
+                  <Square className="w-4 h-4 text-neutral-700 dark:text-neutral-300 group-hover:hidden" />
+                  <Shrink className="w-4 h-4 text-neutral-700 dark:text-neutral-300 hidden group-hover:block" />
+                </>
+              ) : (
+                <>
+                  <Square className="w-4 h-4 text-neutral-700 dark:text-neutral-300 group-hover:hidden" />
+                  <Expand className="w-4 h-4 text-neutral-700 dark:text-neutral-300 hidden group-hover:block" />
+                </>
               )}
-
-              {/* Snap Menu moved outside - see after window div */}
-            </div>
+            </button>
             <button
               onClick={onClose}
               className="p-1.5 rounded transition-all border border-transparent hover:border-neutral-300 dark:hover:border-neutral-600"
@@ -523,6 +488,45 @@ export function DraggableWindow({
           </>
         )}
       </div>
+
+      {/* Tooltip - rendered outside window to avoid overflow-hidden */}
+      {showTooltip && maximizeButtonRef.current && (
+        <div
+          className="fixed pointer-events-none"
+          style={{
+            zIndex: 10002,
+            top: `${maximizeButtonRef.current.getBoundingClientRect().top - 38}px`,
+            left: `${maximizeButtonRef.current.getBoundingClientRect().left + maximizeButtonRef.current.getBoundingClientRect().width / 2}px`,
+            transform: 'translateX(-50%)'
+          }}
+        >
+          <div className="flex flex-col items-center">
+            <div className="px-3 py-1.5 bg-neutral-900 dark:bg-neutral-700 text-white text-xs rounded whitespace-nowrap">
+              Right click for more options
+            </div>
+            <div
+              className="dark:hidden -mt-px"
+              style={{
+                width: 0,
+                height: 0,
+                borderLeft: '6px solid transparent',
+                borderRight: '6px solid transparent',
+                borderTop: '6px solid rgb(23, 23, 23)'
+              }}
+            />
+            <div
+              className="hidden dark:block -mt-px"
+              style={{
+                width: 0,
+                height: 0,
+                borderLeft: '6px solid transparent',
+                borderRight: '6px solid transparent',
+                borderTop: '6px solid rgb(64, 64, 64)'
+              }}
+            />
+          </div>
+        </div>
+      )}
 
       {/* Snap Menu - rendered outside window to avoid overflow-hidden */}
       {showSnapMenu && maximizeButtonRef.current && (
