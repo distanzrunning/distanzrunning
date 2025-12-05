@@ -35,6 +35,7 @@ export function DraggableWindow({
   const [resizeDirection, setResizeDirection] = useState<ResizeDirection>(null)
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 })
   const [snapPreview, setSnapPreview] = useState<'left' | 'right' | null>(null)
+  const [showSnapMenu, setShowSnapMenu] = useState(false)
   const [resizeStart, setResizeStart] = useState({
     mouseX: 0,
     mouseY: 0,
@@ -46,6 +47,7 @@ export function DraggableWindow({
 
   const windowRef = useRef<HTMLDivElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
+  const snapMenuRef = useRef<HTMLDivElement>(null)
 
   // Initialize position to center of screen
   useEffect(() => {
@@ -118,6 +120,20 @@ export function DraggableWindow({
       document.body.style.cursor = ''
     }
   }, [isDragging, resizeDirection])
+
+  // Close snap menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (showSnapMenu && snapMenuRef.current && !snapMenuRef.current.contains(e.target as Node)) {
+        setShowSnapMenu(false)
+      }
+    }
+
+    if (showSnapMenu) {
+      document.addEventListener('mousedown', handleClickOutside)
+      return () => document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [showSnapMenu])
 
   // Handle mouse move for dragging and resizing
   useEffect(() => {
@@ -245,6 +261,36 @@ export function DraggableWindow({
 
   const handleMaximize = () => {
     setIsMaximized(!isMaximized)
+    setShowSnapMenu(false)
+  }
+
+  const handleSnapLeft = () => {
+    const containerRect = containerRef.current?.getBoundingClientRect()
+    if (containerRect) {
+      setIsMaximized(false)
+      setIsSnappedLeft(true)
+      setIsSnappedRight(false)
+      setPosition({ x: 0, y: 0 })
+      setSize({ width: containerRect.width / 2, height: containerRect.height })
+    }
+    setShowSnapMenu(false)
+  }
+
+  const handleSnapRight = () => {
+    const containerRect = containerRef.current?.getBoundingClientRect()
+    if (containerRect) {
+      setIsMaximized(false)
+      setIsSnappedLeft(false)
+      setIsSnappedRight(true)
+      setPosition({ x: containerRect.width / 2, y: 0 })
+      setSize({ width: containerRect.width / 2, height: containerRect.height })
+    }
+    setShowSnapMenu(false)
+  }
+
+  const handleMaximizeContextMenu = (e: React.MouseEvent) => {
+    e.preventDefault()
+    setShowSnapMenu(!showSnapMenu)
   }
 
   const getCursorClass = (direction: ResizeDirection) => {
@@ -358,23 +404,61 @@ export function DraggableWindow({
                 </svg>
               </button>
             )}
-            <button
-              onClick={handleMaximize}
-              className="p-1.5 rounded transition-all border border-transparent hover:border-neutral-300 dark:hover:border-neutral-600 group"
-              aria-label={isMaximized ? 'Restore' : 'Maximize'}
-            >
-              {isMaximized ? (
-                <>
-                  <Square className="w-4 h-4 text-neutral-700 dark:text-neutral-300 group-hover:hidden" />
-                  <Shrink className="w-4 h-4 text-neutral-700 dark:text-neutral-300 hidden group-hover:block" />
-                </>
-              ) : (
-                <>
-                  <Square className="w-4 h-4 text-neutral-700 dark:text-neutral-300 group-hover:hidden" />
-                  <Expand className="w-4 h-4 text-neutral-700 dark:text-neutral-300 hidden group-hover:block" />
-                </>
+            <div className="relative">
+              <button
+                onClick={handleMaximize}
+                onContextMenu={handleMaximizeContextMenu}
+                className="p-1.5 rounded transition-all border border-transparent hover:border-neutral-300 dark:hover:border-neutral-600 group"
+                aria-label={isMaximized ? 'Restore' : 'Maximize'}
+              >
+                {isMaximized ? (
+                  <>
+                    <Square className="w-4 h-4 text-neutral-700 dark:text-neutral-300 group-hover:hidden" />
+                    <Shrink className="w-4 h-4 text-neutral-700 dark:text-neutral-300 hidden group-hover:block" />
+                  </>
+                ) : (
+                  <>
+                    <Square className="w-4 h-4 text-neutral-700 dark:text-neutral-300 group-hover:hidden" />
+                    <Expand className="w-4 h-4 text-neutral-700 dark:text-neutral-300 hidden group-hover:block" />
+                  </>
+                )}
+              </button>
+
+              {/* Snap Menu */}
+              {showSnapMenu && (
+                <div
+                  ref={snapMenuRef}
+                  className="absolute top-full right-0 mt-1 w-44 bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg shadow-lg z-50 py-1"
+                >
+                  <div className="px-3 py-2 text-xs font-medium text-neutral-500 dark:text-neutral-400 border-b border-neutral-200 dark:border-neutral-700">
+                    Snap to...
+                  </div>
+                  <button
+                    onClick={handleSnapLeft}
+                    className="w-full px-3 py-2 text-left text-sm text-neutral-900 dark:text-white hover:bg-neutral-100 dark:hover:bg-neutral-700 flex items-center justify-between transition-colors"
+                  >
+                    <span>Left half</span>
+                    <span className="text-xs text-neutral-500 dark:text-neutral-400">Shift+←</span>
+                  </button>
+                  <button
+                    onClick={handleSnapRight}
+                    className="w-full px-3 py-2 text-left text-sm text-neutral-900 dark:text-white hover:bg-neutral-100 dark:hover:bg-neutral-700 flex items-center justify-between transition-colors"
+                  >
+                    <span>Right half</span>
+                    <span className="text-xs text-neutral-500 dark:text-neutral-400">Shift+→</span>
+                  </button>
+                  <div className="border-t border-neutral-200 dark:border-neutral-700 mt-1 pt-1">
+                    <button
+                      onClick={handleMaximize}
+                      className="w-full px-3 py-2 text-left text-sm text-neutral-900 dark:text-white hover:bg-neutral-100 dark:hover:bg-neutral-700 flex items-center justify-between transition-colors"
+                    >
+                      <span>Maximize</span>
+                      <span className="text-xs text-neutral-500 dark:text-neutral-400">Shift+↑</span>
+                    </button>
+                  </div>
+                </div>
               )}
-            </button>
+            </div>
             <button
               onClick={onClose}
               className="p-1.5 rounded transition-all border border-transparent hover:border-neutral-300 dark:hover:border-neutral-600"
