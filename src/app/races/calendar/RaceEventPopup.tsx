@@ -215,36 +215,34 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-3">
+                <div
+                  className="flex items-center gap-3 cursor-help"
+                  title={race.mensCourseRecordAthlete && race.mensCourseRecordCountry
+                    ? `${race.mensCourseRecordAthlete}\n${race.mensCourseRecordCountry}`
+                    : ''}
+                >
                   <div className="flex items-center justify-center flex-shrink-0 bg-neutral-100 dark:bg-neutral-800 rounded-lg w-10 h-10">
                     <Medal className="w-4 h-4 text-neutral-600 dark:text-neutral-400" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-body text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Men's CR</p>
-                    <p
-                      className="font-mono text-sm font-medium text-neutral-900 dark:text-white truncate"
-                      title={race.mensCourseRecordAthlete && race.mensCourseRecordCountry
-                        ? `${race.mensCourseRecordAthlete}\n${race.mensCourseRecordCountry}`
-                        : ''}
-                      style={{ cursor: race.mensCourseRecordAthlete ? 'help' : 'default' }}
-                    >
+                    <p className="font-mono text-sm font-medium text-neutral-900 dark:text-white truncate">
                       {race.mensCourseRecord || 'N/A'}
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-3">
+                <div
+                  className="flex items-center gap-3 cursor-help"
+                  title={race.womensCourseRecordAthlete && race.womensCourseRecordCountry
+                    ? `${race.womensCourseRecordAthlete}\n${race.womensCourseRecordCountry}`
+                    : ''}
+                >
                   <div className="flex items-center justify-center flex-shrink-0 bg-neutral-100 dark:bg-neutral-800 rounded-lg w-10 h-10">
                     <Medal className="w-4 h-4 text-neutral-600 dark:text-neutral-400" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-body text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Women's CR</p>
-                    <p
-                      className="font-mono text-sm font-medium text-neutral-900 dark:text-white truncate"
-                      title={race.womensCourseRecordAthlete && race.womensCourseRecordCountry
-                        ? `${race.womensCourseRecordAthlete}\n${race.womensCourseRecordCountry}`
-                        : ''}
-                      style={{ cursor: race.womensCourseRecordAthlete ? 'help' : 'default' }}
-                    >
+                    <p className="font-mono text-sm font-medium text-neutral-900 dark:text-white truncate">
                       {race.womensCourseRecord || 'N/A'}
                     </p>
                   </div>
