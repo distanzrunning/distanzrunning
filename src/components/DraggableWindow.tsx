@@ -67,7 +67,7 @@ export function DraggableWindow({
     setShowTooltip(false) // Hide tooltip when dragging starts
 
     if (isMaximized || isSnappedLeft || isSnappedRight) {
-      // If snapped or maximized, unsnap first
+      // If snapped or maximized, unsnap first with animation
       if (isSnappedLeft || isSnappedRight) {
         setIsSnappedLeft(false)
         setIsSnappedRight(false)
@@ -83,7 +83,10 @@ export function DraggableWindow({
           x: newWidth / 2,
           y: 20,
         })
-        setIsDragging(true)
+        // Delay drag to allow resize animation
+        setTimeout(() => {
+          setIsDragging(true)
+        }, 150)
       }
       return
     }
@@ -349,7 +352,7 @@ export function DraggableWindow({
       // Delay minimize to allow animation to complete
       setTimeout(() => {
         onMinimize?.()
-      }, 300) // Match animation duration
+      }, 500) // Increased to allow spring animation to complete
     } else {
       // Already in normal state, minimize immediately
       onMinimize?.()
