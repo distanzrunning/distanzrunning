@@ -419,9 +419,9 @@ export function DraggableWindow({
               onMouseEnter={() => setShowTooltip(true)}
               onMouseLeave={() => setShowTooltip(false)}
               className="p-1.5 rounded transition-all border border-transparent hover:border-neutral-300 dark:hover:border-neutral-600 group"
-              aria-label={isMaximized ? 'Restore' : 'Maximize'}
+              aria-label={isMaximized || isSnappedLeft || isSnappedRight ? 'Restore' : 'Maximize'}
             >
-              {isMaximized ? (
+              {isMaximized || isSnappedLeft || isSnappedRight ? (
                 <>
                   <Square className="w-4 h-4 text-neutral-700 dark:text-neutral-300 group-hover:hidden" />
                   <Shrink className="w-4 h-4 text-neutral-700 dark:text-neutral-300 hidden group-hover:block" />
