@@ -6,7 +6,7 @@ import type { RaceGuide } from '../page'
 import { urlFor } from '@/sanity/lib/image'
 import { convertCurrencySync, formatPrice } from '@/lib/raceUtils'
 import { DraggableWindow } from '@/components/DraggableWindow'
-import { Route, Wallet, Users, ArrowUpRight, ArrowDownRight, Mountain, ThermometerSun, Medal } from 'lucide-react'
+import { Route, Wallet, Users, ArrowUpRight, ArrowDownRight, Mountain, ThermometerSun, Medal, Settings2 } from 'lucide-react'
 
 interface RaceEventPopupProps {
   race: RaceGuide | null
@@ -106,18 +106,20 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => setUseMetric(!useMetric)}
-                  className="px-2 py-1 text-xs font-medium rounded transition-colors bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700"
-                  title={useMetric ? 'Switch to Imperial (°F, ft)' : 'Switch to Metric (°C, m)'}
+                  className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium rounded-lg transition-colors bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700"
+                  title="Metric/Imperial"
                 >
-                  {useMetric ? '°C / m' : '°F / ft'}
+                  <Settings2 className="w-3.5 h-3.5" />
+                  <span>{useMetric ? '°C / m' : '°F / ft'}</span>
                 </button>
                 {race.currency && race.currency !== 'USD' && (
                   <button
                     onClick={() => setUseLocalCurrency(!useLocalCurrency)}
-                    className="px-2 py-1 text-xs font-medium rounded transition-colors bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700"
-                    title={useLocalCurrency ? 'Switch to USD' : `Switch to ${race.currency}`}
+                    className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium rounded-lg transition-colors bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700"
+                    title="Currency"
                   >
-                    {useLocalCurrency ? race.currency : 'USD'}
+                    <Settings2 className="w-3.5 h-3.5" />
+                    <span>{useLocalCurrency ? race.currency : 'USD'}</span>
                   </button>
                 )}
               </div>
@@ -223,34 +225,34 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-3">
+                <div
+                  className="flex items-center gap-3"
+                  title={race.mensCourseRecordAthlete && race.mensCourseRecordCountry
+                    ? `${race.mensCourseRecordAthlete} (${race.mensCourseRecordCountry})`
+                    : undefined}
+                >
                   <div className="flex items-center justify-center flex-shrink-0 bg-neutral-100 dark:bg-neutral-800 rounded-lg w-10 h-10">
                     <Medal className="w-4 h-4 text-neutral-600 dark:text-neutral-400" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-body text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Men's CR</p>
-                    <p
-                      className="font-mono text-sm font-medium text-neutral-900 dark:text-white truncate cursor-help"
-                      title={race.mensCourseRecordAthlete && race.mensCourseRecordCountry
-                        ? `${race.mensCourseRecordAthlete} (${race.mensCourseRecordCountry})`
-                        : undefined}
-                    >
+                    <p className="font-mono text-sm font-medium text-neutral-900 dark:text-white truncate cursor-help">
                       {race.mensCourseRecord || 'N/A'}
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-3">
+                <div
+                  className="flex items-center gap-3"
+                  title={race.womensCourseRecordAthlete && race.womensCourseRecordCountry
+                    ? `${race.womensCourseRecordAthlete} (${race.womensCourseRecordCountry})`
+                    : undefined}
+                >
                   <div className="flex items-center justify-center flex-shrink-0 bg-neutral-100 dark:bg-neutral-800 rounded-lg w-10 h-10">
                     <Medal className="w-4 h-4 text-neutral-600 dark:text-neutral-400" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-body text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Women's CR</p>
-                    <p
-                      className="font-mono text-sm font-medium text-neutral-900 dark:text-white truncate cursor-help"
-                      title={race.womensCourseRecordAthlete && race.womensCourseRecordCountry
-                        ? `${race.womensCourseRecordAthlete} (${race.womensCourseRecordCountry})`
-                        : undefined}
-                    >
+                    <p className="font-mono text-sm font-medium text-neutral-900 dark:text-white truncate cursor-help">
                       {race.womensCourseRecord || 'N/A'}
                     </p>
                   </div>
