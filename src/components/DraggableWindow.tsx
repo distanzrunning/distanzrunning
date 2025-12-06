@@ -31,8 +31,6 @@ export function DraggableWindow({
   const [isMaximized, setIsMaximized] = useState(false)
   const [isSnappedLeft, setIsSnappedLeft] = useState(false)
   const [isSnappedRight, setIsSnappedRight] = useState(false)
-  const [position, setPosition] = useState({ x: 0, y: 0 })
-  const [size, setSize] = useState({ width: initialWidth, height: initialHeight })
   const [isDragging, setIsDragging] = useState(false)
   const [resizeDirection, setResizeDirection] = useState<ResizeDirection>(null)
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 })
@@ -48,19 +46,21 @@ export function DraggableWindow({
     posY: 0
   })
 
+  // Initialize position/size - use lazy initialization to avoid shake
+  const [position, setPosition] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const initialTop = Math.max(50, window.innerHeight / 2 - initialHeight / 2 - 48)
+      const initialLeft = window.innerWidth / 2 - initialWidth / 2
+      return { x: initialLeft, y: initialTop }
+    }
+    return { x: 0, y: 0 }
+  })
+  const [size, setSize] = useState({ width: initialWidth, height: initialHeight })
+
   const windowRef = useRef<HTMLDivElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const snapMenuRef = useRef<HTMLDivElement>(null)
   const maximizeButtonRef = useRef<HTMLButtonElement>(null)
-
-  // Initialize position to center of screen
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const initialTop = Math.max(50, window.innerHeight / 2 - initialHeight / 2 - 48)
-      const initialLeft = window.innerWidth / 2 - initialWidth / 2
-      setPosition({ x: initialLeft, y: initialTop })
-    }
-  }, [initialWidth, initialHeight])
 
   // Handle titlebar drag
   const handleMouseDown = (e: React.MouseEvent) => {
@@ -327,6 +327,24 @@ export function DraggableWindow({
     setShowSnapMenu(!showSnapMenu)
   }
 
+  const handleMinimizeClick = () => {
+    // Reset to center position before minimizing
+    if (isSnappedLeft || isSnappedRight || isMaximized) {
+      const containerRect = containerRef.current?.getBoundingClientRect()
+      if (containerRect) {
+        const centerX = (containerRect.width - initialWidth) / 2
+        const centerY = Math.max(50, (containerRect.height - initialHeight) / 2)
+        setPosition({ x: centerX, y: centerY })
+        setSize({ width: initialWidth, height: initialHeight })
+      }
+      setIsSnappedLeft(false)
+      setIsSnappedRight(false)
+      setIsMaximized(false)
+    }
+    // Call parent minimize handler
+    onMinimize?.()
+  }
+
   const getCursorClass = (direction: ResizeDirection) => {
     switch (direction) {
       case 'n':
@@ -406,8 +424,9 @@ export function DraggableWindow({
             ? { duration: 0 } // Disable animation during drag/resize
             : {
                 type: 'spring',
-                stiffness: 300,
-                damping: 30,
+                stiffness: 400,
+                damping: 40,
+                mass: 0.8,
               }
         }
       >
@@ -429,7 +448,7 @@ export function DraggableWindow({
           <div className="absolute right-2 flex items-center gap-1">
             {onMinimize && (
               <button
-                onClick={onMinimize}
+                onClick={handleMinimizeClick}
                 className="p-1.5 rounded transition-all border border-transparent hover:border-neutral-300 dark:hover:border-neutral-600"
                 aria-label="Minimize"
               >
