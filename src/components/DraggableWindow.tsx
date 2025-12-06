@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect, ReactNode } from 'react'
+import { createPortal } from 'react-dom'
 import { X, Square, Expand, Shrink } from 'lucide-react'
 
 interface DraggableWindowProps {
@@ -489,8 +490,8 @@ export function DraggableWindow({
         )}
       </div>
 
-      {/* Tooltip - rendered outside window to avoid overflow-hidden */}
-      {showTooltip && maximizeButtonRef.current && (
+      {/* Tooltip - rendered to document.body via portal to escape stacking context */}
+      {showTooltip && maximizeButtonRef.current && typeof document !== 'undefined' && createPortal(
         <div
           className="fixed pointer-events-none z-[9999]"
           style={{
@@ -524,11 +525,12 @@ export function DraggableWindow({
               }}
             />
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
-      {/* Snap Menu - rendered outside window to avoid overflow-hidden */}
-      {showSnapMenu && maximizeButtonRef.current && (
+      {/* Snap Menu - rendered to document.body via portal to escape stacking context */}
+      {showSnapMenu && maximizeButtonRef.current && typeof document !== 'undefined' && createPortal(
         <div
           ref={snapMenuRef}
           className="fixed w-44 bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg shadow-lg py-1 pointer-events-auto z-[9999]"
@@ -563,7 +565,8 @@ export function DraggableWindow({
               <span className="text-xs text-neutral-500 dark:text-neutral-400">Shift+↑</span>
             </button>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   )
