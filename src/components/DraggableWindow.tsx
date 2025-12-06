@@ -63,6 +63,8 @@ export function DraggableWindow({
 
   // Handle titlebar drag
   const handleMouseDown = (e: React.MouseEvent) => {
+    setShowTooltip(false) // Hide tooltip when dragging starts
+
     if (isMaximized || isSnappedLeft || isSnappedRight) {
       // If snapped or maximized, unsnap first
       if (isSnappedLeft || isSnappedRight) {
@@ -265,6 +267,7 @@ export function DraggableWindow({
   const handleMaximize = () => {
     setIsMaximized(!isMaximized)
     setShowSnapMenu(false)
+    setShowTooltip(false)
   }
 
   const handleSnapLeft = () => {
@@ -277,6 +280,7 @@ export function DraggableWindow({
       setSize({ width: containerRect.width / 2, height: containerRect.height })
     }
     setShowSnapMenu(false)
+    setShowTooltip(false)
   }
 
   const handleSnapRight = () => {
@@ -289,6 +293,7 @@ export function DraggableWindow({
       setSize({ width: containerRect.width / 2, height: containerRect.height })
     }
     setShowSnapMenu(false)
+    setShowTooltip(false)
   }
 
   const handleMaximizeContextMenu = (e: React.MouseEvent) => {
