@@ -340,9 +340,15 @@ export function DraggableWindow({
       setIsSnappedLeft(false)
       setIsSnappedRight(false)
       setIsMaximized(false)
+
+      // Delay minimize to allow animation to complete
+      setTimeout(() => {
+        onMinimize?.()
+      }, 300) // Match animation duration
+    } else {
+      // Already in normal state, minimize immediately
+      onMinimize?.()
     }
-    // Call parent minimize handler
-    onMinimize?.()
   }
 
   const getCursorClass = (direction: ResizeDirection) => {
@@ -424,9 +430,9 @@ export function DraggableWindow({
             ? { duration: 0 } // Disable animation during drag/resize
             : {
                 type: 'spring',
-                stiffness: 400,
-                damping: 40,
-                mass: 0.8,
+                stiffness: 260,
+                damping: 30,
+                mass: 1,
               }
         }
       >
