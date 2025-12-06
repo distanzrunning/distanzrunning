@@ -156,16 +156,16 @@ export function DraggableWindow({
             y: Math.max(0, Math.min(newY, maxY)),
           })
 
-          // Detect snap zones - trigger when window position hits edges OR when trying to go beyond
-          const snapThreshold = 100
+          // Detect snap zones - trigger when window is very close to edges
+          const snapThreshold = 10 // Reduced from 100 to only trigger near edges
           const windowLeft = Math.max(0, newX)
           const windowRight = Math.min(newX + size.width, containerRect.width)
 
-          // Show left snap if window is at left edge or trying to go left beyond edge
+          // Show left snap if window is at left edge or very close (within 10px)
           if (windowLeft === 0 || newX < snapThreshold) {
             setSnapPreview('left')
           }
-          // Show right snap if window is at right edge or trying to go right beyond edge
+          // Show right snap if window is at right edge or very close (within 10px)
           else if (windowRight === containerRect.width || newX + size.width > containerRect.width - snapThreshold) {
             setSnapPreview('right')
           } else {
