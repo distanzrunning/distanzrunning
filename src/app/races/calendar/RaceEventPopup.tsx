@@ -27,6 +27,9 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
 
   const imageUrl = race.mainImage ? urlFor(race.mainImage)?.width(800).height(520).url() : null
 
+  // Determine if we should show local currency
+  const showLocalCurrency = useMetric && race.currency && race.currency !== 'USD'
+
   return (
     <DraggableWindow
       title={race.title}
@@ -105,7 +108,7 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
               <button
                 onClick={() => setUseMetric(!useMetric)}
                 className="flex items-center justify-center w-8 h-8 rounded-lg transition-colors bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700"
-                title={useMetric ? 'Switch to Imperial (°F, ft)' : 'Switch to Metric (°C, m)'}
+                title={useMetric ? 'Switch to Imperial' : 'Switch to Metric'}
                 aria-label="Toggle units"
               >
                 <Settings2 className="w-4 h-4" />
@@ -132,7 +135,9 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
                     <p className="font-body text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Entry Price</p>
                     <p className="font-body text-sm font-medium text-neutral-900 dark:text-white truncate">
                       {race.price !== undefined && race.price !== null
-                        ? formatPrice(convertCurrencySync(race.price, race.currency || 'USD', 'USD'), 'USD')
+                        ? showLocalCurrency
+                          ? formatPrice(race.price, race.currency!)
+                          : formatPrice(convertCurrencySync(race.price, race.currency || 'USD', 'USD'), 'USD')
                         : 'N/A'}
                     </p>
                   </div>
@@ -219,7 +224,7 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
                     <p
                       className="font-mono text-sm font-medium text-neutral-900 dark:text-white truncate"
                       title={race.mensCourseRecordAthlete && race.mensCourseRecordCountry
-                        ? `${race.mensCourseRecordAthlete} (${race.mensCourseRecordCountry})`
+                        ? `${race.mensCourseRecordAthlete}\n${race.mensCourseRecordCountry}`
                         : ''}
                       style={{ cursor: race.mensCourseRecordAthlete ? 'help' : 'default' }}
                     >
@@ -236,7 +241,7 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
                     <p
                       className="font-mono text-sm font-medium text-neutral-900 dark:text-white truncate"
                       title={race.womensCourseRecordAthlete && race.womensCourseRecordCountry
-                        ? `${race.womensCourseRecordAthlete} (${race.womensCourseRecordCountry})`
+                        ? `${race.womensCourseRecordAthlete}\n${race.womensCourseRecordCountry}`
                         : ''}
                       style={{ cursor: race.womensCourseRecordAthlete ? 'help' : 'default' }}
                     >
