@@ -322,12 +322,12 @@ export function DraggableWindow({
         <div
           className="pointer-events-none absolute transition-opacity duration-150"
           style={{
-            top: '1px',
+            top: '2px',
             bottom: 0,
             left: snapPreview === 'left' ? 0 : '50%',
             width: '50%',
             background: 'repeating-linear-gradient(45deg, rgba(228, 60, 129, 0.03), rgba(228, 60, 129, 0.03) 10px, rgba(228, 60, 129, 0.05) 10px, rgba(228, 60, 129, 0.05) 20px)',
-            border: '1px solid rgba(228, 60, 129, 0.3)',
+            border: '2px solid rgba(228, 60, 129, 0.4)',
             zIndex: 39,
           }}
         />
