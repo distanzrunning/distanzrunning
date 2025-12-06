@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect, ReactNode } from 'react'
 import { createPortal } from 'react-dom'
+import { motion } from 'framer-motion'
 import { X, Square, Expand, Shrink } from 'lucide-react'
 
 interface DraggableWindowProps {
@@ -277,9 +278,19 @@ export function DraggableWindow({
         setPosition({ x: centerX, y: centerY })
         setSize({ width: initialWidth, height: initialHeight })
       }
+    } else if (isMaximized) {
+      // Restoring from maximize - go back to center
+      setIsMaximized(false)
+      const containerRect = containerRef.current?.getBoundingClientRect()
+      if (containerRect) {
+        const centerX = (containerRect.width - initialWidth) / 2
+        const centerY = Math.max(50, (containerRect.height - initialHeight) / 2)
+        setPosition({ x: centerX, y: centerY })
+        setSize({ width: initialWidth, height: initialHeight })
+      }
     } else {
-      // Normal maximize/restore toggle
-      setIsMaximized(!isMaximized)
+      // Normal maximize
+      setIsMaximized(true)
     }
     setShowSnapMenu(false)
     setShowTooltip(false)
@@ -353,10 +364,11 @@ export function DraggableWindow({
         />
       )}
 
-      <div
+      <motion.div
         ref={windowRef}
         className="pointer-events-auto absolute rounded-lg shadow-2xl flex flex-col overflow-hidden border-b border-neutral-200 dark:border-neutral-700"
-        style={
+        initial={false}
+        animate={
           isMaximized
             ? {
                 top: 0,
@@ -386,6 +398,16 @@ export function DraggableWindow({
                 left: `${position.x}px`,
                 width: `${size.width}px`,
                 height: `${size.height}px`,
+                borderRadius: '0.5rem',
+              }
+        }
+        transition={
+          isDragging || resizeDirection
+            ? { duration: 0 } // Disable animation during drag/resize
+            : {
+                type: 'spring',
+                stiffness: 300,
+                damping: 30,
               }
         }
       >
@@ -508,7 +530,7 @@ export function DraggableWindow({
             />
           </>
         )}
-      </div>
+      </motion.div>
 
       {/* Tooltip - rendered to document.body via portal to escape stacking context */}
       {showTooltip && maximizeButtonRef.current && typeof document !== 'undefined' && (() => {
