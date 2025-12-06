@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { format } from 'date-fns'
+import Image from 'next/image'
 import type { RaceGuide } from '../page'
 import { urlFor } from '@/sanity/lib/image'
 import { convertCurrencySync, formatPrice } from '@/lib/raceUtils'
@@ -119,11 +120,14 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
 
               {/* World Athletics Label - Right Side */}
               {labelImage && (
-                <div className="flex-shrink-0">
-                  <img
+                <div className="flex-shrink-0 relative h-14 w-14">
+                  <Image
                     src={labelImage}
                     alt="World Athletics Label"
-                    className="h-12 w-auto object-contain"
+                    fill
+                    className="object-contain"
+                    quality={100}
+                    priority
                   />
                 </div>
               )}
