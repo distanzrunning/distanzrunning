@@ -322,10 +322,10 @@ export function DraggableWindow({
         <div
           className="pointer-events-none absolute transition-opacity duration-150"
           style={{
-            top: 0,
+            top: '1px',
+            bottom: 0,
             left: snapPreview === 'left' ? 0 : '50%',
             width: '50%',
-            height: '100%',
             background: 'repeating-linear-gradient(45deg, rgba(228, 60, 129, 0.03), rgba(228, 60, 129, 0.03) 10px, rgba(228, 60, 129, 0.05) 10px, rgba(228, 60, 129, 0.05) 20px)',
             border: '1px solid rgba(228, 60, 129, 0.3)',
             zIndex: 39,
@@ -491,43 +491,84 @@ export function DraggableWindow({
       </div>
 
       {/* Tooltip - rendered to document.body via portal to escape stacking context */}
-      {showTooltip && maximizeButtonRef.current && typeof document !== 'undefined' && createPortal(
-        <div
-          className="fixed pointer-events-none z-[9999]"
-          style={{
-            top: `${maximizeButtonRef.current.getBoundingClientRect().top - 38}px`,
-            left: `${maximizeButtonRef.current.getBoundingClientRect().left + maximizeButtonRef.current.getBoundingClientRect().width / 2}px`,
-            transform: 'translateX(-50%)'
-          }}
-        >
-          <div className="flex flex-col items-center">
-            <div className="px-3 py-1.5 bg-neutral-900 dark:bg-neutral-700 text-white text-xs rounded whitespace-nowrap">
-              Right click for more options
+      {showTooltip && maximizeButtonRef.current && typeof document !== 'undefined' && (() => {
+        const buttonRect = maximizeButtonRef.current!.getBoundingClientRect()
+        const buttonCenterX = buttonRect.left + buttonRect.width / 2
+        const tooltipWidth = 180 // Approximate width of tooltip
+        const viewportWidth = window.innerWidth
+
+        // Check if centering would cause overflow on the right
+        const wouldOverflowRight = buttonCenterX + tooltipWidth / 2 > viewportWidth - 8
+        const isAlignedRight = wouldOverflowRight
+
+        return createPortal(
+          <div
+            className="fixed pointer-events-none z-[9999]"
+            style={
+              isAlignedRight
+                ? {
+                    top: `${buttonRect.top - 38}px`,
+                    right: '8px',
+                  }
+                : {
+                    top: `${buttonRect.top - 38}px`,
+                    left: `${buttonCenterX}px`,
+                    transform: 'translateX(-50%)'
+                  }
+            }
+          >
+            <div className={`flex flex-col ${isAlignedRight ? 'items-end' : 'items-center'}`}>
+              <div className="px-3 py-1.5 bg-neutral-900 dark:bg-neutral-700 text-white text-xs rounded whitespace-nowrap">
+                Right click for more options
+              </div>
+              {/* Arrow - positioned based on alignment */}
+              <div
+                className="dark:hidden -mt-px"
+                style={
+                  isAlignedRight
+                    ? {
+                        width: 0,
+                        height: 0,
+                        borderLeft: '6px solid transparent',
+                        borderRight: '6px solid transparent',
+                        borderTop: '6px solid rgb(23, 23, 23)',
+                        marginRight: `${viewportWidth - buttonRect.right + buttonRect.width / 2 - 6}px`
+                      }
+                    : {
+                        width: 0,
+                        height: 0,
+                        borderLeft: '6px solid transparent',
+                        borderRight: '6px solid transparent',
+                        borderTop: '6px solid rgb(23, 23, 23)'
+                      }
+                }
+              />
+              <div
+                className="hidden dark:block -mt-px"
+                style={
+                  isAlignedRight
+                    ? {
+                        width: 0,
+                        height: 0,
+                        borderLeft: '6px solid transparent',
+                        borderRight: '6px solid transparent',
+                        borderTop: '6px solid rgb(64, 64, 64)',
+                        marginRight: `${viewportWidth - buttonRect.right + buttonRect.width / 2 - 6}px`
+                      }
+                    : {
+                        width: 0,
+                        height: 0,
+                        borderLeft: '6px solid transparent',
+                        borderRight: '6px solid transparent',
+                        borderTop: '6px solid rgb(64, 64, 64)'
+                      }
+                }
+              />
             </div>
-            <div
-              className="dark:hidden -mt-px"
-              style={{
-                width: 0,
-                height: 0,
-                borderLeft: '6px solid transparent',
-                borderRight: '6px solid transparent',
-                borderTop: '6px solid rgb(23, 23, 23)'
-              }}
-            />
-            <div
-              className="hidden dark:block -mt-px"
-              style={{
-                width: 0,
-                height: 0,
-                borderLeft: '6px solid transparent',
-                borderRight: '6px solid transparent',
-                borderTop: '6px solid rgb(64, 64, 64)'
-              }}
-            />
-          </div>
-        </div>,
-        document.body
-      )}
+          </div>,
+          document.body
+        )
+      })()}
 
       {/* Snap Menu - rendered to document.body via portal to escape stacking context */}
       {showSnapMenu && maximizeButtonRef.current && typeof document !== 'undefined' && createPortal(
