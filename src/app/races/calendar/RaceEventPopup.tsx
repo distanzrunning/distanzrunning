@@ -22,6 +22,8 @@ function formatLocation(city?: string, stateRegion?: string, country?: string): 
 
 export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProps) {
   const [useMetric, setUseMetric] = useState(false)
+  const [showMensTooltip, setShowMensTooltip] = useState(false)
+  const [showWomensTooltip, setShowWomensTooltip] = useState(false)
 
   if (!race) return null
 
@@ -215,37 +217,65 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
                     </p>
                   </div>
                 </div>
-                <div
-                  className="flex items-center gap-3 cursor-help"
-                  title={race.mensCourseRecordAthlete && race.mensCourseRecordCountry
-                    ? `${race.mensCourseRecordAthlete}\n${race.mensCourseRecordCountry}`
-                    : ''}
-                >
-                  <div className="flex items-center justify-center flex-shrink-0 bg-neutral-100 dark:bg-neutral-800 rounded-lg w-10 h-10">
-                    <Medal className="w-4 h-4 text-neutral-600 dark:text-neutral-400" />
+                <div className="relative flex items-center gap-3">
+                  <div
+                    className="flex items-center gap-3 cursor-help flex-1"
+                    onMouseEnter={() => setShowMensTooltip(true)}
+                    onMouseLeave={() => setShowMensTooltip(false)}
+                  >
+                    <div className="flex items-center justify-center flex-shrink-0 bg-neutral-100 dark:bg-neutral-800 rounded-lg w-10 h-10">
+                      <Medal className="w-4 h-4 text-neutral-600 dark:text-neutral-400" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-body text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Men's CR</p>
+                      <p className="font-mono text-sm font-medium text-neutral-900 dark:text-white truncate">
+                        {race.mensCourseRecord || 'N/A'}
+                      </p>
+                    </div>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-body text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Men's CR</p>
-                    <p className="font-mono text-sm font-medium text-neutral-900 dark:text-white truncate">
-                      {race.mensCourseRecord || 'N/A'}
-                    </p>
-                  </div>
+                  {/* Tooltip */}
+                  {showMensTooltip && race.mensCourseRecordAthlete && race.mensCourseRecordCountry && (
+                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-neutral-900 dark:bg-neutral-800 text-white text-xs rounded-lg shadow-lg whitespace-nowrap z-50 pointer-events-none">
+                      <div className="text-center">
+                        <div className="font-medium">{race.mensCourseRecordAthlete}</div>
+                        <div className="text-neutral-300 dark:text-neutral-400">{race.mensCourseRecordCountry}</div>
+                      </div>
+                      {/* Arrow */}
+                      <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-px">
+                        <div className="border-4 border-transparent border-t-neutral-900 dark:border-t-neutral-800" />
+                      </div>
+                    </div>
+                  )}
                 </div>
-                <div
-                  className="flex items-center gap-3 cursor-help"
-                  title={race.womensCourseRecordAthlete && race.womensCourseRecordCountry
-                    ? `${race.womensCourseRecordAthlete}\n${race.womensCourseRecordCountry}`
-                    : ''}
-                >
-                  <div className="flex items-center justify-center flex-shrink-0 bg-neutral-100 dark:bg-neutral-800 rounded-lg w-10 h-10">
-                    <Medal className="w-4 h-4 text-neutral-600 dark:text-neutral-400" />
+                <div className="relative flex items-center gap-3">
+                  <div
+                    className="flex items-center gap-3 cursor-help flex-1"
+                    onMouseEnter={() => setShowWomensTooltip(true)}
+                    onMouseLeave={() => setShowWomensTooltip(false)}
+                  >
+                    <div className="flex items-center justify-center flex-shrink-0 bg-neutral-100 dark:bg-neutral-800 rounded-lg w-10 h-10">
+                      <Medal className="w-4 h-4 text-neutral-600 dark:text-neutral-400" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-body text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Women's CR</p>
+                      <p className="font-mono text-sm font-medium text-neutral-900 dark:text-white truncate">
+                        {race.womensCourseRecord || 'N/A'}
+                      </p>
+                    </div>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-body text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Women's CR</p>
-                    <p className="font-mono text-sm font-medium text-neutral-900 dark:text-white truncate">
-                      {race.womensCourseRecord || 'N/A'}
-                    </p>
-                  </div>
+                  {/* Tooltip */}
+                  {showWomensTooltip && race.womensCourseRecordAthlete && race.womensCourseRecordCountry && (
+                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-neutral-900 dark:bg-neutral-800 text-white text-xs rounded-lg shadow-lg whitespace-nowrap z-50 pointer-events-none">
+                      <div className="text-center">
+                        <div className="font-medium">{race.womensCourseRecordAthlete}</div>
+                        <div className="text-neutral-300 dark:text-neutral-400">{race.womensCourseRecordCountry}</div>
+                      </div>
+                      {/* Arrow */}
+                      <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-px">
+                        <div className="border-4 border-transparent border-t-neutral-900 dark:border-t-neutral-800" />
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
