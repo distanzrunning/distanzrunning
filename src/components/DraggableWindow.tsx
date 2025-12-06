@@ -241,11 +241,11 @@ export function DraggableWindow({
           if (snapPreview === 'left') {
             setIsSnappedLeft(true)
             setPosition({ x: 0, y: 0 })
-            setSize({ width: containerRect.width / 2, height: containerRect.height })
+            setSize({ width: Math.floor(containerRect.width / 2), height: containerRect.height })
           } else if (snapPreview === 'right') {
             setIsSnappedRight(true)
-            setPosition({ x: containerRect.width / 2, y: 0 })
-            setSize({ width: containerRect.width / 2, height: containerRect.height })
+            setPosition({ x: Math.floor(containerRect.width / 2), y: 0 })
+            setSize({ width: Math.floor(containerRect.width / 2), height: containerRect.height })
           }
         }
         setSnapPreview(null)
@@ -289,8 +289,13 @@ export function DraggableWindow({
         setSize({ width: initialWidth, height: initialHeight })
       }
     } else {
-      // Normal maximize
-      setIsMaximized(true)
+      // Normal maximize - set to full container size
+      const containerRect = containerRef.current?.getBoundingClientRect()
+      if (containerRect) {
+        setIsMaximized(true)
+        setPosition({ x: 0, y: 0 })
+        setSize({ width: containerRect.width, height: containerRect.height })
+      }
     }
     setShowSnapMenu(false)
     setShowTooltip(false)
@@ -303,7 +308,7 @@ export function DraggableWindow({
       setIsSnappedLeft(true)
       setIsSnappedRight(false)
       setPosition({ x: 0, y: 0 })
-      setSize({ width: containerRect.width / 2, height: containerRect.height })
+      setSize({ width: Math.floor(containerRect.width / 2), height: containerRect.height })
     }
     setShowSnapMenu(false)
     setShowTooltip(false)
@@ -315,8 +320,8 @@ export function DraggableWindow({
       setIsMaximized(false)
       setIsSnappedLeft(false)
       setIsSnappedRight(true)
-      setPosition({ x: containerRect.width / 2, y: 0 })
-      setSize({ width: containerRect.width / 2, height: containerRect.height })
+      setPosition({ x: Math.floor(containerRect.width / 2), y: 0 })
+      setSize({ width: Math.floor(containerRect.width / 2), height: containerRect.height })
     }
     setShowSnapMenu(false)
     setShowTooltip(false)
@@ -392,39 +397,13 @@ export function DraggableWindow({
         ref={windowRef}
         className="pointer-events-auto absolute rounded-lg shadow-2xl flex flex-col overflow-hidden border-b border-neutral-200 dark:border-neutral-700"
         initial={false}
-        animate={
-          isMaximized
-            ? {
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: '100%',
-                borderRadius: 0,
-              }
-            : isSnappedLeft
-            ? {
-                top: 0,
-                left: 0,
-                width: '50%',
-                height: '100%',
-                borderRadius: 0,
-              }
-            : isSnappedRight
-            ? {
-                top: 0,
-                left: '50%',
-                width: '50%',
-                height: '100%',
-                borderRadius: 0,
-              }
-            : {
-                top: `${position.y}px`,
-                left: `${position.x}px`,
-                width: `${size.width}px`,
-                height: `${size.height}px`,
-                borderRadius: '0.5rem',
-              }
-        }
+        animate={{
+          top: `${position.y}px`,
+          left: `${position.x}px`,
+          width: `${size.width}px`,
+          height: `${size.height}px`,
+          borderRadius: isMaximized || isSnappedLeft || isSnappedRight ? 0 : '0.5rem',
+        }}
         transition={
           isDragging || resizeDirection
             ? { duration: 0 } // Disable animation during drag/resize
