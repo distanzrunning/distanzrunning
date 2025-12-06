@@ -98,100 +98,118 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
             <h4 className="font-body text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-3">Race Details</h4>
             <div className="space-y-3">
               <div className="grid grid-cols-3 gap-3">
-                <div>
-                  <div className="flex items-center gap-1.5 mb-1">
-                    <Route className="w-3.5 h-3.5 text-neutral-500 dark:text-neutral-500" />
-                    <p className="font-body text-xs text-neutral-500 dark:text-neutral-500">Surface</p>
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center justify-center flex-shrink-0 bg-neutral-100 dark:bg-neutral-800 rounded-lg w-10 h-10">
+                    <Route className="w-4 h-4 text-neutral-600 dark:text-neutral-400" />
                   </div>
-                  <p className="font-body text-sm font-medium text-neutral-900 dark:text-white">
-                    {race.surface || 'N/A'}
-                  </p>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-body text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Surface</p>
+                    <p className="font-body text-sm font-medium text-neutral-900 dark:text-white truncate">
+                      {race.surface || 'N/A'}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <div className="flex items-center gap-1.5 mb-1">
-                    <Wallet className="w-3.5 h-3.5 text-neutral-500 dark:text-neutral-500" />
-                    <p className="font-body text-xs text-neutral-500 dark:text-neutral-500">Entry Price</p>
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center justify-center flex-shrink-0 bg-neutral-100 dark:bg-neutral-800 rounded-lg w-10 h-10">
+                    <Wallet className="w-4 h-4 text-neutral-600 dark:text-neutral-400" />
                   </div>
-                  <p className="font-body text-sm font-medium text-neutral-900 dark:text-white">
-                    {race.price !== undefined && race.price !== null
-                      ? formatPrice(convertCurrencySync(race.price, race.currency || 'USD', 'USD'), 'USD')
-                      : 'N/A'}
-                  </p>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-body text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Entry Price</p>
+                    <p className="font-body text-sm font-medium text-neutral-900 dark:text-white truncate">
+                      {race.price !== undefined && race.price !== null
+                        ? formatPrice(convertCurrencySync(race.price, race.currency || 'USD', 'USD'), 'USD')
+                        : 'N/A'}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <div className="flex items-center gap-1.5 mb-1">
-                    <Users className="w-3.5 h-3.5 text-neutral-500 dark:text-neutral-500" />
-                    <p className="font-body text-xs text-neutral-500 dark:text-neutral-500">Finishers</p>
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center justify-center flex-shrink-0 bg-neutral-100 dark:bg-neutral-800 rounded-lg w-10 h-10">
+                    <Users className="w-4 h-4 text-neutral-600 dark:text-neutral-400" />
                   </div>
-                  <p className="font-body text-sm font-medium text-neutral-900 dark:text-white">
-                    {race.finishers ? race.finishers.toLocaleString() : 'N/A'}
-                  </p>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-3 gap-3">
-                <div>
-                  <div className="flex items-center gap-1.5 mb-1">
-                    <ArrowUpRight className="w-3.5 h-3.5 text-neutral-500 dark:text-neutral-500" />
-                    <p className="font-body text-xs text-neutral-500 dark:text-neutral-500">Elev. Gain</p>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-body text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Finishers</p>
+                    <p className="font-body text-sm font-medium text-neutral-900 dark:text-white truncate">
+                      {race.finishers ? race.finishers.toLocaleString() : 'N/A'}
+                    </p>
                   </div>
-                  <p className="font-body text-sm font-medium text-neutral-900 dark:text-white">
-                    {race.elevationGain !== undefined && race.elevationGain !== null
-                      ? `${Math.round(race.elevationGain * 3.28084).toLocaleString()}ft`
-                      : 'N/A'}
-                  </p>
-                </div>
-                <div>
-                  <div className="flex items-center gap-1.5 mb-1">
-                    <ArrowDownRight className="w-3.5 h-3.5 text-neutral-500 dark:text-neutral-500" />
-                    <p className="font-body text-xs text-neutral-500 dark:text-neutral-500">Elev. Loss</p>
-                  </div>
-                  <p className="font-body text-sm font-medium text-neutral-900 dark:text-white">
-                    {race.elevationLoss !== undefined && race.elevationLoss !== null
-                      ? `${Math.round(race.elevationLoss * 3.28084).toLocaleString()}ft`
-                      : 'N/A'}
-                  </p>
-                </div>
-                <div>
-                  <div className="flex items-center gap-1.5 mb-1">
-                    <Mountain className="w-3.5 h-3.5 text-neutral-500 dark:text-neutral-500" />
-                    <p className="font-body text-xs text-neutral-500 dark:text-neutral-500">Profile</p>
-                  </div>
-                  <p className="font-body text-sm font-medium text-neutral-900 dark:text-white">
-                    {race.profile ? race.profile.charAt(0).toUpperCase() + race.profile.slice(1) : 'N/A'}
-                  </p>
                 </div>
               </div>
 
               <div className="grid grid-cols-3 gap-3">
-                <div>
-                  <div className="flex items-center gap-1.5 mb-1">
-                    <ThermometerSun className="w-3.5 h-3.5 text-neutral-500 dark:text-neutral-500" />
-                    <p className="font-body text-xs text-neutral-500 dark:text-neutral-500">Avg. Temp</p>
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center justify-center flex-shrink-0 bg-neutral-100 dark:bg-neutral-800 rounded-lg w-10 h-10">
+                    <ArrowUpRight className="w-4 h-4 text-neutral-600 dark:text-neutral-400" />
                   </div>
-                  <p className="font-body text-sm font-medium text-neutral-900 dark:text-white">
-                    {race.averageTemperature !== undefined && race.averageTemperature !== null
-                      ? `${Math.round(race.averageTemperature * 9/5 + 32)}°F`
-                      : 'N/A'}
-                  </p>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-body text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Elev. Gain</p>
+                    <p className="font-body text-sm font-medium text-neutral-900 dark:text-white truncate">
+                      {race.elevationGain !== undefined && race.elevationGain !== null
+                        ? `${Math.round(race.elevationGain * 3.28084).toLocaleString()}ft`
+                        : 'N/A'}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <div className="flex items-center gap-1.5 mb-1">
-                    <Medal className="w-3.5 h-3.5 text-neutral-500 dark:text-neutral-500" />
-                    <p className="font-body text-xs text-neutral-500 dark:text-neutral-500">Men's CR</p>
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center justify-center flex-shrink-0 bg-neutral-100 dark:bg-neutral-800 rounded-lg w-10 h-10">
+                    <ArrowDownRight className="w-4 h-4 text-neutral-600 dark:text-neutral-400" />
                   </div>
-                  <p className="font-mono text-sm font-medium text-neutral-900 dark:text-white">
-                    {race.mensCourseRecord || 'N/A'}
-                  </p>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-body text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Elev. Loss</p>
+                    <p className="font-body text-sm font-medium text-neutral-900 dark:text-white truncate">
+                      {race.elevationLoss !== undefined && race.elevationLoss !== null
+                        ? `${Math.round(race.elevationLoss * 3.28084).toLocaleString()}ft`
+                        : 'N/A'}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <div className="flex items-center gap-1.5 mb-1">
-                    <Medal className="w-3.5 h-3.5 text-neutral-500 dark:text-neutral-500" />
-                    <p className="font-body text-xs text-neutral-500 dark:text-neutral-500">Women's CR</p>
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center justify-center flex-shrink-0 bg-neutral-100 dark:bg-neutral-800 rounded-lg w-10 h-10">
+                    <Mountain className="w-4 h-4 text-neutral-600 dark:text-neutral-400" />
                   </div>
-                  <p className="font-mono text-sm font-medium text-neutral-900 dark:text-white">
-                    {race.womensCourseRecord || 'N/A'}
-                  </p>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-body text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Profile</p>
+                    <p className="font-body text-sm font-medium text-neutral-900 dark:text-white truncate">
+                      {race.profile ? race.profile.charAt(0).toUpperCase() + race.profile.slice(1) : 'N/A'}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-3 gap-3">
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center justify-center flex-shrink-0 bg-neutral-100 dark:bg-neutral-800 rounded-lg w-10 h-10">
+                    <ThermometerSun className="w-4 h-4 text-neutral-600 dark:text-neutral-400" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-body text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Avg. Temp</p>
+                    <p className="font-body text-sm font-medium text-neutral-900 dark:text-white truncate">
+                      {race.averageTemperature !== undefined && race.averageTemperature !== null
+                        ? `${Math.round(race.averageTemperature * 9/5 + 32)}°F`
+                        : 'N/A'}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center justify-center flex-shrink-0 bg-neutral-100 dark:bg-neutral-800 rounded-lg w-10 h-10">
+                    <Medal className="w-4 h-4 text-neutral-600 dark:text-neutral-400" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-body text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Men's CR</p>
+                    <p className="font-mono text-sm font-medium text-neutral-900 dark:text-white truncate">
+                      {race.mensCourseRecord || 'N/A'}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center justify-center flex-shrink-0 bg-neutral-100 dark:bg-neutral-800 rounded-lg w-10 h-10">
+                    <Medal className="w-4 h-4 text-neutral-600 dark:text-neutral-400" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-body text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Women's CR</p>
+                    <p className="font-mono text-sm font-medium text-neutral-900 dark:text-white truncate">
+                      {race.womensCourseRecord || 'N/A'}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
