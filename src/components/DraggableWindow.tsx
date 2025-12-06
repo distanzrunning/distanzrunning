@@ -428,17 +428,17 @@ export function DraggableWindow({
       >
         {/* Titlebar */}
         <div
-          className="flex items-center justify-between px-6 py-4 cursor-move select-none"
+          className="flex items-center justify-between px-6 py-4 cursor-move select-none border-b border-neutral-200 dark:border-neutral-700"
           onMouseDown={handleMouseDown}
           onDoubleClick={handleMaximize}
         >
-          {/* Title - left aligned */}
-          <h3 className="text-base font-semibold text-neutral-900 dark:text-white truncate flex-1 pr-4">
+          {/* Title - centered */}
+          <h3 className="text-base font-semibold text-neutral-900 dark:text-white truncate flex-1 text-center px-8">
             {title}
           </h3>
 
-          {/* Action buttons - right side */}
-          <div className="flex items-center gap-2">
+          {/* Action buttons - absolute positioned on right */}
+          <div className="absolute right-6 flex items-center gap-2">
             {onMinimize && (
               <button
                 onClick={handleMinimizeClick}

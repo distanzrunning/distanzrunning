@@ -39,7 +39,7 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
           {/* Image Container */}
           <div className="relative w-full">
             {/* Image Wrapper */}
-            <div className="relative overflow-hidden rounded-t-lg">
+            <div className="relative overflow-hidden rounded-lg">
               <div style={{ paddingBottom: '65%' }} className="relative">
                 {imageUrl && (
                   <img
