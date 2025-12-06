@@ -492,7 +492,7 @@ export function DraggableWindow({
         </div>
 
         {/* Content */}
-        <div className="flex-1 overflow-hidden bg-neutral-50 dark:bg-neutral-800 border-l border-r border-neutral-200 dark:border-neutral-700">
+        <div className="flex-1 overflow-hidden bg-neutral-50 dark:bg-neutral-800">
           {children}
         </div>
 
