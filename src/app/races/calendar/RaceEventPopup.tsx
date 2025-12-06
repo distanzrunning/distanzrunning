@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import { format } from 'date-fns'
 import type { RaceGuide } from '../page'
 import { urlFor } from '@/sanity/lib/image'
@@ -20,6 +21,9 @@ function formatLocation(city?: string, stateRegion?: string, country?: string): 
 }
 
 export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProps) {
+  const [useMetric, setUseMetric] = useState(false)
+  const [useLocalCurrency, setUseLocalCurrency] = useState(false)
+
   if (!race) return null
 
   const imageUrl = race.mainImage ? urlFor(race.mainImage)?.width(800).height(520).url() : null
@@ -93,9 +97,31 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
             </div>
           </div>
 
-          {/* Race Details Card */}
+          {/* Key Details Card */}
           <div className="bg-white dark:bg-neutral-900 rounded-xl shadow-sm border border-neutral-100 dark:border-neutral-800 p-5">
-            <h4 className="font-body text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-3">Race Details</h4>
+            <div className="flex items-center justify-between mb-3">
+              <h4 className="font-body text-sm font-medium text-neutral-600 dark:text-neutral-400">Key Details</h4>
+
+              {/* Unit Toggle */}
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setUseMetric(!useMetric)}
+                  className="px-2 py-1 text-xs font-medium rounded transition-colors bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700"
+                  title={useMetric ? 'Switch to Imperial (°F, ft)' : 'Switch to Metric (°C, m)'}
+                >
+                  {useMetric ? '°C / m' : '°F / ft'}
+                </button>
+                {race.currency && race.currency !== 'USD' && (
+                  <button
+                    onClick={() => setUseLocalCurrency(!useLocalCurrency)}
+                    className="px-2 py-1 text-xs font-medium rounded transition-colors bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700"
+                    title={useLocalCurrency ? 'Switch to USD' : `Switch to ${race.currency}`}
+                  >
+                    {useLocalCurrency ? race.currency : 'USD'}
+                  </button>
+                )}
+              </div>
+            </div>
             <div className="space-y-3">
               <div className="grid grid-cols-3 gap-3">
                 <div className="flex items-center gap-3">
@@ -117,7 +143,9 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
                     <p className="font-body text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Entry Price</p>
                     <p className="font-body text-sm font-medium text-neutral-900 dark:text-white truncate">
                       {race.price !== undefined && race.price !== null
-                        ? formatPrice(convertCurrencySync(race.price, race.currency || 'USD', 'USD'), 'USD')
+                        ? useLocalCurrency && race.currency
+                          ? formatPrice(race.price, race.currency)
+                          : formatPrice(convertCurrencySync(race.price, race.currency || 'USD', 'USD'), 'USD')
                         : 'N/A'}
                     </p>
                   </div>
@@ -144,7 +172,9 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
                     <p className="font-body text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Elev. Gain</p>
                     <p className="font-body text-sm font-medium text-neutral-900 dark:text-white truncate">
                       {race.elevationGain !== undefined && race.elevationGain !== null
-                        ? `${Math.round(race.elevationGain * 3.28084).toLocaleString()}ft`
+                        ? useMetric
+                          ? `${Math.round(race.elevationGain).toLocaleString()}m`
+                          : `${Math.round(race.elevationGain * 3.28084).toLocaleString()}ft`
                         : 'N/A'}
                     </p>
                   </div>
@@ -157,7 +187,9 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
                     <p className="font-body text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Elev. Loss</p>
                     <p className="font-body text-sm font-medium text-neutral-900 dark:text-white truncate">
                       {race.elevationLoss !== undefined && race.elevationLoss !== null
-                        ? `${Math.round(race.elevationLoss * 3.28084).toLocaleString()}ft`
+                        ? useMetric
+                          ? `${Math.round(race.elevationLoss).toLocaleString()}m`
+                          : `${Math.round(race.elevationLoss * 3.28084).toLocaleString()}ft`
                         : 'N/A'}
                     </p>
                   </div>
@@ -184,7 +216,9 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
                     <p className="font-body text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Avg. Temp</p>
                     <p className="font-body text-sm font-medium text-neutral-900 dark:text-white truncate">
                       {race.averageTemperature !== undefined && race.averageTemperature !== null
-                        ? `${Math.round(race.averageTemperature * 9/5 + 32)}°F`
+                        ? useMetric
+                          ? `${Math.round(race.averageTemperature)}°C`
+                          : `${Math.round(race.averageTemperature * 9/5 + 32)}°F`
                         : 'N/A'}
                     </p>
                   </div>
@@ -195,7 +229,12 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-body text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Men's CR</p>
-                    <p className="font-mono text-sm font-medium text-neutral-900 dark:text-white truncate">
+                    <p
+                      className="font-mono text-sm font-medium text-neutral-900 dark:text-white truncate cursor-help"
+                      title={race.mensCourseRecordAthlete && race.mensCourseRecordCountry
+                        ? `${race.mensCourseRecordAthlete} (${race.mensCourseRecordCountry})`
+                        : undefined}
+                    >
                       {race.mensCourseRecord || 'N/A'}
                     </p>
                   </div>
@@ -206,7 +245,12 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-body text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Women's CR</p>
-                    <p className="font-mono text-sm font-medium text-neutral-900 dark:text-white truncate">
+                    <p
+                      className="font-mono text-sm font-medium text-neutral-900 dark:text-white truncate cursor-help"
+                      title={race.womensCourseRecordAthlete && race.womensCourseRecordCountry
+                        ? `${race.womensCourseRecordAthlete} (${race.womensCourseRecordCountry})`
+                        : undefined}
+                    >
                       {race.womensCourseRecord || 'N/A'}
                     </p>
                   </div>
