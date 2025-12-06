@@ -22,7 +22,6 @@ function formatLocation(city?: string, stateRegion?: string, country?: string): 
 
 export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProps) {
   const [useMetric, setUseMetric] = useState(false)
-  const [useLocalCurrency, setUseLocalCurrency] = useState(false)
 
   if (!race) return null
 
@@ -103,26 +102,14 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
               <h4 className="font-body text-sm font-medium text-neutral-600 dark:text-neutral-400">Key Details</h4>
 
               {/* Unit Toggle */}
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => setUseMetric(!useMetric)}
-                  className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium rounded-lg transition-colors bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700"
-                  title="Metric/Imperial"
-                >
-                  <Settings2 className="w-3.5 h-3.5" />
-                  <span>{useMetric ? '°C / m' : '°F / ft'}</span>
-                </button>
-                {race.currency && race.currency !== 'USD' && (
-                  <button
-                    onClick={() => setUseLocalCurrency(!useLocalCurrency)}
-                    className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium rounded-lg transition-colors bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700"
-                    title="Currency"
-                  >
-                    <Settings2 className="w-3.5 h-3.5" />
-                    <span>{useLocalCurrency ? race.currency : 'USD'}</span>
-                  </button>
-                )}
-              </div>
+              <button
+                onClick={() => setUseMetric(!useMetric)}
+                className="flex items-center justify-center w-8 h-8 rounded-lg transition-colors bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700"
+                title={useMetric ? 'Switch to Imperial (°F, ft)' : 'Switch to Metric (°C, m)'}
+                aria-label="Toggle units"
+              >
+                <Settings2 className="w-4 h-4" />
+              </button>
             </div>
             <div className="space-y-3">
               <div className="grid grid-cols-3 gap-3">
@@ -145,9 +132,7 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
                     <p className="font-body text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Entry Price</p>
                     <p className="font-body text-sm font-medium text-neutral-900 dark:text-white truncate">
                       {race.price !== undefined && race.price !== null
-                        ? useLocalCurrency && race.currency
-                          ? formatPrice(race.price, race.currency)
-                          : formatPrice(convertCurrencySync(race.price, race.currency || 'USD', 'USD'), 'USD')
+                        ? formatPrice(convertCurrencySync(race.price, race.currency || 'USD', 'USD'), 'USD')
                         : 'N/A'}
                     </p>
                   </div>
@@ -225,34 +210,36 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
                     </p>
                   </div>
                 </div>
-                <div
-                  className="flex items-center gap-3"
-                  title={race.mensCourseRecordAthlete && race.mensCourseRecordCountry
-                    ? `${race.mensCourseRecordAthlete} (${race.mensCourseRecordCountry})`
-                    : undefined}
-                >
+                <div className="flex items-center gap-3">
                   <div className="flex items-center justify-center flex-shrink-0 bg-neutral-100 dark:bg-neutral-800 rounded-lg w-10 h-10">
                     <Medal className="w-4 h-4 text-neutral-600 dark:text-neutral-400" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-body text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Men's CR</p>
-                    <p className="font-mono text-sm font-medium text-neutral-900 dark:text-white truncate cursor-help">
+                    <p
+                      className="font-mono text-sm font-medium text-neutral-900 dark:text-white truncate"
+                      title={race.mensCourseRecordAthlete && race.mensCourseRecordCountry
+                        ? `${race.mensCourseRecordAthlete} (${race.mensCourseRecordCountry})`
+                        : ''}
+                      style={{ cursor: race.mensCourseRecordAthlete ? 'help' : 'default' }}
+                    >
                       {race.mensCourseRecord || 'N/A'}
                     </p>
                   </div>
                 </div>
-                <div
-                  className="flex items-center gap-3"
-                  title={race.womensCourseRecordAthlete && race.womensCourseRecordCountry
-                    ? `${race.womensCourseRecordAthlete} (${race.womensCourseRecordCountry})`
-                    : undefined}
-                >
+                <div className="flex items-center gap-3">
                   <div className="flex items-center justify-center flex-shrink-0 bg-neutral-100 dark:bg-neutral-800 rounded-lg w-10 h-10">
                     <Medal className="w-4 h-4 text-neutral-600 dark:text-neutral-400" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-body text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Women's CR</p>
-                    <p className="font-mono text-sm font-medium text-neutral-900 dark:text-white truncate cursor-help">
+                    <p
+                      className="font-mono text-sm font-medium text-neutral-900 dark:text-white truncate"
+                      title={race.womensCourseRecordAthlete && race.womensCourseRecordCountry
+                        ? `${race.womensCourseRecordAthlete} (${race.womensCourseRecordCountry})`
+                        : ''}
+                      style={{ cursor: race.womensCourseRecordAthlete ? 'help' : 'default' }}
+                    >
                       {race.womensCourseRecord || 'N/A'}
                     </p>
                   </div>
