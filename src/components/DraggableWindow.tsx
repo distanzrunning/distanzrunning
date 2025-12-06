@@ -61,6 +61,7 @@ export function DraggableWindow({
   const containerRef = useRef<HTMLDivElement>(null)
   const snapMenuRef = useRef<HTMLDivElement>(null)
   const maximizeButtonRef = useRef<HTMLButtonElement>(null)
+  const dragTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   // Handle titlebar drag
   const handleMouseDown = (e: React.MouseEvent) => {
@@ -84,8 +85,9 @@ export function DraggableWindow({
           y: 20,
         })
         // Delay drag to allow resize animation
-        setTimeout(() => {
+        dragTimeoutRef.current = setTimeout(() => {
           setIsDragging(true)
+          dragTimeoutRef.current = null
         }, 150)
       }
       return
@@ -237,6 +239,12 @@ export function DraggableWindow({
     }
 
     const handleMouseUp = () => {
+      // Cancel pending drag timeout if exists
+      if (dragTimeoutRef.current) {
+        clearTimeout(dragTimeoutRef.current)
+        dragTimeoutRef.current = null
+      }
+
       // Handle snap on mouse up
       if (isDragging && snapPreview) {
         const containerRect = containerRef.current?.getBoundingClientRect()
@@ -398,14 +406,14 @@ export function DraggableWindow({
 
       <motion.div
         ref={windowRef}
-        className="pointer-events-auto absolute rounded-lg shadow-2xl flex flex-col overflow-hidden border-b border-neutral-200 dark:border-neutral-700"
+        className="pointer-events-auto absolute flex flex-col overflow-hidden bg-white dark:bg-neutral-900 shadow-xl border border-neutral-200 dark:border-neutral-700"
         initial={false}
         animate={{
           top: `${position.y}px`,
           left: `${position.x}px`,
           width: `${size.width}px`,
           height: `${size.height}px`,
-          borderRadius: isMaximized || isSnappedLeft || isSnappedRight ? 0 : '0.5rem',
+          borderRadius: isMaximized || isSnappedLeft || isSnappedRight ? 0 : '1rem',
         }}
         transition={
           isDragging || resizeDirection
@@ -420,24 +428,21 @@ export function DraggableWindow({
       >
         {/* Titlebar */}
         <div
-          className="flex items-center justify-center relative px-3 py-2 bg-neutral-100/80 dark:bg-neutral-800/80 border-b border-neutral-200 dark:border-neutral-700 cursor-move select-none backdrop-blur-md"
+          className="flex items-center justify-between px-6 py-4 cursor-move select-none"
           onMouseDown={handleMouseDown}
           onDoubleClick={handleMaximize}
-          style={{ minHeight: '40px' }}
         >
-          {/* Title - centered */}
-          <div className="flex-1 text-center px-8">
-            <h3 className="text-sm font-semibold text-neutral-900 dark:text-white truncate">
-              {title}
-            </h3>
-          </div>
+          {/* Title - left aligned */}
+          <h3 className="text-base font-semibold text-neutral-900 dark:text-white truncate flex-1 pr-4">
+            {title}
+          </h3>
 
-          {/* Action buttons - absolute positioned on right */}
-          <div className="absolute right-2 flex items-center gap-1">
+          {/* Action buttons - right side */}
+          <div className="flex items-center gap-2">
             {onMinimize && (
               <button
                 onClick={handleMinimizeClick}
-                className="p-1.5 rounded transition-all border border-transparent hover:border-neutral-300 dark:hover:border-neutral-600"
+                className="h-8 w-8 rounded-md flex items-center justify-center text-neutral-500 dark:text-neutral-400 hover:text-neutral-400 dark:hover:text-neutral-300 transition-colors active:scale-95"
                 aria-label="Minimize"
               >
                 <svg
@@ -450,7 +455,6 @@ export function DraggableWindow({
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  className="text-neutral-700 dark:text-neutral-300"
                 >
                   <path d="M5 16h14" />
                 </svg>
@@ -462,27 +466,27 @@ export function DraggableWindow({
               onContextMenu={handleMaximizeContextMenu}
               onMouseEnter={() => setShowTooltip(true)}
               onMouseLeave={() => setShowTooltip(false)}
-              className="p-1.5 rounded transition-all border border-transparent hover:border-neutral-300 dark:hover:border-neutral-600 group"
+              className="h-8 w-8 rounded-md flex items-center justify-center text-neutral-500 dark:text-neutral-400 hover:text-neutral-400 dark:hover:text-neutral-300 transition-colors active:scale-95 group"
               aria-label={isMaximized || isSnappedLeft || isSnappedRight ? 'Restore' : 'Maximize'}
             >
               {isMaximized || isSnappedLeft || isSnappedRight ? (
                 <>
-                  <Square className="w-4 h-4 text-neutral-700 dark:text-neutral-300 group-hover:hidden" />
-                  <Shrink className="w-4 h-4 text-neutral-700 dark:text-neutral-300 hidden group-hover:block" />
+                  <Square className="w-4 h-4 group-hover:hidden" />
+                  <Shrink className="w-4 h-4 hidden group-hover:block" />
                 </>
               ) : (
                 <>
-                  <Square className="w-4 h-4 text-neutral-700 dark:text-neutral-300 group-hover:hidden" />
-                  <Expand className="w-4 h-4 text-neutral-700 dark:text-neutral-300 hidden group-hover:block" />
+                  <Square className="w-4 h-4 group-hover:hidden" />
+                  <Expand className="w-4 h-4 hidden group-hover:block" />
                 </>
               )}
             </button>
             <button
               onClick={onClose}
-              className="p-1.5 rounded transition-all border border-transparent hover:border-neutral-300 dark:hover:border-neutral-600"
+              className="h-8 w-8 rounded-md flex items-center justify-center text-neutral-500 dark:text-neutral-400 hover:text-neutral-400 dark:hover:text-neutral-300 transition-colors active:scale-95"
               aria-label="Close"
             >
-              <X className="w-4 h-4 text-neutral-700 dark:text-neutral-300" />
+              <X className="w-4 h-4" />
             </button>
           </div>
         </div>
