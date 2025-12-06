@@ -32,6 +32,24 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
   // Determine if we should show local currency
   const showLocalCurrency = useMetric && race.currency && race.currency !== 'USD'
 
+  // Determine World Athletics Label image
+  const getWorldAthleticsLabel = () => {
+    if (!race.tags) return null
+
+    if (race.tags.includes('World Athletics Platinum Label')) {
+      return '/images/platinum.png'
+    } else if (race.tags.includes('World Athletics Elite Label')) {
+      return '/images/elite.png'
+    } else if (race.tags.includes('World Athletics Gold Label')) {
+      return '/images/gold.png'
+    } else if (race.tags.includes('World Athletics Label')) {
+      return '/images/label.png'
+    }
+    return null
+  }
+
+  const labelImage = getWorldAthleticsLabel()
+
   return (
     <DraggableWindow
       title={race.title}
@@ -87,7 +105,7 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
                 </p>
               </div>
 
-              {/* Title and Location - Right Side */}
+              {/* Title and Location - Center */}
               <div className="flex-1">
                 <h3 className="font-body text-xl font-semibold leading-tight text-neutral-900 dark:text-white mb-1">
                   {race.title}
@@ -98,6 +116,17 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
                   </p>
                 )}
               </div>
+
+              {/* World Athletics Label - Right Side */}
+              {labelImage && (
+                <div className="flex-shrink-0">
+                  <img
+                    src={labelImage}
+                    alt="World Athletics Label"
+                    className="h-12 w-auto object-contain"
+                  />
+                </div>
+              )}
             </div>
           </div>
 
