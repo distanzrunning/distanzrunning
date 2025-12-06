@@ -265,7 +265,22 @@ export function DraggableWindow({
   }, [isDragging, resizeDirection, dragOffset, position, size, resizeStart, minWidth, minHeight])
 
   const handleMaximize = () => {
-    setIsMaximized(!isMaximized)
+    // If snapped, restore to normal floating state
+    if (isSnappedLeft || isSnappedRight) {
+      setIsSnappedLeft(false)
+      setIsSnappedRight(false)
+      // Restore to initial size and center position
+      const containerRect = containerRef.current?.getBoundingClientRect()
+      if (containerRect) {
+        const centerX = (containerRect.width - initialWidth) / 2
+        const centerY = Math.max(50, (containerRect.height - initialHeight) / 2)
+        setPosition({ x: centerX, y: centerY })
+        setSize({ width: initialWidth, height: initialHeight })
+      }
+    } else {
+      // Normal maximize/restore toggle
+      setIsMaximized(!isMaximized)
+    }
     setShowSnapMenu(false)
     setShowTooltip(false)
   }
