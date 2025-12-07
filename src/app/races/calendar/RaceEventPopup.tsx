@@ -315,10 +315,10 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
           </div>
 
           {/* Action Buttons */}
-          <div className="flex gap-3">
+          <div className="grid grid-cols-3 gap-3">
             <a
               href={`/races/${race.slug.current}`}
-              className="flex-1 inline-flex items-center justify-center px-4 py-3 bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 rounded-xl font-medium text-sm transition-all hover:opacity-90 shadow-sm"
+              className="col-span-2 inline-flex items-center justify-center px-4 py-3 bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 rounded-xl font-medium text-sm transition-all hover:opacity-90 shadow-sm"
               onClick={(e) => {
                 e.preventDefault()
                 window.location.href = `/races/${race.slug.current}`
@@ -331,7 +331,7 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
                 href={race.officialWebsite}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center px-4 py-3 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 text-neutral-900 dark:text-white rounded-xl font-medium text-sm transition-all hover:bg-neutral-50 dark:hover:bg-neutral-800 shadow-sm"
+                className="col-span-1 inline-flex items-center justify-center px-4 py-3 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 text-neutral-900 dark:text-white rounded-xl font-medium text-sm transition-all hover:bg-neutral-50 dark:hover:bg-neutral-800 shadow-sm"
               >
                 Official Site
               </a>
