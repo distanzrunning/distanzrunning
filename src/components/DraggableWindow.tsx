@@ -352,6 +352,36 @@ export function DraggableWindow({
     setShowTooltip(false)
   }
 
+  // Handle keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Only handle shortcuts when Shift is pressed
+      if (!e.shiftKey) return
+
+      // Prevent default behavior for these shortcuts
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowRight' || e.key === 'ArrowUp') {
+        e.preventDefault()
+      }
+
+      switch (e.key) {
+        case 'ArrowLeft':
+          handleSnapLeft()
+          break
+        case 'ArrowRight':
+          handleSnapRight()
+          break
+        case 'ArrowUp':
+          handleMaximize()
+          break
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown)
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [isMaximized, isSnappedLeft, isSnappedRight])
+
   const handleMaximizeContextMenu = (e: React.MouseEvent) => {
     e.preventDefault()
     setShowSnapMenu(!showSnapMenu)
@@ -654,14 +684,20 @@ export function DraggableWindow({
             className="w-full px-3 py-2 text-left text-sm text-neutral-900 dark:text-white hover:bg-neutral-100 dark:hover:bg-neutral-700 flex items-center justify-between transition-colors"
           >
             <span>Left half</span>
-            <span className="text-xs text-neutral-500 dark:text-neutral-400">Shift+←</span>
+            <span className="flex items-center gap-1">
+              <kbd className="px-1.5 py-0.5 text-xs font-medium text-neutral-600 dark:text-neutral-400 bg-neutral-100 dark:bg-neutral-700 border border-neutral-300 dark:border-neutral-600 rounded">Shift</kbd>
+              <kbd className="px-1.5 py-0.5 text-xs font-medium text-neutral-600 dark:text-neutral-400 bg-neutral-100 dark:bg-neutral-700 border border-neutral-300 dark:border-neutral-600 rounded">←</kbd>
+            </span>
           </button>
           <button
             onClick={handleSnapRight}
             className="w-full px-3 py-2 text-left text-sm text-neutral-900 dark:text-white hover:bg-neutral-100 dark:hover:bg-neutral-700 flex items-center justify-between transition-colors"
           >
             <span>Right half</span>
-            <span className="text-xs text-neutral-500 dark:text-neutral-400">Shift+→</span>
+            <span className="flex items-center gap-1">
+              <kbd className="px-1.5 py-0.5 text-xs font-medium text-neutral-600 dark:text-neutral-400 bg-neutral-100 dark:bg-neutral-700 border border-neutral-300 dark:border-neutral-600 rounded">Shift</kbd>
+              <kbd className="px-1.5 py-0.5 text-xs font-medium text-neutral-600 dark:text-neutral-400 bg-neutral-100 dark:bg-neutral-700 border border-neutral-300 dark:border-neutral-600 rounded">→</kbd>
+            </span>
           </button>
           <div className="border-t border-neutral-200 dark:border-neutral-700 mt-1 pt-1">
             <button
@@ -669,7 +705,10 @@ export function DraggableWindow({
               className="w-full px-3 py-2 text-left text-sm text-neutral-900 dark:text-white hover:bg-neutral-100 dark:hover:bg-neutral-700 flex items-center justify-between transition-colors"
             >
               <span>Maximize</span>
-              <span className="text-xs text-neutral-500 dark:text-neutral-400">Shift+↑</span>
+              <span className="flex items-center gap-1">
+                <kbd className="px-1.5 py-0.5 text-xs font-medium text-neutral-600 dark:text-neutral-400 bg-neutral-100 dark:bg-neutral-700 border border-neutral-300 dark:border-neutral-600 rounded">Shift</kbd>
+                <kbd className="px-1.5 py-0.5 text-xs font-medium text-neutral-600 dark:text-neutral-400 bg-neutral-100 dark:bg-neutral-700 border border-neutral-300 dark:border-neutral-600 rounded">↑</kbd>
+              </span>
             </button>
           </div>
         </div>,
