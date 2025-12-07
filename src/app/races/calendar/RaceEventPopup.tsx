@@ -58,16 +58,18 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
       onClose={onClose}
       onMinimize={onMinimize}
       initialWidth={672}
-      initialHeight={600}
+      initialHeight={700}
       minWidth={400}
-      minHeight={400}
+      minHeight={300}
     >
-      {/* Scrollable Content Area - Full Height */}
-      <div className="h-full overflow-y-auto flex justify-center race-popup-scroll p-4">
-        <div className="w-full max-w-[600px] flex flex-col gap-4">
+      {/* Main container with flex column */}
+      <div className="h-full flex flex-col bg-neutral-50 dark:bg-neutral-950">
+        {/* Scrollable Content Area */}
+        <div className="overflow-y-auto flex-1 flex justify-center race-popup-scroll p-4 pb-0">
+          <div className="w-full max-w-[600px] flex flex-col gap-4">
             {/* Image Card */}
             <div className="relative w-full bg-white dark:bg-neutral-900 rounded-xl overflow-hidden shadow-sm border border-neutral-100 dark:border-neutral-800">
-              <div style={{ paddingBottom: '60%', minHeight: '200px' }} className="relative">
+              <div style={{ height: '240px' }} className="relative">
               {imageUrl && (
                 <img
                   src={imageUrl}
@@ -319,29 +321,34 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
           {race.gpxFile?.asset?.url && (
             <RaceRouteMap gpxUrl={race.gpxFile.asset.url} title={race.title} />
           )}
+          </div>
+        </div>
 
-          {/* Action Buttons */}
-          <div className="grid grid-cols-3 gap-3">
-            <a
-              href={`/races/${race.slug.current}`}
-              className="col-span-2 inline-flex items-center justify-center px-4 py-3 bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 rounded-xl font-medium text-sm transition-all hover:opacity-90 shadow-sm"
-              onClick={(e) => {
-                e.preventDefault()
-                window.location.href = `/races/${race.slug.current}`
-              }}
-            >
-              Race Guide
-            </a>
-            {race.officialWebsite && (
+        {/* Fixed Action Buttons at Bottom - No Border */}
+        <div className="flex-shrink-0 bg-neutral-50 dark:bg-neutral-950 p-4 pt-3">
+          <div className="w-full max-w-[600px] mx-auto">
+            <div className="grid grid-cols-3 gap-3">
               <a
-                href={race.officialWebsite}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="col-span-1 inline-flex items-center justify-center px-4 py-3 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 text-neutral-900 dark:text-white rounded-xl font-medium text-sm transition-all hover:bg-neutral-50 dark:hover:bg-neutral-800 shadow-sm"
+                href={`/races/${race.slug.current}`}
+                className="col-span-2 inline-flex items-center justify-center px-4 py-3 bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 rounded-xl font-medium text-sm transition-all hover:opacity-90 shadow-sm"
+                onClick={(e) => {
+                  e.preventDefault()
+                  window.location.href = `/races/${race.slug.current}`
+                }}
               >
-                Official Site
+                Race Guide
               </a>
-            )}
+              {race.officialWebsite && (
+                <a
+                  href={race.officialWebsite}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="col-span-1 inline-flex items-center justify-center px-4 py-3 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 text-neutral-900 dark:text-white rounded-xl font-medium text-sm transition-all hover:bg-neutral-50 dark:hover:bg-neutral-800 shadow-sm"
+                >
+                  Official Site
+                </a>
+              )}
+            </div>
           </div>
         </div>
       </div>
