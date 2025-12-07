@@ -349,6 +349,13 @@ export function DraggableWindow({
   }
 
   const handleMinimizeClick = () => {
+    // Cancel any pending drag operations
+    setIsDragging(false)
+    if (dragTimeoutRef.current) {
+      clearTimeout(dragTimeoutRef.current)
+      dragTimeoutRef.current = null
+    }
+
     // Reset to center position before minimizing
     if (isSnappedLeft || isSnappedRight || isMaximized) {
       const containerRect = containerRef.current?.getBoundingClientRect()
