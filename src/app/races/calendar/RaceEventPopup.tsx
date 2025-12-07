@@ -321,6 +321,9 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
           {race.gpxFile?.asset?.url && (
             <RaceRouteMap gpxUrl={race.gpxFile.asset.url} title={race.title} />
           )}
+
+          {/* Spacer to ensure content can scroll */}
+          <div className="h-4"></div>
           </div>
         </div>
 
