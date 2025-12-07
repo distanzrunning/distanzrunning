@@ -58,9 +58,9 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
       onClose={onClose}
       onMinimize={onMinimize}
       initialWidth={672}
-      initialHeight={700}
+      initialHeight={600}
       minWidth={400}
-      minHeight={300}
+      minHeight={400}
     >
       {/* Scrollable Content Area - Full Height */}
       <div className="h-full overflow-y-auto flex justify-center race-popup-scroll p-4">
