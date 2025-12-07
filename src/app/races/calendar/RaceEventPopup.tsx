@@ -69,12 +69,12 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
           <div className="w-full max-w-[600px] flex flex-col gap-4">
             {/* Image Card */}
             <div className="relative w-full bg-white dark:bg-neutral-900 rounded-xl overflow-hidden shadow-sm border border-neutral-100 dark:border-neutral-800 flex-shrink-0">
-              <div style={{ height: '240px' }} className="relative flex-shrink-0">
+              <div style={{ height: '300px' }} className="relative flex-shrink-0">
               {imageUrl && (
                 <img
                   src={imageUrl}
                   alt={race.title}
-                  className="absolute inset-0 w-full h-full object-contain object-center"
+                  className="absolute inset-0 w-full h-full object-cover object-center"
                 />
               )}
             </div>
