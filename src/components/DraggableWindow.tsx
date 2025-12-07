@@ -32,6 +32,7 @@ export function DraggableWindow({
   const [isSnappedLeft, setIsSnappedLeft] = useState(false)
   const [isSnappedRight, setIsSnappedRight] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
+  const [isMinimizing, setIsMinimizing] = useState(false)
   const [resizeDirection, setResizeDirection] = useState<ResizeDirection>(null)
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 })
   const [snapPreview, setSnapPreview] = useState<'left' | 'right' | null>(null)
@@ -67,6 +68,9 @@ export function DraggableWindow({
   const handleMouseDown = (e: React.MouseEvent) => {
     // Only handle left mouse button (button 0)
     if (e.button !== 0) return
+
+    // Prevent dragging if minimizing
+    if (isMinimizing) return
 
     setShowTooltip(false) // Hide tooltip when dragging starts
 
@@ -353,6 +357,9 @@ export function DraggableWindow({
   const handleMinimizeClick = (e: React.MouseEvent) => {
     e.stopPropagation() // Prevent titlebar drag from triggering
 
+    // Set minimizing flag to prevent dragging
+    setIsMinimizing(true)
+
     // Cancel any pending drag operations
     setIsDragging(false)
     if (dragTimeoutRef.current) {
@@ -376,10 +383,12 @@ export function DraggableWindow({
       // Delay minimize to allow animation to complete
       setTimeout(() => {
         onMinimize?.()
+        setIsMinimizing(false)
       }, 500) // Increased to allow spring animation to complete
     } else {
       // Already in normal state, minimize immediately
       onMinimize?.()
+      setIsMinimizing(false)
     }
   }
 
