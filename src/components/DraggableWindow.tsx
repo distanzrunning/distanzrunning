@@ -423,7 +423,7 @@ export function DraggableWindow({
           left: `${position.x}px`,
           width: `${size.width}px`,
           height: `${size.height}px`,
-          borderRadius: isMaximized || isSnappedLeft || isSnappedRight ? 0 : '1rem',
+          borderRadius: '1rem',
         }}
         transition={
           isDragging || resizeDirection
