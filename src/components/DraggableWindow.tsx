@@ -65,14 +65,25 @@ export function DraggableWindow({
 
   // Handle titlebar drag
   const handleMouseDown = (e: React.MouseEvent) => {
+    console.log('[DraggableWindow] handleMouseDown called', {
+      button: e.button,
+      isSnappedLeft,
+      isSnappedRight,
+      isMaximized,
+    })
+
     // Only handle left mouse button (button 0)
-    if (e.button !== 0) return
+    if (e.button !== 0) {
+      console.log('[DraggableWindow] Ignoring non-left button click')
+      return
+    }
 
     setShowTooltip(false) // Hide tooltip when dragging starts
 
     if (isMaximized || isSnappedLeft || isSnappedRight) {
       // If snapped or maximized, unsnap first with animation
       if (isSnappedLeft || isSnappedRight) {
+        console.log('[DraggableWindow] Unsnapping window')
         setIsSnappedLeft(false)
         setIsSnappedRight(false)
         // Center the window under cursor
@@ -89,6 +100,7 @@ export function DraggableWindow({
         })
         // Delay drag to allow resize animation
         dragTimeoutRef.current = setTimeout(() => {
+          console.log('[DraggableWindow] Setting isDragging=true after delay')
           setIsDragging(true)
           dragTimeoutRef.current = null
         }, 150)
@@ -96,6 +108,7 @@ export function DraggableWindow({
       return
     }
 
+    console.log('[DraggableWindow] Starting normal drag')
     setDragOffset({
       x: e.clientX - position.x,
       y: e.clientY - position.y,
@@ -123,6 +136,7 @@ export function DraggableWindow({
 
   // Prevent text selection during drag/resize
   useEffect(() => {
+    console.log('[DraggableWindow] useEffect - drag state changed', { isDragging, resizeDirection })
     if (isDragging || resizeDirection) {
       document.body.style.userSelect = 'none'
       document.body.style.cursor = resizeDirection ? getCursorClass(resizeDirection).replace('cursor-', '') : 'move'
@@ -351,15 +365,25 @@ export function DraggableWindow({
   }
 
   const handleMinimizeClick = (e: React.MouseEvent) => {
+    console.log('[DraggableWindow] handleMinimizeClick called', {
+      isDragging,
+      hasDragTimeout: !!dragTimeoutRef.current,
+      isSnappedLeft,
+      isSnappedRight,
+      isMaximized,
+    })
+
     e.stopPropagation() // Prevent titlebar drag from triggering
 
     // Cancel any pending drag operations
     setIsDragging(false)
     if (dragTimeoutRef.current) {
+      console.log('[DraggableWindow] Clearing drag timeout')
       clearTimeout(dragTimeoutRef.current)
       dragTimeoutRef.current = null
     }
 
+    console.log('[DraggableWindow] Calling onMinimize')
     // Just minimize immediately - no animations
     onMinimize?.()
   }
