@@ -66,35 +66,19 @@ export function DraggableWindow({
 
   // Handle titlebar drag
   const handleMouseDown = (e: React.MouseEvent) => {
-    console.log('[DraggableWindow] handleMouseDown called', {
-      button: e.button,
-      isSnappedLeft,
-      isSnappedRight,
-      isMaximized,
-      isTransitioning: isTransitioning.current,
-    })
-
     // Only handle left mouse button (button 0)
-    if (e.button !== 0) {
-      console.log('[DraggableWindow] Ignoring non-left button click')
-      return
-    }
+    if (e.button !== 0) return
 
     // If we're in a transition (maximize/unmaximize/snap), ignore drag
-    if (isTransitioning.current) {
-      console.log('[DraggableWindow] Ignoring mousedown during transition')
-      return
-    }
+    if (isTransitioning.current) return
 
     setShowTooltip(false) // Hide tooltip when dragging starts
 
     if (isMaximized || isSnappedLeft || isSnappedRight) {
       // If snapped or maximized, don't start drag - double-click will handle it
-      console.log('[DraggableWindow] Ignoring single click on snapped/maximized window')
       return
     }
 
-    console.log('[DraggableWindow] Starting normal drag')
     setDragOffset({
       x: e.clientX - position.x,
       y: e.clientY - position.y,
@@ -131,7 +115,6 @@ export function DraggableWindow({
 
   // Prevent text selection during drag/resize
   useEffect(() => {
-    console.log('[DraggableWindow] useEffect - drag state changed', { isDragging, resizeDirection })
     if (isDragging || resizeDirection) {
       document.body.style.userSelect = 'none'
       document.body.style.cursor = resizeDirection ? getCursorClass(resizeDirection).replace('cursor-', '') : 'move'
@@ -291,28 +274,19 @@ export function DraggableWindow({
   }, [isDragging, resizeDirection, dragOffset, position, size, resizeStart, minWidth, minHeight])
 
   const handleMaximize = (e?: React.MouseEvent) => {
-    console.log('[DraggableWindow] handleMaximize called', {
-      isSnappedLeft,
-      isSnappedRight,
-      isMaximized,
-    })
-
     e?.stopPropagation() // Prevent titlebar drag from triggering
 
     // Set transition flag to prevent drag during state change
     isTransitioning.current = true
-    console.log('[DraggableWindow] Set isTransitioning=true')
 
     // Clear transition flag after animation completes
     setTimeout(() => {
       isTransitioning.current = false
-      console.log('[DraggableWindow] Cleared isTransitioning after animation')
     }, 500) // Match animation duration
 
     // Cancel any pending drag operations
     setIsDragging(false)
     if (dragTimeoutRef.current) {
-      console.log('[DraggableWindow] Clearing drag timeout in maximize')
       clearTimeout(dragTimeoutRef.current)
       dragTimeoutRef.current = null
     }
@@ -384,25 +358,15 @@ export function DraggableWindow({
   }
 
   const handleMinimizeClick = (e: React.MouseEvent) => {
-    console.log('[DraggableWindow] handleMinimizeClick called', {
-      isDragging,
-      hasDragTimeout: !!dragTimeoutRef.current,
-      isSnappedLeft,
-      isSnappedRight,
-      isMaximized,
-    })
-
     e.stopPropagation() // Prevent titlebar drag from triggering
 
     // Cancel any pending drag operations
     setIsDragging(false)
     if (dragTimeoutRef.current) {
-      console.log('[DraggableWindow] Clearing drag timeout')
       clearTimeout(dragTimeoutRef.current)
       dragTimeoutRef.current = null
     }
 
-    console.log('[DraggableWindow] Calling onMinimize')
     // Just minimize immediately - no animations
     onMinimize?.()
   }
