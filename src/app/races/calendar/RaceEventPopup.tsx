@@ -324,7 +324,7 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
                 window.location.href = `/races/${race.slug.current}`
               }}
             >
-              View Full Guide
+              Race Guide
             </a>
             {race.officialWebsite && (
               <a
