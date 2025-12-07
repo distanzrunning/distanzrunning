@@ -179,7 +179,7 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
   }
 
   return (
-    <div className="relative w-full h-80 bg-neutral-100 dark:bg-neutral-800 rounded-xl overflow-hidden shadow-sm border border-neutral-100 dark:border-neutral-800">
+    <div className="relative w-full h-80 min-h-80 bg-neutral-100 dark:bg-neutral-800 rounded-xl overflow-hidden shadow-sm border border-neutral-100 dark:border-neutral-800 flex-shrink-0">
       {isLoading && (
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-sm text-neutral-500 dark:text-neutral-400">Loading map...</div>
