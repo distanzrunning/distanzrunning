@@ -92,24 +92,42 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
         // Fit map to route bounds
         map.fitBounds(bounds)
 
-        // Add start marker (green)
-        new google.maps.Marker({
+        // Add start marker (green) using AdvancedMarkerElement
+        const startMarkerElement = document.createElement('div')
+        startMarkerElement.innerHTML = `
+          <div style="
+            width: 32px;
+            height: 32px;
+            background-color: #00D464;
+            border: 3px solid white;
+            border-radius: 50%;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+          "></div>
+        `
+        new google.maps.marker.AdvancedMarkerElement({
           position: coordinates[0],
           map,
           title: 'Start',
-          icon: {
-            url: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png',
-          },
+          content: startMarkerElement,
         })
 
-        // Add finish marker (red)
-        new google.maps.Marker({
+        // Add finish marker (red) using AdvancedMarkerElement
+        const finishMarkerElement = document.createElement('div')
+        finishMarkerElement.innerHTML = `
+          <div style="
+            width: 32px;
+            height: 32px;
+            background-color: #DC2626;
+            border: 3px solid white;
+            border-radius: 50%;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+          "></div>
+        `
+        new google.maps.marker.AdvancedMarkerElement({
           position: coordinates[coordinates.length - 1],
           map,
           title: 'Finish',
-          icon: {
-            url: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
-          },
+          content: finishMarkerElement,
         })
 
         setIsLoading(false)
@@ -149,22 +167,54 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
   )
 }
 
+// Global flag to prevent multiple script loads
+let isLoadingGoogleMaps = false
+let googleMapsPromise: Promise<void> | null = null
+
 // Helper function to load Google Maps script
 function loadGoogleMapsScript(apiKey: string): Promise<void> {
-  return new Promise((resolve, reject) => {
-    if (window.google) {
-      resolve()
-      return
-    }
+  // Return existing promise if already loading
+  if (isLoadingGoogleMaps && googleMapsPromise) {
+    return googleMapsPromise
+  }
 
+  // Return resolved promise if already loaded
+  if (window.google?.maps) {
+    return Promise.resolve()
+  }
+
+  // Check if script already exists in DOM
+  const existingScript = document.querySelector('script[src*="maps.googleapis.com"]')
+  if (existingScript) {
+    return new Promise((resolve) => {
+      const checkGoogle = setInterval(() => {
+        if (window.google?.maps) {
+          clearInterval(checkGoogle)
+          resolve()
+        }
+      }, 100)
+    })
+  }
+
+  isLoadingGoogleMaps = true
+  googleMapsPromise = new Promise((resolve, reject) => {
     const script = document.createElement('script')
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=geometry`
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=marker&loading=async`
     script.async = true
     script.defer = true
-    script.onload = () => resolve()
-    script.onerror = () => reject(new Error('Failed to load Google Maps script'))
+    script.onload = () => {
+      isLoadingGoogleMaps = false
+      resolve()
+    }
+    script.onerror = () => {
+      isLoadingGoogleMaps = false
+      googleMapsPromise = null
+      reject(new Error('Failed to load Google Maps script'))
+    }
     document.head.appendChild(script)
   })
+
+  return googleMapsPromise
 }
 
 // Helper function to parse GPX and extract coordinates
