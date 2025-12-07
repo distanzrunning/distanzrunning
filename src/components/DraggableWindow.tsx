@@ -468,6 +468,7 @@ export function DraggableWindow({
             {onMinimize && (
               <button
                 onClick={handleMinimizeClick}
+                onMouseDown={(e) => e.stopPropagation()}
                 className="h-8 w-8 rounded-md flex items-center justify-center text-neutral-500 dark:text-neutral-400 hover:text-neutral-400 dark:hover:text-neutral-300 transition-colors active:scale-95"
                 aria-label="Minimize"
               >
@@ -489,6 +490,7 @@ export function DraggableWindow({
             <button
               ref={maximizeButtonRef}
               onClick={handleMaximize}
+              onMouseDown={(e) => e.stopPropagation()}
               onContextMenu={handleMaximizeContextMenu}
               onMouseEnter={() => setShowTooltip(true)}
               onMouseLeave={() => setShowTooltip(false)}
@@ -509,6 +511,7 @@ export function DraggableWindow({
             </button>
             <button
               onClick={handleCloseClick}
+              onMouseDown={(e) => e.stopPropagation()}
               className="h-8 w-8 rounded-md flex items-center justify-center text-neutral-500 dark:text-neutral-400 hover:text-neutral-400 dark:hover:text-neutral-300 transition-colors active:scale-95"
               aria-label="Close"
             >
