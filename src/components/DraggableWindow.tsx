@@ -400,7 +400,7 @@ export function DraggableWindow({
       {/* Snap Preview Overlay */}
       {snapPreview && (
         <div
-          className="pointer-events-none absolute transition-opacity duration-150"
+          className="pointer-events-none absolute transition-opacity duration-150 rounded-2xl"
           style={{
             top: '2px',
             bottom: 0,
@@ -408,7 +408,7 @@ export function DraggableWindow({
             width: '50%',
             background: 'repeating-linear-gradient(45deg, rgba(228, 60, 129, 0.03), rgba(228, 60, 129, 0.03) 10px, rgba(228, 60, 129, 0.05) 10px, rgba(228, 60, 129, 0.05) 20px)',
             border: '2px solid rgba(228, 60, 129, 0.4)',
-            zIndex: 39,
+            zIndex: 10,
           }}
         />
       )}
@@ -416,6 +416,7 @@ export function DraggableWindow({
       <motion.div
         ref={windowRef}
         className="pointer-events-auto absolute flex flex-col overflow-hidden bg-white dark:bg-neutral-900 shadow-xl border border-neutral-200 dark:border-neutral-700"
+        style={{ zIndex: 50 }}
         initial={false}
         animate={{
           top: `${position.y}px`,
