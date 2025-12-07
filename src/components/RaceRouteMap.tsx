@@ -11,6 +11,20 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
   const mapRef = useRef<HTMLDivElement>(null)
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [isDarkMode, setIsDarkMode] = useState(false)
+
+  // Detect dark mode
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+    setIsDarkMode(mediaQuery.matches)
+
+    const handleChange = (e: MediaQueryListEvent) => {
+      setIsDarkMode(e.matches)
+    }
+
+    mediaQuery.addEventListener('change', handleChange)
+    return () => mediaQuery.removeEventListener('change', handleChange)
+  }, [])
 
   useEffect(() => {
     let map: google.maps.Map | null = null
@@ -51,7 +65,115 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
         coordinates.forEach(coord => bounds.extend(coord))
         const center = bounds.getCenter()
 
-        // Initialize map with custom styling
+        // Light mode monochrome styles
+        const lightStyles: google.maps.MapTypeStyle[] = [
+          {
+            featureType: 'all',
+            elementType: 'geometry',
+            stylers: [{ color: '#f5f5f5' }]
+          },
+          {
+            featureType: 'water',
+            elementType: 'geometry',
+            stylers: [{ color: '#e0e0e0' }]
+          },
+          {
+            featureType: 'water',
+            elementType: 'labels.text.fill',
+            stylers: [{ color: '#9e9e9e' }]
+          },
+          {
+            featureType: 'road',
+            elementType: 'geometry',
+            stylers: [{ color: '#ffffff' }]
+          },
+          {
+            featureType: 'road',
+            elementType: 'geometry.stroke',
+            stylers: [{ color: '#d4d4d4' }]
+          },
+          {
+            featureType: 'road',
+            elementType: 'labels.text.fill',
+            stylers: [{ color: '#757575' }]
+          },
+          {
+            featureType: 'poi',
+            elementType: 'geometry',
+            stylers: [{ color: '#eeeeee' }]
+          },
+          {
+            featureType: 'poi',
+            elementType: 'labels.text.fill',
+            stylers: [{ color: '#757575' }]
+          },
+          {
+            featureType: 'transit',
+            elementType: 'geometry',
+            stylers: [{ color: '#e5e5e5' }]
+          },
+          {
+            featureType: 'administrative',
+            elementType: 'labels.text.fill',
+            stylers: [{ color: '#9e9e9e' }]
+          }
+        ]
+
+        // Dark mode monochrome styles
+        const darkStyles: google.maps.MapTypeStyle[] = [
+          {
+            featureType: 'all',
+            elementType: 'geometry',
+            stylers: [{ color: '#242424' }]
+          },
+          {
+            featureType: 'water',
+            elementType: 'geometry',
+            stylers: [{ color: '#1a1a1a' }]
+          },
+          {
+            featureType: 'water',
+            elementType: 'labels.text.fill',
+            stylers: [{ color: '#525252' }]
+          },
+          {
+            featureType: 'road',
+            elementType: 'geometry',
+            stylers: [{ color: '#2c2c2c' }]
+          },
+          {
+            featureType: 'road',
+            elementType: 'geometry.stroke',
+            stylers: [{ color: '#1f1f1f' }]
+          },
+          {
+            featureType: 'road',
+            elementType: 'labels.text.fill',
+            stylers: [{ color: '#8a8a8a' }]
+          },
+          {
+            featureType: 'poi',
+            elementType: 'geometry',
+            stylers: [{ color: '#212121' }]
+          },
+          {
+            featureType: 'poi',
+            elementType: 'labels.text.fill',
+            stylers: [{ color: '#757575' }]
+          },
+          {
+            featureType: 'transit',
+            elementType: 'geometry',
+            stylers: [{ color: '#1f1f1f' }]
+          },
+          {
+            featureType: 'administrative',
+            elementType: 'labels.text.fill',
+            stylers: [{ color: '#525252' }]
+          }
+        ]
+
+        // Initialize map with theme-aware styling
         map = new google.maps.Map(mapRef.current, {
           center,
           zoom: 12,
@@ -60,63 +182,7 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
           fullscreenControl: false,
           streetViewControl: false,
           zoomControl: true,
-          styles: [
-            {
-              featureType: 'all',
-              elementType: 'geometry',
-              stylers: [{ color: '#f5f5f5' }]
-            },
-            {
-              featureType: 'water',
-              elementType: 'geometry',
-              stylers: [{ color: '#c9e7f5' }]
-            },
-            {
-              featureType: 'water',
-              elementType: 'labels.text.fill',
-              stylers: [{ color: '#7c9ca6' }]
-            },
-            {
-              featureType: 'road',
-              elementType: 'geometry',
-              stylers: [{ color: '#ffffff' }]
-            },
-            {
-              featureType: 'road',
-              elementType: 'geometry.stroke',
-              stylers: [{ color: '#d4d4d4' }]
-            },
-            {
-              featureType: 'road.arterial',
-              elementType: 'geometry',
-              stylers: [{ color: '#ffffff' }]
-            },
-            {
-              featureType: 'road.highway',
-              elementType: 'geometry',
-              stylers: [{ color: '#f8f8f8' }]
-            },
-            {
-              featureType: 'road.highway',
-              elementType: 'geometry.stroke',
-              stylers: [{ color: '#e6e6e6' }]
-            },
-            {
-              featureType: 'poi',
-              elementType: 'geometry',
-              stylers: [{ color: '#eeeeee' }]
-            },
-            {
-              featureType: 'poi.park',
-              elementType: 'geometry',
-              stylers: [{ color: '#d4e8d4' }]
-            },
-            {
-              featureType: 'transit',
-              elementType: 'geometry',
-              stylers: [{ color: '#e5e5e5' }]
-            }
-          ]
+          styles: isDarkMode ? darkStyles : lightStyles
         })
 
         // Draw route polyline
@@ -168,7 +234,7 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
       if (polyline) polyline.setMap(null)
       if (map) map = null
     }
-  }, [gpxUrl])
+  }, [gpxUrl, isDarkMode])
 
   if (error) {
     return (
