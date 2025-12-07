@@ -199,7 +199,7 @@ function loadGoogleMapsScript(apiKey: string): Promise<void> {
   isLoadingGoogleMaps = true
   googleMapsPromise = new Promise((resolve, reject) => {
     const script = document.createElement('script')
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=marker&loading=async`
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=marker,geometry&loading=async`
     script.async = true
     script.defer = true
     script.onload = () => {
@@ -218,10 +218,10 @@ function loadGoogleMapsScript(apiKey: string): Promise<void> {
 }
 
 // Helper function to parse GPX and extract coordinates
-function parseGPX(gpxText: string): google.maps.LatLng[] {
+function parseGPX(gpxText: string): google.maps.LatLngLiteral[] {
   const parser = new DOMParser()
   const xmlDoc = parser.parseFromString(gpxText, 'text/xml')
-  const coordinates: google.maps.LatLng[] = []
+  const coordinates: google.maps.LatLngLiteral[] = []
 
   // Try to get track points (trkpt) first, then route points (rtept), then waypoints (wpt)
   const trackPoints = xmlDoc.getElementsByTagName('trkpt')
@@ -238,7 +238,7 @@ function parseGPX(gpxText: string): google.maps.LatLng[] {
     const lat = parseFloat(points[i].getAttribute('lat') || '0')
     const lon = parseFloat(points[i].getAttribute('lon') || '0')
     if (lat && lon) {
-      coordinates.push(new google.maps.LatLng(lat, lon))
+      coordinates.push({ lat, lng: lon })
     }
   }
 
