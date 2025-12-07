@@ -396,7 +396,7 @@ export function DraggableWindow({
   }
 
   return (
-    <div ref={containerRef} className="absolute inset-0 pointer-events-none" style={{ zIndex: 40 }}>
+    <div ref={containerRef} className="absolute inset-0 pointer-events-none" style={{ zIndex: 100 }}>
       {/* Snap Preview Overlay */}
       {snapPreview && (
         <div
