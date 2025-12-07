@@ -51,15 +51,72 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
         coordinates.forEach(coord => bounds.extend(coord))
         const center = bounds.getCenter()
 
-        // Initialize map
+        // Initialize map with custom styling
         map = new google.maps.Map(mapRef.current, {
           center,
           zoom: 12,
           mapTypeId: google.maps.MapTypeId.ROADMAP,
-          mapTypeControl: true,
-          fullscreenControl: true,
+          mapTypeControl: false,
+          fullscreenControl: false,
           streetViewControl: false,
           zoomControl: true,
+          styles: [
+            {
+              featureType: 'all',
+              elementType: 'geometry',
+              stylers: [{ color: '#f5f5f5' }]
+            },
+            {
+              featureType: 'water',
+              elementType: 'geometry',
+              stylers: [{ color: '#c9e7f5' }]
+            },
+            {
+              featureType: 'water',
+              elementType: 'labels.text.fill',
+              stylers: [{ color: '#7c9ca6' }]
+            },
+            {
+              featureType: 'road',
+              elementType: 'geometry',
+              stylers: [{ color: '#ffffff' }]
+            },
+            {
+              featureType: 'road',
+              elementType: 'geometry.stroke',
+              stylers: [{ color: '#d4d4d4' }]
+            },
+            {
+              featureType: 'road.arterial',
+              elementType: 'geometry',
+              stylers: [{ color: '#ffffff' }]
+            },
+            {
+              featureType: 'road.highway',
+              elementType: 'geometry',
+              stylers: [{ color: '#f8f8f8' }]
+            },
+            {
+              featureType: 'road.highway',
+              elementType: 'geometry.stroke',
+              stylers: [{ color: '#e6e6e6' }]
+            },
+            {
+              featureType: 'poi',
+              elementType: 'geometry',
+              stylers: [{ color: '#eeeeee' }]
+            },
+            {
+              featureType: 'poi.park',
+              elementType: 'geometry',
+              stylers: [{ color: '#d4e8d4' }]
+            },
+            {
+              featureType: 'transit',
+              elementType: 'geometry',
+              stylers: [{ color: '#e5e5e5' }]
+            }
+          ]
         })
 
         // Draw route polyline
@@ -122,7 +179,7 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
   }
 
   return (
-    <div className="relative w-full h-64 bg-neutral-100 dark:bg-neutral-800 rounded-xl overflow-hidden">
+    <div className="relative w-full h-80 bg-neutral-100 dark:bg-neutral-800 rounded-xl overflow-hidden shadow-sm border border-neutral-100 dark:border-neutral-800">
       {isLoading && (
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-sm text-neutral-500 dark:text-neutral-400">Loading map...</div>
