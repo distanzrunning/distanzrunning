@@ -65,6 +65,9 @@ export function DraggableWindow({
 
   // Handle titlebar drag
   const handleMouseDown = (e: React.MouseEvent) => {
+    // Only handle left mouse button (button 0)
+    if (e.button !== 0) return
+
     setShowTooltip(false) // Hide tooltip when dragging starts
 
     if (isMaximized || isSnappedLeft || isSnappedRight) {
@@ -102,6 +105,8 @@ export function DraggableWindow({
 
   // Handle resize drag
   const handleResizeMouseDown = (e: React.MouseEvent, direction: ResizeDirection) => {
+    // Only handle left mouse button (button 0)
+    if (e.button !== 0) return
     if (isMaximized) return
 
     e.stopPropagation()
