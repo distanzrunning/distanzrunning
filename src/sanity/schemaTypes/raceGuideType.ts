@@ -511,6 +511,15 @@ export const raceGuideType = defineType({
       description: 'URL to the official race website',
     }),
     defineField({
+      name: 'gpxFile',
+      title: 'GPX Route File',
+      type: 'file',
+      description: 'Upload the GPX file containing the race route coordinates',
+      options: {
+        accept: '.gpx',
+      },
+    }),
+    defineField({
       name: 'featuredRace',
       title: 'Featured Race Guide',
       type: 'boolean',

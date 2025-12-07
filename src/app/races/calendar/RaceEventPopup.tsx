@@ -7,6 +7,7 @@ import type { RaceGuide } from '../page'
 import { urlFor } from '@/sanity/lib/image'
 import { convertCurrencySync, formatPrice } from '@/lib/raceUtils'
 import { DraggableWindow } from '@/components/DraggableWindow'
+import { RaceRouteMap } from '@/components/RaceRouteMap'
 import { Route, Wallet, Users, ArrowUpRight, ArrowDownRight, Mountain, ThermometerSun, Medal, Settings2 } from 'lucide-react'
 
 interface RaceEventPopupProps {
@@ -313,6 +314,13 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
               </div>
             </div>
           </div>
+
+          {/* Race Route Map */}
+          {race.gpxFile?.asset?.url && (
+            <div className="mb-6">
+              <RaceRouteMap gpxUrl={race.gpxFile.asset.url} title={race.title} />
+            </div>
+          )}
 
           {/* Action Buttons */}
           <div className="grid grid-cols-3 gap-3">

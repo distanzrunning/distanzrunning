@@ -31,6 +31,12 @@ export type RaceGuide = {
   womensCourseRecordCountry?: string
   finishers?: number
   officialWebsite?: string
+  gpxFile?: {
+    asset?: {
+      _id: string
+      url: string
+    }
+  }
 }
 
 export const revalidate = 60 // Incremental Static Regeneration - refresh every 60s

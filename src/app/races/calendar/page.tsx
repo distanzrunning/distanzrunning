@@ -40,6 +40,12 @@ export default async function RaceCalendarPage() {
       womensCourseRecordCountry,
       finishers,
       officialWebsite,
+      gpxFile {
+        asset-> {
+          _id,
+          url
+        }
+      },
       "raceCategoryName": raceCategory->title
     }
   `)
