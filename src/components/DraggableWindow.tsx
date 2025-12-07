@@ -62,6 +62,7 @@ export function DraggableWindow({
   const snapMenuRef = useRef<HTMLDivElement>(null)
   const maximizeButtonRef = useRef<HTMLButtonElement>(null)
   const dragTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+  const isTransitioning = useRef(false) // Prevent drag during state transitions
 
   // Handle titlebar drag
   const handleMouseDown = (e: React.MouseEvent) => {
@@ -70,6 +71,7 @@ export function DraggableWindow({
       isSnappedLeft,
       isSnappedRight,
       isMaximized,
+      isTransitioning: isTransitioning.current,
     })
 
     // Only handle left mouse button (button 0)
@@ -78,33 +80,17 @@ export function DraggableWindow({
       return
     }
 
+    // If we're in a transition (maximize/unmaximize/snap), ignore drag
+    if (isTransitioning.current) {
+      console.log('[DraggableWindow] Ignoring mousedown during transition')
+      return
+    }
+
     setShowTooltip(false) // Hide tooltip when dragging starts
 
     if (isMaximized || isSnappedLeft || isSnappedRight) {
-      // If snapped or maximized, unsnap first with animation
-      if (isSnappedLeft || isSnappedRight) {
-        console.log('[DraggableWindow] Unsnapping window')
-        setIsSnappedLeft(false)
-        setIsSnappedRight(false)
-        // Center the window under cursor
-        const newWidth = initialWidth
-        const newHeight = initialHeight
-        setSize({ width: newWidth, height: newHeight })
-        setPosition({
-          x: e.clientX - newWidth / 2,
-          y: e.clientY - 20, // Offset for titlebar
-        })
-        setDragOffset({
-          x: newWidth / 2,
-          y: 20,
-        })
-        // Delay drag to allow resize animation
-        dragTimeoutRef.current = setTimeout(() => {
-          console.log('[DraggableWindow] Setting isDragging=true after delay')
-          setIsDragging(true)
-          dragTimeoutRef.current = null
-        }, 150)
-      }
+      // If snapped or maximized, don't start drag - double-click will handle it
+      console.log('[DraggableWindow] Ignoring single click on snapped/maximized window')
       return
     }
 
@@ -133,6 +119,15 @@ export function DraggableWindow({
       posY: position.y,
     })
   }
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (dragTimeoutRef.current) {
+        clearTimeout(dragTimeoutRef.current)
+      }
+    }
+  }, [])
 
   // Prevent text selection during drag/resize
   useEffect(() => {
@@ -304,7 +299,17 @@ export function DraggableWindow({
 
     e?.stopPropagation() // Prevent titlebar drag from triggering
 
-    // Cancel any pending drag operations from double-click
+    // Set transition flag to prevent drag during state change
+    isTransitioning.current = true
+    console.log('[DraggableWindow] Set isTransitioning=true')
+
+    // Clear transition flag after animation completes
+    setTimeout(() => {
+      isTransitioning.current = false
+      console.log('[DraggableWindow] Cleared isTransitioning after animation')
+    }, 500) // Match animation duration
+
+    // Cancel any pending drag operations
     setIsDragging(false)
     if (dragTimeoutRef.current) {
       console.log('[DraggableWindow] Clearing drag timeout in maximize')
