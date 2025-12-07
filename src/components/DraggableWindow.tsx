@@ -296,7 +296,21 @@ export function DraggableWindow({
   }, [isDragging, resizeDirection, dragOffset, position, size, resizeStart, minWidth, minHeight])
 
   const handleMaximize = (e?: React.MouseEvent) => {
+    console.log('[DraggableWindow] handleMaximize called', {
+      isSnappedLeft,
+      isSnappedRight,
+      isMaximized,
+    })
+
     e?.stopPropagation() // Prevent titlebar drag from triggering
+
+    // Cancel any pending drag operations from double-click
+    setIsDragging(false)
+    if (dragTimeoutRef.current) {
+      console.log('[DraggableWindow] Clearing drag timeout in maximize')
+      clearTimeout(dragTimeoutRef.current)
+      dragTimeoutRef.current = null
+    }
 
     // If snapped, restore to normal floating state
     if (isSnappedLeft || isSnappedRight) {
