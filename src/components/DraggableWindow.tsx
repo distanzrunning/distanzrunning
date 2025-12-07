@@ -281,7 +281,9 @@ export function DraggableWindow({
     }
   }, [isDragging, resizeDirection, dragOffset, position, size, resizeStart, minWidth, minHeight])
 
-  const handleMaximize = () => {
+  const handleMaximize = (e?: React.MouseEvent) => {
+    e?.stopPropagation() // Prevent titlebar drag from triggering
+
     // If snapped, restore to normal floating state
     if (isSnappedLeft || isSnappedRight) {
       setIsSnappedLeft(false)
@@ -348,7 +350,9 @@ export function DraggableWindow({
     setShowSnapMenu(!showSnapMenu)
   }
 
-  const handleMinimizeClick = () => {
+  const handleMinimizeClick = (e: React.MouseEvent) => {
+    e.stopPropagation() // Prevent titlebar drag from triggering
+
     // Cancel any pending drag operations
     setIsDragging(false)
     if (dragTimeoutRef.current) {
@@ -377,6 +381,11 @@ export function DraggableWindow({
       // Already in normal state, minimize immediately
       onMinimize?.()
     }
+  }
+
+  const handleCloseClick = (e: React.MouseEvent) => {
+    e.stopPropagation() // Prevent titlebar drag from triggering
+    onClose()
   }
 
   const getCursorClass = (direction: ResizeDirection) => {
@@ -494,7 +503,7 @@ export function DraggableWindow({
               )}
             </button>
             <button
-              onClick={onClose}
+              onClick={handleCloseClick}
               className="h-8 w-8 rounded-md flex items-center justify-center text-neutral-500 dark:text-neutral-400 hover:text-neutral-400 dark:hover:text-neutral-300 transition-colors active:scale-95"
               aria-label="Close"
             >
