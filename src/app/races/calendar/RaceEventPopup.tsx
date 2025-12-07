@@ -68,8 +68,8 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
         <div className="overflow-y-auto flex-1 flex justify-center race-popup-scroll p-4 pb-0">
           <div className="w-full max-w-[600px] flex flex-col gap-4">
             {/* Image Card */}
-            <div className="relative w-full bg-white dark:bg-neutral-900 rounded-xl overflow-hidden shadow-sm border border-neutral-100 dark:border-neutral-800">
-              <div style={{ height: '240px' }} className="relative">
+            <div className="relative w-full bg-white dark:bg-neutral-900 rounded-xl overflow-hidden shadow-sm border border-neutral-100 dark:border-neutral-800 flex-shrink-0">
+              <div style={{ height: '240px' }} className="relative flex-shrink-0">
               {imageUrl && (
                 <img
                   src={imageUrl}
@@ -91,7 +91,7 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
           </div>
 
           {/* Title and Date Card */}
-          <div className="bg-white dark:bg-neutral-900 rounded-xl shadow-sm border border-neutral-100 dark:border-neutral-800 p-5">
+          <div className="bg-white dark:bg-neutral-900 rounded-xl shadow-sm border border-neutral-100 dark:border-neutral-800 p-5 flex-shrink-0">
             <div className="flex items-center gap-4">
               {/* Date - Left Side */}
               <div className="flex flex-col items-center justify-center flex-shrink-0 bg-neutral-100 dark:bg-neutral-800 rounded-xl w-16 h-16">
@@ -138,7 +138,7 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
           </div>
 
           {/* Key Details Card */}
-          <div className="bg-white dark:bg-neutral-900 rounded-xl shadow-sm border border-neutral-100 dark:border-neutral-800 p-5">
+          <div className="bg-white dark:bg-neutral-900 rounded-xl shadow-sm border border-neutral-100 dark:border-neutral-800 p-5 flex-shrink-0">
             <div className="flex items-center justify-between mb-3">
               <h4 className="font-body text-sm font-medium text-neutral-600 dark:text-neutral-400">Key Details</h4>
 
