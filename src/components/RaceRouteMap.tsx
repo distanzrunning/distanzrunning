@@ -133,7 +133,11 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
         const mapStyles = isDark ? DARK_MAP_STYLES : LIGHT_MAP_STYLES
         console.log('[RaceRouteMap] Using', isDark ? 'DARK' : 'LIGHT', 'map styles')
 
-        // Initialize map with theme-specific styles
+        // Use a simple Map ID for Advanced Markers, but apply custom styles over it
+        // This allows us to use AdvancedMarkerElement while controlling the theme via styles
+        const mapId = '5f71815e7cfcb0a23878760d' // Light mode ID, but styles will override
+
+        // Initialize map with Map ID (for Advanced Markers) and custom styles (for theme)
         const map = new google.maps.Map(mapRef.current, {
           center,
           zoom: 12,
@@ -141,6 +145,7 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
           fullscreenControl: false,
           streetViewControl: false,
           zoomControl: true,
+          mapId: mapId,
           styles: mapStyles,
         })
 
