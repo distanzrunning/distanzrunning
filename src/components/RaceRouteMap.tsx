@@ -22,14 +22,12 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
         setError(null)
 
         // Load Google Maps API if not already loaded
-        if (!window.google) {
-          const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
-          if (!apiKey) {
-            throw new Error('Google Maps API key is not configured')
-          }
-
-          await loadGoogleMapsScript(apiKey)
+        const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
+        if (!apiKey) {
+          throw new Error('Google Maps API key is not configured')
         }
+
+        await loadGoogleMapsScript(apiKey)
 
         if (!mapRef.current) return
 
@@ -155,14 +153,14 @@ let isLoadingGoogleMaps = false
 let googleMapsPromise: Promise<void> | null = null
 
 // Helper function to load Google Maps script
-function loadGoogleMapsScript(apiKey: string): Promise<void> {
+async function loadGoogleMapsScript(apiKey: string): Promise<void> {
   // Return existing promise if already loading
   if (isLoadingGoogleMaps && googleMapsPromise) {
     return googleMapsPromise
   }
 
-  // Return resolved promise if already loaded
-  if (window.google?.maps) {
+  // Return resolved promise if already loaded and initialized
+  if (window.google?.maps?.Map && window.google?.maps?.marker?.AdvancedMarkerElement) {
     return Promise.resolve()
   }
 
@@ -171,7 +169,7 @@ function loadGoogleMapsScript(apiKey: string): Promise<void> {
   if (existingScript) {
     return new Promise((resolve) => {
       const checkGoogle = setInterval(() => {
-        if (window.google?.maps) {
+        if (window.google?.maps?.Map && window.google?.maps?.marker?.AdvancedMarkerElement) {
           clearInterval(checkGoogle)
           resolve()
         }
@@ -182,12 +180,25 @@ function loadGoogleMapsScript(apiKey: string): Promise<void> {
   isLoadingGoogleMaps = true
   googleMapsPromise = new Promise((resolve, reject) => {
     const script = document.createElement('script')
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=marker,geometry&loading=async`
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=marker&v=beta`
     script.async = true
-    script.defer = true
     script.onload = () => {
-      isLoadingGoogleMaps = false
-      resolve()
+      // Wait for Google Maps to fully initialize
+      const checkInit = setInterval(() => {
+        if (window.google?.maps?.Map && window.google?.maps?.marker?.AdvancedMarkerElement) {
+          clearInterval(checkInit)
+          isLoadingGoogleMaps = false
+          resolve()
+        }
+      }, 50)
+
+      // Timeout after 10 seconds
+      setTimeout(() => {
+        clearInterval(checkInit)
+        isLoadingGoogleMaps = false
+        googleMapsPromise = null
+        reject(new Error('Google Maps initialization timeout'))
+      }, 10000)
     }
     script.onerror = () => {
       isLoadingGoogleMaps = false
