@@ -1,6 +1,7 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, useContext } from 'react'
+import { DarkModeContext } from './DarkModeProvider'
 
 interface RaceRouteMapProps {
   gpxUrl: string
@@ -11,6 +12,7 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
   const mapRef = useRef<HTMLDivElement>(null)
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const { isDark } = useContext(DarkModeContext)
 
   useEffect(() => {
     let map: google.maps.Map | null = null
@@ -125,7 +127,7 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
       if (polyline) polyline.setMap(null)
       if (map) map = null
     }
-  }, [gpxUrl])
+  }, [gpxUrl, isDark])
 
   if (error) {
     return (
