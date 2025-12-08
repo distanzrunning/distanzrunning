@@ -10,14 +10,14 @@ interface RaceRouteMapProps {
 
 export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
   const mapRef = useRef<HTMLDivElement>(null)
+  const mapInstanceRef = useRef<google.maps.Map | null>(null)
+  const polylineRef = useRef<google.maps.Polyline | null>(null)
+  const markersRef = useRef<google.maps.marker.AdvancedMarkerElement[]>([])
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const { isDark } = useContext(DarkModeContext)
 
   useEffect(() => {
-    let map: google.maps.Map | null = null
-    let polyline: google.maps.Polyline | null = null
-
     const initMap = async () => {
       try {
         setIsLoading(true)
@@ -33,17 +33,24 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
 
         if (!mapRef.current) return
 
-        // Fetch and parse GPX file
+        // Fetch and parse GPX or GeoJSON file
         const response = await fetch(gpxUrl)
         if (!response.ok) {
-          throw new Error('Failed to fetch GPX file')
+          throw new Error('Failed to fetch route file')
         }
 
-        const gpxText = await response.text()
-        const coordinates = parseGPX(gpxText)
+        const fileText = await response.text()
+
+        // Try to parse as GeoJSON first (check if it starts with '{')
+        let coordinates: google.maps.LatLngLiteral[]
+        if (fileText.trim().startsWith('{')) {
+          coordinates = parseGeoJSON(fileText)
+        } else {
+          coordinates = parseGPX(fileText)
+        }
 
         if (coordinates.length === 0) {
-          throw new Error('No coordinates found in GPX file')
+          throw new Error('No coordinates found in route file')
         }
 
         // Calculate center from coordinates
@@ -51,19 +58,24 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
         const centerLng = coordinates.reduce((sum, coord) => sum + coord.lng, 0) / coordinates.length
         const center = { lat: centerLat, lng: centerLng }
 
-        // Initialize map with custom Map ID from Google Maps Platform
-        map = new google.maps.Map(mapRef.current, {
+        // Use different Map IDs for light and dark mode
+        const mapId = isDark ? '5f71815e7cfcb0a2f0ed7efe' : '5f71815e7cfcb0a23878760d'
+
+        // Initialize map with theme-specific Map ID
+        const map = new google.maps.Map(mapRef.current, {
           center,
           zoom: 12,
           mapTypeControl: false,
           fullscreenControl: false,
           streetViewControl: false,
           zoomControl: true,
-          mapId: '5f71815e7cfcb0a23878760d',
+          mapId: mapId,
         })
 
+        mapInstanceRef.current = map
+
         // Draw route polyline
-        polyline = new google.maps.Polyline({
+        const polyline = new google.maps.Polyline({
           path: coordinates,
           geodesic: true,
           strokeColor: '#e43c81', // Electric Pink from Distanz brand
@@ -72,6 +84,7 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
         })
 
         polyline.setMap(map)
+        polylineRef.current = polyline
 
         // Fit map to route bounds using LatLngBounds literal
         const bounds = {
@@ -90,7 +103,7 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
           scale: 1.2,
         })
 
-        new google.maps.marker.AdvancedMarkerElement({
+        const startMarker = new google.maps.marker.AdvancedMarkerElement({
           map,
           position: coordinates[0],
           title: 'Start',
@@ -105,12 +118,14 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
           scale: 1.2,
         })
 
-        new google.maps.marker.AdvancedMarkerElement({
+        const finishMarker = new google.maps.marker.AdvancedMarkerElement({
           map,
           position: coordinates[coordinates.length - 1],
           title: 'Finish',
           content: finishPin.element,
         })
+
+        markersRef.current = [startMarker, finishMarker]
 
         setIsLoading(false)
       } catch (err) {
@@ -124,8 +139,17 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
 
     return () => {
       // Cleanup
-      if (polyline) polyline.setMap(null)
-      if (map) map = null
+      if (polylineRef.current) {
+        polylineRef.current.setMap(null)
+        polylineRef.current = null
+      }
+      if (markersRef.current) {
+        markersRef.current.forEach(marker => marker.map = null)
+        markersRef.current = []
+      }
+      if (mapInstanceRef.current) {
+        mapInstanceRef.current = null
+      }
     }
   }, [gpxUrl, isDark])
 
@@ -210,6 +234,54 @@ async function loadGoogleMapsScript(apiKey: string): Promise<void> {
   })
 
   return googleMapsPromise
+}
+
+// Helper function to parse GeoJSON and extract coordinates
+function parseGeoJSON(geoJsonText: string): google.maps.LatLngLiteral[] {
+  try {
+    const geoJson = JSON.parse(geoJsonText)
+    const coordinates: google.maps.LatLngLiteral[] = []
+
+    // Handle FeatureCollection
+    if (geoJson.type === 'FeatureCollection' && geoJson.features) {
+      for (const feature of geoJson.features) {
+        if (feature.geometry && feature.geometry.type === 'LineString') {
+          // GeoJSON format is [longitude, latitude, elevation?]
+          for (const coord of feature.geometry.coordinates) {
+            coordinates.push({
+              lng: coord[0],
+              lat: coord[1]
+            })
+          }
+        }
+      }
+    }
+    // Handle single Feature
+    else if (geoJson.type === 'Feature' && geoJson.geometry) {
+      if (geoJson.geometry.type === 'LineString') {
+        for (const coord of geoJson.geometry.coordinates) {
+          coordinates.push({
+            lng: coord[0],
+            lat: coord[1]
+          })
+        }
+      }
+    }
+    // Handle LineString directly
+    else if (geoJson.type === 'LineString' && geoJson.coordinates) {
+      for (const coord of geoJson.coordinates) {
+        coordinates.push({
+          lng: coord[0],
+          lat: coord[1]
+        })
+      }
+    }
+
+    return coordinates
+  } catch (error) {
+    console.error('Error parsing GeoJSON:', error)
+    return []
+  }
 }
 
 // Helper function to parse GPX and extract coordinates
