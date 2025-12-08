@@ -15,9 +15,14 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
   const markersRef = useRef<google.maps.marker.AdvancedMarkerElement[]>([])
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(true)
-  const { isDark } = useContext(DarkModeContext)
+  const { isDark, isInitialized } = useContext(DarkModeContext)
 
   useEffect(() => {
+    // Wait for dark mode to be initialized before loading map
+    if (!isInitialized) {
+      return
+    }
+
     const initMap = async () => {
       try {
         setIsLoading(true)
@@ -151,7 +156,7 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
         mapInstanceRef.current = null
       }
     }
-  }, [gpxUrl, isDark])
+  }, [gpxUrl, isDark, isInitialized])
 
   if (error) {
     return (

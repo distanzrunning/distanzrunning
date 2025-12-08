@@ -7,13 +7,16 @@ import { Moon, Sun } from 'lucide-react'
 export const DarkModeContext = createContext<{
   isDark: boolean
   toggleDarkMode: () => void
+  isInitialized: boolean
 }>({
   isDark: false,
-  toggleDarkMode: () => {}
+  toggleDarkMode: () => {},
+  isInitialized: false
 })
 
 export function DarkModeProvider({ children }: { children: React.ReactNode }) {
   const [isDark, setIsDark] = useState(false)
+  const [isInitialized, setIsInitialized] = useState(false)
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme')
@@ -26,6 +29,8 @@ export function DarkModeProvider({ children }: { children: React.ReactNode }) {
       // Default to light mode
       document.documentElement.classList.remove('dark')
     }
+
+    setIsInitialized(true)
   }, [])
 
   const toggleDarkMode = () => {
@@ -40,7 +45,7 @@ export function DarkModeProvider({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <DarkModeContext.Provider value={{ isDark, toggleDarkMode }}>
+    <DarkModeContext.Provider value={{ isDark, toggleDarkMode, isInitialized }}>
       {children}
     </DarkModeContext.Provider>
   )
