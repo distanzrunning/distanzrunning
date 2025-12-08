@@ -20,8 +20,11 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
   useEffect(() => {
     // Wait for dark mode to be initialized before loading map
     if (!isInitialized) {
+      console.log('[RaceRouteMap] Waiting for dark mode initialization...')
       return
     }
+
+    console.log('[RaceRouteMap] Dark mode initialized. isDark:', isDark)
 
     const initMap = async () => {
       try {
@@ -65,6 +68,7 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
 
         // Use different Map IDs for light and dark mode
         const mapId = isDark ? '5f71815e7cfcb0a2f0ed7efe' : '5f71815e7cfcb0a23878760d'
+        console.log('[RaceRouteMap] Using Map ID:', mapId, 'isDark:', isDark)
 
         // Initialize map with theme-specific Map ID
         const map = new google.maps.Map(mapRef.current, {
