@@ -46,10 +46,10 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
           throw new Error('No coordinates found in GPX file')
         }
 
-        // Calculate center and bounds
-        const bounds = new google.maps.LatLngBounds()
-        coordinates.forEach(coord => bounds.extend(coord))
-        const center = bounds.getCenter()
+        // Calculate center from coordinates
+        const centerLat = coordinates.reduce((sum, coord) => sum + coord.lat, 0) / coordinates.length
+        const centerLng = coordinates.reduce((sum, coord) => sum + coord.lng, 0) / coordinates.length
+        const center = { lat: centerLat, lng: centerLng }
 
         // Initialize map with custom Map ID from Google Maps Platform
         map = new google.maps.Map(mapRef.current, {
@@ -75,7 +75,13 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
 
         polyline.setMap(map)
 
-        // Fit map to route bounds
+        // Fit map to route bounds using LatLngBounds literal
+        const bounds = {
+          north: Math.max(...coordinates.map(c => c.lat)),
+          south: Math.min(...coordinates.map(c => c.lat)),
+          east: Math.max(...coordinates.map(c => c.lng)),
+          west: Math.min(...coordinates.map(c => c.lng))
+        }
         map.fitBounds(bounds)
 
         // Add start marker (green) using AdvancedMarkerElement
