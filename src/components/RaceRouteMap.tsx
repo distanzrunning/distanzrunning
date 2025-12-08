@@ -136,7 +136,10 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
 
         markersRef.current = [startMarker, finishMarker]
 
-        setIsLoading(false)
+        // Small delay to allow Map ID styling to fully apply before showing map
+        setTimeout(() => {
+          setIsLoading(false)
+        }, 300)
       } catch (err) {
         console.error('Error loading map:', err)
         setError(err instanceof Error ? err.message : 'Failed to load map')
@@ -146,19 +149,37 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
 
     initMap()
 
+    // Cleanup existing map before initializing new one
     return () => {
-      // Cleanup
+      console.log('[RaceRouteMap] Cleaning up map...')
+
+      // Remove polyline
       if (polylineRef.current) {
         polylineRef.current.setMap(null)
         polylineRef.current = null
       }
-      if (markersRef.current) {
-        markersRef.current.forEach(marker => marker.map = null)
+
+      // Remove markers
+      if (markersRef.current.length > 0) {
+        markersRef.current.forEach(marker => {
+          marker.map = null
+        })
         markersRef.current = []
       }
+
+      // Clear map reference
       if (mapInstanceRef.current) {
+        // Remove all event listeners and references
+        google.maps.event.clearInstanceListeners(mapInstanceRef.current)
         mapInstanceRef.current = null
       }
+
+      // Clear the map container
+      if (mapRef.current) {
+        mapRef.current.innerHTML = ''
+      }
+
+      console.log('[RaceRouteMap] Cleanup complete')
     }
   }, [gpxUrl, isDark, isInitialized])
 
@@ -173,11 +194,15 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
   return (
     <div className="relative w-full h-80 min-h-80 bg-neutral-100 dark:bg-neutral-800 rounded-xl overflow-hidden shadow-sm border border-neutral-100 dark:border-neutral-800 flex-shrink-0">
       {isLoading && (
-        <div className="absolute inset-0 flex items-center justify-center">
+        <div className="absolute inset-0 flex items-center justify-center bg-neutral-100 dark:bg-neutral-800 z-10">
           <div className="text-sm text-neutral-500 dark:text-neutral-400">Loading map...</div>
         </div>
       )}
-      <div ref={mapRef} className="w-full h-full" />
+      <div
+        ref={mapRef}
+        className="w-full h-full transition-opacity duration-300"
+        style={{ opacity: isLoading ? 0 : 1 }}
+      />
     </div>
   )
 }
