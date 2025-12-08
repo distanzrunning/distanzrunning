@@ -11,6 +11,20 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
   const mapRef = useRef<HTMLDivElement>(null)
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [isDarkMode, setIsDarkMode] = useState(false)
+
+  // Detect dark mode
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+    setIsDarkMode(mediaQuery.matches)
+
+    const handleChange = (e: MediaQueryListEvent) => {
+      setIsDarkMode(e.matches)
+    }
+
+    mediaQuery.addEventListener('change', handleChange)
+    return () => mediaQuery.removeEventListener('change', handleChange)
+  }, [])
 
   useEffect(() => {
     let map: google.maps.Map | null = null
@@ -50,6 +64,11 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
         const center = { lat: centerLat, lng: centerLng }
 
         // Initialize map with custom Map ID from Google Maps Platform
+        // Use different Map IDs for light and dark modes
+        // TODO: Create a dark mode Map ID in Google Maps Platform and replace the second ID
+        const lightModeMapId = '5f71815e7cfcb0a23878760d'
+        const darkModeMapId = '5f71815e7cfcb0a23878760d' // Replace with dark mode Map ID when created
+
         map = new google.maps.Map(mapRef.current, {
           center,
           zoom: 12,
@@ -57,8 +76,7 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
           fullscreenControl: false,
           streetViewControl: false,
           zoomControl: true,
-          // Use custom Map ID that handles both light and dark modes
-          mapId: '5f71815e7cfcb0a23878760d',
+          mapId: isDarkMode ? darkModeMapId : lightModeMapId,
         })
 
         // Draw route polyline
@@ -126,7 +144,7 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
       if (polyline) polyline.setMap(null)
       if (map) map = null
     }
-  }, [gpxUrl])
+  }, [gpxUrl, isDarkMode])
 
   if (error) {
     return (
