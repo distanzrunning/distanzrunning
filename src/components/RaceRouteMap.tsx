@@ -180,7 +180,7 @@ async function loadGoogleMapsScript(apiKey: string): Promise<void> {
   isLoadingGoogleMaps = true
   googleMapsPromise = new Promise((resolve, reject) => {
     const script = document.createElement('script')
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=marker&v=beta`
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=marker&v=beta&loading=async`
     script.async = true
     script.onload = () => {
       // Wait for Google Maps to fully initialize
