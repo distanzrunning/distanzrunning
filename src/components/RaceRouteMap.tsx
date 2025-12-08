@@ -84,42 +84,34 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
         }
         map.fitBounds(bounds)
 
-        // Add start marker (green) using AdvancedMarkerElement
-        const startMarkerElement = document.createElement('div')
-        startMarkerElement.innerHTML = `
-          <div style="
-            width: 32px;
-            height: 32px;
-            background-color: #00D464;
-            border: 3px solid white;
-            border-radius: 50%;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-          "></div>
-        `
-        new google.maps.marker.AdvancedMarkerElement({
-          position: coordinates[0],
-          map,
-          title: 'Start',
-          content: startMarkerElement,
+        // Add start marker (green) using PinElement
+        const startPin = new google.maps.marker.PinElement({
+          background: '#00D464',
+          borderColor: '#ffffff',
+          glyphColor: '#ffffff',
+          scale: 1.2,
         })
 
-        // Add finish marker (red) using AdvancedMarkerElement
-        const finishMarkerElement = document.createElement('div')
-        finishMarkerElement.innerHTML = `
-          <div style="
-            width: 32px;
-            height: 32px;
-            background-color: #DC2626;
-            border: 3px solid white;
-            border-radius: 50%;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-          "></div>
-        `
         new google.maps.marker.AdvancedMarkerElement({
-          position: coordinates[coordinates.length - 1],
           map,
+          position: coordinates[0],
+          title: 'Start',
+          content: startPin.element,
+        })
+
+        // Add finish marker (red) using PinElement
+        const finishPin = new google.maps.marker.PinElement({
+          background: '#DC2626',
+          borderColor: '#ffffff',
+          glyphColor: '#ffffff',
+          scale: 1.2,
+        })
+
+        new google.maps.marker.AdvancedMarkerElement({
+          map,
+          position: coordinates[coordinates.length - 1],
           title: 'Finish',
-          content: finishMarkerElement,
+          content: finishPin.element,
         })
 
         setIsLoading(false)
