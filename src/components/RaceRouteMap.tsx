@@ -55,7 +55,6 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
         map = new google.maps.Map(mapRef.current, {
           center,
           zoom: 12,
-          mapTypeId: google.maps.MapTypeId.ROADMAP,
           mapTypeControl: false,
           fullscreenControl: false,
           streetViewControl: false,
