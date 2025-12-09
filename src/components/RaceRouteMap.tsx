@@ -8,21 +8,21 @@ interface RaceRouteMapProps {
   title: string
 }
 
-// Light mode map styles - minimalist labels
+// Light mode map styles - minimalist with city/town labels
 const LIGHT_MAP_STYLES = [
   { elementType: "geometry", stylers: [{ color: "#f5f5f5" }] },
   { elementType: "labels.icon", stylers: [{ visibility: "off" }] },
   { elementType: "labels.text.fill", stylers: [{ color: "#616161" }] },
   { elementType: "labels.text.stroke", stylers: [{ color: "#f5f5f5" }] },
-  // Hide all administrative labels except locality (city names)
-  { featureType: "administrative", elementType: "labels", stylers: [{ visibility: "off" }] },
+  // Hide administrative geometry and borders
   { featureType: "administrative", elementType: "geometry", stylers: [{ visibility: "off" }] },
   { featureType: "administrative.land_parcel", stylers: [{ visibility: "off" }] },
   { featureType: "administrative.neighborhood", stylers: [{ visibility: "off" }] },
   { featureType: "administrative.province", elementType: "labels", stylers: [{ visibility: "off" }] },
-  // Keep only locality (city) labels visible, but simplified
-  { featureType: "administrative.locality", elementType: "labels.text.fill", stylers: [{ color: "#757575" }] },
-  { featureType: "administrative.locality", elementType: "labels.text.stroke", stylers: [{ visibility: "off" }] },
+  { featureType: "administrative.country", elementType: "labels", stylers: [{ visibility: "off" }] },
+  // Keep locality (city/town) labels visible with clear styling
+  { featureType: "administrative.locality", elementType: "labels.text.fill", stylers: [{ color: "#424242" }] },
+  { featureType: "administrative.locality", elementType: "labels.text.stroke", stylers: [{ color: "#ffffff" }, { weight: 2 }] },
   // Hide all POI labels and icons
   { featureType: "poi", stylers: [{ visibility: "off" }] },
   { featureType: "poi", elementType: "geometry", stylers: [{ color: "#eeeeee" }] },
@@ -45,22 +45,21 @@ const LIGHT_MAP_STYLES = [
   { featureType: "water", elementType: "labels", stylers: [{ visibility: "off" }] }
 ]
 
-// Dark mode map styles - minimalist labels
+// Dark mode map styles - minimalist with city/town labels
 const DARK_MAP_STYLES = [
   { elementType: "geometry", stylers: [{ color: "#212121" }] },
   { elementType: "labels.icon", stylers: [{ visibility: "off" }] },
   { elementType: "labels.text.fill", stylers: [{ color: "#757575" }] },
   { elementType: "labels.text.stroke", stylers: [{ color: "#212121" }] },
-  // Hide all administrative labels except locality (city names)
-  { featureType: "administrative", elementType: "labels", stylers: [{ visibility: "off" }] },
+  // Hide administrative geometry and borders
   { featureType: "administrative", elementType: "geometry", stylers: [{ visibility: "off" }] },
   { featureType: "administrative.land_parcel", stylers: [{ visibility: "off" }] },
   { featureType: "administrative.neighborhood", stylers: [{ visibility: "off" }] },
   { featureType: "administrative.province", elementType: "labels", stylers: [{ visibility: "off" }] },
   { featureType: "administrative.country", elementType: "labels", stylers: [{ visibility: "off" }] },
-  // Keep only locality (city) labels visible, but simplified
-  { featureType: "administrative.locality", elementType: "labels.text.fill", stylers: [{ color: "#9e9e9e" }] },
-  { featureType: "administrative.locality", elementType: "labels.text.stroke", stylers: [{ visibility: "off" }] },
+  // Keep locality (city/town) labels visible with clear styling
+  { featureType: "administrative.locality", elementType: "labels.text.fill", stylers: [{ color: "#e0e0e0" }] },
+  { featureType: "administrative.locality", elementType: "labels.text.stroke", stylers: [{ color: "#212121" }, { weight: 2 }] },
   // Hide all POI labels and icons
   { featureType: "poi", stylers: [{ visibility: "off" }] },
   { featureType: "poi", elementType: "labels", stylers: [{ visibility: "off" }] },
