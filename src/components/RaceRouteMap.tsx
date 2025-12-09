@@ -154,8 +154,12 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
           zoomControl: true,
           styles: mapStyles,
           // Minimize map controls and attributions
-          disableDefaultUI: false, // Keep zoom controls
+          disableDefaultUI: true, // Disable all default UI
+          zoomControl: true, // Re-enable only zoom control
           clickableIcons: false, // Disable clickable POI icons
+          zoomControlOptions: {
+            position: google.maps.ControlPosition.RIGHT_CENTER,
+          },
         })
 
         mapInstanceRef.current = map
@@ -283,18 +287,42 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
         style={{ opacity: isLoading ? 0 : 1 }}
       />
       <style jsx>{`
+        /* Minimize legal text and attributions */
         .race-route-map :global(.gm-style-cc),
-        .race-route-map :global(.gmnoprint),
-        .race-route-map :global([style*="position: absolute"][style*="bottom"]:not(.gm-style-iw)) {
+        .race-route-map :global([style*="position: absolute"][style*="bottom"]:not(.gm-style-iw):not(.gmnoprint)) {
           opacity: 0.3;
           font-size: 9px;
         }
-        .race-route-map :global(.gm-style-cc):hover,
-        .race-route-map :global(.gmnoprint):hover {
+        .race-route-map :global(.gm-style-cc):hover {
           opacity: 0.6;
         }
         .race-route-map :global(a[href^="https://maps.google.com/maps"]) {
           font-size: 8px !important;
+        }
+
+        /* Style zoom controls for minimalist appearance */
+        .race-route-map :global(.gmnoprint) {
+          opacity: 0.7;
+        }
+        .race-route-map :global(.gmnoprint):hover {
+          opacity: 1;
+        }
+
+        /* Minimalist zoom button styling */
+        .race-route-map :global(button[aria-label*="Zoom"]) {
+          background: ${isDark ? 'rgba(33, 33, 33, 0.9)' : 'rgba(255, 255, 255, 0.9)'} !important;
+          border: 1px solid ${isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.1)'} !important;
+          box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2) !important;
+          border-radius: 4px !important;
+          width: 32px !important;
+          height: 32px !important;
+          margin: 4px 8px !important;
+        }
+        .race-route-map :global(button[aria-label*="Zoom"]:hover) {
+          background: ${isDark ? 'rgba(50, 50, 50, 0.95)' : 'rgba(245, 245, 245, 0.95)'} !important;
+        }
+        .race-route-map :global(button[aria-label*="Zoom"] img) {
+          filter: ${isDark ? 'invert(1) brightness(0.9)' : 'none'};
         }
       `}</style>
     </div>
