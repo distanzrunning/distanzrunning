@@ -149,16 +149,25 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
           center,
           zoom: 12,
           mapTypeControl: false,
-          fullscreenControl: false,
+          fullscreenControl: true,
           streetViewControl: false,
           zoomControl: true,
+          rotateControl: true, // Enable 3D/tilt control
           styles: mapStyles,
           // Minimize map controls and attributions
           disableDefaultUI: true, // Disable all default UI
-          zoomControl: true, // Re-enable only zoom control
+          zoomControl: true, // Re-enable zoom control
+          fullscreenControl: true, // Re-enable fullscreen control
+          rotateControl: true, // Re-enable 3D/tilt control
           clickableIcons: false, // Disable clickable POI icons
           zoomControlOptions: {
-            position: google.maps.ControlPosition.RIGHT_CENTER,
+            position: google.maps.ControlPosition.RIGHT_TOP,
+          },
+          fullscreenControlOptions: {
+            position: google.maps.ControlPosition.RIGHT_TOP,
+          },
+          rotateControlOptions: {
+            position: google.maps.ControlPosition.RIGHT_TOP,
           },
         })
 
@@ -300,9 +309,37 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
           font-size: 8px !important;
         }
 
-        /* Minimalist zoom button styling - dark mode adaptation only */
-        .race-route-map :global(button[aria-label*="Zoom"] img) {
+        /* Minimalist control button styling with rounded edges */
+        .race-route-map :global(.gm-control-active) {
+          background: rgba(255, 255, 255, 0.95) !important;
+          border-radius: 8px !important;
+          box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3) !important;
+          margin: 8px !important;
+        }
+
+        /* Style all control buttons consistently */
+        .race-route-map :global(button[aria-label*="Zoom"]),
+        .race-route-map :global(button[aria-label*="Rotate"]),
+        .race-route-map :global(button[aria-label*="Tilt"]),
+        .race-route-map :global(button[title*="Toggle fullscreen"]) {
+          background: rgba(255, 255, 255, 0.95) !important;
+          border-radius: 8px !important;
+          box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3) !important;
+          margin: 4px 8px !important;
+          border: none !important;
+        }
+
+        /* Invert icons for dark mode */
+        .race-route-map :global(button[aria-label*="Zoom"] img),
+        .race-route-map :global(button[aria-label*="Rotate"] img),
+        .race-route-map :global(button[aria-label*="Tilt"] img),
+        .race-route-map :global(button[title*="Toggle fullscreen"] img) {
           filter: ${isDark ? 'invert(1)' : 'none'} !important;
+        }
+
+        /* Style the control containers */
+        .race-route-map :global(.gmnoprint) {
+          border-radius: 8px !important;
         }
       `}</style>
     </div>
