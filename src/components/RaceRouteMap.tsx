@@ -153,6 +153,9 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
           streetViewControl: false,
           zoomControl: true,
           styles: mapStyles,
+          // Minimize map controls and attributions
+          disableDefaultUI: false, // Keep zoom controls
+          clickableIcons: false, // Disable clickable POI icons
         })
 
         mapInstanceRef.current = map
@@ -276,9 +279,24 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
       )}
       <div
         ref={mapRef}
-        className="w-full h-full transition-opacity duration-300"
+        className="w-full h-full transition-opacity duration-300 race-route-map"
         style={{ opacity: isLoading ? 0 : 1 }}
       />
+      <style jsx>{`
+        .race-route-map :global(.gm-style-cc),
+        .race-route-map :global(.gmnoprint),
+        .race-route-map :global([style*="position: absolute"][style*="bottom"]:not(.gm-style-iw)) {
+          opacity: 0.3;
+          font-size: 9px;
+        }
+        .race-route-map :global(.gm-style-cc):hover,
+        .race-route-map :global(.gmnoprint):hover {
+          opacity: 0.6;
+        }
+        .race-route-map :global(a[href^="https://maps.google.com/maps"]) {
+          font-size: 8px !important;
+        }
+      `}</style>
     </div>
   )
 }
