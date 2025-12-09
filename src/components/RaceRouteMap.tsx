@@ -300,29 +300,9 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
           font-size: 8px !important;
         }
 
-        /* Style zoom controls for minimalist appearance */
-        .race-route-map :global(.gmnoprint) {
-          opacity: 0.7;
-        }
-        .race-route-map :global(.gmnoprint):hover {
-          opacity: 1;
-        }
-
-        /* Minimalist zoom button styling */
-        .race-route-map :global(button[aria-label*="Zoom"]) {
-          background: ${isDark ? 'rgba(33, 33, 33, 0.9)' : 'rgba(255, 255, 255, 0.9)'} !important;
-          border: 1px solid ${isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.1)'} !important;
-          box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2) !important;
-          border-radius: 4px !important;
-          width: 32px !important;
-          height: 32px !important;
-          margin: 4px 8px !important;
-        }
-        .race-route-map :global(button[aria-label*="Zoom"]:hover) {
-          background: ${isDark ? 'rgba(50, 50, 50, 0.95)' : 'rgba(245, 245, 245, 0.95)'} !important;
-        }
+        /* Minimalist zoom button styling - dark mode adaptation only */
         .race-route-map :global(button[aria-label*="Zoom"] img) {
-          filter: ${isDark ? 'invert(1) brightness(0.9)' : 'none'};
+          filter: ${isDark ? 'invert(1)' : 'none'} !important;
         }
       `}</style>
     </div>
