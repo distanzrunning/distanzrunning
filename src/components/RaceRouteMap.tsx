@@ -75,7 +75,7 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
   const mapRef = useRef<HTMLDivElement>(null)
   const mapInstanceRef = useRef<google.maps.Map | null>(null)
   const polylineRef = useRef<google.maps.Polyline | null>(null)
-  const markersRef = useRef<google.maps.marker.AdvancedMarkerElement[]>([])
+  const markersRef = useRef<google.maps.Marker[]>([])
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const { isDark, isInitialized } = useContext(DarkModeContext)
@@ -133,11 +133,7 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
         const mapStyles = isDark ? DARK_MAP_STYLES : LIGHT_MAP_STYLES
         console.log('[RaceRouteMap] Using', isDark ? 'DARK' : 'LIGHT', 'map styles')
 
-        // Use a simple Map ID for Advanced Markers, but apply custom styles over it
-        // This allows us to use AdvancedMarkerElement while controlling the theme via styles
-        const mapId = '5f71815e7cfcb0a23878760d' // Light mode ID, but styles will override
-
-        // Initialize map with Map ID (for Advanced Markers) and custom styles (for theme)
+        // Initialize map with custom styles only (no Map ID - we'll use classic markers)
         const map = new google.maps.Map(mapRef.current, {
           center,
           zoom: 12,
@@ -145,7 +141,6 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
           fullscreenControl: false,
           streetViewControl: false,
           zoomControl: true,
-          mapId: mapId,
           styles: mapStyles,
         })
 
@@ -172,34 +167,36 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
         }
         map.fitBounds(bounds)
 
-        // Add start marker (green) using PinElement
-        const startPin = new google.maps.marker.PinElement({
-          background: '#00D464',
-          borderColor: '#ffffff',
-          glyphColor: '#ffffff',
-          scale: 1.2,
-        })
-
-        const startMarker = new google.maps.marker.AdvancedMarkerElement({
+        // Add start marker (green) using classic Marker with custom icon
+        const startMarker = new google.maps.Marker({
           map,
           position: coordinates[0],
           title: 'Start',
-          content: startPin.element,
+          icon: {
+            path: google.maps.SymbolPath.CIRCLE,
+            fillColor: '#00D464',
+            fillOpacity: 1,
+            strokeColor: '#ffffff',
+            strokeWeight: 2,
+            scale: 8,
+          },
+          zIndex: 1000,
         })
 
-        // Add finish marker (red) using PinElement
-        const finishPin = new google.maps.marker.PinElement({
-          background: '#DC2626',
-          borderColor: '#ffffff',
-          glyphColor: '#ffffff',
-          scale: 1.2,
-        })
-
-        const finishMarker = new google.maps.marker.AdvancedMarkerElement({
+        // Add finish marker (red) using classic Marker with custom icon
+        const finishMarker = new google.maps.Marker({
           map,
           position: coordinates[coordinates.length - 1],
           title: 'Finish',
-          content: finishPin.element,
+          icon: {
+            path: google.maps.SymbolPath.CIRCLE,
+            fillColor: '#DC2626',
+            fillOpacity: 1,
+            strokeColor: '#ffffff',
+            strokeWeight: 2,
+            scale: 8,
+          },
+          zIndex: 1000,
         })
 
         markersRef.current = [startMarker, finishMarker]
@@ -230,7 +227,7 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
       // Remove markers
       if (markersRef.current.length > 0) {
         markersRef.current.forEach(marker => {
-          marker.map = null
+          marker.setMap(null)
         })
         markersRef.current = []
       }
