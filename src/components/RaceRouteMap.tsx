@@ -8,10 +8,74 @@ interface RaceRouteMapProps {
   title: string
 }
 
-// Map styling using local JSON configuration files
-// Light mode: /light_mode.json (monochrome, minimal POIs, city labels only)
-// Dark mode: /dark_mode.json (monochrome, minimal POIs, city labels only)
+// Map styling using integrated Navigation styles
+// Light mode: Monochrome with minimal POIs, city labels only
+// Dark mode: Monochrome with minimal POIs, city labels only
 // Uses 'navigation' map type for clean, turn-by-turn optimized appearance
+
+// Light mode styles - monochrome, minimal POIs
+const LIGHT_MAP_STYLES = [
+  { id: 'infrastructure.building.commercial', geometry: { visible: false } },
+  { id: 'infrastructure.railwayTrack.commuter', geometry: { visible: false } },
+  { id: 'infrastructure.roadNetwork.roadDetail.directionArrow', label: { visible: false } },
+  { id: 'infrastructure.roadNetwork.roadDetail.surface', geometry: { visible: false }, label: { visible: false } },
+  { id: 'infrastructure.roadNetwork.roadSign', label: { visible: false } },
+  { id: 'infrastructure.urbanArea', geometry: { visible: false } },
+  { id: 'natural.archipelago', label: { visible: false } },
+  { id: 'pointOfInterest', geometry: { visible: false }, label: { visible: false } },
+  { id: 'pointOfInterest.foodAndDrink.bar', label: { visible: false } },
+  { id: 'pointOfInterest.landmark', label: { visible: false } },
+  { id: 'pointOfInterest.other.cemetery', geometry: { visible: false } },
+  { id: 'pointOfInterest.recreation.beach', geometry: { visible: false }, label: { visible: false } },
+  { id: 'pointOfInterest.recreation.golfCourse', geometry: { visible: false } },
+  { id: 'pointOfInterest.recreation.natureReserve', geometry: { visible: false } },
+  { id: 'pointOfInterest.recreation.park', geometry: { visible: false } },
+  { id: 'pointOfInterest.recreation.sportsComplex', geometry: { visible: false } },
+  { id: 'pointOfInterest.recreation.sportsField', geometry: { visible: false } },
+  { id: 'pointOfInterest.recreation.zoo', geometry: { visible: false } },
+  { id: 'pointOfInterest.transit.airport', geometry: { visible: false }, label: { visible: false } },
+  { id: 'political.border', geometry: { visible: false }, label: { visible: false } },
+  { id: 'political.city', label: { visible: true } },
+  { id: 'political.reservation', label: { visible: false } },
+  { id: 'political.stateOrProvince', geometry: { visible: false }, label: { visible: false } },
+  { id: 'political.sublocality', label: { visible: false } }
+]
+
+// Dark mode styles - monochrome, minimal POIs
+const DARK_MAP_STYLES = [
+  { id: 'infrastructure.building.commercial', geometry: { visible: false } },
+  { id: 'infrastructure.businessCorridor', geometry: { visible: false } },
+  { id: 'infrastructure.railwayTrack.commuter', geometry: { visible: false } },
+  { id: 'infrastructure.roadNetwork.noTraffic.pedestrianMall', geometry: { visible: false } },
+  { id: 'infrastructure.roadNetwork.noTraffic.trail.paved', geometry: { visible: false } },
+  { id: 'infrastructure.roadNetwork.noTraffic.trail.unpaved', geometry: { visible: false }, label: { visible: false } },
+  { id: 'infrastructure.roadNetwork.ramp', geometry: { visible: false }, label: { visible: false } },
+  { id: 'infrastructure.roadNetwork.road.arterial', geometry: { visible: true }, label: { visible: false } },
+  { id: 'infrastructure.roadNetwork.road.highway', label: { visible: false } },
+  { id: 'infrastructure.roadNetwork.road.local', label: { visible: false } },
+  { id: 'infrastructure.roadNetwork.road.noOutlet', label: { visible: false } },
+  { id: 'infrastructure.roadNetwork.roadDetail', geometry: { visible: false }, label: { visible: false } },
+  { id: 'infrastructure.roadNetwork.roadDetail.directionArrow', label: { visible: false } },
+  { id: 'infrastructure.roadNetwork.roadDetail.surface', geometry: { visible: false }, label: { visible: false } },
+  { id: 'infrastructure.roadNetwork.roadSign', label: { visible: false } },
+  { id: 'infrastructure.urbanArea', geometry: { visible: false } },
+  { id: 'pointOfInterest', label: { visible: false } },
+  { id: 'pointOfInterest.foodAndDrink.bar', label: { visible: false } },
+  { id: 'pointOfInterest.landmark', label: { visible: false } },
+  { id: 'pointOfInterest.other.cemetery', geometry: { visible: false } },
+  { id: 'pointOfInterest.recreation.beach', geometry: { visible: false }, label: { visible: false } },
+  { id: 'pointOfInterest.recreation.golfCourse', geometry: { visible: false } },
+  { id: 'pointOfInterest.recreation.natureReserve', geometry: { visible: false } },
+  { id: 'pointOfInterest.recreation.park', geometry: { visible: false } },
+  { id: 'pointOfInterest.recreation.sportsComplex', geometry: { visible: false } },
+  { id: 'pointOfInterest.recreation.sportsField', geometry: { visible: false } },
+  { id: 'pointOfInterest.recreation.zoo', geometry: { visible: false } },
+  { id: 'pointOfInterest.transit.airport', geometry: { visible: false }, label: { visible: false } },
+  { id: 'political.border', label: { visible: false } },
+  { id: 'political.reservation', label: { visible: false } },
+  { id: 'political.stateOrProvince', label: { visible: false } },
+  { id: 'political.sublocality', label: { visible: false } }
+]
 
 export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
   const mapRef = useRef<HTMLDivElement>(null)
@@ -20,31 +84,12 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
   const markersRef = useRef<google.maps.marker.AdvancedMarkerElement[]>([])
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(true)
-  const [mapStyles, setMapStyles] = useState<any>(null)
   const { isDark, isInitialized } = useContext(DarkModeContext)
 
-  // Load map styles on mount and when theme changes
   useEffect(() => {
-    const loadStyles = async () => {
-      try {
-        const styleFile = isDark ? '/dark_mode.json' : '/light_mode.json'
-        const response = await fetch(styleFile)
-        const styles = await response.json()
-        setMapStyles(styles.styles) // Extract the styles array from the JSON
-      } catch (err) {
-        console.error('[RaceRouteMap] Error loading map styles:', err)
-      }
-    }
-
-    if (isInitialized) {
-      loadStyles()
-    }
-  }, [isDark, isInitialized])
-
-  useEffect(() => {
-    // Wait for dark mode to be initialized and styles to be loaded
-    if (!isInitialized || !mapStyles) {
-      console.log('[RaceRouteMap] Waiting for dark mode initialization and styles...')
+    // Wait for dark mode to be initialized
+    if (!isInitialized) {
+      console.log('[RaceRouteMap] Waiting for dark mode initialization...')
       return
     }
 
@@ -90,16 +135,16 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
         const centerLng = coordinates.reduce((sum, coord) => sum + coord.lng, 0) / coordinates.length
         const center = { lat: centerLat, lng: centerLng }
 
-        console.log('[RaceRouteMap] Initializing map with local JSON styles in', isDark ? 'DARK' : 'LIGHT', 'mode')
+        console.log('[RaceRouteMap] Initializing map with integrated styles in', isDark ? 'DARK' : 'LIGHT', 'mode')
 
-        // Initialize map with local JSON styles
+        // Initialize map with integrated Navigation styles
         // Uses 'navigation' map type with monochrome styling
-        // Styles loaded from /light_mode.json or /dark_mode.json
+        // Switches between LIGHT_MAP_STYLES and DARK_MAP_STYLES based on theme
         const map = new google.maps.Map(mapRef.current, {
           center,
           zoom: 12,
           mapTypeId: 'navigation', // Use Navigation map type (optimized for turn-by-turn guidance)
-          styles: mapStyles, // Apply local JSON styles
+          styles: isDark ? DARK_MAP_STYLES : LIGHT_MAP_STYLES, // Apply integrated styles
           mapTypeControl: false,
           fullscreenControl: true,
           streetViewControl: false,
@@ -215,7 +260,7 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
 
       console.log('[RaceRouteMap] Cleanup complete')
     }
-  }, [gpxUrl, isDark, isInitialized, mapStyles])
+  }, [gpxUrl, isDark, isInitialized])
 
   if (error) {
     return (
