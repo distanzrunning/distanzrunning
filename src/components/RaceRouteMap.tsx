@@ -8,85 +8,15 @@ interface RaceRouteMapProps {
   title: string
 }
 
-// Light mode map styles - minimalist with city/town labels
-const LIGHT_MAP_STYLES = [
-  { elementType: "geometry", stylers: [{ color: "#f5f5f5" }] },
-  { elementType: "labels.icon", stylers: [{ visibility: "off" }] },
-  { elementType: "labels.text.fill", stylers: [{ color: "#616161" }] },
-  { elementType: "labels.text.stroke", stylers: [{ color: "#f5f5f5" }] },
-  // Hide administrative geometry and borders
-  { featureType: "administrative", elementType: "geometry", stylers: [{ visibility: "off" }] },
-  { featureType: "administrative.land_parcel", stylers: [{ visibility: "off" }] },
-  { featureType: "administrative.neighborhood", stylers: [{ visibility: "off" }] },
-  { featureType: "administrative.province", elementType: "labels", stylers: [{ visibility: "off" }] },
-  { featureType: "administrative.country", elementType: "labels", stylers: [{ visibility: "off" }] },
-  // Keep locality (city/town) labels visible with clear styling
-  { featureType: "administrative.locality", elementType: "labels.text.fill", stylers: [{ color: "#424242" }] },
-  { featureType: "administrative.locality", elementType: "labels.text.stroke", stylers: [{ color: "#ffffff" }, { weight: 2 }] },
-  // Hide all POI labels and icons
-  { featureType: "poi", stylers: [{ visibility: "off" }] },
-  { featureType: "poi", elementType: "geometry", stylers: [{ color: "#eeeeee" }] },
-  { featureType: "poi", elementType: "labels", stylers: [{ visibility: "off" }] },
-  { featureType: "poi.park", elementType: "geometry", stylers: [{ color: "#e5e5e5" }] },
-  { featureType: "poi.park", elementType: "labels", stylers: [{ visibility: "off" }] },
-  // Road geometry but no labels
-  { featureType: "road", elementType: "geometry", stylers: [{ color: "#ffffff" }] },
-  { featureType: "road", elementType: "labels", stylers: [{ visibility: "off" }] },
-  { featureType: "road.highway", elementType: "geometry", stylers: [{ color: "#dadada" }] },
-  { featureType: "road.highway", elementType: "labels", stylers: [{ visibility: "off" }] },
-  { featureType: "road.arterial", elementType: "labels", stylers: [{ visibility: "off" }] },
-  { featureType: "road.local", elementType: "labels", stylers: [{ visibility: "off" }] },
-  // Hide all transit
-  { featureType: "transit", stylers: [{ visibility: "off" }] },
-  { featureType: "transit.line", elementType: "geometry", stylers: [{ color: "#e5e5e5" }] },
-  { featureType: "transit.station", elementType: "geometry", stylers: [{ color: "#eeeeee" }] },
-  // Water with no labels
-  { featureType: "water", elementType: "geometry", stylers: [{ color: "#c9c9c9" }] },
-  { featureType: "water", elementType: "labels", stylers: [{ visibility: "off" }] }
-]
-
-// Dark mode map styles - minimalist with city/town labels
-const DARK_MAP_STYLES = [
-  { elementType: "geometry", stylers: [{ color: "#212121" }] },
-  { elementType: "labels.icon", stylers: [{ visibility: "off" }] },
-  { elementType: "labels.text.fill", stylers: [{ color: "#757575" }] },
-  { elementType: "labels.text.stroke", stylers: [{ color: "#212121" }] },
-  // Hide administrative geometry and borders
-  { featureType: "administrative", elementType: "geometry", stylers: [{ visibility: "off" }] },
-  { featureType: "administrative.land_parcel", stylers: [{ visibility: "off" }] },
-  { featureType: "administrative.neighborhood", stylers: [{ visibility: "off" }] },
-  { featureType: "administrative.province", elementType: "labels", stylers: [{ visibility: "off" }] },
-  { featureType: "administrative.country", elementType: "labels", stylers: [{ visibility: "off" }] },
-  // Keep locality (city/town) labels visible with clear styling
-  { featureType: "administrative.locality", elementType: "labels.text.fill", stylers: [{ color: "#e0e0e0" }] },
-  { featureType: "administrative.locality", elementType: "labels.text.stroke", stylers: [{ color: "#212121" }, { weight: 2 }] },
-  // Hide all POI labels and icons
-  { featureType: "poi", stylers: [{ visibility: "off" }] },
-  { featureType: "poi", elementType: "labels", stylers: [{ visibility: "off" }] },
-  { featureType: "poi.park", elementType: "geometry", stylers: [{ color: "#181818" }] },
-  { featureType: "poi.park", elementType: "labels", stylers: [{ visibility: "off" }] },
-  // Road geometry but no labels
-  { featureType: "road", elementType: "geometry.fill", stylers: [{ color: "#2c2c2c" }] },
-  { featureType: "road", elementType: "labels", stylers: [{ visibility: "off" }] },
-  { featureType: "road.arterial", elementType: "geometry", stylers: [{ color: "#373737" }] },
-  { featureType: "road.arterial", elementType: "labels", stylers: [{ visibility: "off" }] },
-  { featureType: "road.highway", elementType: "geometry", stylers: [{ color: "#3c3c3c" }] },
-  { featureType: "road.highway", elementType: "labels", stylers: [{ visibility: "off" }] },
-  { featureType: "road.highway.controlled_access", elementType: "geometry", stylers: [{ color: "#4e4e4e" }] },
-  { featureType: "road.local", elementType: "labels", stylers: [{ visibility: "off" }] },
-  // Hide all transit
-  { featureType: "transit", stylers: [{ visibility: "off" }] },
-  { featureType: "transit", elementType: "labels", stylers: [{ visibility: "off" }] },
-  // Water with no labels
-  { featureType: "water", elementType: "geometry", stylers: [{ color: "#000000" }] },
-  { featureType: "water", elementType: "labels", stylers: [{ visibility: "off" }] }
-]
+// Map styling now managed via Map ID in Google Cloud Console
+// Map ID: 5f71815e7cfcb0a23878760d (has both light and dark mode styles configured)
+// The colorScheme option switches between light/dark styles automatically
 
 export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
   const mapRef = useRef<HTMLDivElement>(null)
   const mapInstanceRef = useRef<google.maps.Map | null>(null)
   const polylineRef = useRef<google.maps.Polyline | null>(null)
-  const markersRef = useRef<google.maps.Marker[]>([])
+  const markersRef = useRef<google.maps.marker.AdvancedMarkerElement[]>([])
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const { isDark, isInitialized } = useContext(DarkModeContext)
@@ -140,33 +70,27 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
         const centerLng = coordinates.reduce((sum, coord) => sum + coord.lng, 0) / coordinates.length
         const center = { lat: centerLat, lng: centerLng }
 
-        // Use different styles for light and dark mode
-        const mapStyles = isDark ? DARK_MAP_STYLES : LIGHT_MAP_STYLES
-        console.log('[RaceRouteMap] Using', isDark ? 'DARK' : 'LIGHT', 'map styles')
+        console.log('[RaceRouteMap] Initializing map with Map ID in', isDark ? 'DARK' : 'LIGHT', 'mode')
 
-        // Initialize map with custom styles only (no Map ID - we'll use classic markers)
+        // Initialize map with Map ID and colorScheme for automatic light/dark switching
         const map = new google.maps.Map(mapRef.current, {
           center,
           zoom: 12,
+          mapId: '5f71815e7cfcb0a23878760d', // Map ID with both light/dark styles
+          colorScheme: isDark ? 'DARK' : 'LIGHT', // Switch between light and dark styles
           mapTypeControl: false,
           fullscreenControl: true,
           streetViewControl: false,
           zoomControl: true,
-          rotateControl: true, // Enable 3D/tilt control
-          styles: mapStyles,
           // Minimize map controls and attributions
           disableDefaultUI: true, // Disable all default UI
           zoomControl: true, // Re-enable zoom control
           fullscreenControl: true, // Re-enable fullscreen control
-          rotateControl: true, // Re-enable 3D/tilt control
           clickableIcons: false, // Disable clickable POI icons
           zoomControlOptions: {
             position: google.maps.ControlPosition.RIGHT_TOP,
           },
           fullscreenControlOptions: {
-            position: google.maps.ControlPosition.RIGHT_TOP,
-          },
-          rotateControlOptions: {
             position: google.maps.ControlPosition.RIGHT_TOP,
           },
         })
@@ -194,36 +118,32 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
         }
         map.fitBounds(bounds)
 
-        // Add start marker (green) using classic Marker with custom icon
-        const startMarker = new google.maps.Marker({
+        // Helper function to create marker pin element
+        const createMarkerPin = (color: string): HTMLElement => {
+          const pin = document.createElement('div')
+          pin.style.width = '16px'
+          pin.style.height = '16px'
+          pin.style.borderRadius = '50%'
+          pin.style.backgroundColor = color
+          pin.style.border = '2px solid white'
+          pin.style.boxShadow = '0 2px 4px rgba(0,0,0,0.3)'
+          return pin
+        }
+
+        // Add start marker (green) using AdvancedMarkerElement
+        const startMarker = new google.maps.marker.AdvancedMarkerElement({
           map,
           position: coordinates[0],
           title: 'Start',
-          icon: {
-            path: google.maps.SymbolPath.CIRCLE,
-            fillColor: '#00D464',
-            fillOpacity: 1,
-            strokeColor: '#ffffff',
-            strokeWeight: 2,
-            scale: 8,
-          },
-          zIndex: 1000,
+          content: createMarkerPin('#00D464'), // Volt Green
         })
 
-        // Add finish marker (red) using classic Marker with custom icon
-        const finishMarker = new google.maps.Marker({
+        // Add finish marker (red) using AdvancedMarkerElement
+        const finishMarker = new google.maps.marker.AdvancedMarkerElement({
           map,
           position: coordinates[coordinates.length - 1],
           title: 'Finish',
-          icon: {
-            path: google.maps.SymbolPath.CIRCLE,
-            fillColor: '#DC2626',
-            fillOpacity: 1,
-            strokeColor: '#ffffff',
-            strokeWeight: 2,
-            scale: 8,
-          },
-          zIndex: 1000,
+          content: createMarkerPin('#DC2626'), // Track Red
         })
 
         markersRef.current = [startMarker, finishMarker]
@@ -286,8 +206,11 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
   return (
     <div className="relative w-full h-80 min-h-80 bg-neutral-100 dark:bg-neutral-800 rounded-xl overflow-hidden shadow-sm border border-neutral-100 dark:border-neutral-800 flex-shrink-0">
       {isLoading && (
-        <div className="absolute inset-0 flex items-center justify-center bg-neutral-100 dark:bg-neutral-800 z-10">
-          <div className="text-sm text-neutral-500 dark:text-neutral-400">Loading map...</div>
+        <div className="absolute inset-0 flex items-center justify-center bg-neutral-100 dark:bg-neutral-800 z-10 transition-opacity duration-200">
+          <div className="flex flex-col items-center gap-3">
+            <div className="w-8 h-8 border-2 border-neutral-300 dark:border-neutral-600 border-t-electric-pink rounded-full animate-spin"></div>
+            <div className="text-sm text-neutral-500 dark:text-neutral-400">Loading map...</div>
+          </div>
         </div>
       )}
       <div
@@ -309,37 +232,23 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
           font-size: 8px !important;
         }
 
-        /* Minimalist control button styling with rounded edges */
-        .race-route-map :global(.gm-control-active) {
-          background: rgba(255, 255, 255, 0.95) !important;
-          border-radius: 8px !important;
-          box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3) !important;
+        /* Target control containers */
+        .race-route-map :global(div.gmnoprint) {
           margin: 8px !important;
         }
 
-        /* Style all control buttons consistently */
-        .race-route-map :global(button[aria-label*="Zoom"]),
-        .race-route-map :global(button[aria-label*="Rotate"]),
-        .race-route-map :global(button[aria-label*="Tilt"]),
-        .race-route-map :global(button[title*="Toggle fullscreen"]) {
+        /* Target all control buttons with better selectors */
+        .race-route-map :global(div.gmnoprint button) {
           background: rgba(255, 255, 255, 0.95) !important;
           border-radius: 8px !important;
           box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3) !important;
-          margin: 4px 8px !important;
           border: none !important;
+          margin: 2px !important;
         }
 
-        /* Invert icons for dark mode */
-        .race-route-map :global(button[aria-label*="Zoom"] img),
-        .race-route-map :global(button[aria-label*="Rotate"] img),
-        .race-route-map :global(button[aria-label*="Tilt"] img),
-        .race-route-map :global(button[title*="Toggle fullscreen"] img) {
+        /* Invert button icons for dark mode */
+        .race-route-map :global(div.gmnoprint button img) {
           filter: ${isDark ? 'invert(1)' : 'none'} !important;
-        }
-
-        /* Style the control containers */
-        .race-route-map :global(.gmnoprint) {
-          border-radius: 8px !important;
         }
       `}</style>
     </div>
