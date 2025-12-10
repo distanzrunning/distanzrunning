@@ -9,8 +9,10 @@ interface RaceRouteMapProps {
 }
 
 // Map styling now managed via Map ID in Google Cloud Console
-// Map ID: 5f71815e7cfcb0a23878760d (has both light and dark mode styles configured)
-// The colorScheme option switches between light/dark styles automatically
+// Map ID: 5f71815e7cfcb0a23878760d
+// Light mode: Navigation variant (optimized for turn-by-turn guidance)
+// Dark mode: Navigation dark variant
+// The colorScheme option switches between these variants automatically
 
 export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
   const mapRef = useRef<HTMLDivElement>(null)
