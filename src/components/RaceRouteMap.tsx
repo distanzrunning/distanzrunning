@@ -75,32 +75,14 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
 
         console.log('[RaceRouteMap] Initializing map with Map ID and colorScheme in', isDark ? 'DARK' : 'LIGHT', 'mode')
 
-        // Initialize map with Map ID and colorScheme for cloud-based styling
-        // Map ID has both light and dark Roadmap styles configured in Google Cloud Console
-        // colorScheme switches between the two cloud-configured styles
-        // IMPORTANT: Cannot use local 'styles' array when mapId is present
-        // Note: Styles must be associated with 'roadmap' map type in Cloud Console
+        // Initialize map with Map ID - all styling from Google Cloud Console
+        // Map ID has both light and dark Roadmap styles configured
+        // No local styling - everything managed in Google Maps Platform
         const map = new google.maps.Map(mapRef.current, {
           center,
           zoom: 12,
-          mapId: '5f71815e7cfcb0a23878760d', // Map ID with both light/dark Roadmap styles
-          mapTypeId: 'roadmap', // Roadmap map type with custom monochrome styling
-          colorScheme: isDark ? 'DARK' : 'LIGHT', // Switch between cloud-configured light/dark styles
-          mapTypeControl: false,
-          fullscreenControl: true,
-          streetViewControl: false,
-          zoomControl: true,
-          // Minimize map controls and attributions
-          disableDefaultUI: true, // Disable all default UI
-          zoomControl: true, // Re-enable zoom control
-          fullscreenControl: true, // Re-enable fullscreen control
-          clickableIcons: false, // Disable clickable POI icons
-          zoomControlOptions: {
-            position: google.maps.ControlPosition.RIGHT_TOP,
-          },
-          fullscreenControlOptions: {
-            position: google.maps.ControlPosition.RIGHT_TOP,
-          },
+          mapId: '5f71815e7cfcb0a23878760d', // Map ID with cloud-based styles
+          colorScheme: isDark ? 'DARK' : 'LIGHT', // Switch between light/dark cloud styles
         })
 
         mapInstanceRef.current = map
@@ -225,42 +207,9 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
       )}
       <div
         ref={mapRef}
-        className="w-full h-full transition-opacity duration-300 race-route-map"
+        className="w-full h-full transition-opacity duration-300"
         style={{ opacity: isLoading ? 0 : 1 }}
       />
-      <style jsx>{`
-        /* Minimize legal text and attributions */
-        .race-route-map :global(.gm-style-cc),
-        .race-route-map :global([style*="position: absolute"][style*="bottom"]:not(.gm-style-iw):not(.gmnoprint)) {
-          opacity: 0.3;
-          font-size: 9px;
-        }
-        .race-route-map :global(.gm-style-cc):hover {
-          opacity: 0.6;
-        }
-        .race-route-map :global(a[href^="https://maps.google.com/maps"]) {
-          font-size: 8px !important;
-        }
-
-        /* Target control containers */
-        .race-route-map :global(div.gmnoprint) {
-          margin: 8px !important;
-        }
-
-        /* Target all control buttons with better selectors */
-        .race-route-map :global(div.gmnoprint button) {
-          background: rgba(255, 255, 255, 0.95) !important;
-          border-radius: 8px !important;
-          box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3) !important;
-          border: none !important;
-          margin: 2px !important;
-        }
-
-        /* Invert button icons for dark mode */
-        .race-route-map :global(div.gmnoprint button img) {
-          filter: ${isDark ? 'invert(1)' : 'none'} !important;
-        }
-      `}</style>
     </div>
   )
 }
