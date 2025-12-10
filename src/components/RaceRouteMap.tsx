@@ -157,15 +157,17 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
 
         // Small delay to allow Map ID styling to fully apply before showing map
         setTimeout(() => {
+          console.log('[RaceRouteMap] Map initialization complete, hiding loading screen')
           setIsLoading(false)
         }, 300)
       } catch (err) {
-        console.error('Error loading map:', err)
+        console.error('[RaceRouteMap] Error loading map:', err)
         setError(err instanceof Error ? err.message : 'Failed to load map')
         setIsLoading(false)
       }
     }
 
+    console.log('[RaceRouteMap] Calling initMap...')
     initMap()
 
     // Cleanup existing map before initializing new one
