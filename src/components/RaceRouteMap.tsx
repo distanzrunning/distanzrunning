@@ -214,7 +214,7 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
   }
 
   return (
-    <div className="relative w-full h-80 min-h-80 bg-[#f5f5f5] dark:bg-[#1a1a1a] rounded-xl overflow-hidden shadow-sm border border-neutral-100 dark:border-neutral-800 flex-shrink-0">
+    <div className="relative w-full h-80 min-h-80 rounded-xl overflow-hidden shadow-sm border border-neutral-100 dark:border-neutral-800 flex-shrink-0">
       {isLoading && (
         <div className="absolute inset-0 flex items-center justify-center bg-neutral-100 dark:bg-neutral-800 z-10 transition-opacity duration-200">
           <div className="flex flex-col items-center gap-3">
