@@ -10,8 +10,9 @@ interface RaceRouteMapProps {
 
 // Map styling now managed via Map ID in Google Cloud Console
 // Map ID: 5f71815e7cfcb0a23878760d
-// Light mode: Navigation variant (optimized for turn-by-turn guidance)
-// Dark mode: Navigation dark variant
+// In Google Cloud Console, ensure Map ID styles are applied to 'roadmap' map type
+// Light mode: Custom Navigation-style variant
+// Dark mode: Custom Navigation-dark variant
 // The colorScheme option switches between these variants automatically
 
 export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
@@ -77,10 +78,12 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
         // Initialize map with Map ID using theme variant navigation
         // Map ID has both light and dark theme variants configured in Google Cloud Console
         // Switches between variants based on colorScheme option
+        // CRITICAL: Must specify mapTypeId to use custom Navigation styling from Map ID
         const map = new google.maps.Map(mapRef.current, {
           center,
           zoom: 12,
           mapId: '5f71815e7cfcb0a23878760d', // Map ID with both light/dark theme variants
+          mapTypeId: 'roadmap', // Use roadmap type (vector-based, fully styleable)
           colorScheme: isDark ? 'DARK' : 'LIGHT', // Switch between theme variants
           mapTypeControl: false,
           fullscreenControl: true,
