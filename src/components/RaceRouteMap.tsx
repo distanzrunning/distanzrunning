@@ -8,12 +8,10 @@ interface RaceRouteMapProps {
   title: string
 }
 
-// Map styling now managed via Map ID in Google Cloud Console
-// Map ID: 5f71815e7cfcb0a23878760d
-// Uses 'navigation' map type (optimized for turn-by-turn guidance)
-// Light mode: Navigation variant with custom styling
-// Dark mode: Navigation dark variant with custom styling
-// The colorScheme option switches between these variants automatically
+// Map styling using local JSON configuration files
+// Light mode: /light_mode.json (monochrome, minimal POIs, city labels only)
+// Dark mode: /dark_mode.json (monochrome, minimal POIs, city labels only)
+// Uses 'navigation' map type for clean, turn-by-turn optimized appearance
 
 export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
   const mapRef = useRef<HTMLDivElement>(null)
@@ -22,12 +20,31 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
   const markersRef = useRef<google.maps.marker.AdvancedMarkerElement[]>([])
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [mapStyles, setMapStyles] = useState<any>(null)
   const { isDark, isInitialized } = useContext(DarkModeContext)
 
+  // Load map styles on mount and when theme changes
   useEffect(() => {
-    // Wait for dark mode to be initialized before loading map
-    if (!isInitialized) {
-      console.log('[RaceRouteMap] Waiting for dark mode initialization...')
+    const loadStyles = async () => {
+      try {
+        const styleFile = isDark ? '/dark_mode.json' : '/light_mode.json'
+        const response = await fetch(styleFile)
+        const styles = await response.json()
+        setMapStyles(styles.styles) // Extract the styles array from the JSON
+      } catch (err) {
+        console.error('[RaceRouteMap] Error loading map styles:', err)
+      }
+    }
+
+    if (isInitialized) {
+      loadStyles()
+    }
+  }, [isDark, isInitialized])
+
+  useEffect(() => {
+    // Wait for dark mode to be initialized and styles to be loaded
+    if (!isInitialized || !mapStyles) {
+      console.log('[RaceRouteMap] Waiting for dark mode initialization and styles...')
       return
     }
 
@@ -73,18 +90,16 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
         const centerLng = coordinates.reduce((sum, coord) => sum + coord.lng, 0) / coordinates.length
         const center = { lat: centerLat, lng: centerLng }
 
-        console.log('[RaceRouteMap] Initializing map with Map ID in', isDark ? 'DARK' : 'LIGHT', 'theme variant')
+        console.log('[RaceRouteMap] Initializing map with local JSON styles in', isDark ? 'DARK' : 'LIGHT', 'mode')
 
-        // Initialize map with Map ID using theme variant navigation
-        // Map ID has both light and dark theme variants configured in Google Cloud Console
-        // Switches between variants based on colorScheme option
-        // CRITICAL: Must specify mapTypeId 'navigation' to use custom Navigation styling from Map ID
+        // Initialize map with local JSON styles
+        // Uses 'navigation' map type with monochrome styling
+        // Styles loaded from /light_mode.json or /dark_mode.json
         const map = new google.maps.Map(mapRef.current, {
           center,
           zoom: 12,
-          mapId: '5f71815e7cfcb0a23878760d', // Map ID with both light/dark theme variants
           mapTypeId: 'navigation', // Use Navigation map type (optimized for turn-by-turn guidance)
-          colorScheme: isDark ? 'DARK' : 'LIGHT', // Switch between theme variants
+          styles: mapStyles, // Apply local JSON styles
           mapTypeControl: false,
           fullscreenControl: true,
           streetViewControl: false,
@@ -200,7 +215,7 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
 
       console.log('[RaceRouteMap] Cleanup complete')
     }
-  }, [gpxUrl, isDark, isInitialized])
+  }, [gpxUrl, isDark, isInitialized, mapStyles])
 
   if (error) {
     return (
