@@ -135,16 +135,18 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
         const centerLng = coordinates.reduce((sum, coord) => sum + coord.lng, 0) / coordinates.length
         const center = { lat: centerLat, lng: centerLng }
 
-        console.log('[RaceRouteMap] Initializing map with integrated styles in', isDark ? 'DARK' : 'LIGHT', 'mode')
+        console.log('[RaceRouteMap] Initializing map with Map ID and integrated styles in', isDark ? 'DARK' : 'LIGHT', 'mode')
 
-        // Initialize map with integrated Navigation styles
+        // Initialize map with Map ID (required for AdvancedMarkerElement) and integrated Navigation styles
+        // Map ID enables Advanced Markers while local styles override the default appearance
         // Uses 'navigation' map type with monochrome styling
         // Switches between LIGHT_MAP_STYLES and DARK_MAP_STYLES based on theme
         const map = new google.maps.Map(mapRef.current, {
           center,
           zoom: 12,
+          mapId: '5f71815e7cfcb0a23878760d', // Required for AdvancedMarkerElement
           mapTypeId: 'navigation', // Use Navigation map type (optimized for turn-by-turn guidance)
-          styles: isDark ? DARK_MAP_STYLES : LIGHT_MAP_STYLES, // Apply integrated styles
+          styles: isDark ? DARK_MAP_STYLES : LIGHT_MAP_STYLES, // Apply integrated styles (override Map ID styles)
           mapTypeControl: false,
           fullscreenControl: true,
           streetViewControl: false,
