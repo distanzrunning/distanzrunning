@@ -8,74 +8,12 @@ interface RaceRouteMapProps {
   title: string
 }
 
-// Map styling using integrated Navigation styles
+// Map styling using cloud-based Navigation styles via Map ID
+// Map ID: 5f71815e7cfcb0a23878760d has both light and dark Navigation styles configured
 // Light mode: Monochrome with minimal POIs, city labels only
 // Dark mode: Monochrome with minimal POIs, city labels only
 // Uses 'navigation' map type for clean, turn-by-turn optimized appearance
-
-// Light mode styles - monochrome, minimal POIs
-const LIGHT_MAP_STYLES = [
-  { id: 'infrastructure.building.commercial', geometry: { visible: false } },
-  { id: 'infrastructure.railwayTrack.commuter', geometry: { visible: false } },
-  { id: 'infrastructure.roadNetwork.roadDetail.directionArrow', label: { visible: false } },
-  { id: 'infrastructure.roadNetwork.roadDetail.surface', geometry: { visible: false }, label: { visible: false } },
-  { id: 'infrastructure.roadNetwork.roadSign', label: { visible: false } },
-  { id: 'infrastructure.urbanArea', geometry: { visible: false } },
-  { id: 'natural.archipelago', label: { visible: false } },
-  { id: 'pointOfInterest', geometry: { visible: false }, label: { visible: false } },
-  { id: 'pointOfInterest.foodAndDrink.bar', label: { visible: false } },
-  { id: 'pointOfInterest.landmark', label: { visible: false } },
-  { id: 'pointOfInterest.other.cemetery', geometry: { visible: false } },
-  { id: 'pointOfInterest.recreation.beach', geometry: { visible: false }, label: { visible: false } },
-  { id: 'pointOfInterest.recreation.golfCourse', geometry: { visible: false } },
-  { id: 'pointOfInterest.recreation.natureReserve', geometry: { visible: false } },
-  { id: 'pointOfInterest.recreation.park', geometry: { visible: false } },
-  { id: 'pointOfInterest.recreation.sportsComplex', geometry: { visible: false } },
-  { id: 'pointOfInterest.recreation.sportsField', geometry: { visible: false } },
-  { id: 'pointOfInterest.recreation.zoo', geometry: { visible: false } },
-  { id: 'pointOfInterest.transit.airport', geometry: { visible: false }, label: { visible: false } },
-  { id: 'political.border', geometry: { visible: false }, label: { visible: false } },
-  { id: 'political.city', label: { visible: true } },
-  { id: 'political.reservation', label: { visible: false } },
-  { id: 'political.stateOrProvince', geometry: { visible: false }, label: { visible: false } },
-  { id: 'political.sublocality', label: { visible: false } }
-]
-
-// Dark mode styles - monochrome, minimal POIs
-const DARK_MAP_STYLES = [
-  { id: 'infrastructure.building.commercial', geometry: { visible: false } },
-  { id: 'infrastructure.businessCorridor', geometry: { visible: false } },
-  { id: 'infrastructure.railwayTrack.commuter', geometry: { visible: false } },
-  { id: 'infrastructure.roadNetwork.noTraffic.pedestrianMall', geometry: { visible: false } },
-  { id: 'infrastructure.roadNetwork.noTraffic.trail.paved', geometry: { visible: false } },
-  { id: 'infrastructure.roadNetwork.noTraffic.trail.unpaved', geometry: { visible: false }, label: { visible: false } },
-  { id: 'infrastructure.roadNetwork.ramp', geometry: { visible: false }, label: { visible: false } },
-  { id: 'infrastructure.roadNetwork.road.arterial', geometry: { visible: true }, label: { visible: false } },
-  { id: 'infrastructure.roadNetwork.road.highway', label: { visible: false } },
-  { id: 'infrastructure.roadNetwork.road.local', label: { visible: false } },
-  { id: 'infrastructure.roadNetwork.road.noOutlet', label: { visible: false } },
-  { id: 'infrastructure.roadNetwork.roadDetail', geometry: { visible: false }, label: { visible: false } },
-  { id: 'infrastructure.roadNetwork.roadDetail.directionArrow', label: { visible: false } },
-  { id: 'infrastructure.roadNetwork.roadDetail.surface', geometry: { visible: false }, label: { visible: false } },
-  { id: 'infrastructure.roadNetwork.roadSign', label: { visible: false } },
-  { id: 'infrastructure.urbanArea', geometry: { visible: false } },
-  { id: 'pointOfInterest', label: { visible: false } },
-  { id: 'pointOfInterest.foodAndDrink.bar', label: { visible: false } },
-  { id: 'pointOfInterest.landmark', label: { visible: false } },
-  { id: 'pointOfInterest.other.cemetery', geometry: { visible: false } },
-  { id: 'pointOfInterest.recreation.beach', geometry: { visible: false }, label: { visible: false } },
-  { id: 'pointOfInterest.recreation.golfCourse', geometry: { visible: false } },
-  { id: 'pointOfInterest.recreation.natureReserve', geometry: { visible: false } },
-  { id: 'pointOfInterest.recreation.park', geometry: { visible: false } },
-  { id: 'pointOfInterest.recreation.sportsComplex', geometry: { visible: false } },
-  { id: 'pointOfInterest.recreation.sportsField', geometry: { visible: false } },
-  { id: 'pointOfInterest.recreation.zoo', geometry: { visible: false } },
-  { id: 'pointOfInterest.transit.airport', geometry: { visible: false }, label: { visible: false } },
-  { id: 'political.border', label: { visible: false } },
-  { id: 'political.reservation', label: { visible: false } },
-  { id: 'political.stateOrProvince', label: { visible: false } },
-  { id: 'political.sublocality', label: { visible: false } }
-]
+// Switches between light/dark using colorScheme option (LIGHT or DARK)
 
 export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
   const mapRef = useRef<HTMLDivElement>(null)
@@ -135,18 +73,18 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
         const centerLng = coordinates.reduce((sum, coord) => sum + coord.lng, 0) / coordinates.length
         const center = { lat: centerLat, lng: centerLng }
 
-        console.log('[RaceRouteMap] Initializing map with Map ID and integrated styles in', isDark ? 'DARK' : 'LIGHT', 'mode')
+        console.log('[RaceRouteMap] Initializing map with Map ID and colorScheme in', isDark ? 'DARK' : 'LIGHT', 'mode')
 
-        // Initialize map with Map ID (required for AdvancedMarkerElement) and integrated Navigation styles
-        // Map ID enables Advanced Markers while local styles override the default appearance
-        // Uses 'navigation' map type with monochrome styling
-        // Switches between LIGHT_MAP_STYLES and DARK_MAP_STYLES based on theme
+        // Initialize map with Map ID and colorScheme for cloud-based styling
+        // Map ID has both light and dark Navigation styles configured in Google Cloud Console
+        // colorScheme switches between the two cloud-configured styles
+        // IMPORTANT: Cannot use local 'styles' array when mapId is present
         const map = new google.maps.Map(mapRef.current, {
           center,
           zoom: 12,
-          mapId: '5f71815e7cfcb0a23878760d', // Required for AdvancedMarkerElement
+          mapId: '5f71815e7cfcb0a23878760d', // Map ID with both light/dark Navigation styles
           mapTypeId: 'navigation', // Use Navigation map type (optimized for turn-by-turn guidance)
-          styles: isDark ? DARK_MAP_STYLES : LIGHT_MAP_STYLES, // Apply integrated styles (override Map ID styles)
+          colorScheme: isDark ? 'DARK' : 'LIGHT', // Switch between cloud-configured light/dark styles
           mapTypeControl: false,
           fullscreenControl: true,
           streetViewControl: false,
