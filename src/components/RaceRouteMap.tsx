@@ -8,11 +8,10 @@ interface RaceRouteMapProps {
   title: string
 }
 
-// Map styling using cloud-based Roadmap styles via Map ID
-// Map ID: 5f71815e7cfcb0a23878760d has both light and dark Roadmap styles configured
+// Map styling using cloud-based styles via Map ID
+// Map ID: 5f71815e7cfcb0a2c8c865c0 (JavaScript Vector) with both light and dark styles configured
 // Light mode: Monochrome with minimal POIs, city labels only
 // Dark mode: Monochrome with minimal POIs, city labels only
-// Uses 'roadmap' map type with custom cloud-based styling
 // Switches between light/dark using colorScheme option (LIGHT or DARK)
 
 export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
@@ -76,12 +75,12 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
         console.log('[RaceRouteMap] Initializing map with Map ID and colorScheme in', isDark ? 'DARK' : 'LIGHT', 'mode')
 
         // Initialize map with Map ID - all styling from Google Cloud Console
-        // Map ID has both light and dark Roadmap styles configured
+        // Map ID (JavaScript Vector) has both light and dark styles configured
         // No local styling - everything managed in Google Maps Platform
         const map = new google.maps.Map(mapRef.current, {
           center,
           zoom: 12,
-          mapId: '5f71815e7cfcb0a23878760d', // Map ID with cloud-based styles
+          mapId: '5f71815e7cfcb0a2c8c865c0', // JavaScript Vector Map ID with cloud-based styles
           colorScheme: isDark ? 'DARK' : 'LIGHT', // Switch between light/dark cloud styles
         })
 
