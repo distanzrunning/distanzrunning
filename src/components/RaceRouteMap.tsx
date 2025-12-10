@@ -70,14 +70,16 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
         const centerLng = coordinates.reduce((sum, coord) => sum + coord.lng, 0) / coordinates.length
         const center = { lat: centerLat, lng: centerLng }
 
-        console.log('[RaceRouteMap] Initializing map with Map ID in', isDark ? 'DARK' : 'LIGHT', 'mode')
+        console.log('[RaceRouteMap] Initializing map with Map ID in', isDark ? 'DARK' : 'LIGHT', 'theme variant')
 
-        // Initialize map with Map ID and colorScheme for automatic light/dark switching
+        // Initialize map with Map ID using theme variant navigation
+        // Map ID has both light and dark theme variants configured in Google Cloud Console
+        // Switches between variants based on colorScheme option
         const map = new google.maps.Map(mapRef.current, {
           center,
           zoom: 12,
-          mapId: '5f71815e7cfcb0a23878760d', // Map ID with both light/dark styles
-          colorScheme: isDark ? 'DARK' : 'LIGHT', // Switch between light and dark styles
+          mapId: '5f71815e7cfcb0a23878760d', // Map ID with both light/dark theme variants
+          colorScheme: isDark ? 'DARK' : 'LIGHT', // Switch between theme variants
           mapTypeControl: false,
           fullscreenControl: true,
           streetViewControl: false,
