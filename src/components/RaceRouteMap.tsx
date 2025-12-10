@@ -76,14 +76,15 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
         console.log('[RaceRouteMap] Initializing map with Map ID and colorScheme in', isDark ? 'DARK' : 'LIGHT', 'mode')
 
         // Initialize map with Map ID and colorScheme for cloud-based styling
-        // Map ID has both light and dark Navigation styles configured in Google Cloud Console
+        // Map ID has both light and dark styles configured in Google Cloud Console
         // colorScheme switches between the two cloud-configured styles
         // IMPORTANT: Cannot use local 'styles' array when mapId is present
+        // Using roadmap temporarily to test if styles are associated with roadmap vs navigation
         const map = new google.maps.Map(mapRef.current, {
           center,
           zoom: 12,
-          mapId: '5f71815e7cfcb0a23878760d', // Map ID with both light/dark Navigation styles
-          mapTypeId: 'navigation', // Use Navigation map type (optimized for turn-by-turn guidance)
+          mapId: '5f71815e7cfcb0a23878760d', // Map ID with both light/dark styles
+          mapTypeId: 'roadmap', // Temporarily using roadmap to test style association
           colorScheme: isDark ? 'DARK' : 'LIGHT', // Switch between cloud-configured light/dark styles
           mapTypeControl: false,
           fullscreenControl: true,
