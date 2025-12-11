@@ -226,6 +226,62 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
         button[aria-label*="compass"] {
           display: none !important;
         }
+
+        /* Minimalist rounded controls styling */
+        .gm-control-active {
+          background-color: white !important;
+          border-radius: 16px !important;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+          border: none !important;
+          padding: 0 !important;
+          margin: 8px !important;
+        }
+
+        /* Zoom control buttons */
+        button[aria-label="Zoom in"],
+        button[aria-label="Zoom out"] {
+          background-color: white !important;
+          border: none !important;
+          border-radius: 16px !important;
+          width: 40px !important;
+          height: 40px !important;
+          margin: 4px 8px !important;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+          cursor: pointer !important;
+          transition: background-color 0.2s !important;
+        }
+
+        button[aria-label="Zoom in"]:hover,
+        button[aria-label="Zoom out"]:hover {
+          background-color: #f5f5f5 !important;
+        }
+
+        /* Fullscreen control */
+        button[aria-label*="full screen"],
+        button[aria-label*="fullscreen"],
+        button[aria-label*="Toggle fullscreen"] {
+          background-color: white !important;
+          border: none !important;
+          border-radius: 16px !important;
+          width: 40px !important;
+          height: 40px !important;
+          margin: 8px !important;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+          cursor: pointer !important;
+          transition: background-color 0.2s !important;
+        }
+
+        button[aria-label*="full screen"]:hover,
+        button[aria-label*="fullscreen"]:hover,
+        button[aria-label*="Toggle fullscreen"]:hover {
+          background-color: #f5f5f5 !important;
+        }
+
+        /* Remove default grouping/spacing */
+        .gmnoprint {
+          background: transparent !important;
+          box-shadow: none !important;
+        }
       `}</style>
     </div>
   )
