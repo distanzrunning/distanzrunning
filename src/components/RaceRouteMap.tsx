@@ -84,14 +84,15 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
           // Lock camera perspective to prevent tilt/rotate control
           tilt: 0,
           heading: 0,
-          // Enable only essential controls
+          // Disable default UI and enable only specific controls
+          disableDefaultUI: true,
           zoomControl: true,
           fullscreenControl: true,
-          // Disable all other controls
-          scaleControl: false,
-          mapTypeControl: false,
-          streetViewControl: false,
+          // Explicitly disable camera control
           rotateControl: false,
+          // Additional options to prevent camera control
+          gestureHandling: 'greedy',
+          keyboardShortcuts: false,
         })
 
         mapInstanceRef.current = map
@@ -217,6 +218,15 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
         className="w-full h-full transition-opacity duration-300"
         style={{ opacity: isLoading ? 0 : 1 }}
       />
+      <style jsx global>{`
+        /* Hide camera/compass control (the four chevrons) */
+        .gm-compass,
+        button[aria-label*="Rotate"],
+        button[aria-label*="Tilt"],
+        button[aria-label*="compass"] {
+          display: none !important;
+        }
+      `}</style>
     </div>
   )
 }
