@@ -81,6 +81,9 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
           zoom: 12,
           mapId: '5f71815e7cfcb0a2c8c865c0', // JavaScript Vector Map ID with cloud-based styles
           colorScheme: isDark ? 'DARK' : 'LIGHT', // Switch between light/dark cloud styles
+          // Lock camera perspective to prevent tilt/rotate control
+          tilt: 0,
+          heading: 0,
           // Enable only essential controls
           zoomControl: true,
           fullscreenControl: true,
