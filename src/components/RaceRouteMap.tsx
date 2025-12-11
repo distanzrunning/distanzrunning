@@ -264,7 +264,8 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
           border-radius: 16px !important;
           width: 40px !important;
           height: 40px !important;
-          margin: 4px 8px !important;
+          margin: 4px !important;
+          margin-right: 8px !important;
           box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
           cursor: pointer !important;
           transition: background-color 0.2s !important;
@@ -303,7 +304,8 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
           border-radius: 16px !important;
           width: 40px !important;
           height: 40px !important;
-          margin: 4px 8px !important;
+          margin: 4px !important;
+          margin-right: 8px !important;
           box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
           cursor: pointer !important;
           transition: background-color 0.2s !important;
