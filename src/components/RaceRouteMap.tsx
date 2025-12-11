@@ -229,9 +229,26 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
 
         /* Remove default grouping/spacing and backgrounds */
         .gmnoprint,
-        .gm-bundled-control {
+        .gm-bundled-control,
+        .gm-bundled-control > div,
+        .gm-svpc,
+        div[style*="background-color"] > div > div {
           background: transparent !important;
+          background-color: transparent !important;
           box-shadow: none !important;
+        }
+
+        /* Target the specific zoom control container */
+        button[aria-label="Zoom in"] + button[aria-label="Zoom out"],
+        button[aria-label="Zoom out"] + button[aria-label="Zoom in"] {
+          background: transparent !important;
+        }
+
+        /* Remove background from parent containers */
+        .gmnoprint > div,
+        .gmnoprint > div > div {
+          background: transparent !important;
+          background-color: transparent !important;
         }
 
         /* Light mode controls */
