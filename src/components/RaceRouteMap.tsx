@@ -88,6 +88,13 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
           disableDefaultUI: true,
           zoomControl: true,
           fullscreenControl: true,
+          // Position controls at bottom-right, with fullscreen above zoom
+          zoomControlOptions: {
+            position: google.maps.ControlPosition.RIGHT_BOTTOM,
+          },
+          fullscreenControlOptions: {
+            position: google.maps.ControlPosition.RIGHT_BOTTOM,
+          },
           // Explicitly disable camera control
           rotateControl: false,
           // Additional options to prevent camera control
@@ -265,7 +272,8 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
           width: 40px !important;
           height: 40px !important;
           margin: 4px !important;
-          margin-right: 8px !important;
+          margin-right: 12px !important;
+          margin-bottom: 12px !important;
           box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
           cursor: pointer !important;
           transition: background-color 0.2s !important;
@@ -284,7 +292,9 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
           border-radius: 16px !important;
           width: 40px !important;
           height: 40px !important;
-          margin: 8px !important;
+          margin: 4px !important;
+          margin-right: 12px !important;
+          margin-bottom: 12px !important;
           box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
           cursor: pointer !important;
           transition: background-color 0.2s !important;
@@ -305,7 +315,8 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
           width: 40px !important;
           height: 40px !important;
           margin: 4px !important;
-          margin-right: 8px !important;
+          margin-right: 12px !important;
+          margin-bottom: 12px !important;
           box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
           cursor: pointer !important;
           transition: background-color 0.2s !important;
@@ -324,7 +335,9 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
           border-radius: 16px !important;
           width: 40px !important;
           height: 40px !important;
-          margin: 8px !important;
+          margin: 4px !important;
+          margin-right: 12px !important;
+          margin-bottom: 12px !important;
           box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
           cursor: pointer !important;
           transition: background-color 0.2s !important;
