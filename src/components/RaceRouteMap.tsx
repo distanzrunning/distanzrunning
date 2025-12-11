@@ -137,11 +137,12 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
 
         markersRef.current = [startMarker, finishMarker]
 
-        // Small delay to allow Map ID styling to fully apply before showing map
+        // Wait for map tiles to fully load before hiding loading screen
+        // Longer delay ensures tiles are loaded from center outward
         setTimeout(() => {
           console.log('[RaceRouteMap] Map initialization complete, hiding loading screen')
           setIsLoading(false)
-        }, 300)
+        }, 1500)
       } catch (err) {
         console.error('[RaceRouteMap] Error loading map:', err)
         setError(err instanceof Error ? err.message : 'Failed to load map')
