@@ -236,6 +236,8 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
           background: transparent !important;
           background-color: transparent !important;
           box-shadow: none !important;
+          border: none !important;
+          outline: none !important;
         }
 
         /* Target the specific zoom control container */
@@ -249,6 +251,9 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
         .gmnoprint > div > div {
           background: transparent !important;
           background-color: transparent !important;
+          box-shadow: none !important;
+          border: none !important;
+          outline: none !important;
         }
 
         /* Light mode controls */
