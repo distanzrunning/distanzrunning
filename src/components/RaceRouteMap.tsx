@@ -74,21 +74,21 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
 
         console.log('[RaceRouteMap] Initializing map with Map ID and colorScheme in', isDark ? 'DARK' : 'LIGHT', 'mode')
 
-        // Initialize map with Map ID and default controls
+        // Initialize map with Map ID and selected controls
         // Map ID (JavaScript Vector) has both light and dark styles configured
-        // Using default Google Maps controls
         const map = new google.maps.Map(mapRef.current, {
           center,
           zoom: 12,
           mapId: '5f71815e7cfcb0a2c8c865c0', // JavaScript Vector Map ID with cloud-based styles
           colorScheme: isDark ? 'DARK' : 'LIGHT', // Switch between light/dark cloud styles
-          // Default controls - all enabled by default
+          // Enable only selected controls
           zoomControl: true,
-          mapTypeControl: true,
           scaleControl: true,
-          streetViewControl: true,
-          rotateControl: true,
           fullscreenControl: true,
+          // Disable unwanted controls
+          mapTypeControl: false,
+          streetViewControl: false,
+          rotateControl: false,
         })
 
         mapInstanceRef.current = map
