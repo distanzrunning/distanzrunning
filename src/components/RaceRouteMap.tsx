@@ -271,7 +271,7 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
           border-radius: 16px !important;
           width: 40px !important;
           height: 40px !important;
-          margin: 2px !important;
+          margin: 0 !important;
           margin-right: 16px !important;
           margin-bottom: 16px !important;
           box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
@@ -284,6 +284,11 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
           background-color: #f5f5f5 !important;
         }
 
+        /* Add spacing between zoom in and zoom out buttons */
+        html:not(.dark) button[aria-label="Zoom out"] {
+          margin-top: 8px !important;
+        }
+
         html:not(.dark) button[aria-label*="full screen"],
         html:not(.dark) button[aria-label*="fullscreen"],
         html:not(.dark) button[aria-label*="Toggle fullscreen"] {
@@ -292,9 +297,9 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
           border-radius: 16px !important;
           width: 40px !important;
           height: 40px !important;
-          margin: 2px !important;
+          margin: 0 !important;
           margin-right: 16px !important;
-          margin-bottom: 8px !important;
+          margin-bottom: 16px !important;
           box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
           cursor: pointer !important;
           transition: background-color 0.2s !important;
@@ -314,7 +319,7 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
           border-radius: 16px !important;
           width: 40px !important;
           height: 40px !important;
-          margin: 2px !important;
+          margin: 0 !important;
           margin-right: 16px !important;
           margin-bottom: 16px !important;
           box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
@@ -327,6 +332,11 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
           background-color: #3d3d3d !important;
         }
 
+        /* Add spacing between zoom in and zoom out buttons */
+        html.dark button[aria-label="Zoom out"] {
+          margin-top: 8px !important;
+        }
+
         html.dark button[aria-label*="full screen"],
         html.dark button[aria-label*="fullscreen"],
         html.dark button[aria-label*="Toggle fullscreen"] {
@@ -335,9 +345,9 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
           border-radius: 16px !important;
           width: 40px !important;
           height: 40px !important;
-          margin: 2px !important;
+          margin: 0 !important;
           margin-right: 16px !important;
-          margin-bottom: 8px !important;
+          margin-bottom: 16px !important;
           box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
           cursor: pointer !important;
           transition: background-color 0.2s !important;
