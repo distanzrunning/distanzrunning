@@ -175,7 +175,8 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
               'line-join': 'round'
             },
             paint: {
-              'line-color': '#e43c81', // Electric Pink from Distanz brand
+              // Electric Pink - brighter in dark mode for better visibility
+              'line-color': isDark ? '#ff4d94' : '#e43c81',
               'line-width': [
                 'interpolate',
                 ['exponential', 1.5],
