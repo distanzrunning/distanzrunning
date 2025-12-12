@@ -148,24 +148,25 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
           }
         })
 
-        // Create zoom controls container
+        // Create zoom controls container - single pill-shaped button
         const zoomContainer = document.createElement('div')
         zoomContainer.style.cssText = `
+          background-color: ${isDark ? '#2d2d2d' : 'white'};
+          border-radius: 20px;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, ${isDark ? '0.3' : '0.15'});
           display: flex;
           flex-direction: column;
-          gap: 8px;
+          overflow: hidden;
         `
 
         // Create zoom in button
         const zoomInButton = document.createElement('button')
         zoomInButton.setAttribute('aria-label', 'Zoom in')
         zoomInButton.style.cssText = `
-          background-color: ${isDark ? '#2d2d2d' : 'white'};
+          background-color: transparent;
           border: none;
-          border-radius: 16px;
           width: 40px;
           height: 40px;
-          box-shadow: 0 2px 8px rgba(0, 0, 0, ${isDark ? '0.3' : '0.15'});
           cursor: pointer;
           display: flex;
           align-items: center;
@@ -177,25 +178,31 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
         `
         zoomInButton.textContent = '+'
         zoomInButton.addEventListener('mouseenter', () => {
-          zoomInButton.style.backgroundColor = isDark ? '#3d3d3d' : '#f5f5f5'
+          zoomInButton.style.backgroundColor = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)'
         })
         zoomInButton.addEventListener('mouseleave', () => {
-          zoomInButton.style.backgroundColor = isDark ? '#2d2d2d' : 'white'
+          zoomInButton.style.backgroundColor = 'transparent'
         })
         zoomInButton.addEventListener('click', () => {
           map.setZoom(map.getZoom()! + 1)
         })
 
+        // Create divider between zoom buttons
+        const divider = document.createElement('div')
+        divider.style.cssText = `
+          height: 1px;
+          background-color: ${isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'};
+          margin: 0 8px;
+        `
+
         // Create zoom out button
         const zoomOutButton = document.createElement('button')
         zoomOutButton.setAttribute('aria-label', 'Zoom out')
         zoomOutButton.style.cssText = `
-          background-color: ${isDark ? '#2d2d2d' : 'white'};
+          background-color: transparent;
           border: none;
-          border-radius: 16px;
           width: 40px;
           height: 40px;
-          box-shadow: 0 2px 8px rgba(0, 0, 0, ${isDark ? '0.3' : '0.15'});
           cursor: pointer;
           display: flex;
           align-items: center;
@@ -207,10 +214,10 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
         `
         zoomOutButton.textContent = '−'
         zoomOutButton.addEventListener('mouseenter', () => {
-          zoomOutButton.style.backgroundColor = isDark ? '#3d3d3d' : '#f5f5f5'
+          zoomOutButton.style.backgroundColor = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)'
         })
         zoomOutButton.addEventListener('mouseleave', () => {
-          zoomOutButton.style.backgroundColor = isDark ? '#2d2d2d' : 'white'
+          zoomOutButton.style.backgroundColor = 'transparent'
         })
         zoomOutButton.addEventListener('click', () => {
           map.setZoom(map.getZoom()! - 1)
@@ -218,6 +225,7 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
 
         // Assemble zoom controls
         zoomContainer.appendChild(zoomInButton)
+        zoomContainer.appendChild(divider)
         zoomContainer.appendChild(zoomOutButton)
 
         // Assemble control container
