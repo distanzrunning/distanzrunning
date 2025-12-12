@@ -264,6 +264,30 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
           return pin
         }
 
+        // Helper function to create checkered flag finish marker
+        const createCheckeredFinishMarker = (): HTMLElement => {
+          const container = document.createElement('div')
+          container.style.width = '16px'
+          container.style.height = '16px'
+          container.style.borderRadius = '50%'
+          container.style.overflow = 'hidden'
+          container.style.border = '2px solid white'
+          container.style.boxShadow = '0 2px 4px rgba(0,0,0,0.3)'
+
+          // Create checkered pattern using CSS gradient
+          container.style.background = `
+            linear-gradient(45deg, #000 25%, transparent 25%),
+            linear-gradient(-45deg, #000 25%, transparent 25%),
+            linear-gradient(45deg, transparent 75%, #000 75%),
+            linear-gradient(-45deg, transparent 75%, #000 75%)
+          `
+          container.style.backgroundSize = '8px 8px'
+          container.style.backgroundPosition = '0 0, 0 4px, 4px -4px, -4px 0px'
+          container.style.backgroundColor = '#fff'
+
+          return container
+        }
+
         // Add start marker (green) using AdvancedMarkerElement
         const startMarker = new google.maps.marker.AdvancedMarkerElement({
           map,
@@ -272,12 +296,12 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
           content: createMarkerPin('#00D464'), // Volt Green
         })
 
-        // Add finish marker (red) using AdvancedMarkerElement
+        // Add finish marker with checkered flag using AdvancedMarkerElement
         const finishMarker = new google.maps.marker.AdvancedMarkerElement({
           map,
           position: coordinates[coordinates.length - 1],
           title: 'Finish',
-          content: createMarkerPin('#DC2626'), // Track Red
+          content: createCheckeredFinishMarker(),
         })
 
         markersRef.current = [startMarker, finishMarker]
