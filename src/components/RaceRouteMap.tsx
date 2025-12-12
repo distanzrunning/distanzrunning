@@ -80,19 +80,22 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
 
         console.log('[RaceRouteMap] Initializing Mapbox map in', isDark ? 'DARK' : 'LIGHT', 'mode')
 
-        // Initialize Mapbox map with minimal style
+        // Initialize Mapbox map with monochrome grayscale style
         const map = new mapboxgl.Map({
           container: mapRef.current,
+          // Use monochrome styles for clean, minimal look
           style: isDark
             ? 'mapbox://styles/mapbox/dark-v11'
             : 'mapbox://styles/mapbox/light-v11',
           bounds,
           fitBoundsOptions: { padding: 40 },
           attributionControl: false,
-          // Disable rotation and pitch
+          // Disable rotation and pitch for flat 2D view
           pitchWithRotate: false,
           dragRotate: false,
           touchPitch: false,
+          // Disable 3D terrain and buildings
+          projection: { name: 'mercator' },
         })
 
         mapInstanceRef.current = map
@@ -120,65 +123,77 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
             lineMetrics: true
           })
 
-          // Add Strava-style route layers (matching Google Maps implementation)
-          // Shadow layer (bottom)
+          // Add Strava-style route layers with smooth rendering
+          // Shadow layer (bottom) - adds depth
           map.addLayer({
             id: 'route-shadow',
             type: 'line',
             source: 'route',
             layout: {
               'line-cap': 'round',
-              'line-join': 'round'
+              'line-join': 'round',
+              'line-miter-limit': 2,
+              'line-round-limit': 1.05
             },
             paint: {
               'line-color': 'rgba(0, 0, 0, 0.25)',
               'line-width': 9,
-              'line-blur': 2
+              'line-blur': 2,
+              'line-opacity': 0.6
             }
           })
 
-          // Border layer (white outline)
+          // Border layer (white outline) - crisp edges
           map.addLayer({
             id: 'route-border',
             type: 'line',
             source: 'route',
             layout: {
               'line-cap': 'round',
-              'line-join': 'round'
+              'line-join': 'round',
+              'line-miter-limit': 2,
+              'line-round-limit': 1.05
             },
             paint: {
               'line-color': '#ffffff',
-              'line-width': 7
+              'line-width': 7,
+              'line-opacity': 1.0
             }
           })
 
-          // Main route line (electric pink)
+          // Main route line (electric pink) - smooth and bold
           map.addLayer({
             id: 'route-line',
             type: 'line',
             source: 'route',
             layout: {
               'line-cap': 'round',
-              'line-join': 'round'
+              'line-join': 'round',
+              'line-miter-limit': 2,
+              'line-round-limit': 1.05
             },
             paint: {
               'line-color': '#e43c81', // Electric Pink from Distanz brand
-              'line-width': 5
+              'line-width': 5,
+              'line-opacity': 1.0
             }
           })
 
-          // Highlight layer (top, subtle white highlight)
+          // Highlight layer (top, subtle white highlight) - adds dimension
           map.addLayer({
             id: 'route-highlight',
             type: 'line',
             source: 'route',
             layout: {
               'line-cap': 'round',
-              'line-join': 'round'
+              'line-join': 'round',
+              'line-miter-limit': 2,
+              'line-round-limit': 1.05
             },
             paint: {
               'line-color': 'rgba(255, 255, 255, 0.4)',
-              'line-width': 2.5
+              'line-width': 2.5,
+              'line-opacity': 1.0
             }
           })
 
