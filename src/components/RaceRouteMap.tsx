@@ -95,16 +95,7 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
 
         mapInstanceRef.current = map
 
-        // Create custom control container
-        const controlContainer = document.createElement('div')
-        controlContainer.style.cssText = `
-          display: flex;
-          flex-direction: column;
-          gap: 16px;
-          margin: 0 16px 16px 0;
-        `
-
-        // Create fullscreen button
+        // Create fullscreen button (top-right)
         const fullscreenButton = document.createElement('button')
         fullscreenButton.setAttribute('aria-label', 'Toggle fullscreen view')
         fullscreenButton.style.cssText = `
@@ -119,6 +110,7 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
           align-items: center;
           justify-content: center;
           transition: background-color 0.2s;
+          margin: 16px 16px 0 0;
         `
 
         // Fullscreen icon SVG
@@ -228,12 +220,16 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
         zoomContainer.appendChild(divider)
         zoomContainer.appendChild(zoomOutButton)
 
-        // Assemble control container
-        controlContainer.appendChild(fullscreenButton)
-        controlContainer.appendChild(zoomContainer)
+        // Add zoom control container with proper margin
+        const zoomControlWrapper = document.createElement('div')
+        zoomControlWrapper.style.cssText = `
+          margin: 0 16px 16px 0;
+        `
+        zoomControlWrapper.appendChild(zoomContainer)
 
-        // Add custom controls to map
-        map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(controlContainer)
+        // Add custom controls to map at different positions
+        map.controls[google.maps.ControlPosition.RIGHT_TOP].push(fullscreenButton)
+        map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(zoomControlWrapper)
 
         // Draw route polyline
         const polyline = new google.maps.Polyline({
@@ -356,6 +352,25 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
         className="w-full h-full transition-opacity duration-300"
         style={{ opacity: isLoading ? 0 : 1 }}
       />
+      <style jsx global>{`
+        /* Make Google Maps attribution/legal tags more transparent */
+        .gmnoprint,
+        .gm-style-cc {
+          opacity: 0.5 !important;
+        }
+
+        /* Also target specific attribution elements */
+        .gm-style .gm-style-cc,
+        .gm-style .gmnoprint {
+          opacity: 0.5 !important;
+        }
+
+        /* Make them fully visible on hover */
+        .gmnoprint:hover,
+        .gm-style-cc:hover {
+          opacity: 1 !important;
+        }
+      `}</style>
     </div>
   )
 }
