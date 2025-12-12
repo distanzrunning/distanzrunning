@@ -4,6 +4,8 @@ import { useEffect, useRef, useState, useContext } from 'react'
 import { DarkModeContext } from './DarkModeProvider'
 import mapboxgl from 'mapbox-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
+import simplify from '@turf/simplify'
+import { lineString } from '@turf/helpers'
 
 interface RaceRouteMapProps {
   gpxUrl: string
@@ -68,6 +70,18 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
           throw new Error('No coordinates found in route file')
         }
 
+        // Apply Douglas-Peucker simplification to remove GPS noise while preserving shape
+        // This is key for smooth, professional-looking routes (Strava technique)
+        const tolerance = 0.00005 // ~5 meters - balance between smoothness and accuracy
+        const line = lineString(coordinates)
+        const simplified = simplify(line, { tolerance, highQuality: true })
+        const simplifiedCoords = simplified.geometry.coordinates as [number, number][]
+
+        console.log(`[RaceRouteMap] Simplified route: ${coordinates.length} → ${simplifiedCoords.length} points`)
+
+        // Use simplified coordinates for rendering
+        coordinates = simplifiedCoords
+
         // Calculate bounds from coordinates
         const lngs = coordinates.map(c => c[0])
         const lats = coordinates.map(c => c[1])
@@ -123,77 +137,107 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
             lineMetrics: true
           })
 
-          // Add Strava-style route layers with smooth rendering
-          // Shadow layer (bottom) - adds depth
+          // Professional Strava-style route rendering with zoom-based widths
+          // Uses line-gap-width for proper casing (outline) technique
+
+          // Shadow layer (bottom) - subtle depth
           map.addLayer({
             id: 'route-shadow',
             type: 'line',
             source: 'route',
             layout: {
               'line-cap': 'round',
-              'line-join': 'round',
-              'line-miter-limit': 2,
-              'line-round-limit': 1.05
+              'line-join': 'round'
             },
             paint: {
               'line-color': 'rgba(0, 0, 0, 0.25)',
-              'line-width': 9,
+              'line-width': [
+                'interpolate',
+                ['exponential', 1.5],
+                ['zoom'],
+                10, 7,  // At zoom 10: 7px
+                14, 12, // At zoom 14: 12px
+                18, 20  // At zoom 18: 20px
+              ],
               'line-blur': 2,
-              'line-opacity': 0.6
+              'line-opacity': 0.5
             }
           })
 
-          // Border layer (white outline) - crisp edges
-          map.addLayer({
-            id: 'route-border',
-            type: 'line',
-            source: 'route',
-            layout: {
-              'line-cap': 'round',
-              'line-join': 'round',
-              'line-miter-limit': 2,
-              'line-round-limit': 1.05
-            },
-            paint: {
-              'line-color': '#ffffff',
-              'line-width': 7,
-              'line-opacity': 1.0
-            }
-          })
-
-          // Main route line (electric pink) - smooth and bold
+          // Main route line (electric pink) with zoom-based width
           map.addLayer({
             id: 'route-line',
             type: 'line',
             source: 'route',
             layout: {
               'line-cap': 'round',
-              'line-join': 'round',
-              'line-miter-limit': 2,
-              'line-round-limit': 1.05
+              'line-join': 'round'
             },
             paint: {
               'line-color': '#e43c81', // Electric Pink from Distanz brand
-              'line-width': 5,
+              'line-width': [
+                'interpolate',
+                ['exponential', 1.5],
+                ['zoom'],
+                10, 3,  // At zoom 10: 3px
+                14, 5,  // At zoom 14: 5px
+                18, 8   // At zoom 18: 8px
+              ],
               'line-opacity': 1.0
             }
           })
 
-          // Highlight layer (top, subtle white highlight) - adds dimension
+          // Casing (outline) using line-gap-width - professional technique
+          map.addLayer({
+            id: 'route-casing',
+            type: 'line',
+            source: 'route',
+            layout: {
+              'line-cap': 'round',
+              'line-join': 'round'
+            },
+            paint: {
+              'line-color': '#ffffff',
+              'line-gap-width': [
+                'interpolate',
+                ['exponential', 1.5],
+                ['zoom'],
+                10, 3,  // Match main line width
+                14, 5,
+                18, 8
+              ],
+              'line-width': [
+                'interpolate',
+                ['exponential', 1.5],
+                ['zoom'],
+                10, 1.5, // Casing width at zoom 10
+                14, 2,   // Casing width at zoom 14
+                18, 2.5  // Casing width at zoom 18
+              ],
+              'line-opacity': 1.0
+            }
+          })
+
+          // Subtle highlight on top for dimension
           map.addLayer({
             id: 'route-highlight',
             type: 'line',
             source: 'route',
             layout: {
               'line-cap': 'round',
-              'line-join': 'round',
-              'line-miter-limit': 2,
-              'line-round-limit': 1.05
+              'line-join': 'round'
             },
             paint: {
-              'line-color': 'rgba(255, 255, 255, 0.4)',
-              'line-width': 2.5,
-              'line-opacity': 1.0
+              'line-color': 'rgba(255, 255, 255, 0.3)',
+              'line-width': [
+                'interpolate',
+                ['exponential', 1.5],
+                ['zoom'],
+                10, 1,   // Thin highlight at low zoom
+                14, 1.5,
+                18, 2
+              ],
+              'line-opacity': 0.8
             }
           })
 
