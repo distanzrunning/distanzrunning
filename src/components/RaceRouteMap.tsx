@@ -94,13 +94,12 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
 
         console.log('[RaceRouteMap] Initializing Mapbox map in', isDark ? 'DARK' : 'LIGHT', 'mode')
 
-        // Initialize Mapbox map with monochrome grayscale style
+        // Initialize Mapbox map with custom Light 2D style (monochrome theme)
         const map = new mapboxgl.Map({
           container: mapRef.current,
-          // Use monochrome styles for clean, minimal look
-          style: isDark
-            ? 'mapbox://styles/mapbox/dark-v11'
-            : 'mapbox://styles/mapbox/light-v11',
+          // Use custom Light 2D style from Mapbox Studio (distanzrunning account)
+          // Monochrome theme with minimal POIs, clean roads, optimized for route visualization
+          style: 'mapbox://styles/distanzrunning/cmj3ggcfd005s01se8ubod20o',
           bounds,
           fitBoundsOptions: { padding: 40 },
           attributionControl: false,
@@ -108,7 +107,7 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
           pitchWithRotate: false,
           dragRotate: false,
           touchPitch: false,
-          // Disable 3D terrain and buildings
+          // Use Mercator projection (flat 2D, matching the style config)
           projection: { name: 'mercator' },
         })
 
