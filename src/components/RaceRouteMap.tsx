@@ -2,23 +2,18 @@
 
 import { useEffect, useRef, useState, useContext } from 'react'
 import { DarkModeContext } from './DarkModeProvider'
+import mapboxgl from 'mapbox-gl'
+import 'mapbox-gl/dist/mapbox-gl.css'
 
 interface RaceRouteMapProps {
   gpxUrl: string
   title: string
 }
 
-// Map styling using cloud-based styles via Map ID
-// Map ID: 5f71815e7cfcb0a2c8c865c0 (JavaScript Vector) with both light and dark styles configured
-// Light mode: Monochrome with minimal POIs, city labels only
-// Dark mode: Monochrome with minimal POIs, city labels only
-// Switches between light/dark using colorScheme option (LIGHT or DARK)
-
+// Mapbox implementation matching Google Maps style
 export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
   const mapRef = useRef<HTMLDivElement>(null)
-  const mapInstanceRef = useRef<google.maps.Map | null>(null)
-  const polylineRef = useRef<google.maps.Polyline | null>(null)
-  const markersRef = useRef<google.maps.marker.AdvancedMarkerElement[]>([])
+  const mapInstanceRef = useRef<mapboxgl.Map | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const { isDark, isInitialized } = useContext(DarkModeContext)
@@ -37,13 +32,13 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
         setIsLoading(true)
         setError(null)
 
-        // Load Google Maps API if not already loaded
-        const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
-        if (!apiKey) {
-          throw new Error('Google Maps API key is not configured')
+        // Get Mapbox access token
+        const accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN
+        if (!accessToken) {
+          throw new Error('Mapbox access token is not configured')
         }
 
-        await loadGoogleMapsScript(apiKey)
+        mapboxgl.accessToken = accessToken
 
         if (!mapRef.current) return
 
@@ -56,7 +51,7 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
         const fileText = await response.text()
 
         // Try to parse as GeoJSON first (check if it starts with '{')
-        let coordinates: google.maps.LatLngLiteral[]
+        let coordinates: [number, number][]
         if (fileText.trim().startsWith('{')) {
           coordinates = parseGeoJSON(fileText)
         } else {
@@ -67,282 +62,146 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
           throw new Error('No coordinates found in route file')
         }
 
-        // Calculate center from coordinates
-        const centerLat = coordinates.reduce((sum, coord) => sum + coord.lat, 0) / coordinates.length
-        const centerLng = coordinates.reduce((sum, coord) => sum + coord.lng, 0) / coordinates.length
-        const center = { lat: centerLat, lng: centerLng }
+        // Calculate bounds from coordinates
+        const lngs = coordinates.map(c => c[0])
+        const lats = coordinates.map(c => c[1])
+        const bounds: [number, number, number, number] = [
+          Math.min(...lngs),
+          Math.min(...lats),
+          Math.max(...lngs),
+          Math.max(...lats)
+        ]
 
-        console.log('[RaceRouteMap] Initializing map with Map ID and colorScheme in', isDark ? 'DARK' : 'LIGHT', 'mode')
+        console.log('[RaceRouteMap] Initializing Mapbox map in', isDark ? 'DARK' : 'LIGHT', 'mode')
 
-        // Initialize map with Map ID and NO default controls
-        // Map ID (JavaScript Vector) has both light and dark styles configured
-        const map = new google.maps.Map(mapRef.current, {
-          center,
-          zoom: 12,
-          mapId: '5f71815e7cfcb0a2c8c865c0', // JavaScript Vector Map ID with cloud-based styles
-          colorScheme: isDark ? 'DARK' : 'LIGHT', // Switch between light/dark cloud styles
-          // Lock camera perspective to prevent tilt/rotate control
-          tilt: 0,
-          heading: 0,
-          // Disable ALL default UI - we'll add custom controls
-          disableDefaultUI: true,
-          // Explicitly disable camera control
-          rotateControl: false,
-          // Additional options to prevent camera control
-          gestureHandling: 'greedy',
-          keyboardShortcuts: false,
+        // Initialize Mapbox map with minimal style
+        const map = new mapboxgl.Map({
+          container: mapRef.current,
+          style: isDark
+            ? 'mapbox://styles/mapbox/dark-v11'
+            : 'mapbox://styles/mapbox/light-v11',
+          bounds,
+          fitBoundsOptions: { padding: 40 },
+          attributionControl: false,
+          // Disable rotation and pitch
+          pitchWithRotate: false,
+          dragRotate: false,
+          touchPitch: false,
         })
 
         mapInstanceRef.current = map
 
-        // Create fullscreen button (top-right)
-        const fullscreenButton = document.createElement('button')
-        fullscreenButton.setAttribute('aria-label', 'Toggle fullscreen view')
-        fullscreenButton.style.cssText = `
-          background-color: ${isDark ? '#2d2d2d' : 'white'};
-          border: none;
-          border-radius: 16px;
-          width: 40px;
-          height: 40px;
-          box-shadow: 0 2px 8px rgba(0, 0, 0, ${isDark ? '0.3' : '0.15'});
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          transition: background-color 0.2s;
-          margin: 16px 16px 0 0;
-        `
+        // Add minimal attribution control (more transparent)
+        map.addControl(
+          new mapboxgl.AttributionControl({
+            compact: true,
+            customAttribution: ''
+          }),
+          'bottom-left'
+        )
 
-        // Fullscreen icon SVG
-        fullscreenButton.innerHTML = `
-          <svg width="16" height="16" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M2 7V2h5M16 7V2h-5M16 11v5h-5M2 11v5h5"
-                  stroke="${isDark ? 'white' : '#333'}"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  ${isDark ? 'filter="none"' : ''}/>
-          </svg>
-        `
+        map.on('load', () => {
+          if (!map) return
 
-        fullscreenButton.addEventListener('mouseenter', () => {
-          fullscreenButton.style.backgroundColor = isDark ? '#3d3d3d' : '#f5f5f5'
-        })
-        fullscreenButton.addEventListener('mouseleave', () => {
-          fullscreenButton.style.backgroundColor = isDark ? '#2d2d2d' : 'white'
-        })
-        fullscreenButton.addEventListener('click', () => {
-          const mapElement = mapRef.current
-          if (!document.fullscreenElement) {
-            mapElement?.requestFullscreen()
-          } else {
-            document.exitFullscreen()
-          }
-        })
+          // Add route source
+          map.addSource('route', {
+            type: 'geojson',
+            data: {
+              type: 'Feature',
+              properties: {},
+              geometry: { type: 'LineString', coordinates }
+            },
+            lineMetrics: true
+          })
 
-        // Create zoom controls container - single pill-shaped button
-        const zoomContainer = document.createElement('div')
-        zoomContainer.style.cssText = `
-          background-color: ${isDark ? '#2d2d2d' : 'white'};
-          border-radius: 20px;
-          box-shadow: 0 2px 8px rgba(0, 0, 0, ${isDark ? '0.3' : '0.15'});
-          display: flex;
-          flex-direction: column;
-          overflow: hidden;
-        `
+          // Add Strava-style route layers (matching Google Maps implementation)
+          // Shadow layer (bottom)
+          map.addLayer({
+            id: 'route-shadow',
+            type: 'line',
+            source: 'route',
+            layout: {
+              'line-cap': 'round',
+              'line-join': 'round'
+            },
+            paint: {
+              'line-color': 'rgba(0, 0, 0, 0.25)',
+              'line-width': 9,
+              'line-blur': 2
+            }
+          })
 
-        // Create zoom in button
-        const zoomInButton = document.createElement('button')
-        zoomInButton.setAttribute('aria-label', 'Zoom in')
-        zoomInButton.style.cssText = `
-          background-color: transparent;
-          border: none;
-          width: 40px;
-          height: 40px;
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 20px;
-          font-weight: 300;
-          color: ${isDark ? 'white' : '#333'};
-          transition: background-color 0.2s;
-        `
-        zoomInButton.textContent = '+'
-        zoomInButton.addEventListener('mouseenter', () => {
-          zoomInButton.style.backgroundColor = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)'
-        })
-        zoomInButton.addEventListener('mouseleave', () => {
-          zoomInButton.style.backgroundColor = 'transparent'
-        })
-        zoomInButton.addEventListener('click', () => {
-          map.setZoom(map.getZoom()! + 1)
-        })
+          // Border layer (white outline)
+          map.addLayer({
+            id: 'route-border',
+            type: 'line',
+            source: 'route',
+            layout: {
+              'line-cap': 'round',
+              'line-join': 'round'
+            },
+            paint: {
+              'line-color': '#ffffff',
+              'line-width': 7
+            }
+          })
 
-        // Create divider between zoom buttons
-        const divider = document.createElement('div')
-        divider.style.cssText = `
-          height: 1px;
-          background-color: ${isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'};
-          margin: 0 8px;
-        `
+          // Main route line (electric pink)
+          map.addLayer({
+            id: 'route-line',
+            type: 'line',
+            source: 'route',
+            layout: {
+              'line-cap': 'round',
+              'line-join': 'round'
+            },
+            paint: {
+              'line-color': '#e43c81', // Electric Pink from Distanz brand
+              'line-width': 5
+            }
+          })
 
-        // Create zoom out button
-        const zoomOutButton = document.createElement('button')
-        zoomOutButton.setAttribute('aria-label', 'Zoom out')
-        zoomOutButton.style.cssText = `
-          background-color: transparent;
-          border: none;
-          width: 40px;
-          height: 40px;
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 20px;
-          font-weight: 300;
-          color: ${isDark ? 'white' : '#333'};
-          transition: background-color 0.2s;
-        `
-        zoomOutButton.textContent = '−'
-        zoomOutButton.addEventListener('mouseenter', () => {
-          zoomOutButton.style.backgroundColor = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)'
-        })
-        zoomOutButton.addEventListener('mouseleave', () => {
-          zoomOutButton.style.backgroundColor = 'transparent'
-        })
-        zoomOutButton.addEventListener('click', () => {
-          map.setZoom(map.getZoom()! - 1)
+          // Highlight layer (top, subtle white highlight)
+          map.addLayer({
+            id: 'route-highlight',
+            type: 'line',
+            source: 'route',
+            layout: {
+              'line-cap': 'round',
+              'line-join': 'round'
+            },
+            paint: {
+              'line-color': 'rgba(255, 255, 255, 0.4)',
+              'line-width': 2.5
+            }
+          })
+
+          // Create start marker (green)
+          const startMarkerEl = createMarkerPin('#00D464') // Volt Green
+          new mapboxgl.Marker({ element: startMarkerEl })
+            .setLngLat(coordinates[0])
+            .addTo(map)
+
+          // Create finish marker (checkered flag)
+          const finishMarkerEl = createCheckeredFinishMarker()
+          new mapboxgl.Marker({ element: finishMarkerEl })
+            .setLngLat(coordinates[coordinates.length - 1])
+            .addTo(map)
+
+          // Create custom controls matching Google Maps style
+          createCustomControls(map, isDark)
+
+          // Hide loading after map is fully loaded
+          setTimeout(() => {
+            console.log('[RaceRouteMap] Map initialization complete, hiding loading screen')
+            setIsLoading(false)
+          }, 800)
         })
 
-        // Assemble zoom controls
-        zoomContainer.appendChild(zoomInButton)
-        zoomContainer.appendChild(divider)
-        zoomContainer.appendChild(zoomOutButton)
-
-        // Add zoom control container with proper margin
-        const zoomControlWrapper = document.createElement('div')
-        zoomControlWrapper.style.cssText = `
-          margin: 0 16px 16px 0;
-        `
-        zoomControlWrapper.appendChild(zoomContainer)
-
-        // Add custom controls to map at different positions
-        map.controls[google.maps.ControlPosition.RIGHT_TOP].push(fullscreenButton)
-        map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(zoomControlWrapper)
-
-        // Draw route polyline with Strava-style multi-layer effect (matching Mapbox implementation)
-        // Shadow layer (bottom)
-        const polylineShadow = new google.maps.Polyline({
-          path: coordinates,
-          geodesic: true,
-          strokeColor: '#000000',
-          strokeOpacity: 0.25,
-          strokeWeight: 9,
-        })
-        polylineShadow.setMap(map)
-
-        // Border layer (white outline)
-        const polylineBorder = new google.maps.Polyline({
-          path: coordinates,
-          geodesic: true,
-          strokeColor: '#ffffff',
-          strokeOpacity: 1.0,
-          strokeWeight: 7,
-        })
-        polylineBorder.setMap(map)
-
-        // Main route line
-        const polyline = new google.maps.Polyline({
-          path: coordinates,
-          geodesic: true,
-          strokeColor: '#e43c81', // Electric Pink from Distanz brand
-          strokeOpacity: 1.0,
-          strokeWeight: 5,
-        })
-        polyline.setMap(map)
-
-        // Highlight layer (top, subtle white highlight)
-        const polylineHighlight = new google.maps.Polyline({
-          path: coordinates,
-          geodesic: true,
-          strokeColor: '#ffffff',
-          strokeOpacity: 0.4,
-          strokeWeight: 2.5,
-        })
-        polylineHighlight.setMap(map)
-
-        polylineRef.current = polyline
-
-        // Fit map to route bounds using LatLngBounds literal
-        const bounds = {
-          north: Math.max(...coordinates.map(c => c.lat)),
-          south: Math.min(...coordinates.map(c => c.lat)),
-          east: Math.max(...coordinates.map(c => c.lng)),
-          west: Math.min(...coordinates.map(c => c.lng))
-        }
-        map.fitBounds(bounds)
-
-        // Helper function to create marker pin element
-        const createMarkerPin = (color: string): HTMLElement => {
-          const pin = document.createElement('div')
-          pin.style.width = '16px'
-          pin.style.height = '16px'
-          pin.style.borderRadius = '50%'
-          pin.style.backgroundColor = color
-          pin.style.border = '2px solid white'
-          pin.style.boxShadow = '0 2px 4px rgba(0,0,0,0.3)'
-          return pin
-        }
-
-        // Helper function to create checkered flag finish marker
-        const createCheckeredFinishMarker = (): HTMLElement => {
-          const container = document.createElement('div')
-          container.style.width = '16px'
-          container.style.height = '16px'
-          container.style.borderRadius = '50%'
-          container.style.overflow = 'hidden'
-          container.style.border = '2px solid white'
-          container.style.boxShadow = '0 2px 4px rgba(0,0,0,0.3)'
-
-          // Create checkered pattern using CSS gradient
-          container.style.background = `
-            linear-gradient(45deg, #000 25%, transparent 25%),
-            linear-gradient(-45deg, #000 25%, transparent 25%),
-            linear-gradient(45deg, transparent 75%, #000 75%),
-            linear-gradient(-45deg, transparent 75%, #000 75%)
-          `
-          container.style.backgroundSize = '8px 8px'
-          container.style.backgroundPosition = '0 0, 0 4px, 4px -4px, -4px 0px'
-          container.style.backgroundColor = '#fff'
-
-          return container
-        }
-
-        // Add start marker (green) using AdvancedMarkerElement
-        const startMarker = new google.maps.marker.AdvancedMarkerElement({
-          map,
-          position: coordinates[0],
-          title: 'Start',
-          content: createMarkerPin('#00D464'), // Volt Green
+        map.on('error', (e: any) => {
+          console.error('[RaceRouteMap] Map error:', e)
         })
 
-        // Add finish marker with checkered flag using AdvancedMarkerElement
-        const finishMarker = new google.maps.marker.AdvancedMarkerElement({
-          map,
-          position: coordinates[coordinates.length - 1],
-          title: 'Finish',
-          content: createCheckeredFinishMarker(),
-        })
-
-        markersRef.current = [startMarker, finishMarker]
-
-        // Wait for map tiles to fully load before hiding loading screen
-        // Longer delay ensures tiles are loaded from center outward
-        setTimeout(() => {
-          console.log('[RaceRouteMap] Map initialization complete, hiding loading screen')
-          setIsLoading(false)
-        }, 1500)
       } catch (err) {
         console.error('[RaceRouteMap] Error loading map:', err)
         setError(err instanceof Error ? err.message : 'Failed to load map')
@@ -353,36 +212,13 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
     console.log('[RaceRouteMap] Calling initMap...')
     initMap()
 
-    // Cleanup existing map before initializing new one
+    // Cleanup
     return () => {
       console.log('[RaceRouteMap] Cleaning up map...')
-
-      // Remove polyline
-      if (polylineRef.current) {
-        polylineRef.current.setMap(null)
-        polylineRef.current = null
-      }
-
-      // Remove markers
-      if (markersRef.current.length > 0) {
-        markersRef.current.forEach(marker => {
-          marker.setMap(null)
-        })
-        markersRef.current = []
-      }
-
-      // Clear map reference
       if (mapInstanceRef.current) {
-        // Remove all event listeners and references
-        google.maps.event.clearInstanceListeners(mapInstanceRef.current)
+        mapInstanceRef.current.remove()
         mapInstanceRef.current = null
       }
-
-      // Clear the map container
-      if (mapRef.current) {
-        mapRef.current.innerHTML = ''
-      }
-
       console.log('[RaceRouteMap] Cleanup complete')
     }
   }, [gpxUrl, isDark, isInitialized])
@@ -408,96 +244,210 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
         style={{ opacity: isLoading ? 0 : 1 }}
       />
       <style jsx global>{`
-        /* Make Google Maps attribution/legal tags more transparent */
-        .gmnoprint,
-        .gm-style-cc {
-          opacity: 0.5 !important;
-        }
-
-        /* Also target specific attribution elements */
-        .gm-style .gm-style-cc,
-        .gm-style .gmnoprint {
+        /* Make Mapbox attribution more transparent (matching Google Maps style) */
+        .mapboxgl-ctrl-attrib,
+        .mapboxgl-ctrl-logo {
           opacity: 0.5 !important;
         }
 
         /* Make them fully visible on hover */
-        .gmnoprint:hover,
-        .gm-style-cc:hover {
+        .mapboxgl-ctrl-attrib:hover,
+        .mapboxgl-ctrl-logo:hover {
           opacity: 1 !important;
+        }
+
+        /* Hide default Mapbox controls (we'll add custom ones) */
+        .mapboxgl-ctrl-top-right .mapboxgl-ctrl,
+        .mapboxgl-ctrl-bottom-right .mapboxgl-ctrl {
+          display: none;
         }
       `}</style>
     </div>
   )
 }
 
-// Global flag to prevent multiple script loads
-let isLoadingGoogleMaps = false
-let googleMapsPromise: Promise<void> | null = null
+// Helper function to create marker pin element
+function createMarkerPin(color: string): HTMLElement {
+  const pin = document.createElement('div')
+  pin.style.width = '16px'
+  pin.style.height = '16px'
+  pin.style.borderRadius = '50%'
+  pin.style.backgroundColor = color
+  pin.style.border = '2px solid white'
+  pin.style.boxShadow = '0 2px 4px rgba(0,0,0,0.3)'
+  return pin
+}
 
-// Helper function to load Google Maps script
-async function loadGoogleMapsScript(apiKey: string): Promise<void> {
-  // Return existing promise if already loading
-  if (isLoadingGoogleMaps && googleMapsPromise) {
-    return googleMapsPromise
-  }
+// Helper function to create checkered flag finish marker
+function createCheckeredFinishMarker(): HTMLElement {
+  const container = document.createElement('div')
+  container.style.width = '16px'
+  container.style.height = '16px'
+  container.style.borderRadius = '50%'
+  container.style.overflow = 'hidden'
+  container.style.border = '2px solid white'
+  container.style.boxShadow = '0 2px 4px rgba(0,0,0,0.3)'
 
-  // Return resolved promise if already loaded and initialized
-  if (window.google?.maps?.Map && window.google?.maps?.marker?.AdvancedMarkerElement) {
-    return Promise.resolve()
-  }
+  // Create checkered pattern using CSS gradient
+  container.style.background = `
+    linear-gradient(45deg, #000 25%, transparent 25%),
+    linear-gradient(-45deg, #000 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #000 75%),
+    linear-gradient(-45deg, transparent 75%, #000 75%)
+  `
+  container.style.backgroundSize = '8px 8px'
+  container.style.backgroundPosition = '0 0, 0 4px, 4px -4px, -4px 0px'
+  container.style.backgroundColor = '#fff'
 
-  // Check if script already exists in DOM
-  const existingScript = document.querySelector('script[src*="maps.googleapis.com"]')
-  if (existingScript) {
-    return new Promise((resolve) => {
-      const checkGoogle = setInterval(() => {
-        if (window.google?.maps?.Map && window.google?.maps?.marker?.AdvancedMarkerElement) {
-          clearInterval(checkGoogle)
-          resolve()
-        }
-      }, 100)
-    })
-  }
+  return container
+}
 
-  isLoadingGoogleMaps = true
-  googleMapsPromise = new Promise((resolve, reject) => {
-    const script = document.createElement('script')
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=marker&v=beta&loading=async`
-    script.async = true
-    script.onload = () => {
-      // Wait for Google Maps to fully initialize
-      const checkInit = setInterval(() => {
-        if (window.google?.maps?.Map && window.google?.maps?.marker?.AdvancedMarkerElement) {
-          clearInterval(checkInit)
-          isLoadingGoogleMaps = false
-          resolve()
-        }
-      }, 50)
+// Create custom controls matching Google Maps style
+function createCustomControls(map: mapboxgl.Map, isDark: boolean) {
+  // Create fullscreen button (top-right)
+  const fullscreenButton = document.createElement('button')
+  fullscreenButton.setAttribute('aria-label', 'Toggle fullscreen view')
+  fullscreenButton.className = 'mapboxgl-ctrl-fullscreen'
+  fullscreenButton.style.cssText = `
+    background-color: ${isDark ? '#2d2d2d' : 'white'};
+    border: none;
+    border-radius: 16px;
+    width: 40px;
+    height: 40px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, ${isDark ? '0.3' : '0.15'});
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    z-index: 1;
+  `
 
-      // Timeout after 10 seconds
-      setTimeout(() => {
-        clearInterval(checkInit)
-        isLoadingGoogleMaps = false
-        googleMapsPromise = null
-        reject(new Error('Google Maps initialization timeout'))
-      }, 10000)
+  // Fullscreen icon SVG
+  fullscreenButton.innerHTML = `
+    <svg width="16" height="16" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M2 7V2h5M16 7V2h-5M16 11v5h-5M2 11v5h5"
+            stroke="${isDark ? 'white' : '#333'}"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"/>
+    </svg>
+  `
+
+  fullscreenButton.addEventListener('mouseenter', () => {
+    fullscreenButton.style.backgroundColor = isDark ? '#3d3d3d' : '#f5f5f5'
+  })
+  fullscreenButton.addEventListener('mouseleave', () => {
+    fullscreenButton.style.backgroundColor = isDark ? '#2d2d2d' : 'white'
+  })
+  fullscreenButton.addEventListener('click', () => {
+    const mapContainer = map.getContainer()
+    if (!document.fullscreenElement) {
+      mapContainer.requestFullscreen()
+    } else {
+      document.exitFullscreen()
     }
-    script.onerror = () => {
-      isLoadingGoogleMaps = false
-      googleMapsPromise = null
-      reject(new Error('Failed to load Google Maps script'))
-    }
-    document.head.appendChild(script)
   })
 
-  return googleMapsPromise
+  // Create zoom controls container - single pill-shaped button
+  const zoomContainer = document.createElement('div')
+  zoomContainer.className = 'mapboxgl-ctrl-zoom'
+  zoomContainer.style.cssText = `
+    background-color: ${isDark ? '#2d2d2d' : 'white'};
+    border-radius: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, ${isDark ? '0.3' : '0.15'});
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: absolute;
+    bottom: 16px;
+    right: 16px;
+    z-index: 1;
+  `
+
+  // Create zoom in button
+  const zoomInButton = document.createElement('button')
+  zoomInButton.setAttribute('aria-label', 'Zoom in')
+  zoomInButton.style.cssText = `
+    background-color: transparent;
+    border: none;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: 300;
+    color: ${isDark ? 'white' : '#333'};
+    transition: background-color 0.2s;
+  `
+  zoomInButton.textContent = '+'
+  zoomInButton.addEventListener('mouseenter', () => {
+    zoomInButton.style.backgroundColor = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)'
+  })
+  zoomInButton.addEventListener('mouseleave', () => {
+    zoomInButton.style.backgroundColor = 'transparent'
+  })
+  zoomInButton.addEventListener('click', () => {
+    map.zoomIn()
+  })
+
+  // Create divider between zoom buttons
+  const divider = document.createElement('div')
+  divider.style.cssText = `
+    height: 1px;
+    background-color: ${isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'};
+    margin: 0 8px;
+  `
+
+  // Create zoom out button
+  const zoomOutButton = document.createElement('button')
+  zoomOutButton.setAttribute('aria-label', 'Zoom out')
+  zoomOutButton.style.cssText = `
+    background-color: transparent;
+    border: none;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: 300;
+    color: ${isDark ? 'white' : '#333'};
+    transition: background-color 0.2s;
+  `
+  zoomOutButton.textContent = '−'
+  zoomOutButton.addEventListener('mouseenter', () => {
+    zoomOutButton.style.backgroundColor = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)'
+  })
+  zoomOutButton.addEventListener('mouseleave', () => {
+    zoomOutButton.style.backgroundColor = 'transparent'
+  })
+  zoomOutButton.addEventListener('click', () => {
+    map.zoomOut()
+  })
+
+  // Assemble zoom controls
+  zoomContainer.appendChild(zoomInButton)
+  zoomContainer.appendChild(divider)
+  zoomContainer.appendChild(zoomOutButton)
+
+  // Add controls to map container
+  const mapContainer = map.getContainer()
+  mapContainer.appendChild(fullscreenButton)
+  mapContainer.appendChild(zoomContainer)
 }
 
 // Helper function to parse GeoJSON and extract coordinates
-function parseGeoJSON(geoJsonText: string): google.maps.LatLngLiteral[] {
+function parseGeoJSON(geoJsonText: string): [number, number][] {
   try {
     const geoJson = JSON.parse(geoJsonText)
-    const coordinates: google.maps.LatLngLiteral[] = []
+    const coordinates: [number, number][] = []
 
     // Handle FeatureCollection
     if (geoJson.type === 'FeatureCollection' && geoJson.features) {
@@ -505,10 +455,7 @@ function parseGeoJSON(geoJsonText: string): google.maps.LatLngLiteral[] {
         if (feature.geometry && feature.geometry.type === 'LineString') {
           // GeoJSON format is [longitude, latitude, elevation?]
           for (const coord of feature.geometry.coordinates) {
-            coordinates.push({
-              lng: coord[0],
-              lat: coord[1]
-            })
+            coordinates.push([coord[0], coord[1]])
           }
         }
       }
@@ -517,20 +464,14 @@ function parseGeoJSON(geoJsonText: string): google.maps.LatLngLiteral[] {
     else if (geoJson.type === 'Feature' && geoJson.geometry) {
       if (geoJson.geometry.type === 'LineString') {
         for (const coord of geoJson.geometry.coordinates) {
-          coordinates.push({
-            lng: coord[0],
-            lat: coord[1]
-          })
+          coordinates.push([coord[0], coord[1]])
         }
       }
     }
     // Handle LineString directly
     else if (geoJson.type === 'LineString' && geoJson.coordinates) {
       for (const coord of geoJson.coordinates) {
-        coordinates.push({
-          lng: coord[0],
-          lat: coord[1]
-        })
+        coordinates.push([coord[0], coord[1]])
       }
     }
 
@@ -542,10 +483,10 @@ function parseGeoJSON(geoJsonText: string): google.maps.LatLngLiteral[] {
 }
 
 // Helper function to parse GPX and extract coordinates
-function parseGPX(gpxText: string): google.maps.LatLngLiteral[] {
+function parseGPX(gpxText: string): [number, number][] {
   const parser = new DOMParser()
   const xmlDoc = parser.parseFromString(gpxText, 'text/xml')
-  const coordinates: google.maps.LatLngLiteral[] = []
+  const coordinates: [number, number][] = []
 
   // Try to get track points (trkpt) first, then route points (rtept), then waypoints (wpt)
   const trackPoints = xmlDoc.getElementsByTagName('trkpt')
@@ -562,16 +503,9 @@ function parseGPX(gpxText: string): google.maps.LatLngLiteral[] {
     const lat = parseFloat(points[i].getAttribute('lat') || '0')
     const lon = parseFloat(points[i].getAttribute('lon') || '0')
     if (lat && lon) {
-      coordinates.push({ lat, lng: lon })
+      coordinates.push([lon, lat]) // Mapbox uses [lng, lat] format
     }
   }
 
   return coordinates
-}
-
-// Extend window type for Google Maps
-declare global {
-  interface Window {
-    google: typeof google
-  }
 }
