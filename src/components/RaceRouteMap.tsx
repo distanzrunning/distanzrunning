@@ -74,7 +74,7 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
 
         console.log('[RaceRouteMap] Initializing map with Map ID and colorScheme in', isDark ? 'DARK' : 'LIGHT', 'mode')
 
-        // Initialize map with Map ID and minimal controls
+        // Initialize map with Map ID and NO default controls
         // Map ID (JavaScript Vector) has both light and dark styles configured
         const map = new google.maps.Map(mapRef.current, {
           center,
@@ -84,17 +84,8 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
           // Lock camera perspective to prevent tilt/rotate control
           tilt: 0,
           heading: 0,
-          // Disable default UI and enable only specific controls
+          // Disable ALL default UI - we'll add custom controls
           disableDefaultUI: true,
-          zoomControl: true,
-          fullscreenControl: true,
-          // Position controls at bottom-right, with fullscreen above zoom
-          zoomControlOptions: {
-            position: google.maps.ControlPosition.RIGHT_BOTTOM,
-          },
-          fullscreenControlOptions: {
-            position: google.maps.ControlPosition.RIGHT_BOTTOM,
-          },
           // Explicitly disable camera control
           rotateControl: false,
           // Additional options to prevent camera control
@@ -103,6 +94,138 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
         })
 
         mapInstanceRef.current = map
+
+        // Create custom control container
+        const controlContainer = document.createElement('div')
+        controlContainer.style.cssText = `
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+          margin: 0 16px 16px 0;
+        `
+
+        // Create fullscreen button
+        const fullscreenButton = document.createElement('button')
+        fullscreenButton.setAttribute('aria-label', 'Toggle fullscreen view')
+        fullscreenButton.style.cssText = `
+          background-color: ${isDark ? '#2d2d2d' : 'white'};
+          border: none;
+          border-radius: 16px;
+          width: 40px;
+          height: 40px;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, ${isDark ? '0.3' : '0.15'});
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: background-color 0.2s;
+        `
+
+        // Fullscreen icon SVG
+        fullscreenButton.innerHTML = `
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M2 7V2h5M16 7V2h-5M16 11v5h-5M2 11v5h5"
+                  stroke="${isDark ? 'white' : '#333'}"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  ${isDark ? 'filter="none"' : ''}/>
+          </svg>
+        `
+
+        fullscreenButton.addEventListener('mouseenter', () => {
+          fullscreenButton.style.backgroundColor = isDark ? '#3d3d3d' : '#f5f5f5'
+        })
+        fullscreenButton.addEventListener('mouseleave', () => {
+          fullscreenButton.style.backgroundColor = isDark ? '#2d2d2d' : 'white'
+        })
+        fullscreenButton.addEventListener('click', () => {
+          const mapElement = mapRef.current
+          if (!document.fullscreenElement) {
+            mapElement?.requestFullscreen()
+          } else {
+            document.exitFullscreen()
+          }
+        })
+
+        // Create zoom controls container
+        const zoomContainer = document.createElement('div')
+        zoomContainer.style.cssText = `
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+        `
+
+        // Create zoom in button
+        const zoomInButton = document.createElement('button')
+        zoomInButton.setAttribute('aria-label', 'Zoom in')
+        zoomInButton.style.cssText = `
+          background-color: ${isDark ? '#2d2d2d' : 'white'};
+          border: none;
+          border-radius: 16px;
+          width: 40px;
+          height: 40px;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, ${isDark ? '0.3' : '0.15'});
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 20px;
+          font-weight: 300;
+          color: ${isDark ? 'white' : '#333'};
+          transition: background-color 0.2s;
+        `
+        zoomInButton.textContent = '+'
+        zoomInButton.addEventListener('mouseenter', () => {
+          zoomInButton.style.backgroundColor = isDark ? '#3d3d3d' : '#f5f5f5'
+        })
+        zoomInButton.addEventListener('mouseleave', () => {
+          zoomInButton.style.backgroundColor = isDark ? '#2d2d2d' : 'white'
+        })
+        zoomInButton.addEventListener('click', () => {
+          map.setZoom(map.getZoom()! + 1)
+        })
+
+        // Create zoom out button
+        const zoomOutButton = document.createElement('button')
+        zoomOutButton.setAttribute('aria-label', 'Zoom out')
+        zoomOutButton.style.cssText = `
+          background-color: ${isDark ? '#2d2d2d' : 'white'};
+          border: none;
+          border-radius: 16px;
+          width: 40px;
+          height: 40px;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, ${isDark ? '0.3' : '0.15'});
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 20px;
+          font-weight: 300;
+          color: ${isDark ? 'white' : '#333'};
+          transition: background-color 0.2s;
+        `
+        zoomOutButton.textContent = '−'
+        zoomOutButton.addEventListener('mouseenter', () => {
+          zoomOutButton.style.backgroundColor = isDark ? '#3d3d3d' : '#f5f5f5'
+        })
+        zoomOutButton.addEventListener('mouseleave', () => {
+          zoomOutButton.style.backgroundColor = isDark ? '#2d2d2d' : 'white'
+        })
+        zoomOutButton.addEventListener('click', () => {
+          map.setZoom(map.getZoom()! - 1)
+        })
+
+        // Assemble zoom controls
+        zoomContainer.appendChild(zoomInButton)
+        zoomContainer.appendChild(zoomOutButton)
+
+        // Assemble control container
+        controlContainer.appendChild(fullscreenButton)
+        controlContainer.appendChild(zoomContainer)
+
+        // Add custom controls to map
+        map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(controlContainer)
 
         // Draw route polyline
         const polyline = new google.maps.Polyline({
@@ -225,149 +348,6 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
         className="w-full h-full transition-opacity duration-300"
         style={{ opacity: isLoading ? 0 : 1 }}
       />
-      <style jsx global>{`
-        /* Hide camera/compass control (the four chevrons) */
-        .gm-compass,
-        button[aria-label*="Rotate"],
-        button[aria-label*="Tilt"],
-        button[aria-label*="compass"] {
-          display: none !important;
-        }
-
-        /* Remove default grouping/spacing and backgrounds */
-        .gmnoprint,
-        .gm-bundled-control,
-        .gm-bundled-control > div,
-        .gm-svpc,
-        div[style*="background-color"] > div > div {
-          background: transparent !important;
-          background-color: transparent !important;
-          box-shadow: none !important;
-          border: none !important;
-          outline: none !important;
-        }
-
-        /* Target the specific zoom control container */
-        button[aria-label="Zoom in"] + button[aria-label="Zoom out"],
-        button[aria-label="Zoom out"] + button[aria-label="Zoom in"] {
-          background: transparent !important;
-        }
-
-        /* Remove background from parent containers */
-        .gmnoprint > div,
-        .gmnoprint > div > div {
-          background: transparent !important;
-          background-color: transparent !important;
-          box-shadow: none !important;
-          border: none !important;
-          outline: none !important;
-        }
-
-        /* Light mode controls */
-        html:not(.dark) button[aria-label="Zoom in"],
-        html:not(.dark) button[aria-label="Zoom out"] {
-          background-color: white !important;
-          border: none !important;
-          border-radius: 16px !important;
-          width: 40px !important;
-          height: 40px !important;
-          margin: 0 !important;
-          margin-right: 16px !important;
-          margin-bottom: 16px !important;
-          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
-          cursor: pointer !important;
-          transition: background-color 0.2s !important;
-        }
-
-        html:not(.dark) button[aria-label="Zoom in"]:hover,
-        html:not(.dark) button[aria-label="Zoom out"]:hover {
-          background-color: #f5f5f5 !important;
-        }
-
-        /* Add spacing between zoom in and zoom out buttons */
-        html:not(.dark) button[aria-label="Zoom out"] {
-          margin-top: 8px !important;
-        }
-
-        html:not(.dark) button[aria-label*="full screen"],
-        html:not(.dark) button[aria-label*="fullscreen"],
-        html:not(.dark) button[aria-label*="Toggle fullscreen"] {
-          background-color: white !important;
-          border: none !important;
-          border-radius: 16px !important;
-          width: 40px !important;
-          height: 40px !important;
-          margin: 0 !important;
-          margin-right: 16px !important;
-          margin-bottom: 16px !important;
-          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
-          cursor: pointer !important;
-          transition: background-color 0.2s !important;
-        }
-
-        html:not(.dark) button[aria-label*="full screen"]:hover,
-        html:not(.dark) button[aria-label*="fullscreen"]:hover,
-        html:not(.dark) button[aria-label*="Toggle fullscreen"]:hover {
-          background-color: #f5f5f5 !important;
-        }
-
-        /* Dark mode controls */
-        html.dark button[aria-label="Zoom in"],
-        html.dark button[aria-label="Zoom out"] {
-          background-color: #2d2d2d !important;
-          border: none !important;
-          border-radius: 16px !important;
-          width: 40px !important;
-          height: 40px !important;
-          margin: 0 !important;
-          margin-right: 16px !important;
-          margin-bottom: 16px !important;
-          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
-          cursor: pointer !important;
-          transition: background-color 0.2s !important;
-        }
-
-        html.dark button[aria-label="Zoom in"]:hover,
-        html.dark button[aria-label="Zoom out"]:hover {
-          background-color: #3d3d3d !important;
-        }
-
-        /* Add spacing between zoom in and zoom out buttons */
-        html.dark button[aria-label="Zoom out"] {
-          margin-top: 8px !important;
-        }
-
-        html.dark button[aria-label*="full screen"],
-        html.dark button[aria-label*="fullscreen"],
-        html.dark button[aria-label*="Toggle fullscreen"] {
-          background-color: #2d2d2d !important;
-          border: none !important;
-          border-radius: 16px !important;
-          width: 40px !important;
-          height: 40px !important;
-          margin: 0 !important;
-          margin-right: 16px !important;
-          margin-bottom: 16px !important;
-          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
-          cursor: pointer !important;
-          transition: background-color 0.2s !important;
-        }
-
-        html.dark button[aria-label*="full screen"]:hover,
-        html.dark button[aria-label*="fullscreen"]:hover,
-        html.dark button[aria-label*="Toggle fullscreen"]:hover {
-          background-color: #3d3d3d !important;
-        }
-
-        /* Ensure icons are visible in dark mode */
-        html.dark button[aria-label="Zoom in"] img,
-        html.dark button[aria-label="Zoom out"] img,
-        html.dark button[aria-label*="full screen"] img,
-        html.dark button[aria-label*="fullscreen"] img,
-        html.dark button[aria-label*="Toggle fullscreen"] img {
-          filter: invert(1) !important;
-        }
-      `}</style>
     </div>
   )
 }
