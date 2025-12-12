@@ -115,7 +115,7 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
 
         // Fullscreen icon SVG
         fullscreenButton.innerHTML = `
-          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg width="16" height="16" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M2 7V2h5M16 7V2h-5M16 11v5h-5M2 11v5h5"
                   stroke="${isDark ? 'white' : '#333'}"
                   stroke-width="2"
