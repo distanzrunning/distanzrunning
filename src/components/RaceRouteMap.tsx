@@ -231,16 +231,76 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
         map.controls[google.maps.ControlPosition.RIGHT_TOP].push(fullscreenButton)
         map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(zoomControlWrapper)
 
-        // Draw route polyline
+        // Snap coordinates to roads using Google Roads API
+        const snapToRoads = async (coords: google.maps.LatLngLiteral[]) => {
+          try {
+            // Roads API can handle up to 100 points per request
+            // Sample coordinates if we have too many
+            let sampledCoords = coords
+            if (coords.length > 100) {
+              const step = Math.ceil(coords.length / 100)
+              sampledCoords = coords.filter((_, index) => index % step === 0)
+              // Always include the last point
+              if (sampledCoords[sampledCoords.length - 1] !== coords[coords.length - 1]) {
+                sampledCoords.push(coords[coords.length - 1])
+              }
+            }
+
+            // Build path string for Roads API
+            const pathString = sampledCoords
+              .map(coord => `${coord.lat},${coord.lng}`)
+              .join('|')
+
+            const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
+            const response = await fetch(
+              `https://roads.googleapis.com/v1/snapToRoads?path=${pathString}&interpolate=true&key=${apiKey}`
+            )
+
+            if (!response.ok) {
+              console.warn('[RaceRouteMap] Roads API failed, using original coordinates')
+              return coords
+            }
+
+            const data = await response.json()
+
+            if (data.snappedPoints) {
+              return data.snappedPoints.map((point: any) => ({
+                lat: point.location.latitude,
+                lng: point.location.longitude
+              }))
+            }
+
+            return coords
+          } catch (error) {
+            console.warn('[RaceRouteMap] Error snapping to roads, using original coordinates:', error)
+            return coords
+          }
+        }
+
+        // Snap coordinates to roads and draw polyline
+        const snappedCoords = await snapToRoads(coordinates)
+
+        // Draw route polyline with glow effect
+        // Outer glow
+        const polylineGlow = new google.maps.Polyline({
+          path: snappedCoords,
+          geodesic: true,
+          strokeColor: '#e43c81',
+          strokeOpacity: 0.3,
+          strokeWeight: 8,
+        })
+        polylineGlow.setMap(map)
+
+        // Main route line
         const polyline = new google.maps.Polyline({
-          path: coordinates,
+          path: snappedCoords,
           geodesic: true,
           strokeColor: '#e43c81', // Electric Pink from Distanz brand
-          strokeOpacity: 0.9,
-          strokeWeight: 4,
+          strokeOpacity: 1.0,
+          strokeWeight: 5,
         })
-
         polyline.setMap(map)
+
         polylineRef.current = polyline
 
         // Fit map to route bounds using LatLngBounds literal
