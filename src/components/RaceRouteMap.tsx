@@ -141,6 +141,16 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
           // Professional Strava-style route rendering with zoom-based widths
           // Uses line-gap-width for proper casing (outline) technique
 
+          // Get the first symbol layer to insert route layers before labels
+          const layers = map.getStyle().layers
+          let firstSymbolId: string | undefined
+          for (const layer of layers || []) {
+            if (layer.type === 'symbol') {
+              firstSymbolId = layer.id
+              break
+            }
+          }
+
           // Shadow layer (bottom) - subtle depth
           map.addLayer({
             id: 'route-shadow',
@@ -151,7 +161,7 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
               'line-join': 'round'
             },
             paint: {
-              'line-color': 'rgba(0, 0, 0, 0.25)',
+              'line-color': isDark ? 'rgba(0, 0, 0, 0.4)' : 'rgba(0, 0, 0, 0.25)',
               'line-width': [
                 'interpolate',
                 ['exponential', 1.5],
@@ -161,9 +171,9 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
                 18, 20  // At zoom 18: 20px
               ],
               'line-blur': 2,
-              'line-opacity': 0.5
+              'line-opacity': 1.0
             }
-          })
+          }, firstSymbolId)
 
           // Main route line (electric pink) with zoom-based width
           map.addLayer({
@@ -175,8 +185,8 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
               'line-join': 'round'
             },
             paint: {
-              // Electric Pink - brighter in dark mode for better visibility
-              'line-color': isDark ? '#ff4d94' : '#e43c81',
+              // Electric Pink - much brighter in dark mode to overcome style filters
+              'line-color': isDark ? 'hsl(335, 100%, 70%)' : '#e43c81',
               'line-width': [
                 'interpolate',
                 ['exponential', 1.5],
@@ -185,9 +195,10 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
                 14, 5,  // At zoom 14: 5px
                 18, 8   // At zoom 18: 8px
               ],
-              'line-opacity': 1.0
+              'line-opacity': 1.0,
+              'line-emissive-strength': isDark ? 1.2 : 1.0
             }
-          })
+          }, firstSymbolId)
 
           // Casing (outline) using line-gap-width - professional technique
           map.addLayer({
@@ -199,7 +210,7 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
               'line-join': 'round'
             },
             paint: {
-              'line-color': '#ffffff',
+              'line-color': isDark ? '#2a2a2a' : '#ffffff',
               'line-gap-width': [
                 'interpolate',
                 ['exponential', 1.5],
@@ -218,7 +229,7 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
               ],
               'line-opacity': 1.0
             }
-          })
+          }, firstSymbolId)
 
           // Subtle highlight on top for dimension
           map.addLayer({
@@ -230,7 +241,7 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
               'line-join': 'round'
             },
             paint: {
-              'line-color': 'rgba(255, 255, 255, 0.3)',
+              'line-color': isDark ? 'rgba(255, 105, 180, 0.4)' : 'rgba(255, 255, 255, 0.3)',
               'line-width': [
                 'interpolate',
                 ['exponential', 1.5],
@@ -239,9 +250,9 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
                 14, 1.5,
                 18, 2
               ],
-              'line-opacity': 0.8
+              'line-opacity': 1.0
             }
-          })
+          }, firstSymbolId)
 
           // Create start marker (green)
           const startMarkerEl = createMarkerPin('#00D464') // Volt Green
