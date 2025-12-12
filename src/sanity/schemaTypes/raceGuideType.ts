@@ -512,11 +512,11 @@ export const raceGuideType = defineType({
     }),
     defineField({
       name: 'gpxFile',
-      title: 'GPX Route File',
+      title: 'Route File (GeoJSON or GPX)',
       type: 'file',
-      description: 'Upload the GPX file containing the race route coordinates',
+      description: 'Upload the GeoJSON (.geojson, .json) or GPX (.gpx) file containing the race route coordinates. GeoJSON is preferred for better performance.',
       options: {
-        accept: '.gpx',
+        accept: '.geojson,.json,.gpx',
       },
     }),
     defineField({

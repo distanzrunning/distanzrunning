@@ -52,9 +52,15 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
 
         // Try to parse as GeoJSON first (check if it starts with '{')
         let coordinates: [number, number][]
+        let geoJsonData: any = null
+
         if (fileText.trim().startsWith('{')) {
+          // Parse GeoJSON and keep the original for Mapbox
+          const parsed = JSON.parse(fileText)
           coordinates = parseGeoJSON(fileText)
+          geoJsonData = parsed
         } else {
+          // Parse GPX to coordinates
           coordinates = parseGPX(fileText)
         }
 
@@ -103,10 +109,10 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
         map.on('load', () => {
           if (!map) return
 
-          // Add route source
+          // Add route source - use native GeoJSON if available, otherwise create from coordinates
           map.addSource('route', {
             type: 'geojson',
-            data: {
+            data: geoJsonData || {
               type: 'Feature',
               properties: {},
               geometry: { type: 'LineString', coordinates }
