@@ -258,6 +258,13 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
                     ? '0 2px 8px rgba(0, 0, 0, 0.5)'
                     : '0 2px 8px rgba(0, 0, 0, 0.15)'
                 }
+                // Style the popup tip (arrow)
+                const popupTip = popupEl.querySelector('.mapboxgl-popup-tip')
+                if (popupTip) {
+                  const tipColor = isDark ? 'rgba(23, 23, 23, 0.95)' : 'rgba(255, 255, 255, 0.95)';
+                  (popupTip as HTMLElement).style.borderTopColor = tipColor;
+                  (popupTip as HTMLElement).style.borderBottomColor = tipColor
+                }
               }
             }, 0)
           })
@@ -300,6 +307,13 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
                   (popupContent as HTMLElement).style.boxShadow = isDark
                     ? '0 2px 8px rgba(0, 0, 0, 0.5)'
                     : '0 2px 8px rgba(0, 0, 0, 0.15)'
+                }
+                // Style the popup tip (arrow)
+                const popupTip = popupEl.querySelector('.mapboxgl-popup-tip')
+                if (popupTip) {
+                  const tipColor = isDark ? 'rgba(23, 23, 23, 0.95)' : 'rgba(255, 255, 255, 0.95)';
+                  (popupTip as HTMLElement).style.borderTopColor = tipColor;
+                  (popupTip as HTMLElement).style.borderBottomColor = tipColor
                 }
               }
             }, 0)
