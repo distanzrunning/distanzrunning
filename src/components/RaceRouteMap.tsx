@@ -100,7 +100,7 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
           // Use custom Light/Dark 2D styles from Mapbox Studio (distanzrunning account)
           // Monochrome theme with minimal POIs, clean roads, optimized for route visualization
           style: isDark
-            ? 'mapbox://styles/distanzrunning/cmj3hat4j001i01qy9h966z3e'  // Dark 2D
+            ? 'mapbox://styles/distanzrunning/cmj5rnjj3000d01pg8ngl0ld6'  // Custom Charcoal Dark
             : 'mapbox://styles/distanzrunning/cmj3gvp8s009z01se13nf3jod', // Light 2D
           bounds,
           fitBoundsOptions: { padding: 40 },
