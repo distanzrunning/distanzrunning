@@ -141,14 +141,24 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
           // Professional Strava-style route rendering with zoom-based widths
           // Uses line-gap-width for proper casing (outline) technique
 
-          // Get the first symbol layer to insert route layers before labels
+          // Get the first symbol/label layer to insert route layers before labels
+          // Look for symbol layers or layers with 'label' in their ID
           const layers = map.getStyle().layers
           let firstSymbolId: string | undefined
+
+          // Debug: log all layer IDs to help identify label layers
+          console.log('[RaceRouteMap] All map layers:', layers?.map(l => `${l.id} (${l.type})`).join(', '))
+
           for (const layer of layers || []) {
-            if (layer.type === 'symbol') {
+            if (layer.type === 'symbol' || (layer.id && layer.id.includes('label'))) {
               firstSymbolId = layer.id
+              console.log('[RaceRouteMap] Inserting route layers before:', layer.id)
               break
             }
+          }
+
+          if (!firstSymbolId) {
+            console.warn('[RaceRouteMap] No symbol/label layer found, route will be on top of labels!')
           }
 
           // Shadow layer (bottom) - subtle depth
