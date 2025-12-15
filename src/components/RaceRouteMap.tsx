@@ -223,17 +223,69 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
             }
           }, firstSymbolId)
 
-          // Create start marker (green)
+          // Create start marker (green) with hover tooltip
           const startMarkerEl = createMarkerPin('#00D464') // Volt Green
-          new mapboxgl.Marker({ element: startMarkerEl })
+          const startMarker = new mapboxgl.Marker({ element: startMarkerEl })
             .setLngLat(coordinates[0])
             .addTo(map)
 
-          // Create finish marker (checkered flag)
+          // Add start tooltip
+          const startPopup = new mapboxgl.Popup({
+            closeButton: false,
+            closeOnClick: false,
+            offset: 15,
+            className: 'start-marker-popup'
+          })
+
+          startMarkerEl.addEventListener('mouseenter', () => {
+            startPopup
+              .setLngLat(coordinates[0])
+              .setHTML(`<div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-weight: 600; color: #1f2937; font-size: 12px; padding: 4px;">Start</div>`)
+              .addTo(map)
+
+            setTimeout(() => {
+              const popupEl = startPopup.getElement()
+              if (popupEl) {
+                popupEl.style.zIndex = '9999'
+              }
+            }, 0)
+          })
+
+          startMarkerEl.addEventListener('mouseleave', () => {
+            startPopup.remove()
+          })
+
+          // Create finish marker (checkered flag) with hover tooltip
           const finishMarkerEl = createCheckeredFinishMarker()
-          new mapboxgl.Marker({ element: finishMarkerEl })
+          const finishMarker = new mapboxgl.Marker({ element: finishMarkerEl })
             .setLngLat(coordinates[coordinates.length - 1])
             .addTo(map)
+
+          // Add finish tooltip
+          const finishPopup = new mapboxgl.Popup({
+            closeButton: false,
+            closeOnClick: false,
+            offset: 15,
+            className: 'finish-marker-popup'
+          })
+
+          finishMarkerEl.addEventListener('mouseenter', () => {
+            finishPopup
+              .setLngLat(coordinates[coordinates.length - 1])
+              .setHTML(`<div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-weight: 600; color: #1f2937; font-size: 12px; padding: 4px;">Finish</div>`)
+              .addTo(map)
+
+            setTimeout(() => {
+              const popupEl = finishPopup.getElement()
+              if (popupEl) {
+                popupEl.style.zIndex = '9999'
+              }
+            }, 0)
+          })
+
+          finishMarkerEl.addEventListener('mouseleave', () => {
+            finishPopup.remove()
+          })
 
           // Create custom controls matching Google Maps style
           createCustomControls(map, isDark)
