@@ -101,7 +101,7 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
           // Monochrome theme with minimal POIs, clean roads, optimized for route visualization
           style: isDark
             ? 'mapbox://styles/distanzrunning/cmj5rnjj3000d01pg8ngl0ld6'  // Custom Charcoal Dark
-            : 'mapbox://styles/distanzrunning/cmj3gvp8s009z01se13nf3jod', // Light 2D
+            : 'mapbox://styles/distanzrunning/cmj6tbhte003k01qveje66t8q', // Custom Light
           bounds,
           fitBoundsOptions: { padding: 40 },
           attributionControl: false,
