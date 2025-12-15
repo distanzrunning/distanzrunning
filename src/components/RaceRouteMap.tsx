@@ -161,7 +161,8 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
             console.warn('[RaceRouteMap] No symbol/label layer found, route will be on top of labels!')
           }
 
-          // Shadow layer (bottom) - subtle depth
+          // Strava-style 4-layer route (matching MarathonShowcase)
+          // 1. Shadow layer (bottom) - subtle depth
           map.addLayer({
             id: 'route-shadow',
             type: 'line',
@@ -171,21 +172,28 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
               'line-join': 'round'
             },
             paint: {
-              'line-color': isDark ? 'rgba(0, 0, 0, 0.4)' : 'rgba(0, 0, 0, 0.25)',
-              'line-width': [
-                'interpolate',
-                ['exponential', 1.5],
-                ['zoom'],
-                10, 7,  // At zoom 10: 7px
-                14, 12, // At zoom 14: 12px
-                18, 20  // At zoom 18: 20px
-              ],
-              'line-blur': 2,
-              'line-opacity': 1.0
+              'line-color': 'rgba(0, 0, 0, 0.25)',
+              'line-width': 9,
+              'line-blur': 2
             }
           }, firstSymbolId)
 
-          // Main route line (electric pink) with zoom-based width
+          // 2. Border layer (white casing)
+          map.addLayer({
+            id: 'route-border',
+            type: 'line',
+            source: 'route',
+            layout: {
+              'line-cap': 'round',
+              'line-join': 'round'
+            },
+            paint: {
+              'line-color': '#ffffff',
+              'line-width': 7
+            }
+          }, firstSymbolId)
+
+          // 3. Main route line (electric pink)
           map.addLayer({
             id: 'route-line',
             type: 'line',
@@ -195,53 +203,12 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
               'line-join': 'round'
             },
             paint: {
-              // Electric Pink - much brighter in dark mode to overcome style filters
-              'line-color': isDark ? 'hsl(335, 100%, 70%)' : '#e43c81',
-              'line-width': [
-                'interpolate',
-                ['exponential', 1.5],
-                ['zoom'],
-                10, 3,  // At zoom 10: 3px
-                14, 5,  // At zoom 14: 5px
-                18, 8   // At zoom 18: 8px
-              ],
-              'line-opacity': 1.0,
-              'line-emissive-strength': isDark ? 1.2 : 1.0
+              'line-color': '#e43c81',
+              'line-width': 5
             }
           }, firstSymbolId)
 
-          // Casing (outline) using line-gap-width - professional technique
-          map.addLayer({
-            id: 'route-casing',
-            type: 'line',
-            source: 'route',
-            layout: {
-              'line-cap': 'round',
-              'line-join': 'round'
-            },
-            paint: {
-              'line-color': isDark ? '#2a2a2a' : '#ffffff',
-              'line-gap-width': [
-                'interpolate',
-                ['exponential', 1.5],
-                ['zoom'],
-                10, 3,  // Match main line width
-                14, 5,
-                18, 8
-              ],
-              'line-width': [
-                'interpolate',
-                ['exponential', 1.5],
-                ['zoom'],
-                10, 1.5, // Casing width at zoom 10
-                14, 2,   // Casing width at zoom 14
-                18, 2.5  // Casing width at zoom 18
-              ],
-              'line-opacity': 1.0
-            }
-          }, firstSymbolId)
-
-          // Subtle highlight on top for dimension
+          // 4. Highlight layer (white overlay for dimension)
           map.addLayer({
             id: 'route-highlight',
             type: 'line',
@@ -251,16 +218,8 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
               'line-join': 'round'
             },
             paint: {
-              'line-color': isDark ? 'rgba(255, 105, 180, 0.4)' : 'rgba(255, 255, 255, 0.3)',
-              'line-width': [
-                'interpolate',
-                ['exponential', 1.5],
-                ['zoom'],
-                10, 1,   // Thin highlight at low zoom
-                14, 1.5,
-                18, 2
-              ],
-              'line-opacity': 1.0
+              'line-color': 'rgba(255, 255, 255, 0.4)',
+              'line-width': 2.5
             }
           }, firstSymbolId)
 
