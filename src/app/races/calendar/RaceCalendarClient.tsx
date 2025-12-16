@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useRef, useEffect } from 'react'
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
@@ -29,6 +29,10 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
   const [showLegend, setShowLegend] = useState(false)
   const [windows, setWindows] = useState<WindowState[]>([])
   const [showMinimizedList, setShowMinimizedList] = useState(false)
+  const [isMonthDropdownOpen, setIsMonthDropdownOpen] = useState(false)
+  const [isYearDropdownOpen, setIsYearDropdownOpen] = useState(false)
+  const monthDropdownRef = useRef<HTMLDivElement>(null)
+  const yearDropdownRef = useRef<HTMLDivElement>(null)
 
   // Convert races to FullCalendar events
   const events = useMemo<CalendarEvent[]>(() => {
@@ -181,17 +185,39 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
   const currentYear = currentDate.getFullYear()
   const years = Array.from({ length: 11 }, (_, i) => currentYear - 5 + i)
 
-  const handleMonthSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleMonthClick = (monthIndex: number) => {
     const newDate = new Date(currentDate)
-    newDate.setMonth(parseInt(e.target.value))
+    newDate.setMonth(monthIndex)
     setCurrentDate(newDate)
+    setIsMonthDropdownOpen(false)
   }
 
-  const handleYearSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleYearClick = (year: number) => {
     const newDate = new Date(currentDate)
-    newDate.setFullYear(parseInt(e.target.value))
+    newDate.setFullYear(year)
     setCurrentDate(newDate)
+    setIsYearDropdownOpen(false)
   }
+
+  // Close dropdowns when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (monthDropdownRef.current && !monthDropdownRef.current.contains(event.target as Node)) {
+        setIsMonthDropdownOpen(false)
+      }
+      if (yearDropdownRef.current && !yearDropdownRef.current.contains(event.target as Node)) {
+        setIsYearDropdownOpen(false)
+      }
+    }
+
+    if (isMonthDropdownOpen || isYearDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [isMonthDropdownOpen, isYearDropdownOpen])
 
   return (
     <>
@@ -276,31 +302,68 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                       )}
                     </div>
                   )}
-                  <select
-                    value={currentMonth}
-                    onChange={handleMonthSelect}
-                    className="pl-3 pr-10 py-2 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white text-sm font-medium cursor-pointer hover:border-neutral-400 dark:hover:border-neutral-600 focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-600 focus:border-transparent transition-colors appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22rgb(64%2C64%2C64)%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E')] dark:bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22rgb(212%2C212%2C212)%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E')] bg-[length:16px] bg-[right_12px_center] bg-no-repeat [direction:ltr]"
-                    style={{ WebkitAppearance: 'menulist' }}
-                  >
-                    {months.map((month, index) => (
-                      <option key={month} value={index}>
-                        {month}
-                      </option>
-                    ))}
-                  </select>
 
-                  <select
-                    value={currentYear}
-                    onChange={handleYearSelect}
-                    className="pl-3 pr-10 py-2 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white text-sm font-medium cursor-pointer hover:border-neutral-400 dark:hover:border-neutral-600 focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-600 focus:border-transparent transition-colors appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22rgb(64%2C64%2C64)%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E')] dark:bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22rgb(212%2C212%2C212)%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E')] bg-[length:16px] bg-[right_12px_center] bg-no-repeat [direction:ltr]"
-                    style={{ WebkitAppearance: 'menulist' }}
-                  >
-                    {years.map((year) => (
-                      <option key={year} value={year}>
-                        {year}
-                      </option>
-                    ))}
-                  </select>
+                  {/* Month Dropdown */}
+                  <div className="relative" ref={monthDropdownRef}>
+                    <button
+                      onClick={() => setIsMonthDropdownOpen(!isMonthDropdownOpen)}
+                      className="flex items-center gap-2 px-4 py-2 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white hover:border-neutral-400 dark:hover:border-neutral-600 transition-colors text-sm font-medium whitespace-nowrap"
+                    >
+                      {months[currentMonth]}
+                      <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </button>
+
+                    {isMonthDropdownOpen && (
+                      <div className="absolute top-full mt-2 right-0 z-40 bg-white dark:bg-neutral-900 rounded-lg shadow-xl border border-neutral-200 dark:border-neutral-800 p-2 min-w-[160px] max-h-[300px] overflow-y-auto">
+                        {months.map((month, index) => (
+                          <button
+                            key={month}
+                            onClick={() => handleMonthClick(index)}
+                            className={`w-full text-left px-3 py-2 rounded-md text-sm transition-colors ${
+                              currentMonth === index
+                                ? 'bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 font-medium'
+                                : 'text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800'
+                            }`}
+                          >
+                            {month}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Year Dropdown */}
+                  <div className="relative" ref={yearDropdownRef}>
+                    <button
+                      onClick={() => setIsYearDropdownOpen(!isYearDropdownOpen)}
+                      className="flex items-center gap-2 px-4 py-2 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white hover:border-neutral-400 dark:hover:border-neutral-600 transition-colors text-sm font-medium whitespace-nowrap"
+                    >
+                      {currentYear}
+                      <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </button>
+
+                    {isYearDropdownOpen && (
+                      <div className="absolute top-full mt-2 right-0 z-40 bg-white dark:bg-neutral-900 rounded-lg shadow-xl border border-neutral-200 dark:border-neutral-800 p-2 min-w-[120px] max-h-[300px] overflow-y-auto">
+                        {years.map((year) => (
+                          <button
+                            key={year}
+                            onClick={() => handleYearClick(year)}
+                            className={`w-full text-left px-3 py-2 rounded-md text-sm transition-colors ${
+                              currentYear === year
+                                ? 'bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 font-medium'
+                                : 'text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800'
+                            }`}
+                          >
+                            {year}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
 
                   <button
                     onClick={handleToday}
