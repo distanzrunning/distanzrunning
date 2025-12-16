@@ -253,17 +253,21 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
                 // Style the popup container
                 const popupContent = popupEl.querySelector('.mapboxgl-popup-content')
                 if (popupContent) {
-                  (popupContent as HTMLElement).style.backgroundColor = tooltipBg
-                  (popupContent as HTMLElement).style.boxShadow = isDark
+                  const contentEl = popupContent as HTMLElement
+                  contentEl.style.setProperty('background-color', tooltipBg, 'important')
+                  contentEl.style.setProperty('padding', '4px 8px', 'important')
+                  contentEl.style.setProperty('border-radius', '6px', 'important')
+                  contentEl.style.boxShadow = isDark
                     ? '0 2px 8px rgba(0, 0, 0, 0.5)'
                     : '0 2px 8px rgba(0, 0, 0, 0.15)'
                 }
                 // Style the popup tip (arrow)
                 const popupTip = popupEl.querySelector('.mapboxgl-popup-tip')
                 if (popupTip) {
-                  const tipColor = isDark ? 'rgba(23, 23, 23, 0.95)' : 'rgba(255, 255, 255, 0.95)';
-                  (popupTip as HTMLElement).style.borderTopColor = tipColor;
-                  (popupTip as HTMLElement).style.borderBottomColor = tipColor
+                  const tipColor = isDark ? 'rgba(23, 23, 23, 0.95)' : 'rgba(255, 255, 255, 0.95)'
+                  const tipEl = popupTip as HTMLElement
+                  tipEl.style.setProperty('border-top-color', tipColor, 'important')
+                  tipEl.style.setProperty('border-bottom-color', tipColor, 'important')
                 }
               }
             }, 0)
@@ -303,17 +307,21 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
                 // Style the popup container
                 const popupContent = popupEl.querySelector('.mapboxgl-popup-content')
                 if (popupContent) {
-                  (popupContent as HTMLElement).style.backgroundColor = tooltipBg
-                  (popupContent as HTMLElement).style.boxShadow = isDark
+                  const contentEl = popupContent as HTMLElement
+                  contentEl.style.setProperty('background-color', tooltipBg, 'important')
+                  contentEl.style.setProperty('padding', '4px 8px', 'important')
+                  contentEl.style.setProperty('border-radius', '6px', 'important')
+                  contentEl.style.boxShadow = isDark
                     ? '0 2px 8px rgba(0, 0, 0, 0.5)'
                     : '0 2px 8px rgba(0, 0, 0, 0.15)'
                 }
                 // Style the popup tip (arrow)
                 const popupTip = popupEl.querySelector('.mapboxgl-popup-tip')
                 if (popupTip) {
-                  const tipColor = isDark ? 'rgba(23, 23, 23, 0.95)' : 'rgba(255, 255, 255, 0.95)';
-                  (popupTip as HTMLElement).style.borderTopColor = tipColor;
-                  (popupTip as HTMLElement).style.borderBottomColor = tipColor
+                  const tipColor = isDark ? 'rgba(23, 23, 23, 0.95)' : 'rgba(255, 255, 255, 0.95)'
+                  const tipEl = popupTip as HTMLElement
+                  tipEl.style.setProperty('border-top-color', tipColor, 'important')
+                  tipEl.style.setProperty('border-bottom-color', tipColor, 'important')
                 }
               }
             }, 0)
