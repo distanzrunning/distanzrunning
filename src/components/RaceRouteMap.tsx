@@ -246,31 +246,30 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
               .setHTML(`<div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-weight: 600; color: ${tooltipColor}; font-size: 12px; padding: 4px;">Start</div>`)
               .addTo(map)
 
-            setTimeout(() => {
-              const popupEl = startPopup.getElement()
-              if (popupEl) {
-                popupEl.style.zIndex = '9999'
-                // Style the popup container
-                const popupContent = popupEl.querySelector('.mapboxgl-popup-content')
-                if (popupContent) {
-                  const contentEl = popupContent as HTMLElement
-                  contentEl.style.setProperty('background-color', tooltipBg, 'important')
-                  contentEl.style.setProperty('padding', '4px 8px', 'important')
-                  contentEl.style.setProperty('border-radius', '6px', 'important')
-                  contentEl.style.boxShadow = isDark
-                    ? '0 2px 8px rgba(0, 0, 0, 0.5)'
-                    : '0 2px 8px rgba(0, 0, 0, 0.15)'
-                }
-                // Style the popup tip (arrow)
-                const popupTip = popupEl.querySelector('.mapboxgl-popup-tip')
-                if (popupTip) {
-                  const tipColor = isDark ? 'rgba(23, 23, 23, 0.95)' : 'rgba(255, 255, 255, 0.95)'
-                  const tipEl = popupTip as HTMLElement
-                  tipEl.style.setProperty('border-top-color', tipColor, 'important')
-                  tipEl.style.setProperty('border-bottom-color', tipColor, 'important')
-                }
+            // Apply styles immediately (synchronously)
+            const popupEl = startPopup.getElement()
+            if (popupEl) {
+              popupEl.style.zIndex = '9999'
+              // Style the popup container
+              const popupContent = popupEl.querySelector('.mapboxgl-popup-content')
+              if (popupContent) {
+                const contentEl = popupContent as HTMLElement
+                contentEl.style.setProperty('background-color', tooltipBg, 'important')
+                contentEl.style.setProperty('padding', '4px 8px', 'important')
+                contentEl.style.setProperty('border-radius', '6px', 'important')
+                contentEl.style.boxShadow = isDark
+                  ? '0 2px 8px rgba(0, 0, 0, 0.5)'
+                  : '0 2px 8px rgba(0, 0, 0, 0.15)'
               }
-            }, 0)
+              // Style the popup tip (arrow)
+              const popupTip = popupEl.querySelector('.mapboxgl-popup-tip')
+              if (popupTip) {
+                const tipColor = isDark ? 'rgba(23, 23, 23, 0.95)' : 'rgba(255, 255, 255, 0.95)'
+                const tipEl = popupTip as HTMLElement
+                tipEl.style.setProperty('border-top-color', tipColor, 'important')
+                tipEl.style.setProperty('border-bottom-color', tipColor, 'important')
+              }
+            }
           })
 
           startMarkerEl.addEventListener('mouseleave', () => {
@@ -300,31 +299,30 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
               .setHTML(`<div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-weight: 600; color: ${tooltipColor}; font-size: 12px; padding: 4px;">Finish</div>`)
               .addTo(map)
 
-            setTimeout(() => {
-              const popupEl = finishPopup.getElement()
-              if (popupEl) {
-                popupEl.style.zIndex = '9999'
-                // Style the popup container
-                const popupContent = popupEl.querySelector('.mapboxgl-popup-content')
-                if (popupContent) {
-                  const contentEl = popupContent as HTMLElement
-                  contentEl.style.setProperty('background-color', tooltipBg, 'important')
-                  contentEl.style.setProperty('padding', '4px 8px', 'important')
-                  contentEl.style.setProperty('border-radius', '6px', 'important')
-                  contentEl.style.boxShadow = isDark
-                    ? '0 2px 8px rgba(0, 0, 0, 0.5)'
-                    : '0 2px 8px rgba(0, 0, 0, 0.15)'
-                }
-                // Style the popup tip (arrow)
-                const popupTip = popupEl.querySelector('.mapboxgl-popup-tip')
-                if (popupTip) {
-                  const tipColor = isDark ? 'rgba(23, 23, 23, 0.95)' : 'rgba(255, 255, 255, 0.95)'
-                  const tipEl = popupTip as HTMLElement
-                  tipEl.style.setProperty('border-top-color', tipColor, 'important')
-                  tipEl.style.setProperty('border-bottom-color', tipColor, 'important')
-                }
+            // Apply styles immediately (synchronously)
+            const popupEl = finishPopup.getElement()
+            if (popupEl) {
+              popupEl.style.zIndex = '9999'
+              // Style the popup container
+              const popupContent = popupEl.querySelector('.mapboxgl-popup-content')
+              if (popupContent) {
+                const contentEl = popupContent as HTMLElement
+                contentEl.style.setProperty('background-color', tooltipBg, 'important')
+                contentEl.style.setProperty('padding', '4px 8px', 'important')
+                contentEl.style.setProperty('border-radius', '6px', 'important')
+                contentEl.style.boxShadow = isDark
+                  ? '0 2px 8px rgba(0, 0, 0, 0.5)'
+                  : '0 2px 8px rgba(0, 0, 0, 0.15)'
               }
-            }, 0)
+              // Style the popup tip (arrow)
+              const popupTip = popupEl.querySelector('.mapboxgl-popup-tip')
+              if (popupTip) {
+                const tipColor = isDark ? 'rgba(23, 23, 23, 0.95)' : 'rgba(255, 255, 255, 0.95)'
+                const tipEl = popupTip as HTMLElement
+                tipEl.style.setProperty('border-top-color', tipColor, 'important')
+                tipEl.style.setProperty('border-bottom-color', tipColor, 'important')
+              }
+            }
           })
 
           finishMarkerEl.addEventListener('mouseleave', () => {
