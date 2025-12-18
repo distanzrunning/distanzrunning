@@ -223,6 +223,56 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
             }
           }, firstSymbolId)
 
+          // 5. Direction arrows
+          const addArrowLayer = () => {
+            if (!map) return
+
+            // Add directional arrows layer
+            map.addLayer({
+              id: 'route-arrows',
+              type: 'symbol',
+              source: 'route',
+              layout: {
+                'symbol-placement': 'line',
+                'symbol-spacing': 80,
+                'icon-image': 'arrow-right',
+                'icon-size': 1.2,
+                'icon-rotation-alignment': 'map',
+                'icon-pitch-alignment': 'map',
+                'icon-ignore-placement': true,
+                'icon-allow-overlap': true
+              },
+              paint: {
+                'icon-opacity': 1.0
+              }
+            }, firstSymbolId)
+          }
+
+          // Create and load arrow icon first
+          if (!map.hasImage('arrow-right')) {
+            const arrowSvg = `
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+                <path fill="none" stroke="#ffffff" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"
+                      d="M6 6 L13 10 L6 14" />
+                <path fill="none" stroke="#e43c81" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"
+                      d="M6 6 L13 10 L6 14" />
+              </svg>
+            `
+
+            const img = new Image(20, 20)
+            img.onload = () => {
+              if (map && !map.hasImage('arrow-right')) {
+                map.addImage('arrow-right', img)
+                // Now add the layer that uses the image
+                addArrowLayer()
+              }
+            }
+            img.src = 'data:image/svg+xml;base64,' + btoa(arrowSvg)
+          } else {
+            // Image already exists, just add the layer
+            addArrowLayer()
+          }
+
           // Create start marker (green) with hover tooltip
           const startMarkerEl = createMarkerPin('#00D464') // Volt Green
           const startMarker = new mapboxgl.Marker({ element: startMarkerEl })
