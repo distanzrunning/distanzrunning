@@ -178,7 +178,7 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
             }
           }, firstSymbolId)
 
-          // 2. Border layer (white casing)
+          // 2. Border layer (dark casing for better contrast)
           map.addLayer({
             id: 'route-border',
             type: 'line',
@@ -188,7 +188,7 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
               'line-join': 'round'
             },
             paint: {
-              'line-color': '#ffffff',
+              'line-color': 'rgba(0, 0, 0, 0.6)',
               'line-width': 7
             }
           }, firstSymbolId)
@@ -252,7 +252,7 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
           if (!map.hasImage('arrow-right')) {
             const arrowSvg = `
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
-                <path fill="none" stroke="#ffffff" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"
+                <path fill="none" stroke="rgba(0, 0, 0, 0.6)" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"
                       d="M6 6 L13 10 L6 14" />
                 <path fill="none" stroke="#e43c81" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"
                       d="M6 6 L13 10 L6 14" />
