@@ -435,15 +435,19 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
         style={{ opacity: isLoading ? 0 : 1 }}
       />
       <style jsx global>{`
-        /* Make Mapbox attribution more transparent (matching Google Maps style) */
-        .mapboxgl-ctrl-attrib,
+        /* Hide Mapbox logo and attribution */
         .mapboxgl-ctrl-logo {
-          opacity: 0.5 !important;
+          display: none !important;
         }
 
-        /* Make them fully visible on hover */
-        .mapboxgl-ctrl-attrib:hover,
-        .mapboxgl-ctrl-logo:hover {
+        /* Make attribution text small and subtle */
+        .mapboxgl-ctrl-attrib {
+          opacity: 0.3 !important;
+          font-size: 10px !important;
+        }
+
+        /* Make attribution visible on hover */
+        .mapboxgl-ctrl-attrib:hover {
           opacity: 1 !important;
         }
 
