@@ -396,7 +396,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
           </div>
 
           {/* Legend Button - Bottom left corner */}
-          <div className="absolute bottom-4 left-4 z-50 group">
+          <div className="absolute bottom-1 left-4 z-50 group">
             <button
               onClick={() => setShowLegend(!showLegend)}
               onMouseEnter={() => setShowLegend(true)}
