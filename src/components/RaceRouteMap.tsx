@@ -456,6 +456,18 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
         .mapboxgl-ctrl-bottom-right .mapboxgl-ctrl {
           display: none;
         }
+
+        /* Fix white corners on custom controls in dark mode */
+        .mapboxgl-ctrl-fullscreen,
+        .mapboxgl-ctrl-zoom {
+          overflow: hidden !important;
+          background: transparent !important;
+        }
+
+        .mapboxgl-ctrl-fullscreen button,
+        .mapboxgl-ctrl-zoom button {
+          outline: none !important;
+        }
       `}</style>
     </div>
   )
