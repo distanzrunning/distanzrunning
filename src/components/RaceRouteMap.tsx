@@ -457,11 +457,19 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
           display: none;
         }
 
-        /* Fix white corners on custom controls in dark mode */
+        /* Minimalist border for custom controls */
         .mapboxgl-ctrl-fullscreen,
         .mapboxgl-ctrl-zoom {
           overflow: hidden !important;
-          background: transparent !important;
+          border: 1px solid rgba(0, 0, 0, 0.1) !important;
+        }
+
+        /* Dark mode border */
+        @media (prefers-color-scheme: dark) {
+          .mapboxgl-ctrl-fullscreen,
+          .mapboxgl-ctrl-zoom {
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+          }
         }
 
         .mapboxgl-ctrl-fullscreen button,
