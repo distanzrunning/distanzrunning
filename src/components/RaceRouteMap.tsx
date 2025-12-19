@@ -476,6 +476,16 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
         .mapboxgl-ctrl-zoom button {
           outline: none !important;
         }
+
+        /* Remove gap below attribution in bottom-left */
+        .mapboxgl-ctrl-bottom-left {
+          margin: 0 !important;
+          padding: 0 !important;
+        }
+
+        .mapboxgl-ctrl-bottom-left .mapboxgl-ctrl {
+          margin: 0 !important;
+        }
       `}</style>
     </div>
   )
