@@ -477,10 +477,10 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
           outline: none !important;
         }
 
-        /* Remove gap below attribution in bottom-left */
+        /* Remove gap and add padding for attribution in bottom-left */
         .mapboxgl-ctrl-bottom-left {
           margin: 0 !important;
-          padding: 0 !important;
+          padding: 0 0 4px 4px !important;
         }
 
         .mapboxgl-ctrl-bottom-left .mapboxgl-ctrl {
