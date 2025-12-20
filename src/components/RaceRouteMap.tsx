@@ -22,12 +22,17 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
   const [showMarkers, setShowMarkers] = useState(false)
   const [useMetric, setUseMetric] = useState(false) // true = km, false = miles (default: miles)
   const useMetricRef = useRef(useMetric) // Ref to track current unit value for event handlers
+  const showMarkersRef = useRef(showMarkers) // Ref to track current marker visibility for event handlers
   const distanceMarkersRef = useRef<mapboxgl.Marker[]>([])
 
-  // Keep ref synchronized with state for event handlers
+  // Keep refs synchronized with state for event handlers
   useEffect(() => {
     useMetricRef.current = useMetric
   }, [useMetric])
+
+  useEffect(() => {
+    showMarkersRef.current = showMarkers
+  }, [showMarkers])
 
   useEffect(() => {
     // Wait for dark mode to be initialized
@@ -392,6 +397,7 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
             bounds,
             showMarkers,
             setShowMarkers,
+            showMarkersRef,
             useMetric,
             setUseMetric,
             useMetricRef,
@@ -564,6 +570,7 @@ function createCustomControls(
   bounds: mapboxgl.LngLatBoundsLike,
   showMarkers: boolean,
   setShowMarkers: (show: boolean) => void,
+  showMarkersRef: React.MutableRefObject<boolean>,
   useMetric: boolean,
   setUseMetric: (metric: boolean) => void,
   useMetricRef: React.MutableRefObject<boolean>,
@@ -919,8 +926,9 @@ function createCustomControls(
   })
 
   markerToggleButton.addEventListener('click', () => {
-    const newShowMarkers = !showMarkers
+    const newShowMarkers = !showMarkersRef.current
     setShowMarkers(newShowMarkers)
+    showMarkersRef.current = newShowMarkers // Update ref immediately
     markerToggleButton.style.opacity = newShowMarkers ? '1' : '0.6'
     markerToggleButton.innerHTML = `
       <svg width="14" height="14" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
