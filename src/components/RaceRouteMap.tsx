@@ -750,26 +750,30 @@ function createCustomControls(
     return R * c
   }
 
-  // Helper function to create distance marker element
+  // Helper function to create distance marker element (Strava-style circular markers)
   const createDistanceMarkerElement = (distance: number, unit: boolean, isDark: boolean): HTMLElement => {
-    const el = document.createElement('div')
     const displayDistance = unit ? distance.toFixed(0) : (distance * 0.621371).toFixed(0)
-    const unitLabel = unit ? 'km' : 'mi'
 
-    el.style.cssText = `
-      background-color: ${isDark ? 'rgba(45, 45, 45, 0.95)' : 'rgba(255, 255, 255, 0.95)'};
-      color: ${isDark ? '#fafafa' : '#171717'};
-      padding: 2px 6px;
-      border-radius: 3px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
+    const markerElement = document.createElement('div')
+    markerElement.style.cssText = `
+      background: white;
+      border: 2px solid ${isDark ? '#e43c81' : '#ff4d94'};
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
       font-weight: 600;
-      border: 1px solid ${isDark ? 'rgba(255, 255, 255, 0.15)' : 'rgba(0, 0, 0, 0.1)'};
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-      white-space: nowrap;
+      font-size: 11px;
+      color: ${isDark ? '#e43c81' : '#ff4d94'};
+      cursor: pointer;
+      z-index: 10;
     `
-    el.textContent = `${displayDistance} ${unitLabel}`
-    return el
+    markerElement.textContent = displayDistance
+    return markerElement
   }
 
   // Function to update/create distance markers
