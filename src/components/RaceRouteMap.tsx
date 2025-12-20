@@ -20,7 +20,7 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
   const [isLoading, setIsLoading] = useState(true)
   const { isDark, isInitialized } = useContext(DarkModeContext)
   const [showMarkers, setShowMarkers] = useState(false)
-  const [useMetric, setUseMetric] = useState(true) // true = km, false = miles
+  const [useMetric, setUseMetric] = useState(false) // true = km, false = miles (default: miles)
   const distanceMarkersRef = useRef<mapboxgl.Marker[]>([])
 
   useEffect(() => {
@@ -829,39 +829,38 @@ function createCustomControls(
 
     // Only update markers if they're currently visible
     if (distanceMarkersRef.current.length > 0) {
-      setTimeout(() => {
-        // Clear existing markers
-        distanceMarkersRef.current.forEach(marker => marker.remove())
-        distanceMarkersRef.current = []
+      // Clear existing markers immediately
+      distanceMarkersRef.current.forEach(marker => marker.remove())
+      distanceMarkersRef.current = []
 
-        let cumulativeDistance = 0
-        const interval = newMetric ? 1 : 0.621371
+      // Recreate markers with new unit
+      let cumulativeDistance = 0
+      const interval = newMetric ? 1 : 0.621371
 
-        for (let i = 1; i < coordinates.length; i++) {
-          const segmentDistance = calculateDistance(coordinates[i - 1], coordinates[i])
-          const prevCumulativeDistance = cumulativeDistance
-          cumulativeDistance += segmentDistance
+      for (let i = 1; i < coordinates.length; i++) {
+        const segmentDistance = calculateDistance(coordinates[i - 1], coordinates[i])
+        const prevCumulativeDistance = cumulativeDistance
+        cumulativeDistance += segmentDistance
 
-          const prevMarkerCount = Math.floor(prevCumulativeDistance / interval)
-          const currentMarkerCount = Math.floor(cumulativeDistance / interval)
+        const prevMarkerCount = Math.floor(prevCumulativeDistance / interval)
+        const currentMarkerCount = Math.floor(cumulativeDistance / interval)
 
-          if (currentMarkerCount > prevMarkerCount) {
-            for (let j = prevMarkerCount + 1; j <= currentMarkerCount; j++) {
-              const targetDistance = j * interval
-              const ratio = (targetDistance - prevCumulativeDistance) / segmentDistance
-              const lat = coordinates[i - 1][1] + ratio * (coordinates[i][1] - coordinates[i - 1][1])
-              const lng = coordinates[i - 1][0] + ratio * (coordinates[i][0] - coordinates[i - 1][0])
+        if (currentMarkerCount > prevMarkerCount) {
+          for (let j = prevMarkerCount + 1; j <= currentMarkerCount; j++) {
+            const targetDistance = j * interval
+            const ratio = (targetDistance - prevCumulativeDistance) / segmentDistance
+            const lat = coordinates[i - 1][1] + ratio * (coordinates[i][1] - coordinates[i - 1][1])
+            const lng = coordinates[i - 1][0] + ratio * (coordinates[i][0] - coordinates[i - 1][0])
 
-              const markerEl = createDistanceMarkerElement(targetDistance, newMetric, isDark)
-              const marker = new mapboxgl.Marker({ element: markerEl, anchor: 'center' })
-                .setLngLat([lng, lat])
-                .addTo(map)
+            const markerEl = createDistanceMarkerElement(targetDistance, newMetric, isDark)
+            const marker = new mapboxgl.Marker({ element: markerEl, anchor: 'center' })
+              .setLngLat([lng, lat])
+              .addTo(map)
 
-              distanceMarkersRef.current.push(marker)
-            }
+            distanceMarkersRef.current.push(marker)
           }
         }
-      }, 0)
+      }
     }
   })
 
