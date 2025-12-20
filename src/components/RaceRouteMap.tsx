@@ -94,6 +94,13 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
 
         console.log('[RaceRouteMap] Initializing Mapbox map in', isDark ? 'DARK' : 'LIGHT', 'mode')
 
+        // Calculate initial zoom from bounds to set min zoom limit
+        const lngDiff = Math.max(...lngs) - Math.min(...lngs)
+        const latDiff = Math.max(...lats) - Math.min(...lats)
+        const maxDiff = Math.max(lngDiff, latDiff)
+        // Set minZoom based on route size - prevent zooming out too far
+        const minZoom = Math.max(10, 14 - Math.log2(maxDiff * 100))
+
         // Initialize Mapbox map with custom 2D monochrome styles
         const map = new mapboxgl.Map({
           container: mapRef.current,
@@ -105,6 +112,8 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
           bounds,
           fitBoundsOptions: { padding: 40 },
           attributionControl: false,
+          minZoom: minZoom,
+          maxZoom: 18,
           // Disable rotation and pitch for flat 2D view
           pitchWithRotate: false,
           dragRotate: false,
@@ -368,7 +377,7 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
           })
 
           // Create custom controls matching Google Maps style
-          createCustomControls(map, isDark)
+          createCustomControls(map, isDark, bounds)
 
           // Hide loading after map is fully loaded
           setTimeout(() => {
@@ -447,6 +456,7 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
 
         /* Minimalist border for custom controls */
         .mapboxgl-ctrl-fullscreen,
+        .mapboxgl-ctrl-recenter,
         .mapboxgl-ctrl-zoom {
           overflow: hidden !important;
           border: 1px solid rgba(0, 0, 0, 0.1) !important;
@@ -455,12 +465,14 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
         /* Dark mode border */
         @media (prefers-color-scheme: dark) {
           .mapboxgl-ctrl-fullscreen,
+          .mapboxgl-ctrl-recenter,
           .mapboxgl-ctrl-zoom {
             border: 1px solid rgba(255, 255, 255, 0.1) !important;
           }
         }
 
         .mapboxgl-ctrl-fullscreen button,
+        .mapboxgl-ctrl-recenter button,
         .mapboxgl-ctrl-zoom button {
           outline: none !important;
         }
@@ -516,7 +528,7 @@ function createCheckeredFinishMarker(): HTMLElement {
 }
 
 // Create custom controls matching Google Maps style
-function createCustomControls(map: mapboxgl.Map, isDark: boolean) {
+function createCustomControls(map: mapboxgl.Map, isDark: boolean, bounds: mapboxgl.LngLatBoundsLike) {
   // Create fullscreen button (top-right)
   const fullscreenButton = document.createElement('button')
   fullscreenButton.setAttribute('aria-label', 'Toggle fullscreen view')
@@ -563,6 +575,49 @@ function createCustomControls(map: mapboxgl.Map, isDark: boolean) {
     } else {
       document.exitFullscreen()
     }
+  })
+
+  // Create recenter button (fit route in view)
+  const recenterButton = document.createElement('button')
+  recenterButton.setAttribute('aria-label', 'Recenter map to route')
+  recenterButton.className = 'mapboxgl-ctrl-recenter'
+  recenterButton.style.cssText = `
+    background-color: ${isDark ? '#2d2d2d' : 'white'};
+    border: none;
+    border-radius: 2px;
+    width: 29px;
+    height: 29px;
+    box-shadow: 0 0 0 2px rgba(0,0,0,.1);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.15s;
+    position: absolute;
+    top: 49px;
+    right: 10px;
+    z-index: 1;
+  `
+
+  // Target/crosshair icon SVG - thicker stroke
+  recenterButton.innerHTML = `
+    <svg width="14" height="14" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="9" cy="9" r="5" stroke="${isDark ? '#bbb' : '#666'}" stroke-width="2" fill="none"/>
+      <line x1="9" y1="0" x2="9" y2="3" stroke="${isDark ? '#bbb' : '#666'}" stroke-width="2" stroke-linecap="round"/>
+      <line x1="9" y1="15" x2="9" y2="18" stroke="${isDark ? '#bbb' : '#666'}" stroke-width="2" stroke-linecap="round"/>
+      <line x1="0" y1="9" x2="3" y2="9" stroke="${isDark ? '#bbb' : '#666'}" stroke-width="2" stroke-linecap="round"/>
+      <line x1="15" y1="9" x2="18" y2="9" stroke="${isDark ? '#bbb' : '#666'}" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+  `
+
+  recenterButton.addEventListener('mouseenter', () => {
+    recenterButton.style.backgroundColor = isDark ? '#3d3d3d' : '#f5f5f5'
+  })
+  recenterButton.addEventListener('mouseleave', () => {
+    recenterButton.style.backgroundColor = isDark ? '#2d2d2d' : 'white'
+  })
+  recenterButton.addEventListener('click', () => {
+    map.fitBounds(bounds, { padding: 40 })
   })
 
   // Create zoom controls container - compact Strava-style
@@ -653,6 +708,7 @@ function createCustomControls(map: mapboxgl.Map, isDark: boolean) {
   // Add controls to map container
   const mapContainer = map.getContainer()
   mapContainer.appendChild(fullscreenButton)
+  mapContainer.appendChild(recenterButton)
   mapContainer.appendChild(zoomContainer)
 }
 
