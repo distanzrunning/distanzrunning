@@ -21,7 +21,13 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
   const { isDark, isInitialized } = useContext(DarkModeContext)
   const [showMarkers, setShowMarkers] = useState(false)
   const [useMetric, setUseMetric] = useState(false) // true = km, false = miles (default: miles)
+  const useMetricRef = useRef(useMetric) // Ref to track current unit value for event handlers
   const distanceMarkersRef = useRef<mapboxgl.Marker[]>([])
+
+  // Keep ref synchronized with state for event handlers
+  useEffect(() => {
+    useMetricRef.current = useMetric
+  }, [useMetric])
 
   useEffect(() => {
     // Wait for dark mode to be initialized
@@ -388,6 +394,7 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
             setShowMarkers,
             useMetric,
             setUseMetric,
+            useMetricRef,
             coordinates,
             distanceMarkersRef
           )
@@ -559,6 +566,7 @@ function createCustomControls(
   setShowMarkers: (show: boolean) => void,
   useMetric: boolean,
   setUseMetric: (metric: boolean) => void,
+  useMetricRef: React.MutableRefObject<boolean>,
   coordinates: [number, number][],
   distanceMarkersRef: React.MutableRefObject<mapboxgl.Marker[]>
 ) {
@@ -823,8 +831,9 @@ function createCustomControls(
     unitToggleButton.style.backgroundColor = isDark ? '#2d2d2d' : 'white'
   })
   unitToggleButton.addEventListener('click', () => {
-    const newMetric = !useMetric
+    const newMetric = !useMetricRef.current
     setUseMetric(newMetric)
+    useMetricRef.current = newMetric // Update ref immediately for marker button
     unitToggleButton.textContent = newMetric ? 'KM' : 'MI'
 
     // Only update markers if they're currently visible
@@ -921,41 +930,41 @@ function createCustomControls(
               stroke-width="0.5"/>
       </svg>
     `
-    // Trigger marker update with the NEW state value
+    // Trigger marker update with current unit value from ref
     if (newShowMarkers) {
-      setTimeout(() => {
-        // Manually trigger marker creation with current state
-        distanceMarkersRef.current.forEach(marker => marker.remove())
-        distanceMarkersRef.current = []
+      // Clear existing markers immediately (synchronous)
+      distanceMarkersRef.current.forEach(marker => marker.remove())
+      distanceMarkersRef.current = []
 
-        let cumulativeDistance = 0
-        const interval = useMetric ? 1 : 0.621371
+      // Use ref to get current unit value
+      const currentMetric = useMetricRef.current
+      let cumulativeDistance = 0
+      const interval = currentMetric ? 1 : 0.621371
 
-        for (let i = 1; i < coordinates.length; i++) {
-          const segmentDistance = calculateDistance(coordinates[i - 1], coordinates[i])
-          const prevCumulativeDistance = cumulativeDistance
-          cumulativeDistance += segmentDistance
+      for (let i = 1; i < coordinates.length; i++) {
+        const segmentDistance = calculateDistance(coordinates[i - 1], coordinates[i])
+        const prevCumulativeDistance = cumulativeDistance
+        cumulativeDistance += segmentDistance
 
-          const prevMarkerCount = Math.floor(prevCumulativeDistance / interval)
-          const currentMarkerCount = Math.floor(cumulativeDistance / interval)
+        const prevMarkerCount = Math.floor(prevCumulativeDistance / interval)
+        const currentMarkerCount = Math.floor(cumulativeDistance / interval)
 
-          if (currentMarkerCount > prevMarkerCount) {
-            for (let j = prevMarkerCount + 1; j <= currentMarkerCount; j++) {
-              const targetDistance = j * interval
-              const ratio = (targetDistance - prevCumulativeDistance) / segmentDistance
-              const lat = coordinates[i - 1][1] + ratio * (coordinates[i][1] - coordinates[i - 1][1])
-              const lng = coordinates[i - 1][0] + ratio * (coordinates[i][0] - coordinates[i - 1][0])
+        if (currentMarkerCount > prevMarkerCount) {
+          for (let j = prevMarkerCount + 1; j <= currentMarkerCount; j++) {
+            const targetDistance = j * interval
+            const ratio = (targetDistance - prevCumulativeDistance) / segmentDistance
+            const lat = coordinates[i - 1][1] + ratio * (coordinates[i][1] - coordinates[i - 1][1])
+            const lng = coordinates[i - 1][0] + ratio * (coordinates[i][0] - coordinates[i - 1][0])
 
-              const markerEl = createDistanceMarkerElement(targetDistance, useMetric, isDark)
-              const marker = new mapboxgl.Marker({ element: markerEl, anchor: 'center' })
-                .setLngLat([lng, lat])
-                .addTo(map)
+            const markerEl = createDistanceMarkerElement(targetDistance, currentMetric, isDark)
+            const marker = new mapboxgl.Marker({ element: markerEl, anchor: 'center' })
+              .setLngLat([lng, lat])
+              .addTo(map)
 
-              distanceMarkersRef.current.push(marker)
-            }
+            distanceMarkersRef.current.push(marker)
           }
         }
-      }, 0)
+      }
     } else {
       // Clear markers
       distanceMarkersRef.current.forEach(marker => marker.remove())
