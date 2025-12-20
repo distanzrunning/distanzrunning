@@ -177,7 +177,7 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
             }
           }, firstSymbolId)
 
-          // 2. Main route line (electric pink)
+          // 2. Main route line (electric pink) - brighter in light mode
           map.addLayer({
             id: 'route-line',
             type: 'line',
@@ -187,7 +187,7 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
               'line-join': 'round'
             },
             paint: {
-              'line-color': '#e43c81',
+              'line-color': isDark ? '#e43c81' : '#ff4d94',
               'line-width': 4
             }
           }, firstSymbolId)
@@ -237,11 +237,12 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
           // Create and load arrow icon first
           if (!map.hasImage('arrow-right')) {
             const arrowOutlineColor = isDark ? '#2d2d2d' : '#ffffff'
+            const arrowPinkColor = isDark ? '#e43c81' : '#ff4d94'
             const arrowSvg = `
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
                 <path fill="none" stroke="${arrowOutlineColor}" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"
                       d="M6 6 L13 10 L6 14" />
-                <path fill="none" stroke="#e43c81" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"
+                <path fill="none" stroke="${arrowPinkColor}" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"
                       d="M6 6 L13 10 L6 14" />
               </svg>
             `
