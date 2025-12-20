@@ -162,7 +162,7 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
           }
 
           // Clean Strava-inspired 3-layer route
-          // 1. White casing (outline)
+          // 1. Casing (outline) - white in light mode, dark in dark mode
           map.addLayer({
             id: 'route-casing',
             type: 'line',
@@ -172,7 +172,7 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
               'line-join': 'round'
             },
             paint: {
-              'line-color': '#ffffff',
+              'line-color': isDark ? '#2d2d2d' : '#ffffff',
               'line-width': 6
             }
           }, firstSymbolId)
@@ -236,9 +236,10 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
 
           // Create and load arrow icon first
           if (!map.hasImage('arrow-right')) {
+            const arrowOutlineColor = isDark ? '#2d2d2d' : '#ffffff'
             const arrowSvg = `
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
-                <path fill="none" stroke="#ffffff" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"
+                <path fill="none" stroke="${arrowOutlineColor}" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"
                       d="M6 6 L13 10 L6 14" />
                 <path fill="none" stroke="#e43c81" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"
                       d="M6 6 L13 10 L6 14" />
