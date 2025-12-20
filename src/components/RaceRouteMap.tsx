@@ -767,7 +767,8 @@ function createCustomControls(
 
   // Helper function to create distance marker element (Strava-style circular markers)
   const createDistanceMarkerElement = (distance: number, unit: boolean, isDark: boolean): HTMLElement => {
-    const displayDistance = unit ? distance.toFixed(0) : (distance * 0.621371).toFixed(0)
+    // distance is in km, convert to miles if needed
+    const displayDistance = unit ? distance.toFixed(0) : (distance / 1.609344).toFixed(0)
 
     const markerElement = document.createElement('div')
     markerElement.style.cssText = `
@@ -851,7 +852,7 @@ function createCustomControls(
 
       // Recreate markers with new unit
       let cumulativeDistance = 0
-      const interval = newMetric ? 1 : 0.621371
+      const interval = newMetric ? 1 : 1.609344 // 1 km or 1 mile in km
 
       for (let i = 1; i < coordinates.length; i++) {
         const segmentDistance = calculateDistance(coordinates[i - 1], coordinates[i])
@@ -947,7 +948,7 @@ function createCustomControls(
       // Use ref to get current unit value
       const currentMetric = useMetricRef.current
       let cumulativeDistance = 0
-      const interval = currentMetric ? 1 : 0.621371
+      const interval = currentMetric ? 1 : 1.609344 // 1 km or 1 mile in km
 
       for (let i = 1; i < coordinates.length; i++) {
         const segmentDistance = calculateDistance(coordinates[i - 1], coordinates[i])
