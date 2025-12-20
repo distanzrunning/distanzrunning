@@ -539,12 +539,12 @@ function createCustomControls(map: mapboxgl.Map, isDark: boolean) {
     z-index: 1;
   `
 
-  // Fullscreen icon SVG - smaller
+  // Fullscreen icon SVG - thicker stroke
   fullscreenButton.innerHTML = `
     <svg width="14" height="14" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M2 7V2h5M16 7V2h-5M16 11v5h-5M2 11v5h5"
             stroke="${isDark ? '#bbb' : '#666'}"
-            stroke-width="1.5"
+            stroke-width="2"
             stroke-linecap="round"
             stroke-linejoin="round"/>
     </svg>
@@ -593,8 +593,8 @@ function createCustomControls(map: mapboxgl.Map, isDark: boolean) {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 16px;
-    font-weight: 400;
+    font-size: 18px;
+    font-weight: 500;
     color: ${isDark ? '#bbb' : '#666'};
     transition: background-color 0.15s;
   `
@@ -629,8 +629,8 @@ function createCustomControls(map: mapboxgl.Map, isDark: boolean) {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 16px;
-    font-weight: 400;
+    font-size: 18px;
+    font-weight: 500;
     color: ${isDark ? '#bbb' : '#666'};
     transition: background-color 0.15s;
   `
