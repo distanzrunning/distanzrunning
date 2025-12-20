@@ -19,6 +19,9 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const { isDark, isInitialized } = useContext(DarkModeContext)
+  const [showMarkers, setShowMarkers] = useState(false)
+  const [useMetric, setUseMetric] = useState(true) // true = km, false = miles
+  const distanceMarkersRef = useRef<mapboxgl.Marker[]>([])
 
   useEffect(() => {
     // Wait for dark mode to be initialized
@@ -377,7 +380,17 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
           })
 
           // Create custom controls matching Google Maps style
-          createCustomControls(map, isDark, bounds)
+          createCustomControls(
+            map,
+            isDark,
+            bounds,
+            showMarkers,
+            setShowMarkers,
+            useMetric,
+            setUseMetric,
+            coordinates,
+            distanceMarkersRef
+          )
 
           // Hide loading after map is fully loaded
           setTimeout(() => {
@@ -403,13 +416,17 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
     // Cleanup
     return () => {
       console.log('[RaceRouteMap] Cleaning up map...')
+      // Remove distance markers
+      distanceMarkersRef.current.forEach(marker => marker.remove())
+      distanceMarkersRef.current = []
+      // Remove map
       if (mapInstanceRef.current) {
         mapInstanceRef.current.remove()
         mapInstanceRef.current = null
       }
       console.log('[RaceRouteMap] Cleanup complete')
     }
-  }, [gpxUrl, isDark, isInitialized])
+  }, [gpxUrl, isDark, isInitialized, showMarkers, useMetric])
 
   if (error) {
     return (
@@ -457,22 +474,28 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
         /* Minimalist border for custom controls */
         .mapboxgl-ctrl-fullscreen,
         .mapboxgl-ctrl-recenter,
+        .mapboxgl-ctrl-markers,
+        .mapboxgl-ctrl-unit,
         .mapboxgl-ctrl-zoom {
           overflow: hidden !important;
-          border: 1px solid rgba(0, 0, 0, 0.1) !important;
+          border: 1px solid rgba(0, 0, 0, 0.05) !important;
         }
 
         /* Dark mode border */
         @media (prefers-color-scheme: dark) {
           .mapboxgl-ctrl-fullscreen,
           .mapboxgl-ctrl-recenter,
+          .mapboxgl-ctrl-markers,
+          .mapboxgl-ctrl-unit,
           .mapboxgl-ctrl-zoom {
-            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            border: 1px solid rgba(255, 255, 255, 0.08) !important;
           }
         }
 
         .mapboxgl-ctrl-fullscreen button,
         .mapboxgl-ctrl-recenter button,
+        .mapboxgl-ctrl-markers button,
+        .mapboxgl-ctrl-unit button,
         .mapboxgl-ctrl-zoom button {
           outline: none !important;
         }
@@ -528,7 +551,17 @@ function createCheckeredFinishMarker(): HTMLElement {
 }
 
 // Create custom controls matching Google Maps style
-function createCustomControls(map: mapboxgl.Map, isDark: boolean, bounds: mapboxgl.LngLatBoundsLike) {
+function createCustomControls(
+  map: mapboxgl.Map,
+  isDark: boolean,
+  bounds: mapboxgl.LngLatBoundsLike,
+  showMarkers: boolean,
+  setShowMarkers: (show: boolean) => void,
+  useMetric: boolean,
+  setUseMetric: (metric: boolean) => void,
+  coordinates: [number, number][],
+  distanceMarkersRef: React.MutableRefObject<mapboxgl.Marker[]>
+) {
   // Create fullscreen button (top-right)
   const fullscreenButton = document.createElement('button')
   fullscreenButton.setAttribute('aria-label', 'Toggle fullscreen view')
@@ -705,10 +738,180 @@ function createCustomControls(map: mapboxgl.Map, isDark: boolean, bounds: mapbox
   zoomContainer.appendChild(divider)
   zoomContainer.appendChild(zoomOutButton)
 
+  // Helper function to calculate distance between two coordinates (Haversine formula)
+  const calculateDistance = (coord1: [number, number], coord2: [number, number]): number => {
+    const R = 6371 // Earth's radius in km
+    const dLat = (coord2[1] - coord1[1]) * Math.PI / 180
+    const dLon = (coord2[0] - coord1[0]) * Math.PI / 180
+    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(coord1[1] * Math.PI / 180) * Math.cos(coord2[1] * Math.PI / 180) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2)
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+    return R * c
+  }
+
+  // Helper function to create distance marker element
+  const createDistanceMarkerElement = (distance: number, unit: boolean, isDark: boolean): HTMLElement => {
+    const el = document.createElement('div')
+    const displayDistance = unit ? distance.toFixed(0) : (distance * 0.621371).toFixed(0)
+    const unitLabel = unit ? 'km' : 'mi'
+
+    el.style.cssText = `
+      background-color: ${isDark ? 'rgba(45, 45, 45, 0.95)' : 'rgba(255, 255, 255, 0.95)'};
+      color: ${isDark ? '#fafafa' : '#171717'};
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      border: 1px solid ${isDark ? 'rgba(255, 255, 255, 0.15)' : 'rgba(0, 0, 0, 0.1)'};
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+      white-space: nowrap;
+    `
+    el.textContent = `${displayDistance} ${unitLabel}`
+    return el
+  }
+
+  // Function to update/create distance markers
+  const updateDistanceMarkers = () => {
+    // Clear existing markers
+    distanceMarkersRef.current.forEach(marker => marker.remove())
+    distanceMarkersRef.current = []
+
+    if (!showMarkers) return
+
+    let cumulativeDistance = 0
+    const interval = useMetric ? 1 : 0.621371 // 1 km or 1 mile in km
+
+    for (let i = 1; i < coordinates.length; i++) {
+      const segmentDistance = calculateDistance(coordinates[i - 1], coordinates[i])
+      const prevCumulativeDistance = cumulativeDistance
+      cumulativeDistance += segmentDistance
+
+      // Check if we've crossed a marker interval
+      const prevMarkerCount = Math.floor(prevCumulativeDistance / interval)
+      const currentMarkerCount = Math.floor(cumulativeDistance / interval)
+
+      if (currentMarkerCount > prevMarkerCount) {
+        // Place marker(s) for each interval crossed
+        for (let j = prevMarkerCount + 1; j <= currentMarkerCount; j++) {
+          const targetDistance = j * interval
+
+          // Interpolate position along the segment
+          const ratio = (targetDistance - prevCumulativeDistance) / segmentDistance
+          const lat = coordinates[i - 1][1] + ratio * (coordinates[i][1] - coordinates[i - 1][1])
+          const lng = coordinates[i - 1][0] + ratio * (coordinates[i][0] - coordinates[i - 1][0])
+
+          const markerEl = createDistanceMarkerElement(targetDistance, useMetric, isDark)
+          const marker = new mapboxgl.Marker({ element: markerEl, anchor: 'center' })
+            .setLngLat([lng, lat])
+            .addTo(map)
+
+          distanceMarkersRef.current.push(marker)
+        }
+      }
+    }
+  }
+
+  // Create distance marker toggle button (below recenter, top-right)
+  const markerToggleButton = document.createElement('button')
+  markerToggleButton.setAttribute('aria-label', 'Toggle distance markers')
+  markerToggleButton.className = 'mapboxgl-ctrl-markers'
+  markerToggleButton.style.cssText = `
+    background-color: ${isDark ? '#2d2d2d' : 'white'};
+    border: none;
+    border-radius: 2px;
+    width: 29px;
+    height: 29px;
+    box-shadow: 0 0 0 2px rgba(0,0,0,.1);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.15s;
+    position: absolute;
+    top: 88px;
+    right: 10px;
+    z-index: 1;
+    opacity: ${showMarkers ? '1' : '0.6'};
+  `
+
+  // Marker icon (location pin)
+  markerToggleButton.innerHTML = `
+    <svg width="14" height="14" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M9 2C6.24 2 4 4.24 4 7c0 3.5 5 9 5 9s5-5.5 5-9c0-2.76-2.24-5-5-5zm0 7c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"
+            fill="${showMarkers ? (isDark ? '#e43c81' : '#ff4d94') : (isDark ? '#bbb' : '#666')}"
+            stroke="${isDark ? '#bbb' : '#666'}"
+            stroke-width="0.5"/>
+    </svg>
+  `
+
+  markerToggleButton.addEventListener('mouseenter', () => {
+    markerToggleButton.style.backgroundColor = isDark ? '#3d3d3d' : '#f5f5f5'
+  })
+  markerToggleButton.addEventListener('mouseleave', () => {
+    markerToggleButton.style.backgroundColor = isDark ? '#2d2d2d' : 'white'
+  })
+  markerToggleButton.addEventListener('click', () => {
+    setShowMarkers(!showMarkers)
+    setTimeout(() => updateDistanceMarkers(), 0)
+    markerToggleButton.style.opacity = !showMarkers ? '1' : '0.6'
+    markerToggleButton.innerHTML = `
+      <svg width="14" height="14" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M9 2C6.24 2 4 4.24 4 7c0 3.5 5 9 5 9s5-5.5 5-9c0-2.76-2.24-5-5-5zm0 7c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"
+              fill="${!showMarkers ? (isDark ? '#e43c81' : '#ff4d94') : (isDark ? '#bbb' : '#666')}"
+              stroke="${isDark ? '#bbb' : '#666'}"
+              stroke-width="0.5"/>
+      </svg>
+    `
+  })
+
+  // Create unit toggle button (below marker toggle, top-right)
+  const unitToggleButton = document.createElement('button')
+  unitToggleButton.setAttribute('aria-label', 'Toggle distance unit (km/mi)')
+  unitToggleButton.className = 'mapboxgl-ctrl-unit'
+  unitToggleButton.style.cssText = `
+    background-color: ${isDark ? '#2d2d2d' : 'white'};
+    border: none;
+    border-radius: 2px;
+    width: 29px;
+    height: 29px;
+    box-shadow: 0 0 0 2px rgba(0,0,0,.1);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.15s;
+    position: absolute;
+    top: 127px;
+    right: 10px;
+    z-index: 1;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    color: ${isDark ? '#bbb' : '#666'};
+  `
+
+  unitToggleButton.textContent = useMetric ? 'KM' : 'MI'
+
+  unitToggleButton.addEventListener('mouseenter', () => {
+    unitToggleButton.style.backgroundColor = isDark ? '#3d3d3d' : '#f5f5f5'
+  })
+  unitToggleButton.addEventListener('mouseleave', () => {
+    unitToggleButton.style.backgroundColor = isDark ? '#2d2d2d' : 'white'
+  })
+  unitToggleButton.addEventListener('click', () => {
+    setUseMetric(!useMetric)
+    setTimeout(() => updateDistanceMarkers(), 0)
+    unitToggleButton.textContent = !useMetric ? 'KM' : 'MI'
+  })
+
   // Add controls to map container
   const mapContainer = map.getContainer()
   mapContainer.appendChild(fullscreenButton)
   mapContainer.appendChild(recenterButton)
+  mapContainer.appendChild(markerToggleButton)
+  mapContainer.appendChild(unitToggleButton)
   mapContainer.appendChild(zoomContainer)
 }
 
