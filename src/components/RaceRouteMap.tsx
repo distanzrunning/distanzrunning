@@ -426,7 +426,7 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
       }
       console.log('[RaceRouteMap] Cleanup complete')
     }
-  }, [gpxUrl, isDark, isInitialized, showMarkers, useMetric])
+  }, [gpxUrl, isDark, isInitialized])
 
   if (error) {
     return (
