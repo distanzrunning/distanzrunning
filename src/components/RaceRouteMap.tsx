@@ -524,27 +524,27 @@ function createCustomControls(map: mapboxgl.Map, isDark: boolean) {
   fullscreenButton.style.cssText = `
     background-color: ${isDark ? '#2d2d2d' : 'white'};
     border: none;
-    border-radius: 4px;
-    width: 36px;
-    height: 36px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, ${isDark ? '0.3' : '0.15'});
+    border-radius: 2px;
+    width: 29px;
+    height: 29px;
+    box-shadow: 0 0 0 2px rgba(0,0,0,.1);
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background-color 0.2s;
+    transition: background-color 0.15s;
     position: absolute;
-    top: 16px;
-    right: 16px;
+    top: 10px;
+    right: 10px;
     z-index: 1;
   `
 
-  // Fullscreen icon SVG
+  // Fullscreen icon SVG - smaller
   fullscreenButton.innerHTML = `
-    <svg width="16" height="16" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg width="14" height="14" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M2 7V2h5M16 7V2h-5M16 11v5h-5M2 11v5h5"
-            stroke="${isDark ? 'white' : '#333'}"
-            stroke-width="2"
+            stroke="${isDark ? '#bbb' : '#666'}"
+            stroke-width="1.5"
             stroke-linecap="round"
             stroke-linejoin="round"/>
     </svg>
@@ -565,19 +565,19 @@ function createCustomControls(map: mapboxgl.Map, isDark: boolean) {
     }
   })
 
-  // Create zoom controls container - minimalist rectangular buttons
+  // Create zoom controls container - compact Strava-style
   const zoomContainer = document.createElement('div')
   zoomContainer.className = 'mapboxgl-ctrl-zoom'
   zoomContainer.style.cssText = `
     background-color: ${isDark ? '#2d2d2d' : 'white'};
-    border-radius: 4px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, ${isDark ? '0.3' : '0.15'});
+    border-radius: 2px;
+    box-shadow: 0 0 0 2px rgba(0,0,0,.1);
     display: flex;
     flex-direction: column;
     overflow: hidden;
     position: absolute;
-    bottom: 16px;
-    right: 16px;
+    bottom: 10px;
+    right: 10px;
     z-index: 1;
   `
 
@@ -587,16 +587,16 @@ function createCustomControls(map: mapboxgl.Map, isDark: boolean) {
   zoomInButton.style.cssText = `
     background-color: transparent;
     border: none;
-    width: 36px;
-    height: 36px;
+    width: 29px;
+    height: 29px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 18px;
-    font-weight: 300;
-    color: ${isDark ? 'white' : '#333'};
-    transition: background-color 0.2s;
+    font-size: 16px;
+    font-weight: 400;
+    color: ${isDark ? '#bbb' : '#666'};
+    transition: background-color 0.15s;
   `
   zoomInButton.textContent = '+'
   zoomInButton.addEventListener('mouseenter', () => {
@@ -614,7 +614,7 @@ function createCustomControls(map: mapboxgl.Map, isDark: boolean) {
   divider.style.cssText = `
     height: 1px;
     background-color: ${isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'};
-    margin: 0 8px;
+    margin: 0 5px;
   `
 
   // Create zoom out button
@@ -623,16 +623,16 @@ function createCustomControls(map: mapboxgl.Map, isDark: boolean) {
   zoomOutButton.style.cssText = `
     background-color: transparent;
     border: none;
-    width: 36px;
-    height: 36px;
+    width: 29px;
+    height: 29px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 18px;
-    font-weight: 300;
-    color: ${isDark ? 'white' : '#333'};
-    transition: background-color 0.2s;
+    font-size: 16px;
+    font-weight: 400;
+    color: ${isDark ? '#bbb' : '#666'};
+    transition: background-color 0.15s;
   `
   zoomOutButton.textContent = '−'
   zoomOutButton.addEventListener('mouseenter', () => {
