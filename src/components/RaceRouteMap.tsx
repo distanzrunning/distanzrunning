@@ -813,7 +813,61 @@ function createCustomControls(
     }
   }
 
-  // Create distance marker toggle button (below recenter, top-right)
+  // Create distance marker control container (marker button + unit toggle on hover)
+  const markerControlContainer = document.createElement('div')
+  markerControlContainer.className = 'mapboxgl-ctrl-markers-container'
+  markerControlContainer.style.cssText = `
+    position: absolute;
+    top: 88px;
+    right: 10px;
+    z-index: 1;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 4px;
+  `
+
+  // Unit toggle button (appears on hover to the left)
+  const unitToggleButton = document.createElement('button')
+  unitToggleButton.setAttribute('aria-label', 'Toggle distance unit (km/mi)')
+  unitToggleButton.className = 'mapboxgl-ctrl-unit'
+  unitToggleButton.style.cssText = `
+    background-color: ${isDark ? '#2d2d2d' : 'white'};
+    border: none;
+    border-radius: 2px;
+    width: 29px;
+    height: 29px;
+    box-shadow: 0 0 0 2px rgba(0,0,0,.1);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.2s, background-color 0.15s;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    color: ${isDark ? '#bbb' : '#666'};
+    opacity: 0;
+    pointer-events: none;
+  `
+
+  unitToggleButton.textContent = useMetric ? 'KM' : 'MI'
+
+  unitToggleButton.addEventListener('mouseenter', () => {
+    unitToggleButton.style.backgroundColor = isDark ? '#3d3d3d' : '#f5f5f5'
+  })
+  unitToggleButton.addEventListener('mouseleave', () => {
+    unitToggleButton.style.backgroundColor = isDark ? '#2d2d2d' : 'white'
+  })
+  unitToggleButton.addEventListener('click', () => {
+    const newMetric = !useMetric
+    setUseMetric(newMetric)
+    unitToggleButton.textContent = newMetric ? 'KM' : 'MI'
+    // Update markers with new unit immediately
+    setTimeout(() => updateDistanceMarkers(), 0)
+  })
+
+  // Marker toggle button
   const markerToggleButton = document.createElement('button')
   markerToggleButton.setAttribute('aria-label', 'Toggle distance markers')
   markerToggleButton.className = 'mapboxgl-ctrl-markers'
@@ -829,10 +883,6 @@ function createCustomControls(
     align-items: center;
     justify-content: center;
     transition: background-color 0.15s;
-    position: absolute;
-    top: 88px;
-    right: 10px;
-    z-index: 1;
     opacity: ${showMarkers ? '1' : '0.6'};
   `
 
@@ -848,70 +898,83 @@ function createCustomControls(
 
   markerToggleButton.addEventListener('mouseenter', () => {
     markerToggleButton.style.backgroundColor = isDark ? '#3d3d3d' : '#f5f5f5'
+    // Show unit toggle on hover
+    unitToggleButton.style.opacity = '1'
+    unitToggleButton.style.pointerEvents = 'auto'
   })
   markerToggleButton.addEventListener('mouseleave', () => {
     markerToggleButton.style.backgroundColor = isDark ? '#2d2d2d' : 'white'
   })
+
+  // Keep unit toggle visible when hovering over it
+  markerControlContainer.addEventListener('mouseleave', () => {
+    unitToggleButton.style.opacity = '0'
+    unitToggleButton.style.pointerEvents = 'none'
+  })
+
   markerToggleButton.addEventListener('click', () => {
-    setShowMarkers(!showMarkers)
-    setTimeout(() => updateDistanceMarkers(), 0)
-    markerToggleButton.style.opacity = !showMarkers ? '1' : '0.6'
+    const newShowMarkers = !showMarkers
+    setShowMarkers(newShowMarkers)
+    markerToggleButton.style.opacity = newShowMarkers ? '1' : '0.6'
     markerToggleButton.innerHTML = `
       <svg width="14" height="14" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M9 2C6.24 2 4 4.24 4 7c0 3.5 5 9 5 9s5-5.5 5-9c0-2.76-2.24-5-5-5zm0 7c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"
-              fill="${!showMarkers ? (isDark ? '#e43c81' : '#ff4d94') : (isDark ? '#bbb' : '#666')}"
+              fill="${newShowMarkers ? (isDark ? '#e43c81' : '#ff4d94') : (isDark ? '#bbb' : '#666')}"
               stroke="${isDark ? '#bbb' : '#666'}"
               stroke-width="0.5"/>
       </svg>
     `
+    // Trigger marker update with the NEW state value
+    if (newShowMarkers) {
+      setTimeout(() => {
+        // Manually trigger marker creation with current state
+        distanceMarkersRef.current.forEach(marker => marker.remove())
+        distanceMarkersRef.current = []
+
+        let cumulativeDistance = 0
+        const interval = useMetric ? 1 : 0.621371
+
+        for (let i = 1; i < coordinates.length; i++) {
+          const segmentDistance = calculateDistance(coordinates[i - 1], coordinates[i])
+          const prevCumulativeDistance = cumulativeDistance
+          cumulativeDistance += segmentDistance
+
+          const prevMarkerCount = Math.floor(prevCumulativeDistance / interval)
+          const currentMarkerCount = Math.floor(cumulativeDistance / interval)
+
+          if (currentMarkerCount > prevMarkerCount) {
+            for (let j = prevMarkerCount + 1; j <= currentMarkerCount; j++) {
+              const targetDistance = j * interval
+              const ratio = (targetDistance - prevCumulativeDistance) / segmentDistance
+              const lat = coordinates[i - 1][1] + ratio * (coordinates[i][1] - coordinates[i - 1][1])
+              const lng = coordinates[i - 1][0] + ratio * (coordinates[i][0] - coordinates[i - 1][0])
+
+              const markerEl = createDistanceMarkerElement(targetDistance, useMetric, isDark)
+              const marker = new mapboxgl.Marker({ element: markerEl, anchor: 'center' })
+                .setLngLat([lng, lat])
+                .addTo(map)
+
+              distanceMarkersRef.current.push(marker)
+            }
+          }
+        }
+      }, 0)
+    } else {
+      // Clear markers
+      distanceMarkersRef.current.forEach(marker => marker.remove())
+      distanceMarkersRef.current = []
+    }
   })
 
-  // Create unit toggle button (below marker toggle, top-right)
-  const unitToggleButton = document.createElement('button')
-  unitToggleButton.setAttribute('aria-label', 'Toggle distance unit (km/mi)')
-  unitToggleButton.className = 'mapboxgl-ctrl-unit'
-  unitToggleButton.style.cssText = `
-    background-color: ${isDark ? '#2d2d2d' : 'white'};
-    border: none;
-    border-radius: 2px;
-    width: 29px;
-    height: 29px;
-    box-shadow: 0 0 0 2px rgba(0,0,0,.1);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background-color 0.15s;
-    position: absolute;
-    top: 127px;
-    right: 10px;
-    z-index: 1;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    font-weight: 700;
-    color: ${isDark ? '#bbb' : '#666'};
-  `
-
-  unitToggleButton.textContent = useMetric ? 'KM' : 'MI'
-
-  unitToggleButton.addEventListener('mouseenter', () => {
-    unitToggleButton.style.backgroundColor = isDark ? '#3d3d3d' : '#f5f5f5'
-  })
-  unitToggleButton.addEventListener('mouseleave', () => {
-    unitToggleButton.style.backgroundColor = isDark ? '#2d2d2d' : 'white'
-  })
-  unitToggleButton.addEventListener('click', () => {
-    setUseMetric(!useMetric)
-    setTimeout(() => updateDistanceMarkers(), 0)
-    unitToggleButton.textContent = !useMetric ? 'KM' : 'MI'
-  })
+  // Assemble marker control container
+  markerControlContainer.appendChild(unitToggleButton)
+  markerControlContainer.appendChild(markerToggleButton)
 
   // Add controls to map container
   const mapContainer = map.getContainer()
   mapContainer.appendChild(fullscreenButton)
   mapContainer.appendChild(recenterButton)
-  mapContainer.appendChild(markerToggleButton)
-  mapContainer.appendChild(unitToggleButton)
+  mapContainer.appendChild(markerControlContainer)
   mapContainer.appendChild(zoomContainer)
 }
 
