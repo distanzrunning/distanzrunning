@@ -765,30 +765,57 @@ function createCustomControls(
     return R * c
   }
 
-  // Helper function to create distance marker element (Strava-style circular markers)
+  // Helper function to create distance marker element (Premium minimalist style)
   const createDistanceMarkerElement = (distance: number, unit: boolean, isDark: boolean): HTMLElement => {
     // distance is in km, convert to miles if needed
     const displayDistance = unit ? distance.toFixed(0) : (distance / 1.609344).toFixed(0)
+    const unitLabel = unit ? 'km' : 'mi'
 
     const markerElement = document.createElement('div')
     markerElement.style.cssText = `
-      background: white;
-      border: 2px solid ${isDark ? '#e43c81' : '#ff4d94'};
+      background: ${isDark ? 'rgba(23, 23, 23, 0.95)' : 'rgba(255, 255, 255, 0.98)'};
+      border: 1.5px solid ${isDark ? 'rgba(228, 60, 129, 0.6)' : 'rgba(255, 77, 148, 0.5)'};
       border-radius: 50%;
-      width: 24px;
-      height: 24px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      width: 22px;
+      height: 22px;
+      box-shadow: ${isDark
+        ? '0 2px 12px rgba(0, 0, 0, 0.4), 0 1px 3px rgba(228, 60, 129, 0.3)'
+        : '0 2px 8px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06)'};
+      backdrop-filter: blur(10px);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      font-family: 'JetBrains Mono', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, monospace;
       font-weight: 600;
-      font-size: 11px;
+      font-size: 9px;
+      letter-spacing: -0.02em;
       color: ${isDark ? '#e43c81' : '#ff4d94'};
       cursor: pointer;
       z-index: 10;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     `
     markerElement.textContent = displayDistance
+    markerElement.setAttribute('data-distance', `${displayDistance} ${unitLabel}`)
+
+    // Add hover effect
+    markerElement.addEventListener('mouseenter', () => {
+      markerElement.style.transform = 'scale(1.15)'
+      markerElement.style.boxShadow = isDark
+        ? '0 4px 20px rgba(0, 0, 0, 0.5), 0 2px 8px rgba(228, 60, 129, 0.4)'
+        : '0 4px 16px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(255, 77, 148, 0.2)'
+      markerElement.style.borderWidth = '2px'
+      markerElement.style.borderColor = isDark ? '#e43c81' : '#ff4d94'
+    })
+
+    markerElement.addEventListener('mouseleave', () => {
+      markerElement.style.transform = 'scale(1)'
+      markerElement.style.boxShadow = isDark
+        ? '0 2px 12px rgba(0, 0, 0, 0.4), 0 1px 3px rgba(228, 60, 129, 0.3)'
+        : '0 2px 8px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06)'
+      markerElement.style.borderWidth = '1.5px'
+      markerElement.style.borderColor = isDark ? 'rgba(228, 60, 129, 0.6)' : 'rgba(255, 77, 148, 0.5)'
+    })
+
     return markerElement
   }
 
@@ -873,6 +900,50 @@ function createCustomControls(
             const marker = new mapboxgl.Marker({ element: markerEl, anchor: 'center' })
               .setLngLat([lng, lat])
               .addTo(map)
+
+            // Add tooltip on hover
+            const displayDist = newMetric ? targetDistance.toFixed(1) : (targetDistance / 1.609344).toFixed(1)
+            const unitLabel = newMetric ? 'km' : 'mi'
+            const popup = new mapboxgl.Popup({
+              closeButton: false,
+              closeOnClick: false,
+              offset: 12,
+              className: 'distance-marker-popup'
+            })
+
+            markerEl.addEventListener('mouseenter', () => {
+              popup
+                .setLngLat([lng, lat])
+                .setHTML(`<div style="font-family: 'JetBrains Mono', monospace; font-weight: 600; color: ${isDark ? '#e43c81' : '#ff4d94'}; font-size: 11px; padding: 2px;">${displayDist} ${unitLabel}</div>`)
+                .addTo(map)
+
+              // Style the popup
+              const popupEl = popup.getElement()
+              if (popupEl) {
+                const popupContent = popupEl.querySelector('.mapboxgl-popup-content')
+                if (popupContent) {
+                  const contentEl = popupContent as HTMLElement
+                  contentEl.style.setProperty('background-color', isDark ? 'rgba(23, 23, 23, 0.95)' : 'rgba(255, 255, 255, 0.98)', 'important')
+                  contentEl.style.setProperty('padding', '4px 8px', 'important')
+                  contentEl.style.setProperty('border-radius', '6px', 'important')
+                  contentEl.style.setProperty('backdrop-filter', 'blur(10px)', 'important')
+                  contentEl.style.boxShadow = isDark
+                    ? '0 2px 12px rgba(0, 0, 0, 0.4)'
+                    : '0 2px 8px rgba(0, 0, 0, 0.08)'
+                }
+                const popupTip = popupEl.querySelector('.mapboxgl-popup-tip')
+                if (popupTip) {
+                  const tipColor = isDark ? 'rgba(23, 23, 23, 0.95)' : 'rgba(255, 255, 255, 0.98)'
+                  const tipEl = popupTip as HTMLElement
+                  tipEl.style.setProperty('border-top-color', tipColor, 'important')
+                  tipEl.style.setProperty('border-bottom-color', tipColor, 'important')
+                }
+              }
+            })
+
+            markerEl.addEventListener('mouseleave', () => {
+              popup.remove()
+            })
 
             distanceMarkersRef.current.push(marker)
           }
@@ -969,6 +1040,50 @@ function createCustomControls(
             const marker = new mapboxgl.Marker({ element: markerEl, anchor: 'center' })
               .setLngLat([lng, lat])
               .addTo(map)
+
+            // Add tooltip on hover
+            const displayDist = currentMetric ? targetDistance.toFixed(1) : (targetDistance / 1.609344).toFixed(1)
+            const unitLabel = currentMetric ? 'km' : 'mi'
+            const popup = new mapboxgl.Popup({
+              closeButton: false,
+              closeOnClick: false,
+              offset: 12,
+              className: 'distance-marker-popup'
+            })
+
+            markerEl.addEventListener('mouseenter', () => {
+              popup
+                .setLngLat([lng, lat])
+                .setHTML(`<div style="font-family: 'JetBrains Mono', monospace; font-weight: 600; color: ${isDark ? '#e43c81' : '#ff4d94'}; font-size: 11px; padding: 2px;">${displayDist} ${unitLabel}</div>`)
+                .addTo(map)
+
+              // Style the popup
+              const popupEl = popup.getElement()
+              if (popupEl) {
+                const popupContent = popupEl.querySelector('.mapboxgl-popup-content')
+                if (popupContent) {
+                  const contentEl = popupContent as HTMLElement
+                  contentEl.style.setProperty('background-color', isDark ? 'rgba(23, 23, 23, 0.95)' : 'rgba(255, 255, 255, 0.98)', 'important')
+                  contentEl.style.setProperty('padding', '4px 8px', 'important')
+                  contentEl.style.setProperty('border-radius', '6px', 'important')
+                  contentEl.style.setProperty('backdrop-filter', 'blur(10px)', 'important')
+                  contentEl.style.boxShadow = isDark
+                    ? '0 2px 12px rgba(0, 0, 0, 0.4)'
+                    : '0 2px 8px rgba(0, 0, 0, 0.08)'
+                }
+                const popupTip = popupEl.querySelector('.mapboxgl-popup-tip')
+                if (popupTip) {
+                  const tipColor = isDark ? 'rgba(23, 23, 23, 0.95)' : 'rgba(255, 255, 255, 0.98)'
+                  const tipEl = popupTip as HTMLElement
+                  tipEl.style.setProperty('border-top-color', tipColor, 'important')
+                  tipEl.style.setProperty('border-bottom-color', tipColor, 'important')
+                }
+              }
+            })
+
+            markerEl.addEventListener('mouseleave', () => {
+              popup.remove()
+            })
 
             distanceMarkersRef.current.push(marker)
           }
