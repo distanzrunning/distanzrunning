@@ -776,47 +776,6 @@ function createCustomControls(
     return markerElement
   }
 
-  // Function to update/create distance markers
-  const updateDistanceMarkers = () => {
-    // Clear existing markers
-    distanceMarkersRef.current.forEach(marker => marker.remove())
-    distanceMarkersRef.current = []
-
-    if (!showMarkers) return
-
-    let cumulativeDistance = 0
-    const interval = useMetric ? 1 : 0.621371 // 1 km or 1 mile in km
-
-    for (let i = 1; i < coordinates.length; i++) {
-      const segmentDistance = calculateDistance(coordinates[i - 1], coordinates[i])
-      const prevCumulativeDistance = cumulativeDistance
-      cumulativeDistance += segmentDistance
-
-      // Check if we've crossed a marker interval
-      const prevMarkerCount = Math.floor(prevCumulativeDistance / interval)
-      const currentMarkerCount = Math.floor(cumulativeDistance / interval)
-
-      if (currentMarkerCount > prevMarkerCount) {
-        // Place marker(s) for each interval crossed
-        for (let j = prevMarkerCount + 1; j <= currentMarkerCount; j++) {
-          const targetDistance = j * interval
-
-          // Interpolate position along the segment
-          const ratio = (targetDistance - prevCumulativeDistance) / segmentDistance
-          const lat = coordinates[i - 1][1] + ratio * (coordinates[i][1] - coordinates[i - 1][1])
-          const lng = coordinates[i - 1][0] + ratio * (coordinates[i][0] - coordinates[i - 1][0])
-
-          const markerEl = createDistanceMarkerElement(targetDistance, useMetric, isDark)
-          const marker = new mapboxgl.Marker({ element: markerEl, anchor: 'center' })
-            .setLngLat([lng, lat])
-            .addTo(map)
-
-          distanceMarkersRef.current.push(marker)
-        }
-      }
-    }
-  }
-
   // Create distance marker control container (marker button + unit toggle on hover)
   const markerControlContainer = document.createElement('div')
   markerControlContainer.className = 'mapboxgl-ctrl-markers-container'
@@ -867,8 +826,43 @@ function createCustomControls(
     const newMetric = !useMetric
     setUseMetric(newMetric)
     unitToggleButton.textContent = newMetric ? 'KM' : 'MI'
-    // Update markers with new unit immediately
-    setTimeout(() => updateDistanceMarkers(), 0)
+
+    // Only update markers if they're currently visible
+    if (distanceMarkersRef.current.length > 0) {
+      setTimeout(() => {
+        // Clear existing markers
+        distanceMarkersRef.current.forEach(marker => marker.remove())
+        distanceMarkersRef.current = []
+
+        let cumulativeDistance = 0
+        const interval = newMetric ? 1 : 0.621371
+
+        for (let i = 1; i < coordinates.length; i++) {
+          const segmentDistance = calculateDistance(coordinates[i - 1], coordinates[i])
+          const prevCumulativeDistance = cumulativeDistance
+          cumulativeDistance += segmentDistance
+
+          const prevMarkerCount = Math.floor(prevCumulativeDistance / interval)
+          const currentMarkerCount = Math.floor(cumulativeDistance / interval)
+
+          if (currentMarkerCount > prevMarkerCount) {
+            for (let j = prevMarkerCount + 1; j <= currentMarkerCount; j++) {
+              const targetDistance = j * interval
+              const ratio = (targetDistance - prevCumulativeDistance) / segmentDistance
+              const lat = coordinates[i - 1][1] + ratio * (coordinates[i][1] - coordinates[i - 1][1])
+              const lng = coordinates[i - 1][0] + ratio * (coordinates[i][0] - coordinates[i - 1][0])
+
+              const markerEl = createDistanceMarkerElement(targetDistance, newMetric, isDark)
+              const marker = new mapboxgl.Marker({ element: markerEl, anchor: 'center' })
+                .setLngLat([lng, lat])
+                .addTo(map)
+
+              distanceMarkersRef.current.push(marker)
+            }
+          }
+        }
+      }, 0)
+    }
   })
 
   // Marker toggle button
