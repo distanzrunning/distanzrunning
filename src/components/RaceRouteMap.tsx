@@ -161,10 +161,10 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
             console.warn('[RaceRouteMap] No symbol/label layer found, route will be on top of labels!')
           }
 
-          // Harmonious 4-layer route with softer styling
-          // 1. Shadow layer (bottom) - very subtle depth
+          // Clean Strava-inspired 3-layer route
+          // 1. White casing (outline)
           map.addLayer({
-            id: 'route-shadow',
+            id: 'route-casing',
             type: 'line',
             source: 'route',
             layout: {
@@ -172,28 +172,12 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
               'line-join': 'round'
             },
             paint: {
-              'line-color': 'rgba(0, 0, 0, 0.15)',
-              'line-width': 9,
-              'line-blur': 2
+              'line-color': '#ffffff',
+              'line-width': 6
             }
           }, firstSymbolId)
 
-          // 2. Border layer (lighter outline for harmony)
-          map.addLayer({
-            id: 'route-border',
-            type: 'line',
-            source: 'route',
-            layout: {
-              'line-cap': 'round',
-              'line-join': 'round'
-            },
-            paint: {
-              'line-color': 'rgba(0, 0, 0, 0.3)',
-              'line-width': 7
-            }
-          }, firstSymbolId)
-
-          // 3. Main route line (electric pink)
+          // 2. Main route line (electric pink)
           map.addLayer({
             id: 'route-line',
             type: 'line',
@@ -204,13 +188,13 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
             },
             paint: {
               'line-color': '#e43c81',
-              'line-width': 5
+              'line-width': 4
             }
           }, firstSymbolId)
 
-          // 4. Highlight layer (softer white overlay)
+          // 3. Subtle shadow for depth
           map.addLayer({
-            id: 'route-highlight',
+            id: 'route-shadow',
             type: 'line',
             source: 'route',
             layout: {
@@ -218,8 +202,10 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
               'line-join': 'round'
             },
             paint: {
-              'line-color': 'rgba(255, 255, 255, 0.3)',
-              'line-width': 2.5
+              'line-color': 'rgba(0, 0, 0, 0.2)',
+              'line-width': 6,
+              'line-blur': 3,
+              'line-offset': 0
             }
           }, firstSymbolId)
 
@@ -252,7 +238,7 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
           if (!map.hasImage('arrow-right')) {
             const arrowSvg = `
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
-                <path fill="none" stroke="rgba(0, 0, 0, 0.3)" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"
+                <path fill="none" stroke="#ffffff" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"
                       d="M6 6 L13 10 L6 14" />
                 <path fill="none" stroke="#e43c81" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"
                       d="M6 6 L13 10 L6 14" />
