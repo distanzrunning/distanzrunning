@@ -146,67 +146,82 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
       {showSettingsDropdown && settingsButtonRef.current && (
         <div
           ref={settingsDropdownRef}
-          className="absolute left-0 top-10 w-72 bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg shadow-lg py-2 z-[9999]"
+          className="absolute left-0 top-10 w-80 bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg shadow-[0_10px_38px_-10px_rgba(0,0,0,0.35),0_10px_20px_-15px_rgba(0,0,0,0.2)] p-2 z-[9999]"
           onClick={(e) => e.stopPropagation()}
           onMouseDown={(e) => e.stopPropagation()}
         >
-          <div className="px-3 py-2 text-xs font-medium text-neutral-500 dark:text-neutral-400 border-b border-neutral-200 dark:border-neutral-700">
-            Content Width
-          </div>
-
-          {/* Width mode toggle */}
-          <div className="px-3 py-3 space-y-2">
-            <label className="flex items-center gap-2 cursor-pointer group">
-              <input
-                type="radio"
-                name="widthMode"
-                checked={widthMode === 'fixed'}
-                onChange={() => setWidthMode('fixed')}
-                className="w-4 h-4 text-electric-pink accent-electric-pink"
-              />
-              <span className="text-sm text-neutral-900 dark:text-white group-hover:text-neutral-700 dark:group-hover:text-neutral-200">
-                Fixed width
-              </span>
+          <div className="flex flex-col gap-2.5">
+            <label className="pt-1.5 text-[15px] block mb-1 text-neutral-900 dark:text-white">
+              Content width
             </label>
 
-            {/* Slider (only shown when Fixed is selected) */}
+            {/* Tab buttons for Fixed/Full */}
+            <div
+              role="group"
+              className="flex space-x-px rounded p-1 bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700"
+            >
+              <button
+                type="button"
+                onClick={() => setWidthMode('fixed')}
+                className={`flex-1 flex border p-1 items-center justify-center leading-4 text-sm font-medium rounded transition-colors ${
+                  widthMode === 'fixed'
+                    ? 'bg-white dark:bg-neutral-700 border-neutral-300 dark:border-neutral-600'
+                    : 'bg-transparent border-transparent hover:bg-neutral-50 dark:hover:bg-neutral-800'
+                } text-neutral-900 dark:text-white`}
+                aria-label="Fixed"
+              >
+                <svg className="size-5" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                  <path d="M10.64 11.4V4.62H8.168V3h6.828v1.62h-2.46v6.78H10.64Z"></path>
+                  <path fillRule="evenodd" d="M16.125 12.375c.483 0 .875.392.875.875v6.5a.875.875 0 0 1-1.75 0v-6.5c0-.483.392-.875.875-.875ZM7 12.375c.483 0 .875.392.875.875v6.5a.875.875 0 0 1-1.75 0v-6.5c0-.483.392-.875.875-.875Z" clipRule="evenodd"></path>
+                  <path d="M7.5 15.5h8v1.75h-8z"></path>
+                </svg>
+              </button>
+              <button
+                type="button"
+                onClick={() => setWidthMode('full')}
+                className={`flex-1 flex border p-1 items-center justify-center leading-4 text-sm font-medium rounded transition-colors ${
+                  widthMode === 'full'
+                    ? 'bg-white dark:bg-neutral-700 border-neutral-300 dark:border-neutral-600'
+                    : 'bg-transparent border-transparent hover:bg-neutral-50 dark:hover:bg-neutral-800'
+                } text-neutral-900 dark:text-white`}
+                aria-label="Full"
+              >
+                <svg className="size-5" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                  <path d="M10.64 11.4V4.62H8.168V3h6.828v1.62h-2.46v6.78H10.64Zm9.252 4.394-3.143-3.143a.857.857 0 1 0-1.212 1.212l1.68 1.68h-5.36a.857.857 0 0 0 0 1.714h5.36l-1.68 1.68a.857.857 0 1 0 1.212 1.212l3.143-3.143a.857.857 0 0 0 0-1.212Z"></path>
+                  <path d="m3.25 15.794 3.144-3.143a.857.857 0 1 1 1.212 1.212l-1.68 1.68h5.36a.857.857 0 0 1 0 1.714h-5.36l1.68 1.68a.857.857 0 1 1-1.212 1.212l-3.143-3.143a.857.857 0 0 1 0-1.212Z"></path>
+                </svg>
+              </button>
+            </div>
+
+            {/* Slider and reset button (only shown when Fixed is selected) */}
             {widthMode === 'fixed' && (
-              <div className="pl-6 space-y-2">
-                <input
-                  type="range"
-                  min={MIN_WIDTH}
-                  max={MAX_WIDTH}
-                  value={customWidth}
-                  onChange={(e) => setCustomWidth(Number(e.target.value))}
-                  className="w-full h-2 bg-neutral-200 dark:bg-neutral-700 rounded-lg appearance-none cursor-pointer accent-electric-pink"
-                  style={{
-                    background: `linear-gradient(to right, #e43c81 0%, #e43c81 ${((customWidth - MIN_WIDTH) / (MAX_WIDTH - MIN_WIDTH)) * 100}%, rgb(229 229 229) ${((customWidth - MIN_WIDTH) / (MAX_WIDTH - MIN_WIDTH)) * 100}%, rgb(229 229 229) 100%)`
-                  }}
-                />
-                <div className="flex items-center justify-between text-xs text-neutral-600 dark:text-neutral-400">
-                  <span>{customWidth}px</span>
-                  <button
-                    onClick={() => setCustomWidth(DEFAULT_WIDTH)}
-                    className="text-electric-pink hover:underline"
-                  >
-                    Reset
-                  </button>
+              <div className="flex items-center space-x-1">
+                <div className="flex-grow">
+                  <div className="relative flex w-full touch-none select-none items-center h-8">
+                    <input
+                      type="range"
+                      min={MIN_WIDTH}
+                      max={MAX_WIDTH}
+                      value={customWidth}
+                      onChange={(e) => setCustomWidth(Number(e.target.value))}
+                      className="w-full h-2 rounded-full appearance-none cursor-pointer"
+                      style={{
+                        background: `linear-gradient(to right, #e43c81 0%, #e43c81 ${((customWidth - MIN_WIDTH) / (MAX_WIDTH - MIN_WIDTH)) * 100}%, #d4d4d8 ${((customWidth - MIN_WIDTH) / (MAX_WIDTH - MIN_WIDTH)) * 100}%, #d4d4d8 100%)`
+                      }}
+                    />
+                  </div>
                 </div>
+                <button
+                  onClick={() => setCustomWidth(DEFAULT_WIDTH)}
+                  className="inline-flex items-center justify-center px-2 py-1.5 text-[15px] rounded-md border border-transparent hover:border-neutral-300 dark:hover:border-neutral-600 transition-colors bg-transparent active:bg-neutral-100 dark:active:bg-neutral-700"
+                  aria-label="Reset width"
+                >
+                  <svg className="size-5" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path fillRule="evenodd" clipRule="evenodd" d="M4.75 3C5.16421 3 5.5 3.33579 5.5 3.75V5.71122C7.1554 4.03743 9.4791 3 12 3C16.9706 3 21 7.02944 21 12C21 12.3803 20.9764 12.7555 20.9304 13.1241C20.8792 13.5351 20.5044 13.8267 20.0934 13.7755C19.6823 13.7242 19.3907 13.3495 19.4419 12.9384C19.4802 12.6313 19.5 12.3181 19.5 12C19.5 7.85786 16.1421 4.5 12 4.5C9.77612 4.5 7.73561 5.46681 6.3448 7H8.75C9.16421 7 9.5 7.33579 9.5 7.75C9.5 8.16421 9.16421 8.5 8.75 8.5H5.25C4.55964 8.5 4 7.94036 4 7.25V3.75C4 3.33579 4.33579 3 4.75 3ZM3.90663 10.2245C4.31766 10.2758 4.60932 10.6505 4.55806 11.0616C4.51977 11.3687 4.5 11.6819 4.5 12C4.5 16.1421 7.85786 19.5 12 19.5C14.2239 19.5 16.2644 18.5332 17.6552 17H15.2618C14.8476 17 14.5118 16.6642 14.5118 16.25C14.5118 15.8358 14.8476 15.5 15.2618 15.5H18.7618C19.4522 15.5 20.0118 16.0596 20.0118 16.75V20.25C20.0118 20.6642 19.6761 21 19.2618 21C18.8476 21 18.5118 20.6642 18.5118 20.25V18.2768C16.8557 19.9576 14.5269 21 12 21C7.02944 21 3 16.9706 3 12C3 11.6197 3.02364 11.2445 3.06959 10.8759C3.12085 10.4649 3.4956 10.1733 3.90663 10.2245Z"></path>
+                  </svg>
+                </button>
               </div>
             )}
-
-            <label className="flex items-center gap-2 cursor-pointer group">
-              <input
-                type="radio"
-                name="widthMode"
-                checked={widthMode === 'full'}
-                onChange={() => setWidthMode('full')}
-                className="w-4 h-4 text-electric-pink accent-electric-pink"
-              />
-              <span className="text-sm text-neutral-900 dark:text-white group-hover:text-neutral-700 dark:group-hover:text-neutral-200">
-                Full width
-              </span>
-            </label>
           </div>
         </div>
       )}
