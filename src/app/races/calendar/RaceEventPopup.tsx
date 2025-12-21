@@ -694,7 +694,7 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
 
         /* Update slider track background for dark mode */
         :global(.dark) input[type="range"][data-slider="black"] {
-          background: linear-gradient(to right, #ffffff 0%, #ffffff var(--slider-progress, 50%), #52525b var(--slider-progress, 50%), #52525b 100%) !important;
+          background: linear-gradient(to right, #52525b 0%, #52525b var(--slider-progress, 50%), #ffffff var(--slider-progress, 50%), #ffffff 100%) !important;
         }
       `}</style>
     </DraggableWindow>
