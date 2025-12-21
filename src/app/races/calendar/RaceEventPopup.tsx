@@ -591,26 +591,42 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
           width: 16px;
           height: 16px;
           border-radius: 50%;
-          background: #171717;
+          background: #171717 !important;
           cursor: pointer;
           border: none;
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
         }
 
         .slider-black::-moz-range-thumb {
           width: 16px;
           height: 16px;
           border-radius: 50%;
-          background: #171717;
+          background: #171717 !important;
           cursor: pointer;
           border: none;
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Remove default track styling */
+        .slider-black::-webkit-slider-runnable-track {
+          height: 8px;
+          border-radius: 4px;
+        }
+
+        .slider-black::-moz-range-track {
+          height: 8px;
+          border-radius: 4px;
+          background: transparent;
         }
 
         :global(.dark) .slider-black::-webkit-slider-thumb {
-          background: #ffffff;
+          background: #ffffff !important;
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
         }
 
         :global(.dark) .slider-black::-moz-range-thumb {
-          background: #ffffff;
+          background: #ffffff !important;
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
         }
 
         /* Update slider track background for dark mode */
