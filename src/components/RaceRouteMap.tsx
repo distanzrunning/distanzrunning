@@ -811,25 +811,30 @@ function createCustomControls(
   const unitToggleButton = document.createElement('button')
   unitToggleButton.setAttribute('aria-label', 'Toggle distance unit (km/mi)')
   unitToggleButton.className = 'mapboxgl-ctrl-unit'
-  unitToggleButton.style.cssText = `
-    background-color: ${isDark ? '#2d2d2d' : 'white'};
-    border: none;
-    border-radius: 2px;
-    width: 29px;
-    height: 29px;
-    box-shadow: 0 0 0 2px rgba(0,0,0,.1);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: opacity 0.2s, background-color 0.15s;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    font-weight: 700;
-    color: ${isDark ? '#bbb' : '#666'};
-    opacity: 0;
-    pointer-events: none;
-  `
+
+  const updateUnitToggleStyle = (markersActive: boolean) => {
+    unitToggleButton.style.cssText = `
+      background-color: ${isDark ? '#2d2d2d' : 'white'};
+      border: none;
+      border-radius: 2px;
+      width: 29px;
+      height: 29px;
+      box-shadow: 0 0 0 2px rgba(0,0,0,.1);
+      cursor: ${markersActive ? 'pointer' : 'not-allowed'};
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.2s, background-color 0.15s;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 700;
+      color: ${markersActive ? (isDark ? '#bbb' : '#666') : (isDark ? '#555' : '#aaa')};
+      opacity: 0;
+      pointer-events: none;
+    `
+  }
+
+  updateUnitToggleStyle(showMarkers)
 
   unitToggleButton.textContent = useMetric ? 'KM' : 'MI'
 
@@ -840,6 +845,9 @@ function createCustomControls(
     unitToggleButton.style.backgroundColor = isDark ? '#2d2d2d' : 'white'
   })
   unitToggleButton.addEventListener('click', () => {
+    // Only allow toggle if markers are visible
+    if (!showMarkersRef.current) return
+
     const newMetric = !useMetricRef.current
     setUseMetric(newMetric)
     useMetricRef.current = newMetric // Update ref immediately for marker button
@@ -992,6 +1000,9 @@ function createCustomControls(
               stroke-width="0.5"/>
       </svg>
     `
+    // Update unit toggle button styling based on marker state
+    updateUnitToggleStyle(newShowMarkers)
+
     // Trigger marker update with current unit value from ref
     if (newShowMarkers) {
       // Clear existing markers immediately (synchronous)
