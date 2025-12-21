@@ -38,7 +38,7 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
   const DEFAULT_WIDTH = 600
   const MIN_WIDTH = 400
   const MAX_WIDTH = 850
-  const FULL_WIDTH_MAX = 1200 // Maximum width for full width mode
+  const FULL_WIDTH_MAX = 850 // Maximum width for full width mode
 
   // Trigger map resize when width changes (debounced to avoid excessive remounts)
   useEffect(() => {
@@ -96,6 +96,12 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
 
   // Calculate effective max-width based on mode
   const effectiveMaxWidth = widthMode === 'full' ? `${FULL_WIDTH_MAX}px` : `${customWidth}px`
+
+  // Calculate map height based on content width (scale from 320px at 400px width to 480px at 850px)
+  const currentWidth = widthMode === 'full' ? FULL_WIDTH_MAX : customWidth
+  const minMapHeight = 320
+  const maxMapHeight = 480
+  const mapHeight = Math.round(minMapHeight + ((currentWidth - MIN_WIDTH) / (MAX_WIDTH - MIN_WIDTH)) * (maxMapHeight - minMapHeight))
 
   // Settings button and dropdown
   const settingsControl = (
@@ -455,7 +461,12 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
 
           {/* Race Route Map */}
           {race.gpxFile?.asset?.url && (
-            <RaceRouteMap key={contentKey} gpxUrl={race.gpxFile.asset.url} title={race.title} />
+            <RaceRouteMap
+              key={contentKey}
+              gpxUrl={race.gpxFile.asset.url}
+              title={race.title}
+              height={mapHeight}
+            />
           )}
 
           {/* Spacer to ensure content can scroll */}

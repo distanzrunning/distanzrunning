@@ -10,10 +10,11 @@ import { lineString } from '@turf/helpers'
 interface RaceRouteMapProps {
   gpxUrl: string
   title: string
+  height?: number // Optional height in pixels
 }
 
 // Mapbox implementation matching Google Maps style
-export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
+export function RaceRouteMap({ gpxUrl, title, height }: RaceRouteMapProps) {
   const mapRef = useRef<HTMLDivElement>(null)
   const mapInstanceRef = useRef<mapboxgl.Map | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -450,7 +451,10 @@ export function RaceRouteMap({ gpxUrl, title }: RaceRouteMapProps) {
   }
 
   return (
-    <div className="relative w-full h-80 min-h-80 rounded-xl overflow-hidden shadow-sm border border-neutral-100 dark:border-neutral-800 flex-shrink-0">
+    <div
+      className="relative w-full rounded-xl overflow-hidden shadow-sm border border-neutral-100 dark:border-neutral-800 flex-shrink-0 transition-all duration-300"
+      style={{ height: height ? `${height}px` : '320px' }}
+    >
       {isLoading && (
         <div className="absolute inset-0 flex items-center justify-center bg-neutral-100 dark:bg-neutral-800 z-10">
           <div className="text-sm text-neutral-500 dark:text-neutral-400">Loading...</div>
