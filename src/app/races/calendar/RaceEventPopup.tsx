@@ -584,59 +584,110 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
           scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
         }
 
-        /* Custom slider styling for black/white theme */
+        /* Custom slider styling for black/white theme - NUCLEAR APPROACH */
         input[type="range"].slider-black {
           -webkit-appearance: none;
+          -moz-appearance: none;
           appearance: none;
+          outline: none;
         }
 
+        /* WebKit (Chrome, Safari, Edge) - ALL states */
         input[type="range"].slider-black::-webkit-slider-thumb {
-          -webkit-appearance: none;
-          appearance: none;
-          width: 16px;
-          height: 16px;
-          border-radius: 50%;
+          -webkit-appearance: none !important;
+          appearance: none !important;
+          width: 16px !important;
+          height: 16px !important;
+          border-radius: 50% !important;
+          background: #171717 !important;
           background-color: #171717 !important;
           background-image: none !important;
-          cursor: pointer;
-          border: none !important;
+          cursor: pointer !important;
+          border: 0 !important;
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !important;
+          margin-top: -4px !important;
+        }
+
+        input[type="range"].slider-black:focus::-webkit-slider-thumb {
+          background: #171717 !important;
+          background-color: #171717 !important;
+          background-image: none !important;
+          outline: none !important;
+        }
+
+        input[type="range"].slider-black:active::-webkit-slider-thumb {
+          background: #171717 !important;
+          background-color: #171717 !important;
+          background-image: none !important;
+        }
+
+        /* Firefox */
+        input[type="range"].slider-black::-moz-range-thumb {
+          -moz-appearance: none !important;
+          width: 16px !important;
+          height: 16px !important;
+          border-radius: 50% !important;
+          background: #171717 !important;
+          background-color: #171717 !important;
+          background-image: none !important;
+          cursor: pointer !important;
+          border: 0 !important;
           box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !important;
         }
 
-        input[type="range"].slider-black::-moz-range-thumb {
-          width: 16px;
-          height: 16px;
-          border-radius: 50%;
+        input[type="range"].slider-black:focus::-moz-range-thumb {
+          background: #171717 !important;
           background-color: #171717 !important;
           background-image: none !important;
-          cursor: pointer;
-          border: none !important;
-          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !important;
+          outline: none !important;
         }
 
         /* Remove default track styling */
         input[type="range"].slider-black::-webkit-slider-runnable-track {
-          height: 8px;
-          border-radius: 4px;
-          background: transparent;
+          height: 8px !important;
+          border-radius: 4px !important;
+          background: transparent !important;
+          border: none !important;
         }
 
         input[type="range"].slider-black::-moz-range-track {
-          height: 8px;
-          border-radius: 4px;
-          background: transparent;
+          height: 8px !important;
+          border-radius: 4px !important;
+          background: transparent !important;
+          border: none !important;
         }
 
+        /* Dark mode overrides */
         :global(.dark) input[type="range"].slider-black::-webkit-slider-thumb {
+          background: #ffffff !important;
           background-color: #ffffff !important;
           background-image: none !important;
           box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5) !important;
+        }
+
+        :global(.dark) input[type="range"].slider-black:focus::-webkit-slider-thumb {
+          background: #ffffff !important;
+          background-color: #ffffff !important;
+          background-image: none !important;
+        }
+
+        :global(.dark) input[type="range"].slider-black:active::-webkit-slider-thumb {
+          background: #ffffff !important;
+          background-color: #ffffff !important;
+          background-image: none !important;
         }
 
         :global(.dark) input[type="range"].slider-black::-moz-range-thumb {
+          background: #ffffff !important;
           background-color: #ffffff !important;
           background-image: none !important;
           box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5) !important;
+        }
+
+        :global(.dark) input[type="range"].slider-black:focus::-moz-range-thumb {
+          background: #ffffff !important;
+          background-color: #ffffff !important;
+          background-image: none !important;
         }
 
         /* Update slider track background for dark mode */
