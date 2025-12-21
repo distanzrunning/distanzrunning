@@ -38,10 +38,15 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
   const DEFAULT_WIDTH = 600
   const MIN_WIDTH = 400
   const MAX_WIDTH = 850
+  const FULL_WIDTH_MAX = 1200 // Maximum width for full width mode
 
-  // Trigger map resize when width changes
+  // Trigger map resize when width changes (debounced to avoid excessive remounts)
   useEffect(() => {
-    setContentKey(prev => prev + 1)
+    const timeoutId = setTimeout(() => {
+      setContentKey(prev => prev + 1)
+    }, 350) // Wait for transition to complete (300ms + 50ms buffer)
+
+    return () => clearTimeout(timeoutId)
   }, [customWidth, widthMode])
 
   // Close dropdown when clicking outside
@@ -90,7 +95,7 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
   const labelImage = getWorldAthleticsLabel()
 
   // Calculate effective max-width based on mode
-  const effectiveMaxWidth = widthMode === 'full' ? '100%' : `${customWidth}px`
+  const effectiveMaxWidth = widthMode === 'full' ? `${FULL_WIDTH_MAX}px` : `${customWidth}px`
 
   // Settings button and dropdown
   const settingsControl = (
