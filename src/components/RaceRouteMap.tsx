@@ -536,6 +536,7 @@ function createMarkerPin(color: string): HTMLElement {
   pin.style.backgroundColor = color
   pin.style.border = '2px solid white'
   pin.style.boxShadow = '0 2px 4px rgba(0,0,0,0.3)'
+  pin.style.zIndex = '100' // Higher z-index for start marker
   return pin
 }
 
@@ -548,6 +549,7 @@ function createCheckeredFinishMarker(): HTMLElement {
   container.style.overflow = 'hidden'
   container.style.border = '2px solid white'
   container.style.boxShadow = '0 2px 4px rgba(0,0,0,0.3)'
+  container.style.zIndex = '50' // Lower z-index than start marker
 
   // Create checkered pattern using CSS gradient
   container.style.background = `
@@ -877,7 +879,7 @@ function createCustomControls(
             const distancePopup = new mapboxgl.Popup({
               closeButton: false,
               closeOnClick: false,
-              offset: 15,
+              offset: [0, -15],
               className: 'distance-marker-popup'
             })
 
@@ -1023,7 +1025,7 @@ function createCustomControls(
             const distancePopup = new mapboxgl.Popup({
               closeButton: false,
               closeOnClick: false,
-              offset: 15,
+              offset: [0, -15],
               className: 'distance-marker-popup'
             })
 
