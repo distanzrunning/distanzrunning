@@ -33,10 +33,16 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
   const [customWidth, setCustomWidth] = useState(600)
   const settingsButtonRef = useRef<HTMLButtonElement>(null)
   const settingsDropdownRef = useRef<HTMLDivElement>(null)
+  const [contentKey, setContentKey] = useState(0) // Force map remount on width change
 
   const DEFAULT_WIDTH = 600
   const MIN_WIDTH = 400
   const MAX_WIDTH = 850
+
+  // Trigger map resize when width changes
+  useEffect(() => {
+    setContentKey(prev => prev + 1)
+  }, [customWidth, widthMode])
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -194,7 +200,7 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
           >
             {/* Image Card */}
             <div className="relative w-full bg-white dark:bg-neutral-900 rounded-xl overflow-hidden shadow-sm border border-neutral-100 dark:border-neutral-800 flex-shrink-0">
-              <div style={{ height: '300px' }} className="relative flex-shrink-0">
+              <div className="relative flex-shrink-0" style={{ aspectRatio: '8 / 5' }}>
               {imageUrl && (
                 <img
                   src={imageUrl}
@@ -444,7 +450,7 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
 
           {/* Race Route Map */}
           {race.gpxFile?.asset?.url && (
-            <RaceRouteMap gpxUrl={race.gpxFile.asset.url} title={race.title} />
+            <RaceRouteMap key={contentKey} gpxUrl={race.gpxFile.asset.url} title={race.title} />
           )}
 
           {/* Spacer to ensure content can scroll */}
@@ -454,7 +460,10 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
 
         {/* Fixed Action Buttons at Bottom - No Border */}
         <div className="flex-shrink-0 bg-neutral-50 dark:bg-neutral-950 p-4 pt-3">
-          <div className="w-full max-w-[600px] mx-auto">
+          <div
+            className="w-full mx-auto transition-all duration-300"
+            style={{ maxWidth: effectiveMaxWidth }}
+          >
             <div className="grid grid-cols-3 gap-3">
               <a
                 href={`/races/${race.slug.current}`}
