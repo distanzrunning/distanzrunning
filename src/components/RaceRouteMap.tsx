@@ -671,7 +671,19 @@ function createCustomControls(
     recenterButton.style.backgroundColor = isDark ? '#2d2d2d' : 'white'
   })
   recenterButton.addEventListener('click', () => {
-    map.fitBounds(bounds, { padding: 40 })
+    // Calculate responsive padding based on container size
+    const container = map.getContainer()
+    const containerWidth = container.offsetWidth
+    const containerHeight = container.offsetHeight
+
+    // Use 5-8% of the smaller dimension as padding, with min/max constraints
+    const minDimension = Math.min(containerWidth, containerHeight)
+    const padding = Math.max(20, Math.min(60, Math.round(minDimension * 0.06)))
+
+    map.fitBounds(bounds, {
+      padding: padding,
+      duration: 800 // Smooth animation
+    })
   })
 
   // Create zoom controls container - compact Strava-style
