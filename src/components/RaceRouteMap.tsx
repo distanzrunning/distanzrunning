@@ -767,19 +767,18 @@ function createCustomControls(
     return R * c
   }
 
-  // Helper function to create distance marker element (Premium minimalist style with number)
+  // Helper function to create distance marker element (Strava-style pink with white text)
   const createDistanceMarkerElement = (number: string, isDark: boolean): HTMLElement => {
     const markerElement = document.createElement('div')
     markerElement.style.cssText = `
-      background: ${isDark ? 'rgba(23, 23, 23, 0.95)' : 'rgba(255, 255, 255, 0.98)'};
-      border: 1.5px solid ${isDark ? 'rgba(228, 60, 129, 0.6)' : 'rgba(255, 77, 148, 0.5)'};
+      background: ${isDark ? '#e43c81' : '#ff4d94'};
+      border: 2px solid white;
       border-radius: 50%;
       width: 20px;
       height: 20px;
       box-shadow: ${isDark
         ? '0 2px 12px rgba(0, 0, 0, 0.4), 0 1px 3px rgba(228, 60, 129, 0.3)'
-        : '0 2px 8px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06)'};
-      backdrop-filter: blur(10px);
+        : '0 2px 8px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.06)'};
       cursor: pointer;
       transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
       display: flex;
@@ -787,8 +786,8 @@ function createCustomControls(
       justify-content: center;
       font-family: 'JetBrains Mono', monospace;
       font-size: 9px;
-      font-weight: 600;
-      color: ${isDark ? '#ffffff' : '#333333'};
+      font-weight: 700;
+      color: white;
     `
     markerElement.textContent = number
 
