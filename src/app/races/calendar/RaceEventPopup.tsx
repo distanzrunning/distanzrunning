@@ -34,6 +34,7 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
   const settingsButtonRef = useRef<HTMLButtonElement>(null)
   const settingsDropdownRef = useRef<HTMLDivElement>(null)
   const [contentKey, setContentKey] = useState(0) // Force map remount on width change
+  const contentContainerRef = useRef<HTMLDivElement>(null) // Track content container for resize observer
 
   const DEFAULT_WIDTH = 600
   const MIN_WIDTH = 400
@@ -48,6 +49,28 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
 
     return () => clearTimeout(timeoutId)
   }, [customWidth, widthMode])
+
+  // Detect container resize from window maximize/minimize and trigger map remount
+  useEffect(() => {
+    const container = contentContainerRef.current
+    if (!container) return
+
+    let resizeTimeout: NodeJS.Timeout
+    const resizeObserver = new ResizeObserver(() => {
+      // Debounce to avoid excessive remounts during transition
+      clearTimeout(resizeTimeout)
+      resizeTimeout = setTimeout(() => {
+        setContentKey(prev => prev + 1)
+      }, 350)
+    })
+
+    resizeObserver.observe(container)
+
+    return () => {
+      clearTimeout(resizeTimeout)
+      resizeObserver.disconnect()
+    }
+  }, [])
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -206,6 +229,7 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
         {/* Scrollable Content Area */}
         <div className="overflow-y-auto flex-1 flex justify-center race-popup-scroll p-4 pb-0">
           <div
+            ref={contentContainerRef}
             className="w-full flex flex-col gap-4 transition-all duration-300"
             style={{ maxWidth: effectiveMaxWidth }}
           >
