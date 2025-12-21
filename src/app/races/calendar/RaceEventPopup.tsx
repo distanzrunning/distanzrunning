@@ -585,52 +585,62 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
         }
 
         /* Custom slider styling for black/white theme */
-        .slider-black::-webkit-slider-thumb {
+        input[type="range"].slider-black {
+          -webkit-appearance: none;
+          appearance: none;
+        }
+
+        input[type="range"].slider-black::-webkit-slider-thumb {
           -webkit-appearance: none;
           appearance: none;
           width: 16px;
           height: 16px;
           border-radius: 50%;
-          background: #171717 !important;
+          background-color: #171717 !important;
+          background-image: none !important;
           cursor: pointer;
-          border: none;
-          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+          border: none !important;
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !important;
         }
 
-        .slider-black::-moz-range-thumb {
+        input[type="range"].slider-black::-moz-range-thumb {
           width: 16px;
           height: 16px;
           border-radius: 50%;
-          background: #171717 !important;
+          background-color: #171717 !important;
+          background-image: none !important;
           cursor: pointer;
-          border: none;
-          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+          border: none !important;
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !important;
         }
 
         /* Remove default track styling */
-        .slider-black::-webkit-slider-runnable-track {
-          height: 8px;
-          border-radius: 4px;
-        }
-
-        .slider-black::-moz-range-track {
+        input[type="range"].slider-black::-webkit-slider-runnable-track {
           height: 8px;
           border-radius: 4px;
           background: transparent;
         }
 
-        :global(.dark) .slider-black::-webkit-slider-thumb {
-          background: #ffffff !important;
-          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+        input[type="range"].slider-black::-moz-range-track {
+          height: 8px;
+          border-radius: 4px;
+          background: transparent;
         }
 
-        :global(.dark) .slider-black::-moz-range-thumb {
-          background: #ffffff !important;
-          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+        :global(.dark) input[type="range"].slider-black::-webkit-slider-thumb {
+          background-color: #ffffff !important;
+          background-image: none !important;
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5) !important;
+        }
+
+        :global(.dark) input[type="range"].slider-black::-moz-range-thumb {
+          background-color: #ffffff !important;
+          background-image: none !important;
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5) !important;
         }
 
         /* Update slider track background for dark mode */
-        :global(.dark) .slider-black {
+        :global(.dark) input[type="range"].slider-black {
           background: linear-gradient(to right, #ffffff 0%, #ffffff var(--slider-progress, 50%), #52525b var(--slider-progress, 50%), #52525b 100%) !important;
         }
       `}</style>
