@@ -205,9 +205,11 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
                       value={customWidth}
                       onChange={(e) => setCustomWidth(Number(e.target.value))}
                       className="w-full h-2 rounded-full appearance-none cursor-pointer slider-black"
+                      data-slider="black"
                       style={{
                         background: `linear-gradient(to right, #171717 0%, #171717 ${((customWidth - MIN_WIDTH) / (MAX_WIDTH - MIN_WIDTH)) * 100}%, #d4d4d8 ${((customWidth - MIN_WIDTH) / (MAX_WIDTH - MIN_WIDTH)) * 100}%, #d4d4d8 100%)`,
-                        '--slider-progress': `${((customWidth - MIN_WIDTH) / (MAX_WIDTH - MIN_WIDTH)) * 100}%`
+                        '--slider-progress': `${((customWidth - MIN_WIDTH) / (MAX_WIDTH - MIN_WIDTH)) * 100}%`,
+                        accentColor: '#171717'
                       } as React.CSSProperties}
                     />
                   </div>
@@ -585,20 +587,15 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
         }
 
         /* Custom slider styling for black/white theme - NUCLEAR APPROACH */
-        input[type="range"].slider-black {
-          -webkit-appearance: none;
-          -moz-appearance: none;
-          appearance: none;
-          outline: none;
-          accent-color: #171717;
-        }
-
-        :global(.dark) input[type="range"].slider-black {
-          accent-color: #ffffff;
+        input[type="range"][data-slider="black"] {
+          -webkit-appearance: none !important;
+          -moz-appearance: none !important;
+          appearance: none !important;
+          outline: none !important;
         }
 
         /* WebKit (Chrome, Safari, Edge) - ALL states */
-        input[type="range"].slider-black::-webkit-slider-thumb {
+        input[type="range"][data-slider="black"]::-webkit-slider-thumb {
           -webkit-appearance: none !important;
           appearance: none !important;
           width: 16px !important;
@@ -613,21 +610,21 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
           margin-top: -4px !important;
         }
 
-        input[type="range"].slider-black:focus::-webkit-slider-thumb {
+        input[type="range"][data-slider="black"]:focus::-webkit-slider-thumb {
           background: #171717 !important;
           background-color: #171717 !important;
           background-image: none !important;
           outline: none !important;
         }
 
-        input[type="range"].slider-black:active::-webkit-slider-thumb {
+        input[type="range"][data-slider="black"]:active::-webkit-slider-thumb {
           background: #171717 !important;
           background-color: #171717 !important;
           background-image: none !important;
         }
 
         /* Firefox */
-        input[type="range"].slider-black::-moz-range-thumb {
+        input[type="range"][data-slider="black"]::-moz-range-thumb {
           -moz-appearance: none !important;
           width: 16px !important;
           height: 16px !important;
@@ -640,7 +637,7 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
           box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !important;
         }
 
-        input[type="range"].slider-black:focus::-moz-range-thumb {
+        input[type="range"][data-slider="black"]:focus::-moz-range-thumb {
           background: #171717 !important;
           background-color: #171717 !important;
           background-image: none !important;
@@ -648,14 +645,14 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
         }
 
         /* Remove default track styling */
-        input[type="range"].slider-black::-webkit-slider-runnable-track {
+        input[type="range"][data-slider="black"]::-webkit-slider-runnable-track {
           height: 8px !important;
           border-radius: 4px !important;
           background: transparent !important;
           border: none !important;
         }
 
-        input[type="range"].slider-black::-moz-range-track {
+        input[type="range"][data-slider="black"]::-moz-range-track {
           height: 8px !important;
           border-radius: 4px !important;
           background: transparent !important;
@@ -663,40 +660,40 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
         }
 
         /* Dark mode overrides */
-        :global(.dark) input[type="range"].slider-black::-webkit-slider-thumb {
+        :global(.dark) input[type="range"][data-slider="black"]::-webkit-slider-thumb {
           background: #ffffff !important;
           background-color: #ffffff !important;
           background-image: none !important;
           box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5) !important;
         }
 
-        :global(.dark) input[type="range"].slider-black:focus::-webkit-slider-thumb {
+        :global(.dark) input[type="range"][data-slider="black"]:focus::-webkit-slider-thumb {
           background: #ffffff !important;
           background-color: #ffffff !important;
           background-image: none !important;
         }
 
-        :global(.dark) input[type="range"].slider-black:active::-webkit-slider-thumb {
+        :global(.dark) input[type="range"][data-slider="black"]:active::-webkit-slider-thumb {
           background: #ffffff !important;
           background-color: #ffffff !important;
           background-image: none !important;
         }
 
-        :global(.dark) input[type="range"].slider-black::-moz-range-thumb {
+        :global(.dark) input[type="range"][data-slider="black"]::-moz-range-thumb {
           background: #ffffff !important;
           background-color: #ffffff !important;
           background-image: none !important;
           box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5) !important;
         }
 
-        :global(.dark) input[type="range"].slider-black:focus::-moz-range-thumb {
+        :global(.dark) input[type="range"][data-slider="black"]:focus::-moz-range-thumb {
           background: #ffffff !important;
           background-color: #ffffff !important;
           background-image: none !important;
         }
 
         /* Update slider track background for dark mode */
-        :global(.dark) input[type="range"].slider-black {
+        :global(.dark) input[type="range"][data-slider="black"] {
           background: linear-gradient(to right, #ffffff 0%, #ffffff var(--slider-progress, 50%), #52525b var(--slider-progress, 50%), #52525b 100%) !important;
         }
       `}</style>
