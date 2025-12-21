@@ -590,6 +590,11 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
           -moz-appearance: none;
           appearance: none;
           outline: none;
+          accent-color: #171717;
+        }
+
+        :global(.dark) input[type="range"].slider-black {
+          accent-color: #ffffff;
         }
 
         /* WebKit (Chrome, Safari, Edge) - ALL states */
