@@ -9,6 +9,8 @@ import { convertCurrencySync, formatPrice } from '@/lib/raceUtils'
 import { DraggableWindow } from '@/components/DraggableWindow'
 import { RaceRouteMap } from '@/components/RaceRouteMap'
 import { Route, Wallet, Users, ArrowUpRight, ArrowDownRight, Mountain, ThermometerSun, Medal, Settings2, Settings } from 'lucide-react'
+import Slider from '@mui/material/Slider'
+import Box from '@mui/material/Box'
 
 interface RaceEventPopupProps {
   race: RaceGuide | null
@@ -197,22 +199,58 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
             {widthMode === 'fixed' && (
               <div className="flex items-center space-x-1">
                 <div className="flex-grow">
-                  <div className="relative flex w-full touch-none select-none items-center h-8">
-                    <input
-                      type="range"
+                  <Box sx={{ width: '100%', px: 1 }}>
+                    <Slider
+                      value={customWidth}
+                      onChange={(_, newValue) => setCustomWidth(newValue as number)}
                       min={MIN_WIDTH}
                       max={MAX_WIDTH}
-                      value={customWidth}
-                      onChange={(e) => setCustomWidth(Number(e.target.value))}
-                      className="w-full h-2 rounded-full appearance-none cursor-pointer slider-black"
-                      data-slider="black"
-                      style={{
-                        background: `linear-gradient(to right, #171717 0%, #171717 ${((customWidth - MIN_WIDTH) / (MAX_WIDTH - MIN_WIDTH)) * 100}%, #d4d4d8 ${((customWidth - MIN_WIDTH) / (MAX_WIDTH - MIN_WIDTH)) * 100}%, #d4d4d8 100%)`,
-                        '--slider-progress': `${((customWidth - MIN_WIDTH) / (MAX_WIDTH - MIN_WIDTH)) * 100}%`,
-                        accentColor: '#171717'
-                      } as React.CSSProperties}
+                      step={1}
+                      valueLabelDisplay="off"
+                      sx={{
+                        color: '#1A1A1A',
+                        height: 8,
+                        padding: 0,
+                        '& .MuiSlider-rail': {
+                          height: 8,
+                          borderRadius: 4,
+                          backgroundColor: '#d4d4d8',
+                          opacity: 1,
+                        },
+                        '& .MuiSlider-track': {
+                          height: 8,
+                          borderRadius: 0,
+                          backgroundColor: '#171717',
+                          border: 'none',
+                        },
+                        '& .MuiSlider-thumb': {
+                          height: 16,
+                          width: 16,
+                          backgroundColor: '#171717',
+                          border: 'none',
+                          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.3)',
+                          '&:hover, &.Mui-active': {
+                            boxShadow: '0 1px 3px rgba(0, 0, 0, 0.3)',
+                          },
+                        },
+                        '.dark &': {
+                          '& .MuiSlider-rail': {
+                            backgroundColor: '#404040',
+                          },
+                          '& .MuiSlider-track': {
+                            backgroundColor: '#E6E6E6',
+                          },
+                          '& .MuiSlider-thumb': {
+                            backgroundColor: '#FFFFFF',
+                            boxShadow: '0 1px 3px rgba(0, 0, 0, 0.5)',
+                            '&:hover, &.Mui-active': {
+                              boxShadow: '0 1px 3px rgba(0, 0, 0, 0.5)',
+                            },
+                          },
+                        },
+                      }}
                     />
-                  </div>
+                  </Box>
                 </div>
                 <button
                   onClick={() => setCustomWidth(DEFAULT_WIDTH)}
