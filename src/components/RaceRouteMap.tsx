@@ -868,11 +868,11 @@ function createCustomControls(
               .addTo(map)
 
             // Add tooltip on hover (similar to start/end markers)
-            const displayDist = newMetric ? targetDistance.toFixed(1) : (targetDistance / 1.609344).toFixed(1)
+            const displayDist = newMetric ? Math.round(targetDistance) : Math.round(targetDistance / 1.609344)
             const unitLabel = newMetric ? 'km' : 'mi'
 
             const tooltipBg = isDark ? 'rgba(23, 23, 23, 0.95)' : 'rgba(255, 255, 255, 0.98)'
-            const tooltipColor = isDark ? '#e43c81' : '#ff4d94'
+            const tooltipColor = isDark ? '#ffffff' : '#333333'
 
             const distancePopup = new mapboxgl.Popup({
               closeButton: false,
@@ -1014,11 +1014,11 @@ function createCustomControls(
               .addTo(map)
 
             // Add tooltip on hover (similar to start/end markers)
-            const displayDist = currentMetric ? targetDistance.toFixed(1) : (targetDistance / 1.609344).toFixed(1)
+            const displayDist = currentMetric ? Math.round(targetDistance) : Math.round(targetDistance / 1.609344)
             const unitLabel = currentMetric ? 'km' : 'mi'
 
             const tooltipBg = isDark ? 'rgba(23, 23, 23, 0.95)' : 'rgba(255, 255, 255, 0.98)'
-            const tooltipColor = isDark ? '#e43c81' : '#ff4d94'
+            const tooltipColor = isDark ? '#ffffff' : '#333333'
 
             const distancePopup = new mapboxgl.Popup({
               closeButton: false,
