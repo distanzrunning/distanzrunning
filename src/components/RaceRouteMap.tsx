@@ -671,7 +671,7 @@ function createCustomControls(
     recenterButton.style.backgroundColor = isDark ? '#2d2d2d' : 'white'
   })
   recenterButton.addEventListener('click', () => {
-    // Calculate responsive padding based on container size
+    // Get current container dimensions
     const container = map.getContainer()
     const containerWidth = container.offsetWidth
     const containerHeight = container.offsetHeight
@@ -680,9 +680,14 @@ function createCustomControls(
     const minDimension = Math.min(containerWidth, containerHeight)
     const padding = Math.max(20, Math.min(60, Math.round(minDimension * 0.06)))
 
+    // Force map to resize first in case container changed
+    map.resize()
+
+    // Then fit bounds with appropriate padding
     map.fitBounds(bounds, {
       padding: padding,
-      duration: 800 // Smooth animation
+      duration: 800, // Smooth animation
+      maxZoom: 16 // Prevent zooming too close
     })
   })
 
