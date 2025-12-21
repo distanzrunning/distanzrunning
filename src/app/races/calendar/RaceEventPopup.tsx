@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { format } from 'date-fns'
 import Image from 'next/image'
 import type { RaceGuide } from '../page'
@@ -8,7 +8,7 @@ import { urlFor } from '@/sanity/lib/image'
 import { convertCurrencySync, formatPrice } from '@/lib/raceUtils'
 import { DraggableWindow } from '@/components/DraggableWindow'
 import { RaceRouteMap } from '@/components/RaceRouteMap'
-import { Route, Wallet, Users, ArrowUpRight, ArrowDownRight, Mountain, ThermometerSun, Medal, Settings2 } from 'lucide-react'
+import { Route, Wallet, Users, ArrowUpRight, ArrowDownRight, Mountain, ThermometerSun, Medal, Settings2, Settings } from 'lucide-react'
 
 interface RaceEventPopupProps {
   race: RaceGuide | null
@@ -26,6 +26,37 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
   const [useMetric, setUseMetric] = useState(false)
   const [showMensTooltip, setShowMensTooltip] = useState(false)
   const [showWomensTooltip, setShowWomensTooltip] = useState(false)
+
+  // Settings dropdown state
+  const [showSettingsDropdown, setShowSettingsDropdown] = useState(false)
+  const [widthMode, setWidthMode] = useState<'fixed' | 'full'>('fixed')
+  const [customWidth, setCustomWidth] = useState(600)
+  const settingsButtonRef = useRef<HTMLButtonElement>(null)
+  const settingsDropdownRef = useRef<HTMLDivElement>(null)
+
+  const DEFAULT_WIDTH = 600
+  const MIN_WIDTH = 400
+  const MAX_WIDTH = 850
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        showSettingsDropdown &&
+        settingsDropdownRef.current &&
+        settingsButtonRef.current &&
+        !settingsDropdownRef.current.contains(e.target as Node) &&
+        !settingsButtonRef.current.contains(e.target as Node)
+      ) {
+        setShowSettingsDropdown(false)
+      }
+    }
+
+    if (showSettingsDropdown) {
+      document.addEventListener('mousedown', handleClickOutside)
+      return () => document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [showSettingsDropdown])
 
   if (!race) return null
 
@@ -52,6 +83,96 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
 
   const labelImage = getWorldAthleticsLabel()
 
+  // Calculate effective max-width based on mode
+  const effectiveMaxWidth = widthMode === 'full' ? '100%' : `${customWidth}px`
+
+  // Settings button and dropdown
+  const settingsControl = (
+    <div className="relative">
+      <button
+        ref={settingsButtonRef}
+        onClick={(e) => {
+          e.stopPropagation()
+          setShowSettingsDropdown(!showSettingsDropdown)
+        }}
+        onMouseDown={(e) => e.stopPropagation()}
+        className="h-8 w-8 rounded-md flex items-center justify-center text-neutral-500 dark:text-neutral-400 hover:text-neutral-400 dark:hover:text-neutral-300 transition-colors active:scale-95"
+        aria-label="Settings"
+      >
+        <Settings className="w-4 h-4" />
+      </button>
+
+      {/* Settings Dropdown */}
+      {showSettingsDropdown && settingsButtonRef.current && (
+        <div
+          ref={settingsDropdownRef}
+          className="absolute left-0 top-10 w-72 bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg shadow-lg py-2 z-[9999]"
+          onClick={(e) => e.stopPropagation()}
+          onMouseDown={(e) => e.stopPropagation()}
+        >
+          <div className="px-3 py-2 text-xs font-medium text-neutral-500 dark:text-neutral-400 border-b border-neutral-200 dark:border-neutral-700">
+            Content Width
+          </div>
+
+          {/* Width mode toggle */}
+          <div className="px-3 py-3 space-y-2">
+            <label className="flex items-center gap-2 cursor-pointer group">
+              <input
+                type="radio"
+                name="widthMode"
+                checked={widthMode === 'fixed'}
+                onChange={() => setWidthMode('fixed')}
+                className="w-4 h-4 text-electric-pink accent-electric-pink"
+              />
+              <span className="text-sm text-neutral-900 dark:text-white group-hover:text-neutral-700 dark:group-hover:text-neutral-200">
+                Fixed width
+              </span>
+            </label>
+
+            {/* Slider (only shown when Fixed is selected) */}
+            {widthMode === 'fixed' && (
+              <div className="pl-6 space-y-2">
+                <input
+                  type="range"
+                  min={MIN_WIDTH}
+                  max={MAX_WIDTH}
+                  value={customWidth}
+                  onChange={(e) => setCustomWidth(Number(e.target.value))}
+                  className="w-full h-2 bg-neutral-200 dark:bg-neutral-700 rounded-lg appearance-none cursor-pointer accent-electric-pink"
+                  style={{
+                    background: `linear-gradient(to right, #e43c81 0%, #e43c81 ${((customWidth - MIN_WIDTH) / (MAX_WIDTH - MIN_WIDTH)) * 100}%, rgb(229 229 229) ${((customWidth - MIN_WIDTH) / (MAX_WIDTH - MIN_WIDTH)) * 100}%, rgb(229 229 229) 100%)`
+                  }}
+                />
+                <div className="flex items-center justify-between text-xs text-neutral-600 dark:text-neutral-400">
+                  <span>{customWidth}px</span>
+                  <button
+                    onClick={() => setCustomWidth(DEFAULT_WIDTH)}
+                    className="text-electric-pink hover:underline"
+                  >
+                    Reset
+                  </button>
+                </div>
+              </div>
+            )}
+
+            <label className="flex items-center gap-2 cursor-pointer group">
+              <input
+                type="radio"
+                name="widthMode"
+                checked={widthMode === 'full'}
+                onChange={() => setWidthMode('full')}
+                className="w-4 h-4 text-electric-pink accent-electric-pink"
+              />
+              <span className="text-sm text-neutral-900 dark:text-white group-hover:text-neutral-700 dark:group-hover:text-neutral-200">
+                Full width
+              </span>
+            </label>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+
   return (
     <DraggableWindow
       title={race.title}
@@ -61,12 +182,16 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
       initialHeight={700}
       minWidth={400}
       minHeight={300}
+      leftControls={settingsControl}
     >
       {/* Main container with flex column */}
       <div className="h-full flex flex-col bg-neutral-50 dark:bg-neutral-950">
         {/* Scrollable Content Area */}
         <div className="overflow-y-auto flex-1 flex justify-center race-popup-scroll p-4 pb-0">
-          <div className="w-full max-w-[600px] flex flex-col gap-4">
+          <div
+            className="w-full flex flex-col gap-4 transition-all duration-300"
+            style={{ maxWidth: effectiveMaxWidth }}
+          >
             {/* Image Card */}
             <div className="relative w-full bg-white dark:bg-neutral-900 rounded-xl overflow-hidden shadow-sm border border-neutral-100 dark:border-neutral-800 flex-shrink-0">
               <div style={{ height: '300px' }} className="relative flex-shrink-0">

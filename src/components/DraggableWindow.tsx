@@ -14,6 +14,7 @@ interface DraggableWindowProps {
   initialHeight?: number
   minWidth?: number
   minHeight?: number
+  leftControls?: ReactNode
 }
 
 type ResizeDirection = 'n' | 's' | 'e' | 'w' | 'ne' | 'nw' | 'se' | 'sw' | null
@@ -27,6 +28,7 @@ export function DraggableWindow({
   initialHeight = 600,
   minWidth = 400,
   minHeight = 300,
+  leftControls,
 }: DraggableWindowProps) {
   const [isMaximized, setIsMaximized] = useState(false)
   const [isSnappedLeft, setIsSnappedLeft] = useState(false)
@@ -472,6 +474,13 @@ export function DraggableWindow({
           onMouseDown={handleMouseDown}
           onDoubleClick={handleMaximize}
         >
+          {/* Left controls - absolute positioned on left */}
+          {leftControls && (
+            <div className="absolute left-6 flex items-center gap-2">
+              {leftControls}
+            </div>
+          )}
+
           {/* Title - centered */}
           <h3 className="text-base font-semibold text-neutral-900 dark:text-white truncate flex-1 text-center px-8">
             {title}
