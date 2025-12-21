@@ -1086,6 +1086,88 @@ function createCustomControls(
   mapContainer.appendChild(recenterButton)
   mapContainer.appendChild(markerControlContainer)
   mapContainer.appendChild(zoomContainer)
+
+  // Initialize markers if they were previously visible (e.g., after dark mode toggle)
+  if (showMarkers) {
+    const currentMetric = useMetric
+    let cumulativeDistance = 0
+    const interval = currentMetric ? 1 : 1.609344 // 1 km or 1 mile in km
+
+    for (let i = 1; i < coordinates.length; i++) {
+      const segmentDistance = calculateDistance(coordinates[i - 1], coordinates[i])
+      const prevCumulativeDistance = cumulativeDistance
+      cumulativeDistance += segmentDistance
+
+      const prevMarkerCount = Math.floor(prevCumulativeDistance / interval)
+      const currentMarkerCount = Math.floor(cumulativeDistance / interval)
+
+      if (currentMarkerCount > prevMarkerCount) {
+        for (let j = prevMarkerCount + 1; j <= currentMarkerCount; j++) {
+          const targetDistance = j * interval
+          const ratio = (targetDistance - prevCumulativeDistance) / segmentDistance
+          const lat = coordinates[i - 1][1] + ratio * (coordinates[i][1] - coordinates[i - 1][1])
+          const lng = coordinates[i - 1][0] + ratio * (coordinates[i][0] - coordinates[i - 1][0])
+
+          const markerEl = createDistanceMarkerElement(isDark)
+          const marker = new mapboxgl.Marker({ element: markerEl, anchor: 'center' })
+            .setLngLat([lng, lat])
+            .addTo(map)
+
+          // Add tooltip on hover (similar to start/end markers)
+          const displayDist = currentMetric ? Math.round(targetDistance) : Math.round(targetDistance / 1.609344)
+          const unitLabel = currentMetric ? 'km' : 'mi'
+
+          const tooltipBg = isDark ? 'rgba(23, 23, 23, 0.95)' : 'rgba(255, 255, 255, 0.98)'
+          const tooltipColor = isDark ? '#ffffff' : '#333333'
+
+          const distancePopup = new mapboxgl.Popup({
+            closeButton: false,
+            closeOnClick: false,
+            offset: [0, -15],
+            className: 'distance-marker-popup'
+          })
+
+          markerEl.addEventListener('mouseenter', () => {
+            distancePopup
+              .setLngLat([lng, lat])
+              .setHTML(`<div style="font-family: 'JetBrains Mono', monospace; font-weight: 600; color: ${tooltipColor}; font-size: 11px; padding: 4px;">${displayDist} ${unitLabel}</div>`)
+              .addTo(map)
+
+            // Apply styles immediately (synchronously)
+            const popupEl = distancePopup.getElement()
+            if (popupEl) {
+              popupEl.style.zIndex = '9999'
+              // Style the popup container
+              const popupContent = popupEl.querySelector('.mapboxgl-popup-content')
+              if (popupContent) {
+                const contentEl = popupContent as HTMLElement
+                contentEl.style.setProperty('background-color', tooltipBg, 'important')
+                contentEl.style.setProperty('padding', '4px 8px', 'important')
+                contentEl.style.setProperty('border-radius', '6px', 'important')
+                contentEl.style.setProperty('backdrop-filter', 'blur(10px)', 'important')
+                contentEl.style.boxShadow = isDark
+                  ? '0 2px 12px rgba(0, 0, 0, 0.4)'
+                  : '0 2px 8px rgba(0, 0, 0, 0.08)'
+              }
+              // Style the popup tip (arrow)
+              const popupTip = popupEl.querySelector('.mapboxgl-popup-tip')
+              if (popupTip) {
+                const tipEl = popupTip as HTMLElement
+                tipEl.style.setProperty('border-top-color', tooltipBg, 'important')
+                tipEl.style.setProperty('border-bottom-color', tooltipBg, 'important')
+              }
+            }
+          })
+
+          markerEl.addEventListener('mouseleave', () => {
+            distancePopup.remove()
+          })
+
+          distanceMarkersRef.current.push(marker)
+        }
+      }
+    }
+  }
 }
 
 // Helper function to parse GeoJSON and extract coordinates
