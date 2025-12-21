@@ -661,40 +661,48 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
 
         /* Dark mode overrides */
         :global(.dark) input[type="range"][data-slider="black"]::-webkit-slider-thumb {
-          background: #a3a3a3 !important;
-          background-color: #a3a3a3 !important;
+          background: #d4d4d8 !important;
+          background-color: #d4d4d8 !important;
           background-image: none !important;
           box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5) !important;
         }
 
         :global(.dark) input[type="range"][data-slider="black"]:focus::-webkit-slider-thumb {
-          background: #a3a3a3 !important;
-          background-color: #a3a3a3 !important;
+          background: #d4d4d8 !important;
+          background-color: #d4d4d8 !important;
           background-image: none !important;
         }
 
         :global(.dark) input[type="range"][data-slider="black"]:active::-webkit-slider-thumb {
-          background: #a3a3a3 !important;
-          background-color: #a3a3a3 !important;
+          background: #d4d4d8 !important;
+          background-color: #d4d4d8 !important;
           background-image: none !important;
+          transform: scale(0.95) !important;
         }
 
         :global(.dark) input[type="range"][data-slider="black"]::-moz-range-thumb {
-          background: #a3a3a3 !important;
-          background-color: #a3a3a3 !important;
+          background: #d4d4d8 !important;
+          background-color: #d4d4d8 !important;
           background-image: none !important;
           box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5) !important;
         }
 
         :global(.dark) input[type="range"][data-slider="black"]:focus::-moz-range-thumb {
-          background: #a3a3a3 !important;
-          background-color: #a3a3a3 !important;
+          background: #d4d4d8 !important;
+          background-color: #d4d4d8 !important;
           background-image: none !important;
+        }
+
+        :global(.dark) input[type="range"][data-slider="black"]:active::-moz-range-thumb {
+          background: #d4d4d8 !important;
+          background-color: #d4d4d8 !important;
+          background-image: none !important;
+          transform: scale(0.95) !important;
         }
 
         /* Update slider track background for dark mode */
         :global(.dark) input[type="range"][data-slider="black"] {
-          background: linear-gradient(to right, #a3a3a3 0%, #a3a3a3 var(--slider-progress, 50%), #ffffff var(--slider-progress, 50%), #ffffff 100%) !important;
+          background: linear-gradient(to right, #d4d4d8 0%, #d4d4d8 var(--slider-progress, 50%), #ffffff var(--slider-progress, 50%), #ffffff 100%) !important;
         }
       `}</style>
     </DraggableWindow>
