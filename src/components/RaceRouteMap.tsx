@@ -767,22 +767,30 @@ function createCustomControls(
     return R * c
   }
 
-  // Helper function to create distance marker element (Premium minimalist style - matching start/end)
-  const createDistanceMarkerElement = (isDark: boolean): HTMLElement => {
+  // Helper function to create distance marker element (Premium minimalist style with number)
+  const createDistanceMarkerElement = (number: string, isDark: boolean): HTMLElement => {
     const markerElement = document.createElement('div')
     markerElement.style.cssText = `
       background: ${isDark ? 'rgba(23, 23, 23, 0.95)' : 'rgba(255, 255, 255, 0.98)'};
       border: 1.5px solid ${isDark ? 'rgba(228, 60, 129, 0.6)' : 'rgba(255, 77, 148, 0.5)'};
       border-radius: 50%;
-      width: 10px;
-      height: 10px;
+      width: 20px;
+      height: 20px;
       box-shadow: ${isDark
         ? '0 2px 12px rgba(0, 0, 0, 0.4), 0 1px 3px rgba(228, 60, 129, 0.3)'
         : '0 2px 8px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06)'};
       backdrop-filter: blur(10px);
       cursor: pointer;
       transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      font-weight: 600;
+      color: ${isDark ? '#ffffff' : '#333333'};
     `
+    markerElement.textContent = number
 
     return markerElement
   }
@@ -864,14 +872,16 @@ function createCustomControls(
             const lat = coordinates[i - 1][1] + ratio * (coordinates[i][1] - coordinates[i - 1][1])
             const lng = coordinates[i - 1][0] + ratio * (coordinates[i][0] - coordinates[i - 1][0])
 
-            const markerEl = createDistanceMarkerElement(isDark)
+            // Calculate display distance for marker number
+            const displayDist = newMetric ? Math.round(targetDistance) : Math.round(targetDistance / 1.609344)
+            const unitLabel = newMetric ? 'km' : 'mi'
+
+            const markerEl = createDistanceMarkerElement(displayDist.toString(), isDark)
             const marker = new mapboxgl.Marker({ element: markerEl, anchor: 'center' })
               .setLngLat([lng, lat])
               .addTo(map)
 
             // Add tooltip on hover (similar to start/end markers)
-            const displayDist = newMetric ? Math.round(targetDistance) : Math.round(targetDistance / 1.609344)
-            const unitLabel = newMetric ? 'km' : 'mi'
 
             const tooltipBg = isDark ? 'rgba(23, 23, 23, 0.95)' : 'rgba(255, 255, 255, 0.98)'
             const tooltipColor = isDark ? '#ffffff' : '#333333'
@@ -1010,14 +1020,16 @@ function createCustomControls(
             const lat = coordinates[i - 1][1] + ratio * (coordinates[i][1] - coordinates[i - 1][1])
             const lng = coordinates[i - 1][0] + ratio * (coordinates[i][0] - coordinates[i - 1][0])
 
-            const markerEl = createDistanceMarkerElement(isDark)
+            // Calculate display distance for marker number
+            const displayDist = currentMetric ? Math.round(targetDistance) : Math.round(targetDistance / 1.609344)
+            const unitLabel = currentMetric ? 'km' : 'mi'
+
+            const markerEl = createDistanceMarkerElement(displayDist.toString(), isDark)
             const marker = new mapboxgl.Marker({ element: markerEl, anchor: 'center' })
               .setLngLat([lng, lat])
               .addTo(map)
 
             // Add tooltip on hover (similar to start/end markers)
-            const displayDist = currentMetric ? Math.round(targetDistance) : Math.round(targetDistance / 1.609344)
-            const unitLabel = currentMetric ? 'km' : 'mi'
 
             const tooltipBg = isDark ? 'rgba(23, 23, 23, 0.95)' : 'rgba(255, 255, 255, 0.98)'
             const tooltipColor = isDark ? '#ffffff' : '#333333'
@@ -1108,14 +1120,16 @@ function createCustomControls(
           const lat = coordinates[i - 1][1] + ratio * (coordinates[i][1] - coordinates[i - 1][1])
           const lng = coordinates[i - 1][0] + ratio * (coordinates[i][0] - coordinates[i - 1][0])
 
-          const markerEl = createDistanceMarkerElement(isDark)
+          // Calculate display distance for marker number
+          const displayDist = currentMetric ? Math.round(targetDistance) : Math.round(targetDistance / 1.609344)
+          const unitLabel = currentMetric ? 'km' : 'mi'
+
+          const markerEl = createDistanceMarkerElement(displayDist.toString(), isDark)
           const marker = new mapboxgl.Marker({ element: markerEl, anchor: 'center' })
             .setLngLat([lng, lat])
             .addTo(map)
 
           // Add tooltip on hover (similar to start/end markers)
-          const displayDist = currentMetric ? Math.round(targetDistance) : Math.round(targetDistance / 1.609344)
-          const unitLabel = currentMetric ? 'km' : 'mi'
 
           const tooltipBg = isDark ? 'rgba(23, 23, 23, 0.95)' : 'rgba(255, 255, 255, 0.98)'
           const tooltipColor = isDark ? '#ffffff' : '#333333'
