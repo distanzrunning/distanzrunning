@@ -204,16 +204,17 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
                       max={MAX_WIDTH}
                       value={customWidth}
                       onChange={(e) => setCustomWidth(Number(e.target.value))}
-                      className="w-full h-2 rounded-full appearance-none cursor-pointer"
+                      className="w-full h-2 rounded-full appearance-none cursor-pointer slider-black"
                       style={{
-                        background: `linear-gradient(to right, #e43c81 0%, #e43c81 ${((customWidth - MIN_WIDTH) / (MAX_WIDTH - MIN_WIDTH)) * 100}%, #d4d4d8 ${((customWidth - MIN_WIDTH) / (MAX_WIDTH - MIN_WIDTH)) * 100}%, #d4d4d8 100%)`
-                      }}
+                        background: `linear-gradient(to right, #171717 0%, #171717 ${((customWidth - MIN_WIDTH) / (MAX_WIDTH - MIN_WIDTH)) * 100}%, #d4d4d8 ${((customWidth - MIN_WIDTH) / (MAX_WIDTH - MIN_WIDTH)) * 100}%, #d4d4d8 100%)`,
+                        '--slider-progress': `${((customWidth - MIN_WIDTH) / (MAX_WIDTH - MIN_WIDTH)) * 100}%`
+                      } as React.CSSProperties}
                     />
                   </div>
                 </div>
                 <button
                   onClick={() => setCustomWidth(DEFAULT_WIDTH)}
-                  className="inline-flex items-center justify-center px-2 py-1.5 text-[15px] rounded-md border border-transparent hover:border-neutral-300 dark:hover:border-neutral-600 transition-colors bg-transparent active:bg-neutral-100 dark:active:bg-neutral-700"
+                  className="inline-flex items-center justify-center px-2 py-1.5 text-[15px] rounded-md border border-transparent hover:border-neutral-300 dark:hover:border-neutral-600 transition-colors bg-transparent active:bg-neutral-100 dark:active:bg-neutral-700 text-neutral-900 dark:text-white"
                   aria-label="Reset width"
                 >
                   <svg className="size-5" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -581,6 +582,40 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
 
         :global(.dark) .race-popup-scroll {
           scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+        }
+
+        /* Custom slider styling for black/white theme */
+        .slider-black::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          appearance: none;
+          width: 16px;
+          height: 16px;
+          border-radius: 50%;
+          background: #171717;
+          cursor: pointer;
+          border: none;
+        }
+
+        .slider-black::-moz-range-thumb {
+          width: 16px;
+          height: 16px;
+          border-radius: 50%;
+          background: #171717;
+          cursor: pointer;
+          border: none;
+        }
+
+        :global(.dark) .slider-black::-webkit-slider-thumb {
+          background: #ffffff;
+        }
+
+        :global(.dark) .slider-black::-moz-range-thumb {
+          background: #ffffff;
+        }
+
+        /* Update slider track background for dark mode */
+        :global(.dark) .slider-black {
+          background: linear-gradient(to right, #ffffff 0%, #ffffff var(--slider-progress, 50%), #52525b var(--slider-progress, 50%), #52525b 100%) !important;
         }
       `}</style>
     </DraggableWindow>
