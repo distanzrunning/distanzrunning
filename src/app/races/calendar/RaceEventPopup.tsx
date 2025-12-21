@@ -136,7 +136,7 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
           setShowSettingsDropdown(!showSettingsDropdown)
         }}
         onMouseDown={(e) => e.stopPropagation()}
-        className="h-8 w-8 rounded-md flex items-center justify-center text-neutral-500 dark:text-neutral-400 hover:text-neutral-400 dark:hover:text-neutral-300 transition-colors active:scale-95"
+        className="h-8 w-8 rounded-md flex items-center justify-center text-neutral-500 dark:text-neutral-400 hover:text-neutral-400 dark:hover:text-neutral-300 hover:border hover:border-neutral-300 dark:hover:border-neutral-600 transition-all active:scale-95"
         aria-label="Settings"
       >
         <Settings className="w-4 h-4" />

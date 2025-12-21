@@ -492,7 +492,7 @@ export function DraggableWindow({
               <button
                 onClick={handleMinimizeClick}
                 onMouseDown={(e) => e.stopPropagation()}
-                className="h-8 w-8 rounded-md flex items-center justify-center text-neutral-500 dark:text-neutral-400 hover:text-neutral-400 dark:hover:text-neutral-300 transition-colors active:scale-95"
+                className="h-8 w-8 rounded-md flex items-center justify-center text-neutral-500 dark:text-neutral-400 hover:text-neutral-400 dark:hover:text-neutral-300 hover:border hover:border-neutral-300 dark:hover:border-neutral-600 transition-all active:scale-95"
                 aria-label="Minimize"
               >
                 <svg
@@ -517,7 +517,7 @@ export function DraggableWindow({
               onContextMenu={handleMaximizeContextMenu}
               onMouseEnter={() => setShowTooltip(true)}
               onMouseLeave={() => setShowTooltip(false)}
-              className="h-8 w-8 rounded-md flex items-center justify-center text-neutral-500 dark:text-neutral-400 hover:text-neutral-400 dark:hover:text-neutral-300 transition-colors active:scale-95 group"
+              className="h-8 w-8 rounded-md flex items-center justify-center text-neutral-500 dark:text-neutral-400 hover:text-neutral-400 dark:hover:text-neutral-300 hover:border hover:border-neutral-300 dark:hover:border-neutral-600 transition-all active:scale-95 group"
               aria-label={isMaximized || isSnappedLeft || isSnappedRight ? 'Restore' : 'Maximize'}
             >
               {isMaximized || isSnappedLeft || isSnappedRight ? (
@@ -535,7 +535,7 @@ export function DraggableWindow({
             <button
               onClick={handleCloseClick}
               onMouseDown={(e) => e.stopPropagation()}
-              className="h-8 w-8 rounded-md flex items-center justify-center text-neutral-500 dark:text-neutral-400 hover:text-neutral-400 dark:hover:text-neutral-300 transition-colors active:scale-95"
+              className="h-8 w-8 rounded-md flex items-center justify-center text-neutral-500 dark:text-neutral-400 hover:text-neutral-400 dark:hover:text-neutral-300 hover:border hover:border-neutral-300 dark:hover:border-neutral-600 transition-all active:scale-95"
               aria-label="Close"
             >
               <X className="w-4 h-4" />
