@@ -780,7 +780,6 @@ function createCustomControls(
         ? '0 2px 12px rgba(0, 0, 0, 0.4), 0 1px 3px rgba(228, 60, 129, 0.3)'
         : '0 2px 8px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.06)'};
       cursor: pointer;
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
       display: flex;
       align-items: center;
       justify-content: center;
