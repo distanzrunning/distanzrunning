@@ -32,49 +32,32 @@ export function RaceRouteMap({
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const { isDark, isInitialized } = useContext(DarkModeContext)
-  const [showMarkers, setShowMarkers] = useState(initialShowMarkers)
-  const [useMetric, setUseMetric] = useState(initialUseMetric)
-  const useMetricRef = useRef(useMetric) // Ref to track current unit value for event handlers
-  const showMarkersRef = useRef(showMarkers) // Ref to track current marker visibility for event handlers
+
+  // Use only refs for marker state - no React state to avoid setState on unmounted component
+  const useMetricRef = useRef(initialUseMetric)
+  const showMarkersRef = useRef(initialShowMarkers)
   const distanceMarkersRef = useRef<mapboxgl.Marker[]>([])
+  const isMountedRef = useRef(true)
 
-  // Wrap setters to schedule updates asynchronously to avoid state updates during render
-  const setShowMarkersAsync = useCallback((value: boolean) => {
-    queueMicrotask(() => setShowMarkers(value))
-  }, [])
+  // Safe setter that only notifies parent without updating local state
+  const setShowMarkersSafe = useCallback((value: boolean) => {
+    if (!isMountedRef.current) return
+    showMarkersRef.current = value
+    onShowMarkersChange?.(value)
+  }, [onShowMarkersChange])
 
-  const setUseMetricAsync = useCallback((value: boolean) => {
-    queueMicrotask(() => setUseMetric(value))
-  }, [])
+  const setUseMetricSafe = useCallback((value: boolean) => {
+    if (!isMountedRef.current) return
+    useMetricRef.current = value
+    onUseMetricChange?.(value)
+  }, [onUseMetricChange])
 
-  // Keep refs synchronized with state for event handlers
+  // Track mounted state
   useEffect(() => {
-    useMetricRef.current = useMetric
-  }, [useMetric])
-
-  useEffect(() => {
-    showMarkersRef.current = showMarkers
-  }, [showMarkers])
-
-  // Track if component has mounted to avoid syncing initial values
-  const hasMountedRef = useRef(false)
-
-  // Sync state changes back to parent (only after initial mount)
-  useEffect(() => {
-    if (hasMountedRef.current) {
-      onShowMarkersChange?.(showMarkers)
+    isMountedRef.current = true
+    return () => {
+      isMountedRef.current = false
     }
-  }, [showMarkers, onShowMarkersChange])
-
-  useEffect(() => {
-    if (hasMountedRef.current) {
-      onUseMetricChange?.(useMetric)
-    }
-  }, [useMetric, onUseMetricChange])
-
-  // Mark as mounted after first render
-  useEffect(() => {
-    hasMountedRef.current = true
   }, [])
 
   useEffect(() => {
@@ -428,11 +411,11 @@ export function RaceRouteMap({
             map,
             isDark,
             bounds,
-            showMarkers,
-            setShowMarkersAsync,
+            showMarkersRef.current,
+            setShowMarkersSafe,
             showMarkersRef,
-            useMetric,
-            setUseMetricAsync,
+            useMetricRef.current,
+            setUseMetricSafe,
             useMetricRef,
             coordinates,
             distanceMarkersRef
