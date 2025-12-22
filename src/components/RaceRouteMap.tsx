@@ -6,7 +6,7 @@ import mapboxgl from 'mapbox-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import simplify from '@turf/simplify'
 import { lineString } from '@turf/helpers'
-import tidy from '@mapbox/geojson-tidy'
+import * as geojsonTidy from '@mapbox/geojson-tidy'
 
 interface RaceRouteMapProps {
   gpxUrl: string
@@ -91,8 +91,8 @@ export function RaceRouteMap({ gpxUrl, title, height }: RaceRouteMapProps) {
         // Step 1: Apply geojson-tidy to filter out noisy point clusters
         // This removes GPS noise and redundant points
         const line = lineString(coordinates)
-        const tidied = tidy(line, { minimumDistance: 5 }) // Remove points closer than 5 meters
-        const tidiedCoords = tidied.geometry.coordinates as [number, number][]
+        const tidied = geojsonTidy.tidy(line, { minimumDistance: 5 }) // Remove points closer than 5 meters
+        const tidiedCoords = tidied.features[0].geometry.coordinates as [number, number][]
 
         console.log(`[RaceRouteMap] After tidy: ${coordinates.length} → ${tidiedCoords.length} points`)
 
