@@ -29,6 +29,10 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
   const [showMensTooltip, setShowMensTooltip] = useState(false)
   const [showWomensTooltip, setShowWomensTooltip] = useState(false)
 
+  // Map marker state (persists across remounts)
+  const [showMapMarkers, setShowMapMarkers] = useState(false)
+  const [mapUseMetric, setMapUseMetric] = useState(false)
+
   // Settings dropdown state
   const [showSettingsDropdown, setShowSettingsDropdown] = useState(false)
   const [widthMode, setWidthMode] = useState<'fixed' | 'full'>('fixed')
@@ -546,6 +550,10 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
               gpxUrl={race.gpxFile.asset.url}
               title={race.title}
               height={mapHeight}
+              initialShowMarkers={showMapMarkers}
+              initialUseMetric={mapUseMetric}
+              onShowMarkersChange={setShowMapMarkers}
+              onUseMetricChange={setMapUseMetric}
             />
           )}
 

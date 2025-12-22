@@ -11,17 +11,29 @@ interface RaceRouteMapProps {
   gpxUrl: string
   title: string
   height?: number // Optional height in pixels
+  initialShowMarkers?: boolean // Initial marker visibility state
+  initialUseMetric?: boolean // Initial unit preference
+  onShowMarkersChange?: (show: boolean) => void // Callback when marker visibility changes
+  onUseMetricChange?: (metric: boolean) => void // Callback when unit preference changes
 }
 
 // Mapbox implementation matching Google Maps style
-export function RaceRouteMap({ gpxUrl, title, height }: RaceRouteMapProps) {
+export function RaceRouteMap({
+  gpxUrl,
+  title,
+  height,
+  initialShowMarkers = false,
+  initialUseMetric = false,
+  onShowMarkersChange,
+  onUseMetricChange
+}: RaceRouteMapProps) {
   const mapRef = useRef<HTMLDivElement>(null)
   const mapInstanceRef = useRef<mapboxgl.Map | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const { isDark, isInitialized } = useContext(DarkModeContext)
-  const [showMarkers, setShowMarkers] = useState(false)
-  const [useMetric, setUseMetric] = useState(false) // true = km, false = miles (default: miles)
+  const [showMarkers, setShowMarkers] = useState(initialShowMarkers)
+  const [useMetric, setUseMetric] = useState(initialUseMetric)
   const useMetricRef = useRef(useMetric) // Ref to track current unit value for event handlers
   const showMarkersRef = useRef(showMarkers) // Ref to track current marker visibility for event handlers
   const distanceMarkersRef = useRef<mapboxgl.Marker[]>([])
@@ -34,6 +46,15 @@ export function RaceRouteMap({ gpxUrl, title, height }: RaceRouteMapProps) {
   useEffect(() => {
     showMarkersRef.current = showMarkers
   }, [showMarkers])
+
+  // Sync state changes back to parent
+  useEffect(() => {
+    onShowMarkersChange?.(showMarkers)
+  }, [showMarkers, onShowMarkersChange])
+
+  useEffect(() => {
+    onUseMetricChange?.(useMetric)
+  }, [useMetric, onUseMetricChange])
 
   useEffect(() => {
     // Wait for dark mode to be initialized
