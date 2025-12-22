@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState, useContext } from 'react'
+import { useEffect, useRef, useState, useContext, useCallback } from 'react'
 import { DarkModeContext } from './DarkModeProvider'
 import mapboxgl from 'mapbox-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
@@ -37,6 +37,15 @@ export function RaceRouteMap({
   const useMetricRef = useRef(useMetric) // Ref to track current unit value for event handlers
   const showMarkersRef = useRef(showMarkers) // Ref to track current marker visibility for event handlers
   const distanceMarkersRef = useRef<mapboxgl.Marker[]>([])
+
+  // Wrap setters to schedule updates asynchronously to avoid state updates during render
+  const setShowMarkersAsync = useCallback((value: boolean) => {
+    queueMicrotask(() => setShowMarkers(value))
+  }, [])
+
+  const setUseMetricAsync = useCallback((value: boolean) => {
+    queueMicrotask(() => setUseMetric(value))
+  }, [])
 
   // Keep refs synchronized with state for event handlers
   useEffect(() => {
@@ -420,10 +429,10 @@ export function RaceRouteMap({
             isDark,
             bounds,
             showMarkers,
-            setShowMarkers,
+            setShowMarkersAsync,
             showMarkersRef,
             useMetric,
-            setUseMetric,
+            setUseMetricAsync,
             useMetricRef,
             coordinates,
             distanceMarkersRef
