@@ -219,7 +219,7 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
                         },
                         '& .MuiSlider-track': {
                           height: 8,
-                          borderRadius: 0,
+                          borderRadius: '4px 0 0 4px',
                           backgroundColor: '#171717',
                           border: 'none',
                         },
