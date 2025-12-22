@@ -6,6 +6,7 @@ import mapboxgl from 'mapbox-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import simplify from '@turf/simplify'
 import { lineString } from '@turf/helpers'
+import tidy from '@mapbox/geojson-tidy'
 
 interface RaceRouteMapProps {
   gpxUrl: string
@@ -85,16 +86,26 @@ export function RaceRouteMap({ gpxUrl, title, height }: RaceRouteMapProps) {
           throw new Error('No coordinates found in route file')
         }
 
-        // Apply Douglas-Peucker simplification to remove GPS noise while preserving shape
+        console.log(`[RaceRouteMap] Original route: ${coordinates.length} points`)
+
+        // Step 1: Apply geojson-tidy to filter out noisy point clusters
+        // This removes GPS noise and redundant points
+        const line = lineString(coordinates)
+        const tidied = tidy(line, { minimumDistance: 5 }) // Remove points closer than 5 meters
+        const tidiedCoords = tidied.geometry.coordinates as [number, number][]
+
+        console.log(`[RaceRouteMap] After tidy: ${coordinates.length} → ${tidiedCoords.length} points`)
+
+        // Step 2: Apply Douglas-Peucker simplification to preserve shape while smoothing
         // This is key for smooth, professional-looking routes (Strava technique)
         const tolerance = 0.00005 // ~5 meters - balance between smoothness and accuracy
-        const line = lineString(coordinates)
-        const simplified = simplify(line, { tolerance, highQuality: true })
+        const tidiedLine = lineString(tidiedCoords)
+        const simplified = simplify(tidiedLine, { tolerance, highQuality: true })
         const simplifiedCoords = simplified.geometry.coordinates as [number, number][]
 
-        console.log(`[RaceRouteMap] Simplified route: ${coordinates.length} → ${simplifiedCoords.length} points`)
+        console.log(`[RaceRouteMap] After simplify: ${tidiedCoords.length} → ${simplifiedCoords.length} points`)
 
-        // Use simplified coordinates for rendering
+        // Use cleaned and simplified coordinates for rendering
         coordinates = simplifiedCoords
 
         // Calculate bounds from coordinates
