@@ -22,6 +22,8 @@ interface CalendarEvent {
 interface WindowState {
   race: RaceGuide
   isMinimized: boolean
+  showMapMarkers: boolean
+  mapUseMetric: boolean
 }
 
 export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
@@ -63,8 +65,13 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
           ))
         }
       } else {
-        // Add new window
-        setWindows([...windows, { race, isMinimized: false }])
+        // Add new window with default marker settings
+        setWindows([...windows, {
+          race,
+          isMinimized: false,
+          showMapMarkers: false,
+          mapUseMetric: false
+        }])
       }
     }
   }
@@ -84,6 +91,18 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
 
   const handleClose = (raceId: string) => {
     setWindows(windows.filter(w => w.race._id !== raceId))
+  }
+
+  const handleMapMarkersChange = (raceId: string, showMarkers: boolean) => {
+    setWindows(windows.map(w =>
+      w.race._id === raceId ? { ...w, showMapMarkers: showMarkers } : w
+    ))
+  }
+
+  const handleMapUseMetricChange = (raceId: string, useMetric: boolean) => {
+    setWindows(windows.map(w =>
+      w.race._id === raceId ? { ...w, mapUseMetric: useMetric } : w
+    ))
   }
 
   const minimizedWindows = windows.filter(w => w.isMinimized)
@@ -233,6 +252,10 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
               race={window.race}
               onClose={() => handleClose(window.race._id)}
               onMinimize={() => handleMinimize(window.race._id)}
+              showMapMarkers={window.showMapMarkers}
+              mapUseMetric={window.mapUseMetric}
+              onMapMarkersChange={(show) => handleMapMarkersChange(window.race._id, show)}
+              onMapUseMetricChange={(metric) => handleMapUseMetricChange(window.race._id, metric)}
             />
           ))}
           <div className="bg-white dark:bg-neutral-900 flex-1 flex flex-col calendar-wrapper overflow-auto">

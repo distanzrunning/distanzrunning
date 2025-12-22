@@ -16,6 +16,10 @@ interface RaceEventPopupProps {
   race: RaceGuide | null
   onClose: () => void
   onMinimize?: () => void
+  showMapMarkers: boolean
+  mapUseMetric: boolean
+  onMapMarkersChange: (show: boolean) => void
+  onMapUseMetricChange: (metric: boolean) => void
 }
 
 // Helper function to format location from city, state/region, and country
@@ -24,14 +28,18 @@ function formatLocation(city?: string, stateRegion?: string, country?: string): 
   return parts.join(', ')
 }
 
-export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProps) {
+export function RaceEventPopup({
+  race,
+  onClose,
+  onMinimize,
+  showMapMarkers,
+  mapUseMetric,
+  onMapMarkersChange,
+  onMapUseMetricChange
+}: RaceEventPopupProps) {
   const [useMetric, setUseMetric] = useState(false)
   const [showMensTooltip, setShowMensTooltip] = useState(false)
   const [showWomensTooltip, setShowWomensTooltip] = useState(false)
-
-  // Map marker state (persists across remounts)
-  const [showMapMarkers, setShowMapMarkers] = useState(false)
-  const [mapUseMetric, setMapUseMetric] = useState(false)
 
   // Settings dropdown state
   const [showSettingsDropdown, setShowSettingsDropdown] = useState(false)
@@ -552,8 +560,8 @@ export function RaceEventPopup({ race, onClose, onMinimize }: RaceEventPopupProp
               height={mapHeight}
               initialShowMarkers={showMapMarkers}
               initialUseMetric={mapUseMetric}
-              onShowMarkersChange={setShowMapMarkers}
-              onUseMetricChange={setMapUseMetric}
+              onShowMarkersChange={onMapMarkersChange}
+              onUseMetricChange={onMapUseMetricChange}
             />
           )}
 
