@@ -8,9 +8,13 @@ import { urlFor } from '@/sanity/lib/image'
 import { convertCurrencySync, formatPrice } from '@/lib/raceUtils'
 import { DraggableWindow } from '@/components/DraggableWindow'
 import { RaceRouteMap } from '@/components/RaceRouteMap'
+import { ElevationChart } from '@/components/ElevationChart'
+import { fetchGPXElevationData, type ElevationPoint } from '@/lib/gpxUtils'
 import { Route, Wallet, Users, ArrowUpRight, ArrowDownRight, Mountain, ThermometerSun, Medal, Settings2, Settings } from 'lucide-react'
 import Slider from '@mui/material/Slider'
 import Box from '@mui/material/Box'
+import { DarkModeContext } from '@/components/DarkModeProvider'
+import { useContext } from 'react'
 
 interface RaceEventPopupProps {
   race: RaceGuide | null
@@ -40,6 +44,10 @@ export function RaceEventPopup({
   const [useMetric, setUseMetric] = useState(false)
   const [showMensTooltip, setShowMensTooltip] = useState(false)
   const [showWomensTooltip, setShowWomensTooltip] = useState(false)
+
+  // Elevation data state
+  const [elevationData, setElevationData] = useState<ElevationPoint[]>([])
+  const { isDark } = useContext(DarkModeContext)
 
   // Settings dropdown state
   const [showSettingsDropdown, setShowSettingsDropdown] = useState(false)
@@ -105,6 +113,13 @@ export function RaceEventPopup({
       return () => document.removeEventListener('mousedown', handleClickOutside)
     }
   }, [showSettingsDropdown])
+
+  // Fetch elevation data when race GPX URL changes
+  useEffect(() => {
+    if (race?.gpxFile?.asset?.url) {
+      fetchGPXElevationData(race.gpxFile.asset.url).then(setElevationData)
+    }
+  }, [race?.gpxFile?.asset?.url])
 
   if (!race) return null
 
@@ -562,6 +577,15 @@ export function RaceEventPopup({
               initialUseMetric={mapUseMetric}
               onShowMarkersChange={onMapMarkersChange}
               onUseMetricChange={onMapUseMetricChange}
+            />
+          )}
+
+          {/* Elevation Chart */}
+          {elevationData.length > 0 && (
+            <ElevationChart
+              elevationData={elevationData}
+              useMetric={mapUseMetric}
+              isDark={isDark}
             />
           )}
 
