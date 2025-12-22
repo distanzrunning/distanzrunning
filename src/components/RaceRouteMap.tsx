@@ -60,6 +60,29 @@ export function RaceRouteMap({
     }
   }, [])
 
+  // Sync internal unit state with external prop changes
+  useEffect(() => {
+    if (useMetricRef.current !== initialUseMetric) {
+      useMetricRef.current = initialUseMetric
+
+      // Update the unit toggle button text if it exists
+      const unitToggleButton = document.querySelector('[data-unit-toggle]') as HTMLButtonElement
+      if (unitToggleButton) {
+        unitToggleButton.textContent = initialUseMetric ? 'KM' : 'MI'
+      }
+
+      // Update markers if they're currently visible by triggering the marker button click
+      if (showMarkersRef.current && distanceMarkersRef.current.length > 0) {
+        const markerButton = document.querySelector('[data-marker-toggle]') as HTMLButtonElement
+        if (markerButton) {
+          // Toggle markers off and back on to refresh with new units
+          markerButton.click() // Hide markers
+          setTimeout(() => markerButton.click(), 50) // Show markers with new units
+        }
+      }
+    }
+  }, [initialUseMetric])
+
   useEffect(() => {
     // Wait for dark mode to be initialized
     if (!isInitialized) {
@@ -851,6 +874,7 @@ function createCustomControls(
   // Unit toggle button (appears on hover to the left)
   const unitToggleButton = document.createElement('button')
   unitToggleButton.setAttribute('aria-label', 'Toggle distance unit (km/mi)')
+  unitToggleButton.setAttribute('data-unit-toggle', 'true')
   unitToggleButton.className = 'mapboxgl-ctrl-unit'
 
   const updateUnitToggleStyle = (markersActive: boolean) => {
@@ -986,6 +1010,7 @@ function createCustomControls(
   // Marker toggle button
   const markerToggleButton = document.createElement('button')
   markerToggleButton.setAttribute('aria-label', 'Toggle distance markers')
+  markerToggleButton.setAttribute('data-marker-toggle', 'true')
   markerToggleButton.className = 'mapboxgl-ctrl-markers'
   markerToggleButton.style.cssText = `
     background-color: ${isDark ? '#2d2d2d' : 'white'};
