@@ -96,24 +96,83 @@ export function createElevationProfile(
 }
 
 /**
- * Fetch and parse a GPX file from a URL, returning elevation profile data
+ * Parse GeoJSON and extract coordinates with elevation data
+ */
+export function parseGeoJSONWithElevation(geoJsonText: string): {
+  coordinates: [number, number][]
+  elevations: number[]
+} {
+  const coordinates: [number, number][] = []
+  const elevations: number[] = []
+
+  try {
+    const geoJson = JSON.parse(geoJsonText)
+
+    // Handle FeatureCollection
+    if (geoJson.type === 'FeatureCollection' && geoJson.features) {
+      for (const feature of geoJson.features) {
+        if (feature.geometry?.type === 'LineString' && feature.geometry.coordinates) {
+          for (const coord of feature.geometry.coordinates) {
+            if (coord.length >= 2) {
+              coordinates.push([coord[0], coord[1]])
+              // Extract elevation if available (third coordinate)
+              elevations.push(coord.length >= 3 ? coord[2] : 0)
+            }
+          }
+        }
+      }
+    }
+    // Handle single Feature
+    else if (geoJson.type === 'Feature' && geoJson.geometry?.type === 'LineString') {
+      for (const coord of geoJson.geometry.coordinates) {
+        if (coord.length >= 2) {
+          coordinates.push([coord[0], coord[1]])
+          elevations.push(coord.length >= 3 ? coord[2] : 0)
+        }
+      }
+    }
+    // Handle direct LineString
+    else if (geoJson.type === 'LineString' && geoJson.coordinates) {
+      for (const coord of geoJson.coordinates) {
+        if (coord.length >= 2) {
+          coordinates.push([coord[0], coord[1]])
+          elevations.push(coord.length >= 3 ? coord[2] : 0)
+        }
+      }
+    }
+  } catch (error) {
+    console.error('Error parsing GeoJSON:', error)
+  }
+
+  return { coordinates, elevations }
+}
+
+/**
+ * Fetch and parse a route file (GPX or GeoJSON) from a URL, returning elevation profile data
  */
 export async function fetchGPXElevationData(gpxUrl: string): Promise<ElevationPoint[]> {
   try {
     const response = await fetch(gpxUrl)
     if (!response.ok) {
-      throw new Error('Failed to fetch GPX file')
+      throw new Error('Failed to fetch route file')
     }
 
-    const gpxText = await response.text()
+    const fileText = await response.text()
+    let coordinates: [number, number][]
+    let elevations: number[]
 
-    // Check if it's actually a GPX file (not GeoJSON)
-    if (gpxText.trim().startsWith('{')) {
-      console.warn('File appears to be GeoJSON, not GPX. Elevation data not available.')
-      return []
+    // Check if it's GeoJSON or GPX
+    if (fileText.trim().startsWith('{')) {
+      // Parse as GeoJSON
+      const result = parseGeoJSONWithElevation(fileText)
+      coordinates = result.coordinates
+      elevations = result.elevations
+    } else {
+      // Parse as GPX
+      const result = parseGPXWithElevation(fileText)
+      coordinates = result.coordinates
+      elevations = result.elevations
     }
-
-    const { coordinates, elevations } = parseGPXWithElevation(gpxText)
 
     if (coordinates.length === 0) {
       return []
@@ -121,7 +180,7 @@ export async function fetchGPXElevationData(gpxUrl: string): Promise<ElevationPo
 
     return createElevationProfile(coordinates, elevations)
   } catch (error) {
-    console.error('Error fetching GPX elevation data:', error)
+    console.error('Error fetching elevation data:', error)
     return []
   }
 }
