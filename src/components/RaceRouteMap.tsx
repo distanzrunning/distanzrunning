@@ -38,11 +38,8 @@ export function RaceRouteMap({ gpxUrl, title, height }: RaceRouteMapProps) {
   useEffect(() => {
     // Wait for dark mode to be initialized
     if (!isInitialized) {
-      console.log('[RaceRouteMap] Waiting for dark mode initialization...')
       return
     }
-
-    console.log('[RaceRouteMap] Dark mode initialized. isDark:', isDark)
 
     const initMap = async () => {
       try {
@@ -57,7 +54,10 @@ export function RaceRouteMap({ gpxUrl, title, height }: RaceRouteMapProps) {
 
         mapboxgl.accessToken = accessToken
 
-        if (!mapRef.current) return
+        // Check if container exists and is attached to DOM
+        if (!mapRef.current || !mapRef.current.parentNode) {
+          return
+        }
 
         // Fetch and parse GPX or GeoJSON file
         const response = await fetch(gpxUrl)
@@ -85,16 +85,12 @@ export function RaceRouteMap({ gpxUrl, title, height }: RaceRouteMapProps) {
           throw new Error('No coordinates found in route file')
         }
 
-        console.log(`[RaceRouteMap] Original route: ${coordinates.length} points`)
-
         // Apply Douglas-Peucker simplification to remove GPS noise while preserving shape
         // This is key for smooth, professional-looking routes (Strava technique)
         const tolerance = 0.00005 // ~5 meters - balance between smoothness and accuracy
         const line = lineString(coordinates)
         const simplified = simplify(line, { tolerance, highQuality: true })
         const simplifiedCoords = simplified.geometry.coordinates as [number, number][]
-
-        console.log(`[RaceRouteMap] Simplified route: ${coordinates.length} → ${simplifiedCoords.length} points`)
 
         // Use simplified coordinates for rendering
         coordinates = simplifiedCoords
@@ -108,8 +104,6 @@ export function RaceRouteMap({ gpxUrl, title, height }: RaceRouteMapProps) {
           Math.max(...lngs),
           Math.max(...lats)
         ]
-
-        console.log('[RaceRouteMap] Initializing Mapbox map in', isDark ? 'DARK' : 'LIGHT', 'mode')
 
         // Calculate initial zoom from bounds to set min zoom limit
         const lngDiff = Math.max(...lngs) - Math.min(...lngs)
@@ -172,19 +166,11 @@ export function RaceRouteMap({ gpxUrl, title, height }: RaceRouteMapProps) {
           const layers = map.getStyle().layers
           let firstSymbolId: string | undefined
 
-          // Debug: log all layer IDs to help identify label layers
-          console.log('[RaceRouteMap] All map layers:', layers?.map(l => `${l.id} (${l.type})`).join(', '))
-
           for (const layer of layers || []) {
             if (layer.type === 'symbol' || (layer.id && layer.id.includes('label'))) {
               firstSymbolId = layer.id
-              console.log('[RaceRouteMap] Inserting route layers before:', layer.id)
               break
             }
-          }
-
-          if (!firstSymbolId) {
-            console.warn('[RaceRouteMap] No symbol/label layer found, route will be on top of labels!')
           }
 
           // Clean Strava-inspired 3-layer route
@@ -410,7 +396,6 @@ export function RaceRouteMap({ gpxUrl, title, height }: RaceRouteMapProps) {
 
           // Hide loading after map is fully loaded
           setTimeout(() => {
-            console.log('[RaceRouteMap] Map initialization complete, hiding loading screen')
             setIsLoading(false)
           }, 800)
         })
@@ -426,21 +411,24 @@ export function RaceRouteMap({ gpxUrl, title, height }: RaceRouteMapProps) {
       }
     }
 
-    console.log('[RaceRouteMap] Calling initMap...')
     initMap()
 
     // Cleanup
     return () => {
-      console.log('[RaceRouteMap] Cleaning up map...')
       // Remove distance markers
       distanceMarkersRef.current.forEach(marker => marker.remove())
       distanceMarkersRef.current = []
-      // Remove map
+
+      // Remove map instance
       if (mapInstanceRef.current) {
         mapInstanceRef.current.remove()
         mapInstanceRef.current = null
       }
-      console.log('[RaceRouteMap] Cleanup complete')
+
+      // Clear the container to prevent "container should be empty" warning
+      if (mapRef.current) {
+        mapRef.current.innerHTML = ''
+      }
     }
   }, [gpxUrl, isDark, isInitialized])
 

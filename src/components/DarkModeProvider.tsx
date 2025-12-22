@@ -20,26 +20,21 @@ export function DarkModeProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme')
-    console.log('[DarkModeProvider] Initializing. Saved theme:', savedTheme)
 
     // Only enable dark mode if explicitly saved as 'dark'
     if (savedTheme === 'dark') {
-      console.log('[DarkModeProvider] Setting dark mode ON')
       setIsDark(true)
       document.documentElement.classList.add('dark')
     } else {
-      console.log('[DarkModeProvider] Setting dark mode OFF')
       // Default to light mode
       document.documentElement.classList.remove('dark')
     }
 
     setIsInitialized(true)
-    console.log('[DarkModeProvider] Initialization complete')
   }, [])
 
   const toggleDarkMode = () => {
     const newIsDark = !isDark
-    console.log('[DarkModeProvider] Toggling dark mode. New value:', newIsDark)
     setIsDark(newIsDark)
     if (newIsDark) {
       document.documentElement.classList.add('dark')
