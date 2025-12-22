@@ -10,7 +10,7 @@ import { DraggableWindow } from '@/components/DraggableWindow'
 import { RaceRouteMap } from '@/components/RaceRouteMap'
 import { ElevationChart } from '@/components/ElevationChart'
 import { fetchGPXElevationData, type ElevationPoint } from '@/lib/gpxUtils'
-import { Route, Wallet, Users, ArrowUpRight, ArrowDownRight, Mountain, ThermometerSun, Medal, Settings2, Settings } from 'lucide-react'
+import { Route, Wallet, Users, ArrowUpRight, ArrowDownRight, Mountain, ThermometerSun, Medal, Settings } from 'lucide-react'
 import Slider from '@mui/material/Slider'
 import Box from '@mui/material/Box'
 import { DarkModeContext } from '@/components/DarkModeProvider'
@@ -41,7 +41,6 @@ export function RaceEventPopup({
   onMapMarkersChange,
   onMapUseMetricChange
 }: RaceEventPopupProps) {
-  const [useMetric, setUseMetric] = useState(false)
   const [showMensTooltip, setShowMensTooltip] = useState(false)
   const [showWomensTooltip, setShowWomensTooltip] = useState(false)
 
@@ -126,7 +125,7 @@ export function RaceEventPopup({
   const imageUrl = race.mainImage ? urlFor(race.mainImage)?.width(800).height(520).url() : null
 
   // Determine if we should show local currency
-  const showLocalCurrency = useMetric && race.currency && race.currency !== 'USD'
+  const showLocalCurrency = mapUseMetric && race.currency && race.currency !== 'USD'
 
   // Determine World Athletics Label image
   const getWorldAthleticsLabel = () => {
@@ -391,14 +390,16 @@ export function RaceEventPopup({
             <div className="flex items-center justify-between mb-3">
               <h4 className="font-body text-sm font-medium text-neutral-600 dark:text-neutral-400">Key Details</h4>
 
-              {/* Unit Toggle */}
+              {/* Universal Unit Toggle - Controls all measurements */}
               <button
-                onClick={() => setUseMetric(!useMetric)}
-                className="flex items-center justify-center w-8 h-8 rounded-lg transition-colors bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700"
-                title={useMetric ? 'Switch to Imperial' : 'Switch to Metric'}
+                onClick={() => onMapUseMetricChange(!mapUseMetric)}
+                className="flex items-center justify-center px-3 h-8 rounded-lg transition-colors bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700"
+                title={`Using ${mapUseMetric ? 'Metric (km/m)' : 'Imperial (mi/ft)'} - Click to switch. Controls all units: key details, map markers, and elevation chart.`}
                 aria-label="Toggle units"
               >
-                <Settings2 className="w-4 h-4" />
+                <span className="font-mono text-xs font-semibold">
+                  {mapUseMetric ? 'KM' : 'MI'}
+                </span>
               </button>
             </div>
             <div className="space-y-3">
@@ -451,7 +452,7 @@ export function RaceEventPopup({
                     <p className="font-body text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Elev. Gain</p>
                     <p className="font-body text-sm font-medium text-neutral-900 dark:text-white truncate">
                       {race.elevationGain !== undefined && race.elevationGain !== null
-                        ? useMetric
+                        ? mapUseMetric
                           ? `${Math.round(race.elevationGain).toLocaleString()}m`
                           : `${Math.round(race.elevationGain * 3.28084).toLocaleString()}ft`
                         : 'N/A'}
@@ -466,7 +467,7 @@ export function RaceEventPopup({
                     <p className="font-body text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Elev. Loss</p>
                     <p className="font-body text-sm font-medium text-neutral-900 dark:text-white truncate">
                       {race.elevationLoss !== undefined && race.elevationLoss !== null
-                        ? useMetric
+                        ? mapUseMetric
                           ? `${Math.round(race.elevationLoss).toLocaleString()}m`
                           : `${Math.round(race.elevationLoss * 3.28084).toLocaleString()}ft`
                         : 'N/A'}
@@ -495,7 +496,7 @@ export function RaceEventPopup({
                     <p className="font-body text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Avg. Temp</p>
                     <p className="font-body text-sm font-medium text-neutral-900 dark:text-white truncate">
                       {race.averageTemperature !== undefined && race.averageTemperature !== null
-                        ? useMetric
+                        ? mapUseMetric
                           ? `${Math.round(race.averageTemperature)}°C`
                           : `${Math.round(race.averageTemperature * 9/5 + 32)}°F`
                         : 'N/A'}
