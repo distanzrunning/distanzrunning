@@ -395,8 +395,8 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
             </div>
           </div>
 
-          {/* Legend Button - Bottom left corner */}
-          <div className="absolute bottom-1 left-4 z-50 group">
+          {/* Legend Button - Bottom right corner */}
+          <div className="absolute bottom-1 right-4 z-50 group">
             <button
               onClick={() => setShowLegend(!showLegend)}
               onMouseEnter={() => setShowLegend(true)}
@@ -410,7 +410,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
             {/* Legend Popover */}
             {showLegend && (
               <div
-                className="absolute bottom-full left-0 mb-2 w-64 bg-white/95 dark:bg-neutral-800/95 backdrop-blur-sm border border-neutral-200 dark:border-neutral-700 rounded-lg shadow-xl p-4"
+                className="absolute bottom-full right-0 mb-2 w-64 bg-white/95 dark:bg-neutral-800/95 backdrop-blur-sm border border-neutral-200 dark:border-neutral-700 rounded-lg shadow-xl p-4"
                 onMouseEnter={() => setShowLegend(true)}
                 onMouseLeave={() => setShowLegend(false)}
               >
