@@ -41,23 +41,25 @@ export function RaceRouteMap({ gpxUrl, title, height }: RaceRouteMapProps) {
       return
     }
 
-    const initMap = async () => {
-      try {
-        setIsLoading(true)
-        setError(null)
+    // Add a small delay to ensure DOM is fully ready
+    const timeoutId = setTimeout(() => {
+      const initMap = async () => {
+        try {
+          setIsLoading(true)
+          setError(null)
 
-        // Get Mapbox access token
-        const accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN
-        if (!accessToken) {
-          throw new Error('Mapbox access token is not configured')
-        }
+          // Get Mapbox access token
+          const accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN
+          if (!accessToken) {
+            throw new Error('Mapbox access token is not configured')
+          }
 
-        mapboxgl.accessToken = accessToken
+          mapboxgl.accessToken = accessToken
 
-        // Check if container exists and is attached to DOM
-        if (!mapRef.current || !mapRef.current.parentNode) {
-          return
-        }
+          // Check if container exists and is attached to DOM
+          if (!mapRef.current || !mapRef.current.parentNode) {
+            return
+          }
 
         // Fetch and parse GPX or GeoJSON file
         const response = await fetch(gpxUrl)
@@ -411,10 +413,13 @@ export function RaceRouteMap({ gpxUrl, title, height }: RaceRouteMapProps) {
       }
     }
 
-    initMap()
+      initMap()
+    }, 100) // Small delay to ensure DOM is ready
 
     // Cleanup
     return () => {
+      clearTimeout(timeoutId)
+
       // Remove distance markers
       distanceMarkersRef.current.forEach(marker => marker.remove())
       distanceMarkersRef.current = []
