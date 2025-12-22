@@ -62,7 +62,8 @@ export function RaceRouteMap({
 
   // Sync internal unit state with external prop changes
   useEffect(() => {
-    if (useMetricRef.current !== initialUseMetric) {
+    // Only update if the external prop is different from our current state
+    if (useMetricRef.current !== initialUseMetric && mapInstanceRef.current) {
       useMetricRef.current = initialUseMetric
 
       // Update the unit toggle button text if it exists
@@ -71,14 +72,11 @@ export function RaceRouteMap({
         unitToggleButton.textContent = initialUseMetric ? 'KM' : 'MI'
       }
 
-      // Update markers if they're currently visible by triggering the marker button click
+      // Update markers if they're currently visible
       if (showMarkersRef.current && distanceMarkersRef.current.length > 0) {
-        const markerButton = document.querySelector('[data-marker-toggle]') as HTMLButtonElement
-        if (markerButton) {
-          // Toggle markers off and back on to refresh with new units
-          markerButton.click() // Hide markers
-          setTimeout(() => markerButton.click(), 50) // Show markers with new units
-        }
+        // Trigger the recreateMarkers event on the map instance
+        const event = new CustomEvent('recreateMarkers')
+        mapInstanceRef.current.getContainer().dispatchEvent(event)
       }
     }
   }, [initialUseMetric])
@@ -1173,6 +1171,48 @@ function createCustomControls(
   mapContainer.appendChild(recenterButton)
   mapContainer.appendChild(markerControlContainer)
   mapContainer.appendChild(zoomContainer)
+
+  // Add event listener for external unit changes
+  mapContainer.addEventListener('recreateMarkers', () => {
+    if (showMarkersRef.current && distanceMarkersRef.current.length > 0) {
+      // Clear existing markers
+      distanceMarkersRef.current.forEach(marker => marker.remove())
+      distanceMarkersRef.current = []
+
+      // Recreate markers with current unit preference
+      const currentMetric = useMetricRef.current
+      let cumulativeDistance = 0
+      const interval = currentMetric ? 1 : 1.609344 // 1 km or 1 mile in km
+
+      for (let i = 1; i < coordinates.length; i++) {
+        const segmentDistance = calculateDistance(coordinates[i - 1], coordinates[i])
+        const prevCumulativeDistance = cumulativeDistance
+        cumulativeDistance += segmentDistance
+
+        const prevMarkerCount = Math.floor(prevCumulativeDistance / interval)
+        const currentMarkerCount = Math.floor(cumulativeDistance / interval)
+
+        if (currentMarkerCount > prevMarkerCount) {
+          for (let j = prevMarkerCount + 1; j <= currentMarkerCount; j++) {
+            const targetDistance = j * interval
+            const ratio = (targetDistance - prevCumulativeDistance) / segmentDistance
+            const lat = coordinates[i - 1][1] + ratio * (coordinates[i][1] - coordinates[i - 1][1])
+            const lng = coordinates[i - 1][0] + ratio * (coordinates[i][0] - coordinates[i - 1][0])
+
+            const displayDist = currentMetric ? Math.round(targetDistance) : Math.round(targetDistance / 1.609344)
+            const unitLabel = currentMetric ? 'km' : 'mi'
+
+            const markerEl = createDistanceMarkerElement(displayDist.toString(), isDark)
+            const marker = new mapboxgl.Marker({ element: markerEl, anchor: 'center' })
+              .setLngLat([lng, lat])
+              .addTo(map)
+
+            distanceMarkersRef.current.push(marker)
+          }
+        }
+      }
+    }
+  })
 
   // Initialize markers if they were previously visible (e.g., after dark mode toggle)
   if (showMarkers) {
