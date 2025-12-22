@@ -7,9 +7,10 @@ interface ElevationChartProps {
   elevationData: Array<{ distance: number; elevation: number }>
   useMetric?: boolean
   isDark?: boolean
+  onUseMetricChange?: (metric: boolean) => void
 }
 
-export function ElevationChart({ elevationData, useMetric = false, isDark = false }: ElevationChartProps) {
+export function ElevationChart({ elevationData, useMetric = false, isDark = false, onUseMetricChange }: ElevationChartProps) {
   // Convert data based on unit preference
   const chartData = useMemo(() => {
     return elevationData.map(point => ({
@@ -54,9 +55,23 @@ export function ElevationChart({ elevationData, useMetric = false, isDark = fals
     <div className="w-full bg-white dark:bg-neutral-900 rounded-xl border border-neutral-100 dark:border-neutral-800 overflow-hidden shadow-sm flex-shrink-0">
       {/* Header */}
       <div className="px-6 py-4 border-b border-neutral-100 dark:border-neutral-800">
-        <h3 className="text-sm font-semibold text-neutral-900 dark:text-white">
-          Elevation Profile
-        </h3>
+        <div className="flex items-center justify-between">
+          <h3 className="text-sm font-semibold text-neutral-900 dark:text-white">
+            Elevation Profile
+          </h3>
+
+          {/* Unit Toggle */}
+          <button
+            onClick={() => onUseMetricChange?.(!useMetric)}
+            className="flex items-center justify-center px-3 h-7 rounded-lg transition-colors bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700"
+            title={`Using ${useMetric ? 'Metric (km/m)' : 'Imperial (mi/ft)'} - Click to switch`}
+            aria-label="Toggle units"
+          >
+            <span className="font-mono text-xs font-semibold">
+              {useMetric ? 'KM' : 'MI'}
+            </span>
+          </button>
+        </div>
       </div>
 
       {/* Chart */}

@@ -10,7 +10,7 @@ import { DraggableWindow } from '@/components/DraggableWindow'
 import { RaceRouteMap } from '@/components/RaceRouteMap'
 import { ElevationChart } from '@/components/ElevationChart'
 import { fetchGPXElevationData, type ElevationPoint } from '@/lib/gpxUtils'
-import { Route, Wallet, Users, ArrowUpRight, ArrowDownRight, Mountain, ThermometerSun, Medal, Settings } from 'lucide-react'
+import { Route, Wallet, Users, ArrowUpRight, ArrowDownRight, Mountain, ThermometerSun, Medal, Settings2 } from 'lucide-react'
 import Slider from '@mui/material/Slider'
 import Box from '@mui/material/Box'
 import { DarkModeContext } from '@/components/DarkModeProvider'
@@ -167,7 +167,7 @@ export function RaceEventPopup({
         className="h-8 w-8 rounded-md flex items-center justify-center text-neutral-500 dark:text-neutral-400 hover:text-neutral-400 dark:hover:text-neutral-300 hover:border hover:border-neutral-300 dark:hover:border-neutral-600 transition-all active:scale-95"
         aria-label="Settings"
       >
-        <Settings className="w-4 h-4" />
+        <Settings2 className="w-4 h-4" />
       </button>
 
       {/* Settings Dropdown */}
@@ -390,16 +390,14 @@ export function RaceEventPopup({
             <div className="flex items-center justify-between mb-3">
               <h4 className="font-body text-sm font-medium text-neutral-600 dark:text-neutral-400">Key Details</h4>
 
-              {/* Universal Unit Toggle - Controls all measurements */}
+              {/* Unit Toggle */}
               <button
                 onClick={() => onMapUseMetricChange(!mapUseMetric)}
-                className="flex items-center justify-center px-3 h-8 rounded-lg transition-colors bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700"
+                className="flex items-center justify-center w-8 h-8 rounded-lg transition-colors bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700"
                 title={`Using ${mapUseMetric ? 'Metric (km/m)' : 'Imperial (mi/ft)'} - Click to switch. Controls all units: key details, map markers, and elevation chart.`}
                 aria-label="Toggle units"
               >
-                <span className="font-mono text-xs font-semibold">
-                  {mapUseMetric ? 'KM' : 'MI'}
-                </span>
+                <Settings2 className="w-4 h-4" />
               </button>
             </div>
             <div className="space-y-3">
@@ -587,6 +585,7 @@ export function RaceEventPopup({
               elevationData={elevationData}
               useMetric={mapUseMetric}
               isDark={isDark}
+              onUseMetricChange={onMapUseMetricChange}
             />
           )}
 
