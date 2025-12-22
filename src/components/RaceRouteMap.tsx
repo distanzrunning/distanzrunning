@@ -47,14 +47,26 @@ export function RaceRouteMap({
     showMarkersRef.current = showMarkers
   }, [showMarkers])
 
-  // Sync state changes back to parent
+  // Track if component has mounted to avoid syncing initial values
+  const hasMountedRef = useRef(false)
+
+  // Sync state changes back to parent (only after initial mount)
   useEffect(() => {
-    onShowMarkersChange?.(showMarkers)
+    if (hasMountedRef.current) {
+      onShowMarkersChange?.(showMarkers)
+    }
   }, [showMarkers, onShowMarkersChange])
 
   useEffect(() => {
-    onUseMetricChange?.(useMetric)
+    if (hasMountedRef.current) {
+      onUseMetricChange?.(useMetric)
+    }
   }, [useMetric, onUseMetricChange])
+
+  // Mark as mounted after first render
+  useEffect(() => {
+    hasMountedRef.current = true
+  }, [])
 
   useEffect(() => {
     // Wait for dark mode to be initialized
