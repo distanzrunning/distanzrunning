@@ -117,8 +117,11 @@ export function ElevationChart({ elevationData, useMetric = false, isDark = fals
     // Start from a rounded value and generate ticks
     const start = Math.ceil(min / interval) * interval
 
+    // Generate ticks but limit to ~5-6 ticks max to avoid clutter
     for (let i = start; i <= max; i += interval) {
       ticks.push(i)
+      // Stop if we have enough ticks
+      if (ticks.length >= 6) break
     }
 
     return ticks
