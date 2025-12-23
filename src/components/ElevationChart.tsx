@@ -195,12 +195,13 @@ export function ElevationChart({ elevationData, useMetric = false, isDark = fals
               tickMargin={8}
               domain={distanceDomain}
               ticks={distanceTicks}
+              allowDataOverflow={false}
               tick={{
                 fill: isDark ? '#a3a3a3' : '#737373',
                 fontSize: 12,
                 fontFamily: 'JetBrains Mono, monospace'
               }}
-              tickFormatter={(value) => `${value.toFixed(0)} ${distanceUnit}`}
+              tickFormatter={(value) => `${Math.round(value)} ${distanceUnit}`}
             />
             <YAxis
               type="number"
@@ -209,6 +210,7 @@ export function ElevationChart({ elevationData, useMetric = false, isDark = fals
               tickMargin={8}
               domain={elevationDomain}
               ticks={elevationTicks}
+              allowDataOverflow={false}
               tick={{
                 fill: isDark ? '#a3a3a3' : '#737373',
                 fontSize: 12,
