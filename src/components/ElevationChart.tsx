@@ -44,9 +44,34 @@ export function ElevationChart({ elevationData, useMetric = false, isDark = fals
   }, [distanceDomainKm, useMetric])
 
   const elevationDomain: [number, number] = useMemo(() => {
-    return useMetric
+    const domain = useMetric
       ? elevationDomainMeters
       : [elevationDomainMeters[0] * 3.28084, elevationDomainMeters[1] * 3.28084]
+
+    // Round domain to match tick intervals for even spacing
+    const min = domain[0]
+    const max = domain[1]
+    const range = max - min
+
+    let interval: number
+    if (useMetric) {
+      if (range <= 50) interval = 10
+      else if (range <= 100) interval = 20
+      else if (range <= 200) interval = 50
+      else if (range <= 500) interval = 100
+      else interval = 200
+    } else {
+      if (range <= 150) interval = 25
+      else if (range <= 300) interval = 50
+      else if (range <= 600) interval = 100
+      else if (range <= 1500) interval = 250
+      else interval = 500
+    }
+
+    const start = Math.floor(min / interval) * interval
+    const end = Math.ceil(max / interval) * interval
+
+    return [start, end] as [number, number]
   }, [elevationDomainMeters, useMetric])
 
   // Generate distance ticks based on unit
@@ -201,10 +226,10 @@ export function ElevationChart({ elevationData, useMetric = false, isDark = fals
               allowDataOverflow={false}
               tick={{
                 fill: isDark ? '#a3a3a3' : '#737373',
-                fontSize: 12,
+                fontSize: 11,
                 fontFamily: 'JetBrains Mono, monospace'
               }}
-              tickFormatter={(value) => `${Math.round(value)} ${distanceUnit}`}
+              tickFormatter={(value) => `${Math.round(value)}${distanceUnit}`}
             />
             <YAxis
               type="number"
@@ -214,9 +239,10 @@ export function ElevationChart({ elevationData, useMetric = false, isDark = fals
               domain={elevationDomain}
               ticks={elevationTicks}
               allowDataOverflow={false}
+              width={45}
               tick={{
                 fill: isDark ? '#a3a3a3' : '#737373',
-                fontSize: 12,
+                fontSize: 11,
                 fontFamily: 'JetBrains Mono, monospace'
               }}
               tickFormatter={(value) => `${Math.round(value)}`}
