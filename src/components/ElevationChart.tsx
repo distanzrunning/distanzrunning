@@ -62,14 +62,20 @@ export function ElevationChart({ elevationData, useMetric = false, isDark = fals
           </h3>
 
           {/* Unit Toggle */}
-          <button
-            onClick={() => onUseMetricChange?.(!useMetric)}
-            className="flex items-center justify-center w-7 h-7 rounded-lg transition-colors bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700"
-            title={useMetric ? 'Change to Imperial (mi/ft)' : 'Change to Metric (km/m)'}
-            aria-label="Toggle units"
-          >
-            <Settings2 className="w-4 h-4" />
-          </button>
+          <div className="relative group">
+            <button
+              onClick={() => onUseMetricChange?.(!useMetric)}
+              className="flex items-center justify-center w-7 h-7 rounded-lg transition-colors bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700"
+              aria-label="Toggle units"
+            >
+              <Settings2 className="w-4 h-4" />
+            </button>
+            {/* Tooltip */}
+            <div className="absolute right-0 top-full mt-2 px-3 py-2 bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 text-xs font-medium rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-opacity duration-200 whitespace-nowrap z-50 pointer-events-none">
+              {useMetric ? 'Change to Imperial (mi/ft)' : 'Change to Metric (km/m)'}
+              <div className="absolute bottom-full right-4 w-2 h-2 bg-neutral-900 dark:bg-neutral-100 transform rotate-45 translate-y-1"></div>
+            </div>
+          </div>
         </div>
       </div>
 

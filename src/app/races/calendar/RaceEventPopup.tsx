@@ -391,14 +391,20 @@ export function RaceEventPopup({
               <h4 className="font-body text-sm font-medium text-neutral-600 dark:text-neutral-400">Key Details</h4>
 
               {/* Unit Toggle */}
-              <button
-                onClick={() => onMapUseMetricChange(!mapUseMetric)}
-                className="flex items-center justify-center w-8 h-8 rounded-lg transition-colors bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700"
-                title={mapUseMetric ? 'Change to Imperial (mi/ft)' : 'Change to Metric (km/m)'}
-                aria-label="Toggle units"
-              >
-                <Settings2 className="w-4 h-4" />
-              </button>
+              <div className="relative group">
+                <button
+                  onClick={() => onMapUseMetricChange(!mapUseMetric)}
+                  className="flex items-center justify-center w-8 h-8 rounded-lg transition-colors bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700"
+                  aria-label="Toggle units"
+                >
+                  <Settings2 className="w-4 h-4" />
+                </button>
+                {/* Tooltip */}
+                <div className="absolute right-0 top-full mt-2 px-3 py-2 bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 text-xs font-medium rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-opacity duration-200 whitespace-nowrap z-50 pointer-events-none">
+                  {mapUseMetric ? 'Change to Imperial (mi/ft)' : 'Change to Metric (km/m)'}
+                  <div className="absolute bottom-full right-4 w-2 h-2 bg-neutral-900 dark:bg-neutral-100 transform rotate-45 translate-y-1"></div>
+                </div>
+              </div>
             </div>
             <div className="space-y-3">
               <div className="grid grid-cols-3 gap-3">
