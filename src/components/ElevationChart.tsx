@@ -43,47 +43,39 @@ export function ElevationChart({ elevationData, useMetric = false, isDark = fals
       : [distanceDomainKm[0] / 1.609344, distanceDomainKm[1] / 1.609344]
   }, [distanceDomainKm, useMetric])
 
-  // Calculate fixed elevation domain that maintains position when toggling units
-  const elevationDomain: [number, number] = useMemo(() => {
+  // Calculate fixed elevation domain in metric (stays constant)
+  const elevationDomainMetric: [number, number] = useMemo(() => {
     const minMeters = elevationDomainMeters[0]
     const maxMeters = elevationDomainMeters[1]
     const rangeMeters = maxMeters - minMeters
 
+    // Determine interval in meters
+    let intervalMeters: number
+    if (rangeMeters <= 50) intervalMeters = 10
+    else if (rangeMeters <= 100) intervalMeters = 20
+    else if (rangeMeters <= 200) intervalMeters = 50
+    else if (rangeMeters <= 500) intervalMeters = 100
+    else intervalMeters = 200
+
+    // Round to interval in meters
+    const startMeters = Math.floor(minMeters / intervalMeters) * intervalMeters
+    const endMeters = Math.ceil(maxMeters / intervalMeters) * intervalMeters
+
+    return [startMeters, endMeters] as [number, number]
+  }, [elevationDomainMeters])
+
+  // Convert to current unit system (maintains exact proportions to prevent chart movement)
+  const elevationDomain: [number, number] = useMemo(() => {
     if (useMetric) {
-      // For metric, determine interval in meters
-      let intervalMeters: number
-      if (rangeMeters <= 50) intervalMeters = 10
-      else if (rangeMeters <= 100) intervalMeters = 20
-      else if (rangeMeters <= 200) intervalMeters = 50
-      else if (rangeMeters <= 500) intervalMeters = 100
-      else intervalMeters = 200
-
-      // Round to interval in meters
-      const startMeters = Math.floor(minMeters / intervalMeters) * intervalMeters
-      const endMeters = Math.ceil(maxMeters / intervalMeters) * intervalMeters
-
-      return [startMeters, endMeters] as [number, number]
+      return elevationDomainMetric
     } else {
-      // For imperial, convert to feet first, then calculate nice intervals
-      const minFeet = minMeters * 3.28084
-      const maxFeet = maxMeters * 3.28084
-      const rangeFeet = maxFeet - minFeet
-
-      // Determine interval in feet
-      let intervalFeet: number
-      if (rangeFeet <= 150) intervalFeet = 25
-      else if (rangeFeet <= 300) intervalFeet = 50
-      else if (rangeFeet <= 600) intervalFeet = 100
-      else if (rangeFeet <= 1500) intervalFeet = 250
-      else intervalFeet = 500
-
-      // Round to interval in feet
-      const startFeet = Math.floor(minFeet / intervalFeet) * intervalFeet
-      const endFeet = Math.ceil(maxFeet / intervalFeet) * intervalFeet
-
-      return [startFeet, endFeet] as [number, number]
+      // Convert the fixed metric domain to feet
+      return [
+        elevationDomainMetric[0] * 3.28084,
+        elevationDomainMetric[1] * 3.28084
+      ] as [number, number]
     }
-  }, [elevationDomainMeters, useMetric])
+  }, [elevationDomainMetric, useMetric])
 
   // Generate distance ticks based on unit
   const distanceTicks = useMemo(() => {
