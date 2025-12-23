@@ -114,8 +114,10 @@ export function ElevationChart({ elevationData, useMetric = false, isDark = fals
       else interval = 500
     }
 
-    // Generate ticks at interval
-    for (let i = min; i <= max; i += interval) {
+    // Start from a rounded value and generate ticks
+    const start = Math.ceil(min / interval) * interval
+
+    for (let i = start; i <= max; i += interval) {
       ticks.push(i)
     }
 
