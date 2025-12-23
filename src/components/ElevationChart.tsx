@@ -12,6 +12,53 @@ interface ElevationChartProps {
 }
 
 export function ElevationChart({ elevationData, useMetric = false, isDark = false, onUseMetricChange }: ElevationChartProps) {
+  // Calculate fixed domains based on raw data (always in metric/km)
+  // This ensures the axes don't move when toggling units
+  const { distanceDomainKm, elevationDomainMeters } = useMemo(() => {
+    if (elevationData.length === 0) return {
+      distanceDomainKm: [0, 10] as [number, number],
+      elevationDomainMeters: [0, 100] as [number, number]
+    }
+
+    const distances = elevationData.map(d => d.distance)
+    const elevations = elevationData.map(d => d.elevation)
+
+    const maxDistance = Math.max(...distances)
+    const minElevation = Math.min(...elevations)
+    const maxElevation = Math.max(...elevations)
+
+    return {
+      distanceDomainKm: [0, Math.ceil(maxDistance * 1.05)] as [number, number],
+      elevationDomainMeters: [
+        Math.floor(minElevation * 0.95),
+        Math.ceil(maxElevation * 1.05)
+      ] as [number, number]
+    }
+  }, [elevationData])
+
+  // Convert domains to current unit system
+  const distanceDomain: [number, number] = useMemo(() => {
+    return useMetric
+      ? distanceDomainKm
+      : [distanceDomainKm[0] / 1.609344, distanceDomainKm[1] / 1.609344]
+  }, [distanceDomainKm, useMetric])
+
+  const elevationDomain: [number, number] = useMemo(() => {
+    return useMetric
+      ? elevationDomainMeters
+      : [elevationDomainMeters[0] * 3.28084, elevationDomainMeters[1] * 3.28084]
+  }, [elevationDomainMeters, useMetric])
+
+  // Generate distance ticks based on unit
+  const distanceTicks = useMemo(() => {
+    const ticks: number[] = []
+    const interval = useMetric ? 5 : 2 // 5km or 2mi intervals
+    for (let i = 0; i <= distanceDomain[1]; i += interval) {
+      ticks.push(i)
+    }
+    return ticks
+  }, [distanceDomain, useMetric])
+
   // Convert data based on unit preference
   const chartData = useMemo(() => {
     return elevationData.map(point => ({
@@ -19,44 +66,6 @@ export function ElevationChart({ elevationData, useMetric = false, isDark = fals
       elevation: useMetric ? point.elevation : point.elevation * 3.28084, // Convert meters to feet if needed
     }))
   }, [elevationData, useMetric])
-
-  // Calculate fixed domains and tick intervals
-  const { distanceDomain, elevationDomain, distanceTicks } = useMemo(() => {
-    if (chartData.length === 0) return {
-      distanceDomain: [0, 10],
-      elevationDomain: [0, 100],
-      distanceTicks: []
-    }
-
-    const distances = chartData.map(d => d.distance)
-    const elevations = chartData.map(d => d.elevation)
-
-    const maxDistance = Math.max(...distances)
-    const minElevation = Math.min(...elevations)
-    const maxElevation = Math.max(...elevations)
-
-    // Distance domain: always start at 0
-    const distDomain = [0, Math.ceil(maxDistance * 1.05)]
-
-    // Elevation domain: add 5% padding
-    const elevDomain = [
-      Math.floor(minElevation * 0.95),
-      Math.ceil(maxElevation * 1.05)
-    ]
-
-    // Generate distance ticks based on unit
-    const ticks: number[] = []
-    const interval = useMetric ? 5 : 2 // 5km or 2mi intervals
-    for (let i = 0; i <= distDomain[1]; i += interval) {
-      ticks.push(i)
-    }
-
-    return {
-      distanceDomain: distDomain,
-      elevationDomain: elevDomain,
-      distanceTicks: ticks
-    }
-  }, [chartData, useMetric])
 
   const distanceUnit = useMetric ? 'km' : 'mi'
   const elevationUnit = useMetric ? 'm' : 'ft'
