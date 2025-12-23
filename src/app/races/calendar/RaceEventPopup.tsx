@@ -10,7 +10,7 @@ import { DraggableWindow } from '@/components/DraggableWindow'
 import { RaceRouteMap } from '@/components/RaceRouteMap'
 import { ElevationChart } from '@/components/ElevationChart'
 import { fetchGPXElevationData, type ElevationPoint } from '@/lib/gpxUtils'
-import { Route, Wallet, Users, ArrowUpRight, ArrowDownRight, Mountain, ThermometerSun, Medal, Settings2 } from 'lucide-react'
+import { Route, Wallet, Users, ArrowUpRight, ArrowDownRight, Mountain, ThermometerSun, Medal, Settings2, Settings } from 'lucide-react'
 import Slider from '@mui/material/Slider'
 import Box from '@mui/material/Box'
 import { DarkModeContext } from '@/components/DarkModeProvider'
@@ -164,10 +164,10 @@ export function RaceEventPopup({
           setShowSettingsDropdown(!showSettingsDropdown)
         }}
         onMouseDown={(e) => e.stopPropagation()}
-        className="h-8 w-8 rounded-md flex items-center justify-center text-neutral-500 dark:text-neutral-400 hover:text-neutral-400 dark:hover:text-neutral-300 hover:border hover:border-neutral-300 dark:hover:border-neutral-600 transition-all active:scale-95"
+        className="h-8 w-8 rounded-md flex items-center justify-center text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors active:scale-95"
         aria-label="Settings"
       >
-        <Settings2 className="w-4 h-4" />
+        <Settings className="w-4 h-4" />
       </button>
 
       {/* Settings Dropdown */}
