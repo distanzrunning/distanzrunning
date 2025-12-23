@@ -189,6 +189,7 @@ export function ElevationChart({ elevationData, useMetric = false, isDark = fals
             />
             <XAxis
               dataKey="distance"
+              type="number"
               tickLine={false}
               axisLine={false}
               tickMargin={8}
@@ -202,6 +203,7 @@ export function ElevationChart({ elevationData, useMetric = false, isDark = fals
               tickFormatter={(value) => `${value.toFixed(0)} ${distanceUnit}`}
             />
             <YAxis
+              type="number"
               tickLine={false}
               axisLine={false}
               tickMargin={8}
