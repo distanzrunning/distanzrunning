@@ -43,35 +43,32 @@ export function ElevationChart({ elevationData, useMetric = false, isDark = fals
       : [distanceDomainKm[0] / 1.609344, distanceDomainKm[1] / 1.609344]
   }, [distanceDomainKm, useMetric])
 
+  // Calculate fixed elevation domain that maintains position when toggling units
   const elevationDomain: [number, number] = useMemo(() => {
-    const domain = useMetric
-      ? elevationDomainMeters
-      : [elevationDomainMeters[0] * 3.28084, elevationDomainMeters[1] * 3.28084]
+    // Always calculate interval from metric base for consistency
+    const minMeters = elevationDomainMeters[0]
+    const maxMeters = elevationDomainMeters[1]
+    const rangeMeters = maxMeters - minMeters
 
-    // Round domain to match tick intervals for even spacing
-    const min = domain[0]
-    const max = domain[1]
-    const range = max - min
+    // Determine interval in meters (base unit)
+    let intervalMeters: number
+    if (rangeMeters <= 50) intervalMeters = 10
+    else if (rangeMeters <= 100) intervalMeters = 20
+    else if (rangeMeters <= 200) intervalMeters = 50
+    else if (rangeMeters <= 500) intervalMeters = 100
+    else intervalMeters = 200
 
-    let interval: number
+    // Round to interval in meters
+    const startMeters = Math.floor(minMeters / intervalMeters) * intervalMeters
+    const endMeters = Math.ceil(maxMeters / intervalMeters) * intervalMeters
+
+    // Convert to current unit system
     if (useMetric) {
-      if (range <= 50) interval = 10
-      else if (range <= 100) interval = 20
-      else if (range <= 200) interval = 50
-      else if (range <= 500) interval = 100
-      else interval = 200
+      return [startMeters, endMeters] as [number, number]
     } else {
-      if (range <= 150) interval = 25
-      else if (range <= 300) interval = 50
-      else if (range <= 600) interval = 100
-      else if (range <= 1500) interval = 250
-      else interval = 500
+      // Convert the fixed metric domain to imperial
+      return [startMeters * 3.28084, endMeters * 3.28084] as [number, number]
     }
-
-    const start = Math.floor(min / interval) * interval
-    const end = Math.ceil(max / interval) * interval
-
-    return [start, end] as [number, number]
   }, [elevationDomainMeters, useMetric])
 
   // Generate distance ticks based on unit
