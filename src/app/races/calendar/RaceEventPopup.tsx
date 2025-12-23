@@ -394,7 +394,7 @@ export function RaceEventPopup({
               <button
                 onClick={() => onMapUseMetricChange(!mapUseMetric)}
                 className="flex items-center justify-center w-8 h-8 rounded-lg transition-colors bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700"
-                title={`Using ${mapUseMetric ? 'Metric (km/m)' : 'Imperial (mi/ft)'} - Click to switch. Controls all units: key details, map markers, and elevation chart.`}
+                title={mapUseMetric ? 'Change to Imperial (mi/ft)' : 'Change to Metric (km/m)'}
                 aria-label="Toggle units"
               >
                 <Settings2 className="w-4 h-4" />

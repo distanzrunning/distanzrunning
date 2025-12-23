@@ -2,6 +2,7 @@
 
 import { useMemo } from 'react'
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
+import { Settings2 } from 'lucide-react'
 
 interface ElevationChartProps {
   elevationData: Array<{ distance: number; elevation: number }>
@@ -63,13 +64,11 @@ export function ElevationChart({ elevationData, useMetric = false, isDark = fals
           {/* Unit Toggle */}
           <button
             onClick={() => onUseMetricChange?.(!useMetric)}
-            className="flex items-center justify-center px-3 h-7 rounded-lg transition-colors bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700"
-            title={`Using ${useMetric ? 'Metric (km/m)' : 'Imperial (mi/ft)'} - Click to switch`}
+            className="flex items-center justify-center w-7 h-7 rounded-lg transition-colors bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700"
+            title={useMetric ? 'Change to Imperial (mi/ft)' : 'Change to Metric (km/m)'}
             aria-label="Toggle units"
           >
-            <span className="font-mono text-xs font-semibold">
-              {useMetric ? 'KM' : 'MI'}
-            </span>
+            <Settings2 className="w-4 h-4" />
           </button>
         </div>
       </div>
