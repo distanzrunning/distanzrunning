@@ -20,6 +20,43 @@ export function ElevationChart({ elevationData, useMetric = false, isDark = fals
     }))
   }, [elevationData, useMetric])
 
+  // Calculate fixed domains and tick intervals
+  const { distanceDomain, elevationDomain, distanceTicks } = useMemo(() => {
+    if (chartData.length === 0) return {
+      distanceDomain: [0, 10],
+      elevationDomain: [0, 100],
+      distanceTicks: []
+    }
+
+    const distances = chartData.map(d => d.distance)
+    const elevations = chartData.map(d => d.elevation)
+
+    const maxDistance = Math.max(...distances)
+    const minElevation = Math.min(...elevations)
+    const maxElevation = Math.max(...elevations)
+
+    // Distance domain: always start at 0
+    const distDomain = [0, Math.ceil(maxDistance * 1.05)]
+
+    // Elevation domain: add 5% padding
+    const elevDomain = [
+      Math.floor(minElevation * 0.95),
+      Math.ceil(maxElevation * 1.05)
+    ]
+
+    // Generate distance ticks based on unit
+    const ticks: number[] = []
+    const interval = useMetric ? 5 : 2 // 5km or 2mi intervals
+    for (let i = 0; i <= distDomain[1]; i += interval) {
+      ticks.push(i)
+    }
+
+    return {
+      distanceDomain: distDomain,
+      elevationDomain: elevDomain,
+      distanceTicks: ticks
+    }
+  }, [chartData, useMetric])
 
   const distanceUnit = useMetric ? 'km' : 'mi'
   const elevationUnit = useMetric ? 'm' : 'ft'
@@ -110,7 +147,8 @@ export function ElevationChart({ elevationData, useMetric = false, isDark = fals
               tickLine={false}
               axisLine={false}
               tickMargin={8}
-              minTickGap={32}
+              domain={distanceDomain}
+              ticks={distanceTicks}
               tick={{
                 fill: isDark ? '#a3a3a3' : '#737373',
                 fontSize: 12,
@@ -122,16 +160,13 @@ export function ElevationChart({ elevationData, useMetric = false, isDark = fals
               tickLine={false}
               axisLine={false}
               tickMargin={8}
+              domain={elevationDomain}
               tick={{
                 fill: isDark ? '#a3a3a3' : '#737373',
                 fontSize: 12,
                 fontFamily: 'JetBrains Mono, monospace'
               }}
               tickFormatter={(value) => `${Math.round(value)}`}
-              domain={[
-                (dataMin: number) => Math.floor(dataMin * 0.95),
-                (dataMax: number) => Math.ceil(dataMax * 1.05)
-              ]}
             />
             <Tooltip content={<CustomTooltip />} />
             <Area
