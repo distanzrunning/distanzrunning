@@ -53,11 +53,47 @@ export function ElevationChart({ elevationData, useMetric = false, isDark = fals
   const distanceTicks = useMemo(() => {
     const ticks: number[] = []
     const interval = useMetric ? 5 : 2 // 5km or 2mi intervals
-    for (let i = 0; i <= distanceDomain[1]; i += interval) {
+    const maxDistance = Math.ceil(distanceDomain[1])
+
+    for (let i = 0; i <= maxDistance; i += interval) {
       ticks.push(i)
     }
     return ticks
   }, [distanceDomain, useMetric])
+
+  // Generate elevation ticks based on unit
+  const elevationTicks = useMemo(() => {
+    const ticks: number[] = []
+    const min = elevationDomain[0]
+    const max = elevationDomain[1]
+    const range = max - min
+
+    // Determine appropriate interval based on range
+    let interval: number
+    if (useMetric) {
+      // For meters
+      if (range <= 100) interval = 20
+      else if (range <= 200) interval = 50
+      else if (range <= 500) interval = 100
+      else interval = 200
+    } else {
+      // For feet
+      if (range <= 300) interval = 50
+      else if (range <= 600) interval = 100
+      else if (range <= 1500) interval = 250
+      else interval = 500
+    }
+
+    // Start from a nice round number
+    const start = Math.floor(min / interval) * interval
+    const end = Math.ceil(max / interval) * interval
+
+    for (let i = start; i <= end; i += interval) {
+      ticks.push(i)
+    }
+
+    return ticks
+  }, [elevationDomain, useMetric])
 
   // Convert data based on unit preference
   const chartData = useMemo(() => {
@@ -170,6 +206,7 @@ export function ElevationChart({ elevationData, useMetric = false, isDark = fals
               axisLine={false}
               tickMargin={8}
               domain={elevationDomain}
+              ticks={elevationTicks}
               tick={{
                 fill: isDark ? '#a3a3a3' : '#737373',
                 fontSize: 12,
