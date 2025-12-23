@@ -28,10 +28,10 @@ export function ElevationChart({ elevationData, useMetric = false, isDark = fals
     const maxElevation = Math.max(...elevations)
 
     return {
-      distanceDomainKm: [0, Math.ceil(maxDistance * 1.05)] as [number, number],
+      distanceDomainKm: [0, Math.ceil(maxDistance)] as [number, number],
       elevationDomainMeters: [
-        Math.floor(minElevation * 0.95),
-        Math.ceil(maxElevation * 1.05)
+        Math.floor(minElevation),
+        Math.ceil(maxElevation)
       ] as [number, number]
     }
   }, [elevationData])
@@ -69,16 +69,19 @@ export function ElevationChart({ elevationData, useMetric = false, isDark = fals
     const range = max - min
 
     // Determine appropriate interval based on range
+    // Target 4-6 ticks for readability
     let interval: number
     if (useMetric) {
       // For meters
-      if (range <= 100) interval = 20
+      if (range <= 50) interval = 10
+      else if (range <= 100) interval = 20
       else if (range <= 200) interval = 50
       else if (range <= 500) interval = 100
       else interval = 200
     } else {
       // For feet
-      if (range <= 300) interval = 50
+      if (range <= 150) interval = 25
+      else if (range <= 300) interval = 50
       else if (range <= 600) interval = 100
       else if (range <= 1500) interval = 250
       else interval = 500
