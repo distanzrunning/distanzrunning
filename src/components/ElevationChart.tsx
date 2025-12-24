@@ -313,7 +313,7 @@ export function ElevationChart({
     )
   }
 
-  // Calculate tooltip position for map hover - mimic Recharts behavior
+  // Calculate tooltip position for map hover - simple left/right positioning
   const tooltipPosition = useMemo(() => {
     if (!hoverDistance || hoverDistance === null || !chartContainerRef.current) {
       return null
@@ -329,31 +329,27 @@ export function ElevationChart({
     const chartWidth = chartContainerRef.current.offsetWidth - chartLeftMargin - chartRightMargin
     const lineXPos = chartLeftMargin + (relativeX * chartWidth)
 
-    // Use actual tooltip width - measured from rendered content
-    // The tooltip contains: "Distance: XX.XX km" (longest), "Elevation: XXXX m", "Grade: +XX.X%"
-    // With padding p-2 (8px) and gap-1.5 (6px), the actual width is around 140-150px
-    const tooltipWidth = 150 // More accurate estimate based on actual content
-    const edgePadding = 10 // Padding from container edges
-
-    // Calculate available space
     const containerWidth = chartContainerRef.current.offsetWidth
+    const tooltipOffset = 10 // Spacing from line
 
-    // Default: center on line
-    let xPos = lineXPos
+    // Simple logic: if more space on right, position to right; otherwise to left
+    const spaceOnRight = containerWidth - lineXPos
+    const spaceOnLeft = lineXPos
 
-    // Check if centering would push tooltip outside bounds
-    const tooltipLeft = xPos - tooltipWidth / 2
-    const tooltipRight = xPos + tooltipWidth / 2
+    let xPos: number
+    let side: 'left' | 'right'
 
-    if (tooltipLeft < edgePadding) {
-      // Too close to left edge - align to left edge with padding
-      xPos = edgePadding + tooltipWidth / 2
-    } else if (tooltipRight > containerWidth - edgePadding) {
-      // Too close to right edge - align to right edge with padding
-      xPos = containerWidth - edgePadding - tooltipWidth / 2
+    if (spaceOnRight > spaceOnLeft) {
+      // Position to right of line
+      xPos = lineXPos + tooltipOffset
+      side = 'left' // tooltip aligns from its left edge
+    } else {
+      // Position to left of line
+      xPos = lineXPos - tooltipOffset
+      side = 'right' // tooltip aligns from its right edge
     }
 
-    return { x: xPos }
+    return { x: xPos, side }
   }, [hoverDistance, distanceDomain])
 
   return (
@@ -485,12 +481,12 @@ export function ElevationChart({
               position: 'absolute',
               left: `${tooltipPosition.x}px`,
               top: '10px',
-              transform: 'translateX(-50%)',
+              transform: tooltipPosition.side === 'left' ? 'translateX(0)' : 'translateX(-100%)',
               pointerEvents: 'none',
               zIndex: 10
             }}
           >
-            <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-md shadow-lg p-2">
+            <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-md shadow-lg p-2 whitespace-nowrap">
               <div className="flex items-baseline gap-1.5 mb-0.5">
                 <span className="text-xs text-neutral-600 dark:text-neutral-300">Distance:</span>
                 <span className="text-xs font-mono text-neutral-900 dark:text-white">{hoverDistance?.toFixed(2)} {distanceUnit}</span>
