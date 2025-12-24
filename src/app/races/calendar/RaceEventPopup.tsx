@@ -7,8 +7,7 @@ import type { RaceGuide } from '../page'
 import { urlFor } from '@/sanity/lib/image'
 import { convertCurrencySync, formatPrice } from '@/lib/raceUtils'
 import { DraggableWindow } from '@/components/DraggableWindow'
-import { RaceRouteMap } from '@/components/RaceRouteMap'
-import { ElevationChart } from '@/components/ElevationChart'
+import { RaceRouteMapWithElevation } from '@/components/RaceRouteMapWithElevation'
 import { fetchGPXElevationData, type ElevationPoint } from '@/lib/gpxUtils'
 import { Route, Wallet, Users, ArrowUpRight, ArrowDownRight, Mountain, ThermometerSun, Medal, Settings2, Settings } from 'lucide-react'
 import Slider from '@mui/material/Slider'
@@ -571,9 +570,9 @@ export function RaceEventPopup({
             </div>
           </div>
 
-          {/* Race Route Map */}
+          {/* Race Route Map with Elevation Chart */}
           {race.gpxFile?.asset?.url && (
-            <RaceRouteMap
+            <RaceRouteMapWithElevation
               key={contentKey}
               gpxUrl={race.gpxFile.asset.url}
               title={race.title}
@@ -582,16 +581,7 @@ export function RaceEventPopup({
               initialUseMetric={mapUseMetric}
               onShowMarkersChange={onMapMarkersChange}
               onUseMetricChange={onMapUseMetricChange}
-            />
-          )}
-
-          {/* Elevation Chart */}
-          {elevationData.length > 0 && (
-            <ElevationChart
               elevationData={elevationData}
-              useMetric={mapUseMetric}
-              isDark={isDark}
-              onUseMetricChange={onMapUseMetricChange}
             />
           )}
 
