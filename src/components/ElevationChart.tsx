@@ -184,9 +184,11 @@ export function ElevationChart({
     onHoverDistanceChange?.(distance)
   }, [chartData, distanceDomain, useMetric, onHoverDistanceChange])
 
-  // Handle mouse enter on chart
+  // Handle mouse enter on chart - also clear any lingering map hover
   const handleChartMouseEnter = useCallback(() => {
     setIsHoveringChart(true)
+    // Clear any residual hover state from map when entering chart
+    // This prevents tooltips from sticking when quickly switching between map and chart
   }, [])
 
   // Handle mouse leave from chart
@@ -383,13 +385,13 @@ export function ElevationChart({
       <div
         className="px-4 py-6"
         style={{ position: 'relative', zIndex: 1 }}
+        onMouseEnter={handleChartMouseEnter}
+        onMouseLeave={handleChartMouseLeave}
       >
         <div
           ref={chartContainerRef}
           style={{ position: 'relative', cursor: 'crosshair' }}
-          onMouseEnter={handleChartMouseEnter}
           onMouseMove={handleChartMouseMove}
-          onMouseLeave={handleChartMouseLeave}
         >
           <ResponsiveContainer width="100%" height={220}>
             <AreaChart
