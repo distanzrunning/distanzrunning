@@ -1225,6 +1225,16 @@ function createCustomControls(
     gap: 10px;
   `
 
+  // Inner container for distance marker and unit toggle (horizontal layout)
+  const distanceControlRow = document.createElement('div')
+  distanceControlRow.className = 'mapboxgl-ctrl-distance-row'
+  distanceControlRow.style.cssText = `
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 4px;
+  `
+
   // Unit toggle button (appears on hover to the left)
   const unitToggleButton = document.createElement('button')
   unitToggleButton.setAttribute('aria-label', 'Toggle distance unit (km/mi)')
@@ -1401,8 +1411,8 @@ function createCustomControls(
     markerToggleButton.style.backgroundColor = isDark ? '#2d2d2d' : 'white'
   })
 
-  // Keep unit toggle visible when hovering over it
-  markerControlContainer.addEventListener('mouseleave', () => {
+  // Keep unit toggle visible when hovering over the row
+  distanceControlRow.addEventListener('mouseleave', () => {
     unitToggleButton.style.opacity = '0'
     unitToggleButton.style.pointerEvents = 'none'
   })
@@ -1577,8 +1587,12 @@ function createCustomControls(
   }
 
   // Assemble marker control container
-  markerControlContainer.appendChild(unitToggleButton)
-  markerControlContainer.appendChild(markerToggleButton)
+  // Put unit toggle and marker toggle in a horizontal row
+  distanceControlRow.appendChild(unitToggleButton)
+  distanceControlRow.appendChild(markerToggleButton)
+  markerControlContainer.appendChild(distanceControlRow)
+
+  // Aid station toggle goes below
   if (aidStationToggleButton) {
     markerControlContainer.appendChild(aidStationToggleButton)
   }
