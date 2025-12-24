@@ -154,7 +154,7 @@ export function RaceRouteMap({
         opacity: 0;
         pointer-events: none;
         z-index: 10000;
-        transition: opacity 0.1s ease;
+        transition: all 0.05s ease-out;
         position: relative;
       `
 
@@ -168,7 +168,7 @@ export function RaceRouteMap({
       console.log('[RaceRouteMap] Created hover marker')
     }
 
-    // Update hover marker position and show it
+    // Update hover marker position and show it (smooth transition via CSS)
     hoverMarkerRef.current.setLngLat([coordinate[0], coordinate[1]])
     const element = hoverMarkerRef.current.getElement()
     if (element) {
