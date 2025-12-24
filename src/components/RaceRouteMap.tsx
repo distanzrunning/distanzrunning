@@ -43,6 +43,11 @@ export function RaceRouteMap({
   const distanceMarkersRef = useRef<mapboxgl.Marker[]>([])
   const isMountedRef = useRef(true)
 
+  // Hover marker and route data for bidirectional interaction
+  const hoverMarkerRef = useRef<mapboxgl.Marker | null>(null)
+  const routeCoordinatesRef = useRef<number[][]>([])
+  const routeDistancesRef = useRef<number[]>([]) // Cumulative distances at each coordinate
+
   // Safe setter that only notifies parent without updating local state
   const setShowMarkersSafe = useCallback((value: boolean) => {
     if (!isMountedRef.current) return
@@ -63,6 +68,100 @@ export function RaceRouteMap({
       isMountedRef.current = false
     }
   }, [])
+
+  // Helper function to calculate distance between two coordinates (Haversine formula)
+  const calculateDistance = useCallback((coord1: number[], coord2: number[]): number => {
+    const R = 6371000 // Earth's radius in meters
+    const dLat = (coord2[1] - coord1[1]) * Math.PI / 180
+    const dLon = (coord2[0] - coord1[0]) * Math.PI / 180
+    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(coord1[1] * Math.PI / 180) * Math.cos(coord2[1] * Math.PI / 180) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2)
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+    return R * c // Returns meters
+  }, [])
+
+  // Helper function to find coordinate at a given distance
+  const findCoordinateAtDistance = useCallback((targetDistance: number): number[] | null => {
+    if (routeDistancesRef.current.length === 0 || routeCoordinatesRef.current.length === 0) {
+      return null
+    }
+
+    // Find the segment containing the target distance
+    for (let i = 0; i < routeDistancesRef.current.length - 1; i++) {
+      const dist1 = routeDistancesRef.current[i]
+      const dist2 = routeDistancesRef.current[i + 1]
+
+      if (targetDistance >= dist1 && targetDistance <= dist2) {
+        // Interpolate between the two coordinates
+        const t = (targetDistance - dist1) / (dist2 - dist1)
+        const coord1 = routeCoordinatesRef.current[i]
+        const coord2 = routeCoordinatesRef.current[i + 1]
+
+        return [
+          coord1[0] + t * (coord2[0] - coord1[0]),
+          coord1[1] + t * (coord2[1] - coord1[1])
+        ]
+      }
+    }
+
+    // If target distance is beyond the route, return the last coordinate
+    if (targetDistance > routeDistancesRef.current[routeDistancesRef.current.length - 1]) {
+      return routeCoordinatesRef.current[routeCoordinatesRef.current.length - 1]
+    }
+
+    // If target distance is before the route, return the first coordinate
+    return routeCoordinatesRef.current[0]
+  }, [])
+
+  // Effect to handle hover distance changes from the chart
+  useEffect(() => {
+    if (!mapInstanceRef.current || !hoverDistance) {
+      // Hide hover marker when no hover distance
+      if (hoverMarkerRef.current) {
+        const element = hoverMarkerRef.current.getElement()
+        if (element) {
+          element.style.opacity = '0'
+        }
+      }
+      return
+    }
+
+    // Convert hover distance from km/mi to meters based on current unit
+    const distanceInMeters = useMetricRef.current ? hoverDistance * 1000 : hoverDistance * 1609.34
+
+    // Find coordinate at this distance
+    const coordinate = findCoordinateAtDistance(distanceInMeters)
+    if (!coordinate) return
+
+    // Create hover marker if it doesn't exist
+    if (!hoverMarkerRef.current) {
+      const markerElement = document.createElement('div')
+      markerElement.style.cssText = `
+        background: #1e40af;
+        border: 2px solid white;
+        border-radius: 50%;
+        width: 12px;
+        height: 12px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        opacity: 0;
+        pointer-events: none;
+        z-index: 1000;
+        transition: opacity 0.15s ease;
+      `
+
+      hoverMarkerRef.current = new mapboxgl.Marker(markerElement)
+        .setLngLat([0, 0])
+        .addTo(mapInstanceRef.current)
+    }
+
+    // Update hover marker position and show it
+    hoverMarkerRef.current.setLngLat([coordinate[0], coordinate[1]])
+    const element = hoverMarkerRef.current.getElement()
+    if (element) {
+      element.style.opacity = '1'
+    }
+  }, [hoverDistance, findCoordinateAtDistance])
 
   // Sync internal unit state with external prop changes
   useEffect(() => {
@@ -146,6 +245,18 @@ export function RaceRouteMap({
 
         // Use simplified coordinates for rendering
         coordinates = simplifiedCoords
+
+        // Store coordinates and calculate cumulative distances for hover interactions
+        routeCoordinatesRef.current = coordinates
+        const distances: number[] = [0] // First point is at distance 0
+        let cumulativeDistance = 0
+
+        for (let i = 1; i < coordinates.length; i++) {
+          cumulativeDistance += calculateDistance(coordinates[i - 1], coordinates[i])
+          distances.push(cumulativeDistance)
+        }
+
+        routeDistancesRef.current = distances
 
         // Calculate bounds from coordinates
         const lngs = coordinates.map(c => c[0])
@@ -324,6 +435,59 @@ export function RaceRouteMap({
             // Image already exists, just add the layer
             addArrowLayer()
           }
+
+          // Add invisible hover zone for route interaction
+          map.addLayer({
+            id: 'route-hover-zone',
+            type: 'line',
+            source: 'route',
+            layout: {
+              'line-cap': 'round',
+              'line-join': 'round'
+            },
+            paint: {
+              'line-color': 'rgba(255, 255, 255, 0)', // Completely transparent
+              'line-width': 20 // Wider hover zone for easier interaction
+            }
+          }, firstSymbolId)
+
+          // Add route hover event handlers
+          map.on('mouseenter', 'route-hover-zone', () => {
+            map.getCanvas().style.cursor = 'crosshair'
+          })
+
+          map.on('mouseleave', 'route-hover-zone', () => {
+            map.getCanvas().style.cursor = ''
+            onHoverDistanceChange?.(null)
+          })
+
+          map.on('mousemove', 'route-hover-zone', (e) => {
+            if (!e.lngLat || routeCoordinatesRef.current.length === 0) return
+
+            // Find closest point on route to cursor
+            const cursorLng = e.lngLat.lng
+            const cursorLat = e.lngLat.lat
+            let closestDistance = Infinity
+            let closestIndex = 0
+
+            for (let i = 0; i < routeCoordinatesRef.current.length; i++) {
+              const coord = routeCoordinatesRef.current[i]
+              const dist = Math.sqrt(
+                Math.pow(coord[0] - cursorLng, 2) + Math.pow(coord[1] - cursorLat, 2)
+              )
+
+              if (dist < closestDistance) {
+                closestDistance = dist
+                closestIndex = i
+              }
+            }
+
+            // Get distance at this point and convert to km/mi based on current unit
+            const distanceInMeters = routeDistancesRef.current[closestIndex] || 0
+            const distance = useMetricRef.current ? distanceInMeters / 1000 : distanceInMeters / 1609.34
+
+            onHoverDistanceChange?.(distance)
+          })
 
           // Create start marker (green) with hover tooltip
           const startMarkerEl = createMarkerPin('#00D464') // Volt Green
