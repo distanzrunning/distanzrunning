@@ -199,10 +199,10 @@ export function ElevationChart({
   const distanceUnit = useMetric ? 'km' : 'mi'
   const elevationUnit = useMetric ? 'm' : 'ft'
 
-  // Find elevation at hover distance for custom tooltip
-  const hoverElevation = useMemo(() => {
+  // Find elevation and grade at hover distance for custom tooltip
+  const { hoverElevation, hoverGrade } = useMemo(() => {
     if (hoverDistance === null || hoverDistance === undefined || chartData.length === 0) {
-      return null
+      return { hoverElevation: null, hoverGrade: null }
     }
 
     // Find the closest data point to the hover distance
@@ -217,22 +217,84 @@ export function ElevationChart({
       }
     }
 
-    return chartData[closestIndex].elevation
-  }, [hoverDistance, chartData])
+    const elevation = chartData[closestIndex].elevation
+
+    // Calculate grade (slope) using surrounding points
+    let grade = 0
+    if (chartData.length > 1) {
+      // Use points before and after for more accurate grade calculation
+      const lookAhead = 3 // Look at points within this range
+      const startIdx = Math.max(0, closestIndex - lookAhead)
+      const endIdx = Math.min(chartData.length - 1, closestIndex + lookAhead)
+
+      if (startIdx < endIdx) {
+        const elevationChange = chartData[endIdx].elevation - chartData[startIdx].elevation
+        const distanceChange = chartData[endIdx].distance - chartData[startIdx].distance
+
+        if (distanceChange > 0) {
+          // Convert to current units for calculation
+          const elevationChangeInUnits = useMetric ? elevationChange : elevationChange
+          const distanceChangeInUnits = useMetric
+            ? distanceChange * 1000 // Convert km to meters for grade calculation
+            : distanceChange * 5280 // Convert miles to feet for grade calculation
+
+          // Grade = (elevation change / horizontal distance) * 100
+          grade = (elevationChangeInUnits / distanceChangeInUnits) * 100
+        }
+      }
+    }
+
+    return { hoverElevation: elevation, hoverGrade: grade }
+  }, [hoverDistance, chartData, useMetric])
+
+  // Calculate grade for a given data point index
+  const calculateGradeAtIndex = useCallback((index: number): number => {
+    if (chartData.length <= 1) return 0
+
+    const lookAhead = 3
+    const startIdx = Math.max(0, index - lookAhead)
+    const endIdx = Math.min(chartData.length - 1, index + lookAhead)
+
+    if (startIdx >= endIdx) return 0
+
+    const elevationChange = chartData[endIdx].elevation - chartData[startIdx].elevation
+    const distanceChange = chartData[endIdx].distance - chartData[startIdx].distance
+
+    if (distanceChange <= 0) return 0
+
+    // Convert to same units for calculation
+    const distanceChangeInUnits = useMetric
+      ? distanceChange * 1000 // Convert km to meters
+      : distanceChange * 5280 // Convert miles to feet
+
+    // Grade = (elevation change / horizontal distance) * 100
+    return (elevationChange / distanceChangeInUnits) * 100
+  }, [chartData, useMetric])
 
   // Custom tooltip
   const CustomTooltip = ({ active, payload }: any) => {
     if (active && payload && payload.length) {
+      // Find the index of this data point
+      const dataPoint = payload[0].payload
+      const pointIndex = chartData.findIndex(d =>
+        d.distance === dataPoint.distance && d.elevation === dataPoint.elevation
+      )
+
+      const grade = pointIndex >= 0 ? calculateGradeAtIndex(pointIndex) : 0
+
       return (
         <div
           className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg shadow-lg p-3"
           style={{ backdropFilter: 'blur(10px)' }}
         >
           <p className="text-sm font-semibold text-neutral-900 dark:text-white mb-1">
-            {payload[0].payload.distance.toFixed(2)} {distanceUnit}
+            {dataPoint.distance.toFixed(2)} {distanceUnit}
           </p>
-          <p className="text-sm text-neutral-600 dark:text-neutral-400">
+          <p className="text-sm text-neutral-600 dark:text-neutral-400 mb-1">
             <span className="font-mono">{Math.round(payload[0].value)}</span> {elevationUnit}
+          </p>
+          <p className="text-xs text-neutral-500 dark:text-neutral-500">
+            Grade: <span className="font-mono">{grade >= 0 ? '+' : ''}{grade.toFixed(1)}%</span>
           </p>
         </div>
       )
@@ -400,8 +462,11 @@ export function ElevationChart({
               <p className="text-sm font-semibold text-neutral-900 dark:text-white mb-1">
                 {hoverDistance?.toFixed(2)} {distanceUnit}
               </p>
-              <p className="text-sm text-neutral-600 dark:text-neutral-400">
+              <p className="text-sm text-neutral-600 dark:text-neutral-400 mb-1">
                 <span className="font-mono">{Math.round(hoverElevation)}</span> {elevationUnit}
+              </p>
+              <p className="text-xs text-neutral-500 dark:text-neutral-500">
+                Grade: <span className="font-mono">{hoverGrade >= 0 ? '+' : ''}{hoverGrade.toFixed(1)}%</span>
               </p>
             </div>
           </div>
