@@ -1,7 +1,7 @@
 'use client'
 
 import { useMemo } from 'react'
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts'
 import { Settings2 } from 'lucide-react'
 
 interface ElevationChartProps {
@@ -21,6 +21,13 @@ export function ElevationChart({
   hoverDistance,
   onHoverDistanceChange
 }: ElevationChartProps) {
+  console.log('[ElevationChart] Rendered with:', {
+    dataPoints: elevationData.length,
+    useMetric,
+    hoverDistance,
+    hasHoverCallback: !!onHoverDistanceChange
+  })
+
   // Calculate fixed domains based on raw data (always in metric/km)
   // This ensures the axes don't move when toggling units
   const { distanceDomainKm, elevationDomainMeters } = useMemo(() => {
@@ -272,6 +279,16 @@ export function ElevationChart({
               tickFormatter={(value) => `${Math.round(value)}`}
             />
             <Tooltip content={<CustomTooltip />} />
+            {/* Show reference line when hovering from map */}
+            {hoverDistance !== null && hoverDistance !== undefined && (
+              <ReferenceLine
+                x={hoverDistance}
+                stroke="#3b82f6"
+                strokeWidth={2}
+                strokeDasharray="3 3"
+                label=""
+              />
+            )}
             <Area
               type="monotone"
               dataKey="elevation"
