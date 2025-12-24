@@ -477,29 +477,52 @@ export function RaceRouteMap({
           map.on('mousemove', 'route-hover-zone', (e) => {
             if (!e.lngLat || routeCoordinatesRef.current.length === 0) return
 
-            // Find closest point on route to cursor
+            // Find closest point on route line segments to cursor (not just data points)
             const cursorLng = e.lngLat.lng
             const cursorLat = e.lngLat.lat
             let closestDistance = Infinity
-            let closestIndex = 0
+            let closestSegmentIndex = 0
+            let closestT = 0 // Parameter along segment (0 to 1)
 
-            for (let i = 0; i < routeCoordinatesRef.current.length; i++) {
-              const coord = routeCoordinatesRef.current[i]
+            // Check each line segment
+            for (let i = 0; i < routeCoordinatesRef.current.length - 1; i++) {
+              const p1 = routeCoordinatesRef.current[i]
+              const p2 = routeCoordinatesRef.current[i + 1]
+
+              // Calculate closest point on line segment
+              const dx = p2[0] - p1[0]
+              const dy = p2[1] - p1[1]
+              const lengthSquared = dx * dx + dy * dy
+
+              if (lengthSquared === 0) continue // Skip zero-length segments
+
+              // Calculate parameter t (0 = p1, 1 = p2)
+              let t = ((cursorLng - p1[0]) * dx + (cursorLat - p1[1]) * dy) / lengthSquared
+              t = Math.max(0, Math.min(1, t)) // Clamp to segment
+
+              // Calculate closest point on segment
+              const closestX = p1[0] + t * dx
+              const closestY = p1[1] + t * dy
+
+              // Calculate distance to this point
               const dist = Math.sqrt(
-                Math.pow(coord[0] - cursorLng, 2) + Math.pow(coord[1] - cursorLat, 2)
+                Math.pow(closestX - cursorLng, 2) + Math.pow(closestY - cursorLat, 2)
               )
 
               if (dist < closestDistance) {
                 closestDistance = dist
-                closestIndex = i
+                closestSegmentIndex = i
+                closestT = t
               }
             }
 
-            // Get distance at this point and convert to km/mi based on current unit
-            const distanceInMeters = routeDistancesRef.current[closestIndex] || 0
+            // Interpolate distance along the route
+            const dist1 = routeDistancesRef.current[closestSegmentIndex] || 0
+            const dist2 = routeDistancesRef.current[closestSegmentIndex + 1] || dist1
+            const distanceInMeters = dist1 + closestT * (dist2 - dist1)
             const distance = useMetricRef.current ? distanceInMeters / 1000 : distanceInMeters / 1609.34
 
-            console.log('[RaceRouteMap] Route hover - distance:', distance, useMetricRef.current ? 'km' : 'mi', 'meters:', distanceInMeters)
+            console.log('[RaceRouteMap] Route hover - distance:', distance, useMetricRef.current ? 'km' : 'mi', 'meters:', distanceInMeters, 'segment:', closestSegmentIndex, 't:', closestT)
             onHoverDistanceChange?.(distance)
           })
 
