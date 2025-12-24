@@ -1411,6 +1411,53 @@ function createCustomControls(
               .setLngLat([lng, lat])
               .addTo(map)
 
+            // Add tooltip on hover
+            const tooltipBg = isDark ? 'rgba(23, 23, 23, 0.95)' : 'rgba(255, 255, 255, 0.98)'
+            const tooltipColor = isDark ? '#ffffff' : '#333333'
+
+            const distancePopup = new mapboxgl.Popup({
+              closeButton: false,
+              closeOnClick: false,
+              offset: [0, -15],
+              className: 'distance-marker-popup'
+            })
+
+            markerEl.addEventListener('mouseenter', () => {
+              distancePopup
+                .setLngLat([lng, lat])
+                .setHTML(`<div style="font-family: 'JetBrains Mono', monospace; font-weight: 600; color: ${tooltipColor}; font-size: 11px; padding: 4px;">${displayDist} ${unitLabel}</div>`)
+                .addTo(map)
+
+              // Apply styles immediately (synchronously)
+              const popupEl = distancePopup.getElement()
+              if (popupEl) {
+                popupEl.style.zIndex = '9999'
+                // Style the popup container
+                const popupContent = popupEl.querySelector('.mapboxgl-popup-content')
+                if (popupContent) {
+                  const contentEl = popupContent as HTMLElement
+                  contentEl.style.setProperty('background-color', tooltipBg, 'important')
+                  contentEl.style.setProperty('padding', '4px 8px', 'important')
+                  contentEl.style.setProperty('border-radius', '6px', 'important')
+                  contentEl.style.setProperty('backdrop-filter', 'blur(10px)', 'important')
+                  contentEl.style.boxShadow = isDark
+                    ? '0 2px 12px rgba(0, 0, 0, 0.4)'
+                    : '0 2px 8px rgba(0, 0, 0, 0.08)'
+                }
+                // Style the popup tip (arrow)
+                const popupTip = popupEl.querySelector('.mapboxgl-popup-tip')
+                if (popupTip) {
+                  const tipEl = popupTip as HTMLElement
+                  tipEl.style.setProperty('border-top-color', tooltipBg, 'important')
+                  tipEl.style.setProperty('border-bottom-color', tooltipBg, 'important')
+                }
+              }
+            })
+
+            markerEl.addEventListener('mouseleave', () => {
+              distancePopup.remove()
+            })
+
             distanceMarkersRef.current.push(marker)
           }
         }
