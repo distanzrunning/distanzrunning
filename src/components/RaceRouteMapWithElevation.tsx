@@ -67,7 +67,7 @@ export function RaceRouteMapWithElevation({
         initialUseMetric={useMetric}
         onShowMarkersChange={onShowMarkersChange}
         onUseMetricChange={handleUseMetricChange}
-        hoverDistance={hoverSource === 'chart' ? hoverDistance : null}
+        hoverDistance={hoverDistance}
         onHoverDistanceChange={handleMapHoverChange}
       />
 

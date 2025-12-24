@@ -466,7 +466,7 @@ export function RaceRouteMap({
 
           // Add route hover event handlers
           map.on('mouseenter', 'route-hover-zone', () => {
-            map.getCanvas().style.cursor = 'default'
+            map.getCanvas().style.cursor = 'crosshair'
           })
 
           map.on('mouseleave', 'route-hover-zone', () => {
