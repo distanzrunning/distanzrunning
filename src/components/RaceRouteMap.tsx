@@ -15,6 +15,8 @@ interface RaceRouteMapProps {
   initialUseMetric?: boolean // Initial unit preference
   onShowMarkersChange?: (show: boolean) => void // Callback when marker visibility changes
   onUseMetricChange?: (metric: boolean) => void // Callback when unit preference changes
+  hoverDistance?: number | null // Distance to show hover marker at
+  onHoverDistanceChange?: (distance: number | null) => void // Callback when hovering over route
 }
 
 // Mapbox implementation matching Google Maps style
@@ -25,7 +27,9 @@ export function RaceRouteMap({
   initialShowMarkers = false,
   initialUseMetric = false,
   onShowMarkersChange,
-  onUseMetricChange
+  onUseMetricChange,
+  hoverDistance,
+  onHoverDistanceChange
 }: RaceRouteMapProps) {
   const mapRef = useRef<HTMLDivElement>(null)
   const mapInstanceRef = useRef<mapboxgl.Map | null>(null)

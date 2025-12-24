@@ -18,6 +18,7 @@ interface RaceRouteMapWithElevationProps {
 
 /**
  * Wrapper component that displays both the route map and elevation chart
+ * with synchronized hover interactions
  */
 export function RaceRouteMapWithElevation({
   gpxUrl,
@@ -31,6 +32,9 @@ export function RaceRouteMapWithElevation({
 }: RaceRouteMapWithElevationProps) {
   const { isDark } = useContext(DarkModeContext)
   const [useMetric, setUseMetric] = useState(initialUseMetric)
+
+  // Hover state for bidirectional interaction between map and chart
+  const [hoverDistance, setHoverDistance] = useState<number | null>(null)
 
   // Sync metric preference between map and chart
   const handleUseMetricChange = (metric: boolean) => {
@@ -49,6 +53,8 @@ export function RaceRouteMapWithElevation({
         initialUseMetric={useMetric}
         onShowMarkersChange={onShowMarkersChange}
         onUseMetricChange={handleUseMetricChange}
+        hoverDistance={hoverDistance}
+        onHoverDistanceChange={setHoverDistance}
       />
 
       {/* Elevation Chart - only show if we have data */}
@@ -57,6 +63,9 @@ export function RaceRouteMapWithElevation({
           elevationData={elevationData}
           useMetric={useMetric}
           isDark={isDark}
+          onUseMetricChange={handleUseMetricChange}
+          hoverDistance={hoverDistance}
+          onHoverDistanceChange={setHoverDistance}
         />
       )}
     </div>

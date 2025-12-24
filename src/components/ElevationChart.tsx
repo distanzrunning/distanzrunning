@@ -9,9 +9,18 @@ interface ElevationChartProps {
   useMetric?: boolean
   isDark?: boolean
   onUseMetricChange?: (metric: boolean) => void
+  hoverDistance?: number | null
+  onHoverDistanceChange?: (distance: number | null) => void
 }
 
-export function ElevationChart({ elevationData, useMetric = false, isDark = false, onUseMetricChange }: ElevationChartProps) {
+export function ElevationChart({
+  elevationData,
+  useMetric = false,
+  isDark = false,
+  onUseMetricChange,
+  hoverDistance,
+  onHoverDistanceChange
+}: ElevationChartProps) {
   // Calculate fixed domains based on raw data (always in metric/km)
   // This ensures the axes don't move when toggling units
   const { distanceDomainKm, elevationDomainMeters } = useMemo(() => {
@@ -199,6 +208,15 @@ export function ElevationChart({ elevationData, useMetric = false, isDark = fals
           <AreaChart
             data={chartData}
             margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
+            onMouseMove={(e: any) => {
+              if (e && e.activePayload && e.activePayload.length > 0) {
+                const distance = e.activePayload[0].payload.distance
+                onHoverDistanceChange?.(distance)
+              }
+            }}
+            onMouseLeave={() => {
+              onHoverDistanceChange?.(null)
+            }}
           >
             <defs>
               <linearGradient id="elevationGradient" x1="0" y1="0" x2="0" y2="1">
