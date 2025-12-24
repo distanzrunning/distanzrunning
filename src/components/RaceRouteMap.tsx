@@ -267,13 +267,25 @@ export function RaceRouteMap({
           // Extract aid stations from GeoJSON features
           if (parsed.type === 'FeatureCollection' && parsed.features) {
             aidStations = parsed.features
-              .filter((feature: any) =>
-                feature.geometry?.type === 'Point' &&
-                feature.properties?.name &&
-                (feature.properties.type === 'aid_station' ||
-                 feature.properties.name.toLowerCase().includes('aid') ||
-                 feature.properties.name.toLowerCase().includes('water'))
-              )
+              .filter((feature: any) => {
+                if (feature.geometry?.type !== 'Point' || !feature.properties?.name) {
+                  return false
+                }
+
+                const name = feature.properties.name.toLowerCase()
+                const type = feature.properties.type?.toLowerCase() || ''
+                const sym = feature.properties.sym?.toLowerCase() || ''
+
+                return (
+                  type === 'aid_station' ||
+                  type.includes('water') ||
+                  name.includes('aid') ||
+                  name.includes('water') ||
+                  name.includes('avituallamiento') ||
+                  name.includes('drink') ||
+                  sym.includes('water')
+                )
+              })
               .map((feature: any) => ({
                 name: feature.properties.name,
                 coordinates: feature.geometry.coordinates as [number, number]
