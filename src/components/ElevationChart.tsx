@@ -284,20 +284,20 @@ export function ElevationChart({
 
       return (
         <div
-          className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg shadow-lg p-3"
+          className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-md shadow-lg p-2"
           style={{ backdropFilter: 'blur(10px)' }}
         >
-          <div className="flex items-baseline gap-2 mb-1">
-            <span className="text-sm text-neutral-600 dark:text-neutral-300">Distance:</span>
-            <span className="text-sm font-mono text-neutral-900 dark:text-white">{dataPoint.distance.toFixed(2)} {distanceUnit}</span>
+          <div className="flex items-baseline gap-1.5 mb-0.5">
+            <span className="text-xs text-neutral-600 dark:text-neutral-300">Distance:</span>
+            <span className="text-xs font-mono text-neutral-900 dark:text-white">{dataPoint.distance.toFixed(2)} {distanceUnit}</span>
           </div>
-          <div className="flex items-baseline gap-2 mb-1">
-            <span className="text-sm text-neutral-600 dark:text-neutral-300">Elevation:</span>
-            <span className="text-sm font-mono text-neutral-900 dark:text-white">{Math.round(payload[0].value)} {elevationUnit}</span>
+          <div className="flex items-baseline gap-1.5 mb-0.5">
+            <span className="text-xs text-neutral-600 dark:text-neutral-300">Elevation:</span>
+            <span className="text-xs font-mono text-neutral-900 dark:text-white">{Math.round(payload[0].value)} {elevationUnit}</span>
           </div>
-          <div className="flex items-baseline gap-2">
-            <span className="text-sm text-neutral-600 dark:text-neutral-300">Grade:</span>
-            <span className="text-sm font-mono text-neutral-900 dark:text-white">{grade >= 0 ? '+' : ''}{grade.toFixed(1)}%</span>
+          <div className="flex items-baseline gap-1.5">
+            <span className="text-xs text-neutral-600 dark:text-neutral-300">Grade:</span>
+            <span className="text-xs font-mono text-neutral-900 dark:text-white">{grade >= 0 ? '+' : ''}{grade.toFixed(1)}%</span>
           </div>
         </div>
       )
@@ -427,7 +427,12 @@ export function ElevationChart({
               }}
               tickFormatter={(value) => `${Math.round(value)}`}
             />
-            <Tooltip content={<CustomTooltip />} cursor={{ stroke: '#3b82f6', strokeWidth: 2, strokeDasharray: '3 3' }} />
+            <Tooltip
+              content={<CustomTooltip />}
+              cursor={{ stroke: '#3b82f6', strokeWidth: 2, strokeDasharray: '3 3' }}
+              position={{ y: 0 }}
+              offset={-10}
+            />
             {/* Show reference line only when hovering from map (not when hovering chart itself) */}
             {hoverDistance !== null && hoverDistance !== undefined && !isHoveringChart && (
               <ReferenceLine
@@ -455,24 +460,24 @@ export function ElevationChart({
             style={{
               position: 'absolute',
               left: `${tooltipPosition.x}px`,
-              top: '50%',
-              transform: 'translate(-50%, -50%)',
+              top: '10px',
+              transform: 'translateX(-50%)',
               pointerEvents: 'none',
               zIndex: 10
             }}
           >
-            <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg shadow-lg p-3">
-              <div className="flex items-baseline gap-2 mb-1">
-                <span className="text-sm text-neutral-600 dark:text-neutral-300">Distance:</span>
-                <span className="text-sm font-mono text-neutral-900 dark:text-white">{hoverDistance?.toFixed(2)} {distanceUnit}</span>
+            <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-md shadow-lg p-2">
+              <div className="flex items-baseline gap-1.5 mb-0.5">
+                <span className="text-xs text-neutral-600 dark:text-neutral-300">Distance:</span>
+                <span className="text-xs font-mono text-neutral-900 dark:text-white">{hoverDistance?.toFixed(2)} {distanceUnit}</span>
               </div>
-              <div className="flex items-baseline gap-2 mb-1">
-                <span className="text-sm text-neutral-600 dark:text-neutral-300">Elevation:</span>
-                <span className="text-sm font-mono text-neutral-900 dark:text-white">{Math.round(hoverElevation)} {elevationUnit}</span>
+              <div className="flex items-baseline gap-1.5 mb-0.5">
+                <span className="text-xs text-neutral-600 dark:text-neutral-300">Elevation:</span>
+                <span className="text-xs font-mono text-neutral-900 dark:text-white">{Math.round(hoverElevation)} {elevationUnit}</span>
               </div>
-              <div className="flex items-baseline gap-2">
-                <span className="text-sm text-neutral-600 dark:text-neutral-300">Grade:</span>
-                <span className="text-sm font-mono text-neutral-900 dark:text-white">{hoverGrade >= 0 ? '+' : ''}{hoverGrade.toFixed(1)}%</span>
+              <div className="flex items-baseline gap-1.5">
+                <span className="text-xs text-neutral-600 dark:text-neutral-300">Grade:</span>
+                <span className="text-xs font-mono text-neutral-900 dark:text-white">{hoverGrade >= 0 ? '+' : ''}{hoverGrade.toFixed(1)}%</span>
               </div>
             </div>
           </div>
