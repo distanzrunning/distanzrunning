@@ -184,11 +184,9 @@ export function ElevationChart({
     onHoverDistanceChange?.(distance)
   }, [chartData, distanceDomain, useMetric, onHoverDistanceChange])
 
-  // Handle mouse enter on chart - also clear any lingering map hover
+  // Handle mouse enter on chart
   const handleChartMouseEnter = useCallback(() => {
     setIsHoveringChart(true)
-    // Clear any residual hover state from map when entering chart
-    // This prevents tooltips from sticking when quickly switching between map and chart
   }, [])
 
   // Handle mouse leave from chart
@@ -476,8 +474,8 @@ export function ElevationChart({
           </AreaChart>
         </ResponsiveContainer>
 
-        {/* Custom floating tooltip for map hover (only show when NOT hovering chart itself) */}
-        {tooltipPosition && hoverElevation !== null && !isHoveringChart && (
+        {/* Custom floating tooltip for map hover (only show when NOT hovering chart itself AND hover came from external source) */}
+        {tooltipPosition && hoverElevation !== null && !isHoveringChart && hoverDistance !== null && (
           <div
             style={{
               position: 'absolute',
