@@ -141,16 +141,16 @@ export function RaceRouteMap({
 
     console.log('[RaceRouteMap] Hover distance:', hoverDistance, 'meters:', distanceInMeters, 'coordinate:', coordinate)
 
-    // Create hover marker if it doesn't exist (matching MarathonShowcase style)
+    // Create hover marker if it doesn't exist (matching start/finish marker size)
     if (!hoverMarkerRef.current) {
       const markerElement = document.createElement('div')
       markerElement.style.cssText = `
         background: #1e40af;
         border: 2px solid white;
         border-radius: 50%;
-        width: 12px;
-        height: 12px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        width: 16px;
+        height: 16px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         opacity: 0;
         pointer-events: none;
         z-index: 1;
@@ -466,10 +466,11 @@ export function RaceRouteMap({
 
           // Add route hover event handlers
           map.on('mouseenter', 'route-hover-zone', () => {
-            // No cursor change - just show blue marker
+            map.getCanvas().style.cursor = 'default'
           })
 
           map.on('mouseleave', 'route-hover-zone', () => {
+            map.getCanvas().style.cursor = ''
             onHoverDistanceChange?.(null)
           })
 
