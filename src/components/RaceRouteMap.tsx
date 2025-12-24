@@ -175,7 +175,7 @@ export function RaceRouteMap({
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         opacity: 0;
         pointer-events: none;
-        z-index: 1;
+        z-index: 10;
         transition: opacity 0.1s ease;
       `
 
@@ -1220,9 +1220,9 @@ function createCustomControls(
     right: 10px;
     z-index: 1;
     display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 4px;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
   `
 
   // Unit toggle button (appears on hover to the left)
@@ -1537,7 +1537,6 @@ function createCustomControls(
       justify-content: center;
       transition: background-color 0.15s;
       opacity: ${showAidStations ? '1' : '0.6'};
-      margin-top: 10px;
     `
 
     // Droplet icon (water drop for aid stations)
