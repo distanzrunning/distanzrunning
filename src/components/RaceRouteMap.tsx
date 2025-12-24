@@ -116,7 +116,9 @@ export function RaceRouteMap({
 
   // Effect to handle hover distance changes from the chart
   useEffect(() => {
-    if (!mapInstanceRef.current || !hoverDistance) {
+    if (!mapInstanceRef.current) return
+
+    if (!hoverDistance || hoverDistance === null) {
       // Hide hover marker when no hover distance
       if (hoverMarkerRef.current) {
         const element = hoverMarkerRef.current.getElement()
@@ -132,27 +134,38 @@ export function RaceRouteMap({
 
     // Find coordinate at this distance
     const coordinate = findCoordinateAtDistance(distanceInMeters)
-    if (!coordinate) return
+    if (!coordinate) {
+      console.warn('[RaceRouteMap] Could not find coordinate for distance:', distanceInMeters)
+      return
+    }
+
+    console.log('[RaceRouteMap] Hover distance:', hoverDistance, 'meters:', distanceInMeters, 'coordinate:', coordinate)
 
     // Create hover marker if it doesn't exist
     if (!hoverMarkerRef.current) {
       const markerElement = document.createElement('div')
       markerElement.style.cssText = `
-        background: #1e40af;
-        border: 2px solid white;
+        background: #3b82f6;
+        border: 3px solid white;
         border-radius: 50%;
-        width: 12px;
-        height: 12px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        width: 16px;
+        height: 16px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
         opacity: 0;
         pointer-events: none;
-        z-index: 1000;
-        transition: opacity 0.15s ease;
+        z-index: 10000;
+        transition: opacity 0.1s ease;
+        position: relative;
       `
 
-      hoverMarkerRef.current = new mapboxgl.Marker(markerElement)
+      hoverMarkerRef.current = new mapboxgl.Marker({
+        element: markerElement,
+        anchor: 'center'
+      })
         .setLngLat([0, 0])
         .addTo(mapInstanceRef.current)
+
+      console.log('[RaceRouteMap] Created hover marker')
     }
 
     // Update hover marker position and show it
@@ -160,6 +173,7 @@ export function RaceRouteMap({
     const element = hoverMarkerRef.current.getElement()
     if (element) {
       element.style.opacity = '1'
+      console.log('[RaceRouteMap] Showing hover marker at', coordinate)
     }
   }, [hoverDistance, findCoordinateAtDistance])
 
@@ -486,6 +500,7 @@ export function RaceRouteMap({
             const distanceInMeters = routeDistancesRef.current[closestIndex] || 0
             const distance = useMetricRef.current ? distanceInMeters / 1000 : distanceInMeters / 1609.34
 
+            console.log('[RaceRouteMap] Route hover - distance:', distance, useMetricRef.current ? 'km' : 'mi', 'meters:', distanceInMeters)
             onHoverDistanceChange?.(distance)
           })
 

@@ -211,10 +211,12 @@ export function ElevationChart({
             onMouseMove={(e: any) => {
               if (e && e.activePayload && e.activePayload.length > 0) {
                 const distance = e.activePayload[0].payload.distance
+                console.log('[ElevationChart] Mouse move at distance:', distance, useMetric ? 'km' : 'mi')
                 onHoverDistanceChange?.(distance)
               }
             }}
             onMouseLeave={() => {
+              console.log('[ElevationChart] Mouse leave')
               onHoverDistanceChange?.(null)
             }}
           >
