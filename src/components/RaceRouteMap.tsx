@@ -42,6 +42,7 @@ export function RaceRouteMap({
   // Use only refs for marker state - no React state to avoid setState on unmounted component
   const useMetricRef = useRef(initialUseMetric)
   const showMarkersRef = useRef(initialShowMarkers)
+  const showAidStationsRef = useRef(false) // Aid stations hidden by default
   const distanceMarkersRef = useRef<mapboxgl.Marker[]>([])
   const isMountedRef = useRef(true)
 
@@ -49,6 +50,7 @@ export function RaceRouteMap({
   const hoverMarkerRef = useRef<mapboxgl.Marker | null>(null)
   const routeCoordinatesRef = useRef<number[][]>([])
   const routeDistancesRef = useRef<number[]>([]) // Cumulative distances at each coordinate
+  const aidStationMarkersRef = useRef<mapboxgl.Marker[]>([]) // Aid station markers
 
   // Safe setter that only notifies parent without updating local state
   const setShowMarkersSafe = useCallback((value: boolean) => {
@@ -62,6 +64,24 @@ export function RaceRouteMap({
     useMetricRef.current = value
     onUseMetricChange?.(value)
   }, [onUseMetricChange])
+
+  const setShowAidStationsSafe = useCallback((value: boolean) => {
+    if (!isMountedRef.current) return
+    showAidStationsRef.current = value
+    // Toggle visibility of aid station markers
+    aidStationMarkersRef.current.forEach(marker => {
+      const element = marker.getElement()
+      if (value) {
+        element.style.visibility = 'visible'
+        element.style.opacity = '1'
+        element.style.pointerEvents = 'auto'
+      } else {
+        element.style.visibility = 'hidden'
+        element.style.opacity = '0'
+        element.style.pointerEvents = 'none'
+      }
+    })
+  }, [])
 
   // Track mounted state
   useEffect(() => {
@@ -236,12 +256,29 @@ export function RaceRouteMap({
         // Try to parse as GeoJSON first (check if it starts with '{')
         let coordinates: [number, number][]
         let geoJsonData: any = null
+        let aidStations: Array<{ name: string; coordinates: [number, number] }> = []
 
         if (fileText.trim().startsWith('{')) {
           // Parse GeoJSON and keep the original for Mapbox
           const parsed = JSON.parse(fileText)
           coordinates = parseGeoJSON(fileText)
           geoJsonData = parsed
+
+          // Extract aid stations from GeoJSON features
+          if (parsed.type === 'FeatureCollection' && parsed.features) {
+            aidStations = parsed.features
+              .filter((feature: any) =>
+                feature.geometry?.type === 'Point' &&
+                feature.properties?.name &&
+                (feature.properties.type === 'aid_station' ||
+                 feature.properties.name.toLowerCase().includes('aid') ||
+                 feature.properties.name.toLowerCase().includes('water'))
+              )
+              .map((feature: any) => ({
+                name: feature.properties.name,
+                coordinates: feature.geometry.coordinates as [number, number]
+              }))
+          }
         } else {
           // Parse GPX to coordinates
           coordinates = parseGPX(fileText)
@@ -634,6 +671,66 @@ export function RaceRouteMap({
             finishPopup.remove()
           })
 
+          // Create aid station markers from GeoJSON data
+          aidStations.forEach((aidStation) => {
+            const markerEl = createAidStationMarker()
+            const marker = new mapboxgl.Marker({ element: markerEl, anchor: 'center' })
+              .setLngLat(aidStation.coordinates)
+              .addTo(map)
+
+            aidStationMarkersRef.current.push(marker)
+
+            // Initially hide aid stations
+            markerEl.style.visibility = 'hidden'
+            markerEl.style.opacity = '0'
+            markerEl.style.pointerEvents = 'none'
+
+            // Add tooltip on hover
+            const aidPopup = new mapboxgl.Popup({
+              closeButton: false,
+              closeOnClick: false,
+              offset: 15,
+              className: 'aid-station-popup'
+            })
+
+            markerEl.addEventListener('mouseenter', () => {
+              const tooltipBg = isDark ? 'rgba(23, 23, 23, 0.95)' : 'rgba(255, 255, 255, 0.95)'
+              const tooltipColor = isDark ? 'rgb(250, 250, 250)' : 'rgb(23, 23, 23)'
+
+              aidPopup
+                .setLngLat(aidStation.coordinates)
+                .setHTML(`<div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-weight: 600; color: ${tooltipColor}; font-size: 12px; padding: 4px;">${aidStation.name}</div>`)
+                .addTo(map)
+
+              // Apply styles immediately
+              const popupEl = aidPopup.getElement()
+              if (popupEl) {
+                popupEl.style.zIndex = '9999'
+                const popupContent = popupEl.querySelector('.mapboxgl-popup-content')
+                if (popupContent) {
+                  const contentEl = popupContent as HTMLElement
+                  contentEl.style.setProperty('background-color', tooltipBg, 'important')
+                  contentEl.style.setProperty('padding', '4px 8px', 'important')
+                  contentEl.style.setProperty('border-radius', '6px', 'important')
+                  contentEl.style.boxShadow = isDark
+                    ? '0 2px 8px rgba(0, 0, 0, 0.5)'
+                    : '0 2px 8px rgba(0, 0, 0, 0.15)'
+                }
+                const popupTip = popupEl.querySelector('.mapboxgl-popup-tip')
+                if (popupTip) {
+                  const tipColor = isDark ? 'rgba(23, 23, 23, 0.95)' : 'rgba(255, 255, 255, 0.95)'
+                  const tipEl = popupTip as HTMLElement
+                  tipEl.style.setProperty('border-top-color', tipColor, 'important')
+                  tipEl.style.setProperty('border-bottom-color', tipColor, 'important')
+                }
+              }
+            })
+
+            markerEl.addEventListener('mouseleave', () => {
+              aidPopup.remove()
+            })
+          })
+
           // Create custom controls matching Google Maps style
           createCustomControls(
             map,
@@ -646,7 +743,12 @@ export function RaceRouteMap({
             setUseMetricSafe,
             useMetricRef,
             coordinates,
-            distanceMarkersRef
+            distanceMarkersRef,
+            showAidStationsRef.current,
+            setShowAidStationsSafe,
+            showAidStationsRef,
+            aidStationMarkersRef,
+            aidStations.length > 0
           )
 
           // Hide loading after map is fully loaded
@@ -826,6 +928,39 @@ function createCheckeredFinishMarker(): HTMLElement {
   return container
 }
 
+// Helper function to create aid station marker (blue droplet)
+function createAidStationMarker(): HTMLElement {
+  const markerElement = document.createElement('div')
+  markerElement.style.cssText = `
+    background: #60a5fa;
+    border: 2px solid white;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 6;
+  `
+
+  const dropSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg")
+  dropSvg.setAttribute("fill", "none")
+  dropSvg.setAttribute("viewBox", "0 0 12 12")
+  dropSvg.setAttribute("width", "10")
+  dropSvg.setAttribute("height", "10")
+
+  const dropPath = document.createElementNS("http://www.w3.org/2000/svg", "path")
+  dropPath.setAttribute("d", "M6 2C6 2 3.5 5 3.5 7C3.5 8.38 4.62 9.5 6 9.5C7.38 9.5 8.5 8.38 8.5 7C8.5 5 6 2 6 2Z")
+  dropPath.setAttribute("fill", "white")
+
+  dropSvg.appendChild(dropPath)
+  markerElement.appendChild(dropSvg)
+
+  return markerElement
+}
+
 // Create custom controls matching Google Maps style
 function createCustomControls(
   map: mapboxgl.Map,
@@ -838,7 +973,12 @@ function createCustomControls(
   setUseMetric: (metric: boolean) => void,
   useMetricRef: React.MutableRefObject<boolean>,
   coordinates: [number, number][],
-  distanceMarkersRef: React.MutableRefObject<mapboxgl.Marker[]>
+  distanceMarkersRef: React.MutableRefObject<mapboxgl.Marker[]>,
+  showAidStations: boolean,
+  setShowAidStations: (show: boolean) => void,
+  showAidStationsRef: React.MutableRefObject<boolean>,
+  aidStationMarkersRef: React.MutableRefObject<mapboxgl.Marker[]>,
+  hasAidStations: boolean
 ) {
   // Create fullscreen button (top-right)
   const fullscreenButton = document.createElement('button')
@@ -1377,9 +1517,72 @@ function createCustomControls(
     }
   })
 
+  // Aid station toggle button (only show if there are aid stations)
+  let aidStationToggleButton: HTMLButtonElement | null = null
+  if (hasAidStations) {
+    aidStationToggleButton = document.createElement('button')
+    aidStationToggleButton.setAttribute('aria-label', 'Toggle aid stations')
+    aidStationToggleButton.setAttribute('data-aid-toggle', 'true')
+    aidStationToggleButton.className = 'mapboxgl-ctrl-aid-stations'
+    aidStationToggleButton.style.cssText = `
+      background-color: ${isDark ? '#2d2d2d' : 'white'};
+      border: none;
+      border-radius: 2px;
+      width: 29px;
+      height: 29px;
+      box-shadow: 0 0 0 2px rgba(0,0,0,.1);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.15s;
+      opacity: ${showAidStations ? '1' : '0.6'};
+      margin-top: 10px;
+    `
+
+    // Droplet icon (water drop for aid stations)
+    aidStationToggleButton.innerHTML = `
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"
+              fill="${showAidStations ? '#60a5fa' : (isDark ? '#bbb' : '#666')}"
+              stroke="${isDark ? '#bbb' : '#666'}"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"/>
+      </svg>
+    `
+
+    aidStationToggleButton.addEventListener('mouseenter', () => {
+      aidStationToggleButton!.style.backgroundColor = isDark ? '#3d3d3d' : '#f5f5f5'
+    })
+    aidStationToggleButton.addEventListener('mouseleave', () => {
+      aidStationToggleButton!.style.backgroundColor = isDark ? '#2d2d2d' : 'white'
+    })
+
+    aidStationToggleButton.addEventListener('click', () => {
+      const newShowAidStations = !showAidStationsRef.current
+      setShowAidStations(newShowAidStations)
+      showAidStationsRef.current = newShowAidStations
+      aidStationToggleButton!.style.opacity = newShowAidStations ? '1' : '0.6'
+      aidStationToggleButton!.innerHTML = `
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"
+                fill="${newShowAidStations ? '#60a5fa' : (isDark ? '#bbb' : '#666')}"
+                stroke="${isDark ? '#bbb' : '#666'}"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"/>
+        </svg>
+      `
+    })
+  }
+
   // Assemble marker control container
   markerControlContainer.appendChild(unitToggleButton)
   markerControlContainer.appendChild(markerToggleButton)
+  if (aidStationToggleButton) {
+    markerControlContainer.appendChild(aidStationToggleButton)
+  }
 
   // Add controls to map container
   const mapContainer = map.getContainer()
