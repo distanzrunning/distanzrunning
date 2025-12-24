@@ -384,12 +384,12 @@ export function ElevationChart({
         className="px-4 py-6"
         style={{ position: 'relative', zIndex: 1 }}
         onMouseEnter={handleChartMouseEnter}
+        onMouseMove={handleChartMouseMove}
         onMouseLeave={handleChartMouseLeave}
       >
         <div
           ref={chartContainerRef}
           style={{ position: 'relative', cursor: 'crosshair' }}
-          onMouseMove={handleChartMouseMove}
         >
           <ResponsiveContainer width="100%" height={220}>
             <AreaChart
