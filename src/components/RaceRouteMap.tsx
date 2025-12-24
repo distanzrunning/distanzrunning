@@ -141,21 +141,20 @@ export function RaceRouteMap({
 
     console.log('[RaceRouteMap] Hover distance:', hoverDistance, 'meters:', distanceInMeters, 'coordinate:', coordinate)
 
-    // Create hover marker if it doesn't exist
+    // Create hover marker if it doesn't exist (matching MarathonShowcase style)
     if (!hoverMarkerRef.current) {
       const markerElement = document.createElement('div')
       markerElement.style.cssText = `
-        background: #3b82f6;
-        border: 3px solid white;
+        background: #1e40af;
+        border: 2px solid white;
         border-radius: 50%;
-        width: 16px;
-        height: 16px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        width: 12px;
+        height: 12px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         opacity: 0;
         pointer-events: none;
-        z-index: 10000;
-        transition: all 0.05s ease-out;
-        position: relative;
+        z-index: 1;
+        transition: opacity 0.1s ease;
       `
 
       hoverMarkerRef.current = new mapboxgl.Marker({

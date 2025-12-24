@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo } from 'react'
+import { useMemo, useRef, useCallback } from 'react'
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts'
 import { Settings2 } from 'lucide-react'
 
@@ -27,6 +27,9 @@ export function ElevationChart({
     hoverDistance,
     hasHoverCallback: !!onHoverDistanceChange
   })
+
+  // Ref for the chart container to calculate mouse position
+  const chartContainerRef = useRef<HTMLDivElement>(null)
 
   // Calculate fixed domains based on raw data (always in metric/km)
   // This ensures the axes don't move when toggling units
@@ -151,6 +154,33 @@ export function ElevationChart({
     }))
   }, [elevationData, useMetric])
 
+  // Handle mouse move over chart area (similar to Chart.js onHover)
+  const handleChartMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    if (!chartContainerRef.current || chartData.length === 0) return
+
+    const rect = chartContainerRef.current.getBoundingClientRect()
+    const mouseX = e.clientX - rect.left
+
+    // Account for chart margins (left margin is ~45px for Y-axis, right margin is ~10px)
+    const chartLeftMargin = 45
+    const chartRightMargin = 10
+    const chartWidth = rect.width - chartLeftMargin - chartRightMargin
+
+    // Calculate relative position (0 to 1)
+    const relativeX = (mouseX - chartLeftMargin) / chartWidth
+
+    // Clamp to valid range
+    if (relativeX < 0 || relativeX > 1) return
+
+    // Find the distance at this position
+    const minDistance = distanceDomain[0]
+    const maxDistance = distanceDomain[1]
+    const distance = minDistance + (relativeX * (maxDistance - minDistance))
+
+    console.log('[ElevationChart] Overlay mouse move at distance:', distance, useMetric ? 'km' : 'mi')
+    onHoverDistanceChange?.(distance)
+  }, [chartData, distanceDomain, useMetric, onHoverDistanceChange])
+
   const distanceUnit = useMetric ? 'km' : 'mi'
   const elevationUnit = useMetric ? 'm' : 'ft'
 
@@ -212,28 +242,22 @@ export function ElevationChart({
       {/* Chart */}
       <div
         className="px-4 py-6"
-        style={{ position: 'relative', zIndex: 1, cursor: 'crosshair' }}
-        onMouseLeave={() => {
-          console.log('[ElevationChart] Container mouse leave')
-          onHoverDistanceChange?.(null)
-        }}
+        style={{ position: 'relative', zIndex: 1 }}
       >
-        <ResponsiveContainer width="100%" height={220}>
-          <AreaChart
-            data={chartData}
-            margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
-            syncMethod="value"
-            onMouseMove={(e: any) => {
-              console.log('[ElevationChart] AreaChart onMouseMove triggered', e?.activePayload)
-              if (e && e.activePayload && e.activePayload.length > 0) {
-                const distance = e.activePayload[0].payload.distance
-                console.log('[ElevationChart] Mouse move at distance:', distance, useMetric ? 'km' : 'mi')
-                onHoverDistanceChange?.(distance)
-              } else {
-                console.log('[ElevationChart] onMouseMove but no activePayload')
-              }
-            }}
-          >
+        <div
+          ref={chartContainerRef}
+          style={{ position: 'relative', cursor: 'crosshair' }}
+          onMouseMove={handleChartMouseMove}
+          onMouseLeave={() => {
+            console.log('[ElevationChart] Container mouse leave')
+            onHoverDistanceChange?.(null)
+          }}
+        >
+          <ResponsiveContainer width="100%" height={220}>
+            <AreaChart
+              data={chartData}
+              margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
+            >
             <defs>
               <linearGradient id="elevationGradient" x1="0" y1="0" x2="0" y2="1">
                 <stop
@@ -306,6 +330,7 @@ export function ElevationChart({
             />
           </AreaChart>
         </ResponsiveContainer>
+        </div>
       </div>
     </div>
   )
