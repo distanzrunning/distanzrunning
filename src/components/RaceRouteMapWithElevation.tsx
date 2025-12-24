@@ -14,6 +14,7 @@ interface RaceRouteMapWithElevationProps {
   onShowMarkersChange?: (show: boolean) => void
   onUseMetricChange?: (metric: boolean) => void
   elevationData?: Array<{ distance: number; elevation: number }>
+  forceLoading?: boolean
 }
 
 /**
@@ -28,7 +29,8 @@ export function RaceRouteMapWithElevation({
   initialUseMetric = false,
   onShowMarkersChange,
   onUseMetricChange,
-  elevationData = []
+  elevationData = [],
+  forceLoading = false
 }: RaceRouteMapWithElevationProps) {
   const { isDark } = useContext(DarkModeContext)
   const [useMetric, setUseMetric] = useState(initialUseMetric)
@@ -69,6 +71,7 @@ export function RaceRouteMapWithElevation({
         onUseMetricChange={handleUseMetricChange}
         hoverDistance={hoverDistance}
         onHoverDistanceChange={handleMapHoverChange}
+        forceLoading={forceLoading}
       />
 
       {/* Elevation Chart - only show if we have data */}

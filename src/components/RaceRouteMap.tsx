@@ -17,6 +17,7 @@ interface RaceRouteMapProps {
   onUseMetricChange?: (metric: boolean) => void // Callback when unit preference changes
   hoverDistance?: number | null // Distance to show hover marker at
   onHoverDistanceChange?: (distance: number | null) => void // Callback when hovering over route
+  forceLoading?: boolean // Force show loading screen (e.g., during resize)
 }
 
 // Mapbox implementation matching Google Maps style
@@ -29,7 +30,8 @@ export function RaceRouteMap({
   onShowMarkersChange,
   onUseMetricChange,
   hoverDistance,
-  onHoverDistanceChange
+  onHoverDistanceChange,
+  forceLoading = false
 }: RaceRouteMapProps) {
   const mapRef = useRef<HTMLDivElement>(null)
   const mapInstanceRef = useRef<mapboxgl.Map | null>(null)
@@ -701,7 +703,7 @@ export function RaceRouteMap({
       className="relative w-full rounded-xl overflow-hidden shadow-sm border border-neutral-100 dark:border-neutral-800 flex-shrink-0 transition-all duration-300"
       style={{ height: height ? `${height}px` : '320px' }}
     >
-      {isLoading && (
+      {(isLoading || forceLoading) && (
         <div className="absolute inset-0 flex items-center justify-center bg-neutral-100 dark:bg-neutral-800 z-10">
           <div className="animate-pulse">
             <img
@@ -718,7 +720,7 @@ export function RaceRouteMap({
       <div
         ref={mapRef}
         className="w-full h-full transition-opacity duration-300"
-        style={{ opacity: isLoading ? 0 : 1 }}
+        style={{ opacity: (isLoading || forceLoading) ? 0 : 1 }}
       />
       <style jsx global>{`
         /* Hide Mapbox logo and attribution */

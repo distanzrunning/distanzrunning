@@ -61,10 +61,18 @@ export function RaceEventPopup({
   const MAX_WIDTH = 850
   const FULL_WIDTH_MAX = 850 // Maximum width for full width mode
 
+  // Track if map is resizing to show loading screen
+  const [isMapResizing, setIsMapResizing] = useState(false)
+
   // Trigger map resize when width changes (debounced to avoid excessive remounts)
   useEffect(() => {
+    // Show loading screen immediately
+    setIsMapResizing(true)
+
     const timeoutId = setTimeout(() => {
       setContentKey(prev => prev + 1)
+      // Hide loading screen after map remounts
+      setTimeout(() => setIsMapResizing(false), 100)
     }, 350) // Wait for transition to complete (300ms + 50ms buffer)
 
     return () => clearTimeout(timeoutId)
@@ -582,6 +590,7 @@ export function RaceEventPopup({
               onShowMarkersChange={onMapMarkersChange}
               onUseMetricChange={onMapUseMetricChange}
               elevationData={elevationData}
+              forceLoading={isMapResizing}
             />
           )}
 
