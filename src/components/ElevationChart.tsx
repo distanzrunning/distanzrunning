@@ -455,7 +455,7 @@ export function ElevationChart({
             />
             <Tooltip
               content={<CustomTooltip />}
-              cursor={{ stroke: '#3b82f6', strokeWidth: 2, strokeDasharray: '3 3' }}
+              cursor={{ stroke: isDark ? '#171717' : '#171717', strokeWidth: 2, strokeDasharray: '3 3' }}
               position={{ y: 0 }}
               offset={-10}
             />
@@ -463,7 +463,7 @@ export function ElevationChart({
             {hoverDistance !== null && hoverDistance !== undefined && !isHoveringChart && (
               <ReferenceLine
                 x={hoverDistance}
-                stroke="#3b82f6"
+                stroke={isDark ? '#171717' : '#171717'}
                 strokeWidth={2}
                 strokeDasharray="3 3"
                 label=""
