@@ -210,23 +210,28 @@ export function ElevationChart({
       </div>
 
       {/* Chart */}
-      <div className="px-4 py-6" style={{ position: 'relative', zIndex: 1 }}>
+      <div
+        className="px-4 py-6"
+        style={{ position: 'relative', zIndex: 1, cursor: 'crosshair' }}
+        onMouseLeave={() => {
+          console.log('[ElevationChart] Container mouse leave')
+          onHoverDistanceChange?.(null)
+        }}
+      >
         <ResponsiveContainer width="100%" height={220}>
           <AreaChart
             data={chartData}
             margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
-            style={{ cursor: 'crosshair' }}
+            syncMethod="value"
             onMouseMove={(e: any) => {
-              console.log('[ElevationChart] onMouseMove triggered', e)
+              console.log('[ElevationChart] AreaChart onMouseMove triggered', e?.activePayload)
               if (e && e.activePayload && e.activePayload.length > 0) {
                 const distance = e.activePayload[0].payload.distance
                 console.log('[ElevationChart] Mouse move at distance:', distance, useMetric ? 'km' : 'mi')
                 onHoverDistanceChange?.(distance)
+              } else {
+                console.log('[ElevationChart] onMouseMove but no activePayload')
               }
-            }}
-            onMouseLeave={() => {
-              console.log('[ElevationChart] Mouse leave')
-              onHoverDistanceChange?.(null)
             }}
           >
             <defs>
