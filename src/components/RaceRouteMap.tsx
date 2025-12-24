@@ -466,11 +466,10 @@ export function RaceRouteMap({
 
           // Add route hover event handlers
           map.on('mouseenter', 'route-hover-zone', () => {
-            map.getCanvas().style.cursor = 'crosshair'
+            // No cursor change - just show blue marker
           })
 
           map.on('mouseleave', 'route-hover-zone', () => {
-            map.getCanvas().style.cursor = ''
             onHoverDistanceChange?.(null)
           })
 

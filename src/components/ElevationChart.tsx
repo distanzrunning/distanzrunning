@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useRef, useCallback } from 'react'
+import { useMemo, useRef, useCallback, useState } from 'react'
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts'
 import { Settings2 } from 'lucide-react'
 
@@ -30,6 +30,9 @@ export function ElevationChart({
 
   // Ref for the chart container to calculate mouse position
   const chartContainerRef = useRef<HTMLDivElement>(null)
+
+  // Track if currently hovering over the chart itself (to avoid double tooltips)
+  const [isHoveringChart, setIsHoveringChart] = useState(false)
 
   // Calculate fixed domains based on raw data (always in metric/km)
   // This ensures the axes don't move when toggling units
@@ -181,6 +184,18 @@ export function ElevationChart({
     onHoverDistanceChange?.(distance)
   }, [chartData, distanceDomain, useMetric, onHoverDistanceChange])
 
+  // Handle mouse enter on chart
+  const handleChartMouseEnter = useCallback(() => {
+    setIsHoveringChart(true)
+  }, [])
+
+  // Handle mouse leave from chart
+  const handleChartMouseLeave = useCallback(() => {
+    setIsHoveringChart(false)
+    console.log('[ElevationChart] Container mouse leave')
+    onHoverDistanceChange?.(null)
+  }, [onHoverDistanceChange])
+
   const distanceUnit = useMetric ? 'km' : 'mi'
   const elevationUnit = useMetric ? 'm' : 'ft'
 
@@ -287,11 +302,9 @@ export function ElevationChart({
         <div
           ref={chartContainerRef}
           style={{ position: 'relative', cursor: 'crosshair' }}
+          onMouseEnter={handleChartMouseEnter}
           onMouseMove={handleChartMouseMove}
-          onMouseLeave={() => {
-            console.log('[ElevationChart] Container mouse leave')
-            onHoverDistanceChange?.(null)
-          }}
+          onMouseLeave={handleChartMouseLeave}
         >
           <ResponsiveContainer width="100%" height={220}>
             <AreaChart
@@ -350,8 +363,8 @@ export function ElevationChart({
               tickFormatter={(value) => `${Math.round(value)}`}
             />
             <Tooltip content={<CustomTooltip />} cursor={{ stroke: '#3b82f6', strokeWidth: 2, strokeDasharray: '3 3' }} />
-            {/* Show reference line when hovering from map (matches cursor style) */}
-            {hoverDistance !== null && hoverDistance !== undefined && (
+            {/* Show reference line only when hovering from map (not when hovering chart itself) */}
+            {hoverDistance !== null && hoverDistance !== undefined && !isHoveringChart && (
               <ReferenceLine
                 x={hoverDistance}
                 stroke="#3b82f6"
@@ -371,8 +384,8 @@ export function ElevationChart({
           </AreaChart>
         </ResponsiveContainer>
 
-        {/* Custom floating tooltip for map hover */}
-        {tooltipPosition && hoverElevation !== null && (
+        {/* Custom floating tooltip for map hover (only show when NOT hovering chart itself) */}
+        {tooltipPosition && hoverElevation !== null && !isHoveringChart && (
           <div
             style={{
               position: 'absolute',
