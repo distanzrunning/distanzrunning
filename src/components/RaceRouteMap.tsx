@@ -703,7 +703,16 @@ export function RaceRouteMap({
     >
       {isLoading && (
         <div className="absolute inset-0 flex items-center justify-center bg-neutral-100 dark:bg-neutral-800 z-10">
-          <div className="text-sm text-neutral-500 dark:text-neutral-400">Loading...</div>
+          <div className="animate-pulse">
+            <img
+              src="/images/distanz_icon_black_round.png"
+              alt="Loading"
+              className="w-16 h-16 opacity-60"
+              style={{
+                animation: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite'
+              }}
+            />
+          </div>
         </div>
       )}
       <div
