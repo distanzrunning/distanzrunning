@@ -184,6 +184,27 @@ export function ElevationChart({
   const distanceUnit = useMetric ? 'km' : 'mi'
   const elevationUnit = useMetric ? 'm' : 'ft'
 
+  // Find elevation at hover distance for custom tooltip
+  const hoverElevation = useMemo(() => {
+    if (hoverDistance === null || hoverDistance === undefined || chartData.length === 0) {
+      return null
+    }
+
+    // Find the closest data point to the hover distance
+    let closestIndex = 0
+    let closestDiff = Math.abs(chartData[0].distance - hoverDistance)
+
+    for (let i = 1; i < chartData.length; i++) {
+      const diff = Math.abs(chartData[i].distance - hoverDistance)
+      if (diff < closestDiff) {
+        closestDiff = diff
+        closestIndex = i
+      }
+    }
+
+    return chartData[closestIndex].elevation
+  }, [hoverDistance, chartData])
+
   // Custom tooltip
   const CustomTooltip = ({ active, payload }: any) => {
     if (active && payload && payload.length) {
@@ -211,6 +232,25 @@ export function ElevationChart({
       </div>
     )
   }
+
+  // Calculate tooltip position for map hover
+  const tooltipPosition = useMemo(() => {
+    if (!hoverDistance || hoverDistance === null || !chartContainerRef.current) {
+      return null
+    }
+
+    const minDistance = distanceDomain[0]
+    const maxDistance = distanceDomain[1]
+    const relativeX = (hoverDistance - minDistance) / (maxDistance - minDistance)
+
+    // Account for margins
+    const chartLeftMargin = 45
+    const chartRightMargin = 10
+    const chartWidth = chartContainerRef.current.offsetWidth - chartLeftMargin - chartRightMargin
+    const xPos = chartLeftMargin + (relativeX * chartWidth)
+
+    return { x: xPos }
+  }, [hoverDistance, distanceDomain])
 
   return (
     <div className="w-full bg-white dark:bg-neutral-900 rounded-xl border border-neutral-100 dark:border-neutral-800 overflow-hidden shadow-sm flex-shrink-0">
@@ -309,8 +349,8 @@ export function ElevationChart({
               }}
               tickFormatter={(value) => `${Math.round(value)}`}
             />
-            <Tooltip content={<CustomTooltip />} />
-            {/* Show reference line when hovering from map */}
+            <Tooltip content={<CustomTooltip />} cursor={{ stroke: '#3b82f6', strokeWidth: 2, strokeDasharray: '3 3' }} />
+            {/* Show reference line when hovering from map (matches cursor style) */}
             {hoverDistance !== null && hoverDistance !== undefined && (
               <ReferenceLine
                 x={hoverDistance}
@@ -330,6 +370,29 @@ export function ElevationChart({
             />
           </AreaChart>
         </ResponsiveContainer>
+
+        {/* Custom floating tooltip for map hover */}
+        {tooltipPosition && hoverElevation !== null && (
+          <div
+            style={{
+              position: 'absolute',
+              left: `${tooltipPosition.x}px`,
+              top: '50%',
+              transform: 'translate(-50%, -50%)',
+              pointerEvents: 'none',
+              zIndex: 10
+            }}
+          >
+            <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg shadow-lg p-3">
+              <p className="text-sm font-semibold text-neutral-900 dark:text-white mb-1">
+                {hoverDistance?.toFixed(2)} {distanceUnit}
+              </p>
+              <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                <span className="font-mono">{Math.round(hoverElevation)}</span> {elevationUnit}
+              </p>
+            </div>
+          </div>
+        )}
         </div>
       </div>
     </div>
