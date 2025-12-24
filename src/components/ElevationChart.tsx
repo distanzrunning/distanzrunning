@@ -34,6 +34,9 @@ export function ElevationChart({
   // Track if currently hovering over the chart itself (to avoid double tooltips)
   const [isHoveringChart, setIsHoveringChart] = useState(false)
 
+  // Use a ref for immediate synchronous hover state tracking (no React render delay)
+  const isHoveringChartRef = useRef(false)
+
   // Calculate fixed domains based on raw data (always in metric/km)
   // This ensures the axes don't move when toggling units
   const { distanceDomainKm, elevationDomainMeters } = useMemo(() => {
@@ -159,7 +162,8 @@ export function ElevationChart({
 
   // Handle mouse move over chart area (similar to Chart.js onHover)
   const handleChartMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    if (!chartContainerRef.current || chartData.length === 0) return
+    // Only process if we're actually hovering the chart (prevent stale events)
+    if (!isHoveringChartRef.current || !chartContainerRef.current || chartData.length === 0) return
 
     const rect = chartContainerRef.current.getBoundingClientRect()
     const mouseX = e.clientX - rect.left
@@ -186,11 +190,13 @@ export function ElevationChart({
 
   // Handle mouse enter on chart
   const handleChartMouseEnter = useCallback(() => {
+    isHoveringChartRef.current = true
     setIsHoveringChart(true)
   }, [])
 
   // Handle mouse leave from chart
   const handleChartMouseLeave = useCallback(() => {
+    isHoveringChartRef.current = false
     setIsHoveringChart(false)
     console.log('[ElevationChart] Container mouse leave')
     onHoverDistanceChange?.(null)
