@@ -36,10 +36,24 @@ export function RaceRouteMapWithElevation({
   // Hover state for bidirectional interaction between map and chart
   const [hoverDistance, setHoverDistance] = useState<number | null>(null)
 
+  // Track which component is being hovered to prevent tooltip sticking
+  const [hoverSource, setHoverSource] = useState<'map' | 'chart' | null>(null)
+
   // Sync metric preference between map and chart
   const handleUseMetricChange = (metric: boolean) => {
     setUseMetric(metric)
     onUseMetricChange?.(metric)
+  }
+
+  // Handle hover distance changes with source tracking
+  const handleMapHoverChange = (distance: number | null) => {
+    setHoverDistance(distance)
+    setHoverSource(distance !== null ? 'map' : null)
+  }
+
+  const handleChartHoverChange = (distance: number | null) => {
+    setHoverDistance(distance)
+    setHoverSource(distance !== null ? 'chart' : null)
   }
 
   return (
@@ -53,8 +67,8 @@ export function RaceRouteMapWithElevation({
         initialUseMetric={useMetric}
         onShowMarkersChange={onShowMarkersChange}
         onUseMetricChange={handleUseMetricChange}
-        hoverDistance={hoverDistance}
-        onHoverDistanceChange={setHoverDistance}
+        hoverDistance={hoverSource === 'chart' ? hoverDistance : null}
+        onHoverDistanceChange={handleMapHoverChange}
       />
 
       {/* Elevation Chart - only show if we have data */}
@@ -64,8 +78,8 @@ export function RaceRouteMapWithElevation({
           useMetric={useMetric}
           isDark={isDark}
           onUseMetricChange={handleUseMetricChange}
-          hoverDistance={hoverDistance}
-          onHoverDistanceChange={setHoverDistance}
+          hoverDistance={hoverSource === 'map' ? hoverDistance : null}
+          onHoverDistanceChange={handleChartHoverChange}
         />
       )}
     </div>
