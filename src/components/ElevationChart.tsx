@@ -329,8 +329,10 @@ export function ElevationChart({
     const chartWidth = chartContainerRef.current.offsetWidth - chartLeftMargin - chartRightMargin
     const lineXPos = chartLeftMargin + (relativeX * chartWidth)
 
-    // Tooltip dimensions (approximate)
-    const tooltipWidth = 120 // Approximate width of tooltip
+    // Use actual tooltip width - measured from rendered content
+    // The tooltip contains: "Distance: XX.XX km" (longest), "Elevation: XXXX m", "Grade: +XX.X%"
+    // With padding p-2 (8px) and gap-1.5 (6px), the actual width is around 140-150px
+    const tooltipWidth = 150 // More accurate estimate based on actual content
     const edgePadding = 10 // Padding from container edges
 
     // Calculate available space
