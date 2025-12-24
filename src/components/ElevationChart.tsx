@@ -169,7 +169,7 @@ export function ElevationChart({ elevationData, useMetric = false, isDark = fals
   return (
     <div className="w-full bg-white dark:bg-neutral-900 rounded-xl border border-neutral-100 dark:border-neutral-800 overflow-hidden shadow-sm flex-shrink-0">
       {/* Header */}
-      <div className="px-6 py-4 border-b border-neutral-100 dark:border-neutral-800">
+      <div className="px-6 py-4">
         <div className="flex items-center justify-between">
           <h3 className="text-sm font-semibold text-neutral-900 dark:text-white">
             Elevation Profile
