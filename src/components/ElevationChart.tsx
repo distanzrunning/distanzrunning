@@ -313,7 +313,7 @@ export function ElevationChart({
     )
   }
 
-  // Calculate tooltip position for map hover
+  // Calculate tooltip position for map hover with smart positioning
   const tooltipPosition = useMemo(() => {
     if (!hoverDistance || hoverDistance === null || !chartContainerRef.current) {
       return null
@@ -327,9 +327,36 @@ export function ElevationChart({
     const chartLeftMargin = 45
     const chartRightMargin = 10
     const chartWidth = chartContainerRef.current.offsetWidth - chartLeftMargin - chartRightMargin
-    const xPos = chartLeftMargin + (relativeX * chartWidth)
+    const lineXPos = chartLeftMargin + (relativeX * chartWidth)
 
-    return { x: xPos }
+    // Tooltip dimensions (approximate)
+    const tooltipWidth = 120 // Approximate width of tooltip
+    const tooltipOffset = 10 // Spacing from line
+
+    // Calculate available space on each side
+    const containerWidth = chartContainerRef.current.offsetWidth
+    const spaceOnRight = containerWidth - lineXPos
+    const spaceOnLeft = lineXPos
+
+    // Determine best position
+    let xPos = lineXPos
+    let alignment: 'right' | 'left' | 'center' = 'right'
+
+    if (spaceOnRight >= tooltipWidth + tooltipOffset) {
+      // Enough space on right - position to the right of line
+      xPos = lineXPos + tooltipOffset
+      alignment = 'left'
+    } else if (spaceOnLeft >= tooltipWidth + tooltipOffset) {
+      // Not enough space on right, but enough on left
+      xPos = lineXPos - tooltipOffset
+      alignment = 'right'
+    } else {
+      // Not enough space on either side - center on line
+      xPos = lineXPos
+      alignment = 'center'
+    }
+
+    return { x: xPos, alignment }
   }, [hoverDistance, distanceDomain])
 
   return (
@@ -461,7 +488,11 @@ export function ElevationChart({
               position: 'absolute',
               left: `${tooltipPosition.x}px`,
               top: '10px',
-              transform: 'translateX(-50%)',
+              transform: tooltipPosition.alignment === 'center'
+                ? 'translateX(-50%)'
+                : tooltipPosition.alignment === 'right'
+                ? 'translateX(-100%)'
+                : 'translateX(0)',
               pointerEvents: 'none',
               zIndex: 10
             }}
