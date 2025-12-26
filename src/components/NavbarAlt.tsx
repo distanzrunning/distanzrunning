@@ -163,9 +163,9 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
 
   return (
     <>
-      {/* Desktop & Mobile Header - Fixed */}
+      {/* Desktop & Mobile Header - Sticky */}
       <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        className={`sticky top-0 z-50 transition-all duration-300 ${
           isScrolled && !isNavHovered && navValue === ''
             ? 'bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md backdrop-saturate-150'
             : 'bg-white dark:bg-neutral-900'
@@ -613,7 +613,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
               </NavigationMenu.Indicator>
 
               <motion.div
-                className="perspective-[2000px] fixed left-0 right-0 w-screen origin-top overflow-hidden max-h-[600px]"
+                className="perspective-[2000px] absolute left-0 right-0 w-full origin-top overflow-hidden max-h-[600px]"
                 initial={false}
                 animate={{
                   scaleY: megaMenuShouldRender ? (megaMenuIsOpen ? 1 : 0) : 0
