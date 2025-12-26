@@ -476,76 +476,38 @@ export function ElevationChart({
               strokeWidth={2}
               fill="url(#elevationGradient)"
               isAnimationActive={false}
+              activeDot={false}
             />
           </AreaChart>
         </ResponsiveContainer>
 
         {/* Custom floating tooltip for map hover (only show when NOT hovering chart itself AND hover came from external source) */}
         {tooltipPosition && hoverElevation !== null && !isHoveringChart && hoverDistance !== null && (
-          <>
-            <div
-              style={{
-                position: 'absolute',
-                left: `${tooltipPosition.x}px`,
-                top: '10px',
-                transform: tooltipPosition.side === 'left' ? 'translateX(0)' : 'translateX(-100%)',
-                pointerEvents: 'none',
-                zIndex: 10
-              }}
-            >
-              <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-md shadow-lg p-2 whitespace-nowrap">
-                <div className="flex items-baseline gap-1.5 mb-0.5">
-                  <span className="text-xs text-neutral-600 dark:text-neutral-300">Distance:</span>
-                  <span className="text-xs font-mono text-neutral-900 dark:text-white">{hoverDistance?.toFixed(2)} {distanceUnit}</span>
-                </div>
-                <div className="flex items-baseline gap-1.5 mb-0.5">
-                  <span className="text-xs text-neutral-600 dark:text-neutral-300">Elevation:</span>
-                  <span className="text-xs font-mono text-neutral-900 dark:text-white">{Math.round(hoverElevation)} {elevationUnit}</span>
-                </div>
-                <div className="flex items-baseline gap-1.5">
-                  <span className="text-xs text-neutral-600 dark:text-neutral-300">Grade:</span>
-                  <span className="text-xs font-mono text-neutral-900 dark:text-white">{hoverGrade >= 0 ? '+' : ''}{hoverGrade.toFixed(1)}%</span>
-                </div>
+          <div
+            style={{
+              position: 'absolute',
+              left: `${tooltipPosition.x}px`,
+              top: '10px',
+              transform: tooltipPosition.side === 'left' ? 'translateX(0)' : 'translateX(-100%)',
+              pointerEvents: 'none',
+              zIndex: 10
+            }}
+          >
+            <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-md shadow-lg p-2 whitespace-nowrap">
+              <div className="flex items-baseline gap-1.5 mb-0.5">
+                <span className="text-xs text-neutral-600 dark:text-neutral-300">Distance:</span>
+                <span className="text-xs font-mono text-neutral-900 dark:text-white">{hoverDistance?.toFixed(2)} {distanceUnit}</span>
+              </div>
+              <div className="flex items-baseline gap-1.5 mb-0.5">
+                <span className="text-xs text-neutral-600 dark:text-neutral-300">Elevation:</span>
+                <span className="text-xs font-mono text-neutral-900 dark:text-white">{Math.round(hoverElevation)} {elevationUnit}</span>
+              </div>
+              <div className="flex items-baseline gap-1.5">
+                <span className="text-xs text-neutral-600 dark:text-neutral-300">Grade:</span>
+                <span className="text-xs font-mono text-neutral-900 dark:text-white">{hoverGrade >= 0 ? '+' : ''}{hoverGrade.toFixed(1)}%</span>
               </div>
             </div>
-            {/* Blue dot marker at hover position on elevation line */}
-            <div
-              style={{
-                position: 'absolute',
-                left: `${tooltipPosition.x}px`,
-                top: `${(() => {
-                  // Calculate Y position to match Recharts rendering
-                  // Chart dimensions and margins
-                  const chartHeight = 220
-                  const chartMargins = { top: 10, right: 10, left: 0, bottom: 0 }
-
-                  // Account for X-axis labels at bottom (approximately 30px)
-                  const xAxisHeight = 30
-
-                  // Calculate actual plot area height
-                  const plotHeight = chartHeight - chartMargins.top - chartMargins.bottom - xAxisHeight
-
-                  const minElev = elevationDomain[0]
-                  const maxElev = elevationDomain[1]
-                  const elevRange = maxElev - minElev
-
-                  // Calculate relative Y position (0 at top, 1 at bottom)
-                  const relativeY = 1 - ((hoverElevation - minElev) / elevRange)
-                  const yPos = chartMargins.top + (relativeY * plotHeight)
-
-                  return yPos
-                })()}px`,
-                transform: 'translate(-50%, -50%)',
-                pointerEvents: 'none',
-                zIndex: 11
-              }}
-            >
-              <div
-                className="w-2.5 h-2.5 rounded-full bg-blue-500 border-2 border-white dark:border-neutral-900"
-                style={{ boxShadow: '0 0 0 2px rgba(59, 130, 246, 0.3)' }}
-              />
-            </div>
-          </>
+          </div>
         )}
         </div>
       </div>
