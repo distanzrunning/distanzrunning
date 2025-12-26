@@ -332,8 +332,15 @@ export function RaceRouteMap({
           Math.max(...lats)
         ]
 
-        // Use simple fixed padding - Mapbox fitBounds handles zoom calculation automatically
-        const calculatedPadding = 100 // Fixed padding in pixels
+        // Calculate padding based on route aspect ratio
+        // Point-to-point races need more padding to show start/finish markers
+        const lngDiff = Math.max(...lngs) - Math.min(...lngs)
+        const latDiff = Math.max(...lats) - Math.min(...lats)
+        const routeAspectRatio = lngDiff / latDiff
+        const isPointToPoint = Math.max(routeAspectRatio, 1/routeAspectRatio) > 3
+
+        // Point-to-point: 80px, Loop races: 50px
+        const calculatedPadding = isPointToPoint ? 80 : 50
 
         // Initialize Mapbox map with custom 2D monochrome styles
         const map = new mapboxgl.Map({
@@ -744,6 +751,7 @@ export function RaceRouteMap({
             map,
             isDark,
             bounds,
+            calculatedPadding,
             showMarkersRef.current,
             setShowMarkersSafe,
             showMarkersRef,
@@ -974,6 +982,7 @@ function createCustomControls(
   map: mapboxgl.Map,
   isDark: boolean,
   bounds: mapboxgl.LngLatBoundsLike,
+  padding: number,
   showMarkers: boolean,
   setShowMarkers: (show: boolean) => void,
   showMarkersRef: React.MutableRefObject<boolean>,
@@ -1079,9 +1088,9 @@ function createCustomControls(
     // Force map to resize first in case container changed
     map.resize()
 
-    // Use simple fixed padding - same as initial load
+    // Use same padding as initial load
     map.fitBounds(bounds, {
-      padding: 150,
+      padding: padding,
       duration: 800, // Smooth animation
       maxZoom: 16 // Prevent zooming too close
     })
