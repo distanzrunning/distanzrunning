@@ -348,7 +348,7 @@ export function RaceRouteMap({
             ? 'mapbox://styles/distanzrunning/cmj5rnjj3000d01pg8ngl0ld6'  // Custom Charcoal Dark
             : 'mapbox://styles/distanzrunning/cmj7ou5ik001c01sbcwkog5ff', // Custom Light with Grey Roads
           bounds,
-          fitBoundsOptions: { padding: 40 },
+          fitBoundsOptions: { padding: 60 }, // Increased padding to prevent marker cut-off on point-to-point races
           attributionControl: false,
           minZoom: minZoom,
           maxZoom: 18,
