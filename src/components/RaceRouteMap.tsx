@@ -340,8 +340,8 @@ export function RaceRouteMap({
         const minZoom = Math.max(10, 14 - Math.log2(maxDiff * 100))
 
         // Use simple fixed padding - Mapbox fitBounds handles zoom calculation automatically
-        // This approach is proven to work (see MarathonShowcase component)
-        const calculatedPadding = 100 // Fixed padding in pixels
+        // For smaller popup containers, we need more padding than the large MarathonShowcase
+        const calculatedPadding = 150 // Fixed padding in pixels
 
         // Initialize Mapbox map with custom 2D monochrome styles
         const map = new mapboxgl.Map({
@@ -1089,7 +1089,7 @@ function createCustomControls(
 
     // Use simple fixed padding - same as initial load
     map.fitBounds(bounds, {
-      padding: 100,
+      padding: 150,
       duration: 800, // Smooth animation
       maxZoom: 16 // Prevent zooming too close
     })
