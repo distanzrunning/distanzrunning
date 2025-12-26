@@ -51,8 +51,6 @@ export function RaceRouteMap({
   const routeCoordinatesRef = useRef<number[][]>([])
   const routeDistancesRef = useRef<number[]>([]) // Cumulative distances at each coordinate
   const aidStationMarkersRef = useRef<mapboxgl.Marker[]>([]) // Aid station markers
-  const routeAspectRatioRef = useRef<number>(1) // Store route aspect ratio for padding calculation
-  const isHorizontalRouteRef = useRef<boolean>(true) // Store if route is horizontal
 
   // Safe setter that only notifies parent without updating local state
   const setShowMarkersSafe = useCallback((value: boolean) => {
@@ -341,65 +339,9 @@ export function RaceRouteMap({
         // Set minZoom based on route size - prevent zooming out too far
         const minZoom = Math.max(10, 14 - Math.log2(maxDiff * 100))
 
-        // Calculate dynamic padding to ensure start/finish markers are visible
-        const containerWidth = mapRef.current.offsetWidth
-        const containerHeight = mapRef.current.offsetHeight
-
-        // Calculate what percentage of the container each axis of the route takes up
-        // This tells us how much "spare space" we have on each side
-        const routeAspectRatio = lngDiff / latDiff
-        const containerAspectRatio = containerWidth / containerHeight
-
-        let calculatedPadding: number | { top: number; bottom: number; left: number; right: number }
-
-        // For point-to-point races (high aspect ratio difference), we need more aggressive padding
-        // to prevent start/finish markers from being cut off
-        const isPointToPoint = Math.max(routeAspectRatio, 1/routeAspectRatio) > 3
-
-        // If route is wider than container aspect ratio, it will hit left/right edges first
-        // If route is taller than container aspect ratio, it will hit top/bottom edges first
-        if (routeAspectRatio > containerAspectRatio) {
-          // Route is wider - will hit left/right edges, need more left/right padding
-          // For point-to-point races, use much higher fixed minimum padding to prevent marker cut-off
-
-          // For point-to-point: use 25% of container width as padding, with high 120px minimum
-          // For loop races: use 8% of container width as padding, with 60px minimum
-          const leftRightPadding = isPointToPoint
-            ? Math.max(120, Math.round(containerWidth * 0.25))
-            : Math.min(150, Math.max(60, Math.round(containerWidth * 0.08)))
-
-          // Top/bottom padding can be smaller since route is horizontal
-          const topBottomPadding = Math.min(100, Math.max(40, Math.round(containerHeight * 0.08)))
-
-          calculatedPadding = {
-            top: topBottomPadding,
-            bottom: topBottomPadding,
-            left: leftRightPadding,
-            right: leftRightPadding
-          }
-        } else {
-          // Route is taller - will hit top/bottom edges, need more top/bottom padding
-
-          // For point-to-point: use 25% of container height as padding, with high 120px minimum
-          // For loop races: use 8% of container height as padding, with 60px minimum
-          const topBottomPadding = isPointToPoint
-            ? Math.max(120, Math.round(containerHeight * 0.25))
-            : Math.min(150, Math.max(60, Math.round(containerHeight * 0.08)))
-
-          // Left/right padding can be smaller since route is vertical
-          const leftRightPadding = Math.min(100, Math.max(40, Math.round(containerWidth * 0.08)))
-
-          calculatedPadding = {
-            top: topBottomPadding,
-            bottom: topBottomPadding,
-            left: leftRightPadding,
-            right: leftRightPadding
-          }
-        }
-
-        // Store for recenter button
-        routeAspectRatioRef.current = routeAspectRatio
-        isHorizontalRouteRef.current = routeAspectRatio > containerAspectRatio
+        // Use simple fixed padding - Mapbox fitBounds handles zoom calculation automatically
+        // This approach is proven to work (see MarathonShowcase component)
+        const calculatedPadding = 100 // Fixed padding in pixels
 
         // Initialize Mapbox map with custom 2D monochrome styles
         const map = new mapboxgl.Map({
@@ -822,9 +764,7 @@ export function RaceRouteMap({
             setShowAidStationsSafe,
             showAidStationsRef,
             aidStationMarkersRef,
-            aidStations.length > 0,
-            routeAspectRatioRef,
-            isHorizontalRouteRef
+            aidStations.length > 0
           )
 
           // Hide loading after map is fully loaded
@@ -1054,9 +994,7 @@ function createCustomControls(
   setShowAidStations: (show: boolean) => void,
   showAidStationsRef: React.MutableRefObject<boolean>,
   aidStationMarkersRef: React.MutableRefObject<mapboxgl.Marker[]>,
-  hasAidStations: boolean,
-  routeAspectRatioRef: React.MutableRefObject<number>,
-  isHorizontalRouteRef: React.MutableRefObject<boolean>
+  hasAidStations: boolean
 ) {
   // Create fullscreen button (top-right)
   const fullscreenButton = document.createElement('button')
@@ -1146,59 +1084,12 @@ function createCustomControls(
     recenterButton.style.backgroundColor = isDark ? '#2d2d2d' : 'white'
   })
   recenterButton.addEventListener('click', () => {
-    // Get current container dimensions
-    const container = map.getContainer()
-    const containerWidth = container.offsetWidth
-    const containerHeight = container.offsetHeight
-
-    // Calculate padding based on route vs container aspect ratio (same logic as initial load)
-    const routeAspectRatio = routeAspectRatioRef.current
-    const containerAspectRatio = containerWidth / containerHeight
-    let padding: number | { top: number; bottom: number; left: number; right: number }
-
-    // Check if this is a point-to-point race (same logic as initial load)
-    const isPointToPoint = Math.max(routeAspectRatio, 1/routeAspectRatio) > 3
-
-    if (routeAspectRatio > containerAspectRatio) {
-      // Route is wider - need more left/right padding
-      // For point-to-point: use 25% of container width as padding, with high 120px minimum
-      // For loop races: use 8% of container width as padding, with 60px minimum
-      const leftRightPadding = isPointToPoint
-        ? Math.max(120, Math.round(containerWidth * 0.25))
-        : Math.min(150, Math.max(60, Math.round(containerWidth * 0.08)))
-
-      const topBottomPadding = Math.min(100, Math.max(40, Math.round(containerHeight * 0.08)))
-
-      padding = {
-        top: topBottomPadding,
-        bottom: topBottomPadding,
-        left: leftRightPadding,
-        right: leftRightPadding
-      }
-    } else {
-      // Route is taller - need more top/bottom padding
-      // For point-to-point: use 25% of container height as padding, with high 120px minimum
-      // For loop races: use 8% of container height as padding, with 60px minimum
-      const topBottomPadding = isPointToPoint
-        ? Math.max(120, Math.round(containerHeight * 0.25))
-        : Math.min(150, Math.max(60, Math.round(containerHeight * 0.08)))
-
-      const leftRightPadding = Math.min(100, Math.max(40, Math.round(containerWidth * 0.08)))
-
-      padding = {
-        top: topBottomPadding,
-        bottom: topBottomPadding,
-        left: leftRightPadding,
-        right: leftRightPadding
-      }
-    }
-
     // Force map to resize first in case container changed
     map.resize()
 
-    // Then fit bounds with appropriate padding
+    // Use simple fixed padding - same as initial load
     map.fitBounds(bounds, {
-      padding: padding,
+      padding: 100,
       duration: 800, // Smooth animation
       maxZoom: 16 // Prevent zooming too close
     })
