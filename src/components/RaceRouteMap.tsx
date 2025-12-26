@@ -51,6 +51,7 @@ export function RaceRouteMap({
   const routeCoordinatesRef = useRef<number[][]>([])
   const routeDistancesRef = useRef<number[]>([]) // Cumulative distances at each coordinate
   const aidStationMarkersRef = useRef<mapboxgl.Marker[]>([]) // Aid station markers
+  const routeAspectRatioRef = useRef<number>(1) // Store route aspect ratio for padding calculation
 
   // Safe setter that only notifies parent without updating local state
   const setShowMarkersSafe = useCallback((value: boolean) => {
@@ -339,12 +340,30 @@ export function RaceRouteMap({
         // Set minZoom based on route size - prevent zooming out too far
         const minZoom = Math.max(10, 14 - Math.log2(maxDiff * 100))
 
-        // Calculate responsive padding based on container size
-        // Use percentage of container size to ensure markers aren't cut off
+        // Calculate dynamic padding based on route geometry
+        // Point-to-point races (high aspect ratio) need more padding than loops
+        const aspectRatio = Math.max(lngDiff, latDiff) / Math.min(lngDiff, latDiff)
+        routeAspectRatioRef.current = aspectRatio // Store for recenter button
+
         const containerWidth = mapRef.current.offsetWidth
         const containerHeight = mapRef.current.offsetHeight
-        const minDimension = Math.min(containerWidth, containerHeight)
-        const calculatedPadding = Math.max(80, Math.min(120, Math.round(minDimension * 0.1)))
+
+        // Base padding on route type and container size
+        let calculatedPadding: number
+        if (aspectRatio > 3) {
+          // Long point-to-point race (like Boston Marathon)
+          // Use larger padding: 12-15% of smaller dimension
+          const minDimension = Math.min(containerWidth, containerHeight)
+          calculatedPadding = Math.max(100, Math.min(150, Math.round(minDimension * 0.15)))
+        } else if (aspectRatio > 1.5) {
+          // Medium point-to-point race
+          const minDimension = Math.min(containerWidth, containerHeight)
+          calculatedPadding = Math.max(90, Math.min(130, Math.round(minDimension * 0.12)))
+        } else {
+          // Loop or near-square route
+          const minDimension = Math.min(containerWidth, containerHeight)
+          calculatedPadding = Math.max(80, Math.min(120, Math.round(minDimension * 0.1)))
+        }
 
         // Initialize Mapbox map with custom 2D monochrome styles
         const map = new mapboxgl.Map({
@@ -767,7 +786,8 @@ export function RaceRouteMap({
             setShowAidStationsSafe,
             showAidStationsRef,
             aidStationMarkersRef,
-            aidStations.length > 0
+            aidStations.length > 0,
+            routeAspectRatioRef
           )
 
           // Hide loading after map is fully loaded
@@ -997,7 +1017,8 @@ function createCustomControls(
   setShowAidStations: (show: boolean) => void,
   showAidStationsRef: React.MutableRefObject<boolean>,
   aidStationMarkersRef: React.MutableRefObject<mapboxgl.Marker[]>,
-  hasAidStations: boolean
+  hasAidStations: boolean,
+  routeAspectRatioRef: React.MutableRefObject<number>
 ) {
   // Create fullscreen button (top-right)
   const fullscreenButton = document.createElement('button')
@@ -1091,10 +1112,21 @@ function createCustomControls(
     const container = map.getContainer()
     const containerWidth = container.offsetWidth
     const containerHeight = container.offsetHeight
-
-    // Use 10% of the smaller dimension as padding, with min/max constraints
     const minDimension = Math.min(containerWidth, containerHeight)
-    const padding = Math.max(80, Math.min(120, Math.round(minDimension * 0.1)))
+
+    // Calculate padding based on route aspect ratio (same as initial load)
+    const aspectRatio = routeAspectRatioRef.current
+    let padding: number
+    if (aspectRatio > 3) {
+      // Long point-to-point race (like Boston Marathon)
+      padding = Math.max(100, Math.min(150, Math.round(minDimension * 0.15)))
+    } else if (aspectRatio > 1.5) {
+      // Medium point-to-point race
+      padding = Math.max(90, Math.min(130, Math.round(minDimension * 0.12)))
+    } else {
+      // Loop or near-square route
+      padding = Math.max(80, Math.min(120, Math.round(minDimension * 0.1)))
+    }
 
     // Force map to resize first in case container changed
     map.resize()
