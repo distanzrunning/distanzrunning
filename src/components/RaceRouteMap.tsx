@@ -52,6 +52,7 @@ export function RaceRouteMap({
   const routeDistancesRef = useRef<number[]>([]) // Cumulative distances at each coordinate
   const aidStationMarkersRef = useRef<mapboxgl.Marker[]>([]) // Aid station markers
   const routeAspectRatioRef = useRef<number>(1) // Store route aspect ratio for padding calculation
+  const isHorizontalRouteRef = useRef<boolean>(true) // Store if route is horizontal
 
   // Safe setter that only notifies parent without updating local state
   const setShowMarkersSafe = useCallback((value: boolean) => {
@@ -345,24 +346,34 @@ export function RaceRouteMap({
         const aspectRatio = Math.max(lngDiff, latDiff) / Math.min(lngDiff, latDiff)
         routeAspectRatioRef.current = aspectRatio // Store for recenter button
 
-        const containerWidth = mapRef.current.offsetWidth
-        const containerHeight = mapRef.current.offsetHeight
+        // For very elongated routes (point-to-point), use asymmetric padding
+        // More padding on the short axis, less on the long axis
+        let calculatedPadding: number | { top: number; bottom: number; left: number; right: number }
 
-        // Base padding on route type and container size
-        let calculatedPadding: number
+        // Determine which axis is longer
+        const isHorizontalRoute = lngDiff > latDiff
+        isHorizontalRouteRef.current = isHorizontalRoute // Store for recenter button
+
         if (aspectRatio > 3) {
           // Long point-to-point race (like Boston Marathon)
-          // Use larger padding: 12-15% of smaller dimension
-          const minDimension = Math.min(containerWidth, containerHeight)
-          calculatedPadding = Math.max(100, Math.min(150, Math.round(minDimension * 0.15)))
+          // Use large padding on short axis, moderate on long axis
+          if (isHorizontalRoute) {
+            // Horizontal route: more padding top/bottom, less left/right
+            calculatedPadding = { top: 120, bottom: 120, left: 80, right: 80 }
+          } else {
+            // Vertical route: more padding left/right, less top/bottom
+            calculatedPadding = { top: 80, bottom: 80, left: 120, right: 120 }
+          }
         } else if (aspectRatio > 1.5) {
           // Medium point-to-point race
-          const minDimension = Math.min(containerWidth, containerHeight)
-          calculatedPadding = Math.max(90, Math.min(130, Math.round(minDimension * 0.12)))
+          if (isHorizontalRoute) {
+            calculatedPadding = { top: 100, bottom: 100, left: 70, right: 70 }
+          } else {
+            calculatedPadding = { top: 70, bottom: 70, left: 100, right: 100 }
+          }
         } else {
-          // Loop or near-square route
-          const minDimension = Math.min(containerWidth, containerHeight)
-          calculatedPadding = Math.max(80, Math.min(120, Math.round(minDimension * 0.1)))
+          // Loop or near-square route - use uniform padding
+          calculatedPadding = 80
         }
 
         // Initialize Mapbox map with custom 2D monochrome styles
@@ -787,7 +798,8 @@ export function RaceRouteMap({
             showAidStationsRef,
             aidStationMarkersRef,
             aidStations.length > 0,
-            routeAspectRatioRef
+            routeAspectRatioRef,
+            isHorizontalRouteRef
           )
 
           // Hide loading after map is fully loaded
@@ -1018,7 +1030,8 @@ function createCustomControls(
   showAidStationsRef: React.MutableRefObject<boolean>,
   aidStationMarkersRef: React.MutableRefObject<mapboxgl.Marker[]>,
   hasAidStations: boolean,
-  routeAspectRatioRef: React.MutableRefObject<number>
+  routeAspectRatioRef: React.MutableRefObject<number>,
+  isHorizontalRouteRef: React.MutableRefObject<boolean>
 ) {
   // Create fullscreen button (top-right)
   const fullscreenButton = document.createElement('button')
@@ -1108,24 +1121,28 @@ function createCustomControls(
     recenterButton.style.backgroundColor = isDark ? '#2d2d2d' : 'white'
   })
   recenterButton.addEventListener('click', () => {
-    // Get current container dimensions
-    const container = map.getContainer()
-    const containerWidth = container.offsetWidth
-    const containerHeight = container.offsetHeight
-    const minDimension = Math.min(containerWidth, containerHeight)
-
     // Calculate padding based on route aspect ratio (same as initial load)
     const aspectRatio = routeAspectRatioRef.current
-    let padding: number
+    const isHorizontalRoute = isHorizontalRouteRef.current
+    let padding: number | { top: number; bottom: number; left: number; right: number }
+
     if (aspectRatio > 3) {
       // Long point-to-point race (like Boston Marathon)
-      padding = Math.max(100, Math.min(150, Math.round(minDimension * 0.15)))
+      if (isHorizontalRoute) {
+        padding = { top: 120, bottom: 120, left: 80, right: 80 }
+      } else {
+        padding = { top: 80, bottom: 80, left: 120, right: 120 }
+      }
     } else if (aspectRatio > 1.5) {
       // Medium point-to-point race
-      padding = Math.max(90, Math.min(130, Math.round(minDimension * 0.12)))
+      if (isHorizontalRoute) {
+        padding = { top: 100, bottom: 100, left: 70, right: 70 }
+      } else {
+        padding = { top: 70, bottom: 70, left: 100, right: 100 }
+      }
     } else {
       // Loop or near-square route
-      padding = Math.max(80, Math.min(120, Math.round(minDimension * 0.1)))
+      padding = 80
     }
 
     // Force map to resize first in case container changed
