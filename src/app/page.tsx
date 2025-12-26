@@ -258,10 +258,8 @@ async function DevelopmentHomePage() {
   return (
     <DarkModeProvider>
       <div className="min-h-screen bg-white dark:bg-[#0c0c0d] transition-colors duration-300">
-        {/* Main bordered content wrapper */}
-        <div className="main-bordered">
-          {/* Featured Post and Breaking News Section */}
-          {(featuredPost || breakingNews.length > 0) && (
+        {/* Featured Post and Breaking News Section */}
+        {(featuredPost || breakingNews.length > 0) && (
           <section className="py-12 bg-white dark:bg-[#0c0c0d] transition-colors duration-300">
             <div className="w-[95%] mx-auto px-2 sm:px-3">
               <div className="grid grid-cols-1 gap-6 md:gap-4 lg:grid-cols-4">
@@ -745,8 +743,6 @@ async function DevelopmentHomePage() {
         {/* Write For Us Section */}
         <WriteForUs />
 
-        </div>
-        {/* End main-bordered */}
       </div>
     </DarkModeProvider>
   )

@@ -25,10 +25,10 @@ export default function LayoutContent({ children, navbar, footer }: LayoutConten
   }
 
   return (
-    <>
+    <div className="main-bordered">
       {navbar}
       <main className="flex-grow">{children}</main>
       {!isCalendarPage && footer}
-    </>
+    </div>
   )
 }
