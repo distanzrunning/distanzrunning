@@ -508,17 +508,22 @@ export function ElevationChart({
                 </div>
               </div>
             </div>
-            {/* Blue dot marker at hover position */}
+            {/* Blue dot marker at hover position on elevation line */}
             <div
               style={{
                 position: 'absolute',
                 left: `${tooltipPosition.x}px`,
                 top: `${(() => {
-                  // Calculate Y position based on elevation
+                  // Calculate Y position to match Recharts rendering
+                  // Chart dimensions and margins
                   const chartHeight = 220
-                  const chartTopMargin = 10
-                  const chartBottomMargin = 0
-                  const plotHeight = chartHeight - chartTopMargin - chartBottomMargin
+                  const chartMargins = { top: 10, right: 10, left: 0, bottom: 0 }
+
+                  // Account for X-axis labels at bottom (approximately 30px)
+                  const xAxisHeight = 30
+
+                  // Calculate actual plot area height
+                  const plotHeight = chartHeight - chartMargins.top - chartMargins.bottom - xAxisHeight
 
                   const minElev = elevationDomain[0]
                   const maxElev = elevationDomain[1]
@@ -526,7 +531,7 @@ export function ElevationChart({
 
                   // Calculate relative Y position (0 at top, 1 at bottom)
                   const relativeY = 1 - ((hoverElevation - minElev) / elevRange)
-                  const yPos = chartTopMargin + (relativeY * plotHeight)
+                  const yPos = chartMargins.top + (relativeY * plotHeight)
 
                   return yPos
                 })()}px`,
