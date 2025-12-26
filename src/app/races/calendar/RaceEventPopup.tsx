@@ -394,14 +394,14 @@ export function RaceEventPopup({
 
           {/* Key Details Card */}
           <div className="bg-white dark:bg-neutral-900 rounded-xl shadow-sm border border-neutral-100 dark:border-neutral-800 p-5 flex-shrink-0">
-            <div className="flex items-center justify-between mb-3">
-              <h4 className="font-body text-sm font-medium text-neutral-600 dark:text-neutral-400">Key Details</h4>
+            <div className="flex items-center justify-between mb-4">
+              <h4 className="font-body text-sm font-semibold text-neutral-700 dark:text-neutral-300">Key Details</h4>
 
               {/* Unit Toggle */}
               <div className="relative group">
                 <button
                   onClick={() => onMapUseMetricChange(!mapUseMetric)}
-                  className="flex items-center justify-center w-8 h-8 rounded-lg transition-colors bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700"
+                  className="flex items-center justify-center w-8 h-8 rounded-lg transition-all bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 hover:scale-105 active:scale-95"
                   aria-label="Toggle units"
                 >
                   <Settings2 className="w-4 h-4" />
@@ -415,9 +415,9 @@ export function RaceEventPopup({
             </div>
             <div className="space-y-3">
               <div className="grid grid-cols-3 gap-3">
-                <div className="flex items-center gap-3">
-                  <div className="flex items-center justify-center flex-shrink-0 bg-neutral-100 dark:bg-neutral-800 rounded-lg w-10 h-10">
-                    <Route className="w-4 h-4 text-neutral-600 dark:text-neutral-400" />
+                <div className="flex items-center gap-3 p-3 rounded-lg bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-100 dark:border-neutral-800 transition-all duration-200 hover:shadow-md hover:scale-[1.02] hover:border-neutral-200 dark:hover:border-neutral-700 cursor-default group">
+                  <div className="flex items-center justify-center flex-shrink-0 bg-electric-pink/10 dark:bg-electric-pink/20 rounded-lg w-10 h-10 group-hover:bg-electric-pink/20 dark:group-hover:bg-electric-pink/30 transition-colors">
+                    <Route className="w-4 h-4 text-electric-pink" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-body text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Surface</p>
@@ -426,9 +426,9 @@ export function RaceEventPopup({
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-3">
-                  <div className="flex items-center justify-center flex-shrink-0 bg-neutral-100 dark:bg-neutral-800 rounded-lg w-10 h-10">
-                    <Wallet className="w-4 h-4 text-neutral-600 dark:text-neutral-400" />
+                <div className="flex items-center gap-3 p-3 rounded-lg bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-100 dark:border-neutral-800 transition-all duration-200 hover:shadow-md hover:scale-[1.02] hover:border-neutral-200 dark:hover:border-neutral-700 cursor-default group">
+                  <div className="flex items-center justify-center flex-shrink-0 bg-volt-green/10 dark:bg-volt-green/20 rounded-lg w-10 h-10 group-hover:bg-volt-green/20 dark:group-hover:bg-volt-green/30 transition-colors">
+                    <Wallet className="w-4 h-4 text-volt-green" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-body text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Entry Price</p>
@@ -441,9 +441,9 @@ export function RaceEventPopup({
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-3">
-                  <div className="flex items-center justify-center flex-shrink-0 bg-neutral-100 dark:bg-neutral-800 rounded-lg w-10 h-10">
-                    <Users className="w-4 h-4 text-neutral-600 dark:text-neutral-400" />
+                <div className="flex items-center gap-3 p-3 rounded-lg bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-100 dark:border-neutral-800 transition-all duration-200 hover:shadow-md hover:scale-[1.02] hover:border-neutral-200 dark:hover:border-neutral-700 cursor-default group">
+                  <div className="flex items-center justify-center flex-shrink-0 bg-pace-purple/10 dark:bg-pace-purple/20 rounded-lg w-10 h-10 group-hover:bg-pace-purple/20 dark:group-hover:bg-pace-purple/30 transition-colors">
+                    <Users className="w-4 h-4 text-pace-purple" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-body text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Finishers</p>
@@ -455,9 +455,9 @@ export function RaceEventPopup({
               </div>
 
               <div className="grid grid-cols-3 gap-3">
-                <div className="flex items-center gap-3">
-                  <div className="flex items-center justify-center flex-shrink-0 bg-neutral-100 dark:bg-neutral-800 rounded-lg w-10 h-10">
-                    <ArrowUpRight className="w-4 h-4 text-neutral-600 dark:text-neutral-400" />
+                <div className="flex items-center gap-3 p-3 rounded-lg bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-100 dark:border-neutral-800 transition-all duration-200 hover:shadow-md hover:scale-[1.02] hover:border-neutral-200 dark:hover:border-neutral-700 cursor-default group">
+                  <div className="flex items-center justify-center flex-shrink-0 bg-trail-brown/10 dark:bg-trail-brown/20 rounded-lg w-10 h-10 group-hover:bg-trail-brown/20 dark:group-hover:bg-trail-brown/30 transition-colors">
+                    <ArrowUpRight className="w-4 h-4 text-trail-brown" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-body text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Elev. Gain</p>
@@ -470,9 +470,9 @@ export function RaceEventPopup({
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-3">
-                  <div className="flex items-center justify-center flex-shrink-0 bg-neutral-100 dark:bg-neutral-800 rounded-lg w-10 h-10">
-                    <ArrowDownRight className="w-4 h-4 text-neutral-600 dark:text-neutral-400" />
+                <div className="flex items-center gap-3 p-3 rounded-lg bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-100 dark:border-neutral-800 transition-all duration-200 hover:shadow-md hover:scale-[1.02] hover:border-neutral-200 dark:hover:border-neutral-700 cursor-default group">
+                  <div className="flex items-center justify-center flex-shrink-0 bg-trail-brown/10 dark:bg-trail-brown/20 rounded-lg w-10 h-10 group-hover:bg-trail-brown/20 dark:group-hover:bg-trail-brown/30 transition-colors">
+                    <ArrowDownRight className="w-4 h-4 text-trail-brown" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-body text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Elev. Loss</p>
@@ -485,9 +485,9 @@ export function RaceEventPopup({
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-3">
-                  <div className="flex items-center justify-center flex-shrink-0 bg-neutral-100 dark:bg-neutral-800 rounded-lg w-10 h-10">
-                    <Mountain className="w-4 h-4 text-neutral-600 dark:text-neutral-400" />
+                <div className="flex items-center gap-3 p-3 rounded-lg bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-100 dark:border-neutral-800 transition-all duration-200 hover:shadow-md hover:scale-[1.02] hover:border-neutral-200 dark:hover:border-neutral-700 cursor-default group">
+                  <div className="flex items-center justify-center flex-shrink-0 bg-signal-orange/10 dark:bg-signal-orange/20 rounded-lg w-10 h-10 group-hover:bg-signal-orange/20 dark:group-hover:bg-signal-orange/30 transition-colors">
+                    <Mountain className="w-4 h-4 text-signal-orange" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-body text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Profile</p>
@@ -499,9 +499,9 @@ export function RaceEventPopup({
               </div>
 
               <div className="grid grid-cols-3 gap-3">
-                <div className="flex items-center gap-3">
-                  <div className="flex items-center justify-center flex-shrink-0 bg-neutral-100 dark:bg-neutral-800 rounded-lg w-10 h-10">
-                    <ThermometerSun className="w-4 h-4 text-neutral-600 dark:text-neutral-400" />
+                <div className="flex items-center gap-3 p-3 rounded-lg bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-100 dark:border-neutral-800 transition-all duration-200 hover:shadow-md hover:scale-[1.02] hover:border-neutral-200 dark:hover:border-neutral-700 cursor-default group">
+                  <div className="flex items-center justify-center flex-shrink-0 bg-signal-orange/10 dark:bg-signal-orange/20 rounded-lg w-10 h-10 group-hover:bg-signal-orange/20 dark:group-hover:bg-signal-orange/30 transition-colors">
+                    <ThermometerSun className="w-4 h-4 text-signal-orange" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-body text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Avg. Temp</p>
@@ -514,21 +514,18 @@ export function RaceEventPopup({
                     </p>
                   </div>
                 </div>
-                <div className="relative flex items-center gap-3">
-                  <div
-                    className="flex items-center gap-3 cursor-help flex-1"
-                    onMouseEnter={() => setShowMensTooltip(true)}
-                    onMouseLeave={() => setShowMensTooltip(false)}
-                  >
-                    <div className="flex items-center justify-center flex-shrink-0 bg-neutral-100 dark:bg-neutral-800 rounded-lg w-10 h-10">
-                      <Medal className="w-4 h-4 text-neutral-600 dark:text-neutral-400" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="font-body text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Men's CR</p>
-                      <p className="font-mono text-sm font-medium text-neutral-900 dark:text-white truncate">
-                        {race.mensCourseRecord || 'N/A'}
-                      </p>
-                    </div>
+                <div className="relative flex items-center gap-3 p-3 rounded-lg bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-100 dark:border-neutral-800 transition-all duration-200 hover:shadow-md hover:scale-[1.02] hover:border-neutral-200 dark:hover:border-neutral-700 cursor-help group"
+                  onMouseEnter={() => setShowMensTooltip(true)}
+                  onMouseLeave={() => setShowMensTooltip(false)}
+                >
+                  <div className="flex items-center justify-center flex-shrink-0 bg-track-red/10 dark:bg-track-red/20 rounded-lg w-10 h-10 group-hover:bg-track-red/20 dark:group-hover:bg-track-red/30 transition-colors">
+                    <Medal className="w-4 h-4 text-track-red" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-body text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Men's CR</p>
+                    <p className="font-mono text-sm font-medium text-neutral-900 dark:text-white truncate">
+                      {race.mensCourseRecord || 'N/A'}
+                    </p>
                   </div>
                   {/* Tooltip */}
                   {showMensTooltip && race.mensCourseRecordAthlete && race.mensCourseRecordCountry && (
@@ -544,21 +541,18 @@ export function RaceEventPopup({
                     </div>
                   )}
                 </div>
-                <div className="relative flex items-center gap-3">
-                  <div
-                    className="flex items-center gap-3 cursor-help flex-1"
-                    onMouseEnter={() => setShowWomensTooltip(true)}
-                    onMouseLeave={() => setShowWomensTooltip(false)}
-                  >
-                    <div className="flex items-center justify-center flex-shrink-0 bg-neutral-100 dark:bg-neutral-800 rounded-lg w-10 h-10">
-                      <Medal className="w-4 h-4 text-neutral-600 dark:text-neutral-400" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="font-body text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Women's CR</p>
-                      <p className="font-mono text-sm font-medium text-neutral-900 dark:text-white truncate">
-                        {race.womensCourseRecord || 'N/A'}
-                      </p>
-                    </div>
+                <div className="relative flex items-center gap-3 p-3 rounded-lg bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-100 dark:border-neutral-800 transition-all duration-200 hover:shadow-md hover:scale-[1.02] hover:border-neutral-200 dark:hover:border-neutral-700 cursor-help group"
+                  onMouseEnter={() => setShowWomensTooltip(true)}
+                  onMouseLeave={() => setShowWomensTooltip(false)}
+                >
+                  <div className="flex items-center justify-center flex-shrink-0 bg-track-red/10 dark:bg-track-red/20 rounded-lg w-10 h-10 group-hover:bg-track-red/20 dark:group-hover:bg-track-red/30 transition-colors">
+                    <Medal className="w-4 h-4 text-track-red" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-body text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Women's CR</p>
+                    <p className="font-mono text-sm font-medium text-neutral-900 dark:text-white truncate">
+                      {race.womensCourseRecord || 'N/A'}
+                    </p>
                   </div>
                   {/* Tooltip */}
                   {showWomensTooltip && race.womensCourseRecordAthlete && race.womensCourseRecordCountry && (
