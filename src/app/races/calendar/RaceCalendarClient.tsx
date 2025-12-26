@@ -36,9 +36,16 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
   const monthDropdownRef = useRef<HTMLDivElement>(null)
   const yearDropdownRef = useRef<HTMLDivElement>(null)
 
-  // Convert races to FullCalendar events
+  // Convert races to FullCalendar events (only current and future races)
   const events = useMemo<CalendarEvent[]>(() => {
+    const today = new Date()
+    today.setHours(0, 0, 0, 0) // Set to start of day for accurate comparison
+
     return races
+      .filter((race) => {
+        const raceDate = new Date(race.eventDate)
+        return raceDate >= today // Only include current and future races
+      })
       .map((race) => ({
         id: race._id,
         title: race.title,
@@ -202,7 +209,21 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
 
   const currentMonth = currentDate.getMonth()
   const currentYear = currentDate.getFullYear()
-  const years = Array.from({ length: 11 }, (_, i) => currentYear - 5 + i)
+
+  // Get today's date for filtering
+  const today = new Date()
+  const todayYear = today.getFullYear()
+  const todayMonth = today.getMonth()
+
+  // Generate years array: current year + next 10 years
+  const years = Array.from({ length: 11 }, (_, i) => todayYear + i)
+
+  // Filter months: if viewing current year, only show current month onwards
+  const availableMonths = months.map((month, index) => ({
+    name: month,
+    index,
+    isAvailable: currentYear > todayYear || (currentYear === todayYear && index >= todayMonth)
+  }))
 
   const handleMonthClick = (monthIndex: number) => {
     const newDate = new Date(currentDate)
@@ -330,27 +351,30 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                   <div className="relative" ref={monthDropdownRef}>
                     <button
                       onClick={() => setIsMonthDropdownOpen(!isMonthDropdownOpen)}
-                      className="flex items-center gap-2 px-4 py-2 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white hover:border-neutral-400 dark:hover:border-neutral-600 transition-colors text-sm font-medium whitespace-nowrap"
+                      className="flex items-center gap-2 px-4 py-2 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white hover:border-neutral-400 dark:hover:border-neutral-600 transition-colors text-sm font-medium w-[140px] justify-between"
                     >
-                      {months[currentMonth]}
-                      <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <span className="truncate">{months[currentMonth]}</span>
+                      <svg className="h-4 w-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                       </svg>
                     </button>
 
                     {isMonthDropdownOpen && (
-                      <div className="absolute top-full mt-2 right-0 z-40 bg-white dark:bg-neutral-900 rounded-lg shadow-xl border border-neutral-200 dark:border-neutral-800 p-2 min-w-[160px] max-h-[300px] overflow-y-auto">
-                        {months.map((month, index) => (
+                      <div className="absolute top-full mt-2 right-0 z-40 bg-white dark:bg-neutral-900 rounded-lg shadow-xl border border-neutral-200 dark:border-neutral-800 p-2 w-[160px] max-h-[300px] overflow-y-auto">
+                        {availableMonths.map((month) => (
                           <button
-                            key={month}
-                            onClick={() => handleMonthClick(index)}
+                            key={month.name}
+                            onClick={() => handleMonthClick(month.index)}
+                            disabled={!month.isAvailable}
                             className={`w-full text-left px-3 py-2 rounded-md text-sm transition-colors ${
-                              currentMonth === index
+                              currentMonth === month.index
                                 ? 'bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 font-medium'
-                                : 'text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800'
+                                : month.isAvailable
+                                ? 'text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800'
+                                : 'text-neutral-400 dark:text-neutral-600 cursor-not-allowed opacity-50'
                             }`}
                           >
-                            {month}
+                            {month.name}
                           </button>
                         ))}
                       </div>
