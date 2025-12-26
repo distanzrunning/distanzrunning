@@ -344,7 +344,7 @@ export function RaceRouteMap({
         const containerWidth = mapRef.current.offsetWidth
         const containerHeight = mapRef.current.offsetHeight
         const minDimension = Math.min(containerWidth, containerHeight)
-        const calculatedPadding = Math.max(60, Math.min(100, Math.round(minDimension * 0.08)))
+        const calculatedPadding = Math.max(80, Math.min(120, Math.round(minDimension * 0.1)))
 
         // Initialize Mapbox map with custom 2D monochrome styles
         const map = new mapboxgl.Map({
@@ -1092,9 +1092,9 @@ function createCustomControls(
     const containerWidth = container.offsetWidth
     const containerHeight = container.offsetHeight
 
-    // Use 5-8% of the smaller dimension as padding, with min/max constraints
+    // Use 10% of the smaller dimension as padding, with min/max constraints
     const minDimension = Math.min(containerWidth, containerHeight)
-    const padding = Math.max(20, Math.min(60, Math.round(minDimension * 0.06)))
+    const padding = Math.max(80, Math.min(120, Math.round(minDimension * 0.1)))
 
     // Force map to resize first in case container changed
     map.resize()
