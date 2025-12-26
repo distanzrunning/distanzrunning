@@ -339,6 +339,13 @@ export function RaceRouteMap({
         // Set minZoom based on route size - prevent zooming out too far
         const minZoom = Math.max(10, 14 - Math.log2(maxDiff * 100))
 
+        // Calculate responsive padding based on container size
+        // Use percentage of container size to ensure markers aren't cut off
+        const containerWidth = mapRef.current.offsetWidth
+        const containerHeight = mapRef.current.offsetHeight
+        const minDimension = Math.min(containerWidth, containerHeight)
+        const calculatedPadding = Math.max(60, Math.min(100, Math.round(minDimension * 0.08)))
+
         // Initialize Mapbox map with custom 2D monochrome styles
         const map = new mapboxgl.Map({
           container: mapRef.current,
@@ -348,7 +355,7 @@ export function RaceRouteMap({
             ? 'mapbox://styles/distanzrunning/cmj5rnjj3000d01pg8ngl0ld6'  // Custom Charcoal Dark
             : 'mapbox://styles/distanzrunning/cmj7ou5ik001c01sbcwkog5ff', // Custom Light with Grey Roads
           bounds,
-          fitBoundsOptions: { padding: 60 }, // Increased padding to prevent marker cut-off on point-to-point races
+          fitBoundsOptions: { padding: calculatedPadding }, // Responsive padding prevents marker cut-off
           attributionControl: false,
           minZoom: minZoom,
           maxZoom: 18,
