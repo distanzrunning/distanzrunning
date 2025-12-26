@@ -1373,48 +1373,19 @@
   position: relative;
   width: 100%;
   margin: 0 auto;
+  background-color: rgb(var(--color-surface));
 }
 
 /* Responsive width - 100% on mobile, 90% on large screens */
 @media (min-width: 1024px) {
   .main-bordered {
     width: 90%;
-  }
-}
-
-/* Add vertical separator lines on both sides */
-.main-bordered::before,
-.main-bordered::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 1px;
-  background-color: rgb(var(--color-borderNeutral));
-  z-index: 1;
-  pointer-events: none;
-}
-
-/* Left border */
-.main-bordered::before {
-  left: 0;
-}
-
-/* Right border */
-.main-bordered::after {
-  right: 0;
-}
-
-/* Hide borders on smaller screens (100% width = no visible borders) */
-@media (max-width: 1023px) {
-  .main-bordered::before,
-  .main-bordered::after {
-    display: none;
+    border-left: 1px solid rgb(var(--color-borderNeutral));
+    border-right: 1px solid rgb(var(--color-borderNeutral));
   }
 }
 
 /* Dark mode support */
-.dark .main-bordered::before,
-.dark .main-bordered::after {
-  background-color: rgb(var(--color-borderNeutral));
+.dark .main-bordered {
+  background-color: rgb(var(--color-canvas));
 }
