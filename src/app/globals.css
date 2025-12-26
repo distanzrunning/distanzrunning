@@ -1374,6 +1374,7 @@
   width: 100%;
   margin: 0 auto;
   background-color: rgb(var(--color-surface));
+  overflow: visible;
 }
 
 /* Responsive width - 100% on mobile, 90% on large screens */
