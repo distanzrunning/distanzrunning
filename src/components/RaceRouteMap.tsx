@@ -332,16 +332,8 @@ export function RaceRouteMap({
           Math.max(...lats)
         ]
 
-        // Calculate initial zoom from bounds to set min zoom limit
-        const lngDiff = Math.max(...lngs) - Math.min(...lngs)
-        const latDiff = Math.max(...lats) - Math.min(...lats)
-        const maxDiff = Math.max(lngDiff, latDiff)
-        // Set minZoom based on route size - prevent zooming out too far
-        const minZoom = Math.max(10, 14 - Math.log2(maxDiff * 100))
-
         // Use simple fixed padding - Mapbox fitBounds handles zoom calculation automatically
-        // For smaller popup containers, we need more padding than the large MarathonShowcase
-        const calculatedPadding = 150 // Fixed padding in pixels
+        const calculatedPadding = 100 // Fixed padding in pixels
 
         // Initialize Mapbox map with custom 2D monochrome styles
         const map = new mapboxgl.Map({
@@ -354,7 +346,7 @@ export function RaceRouteMap({
           bounds,
           fitBoundsOptions: { padding: calculatedPadding }, // Responsive padding prevents marker cut-off
           attributionControl: false,
-          minZoom: minZoom,
+          // No minZoom constraint - allow map to zoom out as far as needed to fit route
           maxZoom: 18,
           // Disable rotation and pitch for flat 2D view
           pitchWithRotate: false,
