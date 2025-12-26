@@ -352,26 +352,46 @@ export function RaceRouteMap({
 
         let calculatedPadding: number | { top: number; bottom: number; left: number; right: number }
 
+        // For point-to-point races (high aspect ratio difference), we need more aggressive padding
+        // to prevent start/finish markers from being cut off
+        const isPointToPoint = Math.max(routeAspectRatio, 1/routeAspectRatio) > 3
+
         // If route is wider than container aspect ratio, it will hit left/right edges first
         // If route is taller than container aspect ratio, it will hit top/bottom edges first
         if (routeAspectRatio > containerAspectRatio) {
-          // Route is wider - will hit left/right edges, need more top/bottom padding
-          // The wider the route relative to container, the more top/bottom padding we need
+          // Route is wider - will hit left/right edges, need more left/right padding
+          // For point-to-point races, use higher padding to prevent marker cut-off
           const excessRatio = routeAspectRatio / containerAspectRatio
-          const topBottomPadding = Math.min(150, Math.max(60, Math.round(containerHeight * 0.15 * excessRatio)))
+
+          // Calculate left/right padding based on container width - more aggressive for point-to-point
+          const leftRightPadding = isPointToPoint
+            ? Math.min(200, Math.max(80, Math.round(containerWidth * 0.12 * excessRatio)))
+            : Math.min(150, Math.max(60, Math.round(containerWidth * 0.08)))
+
+          // Top/bottom padding can be smaller since route is horizontal
+          const topBottomPadding = Math.min(100, Math.max(40, Math.round(containerHeight * 0.08)))
+
           calculatedPadding = {
             top: topBottomPadding,
             bottom: topBottomPadding,
-            left: 60,
-            right: 60
+            left: leftRightPadding,
+            right: leftRightPadding
           }
         } else {
-          // Route is taller - will hit top/bottom edges, need more left/right padding
+          // Route is taller - will hit top/bottom edges, need more top/bottom padding
           const excessRatio = containerAspectRatio / routeAspectRatio
-          const leftRightPadding = Math.min(150, Math.max(60, Math.round(containerWidth * 0.15 * excessRatio)))
+
+          // Calculate top/bottom padding based on container height - more aggressive for point-to-point
+          const topBottomPadding = isPointToPoint
+            ? Math.min(200, Math.max(80, Math.round(containerHeight * 0.12 * excessRatio)))
+            : Math.min(150, Math.max(60, Math.round(containerHeight * 0.08)))
+
+          // Left/right padding can be smaller since route is vertical
+          const leftRightPadding = Math.min(100, Math.max(40, Math.round(containerWidth * 0.08)))
+
           calculatedPadding = {
-            top: 60,
-            bottom: 60,
+            top: topBottomPadding,
+            bottom: topBottomPadding,
             left: leftRightPadding,
             right: leftRightPadding
           }
@@ -1136,23 +1156,38 @@ function createCustomControls(
     const containerAspectRatio = containerWidth / containerHeight
     let padding: number | { top: number; bottom: number; left: number; right: number }
 
+    // Check if this is a point-to-point race (same logic as initial load)
+    const isPointToPoint = Math.max(routeAspectRatio, 1/routeAspectRatio) > 3
+
     if (routeAspectRatio > containerAspectRatio) {
-      // Route is wider - need more top/bottom padding
+      // Route is wider - need more left/right padding
       const excessRatio = routeAspectRatio / containerAspectRatio
-      const topBottomPadding = Math.min(150, Math.max(60, Math.round(containerHeight * 0.15 * excessRatio)))
+
+      const leftRightPadding = isPointToPoint
+        ? Math.min(200, Math.max(80, Math.round(containerWidth * 0.12 * excessRatio)))
+        : Math.min(150, Math.max(60, Math.round(containerWidth * 0.08)))
+
+      const topBottomPadding = Math.min(100, Math.max(40, Math.round(containerHeight * 0.08)))
+
       padding = {
         top: topBottomPadding,
         bottom: topBottomPadding,
-        left: 60,
-        right: 60
+        left: leftRightPadding,
+        right: leftRightPadding
       }
     } else {
-      // Route is taller - need more left/right padding
+      // Route is taller - need more top/bottom padding
       const excessRatio = containerAspectRatio / routeAspectRatio
-      const leftRightPadding = Math.min(150, Math.max(60, Math.round(containerWidth * 0.15 * excessRatio)))
+
+      const topBottomPadding = isPointToPoint
+        ? Math.min(200, Math.max(80, Math.round(containerHeight * 0.12 * excessRatio)))
+        : Math.min(150, Math.max(60, Math.round(containerHeight * 0.08)))
+
+      const leftRightPadding = Math.min(100, Math.max(40, Math.round(containerWidth * 0.08)))
+
       padding = {
-        top: 60,
-        bottom: 60,
+        top: topBottomPadding,
+        bottom: topBottomPadding,
         left: leftRightPadding,
         right: leftRightPadding
       }
