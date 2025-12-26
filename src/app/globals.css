@@ -1363,3 +1363,57 @@
   margin: 0 !important;
   z-index: 50 !important;
 }
+
+/* =======================
+   Bordered Layout System (IEEE Spectrum-inspired)
+   ======================= */
+
+/* Main content wrapper with vertical borders */
+.main-bordered {
+  position: relative;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Add vertical separator lines on both sides */
+.main-bordered::before,
+.main-bordered::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background-color: rgb(var(--color-borderNeutral));
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Left border */
+.main-bordered::before {
+  left: 0;
+}
+
+/* Right border */
+.main-bordered::after {
+  right: 0;
+}
+
+/* Optional: Add horizontal separator at top */
+.main-bordered.with-top-border::before {
+  top: -1px;
+}
+
+/* Responsive: Hide borders on mobile */
+@media (max-width: 768px) {
+  .main-bordered::before,
+  .main-bordered::after {
+    display: none;
+  }
+}
+
+/* Dark mode support */
+.dark .main-bordered::before,
+.dark .main-bordered::after {
+  background-color: rgb(var(--color-borderNeutral));
+}
