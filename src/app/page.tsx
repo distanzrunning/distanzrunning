@@ -260,16 +260,16 @@ async function DevelopmentHomePage() {
       <div className="min-h-screen bg-white dark:bg-[#0c0c0d] transition-colors duration-300">
         {/* Featured Post and Breaking News Section */}
         {(featuredPost || breakingNews.length > 0) && (
-          <section className="py-6 bg-white dark:bg-[#0c0c0d] transition-colors duration-300">
-            <div className="w-[95%] mx-auto px-2 sm:px-3">
-              <div className="grid grid-cols-1 gap-6 md:gap-4 lg:grid-cols-12">
+          <section className="py-4 bg-white dark:bg-[#0c0c0d] transition-colors duration-300">
+            <div className="w-[95%] mx-auto">
+              <div className="grid grid-cols-1 gap-4 lg:grid-cols-12">
                 {/* Featured Post - Takes up 8 columns (66.67%) */}
                 {featuredPost && (
                   <div className="lg:col-span-8 lg:sticky lg:top-20 lg:self-start">
                     <div className="flex flex-col w-full">
                       <Link href={`/articles/post/${featuredPost.slug.current}`} className="group transition-opacity duration-200 hover:opacity-80">
                         {/* Featured & Category Tags */}
-                        <div className="flex items-center gap-2 mb-3 px-1">
+                        <div className="flex items-center gap-2 mb-2">
                           <span className="px-2 py-1 text-xs font-medium text-neutral-600 dark:text-neutral-400 border-l border-b border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:border-neutral-100 dark:hover:border-neutral-800 transition-colors">
                             Featured
                           </span>
@@ -281,23 +281,19 @@ async function DevelopmentHomePage() {
                         </div>
 
                         {/* Title */}
-                        <div className="px-1">
-                          <h3 className="text-3xl md:text-3xl lg:text-4xl font-headline font-semibold leading-tight text-neutral-900 dark:text-white line-clamp-3 md:line-clamp-3 mb-3">
-                            {featuredPost.title}
-                          </h3>
-                        </div>
+                        <h3 className="text-3xl md:text-3xl lg:text-4xl font-headline font-semibold leading-tight text-neutral-900 dark:text-white line-clamp-3 md:line-clamp-3 mb-2">
+                          {featuredPost.title}
+                        </h3>
 
                         {/* Excerpt */}
                         {featuredPost.excerpt && (
-                          <div className="px-1">
-                            <p className="text-base md:text-base text-neutral-600 dark:text-neutral-300 line-clamp-3 max-w-3xl lg:w-4/5 mb-4">
-                              {featuredPost.excerpt}
-                            </p>
-                          </div>
+                          <p className="text-base md:text-base text-neutral-600 dark:text-neutral-300 line-clamp-3 max-w-3xl lg:w-4/5 mb-3">
+                            {featuredPost.excerpt}
+                          </p>
                         )}
 
                         {/* Date & Reading Time */}
-                        <div className="flex items-center gap-1.5 text-xs text-neutral-500 dark:text-neutral-400 px-1 mb-4">
+                        <div className="flex items-center gap-1.5 text-xs text-neutral-500 dark:text-neutral-400 mb-3">
                           <span suppressHydrationWarning>
                             {format(new Date(featuredPost.publishedAt), 'd MMM yyyy')}
                           </span>
@@ -324,9 +320,9 @@ async function DevelopmentHomePage() {
 
                 {/* Breaking News - Takes up 4 columns (33.33%) */}
                 {breakingNews.length > 0 && (
-                  <div className="lg:col-span-4 flex flex-col gap-6 lg:border-l lg:border-neutral-200 lg:dark:border-neutral-800 lg:pl-6">
+                  <div className="lg:col-span-4 flex flex-col gap-4 lg:border-l lg:border-neutral-200 lg:dark:border-neutral-800 lg:pl-4">
                     {/* Header */}
-                    <div className="flex items-center justify-between gap-3 px-1">
+                    <div className="flex items-center justify-between gap-3">
                       <div className="inline-flex items-center px-3 py-1.5 bg-electric-pink/10 dark:bg-electric-pink/20 rounded-full">
                         <span className="text-electric-pink dark:text-electric-pink font-medium text-xs tracking-wide uppercase leading-none">
                           News
@@ -345,11 +341,11 @@ async function DevelopmentHomePage() {
                     </div>
 
                     {/* Articles */}
-                    <div className="flex flex-col gap-6">
+                    <div className="flex flex-col gap-4">
                       {breakingNews.map((post) => (
                         <div
                           key={post._id}
-                          className="group flex flex-col gap-3 relative before:absolute before:-bottom-3 before:left-0 before:right-0 before:h-px before:bg-neutral-200 dark:before:bg-neutral-800 last:before:hidden"
+                          className="group flex flex-col gap-2 relative before:absolute before:-bottom-2 before:left-0 before:right-0 before:h-px before:bg-neutral-200 dark:before:bg-neutral-800 last:before:hidden"
                         >
                           <Link
                             href={`/articles/post/${post.slug.current}`}
