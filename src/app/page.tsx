@@ -327,44 +327,25 @@ async function DevelopmentHomePage() {
 
                 {/* Breaking News - Takes up 4 columns (33.33%) */}
                 {breakingNews.length > 0 && (
-                  <div className="lg:col-span-4 flex flex-col gap-4 lg:border-l lg:border-neutral-200 lg:dark:border-neutral-800 lg:pl-4">
-                    {/* Header */}
-                    <div className="flex items-center justify-between gap-3">
-                      <div className="inline-flex items-center px-3 py-1.5 bg-electric-pink/10 dark:bg-electric-pink/20 rounded-full">
-                        <span className="text-electric-pink dark:text-electric-pink font-semibold text-xs tracking-wide uppercase leading-none">
-                          News
-                        </span>
-                      </div>
-                      {/* All Articles Button - Top Right */}
-                      <Link
-                        href="/articles"
-                        className="flex items-center gap-1.5 px-3 h-8 rounded-lg bg-transparent hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors"
-                      >
-                        <span className="font-body text-xs font-medium text-neutral-900 dark:text-white">All articles</span>
-                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                        </svg>
-                      </Link>
-                    </div>
-
+                  <div className="lg:col-span-4 flex flex-col lg:border-l lg:border-neutral-200 lg:dark:border-neutral-800 lg:pl-4">
                     {/* Articles */}
-                    <div className="flex flex-col gap-4">
+                    <div className="flex flex-col gap-5">
                       {breakingNews.map((post) => (
                         <div
                           key={post._id}
-                          className="group flex flex-row items-start gap-4 pb-4 border-b border-neutral-200 dark:border-neutral-800 last:border-b-0 last:pb-0"
+                          className="group flex flex-row items-start gap-3 pb-5 border-b border-neutral-200 dark:border-neutral-800 last:border-b-0 last:pb-0"
                         >
                           {/* Text Content - Left Side */}
-                          <div className="flex-1 flex flex-col gap-1.5">
+                          <div className="flex-1 flex flex-col gap-2">
                             {/* Tags - NEWS + Category */}
-                            <div className="flex items-center gap-2">
-                              <span className="px-2 py-1 text-xs font-medium uppercase text-neutral-600 dark:text-neutral-400 border-l border-b border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:border-neutral-100 dark:hover:border-neutral-800 transition-colors">
+                            <div className="flex items-center gap-2 mb-0.5">
+                              <span className="px-2 py-1 text-[10px] font-medium uppercase text-neutral-600 dark:text-neutral-400 border-l border-b border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:border-neutral-100 dark:hover:border-neutral-800 transition-colors">
                                 NEWS
                               </span>
                               {post.categoryName && (
                                 <Link
                                   href={`/articles/category/${post.categoryName.toLowerCase()}`}
-                                  className="px-2 py-1 text-xs font-medium uppercase text-electric-pink border-l border-b border-neutral-300 dark:border-neutral-600 hover:bg-electric-pink hover:text-white hover:border-electric-pink transition-colors"
+                                  className="px-2 py-1 text-[10px] font-medium uppercase text-electric-pink border-l border-b border-neutral-300 dark:border-neutral-600 hover:bg-electric-pink hover:text-white hover:border-electric-pink transition-colors"
                                 >
                                   {post.categoryName.toUpperCase()}
                                 </Link>
@@ -373,18 +354,18 @@ async function DevelopmentHomePage() {
 
                             {/* Title */}
                             <Link href={`/articles/post/${post.slug.current}`}>
-                              <h3 className="text-[15px] leading-snug font-semibold text-neutral-900 dark:text-white line-clamp-3 mb-0.5 hover:underline hover:decoration-electric-pink hover:decoration-1 hover:underline-offset-2">
+                              <h3 className="text-[16px] leading-tight font-bold text-neutral-900 dark:text-white line-clamp-3 hover:underline hover:decoration-electric-pink hover:decoration-1 hover:underline-offset-2">
                                 {post.title}
                               </h3>
                             </Link>
 
                             {/* Date and Read Time */}
-                            <div className="flex items-center gap-1.5 text-[11px] text-neutral-500 dark:text-neutral-400 uppercase">
+                            <div className="flex items-center gap-2 text-[11px] text-neutral-500 dark:text-neutral-400 mt-0.5">
                               <span suppressHydrationWarning>
-                                {format(new Date(post.publishedAt), 'd MMM yyyy').toUpperCase()}
+                                {format(new Date(post.publishedAt), 'd MMM yyyy')}
                               </span>
-                              <span>|</span>
-                              <span>5 MIN READ</span>
+                              <span className="text-[10px]">•</span>
+                              <span>4 min read</span>
                             </div>
                           </div>
 
@@ -406,6 +387,17 @@ async function DevelopmentHomePage() {
                         </div>
                       ))}
                     </div>
+
+                    {/* All Articles Button - Bottom Center */}
+                    <Link
+                      href="/articles"
+                      className="flex items-center justify-center gap-2 mt-4 py-2.5 px-4 rounded-lg bg-transparent hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors border border-neutral-200 dark:border-neutral-700"
+                    >
+                      <span className="font-body text-sm font-medium text-neutral-900 dark:text-white">All articles</span>
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </Link>
                   </div>
                 )}
               </div>
