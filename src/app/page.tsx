@@ -260,7 +260,7 @@ async function DevelopmentHomePage() {
       <div className="min-h-screen bg-white dark:bg-[#0c0c0d] transition-colors duration-300">
         {/* Featured Post and Breaking News Section */}
         {(featuredPost || breakingNews.length > 0) && (
-          <section className="py-12 bg-white dark:bg-[#0c0c0d] transition-colors duration-300">
+          <section className="py-6 bg-white dark:bg-[#0c0c0d] transition-colors duration-300">
             <div className="w-[95%] mx-auto px-2 sm:px-3">
               <div className="grid grid-cols-1 gap-6 md:gap-4 lg:grid-cols-12">
                 {/* Featured Post - Takes up 8 columns (66.67%) */}
@@ -268,6 +268,43 @@ async function DevelopmentHomePage() {
                   <div className="lg:col-span-8 lg:sticky lg:top-20 lg:self-start">
                     <div className="flex flex-col w-full">
                       <Link href={`/articles/post/${featuredPost.slug.current}`} className="group transition-opacity duration-200 hover:opacity-80">
+                        {/* Featured & Category Tags */}
+                        <div className="flex items-center gap-2 mb-3 px-1">
+                          <span className="px-2 py-1 text-xs font-medium text-neutral-600 dark:text-neutral-400 border-l border-b border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors">
+                            Featured
+                          </span>
+                          {featuredPost.categoryName && (
+                            <span className="px-2 py-1 text-xs font-medium text-electric-pink border-l border-b border-neutral-300 dark:border-neutral-600 hover:bg-electric-pink hover:text-white transition-colors">
+                              {featuredPost.categoryName}
+                            </span>
+                          )}
+                        </div>
+
+                        {/* Title */}
+                        <div className="px-1">
+                          <h3 className="text-3xl md:text-3xl lg:text-4xl font-headline font-semibold leading-tight text-neutral-900 dark:text-white line-clamp-3 md:line-clamp-3 mb-3">
+                            {featuredPost.title}
+                          </h3>
+                        </div>
+
+                        {/* Excerpt */}
+                        {featuredPost.excerpt && (
+                          <div className="px-1">
+                            <p className="text-base md:text-base text-neutral-600 dark:text-neutral-300 line-clamp-3 max-w-3xl lg:w-4/5 mb-4">
+                              {featuredPost.excerpt}
+                            </p>
+                          </div>
+                        )}
+
+                        {/* Date & Reading Time */}
+                        <div className="flex items-center gap-1.5 text-xs text-neutral-500 dark:text-neutral-400 px-1 mb-4">
+                          <span suppressHydrationWarning>
+                            {format(new Date(featuredPost.publishedAt), 'd MMM yyyy')}
+                          </span>
+                          <span>•</span>
+                          <span>5 min read</span>
+                        </div>
+
                         {/* Image */}
                         <div className="relative w-full overflow-hidden rounded-sm">
                           <div style={{ paddingBottom: '56.25%' }} className="relative">
@@ -279,50 +316,8 @@ async function DevelopmentHomePage() {
                               />
                             )}
                           </div>
-
-                          {/* Featured Pill - Overlaid on top left of image */}
-                          <div className="absolute top-4 left-4 md:top-6 md:left-6">
-                            <div className="flex items-center gap-2 rounded-full border border-white/30 backdrop-blur-md px-3 py-2 bg-white/10">
-                              <span className="text-sm text-white font-medium">
-                                Featured
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Title and Excerpt */}
-                        <div className="flex flex-col gap-2 px-1 mt-4 lg:mt-6">
-                          {/* Title - Using Playfair Display */}
-                          <h3 className="text-3xl md:text-3xl lg:text-4xl font-headline font-semibold leading-tight text-neutral-900 dark:text-white line-clamp-3 md:line-clamp-3 mb-3">
-                            {featuredPost.title}
-                          </h3>
-
-                          {/* Excerpt */}
-                          {featuredPost.excerpt && (
-                            <p className="text-base md:text-base text-neutral-600 dark:text-neutral-300 line-clamp-3 max-w-3xl lg:w-4/5 mb-4">
-                              {featuredPost.excerpt}
-                            </p>
-                          )}
                         </div>
                       </Link>
-
-                      {/* Tags and Date - Outside article link */}
-                      <div className="flex items-center gap-2 text-xs md:text-[10px] font-medium leading-[14px] text-gray-500 dark:text-gray-400 px-1">
-                        {/* Primary Category Tag - Linked */}
-                        {featuredPost.categoryName && (
-                          <Link
-                            href={`/articles/category/${featuredPost.categoryName.toLowerCase()}`}
-                            className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded-sm hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
-                          >
-                            {featuredPost.categoryName}
-                          </Link>
-                        )}
-                        {/* Secondary Tags - Expandable */}
-                        {featuredPost.tags && <ExpandableTags tags={featuredPost.tags} />}
-                        <span suppressHydrationWarning>
-                          {format(new Date(featuredPost.publishedAt), 'yyyy-MM-dd')}
-                        </span>
-                      </div>
                     </div>
                   </div>
                 )}
