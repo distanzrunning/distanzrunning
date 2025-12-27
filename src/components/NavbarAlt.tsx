@@ -613,18 +613,16 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
               </NavigationMenu.Indicator>
 
               <motion.div
-                className="perspective-[2000px] absolute left-0 right-0 w-full origin-top max-h-[600px]"
+                className="absolute left-0 right-0 w-full origin-top overflow-hidden"
                 initial={false}
                 animate={{
-                  scaleY: megaMenuShouldRender ? (megaMenuIsOpen ? 1 : 0) : 0
+                  height: megaMenuShouldRender ? (megaMenuIsOpen ? 'auto' : 0) : 0,
+                  opacity: megaMenuIsOpen ? 1 : 0
                 }}
                 transition={megaMenuIsOpen ? garageDoorOpenTransition : garageDoorCloseTransition}
                 style={{
                   top: '100%',
-                  pointerEvents: megaMenuIsInteractive ? 'auto' : 'none',
-                  transformOrigin: 'top',
-                  willChange: 'transform',
-                  overflow: 'visible'
+                  pointerEvents: megaMenuIsInteractive ? 'auto' : 'none'
                 }}
               >
                 <NavigationMenu.Viewport className="pointer-events-auto relative w-full h-[var(--radix-navigation-menu-viewport-height)] origin-top bg-white dark:bg-neutral-900 border-t border-b border-neutral-200 dark:border-neutral-800 shadow-[0_30px_60px_-40px_rgba(15,23,42,0.45)] transition-[height] duration-300 ease-out" />
