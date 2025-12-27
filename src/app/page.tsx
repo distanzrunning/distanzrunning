@@ -354,7 +354,7 @@ async function DevelopmentHomePage() {
 
                             {/* Title */}
                             <Link href={`/articles/post/${post.slug.current}`}>
-                              <h3 className="text-[16px] leading-tight font-bold text-neutral-900 dark:text-white line-clamp-3 hover:underline hover:decoration-electric-pink hover:decoration-1 hover:underline-offset-2">
+                              <h3 className="text-[18px] leading-tight font-bold text-neutral-900 dark:text-white line-clamp-3 hover:underline hover:decoration-electric-pink hover:decoration-1 hover:underline-offset-2">
                                 {post.title}
                               </h3>
                             </Link>
@@ -391,7 +391,7 @@ async function DevelopmentHomePage() {
                     {/* All Articles Button - Bottom Center */}
                     <Link
                       href="/articles"
-                      className="flex items-center justify-center gap-2 mt-4 py-2.5 px-4 rounded-lg bg-transparent hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors border border-neutral-200 dark:border-neutral-700"
+                      className="flex items-center justify-center gap-2 mt-4 mx-8 py-2.5 px-4 rounded-lg bg-transparent hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors border border-neutral-200 dark:border-neutral-700"
                     >
                       <span className="font-body text-sm font-medium text-neutral-900 dark:text-white">All articles</span>
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
