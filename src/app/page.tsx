@@ -260,7 +260,7 @@ async function DevelopmentHomePage() {
       <div className="min-h-screen bg-white dark:bg-[#0c0c0d] transition-colors duration-300">
         {/* Featured Post and Breaking News Section */}
         {(featuredPost || breakingNews.length > 0) && (
-          <section className="pt-6 pb-4 bg-white dark:bg-[#0c0c0d] transition-colors duration-300">
+          <section className="pb-4 bg-white dark:bg-[#0c0c0d] transition-colors duration-300">
             <div className="w-[95%] mx-auto">
               <div className="grid grid-cols-1 gap-4 lg:grid-cols-12">
                 {/* Featured Post - Takes up 8 columns (66.67%) */}
@@ -270,11 +270,11 @@ async function DevelopmentHomePage() {
                       <Link href={`/articles/post/${featuredPost.slug.current}`} className="group transition-opacity duration-200 hover:opacity-80">
                         {/* Featured & Category Tags */}
                         <div className="flex items-center gap-2 mb-2">
-                          <span className="px-2 py-1 text-xs font-medium text-neutral-600 dark:text-neutral-400 border-l border-b border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:border-neutral-100 dark:hover:border-neutral-800 transition-colors">
+                          <span className="px-2 py-1 text-xs font-medium uppercase text-neutral-600 dark:text-neutral-400 border-l border-b border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:border-neutral-100 dark:hover:border-neutral-800 transition-colors">
                             Featured
                           </span>
                           {featuredPost.categoryName && (
-                            <span className="px-2 py-1 text-xs font-medium text-electric-pink border-l border-b border-neutral-300 dark:border-neutral-600 hover:bg-electric-pink hover:text-white hover:border-electric-pink transition-colors">
+                            <span className="px-2 py-1 text-xs font-medium uppercase text-electric-pink border-l border-b border-neutral-300 dark:border-neutral-600 hover:bg-electric-pink hover:text-white hover:border-electric-pink transition-colors">
                               {featuredPost.categoryName}
                             </span>
                           )}
@@ -297,7 +297,7 @@ async function DevelopmentHomePage() {
                           <span suppressHydrationWarning>
                             {format(new Date(featuredPost.publishedAt), 'd MMM yyyy')}
                           </span>
-                          <span>•</span>
+                          <span>|</span>
                           <span>5 min read</span>
                         </div>
 
@@ -324,7 +324,7 @@ async function DevelopmentHomePage() {
                     {/* Header */}
                     <div className="flex items-center justify-between gap-3">
                       <div className="inline-flex items-center px-3 py-1.5 bg-electric-pink/10 dark:bg-electric-pink/20 rounded-full">
-                        <span className="text-electric-pink dark:text-electric-pink font-medium text-xs tracking-wide uppercase leading-none">
+                        <span className="text-electric-pink dark:text-electric-pink font-semibold text-xs tracking-wide uppercase leading-none">
                           News
                         </span>
                       </div>
@@ -354,7 +354,7 @@ async function DevelopmentHomePage() {
                             {/* Text Content - Left Side */}
                             <div className="flex-1 flex flex-col gap-1.5 order-1">
                               {/* Categories - Multiple linked sections */}
-                              <div className="flex items-center flex-wrap gap-1 text-[11px] font-medium leading-tight">
+                              <div className="flex items-center flex-wrap gap-1 text-[11px] font-medium leading-tight uppercase">
                                 {post.categoryName && (
                                   <Link
                                     href={`/articles/category/${post.categoryName.toLowerCase()}`}
@@ -381,7 +381,7 @@ async function DevelopmentHomePage() {
                                 <span suppressHydrationWarning>
                                   {format(new Date(post.publishedAt), 'd MMM yyyy')}
                                 </span>
-                                <span>•</span>
+                                <span>|</span>
                                 <span>5 min read</span>
                               </div>
                             </div>

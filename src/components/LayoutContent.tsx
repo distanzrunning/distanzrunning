@@ -27,7 +27,7 @@ export default function LayoutContent({ children, navbar, footer }: LayoutConten
   return (
     <div className="main-bordered min-h-screen flex flex-col">
       {navbar}
-      <main className="flex-grow">{children}</main>
+      <main className="flex-grow pt-6">{children}</main>
       {!isCalendarPage && footer}
     </div>
   )
