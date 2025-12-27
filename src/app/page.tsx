@@ -361,23 +361,32 @@ async function DevelopmentHomePage() {
                             className="flex flex-row items-start gap-4 transition-opacity duration-200 hover:opacity-80"
                           >
                             {/* Text Content - Left Side */}
-                            <div className="flex-1 flex flex-col gap-2 order-1">
-                              {/* Categories */}
-                              <div className="flex items-center gap-2 text-xs font-medium leading-tight">
+                            <div className="flex-1 flex flex-col gap-1.5 order-1">
+                              {/* Categories - Multiple linked sections */}
+                              <div className="flex items-center flex-wrap gap-1 text-[11px] font-medium leading-tight">
                                 {post.categoryName && (
-                                  <span className="text-neutral-600 dark:text-neutral-400">
+                                  <Link
+                                    href={`/articles/category/${post.categoryName.toLowerCase()}`}
+                                    className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors"
+                                  >
                                     {post.categoryName}
-                                  </span>
+                                  </Link>
                                 )}
+                                {post.tags && post.tags.slice(0, 2).map((tag, index) => (
+                                  <span key={index} className="flex items-center gap-1">
+                                    <span className="text-neutral-400">•</span>
+                                    <span className="text-neutral-600 dark:text-neutral-400">{tag}</span>
+                                  </span>
+                                ))}
                               </div>
 
                               {/* Title */}
-                              <h3 className="text-base font-semibold leading-tight text-neutral-900 dark:text-white line-clamp-3">
+                              <h3 className="text-[15px] leading-snug font-semibold text-neutral-900 dark:text-white line-clamp-3 mb-0.5">
                                 {post.title}
                               </h3>
 
                               {/* Date and Read Time */}
-                              <div className="flex items-center gap-2 text-xs text-neutral-500 dark:text-neutral-400">
+                              <div className="flex items-center gap-1.5 text-[11px] text-neutral-500 dark:text-neutral-400">
                                 <span suppressHydrationWarning>
                                   {format(new Date(post.publishedAt), 'd MMM yyyy')}
                                 </span>
