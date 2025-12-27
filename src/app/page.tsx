@@ -352,58 +352,55 @@ async function DevelopmentHomePage() {
                       {breakingNews.map((post) => (
                         <div
                           key={post._id}
-                          className="group flex flex-col gap-2 pb-4 border-b border-neutral-200 dark:border-neutral-800 last:border-b-0 last:pb-0"
+                          className="group flex flex-row items-start gap-4 pb-4 border-b border-neutral-200 dark:border-neutral-800 last:border-b-0 last:pb-0"
                         >
-                          <Link
-                            href={`/articles/post/${post.slug.current}`}
-                            className="flex flex-row items-start gap-4 transition-opacity duration-200 hover:opacity-80"
-                          >
-                            {/* Text Content - Left Side */}
-                            <div className="flex-1 flex flex-col gap-1.5 order-1">
-                              {/* Categories - Multiple linked sections */}
-                              <div className="flex items-center flex-wrap gap-1 text-[11px] font-medium leading-tight uppercase">
-                                {post.categoryName && (
-                                  <Link
-                                    href={`/articles/category/${post.categoryName.toLowerCase()}`}
-                                    className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors"
-                                  >
-                                    {post.categoryName}
-                                  </Link>
-                                )}
-                                {post.tags && post.tags.slice(0, 2).map((tag, index) => (
-                                  <span key={index} className="flex items-center gap-1">
-                                    <span className="text-neutral-400">•</span>
-                                    <span className="text-neutral-600 dark:text-neutral-400">{tag}</span>
-                                  </span>
-                                ))}
-                              </div>
-
-                              {/* Title */}
-                              <h3 className="text-[15px] leading-snug font-semibold text-neutral-900 dark:text-white line-clamp-3 mb-0.5">
-                                {post.title}
-                              </h3>
-
-                              {/* Date and Read Time */}
-                              <div className="flex items-center gap-1.5 text-[11px] text-neutral-500 dark:text-neutral-400 uppercase">
-                                <span suppressHydrationWarning>
-                                  {format(new Date(post.publishedAt), 'd MMM yyyy').toUpperCase()}
-                                </span>
-                                <span>|</span>
-                                <span>5 MIN READ</span>
-                              </div>
+                          {/* Text Content - Left Side */}
+                          <div className="flex-1 flex flex-col gap-1.5">
+                            {/* Tags - NEWS + Category */}
+                            <div className="flex items-center gap-2">
+                              <span className="px-2 py-1 text-xs font-medium uppercase text-neutral-600 dark:text-neutral-400 border-l border-b border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:border-neutral-100 dark:hover:border-neutral-800 transition-colors">
+                                NEWS
+                              </span>
+                              {post.categoryName && (
+                                <Link
+                                  href={`/articles/category/${post.categoryName.toLowerCase()}`}
+                                  className="px-2 py-1 text-xs font-medium uppercase text-electric-pink border-l border-b border-neutral-300 dark:border-neutral-600 hover:bg-electric-pink hover:text-white hover:border-electric-pink transition-colors"
+                                >
+                                  {post.categoryName.toUpperCase()}
+                                </Link>
+                              )}
                             </div>
 
-                            {/* Image - Right Side */}
-                            <div className="w-1/3 shrink-0 overflow-hidden rounded-sm order-2">
-                              <div style={{ paddingBottom: '66.67%' }} className="relative">
-                                {post.mainImage && (
-                                  <img
-                                    src={urlFor(post.mainImage).width(400).height(267).url()}
-                                    alt={post.title}
-                                    className="absolute inset-0 w-full h-full object-cover"
-                                  />
-                                )}
-                              </div>
+                            {/* Title */}
+                            <Link href={`/articles/post/${post.slug.current}`}>
+                              <h3 className="text-[15px] leading-snug font-semibold text-neutral-900 dark:text-white line-clamp-3 mb-0.5 hover:underline hover:decoration-electric-pink hover:decoration-1 hover:underline-offset-2">
+                                {post.title}
+                              </h3>
+                            </Link>
+
+                            {/* Date and Read Time */}
+                            <div className="flex items-center gap-1.5 text-[11px] text-neutral-500 dark:text-neutral-400 uppercase">
+                              <span suppressHydrationWarning>
+                                {format(new Date(post.publishedAt), 'd MMM yyyy').toUpperCase()}
+                              </span>
+                              <span>|</span>
+                              <span>5 MIN READ</span>
+                            </div>
+                          </div>
+
+                          {/* Image - Right Side */}
+                          <Link
+                            href={`/articles/post/${post.slug.current}`}
+                            className="w-1/3 shrink-0 overflow-hidden rounded-sm transition-opacity duration-200 hover:opacity-80"
+                          >
+                            <div style={{ paddingBottom: '66.67%' }} className="relative">
+                              {post.mainImage && (
+                                <img
+                                  src={urlFor(post.mainImage).width(400).height(267).url()}
+                                  alt={post.title}
+                                  className="absolute inset-0 w-full h-full object-cover"
+                                />
+                              )}
                             </div>
                           </Link>
                         </div>
