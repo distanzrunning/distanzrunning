@@ -260,7 +260,7 @@ async function DevelopmentHomePage() {
       <div className="min-h-screen bg-white dark:bg-[#0c0c0d] transition-colors duration-300">
         {/* Featured Post and Breaking News Section */}
         {(featuredPost || breakingNews.length > 0) && (
-          <section className="py-4 bg-white dark:bg-[#0c0c0d] transition-colors duration-300">
+          <section className="pt-2 pb-4 bg-white dark:bg-[#0c0c0d] transition-colors duration-300">
             <div className="w-[95%] mx-auto">
               <div className="grid grid-cols-1 gap-4 lg:grid-cols-12">
                 {/* Featured Post - Takes up 8 columns (66.67%) */}
