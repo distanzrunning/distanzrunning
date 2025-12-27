@@ -373,9 +373,9 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                   </NavigationMenu.Trigger>
                   <NavigationMenu.Content className="mega-menu-content">
                     <div className="mx-auto max-w-6xl px-8 md:px-12 lg:px-16 py-8 lg:py-10">
-                      <div className="grid grid-cols-1 gap-4 lg:grid-cols-5 md:gap-6 lg:gap-8">
-                          {/* Column 1: Description - 1/5 */}
-                          <div className="lg:col-span-1 md:border-r md:border-neutral-200/70 md:pr-5 dark:md:border-neutral-800/70">
+                      <div className="grid grid-cols-1 gap-4 lg:grid-cols-10 md:gap-6 lg:gap-8">
+                          {/* Column 1: Description - 3/10 */}
+                          <div className="lg:col-span-3 md:border-r md:border-neutral-200/70 md:pr-5 dark:md:border-neutral-800/70">
                             <h3 className="font-headline text-2xl font-bold text-neutral-900 dark:text-white mb-3">
                               Gear
                             </h3>
@@ -384,8 +384,8 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                             </p>
                           </div>
 
-                          {/* Column 2: Category Links - 2/5 */}
-                          <div className="lg:col-span-2 flex flex-col gap-0.5 md:px-2">
+                          {/* Column 2: Category Links - 3/10 */}
+                          <div className="lg:col-span-3 flex flex-col gap-0.5 md:px-2">
                             <Link
                               href="/gear/category/race-day-shoes"
                               className="flex items-center gap-3 px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-colors"
@@ -458,8 +458,8 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                             </Link>
                           </div>
 
-                          {/* Column 3: Featured Article - 2/5 */}
-                          <div className="lg:col-span-2 md:pl-3">
+                          {/* Column 3: Featured Article - 4/10 */}
+                          <div className="lg:col-span-4 md:pl-3">
                             {featuredGear ? (
                               <Link
                                 href={`/gear/${featuredGear.slug.current}`}
@@ -516,9 +516,9 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                   </NavigationMenu.Trigger>
                   <NavigationMenu.Content className="mega-menu-content">
                     <div className="mx-auto max-w-6xl px-8 md:px-12 lg:px-16 py-8 lg:py-10">
-                      <div className="grid grid-cols-1 gap-4 lg:grid-cols-5 md:gap-6 lg:gap-8">
-                          {/* Column 1: Description - 1/5 */}
-                          <div className="lg:col-span-1 md:border-r md:border-neutral-200/70 md:pr-5 dark:md:border-neutral-800/70">
+                      <div className="grid grid-cols-1 gap-4 lg:grid-cols-10 md:gap-6 lg:gap-8">
+                          {/* Column 1: Description - 3/10 */}
+                          <div className="lg:col-span-3 md:border-r md:border-neutral-200/70 md:pr-5 dark:md:border-neutral-800/70">
                             <h3 className="font-headline text-2xl font-bold text-neutral-900 dark:text-white mb-3">
                               Races
                             </h3>
@@ -527,8 +527,8 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                             </p>
                           </div>
 
-                          {/* Column 2: Race Links - 2/5 */}
-                          <div className="lg:col-span-2 flex flex-col gap-0.5 md:px-2">
+                          {/* Column 2: Race Links - 3/10 */}
+                          <div className="lg:col-span-3 flex flex-col gap-0.5 md:px-2">
                             <Link
                               href="/races"
                               className="flex items-center gap-3 px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-colors"
@@ -561,8 +561,8 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                             </Link>
                           </div>
 
-                          {/* Column 3: Featured Race - 2/5 */}
-                          <div className="lg:col-span-2 md:pl-3">
+                          {/* Column 3: Featured Race - 4/10 */}
+                          <div className="lg:col-span-4 md:pl-3">
                             {featuredRace ? (
                               <Link
                                 href={`/races/${featuredRace.slug.current}`}
