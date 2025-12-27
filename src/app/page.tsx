@@ -281,8 +281,8 @@ async function DevelopmentHomePage() {
                         </div>
 
                         {/* Title with Subheadline */}
-                        <h2 className="text-3xl md:text-4xl lg:text-[42px] font-headline leading-tight mb-3 group/title">
-                          <span className="font-bold text-neutral-900 dark:text-white group-hover/title:underline group-hover/title:decoration-electric-pink group-hover/title:decoration-1 group-hover/title:underline-offset-2 inline">
+                        <h2 className="text-3xl md:text-4xl lg:text-[42px] font-headline leading-tight mb-3">
+                          <span className="font-bold text-neutral-900 dark:text-white hover:underline hover:decoration-electric-pink hover:decoration-1 hover:underline-offset-2 inline cursor-pointer">
                             {featuredPost.title}
                           </span>
                           {featuredPost.excerpt && (
@@ -292,7 +292,7 @@ async function DevelopmentHomePage() {
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                               </svg>
                               {' '}
-                              <span className="font-normal text-neutral-600 dark:text-neutral-400 group-hover/title:underline group-hover/title:decoration-electric-pink group-hover/title:decoration-1 group-hover/title:underline-offset-2 inline">
+                              <span className="font-normal text-neutral-600 dark:text-neutral-400 inline">
                                 {featuredPost.excerpt}
                               </span>
                             </>
