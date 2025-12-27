@@ -371,7 +371,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                       <ChevronDown className="h-4 w-4" aria-hidden />
                     </motion.div>
                   </NavigationMenu.Trigger>
-                  <NavigationMenu.Content className="mega-menu-content absolute left-0 top-0 w-full">
+                  <NavigationMenu.Content className="mega-menu-content">
                     <div className="mx-auto w-full px-4 md:px-6 lg:px-8 py-8 lg:py-10">
                       <div className="grid grid-cols-1 gap-4 lg:grid-cols-[280px_1fr_320px] md:gap-6 lg:gap-8">
                           {/* Column 1: Description */}
@@ -514,7 +514,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                       <ChevronDown className="h-4 w-4" aria-hidden />
                     </motion.div>
                   </NavigationMenu.Trigger>
-                  <NavigationMenu.Content className="mega-menu-content absolute left-0 top-0 w-full">
+                  <NavigationMenu.Content className="mega-menu-content">
                     <div className="mx-auto w-full px-4 md:px-6 lg:px-8 py-8 lg:py-10">
                       <div className="grid grid-cols-1 gap-4 lg:grid-cols-[280px_1fr_320px] md:gap-6 lg:gap-8">
                           {/* Column 1: Description */}
