@@ -360,12 +360,12 @@ async function DevelopmentHomePage() {
                             </Link>
 
                             {/* Date and Read Time */}
-                            <div className="flex items-center gap-2 text-[11px] text-neutral-500 dark:text-neutral-400 mt-0.5">
+                            <div className="flex items-center gap-2 text-[11px] text-neutral-500 dark:text-neutral-400 mt-0.5 uppercase">
                               <span suppressHydrationWarning>
-                                {format(new Date(post.publishedAt), 'd MMM yyyy')}
+                                {format(new Date(post.publishedAt), 'd MMM yyyy').toUpperCase()}
                               </span>
-                              <span className="text-[10px]">•</span>
-                              <span>4 min read</span>
+                              <span>|</span>
+                              <span>5 MIN READ</span>
                             </div>
                           </div>
 
