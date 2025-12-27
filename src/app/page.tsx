@@ -281,15 +281,19 @@ async function DevelopmentHomePage() {
                         </div>
 
                         {/* Title with Subheadline */}
-                        <h2 className="text-3xl md:text-4xl lg:text-[42px] font-headline font-bold leading-tight mb-3 group-hover:underline">
-                          <span className="text-neutral-900 dark:text-white">
+                        <h2 className="text-3xl md:text-4xl lg:text-[42px] font-headline leading-tight mb-3">
+                          <span className="font-bold text-neutral-900 dark:text-white hover:underline hover:decoration-electric-pink hover:decoration-1 hover:underline-offset-2 inline">
                             {featuredPost.title}
                           </span>
                           {featuredPost.excerpt && (
                             <>
                               {' '}
-                              <span className="text-neutral-600 dark:text-neutral-400">
-                                › {featuredPost.excerpt}
+                              <svg className="inline-block w-4 h-4 mx-1 align-middle" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                              </svg>
+                              {' '}
+                              <span className="font-normal text-neutral-600 dark:text-neutral-400 inline">
+                                {featuredPost.excerpt}
                               </span>
                             </>
                           )}
