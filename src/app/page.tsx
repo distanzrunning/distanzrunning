@@ -270,11 +270,11 @@ async function DevelopmentHomePage() {
                       <Link href={`/articles/post/${featuredPost.slug.current}`} className="group transition-opacity duration-200 hover:opacity-80">
                         {/* Featured & Category Tags */}
                         <div className="flex items-center gap-2 mb-3 px-1">
-                          <span className="px-2 py-1 text-xs font-medium text-neutral-600 dark:text-neutral-400 border-l border-b border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors">
+                          <span className="px-2 py-1 text-xs font-medium text-neutral-600 dark:text-neutral-400 border-l border-b border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:border-neutral-100 dark:hover:border-neutral-800 transition-colors">
                             Featured
                           </span>
                           {featuredPost.categoryName && (
-                            <span className="px-2 py-1 text-xs font-medium text-electric-pink border-l border-b border-neutral-300 dark:border-neutral-600 hover:bg-electric-pink hover:text-white transition-colors">
+                            <span className="px-2 py-1 text-xs font-medium text-electric-pink border-l border-b border-neutral-300 dark:border-neutral-600 hover:bg-electric-pink hover:text-white hover:border-electric-pink transition-colors">
                               {featuredPost.categoryName}
                             </span>
                           )}
