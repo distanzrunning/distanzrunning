@@ -180,7 +180,7 @@ async function DevelopmentHomePage() {
   try {
     // Fetch breaking news posts
     breakingNews = await sanity.fetch(`
-      *[_type == "post" && isBreaking == true] | order(publishedAt desc)[0...4]{
+      *[_type == "post" && isBreaking == true] | order(publishedAt desc)[0...6]{
         _id,
         title,
         slug,
@@ -262,10 +262,10 @@ async function DevelopmentHomePage() {
         {(featuredPost || breakingNews.length > 0) && (
           <section className="py-12 bg-white dark:bg-[#0c0c0d] transition-colors duration-300">
             <div className="w-[95%] mx-auto px-2 sm:px-3">
-              <div className="grid grid-cols-1 gap-6 md:gap-4 lg:grid-cols-4">
-                {/* Featured Post - Takes up 3 columns */}
+              <div className="grid grid-cols-1 gap-6 md:gap-4 lg:grid-cols-12">
+                {/* Featured Post - Takes up 8 columns (66.67%) */}
                 {featuredPost && (
-                  <div className="lg:col-span-3 lg:sticky lg:top-20 lg:self-start">
+                  <div className="lg:col-span-8 lg:sticky lg:top-20 lg:self-start">
                     <div className="flex flex-col w-full">
                       <Link href={`/articles/post/${featuredPost.slug.current}`} className="group transition-opacity duration-200 hover:opacity-80">
                         {/* Image */}
@@ -327,9 +327,9 @@ async function DevelopmentHomePage() {
                   </div>
                 )}
 
-                {/* Breaking News - Takes up 1 column */}
+                {/* Breaking News - Takes up 4 columns (33.33%) */}
                 {breakingNews.length > 0 && (
-                  <div className="lg:col-span-1 flex flex-col gap-6 lg:border-l lg:border-neutral-200 lg:dark:border-neutral-800 lg:pl-6">
+                  <div className="lg:col-span-4 flex flex-col gap-6 lg:border-l lg:border-neutral-200 lg:dark:border-neutral-800 lg:pl-6">
                     {/* Header */}
                     <div className="flex items-center justify-between gap-3 px-1">
                       <div className="inline-flex items-center px-3 py-1.5 bg-electric-pink/10 dark:bg-electric-pink/20 rounded-full">
@@ -354,50 +354,51 @@ async function DevelopmentHomePage() {
                       {breakingNews.map((post) => (
                         <div
                           key={post._id}
-                          className="group flex flex-col gap-2 relative before:absolute before:-bottom-4 before:left-0 before:right-0 before:h-px before:bg-neutral-200 dark:before:bg-neutral-800 last:before:hidden md:before:hidden"
+                          className="group flex flex-col gap-3 relative before:absolute before:-bottom-3 before:left-0 before:right-0 before:h-px before:bg-neutral-200 dark:before:bg-neutral-800 last:before:hidden"
                         >
                           <Link
                             href={`/articles/post/${post.slug.current}`}
-                            className="flex flex-row md:flex-col items-center md:items-start gap-6 md:gap-4 transition-opacity duration-200 hover:opacity-80"
+                            className="flex flex-row items-start gap-4 transition-opacity duration-200 hover:opacity-80"
                           >
-                            {/* Image */}
-                            <div className="w-1/3 max-w-36 shrink-0 md:w-full md:max-w-none overflow-hidden rounded-sm">
-                              <div style={{ paddingBottom: '56.25%' }} className="relative">
+                            {/* Text Content - Left Side */}
+                            <div className="flex-1 flex flex-col gap-2 order-1">
+                              {/* Categories */}
+                              <div className="flex items-center gap-2 text-xs font-medium leading-tight">
+                                {post.categoryName && (
+                                  <span className="text-neutral-600 dark:text-neutral-400">
+                                    {post.categoryName}
+                                  </span>
+                                )}
+                              </div>
+
+                              {/* Title */}
+                              <h3 className="text-base font-semibold leading-tight text-neutral-900 dark:text-white line-clamp-3">
+                                {post.title}
+                              </h3>
+
+                              {/* Date and Read Time */}
+                              <div className="flex items-center gap-2 text-xs text-neutral-500 dark:text-neutral-400">
+                                <span suppressHydrationWarning>
+                                  {format(new Date(post.publishedAt), 'd MMM yyyy')}
+                                </span>
+                                <span>•</span>
+                                <span>5 min read</span>
+                              </div>
+                            </div>
+
+                            {/* Image - Right Side */}
+                            <div className="w-1/3 shrink-0 overflow-hidden rounded-sm order-2">
+                              <div style={{ paddingBottom: '66.67%' }} className="relative">
                                 {post.mainImage && (
                                   <img
-                                    src={urlFor(post.mainImage).width(600).height(338).url()}
+                                    src={urlFor(post.mainImage).width(400).height(267).url()}
                                     alt={post.title}
                                     className="absolute inset-0 w-full h-full object-cover"
                                   />
                                 )}
                               </div>
                             </div>
-
-                            {/* Title */}
-                            <div className="flex-1 px-1">
-                              <h3 className="text-base md:text-base font-semibold text-neutral-900 dark:text-white line-clamp-3 md:line-clamp-3">
-                                {post.title}
-                              </h3>
-                            </div>
                           </Link>
-
-                          {/* Tags and Date - Outside article link */}
-                          <div className="flex items-center gap-2 text-xs md:text-[10px] font-medium leading-[14px] text-gray-500 dark:text-gray-400 px-1">
-                            {/* Primary Category Tag - Linked */}
-                            {post.categoryName && (
-                              <Link
-                                href={`/articles/category/${post.categoryName.toLowerCase()}`}
-                                className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded-sm hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
-                              >
-                                {post.categoryName}
-                              </Link>
-                            )}
-                            {/* Secondary Tags - Expandable */}
-                            {post.tags && <ExpandableTags tags={post.tags} />}
-                            <span suppressHydrationWarning>
-                              {format(new Date(post.publishedAt), 'yyyy-MM-dd')}
-                            </span>
-                          </div>
                         </div>
                       ))}
                     </div>
