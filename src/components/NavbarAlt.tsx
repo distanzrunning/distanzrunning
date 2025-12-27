@@ -285,7 +285,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
         </motion.div>
 
         {/* Bottom Section: Centered Navigation Links - Desktop Only */}
-        <div className="hidden lg:block border-b border-neutral-200 dark:border-neutral-700 relative z-40 overflow-visible mb-6">
+        <div className="hidden lg:block border-b border-neutral-200 dark:border-neutral-700 relative z-40 overflow-visible mb-6 bg-white dark:bg-[#0c0c0d]">
           <div className="flex items-center justify-between px-4 md:px-6 lg:px-8 h-12 relative">
 
             {/* Small Logo - Shows when scrolled on desktop */}
@@ -1028,9 +1028,6 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
         isOpen={newsletterModalOpen}
         onClose={() => setNewsletterModalOpen(false)}
       />
-
-      {/* Spacer to prevent content from hiding under fixed header - Responsive height */}
-      <div className="h-[3rem] lg:h-[3.5rem]" />
     </>
   )
 }
