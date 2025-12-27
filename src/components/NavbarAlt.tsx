@@ -1030,7 +1030,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
       />
 
       {/* Spacer to prevent content from hiding under fixed header - Responsive height */}
-      <div className="h-[3rem] lg:h-[4rem]" />
+      <div className="h-[3rem] lg:h-[3.5rem]" />
     </>
   )
 }
