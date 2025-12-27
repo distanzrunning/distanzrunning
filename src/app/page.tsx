@@ -293,12 +293,12 @@ async function DevelopmentHomePage() {
                         )}
 
                         {/* Date & Reading Time */}
-                        <div className="flex items-center gap-1.5 text-xs text-neutral-500 dark:text-neutral-400 mb-3">
+                        <div className="flex items-center gap-1.5 text-xs text-neutral-500 dark:text-neutral-400 mb-3 capitalize">
                           <span suppressHydrationWarning>
                             {format(new Date(featuredPost.publishedAt), 'd MMM yyyy')}
                           </span>
                           <span>|</span>
-                          <span>5 min read</span>
+                          <span>5 Min Read</span>
                         </div>
 
                         {/* Image */}
@@ -345,7 +345,7 @@ async function DevelopmentHomePage() {
                       {breakingNews.map((post) => (
                         <div
                           key={post._id}
-                          className="group flex flex-col gap-2 relative before:absolute before:-bottom-2 before:left-0 before:right-0 before:h-px before:bg-neutral-200 dark:before:bg-neutral-800 last:before:hidden"
+                          className="group flex flex-col gap-2 pb-4 border-b border-neutral-200 dark:border-neutral-800 last:border-b-0 last:pb-0"
                         >
                           <Link
                             href={`/articles/post/${post.slug.current}`}
@@ -377,12 +377,12 @@ async function DevelopmentHomePage() {
                               </h3>
 
                               {/* Date and Read Time */}
-                              <div className="flex items-center gap-1.5 text-[11px] text-neutral-500 dark:text-neutral-400">
+                              <div className="flex items-center gap-1.5 text-[11px] text-neutral-500 dark:text-neutral-400 capitalize">
                                 <span suppressHydrationWarning>
                                   {format(new Date(post.publishedAt), 'd MMM yyyy')}
                                 </span>
                                 <span>|</span>
-                                <span>5 min read</span>
+                                <span>5 Min Read</span>
                               </div>
                             </div>
 
