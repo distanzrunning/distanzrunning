@@ -285,8 +285,8 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
         </motion.div>
 
         {/* Bottom Section: Centered Navigation Links - Desktop Only */}
-        <div className="hidden lg:block border-b border-neutral-200 dark:border-neutral-700 relative z-40">
-          <div className="flex items-center justify-between px-4 md:px-6 lg:px-8 h-12">
+        <div className="hidden lg:block border-b border-neutral-200 dark:border-neutral-700 relative z-40 overflow-visible">
+          <div className="flex items-center justify-between px-4 md:px-6 lg:px-8 h-12 relative">
 
             {/* Small Logo - Shows when scrolled on desktop */}
             <motion.div
@@ -613,7 +613,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
               </NavigationMenu.Indicator>
 
               <motion.div
-                className="absolute origin-top overflow-hidden"
+                className="origin-top overflow-hidden"
                 initial={false}
                 animate={{
                   height: megaMenuShouldRender ? (megaMenuIsOpen ? 'auto' : 0) : 0,
@@ -621,10 +621,13 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                 }}
                 transition={megaMenuIsOpen ? garageDoorOpenTransition : garageDoorCloseTransition}
                 style={{
-                  top: '100%',
-                  left: '-2rem',
-                  right: '-2rem',
-                  pointerEvents: megaMenuIsInteractive ? 'auto' : 'none'
+                  position: 'fixed',
+                  top: isScrolled ? '3rem' : '8rem',
+                  left: '5vw',
+                  right: '5vw',
+                  width: '90vw',
+                  pointerEvents: megaMenuIsInteractive ? 'auto' : 'none',
+                  zIndex: 30
                 }}
               >
                 <NavigationMenu.Viewport className="pointer-events-auto relative w-full h-[var(--radix-navigation-menu-viewport-height)] origin-top bg-white dark:bg-neutral-900 border-t border-b border-neutral-200 dark:border-neutral-800 shadow-[0_30px_60px_-40px_rgba(15,23,42,0.45)] transition-[height] duration-300 ease-out" />
