@@ -387,23 +387,15 @@ async function DevelopmentHomePage() {
                         </div>
                       ))}
                     </div>
-
-                    {/* All Articles Button - Bottom Center */}
-                    <Link
-                      href="/articles"
-                      className="flex items-center justify-center gap-2 mt-4 mx-8 py-2.5 px-4 rounded-lg bg-transparent hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors border border-neutral-200 dark:border-neutral-700"
-                    >
-                      <span className="font-body text-sm font-medium text-neutral-900 dark:text-white">All articles</span>
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                      </svg>
-                    </Link>
                   </div>
                 )}
               </div>
             </div>
           </section>
         )}
+
+        {/* Write For Us Section */}
+        <WriteForUs />
 
         {/* Gear Section */}
         {(featuredGearPost || secondFeaturedGear || recentGear.length > 0) && (
@@ -736,9 +728,6 @@ async function DevelopmentHomePage() {
             </div>
           </section>
         )}
-
-        {/* Write For Us Section */}
-        <WriteForUs />
 
       </div>
     </DarkModeProvider>
