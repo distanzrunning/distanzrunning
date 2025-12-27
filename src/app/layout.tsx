@@ -1,6 +1,6 @@
 // src/app/layout.tsx
 import type { Metadata } from "next";
-import { Playfair_Display, Inter, JetBrains_Mono } from "next/font/google";
+import { Playfair_Display, Playfair_Display_SC, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import AuthProtection from "@/components/AuthProtection";
 import LayoutContent from "@/components/LayoutContent";
@@ -16,6 +16,16 @@ const playfairDisplay = Playfair_Display({
   subsets: ["latin"],
   variable: "--font-headline",
   weight: ["400", "500", "600", "700", "800", "900"],
+  style: ["normal", "italic"],
+  display: 'swap',
+  adjustFontFallback: false,
+});
+
+// Playfair Display Small Caps - for subheadlines
+const playfairDisplaySC = Playfair_Display_SC({
+  subsets: ["latin"],
+  variable: "--font-headline-sc",
+  weight: ["400", "700", "900"],
   style: ["normal", "italic"],
   display: 'swap',
   adjustFontFallback: false,
@@ -61,7 +71,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${playfairDisplay.variable} ${inter.variable} ${jetbrainsMono.variable} bg-white dark:bg-[#0c0c0d] transition-colors duration-300`}>
+    <html lang="en" className={`${playfairDisplay.variable} ${playfairDisplaySC.variable} ${inter.variable} ${jetbrainsMono.variable} bg-white dark:bg-[#0c0c0d] transition-colors duration-300`}>
       <head>
         {/* Prevent flash of dark mode - ensure light mode by default */}
         <script
