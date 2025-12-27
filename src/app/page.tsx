@@ -280,17 +280,20 @@ async function DevelopmentHomePage() {
                           )}
                         </div>
 
-                        {/* Title */}
-                        <h2 className="text-3xl md:text-4xl lg:text-[42px] font-headline font-bold leading-tight text-neutral-900 dark:text-white mb-3 group-hover:underline">
-                          {featuredPost.title}
+                        {/* Title with Subheadline */}
+                        <h2 className="text-3xl md:text-4xl lg:text-[42px] font-headline font-bold leading-tight mb-3 group-hover:underline">
+                          <span className="text-neutral-900 dark:text-white">
+                            {featuredPost.title}
+                          </span>
+                          {featuredPost.excerpt && (
+                            <>
+                              {' '}
+                              <span className="text-neutral-600 dark:text-neutral-400">
+                                › {featuredPost.excerpt}
+                              </span>
+                            </>
+                          )}
                         </h2>
-
-                        {/* Subheadline / Excerpt */}
-                        {featuredPost.excerpt && (
-                          <h3 className="text-lg md:text-xl text-neutral-600 dark:text-neutral-400 line-clamp-2 max-w-3xl lg:w-4/5 mb-4 leading-snug">
-                            {featuredPost.excerpt}
-                          </h3>
-                        )}
 
                         {/* Date & Reading Time */}
                         <div className="flex items-center gap-2 text-xs text-neutral-500 dark:text-neutral-400 mb-4 uppercase">
