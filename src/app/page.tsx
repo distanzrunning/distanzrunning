@@ -269,36 +269,36 @@ async function DevelopmentHomePage() {
                     <div className="flex flex-col w-full">
                       <Link href={`/articles/post/${featuredPost.slug.current}`} className="group transition-opacity duration-200 hover:opacity-80">
                         {/* Featured & Category Tags */}
-                        <div className="flex items-center gap-2 mb-2">
+                        <div className="flex items-center gap-2 mb-3">
                           <span className="px-2 py-1 text-xs font-medium uppercase text-neutral-600 dark:text-neutral-400 border-l border-b border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:border-neutral-100 dark:hover:border-neutral-800 transition-colors">
-                            Featured
+                            FEATURED
                           </span>
                           {featuredPost.categoryName && (
                             <span className="px-2 py-1 text-xs font-medium uppercase text-electric-pink border-l border-b border-neutral-300 dark:border-neutral-600 hover:bg-electric-pink hover:text-white hover:border-electric-pink transition-colors">
-                              {featuredPost.categoryName}
+                              {featuredPost.categoryName.toUpperCase()}
                             </span>
                           )}
                         </div>
 
                         {/* Title */}
-                        <h3 className="text-3xl md:text-3xl lg:text-4xl font-headline font-semibold leading-tight text-neutral-900 dark:text-white line-clamp-3 md:line-clamp-3 mb-2">
+                        <h2 className="text-3xl md:text-4xl lg:text-[42px] font-headline font-bold leading-tight text-neutral-900 dark:text-white mb-3 group-hover:underline">
                           {featuredPost.title}
-                        </h3>
+                        </h2>
 
-                        {/* Excerpt */}
+                        {/* Subheadline / Excerpt */}
                         {featuredPost.excerpt && (
-                          <p className="text-base md:text-base text-neutral-600 dark:text-neutral-300 line-clamp-3 max-w-3xl lg:w-4/5 mb-3">
+                          <h3 className="text-lg md:text-xl text-neutral-600 dark:text-neutral-400 line-clamp-2 max-w-3xl lg:w-4/5 mb-4 leading-snug">
                             {featuredPost.excerpt}
-                          </p>
+                          </h3>
                         )}
 
                         {/* Date & Reading Time */}
-                        <div className="flex items-center gap-1.5 text-xs text-neutral-500 dark:text-neutral-400 mb-3 capitalize">
+                        <div className="flex items-center gap-2 text-xs text-neutral-500 dark:text-neutral-400 mb-4 uppercase">
                           <span suppressHydrationWarning>
-                            {format(new Date(featuredPost.publishedAt), 'd MMM yyyy')}
+                            {format(new Date(featuredPost.publishedAt), 'd MMM yyyy').toUpperCase()}
                           </span>
                           <span>|</span>
-                          <span>5 Min Read</span>
+                          <span>5 MIN READ</span>
                         </div>
 
                         {/* Image */}
@@ -377,12 +377,12 @@ async function DevelopmentHomePage() {
                               </h3>
 
                               {/* Date and Read Time */}
-                              <div className="flex items-center gap-1.5 text-[11px] text-neutral-500 dark:text-neutral-400 capitalize">
+                              <div className="flex items-center gap-1.5 text-[11px] text-neutral-500 dark:text-neutral-400 uppercase">
                                 <span suppressHydrationWarning>
-                                  {format(new Date(post.publishedAt), 'd MMM yyyy')}
+                                  {format(new Date(post.publishedAt), 'd MMM yyyy').toUpperCase()}
                                 </span>
                                 <span>|</span>
-                                <span>5 Min Read</span>
+                                <span>5 MIN READ</span>
                               </div>
                             </div>
 
