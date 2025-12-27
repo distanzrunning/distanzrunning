@@ -372,7 +372,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                     </motion.div>
                   </NavigationMenu.Trigger>
                   <NavigationMenu.Content className="mega-menu-content">
-                    <div className="mx-auto max-w-6xl px-8 md:px-12 lg:px-16 py-8 lg:py-10">
+                    <div className="mx-auto max-w-7xl px-8 md:px-12 lg:px-16 py-8 lg:py-10">
                       <div className="grid grid-cols-1 gap-4 lg:grid-cols-10 md:gap-6 lg:gap-8">
                           {/* Column 1: Description - 3/10 */}
                           <div className="lg:col-span-3 md:border-r md:border-neutral-200/70 md:pr-5 dark:md:border-neutral-800/70">
@@ -515,7 +515,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                     </motion.div>
                   </NavigationMenu.Trigger>
                   <NavigationMenu.Content className="mega-menu-content">
-                    <div className="mx-auto max-w-6xl px-8 md:px-12 lg:px-16 py-8 lg:py-10">
+                    <div className="mx-auto max-w-7xl px-8 md:px-12 lg:px-16 py-8 lg:py-10">
                       <div className="grid grid-cols-1 gap-4 lg:grid-cols-10 md:gap-6 lg:gap-8">
                           {/* Column 1: Description - 3/10 */}
                           <div className="lg:col-span-3 md:border-r md:border-neutral-200/70 md:pr-5 dark:md:border-neutral-800/70">
@@ -623,9 +623,9 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                 style={{
                   position: 'fixed',
                   top: isScrolled ? '3rem' : '8rem',
-                  left: 'calc(5vw + 1px)',
-                  right: 'calc(5vw + 1px)',
-                  width: 'calc(90vw - 2px)',
+                  left: 'calc(4vw + 1px)',
+                  right: 'calc(4vw + 1px)',
+                  width: 'calc(92vw - 2px)',
                   pointerEvents: megaMenuIsInteractive ? 'auto' : 'none',
                   zIndex: 30
                 }}

@@ -1377,10 +1377,10 @@
   overflow: visible;
 }
 
-/* Responsive width - 100% on mobile, 90% on large screens */
+/* Responsive width - 100% on mobile, 92% on large screens */
 @media (min-width: 1024px) {
   .main-bordered {
-    width: 90%;
+    width: 92%;
     border-left: 1px solid rgb(var(--color-borderNeutral));
     border-right: 1px solid rgb(var(--color-borderNeutral));
   }
