@@ -14,6 +14,7 @@ import WriteForUs from '@/components/WriteForUs'
 import ScrollIndicator from '@/components/ScrollIndicator'
 import ExpandableTags from '@/components/ExpandableTags'
 import { Metadata } from 'next'
+import { calculateReadingTime } from '@/lib/readingTime'
 
 type Post = {
   _id: string
@@ -24,6 +25,8 @@ type Post = {
   excerpt: string
   categoryName?: string
   tags?: string[]
+  body?: any[] // Portable Text body for reading time calculation
+  readingTime?: number // Calculated reading time in minutes
 }
 
 type GearPost = {
@@ -179,7 +182,7 @@ async function DevelopmentHomePage() {
 
   try {
     // Fetch breaking news posts
-    breakingNews = await sanity.fetch(`
+    const breakingNewsRaw = await sanity.fetch(`
       *[_type == "post" && isBreaking == true] | order(publishedAt desc)[0...6]{
         _id,
         title,
@@ -187,12 +190,19 @@ async function DevelopmentHomePage() {
         mainImage,
         publishedAt,
         tags,
-        "categoryName": category->title
+        "categoryName": category->title,
+        body
       }
     `);
 
+    // Calculate reading time for breaking news
+    breakingNews = breakingNewsRaw.map((post: Post) => ({
+      ...post,
+      readingTime: post.body ? calculateReadingTime(post.body) : 5
+    }));
+
     // Fetch featured post
-    featuredPost = await sanity.fetch(`
+    const featuredPostRaw = await sanity.fetch(`
       *[_type == "post" && featuredPost == true] | order(publishedAt desc)[0]{
         _id,
         title,
@@ -200,9 +210,18 @@ async function DevelopmentHomePage() {
         mainImage,
         publishedAt,
         excerpt,
-        "categoryName": category->title
+        "categoryName": category->title,
+        body
       }
     `);
+
+    // Calculate reading time for featured post
+    if (featuredPostRaw) {
+      featuredPost = {
+        ...featuredPostRaw,
+        readingTime: featuredPostRaw.body ? calculateReadingTime(featuredPostRaw.body) : 5
+      };
+    }
 
     // Fetch top 2 featured gear posts for main display
     const topGear = await sanity.fetch(`
@@ -305,7 +324,7 @@ async function DevelopmentHomePage() {
                             {format(new Date(featuredPost.publishedAt), 'd MMM yyyy').toUpperCase()}
                           </span>
                           <span>|</span>
-                          <span>5 MIN READ</span>
+                          <span>{featuredPost.readingTime || 5} MIN READ</span>
                         </div>
 
                         {/* Image */}
@@ -365,7 +384,7 @@ async function DevelopmentHomePage() {
                                 {format(new Date(post.publishedAt), 'd MMM yyyy').toUpperCase()}
                               </span>
                               <span>|</span>
-                              <span>5 MIN READ</span>
+                              <span>{post.readingTime || 5} MIN READ</span>
                             </div>
                           </div>
 
