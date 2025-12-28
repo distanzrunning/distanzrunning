@@ -284,7 +284,7 @@ async function DevelopmentHomePage() {
               <div className="grid grid-cols-1 gap-4 lg:grid-cols-12">
                 {/* Featured Post - Takes up 8 columns (66.67%) */}
                 {featuredPost && (
-                  <div className="lg:col-span-8 lg:sticky lg:top-20 lg:self-start">
+                  <div className="lg:col-span-8 lg:sticky lg:top-20 lg:self-start border-b border-neutral-200 dark:border-neutral-800 pb-4">
                     <div className="flex flex-col w-full">
                       <Link href={`/articles/post/${featuredPost.slug.current}`} className="group transition-opacity duration-200 hover:opacity-80">
                         {/* Featured & Category Tags */}
@@ -346,14 +346,15 @@ async function DevelopmentHomePage() {
 
                 {/* Breaking News - Takes up 4 columns (33.33%) */}
                 {breakingNews.length > 0 && (
-                  <div className="lg:col-span-4 flex flex-col lg:border-l lg:border-neutral-200 lg:dark:border-neutral-800 lg:pl-4">
+                  <div className="lg:col-span-4 flex flex-col">
                     {/* Articles */}
-                    <div className="flex flex-col gap-5">
+                    <div className="flex flex-col">
                       {breakingNews.map((post) => (
                         <div
                           key={post._id}
-                          className="group flex flex-row items-start gap-3 pb-5 border-b border-neutral-200 dark:border-neutral-800 last:border-b-0 last:pb-0"
+                          className="group border-l border-b border-neutral-200 dark:border-neutral-800 pl-4 pb-5 -mr-4"
                         >
+                          <div className="flex flex-row items-start gap-3">
                           {/* Text Content - Left Side */}
                           <div className="flex-1 flex flex-col gap-2">
                             {/* Tags - NEWS + Category */}
@@ -403,6 +404,7 @@ async function DevelopmentHomePage() {
                               )}
                             </div>
                           </Link>
+                          </div>
                         </div>
                       ))}
                     </div>
