@@ -81,7 +81,7 @@ export default function NewsletterSignup() {
   }
 
   return (
-    <div className="border-y border-neutral-200 dark:border-neutral-800 bg-gradient-to-t from-neutral-50 dark:from-neutral-800/50 to-transparent">
+    <div className="border-t border-neutral-200 dark:border-neutral-800 bg-gradient-to-t from-neutral-50 dark:from-neutral-800/50 to-transparent">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex w-full flex-col justify-center gap-7 sm:flex-row sm:items-center sm:justify-between">
 
         {/* Left: Heading and description */}
