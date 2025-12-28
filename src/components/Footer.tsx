@@ -12,7 +12,7 @@ export default function Footer() {
   const { isDark } = useContext(DarkModeContext)
 
   return (
-    <footer aria-label="Site footer" className="bg-white dark:bg-neutral-900 border-t border-neutral-200 dark:border-neutral-800">
+    <footer aria-label="Site footer" className="bg-white dark:bg-neutral-900">
       {/* Newsletter Signup Section */}
       <NewsletterSignup />
 
