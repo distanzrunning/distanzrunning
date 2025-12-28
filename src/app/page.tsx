@@ -346,13 +346,13 @@ async function DevelopmentHomePage() {
 
                 {/* Breaking News - Takes up 4 columns (33.33%) */}
                 {breakingNews.length > 0 && (
-                  <div className="lg:col-span-4 flex flex-col">
+                  <div className="lg:col-span-4 flex flex-col -mr-4">
                     {/* Articles */}
                     <div className="flex flex-col">
                       {breakingNews.map((post) => (
                         <div
                           key={post._id}
-                          className="group border-l border-b border-neutral-200 dark:border-neutral-800 pl-4 pt-5 pb-5 -mr-4"
+                          className="group border-l border-b border-neutral-200 dark:border-neutral-800 pl-4 pt-5 pb-5 pr-4"
                         >
                           <div className="flex flex-row items-start gap-3">
                           {/* Text Content - Left Side */}
