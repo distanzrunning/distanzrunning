@@ -352,7 +352,7 @@ async function DevelopmentHomePage() {
                       {breakingNews.map((post) => (
                         <div
                           key={post._id}
-                          className="group border-l border-b border-neutral-200 dark:border-neutral-800 pl-4 pb-5 -mr-4"
+                          className="group border-l border-b border-neutral-200 dark:border-neutral-800 pl-4 pt-5 pb-5 -mr-4"
                         >
                           <div className="flex flex-row items-start gap-3">
                           {/* Text Content - Left Side */}
