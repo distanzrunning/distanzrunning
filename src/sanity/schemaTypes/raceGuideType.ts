@@ -45,6 +45,19 @@ export const raceGuideType = defineType({
       options: { hotspot: true },
     }),
     defineField({
+      name: 'publishedAt',
+      title: 'Published At',
+      type: 'datetime',
+      description: 'When this race guide was published (used for sorting breaking news)',
+    }),
+    defineField({
+      name: 'excerpt',
+      title: 'Excerpt',
+      type: 'text',
+      description: 'A short summary of the race guide for previews (120–160 characters recommended)',
+      validation: (Rule) => Rule.max(200),
+    }),
+    defineField({
       name: 'raceCategory',
       title: 'Race Category',
       type: 'reference',
