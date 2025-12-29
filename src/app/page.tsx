@@ -375,7 +375,7 @@ async function DevelopmentHomePage() {
 
                             {/* Title */}
                             <Link href={`/articles/post/${post.slug.current}`}>
-                              <h3 className="text-[20px] leading-[1.2] font-bold text-neutral-900 dark:text-white line-clamp-3 hover:underline hover:decoration-electric-pink hover:decoration-1 hover:underline-offset-2">
+                              <h3 className="text-[22px] leading-[1.2] font-bold text-neutral-900 dark:text-white line-clamp-3 hover:underline hover:decoration-electric-pink hover:decoration-1 hover:underline-offset-2">
                                 {post.title}
                               </h3>
                             </Link>
