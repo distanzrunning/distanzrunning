@@ -283,9 +283,9 @@ async function DevelopmentHomePage() {
             <div className="grid grid-cols-1 lg:grid-cols-12 lg:gap-4">
               {/* Featured Post - Takes up 8 columns (66.67%) */}
               {featuredPost && (
-                <div className="lg:col-span-8 lg:sticky lg:top-20 lg:self-start">
-                  <div className="w-[95%] mx-auto border-b border-neutral-200 dark:border-neutral-800">
-                    <div className="flex flex-col w-full pb-4">
+                <div className="lg:col-span-8 lg:sticky lg:top-20 lg:self-start border-b border-neutral-200 dark:border-neutral-800 pb-4">
+                  <div className="w-[95%] mx-auto">
+                    <div className="flex flex-col w-full">
                       <Link href={`/articles/post/${featuredPost.slug.current}`} className="group transition-opacity duration-200 hover:opacity-80">
                         {/* Featured & Category Tags */}
                         <div className="flex items-center gap-2 mb-3">
