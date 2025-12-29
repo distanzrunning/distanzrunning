@@ -540,6 +540,13 @@ export const raceGuideType = defineType({
         }),
     }),
     defineField({
+      name: 'isBreaking',
+      title: 'Show in Breaking News Section',
+      type: 'boolean',
+      initialValue: false,
+      description: 'Show this race guide in the homepage breaking news section',
+    }),
+    defineField({
       name: 'body',
       type: 'blockContent',
     }),

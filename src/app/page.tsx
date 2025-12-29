@@ -18,6 +18,7 @@ import { calculateReadingTime } from '@/lib/readingTime'
 
 type Post = {
   _id: string
+  _type?: string // Content type: 'post', 'gearPost', or 'raceGuide'
   title: string
   slug: { current: string }
   mainImage: any // Keep as any for Sanity image objects
@@ -181,16 +182,25 @@ async function DevelopmentHomePage() {
   let recentRaces: RaceGuide[] = [];
 
   try {
-    // Fetch breaking news posts
+    // Fetch breaking news from all content types (posts, gear, races)
     const breakingNewsRaw = await sanity.fetch(`
-      *[_type == "post" && isBreaking == true] | order(publishedAt desc)[0...6]{
+      *[
+        (_type == "post" && isBreaking == true) ||
+        (_type == "gearPost" && isBreaking == true) ||
+        (_type == "raceGuide" && isBreaking == true)
+      ] | order(publishedAt desc)[0...8]{
         _id,
+        _type,
         title,
         slug,
         mainImage,
         publishedAt,
         tags,
-        "categoryName": category->title,
+        "categoryName": select(
+          _type == "post" => category->title,
+          _type == "gearPost" => gearCategory->title,
+          _type == "raceGuide" => raceCategory->title
+        ),
         body
       }
     `);
@@ -365,7 +375,11 @@ async function DevelopmentHomePage() {
                               </span>
                               {post.categoryName && (
                                 <Link
-                                  href={`/articles/category/${post.categoryName.toLowerCase()}`}
+                                  href={
+                                    post._type === 'post' ? `/articles/category/${post.categoryName.toLowerCase()}` :
+                                    post._type === 'gearPost' ? `/gear/category/${post.categoryName.toLowerCase()}` :
+                                    `/races/category/${post.categoryName.toLowerCase()}`
+                                  }
                                   className="px-2 py-1 text-xs font-medium uppercase text-electric-pink border-l border-b border-neutral-300 dark:border-neutral-600 hover:bg-electric-pink hover:text-white hover:border-electric-pink transition-colors"
                                 >
                                   {post.categoryName.toUpperCase()}
@@ -374,7 +388,11 @@ async function DevelopmentHomePage() {
                             </div>
 
                             {/* Title */}
-                            <Link href={`/articles/post/${post.slug.current}`}>
+                            <Link href={
+                              post._type === 'post' ? `/articles/post/${post.slug.current}` :
+                              post._type === 'gearPost' ? `/gear/${post.slug.current}` :
+                              `/races/${post.slug.current}`
+                            }>
                               <h3 className="text-[22px] leading-[1.2] font-bold text-neutral-900 dark:text-white line-clamp-3 hover:underline hover:decoration-electric-pink hover:decoration-1 hover:underline-offset-2">
                                 {post.title}
                               </h3>
@@ -392,7 +410,11 @@ async function DevelopmentHomePage() {
 
                           {/* Image - Right Side */}
                           <Link
-                            href={`/articles/post/${post.slug.current}`}
+                            href={
+                              post._type === 'post' ? `/articles/post/${post.slug.current}` :
+                              post._type === 'gearPost' ? `/gear/${post.slug.current}` :
+                              `/races/${post.slug.current}`
+                            }
                             className="w-1/3 shrink-0 overflow-hidden rounded-sm transition-opacity duration-200 hover:opacity-80"
                           >
                             <div style={{ paddingBottom: '66.67%' }} className="relative">
