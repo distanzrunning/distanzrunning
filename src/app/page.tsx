@@ -280,12 +280,12 @@ async function DevelopmentHomePage() {
         {/* Featured Post and Breaking News Section */}
         {(featuredPost || breakingNews.length > 0) && (
           <section className="bg-white dark:bg-[#0c0c0d] transition-colors duration-300">
-            <div className="grid grid-cols-1 lg:grid-cols-12">
-              {/* Featured Post - Takes up 8 columns (66.67%) */}
-              {featuredPost && (
-                <div className="lg:col-span-8 lg:sticky lg:top-20 lg:self-start border-b border-neutral-200 dark:border-neutral-800">
-                  <div className="w-[95%] mx-auto">
-                    <div className="flex flex-col w-full pb-4 lg:pr-4">
+            <div className="w-[95%] mx-auto">
+              <div className="grid grid-cols-1 lg:grid-cols-12 lg:gap-4">
+                {/* Featured Post - Takes up 8 columns (66.67%) */}
+                {featuredPost && (
+                  <div className="lg:col-span-8 lg:sticky lg:top-20 lg:self-start border-b border-neutral-200 dark:border-neutral-800">
+                    <div className="flex flex-col w-full pb-4">
                       <Link href={`/articles/post/${featuredPost.slug.current}`} className="group transition-opacity duration-200 hover:opacity-80">
                         {/* Featured & Category Tags */}
                         <div className="flex items-center gap-2 mb-3">
@@ -342,13 +342,11 @@ async function DevelopmentHomePage() {
                       </Link>
                     </div>
                   </div>
-                </div>
-              )}
+                )}
 
-              {/* Breaking News - Takes up 4 columns (33.33%) */}
-              {breakingNews.length > 0 && (
-                <div className="lg:col-span-4 flex flex-col border-l border-neutral-200 dark:border-neutral-800">
-                  <div className="w-[95%] mx-auto">
+                {/* Breaking News - Takes up 4 columns (33.33%) */}
+                {breakingNews.length > 0 && (
+                  <div className="lg:col-span-4 flex flex-col border-l border-neutral-200 dark:border-neutral-800">
                     {/* Articles */}
                     <div className="flex flex-col">
                       {breakingNews.map((post) => (
@@ -356,7 +354,7 @@ async function DevelopmentHomePage() {
                           key={post._id}
                           className="group border-b border-neutral-200 dark:border-neutral-800"
                         >
-                          <div className="flex flex-row items-start gap-3 pt-5 pb-5 lg:pl-0">
+                          <div className="flex flex-row items-start gap-3 pt-5 pb-5 pr-4">
                           {/* Text Content - Left Side */}
                           <div className="flex-1 flex flex-col gap-2">
                             {/* Tags - NEWS + Category */}
@@ -411,8 +409,8 @@ async function DevelopmentHomePage() {
                       ))}
                     </div>
                   </div>
-                </div>
-              )}
+                )}
+              </div>
             </div>
           </section>
         )}
