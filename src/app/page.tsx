@@ -300,7 +300,7 @@ async function DevelopmentHomePage() {
                         </div>
 
                         {/* Title with Subheadline */}
-                        <h2 className="text-3xl md:text-4xl lg:text-[42px] font-headline leading-tight mb-3 group/title">
+                        <h2 className="text-3xl md:text-4xl lg:text-[42px] font-headline leading-[1.15] mb-3 group/title">
                           <span className="font-bold text-neutral-900 dark:text-white group-hover/title:underline group-hover/title:decoration-electric-pink group-hover/title:decoration-1 group-hover/title:underline-offset-2 inline cursor-pointer">
                             {featuredPost.title}
                           </span>
@@ -357,9 +357,9 @@ async function DevelopmentHomePage() {
                       >
                         <div className="flex flex-row items-start gap-3 pl-1.5 pt-4 pb-4 pr-5">
                           {/* Text Content - Left Side */}
-                          <div className="flex-1 flex flex-col gap-2 px-2.5">
+                          <div className="flex-1 flex flex-col gap-1.5 px-2.5">
                             {/* Tags - NEWS + Category */}
-                            <div className="flex items-center gap-2 mb-0.5">
+                            <div className="flex items-center gap-2 mb-1">
                               <span className="px-2 py-1 text-[10px] font-medium uppercase text-neutral-600 dark:text-neutral-400 border-l border-b border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:border-neutral-100 dark:hover:border-neutral-800 transition-colors">
                                 NEWS
                               </span>
@@ -375,13 +375,13 @@ async function DevelopmentHomePage() {
 
                             {/* Title */}
                             <Link href={`/articles/post/${post.slug.current}`}>
-                              <h3 className="text-[18px] leading-tight font-bold text-neutral-900 dark:text-white line-clamp-3 hover:underline hover:decoration-electric-pink hover:decoration-1 hover:underline-offset-2">
+                              <h3 className="text-[20px] leading-[1.2] font-bold text-neutral-900 dark:text-white line-clamp-3 hover:underline hover:decoration-electric-pink hover:decoration-1 hover:underline-offset-2">
                                 {post.title}
                               </h3>
                             </Link>
 
                             {/* Date and Read Time */}
-                            <div className="flex items-center gap-2 text-[11px] text-neutral-500 dark:text-neutral-400 mt-0.5 uppercase">
+                            <div className="flex items-center gap-2 text-[11px] text-neutral-500 dark:text-neutral-400 mt-1 uppercase">
                               <span suppressHydrationWarning>
                                 {format(new Date(post.publishedAt), 'd MMM yyyy').toUpperCase()}
                               </span>
