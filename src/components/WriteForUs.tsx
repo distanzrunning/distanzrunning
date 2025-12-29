@@ -5,14 +5,19 @@ import Link from 'next/link'
 import { ChevronRight } from 'lucide-react'
 
 export default function WriteForUs() {
+  // Set to true when using actual ad network integration
+  const isActualAd = false
+
   return (
     <section className="w-full overflow-x-clip px-4 py-8 md:py-12">
       {/* Ad Container - Standard Display Ad Placement */}
       <div className="w-[95%] mx-auto flex flex-col items-center">
-        {/* Display Ad Label */}
-        <div className="text-[10px] uppercase tracking-wider text-neutral-400 dark:text-neutral-600 mb-2">
-          Advertisement
-        </div>
+        {/* Display Ad Label - Only show for actual ads */}
+        {isActualAd && (
+          <div className="text-[10px] uppercase tracking-wider text-neutral-400 dark:text-neutral-600 mb-2">
+            Advertisement
+          </div>
+        )}
 
         {/* Ad Slot - Responsive Container */}
         {/* Desktop: 970x250 (Billboard) or 728x90 (Leaderboard) */}
