@@ -286,7 +286,7 @@ async function DevelopmentHomePage() {
                 <div className="lg:col-span-8 lg:sticky lg:top-20 lg:self-start border-b border-neutral-200 dark:border-neutral-800 pb-4">
                   <div className="w-[95%] mx-auto">
                     <div className="flex flex-col w-full">
-                      <Link href={`/articles/post/${featuredPost.slug.current}`} className="group transition-opacity duration-200 hover:opacity-80">
+                      <Link href={`/articles/post/${featuredPost.slug.current}`} className="group">
                         {/* Featured & Category Tags */}
                         <div className="flex items-center gap-2 mb-3">
                           <span className="px-2 py-1 text-xs font-medium uppercase text-neutral-600 dark:text-neutral-400 border-l border-b border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:border-neutral-100 dark:hover:border-neutral-800 transition-colors">
