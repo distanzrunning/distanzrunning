@@ -357,7 +357,7 @@ async function DevelopmentHomePage() {
                       >
                         <div className="flex flex-row items-start gap-3 pl-1.5 pt-4 pb-4 pr-5">
                           {/* Text Content - Left Side */}
-                          <div className="flex-1 flex flex-col gap-2">
+                          <div className="flex-1 flex flex-col gap-2 px-2.5">
                             {/* Tags - NEWS + Category */}
                             <div className="flex items-center gap-2 mb-0.5">
                               <span className="px-2 py-1 text-[10px] font-medium uppercase text-neutral-600 dark:text-neutral-400 border-l border-b border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:border-neutral-100 dark:hover:border-neutral-800 transition-colors">
