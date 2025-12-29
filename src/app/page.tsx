@@ -356,7 +356,7 @@ async function DevelopmentHomePage() {
                           key={post._id}
                           className="group border-b border-neutral-200 dark:border-neutral-800"
                         >
-                          <div className="flex flex-row items-start gap-3 pl-4 pt-5 pb-5 pr-4">
+                          <div className="flex flex-row items-start gap-3 pl-1.5 pt-4 pb-4 pr-5">
                           {/* Text Content - Left Side */}
                           <div className="flex-1 flex flex-col gap-2">
                             {/* Tags - NEWS + Category */}
