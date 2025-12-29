@@ -189,9 +189,10 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
             opacity: isDesktop && isScrolled ? 0 : 1
           }}
           style={{
-            overflow: isDesktop ? 'hidden' : 'visible'
+            overflow: isDesktop ? 'hidden' : 'visible',
+            willChange: 'height, opacity'
           }}
-          transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
+          transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
         >
           <motion.div
             className="flex items-center justify-between px-4 md:px-6 lg:px-8"
@@ -199,7 +200,10 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
             animate={{
               height: !isDesktop && isScrolled ? '3.5rem' : '5rem' // Mobile: 56px -> 64px when scrolled, Desktop: 80px
             }}
-            transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
+            style={{
+              willChange: 'height'
+            }}
+            transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
           >
 
             {/* Mobile Menu Button - Left (Mobile Only) */}
@@ -218,7 +222,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                 animate={{
                   scale: !isDesktop && isScrolled ? 0.85 : 1
                 }}
-                transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
+                transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
               >
                 <Image
                   src="/images/logo.svg"
