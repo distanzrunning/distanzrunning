@@ -347,16 +347,16 @@ async function DevelopmentHomePage() {
 
               {/* Breaking News - Takes up 4 columns (33.33%) */}
               {breakingNews.length > 0 && (
-                <div className="lg:col-span-4 flex flex-col">
+                <div className="lg:col-span-4 flex flex-col border-l border-neutral-200 dark:border-neutral-800">
                   <div className="w-[95%] mx-auto">
                     {/* Articles */}
-                    <div className="flex flex-col border-l border-neutral-200 dark:border-neutral-800">
+                    <div className="flex flex-col">
                       {breakingNews.map((post) => (
                         <div
                           key={post._id}
-                          className="group"
+                          className="group border-b border-neutral-200 dark:border-neutral-800"
                         >
-                          <div className="flex flex-row items-start gap-3 pl-4 pt-5 pb-5 pr-4 border-b border-neutral-200 dark:border-neutral-800">
+                          <div className="flex flex-row items-start gap-3 pl-4 pt-5 pb-5 pr-4">
                           {/* Text Content - Left Side */}
                           <div className="flex-1 flex flex-col gap-2">
                             {/* Tags - NEWS + Category */}
