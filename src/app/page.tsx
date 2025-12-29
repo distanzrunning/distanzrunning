@@ -360,13 +360,13 @@ async function DevelopmentHomePage() {
                           <div className="flex-1 flex flex-col gap-1.5 px-2.5">
                             {/* Tags - NEWS + Category */}
                             <div className="flex items-center gap-2 mb-1">
-                              <span className="px-2 py-1 text-[10px] font-medium uppercase text-neutral-600 dark:text-neutral-400 border-l border-b border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:border-neutral-100 dark:hover:border-neutral-800 transition-colors">
+                              <span className="px-2 py-1 text-xs font-medium uppercase text-neutral-600 dark:text-neutral-400 border-l border-b border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:border-neutral-100 dark:hover:border-neutral-800 transition-colors">
                                 NEWS
                               </span>
                               {post.categoryName && (
                                 <Link
                                   href={`/articles/category/${post.categoryName.toLowerCase()}`}
-                                  className="px-2 py-1 text-[10px] font-medium uppercase text-electric-pink border-l border-b border-neutral-300 dark:border-neutral-600 hover:bg-electric-pink hover:text-white hover:border-electric-pink transition-colors"
+                                  className="px-2 py-1 text-xs font-medium uppercase text-electric-pink border-l border-b border-neutral-300 dark:border-neutral-600 hover:bg-electric-pink hover:text-white hover:border-electric-pink transition-colors"
                                 >
                                   {post.categoryName.toUpperCase()}
                                 </Link>
