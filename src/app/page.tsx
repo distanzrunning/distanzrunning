@@ -290,10 +290,11 @@ async function DevelopmentHomePage() {
         {/* Featured Post and Breaking News Section */}
         {(featuredPost || breakingNews.length > 0) && (
           <section className="bg-white dark:bg-[#0c0c0d] transition-colors duration-300">
-            <div className="grid grid-cols-1 lg:grid-cols-12">
-              {/* Featured Post - Takes up 8 columns (66.67%) */}
+            {/* Desktop: side-by-side | Mobile: featured article full-width, then 2-col grid below */}
+            <div className="flex flex-col lg:grid lg:grid-cols-12">
+              {/* Featured Post - Takes up 8 columns (66.67%) on desktop, full width on mobile */}
               {featuredPost && (
-                <div className="lg:col-span-8 lg:sticky lg:top-20 lg:self-start border-b border-neutral-200 dark:border-neutral-800 pb-4">
+                <div className="lg:col-span-8 lg:sticky lg:top-20 lg:self-start lg:border-b border-neutral-200 dark:border-neutral-800 pb-4">
                   <div className="px-4 md:px-6">
                     <div className="flex flex-col w-full">
                       <Link href={`/articles/post/${featuredPost.slug.current}`} className="group">
@@ -355,11 +356,11 @@ async function DevelopmentHomePage() {
                 </div>
               )}
 
-              {/* Breaking News - Takes up 4 columns (33.33%) */}
+              {/* Breaking News - Takes up 4 columns (33.33%) on desktop, 2-col grid on mobile */}
               {breakingNews.length > 0 && (
-                <div className="lg:col-span-4 flex flex-col">
-                  {/* Articles */}
-                  <div className="flex flex-col">
+                <div className="lg:col-span-4">
+                  {/* Mobile: 2-column grid | Desktop: single column */}
+                  <div className="grid grid-cols-2 lg:flex lg:flex-col gap-0">
                     {breakingNews.map((post) => (
                       <div
                         key={post._id}
