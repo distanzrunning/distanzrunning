@@ -419,15 +419,13 @@ async function DevelopmentHomePage() {
                               className="shrink-0 overflow-hidden transition-opacity duration-200 hover:opacity-80"
                               style={{ width: '33%' }}
                             >
-                              <div style={{ paddingBottom: '40%' }} className="relative">
-                                {post.mainImage && (
-                                  <img
-                                    src={urlFor(post.mainImage).width(1000).height(400).url()}
-                                    alt={post.title}
-                                    className="absolute inset-0 w-full h-full object-cover"
-                                  />
-                                )}
-                              </div>
+                              {post.mainImage && (
+                                <img
+                                  src={urlFor(post.mainImage).width(1000).height(400).url()}
+                                  alt={post.title}
+                                  className="w-full h-auto object-cover"
+                                />
+                              )}
                             </Link>
                           </div>
                         </div>
