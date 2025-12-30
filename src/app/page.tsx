@@ -365,7 +365,7 @@ async function DevelopmentHomePage() {
                         className="group border-b border-l border-neutral-200 dark:border-neutral-800"
                       >
                         {/* IEEE-style layout: Text LEFT (67%), Image RIGHT (33%) on mobile */}
-                        <div className="py-4 px-2.5 lg:pl-1.5 lg:pt-4 lg:pb-4 lg:pr-5">
+                        <div className="py-5 px-2.5 lg:pl-1.5 lg:pt-4 lg:pb-4 lg:pr-5">
                           <div className="flex flex-row items-start gap-2.5">
                             {/* Text Content - LEFT side (60% on mobile, flexes on desktop) */}
                             <div className="flex-1 flex flex-col lg:px-2.5" style={{ width: '60%' }}>
