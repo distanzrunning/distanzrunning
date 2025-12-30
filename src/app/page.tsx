@@ -358,9 +358,9 @@ async function DevelopmentHomePage() {
                         className="group border-b border-l border-neutral-200 dark:border-neutral-800"
                       >
                         {/* IEEE-style layout: Text LEFT (67%), Image RIGHT (33%) on mobile */}
-                        <div className="flex flex-row items-start gap-3 lg:gap-3 p-4 lg:pl-1.5 lg:pt-4 lg:pb-4 lg:pr-5">
+                        <div className="flex flex-row items-start gap-1.5 py-4 px-1.5 lg:gap-3 lg:pl-1.5 lg:pt-4 lg:pb-4 lg:pr-5">
                           {/* Text Content - LEFT side (67% on mobile, flexes on desktop) */}
-                          <div className="flex-1 flex flex-col gap-1.5 lg:gap-1.5 lg:px-2.5" style={{ width: '67%' }}>
+                          <div className="flex-1 flex flex-col gap-0.5 lg:gap-1.5 lg:px-2.5" style={{ width: '67%' }}>
                             {/* Tags - Content Type + Category - Hide on mobile, show on desktop */}
                             <div className="hidden lg:flex items-center gap-2 mb-1">
                               <span className="px-2 py-1 text-xs font-medium uppercase text-neutral-600 dark:text-neutral-400 border-l border-b border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:border-neutral-100 dark:hover:border-neutral-800 transition-colors">
@@ -386,18 +386,18 @@ async function DevelopmentHomePage() {
                               post._type === 'gearPost' ? `/gear/${post.slug.current}` :
                               `/races/${post.slug.current}`
                             }>
-                              <h3 className="text-sm lg:text-[22px] leading-[1.2] font-bold text-neutral-900 dark:text-white line-clamp-3 lg:line-clamp-3 hover:underline hover:decoration-electric-pink hover:decoration-1 hover:underline-offset-2">
+                              <h3 className="text-[15px] lg:text-[22px] leading-tight font-bold text-neutral-900 dark:text-white line-clamp-3 lg:line-clamp-3 hover:underline hover:decoration-electric-pink hover:decoration-1 hover:underline-offset-2 mb-1">
                                 {post.title}
                               </h3>
                             </Link>
 
                             {/* Date and Read Time */}
-                            <div className="flex items-center gap-2 text-[10px] lg:text-[11px] text-neutral-500 dark:text-neutral-400 mt-0.5 lg:mt-1 uppercase">
+                            <div className="flex flex-col lg:flex-row lg:items-center gap-0.5 lg:gap-2 text-[11px] lg:text-[11px] text-neutral-500 dark:text-neutral-400">
                               <span suppressHydrationWarning>
-                                {format(new Date(post.publishedAt), 'd MMM yyyy').toUpperCase()}
+                                {format(new Date(post.publishedAt), 'd MMM yyyy')}
                               </span>
                               <span className="hidden lg:inline">|</span>
-                              <span className="hidden lg:inline">{post.readingTime || 5} MIN READ</span>
+                              <span className="hidden lg:inline">{post.readingTime || 5} min read</span>
                             </div>
                           </div>
 
@@ -408,7 +408,7 @@ async function DevelopmentHomePage() {
                               post._type === 'gearPost' ? `/gear/${post.slug.current}` :
                               `/races/${post.slug.current}`
                             }
-                            className="shrink-0 overflow-hidden rounded-sm transition-opacity duration-200 hover:opacity-80"
+                            className="shrink-0 overflow-hidden transition-opacity duration-200 hover:opacity-80"
                             style={{ width: '33%' }}
                           >
                             <div style={{ paddingBottom: '100%' }} className="relative">
