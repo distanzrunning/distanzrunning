@@ -444,7 +444,7 @@ async function DevelopmentHomePage() {
         {/* Gear Section */}
         {(featuredGearPost || secondFeaturedGear || recentGear.length > 0) && (
           <section className="py-12 bg-neutral-50 dark:bg-neutral-900/50 transition-colors duration-300">
-            <div className="px-2 sm:px-3">
+            <div>
               {/* Section Header */}
               <div className="flex items-end justify-between gap-8 mb-8 md:mb-11">
                 <div className="flex flex-col gap-3">
@@ -659,7 +659,7 @@ async function DevelopmentHomePage() {
         {/* Races Section - Horizontal Scrolling Carousel */}
         {recentRaces.length > 0 && (
           <section className="py-12 bg-white dark:bg-[#0c0c0d] transition-colors duration-300">
-            <div className="px-2 sm:px-3">
+            <div>
               {/* Section Header */}
               <div className="flex items-end justify-between gap-8 mb-8 md:mb-11">
                 <div className="flex flex-col gap-3">
