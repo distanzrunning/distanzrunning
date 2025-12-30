@@ -1368,25 +1368,74 @@
    Bordered Layout System (IEEE Spectrum-inspired)
    ======================= */
 
-/* Main content wrapper with vertical borders */
+/* Main content wrapper with vertical borders - IEEE style */
 .main-bordered {
   position: relative;
   width: 100%;
   margin: 0 auto;
   background-color: rgb(var(--color-surface));
   overflow: visible;
+  min-height: 100vh;
 }
 
-/* Responsive width - 100% on mobile, 92% on large screens */
+/* Responsive width with side borders - inspired by IEEE's .main.v-sep */
+@media (min-width: 640px) {
+  .main-bordered {
+    width: 96%;
+  }
+}
+
+@media (min-width: 768px) {
+  .main-bordered {
+    width: 94%;
+    border-left: 1px solid rgb(var(--color-borderNeutral));
+    border-right: 1px solid rgb(var(--color-borderNeutral));
+  }
+}
+
 @media (min-width: 1024px) {
   .main-bordered {
     width: 92%;
-    border-left: 1px solid rgb(var(--color-borderNeutral));
-    border-right: 1px solid rgb(var(--color-borderNeutral));
+  }
+}
+
+@media (min-width: 1280px) {
+  .main-bordered {
+    width: 90%;
+  }
+}
+
+@media (min-width: 1536px) {
+  .main-bordered {
+    width: 88%;
+    max-width: 1600px;
   }
 }
 
 /* Dark mode support */
 .dark .main-bordered {
   background-color: rgb(var(--color-canvas));
+}
+
+.dark .main-bordered {
+  border-left-color: rgb(var(--color-borderNeutral));
+  border-right-color: rgb(var(--color-borderNeutral));
+}
+
+/* Utility class for vertical separator borders only (no width constraint) */
+.v-sep {
+  border-left: 1px solid rgb(var(--color-borderNeutral));
+  border-right: 1px solid rgb(var(--color-borderNeutral));
+}
+
+@media (max-width: 767px) {
+  .v-sep {
+    border-left: none;
+    border-right: none;
+  }
+}
+
+.dark .v-sep {
+  border-left-color: rgb(var(--color-borderNeutral));
+  border-right-color: rgb(var(--color-borderNeutral));
 }

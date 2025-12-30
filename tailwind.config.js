@@ -468,6 +468,55 @@ module.exports = {
         '.quartr-font-features': {
           fontFeatureSettings: "'cv02', 'cv03', 'cv04', 'cv11'",
         },
+
+        // IEEE-inspired bordered layout wrapper
+        '.main-bordered': {
+          position: 'relative',
+          width: '100%',
+          margin: '0 auto',
+          minHeight: '100vh',
+          overflow: 'visible',
+        },
+        '@media (min-width: 640px)': {
+          '.main-bordered': {
+            width: '96%',
+          },
+        },
+        '@media (min-width: 768px)': {
+          '.main-bordered': {
+            width: '94%',
+            borderLeft: '1px solid rgb(var(--color-borderNeutral))',
+            borderRight: '1px solid rgb(var(--color-borderNeutral))',
+          },
+        },
+        '@media (min-width: 1024px)': {
+          '.main-bordered': {
+            width: '92%',
+          },
+        },
+        '@media (min-width: 1280px)': {
+          '.main-bordered': {
+            width: '90%',
+          },
+        },
+        '@media (min-width: 1536px)': {
+          '.main-bordered': {
+            width: '88%',
+            maxWidth: '1600px',
+          },
+        },
+
+        // Vertical separator utility (borders only)
+        '.v-sep': {
+          borderLeft: '1px solid rgb(var(--color-borderNeutral))',
+          borderRight: '1px solid rgb(var(--color-borderNeutral))',
+        },
+        '@media (max-width: 767px)': {
+          '.v-sep': {
+            borderLeft: 'none',
+            borderRight: 'none',
+          },
+        },
       });
     },
     require('tailwindcss-animate'),
