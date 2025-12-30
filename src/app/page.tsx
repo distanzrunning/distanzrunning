@@ -309,24 +309,17 @@ async function DevelopmentHomePage() {
                         )}
                       </div>
 
-                      {/* Title with Subheadline */}
-                      <h2 className="text-[22px] leading-[1.2] lg:text-4xl lg:leading-[1.15] font-headline mb-2 lg:mb-3 group/title">
-                        <span className="font-bold text-neutral-900 dark:text-white group-hover/title:underline group-hover/title:decoration-electric-pink group-hover/title:decoration-1 group-hover/title:underline-offset-2 inline cursor-pointer">
-                          {featuredPost.title}
-                        </span>
-                        {featuredPost.excerpt && (
-                          <>
-                            {' '}
-                            <svg className="hidden lg:inline-block w-4 h-4 mx-1 align-middle" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                            </svg>
-                            {' '}
-                            <span className="hidden lg:inline font-[var(--font-headline-sc)] font-normal text-neutral-600 dark:text-neutral-400 group-hover/title:underline group-hover/title:decoration-electric-pink group-hover/title:decoration-1 group-hover/title:underline-offset-2">
-                              {featuredPost.excerpt}
-                            </span>
-                          </>
-                        )}
+                      {/* Title */}
+                      <h2 className="text-[22px] leading-[1.2] lg:text-4xl lg:leading-[1.15] font-headline mb-2 lg:mb-3 font-bold text-neutral-900 dark:text-white group-hover:underline group-hover:decoration-electric-pink group-hover:decoration-1 group-hover:underline-offset-2">
+                        {featuredPost.title}
                       </h2>
+
+                      {/* Subheadline/Excerpt */}
+                      {featuredPost.excerpt && (
+                        <h3 className="text-base lg:text-lg font-[var(--font-headline-sc)] font-normal text-neutral-600 dark:text-neutral-400 mb-2 lg:mb-3 leading-snug">
+                          {featuredPost.excerpt}
+                        </h3>
+                      )}
 
                       {/* Date & Reading Time */}
                       <div className="flex items-center gap-2 text-[10px] lg:text-xs text-neutral-500 dark:text-neutral-400 mb-3 lg:mb-4 uppercase">
@@ -365,9 +358,9 @@ async function DevelopmentHomePage() {
                         className="group border-b border-l border-neutral-200 dark:border-neutral-800"
                       >
                         {/* IEEE-style layout: Text LEFT (67%), Image RIGHT (33%) on mobile */}
-                        <div className="flex flex-row items-start gap-2 lg:gap-3 p-3 lg:pl-1.5 lg:pt-4 lg:pb-4 lg:pr-5">
+                        <div className="flex flex-row items-start gap-3 lg:gap-3 p-4 lg:pl-1.5 lg:pt-4 lg:pb-4 lg:pr-5">
                           {/* Text Content - LEFT side (67% on mobile, flexes on desktop) */}
-                          <div className="flex-1 flex flex-col gap-1 lg:gap-1.5 lg:px-2.5" style={{ width: '67%' }}>
+                          <div className="flex-1 flex flex-col gap-1.5 lg:gap-1.5 lg:px-2.5" style={{ width: '67%' }}>
                             {/* Tags - Content Type + Category - Hide on mobile, show on desktop */}
                             <div className="hidden lg:flex items-center gap-2 mb-1">
                               <span className="px-2 py-1 text-xs font-medium uppercase text-neutral-600 dark:text-neutral-400 border-l border-b border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:border-neutral-100 dark:hover:border-neutral-800 transition-colors">
