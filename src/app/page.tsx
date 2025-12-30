@@ -294,7 +294,7 @@ async function DevelopmentHomePage() {
             <div className="flex flex-col lg:grid lg:grid-cols-12">
               {/* Featured Post - Takes up 8 columns (66.67%) on desktop, full width on mobile */}
               {featuredPost && (
-                <div className="lg:col-span-8 lg:sticky lg:top-20 lg:self-start border-b border-l border-neutral-200 dark:border-neutral-800 pb-4 lg:pb-6">
+                <div className="lg:col-span-8 lg:sticky lg:top-20 lg:self-start border-b border-l lg:border-r-0 border-neutral-200 dark:border-neutral-800 pb-4 lg:pb-6">
                   <div className="px-3 py-3 lg:px-6 lg:py-4">
                     <Link href={`/articles/post/${featuredPost.slug.current}`} className="group">
                       {/* Featured & Category Tags */}
