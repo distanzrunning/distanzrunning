@@ -362,7 +362,7 @@ async function DevelopmentHomePage() {
                     {breakingNews.map((post) => (
                       <div
                         key={post._id}
-                        className="group border-b border-l border-neutral-200 dark:border-neutral-800"
+                        className="group border-b border-l border-neutral-200 dark:border-neutral-800 min-h-[180px] lg:min-h-[220px]"
                       >
                         {/* IEEE-style layout: Text LEFT (67%), Image RIGHT (33%) on mobile */}
                         <div className="pt-0 pr-[22px] pb-4 pl-1.5 lg:pl-1.5 lg:pt-4 lg:pb-4 lg:pr-5">
@@ -410,21 +410,23 @@ async function DevelopmentHomePage() {
                             </div>
 
                             {/* Image - RIGHT side (33% on mobile and desktop) */}
-                            <div className="shrink-0 px-2.5" style={{ width: '33%' }}>
+                            <div className="shrink-0 px-2.5 flex items-start" style={{ width: '33%' }}>
                               <Link
                                 href={
                                   post._type === 'post' ? `/articles/post/${post.slug.current}` :
                                   post._type === 'gearPost' ? `/gear/${post.slug.current}` :
                                   `/races/${post.slug.current}`
                                 }
-                                className="block overflow-hidden transition-opacity duration-200 hover:opacity-80 mb-2.5"
+                                className="block w-full overflow-hidden transition-opacity duration-200 hover:opacity-80 mb-2.5"
                               >
                                 {post.mainImage && (
-                                  <img
-                                    src={urlFor(post.mainImage).width(1000).height(399).url()}
-                                    alt={post.title}
-                                    className="w-full h-auto object-contain"
-                                  />
+                                  <div className="relative w-full" style={{ paddingBottom: '100%' }}>
+                                    <img
+                                      src={urlFor(post.mainImage).width(600).height(600).url()}
+                                      alt={post.title}
+                                      className="absolute inset-0 w-full h-full object-cover"
+                                    />
+                                  </div>
                                 )}
                               </Link>
                             </div>
