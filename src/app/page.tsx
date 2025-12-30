@@ -329,7 +329,7 @@ async function DevelopmentHomePage() {
                       </h2>
 
                       {/* Date & Reading Time */}
-                      <div className="flex items-center gap-2 text-[10px] lg:text-xs text-neutral-500 dark:text-neutral-400 mb-3 lg:mb-4 uppercase font-mono">
+                      <div className="flex items-center gap-2 text-xs lg:text-sm text-neutral-500 dark:text-neutral-400 mb-3 lg:mb-4 uppercase font-mono">
                         <span suppressHydrationWarning>
                           {format(new Date(featuredPost.publishedAt), 'd MMM yyyy').toUpperCase()}
                         </span>
