@@ -478,30 +478,24 @@ module.exports = {
           minHeight: '100vh',
           overflow: 'visible',
         },
-        '@media (min-width: 640px)': {
-          '.main-wrapper': {
-            width: '96%',
-          },
-        },
         '@media (min-width: 768px)': {
           '.main-wrapper': {
-            width: '94%',
+            width: '98%',
           },
         },
         '@media (min-width: 1024px)': {
           '.main-wrapper': {
-            width: '92%',
+            width: '96%',
           },
         },
         '@media (min-width: 1280px)': {
           '.main-wrapper': {
-            width: '90%',
+            width: '94%',
           },
         },
         '@media (min-width: 1536px)': {
           '.main-wrapper': {
-            width: '88%',
-            maxWidth: '1600px',
+            width: '92%',
           },
         },
 
