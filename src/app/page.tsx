@@ -299,11 +299,11 @@ async function DevelopmentHomePage() {
                     <Link href={`/articles/post/${featuredPost.slug.current}`} className="group">
                       {/* Featured & Category Tags */}
                       <div className="flex items-center gap-2 mb-2 lg:mb-3">
-                        <span className="px-2 py-1 text-[10px] lg:text-xs font-medium uppercase text-neutral-600 dark:text-neutral-400 border-l border-b border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:border-neutral-100 dark:hover:border-neutral-800 transition-colors">
+                        <span className="px-2 py-1 text-xs font-medium uppercase text-neutral-600 dark:text-neutral-400 border-l border-b border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:border-neutral-100 dark:hover:border-neutral-800 transition-colors">
                           FEATURED
                         </span>
                         {featuredPost.categoryName && (
-                          <span className="px-2 py-1 text-[10px] lg:text-xs font-medium uppercase text-electric-pink border-l border-b border-neutral-300 dark:border-neutral-600 hover:bg-electric-pink hover:text-white hover:border-electric-pink transition-colors">
+                          <span className="px-2 py-1 text-xs font-medium uppercase text-electric-pink border-l border-b border-neutral-300 dark:border-neutral-600 hover:bg-electric-pink hover:text-white hover:border-electric-pink transition-colors">
                             {featuredPost.categoryName.toUpperCase()}
                           </span>
                         )}
@@ -329,7 +329,7 @@ async function DevelopmentHomePage() {
                       </h2>
 
                       {/* Date & Reading Time */}
-                      <div className="flex items-center gap-2 text-xs lg:text-sm text-neutral-500 dark:text-neutral-400 mb-3 lg:mb-4 uppercase font-mono">
+                      <div className="flex items-center gap-1 text-xs lg:text-sm text-neutral-500 dark:text-neutral-400 mb-3 lg:mb-4 uppercase font-mono">
                         <span suppressHydrationWarning>
                           {format(new Date(featuredPost.publishedAt), 'd MMM yyyy').toUpperCase()}
                         </span>
@@ -423,8 +423,7 @@ async function DevelopmentHomePage() {
                                   <img
                                     src={urlFor(post.mainImage).width(1000).height(399).url()}
                                     alt={post.title}
-                                    className="w-full h-auto"
-                                    style={{ objectFit: 'cover' }}
+                                    className="w-full h-auto object-contain"
                                   />
                                 )}
                               </Link>
