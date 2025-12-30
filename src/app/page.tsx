@@ -317,7 +317,7 @@ async function DevelopmentHomePage() {
                         {featuredPost.excerpt && (
                           <>
                             {' '}
-                            <svg className="inline-block w-4 h-4 mx-1 align-middle" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg className="inline-block w-5 h-5 lg:w-6 lg:h-6 mx-1 lg:mx-2 align-middle" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                             </svg>
                             {' '}
