@@ -417,16 +417,14 @@ async function DevelopmentHomePage() {
                                   post._type === 'gearPost' ? `/gear/${post.slug.current}` :
                                   `/races/${post.slug.current}`
                                 }
-                                className="block w-full overflow-hidden transition-opacity duration-200 hover:opacity-80 mb-2.5"
+                                className="block w-full transition-opacity duration-200 hover:opacity-80"
                               >
                                 {post.mainImage && (
-                                  <div className="relative w-full" style={{ paddingBottom: '100%' }}>
-                                    <img
-                                      src={urlFor(post.mainImage).width(600).height(600).url()}
-                                      alt={post.title}
-                                      className="absolute inset-0 w-full h-full object-cover"
-                                    />
-                                  </div>
+                                  <img
+                                    src={urlFor(post.mainImage).width(600).fit('max').url()}
+                                    alt={post.title}
+                                    className="w-full h-auto max-h-[200px] object-contain"
+                                  />
                                 )}
                               </Link>
                             </div>
