@@ -469,8 +469,9 @@ module.exports = {
           fontFeatureSettings: "'cv02', 'cv03', 'cv04', 'cv11'",
         },
 
-        // IEEE-inspired bordered layout wrapper
-        '.main-bordered': {
+        // IEEE-inspired bordered layout system
+        // Outer wrapper with responsive width and margins
+        '.main-wrapper': {
           position: 'relative',
           width: '100%',
           margin: '0 auto',
@@ -478,31 +479,42 @@ module.exports = {
           overflow: 'visible',
         },
         '@media (min-width: 640px)': {
-          '.main-bordered': {
+          '.main-wrapper': {
             width: '96%',
           },
         },
         '@media (min-width: 768px)': {
-          '.main-bordered': {
+          '.main-wrapper': {
             width: '94%',
-            borderLeft: '1px solid rgb(var(--color-borderNeutral))',
-            borderRight: '1px solid rgb(var(--color-borderNeutral))',
           },
         },
         '@media (min-width: 1024px)': {
-          '.main-bordered': {
+          '.main-wrapper': {
             width: '92%',
           },
         },
         '@media (min-width: 1280px)': {
-          '.main-bordered': {
+          '.main-wrapper': {
             width: '90%',
           },
         },
         '@media (min-width: 1536px)': {
-          '.main-bordered': {
+          '.main-wrapper': {
             width: '88%',
             maxWidth: '1600px',
+          },
+        },
+
+        // Inner bordered container - full width with side borders
+        '.main-bordered': {
+          position: 'relative',
+          width: '100%',
+          overflow: 'visible',
+        },
+        '@media (min-width: 768px)': {
+          '.main-bordered': {
+            borderLeft: '1px solid rgb(var(--color-borderNeutral))',
+            borderRight: '1px solid rgb(var(--color-borderNeutral))',
           },
         },
 

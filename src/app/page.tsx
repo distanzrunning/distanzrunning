@@ -287,7 +287,8 @@ async function DevelopmentHomePage() {
   return (
     <DarkModeProvider>
       <div className="min-h-screen bg-white dark:bg-[#0c0c0d] transition-colors duration-300">
-        <div className="main-bordered">
+        <div className="main-wrapper">
+          <div className="main-bordered">
         {/* Featured Post and Breaking News Section */}
         {(featuredPost || breakingNews.length > 0) && (
           <section className="bg-white dark:bg-[#0c0c0d] transition-colors duration-300">
@@ -773,6 +774,7 @@ async function DevelopmentHomePage() {
           </section>
         )}
 
+          </div>
         </div>
       </div>
     </DarkModeProvider>

@@ -1368,8 +1368,9 @@
    Bordered Layout System (IEEE Spectrum-inspired)
    ======================= */
 
-/* Main content wrapper with vertical borders - IEEE style */
-.main-bordered {
+/* Outer wrapper with responsive width and margins
+   Structure: Viewport edges > Responsive margin > Border > Content */
+.main-wrapper {
   position: relative;
   width: 100%;
   margin: 0 auto;
@@ -1378,45 +1379,59 @@
   min-height: 100vh;
 }
 
-/* Responsive width with side borders - inspired by IEEE's .main.v-sep */
+/* Responsive width - margins expand/contract with screen size */
 @media (min-width: 640px) {
-  .main-bordered {
+  .main-wrapper {
     width: 96%;
   }
 }
 
 @media (min-width: 768px) {
-  .main-bordered {
+  .main-wrapper {
     width: 94%;
-    border-left: 1px solid rgb(var(--color-borderNeutral));
-    border-right: 1px solid rgb(var(--color-borderNeutral));
   }
 }
 
 @media (min-width: 1024px) {
-  .main-bordered {
+  .main-wrapper {
     width: 92%;
   }
 }
 
 @media (min-width: 1280px) {
-  .main-bordered {
+  .main-wrapper {
     width: 90%;
   }
 }
 
 @media (min-width: 1536px) {
-  .main-bordered {
+  .main-wrapper {
     width: 88%;
     max-width: 1600px;
   }
 }
 
-/* Dark mode support */
-.dark .main-bordered {
+/* Dark mode support for wrapper */
+.dark .main-wrapper {
   background-color: rgb(var(--color-canvas));
 }
 
+/* Inner bordered container - full width with side borders */
+.main-bordered {
+  position: relative;
+  width: 100%;
+  overflow: visible;
+}
+
+/* Borders appear at tablet size and above */
+@media (min-width: 768px) {
+  .main-bordered {
+    border-left: 1px solid rgb(var(--color-borderNeutral));
+    border-right: 1px solid rgb(var(--color-borderNeutral));
+  }
+}
+
+/* Dark mode support for borders */
 .dark .main-bordered {
   border-left-color: rgb(var(--color-borderNeutral));
   border-right-color: rgb(var(--color-borderNeutral));
