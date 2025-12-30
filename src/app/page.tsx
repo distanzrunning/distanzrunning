@@ -370,7 +370,7 @@ async function DevelopmentHomePage() {
                             {/* Text Content - LEFT side (67% on mobile, flexes on desktop) */}
                             <div className="flex-1 flex flex-col px-2.5 lg:px-2.5" style={{ width: '67%' }}>
                             {/* Tags - Content Type + Category - Hide on mobile, show on desktop */}
-                            <div className="hidden lg:flex items-center gap-2 mb-2 mt-2.5">
+                            <div className="hidden lg:flex items-center gap-2 mb-2 mt-0">
                               <span className="px-2 py-1 text-xs font-medium uppercase text-neutral-600 dark:text-neutral-400 border-l border-b border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:border-neutral-100 dark:hover:border-neutral-800 transition-colors">
                                 {post._type === 'gearPost' ? 'GEAR' : post._type === 'raceGuide' ? 'RACES' : 'NEWS'}
                               </span>
