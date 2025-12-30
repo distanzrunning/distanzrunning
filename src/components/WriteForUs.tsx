@@ -9,9 +9,9 @@ export default function WriteForUs() {
   const isActualAd = false
 
   return (
-    <section className="w-full overflow-x-clip px-4 py-8 md:py-12">
+    <section className="w-full overflow-x-clip py-8 md:py-12">
       {/* Ad Container - Standard Display Ad Placement */}
-      <div className="w-[95%] mx-auto flex flex-col items-center">
+      <div className="flex flex-col items-center">
         {/* Display Ad Label - Only show for actual ads */}
         {isActualAd && (
           <div className="text-[10px] uppercase tracking-wider text-neutral-400 dark:text-neutral-600 mb-2">
