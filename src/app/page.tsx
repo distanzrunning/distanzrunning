@@ -291,7 +291,7 @@ async function DevelopmentHomePage() {
         {/* Featured Post and Breaking News Section */}
         {(featuredPost || breakingNews.length > 0) && (
           <section className="bg-white dark:bg-[#0c0c0d] transition-colors duration-300">
-            <div className="grid grid-cols-1 lg:grid-cols-12 lg:gap-4">
+            <div className="grid grid-cols-1 lg:grid-cols-12">
               {/* Featured Post - Takes up 8 columns (66.67%) */}
               {featuredPost && (
                 <div className="lg:col-span-8 lg:sticky lg:top-20 lg:self-start border-b border-neutral-200 dark:border-neutral-800 pb-4">
