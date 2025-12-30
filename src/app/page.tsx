@@ -295,7 +295,7 @@ async function DevelopmentHomePage() {
               {/* Featured Post - Takes up 8 columns (66.67%) */}
               {featuredPost && (
                 <div className="lg:col-span-8 lg:sticky lg:top-20 lg:self-start border-b border-neutral-200 dark:border-neutral-800 pb-4">
-                  <div className="w-[95%] mx-auto">
+                  <div>
                     <div className="flex flex-col w-full">
                       <Link href={`/articles/post/${featuredPost.slug.current}`} className="group">
                         {/* Featured & Category Tags */}
@@ -444,7 +444,7 @@ async function DevelopmentHomePage() {
         {/* Gear Section */}
         {(featuredGearPost || secondFeaturedGear || recentGear.length > 0) && (
           <section className="py-12 bg-neutral-50 dark:bg-neutral-900/50 transition-colors duration-300">
-            <div className="w-[95%] mx-auto px-2 sm:px-3">
+            <div className="px-2 sm:px-3">
               {/* Section Header */}
               <div className="flex items-end justify-between gap-8 mb-8 md:mb-11">
                 <div className="flex flex-col gap-3">
@@ -659,7 +659,7 @@ async function DevelopmentHomePage() {
         {/* Races Section - Horizontal Scrolling Carousel */}
         {recentRaces.length > 0 && (
           <section className="py-12 bg-white dark:bg-[#0c0c0d] transition-colors duration-300">
-            <div className="w-[95%] mx-auto px-2 sm:px-3">
+            <div className="px-2 sm:px-3">
               {/* Section Header */}
               <div className="flex items-end justify-between gap-8 mb-8 md:mb-11">
                 <div className="flex flex-col gap-3">
