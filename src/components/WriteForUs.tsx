@@ -21,13 +21,13 @@ export default function WriteForUs() {
 
         {/* Ad Slot - Responsive Container */}
         {/* Desktop: 970x250 (Billboard) or 728x90 (Leaderboard) */}
-        {/* Mobile: 320x100 (Mobile Banner) or 300x250 (Medium Rectangle) */}
+        {/* Mobile: 300x300 (Square) */}
         <div className="w-full max-w-[970px] mx-auto">
           {/* Placeholder: "Write for Us" message */}
           <div className="flex w-full items-center justify-center overflow-hidden rounded-lg bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700">
-            {/* Mobile: 320x100 or 300x250 */}
-            <div className="block md:hidden w-full">
-              <div className="flex min-h-[100px] sm:min-h-[250px] items-center justify-center p-6">
+            {/* Mobile: 300x300 Square */}
+            <div className="block md:hidden w-full max-w-[300px] mx-auto">
+              <div className="flex aspect-square items-center justify-center p-6">
                 <div className="flex flex-col gap-3 items-center text-center">
                   <h4 className="font-body text-lg sm:text-xl font-semibold text-neutral-900 dark:text-white">
                     Want to create running content?
