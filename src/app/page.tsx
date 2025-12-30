@@ -400,12 +400,12 @@ async function DevelopmentHomePage() {
                             </Link>
 
                             {/* Date and Read Time */}
-                            <div className="flex items-center gap-1 text-sm lg:text-[11px] text-neutral-500 dark:text-neutral-400">
+                            <div className="flex items-center gap-1 text-sm lg:text-[11px] text-neutral-500 dark:text-neutral-400 font-mono uppercase">
                               <span suppressHydrationWarning>
-                                {format(new Date(post.publishedAt), 'd MMM yyyy')}
+                                {format(new Date(post.publishedAt), 'd MMM yyyy').toUpperCase()}
                               </span>
                               <span>|</span>
-                              <span>{post.readingTime || 5} min read</span>
+                              <span>{post.readingTime || 5} MIN READ</span>
                             </div>
                             </div>
 
