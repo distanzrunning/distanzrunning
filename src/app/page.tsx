@@ -365,10 +365,10 @@ async function DevelopmentHomePage() {
                         className="group border-b border-l border-neutral-200 dark:border-neutral-800"
                       >
                         {/* IEEE-style layout: Text LEFT (67%), Image RIGHT (33%) on mobile */}
-                        <div className="py-5 px-2.5 lg:pl-1.5 lg:pt-4 lg:pb-4 lg:pr-5">
+                        <div className="pt-4 pr-[22px] pb-4 pl-1.5 lg:pl-1.5 lg:pt-4 lg:pb-4 lg:pr-5">
                           <div className="flex flex-row items-start gap-2.5">
-                            {/* Text Content - LEFT side (60% on mobile, flexes on desktop) */}
-                            <div className="flex-1 flex flex-col lg:px-2.5" style={{ width: '60%' }}>
+                            {/* Text Content - LEFT side (67% on mobile, flexes on desktop) */}
+                            <div className="flex-1 flex flex-col lg:px-2.5" style={{ width: '67%' }}>
                             {/* Tags - Content Type + Category - Hide on mobile, show on desktop */}
                             <div className="hidden lg:flex items-center gap-2 mb-2">
                               <span className="px-2 py-1 text-xs font-medium uppercase text-neutral-600 dark:text-neutral-400 border-l border-b border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:border-neutral-100 dark:hover:border-neutral-800 transition-colors">
@@ -409,7 +409,7 @@ async function DevelopmentHomePage() {
                             </div>
                             </div>
 
-                            {/* Image - RIGHT side (40% on mobile and desktop) */}
+                            {/* Image - RIGHT side (33% on mobile and desktop) */}
                             <Link
                               href={
                                 post._type === 'post' ? `/articles/post/${post.slug.current}` :
@@ -417,12 +417,12 @@ async function DevelopmentHomePage() {
                                 `/races/${post.slug.current}`
                               }
                               className="shrink-0 overflow-hidden transition-opacity duration-200 hover:opacity-80"
-                              style={{ width: '40%' }}
+                              style={{ width: '33%' }}
                             >
-                              <div style={{ paddingBottom: '66.67%' }} className="relative">
+                              <div style={{ paddingBottom: '40%' }} className="relative">
                                 {post.mainImage && (
                                   <img
-                                    src={urlFor(post.mainImage).width(600).height(400).url()}
+                                    src={urlFor(post.mainImage).width(1000).height(400).url()}
                                     alt={post.title}
                                     className="absolute inset-0 w-full h-full object-cover"
                                   />
