@@ -287,71 +287,69 @@ async function DevelopmentHomePage() {
   return (
     <DarkModeProvider>
       <div className="min-h-screen bg-white dark:bg-[#0c0c0d] transition-colors duration-300">
-        {/* Featured Post and Breaking News Section */}
+        {/* Featured Post and Breaking News Section - IEEE Style */}
         {(featuredPost || breakingNews.length > 0) && (
           <section className="bg-white dark:bg-[#0c0c0d] transition-colors duration-300">
             {/* Desktop: side-by-side | Mobile: featured article full-width, then 2-col grid below */}
             <div className="flex flex-col lg:grid lg:grid-cols-12">
               {/* Featured Post - Takes up 8 columns (66.67%) on desktop, full width on mobile */}
               {featuredPost && (
-                <div className="lg:col-span-8 lg:sticky lg:top-20 lg:self-start lg:border-b border-neutral-200 dark:border-neutral-800 pb-4">
-                  <div className="px-4 md:px-6">
-                    <div className="flex flex-col w-full">
-                      <Link href={`/articles/post/${featuredPost.slug.current}`} className="group">
-                        {/* Featured & Category Tags */}
-                        <div className="flex items-center gap-2 mb-3">
-                          <span className="px-2 py-1 text-xs font-medium uppercase text-neutral-600 dark:text-neutral-400 border-l border-b border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:border-neutral-100 dark:hover:border-neutral-800 transition-colors">
-                            FEATURED
+                <div className="lg:col-span-8 lg:sticky lg:top-20 lg:self-start border-b border-l border-neutral-200 dark:border-neutral-800 pb-4 lg:pb-6">
+                  <div className="px-3 py-3 lg:px-6 lg:py-4">
+                    <Link href={`/articles/post/${featuredPost.slug.current}`} className="group">
+                      {/* Featured & Category Tags */}
+                      <div className="flex items-center gap-2 mb-2 lg:mb-3">
+                        <span className="px-2 py-1 text-[10px] lg:text-xs font-medium uppercase text-neutral-600 dark:text-neutral-400 border-l border-b border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:border-neutral-100 dark:hover:border-neutral-800 transition-colors">
+                          FEATURED
+                        </span>
+                        {featuredPost.categoryName && (
+                          <span className="px-2 py-1 text-[10px] lg:text-xs font-medium uppercase text-electric-pink border-l border-b border-neutral-300 dark:border-neutral-600 hover:bg-electric-pink hover:text-white hover:border-electric-pink transition-colors">
+                            {featuredPost.categoryName.toUpperCase()}
                           </span>
-                          {featuredPost.categoryName && (
-                            <span className="px-2 py-1 text-xs font-medium uppercase text-electric-pink border-l border-b border-neutral-300 dark:border-neutral-600 hover:bg-electric-pink hover:text-white hover:border-electric-pink transition-colors">
-                              {featuredPost.categoryName.toUpperCase()}
+                        )}
+                      </div>
+
+                      {/* Title with Subheadline */}
+                      <h2 className="text-[22px] leading-[1.2] lg:text-4xl lg:leading-[1.15] font-headline mb-2 lg:mb-3 group/title">
+                        <span className="font-bold text-neutral-900 dark:text-white group-hover/title:underline group-hover/title:decoration-electric-pink group-hover/title:decoration-1 group-hover/title:underline-offset-2 inline cursor-pointer">
+                          {featuredPost.title}
+                        </span>
+                        {featuredPost.excerpt && (
+                          <>
+                            {' '}
+                            <svg className="hidden lg:inline-block w-4 h-4 mx-1 align-middle" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                            </svg>
+                            {' '}
+                            <span className="hidden lg:inline font-[var(--font-headline-sc)] font-normal text-neutral-600 dark:text-neutral-400 group-hover/title:underline group-hover/title:decoration-electric-pink group-hover/title:decoration-1 group-hover/title:underline-offset-2">
+                              {featuredPost.excerpt}
                             </span>
+                          </>
+                        )}
+                      </h2>
+
+                      {/* Date & Reading Time */}
+                      <div className="flex items-center gap-2 text-[10px] lg:text-xs text-neutral-500 dark:text-neutral-400 mb-3 lg:mb-4 uppercase">
+                        <span suppressHydrationWarning>
+                          {format(new Date(featuredPost.publishedAt), 'd MMM yyyy').toUpperCase()}
+                        </span>
+                        <span>|</span>
+                        <span>{featuredPost.readingTime || 5} MIN READ</span>
+                      </div>
+
+                      {/* Image */}
+                      <div className="relative w-full overflow-hidden rounded-sm">
+                        <div style={{ paddingBottom: '56.25%' }} className="relative">
+                          {featuredPost.mainImage && (
+                            <img
+                              src={urlFor(featuredPost.mainImage).width(1200).height(675).url()}
+                              alt={featuredPost.title}
+                              className="absolute inset-0 w-full h-full object-cover"
+                            />
                           )}
                         </div>
-
-                        {/* Title with Subheadline */}
-                        <h2 className="text-3xl md:text-4xl lg:text-[42px] font-headline leading-[1.15] mb-3 group/title">
-                          <span className="font-bold text-neutral-900 dark:text-white group-hover/title:underline group-hover/title:decoration-electric-pink group-hover/title:decoration-1 group-hover/title:underline-offset-2 inline cursor-pointer">
-                            {featuredPost.title}
-                          </span>
-                          {featuredPost.excerpt && (
-                            <>
-                              {' '}
-                              <svg className="inline-block w-4 h-4 mx-1 align-middle" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                              </svg>
-                              {' '}
-                              <span className="font-[var(--font-headline-sc)] font-normal text-neutral-600 dark:text-neutral-400 group-hover/title:underline group-hover/title:decoration-electric-pink group-hover/title:decoration-1 group-hover/title:underline-offset-2 inline">
-                                {featuredPost.excerpt}
-                              </span>
-                            </>
-                          )}
-                        </h2>
-
-                        {/* Date & Reading Time */}
-                        <div className="flex items-center gap-2 text-xs text-neutral-500 dark:text-neutral-400 mb-4 uppercase">
-                          <span suppressHydrationWarning>
-                            {format(new Date(featuredPost.publishedAt), 'd MMM yyyy').toUpperCase()}
-                          </span>
-                          <span>|</span>
-                          <span>{featuredPost.readingTime || 5} MIN READ</span>
-                        </div>
-
-                        {/* Image */}
-                        <div className="relative w-full overflow-hidden rounded-sm">
-                          <div style={{ paddingBottom: '56.25%' }} className="relative">
-                            {featuredPost.mainImage && (
-                              <img
-                                src={urlFor(featuredPost.mainImage).width(1200).height(675).url()}
-                                alt={featuredPost.title}
-                                className="absolute inset-0 w-full h-full object-cover"
-                              />
-                            )}
-                          </div>
-                        </div>
-                      </Link>
-                    </div>
+                      </div>
+                    </Link>
                   </div>
                 </div>
               )}
@@ -366,9 +364,10 @@ async function DevelopmentHomePage() {
                         key={post._id}
                         className="group border-b border-l border-neutral-200 dark:border-neutral-800"
                       >
-                        <div className="flex flex-col lg:flex-row items-start gap-2 lg:gap-3 p-3 lg:pl-1.5 lg:pt-4 lg:pb-4 lg:pr-5">
-                          {/* Mobile: Image on top | Desktop: Text on left */}
-                          <div className="flex-1 flex flex-col gap-1 lg:gap-1.5 lg:px-2.5 order-2 lg:order-1">
+                        {/* IEEE-style layout: Text LEFT (67%), Image RIGHT (33%) on mobile */}
+                        <div className="flex flex-row items-start gap-2 lg:gap-3 p-3 lg:pl-1.5 lg:pt-4 lg:pb-4 lg:pr-5">
+                          {/* Text Content - LEFT side (67% on mobile, flexes on desktop) */}
+                          <div className="flex-1 flex flex-col gap-1 lg:gap-1.5 lg:px-2.5" style={{ width: '67%' }}>
                             {/* Tags - Content Type + Category - Hide on mobile, show on desktop */}
                             <div className="hidden lg:flex items-center gap-2 mb-1">
                               <span className="px-2 py-1 text-xs font-medium uppercase text-neutral-600 dark:text-neutral-400 border-l border-b border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:border-neutral-100 dark:hover:border-neutral-800 transition-colors">
@@ -394,7 +393,7 @@ async function DevelopmentHomePage() {
                               post._type === 'gearPost' ? `/gear/${post.slug.current}` :
                               `/races/${post.slug.current}`
                             }>
-                              <h3 className="text-sm lg:text-[22px] leading-[1.2] font-bold text-neutral-900 dark:text-white line-clamp-2 lg:line-clamp-3 hover:underline hover:decoration-electric-pink hover:decoration-1 hover:underline-offset-2">
+                              <h3 className="text-sm lg:text-[22px] leading-[1.2] font-bold text-neutral-900 dark:text-white line-clamp-3 lg:line-clamp-3 hover:underline hover:decoration-electric-pink hover:decoration-1 hover:underline-offset-2">
                                 {post.title}
                               </h3>
                             </Link>
@@ -409,29 +408,30 @@ async function DevelopmentHomePage() {
                             </div>
                           </div>
 
-                          {/* Mobile: Image on top, full-width | Desktop: Image on right, 33% */}
+                          {/* Image - RIGHT side (33% on mobile and desktop) */}
                           <Link
                             href={
                               post._type === 'post' ? `/articles/post/${post.slug.current}` :
                               post._type === 'gearPost' ? `/gear/${post.slug.current}` :
                               `/races/${post.slug.current}`
                             }
-                            className="w-full lg:w-1/3 shrink-0 overflow-hidden rounded-sm transition-opacity duration-200 hover:opacity-80 order-1 lg:order-2"
+                            className="shrink-0 overflow-hidden rounded-sm transition-opacity duration-200 hover:opacity-80"
+                            style={{ width: '33%' }}
                           >
-                            <div style={{ paddingBottom: '66.67%' }} className="relative">
+                            <div style={{ paddingBottom: '100%' }} className="relative">
                               {post.mainImage && (
                                 <img
-                                  src={urlFor(post.mainImage).width(400).height(267).url()}
+                                  src={urlFor(post.mainImage).width(400).height(400).url()}
                                   alt={post.title}
                                   className="absolute inset-0 w-full h-full object-cover"
                                 />
                               )}
                             </div>
                           </Link>
-                          </div>
                         </div>
-                      ))}
-                    </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
             </div>
