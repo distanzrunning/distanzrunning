@@ -58,8 +58,8 @@ export default function Navbar({ featuredGear, featuredRace }: NavbarProps) {
   const [isPastThreshold, setIsPastThreshold] = useState(false)
   const [openDropdown, setOpenDropdown] = useState<'gear' | 'races' | null>(null)
   const [closeTimeout, setCloseTimeout] = useState<NodeJS.Timeout | null>(null)
-  // Reduced threshold so navbar animation triggers earlier in the scroll
-  const scrollThreshold = 20
+  // Threshold for navbar transformation - triggers when user scrolls into content area
+  const scrollThreshold = 50
 
   const handleOpenDropdown = (dropdown: 'gear' | 'races') => {
     if (closeTimeout) {
@@ -84,20 +84,23 @@ export default function Navbar({ featuredGear, featuredRace }: NavbarProps) {
   }
 
   useEffect(() => {
-    const handleScroll = () => setIsPastThreshold(window.scrollY > scrollThreshold)
+    const handleScroll = () => {
+      // Smooth transition: start fading at scrollThreshold
+      setIsPastThreshold(window.scrollY > scrollThreshold)
+    }
     handleScroll()
-    window.addEventListener('scroll', handleScroll)
+    window.addEventListener('scroll', handleScroll, { passive: true })
     return () => {
       window.removeEventListener('scroll', handleScroll)
       if (closeTimeout) clearTimeout(closeTimeout)
     }
-  }, [closeTimeout])
+  }, [closeTimeout, scrollThreshold])
 
   return (
     <>
       {/* Desktop Navigation */}
       <nav className="fixed w-full z-50 hidden md:block">
-        <div className="flex justify-center px-6 lg:px-8" style={{ paddingTop: isPastThreshold ? '1rem' : '1rem' }}>
+        <div className="flex justify-center px-6 lg:px-8 pt-4">
           <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
             {/* Floating Logo */}
             <div className={`pointer-events-auto absolute left-0 z-1 flex h-full items-center px-4 transition-all duration-500 ease-out ${
