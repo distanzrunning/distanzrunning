@@ -2,7 +2,7 @@
 import { sanityFetch } from "@/sanity/lib/live";
 import { featuredGearQuery } from "@/sanity/queries/featuredGearQuery";
 import { featuredRaceQuery } from "@/sanity/queries/featuredRaceQuery";
-import NavbarTwoPart from "./NavbarTwoPart";
+import NavbarClient from "./NavbarClient";
 
 export default async function NavbarAltWrapper() {
   const [featuredGear, featuredRace] = await Promise.all([
@@ -10,5 +10,5 @@ export default async function NavbarAltWrapper() {
     sanityFetch({ query: featuredRaceQuery }),
   ]);
 
-  return <NavbarTwoPart featuredGear={featuredGear.data} featuredRace={featuredRace.data} />;
+  return <NavbarClient featuredGear={featuredGear.data} featuredRace={featuredRace.data} />;
 }

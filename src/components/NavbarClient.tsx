@@ -99,7 +99,7 @@ export default function Navbar({ featuredGear, featuredRace }: NavbarProps) {
   return (
     <>
       {/* Desktop Navigation */}
-      <nav className="fixed w-full z-50 hidden md:block">
+      <nav className="sticky top-0 w-full z-50 hidden md:block">
         <div className="flex justify-center px-6 lg:px-8 pt-4">
           <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
             {/* Floating Logo */}

@@ -28,7 +28,7 @@ export default function LayoutContent({ children, navbar, footer }: LayoutConten
     <div className="main-wrapper">
       <div className="main-bordered min-h-screen flex flex-col">
         {navbar}
-        {/* No top padding needed - navbar is now relative and scrolls naturally */}
+        {/* Navbar is sticky - no padding needed, scrolls naturally */}
         <main className="flex-grow bg-white dark:bg-[#0c0c0d] transition-colors duration-300">{children}</main>
         {!isCalendarPage && footer}
       </div>
