@@ -128,7 +128,7 @@ export const BRAND = {
       wide: '1440px',     // Wide layouts
       full: '1920px',     // Full-width sections
     },
-    containerWidth: '1042px', // Quartr-inspired grid container
+    containerWidth: '1042px', // Distanz design system grid container
   },
   spacing: {
     unit: '4px', // Base spacing unit

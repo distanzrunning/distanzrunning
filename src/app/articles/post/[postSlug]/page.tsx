@@ -258,11 +258,11 @@ export default async function BlogPost({ params }: { params: { postSlug: string 
       {/* Table of Contents Widget */}
       <TableOfContentsWidget body={post.body} />
       
-      <div className="bg-white quartr-font-features">
-        <div className="quartr-article-container quartr-text-spacing">
+      <div className="bg-white distanz-font-features">
+        <div className="distanz-article-container distanz-text-spacing">
 
           {/* Shared Grid Row: Image and Breadcrumbs */}
-          <div className="quartr-full-col grid grid-cols-1">
+          <div className="distanz-full-col grid grid-cols-1">
             {/* Image */}
             {post.mainImage && (
               <div className="w-full">
@@ -278,7 +278,7 @@ export default async function BlogPost({ params }: { params: { postSlug: string 
               </div>
             )}
 
-            {/* Breadcrumb - Exact Quartr styling with capsize */}
+            {/* Breadcrumb - Distanz styling with capsize */}
             <div className="pb-6 pt-3 md:pb-9 md:pt-6">
               <div>
                 <ul className="flex w-full flex-nowrap items-center gap-x-1 gap-y-1">
@@ -329,24 +329,24 @@ export default async function BlogPost({ params }: { params: { postSlug: string 
           {/* Title, Reading Time, Date, Author - Using proper 12-column span */}
           <div className="col-span-full lg:col-start-4 lg:col-span-12">
             <div className="flex flex-col gap-6 pb-9 md:gap-9">
-              {/* Title using your Playfair font but with Quartr's exact sizing */}
+              {/* Title using your Playfair font but with Distanz sizing */}
               <h1 className="font-playfair font-semibold tracking-tight text-[35px] leading-[40px] md:text-[56px] md:leading-[56px] text-textDefault">
                 {post.title}
               </h1>
 
               {/* Container for metadata and author */}
               <div className="flex flex-col gap-2">
-                {/* Reading time container - exact Quartr styling */}
+                {/* Reading time container - Distanz styling */}
                 <div>
                   <div className="font-sans text-textSubtle font-normal text-base capsize leading-snug">{readTime} minutes reading time</div>
                 </div>
 
-                {/* Published date container - exact Quartr styling */}
+                {/* Published date container - Distanz styling */}
                 <div>
                   <div className="font-sans text-textSubtle font-normal text-base capsize leading-snug">Published {publishedDate}</div>
                 </div>
 
-                {/* Author container - exact Quartr styling */}
+                {/* Author container - Distanz styling */}
                 {post.author && (
                   <div className="mt-5 flex items-center gap-3">
                     {post.author.image && (
@@ -405,7 +405,7 @@ export default async function BlogPost({ params }: { params: { postSlug: string 
 
           {/* Main Article Body - Using proper 12-column span */}
           <div className="col-span-full lg:col-start-4 lg:col-span-12">
-            <article className="quartr-font-features">
+            <article className="distanz-font-features">
               <PortableText 
                 value={post.body}
                 components={portableTextComponents}

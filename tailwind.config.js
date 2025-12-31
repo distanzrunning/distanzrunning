@@ -403,7 +403,7 @@ module.exports = {
         'normal': '1.35', // Reduced from 1.5
         'relaxed': '1.5', // Reduced from 1.625
         
-        // Exact pixel line heights from Quartr
+        // Exact pixel line heights from Distanz
         '[23px]': '23px',
         '[24px]': '24px',
         '[25px]': '25px',
@@ -415,7 +415,7 @@ module.exports = {
         light: '300',
         regular: '400',
         medium: '500',
-        'semi-bold': '550', // Match Quartr's exact weight
+        'semi-bold': '550', // Match Distanz's exact weight
         bold: '600',
       },
       letterSpacing: {
@@ -427,7 +427,7 @@ module.exports = {
       },
       maxWidth: {
         'distanz': '95%', // Wide container width for consistent layouts
-        'quartr': '95%', // Legacy - updated to match new width
+        'distanz': '95%', // Legacy - updated to match new width
         'text': '720px', // Optimal reading width for articles (unchanged)
         'content': '95%', // Standard content width
         'wide': '95%', // Wide layouts
@@ -483,7 +483,7 @@ module.exports = {
     // require('@tailwindcss/container-queries'),
     function({ addComponents, theme }) {
       addComponents({
-        // Distanz container system (Quartr-inspired)
+        // Distanz container system (Distanz design system)
         '.distanz-container': {
           display: 'grid',
           gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
@@ -532,8 +532,8 @@ module.exports = {
           },
         },
 
-        // Legacy Quartr classes for backwards compatibility
-        '.quartr-container': {
+        // Legacy Distanz classes for backwards compatibility
+        '.distanz-container': {
           display: 'grid',
           gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
           marginLeft: 'auto',
@@ -545,12 +545,12 @@ module.exports = {
           paddingRight: '1.5rem',
         },
         '@media (min-width: 1024px)': {
-          '.quartr-container': {
+          '.distanz-container': {
             gridTemplateColumns: 'repeat(18, minmax(0, 1fr))',
           },
         },
 
-        '.quartr-article-container': {
+        '.distanz-article-container': {
           display: 'grid',
           gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
           marginLeft: 'auto',
@@ -563,16 +563,16 @@ module.exports = {
           paddingTop: '80px',
         },
         '@media (min-width: 1024px)': {
-          '.quartr-article-container': {
+          '.distanz-article-container': {
             gridTemplateColumns: 'repeat(18, minmax(0, 1fr))',
           },
         },
 
-        '.quartr-full-col': {
+        '.distanz-full-col': {
           gridColumn: '1 / -1',
         },
 
-        '.quartr-article-col': {
+        '.distanz-article-col': {
           gridColumn: '1 / -1',
           '@media (min-width: 1024px)': {
             gridColumnStart: '4',
@@ -588,7 +588,7 @@ module.exports = {
         },
 
         // Legacy (Inter-specific, kept for backwards compatibility)
-        '.quartr-font-features': {
+        '.distanz-font-features': {
           fontFeatureSettings: "'cv02', 'cv03', 'cv04', 'cv11'",
         },
 
