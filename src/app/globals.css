@@ -69,22 +69,22 @@
 
 @layer base {
   :root {
-    /* Distanz Typography System - Free Google Fonts
-       Display: Archivo Black (headlines only)
-       Body/UI: Bricolage Grotesque (variable font)
-       Data: JetBrains Mono (metadata, race times) */
+    /* Distanz Typography System - Manrope + EB Garamond
+       News/UI: Manrope (modern geometric sans-serif)
+       Features: EB Garamond (classic old-style serif) */
 
     /* Primary Typefaces */
-    --display-font: var(--font-display), "Archivo Black", "Arial Black", sans-serif;
-    --headline-font: var(--font-display), "Archivo Black", "Arial Black", sans-serif;
-    --body-font: var(--font-body), "Bricolage Grotesque", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    --ui-font: var(--font-body), "Bricolage Grotesque", sans-serif;
-    --mono-font: var(--font-mono), "JetBrains Mono", "Courier New", monospace;
+    --font-family-sans: var(--font-sans), 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-family-serif: var(--font-serif), 'EB Garamond', Georgia, 'Times New Roman', serif;
 
     /* Legacy font variables for backwards compatibility */
-    --base-font: var(--body-font);
-    --brand-font: var(--display-font);
-    --subheading-font: var(--display-font);
+    --display-font: var(--font-family-sans);
+    --headline-font: var(--font-family-sans);
+    --body-font: var(--font-family-sans);
+    --ui-font: var(--font-family-sans);
+    --base-font: var(--font-family-sans);
+    --brand-font: var(--font-family-sans);
+    --subheading-font: var(--font-family-serif);
 
     /* Tighter font metrics for more squared typography */
     --ascent-scale: 0.9688;
@@ -535,154 +535,319 @@
 
   /* ========================================
      Distanz Typography Utility Classes
-     Based on Archivo Black + Bricolage Grotesque
+     Based on Manrope + EB Garamond
      ======================================== */
 
-  /* Metadata Bar (JetBrains Mono, Uppercase) */
-  .text-meta-distanz {
-    font-family: var(--mono-font);
+  /* ===== NEWS/UI TYPOGRAPHY (MANROPE) ===== */
+
+  /* Body Text - News (Manrope) */
+  .text-body-distanz,
+  .news-body {
+    font-family: var(--font-family-sans);
     font-weight: 400;
-    font-size: 13px;
-    line-height: 1;
-    letter-spacing: 0.02em;
+    font-size: 16px;
+    line-height: 1.5;
+    letter-spacing: 0;
+    color: rgb(var(--color-textDefault));
+  }
+
+  .news-body-sm {
+    font-family: var(--font-family-sans);
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.5;
+    letter-spacing: 0;
+    color: rgb(var(--color-textDefault));
+  }
+
+  /* Overline / Tags (Manrope SemiBold, Uppercase) */
+  .news-overline,
+  .text-meta-distanz {
+    font-family: var(--font-family-sans);
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 1.3;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
     color: rgb(var(--color-textSubtle));
   }
 
-  /* Body Text (Bricolage Grotesque) */
-  .text-body-distanz {
-    font-family: var(--body-font);
-    font-weight: 400;
-    font-size: clamp(16px, 1.5vw, 17px);
-    line-height: 1.65;
-    letter-spacing: -0.003em;
-    color: rgb(var(--color-textDefault));
-    max-width: 680px; /* Optimal reading width */
-  }
-
-  /* Lead Paragraph (Bricolage Grotesque) */
-  .text-lead-distanz {
-    font-family: var(--body-font);
-    font-weight: 450; /* Variable weight if supported */
-    font-size: clamp(19px, 2vw, 22px);
-    line-height: 1.5;
-    letter-spacing: -0.005em;
-    color: rgb(var(--color-textDefault));
-  }
-
-  /* Legacy intro class - now maps to lead */
-  .text-intro-distanz {
-    font-family: var(--body-font);
-    font-weight: 450;
-    font-size: clamp(19px, 2vw, 22px);
-    line-height: 1.5;
-    letter-spacing: -0.005em;
-    color: rgb(var(--color-textSubtle));
-  }
-
-  /* Captions (Bricolage Grotesque) */
+  /* Caption (Manrope Medium) */
+  .news-caption,
   .text-caption-distanz {
-    font-family: var(--body-font);
+    font-family: var(--font-family-sans);
     font-weight: 500;
-    font-size: 14px;
+    font-size: 12px;
     line-height: 1.4;
     letter-spacing: 0;
     color: rgb(var(--color-textDefault));
-    opacity: 0.8;
   }
 
-  /* Pull Quotes (Archivo Black) */
-  .text-quote-distanz {
-    font-family: var(--display-font);
-    font-weight: 400;
-    font-size: clamp(24px, 3vw, 36px);
-    line-height: 1.15;
-    letter-spacing: -0.01em;
+  /* Label / Meta (Manrope Medium) */
+  .news-label,
+  .text-label-distanz {
+    font-family: var(--font-family-sans);
+    font-weight: 500;
+    font-size: 11px;
+    line-height: 1.3;
+    letter-spacing: 0.02em;
     color: rgb(var(--color-textDefault));
   }
 
-  /* H6-H4: Minor Headings (Bricolage Grotesque Bold/ExtraBold) */
-  .text-h6-distanz {
-    font-family: var(--body-font);
-    font-weight: 700;
-    font-size: 18px;
-    line-height: 1.2;
-    letter-spacing: -0.005em;
-    color: rgb(var(--color-textDefault));
-  }
-
-  .text-h5-distanz {
-    font-family: var(--body-font);
-    font-weight: 700;
-    font-size: 20px;
-    line-height: 1.2;
-    letter-spacing: -0.005em;
-    color: rgb(var(--color-textDefault));
-  }
-
-  .text-h4-distanz {
-    font-family: var(--body-font);
-    font-weight: 800; /* ExtraBold for more impact */
-    font-size: clamp(18px, 2vw, 24px);
-    line-height: 1.2;
-    letter-spacing: -0.005em;
-    color: rgb(var(--color-textDefault));
-  }
-
-  /* H3: Subsections (Archivo Black) */
+  /* Headlines - News (Manrope Bold/SemiBold) */
+  .news-h3,
   .text-h3-distanz {
-    font-family: var(--display-font);
-    font-weight: 400;
-    font-size: clamp(24px, 3vw, 32px);
-    line-height: 1.1;
+    font-family: var(--font-family-sans);
+    font-weight: 600;
+    font-size: 22px;
+    line-height: 1.3;
+    letter-spacing: 0;
+    color: rgb(var(--color-textDefault));
+  }
+
+  .news-h2,
+  .text-h2-distanz {
+    font-family: var(--font-family-sans);
+    font-weight: 600;
+    font-size: 28px;
+    line-height: 1.25;
     letter-spacing: -0.01em;
     color: rgb(var(--color-textDefault));
   }
 
-  /* H2: Major Sections (Archivo Black) */
-  .text-h2-distanz {
-    font-family: var(--display-font);
-    font-weight: 400;
-    font-size: clamp(32px, 4vw + 0.5rem, 48px);
-    line-height: 1.0;
+  .news-h1,
+  .text-h1-distanz,
+  .text-title-distanz {
+    font-family: var(--font-family-sans);
+    font-weight: 700;
+    font-size: 36px;
+    line-height: 1.2;
     letter-spacing: -0.015em;
     color: rgb(var(--color-textDefault));
   }
 
-  /* H1: Hero Headlines (Archivo Black) */
-  .text-h1-distanz {
-    font-family: var(--display-font);
-    font-weight: 400;
-    font-size: clamp(40px, 5vw + 1rem, 72px);
-    line-height: 0.95;
+  .news-display {
+    font-family: var(--font-family-sans);
+    font-weight: 700;
+    font-size: 48px;
+    line-height: 1.1;
     letter-spacing: -0.02em;
     color: rgb(var(--color-textDefault));
   }
 
-  /* Legacy title class - maps to H1 */
-  .text-title-distanz {
-    font-family: var(--display-font);
-    font-weight: 400;
-    font-size: clamp(40px, 5vw + 1rem, 72px);
-    line-height: 0.95;
-    letter-spacing: -0.02em;
+  /* UI Components (Manrope) */
+  .ui-btn,
+  .text-button-distanz {
+    font-family: var(--font-family-sans);
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 1;
+    letter-spacing: 0.01em;
+  }
+
+  .ui-btn-lg {
+    font-family: var(--font-family-sans);
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 1;
+    letter-spacing: 0.01em;
+  }
+
+  .ui-btn-sm {
+    font-family: var(--font-family-sans);
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 1;
+    letter-spacing: 0.02em;
+  }
+
+  .ui-nav,
+  .text-nav-distanz {
+    font-family: var(--font-family-sans);
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 1;
+    letter-spacing: 0;
     color: rgb(var(--color-textDefault));
   }
 
-  /* Stat Callouts (Archivo Black - Large Numbers) */
+  .ui-nav-active {
+    font-family: var(--font-family-sans);
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 1;
+    letter-spacing: 0;
+    color: rgb(var(--color-textDefault));
+  }
+
+  .ui-input {
+    font-family: var(--font-family-sans);
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.5;
+    letter-spacing: 0;
+  }
+
+  .ui-input-label {
+    font-family: var(--font-family-sans);
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 1.4;
+    letter-spacing: 0;
+  }
+
+  .ui-tag {
+    font-family: var(--font-family-sans);
+    font-weight: 600;
+    font-size: 11px;
+    line-height: 1;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+  }
+
+  /* ===== FEATURES TYPOGRAPHY (EB GARAMOND) ===== */
+
+  /* Body Text - Features (EB Garamond) */
+  .feature-body {
+    font-family: var(--font-family-serif);
+    font-weight: 400;
+    font-size: 19px;
+    line-height: 1.6;
+    letter-spacing: 0.01em;
+    color: rgb(var(--color-textDefault));
+  }
+
+  /* Subhead / Deck (EB Garamond Italic) */
+  .feature-subhead,
+  .text-intro-distanz,
+  .text-lead-distanz {
+    font-family: var(--font-family-serif);
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 1.4;
+    letter-spacing: 0;
+    font-style: italic;
+    color: rgb(var(--color-textDefault));
+  }
+
+  /* Pull Quote (EB Garamond Italic) */
+  .feature-quote,
+  .text-quote-distanz {
+    font-family: var(--font-family-serif);
+    font-weight: 400;
+    font-size: 26px;
+    line-height: 1.4;
+    letter-spacing: 0;
+    font-style: italic;
+    color: rgb(var(--color-textDefault));
+  }
+
+  /* Caption (EB Garamond Italic) */
+  .feature-caption {
+    font-family: var(--font-family-serif);
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.4;
+    letter-spacing: 0.01em;
+    font-style: italic;
+    color: rgb(var(--color-textSubtle));
+  }
+
+  /* Footnote (EB Garamond) */
+  .feature-footnote {
+    font-family: var(--font-family-serif);
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 1.5;
+    letter-spacing: 0.01em;
+    color: rgb(var(--color-textSubtle));
+  }
+
+  /* Headlines - Features (EB Garamond) */
+  .feature-h3,
+  .text-h3-feature {
+    font-family: var(--font-family-serif);
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 1.3;
+    letter-spacing: 0;
+    color: rgb(var(--color-textDefault));
+  }
+
+  .feature-h2,
+  .text-h2-feature {
+    font-family: var(--font-family-serif);
+    font-weight: 500;
+    font-size: 30px;
+    line-height: 1.25;
+    letter-spacing: 0;
+    color: rgb(var(--color-textDefault));
+  }
+
+  .feature-h1,
+  .text-h1-feature {
+    font-family: var(--font-family-serif);
+    font-weight: 400;
+    font-size: 40px;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    font-style: italic;
+    color: rgb(var(--color-textDefault));
+  }
+
+  .feature-display,
+  .text-newsletter-heading-distanz {
+    font-family: var(--font-family-serif);
+    font-weight: 400;
+    font-size: 52px;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    font-style: italic;
+    color: rgb(var(--color-textDefault));
+  }
+
+  /* ===== LEGACY/COMPATIBILITY CLASSES ===== */
+
+  .text-h6-distanz {
+    font-family: var(--font-family-sans);
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 1.2;
+    letter-spacing: 0;
+    color: rgb(var(--color-textDefault));
+  }
+
+  .text-h5-distanz {
+    font-family: var(--font-family-sans);
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 1.2;
+    letter-spacing: 0;
+    color: rgb(var(--color-textDefault));
+  }
+
+  .text-h4-distanz {
+    font-family: var(--font-family-sans);
+    font-weight: 600;
+    font-size: 22px;
+    line-height: 1.3;
+    letter-spacing: 0;
+    color: rgb(var(--color-textDefault));
+  }
+
+  /* Stat Callouts (Manrope Bold) */
   .text-stat-distanz {
-    font-family: var(--display-font);
-    font-weight: 400;
+    font-family: var(--font-family-sans);
+    font-weight: 800;
     font-size: clamp(48px, 6vw, 96px);
     line-height: 0.9;
     letter-spacing: -0.03em;
     color: rgb(var(--color-textDefault));
   }
 
-  /* Stat Labels (JetBrains Mono, Uppercase) */
   .text-stat-label-distanz {
-    font-family: var(--mono-font);
-    font-weight: 500;
+    font-family: var(--font-family-sans);
+    font-weight: 600;
     font-size: 12px;
     line-height: 1;
     letter-spacing: 0.08em;
@@ -690,47 +855,39 @@
     color: rgb(var(--color-textSubtle));
   }
 
-  /* Navigation (Bricolage Grotesque SemiBold) */
-  .text-nav-distanz {
-    font-family: var(--body-font);
-    font-weight: 600;
-    font-size: 15px;
-    line-height: 1;
-    letter-spacing: 0.01em;
-    text-transform: uppercase;
-    color: rgb(var(--color-textDefault));
+  /* Content Containers */
+  .news-content {
+    max-width: 680px;
   }
 
-  /* Buttons/CTAs (Bricolage Grotesque Bold) */
-  .text-button-distanz {
-    font-family: var(--body-font);
-    font-weight: 700;
-    font-size: 15px;
-    line-height: 1;
-    letter-spacing: 0.02em;
-    text-transform: uppercase;
+  .news-content p {
+    margin-bottom: 16px;
   }
 
-  /* Form Labels (Bricolage Grotesque SemiBold) */
-  .text-label-distanz {
-    font-family: var(--body-font);
-    font-weight: 600;
-    font-size: 13px;
-    line-height: 1;
-    letter-spacing: 0.01em;
-    text-transform: uppercase;
-    margin-bottom: 6px;
-    color: rgb(var(--color-textDefault));
+  .news-content section {
+    margin-bottom: 32px;
   }
 
-  /* Newsletter Signup Headers (Archivo Black) */
-  .text-newsletter-heading-distanz {
-    font-family: var(--display-font);
-    font-weight: 400;
-    font-size: clamp(32px, 4vw, 42px);
-    line-height: 1.0;
-    letter-spacing: -0.015em;
-    color: rgb(var(--color-textDefault));
+  .news-content ul li,
+  .news-content ol li {
+    margin-bottom: 8px;
+  }
+
+  .feature-content {
+    max-width: 620px;
+  }
+
+  .feature-content p {
+    margin-bottom: 24px;
+  }
+
+  .feature-content section {
+    margin-bottom: 48px;
+  }
+
+  .feature-content ul li,
+  .feature-content ol li {
+    margin-bottom: 12px;
   }
 
   .text-breadcrumb-distanz {

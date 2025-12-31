@@ -1,6 +1,6 @@
 // src/app/layout.tsx
 import type { Metadata } from "next";
-import { Archivo_Black, Bricolage_Grotesque, JetBrains_Mono } from "next/font/google";
+import { Manrope, EB_Garamond } from "next/font/google";
 import "./globals.css";
 import AuthProtection from "@/components/AuthProtection";
 import LayoutContent from "@/components/LayoutContent";
@@ -12,31 +12,23 @@ import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 
 // Distanz Typography System - Free Google Fonts
-// Display/Headlines: Archivo Black (400 only)
-// Body/UI: Bricolage Grotesque (300-800 variable)
-// Data/Metadata: JetBrains Mono (400, 500, 600)
+// News/UI: Manrope (400, 500, 600, 700, 800)
+// Features: EB Garamond (400, 500, 600 + italic variants)
 
-// Display font - Archivo Black (headlines only have weight 400)
-const archivoBlack = Archivo_Black({
+// Sans-serif font - Manrope (news, UI, navigation)
+const manrope = Manrope({
   subsets: ["latin"],
-  variable: "--font-display",
-  weight: "400",
+  variable: "--font-sans",
+  weight: ["400", "500", "600", "700", "800"],
   display: 'swap',
 });
 
-// Body/UI font - Bricolage Grotesque (variable font with optical sizing)
-const bricolageGrotesque = Bricolage_Grotesque({
+// Serif font - EB Garamond (features, essays, long-form content)
+const ebGaramond = EB_Garamond({
   subsets: ["latin"],
-  variable: "--font-body",
-  weight: ["300", "400", "500", "600", "700", "800"],
-  display: 'swap',
-});
-
-// Monospace font - JetBrains Mono (race times, data, metadata)
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ["latin"],
-  variable: "--font-mono",
+  variable: "--font-serif",
   weight: ["400", "500", "600"],
+  style: ["normal", "italic"],
   display: 'swap',
 });
 
@@ -64,7 +56,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${archivoBlack.variable} ${bricolageGrotesque.variable} ${jetbrainsMono.variable} bg-white dark:bg-[#0c0c0d] transition-colors duration-300`}>
+    <html lang="en" className={`${manrope.variable} ${ebGaramond.variable} bg-white dark:bg-[#0c0c0d] transition-colors duration-300`}>
       <head>
         {/* Prevent flash of dark mode - ensure light mode by default */}
         <script

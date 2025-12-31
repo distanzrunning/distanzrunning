@@ -181,139 +181,181 @@ module.exports = {
         'borderNeutralSubtle': 'rgb(var(--color-borderNeutralSubtle))',
       },
       fontFamily: {
-        // Distanz Typography System - Free Google Fonts
-        // Display (Archivo Black) - Headlines only
-        display: ['var(--font-display)', 'Archivo Black', 'Arial Black', 'sans-serif'],
-        headline: ['var(--font-display)', 'Archivo Black', 'Arial Black', 'sans-serif'],
-        archivo: ['var(--font-display)', 'Archivo Black', 'Arial Black', 'sans-serif'],
+        // Distanz Typography System - Manrope + EB Garamond
+        // News/UI: Manrope (modern geometric sans-serif)
+        // Features: EB Garamond (classic old-style serif)
 
-        // Body/UI (Bricolage Grotesque) - Variable font
+        // Sans-serif (Manrope) - News, headlines, UI
         sans: [
-          'var(--font-body)',
-          'Bricolage Grotesque',
+          'var(--font-sans)',
+          'Manrope',
           '-apple-system',
           'BlinkMacSystemFont',
           'Segoe UI',
           'Roboto',
           'sans-serif'
         ],
-        body: ['var(--font-body)', 'Bricolage Grotesque', 'sans-serif'],
-        ui: ['var(--font-body)', 'Bricolage Grotesque', 'sans-serif'],
-        bricolage: ['var(--font-body)', 'Bricolage Grotesque', 'sans-serif'],
+        manrope: ['var(--font-sans)', 'Manrope', 'sans-serif'],
 
-        // Monospace (JetBrains Mono) - Data, metadata, race times
-        mono: ['var(--font-mono)', 'JetBrains Mono', 'Courier New', 'monospace'],
+        // Serif (EB Garamond) - Features, essays, long-form
+        serif: ['var(--font-serif)', 'EB Garamond', 'Georgia', 'serif'],
+        garamond: ['var(--font-serif)', 'EB Garamond', 'Georgia', 'serif'],
 
         // Legacy aliases for backwards compatibility
-        playfair: ['var(--font-display)', 'Archivo Black', 'sans-serif'],
-        inter: ['var(--font-body)', 'Bricolage Grotesque', 'sans-serif'],
-        garvis: ['var(--font-display)', 'Archivo Black', 'sans-serif'],
-        quasimoda: ['var(--font-body)', 'Bricolage Grotesque', 'sans-serif'],
-        serif: ['var(--font-display)', 'Archivo Black', 'sans-serif'],
+        display: ['var(--font-sans)', 'Manrope', 'sans-serif'],
+        headline: ['var(--font-sans)', 'Manrope', 'sans-serif'],
+        body: ['var(--font-sans)', 'Manrope', 'sans-serif'],
+        ui: ['var(--font-sans)', 'Manrope', 'sans-serif'],
+        playfair: ['var(--font-serif)', 'EB Garamond', 'serif'],
+        inter: ['var(--font-sans)', 'Manrope', 'sans-serif'],
+        archivo: ['var(--font-sans)', 'Manrope', 'sans-serif'],
+        bricolage: ['var(--font-sans)', 'Manrope', 'sans-serif'],
+        garvis: ['var(--font-sans)', 'Manrope', 'sans-serif'],
+        quasimoda: ['var(--font-sans)', 'Manrope', 'sans-serif'],
+        mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Courier New', 'monospace'],
       },
       fontSize: {
-        // Distanz Typography System - Archivo Black + Bricolage Grotesque
+        // Distanz Typography System - Manrope + EB Garamond
 
-        // Metadata & Small Text (JetBrains Mono for metadata, Bricolage for captions)
-        'xs': ['12px', {
+        // Small Text & Metadata (Manrope)
+        'xs': ['11px', {
+          lineHeight: '1.3',
+          letterSpacing: '0.02em',
+          '--font-size-px': '11'
+        }],
+        'sm': ['12px', {
           lineHeight: '1.4',
-          letterSpacing: '0.05em',
+          letterSpacing: '0',
           '--font-size-px': '12'
         }],
-        'sm': ['13px', {
-          lineHeight: '1.4',
-          letterSpacing: '0.02em',
-          '--font-size-px': '13'
-        }],
 
-        // UI & Forms (Bricolage Grotesque)
+        // UI & Forms (Manrope)
         'base': ['14px', {
-          lineHeight: '1.4',
+          lineHeight: '1.5',
           letterSpacing: '0',
           '--font-size-px': '14'
         }],
-        'nav': ['15px', {
+        'nav': ['14px', {
+          lineHeight: '1',
+          letterSpacing: '0',
+          '--font-size-px': '14'
+        }],
+        'button': ['14px', {
           lineHeight: '1',
           letterSpacing: '0.01em',
-          '--font-size-px': '15'
+          '--font-size-px': '14'
         }],
 
-        // Body Text (Bricolage Grotesque)
-        'body': ['clamp(16px, 1.5vw, 17px)', {
-          lineHeight: '1.65',
-          letterSpacing: '-0.003em',
-          '--font-size-px': '17'
-        }],
-        'body-lg': ['clamp(17px, 1.5vw, 18px)', {
-          lineHeight: '1.65',
-          letterSpacing: '-0.003em',
-          '--font-size-px': '18'
-        }],
-
-        // Lead Paragraphs (Bricolage Grotesque)
-        'lead': ['clamp(19px, 2vw, 22px)', {
+        // Body Text - News (Manrope) / Features (EB Garamond)
+        'body': ['16px', {
           lineHeight: '1.5',
-          letterSpacing: '-0.005em',
-          '--font-size-px': '21'
+          letterSpacing: '0',
+          '--font-size-px': '16'
+        }],
+        'body-sm': ['14px', {
+          lineHeight: '1.5',
+          letterSpacing: '0',
+          '--font-size-px': '14'
+        }],
+        'body-feature': ['19px', {
+          lineHeight: '1.6',
+          letterSpacing: '0.01em',
+          '--font-size-px': '19'
         }],
 
-        // Pull Quotes (Archivo Black)
-        'quote': ['clamp(24px, 3vw, 36px)', {
-          lineHeight: '1.15',
+        // Overline / Tags (Manrope)
+        'overline': ['12px', {
+          lineHeight: '1.3',
+          letterSpacing: '0.08em',
+          '--font-size-px': '12'
+        }],
+
+        // Pull Quotes (EB Garamond)
+        'quote': ['26px', {
+          lineHeight: '1.4',
+          letterSpacing: '0',
+          '--font-size-px': '26'
+        }],
+
+        // Headings - News (Manrope Bold/SemiBold)
+        'h3-news': ['22px', {
+          lineHeight: '1.3',
+          letterSpacing: '0',
+          '--font-size-px': '22'
+        }],
+        'h2-news': ['28px', {
+          lineHeight: '1.25',
           letterSpacing: '-0.01em',
+          '--font-size-px': '28'
+        }],
+        'h1-news': ['36px', {
+          lineHeight: '1.2',
+          letterSpacing: '-0.015em',
+          '--font-size-px': '36'
+        }],
+        'display-news': ['48px', {
+          lineHeight: '1.1',
+          letterSpacing: '-0.02em',
+          '--font-size-px': '48'
+        }],
+
+        // Headings - Features (EB Garamond)
+        'h3-feature': ['24px', {
+          lineHeight: '1.3',
+          letterSpacing: '0',
+          '--font-size-px': '24'
+        }],
+        'h2-feature': ['30px', {
+          lineHeight: '1.25',
+          letterSpacing: '0',
           '--font-size-px': '30'
         }],
+        'h1-feature': ['40px', {
+          lineHeight: '1.15',
+          letterSpacing: '-0.01em',
+          '--font-size-px': '40'
+        }],
+        'display-feature': ['52px', {
+          lineHeight: '1.1',
+          letterSpacing: '-0.01em',
+          '--font-size-px': '52'
+        }],
 
-        // Headings - H4-H6 (Bricolage Grotesque Bold)
+        // Generic headings (default to Manrope for news)
         'h6': ['18px', {
           lineHeight: '1.2',
-          letterSpacing: '-0.005em',
+          letterSpacing: '0',
           '--font-size-px': '18'
         }],
         'h5': ['20px', {
           lineHeight: '1.2',
-          letterSpacing: '-0.005em',
+          letterSpacing: '0',
           '--font-size-px': '20'
         }],
-        'h4': ['clamp(18px, 2vw, 24px)', {
-          lineHeight: '1.2',
-          letterSpacing: '-0.005em',
+        'h4': ['22px', {
+          lineHeight: '1.3',
+          letterSpacing: '0',
           '--font-size-px': '22'
         }],
-
-        // Headings - H3 (Archivo Black)
-        'h3': ['clamp(24px, 3vw, 32px)', {
-          lineHeight: '1.1',
+        'h3': ['clamp(22px, 2.5vw, 28px)', {
+          lineHeight: '1.25',
+          letterSpacing: '-0.005em',
+          '--font-size-px': '24'
+        }],
+        'h2': ['clamp(28px, 3.5vw, 36px)', {
+          lineHeight: '1.2',
           letterSpacing: '-0.01em',
-          '--font-size-px': '28'
+          '--font-size-px': '32'
         }],
-
-        // Headings - H2 (Archivo Black)
-        'h2': ['clamp(32px, 4vw + 0.5rem, 48px)', {
-          lineHeight: '1.0',
+        'h1': ['clamp(32px, 4.5vw, 48px)', {
+          lineHeight: '1.15',
           letterSpacing: '-0.015em',
-          '--font-size-px': '42'
+          '--font-size-px': '40'
         }],
-
-        // Headings - H1 (Archivo Black)
-        'h1': ['clamp(40px, 5vw + 1rem, 72px)', {
-          lineHeight: '0.95',
+        'display': ['clamp(40px, 6vw, 60px)', {
+          lineHeight: '1.1',
           letterSpacing: '-0.02em',
-          '--font-size-px': '64'
-        }],
-
-        // Stat Callouts (Archivo Black - Large numbers)
-        'stat': ['clamp(48px, 6vw, 96px)', {
-          lineHeight: '0.9',
-          letterSpacing: '-0.03em',
-          '--font-size-px': '72'
-        }],
-
-        // Newsletter Headers (Archivo Black)
-        'newsletter': ['clamp(32px, 4vw, 42px)', {
-          lineHeight: '1.0',
-          letterSpacing: '-0.015em',
-          '--font-size-px': '38'
+          '--font-size-px': '52'
         }],
 
         // Legacy Tailwind sizes for compatibility
