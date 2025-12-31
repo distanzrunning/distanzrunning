@@ -58,7 +58,8 @@ export default function Navbar({ featuredGear, featuredRace }: NavbarProps) {
   const [isPastThreshold, setIsPastThreshold] = useState(false)
   const [openDropdown, setOpenDropdown] = useState<'gear' | 'races' | null>(null)
   const [closeTimeout, setCloseTimeout] = useState<NodeJS.Timeout | null>(null)
-  const scrollThreshold = 60
+  // Reduced threshold so navbar animation triggers earlier in the scroll
+  const scrollThreshold = 20
 
   const handleOpenDropdown = (dropdown: 'gear' | 'races') => {
     if (closeTimeout) {

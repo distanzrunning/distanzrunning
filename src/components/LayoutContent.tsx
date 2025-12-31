@@ -28,7 +28,8 @@ export default function LayoutContent({ children, navbar, footer }: LayoutConten
     <div className="main-wrapper">
       <div className="main-bordered min-h-screen flex flex-col">
         {navbar}
-        <main className="flex-grow pt-6 bg-white dark:bg-[#0c0c0d] transition-colors duration-300">{children}</main>
+        {/* Navbar clearance: 80px on desktop (navbar height + padding), 60px on mobile */}
+        <main className="flex-grow pt-20 md:pt-20 bg-white dark:bg-[#0c0c0d] transition-colors duration-300">{children}</main>
         {!isCalendarPage && footer}
       </div>
     </div>
