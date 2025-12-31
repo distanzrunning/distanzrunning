@@ -181,96 +181,176 @@ module.exports = {
         'borderNeutralSubtle': 'rgb(var(--color-borderNeutralSubtle))',
       },
       fontFamily: {
-        // Default sans (body font) - Inter
+        // Distanz Typography System - Free Google Fonts
+        // Display (Archivo Black) - Headlines only
+        display: ['var(--font-display)', 'Archivo Black', 'Arial Black', 'sans-serif'],
+        headline: ['var(--font-display)', 'Archivo Black', 'Arial Black', 'sans-serif'],
+        archivo: ['var(--font-display)', 'Archivo Black', 'Arial Black', 'sans-serif'],
+
+        // Body/UI (Bricolage Grotesque) - Variable font
         sans: [
-          'var(--body-font)',
-          'Inter',
+          'var(--font-body)',
+          'Bricolage Grotesque',
           '-apple-system',
           'BlinkMacSystemFont',
-          'system-ui',
+          'Segoe UI',
+          'Roboto',
           'sans-serif'
         ],
-        // Headline font (Playfair Display - serif for elegant headings)
-        headline: ['var(--headline-font)', 'Playfair Display', 'Georgia', 'serif'],
-        playfair: ['var(--headline-font)', 'Playfair Display', 'Georgia', 'serif'],
-        // Subheading font (same as headline)
-        subheading: ['var(--subheading-font)', 'Playfair Display', 'Georgia', 'serif'],
-        // Body font (Inter - sans-serif for body text)
-        body: ['var(--body-font)', 'Inter', 'sans-serif'],
-        inter: ['var(--body-font)', 'Inter', 'sans-serif'],
-        // Monospace font (JetBrains Mono - for data/stats)
+        body: ['var(--font-body)', 'Bricolage Grotesque', 'sans-serif'],
+        ui: ['var(--font-body)', 'Bricolage Grotesque', 'sans-serif'],
+        bricolage: ['var(--font-body)', 'Bricolage Grotesque', 'sans-serif'],
+
+        // Monospace (JetBrains Mono) - Data, metadata, race times
         mono: ['var(--font-mono)', 'JetBrains Mono', 'Courier New', 'monospace'],
 
         // Legacy aliases for backwards compatibility
-        serif: ['var(--headline-font)', 'Playfair Display', 'Georgia', 'serif'],
+        playfair: ['var(--font-display)', 'Archivo Black', 'sans-serif'],
+        inter: ['var(--font-body)', 'Bricolage Grotesque', 'sans-serif'],
+        garvis: ['var(--font-display)', 'Archivo Black', 'sans-serif'],
+        quasimoda: ['var(--font-body)', 'Bricolage Grotesque', 'sans-serif'],
+        serif: ['var(--font-display)', 'Archivo Black', 'sans-serif'],
       },
       fontSize: {
-        // Tighter font sizing system with reduced line heights
-        'xs': ['0.6875rem', { 
-          lineHeight: '1.25', // Reduced from 1.4
-          letterSpacing: '0.0025em',
-          '--font-size-px': '11'
+        // Distanz Typography System - Archivo Black + Bricolage Grotesque
+
+        // Metadata & Small Text (JetBrains Mono for metadata, Bricolage for captions)
+        'xs': ['12px', {
+          lineHeight: '1.4',
+          letterSpacing: '0.05em',
+          '--font-size-px': '12'
         }],
-        'sm': ['0.8125rem', { 
-          lineHeight: '1.25', // Reduced from 1.4
-          letterSpacing: '0.0025em',
+        'sm': ['13px', {
+          lineHeight: '1.4',
+          letterSpacing: '0.02em',
           '--font-size-px': '13'
         }],
-        'base': ['0.9375rem', { 
-          lineHeight: '1.3', // Reduced from 1.4
-          letterSpacing: '0.0025em',
+
+        // UI & Forms (Bricolage Grotesque)
+        'base': ['14px', {
+          lineHeight: '1.4',
+          letterSpacing: '0',
+          '--font-size-px': '14'
+        }],
+        'nav': ['15px', {
+          lineHeight: '1',
+          letterSpacing: '0.01em',
           '--font-size-px': '15'
         }],
-        'lg': ['1.0625rem', { 
-          lineHeight: '1.25', // Reduced from 1.4
-          letterSpacing: '0.0025em',
+
+        // Body Text (Bricolage Grotesque)
+        'body': ['clamp(16px, 1.5vw, 17px)', {
+          lineHeight: '1.65',
+          letterSpacing: '-0.003em',
           '--font-size-px': '17'
         }],
-        'xl': ['1.25rem', { 
-          lineHeight: '1.3', // Reduced from 1.4
+        'body-lg': ['clamp(17px, 1.5vw, 18px)', {
+          lineHeight: '1.65',
+          letterSpacing: '-0.003em',
+          '--font-size-px': '18'
+        }],
+
+        // Lead Paragraphs (Bricolage Grotesque)
+        'lead': ['clamp(19px, 2vw, 22px)', {
+          lineHeight: '1.5',
+          letterSpacing: '-0.005em',
+          '--font-size-px': '21'
+        }],
+
+        // Pull Quotes (Archivo Black)
+        'quote': ['clamp(24px, 3vw, 36px)', {
+          lineHeight: '1.15',
+          letterSpacing: '-0.01em',
+          '--font-size-px': '30'
+        }],
+
+        // Headings - H4-H6 (Bricolage Grotesque Bold)
+        'h6': ['18px', {
+          lineHeight: '1.2',
+          letterSpacing: '-0.005em',
+          '--font-size-px': '18'
+        }],
+        'h5': ['20px', {
+          lineHeight: '1.2',
+          letterSpacing: '-0.005em',
+          '--font-size-px': '20'
+        }],
+        'h4': ['clamp(18px, 2vw, 24px)', {
+          lineHeight: '1.2',
+          letterSpacing: '-0.005em',
+          '--font-size-px': '22'
+        }],
+
+        // Headings - H3 (Archivo Black)
+        'h3': ['clamp(24px, 3vw, 32px)', {
+          lineHeight: '1.1',
+          letterSpacing: '-0.01em',
+          '--font-size-px': '28'
+        }],
+
+        // Headings - H2 (Archivo Black)
+        'h2': ['clamp(32px, 4vw + 0.5rem, 48px)', {
+          lineHeight: '1.0',
+          letterSpacing: '-0.015em',
+          '--font-size-px': '42'
+        }],
+
+        // Headings - H1 (Archivo Black)
+        'h1': ['clamp(40px, 5vw + 1rem, 72px)', {
+          lineHeight: '0.95',
+          letterSpacing: '-0.02em',
+          '--font-size-px': '64'
+        }],
+
+        // Stat Callouts (Archivo Black - Large numbers)
+        'stat': ['clamp(48px, 6vw, 96px)', {
+          lineHeight: '0.9',
+          letterSpacing: '-0.03em',
+          '--font-size-px': '72'
+        }],
+
+        // Newsletter Headers (Archivo Black)
+        'newsletter': ['clamp(32px, 4vw, 42px)', {
+          lineHeight: '1.0',
+          letterSpacing: '-0.015em',
+          '--font-size-px': '38'
+        }],
+
+        // Legacy Tailwind sizes for compatibility
+        'xl': ['20px', {
+          lineHeight: '1.5',
           letterSpacing: '0',
           '--font-size-px': '20'
         }],
-        '2xl': ['1.5rem', { 
-          lineHeight: '1.15', // Reduced from 1.25
-          letterSpacing: '-0.025em',
+        '2xl': ['24px', {
+          lineHeight: '1.4',
+          letterSpacing: '0',
           '--font-size-px': '24'
         }],
-        '3xl': ['1.875rem', { 
-          lineHeight: '1.15', // Reduced from 1.25
-          letterSpacing: '-0.025em',
+        '3xl': ['30px', {
+          lineHeight: '1.3',
+          letterSpacing: '-0.01em',
           '--font-size-px': '30'
         }],
-        '4xl': ['3rem', {
-          lineHeight: '1.1', // Reduced from 1.2
+        '4xl': ['36px', {
+          lineHeight: '1.2',
+          letterSpacing: '-0.01em',
+          '--font-size-px': '36'
+        }],
+        '5xl': ['48px', {
+          lineHeight: '1.1',
           letterSpacing: '-0.02em',
           '--font-size-px': '48'
         }],
-        
-        // Quartr's exact pixel sizes with tighter line heights
-        '[17px]': ['17px', {
-          lineHeight: '22px', // Reduced from 25px
-          '--font-size-px': '17'
+        '6xl': ['60px', {
+          lineHeight: '1.0',
+          letterSpacing: '-0.02em',
+          '--font-size-px': '60'
         }],
-        '[19px]': ['19px', {
-          lineHeight: '25px', // Reduced from 28px
-          '--font-size-px': '19'
-        }],
-        '[21px]': ['21px', {
-          lineHeight: '22px', // Reduced from 24px
-          '--font-size-px': '21'
-        }],
-        '[22px]': ['22px', {
-          lineHeight: '24px', // Reduced from 25px
-          '--font-size-px': '22'
-        }],
-        '[35px]': ['35px', {
-          lineHeight: '36px', // Reduced from 40px
-          '--font-size-px': '35'
-        }],
-        '[56px]': ['56px', {
-          lineHeight: '52px', // Reduced from 56px
-          '--font-size-px': '56'
+        '7xl': ['72px', {
+          lineHeight: '0.95',
+          letterSpacing: '-0.03em',
+          '--font-size-px': '72'
         }],
       },
       lineHeight: {

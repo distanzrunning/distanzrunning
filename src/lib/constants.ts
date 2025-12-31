@@ -34,10 +34,80 @@ export const BRAND = {
   },
   typography: {
     fontFamilies: {
-      headline: 'var(--font-playfair), Playfair Display, Georgia, Times New Roman, serif',
-      body: 'var(--font-body), Source Serif 4, Georgia, serif',
-      ui: 'var(--base-font), Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif',
-      mono: 'var(--font-mono), JetBrains Mono, Courier New, monospace',
+      // Distanz Typography System - Free Google Fonts
+      display: 'Archivo Black, Arial Black, sans-serif',                         // Headlines (H1-H3)
+      headline: 'Archivo Black, Arial Black, sans-serif',                        // Display font (alias)
+      body: 'Bricolage Grotesque, -apple-system, BlinkMacSystemFont, sans-serif', // Body text, paragraphs
+      ui: 'Bricolage Grotesque, sans-serif',                                     // Navigation, buttons, forms
+      mono: 'JetBrains Mono, Courier New, monospace',                            // Race times, data, metadata
+    },
+    weights: {
+      // Archivo Black weights (only 400 available)
+      archivoBlack: 400,
+
+      // Bricolage Grotesque weights (variable font 300-800)
+      bricolageLight: 300,
+      bricolageRegular: 400,
+      bricolageMedium: 500,
+      bricolageSemiBold: 600,
+      bricolageBold: 700,
+      bricolageExtraBold: 800,
+
+      // JetBrains Mono weights
+      jetbrainsRegular: 400,
+      jetbrainsMedium: 500,
+      jetbrainsSemiBold: 600,
+    },
+    sizes: {
+      // Metadata (JetBrains Mono)
+      metadata: '13px',
+
+      // Body & Content (Bricolage Grotesque)
+      caption: '14px',
+      body: 'clamp(16px, 1.5vw, 17px)',
+      lead: 'clamp(19px, 2vw, 22px)',
+
+      // UI Elements (Bricolage Grotesque)
+      label: '13px',
+      nav: '15px',
+      button: '15px',
+
+      // Headings - Minor (Bricolage Grotesque)
+      h6: '18px',
+      h5: '20px',
+      h4: 'clamp(18px, 2vw, 24px)',
+
+      // Headings - Major (Archivo Black)
+      h3: 'clamp(24px, 3vw, 32px)',
+      h2: 'clamp(32px, 4vw + 0.5rem, 48px)',
+      h1: 'clamp(40px, 5vw + 1rem, 72px)',
+
+      // Special Elements
+      quote: 'clamp(24px, 3vw, 36px)',      // Archivo Black
+      stat: 'clamp(48px, 6vw, 96px)',        // Archivo Black
+      newsletter: 'clamp(32px, 4vw, 42px)',  // Archivo Black
+    },
+    lineHeights: {
+      superTight: 0.9,   // Large stat numbers
+      ultraTight: 0.95,  // H1 headlines
+      tight: 1.0,        // H2, newsletter
+      snug: 1.1,         // H3 subsections
+      comfortable: 1.2,  // H4-H6, pull quotes
+      normal: 1.4,       // Captions, small text
+      relaxed: 1.5,      // Lead paragraphs
+      loose: 1.65,       // Body text
+    },
+    letterSpacing: {
+      tightest: '-0.03em',  // Large stats
+      tighter: '-0.02em',   // H1
+      tight: '-0.015em',    // H2, newsletter
+      snug: '-0.01em',      // H3, pull quotes
+      slight: '-0.005em',   // H4-H6, lead
+      minimal: '-0.003em',  // Body text
+      none: '0',
+      wide: '0.01em',       // Navigation
+      wider: '0.02em',      // Buttons, metadata
+      widest: '0.08em',     // Stat labels, uppercase
     },
   },
   layout: {

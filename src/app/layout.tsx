@@ -1,6 +1,6 @@
 // src/app/layout.tsx
 import type { Metadata } from "next";
-import { Playfair_Display, Playfair_Display_SC, Inter, JetBrains_Mono } from "next/font/google";
+import { Archivo_Black, Bricolage_Grotesque, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import AuthProtection from "@/components/AuthProtection";
 import LayoutContent from "@/components/LayoutContent";
@@ -11,39 +11,32 @@ import ReCaptchaProvider from "@/components/ReCaptchaProvider";
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 
-// Distanz headline font (serif) - Playfair Display for elegant headings
-const playfairDisplay = Playfair_Display({
+// Distanz Typography System - Free Google Fonts
+// Display/Headlines: Archivo Black (400 only)
+// Body/UI: Bricolage Grotesque (300-800 variable)
+// Data/Metadata: JetBrains Mono (400, 500, 600)
+
+// Display font - Archivo Black (headlines only have weight 400)
+const archivoBlack = Archivo_Black({
   subsets: ["latin"],
-  variable: "--font-headline",
-  weight: ["400", "500", "600", "700", "800", "900"],
-  style: ["normal", "italic"],
+  variable: "--font-display",
+  weight: "400",
   display: 'swap',
-  adjustFontFallback: false,
 });
 
-// Playfair Display Small Caps - for subheadlines
-const playfairDisplaySC = Playfair_Display_SC({
-  subsets: ["latin"],
-  variable: "--font-headline-sc",
-  weight: ["400", "700", "900"],
-  style: ["normal", "italic"],
-  display: 'swap',
-  adjustFontFallback: false,
-});
-
-// Distanz body font (sans-serif) - Inter for clean, readable body text
-const inter = Inter({
+// Body/UI font - Bricolage Grotesque (variable font with optical sizing)
+const bricolageGrotesque = Bricolage_Grotesque({
   subsets: ["latin"],
   variable: "--font-body",
-  weight: ["300", "400", "500", "600", "700"],
+  weight: ["300", "400", "500", "600", "700", "800"],
   display: 'swap',
 });
 
-// Distanz monospace font - used for race times, statistics, and data
+// Monospace font - JetBrains Mono (race times, data, metadata)
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
   variable: "--font-mono",
-  weight: ["400", "500", "700"],
+  weight: ["400", "500", "600"],
   display: 'swap',
 });
 
@@ -71,7 +64,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${playfairDisplay.variable} ${playfairDisplaySC.variable} ${inter.variable} ${jetbrainsMono.variable} bg-white dark:bg-[#0c0c0d] transition-colors duration-300`}>
+    <html lang="en" className={`${archivoBlack.variable} ${bricolageGrotesque.variable} ${jetbrainsMono.variable} bg-white dark:bg-[#0c0c0d] transition-colors duration-300`}>
       <head>
         {/* Prevent flash of dark mode - ensure light mode by default */}
         <script
