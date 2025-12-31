@@ -69,21 +69,22 @@
 
 @layer base {
   :root {
-    /* Distanz Typography System - Manrope + EB Garamond
-       News/UI: Manrope (modern geometric sans-serif)
-       Features: EB Garamond (classic old-style serif) */
+    /* Distanz Typography System - Adobe Fonts
+       Body/UI: inter-variable (complete weight spectrum 100-900)
+       Headings: eb-garamond (400, 500, 600 + italic variants)
+       Adobe Fonts Project ID: bua7sld */
 
-    /* Primary Typefaces */
-    --font-family-sans: var(--font-sans), 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    --font-family-serif: var(--font-serif), 'EB Garamond', Georgia, 'Times New Roman', serif;
+    /* Primary Typefaces - Adobe Fonts */
+    --font-family-sans: "inter-variable", "Inter", -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-family-serif: "eb-garamond", Georgia, 'Times New Roman', serif;
 
     /* Legacy font variables for backwards compatibility */
-    --display-font: var(--font-family-sans);
-    --headline-font: var(--font-family-sans);
+    --display-font: var(--font-family-serif);
+    --headline-font: var(--font-family-serif);
     --body-font: var(--font-family-sans);
     --ui-font: var(--font-family-sans);
     --base-font: var(--font-family-sans);
-    --brand-font: var(--font-family-sans);
+    --brand-font: var(--font-family-serif);
     --subheading-font: var(--font-family-serif);
 
     /* Tighter font metrics for more squared typography */
@@ -535,12 +536,12 @@
 
   /* ========================================
      Distanz Typography Utility Classes
-     Based on Manrope + EB Garamond
+     Based on Inter Variable + EB Garamond
      ======================================== */
 
-  /* ===== NEWS/UI TYPOGRAPHY (MANROPE) ===== */
+  /* ===== BODY/UI TYPOGRAPHY (INTER) ===== */
 
-  /* Body Text - News (Manrope) */
+  /* Body Text - Body (Inter) */
   .text-body-distanz,
   .news-body {
     font-family: var(--font-family-sans);
@@ -560,7 +561,7 @@
     color: rgb(var(--color-textDefault));
   }
 
-  /* Overline / Tags (Manrope SemiBold, Uppercase) */
+  /* Overline / Tags (Inter SemiBold, Uppercase) */
   .news-overline,
   .text-meta-distanz {
     font-family: var(--font-family-sans);
@@ -572,7 +573,7 @@
     color: rgb(var(--color-textSubtle));
   }
 
-  /* Caption (Manrope Medium) */
+  /* Caption (Inter Medium) */
   .news-caption,
   .text-caption-distanz {
     font-family: var(--font-family-sans);
@@ -583,7 +584,7 @@
     color: rgb(var(--color-textDefault));
   }
 
-  /* Label / Meta (Manrope Medium) */
+  /* Label / Meta (Inter Medium) */
   .news-label,
   .text-label-distanz {
     font-family: var(--font-family-sans);
@@ -594,9 +595,8 @@
     color: rgb(var(--color-textDefault));
   }
 
-  /* Headlines - News (Manrope Bold/SemiBold) */
-  .news-h3,
-  .text-h3-distanz {
+  /* Small Headings - Body (Inter SemiBold) */
+  .news-h3 {
     font-family: var(--font-family-sans);
     font-weight: 600;
     font-size: 22px;
@@ -605,8 +605,7 @@
     color: rgb(var(--color-textDefault));
   }
 
-  .news-h2,
-  .text-h2-distanz {
+  .news-h2 {
     font-family: var(--font-family-sans);
     font-weight: 600;
     font-size: 28px;
@@ -615,27 +614,7 @@
     color: rgb(var(--color-textDefault));
   }
 
-  .news-h1,
-  .text-h1-distanz,
-  .text-title-distanz {
-    font-family: var(--font-family-sans);
-    font-weight: 700;
-    font-size: 36px;
-    line-height: 1.2;
-    letter-spacing: -0.015em;
-    color: rgb(var(--color-textDefault));
-  }
-
-  .news-display {
-    font-family: var(--font-family-sans);
-    font-weight: 700;
-    font-size: 48px;
-    line-height: 1.1;
-    letter-spacing: -0.02em;
-    color: rgb(var(--color-textDefault));
-  }
-
-  /* UI Components (Manrope) */
+  /* UI Components (Inter) */
   .ui-btn,
   .text-button-distanz {
     font-family: var(--font-family-sans);
@@ -705,7 +684,56 @@
     text-transform: uppercase;
   }
 
-  /* ===== FEATURES TYPOGRAPHY (EB GARAMOND) ===== */
+  /* ===== HEADING TYPOGRAPHY (EB GARAMOND) ===== */
+
+  /* Main Headings (EB Garamond) */
+  .text-h3-distanz,
+  .feature-h3,
+  .text-h3-feature {
+    font-family: var(--font-family-serif);
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 1.3;
+    letter-spacing: 0;
+    color: rgb(var(--color-textDefault));
+  }
+
+  .text-h2-distanz,
+  .feature-h2,
+  .text-h2-feature {
+    font-family: var(--font-family-serif);
+    font-weight: 500;
+    font-size: 30px;
+    line-height: 1.25;
+    letter-spacing: 0;
+    color: rgb(var(--color-textDefault));
+  }
+
+  .text-h1-distanz,
+  .text-title-distanz,
+  .news-h1,
+  .feature-h1,
+  .text-h1-feature {
+    font-family: var(--font-family-serif);
+    font-weight: 500;
+    font-size: 40px;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    color: rgb(var(--color-textDefault));
+  }
+
+  .news-display,
+  .feature-display,
+  .text-newsletter-heading-distanz {
+    font-family: var(--font-family-serif);
+    font-weight: 500;
+    font-size: 52px;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    color: rgb(var(--color-textDefault));
+  }
+
+  /* ===== EXTENDED CONTENT TYPOGRAPHY (EB GARAMOND) ===== */
 
   /* Body Text - Features (EB Garamond) */
   .feature-body {
@@ -763,54 +791,11 @@
     color: rgb(var(--color-textSubtle));
   }
 
-  /* Headlines - Features (EB Garamond) */
-  .feature-h3,
-  .text-h3-feature {
-    font-family: var(--font-family-serif);
-    font-weight: 500;
-    font-size: 24px;
-    line-height: 1.3;
-    letter-spacing: 0;
-    color: rgb(var(--color-textDefault));
-  }
-
-  .feature-h2,
-  .text-h2-feature {
-    font-family: var(--font-family-serif);
-    font-weight: 500;
-    font-size: 30px;
-    line-height: 1.25;
-    letter-spacing: 0;
-    color: rgb(var(--color-textDefault));
-  }
-
-  .feature-h1,
-  .text-h1-feature {
-    font-family: var(--font-family-serif);
-    font-weight: 400;
-    font-size: 40px;
-    line-height: 1.15;
-    letter-spacing: -0.01em;
-    font-style: italic;
-    color: rgb(var(--color-textDefault));
-  }
-
-  .feature-display,
-  .text-newsletter-heading-distanz {
-    font-family: var(--font-family-serif);
-    font-weight: 400;
-    font-size: 52px;
-    line-height: 1.1;
-    letter-spacing: -0.01em;
-    font-style: italic;
-    color: rgb(var(--color-textDefault));
-  }
-
   /* ===== LEGACY/COMPATIBILITY CLASSES ===== */
 
   .text-h6-distanz {
-    font-family: var(--font-family-sans);
-    font-weight: 600;
+    font-family: var(--font-family-serif);
+    font-weight: 500;
     font-size: 18px;
     line-height: 1.2;
     letter-spacing: 0;
@@ -818,8 +803,8 @@
   }
 
   .text-h5-distanz {
-    font-family: var(--font-family-sans);
-    font-weight: 600;
+    font-family: var(--font-family-serif);
+    font-weight: 500;
     font-size: 20px;
     line-height: 1.2;
     letter-spacing: 0;
@@ -827,15 +812,15 @@
   }
 
   .text-h4-distanz {
-    font-family: var(--font-family-sans);
-    font-weight: 600;
+    font-family: var(--font-family-serif);
+    font-weight: 500;
     font-size: 22px;
     line-height: 1.3;
     letter-spacing: 0;
     color: rgb(var(--color-textDefault));
   }
 
-  /* Stat Callouts (Manrope Bold) */
+  /* Stat Callouts (Inter Bold) */
   .text-stat-distanz {
     font-family: var(--font-family-sans);
     font-weight: 800;

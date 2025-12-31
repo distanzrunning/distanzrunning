@@ -181,43 +181,44 @@ module.exports = {
         'borderNeutralSubtle': 'rgb(var(--color-borderNeutralSubtle))',
       },
       fontFamily: {
-        // Distanz Typography System - Manrope + EB Garamond
-        // News/UI: Manrope (modern geometric sans-serif)
-        // Features: EB Garamond (classic old-style serif)
+        // Distanz Typography System - Adobe Fonts
+        // Body/UI: inter-variable (complete weight spectrum 100-900)
+        // Headings: eb-garamond (400, 500, 600 + italic variants)
+        // Adobe Fonts Project ID: bua7sld
 
-        // Sans-serif (Manrope) - News, headlines, UI
+        // Sans-serif (Inter Variable) - Body, UI, navigation
         sans: [
-          'var(--font-sans)',
-          'Manrope',
+          'inter-variable',
+          'Inter',
           '-apple-system',
           'BlinkMacSystemFont',
           'Segoe UI',
           'Roboto',
           'sans-serif'
         ],
-        manrope: ['var(--font-sans)', 'Manrope', 'sans-serif'],
+        inter: ['inter-variable', 'Inter', 'sans-serif'],
 
-        // Serif (EB Garamond) - Features, essays, long-form
-        serif: ['var(--font-serif)', 'EB Garamond', 'Georgia', 'serif'],
-        garamond: ['var(--font-serif)', 'EB Garamond', 'Georgia', 'serif'],
+        // Serif (EB Garamond) - Headings, display
+        serif: ['eb-garamond', 'EB Garamond', 'Georgia', 'serif'],
+        garamond: ['eb-garamond', 'EB Garamond', 'Georgia', 'serif'],
 
         // Legacy aliases for backwards compatibility
-        display: ['var(--font-sans)', 'Manrope', 'sans-serif'],
-        headline: ['var(--font-sans)', 'Manrope', 'sans-serif'],
-        body: ['var(--font-sans)', 'Manrope', 'sans-serif'],
-        ui: ['var(--font-sans)', 'Manrope', 'sans-serif'],
-        playfair: ['var(--font-serif)', 'EB Garamond', 'serif'],
-        inter: ['var(--font-sans)', 'Manrope', 'sans-serif'],
-        archivo: ['var(--font-sans)', 'Manrope', 'sans-serif'],
-        bricolage: ['var(--font-sans)', 'Manrope', 'sans-serif'],
-        garvis: ['var(--font-sans)', 'Manrope', 'sans-serif'],
-        quasimoda: ['var(--font-sans)', 'Manrope', 'sans-serif'],
+        display: ['eb-garamond', 'EB Garamond', 'serif'],
+        headline: ['eb-garamond', 'EB Garamond', 'serif'],
+        body: ['inter-variable', 'Inter', 'sans-serif'],
+        ui: ['inter-variable', 'Inter', 'sans-serif'],
+        playfair: ['eb-garamond', 'EB Garamond', 'serif'],
+        manrope: ['inter-variable', 'Inter', 'sans-serif'],
+        archivo: ['inter-variable', 'Inter', 'sans-serif'],
+        bricolage: ['inter-variable', 'Inter', 'sans-serif'],
+        garvis: ['var(--font-sans)', 'Inter', 'sans-serif'],
+        quasimoda: ['var(--font-sans)', 'Inter', 'sans-serif'],
         mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Courier New', 'monospace'],
       },
       fontSize: {
-        // Distanz Typography System - Manrope + EB Garamond
+        // Distanz Typography System - Inter + EB Garamond
 
-        // Small Text & Metadata (Manrope)
+        // Small Text & Metadata (Inter)
         'xs': ['11px', {
           lineHeight: '1.3',
           letterSpacing: '0.02em',
@@ -229,7 +230,7 @@ module.exports = {
           '--font-size-px': '12'
         }],
 
-        // UI & Forms (Manrope)
+        // UI & Forms (Inter)
         'base': ['14px', {
           lineHeight: '1.5',
           letterSpacing: '0',
@@ -246,7 +247,7 @@ module.exports = {
           '--font-size-px': '14'
         }],
 
-        // Body Text - News (Manrope) / Features (EB Garamond)
+        // Body Text - Body (Inter) / Features (EB Garamond)
         'body': ['16px', {
           lineHeight: '1.5',
           letterSpacing: '0',
@@ -263,7 +264,7 @@ module.exports = {
           '--font-size-px': '19'
         }],
 
-        // Overline / Tags (Manrope)
+        // Overline / Tags (Inter)
         'overline': ['12px', {
           lineHeight: '1.3',
           letterSpacing: '0.08em',
@@ -277,7 +278,7 @@ module.exports = {
           '--font-size-px': '26'
         }],
 
-        // Headings - News (Manrope Bold/SemiBold)
+        // Headings - Body (Inter Bold/SemiBold)
         'h3-news': ['22px', {
           lineHeight: '1.3',
           letterSpacing: '0',
@@ -321,7 +322,7 @@ module.exports = {
           '--font-size-px': '52'
         }],
 
-        // Generic headings (default to Manrope for news)
+        // Generic headings (default to EB Garamond)
         'h6': ['18px', {
           lineHeight: '1.2',
           letterSpacing: '0',

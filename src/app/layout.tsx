@@ -1,6 +1,5 @@
 // src/app/layout.tsx
 import type { Metadata } from "next";
-import { Manrope, EB_Garamond } from "next/font/google";
 import "./globals.css";
 import AuthProtection from "@/components/AuthProtection";
 import LayoutContent from "@/components/LayoutContent";
@@ -11,26 +10,10 @@ import ReCaptchaProvider from "@/components/ReCaptchaProvider";
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 
-// Distanz Typography System - Free Google Fonts
-// News/UI: Manrope (400, 500, 600, 700, 800)
-// Features: EB Garamond (400, 500, 600 + italic variants)
-
-// Sans-serif font - Manrope (news, UI, navigation)
-const manrope = Manrope({
-  subsets: ["latin"],
-  variable: "--font-sans",
-  weight: ["400", "500", "600", "700", "800"],
-  display: 'swap',
-});
-
-// Serif font - EB Garamond (features, essays, long-form content)
-const ebGaramond = EB_Garamond({
-  subsets: ["latin"],
-  variable: "--font-serif",
-  weight: ["400", "500", "600"],
-  style: ["normal", "italic"],
-  display: 'swap',
-});
+// Distanz Typography System - Adobe Fonts
+// Body/UI: Inter Variable (complete weight spectrum 100-900)
+// Headings: EB Garamond (400, 500, 600 + italic variants)
+// Adobe Fonts Project ID: bua7sld
 
 export const metadata: Metadata = {
   title: "Distanz Running",
@@ -56,8 +39,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${manrope.variable} ${ebGaramond.variable} bg-white dark:bg-[#0c0c0d] transition-colors duration-300`}>
+    <html lang="en" className="bg-white dark:bg-[#0c0c0d] transition-colors duration-300">
       <head>
+        {/* Adobe Fonts - Inter Variable + EB Garamond */}
+        <link rel="stylesheet" href="https://use.typekit.net/bua7sld.css" />
+
         {/* Prevent flash of dark mode - ensure light mode by default */}
         <script
           dangerouslySetInnerHTML={{
