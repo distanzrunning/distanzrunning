@@ -574,15 +574,17 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                 transition={megaMenuIsOpen ? garageDoorOpenTransition : garageDoorCloseTransition}
                 style={{
                   position: 'fixed',
-                  top: '3rem',
-                  left: 'calc(4vw + 1px)',
-                  right: 'calc(4vw + 1px)',
-                  width: 'calc(92vw - 2px)',
+                  top: 'calc(3rem + 1px)', // 48px nav height + 1px border
+                  left: 0,
+                  right: 0,
+                  width: '100%',
+                  maxWidth: '1585px', // Match main-wrapper max-width
+                  margin: '0 auto',
                   pointerEvents: megaMenuIsInteractive ? 'auto' : 'none',
                   zIndex: 30
                 }}
               >
-                <NavigationMenu.Viewport className="pointer-events-auto relative w-full h-[var(--radix-navigation-menu-viewport-height)] origin-top bg-white dark:bg-neutral-900 border-t border-b border-neutral-200 dark:border-neutral-800 shadow-[0_30px_60px_-40px_rgba(15,23,42,0.45)] transition-[height] duration-300 ease-out" />
+                <NavigationMenu.Viewport className="pointer-events-auto relative w-full h-[var(--radix-navigation-menu-viewport-height)] origin-top bg-white dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-800 shadow-[0_30px_60px_-40px_rgba(15,23,42,0.45)] transition-[height] duration-300 ease-out" />
               </motion.div>
             </NavigationMenu.Root>
 
