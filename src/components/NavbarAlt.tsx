@@ -83,8 +83,9 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
   // Track when header has scrolled away to show compact logo and buttons
   useEffect(() => {
     const handleScroll = () => {
-      // Header is 80px (5rem) tall, show compact elements when it's mostly scrolled away
-      setIsHeaderScrolledAway(window.scrollY > 60)
+      // Header is 80px (h-20 = 5rem) tall, show compact elements only when fully scrolled away
+      // This ensures fade-in happens exactly when sticky nav hits the top
+      setIsHeaderScrolledAway(window.scrollY >= 80)
     }
 
     handleScroll()
