@@ -564,28 +564,26 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                 <span className="h-[2px] w-full rounded-full bg-neutral-900/80 dark:bg-white/80" />
               </NavigationMenu.Indicator>
 
-              <motion.div
-                className="origin-top overflow-hidden"
-                initial={false}
-                animate={{
-                  height: megaMenuShouldRender ? (megaMenuIsOpen ? 'auto' : 0) : 0,
-                  opacity: megaMenuIsOpen ? 1 : 0
-                }}
-                transition={megaMenuIsOpen ? garageDoorOpenTransition : garageDoorCloseTransition}
+              <div
+                className="absolute left-1/2 -translate-x-1/2 w-screen"
                 style={{
-                  position: 'fixed',
-                  top: 'calc(3rem + 1px)', // 48px nav height + 1px border
-                  left: 0,
-                  right: 0,
-                  width: '100%',
+                  top: 'calc(100% + 1px)', // Position below nav list + 1px for border
                   maxWidth: '1585px', // Match main-wrapper max-width
-                  margin: '0 auto',
                   pointerEvents: megaMenuIsInteractive ? 'auto' : 'none',
-                  zIndex: 30
                 }}
               >
-                <NavigationMenu.Viewport className="pointer-events-auto relative w-full h-[var(--radix-navigation-menu-viewport-height)] origin-top bg-white dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-800 shadow-[0_30px_60px_-40px_rgba(15,23,42,0.45)] transition-[height] duration-300 ease-out" />
-              </motion.div>
+                <motion.div
+                  className="origin-top overflow-hidden"
+                  initial={false}
+                  animate={{
+                    height: megaMenuShouldRender ? (megaMenuIsOpen ? 'auto' : 0) : 0,
+                    opacity: megaMenuIsOpen ? 1 : 0
+                  }}
+                  transition={megaMenuIsOpen ? garageDoorOpenTransition : garageDoorCloseTransition}
+                >
+                  <NavigationMenu.Viewport className="pointer-events-auto relative w-full h-[var(--radix-navigation-menu-viewport-height)] origin-top bg-white dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-800 shadow-[0_30px_60px_-40px_rgba(15,23,42,0.45)] transition-[height] duration-300 ease-out" />
+                </motion.div>
+              </div>
             </NavigationMenu.Root>
 
             {/* Right: Utility Buttons - Shows when header scrolls away */}
