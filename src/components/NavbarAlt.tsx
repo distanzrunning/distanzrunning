@@ -163,13 +163,9 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
 
   return (
     <>
-      {/* Desktop & Mobile Header - Sticky */}
+      {/* Desktop & Mobile Header - Two Part Structure */}
       <header
-        className={`sticky top-0 z-50 transition-all duration-300 overflow-visible ${
-          isScrolled && !isNavHovered && navValue === ''
-            ? 'bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md backdrop-saturate-150'
-            : 'bg-white dark:bg-neutral-900'
-        }`}
+        className="relative z-40 bg-white dark:bg-neutral-900 transition-colors duration-300"
         role="banner"
       >
 
@@ -287,7 +283,14 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
             </div>
           </motion.div>
         </motion.div>
+      </header>
 
+      {/* Sticky Navigation Bar - Art Newspaper Style */}
+      <nav className={`sticky top-0 z-50 transition-all duration-300 overflow-visible ${
+        isScrolled && !isNavHovered && navValue === ''
+          ? 'bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md backdrop-saturate-150'
+          : 'bg-white dark:bg-neutral-900'
+      }`}>
         {/* Bottom Section: Centered Navigation Links - Desktop Only */}
         <div className="hidden lg:block border-b border-neutral-200 dark:border-neutral-700 relative z-40 overflow-visible">
           <div className="flex items-center justify-between px-4 md:px-6 lg:px-8 h-12 relative">
@@ -676,8 +679,9 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
             </motion.div>
           </div>
         </div>
+      </nav>
 
-        {/* Mobile Menu Dialog */}
+      {/* Mobile Menu Dialog */}
         <Dialog.Root open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
           <Dialog.Portal>
             <Dialog.Overlay className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40" />
@@ -1007,7 +1011,6 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
           </Dialog.Content>
         </Dialog.Portal>
         </Dialog.Root>
-      </header>
 
       {/* Search Dialog Modal */}
       <Dialog.Root open={searchDialogOpen} onOpenChange={setSearchDialogOpen}>
