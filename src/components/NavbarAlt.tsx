@@ -565,10 +565,10 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
               </NavigationMenu.Indicator>
 
               <div
-                className="w-screen px-0 md:px-[1px]"
+                className="w-screen px-0 md:px-[1px] -mt-px"
                 style={{
                   position: 'fixed',
-                  top: '3rem', // 48px - position at bottom of navbar, overlapping the border
+                  top: 'calc(3rem + 1px)', // 48px content + 1px border
                   left: '50%',
                   transform: 'translateX(-50%)',
                   maxWidth: '1585px', // Match main-wrapper max-width
