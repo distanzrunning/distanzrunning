@@ -568,7 +568,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                 className="w-screen px-0 md:px-[1px]"
                 style={{
                   position: 'fixed',
-                  top: 'calc(3rem + 1px)', // 48px nav height + 1px border
+                  top: '3rem', // 48px - position at bottom of navbar, overlapping the border
                   left: '50%',
                   transform: 'translateX(-50%)',
                   maxWidth: '1585px', // Match main-wrapper max-width
