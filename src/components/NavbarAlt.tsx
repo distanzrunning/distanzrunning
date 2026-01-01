@@ -73,14 +73,24 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
   const [searchDialogOpen, setSearchDialogOpen] = useState(false)
   const [newsletterModalOpen, setNewsletterModalOpen] = useState(false)
   const [isNavHovered, setIsNavHovered] = useState(false)
+  const [isHeaderScrolledAway, setIsHeaderScrolledAway] = useState(false)
   const megaMenuCloseTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
     setMounted(true)
   }, [])
 
-  // Removed scroll-based navbar shrinking - using two-part structure instead
-  // Top section scrolls away naturally, bottom section stays sticky
+  // Track when header has scrolled away to show compact logo and buttons
+  useEffect(() => {
+    const handleScroll = () => {
+      // Header is 80px (5rem) tall, show compact elements when it's mostly scrolled away
+      setIsHeaderScrolledAway(window.scrollY > 60)
+    }
+
+    handleScroll()
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   // Handle keyboard shortcut (Cmd/Ctrl + K) for search
   useEffect(() => {
@@ -228,8 +238,16 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
         <div className="hidden lg:block border-b border-neutral-200 dark:border-neutral-700 relative z-40 overflow-visible">
           <div className="flex items-center justify-between px-4 md:px-6 lg:px-8 h-12 relative">
 
-            {/* Left: Small Logo */}
-            <div className="flex items-center">
+            {/* Left: Small Logo - Shows when header scrolls away */}
+            <motion.div
+              className="flex items-center"
+              initial={false}
+              animate={{
+                opacity: isHeaderScrolledAway ? 1 : 0,
+                pointerEvents: isHeaderScrolledAway ? 'auto' : 'none'
+              }}
+              transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+            >
               <Link href="/" className="flex items-center" title="Home">
                 <Image
                   src="/images/logo.svg"
@@ -248,7 +266,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                   priority
                 />
               </Link>
-            </div>
+            </motion.div>
 
             {/* Center: Desktop Navigation - Radix UI */}
             <NavigationMenu.Root className="absolute left-1/2 -translate-x-1/2 z-50" value={navValue} onValueChange={handleNavValueChange}>
@@ -567,8 +585,16 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
               </motion.div>
             </NavigationMenu.Root>
 
-            {/* Right: Utility Buttons */}
-            <div className="flex items-center gap-3">
+            {/* Right: Utility Buttons - Shows when header scrolls away */}
+            <motion.div
+              className="flex items-center gap-3"
+              initial={false}
+              animate={{
+                opacity: isHeaderScrolledAway ? 1 : 0,
+                pointerEvents: isHeaderScrolledAway ? 'auto' : 'none'
+              }}
+              transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+            >
               {/* Search Icon Button */}
               <button
                 onClick={() => setSearchDialogOpen(true)}
@@ -594,7 +620,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                   )}
                 </button>
               )}
-            </div>
+            </motion.div>
           </div>
         </div>
       </nav>
