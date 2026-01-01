@@ -565,11 +565,15 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
               </NavigationMenu.Indicator>
 
               <div
-                className="absolute left-1/2 -translate-x-1/2 w-screen px-0 md:px-[1px]"
+                className="w-screen px-0 md:px-[1px]"
                 style={{
-                  top: '100%', // Position directly below nav list
+                  position: 'fixed',
+                  top: 'calc(3rem + 1px)', // 48px nav height + 1px border
+                  left: '50%',
+                  transform: 'translateX(-50%)',
                   maxWidth: '1585px', // Match main-wrapper max-width
                   pointerEvents: megaMenuIsInteractive ? 'auto' : 'none',
+                  zIndex: 40,
                 }}
               >
                 <motion.div
