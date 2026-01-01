@@ -228,8 +228,30 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
         <div className="hidden lg:block border-b border-neutral-200 dark:border-neutral-700 relative z-40 overflow-visible">
           <div className="flex items-center justify-between px-4 md:px-6 lg:px-8 h-12 relative">
 
-            {/* Desktop Navigation - Radix UI (hidden on mobile) */}
-            <NavigationMenu.Root className="relative z-50 hidden lg:block" value={navValue} onValueChange={handleNavValueChange}>
+            {/* Left: Small Logo */}
+            <div className="flex items-center">
+              <Link href="/" className="flex items-center" title="Home">
+                <Image
+                  src="/images/logo.svg"
+                  alt="Distanz Running Logo"
+                  className="h-8 w-auto dark:hidden"
+                  width={120}
+                  height={32}
+                  priority
+                />
+                <Image
+                  src="/images/logo_white.svg"
+                  alt="Distanz Running Logo"
+                  className="hidden h-8 w-auto dark:block"
+                  width={120}
+                  height={32}
+                  priority
+                />
+              </Link>
+            </div>
+
+            {/* Center: Desktop Navigation - Radix UI */}
+            <NavigationMenu.Root className="absolute left-1/2 -translate-x-1/2 z-50" value={navValue} onValueChange={handleNavValueChange}>
               <NavigationMenu.List
                 className="flex items-center gap-1"
                 onMouseEnter={() => setIsNavHovered(true)}
@@ -544,6 +566,35 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                 <NavigationMenu.Viewport className="pointer-events-auto relative w-full h-[var(--radix-navigation-menu-viewport-height)] origin-top bg-white dark:bg-neutral-900 border-t border-b border-neutral-200 dark:border-neutral-800 shadow-[0_30px_60px_-40px_rgba(15,23,42,0.45)] transition-[height] duration-300 ease-out" />
               </motion.div>
             </NavigationMenu.Root>
+
+            {/* Right: Utility Buttons */}
+            <div className="flex items-center gap-3">
+              {/* Search Icon Button */}
+              <button
+                onClick={() => setSearchDialogOpen(true)}
+                className="p-2 text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors duration-200"
+                aria-label="Open search"
+                title="Search (⌘K / Ctrl+K)"
+              >
+                <SearchIcon className="h-5 w-5" />
+              </button>
+
+              {/* Dark Mode Toggle */}
+              {mounted && (
+                <button
+                  onClick={toggleDarkMode}
+                  className="p-2 text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors duration-200"
+                  aria-label="Toggle dark mode"
+                  title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+                >
+                  {isDark ? (
+                    <Sun className="h-5 w-5" />
+                  ) : (
+                    <Moon className="h-5 w-5" />
+                  )}
+                </button>
+              )}
+            </div>
           </div>
         </div>
       </nav>
