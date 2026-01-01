@@ -72,46 +72,15 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
   const [isClosingMegaMenu, setIsClosingMegaMenu] = useState(false)
   const [searchDialogOpen, setSearchDialogOpen] = useState(false)
   const [newsletterModalOpen, setNewsletterModalOpen] = useState(false)
-  const [isScrolled, setIsScrolled] = useState(false)
   const [isNavHovered, setIsNavHovered] = useState(false)
-  const [isDesktop, setIsDesktop] = useState(false)
   const megaMenuCloseTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-
-  // Force compact mode on calendar page
-  const isCalendarPage = pathname === '/races/calendar'
 
   useEffect(() => {
     setMounted(true)
-    // Check if desktop on mount
-    setIsDesktop(window.innerWidth >= 1024)
-
-    // Update on resize
-    const handleResize = () => {
-      setIsDesktop(window.innerWidth >= 1024)
-    }
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
   }, [])
 
-  // Handle scroll to shrink navbar
-  useEffect(() => {
-    const handleScroll = () => {
-      // Always use compact mode on calendar page
-      if (isCalendarPage) {
-        setIsScrolled(true)
-      } else if (window.scrollY > 50) {
-        setIsScrolled(true)
-      } else {
-        setIsScrolled(false)
-      }
-    }
-
-    // Set initial state
-    handleScroll()
-
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [isCalendarPage])
+  // Removed scroll-based navbar shrinking - using two-part structure instead
+  // Top section scrolls away naturally, bottom section stays sticky
 
   // Handle keyboard shortcut (Cmd/Ctrl + K) for search
   useEffect(() => {
@@ -175,32 +144,8 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
         </a>
 
         {/* Top Section: Logo, Search Icon, Newsletter, Dark Mode */}
-        <motion.div
-          className="border-b border-neutral-200 dark:border-neutral-700 relative z-50"
-          initial={false}
-          animate={{
-            // On desktop: collapse completely when scrolled
-            // On mobile: reduce height when scrolled
-            height: isDesktop && isScrolled ? 0 : 'auto',
-            opacity: isDesktop && isScrolled ? 0 : 1
-          }}
-          style={{
-            overflow: isDesktop ? 'hidden' : 'visible',
-            willChange: 'height, opacity'
-          }}
-          transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
-        >
-          <motion.div
-            className="flex items-center justify-between px-4 md:px-6 lg:px-8"
-            initial={false}
-            animate={{
-              height: !isDesktop && isScrolled ? '3.5rem' : '5rem' // Mobile: 56px -> 64px when scrolled, Desktop: 80px
-            }}
-            style={{
-              willChange: 'height'
-            }}
-            transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
-          >
+        <div className="border-b border-neutral-200 dark:border-neutral-700 relative z-50">
+          <div className="flex items-center justify-between px-4 md:px-6 lg:px-8 h-20">
 
             {/* Mobile Menu Button - Left (Mobile Only) */}
             <button
@@ -211,32 +156,24 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
               <Menu className="h-6 w-6" />
             </button>
 
-            {/* Centered Logo - Shrinks on mobile scroll */}
+            {/* Centered Logo */}
             <Link href="/" className="absolute left-1/2 -translate-x-1/2 flex items-center flex-shrink-0" title="Home">
-              <motion.div
-                initial={false}
-                animate={{
-                  scale: !isDesktop && isScrolled ? 0.85 : 1
-                }}
-                transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
-              >
-                <Image
-                  src="/images/logo.svg"
-                  alt="Distanz Running Logo"
-                  className="h-14 w-auto dark:hidden"
-                  width={210}
-                  height={56}
-                  priority
-                />
-                <Image
-                  src="/images/logo_white.svg"
-                  alt="Distanz Running Logo"
-                  className="hidden h-14 w-auto dark:block"
-                  width={210}
-                  height={56}
-                  priority
-                />
-              </motion.div>
+              <Image
+                src="/images/logo.svg"
+                alt="Distanz Running Logo"
+                className="h-14 w-auto dark:hidden"
+                width={210}
+                height={56}
+                priority
+              />
+              <Image
+                src="/images/logo_white.svg"
+                alt="Distanz Running Logo"
+                className="hidden h-14 w-auto dark:block"
+                width={210}
+                height={56}
+                priority
+              />
             </Link>
 
             {/* Right: Search Icon + Newsletter + Dark Mode */}
@@ -281,48 +218,15 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                 </button>
               )}
             </div>
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
       </header>
 
       {/* Sticky Navigation Bar - Art Newspaper Style */}
-      <nav className={`sticky top-0 z-50 transition-all duration-300 overflow-visible ${
-        isScrolled && !isNavHovered && navValue === ''
-          ? 'bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md backdrop-saturate-150'
-          : 'bg-white dark:bg-neutral-900'
-      }`}>
+      <nav className="sticky top-0 z-50 bg-white dark:bg-neutral-900 transition-colors duration-300 overflow-visible">
         {/* Bottom Section: Centered Navigation Links - Desktop Only */}
         <div className="hidden lg:block border-b border-neutral-200 dark:border-neutral-700 relative z-40 overflow-visible">
           <div className="flex items-center justify-between px-4 md:px-6 lg:px-8 h-12 relative">
-
-            {/* Small Logo - Shows when scrolled on desktop */}
-            <motion.div
-              initial={false}
-              animate={{
-                opacity: isScrolled ? 1 : 0,
-                pointerEvents: isScrolled ? 'auto' : 'none'
-              }}
-              transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
-            >
-              <Link href="/" className="flex items-center" title="Home">
-                <Image
-                  src="/images/logo.svg"
-                  alt="Distanz Running Logo"
-                  className="h-8 w-auto dark:hidden"
-                  width={120}
-                  height={32}
-                  priority
-                />
-                <Image
-                  src="/images/logo_white.svg"
-                  alt="Distanz Running Logo"
-                  className="hidden h-8 w-auto dark:block"
-                  width={120}
-                  height={32}
-                  priority
-                />
-              </Link>
-            </motion.div>
 
             {/* Desktop Navigation - Radix UI (hidden on mobile) */}
             <NavigationMenu.Root className="relative z-50 hidden lg:block" value={navValue} onValueChange={handleNavValueChange}>
@@ -629,7 +533,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                 transition={megaMenuIsOpen ? garageDoorOpenTransition : garageDoorCloseTransition}
                 style={{
                   position: 'fixed',
-                  top: isScrolled ? '3rem' : '8rem',
+                  top: '3rem',
                   left: 'calc(4vw + 1px)',
                   right: 'calc(4vw + 1px)',
                   width: 'calc(92vw - 2px)',
@@ -640,43 +544,6 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                 <NavigationMenu.Viewport className="pointer-events-auto relative w-full h-[var(--radix-navigation-menu-viewport-height)] origin-top bg-white dark:bg-neutral-900 border-t border-b border-neutral-200 dark:border-neutral-800 shadow-[0_30px_60px_-40px_rgba(15,23,42,0.45)] transition-[height] duration-300 ease-out" />
               </motion.div>
             </NavigationMenu.Root>
-
-            {/* Utility Buttons - Desktop only (shows when scrolled) */}
-            <motion.div
-              className="hidden lg:flex items-center gap-3"
-              initial={false}
-              animate={{
-                opacity: isScrolled ? 1 : 0,
-                pointerEvents: isScrolled ? 'auto' : 'none'
-              }}
-              transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
-            >
-              {/* Search Icon Button */}
-              <button
-                onClick={() => setSearchDialogOpen(true)}
-                className="p-2 text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors duration-200"
-                aria-label="Open search"
-                title="Search (⌘K / Ctrl+K)"
-              >
-                <SearchIcon className="h-5 w-5" />
-              </button>
-
-              {/* Dark Mode Toggle */}
-              {mounted && (
-                <button
-                  onClick={toggleDarkMode}
-                  className="p-2 text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors duration-200"
-                  aria-label="Toggle dark mode"
-                  title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
-                >
-                  {isDark ? (
-                    <Sun className="h-5 w-5" />
-                  ) : (
-                    <Moon className="h-5 w-5" />
-                  )}
-                </button>
-              )}
-            </motion.div>
           </div>
         </div>
       </nav>
