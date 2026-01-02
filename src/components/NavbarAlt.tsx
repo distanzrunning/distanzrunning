@@ -234,10 +234,10 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
       </header>
 
       {/* Sticky Navigation Bar - Art Newspaper Style */}
-      <nav className="sticky top-0 z-50 bg-white dark:bg-neutral-900 transition-colors duration-300 overflow-visible">
+      <nav className="sticky top-0 z-50 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md transition-colors duration-300 overflow-visible">
         {/* Bottom Section: Centered Navigation Links - Desktop Only */}
-        <div className="hidden lg:block relative overflow-visible bg-white dark:bg-neutral-900 navbar-border-overlay" style={{ zIndex: 60 }}>
-          <div className="flex items-center justify-between px-4 md:px-6 lg:px-8 h-12 relative bg-white dark:bg-neutral-900" style={{ zIndex: 60 }}>
+        <div className="hidden lg:block relative overflow-visible bg-transparent navbar-border-overlay" style={{ zIndex: 60 }}>
+          <div className="flex items-center justify-between px-4 md:px-6 lg:px-8 h-12 relative bg-transparent" style={{ zIndex: 60 }}>
 
             {/* Left: Small Logo - Shows when header scrolls away */}
             <motion.div
