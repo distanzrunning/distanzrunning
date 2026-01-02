@@ -13,21 +13,21 @@ export const metadata: Metadata = {
 
 export default function DesignSystemPage() {
   return (
-    <div className="min-h-screen bg-canvas dark:bg-[#0a0a0a]">
+    <div className="min-h-screen bg-canvas dark:bg-[#0a0a0a] scroll-smooth">
       {/* Header */}
       <header className="bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md border-b border-borderNeutral pt-6 pb-6">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex flex-col justify-center min-h-[120px]">
+        <div className="max-w-7xl mx-auto px-6 py-4 flex flex-col justify-center min-h-[140px]">
           <h1 className="font-serif text-[56px] leading-[1.1] font-medium mb-2">
             Design System
           </h1>
           <p className="text-textSubtle text-lg">
             Distanz Running visual language and component library
           </p>
-          <div className="flex gap-4 mt-4 text-sm text-textSubtler">
+          <div className="flex gap-4 mt-4 text-sm text-textSubtler flex-wrap">
             <span>Adobe Fonts: Inter Variable + EB Garamond</span>
-            <span>•</span>
+            <span className="hidden sm:inline">•</span>
             <span>Design Tokens: TypeScript</span>
-            <span>•</span>
+            <span className="hidden sm:inline">•</span>
             <span>Framework: Next.js + Tailwind</span>
           </div>
         </div>
@@ -36,11 +36,11 @@ export default function DesignSystemPage() {
       {/* Navigation */}
       <nav className="bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md border-b border-borderNeutral sticky top-12 z-10">
         <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex gap-6 text-sm font-medium">
-            <a href="#colors" className="hover:text-electric-pink transition-colors">Colors</a>
-            <a href="#typography" className="hover:text-electric-pink transition-colors">Typography</a>
-            <a href="#spacing" className="hover:text-electric-pink transition-colors">Spacing</a>
-            <a href="#components" className="hover:text-electric-pink transition-colors">Components</a>
+          <div className="flex gap-6 text-sm font-medium overflow-x-auto scrollbar-hide justify-center sm:justify-start">
+            <a href="#colors" className="hover:text-electric-pink transition-colors whitespace-nowrap">Colors</a>
+            <a href="#typography" className="hover:text-electric-pink transition-colors whitespace-nowrap">Typography</a>
+            <a href="#spacing" className="hover:text-electric-pink transition-colors whitespace-nowrap">Spacing</a>
+            <a href="#components" className="hover:text-electric-pink transition-colors whitespace-nowrap">Components</a>
           </div>
         </div>
       </nav>
