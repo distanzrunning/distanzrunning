@@ -324,7 +324,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                     </motion.div>
                   </NavigationMenu.Trigger>
                   <NavigationMenu.Content className="mega-menu-content">
-                    <div className="mx-auto max-w-7xl px-8 md:px-12 lg:px-16 pb-8 lg:pb-10">
+                    <div className="mx-auto max-w-7xl px-8 md:px-12 lg:px-16 py-8 lg:py-10">
                       <div className="grid grid-cols-1 gap-4 lg:grid-cols-10 md:gap-6 lg:gap-8">
                           {/* Column 1: Description - 3/10 */}
                           <div className="lg:col-span-3 md:border-r md:border-neutral-200/70 md:pr-5 dark:md:border-neutral-800/70">
@@ -467,7 +467,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                     </motion.div>
                   </NavigationMenu.Trigger>
                   <NavigationMenu.Content className="mega-menu-content">
-                    <div className="mx-auto max-w-7xl px-8 md:px-12 lg:px-16 pb-8 lg:pb-10">
+                    <div className="mx-auto max-w-7xl px-8 md:px-12 lg:px-16 py-8 lg:py-10">
                       <div className="grid grid-cols-1 gap-4 lg:grid-cols-10 md:gap-6 lg:gap-8">
                           {/* Column 1: Description - 3/10 */}
                           <div className="lg:col-span-3 md:border-r md:border-neutral-200/70 md:pr-5 dark:md:border-neutral-800/70">
@@ -565,10 +565,10 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
               </NavigationMenu.Indicator>
 
               <div
-                className="w-screen px-0 md:px-[1px] -mt-px"
+                className="w-screen px-0 md:px-[1px]"
                 style={{
                   position: 'fixed',
-                  top: 'calc(3rem + 1px)', // 48px content + 1px border
+                  top: '3rem', // 48px - align with bottom of navbar content
                   left: '50%',
                   transform: 'translateX(-50%)',
                   maxWidth: '1585px', // Match main-wrapper max-width
