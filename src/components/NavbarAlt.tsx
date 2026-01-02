@@ -272,7 +272,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
             {/* Center: Desktop Navigation - Radix UI */}
             <NavigationMenu.Root className="absolute left-1/2 -translate-x-1/2 z-50" value={navValue} onValueChange={handleNavValueChange}>
               <NavigationMenu.List
-                className="flex items-center gap-1"
+                className="flex items-center gap-1 relative z-50"
                 onMouseEnter={() => setIsNavHovered(true)}
                 onMouseLeave={() => setIsNavHovered(false)}
               >
@@ -560,7 +560,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
 
               </NavigationMenu.List>
 
-              <NavigationMenu.Indicator className="pointer-events-none absolute top-full hidden h-2 translate-y-[6px] items-center justify-center overflow-hidden rounded-full data-[state=hidden]:animate-nav-indicator-out data-[state=visible]:animate-nav-indicator-in lg:flex">
+              <NavigationMenu.Indicator className="pointer-events-none absolute top-full hidden h-2 translate-y-[6px] items-center justify-center overflow-hidden rounded-full data-[state=hidden]:animate-nav-indicator-out data-[state=visible]:animate-nav-indicator-in lg:flex z-50">
                 <span className="h-[2px] w-full rounded-full bg-neutral-900/80 dark:bg-white/80" />
               </NavigationMenu.Indicator>
 
