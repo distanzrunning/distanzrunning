@@ -15,8 +15,8 @@ export default function DesignSystemPage() {
   return (
     <div className="min-h-screen bg-canvas dark:bg-[#0a0a0a]">
       {/* Header */}
-      <header className="bg-surface dark:bg-[#0c0c0d] border-b border-borderNeutral pt-12">
-        <div className="max-w-7xl mx-auto px-6 py-8">
+      <header className="bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md border-b border-borderNeutral pt-12">
+        <div className="max-w-7xl mx-auto px-6 py-4">
           <h1 className="font-serif text-[56px] leading-[1.1] font-medium mb-2">
             Design System
           </h1>
