@@ -15,7 +15,7 @@ export default function DesignSystemPage() {
   return (
     <div className="min-h-screen bg-canvas dark:bg-[#0a0a0a]">
       {/* Header */}
-      <header className="bg-surface dark:bg-[#0c0c0d] border-b border-borderNeutral sticky top-0 z-10">
+      <header className="bg-surface dark:bg-[#0c0c0d] border-b border-borderNeutral sticky top-12 z-10">
         <div className="max-w-7xl mx-auto px-6 py-8">
           <h1 className="font-serif text-[56px] leading-[1.1] font-medium mb-2">
             Design System
@@ -34,7 +34,7 @@ export default function DesignSystemPage() {
       </header>
 
       {/* Navigation */}
-      <nav className="bg-surface dark:bg-[#0c0c0d] border-b border-borderNeutral sticky top-[140px] z-10">
+      <nav className="bg-surface dark:bg-[#0c0c0d] border-b border-borderNeutral sticky top-[188px] z-10">
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex gap-6 text-sm font-medium">
             <a href="#colors" className="hover:text-electric-pink transition-colors">Colors</a>
