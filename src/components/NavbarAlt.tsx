@@ -573,11 +573,11 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                   transform: 'translateX(-50%)',
                   maxWidth: '1585px',
                   pointerEvents: megaMenuIsInteractive ? 'auto' : 'none',
-                  zIndex: 30,
+                  zIndex: 20,
                 }}
               >
                 <motion.div
-                  className="origin-top overflow-hidden"
+                  className="origin-top overflow-hidden -mt-px"
                   initial={false}
                   animate={{
                     height: megaMenuShouldRender ? (megaMenuIsOpen ? 'auto' : 0) : 0,
