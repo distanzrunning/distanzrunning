@@ -13,9 +13,9 @@ export const metadata: Metadata = {
 
 export default function DesignSystemPage() {
   return (
-    <div className="min-h-screen bg-canvas dark:bg-[#0a0a0a] pt-12">
+    <div className="min-h-screen bg-canvas dark:bg-[#0a0a0a]">
       {/* Header */}
-      <header className="bg-surface dark:bg-[#0c0c0d] border-b border-borderNeutral">
+      <header className="bg-surface dark:bg-[#0c0c0d] border-b border-borderNeutral pt-12">
         <div className="max-w-7xl mx-auto px-6 py-8">
           <h1 className="font-serif text-[56px] leading-[1.1] font-medium mb-2">
             Design System
@@ -34,7 +34,7 @@ export default function DesignSystemPage() {
       </header>
 
       {/* Navigation */}
-      <nav className="bg-surface dark:bg-[#0c0c0d] border-b border-borderNeutral sticky top-12 z-10">
+      <nav className="bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md border-b border-borderNeutral sticky top-12 z-10">
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex gap-6 text-sm font-medium">
             <a href="#colors" className="hover:text-electric-pink transition-colors">Colors</a>
@@ -48,7 +48,7 @@ export default function DesignSystemPage() {
       {/* Content */}
       <main className="max-w-7xl mx-auto px-6 py-12 space-y-24">
         {/* Colors Section */}
-        <section id="colors" className="scroll-mt-24">
+        <section id="colors" className="scroll-mt-32">
           <h2 className="font-serif text-[40px] leading-[1.15] font-medium mb-8">
             Color Palette
           </h2>
@@ -56,7 +56,7 @@ export default function DesignSystemPage() {
         </section>
 
         {/* Typography Section */}
-        <section id="typography" className="scroll-mt-24">
+        <section id="typography" className="scroll-mt-32">
           <h2 className="font-serif text-[40px] leading-[1.15] font-medium mb-8">
             Typography
           </h2>
@@ -64,7 +64,7 @@ export default function DesignSystemPage() {
         </section>
 
         {/* Spacing Section */}
-        <section id="spacing" className="scroll-mt-24">
+        <section id="spacing" className="scroll-mt-32">
           <h2 className="font-serif text-[40px] leading-[1.15] font-medium mb-8">
             Spacing & Layout
           </h2>
@@ -72,7 +72,7 @@ export default function DesignSystemPage() {
         </section>
 
         {/* Components Section */}
-        <section id="components" className="scroll-mt-24">
+        <section id="components" className="scroll-mt-32">
           <h2 className="font-serif text-[40px] leading-[1.15] font-medium mb-8">
             Components
           </h2>
