@@ -577,7 +577,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                 }}
               >
                 <motion.div
-                  className="origin-top overflow-hidden"
+                  className="origin-top overflow-hidden -mt-px"
                   initial={false}
                   animate={{
                     height: megaMenuShouldRender ? (megaMenuIsOpen ? 'auto' : 0) : 0,
