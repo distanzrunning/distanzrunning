@@ -16,14 +16,14 @@ export default function DesignSystemPage() {
     <div className="min-h-screen bg-canvas dark:bg-[#0a0a0a]">
       {/* Header */}
       <header className="bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md border-b border-borderNeutral pt-12">
-        <div className="max-w-7xl mx-auto px-6 py-4 text-center">
+        <div className="max-w-7xl mx-auto px-6 py-4 flex flex-col justify-center min-h-[120px]">
           <h1 className="font-serif text-[56px] leading-[1.1] font-medium mb-2">
             Design System
           </h1>
           <p className="text-textSubtle text-lg">
             Distanz Running visual language and component library
           </p>
-          <div className="flex gap-4 mt-4 text-sm text-textSubtler justify-center">
+          <div className="flex gap-4 mt-4 text-sm text-textSubtler">
             <span>Adobe Fonts: Inter Variable + EB Garamond</span>
             <span>•</span>
             <span>Design Tokens: TypeScript</span>
