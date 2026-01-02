@@ -573,7 +573,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                   transform: 'translateX(-50%)',
                   maxWidth: '1585px',
                   pointerEvents: megaMenuIsInteractive ? 'auto' : 'none',
-                  zIndex: 20,
+                  zIndex: 10,
                 }}
               >
                 <motion.div
