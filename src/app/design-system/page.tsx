@@ -1,36 +1,13 @@
-'use client'
-
-import { useState, useEffect } from 'react';
 import ColorPalette from './components/ColorPalette';
 import TypographyShowcase from './components/TypographyShowcase';
 import SpacingShowcase from './components/SpacingShowcase';
 import ComponentShowcase from './components/ComponentShowcase';
 
 export default function DesignSystemPage() {
-  const [activeSection, setActiveSection] = useState('colors');
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveSection(entry.target.id);
-          }
-        });
-      },
-      { rootMargin: '-100px 0px -66% 0px' }
-    );
-
-    const sections = document.querySelectorAll('section[id]');
-    sections.forEach((section) => observer.observe(section));
-
-    return () => sections.forEach((section) => observer.unobserve(section));
-  }, []);
-
   return (
     <div className="min-h-screen bg-canvas dark:bg-[#0a0a0a] scroll-smooth">
       {/* Header */}
-      <header className="bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md border-b border-borderNeutral pt-12 pb-6 lg:pt-6 lg:pb-6">
+      <header className="bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md border-b border-borderNeutral pt-6 pb-6">
         <div className="max-w-7xl mx-auto px-6 py-4 flex flex-col justify-center min-h-[140px]">
           <h1 className="font-serif text-[56px] leading-[1.1] font-medium mb-2">
             Design System
@@ -49,39 +26,19 @@ export default function DesignSystemPage() {
       </header>
 
       {/* Navigation */}
-      <nav className="bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md border-b border-borderNeutral sticky top-12 z-10">
+      <nav className="bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md border-b border-borderNeutral lg:sticky lg:top-12 z-10">
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex gap-6 text-sm font-medium overflow-x-auto scrollbar-hide justify-center sm:justify-start">
-            <a
-              href="#colors"
-              className={`hover:text-electric-pink transition-colors whitespace-nowrap ${
-                activeSection === 'colors' ? 'text-electric-pink' : ''
-              }`}
-            >
+            <a href="#colors" className="hover:text-electric-pink transition-colors whitespace-nowrap">
               Colors
             </a>
-            <a
-              href="#typography"
-              className={`hover:text-electric-pink transition-colors whitespace-nowrap ${
-                activeSection === 'typography' ? 'text-electric-pink' : ''
-              }`}
-            >
+            <a href="#typography" className="hover:text-electric-pink transition-colors whitespace-nowrap">
               Typography
             </a>
-            <a
-              href="#spacing"
-              className={`hover:text-electric-pink transition-colors whitespace-nowrap ${
-                activeSection === 'spacing' ? 'text-electric-pink' : ''
-              }`}
-            >
+            <a href="#spacing" className="hover:text-electric-pink transition-colors whitespace-nowrap">
               Spacing
             </a>
-            <a
-              href="#components"
-              className={`hover:text-electric-pink transition-colors whitespace-nowrap ${
-                activeSection === 'components' ? 'text-electric-pink' : ''
-              }`}
-            >
+            <a href="#components" className="hover:text-electric-pink transition-colors whitespace-nowrap">
               Components
             </a>
           </div>
