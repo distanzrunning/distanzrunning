@@ -26,7 +26,7 @@ export default function DesignSystemPage() {
       </header>
 
       {/* Navigation */}
-      <nav className="bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md border-b border-borderNeutral lg:sticky lg:top-12 z-10">
+      <nav className="bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md border-b border-borderNeutral sticky top-0 lg:top-12 z-10">
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex gap-6 text-sm font-medium overflow-x-auto scrollbar-hide justify-center sm:justify-start">
             <a href="#colors" className="hover:text-electric-pink transition-colors whitespace-nowrap">
