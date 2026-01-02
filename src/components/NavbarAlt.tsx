@@ -568,7 +568,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                 className="w-screen px-0 md:px-[1px]"
                 style={{
                   position: 'absolute',
-                  top: 'calc(100% - 1px)',
+                  top: '100%',
                   left: '50%',
                   transform: 'translateX(-50%)',
                   maxWidth: '1585px',
