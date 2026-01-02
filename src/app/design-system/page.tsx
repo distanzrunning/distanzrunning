@@ -1,6 +1,11 @@
 import ColorPalette from './components/ColorPalette';
 import TypographyShowcase from './components/TypographyShowcase';
 import SpacingShowcase from './components/SpacingShowcase';
+import RadiusAndShadowsShowcase from './components/RadiusAndShadowsShowcase';
+import GridSystemShowcase from './components/GridSystemShowcase';
+import AnimationShowcase from './components/AnimationShowcase';
+import AccessibilityShowcase from './components/AccessibilityShowcase';
+import DesignPatternsShowcase from './components/DesignPatternsShowcase';
 import ComponentShowcase from './components/ComponentShowcase';
 
 export default function DesignSystemPage() {
@@ -38,6 +43,21 @@ export default function DesignSystemPage() {
             <a href="#spacing" className="hover:text-electric-pink transition-colors whitespace-nowrap">
               Spacing
             </a>
+            <a href="#radius-shadows" className="hover:text-electric-pink transition-colors whitespace-nowrap">
+              Radius & Shadows
+            </a>
+            <a href="#grid" className="hover:text-electric-pink transition-colors whitespace-nowrap">
+              Grid System
+            </a>
+            <a href="#animation" className="hover:text-electric-pink transition-colors whitespace-nowrap">
+              Animation
+            </a>
+            <a href="#accessibility" className="hover:text-electric-pink transition-colors whitespace-nowrap">
+              Accessibility
+            </a>
+            <a href="#patterns" className="hover:text-electric-pink transition-colors whitespace-nowrap">
+              Patterns
+            </a>
             <a href="#components" className="hover:text-electric-pink transition-colors whitespace-nowrap">
               Components
             </a>
@@ -69,6 +89,46 @@ export default function DesignSystemPage() {
             Spacing & Layout
           </h2>
           <SpacingShowcase />
+        </section>
+
+        {/* Radius & Shadows Section */}
+        <section id="radius-shadows" className="scroll-mt-32">
+          <h2 className="font-serif text-[40px] leading-[1.15] font-medium mb-8">
+            Border Radius & Shadows
+          </h2>
+          <RadiusAndShadowsShowcase />
+        </section>
+
+        {/* Grid System Section */}
+        <section id="grid" className="scroll-mt-32">
+          <h2 className="font-serif text-[40px] leading-[1.15] font-medium mb-8">
+            Grid System
+          </h2>
+          <GridSystemShowcase />
+        </section>
+
+        {/* Animation Section */}
+        <section id="animation" className="scroll-mt-32">
+          <h2 className="font-serif text-[40px] leading-[1.15] font-medium mb-8">
+            Animation & Motion
+          </h2>
+          <AnimationShowcase />
+        </section>
+
+        {/* Accessibility Section */}
+        <section id="accessibility" className="scroll-mt-32">
+          <h2 className="font-serif text-[40px] leading-[1.15] font-medium mb-8">
+            Accessibility
+          </h2>
+          <AccessibilityShowcase />
+        </section>
+
+        {/* Design Patterns Section */}
+        <section id="patterns" className="scroll-mt-32">
+          <h2 className="font-serif text-[40px] leading-[1.15] font-medium mb-8">
+            Design Patterns
+          </h2>
+          <DesignPatternsShowcase />
         </section>
 
         {/* Components Section */}
