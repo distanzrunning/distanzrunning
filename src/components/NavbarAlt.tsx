@@ -568,16 +568,17 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                 className="w-screen px-0 md:px-[1px]"
                 style={{
                   position: 'fixed',
-                  top: '3rem', // Position at navbar bottom edge
+                  top: 0,
                   left: '50%',
                   transform: 'translateX(-50%)',
-                  maxWidth: '1585px', // Match main-wrapper max-width
+                  maxWidth: '1585px',
                   pointerEvents: megaMenuIsInteractive ? 'auto' : 'none',
-                  zIndex: 30, // Below navbar (z-40) so border stays on top
+                  zIndex: 30, // Below navbar (z-50) so it appears underneath
+                  paddingTop: 'calc(3rem + 1px)', // Offset for navbar height + border
                 }}
               >
                 <motion.div
-                  className="origin-top overflow-hidden -mt-px"
+                  className="origin-top overflow-hidden"
                   initial={false}
                   animate={{
                     height: megaMenuShouldRender ? (megaMenuIsOpen ? 'auto' : 0) : 0,
