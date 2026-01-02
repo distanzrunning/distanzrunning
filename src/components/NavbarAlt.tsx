@@ -568,13 +568,12 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                 className="w-screen px-0 md:px-[1px]"
                 style={{
                   position: 'fixed',
-                  top: 0,
+                  top: 'calc(3rem + 1px)',
                   left: '50%',
                   transform: 'translateX(-50%)',
                   maxWidth: '1585px',
                   pointerEvents: megaMenuIsInteractive ? 'auto' : 'none',
-                  zIndex: 30, // Below navbar (z-50) so it appears underneath
-                  paddingTop: 'calc(3rem + 1px)', // Offset for navbar height + border
+                  zIndex: 30,
                 }}
               >
                 <motion.div
@@ -586,7 +585,7 @@ export default function NavbarAlt({ featuredGear, featuredRace }: NavbarAltProps
                   }}
                   transition={megaMenuIsOpen ? garageDoorOpenTransition : garageDoorCloseTransition}
                 >
-                  <NavigationMenu.Viewport className="pointer-events-auto relative w-full h-[var(--radix-navigation-menu-viewport-height)] origin-top bg-white dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-700 shadow-[0_30px_60px_-40px_rgba(15,23,42,0.45)] transition-[height] duration-300 ease-out" />
+                  <NavigationMenu.Viewport className="pointer-events-auto relative w-full h-[var(--radix-navigation-menu-viewport-height)] origin-top bg-white dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-700 shadow-[0_30px_60px_-40px_rgba(15,23,42,0.45)] transition-[height] duration-300 ease-out border-t border-t-white dark:border-t-neutral-900" />
                 </motion.div>
               </div>
             </NavigationMenu.Root>
