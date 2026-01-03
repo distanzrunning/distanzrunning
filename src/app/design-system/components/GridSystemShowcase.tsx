@@ -22,7 +22,7 @@ export default function GridSystemShowcase() {
 
         <div className="grid grid-cols-18 gap-4 max-w-[1585px] mx-auto">
           {Array.from({ length: 18 }).map((_, i) => (
-            <div key={i} className="bg-electric-pink/20 border border-electric-pink rounded p-2 text-center">
+            <div key={i} className="bg-electric-pink/20 border border-neutral-400 dark:border-neutral-500 rounded p-2 text-center">
               <span className="text-xs font-mono text-textSubtle">{i + 1}</span>
             </div>
           ))}

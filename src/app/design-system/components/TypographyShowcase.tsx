@@ -128,7 +128,7 @@ export default function TypographyShowcase() {
           </div>
 
           <div>
-            <blockquote className="font-serif text-[32px] leading-[1.3] italic mb-2 pl-6 border-l-4 border-electric-pink">
+            <blockquote className="font-serif text-[32px] leading-[1.3] italic mb-2 pl-6 border-l-4 border-neutral-400 dark:border-neutral-500">
               "Feature Quote - Used for pull quotes and emphasized statements within articles."
             </blockquote>
             <TypeSpec label="Feature Quote" size="32px" weight="400 Italic" lineHeight="1.3" />

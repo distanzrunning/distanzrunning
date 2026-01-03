@@ -131,27 +131,27 @@ export default function SpacingShowcase() {
         <h3 className="text-lg font-semibold mb-4">Common Spacing Patterns</h3>
         <div className="space-y-3">
           <div className="flex items-baseline gap-4 text-sm">
-            <code className="font-mono text-electric-pink w-32">space-y-2</code>
+            <code className="font-mono text-neutral-700 dark:text-neutral-300 w-32">space-y-2</code>
             <span className="text-textSubtle">8px - Tight list items</span>
           </div>
           <div className="flex items-baseline gap-4 text-sm">
-            <code className="font-mono text-electric-pink w-32">space-y-4</code>
+            <code className="font-mono text-neutral-700 dark:text-neutral-300 w-32">space-y-4</code>
             <span className="text-textSubtle">16px - Standard paragraphs</span>
           </div>
           <div className="flex items-baseline gap-4 text-sm">
-            <code className="font-mono text-electric-pink w-32">space-y-6</code>
+            <code className="font-mono text-neutral-700 dark:text-neutral-300 w-32">space-y-6</code>
             <span className="text-textSubtle">24px - Form fields</span>
           </div>
           <div className="flex items-baseline gap-4 text-sm">
-            <code className="font-mono text-electric-pink w-32">space-y-8</code>
+            <code className="font-mono text-neutral-700 dark:text-neutral-300 w-32">space-y-8</code>
             <span className="text-textSubtle">32px - Card groups</span>
           </div>
           <div className="flex items-baseline gap-4 text-sm">
-            <code className="font-mono text-electric-pink w-32">space-y-12</code>
+            <code className="font-mono text-neutral-700 dark:text-neutral-300 w-32">space-y-12</code>
             <span className="text-textSubtle">48px - Major sections</span>
           </div>
           <div className="flex items-baseline gap-4 text-sm">
-            <code className="font-mono text-electric-pink w-32">space-y-16</code>
+            <code className="font-mono text-neutral-700 dark:text-neutral-300 w-32">space-y-16</code>
             <span className="text-textSubtle">64px - Page sections</span>
           </div>
         </div>

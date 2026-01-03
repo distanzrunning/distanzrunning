@@ -62,7 +62,7 @@ export default function AnimationShowcase() {
 
         <div className="space-y-4">
           {easings.map((easing) => (
-            <div key={easing.name} className="bg-surface dark:bg-[#0c0c0d] rounded-lg p-4 border border-borderNeutral group hover:border-electric-pink">
+            <div key={easing.name} className="bg-surface dark:bg-[#0c0c0d] rounded-lg p-4 border border-borderNeutral group hover:border-neutral-400 dark:border-neutral-500">
               <div className="flex items-center justify-between mb-2">
                 <span className="font-medium text-sm">{easing.name}</span>
                 <code className="text-xs text-textSubtler font-mono">{easing.value}</code>

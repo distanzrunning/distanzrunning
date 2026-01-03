@@ -31,9 +31,9 @@ function IconDisplay({ icon, name, size = 24 }: IconDisplayProps) {
   return (
     <button
       onClick={handleCopy}
-      className="group relative flex flex-col items-center gap-2 p-4 rounded-lg border border-borderNeutral hover:border-electric-pink hover:bg-surface-subtle transition-all"
+      className="group relative flex flex-col items-center gap-2 p-4 rounded-lg border border-borderNeutral hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-surface-subtle transition-all"
     >
-      <div className="text-textDefault group-hover:text-electric-pink transition-colors">
+      <div className="text-textDefault group-hover:text-neutral-900 dark:group-hover:text-white transition-colors">
         {icon}
       </div>
       <span className="text-xs text-textSubtle text-center font-mono">{name}</span>
@@ -61,7 +61,7 @@ export default function IconSystemShowcase() {
       <div className="bg-surface-subtle rounded-lg p-6 border border-borderNeutral">
         <h3 className="font-serif text-xl font-medium mb-4">Lucide React Icon System</h3>
         <p className="text-textSubtle mb-4">
-          Distanz Running uses <a href="https://lucide.dev" target="_blank" rel="noopener noreferrer" className="text-electric-pink hover:underline">Lucide React</a> (v0.503.0) for all iconography.
+          Distanz Running uses <a href="https://lucide.dev" target="_blank" rel="noopener noreferrer" className="text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white hover:underline">Lucide React</a> (v0.503.0) for all iconography.
           Lucide provides a consistent, modern icon set with over 1,000 icons designed for clarity at small sizes.
         </p>
         <div className="grid md:grid-cols-2 gap-4 text-sm">
@@ -239,7 +239,7 @@ export default function IconSystemShowcase() {
                 <Plus className="w-5 h-5" />
                 Create Article
               </button>
-              <button className="px-4 py-2 border-2 border-electric-pink text-electric-pink rounded-md font-medium flex items-center gap-2 hover:bg-electric-pink hover:text-white transition-colors">
+              <button className="px-4 py-2 border-2 border-neutral-400 dark:border-neutral-500 text-electric-pink rounded-md font-medium flex items-center gap-2 hover:bg-electric-pink hover:text-white transition-colors">
                 <Download className="w-5 h-5" />
                 Download
               </button>
@@ -265,7 +265,7 @@ export default function IconSystemShowcase() {
               <button className="w-10 h-10 flex items-center justify-center bg-electric-pink text-white rounded-md hover:bg-opacity-90 transition-colors" aria-label="Search">
                 <Search className="w-5 h-5" />
               </button>
-              <button className="w-10 h-10 flex items-center justify-center border-2 border-borderNeutral rounded-md hover:border-electric-pink transition-colors" aria-label="Settings">
+              <button className="w-10 h-10 flex items-center justify-center border-2 border-borderNeutral rounded-md hover:border-neutral-400 dark:hover:border-neutral-500 transition-colors" aria-label="Settings">
                 <Settings className="w-5 h-5" />
               </button>
               <button className="w-10 h-10 flex items-center justify-center text-textDefault hover:bg-surface-subtle rounded-md transition-colors" aria-label="More options">
@@ -382,7 +382,7 @@ export default function IconSystemShowcase() {
             href="https://lucide.dev/icons"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 text-electric-pink hover:underline"
+            className="flex items-center gap-2 text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white hover:underline"
           >
             <ExternalLink className="w-4 h-4" />
             Browse all Lucide icons
@@ -391,7 +391,7 @@ export default function IconSystemShowcase() {
             href="https://lucide.dev/guide/packages/lucide-react"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 text-electric-pink hover:underline"
+            className="flex items-center gap-2 text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white hover:underline"
           >
             <ExternalLink className="w-4 h-4" />
             Lucide React documentation
@@ -400,7 +400,7 @@ export default function IconSystemShowcase() {
             href="https://github.com/lucide-icons/lucide"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 text-electric-pink hover:underline"
+            className="flex items-center gap-2 text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white hover:underline"
           >
             <ExternalLink className="w-4 h-4" />
             Lucide GitHub repository

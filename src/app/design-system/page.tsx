@@ -35,34 +35,34 @@ export default function DesignSystemPage() {
       <nav className="bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md border-b border-borderNeutral sticky top-0 lg:top-12 z-10">
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex gap-6 text-sm font-medium overflow-x-auto scrollbar-hide justify-center sm:justify-start">
-            <a href="#colors" className="hover:text-electric-pink transition-colors whitespace-nowrap">
+            <a href="#colors" className="text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors whitespace-nowrap">
               Colors
             </a>
-            <a href="#typography" className="hover:text-electric-pink transition-colors whitespace-nowrap">
+            <a href="#typography" className="text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors whitespace-nowrap">
               Typography
             </a>
-            <a href="#spacing" className="hover:text-electric-pink transition-colors whitespace-nowrap">
+            <a href="#spacing" className="text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors whitespace-nowrap">
               Spacing
             </a>
-            <a href="#radius-shadows" className="hover:text-electric-pink transition-colors whitespace-nowrap">
+            <a href="#radius-shadows" className="text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors whitespace-nowrap">
               Radius & Shadows
             </a>
-            <a href="#grid" className="hover:text-electric-pink transition-colors whitespace-nowrap">
+            <a href="#grid" className="text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors whitespace-nowrap">
               Grid System
             </a>
-            <a href="#icons" className="hover:text-electric-pink transition-colors whitespace-nowrap">
+            <a href="#icons" className="text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors whitespace-nowrap">
               Icons
             </a>
-            <a href="#animation" className="hover:text-electric-pink transition-colors whitespace-nowrap">
+            <a href="#animation" className="text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors whitespace-nowrap">
               Animation
             </a>
-            <a href="#accessibility" className="hover:text-electric-pink transition-colors whitespace-nowrap">
+            <a href="#accessibility" className="text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors whitespace-nowrap">
               Accessibility
             </a>
-            <a href="#patterns" className="hover:text-electric-pink transition-colors whitespace-nowrap">
+            <a href="#patterns" className="text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors whitespace-nowrap">
               Patterns
             </a>
-            <a href="#components" className="hover:text-electric-pink transition-colors whitespace-nowrap">
+            <a href="#components" className="text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors whitespace-nowrap">
               Components
             </a>
           </div>

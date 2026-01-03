@@ -133,13 +133,13 @@ export default function AccessibilityShowcase() {
           <div className="bg-surface dark:bg-[#0c0c0d] rounded-lg p-6 border border-borderNeutral">
             <p className="text-sm font-medium mb-4">Focus States</p>
             <div className="space-y-3">
-              <button className="px-6 py-3 bg-electric-pink text-white rounded-md font-medium focus:ring-2 focus:ring-electric-pink focus:ring-offset-2 focus:outline-none transition-all">
+              <button className="px-6 py-3 bg-electric-pink text-white rounded-md font-medium focus:ring-2 focus:ring-neutral-400 dark:ring-neutral-500 focus:ring-offset-2 focus:outline-none transition-all">
                 Focus Me (Tab to see)
               </button>
               <p className="text-xs text-textSubtle">Try pressing Tab to see the focus ring</p>
             </div>
             <pre className="mt-4 p-3 bg-canvas dark:bg-[#0a0a0a] rounded text-xs overflow-x-auto">
-              <code>{`<button className="focus:ring-2 focus:ring-electric-pink focus:ring-offset-2 focus:outline-none">
+              <code>{`<button className="focus:ring-2 focus:ring-neutral-400 dark:ring-neutral-500 focus:ring-offset-2 focus:outline-none">
   Button
 </button>`}</code>
             </pre>
@@ -276,43 +276,43 @@ export default function AccessibilityShowcase() {
         <h3 className="font-serif text-xl font-medium mb-4">Accessibility Testing Checklist</h3>
         <div className="space-y-3 text-sm">
           <label className="flex items-start gap-3 cursor-pointer">
-            <input type="checkbox" className="mt-1 w-4 h-4 text-electric-pink border-borderNeutral rounded focus:ring-electric-pink" readOnly />
+            <input type="checkbox" className="mt-1 w-4 h-4 text-electric-pink border-borderNeutral rounded focus:ring-neutral-400 dark:ring-neutral-500" readOnly />
             <span className="text-textSubtle">All interactive elements are keyboard accessible</span>
           </label>
           <label className="flex items-start gap-3 cursor-pointer">
-            <input type="checkbox" className="mt-1 w-4 h-4 text-electric-pink border-borderNeutral rounded focus:ring-electric-pink" readOnly />
+            <input type="checkbox" className="mt-1 w-4 h-4 text-electric-pink border-borderNeutral rounded focus:ring-neutral-400 dark:ring-neutral-500" readOnly />
             <span className="text-textSubtle">Focus states are clearly visible</span>
           </label>
           <label className="flex items-start gap-3 cursor-pointer">
-            <input type="checkbox" className="mt-1 w-4 h-4 text-electric-pink border-borderNeutral rounded focus:ring-electric-pink" readOnly />
+            <input type="checkbox" className="mt-1 w-4 h-4 text-electric-pink border-borderNeutral rounded focus:ring-neutral-400 dark:ring-neutral-500" readOnly />
             <span className="text-textSubtle">Color contrast meets WCAG AA (4.5:1 for text)</span>
           </label>
           <label className="flex items-start gap-3 cursor-pointer">
-            <input type="checkbox" className="mt-1 w-4 h-4 text-electric-pink border-borderNeutral rounded focus:ring-electric-pink" readOnly />
+            <input type="checkbox" className="mt-1 w-4 h-4 text-electric-pink border-borderNeutral rounded focus:ring-neutral-400 dark:ring-neutral-500" readOnly />
             <span className="text-textSubtle">All images have descriptive alt text</span>
           </label>
           <label className="flex items-start gap-3 cursor-pointer">
-            <input type="checkbox" className="mt-1 w-4 h-4 text-electric-pink border-borderNeutral rounded focus:ring-electric-pink" readOnly />
+            <input type="checkbox" className="mt-1 w-4 h-4 text-electric-pink border-borderNeutral rounded focus:ring-neutral-400 dark:ring-neutral-500" readOnly />
             <span className="text-textSubtle">Form inputs have associated labels</span>
           </label>
           <label className="flex items-start gap-3 cursor-pointer">
-            <input type="checkbox" className="mt-1 w-4 h-4 text-electric-pink border-borderNeutral rounded focus:ring-electric-pink" readOnly />
+            <input type="checkbox" className="mt-1 w-4 h-4 text-electric-pink border-borderNeutral rounded focus:ring-neutral-400 dark:ring-neutral-500" readOnly />
             <span className="text-textSubtle">Headings follow logical hierarchy (h1 → h2 → h3)</span>
           </label>
           <label className="flex items-start gap-3 cursor-pointer">
-            <input type="checkbox" className="mt-1 w-4 h-4 text-electric-pink border-borderNeutral rounded focus:ring-electric-pink" readOnly />
+            <input type="checkbox" className="mt-1 w-4 h-4 text-electric-pink border-borderNeutral rounded focus:ring-neutral-400 dark:ring-neutral-500" readOnly />
             <span className="text-textSubtle">Page has skip navigation link</span>
           </label>
           <label className="flex items-start gap-3 cursor-pointer">
-            <input type="checkbox" className="mt-1 w-4 h-4 text-electric-pink border-borderNeutral rounded focus:ring-electric-pink" readOnly />
+            <input type="checkbox" className="mt-1 w-4 h-4 text-electric-pink border-borderNeutral rounded focus:ring-neutral-400 dark:ring-neutral-500" readOnly />
             <span className="text-textSubtle">ARIA labels used where needed</span>
           </label>
           <label className="flex items-start gap-3 cursor-pointer">
-            <input type="checkbox" className="mt-1 w-4 h-4 text-electric-pink border-borderNeutral rounded focus:ring-electric-pink" readOnly />
+            <input type="checkbox" className="mt-1 w-4 h-4 text-electric-pink border-borderNeutral rounded focus:ring-neutral-400 dark:ring-neutral-500" readOnly />
             <span className="text-textSubtle">Tested with screen reader (VoiceOver/NVDA)</span>
           </label>
           <label className="flex items-start gap-3 cursor-pointer">
-            <input type="checkbox" className="mt-1 w-4 h-4 text-electric-pink border-borderNeutral rounded focus:ring-electric-pink" readOnly />
+            <input type="checkbox" className="mt-1 w-4 h-4 text-electric-pink border-borderNeutral rounded focus:ring-neutral-400 dark:ring-neutral-500" readOnly />
             <span className="text-textSubtle">Respects prefers-reduced-motion</span>
           </label>
         </div>

@@ -28,9 +28,9 @@ export default function DesignPatternsShowcase() {
               <div className="flex items-center justify-between">
                 <div className="font-bold text-electric-pink">LOGO</div>
                 <nav className="flex gap-6 text-sm">
-                  <a href="#" className="hover:text-electric-pink transition-colors">News</a>
-                  <a href="#" className="hover:text-electric-pink transition-colors">Features</a>
-                  <a href="#" className="hover:text-electric-pink transition-colors">Training</a>
+                  <a href="#" className="hover:text-neutral-900 dark:hover:text-white transition-colors">News</a>
+                  <a href="#" className="hover:text-neutral-900 dark:hover:text-white transition-colors">Features</a>
+                  <a href="#" className="hover:text-neutral-900 dark:hover:text-white transition-colors">Training</a>
                 </nav>
                 <button className="px-4 py-2 bg-electric-pink text-white rounded-md text-sm font-medium">
                   Subscribe
@@ -82,9 +82,9 @@ export default function DesignPatternsShowcase() {
             <h4 className="font-medium mb-4">Breadcrumb Navigation</h4>
             <p className="text-sm text-textSubtle mb-4">Shows current location in site hierarchy</p>
             <nav className="flex items-center gap-2 text-sm text-textSubtle">
-              <a href="#" className="hover:text-electric-pink transition-colors">Home</a>
+              <a href="#" className="hover:text-neutral-900 dark:hover:text-white transition-colors">Home</a>
               <span>/</span>
-              <a href="#" className="hover:text-electric-pink transition-colors">Training</a>
+              <a href="#" className="hover:text-neutral-900 dark:hover:text-white transition-colors">Training</a>
               <span>/</span>
               <span className="text-textDefault font-medium">Marathon Plans</span>
             </nav>
@@ -168,7 +168,7 @@ export default function DesignPatternsShowcase() {
                   onClick={() => setActiveTab('overview')}
                   className={`px-4 py-3 text-sm font-medium transition-colors ${
                     activeTab === 'overview'
-                      ? 'text-electric-pink border-b-2 border-electric-pink -mb-px'
+                      ? 'text-electric-pink border-b-2 border-neutral-400 dark:border-neutral-500 -mb-px'
                       : 'text-textSubtle hover:text-textDefault'
                   }`}
                 >
@@ -178,7 +178,7 @@ export default function DesignPatternsShowcase() {
                   onClick={() => setActiveTab('details')}
                   className={`px-4 py-3 text-sm font-medium transition-colors ${
                     activeTab === 'details'
-                      ? 'text-electric-pink border-b-2 border-electric-pink -mb-px'
+                      ? 'text-electric-pink border-b-2 border-neutral-400 dark:border-neutral-500 -mb-px'
                       : 'text-textSubtle hover:text-textDefault'
                   }`}
                 >
@@ -188,7 +188,7 @@ export default function DesignPatternsShowcase() {
                   onClick={() => setActiveTab('specs')}
                   className={`px-4 py-3 text-sm font-medium transition-colors ${
                     activeTab === 'specs'
-                      ? 'text-electric-pink border-b-2 border-electric-pink -mb-px'
+                      ? 'text-electric-pink border-b-2 border-neutral-400 dark:border-neutral-500 -mb-px'
                       : 'text-textSubtle hover:text-textDefault'
                   }`}
                 >

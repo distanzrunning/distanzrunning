@@ -32,11 +32,11 @@ export default function ComponentShowcase() {
           {/* Secondary Button */}
           <div>
             <p className="text-sm font-medium mb-3">Secondary Button</p>
-            <button className="px-6 py-3 border-2 border-electric-pink text-electric-pink rounded-md font-medium hover:bg-electric-pink hover:text-white transition-colors">
+            <button className="px-6 py-3 border-2 border-neutral-400 dark:border-neutral-500 text-electric-pink rounded-md font-medium hover:bg-neutral-900 dark:hover:bg-white hover:text-white dark:hover:text-neutral-900 transition-colors">
               Secondary Action
             </button>
             <pre className="mt-3 p-3 bg-canvas dark:bg-[#0a0a0a] rounded text-xs overflow-x-auto">
-              <code>{`<button className="px-6 py-3 border-2 border-electric-pink text-electric-pink rounded-md font-medium hover:bg-electric-pink hover:text-white transition-colors">
+              <code>{`<button className="px-6 py-3 border-2 border-neutral-400 dark:border-neutral-500 text-electric-pink rounded-md font-medium hover:bg-neutral-900 dark:hover:bg-white hover:text-white dark:hover:text-neutral-900 transition-colors">
   Secondary Action
 </button>`}</code>
             </pre>
@@ -86,7 +86,7 @@ export default function ComponentShowcase() {
             <label className="block text-sm font-medium mb-2">Text Input</label>
             <input
               type="text"
-              className="w-full px-4 py-3 border border-borderNeutral rounded-md focus:border-electric-pink focus:ring-1 focus:ring-electric-pink outline-none transition-colors bg-surface dark:bg-[#0c0c0d]"
+              className="w-full px-4 py-3 border border-borderNeutral rounded-md focus:border-neutral-400 dark:border-neutral-500 focus:ring-1 focus:ring-neutral-400 dark:ring-neutral-500 outline-none transition-colors bg-surface dark:bg-[#0c0c0d]"
               placeholder="Enter text..."
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
@@ -94,7 +94,7 @@ export default function ComponentShowcase() {
             <pre className="mt-3 p-3 bg-canvas dark:bg-[#0a0a0a] rounded text-xs overflow-x-auto">
               <code>{`<input
   type="text"
-  className="w-full px-4 py-3 border border-borderNeutral rounded-md focus:border-electric-pink focus:ring-1 focus:ring-electric-pink outline-none transition-colors"
+  className="w-full px-4 py-3 border border-borderNeutral rounded-md focus:border-neutral-400 dark:border-neutral-500 focus:ring-1 focus:ring-neutral-400 dark:ring-neutral-500 outline-none transition-colors"
   placeholder="Enter text..."
 />`}</code>
             </pre>
@@ -104,7 +104,7 @@ export default function ComponentShowcase() {
           <div>
             <label className="block text-sm font-medium mb-2">Textarea</label>
             <textarea
-              className="w-full px-4 py-3 border border-borderNeutral rounded-md focus:border-electric-pink focus:ring-1 focus:ring-electric-pink outline-none transition-colors resize-y bg-surface dark:bg-[#0c0c0d]"
+              className="w-full px-4 py-3 border border-borderNeutral rounded-md focus:border-neutral-400 dark:border-neutral-500 focus:ring-1 focus:ring-neutral-400 dark:ring-neutral-500 outline-none transition-colors resize-y bg-surface dark:bg-[#0c0c0d]"
               placeholder="Enter longer text..."
               rows={4}
             />
@@ -114,7 +114,7 @@ export default function ComponentShowcase() {
           <div>
             <label className="block text-sm font-medium mb-2">Select</label>
             <select
-              className="w-full px-4 py-3 border border-borderNeutral rounded-md focus:border-electric-pink focus:ring-1 focus:ring-electric-pink outline-none transition-colors bg-surface dark:bg-[#0c0c0d]"
+              className="w-full px-4 py-3 border border-borderNeutral rounded-md focus:border-neutral-400 dark:border-neutral-500 focus:ring-1 focus:ring-neutral-400 dark:ring-neutral-500 outline-none transition-colors bg-surface dark:bg-[#0c0c0d]"
               value={selectedOption}
               onChange={(e) => setSelectedOption(e.target.value)}
             >
@@ -129,7 +129,7 @@ export default function ComponentShowcase() {
             <input
               type="checkbox"
               id="checkbox-example"
-              className="w-5 h-5 text-electric-pink border-borderNeutral rounded focus:ring-electric-pink focus:ring-2"
+              className="w-5 h-5 text-electric-pink border-borderNeutral rounded focus:ring-neutral-400 dark:ring-neutral-500 focus:ring-2"
             />
             <label htmlFor="checkbox-example" className="text-sm font-medium cursor-pointer">
               Checkbox label
@@ -144,7 +144,7 @@ export default function ComponentShowcase() {
                 type="radio"
                 id="radio1"
                 name="radio-group"
-                className="w-5 h-5 text-electric-pink border-borderNeutral focus:ring-electric-pink focus:ring-2"
+                className="w-5 h-5 text-electric-pink border-borderNeutral focus:ring-neutral-400 dark:ring-neutral-500 focus:ring-2"
               />
               <label htmlFor="radio1" className="text-sm cursor-pointer">
                 Option 1
@@ -155,7 +155,7 @@ export default function ComponentShowcase() {
                 type="radio"
                 id="radio2"
                 name="radio-group"
-                className="w-5 h-5 text-electric-pink border-borderNeutral focus:ring-electric-pink focus:ring-2"
+                className="w-5 h-5 text-electric-pink border-borderNeutral focus:ring-neutral-400 dark:ring-neutral-500 focus:ring-2"
               />
               <label htmlFor="radio2" className="text-sm cursor-pointer">
                 Option 2
@@ -255,7 +255,7 @@ export default function ComponentShowcase() {
           <div>
             <p className="text-sm font-medium mb-3">Outlined Tags</p>
             <div className="flex flex-wrap gap-2">
-              <span className="px-3 py-1 border-2 border-electric-pink text-electric-pink text-xs font-medium rounded-full">
+              <span className="px-3 py-1 border-2 border-neutral-400 dark:border-neutral-500 text-electric-pink text-xs font-medium rounded-full">
                 Marathon
               </span>
               <span className="px-3 py-1 border-2 border-volt-green text-volt-green text-xs font-medium rounded-full">
