@@ -133,7 +133,7 @@ export default function AccessibilityShowcase() {
           <div className="bg-surface dark:bg-[#0c0c0d] rounded-lg p-6 border border-borderNeutral">
             <p className="text-sm font-medium mb-4">Focus States</p>
             <div className="space-y-3">
-              <button className="px-6 py-3 bg-electric-pink text-white rounded-md font-medium focus:ring-2 focus:ring-neutral-400 dark:ring-neutral-500 focus:ring-offset-2 focus:outline-none transition-all">
+              <button className="px-6 py-3 bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 rounded-md font-medium focus:ring-2 focus:ring-neutral-400 dark:ring-neutral-500 focus:ring-offset-2 focus:outline-none transition-all">
                 Focus Me (Tab to see)
               </button>
               <p className="text-xs text-textSubtle">Try pressing Tab to see the focus ring</p>
@@ -151,7 +151,7 @@ export default function AccessibilityShowcase() {
             <pre className="p-3 bg-canvas dark:bg-[#0a0a0a] rounded text-xs overflow-x-auto">
               <code>{`<a
   href="#main-content"
-  className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-electric-pink focus:text-white focus:rounded"
+  className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-neutral-900 dark:focus:bg-white focus:text-white dark:focus:text-neutral-900 focus:rounded"
 >
   Skip to main content
 </a>`}</code>

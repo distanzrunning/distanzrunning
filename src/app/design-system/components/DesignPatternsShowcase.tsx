@@ -32,7 +32,7 @@ export default function DesignPatternsShowcase() {
                   <a href="#" className="hover:text-neutral-900 dark:hover:text-white transition-colors">Features</a>
                   <a href="#" className="hover:text-neutral-900 dark:hover:text-white transition-colors">Training</a>
                 </nav>
-                <button className="px-4 py-2 bg-electric-pink text-white rounded-md text-sm font-medium">
+                <button className="px-4 py-2 bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-100 rounded-md text-sm font-medium transition-colors">
                   Subscribe
                 </button>
               </div>
@@ -141,7 +141,7 @@ export default function DesignPatternsShowcase() {
               <p className="text-xs uppercase tracking-wide mb-2 opacity-90">Featured</p>
               <h2 className="font-serif text-3xl font-medium mb-3">Hero Article Title Goes Here</h2>
               <p className="text-sm mb-6 opacity-90">Compelling description that hooks the reader and encourages them to click through.</p>
-              <button className="px-6 py-3 bg-white text-electric-pink rounded-md font-medium hover:bg-opacity-90 transition-colors">
+              <button className="px-6 py-3 bg-white text-electric-pink rounded-md font-medium hover:bg-neutral-800 dark:hover:bg-neutral-100 transition-colors">
                 Read More
               </button>
             </div>
@@ -168,7 +168,7 @@ export default function DesignPatternsShowcase() {
                   onClick={() => setActiveTab('overview')}
                   className={`px-4 py-3 text-sm font-medium transition-colors ${
                     activeTab === 'overview'
-                      ? 'text-electric-pink border-b-2 border-neutral-400 dark:border-neutral-500 -mb-px'
+                      ? 'text-neutral-900 dark:text-white border-b-2 border-neutral-900 dark:border-white -mb-px'
                       : 'text-textSubtle hover:text-textDefault'
                   }`}
                 >
@@ -178,7 +178,7 @@ export default function DesignPatternsShowcase() {
                   onClick={() => setActiveTab('details')}
                   className={`px-4 py-3 text-sm font-medium transition-colors ${
                     activeTab === 'details'
-                      ? 'text-electric-pink border-b-2 border-neutral-400 dark:border-neutral-500 -mb-px'
+                      ? 'text-neutral-900 dark:text-white border-b-2 border-neutral-900 dark:border-white -mb-px'
                       : 'text-textSubtle hover:text-textDefault'
                   }`}
                 >
@@ -188,7 +188,7 @@ export default function DesignPatternsShowcase() {
                   onClick={() => setActiveTab('specs')}
                   className={`px-4 py-3 text-sm font-medium transition-colors ${
                     activeTab === 'specs'
-                      ? 'text-electric-pink border-b-2 border-neutral-400 dark:border-neutral-500 -mb-px'
+                      ? 'text-neutral-900 dark:text-white border-b-2 border-neutral-900 dark:border-white -mb-px'
                       : 'text-textSubtle hover:text-textDefault'
                   }`}
                 >
@@ -248,14 +248,14 @@ export default function DesignPatternsShowcase() {
             <p className="text-sm text-textSubtle mb-4">Visual progress indicator for multi-step forms</p>
             <div className="flex items-center justify-between max-w-md">
               <div className="flex flex-col items-center">
-                <div className="w-10 h-10 rounded-full bg-electric-pink text-white flex items-center justify-center text-sm font-medium mb-2">
+                <div className="w-10 h-10 rounded-full bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 flex items-center justify-center text-sm font-medium mb-2">
                   ✓
                 </div>
                 <p className="text-xs font-medium">Account</p>
               </div>
               <div className="flex-1 h-1 bg-electric-pink mx-2" />
               <div className="flex flex-col items-center">
-                <div className="w-10 h-10 rounded-full bg-electric-pink text-white flex items-center justify-center text-sm font-medium mb-2">
+                <div className="w-10 h-10 rounded-full bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 flex items-center justify-center text-sm font-medium mb-2">
                   2
                 </div>
                 <p className="text-xs font-medium text-electric-pink">Profile</p>
@@ -327,7 +327,7 @@ export default function DesignPatternsShowcase() {
               <p className="text-4xl mb-4">📭</p>
               <p className="font-medium mb-2">No articles yet</p>
               <p className="text-sm text-textSubtle mb-4">Start by creating your first article</p>
-              <button className="px-4 py-2 bg-electric-pink text-white rounded-md text-sm font-medium">
+              <button className="px-4 py-2 bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-100 rounded-md text-sm font-medium transition-colors">
                 Create Article
               </button>
             </div>

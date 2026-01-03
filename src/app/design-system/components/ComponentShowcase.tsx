@@ -19,11 +19,11 @@ export default function ComponentShowcase() {
           {/* Primary Button */}
           <div>
             <p className="text-sm font-medium mb-3">Primary Button</p>
-            <button className="px-6 py-3 bg-electric-pink text-white rounded-md font-medium hover:bg-opacity-90 transition-colors">
+            <button className="px-6 py-3 bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 rounded-md font-medium hover:bg-neutral-800 dark:hover:bg-neutral-100 transition-colors">
               Primary Action
             </button>
             <pre className="mt-3 p-3 bg-canvas dark:bg-[#0a0a0a] rounded text-xs overflow-x-auto">
-              <code>{`<button className="px-6 py-3 bg-electric-pink text-white rounded-md font-medium hover:bg-opacity-90 transition-colors">
+              <code>{`<button className="px-6 py-3 bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 rounded-md font-medium hover:bg-neutral-800 dark:hover:bg-neutral-100 transition-colors">
   Primary Action
 </button>`}</code>
             </pre>
@@ -32,11 +32,11 @@ export default function ComponentShowcase() {
           {/* Secondary Button */}
           <div>
             <p className="text-sm font-medium mb-3">Secondary Button</p>
-            <button className="px-6 py-3 border-2 border-neutral-400 dark:border-neutral-500 text-electric-pink rounded-md font-medium hover:bg-neutral-900 dark:hover:bg-white hover:text-white dark:hover:text-neutral-900 transition-colors">
+            <button className="px-6 py-3 border-2 border-neutral-400 dark:border-neutral-500 text-neutral-900 dark:text-white rounded-md font-medium hover:bg-neutral-900 dark:hover:bg-white hover:text-white dark:hover:text-neutral-900 transition-colors">
               Secondary Action
             </button>
             <pre className="mt-3 p-3 bg-canvas dark:bg-[#0a0a0a] rounded text-xs overflow-x-auto">
-              <code>{`<button className="px-6 py-3 border-2 border-neutral-400 dark:border-neutral-500 text-electric-pink rounded-md font-medium hover:bg-neutral-900 dark:hover:bg-white hover:text-white dark:hover:text-neutral-900 transition-colors">
+              <code>{`<button className="px-6 py-3 border-2 border-neutral-400 dark:border-neutral-500 text-neutral-900 dark:text-white rounded-md font-medium hover:bg-neutral-900 dark:hover:bg-white hover:text-white dark:hover:text-neutral-900 transition-colors">
   Secondary Action
 </button>`}</code>
             </pre>
@@ -45,11 +45,11 @@ export default function ComponentShowcase() {
           {/* Ghost Button */}
           <div>
             <p className="text-sm font-medium mb-3">Ghost Button</p>
-            <button className="px-6 py-3 text-electric-pink font-medium hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md transition-colors">
+            <button className="px-6 py-3 text-neutral-700 dark:text-neutral-300 font-medium hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-colors">
               Tertiary Action
             </button>
             <pre className="mt-3 p-3 bg-canvas dark:bg-[#0a0a0a] rounded text-xs overflow-x-auto">
-              <code>{`<button className="px-6 py-3 text-electric-pink font-medium hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md transition-colors">
+              <code>{`<button className="px-6 py-3 text-neutral-700 dark:text-neutral-300 font-medium hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-colors">
   Tertiary Action
 </button>`}</code>
             </pre>
@@ -59,13 +59,13 @@ export default function ComponentShowcase() {
           <div>
             <p className="text-sm font-medium mb-3">Button Sizes</p>
             <div className="flex items-center gap-4 flex-wrap">
-              <button className="px-4 py-2 bg-electric-pink text-white rounded-md text-sm font-medium hover:bg-opacity-90 transition-colors">
+              <button className="px-4 py-2 bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 rounded-md text-sm font-medium hover:bg-neutral-800 dark:hover:bg-neutral-100 transition-colors">
                 Small
               </button>
-              <button className="px-6 py-3 bg-electric-pink text-white rounded-md font-medium hover:bg-opacity-90 transition-colors">
+              <button className="px-6 py-3 bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 rounded-md font-medium hover:bg-neutral-800 dark:hover:bg-neutral-100 transition-colors">
                 Medium
               </button>
-              <button className="px-8 py-4 bg-electric-pink text-white rounded-md text-lg font-medium hover:bg-opacity-90 transition-colors">
+              <button className="px-8 py-4 bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 rounded-md text-lg font-medium hover:bg-neutral-800 dark:hover:bg-neutral-100 transition-colors">
                 Large
               </button>
             </div>
@@ -237,7 +237,7 @@ export default function ComponentShowcase() {
           <div>
             <p className="text-sm font-medium mb-3">Category Tags</p>
             <div className="flex flex-wrap gap-2">
-              <span className="px-3 py-1 bg-electric-pink text-white text-xs font-medium rounded-full">
+              <span className="px-3 py-1 bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 text-xs font-medium rounded-full">
                 Running
               </span>
               <span className="px-3 py-1 bg-volt-green text-white text-xs font-medium rounded-full">

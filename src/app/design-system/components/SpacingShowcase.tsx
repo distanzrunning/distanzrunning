@@ -68,7 +68,7 @@ export default function SpacingShowcase() {
             <p className="text-textSubtle text-sm mb-6">
               Vertical: 12px (0.75rem), Horizontal: 24px (1.5rem)
             </p>
-            <button className="px-6 py-3 bg-electric-pink text-white rounded-md font-medium hover:bg-opacity-90 transition-colors">
+            <button className="px-6 py-3 bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 rounded-md font-medium hover:bg-neutral-800 dark:hover:bg-neutral-100 transition-colors">
               Primary Button
             </button>
           </div>

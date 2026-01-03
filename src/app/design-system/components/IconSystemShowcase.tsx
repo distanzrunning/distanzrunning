@@ -106,11 +106,11 @@ export default function IconSystemShowcase() {
         <div className="mt-6 bg-surface dark:bg-[#0c0c0d] rounded-lg p-6 border border-borderNeutral">
           <h4 className="font-medium mb-4 text-sm">Usage Examples</h4>
           <div className="space-y-3 text-sm text-textSubtle">
-            <p><code className="font-mono text-electric-pink">w-4 h-4 (16px)</code> - Inline with small text, compact UI elements</p>
-            <p><code className="font-mono text-electric-pink">w-5 h-5 (20px)</code> - Buttons, form inputs, navigation items</p>
-            <p><code className="font-mono text-electric-pink">w-6 h-6 (24px)</code> - Default size for most icons, feature cards</p>
-            <p><code className="font-mono text-electric-pink">w-8 h-8 (32px)</code> - Section headers, emphasized actions</p>
-            <p><code className="font-mono text-electric-pink">w-10 h-10 (40px)</code> - Hero sections, empty states</p>
+            <p><code className="font-mono text-neutral-700 dark:text-neutral-300">w-4 h-4 (16px)</code> - Inline with small text, compact UI elements</p>
+            <p><code className="font-mono text-neutral-700 dark:text-neutral-300">w-5 h-5 (20px)</code> - Buttons, form inputs, navigation items</p>
+            <p><code className="font-mono text-neutral-700 dark:text-neutral-300">w-6 h-6 (24px)</code> - Default size for most icons, feature cards</p>
+            <p><code className="font-mono text-neutral-700 dark:text-neutral-300">w-8 h-8 (32px)</code> - Section headers, emphasized actions</p>
+            <p><code className="font-mono text-neutral-700 dark:text-neutral-300">w-10 h-10 (40px)</code> - Hero sections, empty states</p>
           </div>
         </div>
       </div>
@@ -235,15 +235,15 @@ export default function IconSystemShowcase() {
           <div className="bg-surface dark:bg-[#0c0c0d] rounded-lg p-6 border border-borderNeutral">
             <h4 className="font-medium mb-4">Buttons with Icons</h4>
             <div className="flex flex-wrap gap-4 mb-4">
-              <button className="px-4 py-2 bg-electric-pink text-white rounded-md font-medium flex items-center gap-2 hover:bg-opacity-90 transition-colors">
+              <button className="px-4 py-2 bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 rounded-md font-medium flex items-center gap-2 hover:bg-neutral-800 dark:hover:bg-neutral-100 transition-colors">
                 <Plus className="w-5 h-5" />
                 Create Article
               </button>
-              <button className="px-4 py-2 border-2 border-neutral-400 dark:border-neutral-500 text-electric-pink rounded-md font-medium flex items-center gap-2 hover:bg-electric-pink hover:text-white transition-colors">
+              <button className="px-4 py-2 border-2 border-neutral-400 dark:border-neutral-500 text-neutral-900 dark:text-white rounded-md font-medium flex items-center gap-2 hover:bg-neutral-900 dark:hover:bg-white hover:text-white transition-colors">
                 <Download className="w-5 h-5" />
                 Download
               </button>
-              <button className="px-4 py-2 text-electric-pink font-medium flex items-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md transition-colors">
+              <button className="px-4 py-2 text-neutral-700 dark:text-neutral-300 font-medium flex items-center gap-2 hover:bg-neutral-100 dark:hover:bg-gray-800 rounded-md transition-colors">
                 Learn More
                 <ArrowRight className="w-5 h-5" />
               </button>
@@ -262,7 +262,7 @@ export default function IconSystemShowcase() {
           <div className="bg-surface dark:bg-[#0c0c0d] rounded-lg p-6 border border-borderNeutral">
             <h4 className="font-medium mb-4">Icon-Only Buttons</h4>
             <div className="flex flex-wrap gap-3 mb-4">
-              <button className="w-10 h-10 flex items-center justify-center bg-electric-pink text-white rounded-md hover:bg-opacity-90 transition-colors" aria-label="Search">
+              <button className="w-10 h-10 flex items-center justify-center bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 rounded-md hover:bg-neutral-800 dark:hover:bg-neutral-100 transition-colors" aria-label="Search">
                 <Search className="w-5 h-5" />
               </button>
               <button className="w-10 h-10 flex items-center justify-center border-2 border-borderNeutral rounded-md hover:border-neutral-400 dark:hover:border-neutral-500 transition-colors" aria-label="Settings">
@@ -319,11 +319,11 @@ export default function IconSystemShowcase() {
           <div className="bg-surface dark:bg-[#0c0c0d] rounded-lg p-6 border border-borderNeutral">
             <h4 className="font-medium mb-4">Loading States</h4>
             <div className="flex items-center gap-4 mb-4">
-              <button className="px-4 py-2 bg-electric-pink text-white rounded-md font-medium flex items-center gap-2" disabled>
+              <button className="px-4 py-2 bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 rounded-md font-medium flex items-center gap-2" disabled>
                 <Loader2 className="w-5 h-5 animate-spin" />
                 Loading...
               </button>
-              <Loader2 className="w-6 h-6 text-electric-pink animate-spin" />
+              <Loader2 className="w-6 h-6 text-neutral-900 dark:text-white animate-spin" />
             </div>
             <pre className="p-3 bg-canvas dark:bg-[#0a0a0a] rounded text-xs overflow-x-auto">
               <code>{`import { Loader2 } from 'lucide-react';

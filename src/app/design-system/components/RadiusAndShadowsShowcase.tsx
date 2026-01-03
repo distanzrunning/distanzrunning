@@ -95,7 +95,7 @@ export default function RadiusAndShadowsShowcase() {
           {/* Button Example */}
           <div className="bg-surface dark:bg-[#0c0c0d] rounded-lg p-6 border border-borderNeutral">
             <h4 className="font-medium mb-4">Button (rounded-md + no shadow)</h4>
-            <button className="px-6 py-3 bg-electric-pink text-white rounded-md font-medium hover:bg-opacity-90 transition-colors">
+            <button className="px-6 py-3 bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 rounded-md font-medium hover:bg-neutral-800 dark:hover:bg-neutral-100 transition-colors">
               Primary Button
             </button>
             <pre className="mt-4 text-xs text-textSubtle">
@@ -117,7 +117,7 @@ export default function RadiusAndShadowsShowcase() {
           {/* Badge Example */}
           <div className="bg-surface dark:bg-[#0c0c0d] rounded-lg p-6 border border-borderNeutral">
             <h4 className="font-medium mb-4">Badge (rounded-full)</h4>
-            <span className="inline-block px-3 py-1 bg-electric-pink text-white text-xs font-medium rounded-full">
+            <span className="inline-block px-3 py-1 bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 text-xs font-medium rounded-full">
               Marathon
             </span>
             <pre className="mt-4 text-xs text-textSubtle">
