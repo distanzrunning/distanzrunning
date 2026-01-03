@@ -3,6 +3,7 @@ import TypographyShowcase from './components/TypographyShowcase';
 import SpacingShowcase from './components/SpacingShowcase';
 import RadiusAndShadowsShowcase from './components/RadiusAndShadowsShowcase';
 import GridSystemShowcase from './components/GridSystemShowcase';
+import IconSystemShowcase from './components/IconSystemShowcase';
 import AnimationShowcase from './components/AnimationShowcase';
 import AccessibilityShowcase from './components/AccessibilityShowcase';
 import DesignPatternsShowcase from './components/DesignPatternsShowcase';
@@ -48,6 +49,9 @@ export default function DesignSystemPage() {
             </a>
             <a href="#grid" className="hover:text-electric-pink transition-colors whitespace-nowrap">
               Grid System
+            </a>
+            <a href="#icons" className="hover:text-electric-pink transition-colors whitespace-nowrap">
+              Icons
             </a>
             <a href="#animation" className="hover:text-electric-pink transition-colors whitespace-nowrap">
               Animation
@@ -105,6 +109,14 @@ export default function DesignSystemPage() {
             Grid System
           </h2>
           <GridSystemShowcase />
+        </section>
+
+        {/* Icon System Section */}
+        <section id="icons" className="scroll-mt-32">
+          <h2 className="font-serif text-[40px] leading-[1.15] font-medium mb-8">
+            Icon System
+          </h2>
+          <IconSystemShowcase />
         </section>
 
         {/* Animation Section */}
