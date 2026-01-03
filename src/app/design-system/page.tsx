@@ -119,7 +119,7 @@ export default function DesignSystemPage() {
   return (
     <div className="min-h-screen bg-canvas dark:bg-[#0a0a0a]">
       {/* Container with Sidebar and Content */}
-      <div className="relative">
+      <div className="max-w-7xl mx-auto relative">
         {/* Sidebar Navigation */}
         <DesignSystemNav
           activeSection={activeSection}
