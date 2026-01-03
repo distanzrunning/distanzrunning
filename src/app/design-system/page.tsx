@@ -8,13 +8,14 @@ import AnimationShowcase from './components/AnimationShowcase';
 import AccessibilityShowcase from './components/AccessibilityShowcase';
 import DesignPatternsShowcase from './components/DesignPatternsShowcase';
 import ComponentShowcase from './components/ComponentShowcase';
+import DesignSystemNav from './components/DesignSystemNav';
 
 export default function DesignSystemPage() {
   return (
     <div className="min-h-screen bg-canvas dark:bg-[#0a0a0a] scroll-smooth">
       {/* Header */}
-      <header className="bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md border-b border-borderNeutral pt-6 pb-6">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex flex-col justify-center min-h-[140px]">
+      <header className="bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md border-b border-borderNeutral pt-6 pb-6 sticky top-0 lg:top-12 z-30">
+        <div className="max-w-7xl mx-auto px-6 lg:pl-80 py-4 flex flex-col justify-center min-h-[140px]">
           <h1 className="font-serif text-[56px] leading-[1.1] font-medium mb-2">
             Design System
           </h1>
@@ -31,137 +32,104 @@ export default function DesignSystemPage() {
         </div>
       </header>
 
-      {/* Navigation */}
-      <nav className="bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md border-b border-borderNeutral sticky top-0 lg:top-12 z-10">
-        <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex gap-6 text-sm font-medium overflow-x-auto scrollbar-hide justify-center sm:justify-start">
-            <a href="#colors" className="text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors whitespace-nowrap">
-              Colors
-            </a>
-            <a href="#typography" className="text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors whitespace-nowrap">
-              Typography
-            </a>
-            <a href="#spacing" className="text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors whitespace-nowrap">
-              Spacing
-            </a>
-            <a href="#radius-shadows" className="text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors whitespace-nowrap">
-              Radius & Shadows
-            </a>
-            <a href="#grid" className="text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors whitespace-nowrap">
-              Grid System
-            </a>
-            <a href="#icons" className="text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors whitespace-nowrap">
-              Icons
-            </a>
-            <a href="#animation" className="text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors whitespace-nowrap">
-              Animation
-            </a>
-            <a href="#accessibility" className="text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors whitespace-nowrap">
-              Accessibility
-            </a>
-            <a href="#patterns" className="text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors whitespace-nowrap">
-              Patterns
-            </a>
-            <a href="#components" className="text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors whitespace-nowrap">
-              Components
-            </a>
-          </div>
-        </div>
-      </nav>
+      {/* Sidebar Navigation */}
+      <DesignSystemNav />
 
       {/* Content */}
-      <main className="max-w-7xl mx-auto px-6 py-12 space-y-24">
-        {/* Colors Section */}
-        <section id="colors" className="scroll-mt-32">
-          <h2 className="font-serif text-[40px] leading-[1.15] font-medium mb-8">
-            Color Palette
-          </h2>
-          <ColorPalette />
-        </section>
+      <main className="lg:pl-64 pt-12">
+        <div className="max-w-5xl mx-auto px-6 py-12 space-y-24">
+          {/* Colors Section */}
+          <section id="colors" className="scroll-mt-32">
+            <h2 className="font-serif text-[40px] leading-[1.15] font-medium mb-8">
+              Color Palette
+            </h2>
+            <ColorPalette />
+          </section>
 
-        {/* Typography Section */}
-        <section id="typography" className="scroll-mt-32">
-          <h2 className="font-serif text-[40px] leading-[1.15] font-medium mb-8">
-            Typography
-          </h2>
-          <TypographyShowcase />
-        </section>
+          {/* Typography Section */}
+          <section id="typography" className="scroll-mt-32">
+            <h2 className="font-serif text-[40px] leading-[1.15] font-medium mb-8">
+              Typography
+            </h2>
+            <TypographyShowcase />
+          </section>
 
-        {/* Spacing Section */}
-        <section id="spacing" className="scroll-mt-32">
-          <h2 className="font-serif text-[40px] leading-[1.15] font-medium mb-8">
-            Spacing & Layout
-          </h2>
-          <SpacingShowcase />
-        </section>
+          {/* Spacing Section */}
+          <section id="spacing" className="scroll-mt-32">
+            <h2 className="font-serif text-[40px] leading-[1.15] font-medium mb-8">
+              Spacing & Layout
+            </h2>
+            <SpacingShowcase />
+          </section>
 
-        {/* Radius & Shadows Section */}
-        <section id="radius-shadows" className="scroll-mt-32">
-          <h2 className="font-serif text-[40px] leading-[1.15] font-medium mb-8">
-            Border Radius & Shadows
-          </h2>
-          <RadiusAndShadowsShowcase />
-        </section>
+          {/* Radius & Shadows Section */}
+          <section id="radius-shadows" className="scroll-mt-32">
+            <h2 className="font-serif text-[40px] leading-[1.15] font-medium mb-8">
+              Border Radius & Shadows
+            </h2>
+            <RadiusAndShadowsShowcase />
+          </section>
 
-        {/* Grid System Section */}
-        <section id="grid" className="scroll-mt-32">
-          <h2 className="font-serif text-[40px] leading-[1.15] font-medium mb-8">
-            Grid System
-          </h2>
-          <GridSystemShowcase />
-        </section>
+          {/* Grid System Section */}
+          <section id="grid" className="scroll-mt-32">
+            <h2 className="font-serif text-[40px] leading-[1.15] font-medium mb-8">
+              Grid System
+            </h2>
+            <GridSystemShowcase />
+          </section>
 
-        {/* Icon System Section */}
-        <section id="icons" className="scroll-mt-32">
-          <h2 className="font-serif text-[40px] leading-[1.15] font-medium mb-8">
-            Icon System
-          </h2>
-          <IconSystemShowcase />
-        </section>
+          {/* Icon System Section */}
+          <section id="icons" className="scroll-mt-32">
+            <h2 className="font-serif text-[40px] leading-[1.15] font-medium mb-8">
+              Icon System
+            </h2>
+            <IconSystemShowcase />
+          </section>
 
-        {/* Animation Section */}
-        <section id="animation" className="scroll-mt-32">
-          <h2 className="font-serif text-[40px] leading-[1.15] font-medium mb-8">
-            Animation & Motion
-          </h2>
-          <AnimationShowcase />
-        </section>
+          {/* Animation Section */}
+          <section id="animation" className="scroll-mt-32">
+            <h2 className="font-serif text-[40px] leading-[1.15] font-medium mb-8">
+              Animation & Motion
+            </h2>
+            <AnimationShowcase />
+          </section>
 
-        {/* Accessibility Section */}
-        <section id="accessibility" className="scroll-mt-32">
-          <h2 className="font-serif text-[40px] leading-[1.15] font-medium mb-8">
-            Accessibility
-          </h2>
-          <AccessibilityShowcase />
-        </section>
+          {/* Accessibility Section */}
+          <section id="accessibility" className="scroll-mt-32">
+            <h2 className="font-serif text-[40px] leading-[1.15] font-medium mb-8">
+              Accessibility
+            </h2>
+            <AccessibilityShowcase />
+          </section>
 
-        {/* Design Patterns Section */}
-        <section id="patterns" className="scroll-mt-32">
-          <h2 className="font-serif text-[40px] leading-[1.15] font-medium mb-8">
-            Design Patterns
-          </h2>
-          <DesignPatternsShowcase />
-        </section>
+          {/* Design Patterns Section */}
+          <section id="patterns" className="scroll-mt-32">
+            <h2 className="font-serif text-[40px] leading-[1.15] font-medium mb-8">
+              Design Patterns
+            </h2>
+            <DesignPatternsShowcase />
+          </section>
 
-        {/* Components Section */}
-        <section id="components" className="scroll-mt-32">
-          <h2 className="font-serif text-[40px] leading-[1.15] font-medium mb-8">
-            Components
-          </h2>
-          <ComponentShowcase />
-        </section>
+          {/* Components Section */}
+          <section id="components" className="scroll-mt-32">
+            <h2 className="font-serif text-[40px] leading-[1.15] font-medium mb-8">
+              Components
+            </h2>
+            <ComponentShowcase />
+          </section>
+        </div>
       </main>
 
       {/* Footer */}
-      <footer className="bg-surface dark:bg-[#0c0c0d] border-t border-borderNeutral mt-24">
-        <div className="max-w-7xl mx-auto px-6 py-8 text-center text-textSubtle text-sm">
+      <footer className="bg-surface dark:bg-[#0c0c0d] border-t border-borderNeutral mt-24 lg:pl-64">
+        <div className="max-w-5xl mx-auto px-6 py-8 text-center text-textSubtle text-sm">
           <p>Distanz Running Design System • Built with Next.js + Tailwind CSS</p>
           <p className="mt-2">
-            <a href="/STYLE_GUIDE.md" className="text-electric-pink hover:underline">
+            <a href="/STYLE_GUIDE.md" className="text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white hover:underline">
               View Style Guide
             </a>
             {' • '}
-            <a href="/src/styles/design-tokens.ts" className="text-electric-pink hover:underline">
+            <a href="/src/styles/design-tokens.ts" className="text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white hover:underline">
               View Design Tokens
             </a>
           </p>
