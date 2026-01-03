@@ -117,9 +117,8 @@ export default function DesignSystemPage() {
   };
 
   return (
-    <div className="min-h-screen bg-canvas dark:bg-[#0a0a0a]">
-      {/* Container with Sidebar and Content */}
-      <div className="max-w-7xl mx-auto relative">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative">
         {/* Sidebar Navigation */}
         <DesignSystemNav
           activeSection={activeSection}
@@ -127,27 +126,11 @@ export default function DesignSystemPage() {
         />
 
         {/* Content */}
-        <main className="lg:pl-64">
-          <div className="px-6 py-12">
+        <div className="lg:pl-64">
+          <div className="py-12">
             {renderContent()}
           </div>
-        </main>
-
-        {/* Footer */}
-        <footer className="bg-surface dark:bg-[#0c0c0d] border-t border-borderNeutral mt-24 lg:pl-64">
-          <div className="px-6 py-8 text-center text-textSubtle text-sm">
-            <p>Distanz Running Design System • Built with Next.js + Tailwind CSS</p>
-            <p className="mt-2">
-              <a href="/STYLE_GUIDE.md" className="text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white hover:underline">
-                View Style Guide
-              </a>
-              {' • '}
-              <a href="/src/styles/design-tokens.ts" className="text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white hover:underline">
-                View Design Tokens
-              </a>
-            </p>
-          </div>
-        </footer>
+        </div>
       </div>
     </div>
   );
