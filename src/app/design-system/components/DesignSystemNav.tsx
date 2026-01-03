@@ -38,6 +38,24 @@ export default function DesignSystemNav({ activeSection, onSectionChange }: Desi
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [expandedSections, setExpandedSections] = useState<string[]>(['foundations']);
 
+  // Color indicators for each section
+  const getSectionIndicatorColor = (sectionId: string) => {
+    const colorMap: Record<string, string> = {
+      introduction: '#e43c81', // Electric Pink
+      colors: '#e43c81',
+      typography: '#00D464', // Volt Green
+      spacing: '#00D464',
+      'radius-shadows': '#00D464',
+      grid: '#00D464',
+      icons: '#FF5722', // Signal Orange
+      animation: '#7C3AED', // Pace Purple
+      accessibility: '#8B4513', // Trail Brown
+      patterns: '#DC2626', // Track Red
+      components: '#DC2626',
+    };
+    return colorMap[sectionId];
+  };
+
   const handleClick = (id: string) => {
     setMobileMenuOpen(false);
     onSectionChange(id);
@@ -104,7 +122,7 @@ export default function DesignSystemNav({ activeSection, onSectionChange }: Desi
                             <button
                               onClick={() => handleClick(sub.id)}
                               className={`
-                                w-full text-left text-sm py-2 px-3 rounded-md transition-colors
+                                w-full text-left text-sm py-2 px-3 rounded-md transition-colors flex items-center gap-2
                                 ${
                                   activeSection === sub.id
                                     ? 'bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white font-medium'
@@ -112,7 +130,13 @@ export default function DesignSystemNav({ activeSection, onSectionChange }: Desi
                                 }
                               `}
                             >
-                              {sub.label}
+                              {getSectionIndicatorColor(sub.id) && (
+                                <span
+                                  className="w-2 h-2 rounded-full flex-shrink-0"
+                                  style={{ backgroundColor: getSectionIndicatorColor(sub.id) }}
+                                />
+                              )}
+                              <span>{sub.label}</span>
                             </button>
                           </li>
                         ))}
@@ -124,7 +148,7 @@ export default function DesignSystemNav({ activeSection, onSectionChange }: Desi
                   <button
                     onClick={() => handleClick(section.id)}
                     className={`
-                      w-full text-left text-sm py-2 px-3 rounded-md transition-colors
+                      w-full text-left text-sm py-2 px-3 rounded-md transition-colors flex items-center gap-2
                       ${
                         activeSection === section.id
                           ? 'bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white font-medium'
@@ -132,7 +156,13 @@ export default function DesignSystemNav({ activeSection, onSectionChange }: Desi
                       }
                     `}
                   >
-                    {section.label}
+                    {getSectionIndicatorColor(section.id) && (
+                      <span
+                        className="w-2 h-2 rounded-full flex-shrink-0"
+                        style={{ backgroundColor: getSectionIndicatorColor(section.id) }}
+                      />
+                    )}
+                    <span>{section.label}</span>
                   </button>
                 )}
               </li>
