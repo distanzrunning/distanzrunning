@@ -43,9 +43,9 @@ function ColorSwatch({ name, value, category }: ColorSwatchProps) {
 
 export default function ColorPalette() {
   return (
-    <div className="space-y-12">
+    <div className="space-y-8">
       {/* Brand Colors */}
-      <div>
+      <div className="bg-canvas dark:bg-[#0a0a0a] p-6 rounded-lg">
         <h3 className="text-xl font-semibold mb-4">Brand Colors</h3>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
           {Object.entries(colors.brand).map(([key, value]) => (
@@ -60,7 +60,7 @@ export default function ColorPalette() {
       </div>
 
       {/* Neutrals */}
-      <div>
+      <div className="bg-canvas dark:bg-[#0a0a0a] p-6 rounded-lg">
         <h3 className="text-xl font-semibold mb-4">Neutral Colors</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
           {Object.entries(colors.neutral).map(([key, value]) => (
@@ -75,7 +75,7 @@ export default function ColorPalette() {
       </div>
 
       {/* Semantic - Light Mode */}
-      <div>
+      <div className="bg-canvas dark:bg-[#0a0a0a] p-6 rounded-lg">
         <h3 className="text-xl font-semibold mb-4">Semantic Colors - Light Mode</h3>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {Object.entries(colors.semantic.light).map(([key, value]) => {
@@ -96,7 +96,7 @@ export default function ColorPalette() {
       </div>
 
       {/* Semantic - Dark Mode */}
-      <div>
+      <div className="bg-canvas dark:bg-[#0a0a0a] p-6 rounded-lg">
         <h3 className="text-xl font-semibold mb-4">Semantic Colors - Dark Mode</h3>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {Object.entries(colors.semantic.dark).map(([key, value]) => {

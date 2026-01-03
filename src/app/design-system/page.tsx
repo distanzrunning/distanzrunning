@@ -117,17 +117,17 @@ export default function DesignSystemPage() {
   };
 
   return (
-    <div className="relative bg-canvas dark:bg-[#0a0a0a]">
-      <div className="max-w-7xl mx-auto">
-        {/* Sidebar Navigation - positioned within container */}
+    <div className="max-w-7xl mx-auto">
+      <div className="flex relative">
+        {/* Sidebar Navigation */}
         <DesignSystemNav
           activeSection={activeSection}
           onSectionChange={setActiveSection}
         />
 
-        {/* Content - full width within container, offset by sidebar */}
-        <div className="lg:pl-64">
-          <div className="bg-surface dark:bg-[#0c0c0d] px-4 sm:px-6 lg:px-8 py-12">
+        {/* Main Content Area - full width with its own background */}
+        <div className="flex-1 lg:ml-64 bg-surface dark:bg-[#0c0c0d]">
+          <div className="px-4 sm:px-6 lg:px-8 py-12">
             {renderContent()}
           </div>
         </div>
