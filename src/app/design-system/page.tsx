@@ -117,17 +117,17 @@ export default function DesignSystemPage() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div className="relative">
-        {/* Sidebar Navigation */}
+    <div className="relative">
+      <div className="max-w-7xl mx-auto">
+        {/* Sidebar Navigation - positioned within container */}
         <DesignSystemNav
           activeSection={activeSection}
           onSectionChange={setActiveSection}
         />
 
-        {/* Content */}
+        {/* Content - full width within container, offset by sidebar */}
         <div className="lg:pl-64">
-          <div className="py-12">
+          <div className="px-4 sm:px-6 lg:px-8 py-12">
             {renderContent()}
           </div>
         </div>
