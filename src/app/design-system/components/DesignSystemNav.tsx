@@ -71,12 +71,12 @@ export default function DesignSystemNav({ activeSection, onSectionChange }: Desi
       {/* Sidebar Navigation */}
       <nav
         className={`
-          lg:absolute lg:left-0 lg:top-0 lg:w-64 lg:pt-12
+          lg:fixed lg:left-0 lg:top-0 lg:bottom-0 lg:w-64
           fixed inset-y-0 left-0 w-64 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md border-r border-borderNeutral z-40 transition-transform duration-300
           ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
         `}
       >
-        <div className="h-full overflow-y-auto px-6 py-8 lg:sticky lg:top-[200px] lg:max-h-[calc(100vh-200px)]">
+        <div className="h-full overflow-y-auto px-6 py-8">
           <h2 className="text-xs uppercase tracking-wide text-textSubtler font-medium mb-4">
             Contents
           </h2>
