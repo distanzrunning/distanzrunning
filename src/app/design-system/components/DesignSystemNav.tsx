@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Menu, X, ChevronDown } from 'lucide-react';
+import Image from 'next/image';
 
 interface NavSection {
   id: string;
@@ -77,9 +78,15 @@ export default function DesignSystemNav({ activeSection, onSectionChange }: Desi
         `}
       >
         <div className="h-full overflow-y-auto px-6 py-8 lg:sticky lg:top-0 lg:max-h-screen">
-          <h2 className="text-xs uppercase tracking-wide text-textSubtler font-medium mb-4">
-            Contents
-          </h2>
+          <div className="mb-6 flex items-center justify-center">
+            <Image
+              src="/images/distanz_icon_black_round.png"
+              alt="Distanz Running"
+              width={48}
+              height={48}
+              className="dark:invert"
+            />
+          </div>
           <ul className="space-y-1">
             {navSections.map((section) => (
               <li key={section.id}>

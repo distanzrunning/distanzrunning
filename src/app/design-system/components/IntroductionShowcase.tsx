@@ -1,11 +1,22 @@
+import Image from 'next/image';
+
 export default function IntroductionShowcase() {
   return (
     <div className="space-y-12">
       {/* Hero */}
       <div>
-        <h1 className="font-serif text-[52px] leading-[1.1] font-medium mb-6">
-          Stride Design System
-        </h1>
+        <div className="flex items-center gap-4 mb-6">
+          <Image
+            src="/images/distanz_icon_black_round.png"
+            alt="Distanz Running"
+            width={64}
+            height={64}
+            className="dark:invert"
+          />
+          <h1 className="font-serif text-[52px] leading-[1.1] font-medium">
+            Stride Design System
+          </h1>
+        </div>
         <p className="text-lg text-textSubtle max-w-3xl">
           A comprehensive design toolkit that enables consistent, accessible, and beautiful experiences across Distanz Running.
           Stride provides reusable components, design guidelines, and code standards that serve as our single source of truth
