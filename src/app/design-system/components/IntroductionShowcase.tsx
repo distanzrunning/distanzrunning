@@ -1,39 +1,126 @@
 export default function IntroductionShowcase() {
   return (
     <div className="space-y-12">
-      {/* Overview */}
+      {/* Hero */}
       <div>
-        <h2 className="font-serif text-[40px] leading-[1.15] font-medium mb-6">
-          Welcome to Distanz Running Design System
-        </h2>
-        <p className="text-textSubtle text-lg mb-8">
-          A comprehensive visual language and component library for building consistent, accessible, and beautiful running-focused experiences.
+        <h1 className="font-serif text-[52px] leading-[1.1] font-medium mb-6">
+          Stride Design System
+        </h1>
+        <p className="text-lg text-textSubtle max-w-3xl">
+          A comprehensive design toolkit that enables consistent, accessible, and beautiful experiences across Distanz Running.
+          Stride provides reusable components, design guidelines, and code standards that serve as our single source of truth
+          for creating digital products.
         </p>
       </div>
 
-      {/* Philosophy */}
-      <div className="bg-surface-subtle rounded-lg p-6 border border-borderNeutral">
-        <h3 className="font-serif text-2xl font-medium mb-4">Design Philosophy</h3>
-        <div className="space-y-4 text-textSubtle">
+      {/* What is Stride */}
+      <div className="bg-surface-subtle rounded-lg p-8 border border-borderNeutral">
+        <h2 className="font-serif text-[30px] leading-[1.25] font-medium mb-4">
+          What is a Design System?
+        </h2>
+        <p className="text-textSubtle mb-4">
+          Design systems are comprehensive collections of reusable components, guidelines, and standards that enable
+          consistent user experiences across products and teams while maintaining design quality at scale.
+        </p>
+        <p className="text-textSubtle">
+          Stride is our toolkit for building authentic Distanz Running experiences. It helps our UX and UI teams create
+          consistent digital experiences across different platforms, products, and services while improving efficiency—no
+          need to recreate the same elements from scratch.
+        </p>
+      </div>
+
+      {/* What Stride Provides */}
+      <div>
+        <h2 className="font-serif text-[30px] leading-[1.25] font-medium mb-6">
+          What Stride Provides
+        </h2>
+        <div className="grid md:grid-cols-2 gap-6">
+          <div className="bg-surface-subtle rounded-lg p-6 border border-borderNeutral">
+            <h3 className="font-semibold mb-3">Design Foundations</h3>
+            <p className="text-sm text-textSubtle mb-4">
+              Core visual elements including color palettes, typography systems, spacing scales, and grid structures
+              that form the basis of all Distanz Running designs.
+            </p>
+            <div className="text-sm">
+              <a href="#" className="text-textDefault hover:text-electric-pink transition-colors">
+                Explore Foundations →
+              </a>
+            </div>
+          </div>
+
+          <div className="bg-surface-subtle rounded-lg p-6 border border-borderNeutral">
+            <h3 className="font-semibold mb-3">Reusable Components</h3>
+            <p className="text-sm text-textSubtle mb-4">
+              Pre-built, accessible UI components with code snippets for commonly used elements like buttons, forms,
+              navigation menus, and cards.
+            </p>
+            <div className="text-sm">
+              <a href="#" className="text-textDefault hover:text-electric-pink transition-colors">
+                View Components →
+              </a>
+            </div>
+          </div>
+
+          <div className="bg-surface-subtle rounded-lg p-6 border border-borderNeutral">
+            <h3 className="font-semibold mb-3">Design Patterns</h3>
+            <p className="text-sm text-textSubtle mb-4">
+              Common interaction patterns and best practices that guide how users navigate and interact with our
+              digital products.
+            </p>
+            <div className="text-sm">
+              <a href="#" className="text-textDefault hover:text-electric-pink transition-colors">
+                Study Patterns →
+              </a>
+            </div>
+          </div>
+
+          <div className="bg-surface-subtle rounded-lg p-6 border border-borderNeutral">
+            <h3 className="font-semibold mb-3">Accessibility Guidelines</h3>
+            <p className="text-sm text-textSubtle mb-4">
+              Standards and guidelines to help create inclusive experiences that work for all users, regardless of
+              their abilities or assistive technologies.
+            </p>
+            <div className="text-sm">
+              <a href="#" className="text-textDefault hover:text-electric-pink transition-colors">
+                Check Accessibility →
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Design Principles */}
+      <div className="bg-surface-subtle rounded-lg p-8 border border-borderNeutral">
+        <h2 className="font-serif text-[30px] leading-[1.25] font-medium mb-6">
+          Design Principles
+        </h2>
+        <div className="space-y-6">
           <div>
-            <h4 className="font-medium text-textDefault mb-2">Minimalist & Refined</h4>
-            <p className="text-sm">
-              Our design system embraces minimalism with a refined aesthetic. We use neutral greys as the foundation,
+            <h3 className="font-semibold mb-2">Minimalist & Refined</h3>
+            <p className="text-sm text-textSubtle">
+              Stride embraces minimalism with a refined aesthetic. We use neutral greys as the foundation,
               reserving electric pink and vibrant accent colors for strategic brand moments and visual hierarchy.
             </p>
           </div>
           <div>
-            <h4 className="font-medium text-textDefault mb-2">Design-Focused</h4>
-            <p className="text-sm">
-              Every component is crafted with attention to detail, balancing form and function.
-              We prioritize clean layouts, thoughtful typography, and purposeful use of color.
+            <h3 className="font-semibold mb-2">Performance-Focused</h3>
+            <p className="text-sm text-textSubtle">
+              Every component is optimized for speed and efficiency. Built with Next.js 14+ and React Server Components,
+              Stride ensures fast, responsive experiences across all devices.
             </p>
           </div>
           <div>
-            <h4 className="font-medium text-textDefault mb-2">Accessibility First</h4>
-            <p className="text-sm">
-              Built to WCAG 2.1 Level AA standards, ensuring everyone can access and enjoy the content
-              regardless of their abilities or assistive technologies.
+            <h3 className="font-semibold mb-2">Accessibility First</h3>
+            <p className="text-sm text-textSubtle">
+              All components are built to WCAG 2.1 Level AA standards, ensuring everyone can access and enjoy
+              Distanz Running content regardless of their abilities or assistive technologies.
+            </p>
+          </div>
+          <div>
+            <h3 className="font-semibold mb-2">Consistent & Scalable</h3>
+            <p className="text-sm text-textSubtle">
+              TypeScript-based design tokens and systematic guidelines ensure consistency across all platforms
+              while maintaining flexibility for growth and evolution.
             </p>
           </div>
         </div>
@@ -41,106 +128,25 @@ export default function IntroductionShowcase() {
 
       {/* Tech Stack */}
       <div>
-        <h3 className="font-serif text-2xl font-medium mb-4">Technical Foundation</h3>
-        <div className="grid md:grid-cols-2 gap-4">
-          <div className="bg-surface dark:bg-[#0c0c0d] rounded-lg p-6 border border-borderNeutral">
-            <h4 className="font-medium mb-2">Framework</h4>
-            <p className="text-sm text-textSubtle mb-3">
-              Built with Next.js 14+ and React Server Components for optimal performance
-            </p>
-            <div className="text-xs text-textSubtler">
-              <code className="font-mono">Next.js + TypeScript + Tailwind CSS</code>
-            </div>
+        <h2 className="font-serif text-[30px] leading-[1.25] font-medium mb-6">
+          Built With
+        </h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="bg-surface-subtle rounded-lg p-4 border border-borderNeutral">
+            <div className="text-xs text-textSubtler mb-1">Framework</div>
+            <div className="font-medium text-sm">Next.js 14+</div>
           </div>
-
-          <div className="bg-surface dark:bg-[#0c0c0d] rounded-lg p-6 border border-borderNeutral">
-            <h4 className="font-medium mb-2">Typography</h4>
-            <p className="text-sm text-textSubtle mb-3">
-              Adobe Fonts providing elegant serif and versatile sans-serif type families
-            </p>
-            <div className="text-xs text-textSubtler">
-              <code className="font-mono">Inter Variable + EB Garamond</code>
-            </div>
+          <div className="bg-surface-subtle rounded-lg p-4 border border-borderNeutral">
+            <div className="text-xs text-textSubtler mb-1">Styling</div>
+            <div className="font-medium text-sm">Tailwind CSS</div>
           </div>
-
-          <div className="bg-surface dark:bg-[#0c0c0d] rounded-lg p-6 border border-borderNeutral">
-            <h4 className="font-medium mb-2">Icons</h4>
-            <p className="text-sm text-textSubtle mb-3">
-              Lucide React for consistent, accessible iconography across all interfaces
-            </p>
-            <div className="text-xs text-textSubtler">
-              <code className="font-mono">Lucide React v0.503.0</code>
-            </div>
+          <div className="bg-surface-subtle rounded-lg p-4 border border-borderNeutral">
+            <div className="text-xs text-textSubtler mb-1">Typography</div>
+            <div className="font-medium text-sm">Adobe Fonts</div>
           </div>
-
-          <div className="bg-surface dark:bg-[#0c0c0d] rounded-lg p-6 border border-borderNeutral">
-            <h4 className="font-medium mb-2">Design Tokens</h4>
-            <p className="text-sm text-textSubtle mb-3">
-              TypeScript-based tokens ensuring consistency across all applications
-            </p>
-            <div className="text-xs text-textSubtler">
-              <code className="font-mono">TypeScript + Tailwind Config</code>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Getting Started */}
-      <div className="bg-surface dark:bg-[#0c0c0d] rounded-lg p-6 border border-borderNeutral">
-        <h3 className="font-serif text-2xl font-medium mb-4">Getting Started</h3>
-        <div className="space-y-4">
-          <div>
-            <h4 className="font-medium text-sm mb-2">1. Explore Foundations</h4>
-            <p className="text-sm text-textSubtle">
-              Start with our foundational elements: colors, typography, spacing, and grid system.
-              These building blocks form the basis of all designs.
-            </p>
-          </div>
-          <div>
-            <h4 className="font-medium text-sm mb-2">2. Review Components</h4>
-            <p className="text-sm text-textSubtle">
-              Browse our component library for pre-built, accessible UI elements ready to use in your projects.
-            </p>
-          </div>
-          <div>
-            <h4 className="font-medium text-sm mb-2">3. Study Patterns</h4>
-            <p className="text-sm text-textSubtle">
-              Learn common design patterns and best practices for creating consistent user experiences.
-            </p>
-          </div>
-          <div>
-            <h4 className="font-medium text-sm mb-2">4. Check Accessibility</h4>
-            <p className="text-sm text-textSubtle">
-              Review our accessibility guidelines to ensure your implementations meet our standards.
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Color Principles */}
-      <div>
-        <h3 className="font-serif text-2xl font-medium mb-4">Color Usage Principles</h3>
-        <div className="space-y-3">
-          <div className="flex items-start gap-3">
-            <div className="w-12 h-12 rounded-md bg-neutral-900 dark:bg-white flex-shrink-0" />
-            <div>
-              <p className="font-medium text-sm">Primary Actions</p>
-              <p className="text-xs text-textSubtle">Neutral 900 / White for primary buttons and key CTAs</p>
-            </div>
-          </div>
-          <div className="flex items-start gap-3">
-            <div className="w-12 h-12 rounded-md bg-electric-pink flex-shrink-0" />
-            <div>
-              <p className="font-medium text-sm">Brand Accents</p>
-              <p className="text-xs text-textSubtle">Electric pink reserved for logos, strategic highlights, and brand moments</p>
-            </div>
-          </div>
-          <div className="flex items-start gap-3">
-            <div className="w-12 h-12 rounded-md bg-neutral-100 dark:bg-neutral-800 flex-shrink-0 border border-borderNeutral" />
-            <div>
-              <p className="font-medium text-sm">Subtle Backgrounds</p>
-              <p className="text-xs text-textSubtle">Neutral greys for surfaces, cards, and subtle visual hierarchy</p>
-            </div>
+          <div className="bg-surface-subtle rounded-lg p-4 border border-borderNeutral">
+            <div className="text-xs text-textSubtler mb-1">Icons</div>
+            <div className="font-medium text-sm">Lucide React</div>
           </div>
         </div>
       </div>
