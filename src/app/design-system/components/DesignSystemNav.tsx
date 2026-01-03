@@ -77,7 +77,7 @@ export default function DesignSystemNav({ activeSection, onSectionChange }: Desi
           ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
         `}
       >
-        <div className="h-full px-6 py-8 flex flex-col">
+        <div className="h-full px-6 py-8 flex flex-col lg:sticky lg:top-0">
           <div className="mb-6 flex items-center gap-3">
             <Image
               src="/images/distanz_icon_black_round.png"
@@ -86,7 +86,7 @@ export default function DesignSystemNav({ activeSection, onSectionChange }: Desi
               height={48}
               className="dark:invert"
             />
-            <span className="font-serif text-2xl font-medium">Stride</span>
+            <span className="font-serif text-[48px] leading-[1] font-medium">Stride</span>
           </div>
           <ul className="space-y-1 overflow-y-auto flex-1">
             {navSections.map((section) => (
