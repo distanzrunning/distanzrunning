@@ -78,11 +78,12 @@ export default function DesignSystemNav() {
       {/* Sidebar Navigation */}
       <nav
         className={`
-          fixed top-[200px] left-0 h-[calc(100vh-200px)] w-64 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md border-r border-borderNeutral z-40 transition-transform duration-300
+          lg:absolute lg:left-0 lg:top-0 lg:w-64 lg:pt-12
+          fixed inset-y-0 left-0 w-64 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md border-r border-borderNeutral z-40 transition-transform duration-300
           ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
         `}
       >
-        <div className="h-full overflow-y-auto px-6 py-8">
+        <div className="h-full overflow-y-auto px-6 py-8 lg:sticky lg:top-[200px] lg:max-h-[calc(100vh-200px)]">
           <h2 className="text-xs uppercase tracking-wide text-textSubtler font-medium mb-4">
             Contents
           </h2>
