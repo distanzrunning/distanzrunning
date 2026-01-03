@@ -57,6 +57,7 @@ module.exports = {
         'borderNeutralHover': 'rgb(var(--color-borderNeutralHover))',
         'borderNeutralSubtle': 'rgb(var(--color-borderNeutralSubtle))',
         'surface': 'rgb(var(--color-surface))',
+        'surface-subtle': 'rgb(var(--color-neutralBgSubtle))',
         'canvas': 'rgb(var(--color-canvas))',
         'greyCold400': 'rgb(var(--color-greyCold400))',
         'neutralBgSubtle': 'rgb(var(--color-neutralBgSubtle))',
@@ -66,6 +67,7 @@ module.exports = {
 
         // Distanz background colors
         'surface': 'rgb(var(--color-surface))',
+        'surface-subtle': 'rgb(var(--color-neutralBgSubtle))',
         'canvas': 'rgb(var(--color-canvas))',
         'neutralBgSubtle': 'rgb(var(--color-neutralBgSubtle))',
       },
