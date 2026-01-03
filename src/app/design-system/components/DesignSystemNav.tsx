@@ -72,7 +72,7 @@ export default function DesignSystemNav({ activeSection, onSectionChange }: Desi
       <nav
         className={`
           lg:absolute lg:left-0 lg:top-0 lg:w-64 lg:min-h-screen
-          fixed inset-y-0 left-0 w-64 bg-neutralBgSubtle/95 dark:bg-[#1a1a1a]/95 backdrop-blur-md border-r border-borderNeutral z-40 transition-transform duration-300
+          fixed inset-y-0 left-0 w-64 bg-canvas dark:bg-[#0a0a0a] border-r border-borderNeutral z-40 transition-transform duration-300
           ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
         `}
       >

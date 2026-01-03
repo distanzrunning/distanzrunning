@@ -17,6 +17,12 @@ import DesignSystemNav from './components/DesignSystemNav';
 export default function DesignSystemPage() {
   const [activeSection, setActiveSection] = useState('introduction');
 
+  const handleSectionChange = (section: string) => {
+    setActiveSection(section);
+    // Scroll to top when changing sections
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const renderContent = () => {
     switch (activeSection) {
       case 'introduction':
@@ -121,11 +127,11 @@ export default function DesignSystemPage() {
       {/* Sidebar Navigation */}
       <DesignSystemNav
         activeSection={activeSection}
-        onSectionChange={setActiveSection}
+        onSectionChange={handleSectionChange}
       />
 
       {/* Main Content Area - full width with its own background */}
-      <div className="flex-1 lg:ml-64 bg-surface dark:bg-[#0c0c0d]">
+      <div className="flex-1 lg:ml-64 bg-white dark:bg-[#0c0c0d]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           {renderContent()}
         </div>
