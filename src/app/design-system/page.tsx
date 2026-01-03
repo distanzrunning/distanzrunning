@@ -17,24 +17,6 @@ import DesignSystemNav from './components/DesignSystemNav';
 export default function DesignSystemPage() {
   const [activeSection, setActiveSection] = useState('introduction');
 
-  // Section color mapping using brand colors
-  const getSectionColor = (section: string) => {
-    const colorMap: Record<string, string> = {
-      introduction: 'border-l-4 border-l-[#e43c81]', // Electric Pink
-      colors: 'border-l-4 border-l-[#e43c81]', // Electric Pink
-      typography: 'border-l-4 border-l-[#00D464]', // Volt Green
-      spacing: 'border-l-4 border-l-[#00D464]', // Volt Green
-      'radius-shadows': 'border-l-4 border-l-[#00D464]', // Volt Green
-      grid: 'border-l-4 border-l-[#00D464]', // Volt Green
-      icons: 'border-l-4 border-l-[#FF5722]', // Signal Orange
-      animation: 'border-l-4 border-l-[#7C3AED]', // Pace Purple
-      accessibility: 'border-l-4 border-l-[#8B4513]', // Trail Brown
-      patterns: 'border-l-4 border-l-[#DC2626]', // Track Red
-      components: 'border-l-4 border-l-[#DC2626]', // Track Red
-    };
-    return colorMap[section] || 'border-l-4 border-l-neutral-300';
-  };
-
   const renderContent = () => {
     switch (activeSection) {
       case 'introduction':
@@ -135,7 +117,7 @@ export default function DesignSystemPage() {
   };
 
   return (
-    <div className="relative">
+    <div className="relative bg-canvas dark:bg-[#0a0a0a]">
       <div className="max-w-7xl mx-auto">
         {/* Sidebar Navigation - positioned within container */}
         <DesignSystemNav
@@ -145,7 +127,7 @@ export default function DesignSystemPage() {
 
         {/* Content - full width within container, offset by sidebar */}
         <div className="lg:pl-64">
-          <div className={`px-4 sm:px-6 lg:px-8 py-12 ${getSectionColor(activeSection)}`}>
+          <div className="bg-surface dark:bg-[#0c0c0d] px-4 sm:px-6 lg:px-8 py-12">
             {renderContent()}
           </div>
         </div>

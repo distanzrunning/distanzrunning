@@ -38,24 +38,6 @@ export default function DesignSystemNav({ activeSection, onSectionChange }: Desi
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [expandedSections, setExpandedSections] = useState<string[]>(['foundations']);
 
-  // Color indicators for each section
-  const getSectionIndicatorColor = (sectionId: string) => {
-    const colorMap: Record<string, string> = {
-      introduction: '#e43c81', // Electric Pink
-      colors: '#e43c81',
-      typography: '#00D464', // Volt Green
-      spacing: '#00D464',
-      'radius-shadows': '#00D464',
-      grid: '#00D464',
-      icons: '#FF5722', // Signal Orange
-      animation: '#7C3AED', // Pace Purple
-      accessibility: '#8B4513', // Trail Brown
-      patterns: '#DC2626', // Track Red
-      components: '#DC2626',
-    };
-    return colorMap[sectionId];
-  };
-
   const handleClick = (id: string) => {
     setMobileMenuOpen(false);
     onSectionChange(id);
@@ -90,7 +72,7 @@ export default function DesignSystemNav({ activeSection, onSectionChange }: Desi
       <nav
         className={`
           lg:absolute lg:left-0 lg:top-0 lg:w-64 lg:min-h-screen
-          fixed inset-y-0 left-0 w-64 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md border-r border-borderNeutral z-40 transition-transform duration-300
+          fixed inset-y-0 left-0 w-64 bg-neutralBgSubtle/95 dark:bg-[#1a1a1a]/95 backdrop-blur-md border-r border-borderNeutral z-40 transition-transform duration-300
           ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
         `}
       >
@@ -122,7 +104,7 @@ export default function DesignSystemNav({ activeSection, onSectionChange }: Desi
                             <button
                               onClick={() => handleClick(sub.id)}
                               className={`
-                                w-full text-left text-sm py-2 px-3 rounded-md transition-colors flex items-center gap-2
+                                w-full text-left text-sm py-2 px-3 rounded-md transition-colors
                                 ${
                                   activeSection === sub.id
                                     ? 'bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white font-medium'
@@ -130,13 +112,7 @@ export default function DesignSystemNav({ activeSection, onSectionChange }: Desi
                                 }
                               `}
                             >
-                              {getSectionIndicatorColor(sub.id) && (
-                                <span
-                                  className="w-2 h-2 rounded-full flex-shrink-0"
-                                  style={{ backgroundColor: getSectionIndicatorColor(sub.id) }}
-                                />
-                              )}
-                              <span>{sub.label}</span>
+                              {sub.label}
                             </button>
                           </li>
                         ))}
@@ -148,7 +124,7 @@ export default function DesignSystemNav({ activeSection, onSectionChange }: Desi
                   <button
                     onClick={() => handleClick(section.id)}
                     className={`
-                      w-full text-left text-sm py-2 px-3 rounded-md transition-colors flex items-center gap-2
+                      w-full text-left text-sm py-2 px-3 rounded-md transition-colors
                       ${
                         activeSection === section.id
                           ? 'bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white font-medium'
@@ -156,13 +132,7 @@ export default function DesignSystemNav({ activeSection, onSectionChange }: Desi
                       }
                     `}
                   >
-                    {getSectionIndicatorColor(section.id) && (
-                      <span
-                        className="w-2 h-2 rounded-full flex-shrink-0"
-                        style={{ backgroundColor: getSectionIndicatorColor(section.id) }}
-                      />
-                    )}
-                    <span>{section.label}</span>
+                    {section.label}
                   </button>
                 )}
               </li>
