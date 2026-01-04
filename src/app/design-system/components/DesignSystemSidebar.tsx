@@ -224,14 +224,22 @@ export default function DesignSystemSidebar({ section, activeSubsection, onSubse
 
   const sections = sectionMap[section] || [];
 
-  const toggleSection = (id: string, subsections?: SubSection[]) => {
-    // If the section has subsections, open the first one
-    if (subsections && subsections.length > 0) {
-      onSubsectionChange(subsections[0].id);
+  // Determine which section should be expanded based on active subsection
+  const getParentSection = (subsectionId: string): string | null => {
+    for (const item of sections) {
+      if (item.subsections?.some(sub => sub.id === subsectionId)) {
+        return item.id;
+      }
     }
-    // Close other sections and toggle this one
+    return null;
+  };
+
+  const parentSection = getParentSection(activeSubsection);
+  const shouldBeExpanded = parentSection ? [parentSection, ...expandedSections.filter(id => id !== parentSection)] : expandedSections;
+
+  const toggleSection = (id: string) => {
     setExpandedSections(prev =>
-      prev.includes(id) ? [] : [id]
+      prev.includes(id) ? prev.filter(sectionId => sectionId !== id) : [...prev, id]
     );
   };
 
@@ -249,7 +257,7 @@ export default function DesignSystemSidebar({ section, activeSubsection, onSubse
                 // Section with subsections
                 <div>
                   <button
-                    onClick={() => toggleSection(item.id, item.subsections)}
+                    onClick={() => toggleSection(item.id)}
                     className={`w-full text-left text-base py-2 px-3 rounded-md transition-colors hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-50 dark:hover:bg-neutral-800/50 flex items-center justify-between ${
                       item.subsections.some(sub => sub.id === activeSubsection)
                         ? 'font-medium text-neutral-900 dark:text-white'
@@ -267,11 +275,11 @@ export default function DesignSystemSidebar({ section, activeSubsection, onSubse
                     </span>
                     <ChevronDown
                       className={`w-4 h-4 transition-transform ${
-                        expandedSections.includes(item.id) ? 'rotate-180' : ''
+                        shouldBeExpanded.includes(item.id) ? 'rotate-180' : ''
                       }`}
                     />
                   </button>
-                  {expandedSections.includes(item.id) && (
+                  {shouldBeExpanded.includes(item.id) && (
                     <ul className="ml-3 mt-1 space-y-1 border-l border-borderNeutral pl-3">
                       {item.subsections.map((sub) => (
                         <li key={sub.id}>
