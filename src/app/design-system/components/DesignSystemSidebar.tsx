@@ -21,6 +21,9 @@ interface DesignSystemSidebarProps {
   onSubsectionChange: (subsection: string) => void;
 }
 
+// Icons that should be filled when active (inner details remain visible)
+const fillableIcons = [SwatchBook, Ruler];
+
 const foundationsSections: SidebarSection[] = [
   { id: 'overview', label: 'Overview', icon: Glasses },
   {
@@ -255,7 +258,11 @@ export default function DesignSystemSidebar({ section, activeSubsection, onSubse
                         <item.icon
                           className="w-4 h-4"
                           strokeWidth={item.subsections.some(sub => sub.id === activeSubsection) ? 2.5 : 1.5}
-                          fill={item.subsections.some(sub => sub.id === activeSubsection) ? 'currentColor' : 'none'}
+                          fill={
+                            item.subsections.some(sub => sub.id === activeSubsection) && fillableIcons.includes(item.icon!)
+                              ? 'currentColor'
+                              : 'none'
+                          }
                         />
                       )}
                       {item.label}
@@ -305,7 +312,7 @@ export default function DesignSystemSidebar({ section, activeSubsection, onSubse
                     <item.icon
                       className="w-4 h-4"
                       strokeWidth={activeSubsection === item.id ? 2.5 : 1.5}
-                      fill={activeSubsection === item.id ? 'currentColor' : 'none'}
+                      fill={activeSubsection === item.id && fillableIcons.includes(item.icon) ? 'currentColor' : 'none'}
                     />
                   )}
                   {item.label}
