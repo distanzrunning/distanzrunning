@@ -250,7 +250,11 @@ export default function DesignSystemSidebar({ section, activeSubsection, onSubse
                 <div>
                   <button
                     onClick={() => toggleSection(item.id, item.subsections)}
-                    className="w-full text-left text-base py-2 px-3 rounded-md transition-colors text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-50 dark:hover:bg-neutral-800/50 flex items-center justify-between"
+                    className={`w-full text-left text-base py-2 px-3 rounded-md transition-colors hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-50 dark:hover:bg-neutral-800/50 flex items-center justify-between ${
+                      item.subsections.some(sub => sub.id === activeSubsection)
+                        ? 'font-medium text-neutral-900 dark:text-white'
+                        : 'text-neutral-700 dark:text-neutral-300'
+                    }`}
                   >
                     <span className="flex items-center gap-2">
                       {item.icon && (
