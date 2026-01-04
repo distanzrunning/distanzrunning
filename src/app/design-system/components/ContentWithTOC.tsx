@@ -78,12 +78,24 @@ export default function ContentWithTOC({ children, tocTitle, tocItems }: Content
             <h4 className="text-sm font-medium text-textDefault mb-4">Contents</h4>
             <ol className="space-y-3">
               <li>
-                <a
-                  href={`#${mainSectionId}`}
-                  className="text-sm text-textSubtle hover:text-textDefault transition-colors block"
-                >
-                  {tocTitle}
-                </a>
+                <div className="relative pl-3 group">
+                  <span
+                    className={`absolute left-0 top-0 bottom-0 w-[2px] transition-opacity ${
+                      activeId === mainSectionId ? 'bg-electric-pink opacity-100' : 'bg-borderNeutral opacity-0 group-hover:opacity-100'
+                    }`}
+                  />
+                  <a
+                    href={`#${mainSectionId}`}
+                    onClick={() => handleClick(mainSectionId)}
+                    className={`text-sm transition-colors block ${
+                      activeId === mainSectionId
+                        ? 'text-textDefault'
+                        : 'text-textSubtle hover:text-textDefault'
+                    }`}
+                  >
+                    {tocTitle}
+                  </a>
+                </div>
                 <ol className="mt-2 space-y-2">
                   {tocItems.map((item) => (
                     <li key={item.id} className="relative pl-3 group">
