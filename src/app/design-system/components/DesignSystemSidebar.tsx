@@ -229,7 +229,7 @@ export default function DesignSystemSidebar({ section, activeSubsection, onSubse
 
   return (
     <nav className="w-64 bg-canvas dark:bg-[#0a0a0a] border-r border-borderNeutral min-h-screen">
-      <div className="px-6 py-8 sticky top-28">
+      <div className="px-6 py-8 sticky top-28 max-h-[calc(100vh-7rem)] overflow-y-auto">
         <ul className="space-y-1">
           {sections.map((item) => (
             <li key={item.id}>
