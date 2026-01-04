@@ -8,6 +8,7 @@ import PlaceholderContent from './components/PlaceholderContent';
 import FoundationsOverview from './components/content/FoundationsOverview';
 import DesignPrinciples from './components/content/DesignPrinciples';
 import UXPrinciples from './components/content/UXPrinciples';
+import ContentWithTOC from './components/ContentWithTOC';
 
 export default function DesignSystemPage() {
   const [activeSection, setActiveSection] = useState<string | null>(null);
@@ -36,10 +37,38 @@ export default function DesignSystemPage() {
         return <FoundationsOverview />;
       }
       if (activeSubsection === 'design-principles') {
-        return <DesignPrinciples />;
+        return (
+          <ContentWithTOC
+            tocTitle="Our principles"
+            tocItems={[
+              { id: 'less-is-more', title: 'Less is more' },
+              { id: 'deliberate-typography', title: 'Deliberate typography' },
+              { id: 'visual-harmony', title: 'Visual harmony' },
+              { id: 'clear-wayfinding', title: 'Clear wayfinding' },
+              { id: 'performance-and-precision', title: 'Performance and precision' },
+              { id: 'recognisable-consistency', title: 'Recognisable consistency' }
+            ]}
+          >
+            <DesignPrinciples />
+          </ContentWithTOC>
+        );
       }
       if (activeSubsection === 'ux-principles') {
-        return <UXPrinciples />;
+        return (
+          <ContentWithTOC
+            tocTitle="Our UX principles"
+            tocItems={[
+              { id: 'user-centred-design', title: 'User-centred design' },
+              { id: 'accessible-to-all', title: 'Accessible to all' },
+              { id: 'progressive-disclosure', title: 'Progressive disclosure' },
+              { id: 'feedback-and-response', title: 'Feedback and response' },
+              { id: 'consistency-and-familiarity', title: 'Consistency and familiarity' },
+              { id: 'respect-time-and-attention', title: 'Respect time and attention' }
+            ]}
+          >
+            <UXPrinciples />
+          </ContentWithTOC>
+        );
       }
     }
 
