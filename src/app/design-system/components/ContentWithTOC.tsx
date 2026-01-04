@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 interface TOCItem {
   id: string;
@@ -15,10 +15,15 @@ interface ContentWithTOCProps {
 
 export default function ContentWithTOC({ children, tocTitle, tocItems }: ContentWithTOCProps) {
   const [activeId, setActiveId] = useState<string>('');
+  const observerRef = useRef<IntersectionObserver | null>(null);
+  const clickedRef = useRef(false);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
+        // Don't update if user just clicked a link
+        if (clickedRef.current) return;
+
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             setActiveId(entry.target.id);
@@ -27,6 +32,8 @@ export default function ContentWithTOC({ children, tocTitle, tocItems }: Content
       },
       { rootMargin: '-100px 0px -80% 0px' }
     );
+
+    observerRef.current = observer;
 
     // Observe all headings with IDs
     const headings = document.querySelectorAll('h2[id], h3[id]');
@@ -37,6 +44,12 @@ export default function ContentWithTOC({ children, tocTitle, tocItems }: Content
 
   const handleClick = (id: string) => {
     setActiveId(id);
+    clickedRef.current = true;
+
+    // Re-enable observer after scroll completes
+    setTimeout(() => {
+      clickedRef.current = false;
+    }, 1000);
   };
 
   const mainSectionId = tocItems[0]?.id.split('-').slice(0, -1).join('-') || 'section';
