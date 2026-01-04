@@ -104,7 +104,7 @@ export default function ContentWithTOC({ children, tocTitle, tocItems, mainSecti
                     </span>
                   </div>
                 )}
-                <ol className={mainSectionId ? "mt-2 space-y-2" : "space-y-2"}>
+                <ol className={mainSectionId ? "mt-2 ml-3 space-y-2" : "space-y-2"}>
                   {tocItems.map((item) => (
                     <li key={item.id} className="relative pl-3 group">
                       <span
