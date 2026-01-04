@@ -18,6 +18,14 @@ export default function ContentWithTOC({ children, tocTitle, tocItems }: Content
   const observerRef = useRef<IntersectionObserver | null>(null);
   const clickedRef = useRef(false);
 
+  // Initialize from URL hash on mount
+  useEffect(() => {
+    const hash = window.location.hash.slice(1); // Remove # from hash
+    if (hash) {
+      setActiveId(hash);
+    }
+  }, []);
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -27,6 +35,8 @@ export default function ContentWithTOC({ children, tocTitle, tocItems }: Content
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             setActiveId(entry.target.id);
+            // Update URL hash without scrolling
+            window.history.replaceState(null, '', `#${entry.target.id}`);
           }
         });
       },

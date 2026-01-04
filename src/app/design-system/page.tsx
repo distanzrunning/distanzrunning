@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import IntroductionShowcase from './components/IntroductionShowcase';
 import DesignSystemTopNav from './components/DesignSystemTopNav';
 import DesignSystemSidebar from './components/DesignSystemSidebar';
@@ -11,17 +12,44 @@ import UXPrinciples from './components/content/UXPrinciples';
 import ContentWithTOC from './components/ContentWithTOC';
 
 export default function DesignSystemPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [activeSection, setActiveSection] = useState<string | null>(null);
   const [activeSubsection, setActiveSubsection] = useState('overview');
+
+  // Initialize from URL params on mount
+  useEffect(() => {
+    const section = searchParams.get('section');
+    const subsection = searchParams.get('subsection');
+
+    if (section) {
+      setActiveSection(section);
+      setActiveSubsection(subsection || 'overview');
+    }
+  }, [searchParams]);
 
   const handleSectionChange = (section: string | null) => {
     setActiveSection(section);
     setActiveSubsection('overview');
+
+    // Update URL
+    if (section) {
+      router.push(`/design-system?section=${section}&subsection=overview`, { scroll: false });
+    } else {
+      router.push('/design-system', { scroll: false });
+    }
+
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleSubsectionChange = (subsection: string) => {
     setActiveSubsection(subsection);
+
+    // Update URL with section and subsection
+    if (activeSection) {
+      router.push(`/design-system?section=${activeSection}&subsection=${subsection}`, { scroll: false });
+    }
+
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
