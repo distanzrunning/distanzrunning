@@ -238,7 +238,7 @@ export default function DesignSystemSidebar({ section, activeSubsection, onSubse
                 <div>
                   <button
                     onClick={() => toggleSection(item.id)}
-                    className="w-full text-left text-sm py-2 px-3 rounded-md transition-colors text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-50 dark:hover:bg-neutral-800/50 flex items-center justify-between"
+                    className="w-full text-left text-base py-2 px-3 rounded-md transition-colors text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-50 dark:hover:bg-neutral-800/50 flex items-center justify-between"
                   >
                     <span>{item.label}</span>
                     <ChevronDown
@@ -254,7 +254,7 @@ export default function DesignSystemSidebar({ section, activeSubsection, onSubse
                           <button
                             onClick={() => handleClick(sub.id)}
                             className={`
-                              w-full text-left text-sm py-2 px-3 rounded-md transition-colors
+                              w-full text-left text-base py-2 px-3 rounded-md transition-colors
                               ${
                                 activeSubsection === sub.id
                                   ? 'bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white font-medium'
@@ -274,7 +274,7 @@ export default function DesignSystemSidebar({ section, activeSubsection, onSubse
                 <button
                   onClick={() => handleClick(item.id)}
                   className={`
-                    w-full text-left text-sm py-2 px-3 rounded-md transition-colors
+                    w-full text-left text-base py-2 px-3 rounded-md transition-colors
                     ${
                       activeSubsection === item.id
                         ? 'bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white font-medium'

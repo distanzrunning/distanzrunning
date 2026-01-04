@@ -28,7 +28,7 @@ export default function DesignSystemTopNav({ activeSection, onSectionChange }: D
           {/* Title */}
           <button
             onClick={() => onSectionChange(null)}
-            className="font-serif text-xl font-medium hover:text-textSubtle transition-colors"
+            className="font-serif text-2xl font-medium hover:text-textSubtle transition-colors"
           >
             Stride Design System
           </button>
@@ -42,7 +42,7 @@ export default function DesignSystemTopNav({ activeSection, onSectionChange }: D
               <button
                 key={section}
                 onClick={() => onSectionChange(section)}
-                className={`text-sm capitalize transition-colors ${
+                className={`text-base capitalize transition-colors hover:underline ${
                   activeSection === section
                     ? 'font-medium text-textDefault'
                     : 'text-textSubtle hover:text-textDefault'
