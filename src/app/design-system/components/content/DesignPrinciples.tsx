@@ -3,7 +3,7 @@ export default function DesignPrinciples() {
     <div className="space-y-8">
       {/* Title */}
       <div>
-        <p className="text-sm uppercase tracking-wide text-textSubtle mb-4">Principles</p>
+        <p className="text-sm tracking-wide text-accent mb-4">Principles</p>
         <h1 className="font-serif text-[40px] leading-[1.15] font-medium mb-4">
           Design principles
         </h1>
