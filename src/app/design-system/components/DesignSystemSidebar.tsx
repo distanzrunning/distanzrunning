@@ -266,7 +266,7 @@ export default function DesignSystemSidebar({
   };
 
   return (
-    <nav className="w-64 bg-canvas dark:bg-[#0a0a0a] border-r border-borderDefault h-full">
+    <nav className="w-64 bg-canvas dark:bg-[#0a0a0a] border-r border-borderSubtle h-full">
       <div className="px-6 py-8 sticky top-28 max-h-[calc(100vh-7rem)] overflow-y-auto">
         <ul className="space-y-1">
           {sections.map((item) => (

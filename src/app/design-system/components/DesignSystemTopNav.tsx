@@ -1,17 +1,20 @@
-'use client';
+"use client";
 
-import Image from 'next/image';
+import Image from "next/image";
 
 interface DesignSystemTopNavProps {
   activeSection: string | null;
   onSectionChange: (section: string | null) => void;
 }
 
-export default function DesignSystemTopNav({ activeSection, onSectionChange }: DesignSystemTopNavProps) {
-  const sections = ['foundations', 'components', 'patterns'];
+export default function DesignSystemTopNav({
+  activeSection,
+  onSectionChange,
+}: DesignSystemTopNavProps) {
+  const sections = ["foundations", "components", "patterns"];
 
   return (
-    <nav className="sticky top-12 z-40 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md border-b border-borderNeutral transition-colors duration-300">
+    <nav className="sticky top-12 z-40 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md border-b border-borderSubtle transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center gap-6 h-16">
           {/* Logo */}
@@ -44,8 +47,8 @@ export default function DesignSystemTopNav({ activeSection, onSectionChange }: D
                 onClick={() => onSectionChange(section)}
                 className={`text-base capitalize transition-colors hover:underline ${
                   activeSection === section
-                    ? 'font-medium text-textDefault'
-                    : 'text-textSubtle hover:text-textDefault'
+                    ? "font-medium text-textDefault"
+                    : "text-textSubtle hover:text-textDefault"
                 }`}
               >
                 {section}
