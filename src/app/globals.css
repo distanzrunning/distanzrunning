@@ -239,6 +239,12 @@
     --color-info-bg: 237, 235, 250; /* Pace Purple 95 */
     --color-info-bg-subtle: 219, 214, 245; /* Pace Purple 90 */
     --color-info-border: 94, 63, 209; /* Pace Purple 55 */
+
+    /* Rule (horizontal dividers) - Complete border patterns */
+    --rule-default: 1px solid rgb(var(--color-borderSubtle)); /* Light separation - Asphalt 90 */
+    --rule-emphasised: 1px solid rgb(var(--color-textDefault)); /* Strong separation - Asphalt 20 */
+    --rule-heavy: 4px solid rgb(var(--color-textDefault)); /* Major section divider - Asphalt 20 */
+    --rule-accent: 4px solid #e43c81; /* Brand accent divider - Electric Pink */
   }
 
   /* Dark Mode - Inverted scale uses lighter shades for text, darker for surfaces */
@@ -280,6 +286,12 @@
 
     /* Legacy aliases */
     --color-neutralBgSubtle: var(--color-surfaceSubtle);
+
+    /* Rule (horizontal dividers) - Dark mode inverted */
+    --rule-default: 1px solid rgb(var(--color-borderSubtle)); /* Light separation - Asphalt 20 */
+    --rule-emphasised: 1px solid rgb(var(--color-textDefault)); /* Strong separation - Asphalt 90 */
+    --rule-heavy: 4px solid rgb(var(--color-textDefault)); /* Major section divider - Asphalt 90 */
+    --rule-accent: 4px solid #e43c81; /* Brand accent divider - Electric Pink */
   }
 
   /* Distanz reset (Distanz design system) */

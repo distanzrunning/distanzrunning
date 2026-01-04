@@ -8,6 +8,7 @@ import FoundationsOverview from "../../components/content/FoundationsOverview";
 import DesignPrinciples from "../../components/content/DesignPrinciples";
 import UXPrinciples from "../../components/content/UXPrinciples";
 import ColourPalettes from "../../components/content/ColourPalettes";
+import Rules from "../../components/content/Rules";
 import ContentWithTOC from "../../components/ContentWithTOC";
 
 export default function DesignSystemSubsectionPage() {
@@ -103,6 +104,41 @@ export default function DesignSystemSubsectionPage() {
             ]}
           >
             <ColourPalettes />
+          </ContentWithTOC>
+        );
+      }
+      if (subsection === "rules") {
+        return (
+          <ContentWithTOC
+            tocTitle="Contents"
+            tocItems={[
+              {
+                id: "styles",
+                title: "Styles",
+                children: [
+                  { id: "styles-rule", title: "Rule" },
+                  { id: "styles-rule-inverse", title: "Rule (inverse)" },
+                  { id: "styles-rule-emphasised", title: "Rule (emphasised)" },
+                  {
+                    id: "styles-rule-inverse-emphasised",
+                    title: "Rule (inverse, emphasised)",
+                  },
+                  { id: "styles-rule-heavy", title: "Rule (heavy)" },
+                  {
+                    id: "styles-rule-inverse-heavy",
+                    title: "Rule (inverse, heavy)",
+                  },
+                  { id: "styles-rule-accent", title: "Rule (accent)" },
+                  {
+                    id: "styles-rule-inverse-accent",
+                    title: "Rule (accent, inverse)",
+                  },
+                ],
+              },
+              { id: "reference", title: "Reference" },
+            ]}
+          >
+            <Rules />
           </ContentWithTOC>
         );
       }
