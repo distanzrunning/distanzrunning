@@ -35,6 +35,10 @@ export default function ContentWithTOC({ children, tocTitle, tocItems }: Content
     return () => observer.disconnect();
   }, []);
 
+  const handleClick = (id: string) => {
+    setActiveId(id);
+  };
+
   const mainSectionId = tocItems[0]?.id.split('-').slice(0, -1).join('-') || 'section';
 
   return (
@@ -67,6 +71,7 @@ export default function ContentWithTOC({ children, tocTitle, tocItems }: Content
                       />
                       <a
                         href={`#${item.id}`}
+                        onClick={() => handleClick(item.id)}
                         className={`text-sm transition-colors block ${
                           activeId === item.id
                             ? 'text-textDefault'
