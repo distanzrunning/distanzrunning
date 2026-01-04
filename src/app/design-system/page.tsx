@@ -98,7 +98,7 @@ export default function DesignSystemPage() {
       <div className="grid grid-cols-1 lg:grid-cols-12 min-h-screen">
         {/* Conditional Sidebar - only show when a section is active */}
         {activeSection && (
-          <div className="hidden lg:block lg:col-span-2">
+          <div className="hidden lg:block lg:col-span-2 h-full">
             <DesignSystemSidebar
               section={activeSection}
               activeSubsection={activeSubsection}
