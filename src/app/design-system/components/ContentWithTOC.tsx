@@ -79,7 +79,7 @@ export default function ContentWithTOC({
         <div className="sticky top-40">
           <div className="bg-surface-subtle rounded-lg p-6 border border-borderNeutral">
             <h4 className="text-sm font-medium text-textDefault mb-4">
-              Contents
+              {tocTitle}
             </h4>
             <ol className="space-y-3">
               <li>
@@ -105,13 +105,7 @@ export default function ContentWithTOC({
                     </a>
                   </div>
                 )}
-                {!mainSectionId && (
-                  <div className="pl-3">
-                    <span className="text-sm text-textSubtle block">
-                      {tocTitle}
-                    </span>
-                  </div>
-                )}
+                {!mainSectionId && <></>}
                 <ol
                   className={
                     mainSectionId ? "mt-2 ml-3 space-y-2" : "space-y-2"
