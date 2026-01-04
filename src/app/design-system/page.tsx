@@ -43,14 +43,14 @@ export default function DesignSystemPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white dark:bg-[#0c0c0d]">
-      {/* Top Navigation */}
+    <div className="bg-white dark:bg-[#0c0c0d]">
+      {/* Design System Top Navigation - below main site navbar */}
       <DesignSystemTopNav
         activeSection={activeSection}
         onSectionChange={handleSectionChange}
       />
 
-      <div className="flex">
+      <div className="flex min-h-screen">
         {/* Conditional Sidebar - only show when a section is active */}
         {activeSection && (
           <DesignSystemSidebar
