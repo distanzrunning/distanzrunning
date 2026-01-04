@@ -28,7 +28,7 @@ export default function DesignSystemTopNav({ activeSection, onSectionChange }: D
           {/* Title */}
           <button
             onClick={() => onSectionChange(null)}
-            className="font-serif text-2xl font-medium hover:text-textSubtle transition-colors"
+            className="font-serif text-2xl font-medium hover:text-textSubtle hover:underline transition-colors"
           >
             Stride Design System
           </button>
