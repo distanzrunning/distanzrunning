@@ -17,7 +17,7 @@ export default function UXPrinciples() {
 
       {/* Principles Section */}
       <div className="space-y-8">
-        <h2 id="our-ux-principles" className="font-serif text-[32px] leading-[1.2] font-medium">
+        <h2 id="our-ux-principles" className="font-serif text-[32px] leading-[1.2] font-medium scroll-mt-32">
           Our UX principles
         </h2>
 
@@ -26,7 +26,7 @@ export default function UXPrinciples() {
 
         {/* Principle 1 */}
         <div className="space-y-4">
-          <h3 id="user-centred-design" className="font-serif text-[24px] leading-[1.3] font-medium">
+          <h3 id="user-centred-design" className="font-serif text-[24px] leading-[1.3] font-medium scroll-mt-32">
             User-centred design
           </h3>
           <p className="text-base text-textDefault max-w-3xl">
@@ -39,7 +39,7 @@ export default function UXPrinciples() {
 
         {/* Principle 2 */}
         <div className="space-y-4">
-          <h3 id="accessible-to-all" className="font-serif text-[24px] leading-[1.3] font-medium">
+          <h3 id="accessible-to-all" className="font-serif text-[24px] leading-[1.3] font-medium scroll-mt-32">
             Accessible to all
           </h3>
           <p className="text-base text-textDefault max-w-3xl">
@@ -52,7 +52,7 @@ export default function UXPrinciples() {
 
         {/* Principle 3 */}
         <div className="space-y-4">
-          <h3 id="progressive-disclosure" className="font-serif text-[24px] leading-[1.3] font-medium">
+          <h3 id="progressive-disclosure" className="font-serif text-[24px] leading-[1.3] font-medium scroll-mt-32">
             Progressive disclosure
           </h3>
           <p className="text-base text-textDefault max-w-3xl">
@@ -65,7 +65,7 @@ export default function UXPrinciples() {
 
         {/* Principle 4 */}
         <div className="space-y-4">
-          <h3 id="feedback-and-response" className="font-serif text-[24px] leading-[1.3] font-medium">
+          <h3 id="feedback-and-response" className="font-serif text-[24px] leading-[1.3] font-medium scroll-mt-32">
             Feedback and response
           </h3>
           <p className="text-base text-textDefault max-w-3xl">
@@ -78,7 +78,7 @@ export default function UXPrinciples() {
 
         {/* Principle 5 */}
         <div className="space-y-4">
-          <h3 id="consistency-and-familiarity" className="font-serif text-[24px] leading-[1.3] font-medium">
+          <h3 id="consistency-and-familiarity" className="font-serif text-[24px] leading-[1.3] font-medium scroll-mt-32">
             Consistency and familiarity
           </h3>
           <p className="text-base text-textDefault max-w-3xl">
@@ -91,7 +91,7 @@ export default function UXPrinciples() {
 
         {/* Principle 6 */}
         <div className="space-y-4">
-          <h3 id="respect-time-and-attention" className="font-serif text-[24px] leading-[1.3] font-medium">
+          <h3 id="respect-time-and-attention" className="font-serif text-[24px] leading-[1.3] font-medium scroll-mt-32">
             Respect time and attention
           </h3>
           <p className="text-base text-textDefault max-w-3xl">
