@@ -1,13 +1,14 @@
-'use client';
+"use client";
 
-import { useParams, useRouter } from 'next/navigation';
-import DesignSystemTopNav from '../../components/DesignSystemTopNav';
-import DesignSystemSidebar from '../../components/DesignSystemSidebar';
-import PlaceholderContent from '../../components/PlaceholderContent';
-import FoundationsOverview from '../../components/content/FoundationsOverview';
-import DesignPrinciples from '../../components/content/DesignPrinciples';
-import UXPrinciples from '../../components/content/UXPrinciples';
-import ContentWithTOC from '../../components/ContentWithTOC';
+import { useParams, useRouter } from "next/navigation";
+import DesignSystemTopNav from "../../components/DesignSystemTopNav";
+import DesignSystemSidebar from "../../components/DesignSystemSidebar";
+import PlaceholderContent from "../../components/PlaceholderContent";
+import FoundationsOverview from "../../components/content/FoundationsOverview";
+import DesignPrinciples from "../../components/content/DesignPrinciples";
+import UXPrinciples from "../../components/content/UXPrinciples";
+import ColourPalettes from "../../components/content/ColourPalettes";
+import ContentWithTOC from "../../components/ContentWithTOC";
 
 export default function DesignSystemSubsectionPage() {
   const params = useParams();
@@ -19,7 +20,7 @@ export default function DesignSystemSubsectionPage() {
     if (newSection) {
       router.push(`/design-system/${newSection}/overview`);
     } else {
-      router.push('/design-system');
+      router.push("/design-system");
     }
   };
 
@@ -29,43 +30,71 @@ export default function DesignSystemSubsectionPage() {
 
   const renderContent = () => {
     // Show Foundations content
-    if (section === 'foundations') {
-      if (subsection === 'overview') {
+    if (section === "foundations") {
+      if (subsection === "overview") {
         return <FoundationsOverview />;
       }
-      if (subsection === 'design-principles') {
+      if (subsection === "design-principles") {
         return (
           <ContentWithTOC
             tocTitle="Our principles"
             mainSectionId="our-principles"
             tocItems={[
-              { id: 'less-is-more', title: 'Less is more' },
-              { id: 'deliberate-typography', title: 'Deliberate typography' },
-              { id: 'visual-harmony', title: 'Visual harmony' },
-              { id: 'clear-wayfinding', title: 'Clear wayfinding' },
-              { id: 'performance-and-precision', title: 'Performance and precision' },
-              { id: 'recognisable-consistency', title: 'Recognisable consistency' }
+              { id: "less-is-more", title: "Less is more" },
+              { id: "deliberate-typography", title: "Deliberate typography" },
+              { id: "visual-harmony", title: "Visual harmony" },
+              { id: "clear-wayfinding", title: "Clear wayfinding" },
+              {
+                id: "performance-and-precision",
+                title: "Performance and precision",
+              },
+              {
+                id: "recognisable-consistency",
+                title: "Recognisable consistency",
+              },
             ]}
           >
             <DesignPrinciples />
           </ContentWithTOC>
         );
       }
-      if (subsection === 'ux-principles') {
+      if (subsection === "ux-principles") {
         return (
           <ContentWithTOC
             tocTitle="Our UX principles"
             mainSectionId="our-ux-principles"
             tocItems={[
-              { id: 'user-centred-design', title: 'User-centred design' },
-              { id: 'accessible-to-all', title: 'Accessible to all' },
-              { id: 'progressive-disclosure', title: 'Progressive disclosure' },
-              { id: 'feedback-and-response', title: 'Feedback and response' },
-              { id: 'consistency-and-familiarity', title: 'Consistency and familiarity' },
-              { id: 'respect-time-and-attention', title: 'Respect time and attention' }
+              { id: "user-centred-design", title: "User-centred design" },
+              { id: "accessible-to-all", title: "Accessible to all" },
+              { id: "progressive-disclosure", title: "Progressive disclosure" },
+              { id: "feedback-and-response", title: "Feedback and response" },
+              {
+                id: "consistency-and-familiarity",
+                title: "Consistency and familiarity",
+              },
+              {
+                id: "respect-time-and-attention",
+                title: "Respect time and attention",
+              },
             ]}
           >
             <UXPrinciples />
+          </ContentWithTOC>
+        );
+      }
+      if (subsection === "palettes") {
+        return (
+          <ContentWithTOC
+            tocTitle="Contents"
+            mainSectionId="palettes"
+            tocItems={[
+              { id: "brand", title: "Brand" },
+              { id: "accent", title: "Accent" },
+              { id: "greyscale", title: "Greyscale" },
+              { id: "canvas", title: "Canvas" },
+            ]}
+          >
+            <ColourPalettes />
           </ContentWithTOC>
         );
       }
@@ -74,15 +103,12 @@ export default function DesignSystemSubsectionPage() {
     // Format the title based on section and subsection
     const sectionTitle = section.charAt(0).toUpperCase() + section.slice(1);
     const subsectionTitle = subsection
-      .split('-')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(' ');
+      .split("-")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
 
     return (
-      <PlaceholderContent
-        title={sectionTitle}
-        subsection={subsectionTitle}
-      />
+      <PlaceholderContent title={sectionTitle} subsection={subsectionTitle} />
     );
   };
 
