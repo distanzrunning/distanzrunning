@@ -86,7 +86,6 @@ export default function DesignSystemSubsectionPage() {
         return (
           <ContentWithTOC
             tocTitle="Contents"
-            mainSectionId="palettes"
             tocItems={[
               { id: "brand", title: "Brand" },
               {
