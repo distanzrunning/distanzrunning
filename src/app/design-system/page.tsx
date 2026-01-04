@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import IntroductionShowcase from './components/IntroductionShowcase';
 import DesignSystemTopNav from './components/DesignSystemTopNav';
@@ -11,7 +11,7 @@ import DesignPrinciples from './components/content/DesignPrinciples';
 import UXPrinciples from './components/content/UXPrinciples';
 import ContentWithTOC from './components/ContentWithTOC';
 
-export default function DesignSystemPage() {
+function DesignSystemContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [activeSection, setActiveSection] = useState<string | null>(null);
@@ -143,5 +143,13 @@ export default function DesignSystemPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function DesignSystemPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <DesignSystemContent />
+    </Suspense>
   );
 }
