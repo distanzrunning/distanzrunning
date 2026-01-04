@@ -18,17 +18,19 @@ export default function ColourPalettes() {
       <section>
         <h2
           id="brand"
-          className="font-serif text-[32px] leading-[1.2] font-medium mb-6 scroll-mt-32"
+          className="font-serif text-[32px] leading-[1.2] font-medium mb-3 scroll-mt-32"
         >
           Brand
         </h2>
+        <p className="text-base text-textSubtle mb-6 max-w-3xl">
+          Core monochrome foundation used throughout the design system for text,
+          backgrounds, and structural elements.
+        </p>
 
         <ColorSwatchGrid
           swatches={[
             { name: "Black", hex: "#000000", textColor: "light" },
             { name: "White", hex: "#FFFFFF", textColor: "dark" },
-            { name: "Electric Pink", hex: "#E43C81", textColor: "light" },
-            { name: "Electric Pink 60", hex: "#EE6FA5", textColor: "light" },
           ]}
         />
 
@@ -48,20 +50,6 @@ export default function ColourPalettes() {
               hsl: "0°, 0%, 100%",
               token: "--color-brand-white",
             },
-            {
-              name: "Electric Pink",
-              hex: "#E43C81",
-              rgb: "228, 60, 129",
-              hsl: "333°, 74%, 57%",
-              token: "--color-brand-electric-pink",
-            },
-            {
-              name: "Electric Pink 60",
-              hex: "#EE6FA5",
-              rgb: "238, 111, 165",
-              hsl: "333°, 74%, 68%",
-              token: "--color-brand-electric-pink-60",
-            },
           ]}
         />
       </section>
@@ -72,48 +60,117 @@ export default function ColourPalettes() {
       <section>
         <h2
           id="accent"
-          className="font-serif text-[32px] leading-[1.2] font-medium mb-6 scroll-mt-32"
+          className="font-serif text-[32px] leading-[1.2] font-medium mb-3 scroll-mt-32"
         >
           Accent
         </h2>
+        <p className="text-base text-textSubtle mb-6 max-w-3xl">
+          Purposeful color used for UI interactions, structural highlights, and
+          content categorization.
+        </p>
 
-        {/* Primary - Pace Purple */}
+        {/* Primary - Electric Pink */}
         <div className="mb-12">
           <hr className="border-t border-borderNeutral mb-6" />
           <h3
             id="accent-primary"
-            className="font-serif text-[24px] leading-[1.3] font-medium mb-6 scroll-mt-32"
+            className="font-serif text-[24px] leading-[1.3] font-medium mb-3 scroll-mt-32"
           >
             Primary
           </h3>
+          <p className="text-sm text-textSubtle mb-6 max-w-3xl">
+            Electric Pink is the primary accent throughout the interface—used
+            for links, active states, highlights, and navigation markers.
+          </p>
 
           <ColorSwatchGrid
             swatches={[
-              { name: "Pace Purple 20", hex: "#1F1352", textColor: "light" },
-              { name: "Pace Purple 30", hex: "#2E1C7A", textColor: "light" },
-              { name: "Pace Purple 45", hex: "#452BB8", textColor: "light" },
-              { name: "Pace Purple 55", hex: "#5E3FD1", textColor: "light" },
-              { name: "Pace Purple 90", hex: "#DBD6F5", textColor: "dark" },
-              { name: "Pace Purple 95", hex: "#EDEBFA", textColor: "dark" },
+              { name: "Electric Pink 20", hex: "#520A23", textColor: "light" },
+              { name: "Electric Pink 30", hex: "#7A0F35", textColor: "light" },
+              { name: "Electric Pink 45", hex: "#B8164F", textColor: "light" },
+              { name: "Electric Pink 55", hex: "#D11B5C", textColor: "light" },
+              { name: "Electric Pink 90", hex: "#F5D2E1", textColor: "dark" },
+              { name: "Electric Pink 95", hex: "#FAE9F0", textColor: "dark" },
             ]}
           />
 
           <ColorTable
             colors={[
               {
-                name: "Pace Purple 20",
-                hex: "#1F1352",
-                rgb: "31, 19, 82",
-                hsl: "262°, 60%, 20%",
-                token: "--color-pace-purple-20",
+                name: "Electric Pink 20",
+                hex: "#520A23",
+                rgb: "82, 10, 35",
+                hsl: "333°, 74%, 20%",
+                token: "--color-electric-pink-20",
               },
               {
-                name: "Pace Purple 30",
-                hex: "#2E1C7A",
-                rgb: "46, 28, 122",
-                hsl: "262°, 60%, 30%",
-                token: "--color-pace-purple-30",
+                name: "Electric Pink 30",
+                hex: "#7A0F35",
+                rgb: "122, 15, 53",
+                hsl: "333°, 74%, 30%",
+                token: "--color-electric-pink-30",
               },
+              {
+                name: "Electric Pink 45",
+                hex: "#B8164F",
+                rgb: "184, 22, 79",
+                hsl: "333°, 74%, 45%",
+                token: "--color-electric-pink-45",
+              },
+              {
+                name: "Electric Pink 55",
+                hex: "#D11B5C",
+                rgb: "209, 27, 92",
+                hsl: "333°, 74%, 55%",
+                token: "--color-electric-pink-55",
+              },
+              {
+                name: "Electric Pink 90",
+                hex: "#F5D2E1",
+                rgb: "245, 210, 225",
+                hsl: "333°, 74%, 90%",
+                token: "--color-electric-pink-90",
+              },
+              {
+                name: "Electric Pink 95",
+                hex: "#FAE9F0",
+                rgb: "250, 233, 240",
+                hsl: "333°, 74%, 95%",
+                token: "--color-electric-pink-95",
+              },
+            ]}
+          />
+        </div>
+
+        {/* Secondary - Pace Purple & Volt Green */}
+        <div className="mb-12">
+          <hr className="border-t border-borderNeutral mb-6" />
+          <h3
+            id="accent-secondary"
+            className="font-serif text-[24px] leading-[1.3] font-medium mb-3 scroll-mt-32"
+          >
+            Secondary
+          </h3>
+          <p className="text-sm text-textSubtle mb-6 max-w-3xl">
+            Category colors for primary content themes—training content uses
+            Pace Purple, nutrition and wellness use Volt Green.
+          </p>
+
+          <ColorSwatchGrid
+            swatches={[
+              { name: "Pace Purple 45", hex: "#452BB8", textColor: "light" },
+              { name: "Pace Purple 55", hex: "#5E3FD1", textColor: "light" },
+              { name: "Pace Purple 90", hex: "#DBD6F5", textColor: "dark" },
+              { name: "Pace Purple 95", hex: "#EDEBFA", textColor: "dark" },
+              { name: "Volt Green 45", hex: "#00733A", textColor: "light" },
+              { name: "Volt Green 55", hex: "#008C47", textColor: "light" },
+              { name: "Volt Green 90", hex: "#CCF5E0", textColor: "dark" },
+              { name: "Volt Green 95", hex: "#E6FAEF", textColor: "dark" },
+            ]}
+          />
+
+          <ColorTable
+            colors={[
               {
                 name: "Pace Purple 45",
                 hex: "#452BB8",
@@ -142,35 +199,6 @@ export default function ColourPalettes() {
                 hsl: "262°, 60%, 95%",
                 token: "--color-pace-purple-95",
               },
-            ]}
-          />
-        </div>
-
-        {/* Secondary - Volt Green & Signal Orange */}
-        <div className="mb-12">
-          <hr className="border-t border-borderNeutral mb-6" />
-          <h3
-            id="accent-secondary"
-            className="font-serif text-[24px] leading-[1.3] font-medium mb-6 scroll-mt-32"
-          >
-            Secondary
-          </h3>
-
-          <ColorSwatchGrid
-            swatches={[
-              { name: "Volt Green 45", hex: "#00733A", textColor: "light" },
-              { name: "Volt Green 55", hex: "#008C47", textColor: "light" },
-              { name: "Volt Green 90", hex: "#CCF5E0", textColor: "dark" },
-              { name: "Volt Green 95", hex: "#E6FAEF", textColor: "dark" },
-              { name: "Signal Orange 45", hex: "#732600", textColor: "light" },
-              { name: "Signal Orange 55", hex: "#8C2F00", textColor: "light" },
-              { name: "Signal Orange 90", hex: "#F5D6CC", textColor: "dark" },
-              { name: "Signal Orange 95", hex: "#FAEBE6", textColor: "dark" },
-            ]}
-          />
-
-          <ColorTable
-            colors={[
               {
                 name: "Volt Green 45",
                 hex: "#00733A",
@@ -199,6 +227,43 @@ export default function ColourPalettes() {
                 hsl: "146°, 100%, 95%",
                 token: "--color-volt-green-95",
               },
+            ]}
+          />
+        </div>
+
+        {/* Tertiary - Signal Orange, Track Red & Trail Brown */}
+        <div className="mb-12">
+          <hr className="border-t border-borderNeutral mb-6" />
+          <h3
+            id="accent-tertiary"
+            className="font-serif text-[24px] leading-[1.3] font-medium mb-3 scroll-mt-32"
+          >
+            Tertiary
+          </h3>
+          <p className="text-sm text-textSubtle mb-6 max-w-3xl">
+            Supporting category colors for specialized content—gear uses Signal
+            Orange, races use Track Red, and routes use Trail Brown.
+          </p>
+
+          <ColorSwatchGrid
+            swatches={[
+              { name: "Signal Orange 45", hex: "#732600", textColor: "light" },
+              { name: "Signal Orange 55", hex: "#8C2F00", textColor: "light" },
+              { name: "Signal Orange 90", hex: "#F5D6CC", textColor: "dark" },
+              { name: "Signal Orange 95", hex: "#FAEBE6", textColor: "dark" },
+              { name: "Track Red 45", hex: "#B81616", textColor: "light" },
+              { name: "Track Red 55", hex: "#D11B1B", textColor: "light" },
+              { name: "Track Red 90", hex: "#F5D2D2", textColor: "dark" },
+              { name: "Track Red 95", hex: "#FAE9E9", textColor: "dark" },
+              { name: "Trail Brown 45", hex: "#73391D", textColor: "light" },
+              { name: "Trail Brown 55", hex: "#8C4623", textColor: "light" },
+              { name: "Trail Brown 90", hex: "#F5E6D9", textColor: "dark" },
+              { name: "Trail Brown 95", hex: "#FAF2EC", textColor: "dark" },
+            ]}
+          />
+
+          <ColorTable
+            colors={[
               {
                 name: "Signal Orange 45",
                 hex: "#732600",
@@ -227,35 +292,6 @@ export default function ColourPalettes() {
                 hsl: "14°, 100%, 95%",
                 token: "--color-signal-orange-95",
               },
-            ]}
-          />
-        </div>
-
-        {/* Tertiary - Track Red & Trail Brown */}
-        <div className="mb-12">
-          <hr className="border-t border-borderNeutral mb-6" />
-          <h3
-            id="accent-tertiary"
-            className="font-serif text-[24px] leading-[1.3] font-medium mb-6 scroll-mt-32"
-          >
-            Tertiary
-          </h3>
-
-          <ColorSwatchGrid
-            swatches={[
-              { name: "Track Red 45", hex: "#B81616", textColor: "light" },
-              { name: "Track Red 55", hex: "#D11B1B", textColor: "light" },
-              { name: "Track Red 90", hex: "#F5D2D2", textColor: "dark" },
-              { name: "Track Red 95", hex: "#FAE9E9", textColor: "dark" },
-              { name: "Trail Brown 45", hex: "#73391D", textColor: "light" },
-              { name: "Trail Brown 55", hex: "#8C4623", textColor: "light" },
-              { name: "Trail Brown 90", hex: "#F5E6D9", textColor: "dark" },
-              { name: "Trail Brown 95", hex: "#FAF2EC", textColor: "dark" },
-            ]}
-          />
-
-          <ColorTable
-            colors={[
               {
                 name: "Track Red 45",
                 hex: "#B81616",
@@ -323,10 +359,14 @@ export default function ColourPalettes() {
       <section>
         <h2
           id="greyscale"
-          className="font-serif text-[32px] leading-[1.2] font-medium mb-6 scroll-mt-32"
+          className="font-serif text-[32px] leading-[1.2] font-medium mb-3 scroll-mt-32"
         >
           Greyscale
         </h2>
+        <p className="text-base text-textSubtle mb-6 max-w-3xl">
+          Systematic neutral scale for text, borders, backgrounds, and subtle UI
+          elements—providing tonal range for minimalist interfaces.
+        </p>
 
         <ColorSwatchGrid
           swatches={[
@@ -409,10 +449,14 @@ export default function ColourPalettes() {
       <section>
         <h2
           id="canvas"
-          className="font-serif text-[32px] leading-[1.2] font-medium mb-6 scroll-mt-32"
+          className="font-serif text-[32px] leading-[1.2] font-medium mb-3 scroll-mt-32"
         >
           Canvas
         </h2>
+        <p className="text-base text-textSubtle mb-6 max-w-3xl">
+          Subtle tinted backgrounds for layered sections and containers—warm
+          tones for inviting spaces, cool tones for technical content.
+        </p>
 
         <ColorSwatchGrid
           swatches={[

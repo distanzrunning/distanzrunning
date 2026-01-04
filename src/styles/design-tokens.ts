@@ -22,12 +22,21 @@ export const fontWeights = {
 } as const;
 
 export const colors = {
-  // Brand Colors
+  // Brand Colors - Core identity
   brand: {
     black: "#000000",
     white: "#FFFFFF",
-    electricPink: "#E43C81",
-    electricPink60: "#EE6FA5", // Lighter variant at 60% lightness
+  },
+
+  // Electric Pink - Primary accent for UI, interactions, and structure (HSL: 333°, 74%)
+  // 1 color with 6 variations - used throughout UI for links, highlights, active states
+  electricPink: {
+    20: "#520A23",
+    30: "#7A0F35",
+    45: "#B8164F",
+    55: "#D11B5C",
+    90: "#F5D2E1",
+    95: "#FAE9F0",
   },
 
   // Asphalt (Greyscale) - Named after running surfaces
@@ -44,11 +53,9 @@ export const colors = {
     100: "#FFFFFF",
   },
 
-  // Pace Purple - Primary accent for Training/Tempo content (HSL: 262°, 60%)
-  // 1 color with 6 variations
+  // Pace Purple - Secondary accent for Training/Tempo content (HSL: 262°, 60%)
+  // 2 colors with 4 variations each
   pacePurple: {
-    20: "#1F1352",
-    30: "#2E1C7A",
     45: "#452BB8",
     55: "#5E3FD1",
     90: "#DBD6F5",
@@ -56,7 +63,6 @@ export const colors = {
   },
 
   // Volt Green - Secondary accent for Nutrition/Wellness (HSL: 146°, 100%)
-  // 2 colors with 4 variations each
   voltGreen: {
     45: "#00733A",
     55: "#008C47",
@@ -64,7 +70,8 @@ export const colors = {
     95: "#E6FAEF",
   },
 
-  // Signal Orange - Secondary accent for Gear/Equipment (HSL: 14°, 100%)
+  // Signal Orange - Tertiary accent for Gear/Equipment (HSL: 14°, 100%)
+  // 2 colors with 4 variations each
   signalOrange: {
     45: "#732600",
     55: "#8C2F00",
@@ -73,7 +80,6 @@ export const colors = {
   },
 
   // Track Red - Tertiary accent for Races/Events (HSL: 0°, 79%)
-  // 2 colors with 4 variations each
   trackRed: {
     45: "#B81616",
     55: "#D11B1B",
@@ -257,6 +263,7 @@ export const animation = {
 export type FontFamily = keyof typeof fonts;
 export type FontWeight = keyof typeof fontWeights;
 export type BrandColor = keyof typeof colors.brand;
+export type ElectricPinkColor = keyof typeof colors.electricPink;
 export type AsphaltColor = keyof typeof colors.asphalt;
 export type PacePurpleColor = keyof typeof colors.pacePurple;
 export type VoltGreenColor = keyof typeof colors.voltGreen;
