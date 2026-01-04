@@ -6,6 +6,8 @@ import DesignSystemTopNav from './components/DesignSystemTopNav';
 import DesignSystemSidebar from './components/DesignSystemSidebar';
 import PlaceholderContent from './components/PlaceholderContent';
 import FoundationsOverview from './components/content/FoundationsOverview';
+import DesignPrinciples from './components/content/DesignPrinciples';
+import UXPrinciples from './components/content/UXPrinciples';
 
 export default function DesignSystemPage() {
   const [activeSection, setActiveSection] = useState<string | null>(null);
@@ -28,9 +30,17 @@ export default function DesignSystemPage() {
       return <IntroductionShowcase onSectionChange={handleSectionChange} />;
     }
 
-    // Show Foundations Overview
-    if (activeSection === 'foundations' && activeSubsection === 'overview') {
-      return <FoundationsOverview />;
+    // Show Foundations content
+    if (activeSection === 'foundations') {
+      if (activeSubsection === 'overview') {
+        return <FoundationsOverview />;
+      }
+      if (activeSubsection === 'design-principles') {
+        return <DesignPrinciples />;
+      }
+      if (activeSubsection === 'ux-principles') {
+        return <UXPrinciples />;
+      }
     }
 
     // Format the title based on section and subsection
