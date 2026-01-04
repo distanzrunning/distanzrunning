@@ -10,16 +10,23 @@ interface ColorSwatchGridProps {
 
 export default function ColorSwatchGrid({ swatches }: ColorSwatchGridProps) {
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 mb-8">
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
       {swatches.map((swatch) => (
         <div key={swatch.name} className="flex flex-col items-center">
           <div
-            className="w-24 h-24 rounded-full mb-3 flex items-center justify-center"
+            className={`w-32 h-32 rounded-full flex items-center justify-center ${
+              swatch.hex === "#FFFFFF" ? "border border-borderNeutral" : ""
+            }`}
             style={{ backgroundColor: swatch.hex }}
-          ></div>
-          <span className="text-xs font-sans text-center text-textDefault">
-            {swatch.name}
-          </span>
+          >
+            <span
+              className={`text-sm font-sans text-center px-2 ${
+                swatch.textColor === "light" ? "text-white" : "text-black"
+              }`}
+            >
+              {swatch.name}
+            </span>
+          </div>
         </div>
       ))}
     </div>
