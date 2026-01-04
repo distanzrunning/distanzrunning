@@ -77,7 +77,7 @@ export default function ContentWithTOC({
       {/* Table of Contents - Desktop Only */}
       <aside className="hidden lg:block lg:col-span-2">
         <div className="sticky top-40">
-          <div className="bg-surface-subtle rounded-lg p-6 border border-borderNeutral">
+          <div className="bg-surfaceSubtle rounded-lg p-6 border border-borderSubtle">
             <h4 className="text-sm font-medium text-textDefault mb-4">
               {tocTitle}
             </h4>
@@ -89,7 +89,7 @@ export default function ContentWithTOC({
                       className={`absolute left-0 top-0 bottom-0 w-[2px] transition-opacity ${
                         activeId === mainSectionId
                           ? "bg-electric-pink opacity-100"
-                          : "bg-borderNeutral opacity-0 group-hover:opacity-100"
+                          : "bg-borderSubtle opacity-0 group-hover:opacity-100"
                       }`}
                     />
                     <a
@@ -118,7 +118,7 @@ export default function ContentWithTOC({
                           className={`absolute left-0 top-0 bottom-0 w-[2px] transition-opacity ${
                             activeId === item.id
                               ? "bg-electric-pink opacity-100"
-                              : "bg-borderNeutral opacity-0 group-hover:opacity-100"
+                              : "bg-borderSubtle opacity-0 group-hover:opacity-100"
                           }`}
                         />
                         <a
@@ -141,7 +141,7 @@ export default function ContentWithTOC({
                                 className={`absolute left-0 top-0 bottom-0 w-[2px] transition-opacity ${
                                   activeId === child.id
                                     ? "bg-electric-pink opacity-100"
-                                    : "bg-borderNeutral opacity-0 group-hover:opacity-100"
+                                    : "bg-borderSubtle opacity-0 group-hover:opacity-100"
                                 }`}
                               />
                               <a

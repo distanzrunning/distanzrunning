@@ -82,14 +82,27 @@ module.exports = {
         textAccent: "rgb(var(--color-textAccent))",
         textAccentSubtle: "rgb(var(--color-textAccentSubtle))",
 
+        // Systematic border tokens - Two-tier approach
+        borderDefault: "rgb(var(--color-borderDefault))",
+        borderDefaultHover: "rgb(var(--color-borderDefaultHover))",
+        borderSubtle: "rgb(var(--color-borderSubtle))",
+        borderSubtleHover: "rgb(var(--color-borderSubtleHover))",
+        borderExtraSubtle: "rgb(var(--color-borderExtraSubtle))",
+
+        // Legacy border aliases (backwards compatible)
         borderNeutral: "rgb(var(--color-borderNeutral))",
         borderNeutralHover: "rgb(var(--color-borderNeutralHover))",
         borderNeutralSubtle: "rgb(var(--color-borderNeutralSubtle))",
+
+        // Systematic surface tokens - Elevation hierarchy
         surface: "rgb(var(--color-surface))",
-        "surface-subtle": "rgb(var(--color-neutralBgSubtle))",
+        surfaceSubtle: "rgb(var(--color-surfaceSubtle))",
         canvas: "rgb(var(--color-canvas))",
-        greyCold400: "rgb(var(--color-greyCold400))",
+
+        // Legacy surface aliases (backwards compatible)
+        "surface-subtle": "rgb(var(--color-neutralBgSubtle))",
         neutralBgSubtle: "rgb(var(--color-neutralBgSubtle))",
+        greyCold400: "rgb(var(--color-greyCold400))",
 
         // Status/Feedback colors - For forms, validation, alerts
         "success-text": "rgb(var(--color-success-text))",
@@ -119,10 +132,13 @@ module.exports = {
       backgroundColor: {
         "primary-light": "#f9e8ee",
 
-        // Distanz background colors
+        // Systematic surface tokens
         surface: "rgb(var(--color-surface))",
-        "surface-subtle": "rgb(var(--color-neutralBgSubtle))",
+        surfaceSubtle: "rgb(var(--color-surfaceSubtle))",
         canvas: "rgb(var(--color-canvas))",
+
+        // Legacy aliases (backwards compatible)
+        "surface-subtle": "rgb(var(--color-neutralBgSubtle))",
         neutralBgSubtle: "rgb(var(--color-neutralBgSubtle))",
       },
       keyframes: {

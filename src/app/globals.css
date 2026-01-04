@@ -180,19 +180,39 @@
     --color-textAccentSubtle:
       238, 182, 205; /* Electric Pink 90 - subtle accent */
 
-    /* Border colors - Light mode uses very light greys for subtle UI */
-    --color-borderNeutral:
-      229, 229, 229; /* Asphalt 90 (L=90%) - default borders (very subtle) */
-    --color-borderNeutralHover:
-      204, 204, 204; /* Asphalt 80 (L=80%) - hover borders */
-    --color-borderNeutralSubtle:
-      242, 242, 242; /* Asphalt 95 (L=95%) - subtle borders (barely visible) */
+    /* Border colors - Systematic two-tier approach */
+    /* DEFAULT: Structural borders for clear visual hierarchy */
+    --color-borderDefault:
+      179, 179, 179; /* Asphalt 70 (L=70%) - page wrappers, sidebars, section dividers */
+    --color-borderDefaultHover:
+      153, 153, 153; /* Asphalt 60 (L=60%) - hover state */
 
-    /* Background colors - Light mode uses very light greys */
-    --color-surface: 255, 255, 255; /* Pure white - primary surface */
+    /* SUBTLE: Nested content and light separation */
+    --color-borderSubtle:
+      229, 229, 229; /* Asphalt 90 (L=90%) - cards, TOC, nested elements */
+    --color-borderSubtleHover:
+      204, 204, 204; /* Asphalt 80 (L=80%) - hover state */
+
+    /* EXTRA SUBTLE: Barely visible dividers */
+    --color-borderExtraSubtle:
+      242, 242, 242; /* Asphalt 95 (L=95%) - internal dividers */
+
+    /* Legacy aliases - map old tokens to new system */
+    --color-borderNeutral: var(
+      --color-borderDefault
+    ); /* Default to structural borders */
+    --color-borderNeutralHover: var(--color-borderDefaultHover);
+    --color-borderNeutralSubtle: var(--color-borderSubtle);
+
+    /* Background colors - Systematic surface elevation */
+    --color-surface:
+      255, 255, 255; /* White - primary elevated surfaces (cards, modals) */
+    --color-surfaceSubtle:
+      247, 247, 247; /* Near Asphalt 95 (L=97%) - subtle elevation (TOC, sidebars) */
     --color-canvas: 242, 242, 242; /* Asphalt 95 (L=95%) - page background */
-    --color-neutralBgSubtle:
-      247, 247, 247; /* Near Asphalt 95 (L=97%) - subtle backgrounds (TOC, cards) */
+
+    /* Legacy aliases */
+    --color-neutralBgSubtle: var(--color-surfaceSubtle);
     --color-greyCold400: 140, 145, 156; /* Legacy - kept for compatibility */
 
     /* Status/Feedback colors - For forms, validation, alerts */
@@ -229,19 +249,37 @@
     --color-textSubtler: 128, 128, 128; /* Asphalt 50 (L=50%) - muted text */
     --color-textInverted: 13, 13, 13; /* Asphalt 5 (L=5%) - inverted text */
 
-    /* Border colors - Dark mode uses darker greys */
-    --color-borderNeutral:
-      51, 51, 51; /* Asphalt 20 (L=20%) - default borders */
-    --color-borderNeutralHover:
-      77, 77, 77; /* Asphalt 30 (L=30%) - hover borders */
-    --color-borderNeutralSubtle:
-      51, 51, 51; /* Asphalt 20 (L=20%) - subtle borders */
+    /* Border colors - Systematic two-tier approach (inverted from light mode) */
+    /* DEFAULT: Structural borders */
+    --color-borderDefault:
+      77, 77, 77; /* Asphalt 30 (L=30%) - page wrappers, sidebars, section dividers */
+    --color-borderDefaultHover:
+      102, 102, 102; /* Asphalt 40 (L=40%) - hover state */
 
-    /* Background colors - Dark mode uses very dark greys */
-    --color-surface: 26, 26, 26; /* Asphalt 10 (L=10%) - elevated surfaces */
+    /* SUBTLE: Nested content */
+    --color-borderSubtle:
+      51, 51, 51; /* Asphalt 20 (L=20%) - cards, TOC, nested elements */
+    --color-borderSubtleHover:
+      77, 77, 77; /* Asphalt 30 (L=30%) - hover state */
+
+    /* EXTRA SUBTLE: Barely visible */
+    --color-borderExtraSubtle:
+      26, 26, 26; /* Asphalt 10 (L=10%) - internal dividers */
+
+    /* Legacy aliases */
+    --color-borderNeutral: var(--color-borderDefault);
+    --color-borderNeutralHover: var(--color-borderDefaultHover);
+    --color-borderNeutralSubtle: var(--color-borderSubtle);
+
+    /* Background colors - Systematic surface elevation (inverted) */
+    --color-surface:
+      26, 26, 26; /* Asphalt 10 (L=10%) - primary elevated surfaces */
+    --color-surfaceSubtle:
+      19, 19, 19; /* Between Asphalt 5-10 - subtle elevation */
     --color-canvas: 13, 13, 13; /* Asphalt 5 (L=5%) - page background */
-    --color-neutralBgSubtle:
-      26, 26, 26; /* Asphalt 10 (L=10%) - subtle backgrounds */
+
+    /* Legacy aliases */
+    --color-neutralBgSubtle: var(--color-surfaceSubtle);
   }
 
   /* Distanz reset (Distanz design system) */

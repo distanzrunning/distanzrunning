@@ -391,10 +391,129 @@ export default function ColourPalettes() {
           Greyscale
         </h2>
         <p className="text-base text-textSubtle mb-6 max-w-3xl">
-          Complete systematic greyscale covering all UI needs—15 shades from
-          near-black to pure white, providing precise tonal control for both
-          light and dark modes.
+          10-shade systematic greyscale with perfect 10% lightness distribution.
+          Optimized based on actual component usage analysis (1,092
+          occurrences). Named by HSL lightness values for predictable,
+          systematic scaling.
         </p>
+
+        {/* Semantic Token Usage Guide */}
+        <div className="mb-8 p-6 bg-surfaceSubtle border border-borderSubtle rounded-lg">
+          <h3 className="font-serif text-[20px] font-medium mb-4 text-textDefault">
+            Semantic Token System
+          </h3>
+          <p className="text-sm text-textSubtle mb-4">
+            Rather than using raw Asphalt shades directly, use semantic tokens
+            that describe{" "}
+            <span className="font-semibold text-textDefault">
+              intent and context
+            </span>
+            . This creates a two-tier system with clear usage rules:
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <h4 className="text-sm font-semibold text-textDefault mb-2">
+                🏗️ Structural (Default)
+              </h4>
+              <div className="text-xs text-textSubtle space-y-1">
+                <p>
+                  <code className="px-1.5 py-0.5 bg-surface rounded text-xs font-mono">
+                    borderDefault
+                  </code>{" "}
+                  — Asphalt 70 (L=70%)
+                </p>
+                <p className="ml-6 text-textSubtler">
+                  Page wrappers, sidebars, major section dividers
+                </p>
+                <p className="mt-2">
+                  <code className="px-1.5 py-0.5 bg-surface rounded text-xs font-mono">
+                    borderDefaultHover
+                  </code>{" "}
+                  — Asphalt 60
+                </p>
+                <p className="ml-6 text-textSubtler">
+                  Hover state for default borders
+                </p>
+              </div>
+            </div>
+
+            <div>
+              <h4 className="text-sm font-semibold text-textDefault mb-2">
+                📄 Nested (Subtle)
+              </h4>
+              <div className="text-xs text-textSubtle space-y-1">
+                <p>
+                  <code className="px-1.5 py-0.5 bg-surface rounded text-xs font-mono">
+                    borderSubtle
+                  </code>{" "}
+                  — Asphalt 90 (L=90%)
+                </p>
+                <p className="ml-6 text-textSubtler">
+                  Cards, TOC, nested elements within sections
+                </p>
+                <p className="mt-2">
+                  <code className="px-1.5 py-0.5 bg-surface rounded text-xs font-mono">
+                    borderSubtleHover
+                  </code>{" "}
+                  — Asphalt 80
+                </p>
+                <p className="ml-6 text-textSubtler">
+                  Hover state for subtle borders
+                </p>
+              </div>
+            </div>
+
+            <div>
+              <h4 className="text-sm font-semibold text-textDefault mb-2">
+                🎨 Surfaces
+              </h4>
+              <div className="text-xs text-textSubtle space-y-1">
+                <p>
+                  <code className="px-1.5 py-0.5 bg-surface rounded text-xs font-mono">
+                    surface
+                  </code>{" "}
+                  — White / Asphalt 10
+                </p>
+                <p className="ml-6 text-textSubtler">
+                  Primary elevated surfaces (cards, modals)
+                </p>
+                <p className="mt-2">
+                  <code className="px-1.5 py-0.5 bg-surface rounded text-xs font-mono">
+                    surfaceSubtle
+                  </code>{" "}
+                  — Asphalt 95 (L=97%)
+                </p>
+                <p className="ml-6 text-textSubtler">
+                  Subtle elevation (TOC, sidebars)
+                </p>
+                <p className="mt-2">
+                  <code className="px-1.5 py-0.5 bg-surface rounded text-xs font-mono">
+                    canvas
+                  </code>{" "}
+                  — Asphalt 95 / Asphalt 5
+                </p>
+                <p className="ml-6 text-textSubtler">Page background</p>
+              </div>
+            </div>
+
+            <div>
+              <h4 className="text-sm font-semibold text-textDefault mb-2">
+                💡 Usage Example
+              </h4>
+              <div className="text-xs font-mono bg-surface p-3 rounded border border-borderExtraSubtle">
+                <div className="text-textSubtle">
+                  {`// Structural separation`}
+                </div>
+                <div className="text-textDefault">{`border-borderDefault`}</div>
+                <div className="text-textSubtle mt-2">{`// Nested card`}</div>
+                <div className="text-textDefault">{`border-borderSubtle`}</div>
+                <div className="text-textSubtle mt-2">{`// Backgrounds`}</div>
+                <div className="text-textDefault">{`bg-surfaceSubtle`}</div>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <ColorSwatchGrid
           swatches={[
