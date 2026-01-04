@@ -1,6 +1,6 @@
 'use client';
 
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import DesignSystemTopNav from '../../components/DesignSystemTopNav';
 import DesignSystemSidebar from '../../components/DesignSystemSidebar';
 import PlaceholderContent from '../../components/PlaceholderContent';
@@ -11,19 +11,20 @@ import ContentWithTOC from '../../components/ContentWithTOC';
 
 export default function DesignSystemSubsectionPage() {
   const params = useParams();
+  const router = useRouter();
   const section = params.section as string;
   const subsection = params.subsection as string;
 
   const handleSectionChange = (newSection: string | null) => {
     if (newSection) {
-      window.location.href = `/design-system/${newSection}/overview`;
+      router.push(`/design-system/${newSection}/overview`);
     } else {
-      window.location.href = '/design-system';
+      router.push('/design-system');
     }
   };
 
   const handleSubsectionChange = (newSubsection: string) => {
-    window.location.href = `/design-system/${section}/${newSubsection}`;
+    router.push(`/design-system/${section}/${newSubsection}`);
   };
 
   const renderContent = () => {
