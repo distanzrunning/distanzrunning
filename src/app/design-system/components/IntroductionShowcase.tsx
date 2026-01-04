@@ -17,24 +17,25 @@ export default function IntroductionShowcase({ onSectionChange }: IntroductionSh
           Stride Design System
         </h1>
         <p className="text-lg text-textSubtle max-w-3xl mb-8">
-          The visual language and interface components that define the experience of Distanz Running's digital products.
+          The visual language and interface components that define Distanz Running's brand and digital experience.
         </p>
 
         {/* Divider */}
         <div className="border-t border-borderNeutral mb-8"></div>
 
         {/* Section Links */}
-        <div className="flex flex-col gap-3">
+        <ul className="flex flex-col gap-3 list-disc pl-6">
           {sections.map((section) => (
-            <button
-              key={section.id}
-              onClick={() => onSectionChange(section.id)}
-              className="text-left text-lg hover:text-electric-pink transition-colors underline"
-            >
-              {section.label}
-            </button>
+            <li key={section.id}>
+              <button
+                onClick={() => onSectionChange(section.id)}
+                className="text-left text-lg hover:text-electric-pink transition-colors underline"
+              >
+                {section.label}
+              </button>
+            </li>
           ))}
-        </div>
+        </ul>
       </div>
     </div>
   );
