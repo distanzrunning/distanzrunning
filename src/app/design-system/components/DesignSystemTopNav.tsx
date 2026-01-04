@@ -11,7 +11,7 @@ export default function DesignSystemTopNav({ activeSection, onSectionChange }: D
   const sections = ['foundations', 'components', 'patterns'];
 
   return (
-    <nav className="sticky top-0 z-40 bg-white dark:bg-[#0c0c0d] border-b border-borderNeutral">
+    <nav className="sticky top-12 z-40 bg-white dark:bg-[#0c0c0d] border-b border-borderNeutral">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center gap-6 h-16">
           {/* Logo */}
