@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, Glasses, Scale, SwatchBook, LayoutGrid, Ruler, Type, LucideIcon } from 'lucide-react';
 
 interface SubSection {
   id: string;
@@ -11,6 +11,7 @@ interface SubSection {
 interface SidebarSection {
   id: string;
   label: string;
+  icon?: LucideIcon;
   subsections?: SubSection[];
 }
 
@@ -21,10 +22,11 @@ interface DesignSystemSidebarProps {
 }
 
 const foundationsSections: SidebarSection[] = [
-  { id: 'overview', label: 'Overview' },
+  { id: 'overview', label: 'Overview', icon: Glasses },
   {
     id: 'principles',
     label: 'Principles',
+    icon: Scale,
     subsections: [
       { id: 'design-principles', label: 'Design principles' },
       { id: 'ux-principles', label: 'UX principles' },
@@ -33,6 +35,7 @@ const foundationsSections: SidebarSection[] = [
   {
     id: 'colour',
     label: 'Colour',
+    icon: SwatchBook,
     subsections: [
       { id: 'palettes', label: 'Palettes' },
       { id: 'collections', label: 'Collections' },
@@ -41,15 +44,17 @@ const foundationsSections: SidebarSection[] = [
   {
     id: 'grid',
     label: 'Grid',
+    icon: LayoutGrid,
     subsections: [
       { id: 'grid-spacing', label: 'Grid Spacing' },
       { id: 'grid-layout', label: 'Grid Layout' },
     ],
   },
-  { id: 'rules', label: 'Rules' },
+  { id: 'rules', label: 'Rules', icon: Ruler },
   {
     id: 'typography',
     label: 'Typography',
+    icon: Type,
     subsections: [
       { id: 'typefaces', label: 'Typefaces' },
       { id: 'modular-scale', label: 'Modular scale' },
@@ -240,7 +245,15 @@ export default function DesignSystemSidebar({ section, activeSubsection, onSubse
                     onClick={() => toggleSection(item.id)}
                     className="w-full text-left text-base py-2 px-3 rounded-md transition-colors text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-50 dark:hover:bg-neutral-800/50 flex items-center justify-between"
                   >
-                    <span>{item.label}</span>
+                    <span className="flex items-center gap-2">
+                      {item.icon && (
+                        <item.icon
+                          className="w-4 h-4"
+                          strokeWidth={item.subsections.some(sub => sub.id === activeSubsection) ? 2.5 : 1.5}
+                        />
+                      )}
+                      {item.label}
+                    </span>
                     <ChevronDown
                       className={`w-4 h-4 transition-transform ${
                         expandedSections.includes(item.id) ? 'rotate-180' : ''
@@ -274,7 +287,7 @@ export default function DesignSystemSidebar({ section, activeSubsection, onSubse
                 <button
                   onClick={() => handleClick(item.id)}
                   className={`
-                    w-full text-left text-base py-2 px-3 rounded-md transition-colors
+                    w-full text-left text-base py-2 px-3 rounded-md transition-colors flex items-center gap-2
                     ${
                       activeSubsection === item.id
                         ? 'bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white font-medium'
@@ -282,6 +295,12 @@ export default function DesignSystemSidebar({ section, activeSubsection, onSubse
                     }
                   `}
                 >
+                  {item.icon && (
+                    <item.icon
+                      className="w-4 h-4"
+                      strokeWidth={activeSubsection === item.id ? 2.5 : 1.5}
+                    />
+                  )}
                   {item.label}
                 </button>
               )}
