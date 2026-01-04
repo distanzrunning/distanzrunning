@@ -10,6 +10,33 @@ export default function ColourPalettes() {
         <h1 className="font-serif text-[40px] leading-[1.15] font-medium mb-4">
           Palettes
         </h1>
+        <p className="text-base text-textSubtle max-w-3xl">
+          Our color palettes are theme-agnostic—each color maintains the same
+          hex value in both light and dark modes. Theme switching is handled
+          through semantic tokens that reference these base colors appropriately
+          for each context.
+        </p>
+      </div>
+
+      {/* Dark Mode Note */}
+      <div className="bg-canvas border-l-4 border-electric-pink p-6">
+        <h3 className="font-sans font-semibold text-sm uppercase tracking-wide text-textDefault mb-2">
+          Dark Mode
+        </h3>
+        <p className="text-sm text-textSubtle leading-relaxed">
+          Use the dark mode toggle in the top-right corner to see how the
+          interface adapts. The raw color values shown below remain
+          constant—what changes are the <strong>semantic tokens</strong> (like{" "}
+          <code className="px-1.5 py-0.5 bg-neutralBgSubtle rounded text-xs font-mono">
+            --color-textDefault
+          </code>
+          ) that swap between light and dark variants of our Greyscale palette.
+          For example,{" "}
+          <code className="px-1.5 py-0.5 bg-neutralBgSubtle rounded text-xs font-mono">
+            textDefault
+          </code>{" "}
+          uses Asphalt 5 in light mode but Asphalt 95 in dark mode.
+        </p>
       </div>
 
       <hr className="border-t-4 border-textDefault" />
