@@ -95,18 +95,20 @@ export default function DesignSystemPage() {
         onSectionChange={handleSectionChange}
       />
 
-      <div className="flex min-h-screen">
+      <div className="grid grid-cols-1 lg:grid-cols-12 min-h-screen">
         {/* Conditional Sidebar - only show when a section is active */}
         {activeSection && (
-          <DesignSystemSidebar
-            section={activeSection}
-            activeSubsection={activeSubsection}
-            onSubsectionChange={handleSubsectionChange}
-          />
+          <div className="hidden lg:block lg:col-span-2">
+            <DesignSystemSidebar
+              section={activeSection}
+              activeSubsection={activeSubsection}
+              onSubsectionChange={handleSubsectionChange}
+            />
+          </div>
         )}
 
         {/* Main Content Area */}
-        <div className="flex-1">
+        <div className={activeSection ? "col-span-1 lg:col-span-10" : "col-span-1 lg:col-span-12"}>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
             {renderContent()}
           </div>

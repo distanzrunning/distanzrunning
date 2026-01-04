@@ -11,14 +11,14 @@ interface ContentWithTOCProps {
 
 export default function ContentWithTOC({ children, tocTitle, tocItems }: ContentWithTOCProps) {
   return (
-    <div className="grid grid-cols-12 gap-8">
+    <div className="grid grid-cols-1 lg:grid-cols-9 gap-8">
       {/* Main Content */}
-      <article className="col-span-12 lg:col-span-9">
+      <article className="col-span-1 lg:col-span-7">
         {children}
       </article>
 
       {/* Table of Contents - Desktop Only */}
-      <aside className="hidden lg:block col-span-3">
+      <aside className="hidden lg:block lg:col-span-2">
         <div className="sticky top-40">
           <div className="bg-surface-subtle rounded-lg p-6 border border-borderNeutral">
             <h4 className="text-sm font-medium text-textDefault mb-4">Contents</h4>
