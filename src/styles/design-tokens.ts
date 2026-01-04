@@ -96,16 +96,20 @@ export const colors = {
   },
 
   // Canvas - Subtle background colors
-  // 2 colors with 3 variations each
+  // 2 colors with 3 variations each for light mode, 2 colors for dark mode
   canvas: {
-    // Warm canvas (beige/cream tint)
+    // Light mode - Warm canvas (beige/cream tint)
     warm85: "#E8E6E0",
     warm90: "#F0EEE8",
     warm95: "#F8F7F4",
-    // Cool canvas (blue/grey tint)
+    // Light mode - Cool canvas (blue/grey tint)
     cool85: "#E0E6E8",
     cool90: "#E8EEF0",
     cool95: "#F4F7F8",
+    // Dark mode - Warm canvas (subtle warm elevation)
+    darkWarm: "#1A1816",
+    // Dark mode - Cool canvas (subtle cool elevation)
+    darkCool: "#16181A",
   },
 
   // Semantic Colors - Light Mode

@@ -19,7 +19,7 @@ export default function ColourPalettes() {
       </div>
 
       {/* Dark Mode Note */}
-      <div className="bg-canvas border-l-4 border-electric-pink p-6">
+      <div className="bg-canvas dark:bg-[#1A1816] border-l-4 border-electric-pink p-6">
         <h3 className="font-sans font-semibold text-sm uppercase tracking-wide text-textDefault mb-2">
           Dark Mode
         </h3>
@@ -482,7 +482,9 @@ export default function ColourPalettes() {
         </h2>
         <p className="text-base text-textSubtle mb-6 max-w-3xl">
           Subtle tinted backgrounds for layered sections and containers—warm
-          tones for inviting spaces, cool tones for technical content.
+          tones for inviting spaces, cool tones for technical content. Light
+          mode uses three tints per color; dark mode uses single elevated
+          surfaces.
         </p>
 
         <ColorSwatchGrid
@@ -493,6 +495,8 @@ export default function ColourPalettes() {
             { name: "Cool 85", hex: "#E0E6E8", textColor: "dark" },
             { name: "Cool 90", hex: "#E8EEF0", textColor: "dark" },
             { name: "Cool 95", hex: "#F4F7F8", textColor: "dark" },
+            { name: "Dark Warm", hex: "#1A1816", textColor: "light" },
+            { name: "Dark Cool", hex: "#16181A", textColor: "light" },
           ]}
         />
 
@@ -539,6 +543,20 @@ export default function ColourPalettes() {
               rgb: "244, 247, 248",
               hsl: "195°, 25%, 95%",
               token: "--color-canvas-cool-95",
+            },
+            {
+              name: "Dark Warm",
+              hex: "#1A1816",
+              rgb: "26, 24, 22",
+              hsl: "30°, 8%, 9%",
+              token: "--color-canvas-dark-warm",
+            },
+            {
+              name: "Dark Cool",
+              hex: "#16181A",
+              rgb: "22, 24, 26",
+              hsl: "210°, 8%, 9%",
+              token: "--color-canvas-dark-cool",
             },
           ]}
         />
