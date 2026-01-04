@@ -1866,21 +1866,15 @@
 /* Borders appear at tablet size and above */
 @media (min-width: 768px) {
   .main-bordered {
-    border-left: 1px solid rgb(var(--color-borderNeutral));
-    border-right: 1px solid rgb(var(--color-borderNeutral));
+    border-left: 1px solid rgb(var(--color-borderSubtle));
+    border-right: 1px solid rgb(var(--color-borderSubtle));
   }
-}
-
-/* Dark mode support for borders */
-.dark .main-bordered {
-  border-left-color: rgb(var(--color-borderNeutral));
-  border-right-color: rgb(var(--color-borderNeutral));
 }
 
 /* Utility class for vertical separator borders only (no width constraint) */
 .v-sep {
-  border-left: 1px solid rgb(var(--color-borderNeutral));
-  border-right: 1px solid rgb(var(--color-borderNeutral));
+  border-left: 1px solid rgb(var(--color-borderSubtle));
+  border-right: 1px solid rgb(var(--color-borderSubtle));
 }
 
 @media (max-width: 767px) {
@@ -1888,11 +1882,6 @@
     border-left: none;
     border-right: none;
   }
-}
-
-.dark .v-sep {
-  border-left-color: rgb(var(--color-borderNeutral));
-  border-right-color: rgb(var(--color-borderNeutral));
 }
 
 /* Navbar border that sits above mega menu */
@@ -1903,11 +1892,7 @@
   left: 0;
   right: 0;
   height: 1px;
-  background-color: rgb(229, 229, 229); /* neutral-200 */
+  background-color: rgb(var(--color-borderSubtle));
   z-index: 70;
   pointer-events: none;
-}
-
-.dark .navbar-border-overlay::after {
-  background-color: rgb(64, 64, 64); /* neutral-700 */
 }
