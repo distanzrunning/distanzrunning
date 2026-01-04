@@ -16,9 +16,12 @@ export default function IntroductionShowcase({ onSectionChange }: IntroductionSh
         <h1 className="font-serif text-[52px] leading-[1.1] font-medium mb-6">
           Stride Design System
         </h1>
-        <p className="text-lg text-textSubtle max-w-3xl mb-12">
+        <p className="text-lg text-textSubtle max-w-3xl mb-8">
           The visual language and interface components that define the experience of Distanz Running's digital products.
         </p>
+
+        {/* Divider */}
+        <div className="border-t border-borderNeutral mb-8"></div>
 
         {/* Section Links */}
         <div className="flex flex-col gap-3">
