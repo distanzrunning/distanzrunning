@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { ChevronDown, Glasses, Scale, SwatchBook, LayoutGrid, Ruler, Type, LucideIcon } from 'lucide-react';
+import { ChevronDown, Glasses, Scale, SwatchBook, LayoutGrid, RulerDimensionLine, Type, LucideIcon } from 'lucide-react';
 
 interface SubSection {
   id: string;
@@ -13,6 +13,7 @@ interface SidebarSection {
   label: string;
   icon?: LucideIcon;
   subsections?: SubSection[];
+  showSeparator?: boolean;
 }
 
 interface DesignSystemSidebarProps {
@@ -20,9 +21,6 @@ interface DesignSystemSidebarProps {
   activeSubsection: string;
   onSubsectionChange: (subsection: string) => void;
 }
-
-// Icons that should be filled when active (inner details remain visible)
-const fillableIcons = [SwatchBook, Ruler];
 
 const foundationsSections: SidebarSection[] = [
   { id: 'overview', label: 'Overview', icon: Glasses },
@@ -34,6 +32,7 @@ const foundationsSections: SidebarSection[] = [
       { id: 'design-principles', label: 'Design principles' },
       { id: 'ux-principles', label: 'UX principles' },
     ],
+    showSeparator: true,
   },
   {
     id: 'colour',
@@ -53,7 +52,7 @@ const foundationsSections: SidebarSection[] = [
       { id: 'grid-layout', label: 'Grid Layout' },
     ],
   },
-  { id: 'rules', label: 'Rules', icon: Ruler },
+  { id: 'rules', label: 'Rules', icon: RulerDimensionLine },
   {
     id: 'typography',
     label: 'Typography',
@@ -230,9 +229,9 @@ export default function DesignSystemSidebar({ section, activeSubsection, onSubse
     if (subsections && subsections.length > 0) {
       onSubsectionChange(subsections[0].id);
     }
-    // Toggle the expanded state
+    // Close other sections and toggle this one
     setExpandedSections(prev =>
-      prev.includes(id) ? prev.filter(s => s !== id) : [...prev, id]
+      prev.includes(id) ? [] : [id]
     );
   };
 
@@ -258,11 +257,6 @@ export default function DesignSystemSidebar({ section, activeSubsection, onSubse
                         <item.icon
                           className="w-4 h-4"
                           strokeWidth={item.subsections.some(sub => sub.id === activeSubsection) ? 2.5 : 1.5}
-                          fill={
-                            item.subsections.some(sub => sub.id === activeSubsection) && fillableIcons.includes(item.icon!)
-                              ? 'currentColor'
-                              : 'none'
-                          }
                         />
                       )}
                       {item.label}
@@ -294,29 +288,36 @@ export default function DesignSystemSidebar({ section, activeSubsection, onSubse
                       ))}
                     </ul>
                   )}
+                  {item.showSeparator && (
+                    <div className="my-4 border-t border-borderNeutral" />
+                  )}
                 </div>
               ) : (
                 // Regular section
-                <button
-                  onClick={() => handleClick(item.id)}
-                  className={`
-                    w-full text-left text-base py-2 px-3 rounded-md transition-colors flex items-center gap-2
-                    ${
-                      activeSubsection === item.id
-                        ? 'bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white font-medium'
-                        : 'text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-50 dark:hover:bg-neutral-800/50'
-                    }
-                  `}
-                >
-                  {item.icon && (
-                    <item.icon
-                      className="w-4 h-4"
-                      strokeWidth={activeSubsection === item.id ? 2.5 : 1.5}
-                      fill={activeSubsection === item.id && fillableIcons.includes(item.icon) ? 'currentColor' : 'none'}
-                    />
+                <div>
+                  <button
+                    onClick={() => handleClick(item.id)}
+                    className={`
+                      w-full text-left text-base py-2 px-3 rounded-md transition-colors flex items-center gap-2
+                      ${
+                        activeSubsection === item.id
+                          ? 'bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white font-medium'
+                          : 'text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-50 dark:hover:bg-neutral-800/50'
+                      }
+                    `}
+                  >
+                    {item.icon && (
+                      <item.icon
+                        className="w-4 h-4"
+                        strokeWidth={activeSubsection === item.id ? 2.5 : 1.5}
+                      />
+                    )}
+                    {item.label}
+                  </button>
+                  {item.showSeparator && (
+                    <div className="my-4 border-t border-borderNeutral" />
                   )}
-                  {item.label}
-                </button>
+                </div>
               )}
             </li>
           ))}
