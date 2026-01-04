@@ -180,19 +180,19 @@
     --color-textAccentSubtle:
       238, 182, 205; /* Electric Pink 90 - subtle accent */
 
-    /* Border colors - Light mode uses mid-light greys */
+    /* Border colors - Light mode uses very light greys for subtle UI */
     --color-borderNeutral:
-      179, 179, 179; /* Asphalt 70 (L=70%) - default borders */
+      229, 229, 229; /* Asphalt 90 (L=90%) - default borders (very subtle) */
     --color-borderNeutralHover:
-      153, 153, 153; /* Asphalt 60 (L=60%) - hover borders */
+      204, 204, 204; /* Asphalt 80 (L=80%) - hover borders */
     --color-borderNeutralSubtle:
-      204, 204, 204; /* Asphalt 80 (L=80%) - subtle borders */
+      242, 242, 242; /* Asphalt 95 (L=95%) - subtle borders (barely visible) */
 
     /* Background colors - Light mode uses very light greys */
     --color-surface: 255, 255, 255; /* Pure white - primary surface */
     --color-canvas: 242, 242, 242; /* Asphalt 95 (L=95%) - page background */
     --color-neutralBgSubtle:
-      229, 229, 229; /* Asphalt 90 (L=90%) - subtle backgrounds */
+      247, 247, 247; /* Near Asphalt 95 (L=97%) - subtle backgrounds (TOC, cards) */
     --color-greyCold400: 140, 145, 156; /* Legacy - kept for compatibility */
 
     /* Status/Feedback colors - For forms, validation, alerts */
