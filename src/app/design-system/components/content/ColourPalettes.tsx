@@ -391,8 +391,9 @@ export default function ColourPalettes() {
           Greyscale
         </h2>
         <p className="text-base text-textSubtle mb-6 max-w-3xl">
-          Systematic neutral scale for text, borders, backgrounds, and subtle UI
-          elements—providing tonal range for minimalist interfaces.
+          Complete systematic greyscale covering all UI needs—15 shades from
+          near-black to pure white, providing precise tonal control for both
+          light and dark modes.
         </p>
 
         <ColorSwatchGrid
@@ -400,10 +401,13 @@ export default function ColourPalettes() {
             { name: "Asphalt 5", hex: "#0D0D0D", textColor: "light" },
             { name: "Asphalt 10", hex: "#1A1A1A", textColor: "light" },
             { name: "Asphalt 20", hex: "#333333", textColor: "light" },
-            { name: "Asphalt 35", hex: "#595959", textColor: "light" },
+            { name: "Asphalt 30", hex: "#4D4D4D", textColor: "light" },
+            { name: "Asphalt 40", hex: "#666666", textColor: "light" },
             { name: "Asphalt 50", hex: "#808080", textColor: "light" },
+            { name: "Asphalt 60", hex: "#999999", textColor: "dark" },
             { name: "Asphalt 70", hex: "#B3B3B3", textColor: "dark" },
-            { name: "Asphalt 85", hex: "#D9D9D9", textColor: "dark" },
+            { name: "Asphalt 80", hex: "#CCCCCC", textColor: "dark" },
+            { name: "Asphalt 90", hex: "#E5E5E5", textColor: "dark" },
             { name: "Asphalt 95", hex: "#F2F2F2", textColor: "dark" },
           ]}
         />
@@ -432,11 +436,18 @@ export default function ColourPalettes() {
               token: "--color-asphalt-20",
             },
             {
-              name: "Asphalt 35",
-              hex: "#595959",
-              rgb: "89, 89, 89",
-              hsl: "0°, 0%, 35%",
-              token: "--color-asphalt-35",
+              name: "Asphalt 30",
+              hex: "#4D4D4D",
+              rgb: "77, 77, 77",
+              hsl: "0°, 0%, 30%",
+              token: "--color-asphalt-30",
+            },
+            {
+              name: "Asphalt 40",
+              hex: "#666666",
+              rgb: "102, 102, 102",
+              hsl: "0°, 0%, 40%",
+              token: "--color-asphalt-40",
             },
             {
               name: "Asphalt 50",
@@ -446,6 +457,13 @@ export default function ColourPalettes() {
               token: "--color-asphalt-50",
             },
             {
+              name: "Asphalt 60",
+              hex: "#999999",
+              rgb: "153, 153, 153",
+              hsl: "0°, 0%, 60%",
+              token: "--color-asphalt-60",
+            },
+            {
               name: "Asphalt 70",
               hex: "#B3B3B3",
               rgb: "179, 179, 179",
@@ -453,11 +471,18 @@ export default function ColourPalettes() {
               token: "--color-asphalt-70",
             },
             {
-              name: "Asphalt 85",
-              hex: "#D9D9D9",
-              rgb: "217, 217, 217",
-              hsl: "0°, 0%, 85%",
-              token: "--color-asphalt-85",
+              name: "Asphalt 80",
+              hex: "#CCCCCC",
+              rgb: "204, 204, 204",
+              hsl: "0°, 0%, 80%",
+              token: "--color-asphalt-80",
+            },
+            {
+              name: "Asphalt 90",
+              hex: "#E5E5E5",
+              rgb: "229, 229, 229",
+              hsl: "0°, 0%, 90%",
+              token: "--color-asphalt-90",
             },
             {
               name: "Asphalt 95",
@@ -557,6 +582,183 @@ export default function ColourPalettes() {
               rgb: "22, 24, 26",
               hsl: "210°, 8%, 9%",
               token: "--color-canvas-dark-cool",
+            },
+          ]}
+        />
+      </section>
+
+      <hr className="border-t-4 border-textDefault" />
+
+      {/* Status Section */}
+      <section>
+        <h2
+          id="status"
+          className="font-serif text-[32px] leading-[1.2] font-medium mb-3 scroll-mt-32"
+        >
+          Status
+        </h2>
+        <p className="text-base text-textSubtle mb-6 max-w-3xl">
+          Semantic feedback colors for forms, validation, and alerts. These map
+          category colors to common UI status meanings—success (Volt Green),
+          warning (Signal Orange), error (Track Red), and info (Pace Purple).
+          Each status has text, background, and border variants for flexible
+          usage.
+        </p>
+
+        <ColorSwatchGrid
+          swatches={[
+            { name: "Success", hex: "#008C47", textColor: "light" },
+            { name: "Success BG", hex: "#E6FAEF", textColor: "dark" },
+            { name: "Warning", hex: "#8C2F00", textColor: "light" },
+            { name: "Warning BG", hex: "#FAEBE6", textColor: "dark" },
+            { name: "Error", hex: "#D11B1B", textColor: "light" },
+            { name: "Error BG", hex: "#FAE9E9", textColor: "dark" },
+            { name: "Info", hex: "#5E3FD1", textColor: "light" },
+            { name: "Info BG", hex: "#EDEBFA", textColor: "dark" },
+          ]}
+        />
+
+        <ColorTable
+          colors={[
+            {
+              name: "Success Text",
+              hex: "#008C47",
+              rgb: "0, 140, 71",
+              hsl: "146°, 100%, 55%",
+              token: "--color-success-text",
+            },
+            {
+              name: "Success Text Subtle",
+              hex: "#00733A",
+              rgb: "0, 115, 58",
+              hsl: "146°, 100%, 45%",
+              token: "--color-success-text-subtle",
+            },
+            {
+              name: "Success Background",
+              hex: "#E6FAEF",
+              rgb: "230, 250, 239",
+              hsl: "146°, 100%, 95%",
+              token: "--color-success-bg",
+            },
+            {
+              name: "Success Background Subtle",
+              hex: "#CCF5E0",
+              rgb: "204, 245, 224",
+              hsl: "146°, 100%, 90%",
+              token: "--color-success-bg-subtle",
+            },
+            {
+              name: "Success Border",
+              hex: "#008C47",
+              rgb: "0, 140, 71",
+              hsl: "146°, 100%, 55%",
+              token: "--color-success-border",
+            },
+            {
+              name: "Warning Text",
+              hex: "#8C2F00",
+              rgb: "140, 47, 0",
+              hsl: "14°, 100%, 55%",
+              token: "--color-warning-text",
+            },
+            {
+              name: "Warning Text Subtle",
+              hex: "#732600",
+              rgb: "115, 38, 0",
+              hsl: "14°, 100%, 45%",
+              token: "--color-warning-text-subtle",
+            },
+            {
+              name: "Warning Background",
+              hex: "#FAEBE6",
+              rgb: "250, 235, 230",
+              hsl: "14°, 100%, 95%",
+              token: "--color-warning-bg",
+            },
+            {
+              name: "Warning Background Subtle",
+              hex: "#F5D6CC",
+              rgb: "245, 214, 204",
+              hsl: "14°, 100%, 90%",
+              token: "--color-warning-bg-subtle",
+            },
+            {
+              name: "Warning Border",
+              hex: "#8C2F00",
+              rgb: "140, 47, 0",
+              hsl: "14°, 100%, 55%",
+              token: "--color-warning-border",
+            },
+            {
+              name: "Error Text",
+              hex: "#D11B1B",
+              rgb: "209, 27, 27",
+              hsl: "0°, 79%, 55%",
+              token: "--color-error-text",
+            },
+            {
+              name: "Error Text Subtle",
+              hex: "#B81616",
+              rgb: "184, 22, 22",
+              hsl: "0°, 79%, 45%",
+              token: "--color-error-text-subtle",
+            },
+            {
+              name: "Error Background",
+              hex: "#FAE9E9",
+              rgb: "250, 233, 233",
+              hsl: "0°, 79%, 95%",
+              token: "--color-error-bg",
+            },
+            {
+              name: "Error Background Subtle",
+              hex: "#F5D2D2",
+              rgb: "245, 210, 210",
+              hsl: "0°, 79%, 90%",
+              token: "--color-error-bg-subtle",
+            },
+            {
+              name: "Error Border",
+              hex: "#D11B1B",
+              rgb: "209, 27, 27",
+              hsl: "0°, 79%, 55%",
+              token: "--color-error-border",
+            },
+            {
+              name: "Info Text",
+              hex: "#5E3FD1",
+              rgb: "94, 63, 209",
+              hsl: "262°, 60%, 55%",
+              token: "--color-info-text",
+            },
+            {
+              name: "Info Text Subtle",
+              hex: "#452BB8",
+              rgb: "69, 43, 184",
+              hsl: "262°, 60%, 45%",
+              token: "--color-info-text-subtle",
+            },
+            {
+              name: "Info Background",
+              hex: "#EDEBFA",
+              rgb: "237, 235, 250",
+              hsl: "262°, 60%, 95%",
+              token: "--color-info-bg",
+            },
+            {
+              name: "Info Background Subtle",
+              hex: "#DBD6F5",
+              rgb: "219, 214, 245",
+              hsl: "262°, 60%, 90%",
+              token: "--color-info-bg-subtle",
+            },
+            {
+              name: "Info Border",
+              hex: "#5E3FD1",
+              rgb: "94, 63, 209",
+              hsl: "262°, 60%, 55%",
+              token: "--color-info-border",
             },
           ]}
         />

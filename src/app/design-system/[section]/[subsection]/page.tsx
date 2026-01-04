@@ -99,6 +99,7 @@ export default function DesignSystemSubsectionPage() {
               },
               { id: "greyscale", title: "Greyscale" },
               { id: "canvas", title: "Canvas" },
+              { id: "status", title: "Status" },
             ]}
           >
             <ColourPalettes />
