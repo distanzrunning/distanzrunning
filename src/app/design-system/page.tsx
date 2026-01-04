@@ -5,6 +5,7 @@ import IntroductionShowcase from './components/IntroductionShowcase';
 import DesignSystemTopNav from './components/DesignSystemTopNav';
 import DesignSystemSidebar from './components/DesignSystemSidebar';
 import PlaceholderContent from './components/PlaceholderContent';
+import FoundationsOverview from './components/content/FoundationsOverview';
 
 export default function DesignSystemPage() {
   const [activeSection, setActiveSection] = useState<string | null>(null);
@@ -25,6 +26,11 @@ export default function DesignSystemPage() {
     // Show introduction if no section is selected
     if (!activeSection) {
       return <IntroductionShowcase onSectionChange={handleSectionChange} />;
+    }
+
+    // Show Foundations Overview
+    if (activeSection === 'foundations' && activeSubsection === 'overview') {
+      return <FoundationsOverview />;
     }
 
     // Format the title based on section and subsection
