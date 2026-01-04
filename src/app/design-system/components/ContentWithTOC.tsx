@@ -62,7 +62,7 @@ export default function ContentWithTOC({ children, tocTitle, tocItems }: Content
                     <li key={item.id} className="relative pl-3 group">
                       <span
                         className={`absolute left-0 top-0 bottom-0 w-[2px] transition-opacity ${
-                          activeId === item.id ? 'bg-accent opacity-100' : 'bg-borderNeutral opacity-0 group-hover:opacity-100'
+                          activeId === item.id ? 'bg-electric-pink opacity-100' : 'bg-borderNeutral opacity-0 group-hover:opacity-100'
                         }`}
                       />
                       <a
