@@ -11,9 +11,10 @@ interface ContentWithTOCProps {
   children: React.ReactNode;
   tocTitle: string;
   tocItems: TOCItem[];
+  mainSectionId?: string; // Optional h2 id
 }
 
-export default function ContentWithTOC({ children, tocTitle, tocItems }: ContentWithTOCProps) {
+export default function ContentWithTOC({ children, tocTitle, tocItems, mainSectionId }: ContentWithTOCProps) {
   const [activeId, setActiveId] = useState<string>('');
   const observerRef = useRef<IntersectionObserver | null>(null);
   const clickedRef = useRef(false);
@@ -62,8 +63,6 @@ export default function ContentWithTOC({ children, tocTitle, tocItems }: Content
     }, 1000);
   };
 
-  const mainSectionId = tocItems[0]?.id.split('-').slice(0, -1).join('-') || 'section';
-
   return (
     <div className="grid grid-cols-1 lg:grid-cols-9 gap-8">
       {/* Main Content */}
@@ -78,25 +77,34 @@ export default function ContentWithTOC({ children, tocTitle, tocItems }: Content
             <h4 className="text-sm font-medium text-textDefault mb-4">Contents</h4>
             <ol className="space-y-3">
               <li>
-                <div className="relative pl-3 group">
-                  <span
-                    className={`absolute left-0 top-0 bottom-0 w-[2px] transition-opacity ${
-                      activeId === mainSectionId ? 'bg-electric-pink opacity-100' : 'bg-borderNeutral opacity-0 group-hover:opacity-100'
-                    }`}
-                  />
-                  <a
-                    href={`#${mainSectionId}`}
-                    onClick={() => handleClick(mainSectionId)}
-                    className={`text-sm transition-colors block ${
-                      activeId === mainSectionId
-                        ? 'text-textDefault'
-                        : 'text-textSubtle hover:text-textDefault'
-                    }`}
-                  >
-                    {tocTitle}
-                  </a>
-                </div>
-                <ol className="mt-2 space-y-2">
+                {mainSectionId && (
+                  <div className="relative pl-3 group">
+                    <span
+                      className={`absolute left-0 top-0 bottom-0 w-[2px] transition-opacity ${
+                        activeId === mainSectionId ? 'bg-electric-pink opacity-100' : 'bg-borderNeutral opacity-0 group-hover:opacity-100'
+                      }`}
+                    />
+                    <a
+                      href={`#${mainSectionId}`}
+                      onClick={() => handleClick(mainSectionId)}
+                      className={`text-sm transition-colors block ${
+                        activeId === mainSectionId
+                          ? 'text-textDefault'
+                          : 'text-textSubtle hover:text-textDefault'
+                      }`}
+                    >
+                      {tocTitle}
+                    </a>
+                  </div>
+                )}
+                {!mainSectionId && (
+                  <div className="pl-3">
+                    <span className="text-sm text-textSubtle block">
+                      {tocTitle}
+                    </span>
+                  </div>
+                )}
+                <ol className={mainSectionId ? "mt-2 space-y-2" : "space-y-2"}>
                   {tocItems.map((item) => (
                     <li key={item.id} className="relative pl-3 group">
                       <span
