@@ -222,7 +222,12 @@ export default function DesignSystemSidebar({ section, activeSubsection, onSubse
 
   const sections = sectionMap[section] || [];
 
-  const toggleSection = (id: string) => {
+  const toggleSection = (id: string, subsections?: SubSection[]) => {
+    // If the section has subsections, open the first one
+    if (subsections && subsections.length > 0) {
+      onSubsectionChange(subsections[0].id);
+    }
+    // Toggle the expanded state
     setExpandedSections(prev =>
       prev.includes(id) ? prev.filter(s => s !== id) : [...prev, id]
     );
@@ -242,7 +247,7 @@ export default function DesignSystemSidebar({ section, activeSubsection, onSubse
                 // Section with subsections
                 <div>
                   <button
-                    onClick={() => toggleSection(item.id)}
+                    onClick={() => toggleSection(item.id, item.subsections)}
                     className="w-full text-left text-base py-2 px-3 rounded-md transition-colors text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-50 dark:hover:bg-neutral-800/50 flex items-center justify-between"
                   >
                     <span className="flex items-center gap-2">
@@ -250,6 +255,7 @@ export default function DesignSystemSidebar({ section, activeSubsection, onSubse
                         <item.icon
                           className="w-4 h-4"
                           strokeWidth={item.subsections.some(sub => sub.id === activeSubsection) ? 2.5 : 1.5}
+                          fill={item.subsections.some(sub => sub.id === activeSubsection) ? 'currentColor' : 'none'}
                         />
                       )}
                       {item.label}
@@ -299,6 +305,7 @@ export default function DesignSystemSidebar({ section, activeSubsection, onSubse
                     <item.icon
                       className="w-4 h-4"
                       strokeWidth={activeSubsection === item.id ? 2.5 : 1.5}
+                      fill={activeSubsection === item.id ? 'currentColor' : 'none'}
                     />
                   )}
                   {item.label}
