@@ -44,7 +44,8 @@ export const colors = {
     100: "#FFFFFF",
   },
 
-  // Pace Purple - Training/Tempo content (HSL: 262°, 60%)
+  // Pace Purple - Primary accent for Training/Tempo content (HSL: 262°, 60%)
+  // 1 color with 6 variations
   pacePurple: {
     20: "#1F1352",
     30: "#2E1C7A",
@@ -54,40 +55,34 @@ export const colors = {
     95: "#EDEBFA",
   },
 
-  // Volt Green - Nutrition/Wellness content (HSL: 146°, 100%)
+  // Volt Green - Secondary accent for Nutrition/Wellness (HSL: 146°, 100%)
+  // 2 colors with 4 variations each
   voltGreen: {
-    20: "#003319",
-    30: "#004D26",
     45: "#00733A",
     55: "#008C47",
     90: "#CCF5E0",
     95: "#E6FAEF",
   },
 
-  // Signal Orange - Gear/Equipment content (HSL: 14°, 100%)
+  // Signal Orange - Secondary accent for Gear/Equipment (HSL: 14°, 100%)
   signalOrange: {
-    20: "#331100",
-    30: "#4D1A00",
     45: "#732600",
     55: "#8C2F00",
     90: "#F5D6CC",
     95: "#FAEBE6",
   },
 
-  // Track Red - Races/Events content (HSL: 0°, 79%)
+  // Track Red - Tertiary accent for Races/Events (HSL: 0°, 79%)
+  // 2 colors with 4 variations each
   trackRed: {
-    20: "#520A0A",
-    30: "#7A0F0F",
     45: "#B81616",
     55: "#D11B1B",
     90: "#F5D2D2",
     95: "#FAE9E9",
   },
 
-  // Trail Brown - Routes/Exploration content (HSL: 25°, 59%)
+  // Trail Brown - Tertiary accent for Routes/Exploration (HSL: 25°, 59%)
   trailBrown: {
-    20: "#331A0D",
-    30: "#4D2713",
     45: "#73391D",
     55: "#8C4623",
     90: "#F5E6D9",
@@ -95,15 +90,16 @@ export const colors = {
   },
 
   // Canvas - Subtle background colors
+  // 2 colors with 3 variations each
   canvas: {
-    // Warm off-whites
-    warmLight: "#FAFAF8",
-    warmMedium: "#F5F5F3",
-    // Cool off-whites
-    coolLight: "#F8F9FA",
-    coolMedium: "#F3F4F5",
-    // Neutral
-    neutral: "#F7F7F7",
+    // Warm canvas (beige/cream tint)
+    warm85: "#E8E6E0",
+    warm90: "#F0EEE8",
+    warm95: "#F8F7F4",
+    // Cool canvas (blue/grey tint)
+    cool85: "#E0E6E8",
+    cool90: "#E8EEF0",
+    cool95: "#F4F7F8",
   },
 
   // Semantic Colors - Light Mode

@@ -89,7 +89,15 @@ export default function DesignSystemSubsectionPage() {
             mainSectionId="palettes"
             tocItems={[
               { id: "brand", title: "Brand" },
-              { id: "accent", title: "Accent" },
+              {
+                id: "accent",
+                title: "Accent",
+                children: [
+                  { id: "accent-primary", title: "Primary" },
+                  { id: "accent-secondary", title: "Secondary" },
+                  { id: "accent-tertiary", title: "Tertiary" },
+                ],
+              },
               { id: "greyscale", title: "Greyscale" },
               { id: "canvas", title: "Canvas" },
             ]}
