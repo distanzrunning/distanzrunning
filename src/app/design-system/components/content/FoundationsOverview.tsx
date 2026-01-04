@@ -7,7 +7,7 @@ export default function FoundationsOverview() {
           Overview
         </h1>
         <p className="text-lg text-textSubtle max-w-3xl">
-          The foundational elements of Distanz Running's visual design language. By combining distinctive visual characteristics with purpose-driven semantics, a cohesive language emerges that embodies the spirit of endurance, precision, and community.
+          The foundational elements of Distanz Running's visual design language. By combining distinctive visual characteristics with purpose-driven semantics, a cohesive language emerges that embodies the spirit of the brand.
         </p>
       </div>
     </div>
