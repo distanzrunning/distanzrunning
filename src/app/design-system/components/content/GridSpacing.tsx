@@ -37,13 +37,13 @@ export default function GridSpacing() {
           <svg
             viewBox="0 0 400 140"
             className="w-full max-w-md"
-            style={{ backgroundColor: "rgb(var(--color-canvas))" }}
+            style={{ backgroundColor: "#EEF2F2" }}
           >
             {/* First label/field pair with 12px gap */}
             <text
               x="50"
               y="35"
-              fill="rgb(var(--color-textSubtle))"
+              fill="#5D6B6B"
               fontSize="14"
               fontFamily="var(--font-family-sans)"
             >
@@ -55,14 +55,14 @@ export default function GridSpacing() {
               width="300"
               height="32"
               fill="none"
-              stroke="rgb(var(--color-borderDefault))"
+              stroke="#9BADAD"
               strokeWidth="1"
               rx="4"
             />
             <text
               x="58"
               y="77"
-              fill="rgb(var(--color-textSubtle))"
+              fill="#5D6B6B"
               fontSize="14"
               fontFamily="var(--font-family-sans)"
             >
@@ -75,7 +75,7 @@ export default function GridSpacing() {
               y1="43"
               x2="32"
               y2="55"
-              stroke="rgb(var(--color-textDefault))"
+              stroke="#2D3A3A"
               strokeWidth="1.5"
             />
             <line
@@ -83,7 +83,7 @@ export default function GridSpacing() {
               y1="43"
               x2="36"
               y2="43"
-              stroke="rgb(var(--color-textDefault))"
+              stroke="#2D3A3A"
               strokeWidth="1.5"
             />
             <line
@@ -91,13 +91,13 @@ export default function GridSpacing() {
               y1="55"
               x2="36"
               y2="55"
-              stroke="rgb(var(--color-textDefault))"
+              stroke="#2D3A3A"
               strokeWidth="1.5"
             />
             <text
               x="32"
               y="52"
-              fill="rgb(var(--color-textDefault))"
+              fill="#2D3A3A"
               fontSize="12"
               fontFamily="var(--font-family-sans)"
               textAnchor="end"
@@ -113,13 +113,13 @@ export default function GridSpacing() {
           <svg
             viewBox="0 0 400 100"
             className="w-full max-w-md"
-            style={{ backgroundColor: "rgb(var(--color-canvas))" }}
+            style={{ backgroundColor: "#EEF2F2" }}
           >
             {/* First link with optical spacing */}
             <text
               x="120"
               y="30"
-              fill="#008CB8"
+              fill="#00878F"
               fontSize="14"
               fontFamily="var(--font-family-sans)"
               textDecoration="underline"
@@ -131,7 +131,7 @@ export default function GridSpacing() {
               y1="35"
               x2="100"
               y2="43"
-              stroke="rgb(var(--color-textDefault))"
+              stroke="#2D3A3A"
               strokeWidth="1.5"
             />
             <line
@@ -139,7 +139,7 @@ export default function GridSpacing() {
               y1="35"
               x2="104"
               y2="35"
-              stroke="rgb(var(--color-textDefault))"
+              stroke="#2D3A3A"
               strokeWidth="1.5"
             />
             <line
@@ -147,13 +147,13 @@ export default function GridSpacing() {
               y1="43"
               x2="104"
               y2="43"
-              stroke="rgb(var(--color-textDefault))"
+              stroke="#2D3A3A"
               strokeWidth="1.5"
             />
             <text
               x="100"
               y="42"
-              fill="rgb(var(--color-textDefault))"
+              fill="#2D3A3A"
               fontSize="11"
               fontFamily="var(--font-family-sans)"
               textAnchor="end"
@@ -166,7 +166,7 @@ export default function GridSpacing() {
               y1="26"
               x2="258"
               y2="26"
-              stroke="rgb(var(--color-textDefault))"
+              stroke="#2D3A3A"
               strokeWidth="1.5"
             />
             <line
@@ -174,13 +174,13 @@ export default function GridSpacing() {
               y1="22"
               x2="254"
               y2="30"
-              stroke="rgb(var(--color-textDefault))"
+              stroke="#2D3A3A"
               strokeWidth="1.5"
             />
             <text
               x="262"
               y="30"
-              fill="rgb(var(--color-textDefault))"
+              fill="#2D3A3A"
               fontSize="11"
               fontFamily="var(--font-family-sans)"
             >
@@ -191,7 +191,7 @@ export default function GridSpacing() {
             <text
               x="120"
               y="70"
-              fill="#008CB8"
+              fill="#00878F"
               fontSize="14"
               fontFamily="var(--font-family-sans)"
               textDecoration="underline"
@@ -203,7 +203,7 @@ export default function GridSpacing() {
               y1="75"
               x2="100"
               y2="83"
-              stroke="rgb(var(--color-textDefault))"
+              stroke="#2D3A3A"
               strokeWidth="1.5"
             />
             <line
@@ -211,7 +211,7 @@ export default function GridSpacing() {
               y1="75"
               x2="104"
               y2="75"
-              stroke="rgb(var(--color-textDefault))"
+              stroke="#2D3A3A"
               strokeWidth="1.5"
             />
             <line
@@ -219,13 +219,13 @@ export default function GridSpacing() {
               y1="83"
               x2="104"
               y2="83"
-              stroke="rgb(var(--color-textDefault))"
+              stroke="#2D3A3A"
               strokeWidth="1.5"
             />
             <text
               x="100"
               y="82"
-              fill="rgb(var(--color-textDefault))"
+              fill="#2D3A3A"
               fontSize="11"
               fontFamily="var(--font-family-sans)"
               textAnchor="end"
@@ -238,7 +238,7 @@ export default function GridSpacing() {
               y1="66"
               x2="262"
               y2="66"
-              stroke="rgb(var(--color-textDefault))"
+              stroke="#2D3A3A"
               strokeWidth="1.5"
             />
             <line
@@ -246,13 +246,13 @@ export default function GridSpacing() {
               y1="62"
               x2="256"
               y2="70"
-              stroke="rgb(var(--color-textDefault))"
+              stroke="#2D3A3A"
               strokeWidth="1.5"
             />
             <text
               x="266"
               y="70"
-              fill="rgb(var(--color-textDefault))"
+              fill="#2D3A3A"
               fontSize="11"
               fontFamily="var(--font-family-sans)"
             >
@@ -303,7 +303,7 @@ export default function GridSpacing() {
           layout, providing clear separation between major content areas.
         </p>
 
-        {/* Medium Screen Gutter - 6 columns with 24px gutters (abstract visualization) */}
+        {/* Medium Screen Gutter - 6 columns with 24px gutters */}
         <div className="mb-8">
           <h3 className="text-sm font-semibold mb-4">
             Medium screens (6 columns, 24px gutter)
@@ -311,10 +311,11 @@ export default function GridSpacing() {
           <svg
             viewBox="0 0 700 200"
             className="w-full border border-borderSubtle"
-            style={{ backgroundColor: "rgb(var(--color-canvas))" }}
+            style={{ backgroundColor: "#EEF2F2" }}
           >
-            {/* 6 columns - alternating white (gutter) and grey (column) */}
-            <rect x="0" y="0" width="700" height="200" fill="#E5E5E5" />
+            {/* Background fill with gutter color, then overlay white columns */}
+            <rect x="0" y="0" width="700" height="200" fill="#B8C4C4" />
+            {/* White columns */}
             <rect x="24" y="0" width="90" height="200" fill="white" />
             <rect x="138" y="0" width="90" height="200" fill="white" />
             <rect x="252" y="0" width="90" height="200" fill="white" />
@@ -328,7 +329,7 @@ export default function GridSpacing() {
               y1="170"
               x2="24"
               y2="170"
-              stroke="rgb(var(--color-textDefault))"
+              stroke="#2D3A3A"
               strokeWidth="2"
             />
             <line
@@ -336,7 +337,7 @@ export default function GridSpacing() {
               y1="165"
               x2="0"
               y2="175"
-              stroke="rgb(var(--color-textDefault))"
+              stroke="#2D3A3A"
               strokeWidth="2"
             />
             <line
@@ -344,13 +345,13 @@ export default function GridSpacing() {
               y1="165"
               x2="24"
               y2="175"
-              stroke="rgb(var(--color-textDefault))"
+              stroke="#2D3A3A"
               strokeWidth="2"
             />
             <text
               x="12"
               y="190"
-              fill="rgb(var(--color-textDefault))"
+              fill="#2D3A3A"
               fontSize="14"
               fontFamily="var(--font-family-sans)"
               fontWeight="500"
@@ -360,7 +361,7 @@ export default function GridSpacing() {
             </text>
           </svg>
           <p className="text-sm text-textSubtle mt-4">
-            Grey areas represent columns, white spaces are 24px gutters between
+            White areas represent columns, grey spaces are 24px gutters between
             them.
           </p>
         </div>
@@ -373,10 +374,11 @@ export default function GridSpacing() {
           <svg
             viewBox="0 0 800 200"
             className="w-full border border-borderSubtle"
-            style={{ backgroundColor: "rgb(var(--color-canvas))" }}
+            style={{ backgroundColor: "#EEF2F2" }}
           >
-            {/* 6 columns - wider gutters */}
-            <rect x="0" y="0" width="800" height="200" fill="#E5E5E5" />
+            {/* Background with gutter color */}
+            <rect x="0" y="0" width="800" height="200" fill="#B8C4C4" />
+            {/* White columns */}
             <rect x="32" y="0" width="100" height="200" fill="white" />
             <rect x="164" y="0" width="100" height="200" fill="white" />
             <rect x="296" y="0" width="100" height="200" fill="white" />
@@ -390,7 +392,7 @@ export default function GridSpacing() {
               y1="170"
               x2="32"
               y2="170"
-              stroke="rgb(var(--color-textDefault))"
+              stroke="#2D3A3A"
               strokeWidth="2"
             />
             <line
@@ -398,7 +400,7 @@ export default function GridSpacing() {
               y1="165"
               x2="0"
               y2="175"
-              stroke="rgb(var(--color-textDefault))"
+              stroke="#2D3A3A"
               strokeWidth="2"
             />
             <line
@@ -406,13 +408,13 @@ export default function GridSpacing() {
               y1="165"
               x2="32"
               y2="175"
-              stroke="rgb(var(--color-textDefault))"
+              stroke="#2D3A3A"
               strokeWidth="2"
             />
             <text
               x="16"
               y="190"
-              fill="rgb(var(--color-textDefault))"
+              fill="#2D3A3A"
               fontSize="14"
               fontFamily="var(--font-family-sans)"
               fontWeight="500"
@@ -432,7 +434,7 @@ export default function GridSpacing() {
           <svg
             viewBox="0 0 400 100"
             className="w-full max-w-md"
-            style={{ backgroundColor: "rgb(var(--color-canvas))" }}
+            style={{ backgroundColor: "#EEF2F2" }}
           >
             {/* First button */}
             <rect
@@ -441,14 +443,14 @@ export default function GridSpacing() {
               width="100"
               height="40"
               fill="none"
-              stroke="#008CB8"
+              stroke="#00878F"
               strokeWidth="2"
               rx="4"
             />
             <text
               x="120"
               y="55"
-              fill="#008CB8"
+              fill="#00878F"
               fontSize="14"
               fontFamily="var(--font-family-sans)"
               textAnchor="middle"
@@ -462,7 +464,7 @@ export default function GridSpacing() {
               y1="50"
               x2="70"
               y2="50"
-              stroke="rgb(var(--color-textDefault))"
+              stroke="#2D3A3A"
               strokeWidth="1.5"
             />
             <line
@@ -470,7 +472,7 @@ export default function GridSpacing() {
               y1="46"
               x2="50"
               y2="54"
-              stroke="rgb(var(--color-textDefault))"
+              stroke="#2D3A3A"
               strokeWidth="1.5"
             />
             <line
@@ -478,13 +480,13 @@ export default function GridSpacing() {
               y1="46"
               x2="70"
               y2="54"
-              stroke="rgb(var(--color-textDefault))"
+              stroke="#2D3A3A"
               strokeWidth="1.5"
             />
             <text
               x="60"
               y="45"
-              fill="rgb(var(--color-textDefault))"
+              fill="#2D3A3A"
               fontSize="12"
               fontFamily="var(--font-family-sans)"
               textAnchor="middle"
@@ -499,14 +501,14 @@ export default function GridSpacing() {
               width="100"
               height="40"
               fill="none"
-              stroke="#008CB8"
+              stroke="#00878F"
               strokeWidth="2"
               rx="4"
             />
             <text
               x="284"
               y="55"
-              fill="#008CB8"
+              fill="#00878F"
               fontSize="14"
               fontFamily="var(--font-family-sans)"
               textAnchor="middle"
@@ -520,7 +522,7 @@ export default function GridSpacing() {
               y1="50"
               x2="234"
               y2="50"
-              stroke="rgb(var(--color-textDefault))"
+              stroke="#2D3A3A"
               strokeWidth="1.5"
             />
             <line
@@ -528,7 +530,7 @@ export default function GridSpacing() {
               y1="46"
               x2="170"
               y2="54"
-              stroke="rgb(var(--color-textDefault))"
+              stroke="#2D3A3A"
               strokeWidth="1.5"
             />
             <line
@@ -536,13 +538,13 @@ export default function GridSpacing() {
               y1="46"
               x2="234"
               y2="54"
-              stroke="rgb(var(--color-textDefault))"
+              stroke="#2D3A3A"
               strokeWidth="1.5"
             />
             <text
               x="202"
               y="45"
-              fill="rgb(var(--color-textDefault))"
+              fill="#2D3A3A"
               fontSize="12"
               fontFamily="var(--font-family-sans)"
               textAnchor="middle"
