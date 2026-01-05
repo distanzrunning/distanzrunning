@@ -17,191 +17,299 @@ export default function Collections() {
         </p>
       </div>
 
-      <hr className="border-t-4 border-asphalt-10 mb-12" />
+      <hr className="border-t-4 border-textDefault" />
 
       {/* Road Collection */}
-      <h2 id="road">Road</h2>
-      <hr className="border-t border-borderSubtle mb-6" />
-      <p className="text-base text-textSubtle mb-6">
-        Professional road running content - races, training, and performance.
-      </p>
+      <section>
+        <h2
+          id="road"
+          className="font-serif text-[32px] leading-[1.2] font-medium mb-3 scroll-mt-32"
+        >
+          Road
+        </h2>
+        <p className="text-base text-textSubtle mb-6 max-w-3xl">
+          Professional road running content - races, training, and performance.
+        </p>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mb-12">
-        <div className="aspect-[4/3] rounded-lg overflow-hidden shadow-sm border border-borderSubtle">
-          <div className="w-full h-full bg-[#B81616] flex items-end p-4">
-            <span className="text-xs font-mono text-white">Track Red 45</span>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
+          <div className="flex flex-col items-center">
+            <div
+              className="w-32 h-32 rounded-full flex items-center justify-center"
+              style={{ backgroundColor: "#B81616" }}
+            >
+              <span className="text-sm font-sans text-center px-2 text-white">
+                Track Red 45
+              </span>
+            </div>
+          </div>
+          <div className="flex flex-col items-center">
+            <div
+              className="w-32 h-32 rounded-full flex items-center justify-center"
+              style={{ backgroundColor: "#D11B1B" }}
+            >
+              <span className="text-sm font-sans text-center px-2 text-white">
+                Track Red 55
+              </span>
+            </div>
+          </div>
+          <div className="flex flex-col items-center">
+            <div
+              className="w-32 h-32 rounded-full flex items-center justify-center"
+              style={{ backgroundColor: "#F5D2D2" }}
+            >
+              <span className="text-sm font-sans text-center px-2 text-black">
+                Track Red 90
+              </span>
+            </div>
+          </div>
+          <div className="flex flex-col items-center">
+            <div
+              className="w-32 h-32 rounded-full flex items-center justify-center"
+              style={{ backgroundColor: "#FAE9E9" }}
+            >
+              <span className="text-sm font-sans text-center px-2 text-black">
+                Track Red 95
+              </span>
+            </div>
           </div>
         </div>
-        <div className="aspect-[4/3] rounded-lg overflow-hidden shadow-sm border border-borderSubtle">
-          <div className="w-full h-full bg-[#D11B1B] flex items-end p-4">
-            <span className="text-xs font-mono text-white">Track Red 55</span>
-          </div>
-        </div>
-        <div className="aspect-[4/3] rounded-lg overflow-hidden shadow-sm border border-borderSubtle">
-          <div className="w-full h-full bg-[#F5D2D2] flex items-end p-4">
-            <span className="text-xs font-mono text-asphalt-10">
-              Track Red 90
-            </span>
-          </div>
-        </div>
-        <div className="aspect-[4/3] rounded-lg overflow-hidden shadow-sm border border-borderSubtle">
-          <div className="w-full h-full bg-[#FAE9E9] flex items-end p-4">
-            <span className="text-xs font-mono text-asphalt-10">
-              Track Red 95
-            </span>
-          </div>
-        </div>
-      </div>
+      </section>
 
-      <hr className="border-t-4 border-asphalt-10 mb-12" />
+      <hr className="border-t-4 border-textDefault" />
 
       {/* Track Collection */}
-      <h2 id="track">Track</h2>
-      <hr className="border-t border-borderSubtle mb-6" />
-      <p className="text-base text-textSubtle mb-6">
-        Track and field content - sprint, middle distance, and technical
-        training.
-      </p>
+      <section>
+        <h2
+          id="track"
+          className="font-serif text-[32px] leading-[1.2] font-medium mb-3 scroll-mt-32"
+        >
+          Track
+        </h2>
+        <p className="text-base text-textSubtle mb-6 max-w-3xl">
+          Track and field content - sprint, middle distance, and technical
+          training.
+        </p>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mb-12">
-        <div className="aspect-[4/3] rounded-lg overflow-hidden shadow-sm border border-borderSubtle">
-          <div className="w-full h-full bg-[#452BB8] flex items-end p-4">
-            <span className="text-xs font-mono text-white">Pace Purple 45</span>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
+          <div className="flex flex-col items-center">
+            <div
+              className="w-32 h-32 rounded-full flex items-center justify-center"
+              style={{ backgroundColor: "#452BB8" }}
+            >
+              <span className="text-sm font-sans text-center px-2 text-white">
+                Pace Purple 45
+              </span>
+            </div>
+          </div>
+          <div className="flex flex-col items-center">
+            <div
+              className="w-32 h-32 rounded-full flex items-center justify-center"
+              style={{ backgroundColor: "#5E3FD1" }}
+            >
+              <span className="text-sm font-sans text-center px-2 text-white">
+                Pace Purple 55
+              </span>
+            </div>
+          </div>
+          <div className="flex flex-col items-center">
+            <div
+              className="w-32 h-32 rounded-full flex items-center justify-center"
+              style={{ backgroundColor: "#DBD6F5" }}
+            >
+              <span className="text-sm font-sans text-center px-2 text-black">
+                Pace Purple 90
+              </span>
+            </div>
+          </div>
+          <div className="flex flex-col items-center">
+            <div
+              className="w-32 h-32 rounded-full flex items-center justify-center"
+              style={{ backgroundColor: "#EDEBFA" }}
+            >
+              <span className="text-sm font-sans text-center px-2 text-black">
+                Pace Purple 95
+              </span>
+            </div>
           </div>
         </div>
-        <div className="aspect-[4/3] rounded-lg overflow-hidden shadow-sm border border-borderSubtle">
-          <div className="w-full h-full bg-[#5E3FD1] flex items-end p-4">
-            <span className="text-xs font-mono text-white">Pace Purple 55</span>
-          </div>
-        </div>
-        <div className="aspect-[4/3] rounded-lg overflow-hidden shadow-sm border border-borderSubtle">
-          <div className="w-full h-full bg-[#DBD6F5] flex items-end p-4">
-            <span className="text-xs font-mono text-asphalt-10">
-              Pace Purple 90
-            </span>
-          </div>
-        </div>
-        <div className="aspect-[4/3] rounded-lg overflow-hidden shadow-sm border border-borderSubtle">
-          <div className="w-full h-full bg-[#EDEBFA] flex items-end p-4">
-            <span className="text-xs font-mono text-asphalt-10">
-              Pace Purple 95
-            </span>
-          </div>
-        </div>
-      </div>
+      </section>
 
-      <hr className="border-t-4 border-asphalt-10 mb-12" />
+      <hr className="border-t-4 border-textDefault" />
 
       {/* Trail Collection */}
-      <h2 id="trail">Trail</h2>
-      <hr className="border-t border-borderSubtle mb-6" />
-      <p className="text-base text-textSubtle mb-6">
-        Trail and ultrarunning content - adventure, exploration, and endurance.
-      </p>
+      <section>
+        <h2
+          id="trail"
+          className="font-serif text-[32px] leading-[1.2] font-medium mb-3 scroll-mt-32"
+        >
+          Trail
+        </h2>
+        <p className="text-base text-textSubtle mb-6 max-w-3xl">
+          Trail and ultrarunning content - adventure, exploration, and
+          endurance.
+        </p>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mb-12">
-        <div className="aspect-[4/3] rounded-lg overflow-hidden shadow-sm border border-borderSubtle">
-          <div className="w-full h-full bg-[#73391D] flex items-end p-4">
-            <span className="text-xs font-mono text-white">Trail Brown 45</span>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
+          <div className="flex flex-col items-center">
+            <div
+              className="w-32 h-32 rounded-full flex items-center justify-center"
+              style={{ backgroundColor: "#73391D" }}
+            >
+              <span className="text-sm font-sans text-center px-2 text-white">
+                Trail Brown 45
+              </span>
+            </div>
+          </div>
+          <div className="flex flex-col items-center">
+            <div
+              className="w-32 h-32 rounded-full flex items-center justify-center"
+              style={{ backgroundColor: "#8C4623" }}
+            >
+              <span className="text-sm font-sans text-center px-2 text-white">
+                Trail Brown 55
+              </span>
+            </div>
+          </div>
+          <div className="flex flex-col items-center">
+            <div
+              className="w-32 h-32 rounded-full flex items-center justify-center"
+              style={{ backgroundColor: "#F5E6D9" }}
+            >
+              <span className="text-sm font-sans text-center px-2 text-black">
+                Trail Brown 90
+              </span>
+            </div>
+          </div>
+          <div className="flex flex-col items-center">
+            <div
+              className="w-32 h-32 rounded-full flex items-center justify-center"
+              style={{ backgroundColor: "#FAF2EC" }}
+            >
+              <span className="text-sm font-sans text-center px-2 text-black">
+                Trail Brown 95
+              </span>
+            </div>
           </div>
         </div>
-        <div className="aspect-[4/3] rounded-lg overflow-hidden shadow-sm border border-borderSubtle">
-          <div className="w-full h-full bg-[#8C4623] flex items-end p-4">
-            <span className="text-xs font-mono text-white">Trail Brown 55</span>
-          </div>
-        </div>
-        <div className="aspect-[4/3] rounded-lg overflow-hidden shadow-sm border border-borderSubtle">
-          <div className="w-full h-full bg-[#F5E6D9] flex items-end p-4">
-            <span className="text-xs font-mono text-asphalt-10">
-              Trail Brown 90
-            </span>
-          </div>
-        </div>
-        <div className="aspect-[4/3] rounded-lg overflow-hidden shadow-sm border border-borderSubtle">
-          <div className="w-full h-full bg-[#FAF2EC] flex items-end p-4">
-            <span className="text-xs font-mono text-asphalt-10">
-              Trail Brown 95
-            </span>
-          </div>
-        </div>
-      </div>
+      </section>
 
-      <hr className="border-t-4 border-asphalt-10 mb-12" />
+      <hr className="border-t-4 border-textDefault" />
 
       {/* Gear Collection */}
-      <h2 id="gear">Gear</h2>
-      <hr className="border-t border-borderSubtle mb-6" />
-      <p className="text-base text-textSubtle mb-6">
-        Equipment and gear reviews - shoes, watches, nutrition, and technology.
-      </p>
+      <section>
+        <h2
+          id="gear"
+          className="font-serif text-[32px] leading-[1.2] font-medium mb-3 scroll-mt-32"
+        >
+          Gear
+        </h2>
+        <p className="text-base text-textSubtle mb-6 max-w-3xl">
+          Equipment and gear reviews - shoes, watches, nutrition, and
+          technology.
+        </p>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mb-12">
-        <div className="aspect-[4/3] rounded-lg overflow-hidden shadow-sm border border-borderSubtle">
-          <div className="w-full h-full bg-[#732600] flex items-end p-4">
-            <span className="text-xs font-mono text-white">
-              Signal Orange 45
-            </span>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
+          <div className="flex flex-col items-center">
+            <div
+              className="w-32 h-32 rounded-full flex items-center justify-center"
+              style={{ backgroundColor: "#732600" }}
+            >
+              <span className="text-sm font-sans text-center px-2 text-white">
+                Signal Orange 45
+              </span>
+            </div>
+          </div>
+          <div className="flex flex-col items-center">
+            <div
+              className="w-32 h-32 rounded-full flex items-center justify-center"
+              style={{ backgroundColor: "#8C2F00" }}
+            >
+              <span className="text-sm font-sans text-center px-2 text-white">
+                Signal Orange 55
+              </span>
+            </div>
+          </div>
+          <div className="flex flex-col items-center">
+            <div
+              className="w-32 h-32 rounded-full flex items-center justify-center"
+              style={{ backgroundColor: "#F5D6CC" }}
+            >
+              <span className="text-sm font-sans text-center px-2 text-black">
+                Signal Orange 90
+              </span>
+            </div>
+          </div>
+          <div className="flex flex-col items-center">
+            <div
+              className="w-32 h-32 rounded-full flex items-center justify-center"
+              style={{ backgroundColor: "#FAEBE6" }}
+            >
+              <span className="text-sm font-sans text-center px-2 text-black">
+                Signal Orange 95
+              </span>
+            </div>
           </div>
         </div>
-        <div className="aspect-[4/3] rounded-lg overflow-hidden shadow-sm border border-borderSubtle">
-          <div className="w-full h-full bg-[#8C2F00] flex items-end p-4">
-            <span className="text-xs font-mono text-white">
-              Signal Orange 55
-            </span>
-          </div>
-        </div>
-        <div className="aspect-[4/3] rounded-lg overflow-hidden shadow-sm border border-borderSubtle">
-          <div className="w-full h-full bg-[#F5D6CC] flex items-end p-4">
-            <span className="text-xs font-mono text-asphalt-10">
-              Signal Orange 90
-            </span>
-          </div>
-        </div>
-        <div className="aspect-[4/3] rounded-lg overflow-hidden shadow-sm border border-borderSubtle">
-          <div className="w-full h-full bg-[#FAEBE6] flex items-end p-4">
-            <span className="text-xs font-mono text-asphalt-10">
-              Signal Orange 95
-            </span>
-          </div>
-        </div>
-      </div>
+      </section>
 
-      <hr className="border-t-4 border-asphalt-10 mb-12" />
+      <hr className="border-t-4 border-textDefault" />
 
       {/* Nutrition Collection */}
-      <h2 id="nutrition">Nutrition</h2>
-      <hr className="border-t border-borderSubtle mb-6" />
-      <p className="text-base text-textSubtle mb-6">
-        Nutrition and wellness content - fueling strategies, recovery, and
-        health.
-      </p>
+      <section>
+        <h2
+          id="nutrition"
+          className="font-serif text-[32px] leading-[1.2] font-medium mb-3 scroll-mt-32"
+        >
+          Nutrition
+        </h2>
+        <p className="text-base text-textSubtle mb-6 max-w-3xl">
+          Nutrition and wellness content - fueling strategies, recovery, and
+          health.
+        </p>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mb-12">
-        <div className="aspect-[4/3] rounded-lg overflow-hidden shadow-sm border border-borderSubtle">
-          <div className="w-full h-full bg-[#00733A] flex items-end p-4">
-            <span className="text-xs font-mono text-white">Volt Green 45</span>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
+          <div className="flex flex-col items-center">
+            <div
+              className="w-32 h-32 rounded-full flex items-center justify-center"
+              style={{ backgroundColor: "#00733A" }}
+            >
+              <span className="text-sm font-sans text-center px-2 text-white">
+                Volt Green 45
+              </span>
+            </div>
+          </div>
+          <div className="flex flex-col items-center">
+            <div
+              className="w-32 h-32 rounded-full flex items-center justify-center"
+              style={{ backgroundColor: "#008C47" }}
+            >
+              <span className="text-sm font-sans text-center px-2 text-white">
+                Volt Green 55
+              </span>
+            </div>
+          </div>
+          <div className="flex flex-col items-center">
+            <div
+              className="w-32 h-32 rounded-full flex items-center justify-center"
+              style={{ backgroundColor: "#CCF5E0" }}
+            >
+              <span className="text-sm font-sans text-center px-2 text-black">
+                Volt Green 90
+              </span>
+            </div>
+          </div>
+          <div className="flex flex-col items-center">
+            <div
+              className="w-32 h-32 rounded-full flex items-center justify-center"
+              style={{ backgroundColor: "#E6FAEF" }}
+            >
+              <span className="text-sm font-sans text-center px-2 text-black">
+                Volt Green 95
+              </span>
+            </div>
           </div>
         </div>
-        <div className="aspect-[4/3] rounded-lg overflow-hidden shadow-sm border border-borderSubtle">
-          <div className="w-full h-full bg-[#008C47] flex items-end p-4">
-            <span className="text-xs font-mono text-white">Volt Green 55</span>
-          </div>
-        </div>
-        <div className="aspect-[4/3] rounded-lg overflow-hidden shadow-sm border border-borderSubtle">
-          <div className="w-full h-full bg-[#CCF5E0] flex items-end p-4">
-            <span className="text-xs font-mono text-asphalt-10">
-              Volt Green 90
-            </span>
-          </div>
-        </div>
-        <div className="aspect-[4/3] rounded-lg overflow-hidden shadow-sm border border-borderSubtle">
-          <div className="w-full h-full bg-[#E6FAEF] flex items-end p-4">
-            <span className="text-xs font-mono text-asphalt-10">
-              Volt Green 95
-            </span>
-          </div>
-        </div>
-      </div>
+      </section>
     </div>
   );
 }
