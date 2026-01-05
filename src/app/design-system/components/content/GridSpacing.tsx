@@ -197,6 +197,53 @@ export default function GridSpacing() {
             className="w-full max-w-[386px] h-auto"
           />
         </figure>
+
+        <hr className="border-t border-borderDefault mb-8" />
+
+        {/* Outside gutter */}
+        <p className="text-base font-semibold mb-4">Outside gutter</p>
+        <p className="text-base text-textSubtle mb-6">
+          Outside gutters provide padding between the grid and the viewport
+          edge. They use the same values as the column gutter.
+        </p>
+
+        <div className="overflow-x-auto mb-8">
+          <table className="w-full border-collapse">
+            <thead>
+              <tr className="border-b border-borderDefault">
+                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                  Outside gutter
+                </th>
+                <th className="text-left py-3 px-4 font-semibold text-sm">
+                  px
+                </th>
+                <th className="text-left py-3 px-4 font-semibold text-sm">
+                  rem
+                </th>
+                <th className="text-left py-3 px-4 font-semibold text-sm">
+                  Token
+                </th>
+              </tr>
+            </thead>
+            <tbody className="whitespace-nowrap">
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 text-sm">Less than 768px (48rem)</td>
+                <td className="py-3 px-4 text-sm">24</td>
+                <td className="py-3 px-4 text-sm">1.5</td>
+                <td className="py-3 px-4 text-sm font-mono" rowSpan={2}>
+                  --grid-outside-gutter
+                </td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 text-sm">
+                  Greater than 768px (48rem)
+                </td>
+                <td className="py-3 px-4 text-sm">32</td>
+                <td className="py-3 px-4 text-sm">2</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </section>
     </div>
   );
