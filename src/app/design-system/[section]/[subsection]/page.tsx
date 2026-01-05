@@ -173,9 +173,10 @@ export default function DesignSystemSubsectionPage() {
                   { id: "gap-and-gutter-grid-gap", title: "Grid gap" },
                   { id: "gap-and-gutter-grid-gutter", title: "Grid gutter" },
                   {
-                    id: "gap-and-gutter-responsive",
-                    title: "Responsive spacing",
+                    id: "gap-and-gutter-outside-gutter",
+                    title: "Outside gutter",
                   },
+                  { id: "gap-and-gutter-summary", title: "Spacing summary" },
                 ],
               },
             ]}

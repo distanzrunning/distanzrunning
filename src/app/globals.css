@@ -246,9 +246,22 @@
     --rule-heavy: 4px solid rgb(var(--color-textDefault)); /* Major section divider - Asphalt 20 */
     --rule-accent: 4px solid #e43c81; /* Brand accent divider - Electric Pink */
 
-    /* Grid Spacing - Standard spacing values for all layouts */
-    --grid-gap: 1rem; /* 16px - standard element spacing within components */
-    --grid-gutter: 2rem; /* 32px - column spacing in grid layouts (2× gap) */
+    /* Grid Spacing - Responsive spacing values (mobile defaults)
+       Gap: 12px mobile, 16px desktop
+       Gutter: 24px mobile, 32px desktop (always 2× gap)
+       Outside gutter: 24px mobile, 32px desktop */
+    --grid-gap: 0.75rem; /* 12px - element spacing (mobile) */
+    --grid-gutter: 1.5rem; /* 24px - column spacing (mobile, 2× gap) */
+    --grid-outside-gutter: 1.5rem; /* 24px - outside padding (mobile) */
+  }
+
+  /* Desktop spacing (768px+) */
+  @media (min-width: 768px) {
+    :root {
+      --grid-gap: 1rem; /* 16px - element spacing (desktop) */
+      --grid-gutter: 2rem; /* 32px - column spacing (desktop, 2× gap) */
+      --grid-outside-gutter: 2rem; /* 32px - outside padding (desktop) */
+    }
   }
 
   /* Dark Mode - Inverted scale uses lighter shades for text, darker for surfaces */

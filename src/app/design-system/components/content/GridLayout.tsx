@@ -57,6 +57,9 @@ export default function GridLayout() {
                   Gap
                 </th>
                 <th className="text-left py-3 px-4 font-semibold text-sm">
+                  Gutter
+                </th>
+                <th className="text-left py-3 px-4 font-semibold text-sm">
                   Outside gutter
                 </th>
                 <th className="text-left py-3 px-4 font-semibold text-sm">
@@ -68,7 +71,8 @@ export default function GridLayout() {
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 text-sm">4</td>
                 <td className="py-3 px-4 text-sm">Less than 768px</td>
-                <td className="py-3 px-4 text-sm">16px</td>
+                <td className="py-3 px-4 text-sm">12px</td>
+                <td className="py-3 px-4 text-sm">24px</td>
                 <td className="py-3 px-4 text-sm">24px</td>
                 <td className="py-3 px-4 text-sm font-mono">default</td>
               </tr>
@@ -76,6 +80,7 @@ export default function GridLayout() {
                 <td className="py-3 pr-4 text-sm">12</td>
                 <td className="py-3 px-4 text-sm">768px and above</td>
                 <td className="py-3 px-4 text-sm">16px</td>
+                <td className="py-3 px-4 text-sm">32px</td>
                 <td className="py-3 px-4 text-sm">32px</td>
                 <td className="py-3 px-4 text-sm font-mono">md:</td>
               </tr>
@@ -165,6 +170,25 @@ export default function GridLayout() {
             </tbody>
           </table>
         </div>
+
+        <hr className="border-t border-borderDefault mb-8" />
+
+        {/* 1 column (small screen) */}
+        <p className="text-base font-semibold mb-4">
+          1-column layout (small screen)
+        </p>
+        <p className="text-base text-textSubtle mb-4">
+          On very small screens or when content needs to stack, the grid
+          collapses to a single column with content stacking vertically.
+        </p>
+        <figure className="mb-8">
+          <Image
+            src="/images/design-system/grid-1col-mobile.svg"
+            alt="1-column layout with vertically stacked content for small screens"
+            width={320}
+            height={280}
+          />
+        </figure>
 
         <hr className="border-t border-borderDefault mb-8" />
 
@@ -397,7 +421,7 @@ export default function GridLayout() {
                 <td className="py-3 pr-4 text-sm">Mobile</td>
                 <td className="py-3 px-4 text-sm">375px</td>
                 <td className="py-3 px-4 text-sm">4</td>
-                <td className="py-3 px-4 text-sm">16px / 32px</td>
+                <td className="py-3 px-4 text-sm">12px / 24px</td>
                 <td className="py-3 px-4 text-sm">None</td>
                 <td className="py-3 px-4 text-sm font-mono">default</td>
               </tr>
@@ -405,7 +429,7 @@ export default function GridLayout() {
                 <td className="py-3 pr-4 text-sm">Small</td>
                 <td className="py-3 px-4 text-sm">640px</td>
                 <td className="py-3 px-4 text-sm">4</td>
-                <td className="py-3 px-4 text-sm">16px / 32px</td>
+                <td className="py-3 px-4 text-sm">12px / 24px</td>
                 <td className="py-3 px-4 text-sm">None</td>
                 <td className="py-3 px-4 text-sm font-mono">sm:</td>
               </tr>
@@ -464,8 +488,8 @@ export default function GridLayout() {
         </h3>
 
         <p className="text-base text-textSubtle mb-4">
-          Grid spacing is defined as CSS custom properties for consistent use
-          across the codebase.
+          Grid spacing is defined as responsive CSS custom properties for
+          consistent use across the codebase.
         </p>
 
         <div className="overflow-x-auto">
@@ -476,7 +500,10 @@ export default function GridLayout() {
                   Variable
                 </th>
                 <th className="text-left py-3 px-4 font-semibold text-sm">
-                  Value
+                  Mobile
+                </th>
+                <th className="text-left py-3 px-4 font-semibold text-sm">
+                  Desktop (768px+)
                 </th>
                 <th className="text-left py-3 px-4 font-semibold text-sm">
                   Usage
@@ -486,6 +513,7 @@ export default function GridLayout() {
             <tbody className="whitespace-nowrap">
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 text-sm font-mono">--grid-gap</td>
+                <td className="py-3 px-4 text-sm">0.75rem (12px)</td>
                 <td className="py-3 px-4 text-sm">1rem (16px)</td>
                 <td className="py-3 px-4 text-sm">
                   Spacing between elements within components
@@ -493,9 +521,20 @@ export default function GridLayout() {
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 text-sm font-mono">--grid-gutter</td>
+                <td className="py-3 px-4 text-sm">1.5rem (24px)</td>
                 <td className="py-3 px-4 text-sm">2rem (32px)</td>
                 <td className="py-3 px-4 text-sm">
                   Column spacing in grid layouts
+                </td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 text-sm font-mono">
+                  --grid-outside-gutter
+                </td>
+                <td className="py-3 px-4 text-sm">1.5rem (24px)</td>
+                <td className="py-3 px-4 text-sm">2rem (32px)</td>
+                <td className="py-3 px-4 text-sm">
+                  Outside padding for page edges
                 </td>
               </tr>
             </tbody>
