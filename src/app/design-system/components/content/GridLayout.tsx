@@ -162,6 +162,155 @@ export default function GridLayout() {
 
       <hr className="border-t-4 border-textDefault" />
 
+      {/* Main Wrapper Section */}
+      <section>
+        <h2
+          id="main-wrapper"
+          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+        >
+          Main wrapper
+        </h2>
+
+        <hr className="border-t border-borderDefault mb-6" />
+
+        <p className="text-base text-textSubtle mb-4">
+          The main wrapper is the outermost layout container that frames all
+          page content. It creates a centered, max-width container with vertical
+          borders on larger screens, inspired by editorial layouts.
+        </p>
+        <p className="text-base text-textSubtle mb-8">
+          On mobile, the wrapper spans full width with no borders. On screens
+          768px and above, it gains left and right borders and centers within
+          the viewport up to a max-width of 1585px.
+        </p>
+
+        {/* Main Wrapper Diagram */}
+        <figure className="mb-8">
+          <Image
+            src="/images/design-system/main-wrapper.svg"
+            alt="Main wrapper structure showing viewport, margins, borders, and content area"
+            width={788}
+            height={280}
+          />
+        </figure>
+
+        <hr className="border-t border-borderDefault mb-8" />
+
+        {/* CSS Classes Table */}
+        <h3
+          id="main-wrapper-classes"
+          className="font-serif text-[22px] leading-[1.3] font-medium mb-3 scroll-mt-32"
+        >
+          CSS classes
+        </h3>
+
+        <div className="overflow-x-auto mb-8">
+          <table className="w-full border-collapse">
+            <thead>
+              <tr className="border-b border-borderDefault">
+                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                  CSS
+                </th>
+                <th className="text-left py-3 px-4 font-semibold text-sm">
+                  Description
+                </th>
+              </tr>
+            </thead>
+            <tbody className="whitespace-nowrap">
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 text-sm font-mono">main-wrapper</td>
+                <td className="py-3 px-4 text-sm">
+                  Outer container with max-width: 1585px, centered with auto
+                  margins
+                </td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 text-sm font-mono">main-bordered</td>
+                <td className="py-3 px-4 text-sm">
+                  Inner container with left/right borders on screens &ge;768px
+                </td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 text-sm font-mono">v-sep</td>
+                <td className="py-3 px-4 text-sm">
+                  Utility class for vertical separator borders only (no width
+                  constraint)
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <hr className="border-t border-borderDefault mb-8" />
+
+        {/* Responsive Behavior Table */}
+        <h3
+          id="main-wrapper-responsive"
+          className="font-serif text-[22px] leading-[1.3] font-medium mb-3 scroll-mt-32"
+        >
+          Responsive behavior
+        </h3>
+
+        <div className="overflow-x-auto mb-8">
+          <table className="w-full border-collapse">
+            <thead>
+              <tr className="border-b border-borderDefault">
+                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                  Screen size
+                </th>
+                <th className="text-left py-3 px-4 font-semibold text-sm">
+                  Width
+                </th>
+                <th className="text-left py-3 px-4 font-semibold text-sm">
+                  Borders
+                </th>
+              </tr>
+            </thead>
+            <tbody className="whitespace-nowrap">
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 text-sm">Less than 768px</td>
+                <td className="py-3 px-4 text-sm">100% (full width)</td>
+                <td className="py-3 px-4 text-sm">None</td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 text-sm">768px to 1585px</td>
+                <td className="py-3 px-4 text-sm">100% (full width)</td>
+                <td className="py-3 px-4 text-sm">Left and right borders</td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 text-sm">Greater than 1585px</td>
+                <td className="py-3 px-4 text-sm">1585px (centered)</td>
+                <td className="py-3 px-4 text-sm">Left and right borders</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <hr className="border-t border-borderDefault mb-8" />
+
+        {/* Usage Example */}
+        <h3
+          id="main-wrapper-usage"
+          className="font-serif text-[22px] leading-[1.3] font-medium mb-3 scroll-mt-32"
+        >
+          Usage
+        </h3>
+
+        <div className="bg-surfaceSubtle p-4 rounded mb-8 overflow-x-auto">
+          <pre className="text-sm font-mono text-textDefault">
+            {`<div class="main-wrapper">
+  <div class="main-bordered">
+    <!-- Navbar -->
+    <!-- Main content -->
+    <!-- Footer -->
+  </div>
+</div>`}
+          </pre>
+        </div>
+      </section>
+
+      <hr className="border-t-4 border-textDefault" />
+
       {/* Resources Section */}
       <section>
         <h2
@@ -181,10 +330,7 @@ export default function GridLayout() {
         </h3>
 
         <p className="text-base text-textSubtle mb-8">
-          <a
-            href="#"
-            className="text-electric-pink hover:underline"
-          >
+          <a href="#" className="text-electric-pink hover:underline">
             Download Figma file
           </a>
         </p>

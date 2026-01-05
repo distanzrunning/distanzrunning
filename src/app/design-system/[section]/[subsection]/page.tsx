@@ -187,6 +187,18 @@ export default function DesignSystemSubsectionPage() {
             tocItems={[
               { id: "column-grid", title: "Column grid" },
               {
+                id: "main-wrapper",
+                title: "Main wrapper",
+                children: [
+                  { id: "main-wrapper-classes", title: "CSS classes" },
+                  {
+                    id: "main-wrapper-responsive",
+                    title: "Responsive behavior",
+                  },
+                  { id: "main-wrapper-usage", title: "Usage" },
+                ],
+              },
+              {
                 id: "resources",
                 title: "Resources",
                 children: [
