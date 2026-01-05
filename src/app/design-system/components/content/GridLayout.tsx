@@ -159,7 +159,7 @@ export default function GridLayout() {
         </figure>
       </section>
 
-      <hr className="border-t-4 border-textDefault" />
+      <hr className="border-t border-borderDefault" />
 
       {/* Main Wrapper Section */}
       <section>
@@ -309,7 +309,7 @@ export default function GridLayout() {
         </div>
       </section>
 
-      <hr className="border-t-4 border-textDefault" />
+      <hr className="border-t border-borderDefault" />
 
       {/* Resources Section */}
       <section>

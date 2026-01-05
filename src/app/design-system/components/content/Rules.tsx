@@ -176,7 +176,7 @@ export default function Rules() {
         </div>
       </section>
 
-      <hr className="border-t-4 border-textDefault" />
+      <hr className="border-t border-borderDefault" />
 
       {/* Dark Mode Section */}
       <section>
@@ -210,7 +210,7 @@ export default function Rules() {
         </div>
       </section>
 
-      <hr className="border-t-4 border-textDefault" />
+      <hr className="border-t border-borderDefault" />
 
       {/* Reference Table */}
       <section>
@@ -286,7 +286,7 @@ export default function Rules() {
         </div>
       </section>
 
-      <hr className="border-t-4 border-textDefault" />
+      <hr className="border-t border-borderDefault" />
 
       {/* Usage Guidelines */}
       <section>

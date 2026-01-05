@@ -78,7 +78,7 @@ export default function Collections() {
         </div>
       </section>
 
-      <hr className="border-t-4 border-textDefault" />
+      <hr className="border-t border-borderDefault" />
 
       {/* Track Collection */}
       <section>
@@ -140,7 +140,7 @@ export default function Collections() {
         </div>
       </section>
 
-      <hr className="border-t-4 border-textDefault" />
+      <hr className="border-t border-borderDefault" />
 
       {/* Trail Collection */}
       <section>
@@ -202,7 +202,7 @@ export default function Collections() {
         </div>
       </section>
 
-      <hr className="border-t-4 border-textDefault" />
+      <hr className="border-t border-borderDefault" />
 
       {/* Gear Collection */}
       <section>
@@ -264,7 +264,7 @@ export default function Collections() {
         </div>
       </section>
 
-      <hr className="border-t-4 border-textDefault" />
+      <hr className="border-t border-borderDefault" />
 
       {/* Nutrition Collection */}
       <section>

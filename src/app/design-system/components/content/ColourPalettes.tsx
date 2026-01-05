@@ -84,7 +84,7 @@ export default function ColourPalettes() {
         />
       </section>
 
-      <hr className="border-t-4 border-textDefault" />
+      <hr className="border-t border-borderDefault" />
 
       {/* Accent Section */}
       <section>
@@ -386,7 +386,7 @@ export default function ColourPalettes() {
         </div>
       </section>
 
-      <hr className="border-t-4 border-textDefault" />
+      <hr className="border-t border-borderDefault" />
 
       {/* Greyscale Section */}
       <section>
@@ -505,7 +505,7 @@ export default function ColourPalettes() {
         />
       </section>
 
-      <hr className="border-t-4 border-textDefault" />
+      <hr className="border-t border-borderDefault" />
 
       {/* Canvas Section */}
       <section>
@@ -600,7 +600,7 @@ export default function ColourPalettes() {
         />
       </section>
 
-      <hr className="border-t-4 border-textDefault" />
+      <hr className="border-t border-borderDefault" />
 
       {/* Status Section */}
       <section>

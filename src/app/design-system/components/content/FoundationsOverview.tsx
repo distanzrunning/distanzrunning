@@ -11,8 +11,6 @@ export default function FoundationsOverview() {
         </h1>
       </div>
 
-      <hr className="border-t-4 border-textDefault" />
-
       <p className="text-base text-textSubtle max-w-3xl">
         The foundational elements of Distanz Running&apos;s visual design
         language. By combining distinctive visual characteristics with
