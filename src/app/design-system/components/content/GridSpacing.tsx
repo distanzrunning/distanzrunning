@@ -39,14 +39,13 @@ export default function GridSpacing() {
         </p>
 
         {/* Grid Gap SVG Diagrams - Side by side like Economist */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8 max-w-[788px]">
           <figure>
             <Image
               src="/images/design-system/grid-component-gap.svg"
               alt="Grid component gap showing 12px and 16px spacing between label and input fields"
               width={386}
               height={232}
-              className="w-full"
             />
           </figure>
           <figure>
@@ -55,7 +54,6 @@ export default function GridSpacing() {
               alt="Grid optical spacing showing emphasised link measurements"
               width={386}
               height={232}
-              className="w-full"
             />
           </figure>
         </div>

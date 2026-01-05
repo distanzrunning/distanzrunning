@@ -165,10 +165,14 @@ export default function DesignSystemSubsectionPage() {
           <ContentWithTOC
             tocTitle="Contents"
             tocItems={[
-              { id: "grid-gap", title: "Grid gap" },
-              { id: "grid-gutter", title: "Grid gutter" },
-              { id: "usage-examples", title: "Usage examples" },
-              { id: "reference", title: "Reference" },
+              {
+                id: "gap-and-gutter",
+                title: "Gap and gutter",
+                children: [
+                  { id: "gap-and-gutter-grid-gap", title: "Grid gap" },
+                  { id: "gap-and-gutter-grid-gutter", title: "Grid gutter" },
+                ],
+              },
             ]}
           >
             <GridSpacing />
