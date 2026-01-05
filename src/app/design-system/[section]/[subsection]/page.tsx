@@ -203,6 +203,7 @@ export default function DesignSystemSubsectionPage() {
                 title: "Resources",
                 children: [
                   { id: "resources-figma-files", title: "Figma files" },
+                  { id: "resources-css-variables", title: "CSS variables" },
                 ],
               },
             ]}

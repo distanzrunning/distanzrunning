@@ -330,9 +330,8 @@ export default function GridLayout() {
         </h3>
 
         <p className="text-base text-textSubtle mb-8">
-          <a href="#" className="text-electric-pink hover:underline">
-            Download Figma file
-          </a>
+          Figma grid templates for Distanz layouts. Each artboard includes
+          pre-configured column grids with correct spacing.
         </p>
 
         {/* Artboards Table */}
@@ -344,70 +343,127 @@ export default function GridLayout() {
                   Artboard
                 </th>
                 <th className="text-left py-3 px-4 font-semibold text-sm">
-                  Grid/artboard
+                  Width
                 </th>
                 <th className="text-left py-3 px-4 font-semibold text-sm">
                   Columns
                 </th>
                 <th className="text-left py-3 px-4 font-semibold text-sm">
-                  Gap/gutter
+                  Gap / Gutter
                 </th>
                 <th className="text-left py-3 px-4 font-semibold text-sm">
-                  Within media query
+                  Borders
+                </th>
+                <th className="text-left py-3 px-4 font-semibold text-sm">
+                  Tailwind
                 </th>
               </tr>
             </thead>
             <tbody className="whitespace-nowrap">
               <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 text-sm">Grid XSM</td>
-                <td className="py-3 px-4 text-sm">312/336px</td>
+                <td className="py-3 pr-4 text-sm">Mobile</td>
+                <td className="py-3 px-4 text-sm">375px</td>
                 <td className="py-3 px-4 text-sm">4</td>
-                <td className="py-3 px-4 text-sm">12/24</td>
-                <td className="py-3 px-4 text-sm font-mono">
-                  --ds-viewport-max-small
-                </td>
+                <td className="py-3 px-4 text-sm">16px / 32px</td>
+                <td className="py-3 px-4 text-sm">None</td>
+                <td className="py-3 px-4 text-sm font-mono">default</td>
               </tr>
               <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 text-sm">Grid SM</td>
-                <td className="py-3 px-4 text-sm">408/432px</td>
-                <td className="py-3 px-4 text-sm">6</td>
-                <td className="py-3 px-4 text-sm">12/24</td>
-                <td className="py-3 px-4 text-sm font-mono">
-                  --ds-viewport-min-small
-                </td>
+                <td className="py-3 pr-4 text-sm">Small</td>
+                <td className="py-3 px-4 text-sm">640px</td>
+                <td className="py-3 px-4 text-sm">4</td>
+                <td className="py-3 px-4 text-sm">16px / 32px</td>
+                <td className="py-3 px-4 text-sm">None</td>
+                <td className="py-3 px-4 text-sm font-mono">sm:</td>
               </tr>
               <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 text-sm">Grid MD</td>
-                <td className="py-3 px-4 text-sm">600/648px</td>
-                <td className="py-3 px-4 text-sm">6</td>
-                <td className="py-3 px-4 text-sm">12/24</td>
-                <td className="py-3 px-4 text-sm font-mono">
-                  --ds-viewport-min-medium
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 text-sm">Grid LG</td>
-                <td className="py-3 px-4 text-sm">976/1040px</td>
+                <td className="py-3 pr-4 text-sm">Medium</td>
+                <td className="py-3 px-4 text-sm">768px</td>
                 <td className="py-3 px-4 text-sm">12</td>
-                <td className="py-3 px-4 text-sm">16/32</td>
-                <td className="py-3 px-4 text-sm font-mono">
-                  --ds-viewport-min-large
+                <td className="py-3 px-4 text-sm">16px / 32px</td>
+                <td className="py-3 px-4 text-sm">Left + Right</td>
+                <td className="py-3 px-4 text-sm font-mono">md:</td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 text-sm">Large</td>
+                <td className="py-3 px-4 text-sm">1024px</td>
+                <td className="py-3 px-4 text-sm">12</td>
+                <td className="py-3 px-4 text-sm">16px / 32px</td>
+                <td className="py-3 px-4 text-sm">Left + Right</td>
+                <td className="py-3 px-4 text-sm font-mono">lg:</td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 text-sm">Extra Large</td>
+                <td className="py-3 px-4 text-sm">1280px</td>
+                <td className="py-3 px-4 text-sm">12</td>
+                <td className="py-3 px-4 text-sm">16px / 32px</td>
+                <td className="py-3 px-4 text-sm">Left + Right</td>
+                <td className="py-3 px-4 text-sm font-mono">xl:</td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 text-sm">2XL</td>
+                <td className="py-3 px-4 text-sm">1536px</td>
+                <td className="py-3 px-4 text-sm">12</td>
+                <td className="py-3 px-4 text-sm">16px / 32px</td>
+                <td className="py-3 px-4 text-sm">Left + Right</td>
+                <td className="py-3 px-4 text-sm font-mono">2xl:</td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 text-sm">Max</td>
+                <td className="py-3 px-4 text-sm">1585px</td>
+                <td className="py-3 px-4 text-sm">12</td>
+                <td className="py-3 px-4 text-sm">16px / 32px</td>
+                <td className="py-3 px-4 text-sm">Left + Right</td>
+                <td className="py-3 px-4 text-sm font-mono">max-w-[1585px]</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <hr className="border-t border-borderDefault my-8" />
+
+        {/* CSS Variables */}
+        <h3
+          id="resources-css-variables"
+          className="font-serif text-[22px] leading-[1.3] font-medium mb-3 scroll-mt-32"
+        >
+          CSS variables
+        </h3>
+
+        <p className="text-base text-textSubtle mb-4">
+          Grid spacing is defined as CSS custom properties for consistent use
+          across the codebase.
+        </p>
+
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse">
+            <thead>
+              <tr className="border-b border-borderDefault">
+                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                  Variable
+                </th>
+                <th className="text-left py-3 px-4 font-semibold text-sm">
+                  Value
+                </th>
+                <th className="text-left py-3 px-4 font-semibold text-sm">
+                  Usage
+                </th>
+              </tr>
+            </thead>
+            <tbody className="whitespace-nowrap">
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 text-sm font-mono">--grid-gap</td>
+                <td className="py-3 px-4 text-sm">1rem (16px)</td>
+                <td className="py-3 px-4 text-sm">
+                  Spacing between elements within components
                 </td>
               </tr>
               <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 text-sm">Grid XLG</td>
-                <td className="py-3 px-4 text-sm">1312/1376px</td>
-                <td className="py-3 px-4 text-sm">12</td>
-                <td className="py-3 px-4 text-sm">16/32</td>
-                <td className="py-3 px-4 text-sm font-mono" rowSpan={2}>
-                  --ds-viewport-min-xlarge
+                <td className="py-3 pr-4 text-sm font-mono">--grid-gutter</td>
+                <td className="py-3 px-4 text-sm">2rem (32px)</td>
+                <td className="py-3 px-4 text-sm">
+                  Column spacing in grid layouts
                 </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 text-sm">Grid MAX</td>
-                <td className="py-3 px-4 text-sm">1432/1496px</td>
-                <td className="py-3 px-4 text-sm">12</td>
-                <td className="py-3 px-4 text-sm">16/32</td>
               </tr>
             </tbody>
           </table>
