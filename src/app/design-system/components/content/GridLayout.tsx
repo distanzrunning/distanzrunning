@@ -28,12 +28,18 @@ export default function GridLayout() {
         <hr className="border-t border-borderDefault mb-6" />
 
         <p className="text-base text-textSubtle mb-4">
-          Across screen sizes, grid spacing and grid gutters remain fixed to the
-          defined values. The number of columns is changeable, and column widths
-          are fluid.
+          Distanz uses a 12-column grid system. This is the industry standard
+          because 12 divides evenly into halves, thirds, quarters, and sixths -
+          providing flexibility while maintaining visual harmony.
+        </p>
+        <p className="text-base text-textSubtle mb-4">
+          On mobile, the grid simplifies to 4 columns. Column widths are fluid
+          while gaps and gutters remain fixed. Content is constrained to a
+          max-width of 1585px.
         </p>
         <p className="text-base text-textSubtle mb-8">
-          The recommended max-width of the grid for the web is 1585px (99rem).
+          This single, consistent grid applies across all pages - ensuring
+          recognisable consistency and clear wayfinding throughout the site.
         </p>
 
         {/* Columns Table */}
@@ -45,69 +51,115 @@ export default function GridLayout() {
                   Columns
                 </th>
                 <th className="text-left py-3 px-4 font-semibold text-sm">
-                  Breakpoints
+                  Breakpoint
                 </th>
                 <th className="text-left py-3 px-4 font-semibold text-sm">
-                  Within media query
+                  Gap
+                </th>
+                <th className="text-left py-3 px-4 font-semibold text-sm">
+                  Outside gutter
+                </th>
+                <th className="text-left py-3 px-4 font-semibold text-sm">
+                  Tailwind
                 </th>
               </tr>
             </thead>
             <tbody className="whitespace-nowrap">
               <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 text-sm">1</td>
-                <td className="py-3 px-4 text-sm">
-                  Less than 599px (37.4375rem)
-                </td>
-                <td className="py-3 px-4 text-sm font-mono"></td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 text-sm">6</td>
-                <td className="py-3 px-4 text-sm">
-                  Greater than or equal to 600px (37.5rem)
-                </td>
-                <td className="py-3 px-4 text-sm font-mono">
-                  --ds-viewport-min-medium
-                </td>
+                <td className="py-3 pr-4 text-sm">4</td>
+                <td className="py-3 px-4 text-sm">Less than 768px</td>
+                <td className="py-3 px-4 text-sm">16px</td>
+                <td className="py-3 px-4 text-sm">24px</td>
+                <td className="py-3 px-4 text-sm font-mono">default</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 text-sm">12</td>
-                <td className="py-3 px-4 text-sm">
-                  Greater than or equal to 960px (60rem)
-                </td>
-                <td className="py-3 px-4 text-sm font-mono">
-                  --ds-viewport-min-large
-                </td>
+                <td className="py-3 px-4 text-sm">768px and above</td>
+                <td className="py-3 px-4 text-sm">16px</td>
+                <td className="py-3 px-4 text-sm">32px</td>
+                <td className="py-3 px-4 text-sm font-mono">md:</td>
               </tr>
             </tbody>
           </table>
         </div>
 
-        {/* CSS Classes Table */}
+        <hr className="border-t border-borderDefault mb-8" />
+
+        {/* Common Layouts */}
+        <h3
+          id="column-grid-common-layouts"
+          className="font-serif text-[22px] leading-[1.3] font-medium mb-3 scroll-mt-32"
+        >
+          Common layouts
+        </h3>
+
+        <p className="text-base text-textSubtle mb-6">
+          The 12-column grid enables consistent layout patterns across the site.
+        </p>
+
         <div className="overflow-x-auto mb-8">
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
                 <th className="text-left py-3 pr-4 font-semibold text-sm">
-                  CSS
+                  Layout
                 </th>
                 <th className="text-left py-3 px-4 font-semibold text-sm">
-                  Description
+                  Column span
+                </th>
+                <th className="text-left py-3 px-4 font-semibold text-sm">
+                  Use case
                 </th>
               </tr>
             </thead>
             <tbody className="whitespace-nowrap">
               <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 text-sm font-mono">ds-layout-grid</td>
+                <td className="py-3 pr-4 text-sm">Full width</td>
+                <td className="py-3 px-4 text-sm font-mono">col-span-12</td>
                 <td className="py-3 px-4 text-sm">
-                  Supports column grid with column gutters
+                  Hero images, full-bleed sections
                 </td>
               </tr>
               <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 text-sm font-mono">
-                  ds-layout-grid--edged
+                <td className="py-3 pr-4 text-sm">Content centered</td>
+                <td className="py-3 px-4 text-sm font-mono">
+                  col-start-3 col-span-8
                 </td>
                 <td className="py-3 px-4 text-sm">
-                  Supports column grid with column gutters and outside gutters
+                  Article body, focused reading
+                </td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 text-sm">Two equal</td>
+                <td className="py-3 px-4 text-sm font-mono">col-span-6</td>
+                <td className="py-3 px-4 text-sm">Side-by-side comparisons</td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 text-sm">Three equal</td>
+                <td className="py-3 px-4 text-sm font-mono">col-span-4</td>
+                <td className="py-3 px-4 text-sm">Card grids, feature lists</td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 text-sm">Four equal</td>
+                <td className="py-3 px-4 text-sm font-mono">col-span-3</td>
+                <td className="py-3 px-4 text-sm">Product grids, thumbnails</td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 text-sm">Sidebar + content</td>
+                <td className="py-3 px-4 text-sm font-mono">
+                  col-span-2 + col-span-10
+                </td>
+                <td className="py-3 px-4 text-sm">
+                  Navigation sidebar layouts
+                </td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 text-sm">Primary + secondary</td>
+                <td className="py-3 px-4 text-sm font-mono">
+                  col-span-8 + col-span-4
+                </td>
+                <td className="py-3 px-4 text-sm">
+                  Featured article + news sidebar
                 </td>
               </tr>
             </tbody>
@@ -116,46 +168,27 @@ export default function GridLayout() {
 
         <hr className="border-t border-borderDefault mb-8" />
 
-        {/* 1 column (small screen) */}
-        <p className="text-base font-semibold mb-4">
-          1 column with outside gutters (small screen)
-        </p>
+        {/* 4 columns (mobile) */}
+        <p className="text-base font-semibold mb-4">4-column grid (mobile)</p>
         <figure className="mb-8">
           <Image
-            src="/images/design-system/grid-1col-12.svg"
-            alt="1-column grid with 12px outside gutters for small screens"
-            width={320}
-            height={312}
+            src="/images/design-system/grid-4col-mobile.svg"
+            alt="4-column grid with 24px outside gutters for mobile screens"
+            width={375}
+            height={280}
           />
         </figure>
 
         <hr className="border-t border-borderDefault mb-8" />
 
-        {/* 6 columns (medium screen) */}
-        <p className="text-base font-semibold mb-4">
-          6 columns with outside gutters (medium screen)
-        </p>
-        <figure className="mb-8">
+        {/* 12 columns (desktop) */}
+        <p className="text-base font-semibold mb-4">12-column grid (desktop)</p>
+        <figure className="mb-8 max-w-[788px]">
           <Image
-            src="/images/design-system/grid-6col-24-edged.svg"
-            alt="6-column grid with 24px outside gutters for medium screens"
-            width={648}
-            height={312}
-          />
-        </figure>
-
-        <hr className="border-t border-borderDefault mb-8" />
-
-        {/* 6 columns (large screen) */}
-        <p className="text-base font-semibold mb-4">
-          6 columns with outside gutters (large screen)
-        </p>
-        <figure className="mb-8">
-          <Image
-            src="/images/design-system/grid-6col-32-edged.svg"
-            alt="6-column grid with 32px outside gutters for large screens"
-            width={704}
-            height={312}
+            src="/images/design-system/grid-12col-desktop.svg"
+            alt="12-column grid with 32px outside gutters for desktop screens"
+            width={788}
+            height={280}
           />
         </figure>
       </section>

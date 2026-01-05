@@ -185,7 +185,13 @@ export default function DesignSystemSubsectionPage() {
           <ContentWithTOC
             tocTitle="Contents"
             tocItems={[
-              { id: "column-grid", title: "Column grid" },
+              {
+                id: "column-grid",
+                title: "Column grid",
+                children: [
+                  { id: "column-grid-common-layouts", title: "Common layouts" },
+                ],
+              },
               {
                 id: "main-wrapper",
                 title: "Main wrapper",
