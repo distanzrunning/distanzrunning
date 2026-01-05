@@ -1,0 +1,31 @@
+<svg width="386" height="200" viewBox="0 0 386 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="386" height="200" fill="#F0F5F5"/>
+
+  <!-- Title -->
+  <text x="193" y="24" text-anchor="middle" fill="#5C8F8F" font-family="system-ui, sans-serif" font-size="11" font-weight="500">GRID GAP (16px)</text>
+
+  <!-- First element (Label) -->
+  <rect x="40" y="50" width="306" height="40" rx="4" fill="#FFFFFF" stroke="#B3B3B3" stroke-width="1"/>
+  <text x="56" y="75" fill="#333333" font-family="system-ui, sans-serif" font-size="13" font-weight="500">Label</text>
+
+  <!-- Gap indicator -->
+  <line x1="360" y1="90" x2="360" y2="106" stroke="#0A1757" stroke-width="1"/>
+  <line x1="352" y1="90" x2="368" y2="90" stroke="#0A1757" stroke-width="1"/>
+  <line x1="352" y1="106" x2="368" y2="106" stroke="#0A1757" stroke-width="1"/>
+  <text x="376" y="102" fill="#0A1757" font-family="system-ui, sans-serif" font-size="10" font-weight="500">16px</text>
+
+  <!-- Second element (Input) -->
+  <rect x="40" y="106" width="306" height="40" rx="4" fill="#FFFFFF" stroke="#B3B3B3" stroke-width="1"/>
+  <text x="56" y="131" fill="#999999" font-family="system-ui, sans-serif" font-size="13">Input field</text>
+
+  <!-- Gap indicator 2 -->
+  <line x1="360" y1="146" x2="360" y2="162" stroke="#0A1757" stroke-width="1"/>
+  <line x1="352" y1="146" x2="368" y2="146" stroke="#0A1757" stroke-width="1"/>
+  <line x1="352" y1="162" x2="368" y2="162" stroke="#0A1757" stroke-width="1"/>
+  <text x="376" y="158" fill="#0A1757" font-family="system-ui, sans-serif" font-size="10" font-weight="500">16px</text>
+
+  <!-- Third element (Button) -->
+  <rect x="40" y="162" width="120" height="32" rx="4" fill="#E43C81"/>
+  <text x="100" y="183" text-anchor="middle" fill="#FFFFFF" font-family="system-ui, sans-serif" font-size="13" font-weight="500">Submit</text>
+</svg>
