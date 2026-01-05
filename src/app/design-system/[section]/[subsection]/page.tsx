@@ -136,25 +136,14 @@ export default function DesignSystemSubsectionPage() {
                 title: "Styles",
                 children: [
                   { id: "styles-rule", title: "Rule" },
-                  { id: "styles-rule-inverse", title: "Rule (inverse)" },
                   { id: "styles-rule-emphasised", title: "Rule (emphasised)" },
-                  {
-                    id: "styles-rule-inverse-emphasised",
-                    title: "Rule (inverse, emphasised)",
-                  },
                   { id: "styles-rule-heavy", title: "Rule (heavy)" },
-                  {
-                    id: "styles-rule-inverse-heavy",
-                    title: "Rule (inverse, heavy)",
-                  },
                   { id: "styles-rule-accent", title: "Rule (accent)" },
-                  {
-                    id: "styles-rule-inverse-accent",
-                    title: "Rule (accent, inverse)",
-                  },
                 ],
               },
+              { id: "dark-mode", title: "Dark mode" },
               { id: "reference", title: "Reference" },
+              { id: "usage", title: "Usage" },
             ]}
           >
             <Rules />
