@@ -32,283 +32,233 @@ export default function GridSpacing() {
           elements within a component or layout.
         </p>
 
-        {/* Gap Label Diagram - shows spacing within a component */}
+        {/* Gap Label Diagram - minimal label/input style */}
         <div className="mb-8">
           <svg
-            viewBox="0 0 800 200"
-            className="w-full max-w-3xl border border-borderSubtle rounded"
+            viewBox="0 0 400 140"
+            className="w-full max-w-md"
             style={{ backgroundColor: "rgb(var(--color-canvas))" }}
           >
-            {/* Three boxes representing elements */}
-            <rect x="50" y="60" width="200" height="80" fill="#e43c81" rx="4" />
-            <rect
-              x="266"
-              y="60"
-              width="200"
-              height="80"
-              fill="#e43c81"
-              rx="4"
-            />
-            <rect
-              x="482"
-              y="60"
-              width="200"
-              height="80"
-              fill="#e43c81"
-              rx="4"
-            />
-
-            {/* Gap measurement lines */}
-            <line
-              x1="250"
-              y1="30"
-              x2="266"
-              y2="30"
-              stroke="rgb(var(--color-textDefault))"
-              strokeWidth="2"
-            />
-            <line
-              x1="250"
-              y1="20"
-              x2="250"
-              y2="40"
-              stroke="rgb(var(--color-textDefault))"
-              strokeWidth="2"
-            />
-            <line
-              x1="266"
-              y1="20"
-              x2="266"
-              y2="40"
-              stroke="rgb(var(--color-textDefault))"
-              strokeWidth="2"
-            />
-
-            {/* Gap label */}
+            {/* First label/field pair with 12px gap */}
             <text
-              x="258"
-              y="18"
+              x="50"
+              y="35"
+              fill="rgb(var(--color-textSubtle))"
+              fontSize="14"
+              fontFamily="var(--font-family-sans)"
+            >
+              Label
+            </text>
+            <rect
+              x="50"
+              y="55"
+              width="300"
+              height="32"
+              fill="none"
+              stroke="rgb(var(--color-borderDefault))"
+              strokeWidth="1"
+              rx="4"
+            />
+            <text
+              x="58"
+              y="77"
+              fill="rgb(var(--color-textSubtle))"
+              fontSize="14"
+              fontFamily="var(--font-family-sans)"
+            >
+              Text value
+            </text>
+
+            {/* Gap measurement for first pair */}
+            <line
+              x1="32"
+              y1="43"
+              x2="32"
+              y2="55"
+              stroke="rgb(var(--color-textDefault))"
+              strokeWidth="1.5"
+            />
+            <line
+              x1="28"
+              y1="43"
+              x2="36"
+              y2="43"
+              stroke="rgb(var(--color-textDefault))"
+              strokeWidth="1.5"
+            />
+            <line
+              x1="28"
+              y1="55"
+              x2="36"
+              y2="55"
+              stroke="rgb(var(--color-textDefault))"
+              strokeWidth="1.5"
+            />
+            <text
+              x="32"
+              y="52"
               fill="rgb(var(--color-textDefault))"
               fontSize="12"
               fontFamily="var(--font-family-sans)"
-              textAnchor="middle"
+              textAnchor="end"
+              dx="-8"
             >
-              16px
-            </text>
-
-            {/* Second gap measurement */}
-            <line
-              x1="466"
-              y1="30"
-              x2="482"
-              y2="30"
-              stroke="rgb(var(--color-textDefault))"
-              strokeWidth="2"
-            />
-            <line
-              x1="466"
-              y1="20"
-              x2="466"
-              y2="40"
-              stroke="rgb(var(--color-textDefault))"
-              strokeWidth="2"
-            />
-            <line
-              x1="482"
-              y1="20"
-              x2="482"
-              y2="40"
-              stroke="rgb(var(--color-textDefault))"
-              strokeWidth="2"
-            />
-
-            <text
-              x="474"
-              y="18"
-              fill="rgb(var(--color-textDefault))"
-              fontSize="12"
-              fontFamily="var(--font-family-sans)"
-              textAnchor="middle"
-            >
-              16px
-            </text>
-
-            {/* Element labels */}
-            <text
-              x="150"
-              y="105"
-              fill="white"
-              fontSize="14"
-              fontFamily="var(--font-family-sans)"
-              fontWeight="500"
-              textAnchor="middle"
-            >
-              Element
-            </text>
-            <text
-              x="366"
-              y="105"
-              fill="white"
-              fontSize="14"
-              fontFamily="var(--font-family-sans)"
-              fontWeight="500"
-              textAnchor="middle"
-            >
-              Element
-            </text>
-            <text
-              x="582"
-              y="105"
-              fill="white"
-              fontSize="14"
-              fontFamily="var(--font-family-sans)"
-              fontWeight="500"
-              textAnchor="middle"
-            >
-              Element
+              12
             </text>
           </svg>
-          <p className="text-sm text-textSubtle mt-4">
-            Gap creates consistent spacing between elements in a row or column.
-          </p>
         </div>
 
-        {/* Gap Optical Alignment Diagram - shows vertical rhythm */}
+        {/* Gap Optical Diagram - showing link with measurements */}
         <div className="mb-8">
           <svg
-            viewBox="0 0 400 320"
-            className="w-full max-w-md border border-borderSubtle rounded"
+            viewBox="0 0 400 100"
+            className="w-full max-w-md"
             style={{ backgroundColor: "rgb(var(--color-canvas))" }}
           >
-            {/* Stack of elements with gap */}
-            <rect x="80" y="40" width="240" height="60" fill="#e43c81" rx="4" />
-            <rect
-              x="80"
-              y="116"
-              width="240"
-              height="60"
-              fill="#e43c81"
-              rx="4"
-            />
-            <rect
-              x="80"
-              y="192"
-              width="240"
-              height="60"
-              fill="#e43c81"
-              rx="4"
-            />
-
-            {/* Gap measurement on right side */}
-            <line
-              x1="350"
-              y1="100"
-              x2="350"
-              y2="116"
-              stroke="rgb(var(--color-textDefault))"
-              strokeWidth="2"
-            />
-            <line
-              x1="340"
-              y1="100"
-              x2="360"
-              y2="100"
-              stroke="rgb(var(--color-textDefault))"
-              strokeWidth="2"
-            />
-            <line
-              x1="340"
-              y1="116"
-              x2="360"
-              y2="116"
-              stroke="rgb(var(--color-textDefault))"
-              strokeWidth="2"
-            />
-
+            {/* First link with optical spacing */}
             <text
-              x="370"
-              y="112"
+              x="120"
+              y="30"
+              fill="#008CB8"
+              fontSize="14"
+              fontFamily="var(--font-family-sans)"
+              textDecoration="underline"
+            >
+              Emphasised link
+            </text>
+            <line
+              x1="100"
+              y1="35"
+              x2="100"
+              y2="43"
+              stroke="rgb(var(--color-textDefault))"
+              strokeWidth="1.5"
+            />
+            <line
+              x1="96"
+              y1="35"
+              x2="104"
+              y2="35"
+              stroke="rgb(var(--color-textDefault))"
+              strokeWidth="1.5"
+            />
+            <line
+              x1="96"
+              y1="43"
+              x2="104"
+              y2="43"
+              stroke="rgb(var(--color-textDefault))"
+              strokeWidth="1.5"
+            />
+            <text
+              x="100"
+              y="42"
               fill="rgb(var(--color-textDefault))"
-              fontSize="12"
+              fontSize="11"
               fontFamily="var(--font-family-sans)"
+              textAnchor="end"
+              dx="-8"
             >
-              16px
+              12
             </text>
-
-            {/* Second gap measurement */}
             <line
-              x1="350"
-              y1="176"
-              x2="350"
-              y2="192"
+              x1="250"
+              y1="26"
+              x2="258"
+              y2="26"
               stroke="rgb(var(--color-textDefault))"
-              strokeWidth="2"
+              strokeWidth="1.5"
             />
             <line
-              x1="340"
-              y1="176"
-              x2="360"
-              y2="176"
+              x1="254"
+              y1="22"
+              x2="254"
+              y2="30"
               stroke="rgb(var(--color-textDefault))"
-              strokeWidth="2"
+              strokeWidth="1.5"
             />
-            <line
-              x1="340"
-              y1="192"
-              x2="360"
-              y2="192"
-              stroke="rgb(var(--color-textDefault))"
-              strokeWidth="2"
-            />
-
             <text
-              x="370"
-              y="188"
+              x="262"
+              y="30"
               fill="rgb(var(--color-textDefault))"
-              fontSize="12"
+              fontSize="11"
               fontFamily="var(--font-family-sans)"
             >
-              16px
+              8
             </text>
 
-            {/* Element labels */}
+            {/* Second link */}
             <text
-              x="200"
-              y="75"
-              fill="white"
+              x="120"
+              y="70"
+              fill="#008CB8"
               fontSize="14"
               fontFamily="var(--font-family-sans)"
-              fontWeight="500"
-              textAnchor="middle"
+              textDecoration="underline"
             >
-              Element
+              Emphasised link
             </text>
+            <line
+              x1="100"
+              y1="75"
+              x2="100"
+              y2="83"
+              stroke="rgb(var(--color-textDefault))"
+              strokeWidth="1.5"
+            />
+            <line
+              x1="96"
+              y1="75"
+              x2="104"
+              y2="75"
+              stroke="rgb(var(--color-textDefault))"
+              strokeWidth="1.5"
+            />
+            <line
+              x1="96"
+              y1="83"
+              x2="104"
+              y2="83"
+              stroke="rgb(var(--color-textDefault))"
+              strokeWidth="1.5"
+            />
             <text
-              x="200"
-              y="151"
-              fill="white"
-              fontSize="14"
+              x="100"
+              y="82"
+              fill="rgb(var(--color-textDefault))"
+              fontSize="11"
               fontFamily="var(--font-family-sans)"
-              fontWeight="500"
-              textAnchor="middle"
+              textAnchor="end"
+              dx="-8"
             >
-              Element
+              16
             </text>
+            <line
+              x1="250"
+              y1="66"
+              x2="262"
+              y2="66"
+              stroke="rgb(var(--color-textDefault))"
+              strokeWidth="1.5"
+            />
+            <line
+              x1="256"
+              y1="62"
+              x2="256"
+              y2="70"
+              stroke="rgb(var(--color-textDefault))"
+              strokeWidth="1.5"
+            />
             <text
-              x="200"
-              y="227"
-              fill="white"
-              fontSize="14"
+              x="266"
+              y="70"
+              fill="rgb(var(--color-textDefault))"
+              fontSize="11"
               fontFamily="var(--font-family-sans)"
-              fontWeight="500"
-              textAnchor="middle"
             >
-              Element
+              12
             </text>
           </svg>
-          <p className="text-sm text-textSubtle mt-4">
-            Vertical stacking uses the same 16px gap for consistent rhythm.
-          </p>
         </div>
 
         {/* Gap Reference Table */}
@@ -353,397 +303,256 @@ export default function GridSpacing() {
           layout, providing clear separation between major content areas.
         </p>
 
-        {/* Gutter 2-Column Diagram */}
+        {/* Medium Screen Gutter - 6 columns with 24px gutters (abstract visualization) */}
         <div className="mb-8">
+          <h3 className="text-sm font-semibold mb-4">
+            Medium screens (6 columns, 24px gutter)
+          </h3>
           <svg
-            viewBox="0 0 800 240"
-            className="w-full max-w-3xl border border-borderSubtle rounded"
+            viewBox="0 0 700 200"
+            className="w-full border border-borderSubtle"
             style={{ backgroundColor: "rgb(var(--color-canvas))" }}
           >
-            {/* Two columns */}
-            <rect
-              x="50"
-              y="60"
-              width="344"
-              height="120"
-              fill="#5E3FD1"
-              rx="4"
-            />
-            <rect
-              x="426"
-              y="60"
-              width="344"
-              height="120"
-              fill="#5E3FD1"
-              rx="4"
-            />
+            {/* 6 columns - alternating white (gutter) and grey (column) */}
+            <rect x="0" y="0" width="700" height="200" fill="#E5E5E5" />
+            <rect x="24" y="0" width="90" height="200" fill="white" />
+            <rect x="138" y="0" width="90" height="200" fill="white" />
+            <rect x="252" y="0" width="90" height="200" fill="white" />
+            <rect x="366" y="0" width="90" height="200" fill="white" />
+            <rect x="480" y="0" width="90" height="200" fill="white" />
+            <rect x="594" y="0" width="90" height="200" fill="white" />
 
             {/* Gutter measurement */}
             <line
-              x1="394"
-              y1="30"
-              x2="426"
-              y2="30"
+              x1="0"
+              y1="170"
+              x2="24"
+              y2="170"
               stroke="rgb(var(--color-textDefault))"
               strokeWidth="2"
             />
             <line
-              x1="394"
-              y1="20"
-              x2="394"
-              y2="40"
+              x1="0"
+              y1="165"
+              x2="0"
+              y2="175"
               stroke="rgb(var(--color-textDefault))"
               strokeWidth="2"
             />
             <line
-              x1="426"
-              y1="20"
-              x2="426"
-              y2="40"
+              x1="24"
+              y1="165"
+              x2="24"
+              y2="175"
               stroke="rgb(var(--color-textDefault))"
               strokeWidth="2"
             />
-
             <text
-              x="410"
-              y="18"
+              x="12"
+              y="190"
               fill="rgb(var(--color-textDefault))"
-              fontSize="12"
-              fontFamily="var(--font-family-sans)"
-              textAnchor="middle"
-            >
-              32px
-            </text>
-
-            {/* Column labels */}
-            <text
-              x="222"
-              y="125"
-              fill="white"
               fontSize="14"
               fontFamily="var(--font-family-sans)"
               fontWeight="500"
               textAnchor="middle"
             >
-              Column
-            </text>
-            <text
-              x="598"
-              y="125"
-              fill="white"
-              fontSize="14"
-              fontFamily="var(--font-family-sans)"
-              fontWeight="500"
-              textAnchor="middle"
-            >
-              Column
+              24
             </text>
           </svg>
           <p className="text-sm text-textSubtle mt-4">
-            Gutter provides clear separation between columns in a 2-column
-            layout.
+            Grey areas represent columns, white spaces are 24px gutters between
+            them.
           </p>
         </div>
 
-        {/* Gutter 3-Column Diagram */}
+        {/* Large Screen Gutter - 6 columns with 32px gutters */}
         <div className="mb-8">
+          <h3 className="text-sm font-semibold mb-4">
+            Large screens (6 columns, 32px gutter)
+          </h3>
           <svg
-            viewBox="0 0 800 240"
-            className="w-full max-w-3xl border border-borderSubtle rounded"
+            viewBox="0 0 800 200"
+            className="w-full border border-borderSubtle"
             style={{ backgroundColor: "rgb(var(--color-canvas))" }}
           >
-            {/* Three columns */}
-            <rect
-              x="50"
-              y="60"
-              width="216"
-              height="120"
-              fill="#5E3FD1"
-              rx="4"
-            />
-            <rect
-              x="298"
-              y="60"
-              width="216"
-              height="120"
-              fill="#5E3FD1"
-              rx="4"
-            />
-            <rect
-              x="546"
-              y="60"
-              width="216"
-              height="120"
-              fill="#5E3FD1"
-              rx="4"
-            />
+            {/* 6 columns - wider gutters */}
+            <rect x="0" y="0" width="800" height="200" fill="#E5E5E5" />
+            <rect x="32" y="0" width="100" height="200" fill="white" />
+            <rect x="164" y="0" width="100" height="200" fill="white" />
+            <rect x="296" y="0" width="100" height="200" fill="white" />
+            <rect x="428" y="0" width="100" height="200" fill="white" />
+            <rect x="560" y="0" width="100" height="200" fill="white" />
+            <rect x="692" y="0" width="100" height="200" fill="white" />
 
-            {/* First gutter measurement */}
+            {/* Gutter measurement */}
             <line
-              x1="266"
-              y1="30"
-              x2="298"
-              y2="30"
+              x1="0"
+              y1="170"
+              x2="32"
+              y2="170"
               stroke="rgb(var(--color-textDefault))"
               strokeWidth="2"
             />
             <line
-              x1="266"
-              y1="20"
-              x2="266"
-              y2="40"
+              x1="0"
+              y1="165"
+              x2="0"
+              y2="175"
               stroke="rgb(var(--color-textDefault))"
               strokeWidth="2"
             />
             <line
-              x1="298"
-              y1="20"
-              x2="298"
-              y2="40"
+              x1="32"
+              y1="165"
+              x2="32"
+              y2="175"
               stroke="rgb(var(--color-textDefault))"
               strokeWidth="2"
             />
-
             <text
-              x="282"
-              y="18"
+              x="16"
+              y="190"
               fill="rgb(var(--color-textDefault))"
-              fontSize="12"
-              fontFamily="var(--font-family-sans)"
-              textAnchor="middle"
-            >
-              32px
-            </text>
-
-            {/* Second gutter measurement */}
-            <line
-              x1="514"
-              y1="30"
-              x2="546"
-              y2="30"
-              stroke="rgb(var(--color-textDefault))"
-              strokeWidth="2"
-            />
-            <line
-              x1="514"
-              y1="20"
-              x2="514"
-              y2="40"
-              stroke="rgb(var(--color-textDefault))"
-              strokeWidth="2"
-            />
-            <line
-              x1="546"
-              y1="20"
-              x2="546"
-              y2="40"
-              stroke="rgb(var(--color-textDefault))"
-              strokeWidth="2"
-            />
-
-            <text
-              x="530"
-              y="18"
-              fill="rgb(var(--color-textDefault))"
-              fontSize="12"
-              fontFamily="var(--font-family-sans)"
-              textAnchor="middle"
-            >
-              32px
-            </text>
-
-            {/* Column labels */}
-            <text
-              x="158"
-              y="125"
-              fill="white"
               fontSize="14"
               fontFamily="var(--font-family-sans)"
               fontWeight="500"
               textAnchor="middle"
             >
-              Column
-            </text>
-            <text
-              x="406"
-              y="125"
-              fill="white"
-              fontSize="14"
-              fontFamily="var(--font-family-sans)"
-              fontWeight="500"
-              textAnchor="middle"
-            >
-              Column
-            </text>
-            <text
-              x="654"
-              y="125"
-              fill="white"
-              fontSize="14"
-              fontFamily="var(--font-family-sans)"
-              fontWeight="500"
-              textAnchor="middle"
-            >
-              Column
+              32
             </text>
           </svg>
           <p className="text-sm text-textSubtle mt-4">
-            The same 32px gutter applies consistently across multi-column
-            layouts.
+            Larger screens use 32px gutters for better visual separation.
           </p>
         </div>
 
-        {/* Component Gutter Diagram - showing gutter between components */}
+        {/* Component Gutter - buttons with spacing */}
         <div className="mb-8">
+          <h3 className="text-sm font-semibold mb-4">Component gutters</h3>
           <svg
-            viewBox="0 0 800 280"
-            className="w-full max-w-3xl border border-borderSubtle rounded"
+            viewBox="0 0 400 100"
+            className="w-full max-w-md"
             style={{ backgroundColor: "rgb(var(--color-canvas))" }}
           >
-            {/* Two component blocks with internal elements */}
-            {/* First component */}
-            <g>
-              <rect
-                x="50"
-                y="60"
-                width="344"
-                height="160"
-                fill="none"
-                stroke="#5E3FD1"
-                strokeWidth="2"
-                rx="4"
-              />
-              <rect
-                x="70"
-                y="80"
-                width="304"
-                height="40"
-                fill="#5E3FD1"
-                rx="2"
-                opacity="0.3"
-              />
-              <rect
-                x="70"
-                y="128"
-                width="304"
-                height="40"
-                fill="#5E3FD1"
-                rx="2"
-                opacity="0.3"
-              />
-              <rect
-                x="70"
-                y="176"
-                width="304"
-                height="24"
-                fill="#5E3FD1"
-                rx="2"
-                opacity="0.3"
-              />
-            </g>
-
-            {/* Second component */}
-            <g>
-              <rect
-                x="426"
-                y="60"
-                width="344"
-                height="160"
-                fill="none"
-                stroke="#5E3FD1"
-                strokeWidth="2"
-                rx="4"
-              />
-              <rect
-                x="446"
-                y="80"
-                width="304"
-                height="40"
-                fill="#5E3FD1"
-                rx="2"
-                opacity="0.3"
-              />
-              <rect
-                x="446"
-                y="128"
-                width="304"
-                height="40"
-                fill="#5E3FD1"
-                rx="2"
-                opacity="0.3"
-              />
-              <rect
-                x="446"
-                y="176"
-                width="304"
-                height="24"
-                fill="#5E3FD1"
-                rx="2"
-                opacity="0.3"
-              />
-            </g>
-
-            {/* Gutter measurement between components */}
-            <line
-              x1="394"
-              y1="30"
-              x2="426"
-              y2="30"
-              stroke="rgb(var(--color-textDefault))"
+            {/* First button */}
+            <rect
+              x="70"
+              y="30"
+              width="100"
+              height="40"
+              fill="none"
+              stroke="#008CB8"
               strokeWidth="2"
+              rx="4"
             />
-            <line
-              x1="394"
-              y1="20"
-              x2="394"
-              y2="40"
-              stroke="rgb(var(--color-textDefault))"
-              strokeWidth="2"
-            />
-            <line
-              x1="426"
-              y1="20"
-              x2="426"
-              y2="40"
-              stroke="rgb(var(--color-textDefault))"
-              strokeWidth="2"
-            />
-
             <text
-              x="410"
-              y="18"
+              x="120"
+              y="55"
+              fill="#008CB8"
+              fontSize="14"
+              fontFamily="var(--font-family-sans)"
+              textAnchor="middle"
+            >
+              Button
+            </text>
+
+            {/* Measurement to first button */}
+            <line
+              x1="50"
+              y1="50"
+              x2="70"
+              y2="50"
+              stroke="rgb(var(--color-textDefault))"
+              strokeWidth="1.5"
+            />
+            <line
+              x1="50"
+              y1="46"
+              x2="50"
+              y2="54"
+              stroke="rgb(var(--color-textDefault))"
+              strokeWidth="1.5"
+            />
+            <line
+              x1="70"
+              y1="46"
+              x2="70"
+              y2="54"
+              stroke="rgb(var(--color-textDefault))"
+              strokeWidth="1.5"
+            />
+            <text
+              x="60"
+              y="45"
               fill="rgb(var(--color-textDefault))"
               fontSize="12"
               fontFamily="var(--font-family-sans)"
               textAnchor="middle"
             >
-              32px
+              24
             </text>
 
-            {/* Component labels */}
+            {/* Second button */}
+            <rect
+              x="234"
+              y="30"
+              width="100"
+              height="40"
+              fill="none"
+              stroke="#008CB8"
+              strokeWidth="2"
+              rx="4"
+            />
             <text
-              x="222"
-              y="250"
-              fill="rgb(var(--color-textDefault))"
+              x="284"
+              y="55"
+              fill="#008CB8"
               fontSize="14"
               fontFamily="var(--font-family-sans)"
               textAnchor="middle"
             >
-              Component
+              Button
             </text>
+
+            {/* Measurement between buttons */}
+            <line
+              x1="170"
+              y1="50"
+              x2="234"
+              y2="50"
+              stroke="rgb(var(--color-textDefault))"
+              strokeWidth="1.5"
+            />
+            <line
+              x1="170"
+              y1="46"
+              x2="170"
+              y2="54"
+              stroke="rgb(var(--color-textDefault))"
+              strokeWidth="1.5"
+            />
+            <line
+              x1="234"
+              y1="46"
+              x2="234"
+              y2="54"
+              stroke="rgb(var(--color-textDefault))"
+              strokeWidth="1.5"
+            />
             <text
-              x="598"
-              y="250"
+              x="202"
+              y="45"
               fill="rgb(var(--color-textDefault))"
-              fontSize="14"
+              fontSize="12"
               fontFamily="var(--font-family-sans)"
               textAnchor="middle"
             >
-              Component
+              32
             </text>
           </svg>
           <p className="text-sm text-textSubtle mt-4">
-            Use gutter spacing between major components and content sections.
+            Use 24px or 32px spacing between components depending on the visual
+            hierarchy needed.
           </p>
         </div>
 
@@ -752,6 +561,9 @@ export default function GridSpacing() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
+                <th className="text-left py-3 px-4 font-semibold text-sm">
+                  Breakpoint
+                </th>
                 <th className="text-left py-3 px-4 font-semibold text-sm">
                   Value
                 </th>
@@ -765,6 +577,15 @@ export default function GridSpacing() {
             </thead>
             <tbody>
               <tr className="border-b border-borderSubtle">
+                <td className="py-3 px-4 text-sm">Medium (768px+)</td>
+                <td className="py-3 px-4 text-sm font-mono">24px / 1.5rem</td>
+                <td className="py-3 px-4 text-sm font-mono">gap-6</td>
+                <td className="py-3 px-4 text-sm font-mono">
+                  var(--grid-gutter-md)
+                </td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 px-4 text-sm">Large (1024px+)</td>
                 <td className="py-3 px-4 text-sm font-mono">32px / 2rem</td>
                 <td className="py-3 px-4 text-sm font-mono">gap-8</td>
                 <td className="py-3 px-4 text-sm font-mono">
@@ -901,7 +722,19 @@ export default function GridSpacing() {
                 <td className="py-3 px-4 text-sm font-mono">var(--grid-gap)</td>
               </tr>
               <tr className="border-b border-borderSubtle">
-                <td className="py-3 px-4 text-sm font-medium">Gutter</td>
+                <td className="py-3 px-4 text-sm font-medium">
+                  Gutter (Medium)
+                </td>
+                <td className="py-3 px-4 text-sm font-mono">24px / 1.5rem</td>
+                <td className="py-3 px-4 text-sm font-mono">gap-6</td>
+                <td className="py-3 px-4 text-sm font-mono">
+                  var(--grid-gutter-md)
+                </td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 px-4 text-sm font-medium">
+                  Gutter (Large)
+                </td>
                 <td className="py-3 px-4 text-sm font-mono">32px / 2rem</td>
                 <td className="py-3 px-4 text-sm font-mono">gap-8</td>
                 <td className="py-3 px-4 text-sm font-mono">
