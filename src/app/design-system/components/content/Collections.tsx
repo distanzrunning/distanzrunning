@@ -23,10 +23,13 @@ export default function Collections() {
       <section>
         <h2
           id="road"
-          className="font-serif text-[32px] leading-[1.2] font-medium mb-3 scroll-mt-32"
+          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
         >
           Road
         </h2>
+
+        <hr className="border-t border-borderDefault mb-6" />
+
         <p className="text-base text-textSubtle mb-6 max-w-3xl">
           Professional road running content - races, training, and performance.
         </p>
@@ -81,10 +84,13 @@ export default function Collections() {
       <section>
         <h2
           id="track"
-          className="font-serif text-[32px] leading-[1.2] font-medium mb-3 scroll-mt-32"
+          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
         >
           Track
         </h2>
+
+        <hr className="border-t border-borderDefault mb-6" />
+
         <p className="text-base text-textSubtle mb-6 max-w-3xl">
           Track and field content - sprint, middle distance, and technical
           training.
@@ -140,10 +146,13 @@ export default function Collections() {
       <section>
         <h2
           id="trail"
-          className="font-serif text-[32px] leading-[1.2] font-medium mb-3 scroll-mt-32"
+          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
         >
           Trail
         </h2>
+
+        <hr className="border-t border-borderDefault mb-6" />
+
         <p className="text-base text-textSubtle mb-6 max-w-3xl">
           Trail and ultrarunning content - adventure, exploration, and
           endurance.
@@ -199,10 +208,13 @@ export default function Collections() {
       <section>
         <h2
           id="gear"
-          className="font-serif text-[32px] leading-[1.2] font-medium mb-3 scroll-mt-32"
+          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
         >
           Gear
         </h2>
+
+        <hr className="border-t border-borderDefault mb-6" />
+
         <p className="text-base text-textSubtle mb-6 max-w-3xl">
           Equipment and gear reviews - shoes, watches, nutrition, and
           technology.
@@ -258,10 +270,13 @@ export default function Collections() {
       <section>
         <h2
           id="nutrition"
-          className="font-serif text-[32px] leading-[1.2] font-medium mb-3 scroll-mt-32"
+          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
         >
           Nutrition
         </h2>
+
+        <hr className="border-t border-borderDefault mb-6" />
+
         <p className="text-base text-textSubtle mb-6 max-w-3xl">
           Nutrition and wellness content - fueling strategies, recovery, and
           health.

@@ -3,13 +3,22 @@ export default function FoundationsOverview() {
     <div className="space-y-8">
       {/* Title */}
       <div>
-        <h1 className="font-serif text-[40px] leading-[1.15] font-medium mb-4">
+        <p className="text-sm tracking-wide text-electric-pink mb-2">
+          Foundations
+        </p>
+        <h1 className="font-serif text-[40px] leading-[1.15] font-medium mb-0">
           Overview
         </h1>
-        <p className="text-lg text-textSubtle max-w-3xl">
-          The foundational elements of Distanz Running's visual design language. By combining distinctive visual characteristics with purpose-driven semantics, a cohesive language emerges that embodies the spirit of the brand.
-        </p>
       </div>
+
+      <hr className="border-t-4 border-textDefault" />
+
+      <p className="text-base text-textSubtle max-w-3xl">
+        The foundational elements of Distanz Running&apos;s visual design
+        language. By combining distinctive visual characteristics with
+        purpose-driven semantics, a cohesive language emerges that embodies the
+        spirit of the brand.
+      </p>
     </div>
   );
 }

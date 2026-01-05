@@ -45,10 +45,13 @@ export default function ColourPalettes() {
       <section>
         <h2
           id="brand"
-          className="font-serif text-[32px] leading-[1.2] font-medium mb-3 scroll-mt-32"
+          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
         >
           Brand
         </h2>
+
+        <hr className="border-t border-borderDefault mb-6" />
+
         <p className="text-base text-textSubtle mb-6 max-w-3xl">
           Core monochrome foundation used throughout the design system for text,
           backgrounds, and structural elements.
@@ -87,10 +90,13 @@ export default function ColourPalettes() {
       <section>
         <h2
           id="accent"
-          className="font-serif text-[32px] leading-[1.2] font-medium mb-3 scroll-mt-32"
+          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
         >
           Accent
         </h2>
+
+        <hr className="border-t border-borderDefault mb-6" />
+
         <p className="text-base text-textSubtle mb-6 max-w-3xl">
           Purposeful color used for UI interactions, structural highlights, and
           content categorization.
@@ -98,7 +104,7 @@ export default function ColourPalettes() {
 
         {/* Primary - Electric Pink */}
         <div className="mb-12">
-          <hr className="border-t border-borderNeutral mb-6" />
+          <hr className="border-t border-borderSubtle mb-6" />
           <h3
             id="accent-primary"
             className="font-serif text-[24px] leading-[1.3] font-medium mb-3 scroll-mt-32"
@@ -171,7 +177,7 @@ export default function ColourPalettes() {
 
         {/* Secondary - Pace Purple & Volt Green */}
         <div className="mb-12">
-          <hr className="border-t border-borderNeutral mb-6" />
+          <hr className="border-t border-borderSubtle mb-6" />
           <h3
             id="accent-secondary"
             className="font-serif text-[24px] leading-[1.3] font-medium mb-3 scroll-mt-32"
@@ -260,7 +266,7 @@ export default function ColourPalettes() {
 
         {/* Tertiary - Tech Cyan, Track Red & Trail Brown */}
         <div className="mb-12">
-          <hr className="border-t border-borderNeutral mb-6" />
+          <hr className="border-t border-borderSubtle mb-6" />
           <h3
             id="accent-tertiary"
             className="font-serif text-[24px] leading-[1.3] font-medium mb-3 scroll-mt-32"
@@ -386,10 +392,13 @@ export default function ColourPalettes() {
       <section>
         <h2
           id="greyscale"
-          className="font-serif text-[32px] leading-[1.2] font-medium mb-3 scroll-mt-32"
+          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
         >
           Greyscale
         </h2>
+
+        <hr className="border-t border-borderDefault mb-6" />
+
         <p className="text-base text-textSubtle mb-6 max-w-3xl">
           10-shade systematic greyscale with perfect 10% lightness distribution.
           Optimized based on actual component usage analysis (1,092
@@ -502,10 +511,13 @@ export default function ColourPalettes() {
       <section>
         <h2
           id="canvas"
-          className="font-serif text-[32px] leading-[1.2] font-medium mb-3 scroll-mt-32"
+          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
         >
           Canvas
         </h2>
+
+        <hr className="border-t border-borderDefault mb-6" />
+
         <p className="text-base text-textSubtle mb-6 max-w-3xl">
           Subtle tinted backgrounds for layered sections and containers—warm
           tones for inviting spaces, cool tones for technical content. Light
@@ -594,10 +606,13 @@ export default function ColourPalettes() {
       <section>
         <h2
           id="status"
-          className="font-serif text-[32px] leading-[1.2] font-medium mb-3 scroll-mt-32"
+          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
         >
           Status
         </h2>
+
+        <hr className="border-t border-borderDefault mb-6" />
+
         <p className="text-base text-textSubtle mb-6 max-w-3xl">
           Semantic feedback colors for forms, validation, and alerts. These map
           category colors to common UI status meanings—success (Volt Green),
