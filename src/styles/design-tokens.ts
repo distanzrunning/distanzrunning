@@ -56,7 +56,7 @@ export const colors = {
     95: "#F2F2F2", // L=95% - Light mode elevated surfaces, backgrounds (57 uses)
   },
 
-  // Pace Purple - Secondary accent for Training/Tempo content (HSL: 262°, 60%)
+  // Pace Purple - Secondary accent for Track/Tempo content (HSL: 262°, 60%)
   // 2 colors with 4 variations each
   pacePurple: {
     45: "#452BB8",
@@ -73,16 +73,16 @@ export const colors = {
     95: "#E6FAEF",
   },
 
-  // Signal Orange - Tertiary accent for Gear/Equipment (HSL: 14°, 100%)
+  // Tech Cyan - Tertiary accent for Gear/Equipment (HSL: 190°, 100%)
   // 2 colors with 4 variations each
-  signalOrange: {
-    45: "#732600",
-    55: "#8C2F00",
-    90: "#F5D6CC",
-    95: "#FAEBE6",
+  techCyan: {
+    45: "#007399",
+    55: "#008CB8",
+    90: "#CCF0F5",
+    95: "#E6F7FA",
   },
 
-  // Track Red - Tertiary accent for Races/Events (HSL: 0°, 79%)
+  // Track Red - Tertiary accent for Road/Races content (HSL: 0°, 79%)
   trackRed: {
     45: "#B81616",
     55: "#D11B1B",
@@ -90,7 +90,7 @@ export const colors = {
     95: "#FAE9E9",
   },
 
-  // Trail Brown - Tertiary accent for Routes/Exploration (HSL: 25°, 59%)
+  // Trail Brown - Tertiary accent for Trail/Exploration (HSL: 25°, 59%)
   trailBrown: {
     45: "#73391D",
     55: "#8C4623",

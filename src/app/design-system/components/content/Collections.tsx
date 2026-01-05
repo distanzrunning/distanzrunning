@@ -35,65 +35,6 @@ export default function Collections() {
           <div className="flex flex-col items-center">
             <div
               className="w-32 h-32 rounded-full flex items-center justify-center"
-              style={{ backgroundColor: "#B81616" }}
-            >
-              <span className="text-sm font-sans text-center px-2 text-white">
-                Track Red 45
-              </span>
-            </div>
-          </div>
-          <div className="flex flex-col items-center">
-            <div
-              className="w-32 h-32 rounded-full flex items-center justify-center"
-              style={{ backgroundColor: "#D11B1B" }}
-            >
-              <span className="text-sm font-sans text-center px-2 text-white">
-                Track Red 55
-              </span>
-            </div>
-          </div>
-          <div className="flex flex-col items-center">
-            <div
-              className="w-32 h-32 rounded-full flex items-center justify-center"
-              style={{ backgroundColor: "#F5D2D2" }}
-            >
-              <span className="text-sm font-sans text-center px-2 text-black">
-                Track Red 90
-              </span>
-            </div>
-          </div>
-          <div className="flex flex-col items-center">
-            <div
-              className="w-32 h-32 rounded-full flex items-center justify-center"
-              style={{ backgroundColor: "#FAE9E9" }}
-            >
-              <span className="text-sm font-sans text-center px-2 text-black">
-                Track Red 95
-              </span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <hr className="border-t-4 border-textDefault" />
-
-      {/* Track Collection */}
-      <section>
-        <h2
-          id="track"
-          className="font-serif text-[32px] leading-[1.2] font-medium mb-3 scroll-mt-32"
-        >
-          Track
-        </h2>
-        <p className="text-base text-textSubtle mb-6 max-w-3xl">
-          Track and field content - sprint, middle distance, and technical
-          training.
-        </p>
-
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
-          <div className="flex flex-col items-center">
-            <div
-              className="w-32 h-32 rounded-full flex items-center justify-center"
               style={{ backgroundColor: "#452BB8" }}
             >
               <span className="text-sm font-sans text-center px-2 text-white">
@@ -128,6 +69,65 @@ export default function Collections() {
             >
               <span className="text-sm font-sans text-center px-2 text-black">
                 Pace Purple 95
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <hr className="border-t-4 border-textDefault" />
+
+      {/* Track Collection */}
+      <section>
+        <h2
+          id="track"
+          className="font-serif text-[32px] leading-[1.2] font-medium mb-3 scroll-mt-32"
+        >
+          Track
+        </h2>
+        <p className="text-base text-textSubtle mb-6 max-w-3xl">
+          Track and field content - sprint, middle distance, and technical
+          training.
+        </p>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
+          <div className="flex flex-col items-center">
+            <div
+              className="w-32 h-32 rounded-full flex items-center justify-center"
+              style={{ backgroundColor: "#B81616" }}
+            >
+              <span className="text-sm font-sans text-center px-2 text-white">
+                Track Red 45
+              </span>
+            </div>
+          </div>
+          <div className="flex flex-col items-center">
+            <div
+              className="w-32 h-32 rounded-full flex items-center justify-center"
+              style={{ backgroundColor: "#D11B1B" }}
+            >
+              <span className="text-sm font-sans text-center px-2 text-white">
+                Track Red 55
+              </span>
+            </div>
+          </div>
+          <div className="flex flex-col items-center">
+            <div
+              className="w-32 h-32 rounded-full flex items-center justify-center"
+              style={{ backgroundColor: "#F5D2D2" }}
+            >
+              <span className="text-sm font-sans text-center px-2 text-black">
+                Track Red 90
+              </span>
+            </div>
+          </div>
+          <div className="flex flex-col items-center">
+            <div
+              className="w-32 h-32 rounded-full flex items-center justify-center"
+              style={{ backgroundColor: "#FAE9E9" }}
+            >
+              <span className="text-sm font-sans text-center px-2 text-black">
+                Track Red 95
               </span>
             </div>
           </div>
@@ -212,40 +212,40 @@ export default function Collections() {
           <div className="flex flex-col items-center">
             <div
               className="w-32 h-32 rounded-full flex items-center justify-center"
-              style={{ backgroundColor: "#732600" }}
+              style={{ backgroundColor: "#007399" }}
             >
               <span className="text-sm font-sans text-center px-2 text-white">
-                Signal Orange 45
+                Tech Cyan 45
               </span>
             </div>
           </div>
           <div className="flex flex-col items-center">
             <div
               className="w-32 h-32 rounded-full flex items-center justify-center"
-              style={{ backgroundColor: "#8C2F00" }}
+              style={{ backgroundColor: "#008CB8" }}
             >
               <span className="text-sm font-sans text-center px-2 text-white">
-                Signal Orange 55
+                Tech Cyan 55
               </span>
             </div>
           </div>
           <div className="flex flex-col items-center">
             <div
               className="w-32 h-32 rounded-full flex items-center justify-center"
-              style={{ backgroundColor: "#F5D6CC" }}
+              style={{ backgroundColor: "#CCF0F5" }}
             >
               <span className="text-sm font-sans text-center px-2 text-black">
-                Signal Orange 90
+                Tech Cyan 90
               </span>
             </div>
           </div>
           <div className="flex flex-col items-center">
             <div
               className="w-32 h-32 rounded-full flex items-center justify-center"
-              style={{ backgroundColor: "#FAEBE6" }}
+              style={{ backgroundColor: "#E6F7FA" }}
             >
               <span className="text-sm font-sans text-center px-2 text-black">
-                Signal Orange 95
+                Tech Cyan 95
               </span>
             </div>
           </div>

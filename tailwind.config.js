@@ -14,7 +14,7 @@ module.exports = {
         // Distanz Brand Colors
         "electric-pink": "#e43c81",
         "volt-green": "#00D464",
-        "signal-orange": "#FF5722",
+        "tech-cyan": "#008CB8",
         "pace-purple": "#7C3AED",
         "trail-brown": "#8B4513",
         "track-red": "#DC2626",

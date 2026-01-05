@@ -258,7 +258,7 @@ export default function ColourPalettes() {
           />
         </div>
 
-        {/* Tertiary - Signal Orange, Track Red & Trail Brown */}
+        {/* Tertiary - Tech Cyan, Track Red & Trail Brown */}
         <div className="mb-12">
           <hr className="border-t border-borderNeutral mb-6" />
           <h3
@@ -268,16 +268,16 @@ export default function ColourPalettes() {
             Tertiary
           </h3>
           <p className="text-sm text-textSubtle mb-6 max-w-3xl">
-            Supporting category colors for specialized content—gear uses Signal
-            Orange, races use Track Red, and routes use Trail Brown.
+            Supporting category colors for specialized content—gear uses Tech
+            Cyan, road races use Track Red, and trail content uses Trail Brown.
           </p>
 
           <ColorSwatchGrid
             swatches={[
-              { name: "Signal Orange 45", hex: "#732600", textColor: "light" },
-              { name: "Signal Orange 55", hex: "#8C2F00", textColor: "light" },
-              { name: "Signal Orange 90", hex: "#F5D6CC", textColor: "dark" },
-              { name: "Signal Orange 95", hex: "#FAEBE6", textColor: "dark" },
+              { name: "Tech Cyan 45", hex: "#007399", textColor: "light" },
+              { name: "Tech Cyan 55", hex: "#008CB8", textColor: "light" },
+              { name: "Tech Cyan 90", hex: "#CCF0F5", textColor: "dark" },
+              { name: "Tech Cyan 95", hex: "#E6F7FA", textColor: "dark" },
               { name: "Track Red 45", hex: "#B81616", textColor: "light" },
               { name: "Track Red 55", hex: "#D11B1B", textColor: "light" },
               { name: "Track Red 90", hex: "#F5D2D2", textColor: "dark" },
@@ -292,32 +292,32 @@ export default function ColourPalettes() {
           <ColorTable
             colors={[
               {
-                name: "Signal Orange 45",
-                hex: "#732600",
-                rgb: "115, 38, 0",
-                hsl: "14°, 100%, 45%",
-                token: "--color-signal-orange-45",
+                name: "Tech Cyan 45",
+                hex: "#007399",
+                rgb: "0, 115, 153",
+                hsl: "190°, 100%, 45%",
+                token: "--color-tech-cyan-45",
               },
               {
-                name: "Signal Orange 55",
-                hex: "#8C2F00",
-                rgb: "140, 47, 0",
-                hsl: "14°, 100%, 55%",
-                token: "--color-signal-orange-55",
+                name: "Tech Cyan 55",
+                hex: "#008CB8",
+                rgb: "0, 140, 184",
+                hsl: "190°, 100%, 55%",
+                token: "--color-tech-cyan-55",
               },
               {
-                name: "Signal Orange 90",
-                hex: "#F5D6CC",
-                rgb: "245, 214, 204",
-                hsl: "14°, 100%, 90%",
-                token: "--color-signal-orange-90",
+                name: "Tech Cyan 90",
+                hex: "#CCF0F5",
+                rgb: "204, 240, 245",
+                hsl: "190°, 100%, 90%",
+                token: "--color-tech-cyan-90",
               },
               {
-                name: "Signal Orange 95",
-                hex: "#FAEBE6",
-                rgb: "250, 235, 230",
-                hsl: "14°, 100%, 95%",
-                token: "--color-signal-orange-95",
+                name: "Tech Cyan 95",
+                hex: "#E6F7FA",
+                rgb: "230, 247, 250",
+                hsl: "190°, 100%, 95%",
+                token: "--color-tech-cyan-95",
               },
               {
                 name: "Track Red 45",
@@ -601,9 +601,8 @@ export default function ColourPalettes() {
         <p className="text-base text-textSubtle mb-6 max-w-3xl">
           Semantic feedback colors for forms, validation, and alerts. These map
           category colors to common UI status meanings—success (Volt Green),
-          warning (Signal Orange), error (Track Red), and info (Pace Purple).
-          Each status has text, background, and border variants for flexible
-          usage.
+          warning (Tech Cyan), error (Track Red), and info (Pace Purple). Each
+          status has text, background, and border variants for flexible usage.
         </p>
 
         <ColorSwatchGrid
