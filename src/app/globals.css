@@ -245,6 +245,10 @@
     --rule-emphasised: 1px solid rgb(var(--color-textDefault)); /* Strong separation - Asphalt 20 */
     --rule-heavy: 4px solid rgb(var(--color-textDefault)); /* Major section divider - Asphalt 20 */
     --rule-accent: 4px solid #e43c81; /* Brand accent divider - Electric Pink */
+
+    /* Grid Spacing - Standard spacing values for all layouts */
+    --grid-gap: 1rem; /* 16px - standard element spacing within components */
+    --grid-gutter: 2rem; /* 32px - column spacing in grid layouts (2× gap) */
   }
 
   /* Dark Mode - Inverted scale uses lighter shades for text, darker for surfaces */

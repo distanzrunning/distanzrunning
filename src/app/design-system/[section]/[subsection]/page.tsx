@@ -10,6 +10,7 @@ import UXPrinciples from "../../components/content/UXPrinciples";
 import ColourPalettes from "../../components/content/ColourPalettes";
 import Collections from "../../components/content/Collections";
 import Rules from "../../components/content/Rules";
+import GridSpacing from "../../components/content/GridSpacing";
 import ContentWithTOC from "../../components/ContentWithTOC";
 
 export default function DesignSystemSubsectionPage() {
@@ -156,6 +157,21 @@ export default function DesignSystemSubsectionPage() {
             ]}
           >
             <Rules />
+          </ContentWithTOC>
+        );
+      }
+      if (subsection === "grid-spacing") {
+        return (
+          <ContentWithTOC
+            tocTitle="Contents"
+            tocItems={[
+              { id: "grid-gap", title: "Grid gap" },
+              { id: "grid-gutter", title: "Grid gutter" },
+              { id: "usage-examples", title: "Usage examples" },
+              { id: "reference", title: "Reference" },
+            ]}
+          >
+            <GridSpacing />
           </ContentWithTOC>
         );
       }

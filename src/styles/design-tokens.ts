@@ -268,6 +268,13 @@ export const breakpoints = {
 } as const;
 
 export const grid = {
+  // Grid Spacing - Standard spacing values for all layouts
+  spacing: {
+    gap: "1rem", // 16px - standard element spacing within components
+    gutter: "2rem", // 32px - column spacing in grid layouts (2× gap)
+  },
+
+  // Grid Layout - Responsive column system
   mobile: {
     columns: 4,
     gutter: "16px",
