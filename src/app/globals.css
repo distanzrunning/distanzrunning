@@ -347,28 +347,32 @@
     @apply col-span-12 lg:col-start-3 lg:col-span-8;
   }
 
-  /* Distanz article container (Distanz design system) */
+  /* Distanz article container (Distanz design system)
+     Uses 12-column grid on desktop (768px+), 4-column on mobile
+     Gap: 16px, Gutter: 32px, Max-width: 1585px */
   .distanz-article-container {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     margin-left: auto;
     margin-right: auto;
-    max-width: 95%;
+    max-width: 1585px;
     width: 100%;
-    column-gap: 1.25rem;
-    padding-left: 1.5rem;
+    column-gap: 1rem; /* 16px gap */
+    padding-left: 1.5rem; /* 24px outside gutter mobile */
     padding-right: 1.5rem;
     padding-top: 80px;
   }
 
-  @media (min-width: 1024px) {
+  @media (min-width: 768px) {
     .distanz-article-container {
-      grid-template-columns: repeat(18, minmax(0, 1fr));
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      padding-left: 2rem; /* 32px outside gutter desktop */
+      padding-right: 2rem;
     }
   }
 
   .distanz-article-col {
-    @apply col-span-full lg:col-start-4 lg:col-span-10;
+    @apply col-span-full md:col-start-3 md:col-span-8;
   }
 
   .distanz-full-col {
@@ -382,33 +386,7 @@
     font-variant-numeric: oldstyle-nums proportional-nums;
   }
 
-  /* Legacy Distanz classes for backwards compatibility */
-  .distanz-article-container {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    margin-left: auto;
-    margin-right: auto;
-    max-width: 95%;
-    width: 100%;
-    column-gap: 1.25rem;
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
-    padding-top: 80px;
-  }
-
-  @media (min-width: 1024px) {
-    .distanz-article-container {
-      grid-template-columns: repeat(18, minmax(0, 1fr));
-    }
-  }
-
-  .distanz-article-col {
-    @apply col-span-full lg:col-start-4 lg:col-span-10;
-  }
-
-  .distanz-full-col {
-    @apply col-span-full;
-  }
+  /* Legacy Distanz classes removed - see distanz-article-container above */
 
   /* Legacy Distanz font features (Inter-specific, kept for backwards compatibility) */
   .distanz-font-features {

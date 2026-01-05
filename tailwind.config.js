@@ -671,21 +671,25 @@ module.exports = {
     // require('@tailwindcss/container-queries'),
     function ({ addComponents, theme }) {
       addComponents({
-        // Distanz container system (Distanz design system)
+        // Distanz container system (12-column grid)
+        // 4 columns on mobile, 12 columns on desktop (768px+)
+        // Gap: 16px, Gutter: 32px, Max-width: 1585px
         ".distanz-container": {
           display: "grid",
           gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
           marginLeft: "auto",
           marginRight: "auto",
-          maxWidth: "95%",
+          maxWidth: "1585px",
           width: "100%",
-          columnGap: "1.25rem",
+          columnGap: "1rem",
           paddingLeft: "1.5rem",
           paddingRight: "1.5rem",
         },
-        "@media (min-width: 1024px)": {
+        "@media (min-width: 768px)": {
           ".distanz-container": {
-            gridTemplateColumns: "repeat(18, minmax(0, 1fr))",
+            gridTemplateColumns: "repeat(12, minmax(0, 1fr))",
+            paddingLeft: "2rem",
+            paddingRight: "2rem",
           },
         },
 
@@ -695,16 +699,18 @@ module.exports = {
           gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
           marginLeft: "auto",
           marginRight: "auto",
-          maxWidth: "95%",
+          maxWidth: "1585px",
           width: "100%",
-          columnGap: "1.25rem",
+          columnGap: "1rem",
           paddingLeft: "1.5rem",
           paddingRight: "1.5rem",
           paddingTop: "80px",
         },
-        "@media (min-width: 1024px)": {
+        "@media (min-width: 768px)": {
           ".distanz-article-container": {
-            gridTemplateColumns: "repeat(18, minmax(0, 1fr))",
+            gridTemplateColumns: "repeat(12, minmax(0, 1fr))",
+            paddingLeft: "2rem",
+            paddingRight: "2rem",
           },
         },
 
@@ -712,59 +718,14 @@ module.exports = {
           gridColumn: "1 / -1",
         },
 
+        // Centered content column (cols 3-10 of 12)
         ".distanz-article-col": {
           gridColumn: "1 / -1",
-          "@media (min-width: 1024px)": {
-            gridColumnStart: "4",
-            gridColumnEnd: "14",
-          },
         },
-
-        // Legacy Distanz classes for backwards compatibility
-        ".distanz-container": {
-          display: "grid",
-          gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
-          marginLeft: "auto",
-          marginRight: "auto",
-          maxWidth: "95%",
-          width: "100%",
-          columnGap: "1.25rem",
-          paddingLeft: "1.5rem",
-          paddingRight: "1.5rem",
-        },
-        "@media (min-width: 1024px)": {
-          ".distanz-container": {
-            gridTemplateColumns: "repeat(18, minmax(0, 1fr))",
-          },
-        },
-
-        ".distanz-article-container": {
-          display: "grid",
-          gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
-          marginLeft: "auto",
-          marginRight: "auto",
-          maxWidth: "95%",
-          width: "100%",
-          columnGap: "1.25rem",
-          paddingLeft: "1.5rem",
-          paddingRight: "1.5rem",
-          paddingTop: "80px",
-        },
-        "@media (min-width: 1024px)": {
-          ".distanz-article-container": {
-            gridTemplateColumns: "repeat(18, minmax(0, 1fr))",
-          },
-        },
-
-        ".distanz-full-col": {
-          gridColumn: "1 / -1",
-        },
-
-        ".distanz-article-col": {
-          gridColumn: "1 / -1",
-          "@media (min-width: 1024px)": {
-            gridColumnStart: "4",
-            gridColumnEnd: "14",
+        "@media (min-width: 768px)": {
+          ".distanz-article-col": {
+            gridColumnStart: "3",
+            gridColumnEnd: "11",
           },
         },
 
@@ -773,11 +734,6 @@ module.exports = {
           fontFeatureSettings: "normal",
           fontVariantLigatures: "common-ligatures",
           fontVariantNumeric: "oldstyle-nums proportional-nums",
-        },
-
-        // Legacy (Inter-specific, kept for backwards compatibility)
-        ".distanz-font-features": {
-          fontFeatureSettings: "'cv02', 'cv03', 'cv04', 'cv11'",
         },
 
         // IEEE-inspired bordered layout system
