@@ -11,6 +11,7 @@ import ColourPalettes from "../../components/content/ColourPalettes";
 import Collections from "../../components/content/Collections";
 import Rules from "../../components/content/Rules";
 import GridSpacing from "../../components/content/GridSpacing";
+import GridLayout from "../../components/content/GridLayout";
 import ContentWithTOC from "../../components/ContentWithTOC";
 
 export default function DesignSystemSubsectionPage() {
@@ -176,6 +177,25 @@ export default function DesignSystemSubsectionPage() {
             ]}
           >
             <GridSpacing />
+          </ContentWithTOC>
+        );
+      }
+      if (subsection === "grid-layout") {
+        return (
+          <ContentWithTOC
+            tocTitle="Contents"
+            tocItems={[
+              { id: "column-grid", title: "Column grid" },
+              {
+                id: "resources",
+                title: "Resources",
+                children: [
+                  { id: "resources-figma-files", title: "Figma files" },
+                ],
+              },
+            ]}
+          >
+            <GridLayout />
           </ContentWithTOC>
         );
       }

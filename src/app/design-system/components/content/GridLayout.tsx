@@ -1,0 +1,272 @@
+import Image from "next/image";
+
+export default function GridLayout() {
+  return (
+    <div className="space-y-8">
+      {/* Page Title */}
+      <div>
+        <p className="text-sm tracking-wide text-electric-pink mb-2">Grid</p>
+        <h1
+          className="font-serif text-[40px] leading-[1.15] font-medium mb-0"
+          id="grid-layout"
+        >
+          Grid layout
+        </h1>
+      </div>
+
+      <hr className="border-t-4 border-textDefault" />
+
+      {/* Column Grid Section */}
+      <section>
+        <h2
+          id="column-grid"
+          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+        >
+          Column grid
+        </h2>
+
+        <hr className="border-t border-borderDefault mb-6" />
+
+        <p className="text-base text-textSubtle mb-4">
+          Across screen sizes, grid spacing and grid gutters remain fixed to the
+          defined values. The number of columns is changeable, and column widths
+          are fluid.
+        </p>
+        <p className="text-base text-textSubtle mb-8">
+          The recommended max-width of the grid for the web is 1585px (99rem).
+        </p>
+
+        {/* Columns Table */}
+        <div className="overflow-x-auto mb-8">
+          <table className="w-full border-collapse">
+            <thead>
+              <tr className="border-b border-borderDefault">
+                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                  Columns
+                </th>
+                <th className="text-left py-3 px-4 font-semibold text-sm">
+                  Breakpoints
+                </th>
+                <th className="text-left py-3 px-4 font-semibold text-sm">
+                  Within media query
+                </th>
+              </tr>
+            </thead>
+            <tbody className="whitespace-nowrap">
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 text-sm">1</td>
+                <td className="py-3 px-4 text-sm">
+                  Less than 599px (37.4375rem)
+                </td>
+                <td className="py-3 px-4 text-sm font-mono"></td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 text-sm">6</td>
+                <td className="py-3 px-4 text-sm">
+                  Greater than or equal to 600px (37.5rem)
+                </td>
+                <td className="py-3 px-4 text-sm font-mono">
+                  --ds-viewport-min-medium
+                </td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 text-sm">12</td>
+                <td className="py-3 px-4 text-sm">
+                  Greater than or equal to 960px (60rem)
+                </td>
+                <td className="py-3 px-4 text-sm font-mono">
+                  --ds-viewport-min-large
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        {/* CSS Classes Table */}
+        <div className="overflow-x-auto mb-8">
+          <table className="w-full border-collapse">
+            <thead>
+              <tr className="border-b border-borderDefault">
+                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                  CSS
+                </th>
+                <th className="text-left py-3 px-4 font-semibold text-sm">
+                  Description
+                </th>
+              </tr>
+            </thead>
+            <tbody className="whitespace-nowrap">
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 text-sm font-mono">ds-layout-grid</td>
+                <td className="py-3 px-4 text-sm">
+                  Supports column grid with column gutters
+                </td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 text-sm font-mono">
+                  ds-layout-grid--edged
+                </td>
+                <td className="py-3 px-4 text-sm">
+                  Supports column grid with column gutters and outside gutters
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <hr className="border-t border-borderDefault mb-8" />
+
+        {/* 1 column (small screen) */}
+        <p className="text-base font-semibold mb-4">
+          1 column with outside gutters (small screen)
+        </p>
+        <figure className="mb-8">
+          <Image
+            src="/images/design-system/grid-1col-12.svg"
+            alt="1-column grid with 12px outside gutters for small screens"
+            width={320}
+            height={312}
+          />
+        </figure>
+
+        <hr className="border-t border-borderDefault mb-8" />
+
+        {/* 6 columns (medium screen) */}
+        <p className="text-base font-semibold mb-4">
+          6 columns with outside gutters (medium screen)
+        </p>
+        <figure className="mb-8">
+          <Image
+            src="/images/design-system/grid-6col-24-edged.svg"
+            alt="6-column grid with 24px outside gutters for medium screens"
+            width={648}
+            height={312}
+          />
+        </figure>
+
+        <hr className="border-t border-borderDefault mb-8" />
+
+        {/* 6 columns (large screen) */}
+        <p className="text-base font-semibold mb-4">
+          6 columns with outside gutters (large screen)
+        </p>
+        <figure className="mb-8">
+          <Image
+            src="/images/design-system/grid-6col-32-edged.svg"
+            alt="6-column grid with 32px outside gutters for large screens"
+            width={704}
+            height={312}
+          />
+        </figure>
+      </section>
+
+      <hr className="border-t-4 border-textDefault" />
+
+      {/* Resources Section */}
+      <section>
+        <h2
+          id="resources"
+          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+        >
+          Resources
+        </h2>
+
+        <hr className="border-t border-borderDefault mb-6" />
+
+        <h3
+          id="resources-figma-files"
+          className="font-serif text-[22px] leading-[1.3] font-medium mb-3 scroll-mt-32"
+        >
+          Figma files
+        </h3>
+
+        <p className="text-base text-textSubtle mb-8">
+          <a
+            href="#"
+            className="text-electric-pink hover:underline"
+          >
+            Download Figma file
+          </a>
+        </p>
+
+        {/* Artboards Table */}
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse">
+            <thead>
+              <tr className="border-b border-borderDefault">
+                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                  Artboard
+                </th>
+                <th className="text-left py-3 px-4 font-semibold text-sm">
+                  Grid/artboard
+                </th>
+                <th className="text-left py-3 px-4 font-semibold text-sm">
+                  Columns
+                </th>
+                <th className="text-left py-3 px-4 font-semibold text-sm">
+                  Gap/gutter
+                </th>
+                <th className="text-left py-3 px-4 font-semibold text-sm">
+                  Within media query
+                </th>
+              </tr>
+            </thead>
+            <tbody className="whitespace-nowrap">
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 text-sm">Grid XSM</td>
+                <td className="py-3 px-4 text-sm">312/336px</td>
+                <td className="py-3 px-4 text-sm">4</td>
+                <td className="py-3 px-4 text-sm">12/24</td>
+                <td className="py-3 px-4 text-sm font-mono">
+                  --ds-viewport-max-small
+                </td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 text-sm">Grid SM</td>
+                <td className="py-3 px-4 text-sm">408/432px</td>
+                <td className="py-3 px-4 text-sm">6</td>
+                <td className="py-3 px-4 text-sm">12/24</td>
+                <td className="py-3 px-4 text-sm font-mono">
+                  --ds-viewport-min-small
+                </td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 text-sm">Grid MD</td>
+                <td className="py-3 px-4 text-sm">600/648px</td>
+                <td className="py-3 px-4 text-sm">6</td>
+                <td className="py-3 px-4 text-sm">12/24</td>
+                <td className="py-3 px-4 text-sm font-mono">
+                  --ds-viewport-min-medium
+                </td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 text-sm">Grid LG</td>
+                <td className="py-3 px-4 text-sm">976/1040px</td>
+                <td className="py-3 px-4 text-sm">12</td>
+                <td className="py-3 px-4 text-sm">16/32</td>
+                <td className="py-3 px-4 text-sm font-mono">
+                  --ds-viewport-min-large
+                </td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 text-sm">Grid XLG</td>
+                <td className="py-3 px-4 text-sm">1312/1376px</td>
+                <td className="py-3 px-4 text-sm">12</td>
+                <td className="py-3 px-4 text-sm">16/32</td>
+                <td className="py-3 px-4 text-sm font-mono" rowSpan={2}>
+                  --ds-viewport-min-xlarge
+                </td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 text-sm">Grid MAX</td>
+                <td className="py-3 px-4 text-sm">1432/1496px</td>
+                <td className="py-3 px-4 text-sm">12</td>
+                <td className="py-3 px-4 text-sm">16/32</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  );
+}
