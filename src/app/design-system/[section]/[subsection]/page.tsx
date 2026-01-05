@@ -8,6 +8,7 @@ import FoundationsOverview from "../../components/content/FoundationsOverview";
 import DesignPrinciples from "../../components/content/DesignPrinciples";
 import UXPrinciples from "../../components/content/UXPrinciples";
 import ColourPalettes from "../../components/content/ColourPalettes";
+import Collections from "../../components/content/Collections";
 import Rules from "../../components/content/Rules";
 import ContentWithTOC from "../../components/ContentWithTOC";
 
@@ -104,6 +105,22 @@ export default function DesignSystemSubsectionPage() {
             ]}
           >
             <ColourPalettes />
+          </ContentWithTOC>
+        );
+      }
+      if (subsection === "collections") {
+        return (
+          <ContentWithTOC
+            tocTitle="Contents"
+            tocItems={[
+              { id: "road", title: "Road" },
+              { id: "track", title: "Track" },
+              { id: "trail", title: "Trail" },
+              { id: "gear", title: "Gear" },
+              { id: "nutrition", title: "Nutrition" },
+            ]}
+          >
+            <Collections />
           </ContentWithTOC>
         );
       }
