@@ -27,16 +27,6 @@ export default function GridSpacing() {
 
         <hr className="border-t border-borderDefault mb-6" />
 
-        <p className="text-base text-textSubtle mb-4">
-          Distanz uses a responsive spacing system that scales with screen size.
-          Gap is the spacing between elements within components. Gutter is the
-          space between grid columns, always 2× the gap value.
-        </p>
-        <p className="text-base text-textSubtle mb-8">
-          Smaller spacing on mobile preserves proportional balance, while larger
-          spacing on desktop gives content room to breathe.
-        </p>
-
         {/* Grid Gap Subsection */}
         <h3
           id="gap-and-gutter-grid-gap"
@@ -45,38 +35,38 @@ export default function GridSpacing() {
           Grid gap
         </h3>
         <p className="text-base text-textSubtle mb-6">
-          Grid gap is the standard spacing between elements - used for vertical
-          and horizontal spacing between form fields, buttons, cards, and
-          component internals.
+          Grid gap is the standard spacing between elements.
         </p>
 
-        {/* Grid Gap SVG Diagrams - Side by side */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8 max-w-[788px]">
+        {/* Grid Gap SVG Diagrams - Side by side like Economist */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
           <figure>
             <Image
-              src="/images/design-system/grid-gap-vertical.svg"
-              alt="Vertical gap showing spacing between stacked form elements"
+              src="/images/design-system/grid-component-gap.svg"
+              alt="Vertical gap between form elements showing 12px and 16px spacing"
               width={386}
               height={232}
+              className="w-full h-auto"
             />
           </figure>
           <figure>
             <Image
-              src="/images/design-system/grid-gap-horizontal.svg"
-              alt="Horizontal gap showing spacing between side-by-side buttons and cards"
+              src="/images/design-system/grid-component-optical.svg"
+              alt="Horizontal gap between buttons showing 12px and 16px spacing"
               width={386}
               height={232}
+              className="w-full h-auto"
             />
           </figure>
         </div>
 
-        {/* Grid Gap Table */}
+        {/* Grid Gap Table with rowspan */}
         <div className="overflow-x-auto mb-8">
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
                 <th className="text-left py-3 pr-4 font-semibold text-sm">
-                  Screen size
+                  Grid gap
                 </th>
                 <th className="text-left py-3 px-4 font-semibold text-sm">
                   px
@@ -85,28 +75,25 @@ export default function GridSpacing() {
                   rem
                 </th>
                 <th className="text-left py-3 px-4 font-semibold text-sm">
-                  Tailwind
-                </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
                   Token
                 </th>
               </tr>
             </thead>
             <tbody className="whitespace-nowrap">
               <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 text-sm">Mobile (&lt;768px)</td>
+                <td className="py-3 pr-4 text-sm">Less than 768px (48rem)</td>
                 <td className="py-3 px-4 text-sm">12</td>
                 <td className="py-3 px-4 text-sm">0.75</td>
-                <td className="py-3 px-4 text-sm font-mono">gap-3</td>
                 <td className="py-3 px-4 text-sm font-mono" rowSpan={2}>
                   --grid-gap
                 </td>
               </tr>
               <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 text-sm">Desktop (768px+)</td>
+                <td className="py-3 pr-4 text-sm">
+                  Greater than 768px (48rem)
+                </td>
                 <td className="py-3 px-4 text-sm">16</td>
                 <td className="py-3 px-4 text-sm">1</td>
-                <td className="py-3 px-4 text-sm font-mono">gap-4</td>
               </tr>
             </tbody>
           </table>
@@ -122,18 +109,17 @@ export default function GridSpacing() {
           Grid gutter
         </h3>
         <p className="text-base text-textSubtle mb-6">
-          Grid gutter is the space between grid columns - always 2× the gap
-          value. This creates visual rhythm and ensures content has room to
-          breathe.
+          Grid gutter is the space between grid columns, 2x the value of the
+          gap.
         </p>
 
-        {/* Grid Gutter Table */}
+        {/* Grid Gutter Table with rowspan */}
         <div className="overflow-x-auto mb-8">
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
                 <th className="text-left py-3 pr-4 font-semibold text-sm">
-                  Screen size
+                  Grid gutter
                 </th>
                 <th className="text-left py-3 px-4 font-semibold text-sm">
                   px
@@ -142,28 +128,25 @@ export default function GridSpacing() {
                   rem
                 </th>
                 <th className="text-left py-3 px-4 font-semibold text-sm">
-                  Tailwind
-                </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
                   Token
                 </th>
               </tr>
             </thead>
             <tbody className="whitespace-nowrap">
               <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 text-sm">Mobile (&lt;768px)</td>
+                <td className="py-3 pr-4 text-sm">Less than 768px (48rem)</td>
                 <td className="py-3 px-4 text-sm">24</td>
                 <td className="py-3 px-4 text-sm">1.5</td>
-                <td className="py-3 px-4 text-sm font-mono">gap-6</td>
                 <td className="py-3 px-4 text-sm font-mono" rowSpan={2}>
                   --grid-gutter
                 </td>
               </tr>
               <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 text-sm">Desktop (768px+)</td>
+                <td className="py-3 pr-4 text-sm">
+                  Greater than 768px (48rem)
+                </td>
                 <td className="py-3 px-4 text-sm">32</td>
                 <td className="py-3 px-4 text-sm">2</td>
-                <td className="py-3 px-4 text-sm font-mono">gap-8</td>
               </tr>
             </tbody>
           </table>
@@ -171,134 +154,49 @@ export default function GridSpacing() {
 
         <hr className="border-t border-borderDefault mb-8" />
 
-        {/* Grid gutter (mobile) */}
-        <p className="text-base font-semibold mb-4">Grid gutter (mobile)</p>
+        {/* Grid gutter (medium screen) */}
+        <p className="text-base font-semibold mb-4">
+          Grid gutter (medium screen)
+        </p>
         <figure className="mb-8">
           <Image
-            src="/images/design-system/grid-gutter-mobile.svg"
-            alt="4-column grid with 24px gutters for mobile screens"
-            width={375}
-            height={232}
-          />
-        </figure>
-
-        <hr className="border-t border-borderDefault mb-8" />
-
-        {/* Grid gutter (desktop) */}
-        <p className="text-base font-semibold mb-4">Grid gutter (desktop)</p>
-        <figure className="mb-8 max-w-[600px]">
-          <Image
-            src="/images/design-system/grid-gutter-desktop.svg"
-            alt="12-column grid with 32px gutters for desktop screens"
+            src="/images/design-system/grid-6col-24.svg"
+            alt="6-column grid with 24px gutters"
             width={600}
-            height={232}
+            height={312}
+            className="w-full max-w-[600px] h-auto"
           />
         </figure>
 
         <hr className="border-t border-borderDefault mb-8" />
 
-        {/* Outside Gutter Subsection */}
-        <h3
-          id="gap-and-gutter-outside-gutter"
-          className="font-serif text-[22px] leading-[1.3] font-medium mb-3 scroll-mt-32"
-        >
-          Outside gutter
-        </h3>
-        <p className="text-base text-textSubtle mb-6">
-          Outside gutters provide padding between the grid and the viewport
-          edge. They use the same responsive values as the column gutter.
+        {/* Grid gutter (large screen) */}
+        <p className="text-base font-semibold mb-4">
+          Grid gutter (large screen)
         </p>
-
-        <div className="overflow-x-auto mb-8">
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
-                  Screen size
-                </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
-                  px
-                </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
-                  rem
-                </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
-                  Token
-                </th>
-              </tr>
-            </thead>
-            <tbody className="whitespace-nowrap">
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 text-sm">Mobile (&lt;768px)</td>
-                <td className="py-3 px-4 text-sm">24</td>
-                <td className="py-3 px-4 text-sm">1.5</td>
-                <td className="py-3 px-4 text-sm font-mono" rowSpan={2}>
-                  --grid-outside-gutter
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 text-sm">Desktop (768px+)</td>
-                <td className="py-3 px-4 text-sm">32</td>
-                <td className="py-3 px-4 text-sm">2</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        <figure className="mb-8">
+          <Image
+            src="/images/design-system/grid-6col-32.svg"
+            alt="6-column grid with 32px gutters"
+            width={640}
+            height={312}
+            className="w-full max-w-[640px] h-auto"
+          />
+        </figure>
 
         <hr className="border-t border-borderDefault mb-8" />
 
-        {/* Spacing Summary */}
-        <h3
-          id="gap-and-gutter-summary"
-          className="font-serif text-[22px] leading-[1.3] font-medium mb-3 scroll-mt-32"
-        >
-          Spacing summary
-        </h3>
-        <p className="text-base text-textSubtle mb-6">
-          All spacing values maintain a consistent 2× relationship between gap
-          and gutter across screen sizes.
-        </p>
-
-        <div className="overflow-x-auto mb-8">
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
-                  Spacing
-                </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
-                  Mobile (&lt;768px)
-                </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
-                  Desktop (768px+)
-                </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
-                  Relationship
-                </th>
-              </tr>
-            </thead>
-            <tbody className="whitespace-nowrap">
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 text-sm">Gap</td>
-                <td className="py-3 px-4 text-sm">12px</td>
-                <td className="py-3 px-4 text-sm">16px</td>
-                <td className="py-3 px-4 text-sm">Base unit</td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 text-sm">Gutter</td>
-                <td className="py-3 px-4 text-sm">24px</td>
-                <td className="py-3 px-4 text-sm">32px</td>
-                <td className="py-3 px-4 text-sm">2× gap</td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 text-sm">Outside gutter</td>
-                <td className="py-3 px-4 text-sm">24px</td>
-                <td className="py-3 px-4 text-sm">32px</td>
-                <td className="py-3 px-4 text-sm">= gutter</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        {/* Component gutters */}
+        <p className="text-base font-semibold mb-4">Component gutters</p>
+        <figure className="mb-8">
+          <Image
+            src="/images/design-system/grid-component-gutter.svg"
+            alt="Component gutter spacing between buttons showing 24px and 32px"
+            width={386}
+            height={232}
+            className="w-full max-w-[386px] h-auto"
+          />
+        </figure>
       </section>
     </div>
   );

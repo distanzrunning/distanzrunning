@@ -172,11 +172,6 @@ export default function DesignSystemSubsectionPage() {
                 children: [
                   { id: "gap-and-gutter-grid-gap", title: "Grid gap" },
                   { id: "gap-and-gutter-grid-gutter", title: "Grid gutter" },
-                  {
-                    id: "gap-and-gutter-outside-gutter",
-                    title: "Outside gutter",
-                  },
-                  { id: "gap-and-gutter-summary", title: "Spacing summary" },
                 ],
               },
             ]}
@@ -190,31 +185,13 @@ export default function DesignSystemSubsectionPage() {
           <ContentWithTOC
             tocTitle="Contents"
             tocItems={[
-              {
-                id: "column-grid",
-                title: "Column grid",
-                children: [
-                  { id: "column-grid-common-layouts", title: "Common layouts" },
-                ],
-              },
-              {
-                id: "main-wrapper",
-                title: "Main wrapper",
-                children: [
-                  { id: "main-wrapper-classes", title: "CSS classes" },
-                  {
-                    id: "main-wrapper-responsive",
-                    title: "Responsive behavior",
-                  },
-                  { id: "main-wrapper-usage", title: "Usage" },
-                ],
-              },
+              { id: "column-grid", title: "Column grid" },
+              { id: "main-wrapper", title: "Main wrapper" },
               {
                 id: "resources",
                 title: "Resources",
                 children: [
-                  { id: "resources-figma-files", title: "Figma files" },
-                  { id: "resources-css-variables", title: "CSS variables" },
+                  { id: "resources-figma-files", title: "Figma artboards" },
                 ],
               },
             ]}
