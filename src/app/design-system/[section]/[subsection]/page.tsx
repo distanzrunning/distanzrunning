@@ -12,6 +12,7 @@ import Collections from "../../components/content/Collections";
 import Rules from "../../components/content/Rules";
 import GridSpacing from "../../components/content/GridSpacing";
 import GridLayout from "../../components/content/GridLayout";
+import Typefaces from "../../components/content/Typefaces";
 import ContentWithTOC from "../../components/ContentWithTOC";
 
 export default function DesignSystemSubsectionPage() {
@@ -186,6 +187,35 @@ export default function DesignSystemSubsectionPage() {
             ]}
           >
             <GridLayout />
+          </ContentWithTOC>
+        );
+      }
+      if (subsection === "typefaces") {
+        return (
+          <ContentWithTOC
+            tocTitle="Contents"
+            tocItems={[
+              {
+                id: "eb-garamond",
+                title: "EB Garamond",
+                children: [
+                  { id: "eb-garamond-regular", title: "EB Garamond" },
+                  { id: "eb-garamond-italic", title: "EB Garamond Italic" },
+                ],
+              },
+              {
+                id: "inter",
+                title: "Inter",
+                children: [
+                  { id: "inter-variable", title: "Inter Variable" },
+                  { id: "inter-weights", title: "Weight spectrum" },
+                ],
+              },
+              { id: "font-roles", title: "Font roles" },
+              { id: "reference", title: "Reference" },
+            ]}
+          >
+            <Typefaces />
           </ContentWithTOC>
         );
       }
