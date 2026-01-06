@@ -14,6 +14,7 @@ import GridSpacing from "../../components/content/GridSpacing";
 import GridLayout from "../../components/content/GridLayout";
 import Typefaces from "../../components/content/Typefaces";
 import ModularScale from "../../components/content/ModularScale";
+import LineHeight from "../../components/content/LineHeight";
 import ContentWithTOC from "../../components/ContentWithTOC";
 
 export default function DesignSystemSubsectionPage() {
@@ -231,6 +232,26 @@ export default function DesignSystemSubsectionPage() {
             ]}
           >
             <ModularScale />
+          </ContentWithTOC>
+        );
+      }
+      if (subsection === "line-height") {
+        return (
+          <ContentWithTOC
+            tocTitle="Contents"
+            tocItems={[
+              {
+                id: "multipliers",
+                title: "Multipliers",
+                children: [
+                  { id: "visual-comparison", title: "Visual comparison" },
+                ],
+              },
+              { id: "computed-values", title: "Computed values" },
+              { id: "reference", title: "Reference" },
+            ]}
+          >
+            <LineHeight />
           </ContentWithTOC>
         );
       }
