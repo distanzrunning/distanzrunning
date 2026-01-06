@@ -47,7 +47,7 @@ export default function DesignSystemSubsectionPage() {
       if (subsection === "design-principles") {
         return (
           <ContentWithTOC
-            tocTitle="Our principles"
+            tocTitle="Contents"
             mainSectionId="our-principles"
             tocItems={[
               { id: "less-is-more", title: "Less is more" },
@@ -71,7 +71,7 @@ export default function DesignSystemSubsectionPage() {
       if (subsection === "ux-principles") {
         return (
           <ContentWithTOC
-            tocTitle="Our UX principles"
+            tocTitle="Contents"
             mainSectionId="our-ux-principles"
             tocItems={[
               { id: "user-centred-design", title: "User-centred design" },
