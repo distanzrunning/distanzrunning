@@ -16,6 +16,7 @@ import Typefaces from "../../components/content/Typefaces";
 import ModularScale from "../../components/content/ModularScale";
 import LineHeight from "../../components/content/LineHeight";
 import TextStyles from "../../components/content/TextStyles";
+import Iconography from "../../components/content/Iconography";
 import ContentWithTOC from "../../components/ContentWithTOC";
 
 export default function DesignSystemSubsectionPage() {
@@ -269,6 +270,27 @@ export default function DesignSystemSubsectionPage() {
             ]}
           >
             <TextStyles />
+          </ContentWithTOC>
+        );
+      }
+      if (subsection === "iconography") {
+        return (
+          <ContentWithTOC
+            tocTitle="Contents"
+            tocItems={[
+              { id: "sizing", title: "Sizing" },
+              { id: "stroke-weight", title: "Stroke weight" },
+              { id: "colour", title: "Colour" },
+              { id: "navigation", title: "Navigation" },
+              { id: "theme", title: "Theme" },
+              { id: "categories", title: "Categories" },
+              { id: "data", title: "Data & metrics" },
+              { id: "design-system", title: "Design system" },
+              { id: "usage", title: "Usage guidelines" },
+              { id: "reference", title: "Reference" },
+            ]}
+          >
+            <Iconography />
           </ContentWithTOC>
         );
       }

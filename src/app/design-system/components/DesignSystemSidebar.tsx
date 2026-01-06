@@ -9,6 +9,7 @@ import {
   LayoutGrid,
   RulerDimensionLine,
   Type,
+  Shapes,
   LucideIcon,
 } from "lucide-react";
 
@@ -73,6 +74,7 @@ const foundationsSections: SidebarSection[] = [
       { id: "text-styles", label: "Text styles" },
     ],
   },
+  { id: "iconography", label: "Iconography", icon: Shapes },
 ];
 
 const componentsSections: SidebarSection[] = [
