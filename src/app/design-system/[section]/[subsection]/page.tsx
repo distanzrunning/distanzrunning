@@ -13,6 +13,7 @@ import Rules from "../../components/content/Rules";
 import GridSpacing from "../../components/content/GridSpacing";
 import GridLayout from "../../components/content/GridLayout";
 import Typefaces from "../../components/content/Typefaces";
+import ModularScale from "../../components/content/ModularScale";
 import ContentWithTOC from "../../components/ContentWithTOC";
 
 export default function DesignSystemSubsectionPage() {
@@ -216,6 +217,20 @@ export default function DesignSystemSubsectionPage() {
             ]}
           >
             <Typefaces />
+          </ContentWithTOC>
+        );
+      }
+      if (subsection === "modular-scale") {
+        return (
+          <ContentWithTOC
+            tocTitle="Contents"
+            tocItems={[
+              { id: "type-scale", title: "Type scale" },
+              { id: "heading-sizes", title: "Heading sizes" },
+              { id: "body-text", title: "Body text" },
+            ]}
+          >
+            <ModularScale />
           </ContentWithTOC>
         );
       }
