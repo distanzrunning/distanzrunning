@@ -98,6 +98,14 @@ export const colors = {
     95: "#FAF2EC",
   },
 
+  // Signal Orange - Used for warning states (HSL: 20°, 100%)
+  signalOrange: {
+    45: "#732600",
+    55: "#8C2F00",
+    90: "#F5D6CC",
+    95: "#FAEBE6",
+  },
+
   // Canvas - Subtle background colors
   // 2 colors with 3 variations each for light mode, 2 colors for dark mode
   canvas: {

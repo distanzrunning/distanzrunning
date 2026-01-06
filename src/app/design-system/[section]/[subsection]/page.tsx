@@ -7,6 +7,7 @@ import PlaceholderContent from "../../components/PlaceholderContent";
 import FoundationsOverview from "../../components/content/FoundationsOverview";
 import DesignPrinciples from "../../components/content/DesignPrinciples";
 import UXPrinciples from "../../components/content/UXPrinciples";
+import DesignTokens from "../../components/content/DesignTokens";
 import ColourPalettes from "../../components/content/ColourPalettes";
 import Collections from "../../components/content/Collections";
 import Rules from "../../components/content/Rules";
@@ -88,6 +89,56 @@ export default function DesignSystemSubsectionPage() {
             ]}
           >
             <UXPrinciples />
+          </ContentWithTOC>
+        );
+      }
+      if (subsection === "design-tokens") {
+        return (
+          <ContentWithTOC
+            tocTitle="Contents"
+            tocItems={[
+              { id: "what-are-tokens", title: "What are design tokens?" },
+              {
+                id: "token-types",
+                title: "Token types",
+                children: [
+                  { id: "global-tokens", title: "Global tokens" },
+                  { id: "semantic-tokens", title: "Semantic tokens" },
+                  { id: "component-tokens", title: "Component tokens" },
+                ],
+              },
+              { id: "token-categories", title: "Token categories" },
+              {
+                id: "naming-convention",
+                title: "Naming convention",
+                children: [
+                  { id: "naming-structure", title: "Structure" },
+                  { id: "naming-examples", title: "Examples" },
+                ],
+              },
+              {
+                id: "usage-guidelines",
+                title: "Usage guidelines",
+                children: [
+                  { id: "prefer-semantic", title: "Prefer semantic tokens" },
+                  {
+                    id: "use-global-sparingly",
+                    title: "Use global tokens sparingly",
+                  },
+                  { id: "never-hardcode", title: "Never hard-code values" },
+                ],
+              },
+              {
+                id: "implementation",
+                title: "Implementation",
+                children: [
+                  { id: "css-variables", title: "CSS custom properties" },
+                  { id: "tailwind-classes", title: "Tailwind classes" },
+                ],
+              },
+            ]}
+          >
+            <DesignTokens />
           </ContentWithTOC>
         );
       }

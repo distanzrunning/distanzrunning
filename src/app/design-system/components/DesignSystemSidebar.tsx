@@ -41,6 +41,7 @@ const foundationsSections: SidebarSection[] = [
     subsections: [
       { id: "design-principles", label: "Design principles" },
       { id: "ux-principles", label: "UX principles" },
+      { id: "design-tokens", label: "Design tokens" },
     ],
     showSeparator: true,
   },
