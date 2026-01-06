@@ -41,7 +41,7 @@ export default function Typefaces() {
         </p>
 
         {/* Type specimen */}
-        <div className="bg-canvas p-6 mb-4">
+        <div className="bg-surfaceSubtle p-6 mb-4">
           <p
             className="font-serif text-[40px] font-normal leading-[1.2] mb-4"
             style={{ fontFamily: "var(--font-family-serif)" }}
@@ -132,7 +132,7 @@ export default function Typefaces() {
           For emphasis within body text and pull quotes where Garamond is used.
         </p>
 
-        <div className="bg-canvas p-6 mb-8">
+        <div className="bg-surfaceSubtle p-6 mb-8">
           <p
             className="font-serif text-[28px] font-normal italic leading-[1.2] mb-4"
             style={{ fontFamily: "var(--font-family-serif)" }}
@@ -175,7 +175,7 @@ export default function Typefaces() {
         </p>
 
         {/* Type specimen */}
-        <div className="bg-canvas p-6 mb-4">
+        <div className="bg-surfaceSubtle p-6 mb-4">
           <p
             className="font-sans text-[32px] font-normal leading-[1.2] mb-4"
             style={{ fontFamily: "var(--font-family-sans)" }}
@@ -197,7 +197,7 @@ export default function Typefaces() {
         </div>
 
         {/* Figures specimen */}
-        <div className="bg-canvas p-6 mb-4">
+        <div className="bg-surfaceSubtle p-6 mb-4">
           <p
             className="font-sans text-[20px] font-normal leading-[1.3] mb-0"
             style={{ fontFamily: "var(--font-family-sans)" }}
@@ -282,7 +282,7 @@ export default function Typefaces() {
           precise typographic control.
         </p>
 
-        <div className="bg-canvas p-6 mb-8">
+        <div className="bg-surfaceSubtle p-6 mb-8">
           <p
             className="font-sans text-[20px] leading-[1.4] mb-2"
             style={{ fontFamily: "var(--font-family-sans)", fontWeight: 300 }}
