@@ -15,6 +15,7 @@ import GridLayout from "../../components/content/GridLayout";
 import Typefaces from "../../components/content/Typefaces";
 import ModularScale from "../../components/content/ModularScale";
 import LineHeight from "../../components/content/LineHeight";
+import TextStyles from "../../components/content/TextStyles";
 import ContentWithTOC from "../../components/ContentWithTOC";
 
 export default function DesignSystemSubsectionPage() {
@@ -252,6 +253,22 @@ export default function DesignSystemSubsectionPage() {
             ]}
           >
             <LineHeight />
+          </ContentWithTOC>
+        );
+      }
+      if (subsection === "text-styles") {
+        return (
+          <ContentWithTOC
+            tocTitle="Contents"
+            tocItems={[
+              { id: "display", title: "Display" },
+              { id: "headings", title: "Headings" },
+              { id: "body", title: "Body" },
+              { id: "ui", title: "UI" },
+              { id: "reference", title: "Quick reference" },
+            ]}
+          >
+            <TextStyles />
           </ContentWithTOC>
         );
       }

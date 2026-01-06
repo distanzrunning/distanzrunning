@@ -70,6 +70,7 @@ const foundationsSections: SidebarSection[] = [
       { id: "typefaces", label: "Typefaces" },
       { id: "modular-scale", label: "Modular scale" },
       { id: "line-height", label: "Line-height" },
+      { id: "text-styles", label: "Text styles" },
     ],
   },
 ];
