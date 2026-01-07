@@ -97,19 +97,6 @@ export default function DesignSystemSubsectionPage() {
             tocItems={[
               { id: "what-are-tokens", title: "What are design tokens?" },
               {
-                id: "terminology",
-                title: "Terminology",
-                children: [
-                  { id: "term-token", title: "Token" },
-                  { id: "term-value", title: "Value" },
-                  { id: "term-alias", title: "Alias" },
-                  { id: "term-global", title: "Global token" },
-                  { id: "term-semantic", title: "Semantic token" },
-                  { id: "term-component", title: "Component token" },
-                ],
-              },
-              { id: "token-inheritance", title: "Token inheritance" },
-              {
                 id: "token-types",
                 title: "Token types",
                 children: [
@@ -118,22 +105,8 @@ export default function DesignSystemSubsectionPage() {
                   { id: "component-tokens", title: "Component tokens" },
                 ],
               },
-              {
-                id: "examples",
-                title: "Examples",
-                children: [
-                  { id: "example-colour", title: "Colour tokens" },
-                  { id: "example-size", title: "Size tokens" },
-                  { id: "example-layout", title: "Layout tokens" },
-                ],
-              },
-              { id: "naming-principles", title: "Naming principles" },
+              { id: "token-inheritance", title: "Token inheritance" },
               { id: "token-categories", title: "Token categories" },
-              {
-                id: "naming-convention",
-                title: "Naming structure",
-                children: [{ id: "naming-examples", title: "Examples" }],
-              },
               {
                 id: "usage-guidelines",
                 title: "Usage guidelines",
@@ -142,10 +115,6 @@ export default function DesignSystemSubsectionPage() {
                   {
                     id: "use-global-sparingly",
                     title: "Use global tokens sparingly",
-                  },
-                  {
-                    id: "component-tokens-usage",
-                    title: "Use component tokens correctly",
                   },
                   { id: "never-hardcode", title: "Never hard-code values" },
                 ],
@@ -158,7 +127,6 @@ export default function DesignSystemSubsectionPage() {
                   { id: "tailwind-classes", title: "Tailwind classes" },
                 ],
               },
-              { id: "resources", title: "Resources" },
             ]}
           >
             <DesignTokens />
