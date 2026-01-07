@@ -255,7 +255,7 @@ export default function DesignTokens() {
         </p>
 
         {/* SVG Diagram */}
-        <div className="bg-canvas dark:bg-[#0a0a0a] rounded-lg border border-borderDefault p-8 mb-6">
+        <div className="mb-6">
           <img
             src="/images/design-system/token-inheritance.svg"
             alt="Token inheritance diagram showing how values flow from raw hex codes through global, semantic, and component tokens"
