@@ -257,7 +257,7 @@ export default function DesignTokens() {
         {/* SVG Diagram */}
         <div className="bg-canvas dark:bg-[#0a0a0a] rounded-lg border border-borderDefault p-8 mb-6 overflow-x-auto">
           <svg
-            viewBox="0 0 700 120"
+            viewBox="0 0 600 120"
             className="w-full max-w-3xl mx-auto"
             aria-labelledby="token-inheritance-title"
           >
@@ -269,7 +269,7 @@ export default function DesignTokens() {
             {/* Raw Value */}
             <g>
               <rect
-                x="10"
+                x="5"
                 y="35"
                 width="100"
                 height="50"
@@ -278,7 +278,7 @@ export default function DesignTokens() {
                 strokeWidth="1"
               />
               <text
-                x="60"
+                x="55"
                 y="55"
                 textAnchor="middle"
                 className="fill-textSubtle text-[9px] font-sans"
@@ -286,7 +286,7 @@ export default function DesignTokens() {
                 Raw value
               </text>
               <text
-                x="60"
+                x="55"
                 y="72"
                 textAnchor="middle"
                 className="fill-textDefault text-[11px] font-mono font-medium"
@@ -297,7 +297,7 @@ export default function DesignTokens() {
 
             {/* Arrow 1 */}
             <path
-              d="M110 60 L140 60"
+              d="M105 60 L125 60"
               className="stroke-asphalt-50"
               strokeWidth="2"
               markerEnd="url(#arrowhead)"
@@ -306,16 +306,16 @@ export default function DesignTokens() {
             {/* Global Token */}
             <g>
               <rect
-                x="140"
+                x="125"
                 y="35"
-                width="130"
+                width="120"
                 height="50"
                 rx="4"
                 className="fill-asphalt-95 dark:fill-asphalt-20 stroke-electric-pink"
                 strokeWidth="2"
               />
               <text
-                x="205"
+                x="185"
                 y="55"
                 textAnchor="middle"
                 className="fill-textSubtle text-[9px] font-sans"
@@ -323,7 +323,7 @@ export default function DesignTokens() {
                 Global token
               </text>
               <text
-                x="205"
+                x="185"
                 y="72"
                 textAnchor="middle"
                 className="fill-electric-pink text-[10px] font-mono font-medium"
@@ -334,7 +334,7 @@ export default function DesignTokens() {
 
             {/* Arrow 2 */}
             <path
-              d="M270 60 L300 60"
+              d="M245 60 L265 60"
               className="stroke-asphalt-50"
               strokeWidth="2"
               markerEnd="url(#arrowhead)"
@@ -343,16 +343,16 @@ export default function DesignTokens() {
             {/* Semantic Token */}
             <g>
               <rect
-                x="300"
+                x="265"
                 y="35"
-                width="120"
+                width="110"
                 height="50"
                 rx="4"
                 className="fill-asphalt-95 dark:fill-asphalt-20 stroke-pace-purple"
                 strokeWidth="2"
               />
               <text
-                x="360"
+                x="320"
                 y="55"
                 textAnchor="middle"
                 className="fill-textSubtle text-[9px] font-sans"
@@ -360,7 +360,7 @@ export default function DesignTokens() {
                 Semantic token
               </text>
               <text
-                x="360"
+                x="320"
                 y="72"
                 textAnchor="middle"
                 className="fill-pace-purple text-[10px] font-mono font-medium"
@@ -371,7 +371,7 @@ export default function DesignTokens() {
 
             {/* Arrow 3 */}
             <path
-              d="M420 60 L450 60"
+              d="M375 60 L395 60"
               className="stroke-asphalt-50"
               strokeWidth="2"
               markerEnd="url(#arrowhead)"
@@ -380,7 +380,7 @@ export default function DesignTokens() {
             {/* Component Token */}
             <g>
               <rect
-                x="450"
+                x="395"
                 y="35"
                 width="140"
                 height="50"
@@ -389,7 +389,7 @@ export default function DesignTokens() {
                 strokeWidth="2"
               />
               <text
-                x="520"
+                x="465"
                 y="55"
                 textAnchor="middle"
                 className="fill-textSubtle text-[9px] font-sans"
@@ -397,7 +397,7 @@ export default function DesignTokens() {
                 Component token
               </text>
               <text
-                x="520"
+                x="465"
                 y="72"
                 textAnchor="middle"
                 className="fill-volt-green text-[10px] font-mono font-medium"
