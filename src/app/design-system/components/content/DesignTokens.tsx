@@ -390,17 +390,21 @@ export default function DesignTokens() {
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          <div className="bg-success-bg-subtle border border-success-border rounded-lg p-4">
-            <p className="text-sm font-semibold text-success-text mb-2">Do</p>
-            <code className="text-xs font-mono">
+          <div className="bg-success-bg-subtle dark:bg-[#0D2818] border border-success-border rounded-lg p-4">
+            <p className="text-sm font-semibold text-success-text dark:text-[#4ADE80] mb-2">
+              Do
+            </p>
+            <code className="text-xs font-mono text-textDefault">
               color: var(--color-textDefault);
             </code>
           </div>
-          <div className="bg-error-bg-subtle border border-error-border rounded-lg p-4">
-            <p className="text-sm font-semibold text-error-text mb-2">
+          <div className="bg-error-bg-subtle dark:bg-[#2D1212] border border-error-border rounded-lg p-4">
+            <p className="text-sm font-semibold text-error-text dark:text-[#F87171] mb-2">
               Don&apos;t
             </p>
-            <code className="text-xs font-mono">color: #1A1A1A;</code>
+            <code className="text-xs font-mono text-textDefault">
+              color: #1A1A1A;
+            </code>
           </div>
         </div>
 
@@ -419,17 +423,19 @@ export default function DesignTokens() {
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          <div className="bg-success-bg-subtle border border-success-border rounded-lg p-4">
-            <p className="text-sm font-semibold text-success-text mb-2">Do</p>
-            <code className="text-xs font-mono">
+          <div className="bg-success-bg-subtle dark:bg-[#0D2818] border border-success-border rounded-lg p-4">
+            <p className="text-sm font-semibold text-success-text dark:text-[#4ADE80] mb-2">
+              Do
+            </p>
+            <code className="text-xs font-mono text-textDefault">
               background: var(--color-surface);
             </code>
           </div>
-          <div className="bg-error-bg-subtle border border-error-border rounded-lg p-4">
-            <p className="text-sm font-semibold text-error-text mb-2">
+          <div className="bg-error-bg-subtle dark:bg-[#2D1212] border border-error-border rounded-lg p-4">
+            <p className="text-sm font-semibold text-error-text dark:text-[#F87171] mb-2">
               Don&apos;t
             </p>
-            <code className="text-xs font-mono">
+            <code className="text-xs font-mono text-textDefault">
               background: var(--color-asphalt-95);
             </code>
           </div>
