@@ -209,6 +209,8 @@
       255, 255, 255; /* White - primary elevated surfaces (cards, modals) */
     --color-surfaceSubtle:
       247, 247, 247; /* Near Asphalt 95 (L=97%) - subtle elevation (TOC, sidebars) */
+    --color-surfaceWarm:
+      248, 247, 244; /* Warm 95 - warm-tinted elevation for callouts */
     --color-canvas: 242, 242, 242; /* Asphalt 95 (L=95%) - page background */
 
     /* Legacy aliases */
@@ -299,6 +301,8 @@
       26, 26, 26; /* Asphalt 10 (L=10%) - primary elevated surfaces */
     --color-surfaceSubtle:
       19, 19, 19; /* Between Asphalt 5-10 - subtle elevation */
+    --color-surfaceWarm:
+      26, 24, 22; /* Dark Warm - warm-tinted elevation for callouts */
     --color-canvas: 13, 13, 13; /* Asphalt 5 (L=5%) - page background */
 
     /* Legacy aliases */
@@ -309,6 +313,33 @@
     --rule-emphasised: 1px solid rgb(var(--color-textDefault)); /* Strong separation - Asphalt 90 */
     --rule-heavy: 4px solid rgb(var(--color-textDefault)); /* Major section divider - Asphalt 90 */
     --rule-accent: 4px solid #e43c81; /* Brand accent divider - Electric Pink */
+
+    /* Status/Feedback colors - Dark mode (lighter text, darker backgrounds) */
+    --color-success-text:
+      74, 222, 128; /* Volt Green 65 - lighter for dark bg */
+    --color-success-text-subtle: 34, 197, 94; /* Volt Green 55 */
+    --color-success-bg: 20, 51, 36; /* Volt Green 15 */
+    --color-success-bg-subtle: 13, 40, 24; /* Volt Green 10 */
+    --color-success-border: 34, 197, 94; /* Volt Green 55 */
+
+    --color-warning-text:
+      251, 146, 60; /* Signal Orange 65 - lighter for dark bg */
+    --color-warning-text-subtle: 249, 115, 22; /* Signal Orange 55 */
+    --color-warning-bg: 51, 32, 13; /* Signal Orange 15 */
+    --color-warning-bg-subtle: 40, 24, 10; /* Signal Orange 10 */
+    --color-warning-border: 249, 115, 22; /* Signal Orange 55 */
+
+    --color-error-text: 248, 113, 113; /* Track Red 65 - lighter for dark bg */
+    --color-error-text-subtle: 239, 68, 68; /* Track Red 55 */
+    --color-error-bg: 51, 18, 18; /* Track Red 15 */
+    --color-error-bg-subtle: 45, 18, 18; /* Track Red 10 */
+    --color-error-border: 239, 68, 68; /* Track Red 55 */
+
+    --color-info-text: 167, 139, 250; /* Pace Purple 65 - lighter for dark bg */
+    --color-info-text-subtle: 139, 92, 246; /* Pace Purple 55 */
+    --color-info-bg: 35, 28, 51; /* Pace Purple 15 */
+    --color-info-bg-subtle: 27, 21, 40; /* Pace Purple 10 */
+    --color-info-border: 139, 92, 246; /* Pace Purple 55 */
   }
 
   /* Distanz reset (Distanz design system) */

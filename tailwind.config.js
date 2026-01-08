@@ -97,6 +97,7 @@ module.exports = {
         // Systematic surface tokens - Elevation hierarchy
         surface: "rgb(var(--color-surface))",
         surfaceSubtle: "rgb(var(--color-surfaceSubtle))",
+        surfaceWarm: "rgb(var(--color-surfaceWarm))",
         canvas: "rgb(var(--color-canvas))",
 
         // Legacy surface aliases (backwards compatible)
@@ -135,6 +136,7 @@ module.exports = {
         // Systematic surface tokens
         surface: "rgb(var(--color-surface))",
         surfaceSubtle: "rgb(var(--color-surfaceSubtle))",
+        surfaceWarm: "rgb(var(--color-surfaceWarm))",
         canvas: "rgb(var(--color-canvas))",
 
         // Legacy aliases (backwards compatible)

@@ -19,7 +19,7 @@ export default function ColourPalettes() {
       </div>
 
       {/* Dark Mode Note */}
-      <div className="bg-canvas dark:bg-[#1A1816] border-l-4 border-electric-pink p-6">
+      <div className="bg-surfaceWarm border-l-4 border-electric-pink p-6">
         <h3 className="font-sans font-semibold text-sm uppercase tracking-wide text-textDefault mb-2">
           Dark Mode
         </h3>

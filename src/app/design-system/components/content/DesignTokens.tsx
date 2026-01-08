@@ -58,7 +58,7 @@ export default function DesignTokens() {
           engineering.
         </p>
 
-        <div className="bg-canvas dark:bg-[#1A1816] border-l-4 border-electric-pink p-6">
+        <div className="bg-surfaceWarm border-l-4 border-electric-pink p-6">
           <h3 className="font-sans font-semibold text-sm uppercase tracking-wide text-textDefault mb-2">
             Why tokens matter
           </h3>
@@ -101,10 +101,10 @@ export default function DesignTokens() {
           is, not how it should be used.
         </p>
 
-        <div className="bg-canvas dark:bg-[#0a0a0a] rounded-lg border border-borderDefault overflow-hidden mb-8">
+        <div className="bg-canvas rounded-lg border border-borderDefault overflow-hidden mb-8">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-borderDefault bg-neutralBgSubtle dark:bg-[#1A1816]">
+              <tr className="border-b border-borderDefault bg-surfaceWarm">
                 <th className="text-left py-3 px-4 font-semibold">
                   Token name
                 </th>
@@ -154,10 +154,10 @@ export default function DesignTokens() {
           context (like light/dark mode).
         </p>
 
-        <div className="bg-canvas dark:bg-[#0a0a0a] rounded-lg border border-borderDefault overflow-hidden mb-8">
+        <div className="bg-canvas rounded-lg border border-borderDefault overflow-hidden mb-8">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-borderDefault bg-neutralBgSubtle dark:bg-[#1A1816]">
+              <tr className="border-b border-borderDefault bg-surfaceWarm">
                 <th className="text-left py-3 px-4 font-semibold">
                   Semantic token
                 </th>
@@ -206,10 +206,10 @@ export default function DesignTokens() {
           allowing for precise control without affecting the broader system.
         </p>
 
-        <div className="bg-canvas dark:bg-[#0a0a0a] rounded-lg border border-borderDefault overflow-hidden mb-8">
+        <div className="bg-canvas rounded-lg border border-borderDefault overflow-hidden mb-8">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-borderDefault bg-neutralBgSubtle dark:bg-[#1A1816]">
+              <tr className="border-b border-borderDefault bg-surfaceWarm">
                 <th className="text-left py-3 px-4 font-semibold">
                   Component token
                 </th>
@@ -302,7 +302,7 @@ export default function DesignTokens() {
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          <div className="bg-canvas dark:bg-[#0a0a0a] rounded-lg border border-borderDefault p-6">
+          <div className="bg-canvas rounded-lg border border-borderDefault p-6">
             <h4 className="font-semibold mb-2">Colour</h4>
             <p className="text-sm text-textSubtle mb-3">
               Brand colours, greyscale, semantic colours, and status colours.
@@ -312,7 +312,7 @@ export default function DesignTokens() {
             </code>
           </div>
 
-          <div className="bg-canvas dark:bg-[#0a0a0a] rounded-lg border border-borderDefault p-6">
+          <div className="bg-canvas rounded-lg border border-borderDefault p-6">
             <h4 className="font-semibold mb-2">Typography</h4>
             <p className="text-sm text-textSubtle mb-3">
               Font families, sizes, weights, line heights, and letter spacing.
@@ -322,7 +322,7 @@ export default function DesignTokens() {
             </code>
           </div>
 
-          <div className="bg-canvas dark:bg-[#0a0a0a] rounded-lg border border-borderDefault p-6">
+          <div className="bg-canvas rounded-lg border border-borderDefault p-6">
             <h4 className="font-semibold mb-2">Spacing</h4>
             <p className="text-sm text-textSubtle mb-3">
               Margins, padding, gaps, and layout spacing based on an 8px grid.
@@ -332,7 +332,7 @@ export default function DesignTokens() {
             </code>
           </div>
 
-          <div className="bg-canvas dark:bg-[#0a0a0a] rounded-lg border border-borderDefault p-6">
+          <div className="bg-canvas rounded-lg border border-borderDefault p-6">
             <h4 className="font-semibold mb-2">Border</h4>
             <p className="text-sm text-textSubtle mb-3">
               Border widths, radii, and styles for consistent component edges.
@@ -342,7 +342,7 @@ export default function DesignTokens() {
             </code>
           </div>
 
-          <div className="bg-canvas dark:bg-[#0a0a0a] rounded-lg border border-borderDefault p-6">
+          <div className="bg-canvas rounded-lg border border-borderDefault p-6">
             <h4 className="font-semibold mb-2">Shadow</h4>
             <p className="text-sm text-textSubtle mb-3">
               Elevation and depth through consistent shadow definitions.
@@ -352,7 +352,7 @@ export default function DesignTokens() {
             </code>
           </div>
 
-          <div className="bg-canvas dark:bg-[#0a0a0a] rounded-lg border border-borderDefault p-6">
+          <div className="bg-canvas rounded-lg border border-borderDefault p-6">
             <h4 className="font-semibold mb-2">Animation</h4>
             <p className="text-sm text-textSubtle mb-3">
               Durations, easing curves, and motion parameters.
@@ -390,16 +390,14 @@ export default function DesignTokens() {
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          <div className="bg-success-bg-subtle dark:bg-[#0D2818] border border-success-border rounded-lg p-4">
-            <p className="text-sm font-semibold text-success-text dark:text-[#4ADE80] mb-2">
-              Do
-            </p>
+          <div className="bg-success-bg-subtle border border-success-border rounded-lg p-4">
+            <p className="text-sm font-semibold text-success-text mb-2">Do</p>
             <code className="text-xs font-mono text-textDefault">
               color: var(--color-textDefault);
             </code>
           </div>
-          <div className="bg-error-bg-subtle dark:bg-[#2D1212] border border-error-border rounded-lg p-4">
-            <p className="text-sm font-semibold text-error-text dark:text-[#F87171] mb-2">
+          <div className="bg-error-bg-subtle border border-error-border rounded-lg p-4">
+            <p className="text-sm font-semibold text-error-text mb-2">
               Don&apos;t
             </p>
             <code className="text-xs font-mono text-textDefault">
@@ -423,16 +421,14 @@ export default function DesignTokens() {
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          <div className="bg-success-bg-subtle dark:bg-[#0D2818] border border-success-border rounded-lg p-4">
-            <p className="text-sm font-semibold text-success-text dark:text-[#4ADE80] mb-2">
-              Do
-            </p>
+          <div className="bg-success-bg-subtle border border-success-border rounded-lg p-4">
+            <p className="text-sm font-semibold text-success-text mb-2">Do</p>
             <code className="text-xs font-mono text-textDefault">
               background: var(--color-surface);
             </code>
           </div>
-          <div className="bg-error-bg-subtle dark:bg-[#2D1212] border border-error-border rounded-lg p-4">
-            <p className="text-sm font-semibold text-error-text dark:text-[#F87171] mb-2">
+          <div className="bg-error-bg-subtle border border-error-border rounded-lg p-4">
+            <p className="text-sm font-semibold text-error-text mb-2">
               Don&apos;t
             </p>
             <code className="text-xs font-mono text-textDefault">
@@ -487,8 +483,8 @@ export default function DesignTokens() {
           Tokens are exposed as CSS variables for use in stylesheets:
         </p>
 
-        <div className="bg-[#1A1A1A] rounded-lg p-4 mb-8 overflow-x-auto">
-          <pre className="text-sm font-mono text-[#E5E5E5]">
+        <div className="bg-asphalt-10 rounded-lg p-4 mb-8 overflow-x-auto">
+          <pre className="text-sm font-mono text-asphalt-90">
             <code>{`.element {
   color: var(--color-textDefault);
   background: var(--color-surface);
@@ -508,8 +504,8 @@ export default function DesignTokens() {
           Most tokens are mapped to Tailwind utilities for use in JSX:
         </p>
 
-        <div className="bg-[#1A1A1A] rounded-lg p-4 overflow-x-auto">
-          <pre className="text-sm font-mono text-[#E5E5E5]">
+        <div className="bg-asphalt-10 rounded-lg p-4 overflow-x-auto">
+          <pre className="text-sm font-mono text-asphalt-90">
             <code>{`<div className="text-textDefault bg-surface p-4 rounded-md">
   Content styled with tokens
 </div>`}</code>
