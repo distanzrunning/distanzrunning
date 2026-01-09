@@ -282,20 +282,25 @@ export const grid = {
     gutter: "2rem", // 32px - column spacing in grid layouts (2× gap)
   },
 
-  // Grid Layout - Responsive column system
-  mobile: {
-    columns: 4,
-    gutter: "16px",
-    margin: "16px",
+  // Grid Layout - Responsive column system (Economist-inspired)
+  // 1 column (mobile) → 6 columns (medium) → 12 columns (large)
+  small: {
+    columns: 1,
+    breakpoint: "0px", // < 600px
+    gutter: "12px",
+    margin: "24px",
   },
-  tablet: {
+  medium: {
+    columns: 6,
+    breakpoint: "600px", // ≥ 600px
+    gutter: "12px",
+    margin: "24px",
+  },
+  large: {
     columns: 12,
-    gutter: "24px",
+    breakpoint: "960px", // ≥ 960px
+    gutter: "16px",
     margin: "32px",
-  },
-  desktop: {
-    columns: 18,
-    gutter: "24px",
     maxWidth: "1585px",
   },
 } as const;

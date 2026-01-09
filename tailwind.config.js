@@ -673,24 +673,30 @@ module.exports = {
     // require('@tailwindcss/container-queries'),
     function ({ addComponents, theme }) {
       addComponents({
-        // Distanz container system (12-column grid)
-        // 4 columns on mobile, 12 columns on desktop (768px+)
-        // Gap: 16px, Gutter: 32px, Max-width: 1585px
+        // Distanz container system (Economist-inspired grid)
+        // 1 column (< 600px) → 6 columns (≥ 600px) → 12 columns (≥ 960px)
+        // Gap: 12px (small/medium), 16px (large), Max-width: 1585px
         ".distanz-container": {
           display: "grid",
-          gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
+          gridTemplateColumns: "repeat(1, minmax(0, 1fr))",
           marginLeft: "auto",
           marginRight: "auto",
           maxWidth: "1585px",
           width: "100%",
-          columnGap: "1rem",
-          paddingLeft: "1.5rem",
+          columnGap: "0.75rem", // 12px
+          paddingLeft: "1.5rem", // 24px
           paddingRight: "1.5rem",
         },
-        "@media (min-width: 768px)": {
+        "@media (min-width: 600px)": {
+          ".distanz-container": {
+            gridTemplateColumns: "repeat(6, minmax(0, 1fr))",
+          },
+        },
+        "@media (min-width: 960px)": {
           ".distanz-container": {
             gridTemplateColumns: "repeat(12, minmax(0, 1fr))",
-            paddingLeft: "2rem",
+            columnGap: "1rem", // 16px
+            paddingLeft: "2rem", // 32px
             paddingRight: "2rem",
           },
         },
@@ -698,20 +704,26 @@ module.exports = {
         // Article container with top padding
         ".distanz-article-container": {
           display: "grid",
-          gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
+          gridTemplateColumns: "repeat(1, minmax(0, 1fr))",
           marginLeft: "auto",
           marginRight: "auto",
           maxWidth: "1585px",
           width: "100%",
-          columnGap: "1rem",
-          paddingLeft: "1.5rem",
+          columnGap: "0.75rem", // 12px
+          paddingLeft: "1.5rem", // 24px
           paddingRight: "1.5rem",
           paddingTop: "80px",
         },
-        "@media (min-width: 768px)": {
+        "@media (min-width: 600px)": {
+          ".distanz-article-container": {
+            gridTemplateColumns: "repeat(6, minmax(0, 1fr))",
+          },
+        },
+        "@media (min-width: 960px)": {
           ".distanz-article-container": {
             gridTemplateColumns: "repeat(12, minmax(0, 1fr))",
-            paddingLeft: "2rem",
+            columnGap: "1rem", // 16px
+            paddingLeft: "2rem", // 32px
             paddingRight: "2rem",
           },
         },

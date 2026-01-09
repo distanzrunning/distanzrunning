@@ -55,22 +55,22 @@ export default function GridLayout() {
             <tbody className="whitespace-nowrap">
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 text-sm">1</td>
-                <td className="py-3 px-4 text-sm">Less than 640px (40rem)</td>
+                <td className="py-3 px-4 text-sm">Less than 600px (37.5rem)</td>
                 <td className="py-3 px-4 text-sm"></td>
               </tr>
               <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 text-sm">4</td>
+                <td className="py-3 pr-4 text-sm">6</td>
                 <td className="py-3 px-4 text-sm">
-                  Greater than or equal to 640px (40rem)
+                  Greater than or equal to 600px (37.5rem)
                 </td>
-                <td className="py-3 px-4 text-sm font-mono">sm:</td>
+                <td className="py-3 px-4 text-sm font-mono">min-[600px]:</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 text-sm">12</td>
                 <td className="py-3 px-4 text-sm">
-                  Greater than or equal to 768px (48rem)
+                  Greater than or equal to 960px (60rem)
                 </td>
-                <td className="py-3 px-4 text-sm font-mono">md:</td>
+                <td className="py-3 px-4 text-sm font-mono">min-[960px]:</td>
               </tr>
             </tbody>
           </table>
@@ -361,39 +361,38 @@ export default function GridLayout() {
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 text-sm">Grid SM</td>
-                <td className="py-3 px-4 text-sm">592/640px</td>
-                <td className="py-3 px-4 text-sm">4</td>
+                <td className="py-3 px-4 text-sm">552/600px</td>
+                <td className="py-3 px-4 text-sm">6</td>
                 <td className="py-3 px-4 text-sm">12/24</td>
-                <td className="py-3 px-4 text-sm font-mono">sm:</td>
+                <td className="py-3 px-4 text-sm font-mono">min-[600px]:</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 text-sm">Grid MD</td>
-                <td className="py-3 px-4 text-sm">704/768px</td>
-                <td className="py-3 px-4 text-sm">12</td>
-                <td className="py-3 px-4 text-sm">16/32</td>
-                <td className="py-3 px-4 text-sm font-mono">md:</td>
+                <td className="py-3 px-4 text-sm">712/760px</td>
+                <td className="py-3 px-4 text-sm">6</td>
+                <td className="py-3 px-4 text-sm">12/24</td>
+                <td className="py-3 px-4 text-sm font-mono">min-[600px]:</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 text-sm">Grid LG</td>
-                <td className="py-3 px-4 text-sm">960/1024px</td>
+                <td className="py-3 px-4 text-sm">896/960px</td>
                 <td className="py-3 px-4 text-sm">12</td>
                 <td className="py-3 px-4 text-sm">16/32</td>
-                <td className="py-3 px-4 text-sm font-mono">lg:</td>
+                <td className="py-3 px-4 text-sm font-mono">min-[960px]:</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 text-sm">Grid XLG</td>
                 <td className="py-3 px-4 text-sm">1216/1280px</td>
                 <td className="py-3 px-4 text-sm">12</td>
                 <td className="py-3 px-4 text-sm">16/32</td>
-                <td className="py-3 px-4 text-sm font-mono" rowSpan={2}>
-                  xl:
-                </td>
+                <td className="py-3 px-4 text-sm font-mono">min-[960px]:</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 text-sm">Grid MAX</td>
                 <td className="py-3 px-4 text-sm">1521/1585px</td>
                 <td className="py-3 px-4 text-sm">12</td>
                 <td className="py-3 px-4 text-sm">16/32</td>
+                <td className="py-3 px-4 text-sm font-mono">min-[960px]:</td>
               </tr>
             </tbody>
           </table>

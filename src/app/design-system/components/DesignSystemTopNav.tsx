@@ -15,8 +15,8 @@ export default function DesignSystemTopNav({
 
   return (
     <nav className="sticky top-12 z-40 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md border-b border-borderSubtle transition-colors duration-300">
-      {/* Mobile layout */}
-      <div className="lg:hidden px-4 sm:px-6">
+      {/* Mobile/Medium layout (< 960px) */}
+      <div className="min-[960px]:hidden px-6">
         <div className="flex items-center gap-4 h-14">
           <Image
             src="/images/distanz_icon_black_round.png"
@@ -50,8 +50,8 @@ export default function DesignSystemTopNav({
         </div>
       </div>
 
-      {/* Desktop layout - aligned with grid */}
-      <div className="hidden lg:grid lg:grid-cols-12 h-14">
+      {/* Large screen layout (≥ 960px) - aligned with 12-column grid */}
+      <div className="hidden min-[960px]:grid min-[960px]:grid-cols-12 h-14 max-w-[1585px] mx-auto">
         {/* Logo and Title - aligned with sidebar (2 cols) */}
         <div className="col-span-2 flex items-center gap-3 px-6">
           <Image

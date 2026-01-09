@@ -358,9 +358,9 @@ export default function DesignSystemSubsectionPage() {
         onSectionChange={handleSectionChange}
       />
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 min-h-screen">
-        {/* Conditional Sidebar - only show when a section is active */}
-        <div className="hidden lg:block lg:col-span-2 h-full">
+      <div className="grid grid-cols-1 min-[960px]:grid-cols-12 min-h-screen max-w-[1585px] mx-auto">
+        {/* Conditional Sidebar - only show on large screens (≥960px) */}
+        <div className="hidden min-[960px]:block min-[960px]:col-span-2 h-full">
           <DesignSystemSidebar
             section={section}
             activeSubsection={subsection}
@@ -369,10 +369,8 @@ export default function DesignSystemSubsectionPage() {
         </div>
 
         {/* Main Content Area */}
-        <div className="col-span-1 lg:col-span-10">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            {renderContent()}
-          </div>
+        <div className="col-span-1 min-[960px]:col-span-10">
+          <div className="px-6 min-[960px]:px-8 py-12">{renderContent()}</div>
         </div>
       </div>
     </div>
