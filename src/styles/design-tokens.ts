@@ -277,6 +277,9 @@ export const breakpoints = {
 
 export const grid = {
   // Grid Spacing - Standard spacing values for all layouts
+  // Gap: spacing between elements (12px/16px)
+  // Gutter: spacing between grid columns (24px/32px) - always 2× gap
+  // Outside gutter: padding from viewport edge (24px/32px) - same as gutter
   spacing: {
     gap: "1rem", // 16px - standard element spacing within components
     gutter: "2rem", // 32px - column spacing in grid layouts (2× gap)
@@ -287,20 +290,23 @@ export const grid = {
   small: {
     columns: 1,
     breakpoint: "0px", // < 600px
-    gutter: "12px",
-    margin: "24px",
+    gap: "12px", // element spacing
+    gutter: "24px", // column spacing (2× gap)
+    outsideGutter: "24px", // viewport padding
   },
   medium: {
     columns: 6,
     breakpoint: "600px", // ≥ 600px
-    gutter: "12px",
-    margin: "24px",
+    gap: "12px", // element spacing
+    gutter: "24px", // column spacing (2× gap)
+    outsideGutter: "24px", // viewport padding
   },
   large: {
     columns: 12,
     breakpoint: "960px", // ≥ 960px
-    gutter: "16px",
-    margin: "32px",
+    gap: "16px", // element spacing
+    gutter: "32px", // column spacing (2× gap)
+    outsideGutter: "32px", // viewport padding
     maxWidth: "1585px",
   },
 } as const;

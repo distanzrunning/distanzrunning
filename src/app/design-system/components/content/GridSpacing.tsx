@@ -156,12 +156,12 @@ export default function GridSpacing() {
 
         {/* Grid gutter (medium screen, 6 columns) */}
         <p className="text-base font-semibold mb-4">
-          Grid gutter (medium screen, ≥600px) — 6 columns, 12px gap
+          Grid gutter (medium screen, ≥600px) — 6 columns, 24px gutter
         </p>
         <figure className="mb-8">
           <Image
             src="/images/design-system/grid-6col-24.svg"
-            alt="6-column grid with 12px gutters"
+            alt="6-column grid with 24px gutters"
             width={600}
             height={312}
             className="w-full max-w-[600px] h-auto"
@@ -172,12 +172,12 @@ export default function GridSpacing() {
 
         {/* Grid gutter (large screen, 12 columns) */}
         <p className="text-base font-semibold mb-4">
-          Grid gutter (large screen, ≥960px) — 12 columns, 16px gap
+          Grid gutter (large screen, ≥960px) — 12 columns, 32px gutter
         </p>
         <figure className="mb-8">
           <Image
             src="/images/design-system/grid-12col-32-edged.svg"
-            alt="12-column grid with 16px gutters"
+            alt="12-column grid with 32px gutters"
             width={960}
             height={312}
             className="w-full max-w-[960px] h-auto"

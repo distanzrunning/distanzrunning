@@ -3,28 +3,28 @@
     <!-- Background -->
     <rect fill="#F0F5F5" width="648" height="312" rx="2"/>
 
-    <!-- 6 columns (92px each, 12px gaps, 24px outside gutters) -->
-    <!-- Total: 24 + 92 + 12 + 92 + 12 + 92 + 12 + 92 + 12 + 92 + 12 + 92 + 24 = 648 -->
+    <!-- 6 columns (80px each, 24px gutters, 24px outside gutters) -->
+    <!-- Total: 24 + 80 + 24 + 80 + 24 + 80 + 24 + 80 + 24 + 80 + 24 + 80 + 24 = 648 -->
     <!-- Column 1: x=24 -->
-    <path fill="#E0EBEB" d="M24 0h92v312H24z"/>
-    <!-- Column 2: x=24+92+12=128 -->
-    <path fill="#E0EBEB" d="M128 0h92v312h-92z"/>
-    <!-- Column 3: x=128+92+12=232 -->
-    <path fill="#E0EBEB" d="M232 0h92v312h-92z"/>
-    <!-- Column 4: x=232+92+12=336 -->
-    <path fill="#E0EBEB" d="M336 0h92v312h-92z"/>
-    <!-- Column 5: x=336+92+12=440 -->
-    <path fill="#E0EBEB" d="M440 0h92v312h-92z"/>
-    <!-- Column 6: x=440+92+12=544 -->
-    <path fill="#E0EBEB" d="M544 0h92v312h-92z"/>
+    <path fill="#E0EBEB" d="M24 0h80v312H24z"/>
+    <!-- Column 2: x=24+80+24=128 -->
+    <path fill="#E0EBEB" d="M128 0h80v312h-80z"/>
+    <!-- Column 3: x=128+80+24=232 -->
+    <path fill="#E0EBEB" d="M232 0h80v312h-80z"/>
+    <!-- Column 4: x=232+80+24=336 -->
+    <path fill="#E0EBEB" d="M336 0h80v312h-80z"/>
+    <!-- Column 5: x=336+80+24=440 -->
+    <path fill="#E0EBEB" d="M440 0h80v312h-80z"/>
+    <!-- Column 6: x=440+80+24=544 -->
+    <path fill="#E0EBEB" d="M544 0h80v312h-80z"/>
 
     <!-- Left outside gutter indicator (24px) -->
     <path d="M24 160h-1v-3H1v3H0v-8h1v4h22v-4h1v8z" fill="#0A1757"/>
     <text x="12" y="179" fill="#121212" font-family="system-ui, sans-serif" font-size="12" text-anchor="middle">24</text>
 
-    <!-- Gap indicator (12px) - between columns 1 and 2 -->
-    <path d="M128 160h-1v-3h-10v3h-1v-8h1v4h10v-4h1v8z" fill="#0A1757"/>
-    <text x="122" y="179" fill="#121212" font-family="system-ui, sans-serif" font-size="12" text-anchor="middle">12</text>
+    <!-- Gutter indicator (24px) - between columns 1 and 2 -->
+    <path d="M128 160h-1v-3h-22v3h-1v-8h1v4h22v-4h1v8z" fill="#0A1757"/>
+    <text x="116" y="179" fill="#121212" font-family="system-ui, sans-serif" font-size="12" text-anchor="middle">24</text>
 
     <!-- Right outside gutter indicator (24px) -->
     <path d="M648 160h-1v-3h-22v3h-1v-8h1v4h22v-4h1v8z" fill="#0A1757"/>
