@@ -248,21 +248,20 @@
     --rule-heavy: 4px solid rgb(var(--color-textDefault)); /* Major section divider - Asphalt 20 */
     --rule-accent: 4px solid #e43c81; /* Brand accent divider - Electric Pink */
 
-    /* Grid Spacing - Responsive spacing values (mobile defaults)
-       Gap: 12px mobile, 16px desktop
-       Gutter: 24px mobile, 32px desktop (always 2× gap)
-       Outside gutter: 24px mobile, 32px desktop */
-    --grid-gap: 0.75rem; /* 12px - element spacing (mobile) */
-    --grid-gutter: 1.5rem; /* 24px - column spacing (mobile, 2× gap) */
-    --grid-outside-gutter: 1.5rem; /* 24px - outside padding (mobile) */
+    /* Grid Spacing - Responsive spacing values
+       Small/Medium (<960px): Gap 12px, Gutter 24px, Outside 24px
+       Large (≥960px): Gap 16px, Gutter 32px, Outside 32px */
+    --grid-gap: 0.75rem; /* 12px - element spacing (small/medium) */
+    --grid-gutter: 1.5rem; /* 24px - column spacing (small/medium, 2× gap) */
+    --grid-outside-gutter: 1.5rem; /* 24px - outside padding (small/medium) */
   }
 
-  /* Desktop spacing (768px+) */
-  @media (min-width: 768px) {
+  /* Large screen spacing (960px+) */
+  @media (min-width: 960px) {
     :root {
-      --grid-gap: 1rem; /* 16px - element spacing (desktop) */
-      --grid-gutter: 2rem; /* 32px - column spacing (desktop, 2× gap) */
-      --grid-outside-gutter: 2rem; /* 32px - outside padding (desktop) */
+      --grid-gap: 1rem; /* 16px - element spacing (large) */
+      --grid-gutter: 2rem; /* 32px - column spacing (large, 2× gap) */
+      --grid-outside-gutter: 2rem; /* 32px - outside padding (large) */
     }
   }
 

@@ -81,7 +81,7 @@ export default function GridSpacing() {
             </thead>
             <tbody className="whitespace-nowrap">
               <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 text-sm">Less than 768px (48rem)</td>
+                <td className="py-3 pr-4 text-sm">Less than 960px (60rem)</td>
                 <td className="py-3 px-4 text-sm">12</td>
                 <td className="py-3 px-4 text-sm">0.75</td>
                 <td className="py-3 px-4 text-sm font-mono" rowSpan={2}>
@@ -90,7 +90,7 @@ export default function GridSpacing() {
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 text-sm">
-                  Greater than 768px (48rem)
+                  Greater than or equal to 960px (60rem)
                 </td>
                 <td className="py-3 px-4 text-sm">16</td>
                 <td className="py-3 px-4 text-sm">1</td>
@@ -134,7 +134,7 @@ export default function GridSpacing() {
             </thead>
             <tbody className="whitespace-nowrap">
               <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 text-sm">Less than 768px (48rem)</td>
+                <td className="py-3 pr-4 text-sm">Less than 960px (60rem)</td>
                 <td className="py-3 px-4 text-sm">24</td>
                 <td className="py-3 px-4 text-sm">1.5</td>
                 <td className="py-3 px-4 text-sm font-mono" rowSpan={2}>
@@ -143,7 +143,7 @@ export default function GridSpacing() {
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 text-sm">
-                  Greater than 768px (48rem)
+                  Greater than or equal to 960px (60rem)
                 </td>
                 <td className="py-3 px-4 text-sm">32</td>
                 <td className="py-3 px-4 text-sm">2</td>
@@ -154,14 +154,14 @@ export default function GridSpacing() {
 
         <hr className="border-t border-borderDefault mb-8" />
 
-        {/* Grid gutter (medium screen) */}
+        {/* Grid gutter (medium screen, 6 columns) */}
         <p className="text-base font-semibold mb-4">
-          Grid gutter (medium screen)
+          Grid gutter (medium screen, ≥600px) — 6 columns, 12px gap
         </p>
         <figure className="mb-8">
           <Image
             src="/images/design-system/grid-6col-24.svg"
-            alt="6-column grid with 24px gutters"
+            alt="6-column grid with 12px gutters"
             width={600}
             height={312}
             className="w-full max-w-[600px] h-auto"
@@ -170,17 +170,17 @@ export default function GridSpacing() {
 
         <hr className="border-t border-borderDefault mb-8" />
 
-        {/* Grid gutter (large screen) */}
+        {/* Grid gutter (large screen, 12 columns) */}
         <p className="text-base font-semibold mb-4">
-          Grid gutter (large screen)
+          Grid gutter (large screen, ≥960px) — 12 columns, 16px gap
         </p>
         <figure className="mb-8">
           <Image
-            src="/images/design-system/grid-6col-32.svg"
-            alt="6-column grid with 32px gutters"
-            width={640}
+            src="/images/design-system/grid-12col-32-edged.svg"
+            alt="12-column grid with 16px gutters"
+            width={960}
             height={312}
-            className="w-full max-w-[640px] h-auto"
+            className="w-full max-w-[960px] h-auto"
           />
         </figure>
 
@@ -227,7 +227,7 @@ export default function GridSpacing() {
             </thead>
             <tbody className="whitespace-nowrap">
               <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 text-sm">Less than 768px (48rem)</td>
+                <td className="py-3 pr-4 text-sm">Less than 960px (60rem)</td>
                 <td className="py-3 px-4 text-sm">24</td>
                 <td className="py-3 px-4 text-sm">1.5</td>
                 <td className="py-3 px-4 text-sm font-mono" rowSpan={2}>
@@ -236,7 +236,7 @@ export default function GridSpacing() {
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 text-sm">
-                  Greater than 768px (48rem)
+                  Greater than or equal to 960px (60rem)
                 </td>
                 <td className="py-3 px-4 text-sm">32</td>
                 <td className="py-3 px-4 text-sm">2</td>
