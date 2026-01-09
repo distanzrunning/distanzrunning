@@ -144,17 +144,17 @@ export default function GridLayout() {
 
         <hr className="border-t border-borderDefault mb-8" />
 
-        {/* 6 columns with outside gutters (large screen) */}
+        {/* 12 columns with outside gutters (large screen) */}
         <p className="text-base font-semibold mb-4">
-          6 columns with outside gutters (large screen)
+          12 columns with outside gutters (large screen, ≥960px)
         </p>
         <figure className="mb-8">
           <Image
-            src="/images/design-system/grid-6col-32-edged.svg"
-            alt="6-column grid with 32px outside gutters"
-            width={704}
+            src="/images/design-system/grid-12col-32-edged.svg"
+            alt="12-column grid with 32px outside gutters and 16px gaps"
+            width={960}
             height={312}
-            className="w-full max-w-[704px] h-auto"
+            className="w-full max-w-[960px] h-auto"
           />
         </figure>
       </section>
