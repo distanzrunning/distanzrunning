@@ -674,11 +674,11 @@ module.exports = {
     function ({ addComponents, theme }) {
       addComponents({
         // Distanz container system (Economist-inspired grid)
-        // 1 column (< 600px) → 6 columns (≥ 600px) → 12 columns (≥ 960px)
+        // 4 columns (< 600px) → 6 columns (≥ 600px) → 12 columns (≥ 960px)
         // Gap: 12px (small/medium), 16px (large), Max-width: 1585px
         ".distanz-container": {
           display: "grid",
-          gridTemplateColumns: "repeat(1, minmax(0, 1fr))",
+          gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
           marginLeft: "auto",
           marginRight: "auto",
           maxWidth: "1585px",
@@ -704,7 +704,7 @@ module.exports = {
         // Article container with top padding
         ".distanz-article-container": {
           display: "grid",
-          gridTemplateColumns: "repeat(1, minmax(0, 1fr))",
+          gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
           marginLeft: "auto",
           marginRight: "auto",
           maxWidth: "1585px",

@@ -286,9 +286,9 @@ export const grid = {
   },
 
   // Grid Layout - Responsive column system (Economist-inspired)
-  // 1 column (mobile) → 6 columns (medium) → 12 columns (large)
+  // 4 columns (mobile) → 6 columns (medium) → 12 columns (large)
   small: {
-    columns: 1,
+    columns: 4,
     breakpoint: "0px", // < 600px
     gap: "12px", // element spacing
     gutter: "24px", // column spacing (2× gap)

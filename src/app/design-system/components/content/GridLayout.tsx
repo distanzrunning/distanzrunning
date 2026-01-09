@@ -54,7 +54,7 @@ export default function GridLayout() {
             </thead>
             <tbody className="whitespace-nowrap">
               <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 text-sm">1</td>
+                <td className="py-3 pr-4 text-sm">4</td>
                 <td className="py-3 px-4 text-sm">Less than 600px (37.5rem)</td>
                 <td className="py-3 px-4 text-sm"></td>
               </tr>
@@ -112,17 +112,17 @@ export default function GridLayout() {
 
         <hr className="border-t border-borderDefault mb-8" />
 
-        {/* 1 column with outside gutters (small screen) */}
+        {/* 4 columns with outside gutters (small screen) */}
         <p className="text-base font-semibold mb-4">
-          1 column with outside gutters (small screen)
+          4 columns with outside gutters (small screen, &lt;600px)
         </p>
         <figure className="mb-8">
           <Image
-            src="/images/design-system/grid-1col-12.svg"
-            alt="1-column layout with 12px outside gutters"
-            width={320}
+            src="/images/design-system/grid-4col-24-edged.svg"
+            alt="4-column layout with 24px gutters and outside gutters"
+            width={336}
             height={312}
-            className="w-full max-w-[320px] h-auto"
+            className="w-full max-w-[336px] h-auto"
           />
         </figure>
 
@@ -355,7 +355,7 @@ export default function GridLayout() {
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 text-sm">Grid XSM</td>
                 <td className="py-3 px-4 text-sm">312/336px</td>
-                <td className="py-3 px-4 text-sm">1</td>
+                <td className="py-3 px-4 text-sm">4</td>
                 <td className="py-3 px-4 text-sm">12/24</td>
                 <td className="py-3 px-4 text-sm"></td>
               </tr>

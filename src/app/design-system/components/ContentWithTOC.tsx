@@ -70,12 +70,14 @@ export default function ContentWithTOC({
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-9 gap-8">
+    <div className="grid grid-cols-1 min-[960px]:grid-cols-9 gap-8">
       {/* Main Content */}
-      <article className="col-span-1 lg:col-span-7">{children}</article>
+      <article className="col-span-1 min-[960px]:col-span-7">
+        {children}
+      </article>
 
-      {/* Table of Contents - Desktop Only */}
-      <aside className="hidden lg:block lg:col-span-2">
+      {/* Table of Contents - Desktop Only (≥960px) */}
+      <aside className="hidden min-[960px]:block min-[960px]:col-span-2">
         <div className="sticky top-40">
           <div className="bg-surfaceSubtle rounded-lg p-6 border border-borderSubtle">
             <h4 className="text-sm font-medium text-textDefault mb-4">

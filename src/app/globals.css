@@ -391,8 +391,8 @@
   }
 
   /* Distanz article container (Distanz design system)
-     Uses 12-column grid on desktop (768px+), 4-column on mobile
-     Gap: 16px, Gutter: 32px, Max-width: 1585px */
+     Uses 4 columns (mobile) → 6 columns (≥600px) → 12 columns (≥960px)
+     Gap: 12px/16px, Gutter: 24px/32px, Max-width: 1585px */
   .distanz-article-container {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -406,7 +406,13 @@
     padding-top: 80px;
   }
 
-  @media (min-width: 768px) {
+  @media (min-width: 600px) {
+    .distanz-article-container {
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 960px) {
     .distanz-article-container {
       grid-template-columns: repeat(12, minmax(0, 1fr));
       padding-left: 2rem; /* 32px outside gutter desktop */
