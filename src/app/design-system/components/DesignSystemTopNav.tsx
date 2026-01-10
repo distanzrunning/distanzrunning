@@ -78,29 +78,23 @@ export default function DesignSystemTopNav({
 
         {/* Mobile dropdown menu */}
         {menuOpen && (
-          <>
-            <div
-              className="fixed top-0 left-0 right-0 bottom-0 bg-black/20 z-40"
-              onClick={() => setMenuOpen(false)}
-            />
-            <div className="absolute left-0 right-0 top-full bg-neutral-900 dark:bg-neutral-950 border-b border-neutral-800 shadow-lg z-50">
-              <div className="px-6 py-4 space-y-1">
-                {sections.map((section) => (
-                  <button
-                    key={section}
-                    onClick={() => handleSectionClick(section)}
-                    className={`block w-full text-left py-3 px-4 rounded-md text-base capitalize transition-colors ${
-                      activeSection === section
-                        ? "font-medium text-white bg-neutral-800"
-                        : "text-neutral-400 hover:text-white hover:bg-neutral-800/50"
-                    }`}
-                  >
-                    {section}
-                  </button>
-                ))}
-              </div>
+          <div className="absolute left-0 right-0 top-full bg-neutral-900 dark:bg-neutral-950 border-b border-neutral-800 shadow-lg z-50">
+            <div className="px-6 py-4 space-y-1">
+              {sections.map((section) => (
+                <button
+                  key={section}
+                  onClick={() => handleSectionClick(section)}
+                  className={`block w-full text-left py-3 px-4 rounded-md text-base capitalize transition-colors ${
+                    activeSection === section
+                      ? "font-medium text-white bg-neutral-800"
+                      : "text-neutral-400 hover:text-white hover:bg-neutral-800/50"
+                  }`}
+                >
+                  {section}
+                </button>
+              ))}
             </div>
-          </>
+          </div>
         )}
       </div>
 
