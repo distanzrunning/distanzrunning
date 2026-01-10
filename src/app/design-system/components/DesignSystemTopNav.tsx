@@ -29,7 +29,7 @@ export default function DesignSystemTopNav({
           : "bg-white dark:bg-neutral-900 border-borderSubtle"
       }`}
     >
-      <div className="flex items-stretch px-6 min-[1100px]:px-8 py-6 min-[1100px]:py-8">
+      <div className="flex items-stretch px-6 min-[1100px]:px-8 py-4 min-[1100px]:py-5">
         {/* Logo and Title */}
         <button
           onClick={() => onSectionChange(null)}
