@@ -23,7 +23,7 @@ export default function DesignSystemTopNav({
 
   return (
     <nav
-      className={`min-[960px]:sticky min-[960px]:top-12 z-40 border-b transition-colors duration-300 ${
+      className={`relative min-[960px]:sticky min-[960px]:top-12 z-40 border-b transition-colors duration-300 ${
         menuOpen
           ? "bg-neutral-900 dark:bg-neutral-950 border-neutral-800"
           : "bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md border-borderSubtle"
@@ -74,10 +74,10 @@ export default function DesignSystemTopNav({
         {menuOpen && (
           <>
             <div
-              className="fixed inset-0 bg-black/20 z-30"
+              className="fixed inset-0 bg-black/20 z-40"
               onClick={() => setMenuOpen(false)}
             />
-            <div className="absolute left-0 right-0 top-full bg-neutral-900 dark:bg-neutral-950 border-b border-neutral-800 shadow-lg z-40">
+            <div className="absolute left-0 right-0 top-full bg-neutral-900 dark:bg-neutral-950 border-b border-neutral-800 shadow-lg z-50">
               <div className="px-6 py-4 space-y-1">
                 {sections.map((section) => (
                   <button
