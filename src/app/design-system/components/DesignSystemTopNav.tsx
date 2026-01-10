@@ -49,7 +49,7 @@ export default function DesignSystemTopNav({
           <h1
             className={`font-serif text-2xl leading-tight ${menuOpen ? "text-white" : "text-textDefault"}`}
           >
-            The Stride Design System
+            Stride Design System
           </h1>
         </button>
 
