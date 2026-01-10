@@ -20,11 +20,8 @@ export default function DesignSystemPage() {
         onSectionChange={handleSectionChange}
       />
 
-      <div className="max-w-[1585px] mx-auto px-6 min-[1100px]:px-8 py-12">
-        {/* Content aligned with sidebar position on desktop */}
-        <div className="min-[1100px]:ml-64">
-          <IntroductionShowcase onSectionChange={handleSectionChange} />
-        </div>
+      <div className="px-6 min-[1100px]:px-8 py-12">
+        <IntroductionShowcase onSectionChange={handleSectionChange} />
       </div>
     </div>
   );
