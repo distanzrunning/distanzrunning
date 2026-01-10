@@ -29,7 +29,7 @@ export default function DesignSystemTopNav({
           : "bg-white dark:bg-neutral-900 border-borderSubtle"
       }`}
     >
-      <div className="flex items-stretch px-6 min-[1100px]:px-8 py-4 min-[1100px]:py-5">
+      <div className="flex items-stretch px-6 min-[1100px]:px-8 py-3 min-[1100px]:py-4">
         {/* Logo and Title */}
         <button
           onClick={() => onSectionChange(null)}
@@ -42,8 +42,8 @@ export default function DesignSystemTopNav({
                 : "/images/distanz_icon_black_round.png"
             }
             alt="Distanz Running"
-            width={56}
-            height={56}
+            width={40}
+            height={40}
             className={menuOpen ? "" : "dark:invert"}
           />
           <h1
