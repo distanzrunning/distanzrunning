@@ -29,7 +29,7 @@ export default function DesignSystemTopNav({
               height={28}
               className="dark:invert"
             />
-            <span className="font-serif text-base font-medium">Stride DS</span>
+            <span className="font-serif text-xl font-medium">Stride DS</span>
           </button>
           <div className="h-5 w-px bg-borderNeutral" />
           <div className="flex items-center gap-4">
@@ -65,7 +65,7 @@ export default function DesignSystemTopNav({
               height={28}
               className="dark:invert"
             />
-            <span className="font-serif text-base font-medium">Stride DS</span>
+            <span className="font-serif text-xl font-medium">Stride DS</span>
           </button>
         </div>
 
