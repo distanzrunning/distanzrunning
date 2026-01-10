@@ -35,13 +35,14 @@ export default function TextStyles() {
 
         <p className="text-base text-textSubtle mb-6">
           Large-scale typography for hero sections and feature headlines. Uses
-          the serif typeface for editorial impact.
+          the serif typeface for editorial impact. Display styles use fluid
+          typography that scales smoothly between mobile and desktop viewports.
         </p>
 
         {/* Display Large */}
         <div className="mb-8">
           <div className="bg-surfaceSubtle p-6 mb-4">
-            <p className="font-serif text-[56px] leading-[1.1] font-medium">
+            <p className="font-serif text-display-large leading-[1.05] font-medium">
               The Art of the Long Run
             </p>
           </div>
@@ -58,7 +59,7 @@ export default function TextStyles() {
                 </tr>
                 <tr className="border-b border-borderSubtle">
                   <td className="py-2 pr-4 text-textSubtle">Size</td>
-                  <td className="py-2 px-4">56px</td>
+                  <td className="py-2 px-4">clamp(48px, 7vw, 84px)</td>
                 </tr>
                 <tr className="border-b border-borderSubtle">
                   <td className="py-2 pr-4 text-textSubtle">Weight</td>
@@ -66,12 +67,12 @@ export default function TextStyles() {
                 </tr>
                 <tr className="border-b border-borderSubtle">
                   <td className="py-2 pr-4 text-textSubtle">Line-height</td>
-                  <td className="py-2 px-4">1.1</td>
+                  <td className="py-2 px-4">1.05</td>
                 </tr>
                 <tr className="border-b border-borderSubtle">
                   <td className="py-2 pr-4 text-textSubtle">Tailwind</td>
                   <td className="py-2 px-4 font-mono text-xs">
-                    font-serif text-[56px] leading-[1.1] font-medium
+                    font-serif text-display-large font-medium
                   </td>
                 </tr>
                 <tr className="border-b border-borderSubtle">
@@ -88,7 +89,7 @@ export default function TextStyles() {
         {/* Display */}
         <div className="mb-8">
           <div className="bg-surfaceSubtle p-6 mb-4">
-            <p className="font-serif text-[48px] leading-[1.1] font-medium">
+            <p className="font-serif text-display leading-[1.1] font-medium">
               Breaking Through the Wall
             </p>
           </div>
@@ -105,7 +106,7 @@ export default function TextStyles() {
                 </tr>
                 <tr className="border-b border-borderSubtle">
                   <td className="py-2 pr-4 text-textSubtle">Size</td>
-                  <td className="py-2 px-4">48px</td>
+                  <td className="py-2 px-4">clamp(40px, 6vw, 72px)</td>
                 </tr>
                 <tr className="border-b border-borderSubtle">
                   <td className="py-2 pr-4 text-textSubtle">Weight</td>
@@ -118,7 +119,7 @@ export default function TextStyles() {
                 <tr className="border-b border-borderSubtle">
                   <td className="py-2 pr-4 text-textSubtle">Tailwind</td>
                   <td className="py-2 px-4 font-mono text-xs">
-                    font-serif text-[48px] leading-[1.1] font-medium
+                    font-serif text-display font-medium
                   </td>
                 </tr>
                 <tr className="border-b border-borderSubtle">
@@ -149,14 +150,13 @@ export default function TextStyles() {
         <p className="text-base text-textSubtle mb-6">
           Hierarchical heading styles for structuring content. All headings use
           the serif typeface with medium weight for editorial character.
+          Headings use fluid typography that scales between mobile and desktop.
         </p>
 
         {/* H1 */}
         <div className="mb-8">
           <div className="bg-surfaceSubtle p-6 mb-4">
-            <h1 className="font-serif text-[40px] leading-[1.15] font-medium">
-              Page Title
-            </h1>
+            <h1 className="font-serif text-h1 font-medium">Page Title</h1>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full border-collapse">
@@ -171,7 +171,7 @@ export default function TextStyles() {
                 </tr>
                 <tr className="border-b border-borderSubtle">
                   <td className="py-2 pr-4 text-textSubtle">Size</td>
-                  <td className="py-2 px-4">40px</td>
+                  <td className="py-2 px-4">clamp(36px, 5vw, 68px)</td>
                 </tr>
                 <tr className="border-b border-borderSubtle">
                   <td className="py-2 pr-4 text-textSubtle">Weight</td>
@@ -179,12 +179,12 @@ export default function TextStyles() {
                 </tr>
                 <tr className="border-b border-borderSubtle">
                   <td className="py-2 pr-4 text-textSubtle">Line-height</td>
-                  <td className="py-2 px-4">1.15</td>
+                  <td className="py-2 px-4">1.1</td>
                 </tr>
                 <tr className="border-b border-borderSubtle">
                   <td className="py-2 pr-4 text-textSubtle">Tailwind</td>
                   <td className="py-2 px-4 font-mono text-xs">
-                    font-serif text-[40px] leading-[1.15] font-medium
+                    font-serif text-h1 font-medium
                   </td>
                 </tr>
                 <tr className="border-b border-borderSubtle">
@@ -201,9 +201,7 @@ export default function TextStyles() {
         {/* H2 */}
         <div className="mb-8">
           <div className="bg-surfaceSubtle p-6 mb-4">
-            <h2 className="font-serif text-[28px] leading-[1.2] font-medium">
-              Section Heading
-            </h2>
+            <h2 className="font-serif text-h2 font-medium">Section Heading</h2>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full border-collapse">
@@ -218,7 +216,7 @@ export default function TextStyles() {
                 </tr>
                 <tr className="border-b border-borderSubtle">
                   <td className="py-2 pr-4 text-textSubtle">Size</td>
-                  <td className="py-2 px-4">28px</td>
+                  <td className="py-2 px-4">clamp(32px, 4.5vw, 58px)</td>
                 </tr>
                 <tr className="border-b border-borderSubtle">
                   <td className="py-2 pr-4 text-textSubtle">Weight</td>
@@ -226,12 +224,12 @@ export default function TextStyles() {
                 </tr>
                 <tr className="border-b border-borderSubtle">
                   <td className="py-2 pr-4 text-textSubtle">Line-height</td>
-                  <td className="py-2 px-4">1.2</td>
+                  <td className="py-2 px-4">1.15</td>
                 </tr>
                 <tr className="border-b border-borderSubtle">
                   <td className="py-2 pr-4 text-textSubtle">Tailwind</td>
                   <td className="py-2 px-4 font-mono text-xs">
-                    font-serif text-[28px] leading-[1.2] font-medium
+                    font-serif text-h2 font-medium
                   </td>
                 </tr>
                 <tr className="border-b border-borderSubtle">
@@ -248,7 +246,7 @@ export default function TextStyles() {
         {/* H3 */}
         <div className="mb-8">
           <div className="bg-surfaceSubtle p-6 mb-4">
-            <h3 className="font-serif text-[22px] leading-[1.3] font-medium">
+            <h3 className="font-serif text-h3 font-medium">
               Subsection Heading
             </h3>
           </div>
@@ -265,7 +263,7 @@ export default function TextStyles() {
                 </tr>
                 <tr className="border-b border-borderSubtle">
                   <td className="py-2 pr-4 text-textSubtle">Size</td>
-                  <td className="py-2 px-4">22px</td>
+                  <td className="py-2 px-4">clamp(28px, 3.5vw, 44px)</td>
                 </tr>
                 <tr className="border-b border-borderSubtle">
                   <td className="py-2 pr-4 text-textSubtle">Weight</td>
@@ -273,12 +271,12 @@ export default function TextStyles() {
                 </tr>
                 <tr className="border-b border-borderSubtle">
                   <td className="py-2 pr-4 text-textSubtle">Line-height</td>
-                  <td className="py-2 px-4">1.3</td>
+                  <td className="py-2 px-4">1.2</td>
                 </tr>
                 <tr className="border-b border-borderSubtle">
                   <td className="py-2 pr-4 text-textSubtle">Tailwind</td>
                   <td className="py-2 px-4 font-mono text-xs">
-                    font-serif text-[22px] leading-[1.3] font-medium
+                    font-serif text-h3 font-medium
                   </td>
                 </tr>
                 <tr className="border-b border-borderSubtle">
@@ -479,8 +477,8 @@ export default function TextStyles() {
         <hr className="border-t border-borderDefault mb-6" />
 
         <p className="text-base text-textSubtle mb-6">
-          Interface text styles for labels, buttons, navigation, and
-          interactive elements. Designed for clarity and scanability.
+          Interface text styles for labels, buttons, navigation, and interactive
+          elements. Designed for clarity and scanability.
         </p>
 
         {/* Label */}
@@ -661,37 +659,58 @@ export default function TextStyles() {
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Display Large</td>
                 <td className="py-3 px-4">Serif</td>
-                <td className="py-3 px-4">56px</td>
+                <td className="py-3 px-4">48–84px</td>
                 <td className="py-3 px-4">500</td>
-                <td className="py-3 px-4">1.1</td>
+                <td className="py-3 px-4">1.05</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Display</td>
                 <td className="py-3 px-4">Serif</td>
-                <td className="py-3 px-4">48px</td>
+                <td className="py-3 px-4">40–72px</td>
                 <td className="py-3 px-4">500</td>
                 <td className="py-3 px-4">1.1</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Heading 1</td>
                 <td className="py-3 px-4">Serif</td>
-                <td className="py-3 px-4">40px</td>
+                <td className="py-3 px-4">36–68px</td>
                 <td className="py-3 px-4">500</td>
-                <td className="py-3 px-4">1.15</td>
+                <td className="py-3 px-4">1.1</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Heading 2</td>
                 <td className="py-3 px-4">Serif</td>
-                <td className="py-3 px-4">28px</td>
+                <td className="py-3 px-4">32–58px</td>
                 <td className="py-3 px-4">500</td>
-                <td className="py-3 px-4">1.2</td>
+                <td className="py-3 px-4">1.15</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Heading 3</td>
                 <td className="py-3 px-4">Serif</td>
-                <td className="py-3 px-4">22px</td>
+                <td className="py-3 px-4">28–44px</td>
                 <td className="py-3 px-4">500</td>
-                <td className="py-3 px-4">1.3</td>
+                <td className="py-3 px-4">1.2</td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4">Heading 4</td>
+                <td className="py-3 px-4">Serif</td>
+                <td className="py-3 px-4">24–38px</td>
+                <td className="py-3 px-4">500</td>
+                <td className="py-3 px-4">1.2</td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4">Heading 5</td>
+                <td className="py-3 px-4">Serif</td>
+                <td className="py-3 px-4">20–28px</td>
+                <td className="py-3 px-4">500</td>
+                <td className="py-3 px-4">1.2</td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4">Heading 6</td>
+                <td className="py-3 px-4">Serif</td>
+                <td className="py-3 px-4">18–24px</td>
+                <td className="py-3 px-4">500</td>
+                <td className="py-3 px-4">1.2</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Body Large</td>

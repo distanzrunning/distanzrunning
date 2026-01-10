@@ -14,11 +14,11 @@ export const fonts = {
 } as const;
 
 export const fontWeights = {
-  light: 300,
-  regular: 400,
-  medium: 500,
-  semibold: 550,
-  bold: 600,
+  light: 300, // Rarely used, large display text only
+  regular: 400, // Body text, paragraphs
+  medium: 500, // Headings, emphasis
+  semibold: 600, // Buttons, strong emphasis
+  bold: 700, // Maximum emphasis, rarely used
 } as const;
 
 export const colors = {
@@ -197,26 +197,36 @@ export const colors = {
 } as const;
 
 export const typography = {
-  // Font Sizes (in rem)
+  // Font Sizes
+  // Headings use fluid typography: clamp(min, preferred, max)
+  // Body text uses fixed sizes based on 16px base
   fontSize: {
+    // Small text & metadata
     xs: "0.6875rem", // 11px
-    sm: "0.8125rem", // 13px
-    base: "0.9375rem", // 15px
-    md: "0.9375rem", // 15px
-    lg: "1.0625rem", // 17px
-    xl: "1.1875rem", // 19px
-    "2xl": "1.3125rem", // 21px
-    h6: "1.5rem", // 24px
-    h5: "1.75rem", // 28px
-    h4: "2.375rem", // 38px
-    h3: "2.75rem", // 44px
-    h2: "3.625rem", // 58px
-    h1: "4.25rem", // 68px
-    featureH3: "2.5rem", // 40px
-    featureH2: "3.5rem", // 56px
-    featureH1: "4.5rem", // 72px
+    sm: "0.75rem", // 12px
+
+    // Body text (Inter) - fixed sizes
+    base: "1rem", // 16px - standard body
+    md: "1rem", // 16px - alias for base
+    lg: "1.125rem", // 18px - body large / lead paragraphs
+    xl: "1.25rem", // 20px - feature body
+
+    // Headings (EB Garamond) - max values for fluid scaling
+    // Fluid formula: clamp(min, preferred, max)
+    h6: "1.5rem", // 24px → clamp(18px, 2vw, 24px)
+    h5: "1.75rem", // 28px → clamp(20px, 2.5vw, 28px)
+    h4: "2.375rem", // 38px → clamp(24px, 3vw, 38px)
+    h3: "2.75rem", // 44px → clamp(28px, 3.5vw, 44px)
+    h2: "3.625rem", // 58px → clamp(32px, 4.5vw, 58px)
+    h1: "4.25rem", // 68px → clamp(36px, 5vw, 68px)
+
+    // Display (EB Garamond) - hero headlines
+    display: "4.5rem", // 72px → clamp(40px, 6vw, 72px)
+    displayLarge: "5.25rem", // 84px → clamp(48px, 7vw, 84px)
+
+    // Feature content (EB Garamond)
     featureBody: "1.25rem", // 20px
-    featureQuote: "2rem", // 32px
+    featureQuote: "2rem", // 32px → clamp(24px, 3vw, 32px)
   },
 
   // Line Heights

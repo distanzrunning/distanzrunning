@@ -1,6 +1,34 @@
 import Image from "next/image";
 
 export default function GridSpacing() {
+  // Spacing scale data aligned with design-tokens.ts
+  const spacingScale = [
+    { token: "0", px: 0, rem: "0", usage: "Reset, no spacing" },
+    {
+      token: "0.5",
+      px: 2,
+      rem: "0.125",
+      usage: "Micro adjustments, icon gaps",
+    },
+    { token: "1", px: 4, rem: "0.25", usage: "Fine-tuning, tight spacing" },
+    { token: "2", px: 8, rem: "0.5", usage: "Base unit, compact elements" },
+    { token: "3", px: 12, rem: "0.75", usage: "Small gap, grid gap (mobile)" },
+    { token: "4", px: 16, rem: "1", usage: "Standard gap, grid gap (desktop)" },
+    {
+      token: "6",
+      px: 24,
+      rem: "1.5",
+      usage: "Medium spacing, gutter (mobile)",
+    },
+    { token: "8", px: 32, rem: "2", usage: "Large spacing, gutter (desktop)" },
+    { token: "10", px: 40, rem: "2.5", usage: "Section padding" },
+    { token: "12", px: 48, rem: "3", usage: "Component separation" },
+    { token: "16", px: 64, rem: "4", usage: "Large section gaps" },
+    { token: "20", px: 80, rem: "5", usage: "Major section spacing" },
+    { token: "24", px: 96, rem: "6", usage: "Page section spacing" },
+    { token: "32", px: 128, rem: "8", usage: "Maximum spacing" },
+  ];
+
   return (
     <div className="space-y-8">
       {/* Page Title */}
@@ -15,6 +43,98 @@ export default function GridSpacing() {
       </div>
 
       <hr className="border-t-4 border-textDefault" />
+
+      {/* Spacing Scale Section */}
+      <section>
+        <h2
+          id="spacing-scale"
+          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+        >
+          Spacing scale
+        </h2>
+
+        <hr className="border-t border-borderDefault mb-6" />
+
+        <p className="text-base text-textSubtle mb-4">
+          A systematic spacing scale based on an 8px grid. The base unit is 8px
+          (spacing-2), with 4px increments available for fine-tuning and 2px for
+          micro adjustments.
+        </p>
+
+        <div className="bg-surfaceWarm border-l-4 border-electric-pink p-6 mb-8">
+          <h3 className="font-sans font-semibold text-sm uppercase tracking-wide text-textDefault mb-2">
+            Grid System
+          </h3>
+          <ul className="text-sm text-textSubtle leading-relaxed space-y-1">
+            <li>
+              <strong>Primary grid:</strong> 8px increments (spacing-2, 4, 6,
+              8...)
+            </li>
+            <li>
+              <strong>Fine-tuning:</strong> 4px increments (spacing-1, 3, 5...)
+            </li>
+            <li>
+              <strong>Micro adjustments:</strong> 2px (spacing-0.5)
+            </li>
+          </ul>
+        </div>
+
+        {/* Visual spacing scale */}
+        <div className="bg-surfaceSubtle p-6 mb-8 space-y-3">
+          {spacingScale.slice(1, 9).map((item) => (
+            <div key={item.token} className="flex items-center gap-4">
+              <span className="font-mono text-sm text-textSubtle w-8">
+                {item.token}
+              </span>
+              <div
+                className="bg-electric-pink h-4"
+                style={{ width: `${item.px}px` }}
+              />
+              <span className="text-sm text-textSubtle">{item.px}px</span>
+            </div>
+          ))}
+        </div>
+
+        {/* Spacing reference table */}
+        <div className="overflow-x-auto mb-8">
+          <table className="w-full border-collapse">
+            <thead>
+              <tr className="border-b border-borderDefault">
+                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                  Token
+                </th>
+                <th className="text-left py-3 px-4 font-semibold text-sm">
+                  px
+                </th>
+                <th className="text-left py-3 px-4 font-semibold text-sm">
+                  rem
+                </th>
+                <th className="text-left py-3 px-4 font-semibold text-sm">
+                  Tailwind
+                </th>
+                <th className="text-left py-3 px-4 font-semibold text-sm">
+                  Usage
+                </th>
+              </tr>
+            </thead>
+            <tbody className="text-sm whitespace-nowrap">
+              {spacingScale.map((item) => (
+                <tr key={item.token} className="border-b border-borderSubtle">
+                  <td className="py-3 pr-4 font-mono">spacing-{item.token}</td>
+                  <td className="py-3 px-4">{item.px}</td>
+                  <td className="py-3 px-4">{item.rem}</td>
+                  <td className="py-3 px-4 font-mono">
+                    p-{item.token}, m-{item.token}, gap-{item.token}
+                  </td>
+                  <td className="py-3 px-4 text-textSubtle">{item.usage}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <hr className="border-t border-borderDefault" />
 
       {/* Gap and Gutter Section */}
       <section>

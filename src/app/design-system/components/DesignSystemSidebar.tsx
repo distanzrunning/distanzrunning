@@ -239,8 +239,10 @@ export default function DesignSystemSidebar({
   onSubsectionChange,
 }: DesignSystemSidebarProps) {
   const [expandedSections, setExpandedSections] = useState<string[]>([]);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   const sections = sectionMap[section] || [];
+  const sectionTitle = section.charAt(0).toUpperCase() + section.slice(1);
 
   // Determine which section should be expanded based on active subsection
   const getParentSection = (subsectionId: string): string | null => {
@@ -267,104 +269,135 @@ export default function DesignSystemSidebar({
 
   const handleClick = (id: string) => {
     onSubsectionChange(id);
+    setMobileNavOpen(false);
   };
 
-  return (
-    <nav className="w-64 bg-canvas dark:bg-[#0a0a0a] border-r border-borderSubtle h-full">
-      <div className="px-6 py-8 sticky top-28 max-h-[calc(100vh-7rem)] overflow-y-auto">
-        <ul className="space-y-1">
-          {sections.map((item) => (
-            <li key={item.id}>
-              {item.subsections ? (
-                // Section with subsections
-                <div>
-                  <button
-                    onClick={() => toggleSection(item.id)}
-                    className={`w-full text-left text-base py-2 px-3 rounded-md transition-colors hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-50 dark:hover:bg-neutral-800/50 flex items-center justify-between ${
-                      item.subsections.some(
-                        (sub) => sub.id === activeSubsection,
-                      )
-                        ? "font-medium text-neutral-900 dark:text-white"
-                        : "text-neutral-700 dark:text-neutral-300"
-                    }`}
-                  >
-                    <span className="flex items-center gap-2">
-                      {item.icon && (
-                        <item.icon
-                          className="w-4 h-4"
-                          strokeWidth={
-                            item.subsections.some(
-                              (sub) => sub.id === activeSubsection,
-                            )
-                              ? 2.5
-                              : 1.5
-                          }
-                        />
-                      )}
-                      {item.label}
-                    </span>
-                    <ChevronDown
-                      className={`w-4 h-4 transition-transform ${
-                        shouldBeExpanded.includes(item.id) ? "rotate-180" : ""
-                      }`}
-                    />
-                  </button>
-                  {shouldBeExpanded.includes(item.id) && (
-                    <ul className="ml-3 mt-1 space-y-1 border-l border-borderSubtle pl-3">
-                      {item.subsections.map((sub) => (
-                        <li key={sub.id}>
-                          <button
-                            onClick={() => handleClick(sub.id)}
-                            className={`
-                              w-full text-left text-base py-2 px-3 rounded-md transition-colors
-                              ${
-                                activeSubsection === sub.id
-                                  ? "bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white font-medium"
-                                  : "text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-50 dark:hover:bg-neutral-800/50"
-                              }
-                            `}
-                          >
-                            {sub.label}
-                          </button>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                  {item.showSeparator && (
-                    <div className="my-4 border-t border-borderSubtle" />
-                  )}
-                </div>
-              ) : (
-                // Regular section
-                <div>
-                  <button
-                    onClick={() => handleClick(item.id)}
-                    className={`
-                      w-full text-left text-base py-2 px-3 rounded-md transition-colors flex items-center gap-2
-                      ${
-                        activeSubsection === item.id
-                          ? "bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white font-medium"
-                          : "text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-50 dark:hover:bg-neutral-800/50"
+  // Shared navigation list component
+  const renderNavList = () => (
+    <ul className="space-y-1">
+      {sections.map((item) => (
+        <li key={item.id}>
+          {item.subsections ? (
+            // Section with subsections
+            <div>
+              <button
+                onClick={() => toggleSection(item.id)}
+                className={`w-full text-left text-base py-2 px-3 rounded-md transition-colors hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-50 dark:hover:bg-neutral-800/50 flex items-center justify-between ${
+                  item.subsections.some((sub) => sub.id === activeSubsection)
+                    ? "font-medium text-neutral-900 dark:text-white"
+                    : "text-neutral-700 dark:text-neutral-300"
+                }`}
+              >
+                <span className="flex items-center gap-2">
+                  {item.icon && (
+                    <item.icon
+                      className="w-4 h-4"
+                      strokeWidth={
+                        item.subsections.some(
+                          (sub) => sub.id === activeSubsection,
+                        )
+                          ? 2.5
+                          : 1.5
                       }
-                    `}
-                  >
-                    {item.icon && (
-                      <item.icon
-                        className="w-4 h-4"
-                        strokeWidth={activeSubsection === item.id ? 2.5 : 1.5}
-                      />
-                    )}
-                    {item.label}
-                  </button>
-                  {item.showSeparator && (
-                    <div className="my-4 border-t border-borderSubtle" />
+                    />
                   )}
-                </div>
+                  {item.label}
+                </span>
+                <ChevronDown
+                  className={`w-4 h-4 transition-transform ${
+                    shouldBeExpanded.includes(item.id) ? "rotate-180" : ""
+                  }`}
+                />
+              </button>
+              {shouldBeExpanded.includes(item.id) && (
+                <ul className="ml-3 mt-1 space-y-1 border-l border-borderSubtle pl-3">
+                  {item.subsections.map((sub) => (
+                    <li key={sub.id}>
+                      <button
+                        onClick={() => handleClick(sub.id)}
+                        className={`
+                          w-full text-left text-base py-2 px-3 rounded-md transition-colors
+                          ${
+                            activeSubsection === sub.id
+                              ? "bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white font-medium"
+                              : "text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-50 dark:hover:bg-neutral-800/50"
+                          }
+                        `}
+                      >
+                        {sub.label}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
               )}
-            </li>
-          ))}
-        </ul>
+              {item.showSeparator && (
+                <div className="my-4 border-t border-borderSubtle" />
+              )}
+            </div>
+          ) : (
+            // Regular section
+            <div>
+              <button
+                onClick={() => handleClick(item.id)}
+                className={`
+                  w-full text-left text-base py-2 px-3 rounded-md transition-colors flex items-center gap-2
+                  ${
+                    activeSubsection === item.id
+                      ? "bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white font-medium"
+                      : "text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-50 dark:hover:bg-neutral-800/50"
+                  }
+                `}
+              >
+                {item.icon && (
+                  <item.icon
+                    className="w-4 h-4"
+                    strokeWidth={activeSubsection === item.id ? 2.5 : 1.5}
+                  />
+                )}
+                {item.label}
+              </button>
+              {item.showSeparator && (
+                <div className="my-4 border-t border-borderSubtle" />
+              )}
+            </div>
+          )}
+        </li>
+      ))}
+    </ul>
+  );
+
+  return (
+    <>
+      {/* Mobile Section Header (< 960px) */}
+      <div className="min-[960px]:hidden bg-surfaceSubtle dark:bg-neutral-900 border-b border-borderSubtle">
+        <button
+          onClick={() => setMobileNavOpen(!mobileNavOpen)}
+          className="w-full flex items-center justify-between px-6 py-3"
+        >
+          <span className="text-base font-medium text-textDefault">
+            {sectionTitle}
+          </span>
+          <ChevronDown
+            className={`w-5 h-5 text-textSubtle transition-transform ${
+              mobileNavOpen ? "rotate-180" : ""
+            }`}
+          />
+        </button>
+
+        {/* Mobile dropdown navigation */}
+        {mobileNavOpen && (
+          <div className="px-6 pb-4 max-h-[60vh] overflow-y-auto">
+            {renderNavList()}
+          </div>
+        )}
       </div>
-    </nav>
+
+      {/* Desktop Sidebar (≥ 960px) */}
+      <nav className="hidden min-[960px]:block w-64 bg-canvas dark:bg-[#0a0a0a] border-r border-borderSubtle h-full">
+        <div className="px-6 py-8 sticky top-28 max-h-[calc(100vh-7rem)] overflow-y-auto">
+          {renderNavList()}
+        </div>
+      </nav>
+    </>
   );
 }

@@ -11,67 +11,83 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // Distanz Brand Colors
-        "electric-pink": "#e43c81",
-        "volt-green": "#00D464",
-        "tech-cyan": "#008CB8",
-        "pace-purple": "#7C3AED",
-        "trail-brown": "#8B4513",
-        "track-red": "#DC2626",
+        // ═══════════════════════════════════════════════════════════════════
+        // GLOBAL PALETTE TOKENS (Static - these values never change)
+        // Source: src/styles/design-tokens.ts
+        // ═══════════════════════════════════════════════════════════════════
 
-        // Primary palette
-        black: "#0A0A0A",
+        // Brand Core
+        black: "#000000",
         white: "#FFFFFF",
-        "off-white": "#FAFAF8",
 
-        // Asphalt (Greyscale) - 10-shade systematic scale with even distribution
-        // Lightness-based naming (5 = 5% lightness, 95 = 95% lightness)
-        // Perfect 10% steps throughout the scale (except bookends with 5% steps)
-        "asphalt-5": "#0D0D0D", // L=5%  - Dark mode canvas, extreme dark backgrounds
-        "asphalt-10": "#1A1A1A", // L=10% - Dark mode main backgrounds, light mode primary text
-        "asphalt-20": "#333333", // L=20% - Dark mode elevated surfaces, light mode headings
-        "asphalt-30": "#4D4D4D", // L=30% - Dark mode primary text, light mode secondary text
-        "asphalt-40": "#666666", // L=40% - Dark mode secondary text, light mode muted text
-        "asphalt-50": "#808080", // L=50% - True mid-grey, placeholders, disabled states
-        "asphalt-60": "#999999", // L=60% - Light mode focus rings, dark mode subtle text
-        "asphalt-70": "#B3B3B3", // L=70% - Light mode borders, dark mode body text
-        "asphalt-80": "#CCCCCC", // L=80% - Light mode dividers, dark mode hover backgrounds
-        "asphalt-90": "#E5E5E5", // L=90% - Light mode hover backgrounds, surfaces
-        "asphalt-95": "#F2F2F2", // L=95% - Light mode elevated surfaces, backgrounds
+        // Electric Pink - Primary accent (HSL: 333°, 74%)
+        "electric-pink": "#D11B5C", // Default = 55 shade
+        "electric-pink-20": "#520A23",
+        "electric-pink-30": "#7A0F35",
+        "electric-pink-45": "#B8164F",
+        "electric-pink-55": "#D11B5C",
+        "electric-pink-90": "#F5D2E1",
+        "electric-pink-95": "#FAE9F0",
 
-        // Backwards compatibility: Tailwind neutral scale → Asphalt
-        // Maps Tailwind's neutral-50 through neutral-950 to closest Asphalt equivalents
-        "neutral-50": "#F2F2F2", // → asphalt-95
-        "neutral-100": "#E5E5E5", // → asphalt-90
-        "neutral-200": "#CCCCCC", // → asphalt-80
-        "neutral-300": "#B3B3B3", // → asphalt-70
-        "neutral-400": "#999999", // → asphalt-60
-        "neutral-500": "#808080", // → asphalt-50 (perfect mid-grey match)
-        "neutral-600": "#666666", // → asphalt-40
-        "neutral-700": "#4D4D4D", // → asphalt-30
-        "neutral-800": "#333333", // → asphalt-20
-        "neutral-900": "#1A1A1A", // → asphalt-10
-        "neutral-950": "#0D0D0D", // → asphalt-5
+        // Pace Purple - Secondary accent, Training (HSL: 262°, 60%)
+        "pace-purple": "#5E3FD1", // Default = 55 shade
+        "pace-purple-45": "#452BB8",
+        "pace-purple-55": "#5E3FD1",
+        "pace-purple-90": "#DBD6F5",
+        "pace-purple-95": "#EDEBFA",
 
-        // Legacy gray scale (deprecated - use asphalt-X or neutral-X instead)
-        "gray-900": "#1A1A1A",
-        "gray-800": "#2D2D2D",
-        "gray-700": "#404040",
-        "gray-600": "#595959",
-        "gray-500": "#737373",
-        "gray-400": "#A6A6A6",
-        "gray-300": "#D9D9D9",
-        "gray-200": "#E6E6E6",
-        "gray-100": "#F5F5F5",
+        // Volt Green - Secondary accent, Nutrition/Wellness (HSL: 146°, 100%)
+        "volt-green": "#008C47", // Default = 55 shade
+        "volt-green-45": "#00733A",
+        "volt-green-55": "#008C47",
+        "volt-green-90": "#CCF5E0",
+        "volt-green-95": "#E6FAEF",
 
-        // Legacy/compatibility
-        primary: "#e43c81",
-        secondary: "#eeb6cd",
-        dark: "#000000",
-        light: "#f7f7f7",
-        muted: "#6b7280",
+        // Tech Cyan - Tertiary accent, Gear (HSL: 190°, 100%)
+        "tech-cyan": "#008CB8", // Default = 55 shade
+        "tech-cyan-45": "#007399",
+        "tech-cyan-55": "#008CB8",
+        "tech-cyan-90": "#CCF0F5",
+        "tech-cyan-95": "#E6F7FA",
 
-        // Semantic colors via CSS variables
+        // Track Red - Tertiary accent, Road/Races (HSL: 0°, 79%)
+        "track-red": "#D11B1B", // Default = 55 shade
+        "track-red-45": "#B81616",
+        "track-red-55": "#D11B1B",
+        "track-red-90": "#F5D2D2",
+        "track-red-95": "#FAE9E9",
+
+        // Trail Brown - Tertiary accent, Trail (HSL: 25°, 59%)
+        "trail-brown": "#8C4623", // Default = 55 shade
+        "trail-brown-45": "#73391D",
+        "trail-brown-55": "#8C4623",
+        "trail-brown-90": "#F5E6D9",
+        "trail-brown-95": "#FAF2EC",
+
+        // Signal Orange - Warning states (HSL: 20°, 100%)
+        "signal-orange-45": "#732600",
+        "signal-orange-55": "#8C2F00",
+        "signal-orange-90": "#F5D6CC",
+        "signal-orange-95": "#FAEBE6",
+
+        // Asphalt Greyscale - 10% lightness steps
+        "asphalt-5": "#0D0D0D",
+        "asphalt-10": "#1A1A1A",
+        "asphalt-20": "#333333",
+        "asphalt-30": "#4D4D4D",
+        "asphalt-40": "#666666",
+        "asphalt-50": "#808080",
+        "asphalt-60": "#999999",
+        "asphalt-70": "#B3B3B3",
+        "asphalt-80": "#CCCCCC",
+        "asphalt-90": "#E5E5E5",
+        "asphalt-95": "#F2F2F2",
+
+        // ═══════════════════════════════════════════════════════════════════
+        // SEMANTIC TOKENS (Dynamic - swap between light/dark mode via CSS vars)
+        // ═══════════════════════════════════════════════════════════════════
+
+        // Text colors
         textDefault: "rgb(var(--color-textDefault))",
         textSubtle: "rgb(var(--color-textSubtle))",
         textSubtler: "rgb(var(--color-textSubtler))",
@@ -82,48 +98,45 @@ module.exports = {
         textAccent: "rgb(var(--color-textAccent))",
         textAccentSubtle: "rgb(var(--color-textAccentSubtle))",
 
-        // Systematic border tokens - Two-tier approach
+        // Border colors
         borderDefault: "rgb(var(--color-borderDefault))",
         borderDefaultHover: "rgb(var(--color-borderDefaultHover))",
         borderSubtle: "rgb(var(--color-borderSubtle))",
         borderSubtleHover: "rgb(var(--color-borderSubtleHover))",
         borderExtraSubtle: "rgb(var(--color-borderExtraSubtle))",
-
-        // Legacy border aliases (backwards compatible)
         borderNeutral: "rgb(var(--color-borderNeutral))",
         borderNeutralHover: "rgb(var(--color-borderNeutralHover))",
         borderNeutralSubtle: "rgb(var(--color-borderNeutralSubtle))",
 
-        // Systematic surface tokens - Elevation hierarchy
+        // Surface colors
         surface: "rgb(var(--color-surface))",
         surfaceSubtle: "rgb(var(--color-surfaceSubtle))",
         surfaceWarm: "rgb(var(--color-surfaceWarm))",
         canvas: "rgb(var(--color-canvas))",
-
-        // Legacy surface aliases (backwards compatible)
-        "surface-subtle": "rgb(var(--color-neutralBgSubtle))",
         neutralBgSubtle: "rgb(var(--color-neutralBgSubtle))",
-        greyCold400: "rgb(var(--color-greyCold400))",
 
-        // Status/Feedback colors - For forms, validation, alerts
+        // Status colors - Success
         "success-text": "rgb(var(--color-success-text))",
         "success-text-subtle": "rgb(var(--color-success-text-subtle))",
         "success-bg": "rgb(var(--color-success-bg))",
         "success-bg-subtle": "rgb(var(--color-success-bg-subtle))",
         "success-border": "rgb(var(--color-success-border))",
 
+        // Status colors - Warning
         "warning-text": "rgb(var(--color-warning-text))",
         "warning-text-subtle": "rgb(var(--color-warning-text-subtle))",
         "warning-bg": "rgb(var(--color-warning-bg))",
         "warning-bg-subtle": "rgb(var(--color-warning-bg-subtle))",
         "warning-border": "rgb(var(--color-warning-border))",
 
+        // Status colors - Error
         "error-text": "rgb(var(--color-error-text))",
         "error-text-subtle": "rgb(var(--color-error-text-subtle))",
         "error-bg": "rgb(var(--color-error-bg))",
         "error-bg-subtle": "rgb(var(--color-error-bg-subtle))",
         "error-border": "rgb(var(--color-error-border))",
 
+        // Status colors - Info
         "info-text": "rgb(var(--color-info-text))",
         "info-text-subtle": "rgb(var(--color-info-text-subtle))",
         "info-bg": "rgb(var(--color-info-bg))",
@@ -131,16 +144,11 @@ module.exports = {
         "info-border": "rgb(var(--color-info-border))",
       },
       backgroundColor: {
-        "primary-light": "#f9e8ee",
-
-        // Systematic surface tokens
+        // Surface tokens (semantic)
         surface: "rgb(var(--color-surface))",
         surfaceSubtle: "rgb(var(--color-surfaceSubtle))",
         surfaceWarm: "rgb(var(--color-surfaceWarm))",
         canvas: "rgb(var(--color-canvas))",
-
-        // Legacy aliases (backwards compatible)
-        "surface-subtle": "rgb(var(--color-neutralBgSubtle))",
         neutralBgSubtle: "rgb(var(--color-neutralBgSubtle))",
       },
       keyframes: {
@@ -240,13 +248,7 @@ module.exports = {
           "megaMenuClose 300ms cubic-bezier(.16,1,.3,1) forwards",
       },
       textColor: {
-        primary: "#e43c81",
-        secondary: "#eeb6cd",
-        dark: "#000000",
-        light: "#f7f7f7",
-        muted: "#6b7280",
-
-        // Distanz semantic text colors
+        // Semantic text colors (dynamic via CSS vars)
         textDefault: "rgb(var(--color-textDefault))",
         textSubtle: "rgb(var(--color-textSubtle))",
         textSubtler: "rgb(var(--color-textSubtler))",
@@ -258,10 +260,8 @@ module.exports = {
         textAccentSubtle: "rgb(var(--color-textAccentSubtle))",
       },
       borderColor: {
-        primary: "#e43c81",
-        secondary: "#eeb6cd",
-
-        // Distanz border colors
+        // Semantic border colors (dynamic via CSS vars)
+        borderDefault: "rgb(var(--color-borderDefault))",
         borderNeutral: "rgb(var(--color-borderNeutral))",
         borderNeutralHover: "rgb(var(--color-borderNeutralHover))",
         borderNeutralSubtle: "rgb(var(--color-borderNeutralSubtle))",
@@ -355,13 +355,21 @@ module.exports = {
           },
         ],
 
-        // Body Text - Body (Inter) / Features (EB Garamond)
+        // Body Text (Inter) - Fixed sizes from design-tokens.ts
         body: [
           "16px",
           {
             lineHeight: "1.5",
             letterSpacing: "0",
             "--font-size-px": "16",
+          },
+        ],
+        "body-lg": [
+          "18px",
+          {
+            lineHeight: "1.6",
+            letterSpacing: "0",
+            "--font-size-px": "18",
           },
         ],
         "body-sm": [
@@ -372,12 +380,13 @@ module.exports = {
             "--font-size-px": "14",
           },
         ],
+        // Feature body (EB Garamond for long-form articles)
         "body-feature": [
-          "19px",
+          "20px",
           {
             lineHeight: "1.6",
-            letterSpacing: "0.01em",
-            "--font-size-px": "19",
+            letterSpacing: "0",
+            "--font-size-px": "20",
           },
         ],
 
@@ -469,61 +478,70 @@ module.exports = {
           },
         ],
 
-        // Generic headings (default to EB Garamond)
+        // Headings (EB Garamond) - Fluid typography from design-tokens.ts
+        // Format: clamp(min, preferred, max) where max = design token value
         h6: [
-          "18px",
+          "clamp(18px, 2vw, 24px)",
           {
             lineHeight: "1.2",
             letterSpacing: "0",
-            "--font-size-px": "18",
-          },
-        ],
-        h5: [
-          "20px",
-          {
-            lineHeight: "1.2",
-            letterSpacing: "0",
-            "--font-size-px": "20",
-          },
-        ],
-        h4: [
-          "22px",
-          {
-            lineHeight: "1.3",
-            letterSpacing: "0",
-            "--font-size-px": "22",
-          },
-        ],
-        h3: [
-          "clamp(22px, 2.5vw, 28px)",
-          {
-            lineHeight: "1.25",
-            letterSpacing: "-0.005em",
             "--font-size-px": "24",
           },
         ],
-        h2: [
-          "clamp(28px, 3.5vw, 36px)",
+        h5: [
+          "clamp(20px, 2.5vw, 28px)",
           {
             lineHeight: "1.2",
+            letterSpacing: "0",
+            "--font-size-px": "28",
+          },
+        ],
+        h4: [
+          "clamp(24px, 3vw, 38px)",
+          {
+            lineHeight: "1.2",
+            letterSpacing: "0",
+            "--font-size-px": "38",
+          },
+        ],
+        h3: [
+          "clamp(28px, 3.5vw, 44px)",
+          {
+            lineHeight: "1.2",
+            letterSpacing: "-0.005em",
+            "--font-size-px": "44",
+          },
+        ],
+        h2: [
+          "clamp(32px, 4.5vw, 58px)",
+          {
+            lineHeight: "1.15",
             letterSpacing: "-0.01em",
-            "--font-size-px": "32",
+            "--font-size-px": "58",
           },
         ],
         h1: [
-          "clamp(32px, 4.5vw, 48px)",
+          "clamp(36px, 5vw, 68px)",
           {
-            lineHeight: "1.15",
+            lineHeight: "1.1",
             letterSpacing: "-0.015em",
-            "--font-size-px": "40",
+            "--font-size-px": "68",
           },
         ],
         display: [
-          "clamp(40px, 6vw, 60px)",
+          "clamp(40px, 6vw, 72px)",
           {
             lineHeight: "1.1",
             letterSpacing: "-0.02em",
-            "--font-size-px": "52",
+            "--font-size-px": "72",
+          },
+        ],
+        "display-large": [
+          "clamp(48px, 7vw, 84px)",
+          {
+            lineHeight: "1.05",
+            letterSpacing: "-0.02em",
+            "--font-size-px": "84",
           },
         ],
 
@@ -601,11 +619,11 @@ module.exports = {
         "[56px]": "56px",
       },
       fontWeight: {
-        light: "300",
-        regular: "400",
-        medium: "500",
-        "semi-bold": "550", // Match Distanz's exact weight
-        bold: "600",
+        light: "300", // Rarely used, large display text only
+        regular: "400", // Body text, paragraphs
+        medium: "500", // Headings, emphasis
+        semibold: "600", // Buttons, strong emphasis
+        bold: "700", // Maximum emphasis, rarely used
       },
       letterSpacing: {
         tight: "-0.025em",

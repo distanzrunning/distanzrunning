@@ -230,7 +230,7 @@ export default function Typefaces() {
                 <td className="py-3 pr-4">Light</td>
                 <td className="py-3 px-4">300</td>
                 <td className="py-3 px-4">normal</td>
-                <td className="py-3 px-4 font-mono" rowSpan={10}>
+                <td className="py-3 px-4 font-mono" rowSpan={5}>
                   --font-family-sans
                 </td>
               </tr>
@@ -246,22 +246,12 @@ export default function Typefaces() {
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">SemiBold</td>
-                <td className="py-3 px-4">550</td>
-                <td className="py-3 px-4">normal</td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4">Bold</td>
                 <td className="py-3 px-4">600</td>
                 <td className="py-3 px-4">normal</td>
               </tr>
               <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4">ExtraBold</td>
+                <td className="py-3 pr-4">Bold</td>
                 <td className="py-3 px-4">700</td>
-                <td className="py-3 px-4">normal</td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4">Black</td>
-                <td className="py-3 px-4">800</td>
                 <td className="py-3 px-4">normal</td>
               </tr>
             </tbody>
@@ -303,27 +293,15 @@ export default function Typefaces() {
           </p>
           <p
             className="font-sans text-[20px] leading-[1.4] mb-2"
-            style={{ fontFamily: "var(--font-family-sans)", fontWeight: 550 }}
-          >
-            SemiBold 550 — The quick brown fox
-          </p>
-          <p
-            className="font-sans text-[20px] leading-[1.4] mb-2"
             style={{ fontFamily: "var(--font-family-sans)", fontWeight: 600 }}
           >
-            Bold 600 — The quick brown fox
-          </p>
-          <p
-            className="font-sans text-[20px] leading-[1.4] mb-2"
-            style={{ fontFamily: "var(--font-family-sans)", fontWeight: 700 }}
-          >
-            ExtraBold 700 — The quick brown fox
+            SemiBold 600 — The quick brown fox
           </p>
           <p
             className="font-sans text-[20px] leading-[1.4] mb-0"
-            style={{ fontFamily: "var(--font-family-sans)", fontWeight: 800 }}
+            style={{ fontFamily: "var(--font-family-sans)", fontWeight: 700 }}
           >
-            Black 800 — The quick brown fox
+            Bold 700 — The quick brown fox
           </p>
         </div>
       </section>
@@ -471,13 +449,13 @@ export default function Typefaces() {
                 <td className="py-3 px-4 font-mono">font-medium</td>
               </tr>
               <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">--font-weight-semi-bold</td>
-                <td className="py-3 px-4">550</td>
+                <td className="py-3 pr-4 font-mono">--font-weight-semibold</td>
+                <td className="py-3 px-4">600</td>
                 <td className="py-3 px-4 font-mono">font-semibold</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 font-mono">--font-weight-bold</td>
-                <td className="py-3 px-4">600</td>
+                <td className="py-3 px-4">700</td>
                 <td className="py-3 px-4 font-mono">font-bold</td>
               </tr>
             </tbody>
