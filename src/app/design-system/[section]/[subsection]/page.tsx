@@ -5,6 +5,8 @@ import DesignSystemTopNav from "../../components/DesignSystemTopNav";
 import DesignSystemSidebar from "../../components/DesignSystemSidebar";
 import PlaceholderContent from "../../components/PlaceholderContent";
 import FoundationsOverview from "../../components/content/FoundationsOverview";
+import ComponentsOverview from "../../components/content/ComponentsOverview";
+import PatternsOverview from "../../components/content/PatternsOverview";
 import DesignPrinciples from "../../components/content/DesignPrinciples";
 import UXPrinciples from "../../components/content/UXPrinciples";
 import DesignTokens from "../../components/content/DesignTokens";
@@ -335,6 +337,20 @@ export default function DesignSystemSubsectionPage() {
             <Iconography />
           </ContentWithTOC>
         );
+      }
+    }
+
+    // Show Components content
+    if (section === "components") {
+      if (subsection === "overview") {
+        return <ComponentsOverview />;
+      }
+    }
+
+    // Show Patterns content
+    if (section === "patterns") {
+      if (subsection === "overview") {
+        return <PatternsOverview />;
       }
     }
 
