@@ -9,7 +9,7 @@ interface ButtonPreviewProps {
 
 function ButtonPreview({ variant, disabled = false }: ButtonPreviewProps) {
   const baseClasses =
-    "inline-flex items-center justify-center px-5 h-12 rounded-lg font-sans font-semibold text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed";
+    "inline-flex items-center justify-center px-5 h-12 min-w-[120px] rounded-lg font-sans font-semibold text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed";
 
   const variantClasses = {
     primary:
@@ -130,9 +130,7 @@ export default function ButtonComponent() {
           title="Primary"
           id="variants-primary"
           variant="primary"
-          code={`<button className="inline-flex items-center justify-center px-5 h-12 rounded-lg font-sans font-semibold text-sm bg-asphalt-10 dark:bg-asphalt-95 text-white dark:text-asphalt-10 hover:bg-asphalt-20 dark:hover:bg-asphalt-90 transition-colors">
-  Button
-</button>`}
+          code={`<Button>Button</Button>`}
         />
 
         {/* Secondary */}
@@ -140,9 +138,7 @@ export default function ButtonComponent() {
           title="Secondary"
           id="variants-secondary"
           variant="secondary"
-          code={`<button className="inline-flex items-center justify-center px-5 h-12 rounded-lg font-sans font-semibold text-sm bg-transparent border border-asphalt-10 dark:border-asphalt-95 text-asphalt-10 dark:text-asphalt-95 hover:bg-asphalt-95 dark:hover:bg-asphalt-10 transition-colors">
-  Button
-</button>`}
+          code={`<Button secondary>Button</Button>`}
         />
 
         {/* Inverse */}
@@ -150,9 +146,7 @@ export default function ButtonComponent() {
           title="Inverse"
           id="variants-inverse"
           variant="inverse"
-          code={`<button className="inline-flex items-center justify-center px-5 h-12 rounded-lg font-sans font-semibold text-sm bg-white text-asphalt-10 hover:bg-asphalt-95 transition-colors">
-  Button
-</button>`}
+          code={`<Button inverse>Button</Button>`}
           inverse
         />
 
@@ -161,9 +155,7 @@ export default function ButtonComponent() {
           title="Inverse, Secondary"
           id="variants-inverse-secondary"
           variant="inverse-secondary"
-          code={`<button className="inline-flex items-center justify-center px-5 h-12 rounded-lg font-sans font-semibold text-sm bg-transparent border border-white text-white hover:bg-white/10 transition-colors">
-  Button
-</button>`}
+          code={`<Button inverse secondary>Button</Button>`}
           inverse
         />
       </section>
