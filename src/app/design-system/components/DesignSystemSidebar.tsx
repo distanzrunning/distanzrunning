@@ -10,6 +10,17 @@ import {
   RulerDimensionLine,
   Type,
   Shapes,
+  Power,
+  PencilLine,
+  SlidersVertical,
+  MessageSquareWarning,
+  FileInput,
+  Eye,
+  SignpostBig,
+  Compass,
+  Network,
+  Image,
+  Puzzle,
   LucideIcon,
 } from "lucide-react";
 
@@ -79,10 +90,11 @@ const foundationsSections: SidebarSection[] = [
 ];
 
 const componentsSections: SidebarSection[] = [
-  { id: "overview", label: "Overview", showSeparator: true },
+  { id: "overview", label: "Overview", icon: Glasses, showSeparator: true },
   {
     id: "buttons",
     label: "Buttons",
+    icon: Power,
     subsections: [
       { id: "button", label: "Button" },
       { id: "button-icon", label: "Button + Icon" },
@@ -93,6 +105,7 @@ const componentsSections: SidebarSection[] = [
   {
     id: "content",
     label: "Content",
+    icon: PencilLine,
     subsections: [
       { id: "blockquote", label: "Blockquote" },
       { id: "pull-quote", label: "Pull-quote" },
@@ -101,6 +114,7 @@ const componentsSections: SidebarSection[] = [
   {
     id: "controls",
     label: "Controls",
+    icon: SlidersVertical,
     subsections: [
       { id: "close", label: "Close" },
       { id: "collapse", label: "Collapse" },
@@ -119,6 +133,7 @@ const componentsSections: SidebarSection[] = [
   {
     id: "feedback",
     label: "Feedback",
+    icon: MessageSquareWarning,
     subsections: [
       { id: "banner-alert", label: "Banner alert" },
       { id: "indicator", label: "Indicator" },
@@ -130,6 +145,7 @@ const componentsSections: SidebarSection[] = [
   {
     id: "forms",
     label: "Forms",
+    icon: FileInput,
     subsections: [
       { id: "checkbox", label: "Checkbox" },
       { id: "combined-input-field", label: "Combined input field" },
@@ -151,6 +167,7 @@ const componentsSections: SidebarSection[] = [
   {
     id: "identity",
     label: "Identity",
+    icon: Eye,
     subsections: [
       { id: "idents-columns", label: "Idents (Columns)" },
       { id: "idents-newsletters", label: "Idents (Newsletters)" },
@@ -160,6 +177,7 @@ const componentsSections: SidebarSection[] = [
   {
     id: "landmarks",
     label: "Landmarks",
+    icon: SignpostBig,
     subsections: [
       { id: "badge", label: "Badge" },
       { id: "section-headline", label: "Section headline" },
@@ -173,6 +191,7 @@ const componentsSections: SidebarSection[] = [
   {
     id: "navigation",
     label: "Navigation",
+    icon: Compass,
     subsections: [
       { id: "actioned-link", label: "Actioned link" },
       { id: "breadcrumb", label: "Breadcrumb" },
@@ -194,11 +213,13 @@ const componentsSections: SidebarSection[] = [
   {
     id: "structure",
     label: "Structure",
+    icon: Network,
     subsections: [{ id: "rule", label: "Rule" }],
   },
   {
     id: "assets",
     label: "Assets",
+    icon: Image,
     subsections: [
       { id: "avatar", label: "Avatar" },
       { id: "logo-wordmark", label: "Logo & wordmark" },
@@ -209,10 +230,11 @@ const componentsSections: SidebarSection[] = [
 ];
 
 const patternsSections: SidebarSection[] = [
-  { id: "overview", label: "Overview", showSeparator: true },
+  { id: "overview", label: "Overview", icon: Glasses, showSeparator: true },
   {
     id: "layout",
     label: "Layout",
+    icon: Puzzle,
     subsections: [
       { id: "footer", label: "Footer" },
       { id: "footer-secondary", label: "Footer (secondary)" },
