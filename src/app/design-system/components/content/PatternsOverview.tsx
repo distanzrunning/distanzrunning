@@ -14,7 +14,7 @@ export default function PatternsOverview() {
         </h1>
       </div>
 
-      <p className="text-xl text-textSubtle max-w-3xl leading-relaxed">
+      <p className="text-base text-textSubtle max-w-3xl">
         Patterns are recurring solutions to common design problems. They combine
         multiple components into cohesive, reusable structures that maintain
         consistency across the interface while solving specific user needs.
