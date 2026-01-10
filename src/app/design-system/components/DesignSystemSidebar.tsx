@@ -215,6 +215,7 @@ const componentsSections: SidebarSection[] = [
     label: "Structure",
     icon: Network,
     subsections: [{ id: "rule", label: "Rule" }],
+    showSeparator: true,
   },
   {
     id: "assets",
