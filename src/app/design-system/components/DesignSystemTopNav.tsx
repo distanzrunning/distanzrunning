@@ -22,13 +22,21 @@ export default function DesignSystemTopNav({
   };
 
   return (
-    <nav className="sticky top-12 z-40 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md border-b border-borderSubtle transition-colors duration-300">
+    <nav
+      className={`min-[960px]:sticky min-[960px]:top-12 z-40 border-b transition-colors duration-300 ${
+        menuOpen
+          ? "bg-neutral-900 dark:bg-neutral-950 border-neutral-800"
+          : "bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md border-borderSubtle"
+      }`}
+    >
       {/* Mobile/Medium layout (< 960px) */}
       <div className="min-[960px]:hidden px-6">
         <div className="flex items-center justify-between h-14">
           <button
             onClick={() => onSectionChange(null)}
-            className="flex items-center gap-3 hover:opacity-70 transition-opacity"
+            className={`flex items-center gap-3 hover:opacity-70 transition-opacity ${
+              menuOpen ? "invert dark:invert-0" : ""
+            }`}
           >
             <Image
               src="/images/distanz_icon_black_round.png"
@@ -41,14 +49,23 @@ export default function DesignSystemTopNav({
           </button>
           <button
             onClick={() => setMenuOpen(!menuOpen)}
-            className="flex items-center gap-2 text-sm text-textSubtle hover:text-textDefault transition-colors"
+            className={`flex items-center gap-2 text-sm transition-colors ${
+              menuOpen
+                ? "text-white hover:text-neutral-300"
+                : "text-textSubtle hover:text-textDefault"
+            }`}
             aria-label={menuOpen ? "Close menu" : "Open menu"}
           >
-            <span>Menu</span>
             {menuOpen ? (
-              <X className="w-5 h-5" />
+              <>
+                <X className="w-5 h-5" />
+                <span>Close</span>
+              </>
             ) : (
-              <Menu className="w-5 h-5" />
+              <>
+                <Menu className="w-5 h-5" />
+                <span>Menu</span>
+              </>
             )}
           </button>
         </div>
@@ -60,7 +77,7 @@ export default function DesignSystemTopNav({
               className="fixed inset-0 bg-black/20 z-30"
               onClick={() => setMenuOpen(false)}
             />
-            <div className="absolute left-0 right-0 top-full bg-white dark:bg-neutral-900 border-b border-borderSubtle shadow-lg z-40">
+            <div className="absolute left-0 right-0 top-full bg-neutral-900 dark:bg-neutral-950 border-b border-neutral-800 shadow-lg z-40">
               <div className="px-6 py-4 space-y-1">
                 {sections.map((section) => (
                   <button
@@ -68,8 +85,8 @@ export default function DesignSystemTopNav({
                     onClick={() => handleSectionClick(section)}
                     className={`block w-full text-left py-3 px-4 rounded-md text-base capitalize transition-colors ${
                       activeSection === section
-                        ? "font-medium text-textDefault bg-neutral-100 dark:bg-neutral-800"
-                        : "text-textSubtle hover:text-textDefault hover:bg-neutral-50 dark:hover:bg-neutral-800/50"
+                        ? "font-medium text-white bg-neutral-800"
+                        : "text-neutral-400 hover:text-white hover:bg-neutral-800/50"
                     }`}
                   >
                     {section}
