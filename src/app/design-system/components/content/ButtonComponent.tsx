@@ -9,16 +9,16 @@ interface ButtonPreviewProps {
 
 function ButtonPreview({ variant, disabled = false }: ButtonPreviewProps) {
   const baseClasses =
-    "inline-flex items-center justify-center px-5 h-12 min-w-[120px] rounded-lg font-sans font-semibold text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed";
+    "inline-flex items-center justify-center px-5 h-12 min-w-[120px] rounded-md font-sans font-semibold text-sm transition-colors focus:outline-none focus:ring-1 focus:ring-electric-pink-55 disabled:opacity-50 disabled:cursor-not-allowed";
 
   const variantClasses = {
     primary:
-      "bg-asphalt-10 dark:bg-asphalt-95 text-white dark:text-asphalt-10 hover:bg-asphalt-20 dark:hover:bg-asphalt-90 focus:ring-asphalt-30",
+      "bg-asphalt-10 dark:bg-asphalt-95 text-white dark:text-asphalt-10 hover:bg-asphalt-20 dark:hover:bg-asphalt-90",
     secondary:
-      "bg-transparent border border-asphalt-10 dark:border-asphalt-95 text-asphalt-10 dark:text-asphalt-95 hover:bg-asphalt-95 dark:hover:bg-asphalt-10 focus:ring-asphalt-30",
-    inverse: "bg-white text-asphalt-10 hover:bg-asphalt-95 focus:ring-white",
+      "bg-transparent border border-asphalt-10 dark:border-asphalt-95 text-asphalt-10 dark:text-asphalt-95 hover:bg-asphalt-95 dark:hover:bg-asphalt-10",
+    inverse: "bg-white text-asphalt-10 hover:bg-asphalt-95",
     "inverse-secondary":
-      "bg-transparent border border-white text-white hover:bg-white/10 focus:ring-white",
+      "bg-transparent border border-white text-white hover:bg-white/10",
   };
 
   return (
@@ -315,8 +315,8 @@ export default function ButtonComponent() {
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Border radius</td>
-                <td className="py-3 px-4">8px</td>
-                <td className="py-3 px-4 font-mono">rounded-lg</td>
+                <td className="py-3 px-4">6px</td>
+                <td className="py-3 px-4 font-mono">rounded-md</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Font family</td>
