@@ -151,10 +151,10 @@ export default function NewsletterSignup() {
                   type="submit"
                   data-attr="newsletter-footer-submit"
                   disabled={isSubmitting}
-                  className="group whitespace-nowrap font-medium text-lg relative m-0 flex cursor-pointer select-none items-center rounded-lg border-none p-0 no-underline outline-none transition ease-out focus-visible:outline-none active:scale-[0.98] active:duration-100 h-12 gap-2 px-5 bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-100 justify-center disabled:opacity-40 disabled:cursor-not-allowed"
+                  className="group whitespace-nowrap font-semibold text-sm relative m-0 flex cursor-pointer select-none items-center rounded-lg border-none p-0 no-underline outline-none transition ease-out focus-visible:outline-none active:scale-[0.98] active:duration-100 h-12 gap-2 px-5 bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-100 justify-center disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                   <div className="flex min-w-0 transition-opacity opacity-100">
-                    <div className="font-sans font-medium text-lg leading-snug">
+                    <div className="font-sans font-semibold text-sm leading-snug">
                       {isSubmitting ? "Subscribing..." : "Subscribe"}
                     </div>
                   </div>

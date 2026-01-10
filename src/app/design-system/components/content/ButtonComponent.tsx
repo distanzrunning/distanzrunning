@@ -16,8 +16,7 @@ function ButtonPreview({ variant, disabled = false }: ButtonPreviewProps) {
       "bg-asphalt-10 dark:bg-asphalt-95 text-white dark:text-asphalt-10 hover:bg-asphalt-20 dark:hover:bg-asphalt-90 focus:ring-asphalt-30",
     secondary:
       "bg-transparent border border-asphalt-10 dark:border-asphalt-95 text-asphalt-10 dark:text-asphalt-95 hover:bg-asphalt-95 dark:hover:bg-asphalt-10 focus:ring-asphalt-30",
-    inverse:
-      "bg-white text-asphalt-10 hover:bg-asphalt-95 focus:ring-white",
+    inverse: "bg-white text-asphalt-10 hover:bg-asphalt-95 focus:ring-white",
     "inverse-secondary":
       "bg-transparent border border-white text-white hover:bg-white/10 focus:ring-white",
   };
@@ -59,19 +58,22 @@ function VariantShowcase({
         {title}
       </h3>
 
-      {/* Preview container */}
-      <div
-        className={`rounded-t-lg border border-b-0 border-borderSubtle p-8 flex items-center justify-center ${
-          inverse ? "bg-asphalt-10" : "bg-white dark:bg-asphalt-10"
-        }`}
-      >
-        <ButtonPreview variant={variant} disabled={isDisabled} />
-      </div>
+      {/* Preview + States container (side-by-side) */}
+      <div className="flex rounded-t-lg border border-b-0 border-borderSubtle overflow-hidden">
+        {/* Preview area */}
+        <div
+          className={`flex-1 p-8 flex items-center justify-center min-h-[120px] ${
+            inverse ? "bg-asphalt-10" : "bg-white dark:bg-asphalt-10"
+          }`}
+        >
+          <ButtonPreview variant={variant} disabled={isDisabled} />
+        </div>
 
-      {/* Controls sidebar */}
-      <div className="border-x border-borderSubtle px-4 py-3 bg-surfaceSubtle dark:bg-neutral-900">
-        <div className="flex items-center gap-4">
-          <span className="text-sm font-medium text-textSubtle">States</span>
+        {/* States sidebar */}
+        <div className="w-[140px] border-l border-borderSubtle bg-surfaceSubtle dark:bg-neutral-900 p-4 flex flex-col">
+          <span className="text-sm font-medium text-textSubtle mb-3">
+            States
+          </span>
           <label className="flex items-center gap-2 cursor-pointer">
             <input
               type="checkbox"
@@ -216,19 +218,13 @@ export default function ButtonComponent() {
             Use clear, action-oriented labels (e.g., &quot;Subscribe&quot;,
             &quot;Save changes&quot;, &quot;Continue&quot;)
           </li>
-          <li>
-            Keep button labels concise—ideally 1-3 words
-          </li>
-          <li>
-            Maintain consistent button sizing within the same context
-          </li>
+          <li>Keep button labels concise—ideally 1-3 words</li>
+          <li>Maintain consistent button sizing within the same context</li>
           <li>
             Ensure sufficient colour contrast for accessibility (WCAG AA
             minimum)
           </li>
-          <li>
-            Provide visual feedback for hover, focus, and disabled states
-          </li>
+          <li>Provide visual feedback for hover, focus, and disabled states</li>
         </ul>
       </section>
 
