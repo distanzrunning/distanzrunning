@@ -1,7 +1,8 @@
-'use client';
+"use client";
 
-import { useRouter } from 'next/navigation';
-import IntroductionShowcase from './components/IntroductionShowcase';
+import { useRouter } from "next/navigation";
+import DesignSystemTopNav from "./components/DesignSystemTopNav";
+import IntroductionShowcase from "./components/IntroductionShowcase";
 
 export default function DesignSystemPage() {
   const router = useRouter();
@@ -14,8 +15,16 @@ export default function DesignSystemPage() {
 
   return (
     <div className="bg-white dark:bg-[#0c0c0d] min-h-screen">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <IntroductionShowcase onSectionChange={handleSectionChange} />
+      <DesignSystemTopNav
+        activeSection={null}
+        onSectionChange={handleSectionChange}
+      />
+
+      <div className="max-w-[1585px] mx-auto px-6 min-[1100px]:px-8 py-12">
+        {/* Content aligned with sidebar position on desktop */}
+        <div className="min-[1100px]:ml-64">
+          <IntroductionShowcase onSectionChange={handleSectionChange} />
+        </div>
       </div>
     </div>
   );
