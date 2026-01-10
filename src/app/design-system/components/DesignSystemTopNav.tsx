@@ -22,40 +22,44 @@ export default function DesignSystemTopNav({
   };
 
   return (
-    <nav
+    <header
       className={`relative min-[1100px]:sticky min-[1100px]:top-12 z-40 border-b transition-colors duration-300 ${
         menuOpen
           ? "bg-neutral-900 dark:bg-neutral-950 border-neutral-800"
-          : "bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md border-borderSubtle"
+          : "bg-white dark:bg-neutral-900 border-borderSubtle"
       }`}
     >
-      {/* Mobile/Tablet layout (< 1100px) */}
-      <div className="min-[1100px]:hidden px-6">
-        <div className="flex items-center justify-between h-14">
-          <button
-            onClick={() => onSectionChange(null)}
-            className="flex items-center gap-3 hover:opacity-70 transition-opacity"
+      <div className="flex items-stretch justify-between px-6 min-[1100px]:px-8 py-6 min-[1100px]:py-8">
+        {/* Logo and Title */}
+        <button
+          onClick={() => onSectionChange(null)}
+          className="flex items-center gap-4 hover:opacity-70 transition-opacity"
+        >
+          <Image
+            src={
+              menuOpen
+                ? "/images/distanz_icon_white_round.png"
+                : "/images/distanz_icon_black_round.png"
+            }
+            alt="Distanz Running"
+            width={56}
+            height={56}
+            className={menuOpen ? "" : "dark:invert"}
+          />
+          <h1
+            className={`font-serif text-lg leading-tight ${menuOpen ? "text-white" : "text-textDefault"}`}
           >
-            <Image
-              src={
-                menuOpen
-                  ? "/images/distanz_icon_white_round.png"
-                  : "/images/distanz_icon_black_round.png"
-              }
-              alt="Distanz Running"
-              width={28}
-              height={28}
-              className={menuOpen ? "" : "dark:invert"}
-            />
-            <span
-              className={`font-serif text-xl font-medium ${menuOpen ? "text-white" : ""}`}
-            >
-              Stride DS
-            </span>
-          </button>
+            <strong className="font-semibold">Distanz</strong>{" "}
+            <span className="font-normal">Design System</span>
+          </h1>
+        </button>
+
+        {/* Menu section */}
+        <nav className="flex items-center gap-6">
+          {/* Mobile/Tablet menu button */}
           <button
             onClick={() => setMenuOpen(!menuOpen)}
-            className={`flex items-center gap-2 text-sm transition-colors ${
+            className={`min-[1100px]:hidden flex items-center gap-2 text-sm transition-colors ${
               menuOpen
                 ? "text-white hover:text-neutral-300"
                 : "text-textSubtle hover:text-textDefault"
@@ -74,66 +78,47 @@ export default function DesignSystemTopNav({
               </>
             )}
           </button>
-        </div>
 
-        {/* Mobile dropdown menu */}
-        {menuOpen && (
-          <div className="absolute left-0 right-0 top-full bg-neutral-900 dark:bg-neutral-950 border-b border-neutral-800 shadow-lg z-50">
-            <div className="px-6 py-4 space-y-1">
-              {sections.map((section) => (
+          {/* Desktop navigation links */}
+          <ul className="hidden min-[1100px]:flex items-center gap-6">
+            {sections.map((section) => (
+              <li key={section}>
                 <button
-                  key={section}
-                  onClick={() => handleSectionClick(section)}
-                  className={`block w-full text-left py-3 px-4 rounded-md text-base capitalize transition-colors ${
+                  onClick={() => onSectionChange(section)}
+                  className={`text-base capitalize transition-colors hover:underline ${
                     activeSection === section
-                      ? "font-medium text-white bg-neutral-800"
-                      : "text-neutral-400 hover:text-white hover:bg-neutral-800/50"
+                      ? "font-medium text-textDefault"
+                      : "text-textSubtle hover:text-textDefault"
                   }`}
                 >
                   {section}
                 </button>
-              ))}
-            </div>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </div>
+
+      {/* Mobile dropdown menu */}
+      {menuOpen && (
+        <div className="min-[1100px]:hidden absolute left-0 right-0 top-full bg-neutral-900 dark:bg-neutral-950 border-b border-neutral-800 shadow-lg z-50">
+          <div className="px-6 py-4 space-y-1">
+            {sections.map((section) => (
+              <button
+                key={section}
+                onClick={() => handleSectionClick(section)}
+                className={`block w-full text-left py-3 px-4 rounded-md text-base capitalize transition-colors ${
+                  activeSection === section
+                    ? "font-medium text-white bg-neutral-800"
+                    : "text-neutral-400 hover:text-white hover:bg-neutral-800/50"
+                }`}
+              >
+                {section}
+              </button>
+            ))}
           </div>
-        )}
-      </div>
-
-      {/* Large screen layout (≥ 1100px) */}
-      <div className="hidden min-[1100px]:flex h-14 max-w-[1585px] mx-auto">
-        {/* Logo and Title - aligned with sidebar */}
-        <div className="w-64 flex-shrink-0 flex items-center px-6">
-          <button
-            onClick={() => onSectionChange(null)}
-            className="flex items-center gap-3 hover:opacity-70 transition-opacity"
-          >
-            <Image
-              src="/images/distanz_icon_black_round.png"
-              alt="Distanz Running"
-              width={28}
-              height={28}
-              className="dark:invert"
-            />
-            <span className="font-serif text-xl font-medium">Stride DS</span>
-          </button>
         </div>
-
-        {/* Section Links - aligned with content area */}
-        <div className="flex-1 flex items-center gap-6 px-8">
-          {sections.map((section) => (
-            <button
-              key={section}
-              onClick={() => onSectionChange(section)}
-              className={`text-base capitalize transition-colors hover:underline ${
-                activeSection === section
-                  ? "font-medium text-textDefault"
-                  : "text-textSubtle hover:text-textDefault"
-              }`}
-            >
-              {section}
-            </button>
-          ))}
-        </div>
-      </div>
-    </nav>
+      )}
+    </header>
   );
 }
