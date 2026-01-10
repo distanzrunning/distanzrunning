@@ -392,11 +392,9 @@ export default function DesignSystemSidebar({
         )}
       </div>
 
-      {/* Desktop Sidebar (≥ 960px) */}
-      <nav className="hidden min-[960px]:block w-64 bg-canvas dark:bg-[#0a0a0a] border-r border-borderSubtle h-full">
-        <div className="px-6 py-8 sticky top-28 max-h-[calc(100vh-7rem)] overflow-y-auto">
-          {renderNavList()}
-        </div>
+      {/* Desktop Sidebar (≥ 960px) - Fixed position */}
+      <nav className="hidden min-[960px]:block fixed top-[6.5rem] left-0 w-64 bg-canvas dark:bg-[#0a0a0a] border-r border-borderSubtle h-[calc(100vh-6.5rem)] overflow-y-auto">
+        <div className="px-6 py-8">{renderNavList()}</div>
       </nav>
     </>
   );

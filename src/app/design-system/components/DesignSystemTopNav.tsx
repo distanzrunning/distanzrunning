@@ -34,18 +34,24 @@ export default function DesignSystemTopNav({
         <div className="flex items-center justify-between h-14">
           <button
             onClick={() => onSectionChange(null)}
-            className={`flex items-center gap-3 hover:opacity-70 transition-opacity ${
-              menuOpen ? "invert dark:invert-0" : ""
-            }`}
+            className="flex items-center gap-3 hover:opacity-70 transition-opacity"
           >
             <Image
-              src="/images/distanz_icon_black_round.png"
+              src={
+                menuOpen
+                  ? "/images/distanz_icon_white_round.png"
+                  : "/images/distanz_icon_black_round.png"
+              }
               alt="Distanz Running"
               width={28}
               height={28}
-              className="dark:invert"
+              className={menuOpen ? "" : "dark:invert"}
             />
-            <span className="font-serif text-xl font-medium">Stride DS</span>
+            <span
+              className={`font-serif text-xl font-medium ${menuOpen ? "text-white" : ""}`}
+            >
+              Stride DS
+            </span>
           </button>
           <button
             onClick={() => setMenuOpen(!menuOpen)}
@@ -74,7 +80,7 @@ export default function DesignSystemTopNav({
         {menuOpen && (
           <>
             <div
-              className="fixed inset-0 bg-black/20 z-40"
+              className="fixed top-0 left-0 right-0 bottom-0 bg-black/20 z-40"
               onClick={() => setMenuOpen(false)}
             />
             <div className="absolute left-0 right-0 top-full bg-neutral-900 dark:bg-neutral-950 border-b border-neutral-800 shadow-lg z-50">
