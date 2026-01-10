@@ -368,8 +368,8 @@ export default function DesignSystemSidebar({
 
   return (
     <>
-      {/* Mobile Section Header (< 960px) */}
-      <div className="min-[960px]:hidden bg-surfaceSubtle dark:bg-neutral-900 border-b border-borderSubtle">
+      {/* Mobile/Tablet Section Header (< 1100px) */}
+      <div className="min-[1100px]:hidden bg-surfaceSubtle dark:bg-neutral-900 border-b border-borderSubtle">
         <button
           onClick={() => setMobileNavOpen(!mobileNavOpen)}
           className="w-full flex items-center justify-between px-6 py-3"
@@ -392,8 +392,8 @@ export default function DesignSystemSidebar({
         )}
       </div>
 
-      {/* Desktop Sidebar (≥ 960px) - Sticky within grid */}
-      <nav className="hidden min-[960px]:block w-full bg-canvas dark:bg-[#0a0a0a] border-r border-borderSubtle h-full">
+      {/* Desktop Sidebar (≥ 1100px) - Fixed width, sticky content */}
+      <nav className="hidden min-[1100px]:block w-64 bg-canvas dark:bg-[#0a0a0a] border-r border-borderSubtle h-full">
         <div className="px-6 py-8 sticky top-28 max-h-[calc(100vh-7rem)] overflow-y-auto">
           {renderNavList()}
         </div>

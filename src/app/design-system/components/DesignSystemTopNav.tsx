@@ -23,14 +23,14 @@ export default function DesignSystemTopNav({
 
   return (
     <nav
-      className={`relative min-[960px]:sticky min-[960px]:top-12 z-40 border-b transition-colors duration-300 ${
+      className={`relative min-[1100px]:sticky min-[1100px]:top-12 z-40 border-b transition-colors duration-300 ${
         menuOpen
           ? "bg-neutral-900 dark:bg-neutral-950 border-neutral-800"
           : "bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md border-borderSubtle"
       }`}
     >
-      {/* Mobile/Medium layout (< 960px) */}
-      <div className="min-[960px]:hidden px-6">
+      {/* Mobile/Tablet layout (< 1100px) */}
+      <div className="min-[1100px]:hidden px-6">
         <div className="flex items-center justify-between h-14">
           <button
             onClick={() => onSectionChange(null)}
@@ -98,10 +98,10 @@ export default function DesignSystemTopNav({
         )}
       </div>
 
-      {/* Large screen layout (≥ 960px) - aligned with 12-column grid */}
-      <div className="hidden min-[960px]:grid min-[960px]:grid-cols-12 h-14 max-w-[1585px] mx-auto">
-        {/* Logo and Title - aligned with sidebar (2 cols) */}
-        <div className="col-span-2 flex items-center px-6">
+      {/* Large screen layout (≥ 1100px) */}
+      <div className="hidden min-[1100px]:flex h-14 max-w-[1585px] mx-auto">
+        {/* Logo and Title - aligned with sidebar */}
+        <div className="w-64 flex-shrink-0 flex items-center px-6">
           <button
             onClick={() => onSectionChange(null)}
             className="flex items-center gap-3 hover:opacity-70 transition-opacity"
@@ -117,8 +117,8 @@ export default function DesignSystemTopNav({
           </button>
         </div>
 
-        {/* Section Links - aligned with content area (10 cols) */}
-        <div className="col-span-10 flex items-center gap-6 px-8">
+        {/* Section Links - aligned with content area */}
+        <div className="flex-1 flex items-center gap-6 px-8">
           {sections.map((section) => (
             <button
               key={section}

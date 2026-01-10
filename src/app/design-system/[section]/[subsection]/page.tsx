@@ -358,8 +358,8 @@ export default function DesignSystemSubsectionPage() {
         onSectionChange={handleSectionChange}
       />
 
-      {/* Mobile Section Header - visible on mobile only */}
-      <div className="min-[960px]:hidden">
+      {/* Mobile/Tablet Section Header - visible below 1100px */}
+      <div className="min-[1100px]:hidden">
         <DesignSystemSidebar
           section={section}
           activeSubsection={subsection}
@@ -367,9 +367,9 @@ export default function DesignSystemSubsectionPage() {
         />
       </div>
 
-      <div className="grid grid-cols-1 min-[960px]:grid-cols-12 min-h-screen max-w-[1585px] mx-auto">
-        {/* Desktop Sidebar - sticky within grid */}
-        <div className="hidden min-[960px]:block min-[960px]:col-span-2">
+      <div className="flex min-h-screen max-w-[1585px] mx-auto">
+        {/* Desktop Sidebar - fixed width, hidden below 1100px */}
+        <div className="hidden min-[1100px]:block w-64 flex-shrink-0">
           <DesignSystemSidebar
             section={section}
             activeSubsection={subsection}
@@ -378,7 +378,7 @@ export default function DesignSystemSubsectionPage() {
         </div>
 
         {/* Main Content Area */}
-        <div className="col-span-1 min-[960px]:col-span-10">
+        <div className="flex-1 min-w-0">
           <div className="px-6 min-[960px]:px-8 py-12">{renderContent()}</div>
         </div>
       </div>
