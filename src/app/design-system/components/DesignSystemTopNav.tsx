@@ -47,10 +47,9 @@ export default function DesignSystemTopNav({
             className={menuOpen ? "" : "dark:invert"}
           />
           <h1
-            className={`font-serif text-lg leading-tight ${menuOpen ? "text-white" : "text-textDefault"}`}
+            className={`font-serif text-2xl leading-tight ${menuOpen ? "text-white" : "text-textDefault"}`}
           >
-            <strong className="font-semibold">Distanz</strong>{" "}
-            <span className="font-normal">Design System</span>
+            Stride Design System
           </h1>
         </button>
 
