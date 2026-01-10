@@ -40,37 +40,44 @@ interface VariantShowcaseProps {
   inverse?: boolean;
 }
 
-// Simple syntax highlighting for JSX
+// VS Code Dark-style syntax highlighting for JSX
 function highlightCode(code: string) {
-  // Match JSX tags and attributes
+  // Match JSX tags, attributes, and text content
   const parts = code.split(/(<\/?[A-Z][a-zA-Z]*|>|[a-z]+(?==))/g);
 
   return parts.map((part, i) => {
-    // Component tags (e.g., <Button, </Button)
+    // Component tags (e.g., <Button, </Button) - Blue
     if (/^<\/?[A-Z]/.test(part)) {
       return (
-        <span key={i} className="text-electric-pink-55">
+        <span key={i} className="text-[#569CD6]">
           {part}
         </span>
       );
     }
-    // Closing bracket
+    // Closing bracket - Blue
     if (part === ">") {
       return (
-        <span key={i} className="text-electric-pink-55">
+        <span key={i} className="text-[#569CD6]">
           {part}
         </span>
       );
     }
-    // Attributes (e.g., inverse, secondary)
+    // Attributes (e.g., inverse, secondary) - Light Blue
     if (/^[a-z]+$/.test(part) && parts[i + 1] !== ">") {
       return (
-        <span key={i} className="text-pace-purple-55">
+        <span key={i} className="text-[#9CDCFE]">
           {part}
         </span>
       );
     }
-    // Default text
+    // Default text content - Orange
+    if (part && !part.startsWith("<") && part !== ">") {
+      return (
+        <span key={i} className="text-[#CE9178]">
+          {part}
+        </span>
+      );
+    }
     return <span key={i}>{part}</span>;
   });
 }
@@ -98,7 +105,7 @@ function VariantShowcase({
       <div className="flex rounded-t-lg border border-b-0 border-borderSubtle overflow-hidden">
         {/* Preview area */}
         <div
-          className={`flex-1 p-8 flex items-center justify-center min-h-[120px] ${
+          className={`flex-1 p-8 flex items-center justify-start min-h-[120px] ${
             inverse ? "bg-asphalt-10" : "bg-white dark:bg-asphalt-10"
           }`}
         >
@@ -123,7 +130,7 @@ function VariantShowcase({
       </div>
 
       {/* Editable code box */}
-      <div className="relative rounded-b-lg border border-borderSubtle bg-surfaceSubtle dark:bg-neutral-900 overflow-hidden focus-within:border-electric-pink-55 focus-within:ring-1 focus-within:ring-electric-pink-55 transition-all">
+      <div className="relative rounded-b-lg border border-borderSubtle bg-surfaceSubtle dark:bg-neutral-900 overflow-hidden focus-within:border-borderDefault transition-all">
         {/* Highlighted overlay */}
         <div className="absolute inset-0 p-4 pointer-events-none">
           <pre className="text-sm font-mono">
