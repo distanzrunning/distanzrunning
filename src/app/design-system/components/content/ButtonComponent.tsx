@@ -40,6 +40,41 @@ interface VariantShowcaseProps {
   inverse?: boolean;
 }
 
+// Simple syntax highlighting for JSX
+function highlightCode(code: string) {
+  // Match JSX tags and attributes
+  const parts = code.split(/(<\/?[A-Z][a-zA-Z]*|>|[a-z]+(?==))/g);
+
+  return parts.map((part, i) => {
+    // Component tags (e.g., <Button, </Button)
+    if (/^<\/?[A-Z]/.test(part)) {
+      return (
+        <span key={i} className="text-electric-pink-55">
+          {part}
+        </span>
+      );
+    }
+    // Closing bracket
+    if (part === ">") {
+      return (
+        <span key={i} className="text-electric-pink-55">
+          {part}
+        </span>
+      );
+    }
+    // Attributes (e.g., inverse, secondary)
+    if (/^[a-z]+$/.test(part) && parts[i + 1] !== ">") {
+      return (
+        <span key={i} className="text-pace-purple-55">
+          {part}
+        </span>
+      );
+    }
+    // Default text
+    return <span key={i}>{part}</span>;
+  });
+}
+
 function VariantShowcase({
   title,
   id,
@@ -48,6 +83,7 @@ function VariantShowcase({
   inverse = false,
 }: VariantShowcaseProps) {
   const [isDisabled, setIsDisabled] = useState(false);
+  const [codeValue, setCodeValue] = useState(code);
 
   return (
     <div className="mb-8">
@@ -86,11 +122,22 @@ function VariantShowcase({
         </div>
       </div>
 
-      {/* Code preview */}
-      <div className="rounded-b-lg border border-borderSubtle bg-surfaceSubtle dark:bg-neutral-900 p-4 overflow-x-auto">
-        <pre className="text-sm font-mono text-textDefault">
-          <code>{code}</code>
-        </pre>
+      {/* Editable code box */}
+      <div className="relative rounded-b-lg border border-borderSubtle bg-surfaceSubtle dark:bg-neutral-900 overflow-hidden focus-within:border-electric-pink-55 focus-within:ring-1 focus-within:ring-electric-pink-55 transition-all">
+        {/* Highlighted overlay */}
+        <div className="absolute inset-0 p-4 pointer-events-none">
+          <pre className="text-sm font-mono">
+            <code>{highlightCode(codeValue)}</code>
+          </pre>
+        </div>
+        {/* Editable textarea */}
+        <textarea
+          value={codeValue}
+          onChange={(e) => setCodeValue(e.target.value)}
+          spellCheck={false}
+          className="w-full p-4 text-sm font-mono bg-transparent text-transparent caret-textDefault resize-none focus:outline-none"
+          rows={1}
+        />
       </div>
     </div>
   );
