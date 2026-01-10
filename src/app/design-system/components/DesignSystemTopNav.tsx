@@ -30,26 +30,15 @@ export default function DesignSystemTopNav({
       }`}
     >
       <div className="flex items-stretch px-6 min-[1100px]:px-8 py-3 min-[1100px]:py-4">
-        {/* Logo and Title */}
+        {/* Title */}
         <button
           onClick={() => onSectionChange(null)}
-          className="flex items-center gap-4 hover:opacity-70 transition-opacity pr-6 min-[1100px]:pr-8"
+          className="flex items-center hover:opacity-70 transition-opacity pr-6 min-[1100px]:pr-8"
         >
-          <Image
-            src={
-              menuOpen
-                ? "/images/distanz_icon_white_round.png"
-                : "/images/distanz_icon_black_round.png"
-            }
-            alt="Distanz Running"
-            width={40}
-            height={40}
-            className={menuOpen ? "" : "dark:invert"}
-          />
           <h1
             className={`font-serif text-2xl leading-tight ${menuOpen ? "text-white" : "text-textDefault"}`}
           >
-            Stride Design System
+            The Stride Design System
           </h1>
         </button>
 
