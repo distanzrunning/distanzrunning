@@ -18,18 +18,18 @@ export default function DesignSystemTopNav({
       {/* Mobile/Medium layout (< 960px) */}
       <div className="min-[960px]:hidden px-6">
         <div className="flex items-center gap-4 h-14">
-          <Image
-            src="/images/distanz_icon_black_round.png"
-            alt="Distanz Running"
-            width={28}
-            height={28}
-            className="dark:invert"
-          />
           <button
             onClick={() => onSectionChange(null)}
-            className="font-serif text-lg font-medium hover:text-textSubtle transition-colors"
+            className="flex items-center gap-3 hover:opacity-70 transition-opacity"
           >
-            Stride
+            <Image
+              src="/images/distanz_icon_black_round.png"
+              alt="Distanz Running"
+              width={28}
+              height={28}
+              className="dark:invert"
+            />
+            <span className="font-serif text-base font-medium">Stride DS</span>
           </button>
           <div className="h-5 w-px bg-borderNeutral" />
           <div className="flex items-center gap-4">
@@ -53,19 +53,19 @@ export default function DesignSystemTopNav({
       {/* Large screen layout (≥ 960px) - aligned with 12-column grid */}
       <div className="hidden min-[960px]:grid min-[960px]:grid-cols-12 h-14 max-w-[1585px] mx-auto">
         {/* Logo and Title - aligned with sidebar (2 cols) */}
-        <div className="col-span-2 flex items-center gap-3 px-6">
-          <Image
-            src="/images/distanz_icon_black_round.png"
-            alt="Distanz Running"
-            width={28}
-            height={28}
-            className="dark:invert"
-          />
+        <div className="col-span-2 flex items-center px-6">
           <button
             onClick={() => onSectionChange(null)}
-            className="font-serif text-lg font-medium hover:text-textSubtle transition-colors"
+            className="flex items-center gap-3 hover:opacity-70 transition-opacity"
           >
-            Stride
+            <Image
+              src="/images/distanz_icon_black_round.png"
+              alt="Distanz Running"
+              width={28}
+              height={28}
+              className="dark:invert"
+            />
+            <span className="font-serif text-base font-medium">Stride DS</span>
           </button>
         </div>
 
