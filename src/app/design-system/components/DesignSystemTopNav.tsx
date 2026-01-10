@@ -33,7 +33,7 @@ export default function DesignSystemTopNav({
         {/* Logo and Title */}
         <button
           onClick={() => onSectionChange(null)}
-          className="flex items-center gap-4 hover:opacity-70 transition-opacity pr-6 min-[1100px]:pr-8"
+          className="flex items-center gap-4 hover:opacity-70 transition-opacity pr-6 min-[1100px]:pr-8 flex-1 min-[1100px]:flex-none"
         >
           <Image
             src={
