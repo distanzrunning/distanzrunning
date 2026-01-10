@@ -15,9 +15,8 @@ export default function PatternsOverview() {
       </div>
 
       <p className="text-base text-textSubtle max-w-3xl">
-        Patterns are recurring solutions to common design problems. They combine
-        multiple components into cohesive, reusable structures that maintain
-        consistency across the interface while solving specific user needs.
+        Patterns are the ways in which components are grouped together and
+        organised in order to serve a particular purpose.
       </p>
     </article>
   );
