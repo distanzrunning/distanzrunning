@@ -79,7 +79,7 @@ const foundationsSections: SidebarSection[] = [
 ];
 
 const componentsSections: SidebarSection[] = [
-  { id: "overview", label: "Overview" },
+  { id: "overview", label: "Overview", showSeparator: true },
   {
     id: "buttons",
     label: "Buttons",
@@ -209,7 +209,7 @@ const componentsSections: SidebarSection[] = [
 ];
 
 const patternsSections: SidebarSection[] = [
-  { id: "overview", label: "Overview" },
+  { id: "overview", label: "Overview", showSeparator: true },
   {
     id: "layout",
     label: "Layout",
