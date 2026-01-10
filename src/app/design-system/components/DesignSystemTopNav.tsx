@@ -29,11 +29,11 @@ export default function DesignSystemTopNav({
           : "bg-white dark:bg-neutral-900 border-borderSubtle"
       }`}
     >
-      <div className="flex items-stretch justify-between px-6 min-[1100px]:px-8 py-6 min-[1100px]:py-8">
+      <div className="flex items-stretch px-6 min-[1100px]:px-8 py-6 min-[1100px]:py-8">
         {/* Logo and Title */}
         <button
           onClick={() => onSectionChange(null)}
-          className="flex items-center gap-4 hover:opacity-70 transition-opacity"
+          className="flex items-center gap-4 hover:opacity-70 transition-opacity pr-6 min-[1100px]:pr-8"
         >
           <Image
             src={
@@ -54,8 +54,13 @@ export default function DesignSystemTopNav({
           </h1>
         </button>
 
+        {/* Divider */}
+        <div
+          className={`w-px self-stretch ${menuOpen ? "bg-neutral-700" : "bg-borderSubtle"}`}
+        />
+
         {/* Menu section */}
-        <nav className="flex items-center gap-6">
+        <nav className="flex items-center pl-6 min-[1100px]:pl-8">
           {/* Mobile/Tablet menu button */}
           <button
             onClick={() => setMenuOpen(!menuOpen)}
