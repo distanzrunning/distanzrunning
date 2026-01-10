@@ -1,6 +1,6 @@
 export default function DesignTokens() {
   return (
-    <div className="space-y-8">
+    <div className="space-y-4">
       {/* Title */}
       <div>
         <p className="text-sm tracking-wide text-electric-pink mb-2">

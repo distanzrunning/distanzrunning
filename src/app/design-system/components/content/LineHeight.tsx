@@ -17,7 +17,7 @@ export default function LineHeight() {
   ];
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-4">
       {/* Page Title */}
       <div>
         <p className="text-sm tracking-wide text-electric-pink mb-2">
@@ -77,9 +77,7 @@ export default function LineHeight() {
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">1.4</td>
-                <td className="py-3 px-4">
-                  Small to medium text (≤20px)
-                </td>
+                <td className="py-3 px-4">Small to medium text (≤20px)</td>
                 <td className="py-3 px-4 font-mono">leading-relaxed</td>
               </tr>
               <tr className="border-b border-borderSubtle">
@@ -89,9 +87,7 @@ export default function LineHeight() {
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">1.2</td>
-                <td className="py-3 px-4">
-                  Large headings (≥28px)
-                </td>
+                <td className="py-3 px-4">Large headings (≥28px)</td>
                 <td className="py-3 px-4 font-mono">leading-tight</td>
               </tr>
               <tr className="border-b border-borderSubtle">
@@ -195,7 +191,12 @@ export default function LineHeight() {
                 <tr key={index} className="border-b border-borderSubtle">
                   <td className="py-3 pr-4">{item.size}</td>
                   <td className="py-3 px-4 font-mono">
-                    text-{item.name === "h1" || item.name === "h2" || item.name === "h3" ? `[${item.size}px]` : item.name}
+                    text-
+                    {item.name === "h1" ||
+                    item.name === "h2" ||
+                    item.name === "h3"
+                      ? `[${item.size}px]`
+                      : item.name}
                   </td>
                   <td className="py-3 px-4">{item.multiplier}</td>
                   <td className="py-3 px-4">{item.lineHeight}</td>
@@ -248,9 +249,7 @@ export default function LineHeight() {
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 font-mono">leading-tight</td>
                 <td className="py-3 px-4">1.25</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Large headings
-                </td>
+                <td className="py-3 px-4 text-textSubtle">Large headings</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 font-mono">leading-snug</td>
@@ -269,9 +268,7 @@ export default function LineHeight() {
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 font-mono">leading-relaxed</td>
                 <td className="py-3 px-4">1.625</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Long-form content
-                </td>
+                <td className="py-3 px-4 text-textSubtle">Long-form content</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 font-mono">leading-loose</td>

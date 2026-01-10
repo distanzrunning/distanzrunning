@@ -30,7 +30,7 @@ export default function GridSpacing() {
   ];
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-4">
       {/* Page Title */}
       <div>
         <p className="text-sm tracking-wide text-electric-pink mb-2">Grid</p>

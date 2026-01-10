@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function GridLayout() {
   return (
-    <div className="space-y-8">
+    <div className="space-y-4">
       {/* Page Title */}
       <div>
         <p className="text-sm tracking-wide text-electric-pink mb-2">Grid</p>
