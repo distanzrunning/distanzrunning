@@ -9,6 +9,8 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   inverse?: boolean;
   /** Size variant - default (h-12, px-5) or slim (h-9, px-4) */
   size?: "default" | "slim";
+  /** Skip automatic dark mode switching (used by design system docs) */
+  ignoreDarkMode?: boolean;
   /** Additional CSS classes for custom sizing/layout */
   className?: string;
 }
@@ -42,6 +44,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       variant = "primary",
       inverse = false,
       size = "default",
+      ignoreDarkMode = false,
       className = "",
       disabled,
       type = "button",
@@ -63,20 +66,39 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       font-sans font-semibold text-sm
       transition-colors
       focus:outline-none focus:ring-2 focus:ring-borderNeutral
-      disabled:opacity-50 disabled:cursor-not-allowed
       active:scale-[0.98] active:duration-100
     `;
 
     // Variant + inverse color combinations
-    // Note: No dark: modifiers - the inverse prop controls light/dark appearance
+    // When ignoreDarkMode is true, no dark: modifiers are used (for design system docs)
+    // When ignoreDarkMode is false, dark: modifiers enable automatic theme switching
     const getVariantClasses = () => {
+      if (disabled) {
+        // Disabled state: distinct grey style for all variants
+        if (variant === "primary") {
+          if (ignoreDarkMode) {
+            return "bg-asphalt-70 text-white cursor-not-allowed";
+          }
+          return "bg-asphalt-70 dark:bg-asphalt-40 text-white dark:text-asphalt-10 cursor-not-allowed";
+        }
+        if (variant === "secondary") {
+          if (ignoreDarkMode) {
+            return "bg-transparent border border-asphalt-70 text-asphalt-70 cursor-not-allowed";
+          }
+          return "bg-transparent border border-asphalt-70 dark:border-asphalt-40 text-asphalt-70 dark:text-asphalt-40 cursor-not-allowed";
+        }
+      }
+
       if (variant === "primary") {
         if (inverse) {
           // Inverse primary: light button for dark backgrounds
           return "bg-white text-asphalt-10 hover:bg-asphalt-95";
         }
-        // Primary: dark button for light backgrounds
-        return "bg-asphalt-10 text-white hover:bg-asphalt-20";
+        // Primary: dark button in light mode, light button in dark mode
+        if (ignoreDarkMode) {
+          return "bg-asphalt-10 text-white hover:bg-asphalt-20";
+        }
+        return "bg-asphalt-10 dark:bg-asphalt-95 text-white dark:text-asphalt-10 hover:bg-asphalt-20 dark:hover:bg-asphalt-90";
       }
 
       if (variant === "secondary") {
@@ -84,8 +106,11 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           // Inverse secondary: light border/text for dark backgrounds
           return "bg-transparent border border-white text-white hover:bg-white/10";
         }
-        // Secondary: dark border/text for light backgrounds
-        return "bg-transparent border border-asphalt-70 text-asphalt-10 hover:border-asphalt-40 hover:bg-asphalt-95/50";
+        // Secondary: visible border in both light and dark modes
+        if (ignoreDarkMode) {
+          return "bg-transparent border border-asphalt-70 text-asphalt-10 hover:border-asphalt-40 hover:bg-asphalt-95/50";
+        }
+        return "bg-transparent border border-asphalt-70 dark:border-asphalt-40 text-asphalt-10 dark:text-asphalt-95 hover:border-asphalt-40 dark:hover:border-asphalt-60 hover:bg-asphalt-95/50 dark:hover:bg-asphalt-20/30";
       }
 
       return "";

@@ -130,6 +130,7 @@ function VariantShowcase({
                 : "primary"
             }
             inverse={effectiveInverse}
+            ignoreDarkMode
             disabled={isDisabled}
             aria-label="Search"
           >

@@ -104,6 +104,7 @@ function VariantShowcase({
                 : "primary"
             }
             inverse={effectiveInverse}
+            ignoreDarkMode
             size="slim"
             disabled={isDisabled}
             className="min-w-[100px]"
