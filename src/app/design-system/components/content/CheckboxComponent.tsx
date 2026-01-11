@@ -162,24 +162,80 @@ function VariantShowcase() {
           </span>
           <div className="space-y-2">
             <label className="flex items-center gap-2 cursor-pointer">
-              <input
-                type="checkbox"
-                checked={isDisabled}
-                onChange={(e) => setIsDisabled(e.target.checked)}
-                className="w-4 h-4 rounded-sm border-asphalt-30 dark:border-asphalt-70 bg-white dark:bg-asphalt-10 checked:bg-asphalt-10 dark:checked:bg-asphalt-95 checked:border-asphalt-10 dark:checked:border-asphalt-95 focus:ring-2 focus:ring-borderNeutral focus:ring-offset-0"
-              />
+              <div className="relative">
+                <input
+                  type="checkbox"
+                  checked={isDisabled}
+                  onChange={(e) => setIsDisabled(e.target.checked)}
+                  className="peer sr-only"
+                />
+                <div
+                  className={`w-4 h-4 rounded-sm border transition-colors cursor-pointer
+                    ${
+                      isDisabled
+                        ? "bg-asphalt-10 dark:bg-asphalt-95 border-asphalt-10 dark:border-asphalt-95"
+                        : "bg-white dark:bg-asphalt-10 border-asphalt-30 dark:border-asphalt-70"
+                    }
+                    peer-focus:ring-2 peer-focus:ring-borderNeutral peer-focus:rounded-sm
+                  `}
+                >
+                  {isDisabled && (
+                    <svg
+                      className="w-4 h-4 text-white dark:text-asphalt-10"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={3}
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                  )}
+                </div>
+              </div>
               <span className="text-sm text-textDefault">disabled</span>
             </label>
             <label className="flex items-center gap-2 cursor-pointer">
-              <input
-                type="checkbox"
-                checked={isIndeterminate}
-                onChange={(e) => {
-                  setIsIndeterminate(e.target.checked);
-                  if (e.target.checked) setIsChecked(false);
-                }}
-                className="w-4 h-4 rounded-sm border-asphalt-30 dark:border-asphalt-70 bg-white dark:bg-asphalt-10 checked:bg-asphalt-10 dark:checked:bg-asphalt-95 checked:border-asphalt-10 dark:checked:border-asphalt-95 focus:ring-2 focus:ring-borderNeutral focus:ring-offset-0"
-              />
+              <div className="relative">
+                <input
+                  type="checkbox"
+                  checked={isIndeterminate}
+                  onChange={(e) => {
+                    setIsIndeterminate(e.target.checked);
+                    if (e.target.checked) setIsChecked(false);
+                  }}
+                  className="peer sr-only"
+                />
+                <div
+                  className={`w-4 h-4 rounded-sm border transition-colors cursor-pointer
+                    ${
+                      isIndeterminate
+                        ? "bg-asphalt-10 dark:bg-asphalt-95 border-asphalt-10 dark:border-asphalt-95"
+                        : "bg-white dark:bg-asphalt-10 border-asphalt-30 dark:border-asphalt-70"
+                    }
+                    peer-focus:ring-2 peer-focus:ring-borderNeutral peer-focus:rounded-sm
+                  `}
+                >
+                  {isIndeterminate && (
+                    <svg
+                      className="w-4 h-4 text-white dark:text-asphalt-10"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={3}
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                  )}
+                </div>
+              </div>
               <span className="text-sm text-textDefault">isIndeterminate</span>
             </label>
           </div>
