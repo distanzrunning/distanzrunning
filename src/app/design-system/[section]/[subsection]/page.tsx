@@ -21,6 +21,7 @@ import LineHeight from "../../components/content/LineHeight";
 import TextStyles from "../../components/content/TextStyles";
 import Iconography from "../../components/content/Iconography";
 import ButtonComponent from "../../components/content/ButtonComponent";
+import ButtonIconComponent from "../../components/content/ButtonIconComponent";
 import CheckboxComponent from "../../components/content/CheckboxComponent";
 import ContentWithTOC from "../../components/ContentWithTOC";
 
@@ -386,6 +387,49 @@ export default function DesignSystemSubsectionPage() {
             ]}
           >
             <ButtonComponent />
+          </ContentWithTOC>
+        );
+      }
+
+      if (subsection === "button-icon") {
+        return (
+          <ContentWithTOC
+            tocTitle="Contents"
+            tocItems={[
+              {
+                id: "variants",
+                title: "Variants",
+                children: [
+                  { id: "variants-primary", title: "Primary" },
+                  { id: "variants-inverse", title: "Inverse" },
+                  { id: "variants-secondary", title: "Secondary" },
+                  {
+                    id: "variants-inverse-secondary",
+                    title: "Inverse, Secondary",
+                  },
+                ],
+              },
+              {
+                id: "guidelines",
+                title: "Guidelines",
+                children: [
+                  { id: "guidelines-how-to-use", title: "How to use" },
+                  { id: "guidelines-best-practices", title: "Best practices" },
+                ],
+              },
+              { id: "anatomy", title: "Anatomy" },
+              { id: "props", title: "Props" },
+              {
+                id: "colours",
+                title: "Colour reference",
+                children: [
+                  { id: "colours-primary", title: "Primary icon button" },
+                  { id: "colours-secondary", title: "Secondary icon button" },
+                ],
+              },
+            ]}
+          >
+            <ButtonIconComponent />
           </ContentWithTOC>
         );
       }
