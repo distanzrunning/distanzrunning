@@ -36,7 +36,7 @@ function CheckboxPreview({
                 ? "bg-asphalt-10 dark:bg-asphalt-95 border-asphalt-10 dark:border-asphalt-95"
                 : "bg-white dark:bg-asphalt-10 border-asphalt-30 dark:border-asphalt-70"
             }
-            peer-focus:ring-1 peer-focus:ring-electric-pink-55
+            peer-focus:ring-2 peer-focus:ring-borderNeutral
           `}
         >
           {/* Checkmark */}
@@ -131,7 +131,7 @@ function VariantShowcase() {
   const [isDisabled, setIsDisabled] = useState(false);
   const [isIndeterminate, setIsIndeterminate] = useState(false);
   const [codeValue, setCodeValue] = useState(
-    "<FormCheckbox labelText='Input text' id='checkbox' />"
+    "<FormCheckbox labelText='Input text' id='checkbox' />",
   );
 
   return (
@@ -166,7 +166,7 @@ function VariantShowcase() {
                 type="checkbox"
                 checked={isDisabled}
                 onChange={(e) => setIsDisabled(e.target.checked)}
-                className="w-4 h-4 rounded-sm border-asphalt-30 dark:border-asphalt-70 bg-white dark:bg-asphalt-10 checked:bg-asphalt-10 dark:checked:bg-asphalt-95 checked:border-asphalt-10 dark:checked:border-asphalt-95 focus:ring-1 focus:ring-electric-pink-55 focus:ring-offset-0"
+                className="w-4 h-4 rounded-sm border-asphalt-30 dark:border-asphalt-70 bg-white dark:bg-asphalt-10 checked:bg-asphalt-10 dark:checked:bg-asphalt-95 checked:border-asphalt-10 dark:checked:border-asphalt-95 focus:ring-2 focus:ring-borderNeutral focus:ring-offset-0"
               />
               <span className="text-sm text-textDefault">disabled</span>
             </label>
@@ -178,7 +178,7 @@ function VariantShowcase() {
                   setIsIndeterminate(e.target.checked);
                   if (e.target.checked) setIsChecked(false);
                 }}
-                className="w-4 h-4 rounded-sm border-asphalt-30 dark:border-asphalt-70 bg-white dark:bg-asphalt-10 checked:bg-asphalt-10 dark:checked:bg-asphalt-95 checked:border-asphalt-10 dark:checked:border-asphalt-95 focus:ring-1 focus:ring-electric-pink-55 focus:ring-offset-0"
+                className="w-4 h-4 rounded-sm border-asphalt-30 dark:border-asphalt-70 bg-white dark:bg-asphalt-10 checked:bg-asphalt-10 dark:checked:bg-asphalt-95 checked:border-asphalt-10 dark:checked:border-asphalt-95 focus:ring-2 focus:ring-borderNeutral focus:ring-offset-0"
               />
               <span className="text-sm text-textDefault">isIndeterminate</span>
             </label>
