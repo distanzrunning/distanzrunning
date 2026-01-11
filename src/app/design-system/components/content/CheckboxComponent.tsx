@@ -46,13 +46,13 @@ function CheckboxPreview({
               className="w-3.5 h-3.5 text-white dark:text-asphalt-10"
               fill="none"
               stroke="currentColor"
-              strokeWidth={1.75}
+              strokeWidth={2}
               viewBox="0 0 12 12"
             >
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                d="M2 6l3 3 5-5.5"
+                d="M2.5 6L5 8.5L9.5 4"
               />
             </svg>
           )}
@@ -62,7 +62,7 @@ function CheckboxPreview({
               className="w-3.5 h-3.5 text-white dark:text-asphalt-10"
               fill="none"
               stroke="currentColor"
-              strokeWidth={1.75}
+              strokeWidth={2}
               viewBox="0 0 12 12"
             >
               <path strokeLinecap="round" strokeLinejoin="round" d="M2 6h8" />
@@ -182,13 +182,13 @@ function VariantShowcase() {
                       className="w-3 h-3 text-white dark:text-asphalt-10"
                       fill="none"
                       stroke="currentColor"
-                      strokeWidth={1.75}
+                      strokeWidth={2}
                       viewBox="0 0 12 12"
                     >
                       <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        d="M2 6l3 3 5-5.5"
+                        d="M2.5 6L5 8.5L9.5 4"
                       />
                     </svg>
                   )}
