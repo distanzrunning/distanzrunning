@@ -85,26 +85,26 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 
       if (variant === "primary") {
         if (inverse) {
-          // Inverse primary: light button for dark backgrounds
-          return "bg-white text-asphalt-10 hover:bg-asphalt-95";
-        }
-        // Primary: dark button in light mode, light button in dark mode
-        if (ignoreDarkMode) {
+          // Inverse primary: dark button for light backgrounds
           return "bg-asphalt-10 text-white hover:bg-asphalt-20";
         }
-        return "bg-asphalt-10 dark:bg-asphalt-95 text-white dark:text-asphalt-10 hover:bg-asphalt-20 dark:hover:bg-asphalt-90";
+        // Primary: light button in light mode, dark button in dark mode
+        if (ignoreDarkMode) {
+          return "bg-asphalt-95 text-asphalt-10 hover:bg-asphalt-90";
+        }
+        return "bg-asphalt-95 dark:bg-asphalt-10 text-asphalt-10 dark:text-white hover:bg-asphalt-90 dark:hover:bg-asphalt-20";
       }
 
       if (variant === "secondary") {
         if (inverse) {
-          // Inverse secondary: light border/text for dark backgrounds
-          return "bg-transparent border border-white text-white hover:bg-white/10";
+          // Inverse secondary: dark border/text for light backgrounds
+          return "bg-transparent border border-asphalt-10 text-asphalt-10 hover:bg-asphalt-10/10";
         }
         // Secondary: visible border in both light and dark modes
         if (ignoreDarkMode) {
-          return "bg-transparent border border-asphalt-70 text-asphalt-10 hover:border-asphalt-40 hover:bg-asphalt-95/50";
+          return "bg-transparent border border-asphalt-40 text-asphalt-10 hover:border-asphalt-70 hover:bg-asphalt-95/50";
         }
-        return "bg-transparent border border-asphalt-70 dark:border-asphalt-40 text-asphalt-10 dark:text-asphalt-95 hover:border-asphalt-40 dark:hover:border-asphalt-60 hover:bg-asphalt-95/50 dark:hover:bg-asphalt-20/30";
+        return "bg-transparent border border-asphalt-40 dark:border-asphalt-70 text-asphalt-10 dark:text-asphalt-95 hover:border-asphalt-70 dark:hover:border-asphalt-40 hover:bg-asphalt-95/50 dark:hover:bg-asphalt-20/30";
       }
 
       return "";
