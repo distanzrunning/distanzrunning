@@ -29,46 +29,43 @@ function CheckboxPreview({
         />
         <div
           className={`
-            w-5 h-5 rounded-sm border transition-colors
+            w-[18px] h-[18px] rounded-[3px] border flex items-center justify-center
+            transition-all duration-150 ease-out
             ${disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}
             ${
               checked || isIndeterminate
                 ? "bg-asphalt-10 dark:bg-asphalt-95 border-asphalt-10 dark:border-asphalt-95"
-                : "bg-white dark:bg-asphalt-10 border-asphalt-30 dark:border-asphalt-70"
+                : "bg-white dark:bg-asphalt-10 border-asphalt-40 dark:border-asphalt-60 hover:border-asphalt-50"
             }
-            peer-focus:ring-2 peer-focus:ring-borderNeutral
+            peer-focus:ring-2 peer-focus:ring-borderNeutral peer-focus:ring-offset-1
           `}
         >
           {/* Checkmark */}
           {checked && !isIndeterminate && (
             <svg
-              className="w-5 h-5 text-white dark:text-asphalt-10"
+              className="w-3 h-3 text-white dark:text-asphalt-10"
               fill="none"
               stroke="currentColor"
-              viewBox="0 0 24 24"
+              strokeWidth={2.5}
+              viewBox="0 0 12 12"
             >
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                strokeWidth={3}
-                d="M5 13l4 4L19 7"
+                d="M2.5 6l2.5 2.5 4.5-5"
               />
             </svg>
           )}
           {/* Indeterminate dash */}
           {isIndeterminate && (
             <svg
-              className="w-5 h-5 text-white dark:text-asphalt-10"
+              className="w-3 h-3 text-white dark:text-asphalt-10"
               fill="none"
               stroke="currentColor"
-              viewBox="0 0 24 24"
+              strokeWidth={2.5}
+              viewBox="0 0 12 12"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={3}
-                d="M5 12h14"
-              />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M2.5 6h7" />
             </svg>
           )}
         </div>
@@ -170,27 +167,28 @@ function VariantShowcase() {
                   className="peer sr-only"
                 />
                 <div
-                  className={`w-4 h-4 rounded-sm border transition-colors cursor-pointer
+                  className={`w-[16px] h-[16px] rounded-[3px] border flex items-center justify-center
+                    transition-all duration-150 ease-out cursor-pointer
                     ${
                       isDisabled
                         ? "bg-asphalt-10 dark:bg-asphalt-95 border-asphalt-10 dark:border-asphalt-95"
-                        : "bg-white dark:bg-asphalt-10 border-asphalt-30 dark:border-asphalt-70"
+                        : "bg-white dark:bg-asphalt-10 border-asphalt-40 dark:border-asphalt-60 hover:border-asphalt-50"
                     }
-                    peer-focus:ring-2 peer-focus:ring-borderNeutral peer-focus:rounded-sm
+                    peer-focus:ring-2 peer-focus:ring-borderNeutral peer-focus:ring-offset-1
                   `}
                 >
                   {isDisabled && (
                     <svg
-                      className="w-4 h-4 text-white dark:text-asphalt-10"
+                      className="w-2.5 h-2.5 text-white dark:text-asphalt-10"
                       fill="none"
                       stroke="currentColor"
-                      viewBox="0 0 24 24"
+                      strokeWidth={2.5}
+                      viewBox="0 0 12 12"
                     >
                       <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        strokeWidth={3}
-                        d="M5 13l4 4L19 7"
+                        d="M2.5 6l2.5 2.5 4.5-5"
                       />
                     </svg>
                   )}
@@ -210,27 +208,28 @@ function VariantShowcase() {
                   className="peer sr-only"
                 />
                 <div
-                  className={`w-4 h-4 rounded-sm border transition-colors cursor-pointer
+                  className={`w-[16px] h-[16px] rounded-[3px] border flex items-center justify-center
+                    transition-all duration-150 ease-out cursor-pointer
                     ${
                       isIndeterminate
                         ? "bg-asphalt-10 dark:bg-asphalt-95 border-asphalt-10 dark:border-asphalt-95"
-                        : "bg-white dark:bg-asphalt-10 border-asphalt-30 dark:border-asphalt-70"
+                        : "bg-white dark:bg-asphalt-10 border-asphalt-40 dark:border-asphalt-60 hover:border-asphalt-50"
                     }
-                    peer-focus:ring-2 peer-focus:ring-borderNeutral peer-focus:rounded-sm
+                    peer-focus:ring-2 peer-focus:ring-borderNeutral peer-focus:ring-offset-1
                   `}
                 >
                   {isIndeterminate && (
                     <svg
-                      className="w-4 h-4 text-white dark:text-asphalt-10"
+                      className="w-2.5 h-2.5 text-white dark:text-asphalt-10"
                       fill="none"
                       stroke="currentColor"
-                      viewBox="0 0 24 24"
+                      strokeWidth={2.5}
+                      viewBox="0 0 12 12"
                     >
                       <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        strokeWidth={3}
-                        d="M5 13l4 4L19 7"
+                        d="M2.5 6h7"
                       />
                     </svg>
                   )}
