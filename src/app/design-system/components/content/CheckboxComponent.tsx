@@ -242,7 +242,7 @@ function VariantShowcase() {
       </div>
 
       {/* Editable code box */}
-      <div className="relative rounded-b-lg border border-borderSubtle bg-surfaceSubtle dark:bg-neutral-900 overflow-hidden focus-within:border-borderDefault transition-all">
+      <div className="relative rounded-b-lg border border-borderSubtle bg-surfaceSubtle dark:bg-neutral-900 overflow-hidden focus-within:border-borderDefault focus-within:ring-1 focus-within:ring-borderNeutral transition-all">
         <div className="absolute inset-0 p-4 pointer-events-none">
           <pre className="text-sm font-mono">
             <code>{highlightCode(codeValue)}</code>
