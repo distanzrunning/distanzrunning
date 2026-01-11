@@ -74,18 +74,12 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     // When ignoreDarkMode is false, dark: modifiers enable automatic theme switching
     const getVariantClasses = () => {
       if (disabled) {
-        // Disabled state: distinct grey style for all variants
+        // Disabled state: consistent grey style regardless of theme
         if (variant === "primary") {
-          if (ignoreDarkMode) {
-            return "bg-asphalt-70 text-white cursor-not-allowed";
-          }
-          return "bg-asphalt-70 dark:bg-asphalt-40 text-white dark:text-asphalt-10 cursor-not-allowed";
+          return "bg-asphalt-70 text-white cursor-not-allowed";
         }
         if (variant === "secondary") {
-          if (ignoreDarkMode) {
-            return "bg-transparent border border-asphalt-70 text-asphalt-70 cursor-not-allowed";
-          }
-          return "bg-transparent border border-asphalt-70 dark:border-asphalt-40 text-asphalt-70 dark:text-asphalt-40 cursor-not-allowed";
+          return "bg-transparent border border-asphalt-70 text-asphalt-70 cursor-not-allowed";
         }
       }
 
