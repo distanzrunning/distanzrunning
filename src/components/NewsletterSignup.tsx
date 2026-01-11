@@ -152,6 +152,7 @@ export default function NewsletterSignup() {
                   type="submit"
                   data-attr="newsletter-footer-submit"
                   disabled={!email || isSubmitting}
+                  inverse
                 >
                   {isSubmitting ? "Subscribing..." : "Subscribe"}
                 </Button>
