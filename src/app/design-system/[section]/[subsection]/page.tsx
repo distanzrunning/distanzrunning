@@ -21,6 +21,7 @@ import LineHeight from "../../components/content/LineHeight";
 import TextStyles from "../../components/content/TextStyles";
 import Iconography from "../../components/content/Iconography";
 import ButtonComponent from "../../components/content/ButtonComponent";
+import CheckboxComponent from "../../components/content/CheckboxComponent";
 import ContentWithTOC from "../../components/ContentWithTOC";
 
 export default function DesignSystemSubsectionPage() {
@@ -385,6 +386,24 @@ export default function DesignSystemSubsectionPage() {
             ]}
           >
             <ButtonComponent />
+          </ContentWithTOC>
+        );
+      }
+
+      if (subsection === "checkbox") {
+        return (
+          <ContentWithTOC
+            tocTitle="Contents"
+            tocItems={[
+              {
+                id: "variants",
+                title: "Variants",
+                children: [{ id: "variants-default", title: "Default" }],
+              },
+              { id: "props", title: "Props" },
+            ]}
+          >
+            <CheckboxComponent />
           </ContentWithTOC>
         );
       }

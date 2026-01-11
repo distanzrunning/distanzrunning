@@ -122,7 +122,7 @@ function VariantShowcase({
               type="checkbox"
               checked={isDisabled}
               onChange={(e) => setIsDisabled(e.target.checked)}
-              className="w-4 h-4 rounded border-borderDefault text-electric-pink focus:ring-electric-pink"
+              className="w-4 h-4 rounded-sm border-asphalt-30 dark:border-asphalt-70 bg-white dark:bg-asphalt-10 checked:bg-asphalt-10 dark:checked:bg-asphalt-95 checked:border-asphalt-10 dark:checked:border-asphalt-95 focus:ring-1 focus:ring-electric-pink-55 focus:ring-offset-0"
             />
             <span className="text-sm text-textDefault">disabled</span>
           </label>
