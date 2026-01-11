@@ -50,7 +50,7 @@ const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
       type = "button",
       ...props
     },
-    ref
+    ref,
   ) => {
     // Size classes - square buttons
     const sizeClasses = {
@@ -70,23 +70,24 @@ const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
     `;
 
     // Variant + inverse color combinations
+    // Note: No dark: modifiers - the inverse prop controls light/dark appearance
     const getVariantClasses = () => {
       if (variant === "primary") {
         if (inverse) {
-          // Inverse primary: white bg on dark backgrounds
+          // Inverse primary: light button for dark backgrounds
           return "bg-white text-asphalt-10 hover:bg-asphalt-95";
         }
-        // Primary: dark bg in light mode, light bg in dark mode
-        return "bg-asphalt-10 dark:bg-asphalt-95 text-white dark:text-asphalt-10 hover:bg-asphalt-20 dark:hover:bg-asphalt-90";
+        // Primary: dark button for light backgrounds
+        return "bg-asphalt-10 text-white hover:bg-asphalt-20";
       }
 
       if (variant === "secondary") {
         if (inverse) {
-          // Inverse secondary: transparent with white border on dark backgrounds
+          // Inverse secondary: light icon for dark backgrounds
           return "bg-transparent border border-white text-white hover:bg-white/10";
         }
-        // Secondary: transparent with subtle hover
-        return "bg-transparent text-asphalt-10 dark:text-asphalt-95 hover:bg-asphalt-95/50 dark:hover:bg-asphalt-20/30";
+        // Secondary: dark icon for light backgrounds
+        return "bg-transparent text-asphalt-10 hover:bg-asphalt-95/50";
       }
 
       return "";
@@ -107,7 +108,7 @@ const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
         {children}
       </button>
     );
-  }
+  },
 );
 
 IconButton.displayName = "IconButton";

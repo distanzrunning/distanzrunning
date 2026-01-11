@@ -47,7 +47,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       type = "button",
       ...props
     },
-    ref
+    ref,
   ) => {
     // Size classes
     const sizeClasses = {
@@ -68,23 +68,24 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     `;
 
     // Variant + inverse color combinations
+    // Note: No dark: modifiers - the inverse prop controls light/dark appearance
     const getVariantClasses = () => {
       if (variant === "primary") {
         if (inverse) {
-          // Inverse primary: white bg on dark backgrounds
+          // Inverse primary: light button for dark backgrounds
           return "bg-white text-asphalt-10 hover:bg-asphalt-95";
         }
-        // Primary: dark bg in light mode, light bg in dark mode
-        return "bg-asphalt-10 dark:bg-asphalt-95 text-white dark:text-asphalt-10 hover:bg-asphalt-20 dark:hover:bg-asphalt-90";
+        // Primary: dark button for light backgrounds
+        return "bg-asphalt-10 text-white hover:bg-asphalt-20";
       }
 
       if (variant === "secondary") {
         if (inverse) {
-          // Inverse secondary: white border on dark backgrounds
+          // Inverse secondary: light border/text for dark backgrounds
           return "bg-transparent border border-white text-white hover:bg-white/10";
         }
-        // Secondary: grey border with subtle hover
-        return "bg-transparent border border-asphalt-70 dark:border-asphalt-40 text-asphalt-10 dark:text-asphalt-95 hover:border-asphalt-40 hover:bg-asphalt-95/50 dark:hover:border-asphalt-60 dark:hover:bg-asphalt-20/30";
+        // Secondary: dark border/text for light backgrounds
+        return "bg-transparent border border-asphalt-70 text-asphalt-10 hover:border-asphalt-40 hover:bg-asphalt-95/50";
       }
 
       return "";
@@ -105,7 +106,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         {children}
       </button>
     );
-  }
+  },
 );
 
 Button.displayName = "Button";
