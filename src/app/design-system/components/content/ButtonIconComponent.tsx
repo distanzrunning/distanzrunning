@@ -94,10 +94,10 @@ function VariantShowcase({
 
       {/* Preview + States container (side-by-side) */}
       <div className="flex rounded-t-lg border border-b-0 border-borderSubtle overflow-hidden">
-        {/* Preview area */}
+        {/* Preview area - always light for normal variants, always dark for inverse */}
         <div
           className={`flex-1 p-8 flex items-center justify-start min-h-[120px] ${
-            inverse ? "bg-asphalt-10" : "bg-white dark:bg-asphalt-10"
+            inverse ? "bg-asphalt-10" : "bg-white"
           }`}
         >
           <IconButton
