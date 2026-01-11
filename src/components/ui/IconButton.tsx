@@ -87,22 +87,22 @@ const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
 
       if (variant === "primary") {
         if (inverse) {
-          // Inverse primary: blends with theme (light in light mode, dark in dark mode)
-          return "bg-asphalt-95 dark:bg-asphalt-10 text-asphalt-10 dark:text-white hover:bg-asphalt-90 dark:hover:bg-asphalt-20";
+          // Inverse primary: for dark backgrounds - contrasts (light button on dark bg)
+          return "bg-asphalt-95 text-asphalt-10 hover:bg-asphalt-90";
         }
-        // Primary: contrasts with theme (dark in light mode, light in dark mode)
+        // Primary: blends with theme (light in light mode, dark in dark mode)
         if (ignoreDarkMode) {
-          return "bg-asphalt-10 text-white hover:bg-asphalt-20";
+          return "bg-asphalt-95 text-asphalt-10 hover:bg-asphalt-90";
         }
-        return "bg-asphalt-10 dark:bg-asphalt-95 text-white dark:text-asphalt-10 hover:bg-asphalt-20 dark:hover:bg-asphalt-90";
+        return "bg-asphalt-95 dark:bg-asphalt-10 text-asphalt-10 dark:text-white hover:bg-asphalt-90 dark:hover:bg-asphalt-20";
       }
 
       if (variant === "secondary") {
         if (inverse) {
-          // Inverse secondary: blends with theme
-          return "bg-transparent text-asphalt-10 dark:text-asphalt-95 hover:bg-asphalt-95/50 dark:hover:bg-asphalt-20/30";
+          // Inverse secondary: for dark backgrounds
+          return "bg-transparent text-asphalt-95 hover:bg-asphalt-20/30";
         }
-        // Secondary: visible in both light and dark modes
+        // Secondary: blends with theme
         if (ignoreDarkMode) {
           return "bg-transparent text-asphalt-10 hover:bg-asphalt-95/50";
         }
