@@ -357,8 +357,8 @@ export default function DesignSystemSubsectionPage() {
                 title: "Variants",
                 children: [
                   { id: "variants-primary", title: "Primary" },
-                  { id: "variants-secondary", title: "Secondary" },
                   { id: "variants-inverse", title: "Inverse" },
+                  { id: "variants-secondary", title: "Secondary" },
                   {
                     id: "variants-inverse-secondary",
                     title: "Inverse, Secondary",

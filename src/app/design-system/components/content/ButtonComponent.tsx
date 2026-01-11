@@ -15,7 +15,7 @@ function ButtonPreview({ variant, disabled = false }: ButtonPreviewProps) {
     primary:
       "bg-asphalt-10 dark:bg-asphalt-95 text-white dark:text-asphalt-10 hover:bg-asphalt-20 dark:hover:bg-asphalt-90",
     secondary:
-      "bg-transparent border border-asphalt-70 dark:border-asphalt-40 text-asphalt-10 dark:text-asphalt-95 hover:border-asphalt-50 hover:bg-asphalt-95 dark:hover:border-asphalt-50 dark:hover:bg-asphalt-10",
+      "bg-transparent border border-asphalt-70 dark:border-asphalt-40 text-asphalt-10 dark:text-asphalt-95 hover:border-asphalt-40 hover:bg-asphalt-95/50 dark:hover:border-asphalt-60 dark:hover:bg-asphalt-20/30",
     inverse: "bg-white text-asphalt-10 hover:bg-asphalt-95",
     "inverse-secondary":
       "bg-transparent border border-white text-white hover:bg-white/10",
@@ -216,14 +216,6 @@ export default function ButtonComponent() {
           code={`<Button>Button</Button>`}
         />
 
-        {/* Secondary */}
-        <VariantShowcase
-          title="Secondary"
-          id="variants-secondary"
-          variant="secondary"
-          code={`<Button secondary>Button</Button>`}
-        />
-
         {/* Inverse */}
         <VariantShowcase
           title="Inverse"
@@ -231,6 +223,14 @@ export default function ButtonComponent() {
           variant="inverse"
           code={`<Button inverse>Button</Button>`}
           inverse
+        />
+
+        {/* Secondary */}
+        <VariantShowcase
+          title="Secondary"
+          id="variants-secondary"
+          variant="secondary"
+          code={`<Button secondary>Button</Button>`}
         />
 
         {/* Inverse Secondary */}
