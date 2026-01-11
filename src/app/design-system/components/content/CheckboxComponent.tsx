@@ -37,35 +37,35 @@ function CheckboxPreview({
                 ? "bg-asphalt-10 dark:bg-asphalt-95 border-asphalt-10 dark:border-asphalt-95"
                 : "bg-white dark:bg-asphalt-10 border-asphalt-40 dark:border-asphalt-60 hover:border-asphalt-50"
             }
-            peer-focus:ring-2 peer-focus:ring-borderNeutral peer-focus:ring-offset-1
+            peer-focus:ring-1 peer-focus:ring-borderNeutral peer-focus:ring-offset-0
           `}
         >
           {/* Checkmark */}
           {checked && !isIndeterminate && (
             <svg
-              className="w-3 h-3 text-white dark:text-asphalt-10"
+              className="w-3.5 h-3.5 text-white dark:text-asphalt-10"
               fill="none"
               stroke="currentColor"
-              strokeWidth={2.5}
+              strokeWidth={1.75}
               viewBox="0 0 12 12"
             >
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                d="M2.5 6l2.5 2.5 4.5-5"
+                d="M2 6l3 3 5-5.5"
               />
             </svg>
           )}
           {/* Indeterminate dash */}
           {isIndeterminate && (
             <svg
-              className="w-3 h-3 text-white dark:text-asphalt-10"
+              className="w-3.5 h-3.5 text-white dark:text-asphalt-10"
               fill="none"
               stroke="currentColor"
-              strokeWidth={2.5}
+              strokeWidth={1.75}
               viewBox="0 0 12 12"
             >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M2.5 6h7" />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M2 6h8" />
             </svg>
           )}
         </div>
@@ -174,21 +174,21 @@ function VariantShowcase() {
                         ? "bg-asphalt-10 dark:bg-asphalt-95 border-asphalt-10 dark:border-asphalt-95"
                         : "bg-white dark:bg-asphalt-10 border-asphalt-40 dark:border-asphalt-60 hover:border-asphalt-50"
                     }
-                    peer-focus:ring-2 peer-focus:ring-borderNeutral peer-focus:ring-offset-1
+                    peer-focus:ring-1 peer-focus:ring-borderNeutral peer-focus:ring-offset-0
                   `}
                 >
                   {isDisabled && (
                     <svg
-                      className="w-2.5 h-2.5 text-white dark:text-asphalt-10"
+                      className="w-3 h-3 text-white dark:text-asphalt-10"
                       fill="none"
                       stroke="currentColor"
-                      strokeWidth={2.5}
+                      strokeWidth={1.75}
                       viewBox="0 0 12 12"
                     >
                       <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        d="M2.5 6l2.5 2.5 4.5-5"
+                        d="M2 6l3 3 5-5.5"
                       />
                     </svg>
                   )}
@@ -215,21 +215,21 @@ function VariantShowcase() {
                         ? "bg-asphalt-10 dark:bg-asphalt-95 border-asphalt-10 dark:border-asphalt-95"
                         : "bg-white dark:bg-asphalt-10 border-asphalt-40 dark:border-asphalt-60 hover:border-asphalt-50"
                     }
-                    peer-focus:ring-2 peer-focus:ring-borderNeutral peer-focus:ring-offset-1
+                    peer-focus:ring-1 peer-focus:ring-borderNeutral peer-focus:ring-offset-0
                   `}
                 >
                   {isIndeterminate && (
                     <svg
-                      className="w-2.5 h-2.5 text-white dark:text-asphalt-10"
+                      className="w-3 h-3 text-white dark:text-asphalt-10"
                       fill="none"
                       stroke="currentColor"
-                      strokeWidth={2.5}
+                      strokeWidth={1.75}
                       viewBox="0 0 12 12"
                     >
                       <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        d="M2.5 6h7"
+                        d="M2 6h8"
                       />
                     </svg>
                   )}
