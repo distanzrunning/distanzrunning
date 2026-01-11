@@ -22,6 +22,7 @@ import TextStyles from "../../components/content/TextStyles";
 import Iconography from "../../components/content/Iconography";
 import ButtonComponent from "../../components/content/ButtonComponent";
 import ButtonIconComponent from "../../components/content/ButtonIconComponent";
+import SlimButtonComponent from "../../components/content/SlimButtonComponent";
 import CheckboxComponent from "../../components/content/CheckboxComponent";
 import ContentWithTOC from "../../components/ContentWithTOC";
 
@@ -430,6 +431,40 @@ export default function DesignSystemSubsectionPage() {
             ]}
           >
             <ButtonIconComponent />
+          </ContentWithTOC>
+        );
+      }
+
+      if (subsection === "slim-button") {
+        return (
+          <ContentWithTOC
+            tocTitle="Contents"
+            tocItems={[
+              {
+                id: "variants",
+                title: "Variants",
+                children: [
+                  { id: "variants-primary", title: "Primary" },
+                  { id: "variants-inverse", title: "Inverse" },
+                  { id: "variants-secondary", title: "Secondary" },
+                  {
+                    id: "variants-inverse-secondary",
+                    title: "Inverse, Secondary",
+                  },
+                ],
+              },
+              {
+                id: "guidelines",
+                title: "Guidelines",
+                children: [
+                  { id: "guidelines-how-to-use", title: "How to use" },
+                ],
+              },
+              { id: "anatomy", title: "Anatomy" },
+              { id: "props", title: "Props" },
+            ]}
+          >
+            <SlimButtonComponent />
           </ContentWithTOC>
         );
       }
