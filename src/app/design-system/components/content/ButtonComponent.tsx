@@ -1,36 +1,7 @@
 "use client";
 
 import { useState } from "react";
-
-interface ButtonPreviewProps {
-  variant: "primary" | "secondary" | "inverse" | "inverse-secondary";
-  disabled?: boolean;
-}
-
-function ButtonPreview({ variant, disabled = false }: ButtonPreviewProps) {
-  const baseClasses =
-    "inline-flex items-center justify-center px-5 h-12 min-w-[120px] rounded-md font-sans font-semibold text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-borderNeutral disabled:opacity-50 disabled:cursor-not-allowed";
-
-  const variantClasses = {
-    primary:
-      "bg-asphalt-10 dark:bg-asphalt-95 text-white dark:text-asphalt-10 hover:bg-asphalt-20 dark:hover:bg-asphalt-90",
-    secondary:
-      "bg-transparent border border-asphalt-70 dark:border-asphalt-40 text-asphalt-10 dark:text-asphalt-95 hover:border-asphalt-40 hover:bg-asphalt-95/50 dark:hover:border-asphalt-60 dark:hover:bg-asphalt-20/30",
-    inverse: "bg-white text-asphalt-10 hover:bg-asphalt-95",
-    "inverse-secondary":
-      "bg-transparent border border-white text-white hover:bg-white/10",
-  };
-
-  return (
-    <button
-      type="button"
-      disabled={disabled}
-      className={`${baseClasses} ${variantClasses[variant]}`}
-    >
-      Button
-    </button>
-  );
-}
+import Button from "@/components/ui/Button";
 
 interface VariantShowcaseProps {
   title: string;
@@ -109,7 +80,18 @@ function VariantShowcase({
             inverse ? "bg-asphalt-10" : "bg-white dark:bg-asphalt-10"
           }`}
         >
-          <ButtonPreview variant={variant} disabled={isDisabled} />
+          <Button
+            variant={
+              variant === "secondary" || variant === "inverse-secondary"
+                ? "secondary"
+                : "primary"
+            }
+            inverse={variant === "inverse" || variant === "inverse-secondary"}
+            disabled={isDisabled}
+            className="min-w-[120px]"
+          >
+            Button
+          </Button>
         </div>
 
         {/* States sidebar */}
