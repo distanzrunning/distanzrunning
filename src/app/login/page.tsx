@@ -73,7 +73,7 @@ export default function LoginPage() {
                 <h2 className="text-xl font-semibold text-textDefault leading-tight">
                   Staging Access
                 </h2>
-                <p className="text-sm text-textSubtle mt-2 leading-tight">
+                <p className="text-base text-textSubtle mt-2 leading-tight">
                   Enter the password to access the staging site
                 </p>
               </div>
