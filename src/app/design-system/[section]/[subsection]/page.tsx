@@ -26,6 +26,7 @@ import SlimButtonComponent from "../../components/content/SlimButtonComponent";
 import SlimButtonIconComponent from "../../components/content/SlimButtonIconComponent";
 import CheckboxComponent from "../../components/content/CheckboxComponent";
 import BlockquoteComponent from "../../components/content/BlockquoteComponent";
+import PullQuoteComponent from "../../components/content/PullQuoteComponent";
 import ContentWithTOC from "../../components/ContentWithTOC";
 
 export default function DesignSystemSubsectionPage() {
@@ -538,6 +539,36 @@ export default function DesignSystemSubsectionPage() {
             ]}
           >
             <BlockquoteComponent />
+          </ContentWithTOC>
+        );
+      }
+
+      if (subsection === "pull-quote") {
+        return (
+          <ContentWithTOC
+            tocTitle="Contents"
+            tocItems={[
+              {
+                id: "variants",
+                title: "Variants",
+                children: [{ id: "variants-default", title: "Default" }],
+              },
+              { id: "props", title: "Props" },
+              { id: "anatomy", title: "Anatomy" },
+              { id: "colours", title: "Colour reference" },
+              {
+                id: "guidelines",
+                title: "Guidelines",
+                children: [
+                  {
+                    id: "guidelines-blockquote-vs-pullquote",
+                    title: "Blockquote vs Pull-quote",
+                  },
+                ],
+              },
+            ]}
+          >
+            <PullQuoteComponent />
           </ContentWithTOC>
         );
       }
