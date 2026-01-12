@@ -75,11 +75,12 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     const getVariantClasses = () => {
       if (disabled) {
         // Disabled state: subtle, recessive styling for premium feel
+        // Light mode: light bg, muted text | Dark mode: dark bg, muted text (inverted)
         if (variant === "primary") {
-          return "bg-asphalt-90 dark:bg-asphalt-20 text-asphalt-50 cursor-not-allowed";
+          return "bg-asphalt-90 dark:bg-asphalt-20 text-asphalt-60 dark:text-asphalt-50 cursor-not-allowed";
         }
         if (variant === "secondary") {
-          return "bg-transparent border border-asphalt-80 dark:border-asphalt-30 text-asphalt-50 cursor-not-allowed";
+          return "bg-transparent border border-asphalt-80 dark:border-asphalt-30 text-asphalt-60 dark:text-asphalt-50 cursor-not-allowed";
         }
       }
 
