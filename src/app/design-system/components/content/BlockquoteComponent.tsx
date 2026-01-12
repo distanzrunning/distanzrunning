@@ -43,12 +43,22 @@ function highlightCode(code: string) {
 interface VariantShowcaseProps {
   title: string;
   id: string;
-  code: string;
-  quoteText: string;
+  initialText: string;
 }
 
-function VariantShowcase({ title, id, code, quoteText }: VariantShowcaseProps) {
-  const [codeValue, setCodeValue] = useState(code);
+function VariantShowcase({ title, id, initialText }: VariantShowcaseProps) {
+  const [text, setText] = useState(initialText);
+
+  // Extract text from code when user edits
+  const handleCodeChange = (newCode: string) => {
+    // Extract text between > and </ tags
+    const match = newCode.match(/>([^<]*)</);
+    if (match) {
+      setText(match[1]);
+    }
+  };
+
+  const codeValue = `<Blockquote>${text}</Blockquote>`;
 
   return (
     <div className="mb-8">
@@ -62,7 +72,7 @@ function VariantShowcase({ title, id, code, quoteText }: VariantShowcaseProps) {
       {/* Preview area */}
       <div className="rounded-t-lg border border-b-0 border-borderSubtle overflow-hidden">
         <div className="p-8 bg-white dark:bg-asphalt-10">
-          <Blockquote>{quoteText}</Blockquote>
+          <Blockquote>{text}</Blockquote>
         </div>
       </div>
 
@@ -75,7 +85,7 @@ function VariantShowcase({ title, id, code, quoteText }: VariantShowcaseProps) {
         </div>
         <textarea
           value={codeValue}
-          onChange={(e) => setCodeValue(e.target.value)}
+          onChange={(e) => handleCodeChange(e.target.value)}
           spellCheck={false}
           className="w-full p-4 text-sm font-mono bg-transparent text-transparent caret-textDefault resize-none focus:outline-none whitespace-pre-wrap break-words"
           rows={3}
@@ -118,8 +128,7 @@ export default function BlockquoteComponent() {
         <VariantShowcase
           title="Default"
           id="variants-default"
-          quoteText="Give, give, they cry–and take! For wilful men are they Who tax'd our cake, and took our cake, To throw our cake away."
-          code={`<Blockquote>Give, give, they cry–and take! For wilful men are they Who tax'd our cake, and took our cake, To throw our cake away.</Blockquote>`}
+          initialText="Give, give, they cry–and take! For wilful men are they Who tax'd our cake, and took our cake, To throw our cake away."
         />
       </section>
 
