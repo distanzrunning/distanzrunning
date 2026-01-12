@@ -521,10 +521,7 @@ export default function DesignSystemSubsectionPage() {
           </ContentWithTOC>
         );
       }
-    }
 
-    // Show Content section
-    if (section === "content") {
       if (subsection === "blockquote") {
         return (
           <ContentWithTOC
