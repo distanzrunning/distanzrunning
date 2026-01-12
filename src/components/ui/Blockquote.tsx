@@ -10,7 +10,7 @@ export interface BlockquoteProps {
 /**
  * Blockquote component for quoting a passage of text or speech from another source.
  *
- * Features a left border accent and italic styling.
+ * Features a pink left border accent and serif typography for an authoritative feel.
  *
  * @example
  * <Blockquote>
@@ -18,16 +18,21 @@ export interface BlockquoteProps {
  *   Who tax'd our cake, and took our cake, To throw our cake away.
  * </Blockquote>
  */
-export default function Blockquote({ children, className = "" }: BlockquoteProps) {
+export default function Blockquote({
+  children,
+  className = "",
+}: BlockquoteProps) {
   return (
     <blockquote
       className={`
-        border-l-4 border-borderNeutral dark:border-asphalt-60
+        border-l-4 border-electric-pink
         pl-6 my-8
-        font-sans text-[17px] leading-[25px] md:text-[19px] md:leading-[28px]
-        text-textDefault italic
+        font-serif text-[19px] leading-[28px] md:text-[21px] md:leading-[32px]
+        text-textDefault
         ${className}
-      `.replace(/\s+/g, " ").trim()}
+      `
+        .replace(/\s+/g, " ")
+        .trim()}
     >
       {children}
     </blockquote>

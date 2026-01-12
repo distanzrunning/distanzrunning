@@ -69,7 +69,7 @@ function VariantShowcase({ title, id, code, quoteText }: VariantShowcaseProps) {
       {/* Editable code box */}
       <div className="relative rounded-b-lg border border-borderSubtle bg-surfaceSubtle dark:bg-neutral-900 overflow-hidden focus-within:border-borderDefault focus-within:ring-1 focus-within:ring-borderNeutral transition-all">
         <div className="absolute inset-0 p-4 pointer-events-none">
-          <pre className="text-sm font-mono">
+          <pre className="text-sm font-mono whitespace-pre-wrap break-words">
             <code>{highlightCode(codeValue)}</code>
           </pre>
         </div>
@@ -77,8 +77,8 @@ function VariantShowcase({ title, id, code, quoteText }: VariantShowcaseProps) {
           value={codeValue}
           onChange={(e) => setCodeValue(e.target.value)}
           spellCheck={false}
-          className="w-full p-4 text-sm font-mono bg-transparent text-transparent caret-textDefault resize-none focus:outline-none"
-          rows={1}
+          className="w-full p-4 text-sm font-mono bg-transparent text-transparent caret-textDefault resize-none focus:outline-none whitespace-pre-wrap break-words"
+          rows={3}
         />
       </div>
     </div>
@@ -213,33 +213,28 @@ export default function BlockquoteComponent() {
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Font family</td>
-                <td className="py-3 px-4">Inter</td>
-                <td className="py-3 px-4 font-mono">font-sans</td>
+                <td className="py-3 px-4">EB Garamond</td>
+                <td className="py-3 px-4 font-mono">font-serif</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Font size (mobile)</td>
-                <td className="py-3 px-4">17px</td>
-                <td className="py-3 px-4 font-mono">text-[17px]</td>
+                <td className="py-3 px-4">19px</td>
+                <td className="py-3 px-4 font-mono">text-[19px]</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Font size (desktop)</td>
-                <td className="py-3 px-4">19px</td>
-                <td className="py-3 px-4 font-mono">md:text-[19px]</td>
+                <td className="py-3 px-4">21px</td>
+                <td className="py-3 px-4 font-mono">md:text-[21px]</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Line height (mobile)</td>
-                <td className="py-3 px-4">25px</td>
-                <td className="py-3 px-4 font-mono">leading-[25px]</td>
+                <td className="py-3 px-4">28px</td>
+                <td className="py-3 px-4 font-mono">leading-[28px]</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Line height (desktop)</td>
-                <td className="py-3 px-4">28px</td>
-                <td className="py-3 px-4 font-mono">md:leading-[28px]</td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4">Font style</td>
-                <td className="py-3 px-4">Italic</td>
-                <td className="py-3 px-4 font-mono">italic</td>
+                <td className="py-3 px-4">32px</td>
+                <td className="py-3 px-4 font-mono">md:leading-[32px]</td>
               </tr>
             </tbody>
           </table>
@@ -277,8 +272,8 @@ export default function BlockquoteComponent() {
             <tbody className="text-sm">
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Border</td>
-                <td className="py-3 px-4 font-mono">borderNeutral</td>
-                <td className="py-3 px-4 font-mono">asphalt-60</td>
+                <td className="py-3 px-4 font-mono">electric-pink</td>
+                <td className="py-3 px-4 font-mono">electric-pink</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Text</td>
