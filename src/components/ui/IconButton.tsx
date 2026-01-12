@@ -77,11 +77,21 @@ const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
     const getVariantClasses = () => {
       if (disabled) {
         // Disabled state: subtle, recessive styling for premium feel
-        // Light mode: light bg, muted text | Dark mode: dark bg, muted text (inverted)
+        // Inverse disabled should match the opposite theme's primary disabled
         if (variant === "primary") {
+          if (inverse) {
+            // Inverse disabled: dark grey for dark backgrounds (no dark mode switch)
+            return "bg-asphalt-20 text-asphalt-50 cursor-not-allowed";
+          }
+          // Primary disabled: light grey in light mode, dark grey in dark mode
           return "bg-asphalt-90 dark:bg-asphalt-20 text-asphalt-60 dark:text-asphalt-50 cursor-not-allowed";
         }
         if (variant === "secondary") {
+          if (inverse) {
+            // Inverse secondary disabled: for dark backgrounds (no dark mode switch)
+            return "bg-transparent text-asphalt-50 cursor-not-allowed";
+          }
+          // Secondary disabled
           return "bg-transparent text-asphalt-60 dark:text-asphalt-50 cursor-not-allowed";
         }
       }
