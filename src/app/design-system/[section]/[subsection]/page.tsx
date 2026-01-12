@@ -27,6 +27,7 @@ import SlimButtonIconComponent from "../../components/content/SlimButtonIconComp
 import CheckboxComponent from "../../components/content/CheckboxComponent";
 import BlockquoteComponent from "../../components/content/BlockquoteComponent";
 import PullQuoteComponent from "../../components/content/PullQuoteComponent";
+import CloseComponent from "../../components/content/CloseComponent";
 import ContentWithTOC from "../../components/ContentWithTOC";
 
 export default function DesignSystemSubsectionPage() {
@@ -569,6 +570,23 @@ export default function DesignSystemSubsectionPage() {
             ]}
           >
             <PullQuoteComponent />
+          </ContentWithTOC>
+        );
+      }
+
+      if (subsection === "close") {
+        return (
+          <ContentWithTOC
+            tocTitle="Contents"
+            tocItems={[
+              { id: "preview", title: "Preview" },
+              { id: "usage", title: "Usage" },
+              { id: "props", title: "Props" },
+              { id: "guidelines", title: "Guidelines" },
+              { id: "common-patterns", title: "Common Patterns" },
+            ]}
+          >
+            <CloseComponent />
           </ContentWithTOC>
         );
       }
