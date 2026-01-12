@@ -25,6 +25,7 @@ import ButtonIconComponent from "../../components/content/ButtonIconComponent";
 import SlimButtonComponent from "../../components/content/SlimButtonComponent";
 import SlimButtonIconComponent from "../../components/content/SlimButtonIconComponent";
 import CheckboxComponent from "../../components/content/CheckboxComponent";
+import BlockquoteComponent from "../../components/content/BlockquoteComponent";
 import ContentWithTOC from "../../components/ContentWithTOC";
 
 export default function DesignSystemSubsectionPage() {
@@ -517,6 +518,29 @@ export default function DesignSystemSubsectionPage() {
             ]}
           >
             <CheckboxComponent />
+          </ContentWithTOC>
+        );
+      }
+    }
+
+    // Show Content section
+    if (section === "content") {
+      if (subsection === "blockquote") {
+        return (
+          <ContentWithTOC
+            tocTitle="Contents"
+            tocItems={[
+              {
+                id: "variants",
+                title: "Variants",
+                children: [{ id: "variants-default", title: "Default" }],
+              },
+              { id: "props", title: "Props" },
+              { id: "anatomy", title: "Anatomy" },
+              { id: "colours", title: "Colour reference" },
+            ]}
+          >
+            <BlockquoteComponent />
           </ContentWithTOC>
         );
       }
