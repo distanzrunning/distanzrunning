@@ -69,14 +69,9 @@ export default function LoginPage() {
           <div className="bg-neutralBgSubtle rounded-xl p-8 shadow-sm transition-colors duration-300">
             <div className="space-y-6">
               {/* Title */}
-              <div>
-                <h2 className="text-xl font-semibold text-textDefault leading-tight">
-                  Staging Access
-                </h2>
-                <p className="text-base text-textSubtle mt-2 leading-tight">
-                  Enter the password to access the staging site
-                </p>
-              </div>
+              <h2 className="text-xl font-semibold text-textDefault leading-tight">
+                Staging Access
+              </h2>
 
               {/* Form */}
               <form className="space-y-6" onSubmit={handleSubmit}>
