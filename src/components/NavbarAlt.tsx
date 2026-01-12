@@ -25,6 +25,8 @@ import {
   Sun,
   Search as SearchIcon,
 } from "lucide-react";
+import IconButton from "@/components/ui/IconButton";
+import Button from "@/components/ui/Button";
 import { motion } from "framer-motion";
 import { DarkModeContext } from "./DarkModeProvider";
 import { urlFor } from "@/sanity/lib/image";
@@ -173,13 +175,14 @@ export default function NavbarAlt({
         <div className="border-b border-borderSubtle relative z-50">
           <div className="flex items-center justify-between px-4 md:px-6 lg:px-8 h-20">
             {/* Mobile Menu Button - Left (Mobile Only) */}
-            <button
+            <IconButton
               onClick={() => setMobileMenuOpen(true)}
-              className="lg:hidden p-2 text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors duration-200"
-              title="Menu"
+              className="lg:hidden"
+              aria-label="Menu"
+              variant="secondary"
             >
               <Menu className="h-6 w-6" />
-            </button>
+            </IconButton>
 
             {/* Centered Logo */}
             <Link
@@ -208,45 +211,46 @@ export default function NavbarAlt({
             {/* Right: Search Icon + Newsletter + Dark Mode */}
             <div className="ml-auto flex items-center gap-3">
               {/* Search Icon Button */}
-              <button
+              <IconButton
                 onClick={() => setSearchDialogOpen(true)}
-                className="p-2 text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors duration-200"
                 aria-label="Open search"
                 title="Search (⌘K / Ctrl+K)"
+                variant="secondary"
               >
                 <SearchIcon className="h-5 w-5" />
-              </button>
+              </IconButton>
 
               {/* Newsletter Button - Desktop */}
-              <button
+              <Button
                 onClick={() => {
                   posthog.capture("newsletter_modal_opened", {
                     location: "navbar_desktop",
                   });
                   setNewsletterModalOpen(true);
                 }}
-                className="hidden md:inline-flex items-center px-4 h-9 text-sm font-semibold text-white bg-neutral-900 dark:bg-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-100 rounded-md transition-all duration-200 ease-out active:scale-[0.98] whitespace-nowrap"
+                className="hidden md:inline-flex whitespace-nowrap"
+                size="slim"
                 data-attr="newsletter-modal-open-desktop"
               >
                 Newsletter
-              </button>
+              </Button>
 
               {/* Dark Mode Toggle */}
               {mounted && (
-                <button
+                <IconButton
                   onClick={toggleDarkMode}
-                  className="p-2 text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors duration-200"
                   aria-label="Toggle dark mode"
                   title={
                     isDark ? "Switch to light mode" : "Switch to dark mode"
                   }
+                  variant="secondary"
                 >
                   {isDark ? (
                     <Sun className="h-5 w-5" />
                   ) : (
                     <Moon className="h-5 w-5" />
                   )}
-                </button>
+                </IconButton>
               )}
             </div>
           </div>
@@ -678,31 +682,31 @@ export default function NavbarAlt({
               transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
             >
               {/* Search Icon Button */}
-              <button
+              <IconButton
                 onClick={() => setSearchDialogOpen(true)}
-                className="p-2 text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors duration-200"
                 aria-label="Open search"
                 title="Search (⌘K / Ctrl+K)"
+                variant="secondary"
               >
                 <SearchIcon className="h-5 w-5" />
-              </button>
+              </IconButton>
 
               {/* Dark Mode Toggle */}
               {mounted && (
-                <button
+                <IconButton
                   onClick={toggleDarkMode}
-                  className="p-2 text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors duration-200"
                   aria-label="Toggle dark mode"
                   title={
                     isDark ? "Switch to light mode" : "Switch to dark mode"
                   }
+                  variant="secondary"
                 >
                   {isDark ? (
                     <Sun className="h-5 w-5" />
                   ) : (
                     <Moon className="h-5 w-5" />
                   )}
-                </button>
+                </IconButton>
               )}
             </motion.div>
           </div>
@@ -746,9 +750,9 @@ export default function NavbarAlt({
                     />
                   </Link>
                   <Dialog.Close asChild>
-                    <button className="p-2 rounded-lg bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors">
+                    <IconButton aria-label="Close menu" variant="secondary">
                       <X className="h-5 w-5" />
-                    </button>
+                    </IconButton>
                   </Dialog.Close>
                 </div>
 
@@ -790,7 +794,7 @@ export default function NavbarAlt({
                   </button>
 
                   <div className="pt-6 border-t border-borderSubtle">
-                    <button
+                    <Button
                       onClick={() => {
                         posthog.capture("newsletter_modal_opened", {
                           location: "navbar_mobile",
@@ -798,11 +802,11 @@ export default function NavbarAlt({
                         setNewsletterModalOpen(true);
                         setMobileMenuOpen(false);
                       }}
-                      className="block w-full text-center px-6 py-3 text-base font-semibold text-white bg-neutral-900 dark:bg-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-100 rounded-md transition-all duration-200 ease-out active:scale-[0.98]"
+                      className="w-full"
                       data-attr="newsletter-modal-open-mobile"
                     >
                       Subscribe to Newsletter
-                    </button>
+                    </Button>
                   </div>
                 </div>
               </>
@@ -812,13 +816,14 @@ export default function NavbarAlt({
             {mobileSubMenu === "gear" && (
               <>
                 <div className="flex justify-start mb-8">
-                  <button
+                  <Button
                     onClick={() => setMobileSubMenu("main")}
-                    className="flex items-center gap-2 px-4 py-2 rounded-lg bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors"
+                    variant="secondary"
+                    size="slim"
                   >
-                    <ArrowLeft className="h-4 w-4" />
+                    <ArrowLeft className="h-4 w-4 mr-2" />
                     Back
-                  </button>
+                  </Button>
                 </div>
 
                 <h2 className="text-2xl font-bold text-neutral-900 dark:text-white mb-6">
@@ -981,13 +986,14 @@ export default function NavbarAlt({
             {mobileSubMenu === "races" && (
               <>
                 <div className="flex justify-start mb-8">
-                  <button
+                  <Button
                     onClick={() => setMobileSubMenu("main")}
-                    className="flex items-center gap-2 px-4 py-2 rounded-lg bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors"
+                    variant="secondary"
+                    size="slim"
                   >
-                    <ArrowLeft className="h-4 w-4" />
+                    <ArrowLeft className="h-4 w-4 mr-2" />
                     Back
-                  </button>
+                  </Button>
                 </div>
 
                 <h2 className="text-2xl font-bold text-neutral-900 dark:text-white mb-6">
