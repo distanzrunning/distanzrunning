@@ -81,11 +81,8 @@ export default function LoginPage() {
               {/* Form */}
               <form className="space-y-6" onSubmit={handleSubmit}>
                 {/* Password field */}
-                <div className="space-y-2">
-                  <label
-                    htmlFor="password"
-                    className="block text-base font-normal text-textDefault"
-                  >
+                <div>
+                  <label htmlFor="password" className="sr-only">
                     Password
                   </label>
                   <div className="relative flex border border-borderNeutral rounded-lg hover:border-borderNeutralHover focus-within:ring-2 focus-within:ring-borderNeutral focus-within:border-borderNeutralHover transition-colors duration-300 overflow-hidden">
@@ -96,7 +93,7 @@ export default function LoginPage() {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       className="flex-1 px-3 py-3 bg-gray-50 dark:bg-neutral-800 text-textDefault placeholder:text-textSubtle focus:outline-none"
-                      placeholder="Enter staging password"
+                      placeholder="Password"
                       autoComplete="current-password"
                       disabled={isLoading}
                     />
