@@ -86,9 +86,8 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 
       if (variant === "primary") {
         if (inverse) {
-          // Inverse primary: light button for dark backgrounds in light mode,
-          // dark button in dark mode (same as primary in light mode)
-          return "bg-white dark:bg-asphalt-10 text-asphalt-10 dark:text-white hover:bg-asphalt-95 dark:hover:bg-asphalt-20";
+          // Inverse primary: light button for dark backgrounds (no dark mode switch)
+          return "bg-white text-asphalt-10 hover:bg-asphalt-95";
         }
         // Primary: dark button in light mode, light button in dark mode
         if (ignoreDarkMode) {
@@ -99,9 +98,8 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 
       if (variant === "secondary") {
         if (inverse) {
-          // Inverse secondary: light border/text for dark backgrounds in light mode,
-          // dark border/text in dark mode (same as secondary in light mode)
-          return "bg-transparent border border-white dark:border-asphalt-70 text-white dark:text-asphalt-10 hover:bg-white/10 dark:hover:bg-asphalt-95/50";
+          // Inverse secondary: light border/text for dark backgrounds (no dark mode switch)
+          return "bg-transparent border border-white text-white hover:bg-white/10";
         }
         // Secondary: visible border in both light and dark modes
         if (ignoreDarkMode) {
