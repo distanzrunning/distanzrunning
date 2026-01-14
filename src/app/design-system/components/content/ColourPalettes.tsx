@@ -587,6 +587,26 @@ interface ColorScale {
   steps: ColorStep[];
 }
 
+// Background scale (only 2 steps, will be displayed differently)
+const backgroundScale: ColorScale = {
+  name: "Background",
+  id: "background",
+  steps: [
+    {
+      step: 100,
+      cssVar: "--ds-background-100",
+      lightValue: "#FAFAFA",
+      darkValue: "#0A0A0A",
+    },
+    {
+      step: 200,
+      cssVar: "--ds-background-200",
+      lightValue: "#FFFFFF",
+      darkValue: "#000000",
+    },
+  ],
+};
+
 const grayScale: ColorScale = {
   name: "Gray",
   id: "gray",
@@ -650,6 +670,73 @@ const grayScale: ColorScale = {
       cssVar: "--ds-gray-1000",
       lightValue: "#171717",
       darkValue: "#EDEDED",
+    },
+  ],
+};
+
+const grayAlphaScale: ColorScale = {
+  name: "Gray Alpha",
+  id: "gray-alpha",
+  steps: [
+    {
+      step: 100,
+      cssVar: "--ds-gray-alpha-100",
+      lightValue: "rgba(0,0,0,0.05)",
+      darkValue: "rgba(255,255,255,0.06)",
+    },
+    {
+      step: 200,
+      cssVar: "--ds-gray-alpha-200",
+      lightValue: "rgba(0,0,0,0.09)",
+      darkValue: "rgba(255,255,255,0.09)",
+    },
+    {
+      step: 300,
+      cssVar: "--ds-gray-alpha-300",
+      lightValue: "rgba(0,0,0,0.13)",
+      darkValue: "rgba(255,255,255,0.13)",
+    },
+    {
+      step: 400,
+      cssVar: "--ds-gray-alpha-400",
+      lightValue: "rgba(0,0,0,0.17)",
+      darkValue: "rgba(255,255,255,0.17)",
+    },
+    {
+      step: 500,
+      cssVar: "--ds-gray-alpha-500",
+      lightValue: "rgba(0,0,0,0.24)",
+      darkValue: "rgba(255,255,255,0.24)",
+    },
+    {
+      step: 600,
+      cssVar: "--ds-gray-alpha-600",
+      lightValue: "rgba(0,0,0,0.38)",
+      darkValue: "rgba(255,255,255,0.51)",
+    },
+    {
+      step: 700,
+      cssVar: "--ds-gray-alpha-700",
+      lightValue: "rgba(0,0,0,0.47)",
+      darkValue: "rgba(255,255,255,0.54)",
+    },
+    {
+      step: 800,
+      cssVar: "--ds-gray-alpha-800",
+      lightValue: "rgba(0,0,0,0.55)",
+      darkValue: "rgba(255,255,255,0.47)",
+    },
+    {
+      step: 900,
+      cssVar: "--ds-gray-alpha-900",
+      lightValue: "rgba(0,0,0,0.65)",
+      darkValue: "rgba(255,255,255,0.61)",
+    },
+    {
+      step: 1000,
+      cssVar: "--ds-gray-alpha-1000",
+      lightValue: "rgba(0,0,0,0.91)",
+      darkValue: "rgba(255,255,255,0.92)",
     },
   ],
 };
@@ -1193,6 +1280,10 @@ function ColorScaleRow({
   scale: ColorScale;
   isDark: boolean;
 }) {
+  // Pad scales with fewer than 10 steps to align with full scales
+  const fullSteps = 10;
+  const emptySlots = fullSteps - scale.steps.length;
+
   return (
     <div className="flex flex-col items-start gap-2 md:flex-row md:items-center">
       <div className="w-[100px] flex-shrink-0">
@@ -1210,119 +1301,37 @@ function ColorScaleRow({
             />
           </li>
         ))}
+        {/* Empty slots to maintain alignment */}
+        {Array.from({ length: emptySlots }).map((_, i) => (
+          <li key={`empty-${i}`} className="w-full max-w-[68px]">
+            <div className="w-full aspect-square md:h-10 md:aspect-auto" />
+          </li>
+        ))}
       </ul>
     </div>
   );
 }
 
-// Gray Scale Section
-function GrayScaleSection({ isDark }: { isDark: boolean }) {
-  return (
-    <section className="mb-16">
-      <SectionHeader id="gray">Gray</SectionHeader>
-      <p className="text-base text-textSubtle mt-4 mb-8">
-        The gray scale is the foundation of the color system. It provides
-        neutral tones for backgrounds, borders, and text. Click any swatch to
-        copy the hex value.
-      </p>
-      <ColorScaleRow scale={grayScale} isDark={isDark} />
-    </section>
-  );
-}
-
-// Gray Alpha Scale Section
-function GrayAlphaSection({ isDark }: { isDark: boolean }) {
-  const grayAlphaScale: ColorScale = {
-    name: "Gray Alpha",
-    id: "gray-alpha",
-    steps: [
-      {
-        step: 100,
-        cssVar: "--ds-gray-alpha-100",
-        lightValue: "rgba(0,0,0,0.05)",
-        darkValue: "rgba(255,255,255,0.06)",
-      },
-      {
-        step: 200,
-        cssVar: "--ds-gray-alpha-200",
-        lightValue: "rgba(0,0,0,0.09)",
-        darkValue: "rgba(255,255,255,0.09)",
-      },
-      {
-        step: 300,
-        cssVar: "--ds-gray-alpha-300",
-        lightValue: "rgba(0,0,0,0.13)",
-        darkValue: "rgba(255,255,255,0.13)",
-      },
-      {
-        step: 400,
-        cssVar: "--ds-gray-alpha-400",
-        lightValue: "rgba(0,0,0,0.17)",
-        darkValue: "rgba(255,255,255,0.17)",
-      },
-      {
-        step: 500,
-        cssVar: "--ds-gray-alpha-500",
-        lightValue: "rgba(0,0,0,0.24)",
-        darkValue: "rgba(255,255,255,0.24)",
-      },
-      {
-        step: 600,
-        cssVar: "--ds-gray-alpha-600",
-        lightValue: "rgba(0,0,0,0.38)",
-        darkValue: "rgba(255,255,255,0.51)",
-      },
-      {
-        step: 700,
-        cssVar: "--ds-gray-alpha-700",
-        lightValue: "rgba(0,0,0,0.47)",
-        darkValue: "rgba(255,255,255,0.54)",
-      },
-      {
-        step: 800,
-        cssVar: "--ds-gray-alpha-800",
-        lightValue: "rgba(0,0,0,0.55)",
-        darkValue: "rgba(255,255,255,0.47)",
-      },
-      {
-        step: 900,
-        cssVar: "--ds-gray-alpha-900",
-        lightValue: "rgba(0,0,0,0.65)",
-        darkValue: "rgba(255,255,255,0.61)",
-      },
-      {
-        step: 1000,
-        cssVar: "--ds-gray-alpha-1000",
-        lightValue: "rgba(0,0,0,0.91)",
-        darkValue: "rgba(255,255,255,0.92)",
-      },
-    ],
-  };
+// Unified Color Scales Section (like Geist)
+function ColorScalesSection({ isDark }: { isDark: boolean }) {
+  // All scales in one array for unified display
+  const allScales: ColorScale[] = [
+    backgroundScale,
+    grayScale,
+    grayAlphaScale,
+    ...accentScales,
+  ];
 
   return (
     <section className="mb-16">
-      <SectionHeader id="gray-alpha">Gray Alpha</SectionHeader>
+      <SectionHeader id="color-scales">Color Scales</SectionHeader>
       <p className="text-base text-textSubtle mt-4 mb-8">
-        Transparent gray variants for overlays, shadows, and layered effects.
-        These use black with alpha in light mode and white with alpha in dark
-        mode.
+        The complete color system. Each scale ranges from 100-1000, providing
+        consistent tones for backgrounds, borders, text, and accents. Click any
+        swatch to copy its value.
       </p>
-      <ColorScaleRow scale={grayAlphaScale} isDark={isDark} />
-    </section>
-  );
-}
-
-// Accent Colors Section
-function AccentColorsSection({ isDark }: { isDark: boolean }) {
-  return (
-    <section className="mb-16">
-      <SectionHeader id="accent-colors">Accent Colors</SectionHeader>
-      <p className="text-base text-textSubtle mt-4 mb-8">
-        Accent color scales for semantic and decorative use. Each scale follows
-        the same 100-1000 structure as gray.
-      </p>
-      <div className="space-y-6">
-        {accentScales.map((scale) => (
+      <div className="space-y-4">
+        {allScales.map((scale) => (
           <ColorScaleRow key={scale.id} scale={scale} isDark={isDark} />
         ))}
       </div>
@@ -1440,9 +1449,7 @@ export default function ColourPalettes() {
       </div>
 
       {/* Main content sections - ordered like Geist */}
-      <GrayScaleSection isDark={isDark} />
-      <GrayAlphaSection isDark={isDark} />
-      <AccentColorsSection isDark={isDark} />
+      <ColorScalesSection isDark={isDark} />
       <BackgroundsSection />
       <ComponentBackgroundsSection />
       <BordersSection />
