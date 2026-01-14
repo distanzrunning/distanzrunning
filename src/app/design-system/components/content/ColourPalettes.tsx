@@ -1225,7 +1225,7 @@ function Toast({
 }) {
   return (
     <div
-      className={`fixed bottom-4 left-4 z-50 transition-all duration-300 ${
+      className={`fixed bottom-4 right-4 z-50 transition-all duration-300 ${
         visible
           ? "opacity-100 translate-y-0"
           : "opacity-0 translate-y-2 pointer-events-none"
