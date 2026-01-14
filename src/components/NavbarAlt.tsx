@@ -179,7 +179,7 @@ export default function NavbarAlt({
               onClick={() => setMobileMenuOpen(true)}
               className="lg:hidden"
               aria-label="Menu"
-              variant="secondary"
+              variant="tertiary"
             >
               <Menu className="h-6 w-6" />
             </IconButton>
@@ -215,7 +215,7 @@ export default function NavbarAlt({
                 onClick={() => setSearchDialogOpen(true)}
                 aria-label="Open search"
                 title="Search (⌘K / Ctrl+K)"
-                variant="secondary"
+                variant="tertiary"
               >
                 <SearchIcon className="h-5 w-5" />
               </IconButton>
@@ -243,7 +243,7 @@ export default function NavbarAlt({
                   title={
                     isDark ? "Switch to light mode" : "Switch to dark mode"
                   }
-                  variant="secondary"
+                  variant="tertiary"
                 >
                   {isDark ? (
                     <Sun className="h-5 w-5" />
@@ -686,7 +686,7 @@ export default function NavbarAlt({
                 onClick={() => setSearchDialogOpen(true)}
                 aria-label="Open search"
                 title="Search (⌘K / Ctrl+K)"
-                variant="secondary"
+                variant="tertiary"
               >
                 <SearchIcon className="h-5 w-5" />
               </IconButton>
@@ -699,7 +699,7 @@ export default function NavbarAlt({
                   title={
                     isDark ? "Switch to light mode" : "Switch to dark mode"
                   }
-                  variant="secondary"
+                  variant="tertiary"
                 >
                   {isDark ? (
                     <Sun className="h-5 w-5" />
@@ -750,7 +750,7 @@ export default function NavbarAlt({
                     />
                   </Link>
                   <Dialog.Close asChild>
-                    <IconButton aria-label="Close menu" variant="secondary">
+                    <IconButton aria-label="Close menu" variant="tertiary">
                       <X className="h-5 w-5" />
                     </IconButton>
                   </Dialog.Close>
