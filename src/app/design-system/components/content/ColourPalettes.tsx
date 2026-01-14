@@ -1347,7 +1347,7 @@ function ColorSwatch({
         }`}
       >
         <Check
-          size={24}
+          size={20}
           strokeWidth={1.5}
           className="text-gray-900 dark:text-white"
         />
