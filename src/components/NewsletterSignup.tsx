@@ -91,15 +91,14 @@ export default function NewsletterSignup() {
   };
 
   return (
-    <div className="flex border-y border-borderSubtle bg-gradient-to-t from-neutral-50 dark:from-neutral-800/50 to-transparent py-12">
+    <div className="flex border-y border-borderSubtle bg-gradient-to-t from-asphalt-5 dark:from-asphalt-20/50 to-transparent py-12">
       <div className="mx-auto flex w-full max-w-7xl flex-col justify-center gap-7 px-4 sm:flex-row sm:items-center sm:justify-between">
         {/* Left: Heading and description */}
         <div className="flex flex-col gap-2">
-          <span className="text-xl md:text-2xl font-headline font-bold text-neutral-900 dark:text-white">
-            Subscribe to the{" "}
-            <i className="italic text-neutral-900 dark:text-white">Shakeout</i>
+          <span className="text-xl md:text-2xl font-headline font-bold text-textDefault">
+            Subscribe to the <i className="italic text-textDefault">Shakeout</i>
           </span>
-          <span className="text-base text-neutral-600 dark:text-neutral-400 max-w-[400px]">
+          <span className="text-base text-textSubtle max-w-[400px]">
             A curated set of running stories, gear reviews, and race guides
             every other week.
           </span>
@@ -122,7 +121,7 @@ export default function NewsletterSignup() {
                   d="M5 13l4 4L19 7"
                 />
               </svg>
-              <span className="text-sm text-neutral-900 dark:text-white font-medium">
+              <span className="text-sm text-textDefault font-medium">
                 Check your email to confirm!
               </span>
             </div>
@@ -143,7 +142,7 @@ export default function NewsletterSignup() {
                     placeholder="Enter your email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full min-h-12 rounded-lg pl-3 pr-3 text-base placeholder:font-medium placeholder:text-neutral-400 dark:placeholder:text-neutral-500 text-neutral-900 dark:text-white border border-borderSubtle bg-white dark:bg-neutral-800 hover:border-borderSubtleHover focus:border-borderSubtleHover focus:outline-none focus:ring-2 focus:ring-borderSubtle disabled:opacity-40 transition-all"
+                    className="w-full min-h-12 rounded-lg pl-3 pr-3 text-base placeholder:font-medium placeholder:text-textSubtler text-textDefault border border-borderSubtle bg-surface hover:border-borderSubtleHover focus:border-borderSubtleHover focus:outline-none focus:ring-2 focus:ring-borderSubtle disabled:opacity-40 transition-all"
                     required
                     disabled={isSubmitting}
                   />
@@ -165,11 +164,11 @@ export default function NewsletterSignup() {
               </div>
               <div className="flex w-full flex-col items-center sm:items-start">
                 <div className="max-w-sm text-center sm:text-start">
-                  <div className="text-balance text-neutral-500 dark:text-neutral-400 text-xs">
+                  <div className="text-balance text-textSubtler text-xs">
                     This site is protected by reCAPTCHA and the Google{" "}
                     <a
                       href="https://policies.google.com/privacy"
-                      className="underline hover:text-neutral-700 dark:hover:text-neutral-300 transition-colors"
+                      className="underline hover:text-textSubtle transition-colors"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
@@ -178,7 +177,7 @@ export default function NewsletterSignup() {
                     and{" "}
                     <a
                       href="https://policies.google.com/terms"
-                      className="underline hover:text-neutral-700 dark:hover:text-neutral-300 transition-colors"
+                      className="underline hover:text-textSubtle transition-colors"
                       target="_blank"
                       rel="noopener noreferrer"
                     >

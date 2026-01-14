@@ -139,7 +139,7 @@ export function NewsletterModal({ isOpen, onClose }: NewsletterModalProps) {
             className="fixed inset-0 z-50 flex items-center justify-center p-6 sm:p-4"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="border border-borderSubtle bg-surface/95 backdrop-blur-sm backdrop-saturate-150 rounded-2xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-hidden relative transition-colors duration-300">
+            <div className="border border-borderSubtle bg-white/95 dark:bg-asphalt-15/95 backdrop-blur-sm backdrop-saturate-150 rounded-2xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-hidden relative transition-colors duration-300">
               {/* Loading spinner - covers entire modal until image loads */}
               {!imageLoaded && (
                 <div className="absolute inset-0 flex items-center justify-center z-50 bg-asphalt-10 rounded-2xl">

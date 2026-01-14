@@ -160,7 +160,7 @@ export default function NavbarAlt({
     <>
       {/* Desktop & Mobile Header - Two Part Structure */}
       <header
-        className="relative z-40 bg-white dark:bg-neutral-900 transition-colors duration-300"
+        className="relative z-40 bg-canvas transition-colors duration-300"
         role="banner"
       >
         {/* Skip Links for Accessibility */}
@@ -258,7 +258,7 @@ export default function NavbarAlt({
       </header>
 
       {/* Sticky Navigation Bar - Art Newspaper Style */}
-      <nav className="sticky top-0 z-50 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md transition-colors duration-300 overflow-visible">
+      <nav className="sticky top-0 z-50 bg-white/80 dark:bg-asphalt-10/80 backdrop-blur-md transition-colors duration-300 overflow-visible">
         {/* Bottom Section: Centered Navigation Links - Desktop Only */}
         <div
           className="hidden lg:block relative overflow-visible bg-transparent navbar-border-overlay"
@@ -316,7 +316,7 @@ export default function NavbarAlt({
                   <NavigationMenu.Link asChild>
                     <Link
                       href="/articles/category/road"
-                      className="inline-flex items-center px-3 py-2 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                      className="inline-flex items-center px-3 py-2 text-sm font-semibold text-textSubtle hover:text-textDefault transition-colors duration-200 rounded-md hover:bg-surfaceSubtle"
                     >
                       Road
                     </Link>
@@ -328,7 +328,7 @@ export default function NavbarAlt({
                   <NavigationMenu.Link asChild>
                     <Link
                       href="/articles/category/track"
-                      className="inline-flex items-center px-3 py-2 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                      className="inline-flex items-center px-3 py-2 text-sm font-semibold text-textSubtle hover:text-textDefault transition-colors duration-200 rounded-md hover:bg-surfaceSubtle"
                     >
                       Track
                     </Link>
@@ -340,7 +340,7 @@ export default function NavbarAlt({
                   <NavigationMenu.Link asChild>
                     <Link
                       href="/articles/category/trail"
-                      className="inline-flex items-center px-3 py-2 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                      className="inline-flex items-center px-3 py-2 text-sm font-semibold text-textSubtle hover:text-textDefault transition-colors duration-200 rounded-md hover:bg-surfaceSubtle"
                     >
                       Trail
                     </Link>
@@ -349,7 +349,7 @@ export default function NavbarAlt({
 
                 {/* Gear Dropdown */}
                 <NavigationMenu.Item value="gear">
-                  <NavigationMenu.Trigger className="group relative flex items-center gap-1 px-3 py-2 text-sm font-semibold text-neutral-700 dark:text-neutral-300 transition-colors duration-200 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:text-neutral-900 dark:hover:text-white data-[state=open]:bg-neutral-100 dark:data-[state=open]:bg-neutral-800 data-[state=open]:text-neutral-900 dark:data-[state=open]:text-white">
+                  <NavigationMenu.Trigger className="group relative flex items-center gap-1 px-3 py-2 text-sm font-semibold text-textSubtle transition-colors duration-200 rounded-md hover:bg-surfaceSubtle hover:text-textDefault data-[state=open]:bg-surfaceSubtle data-[state=open]:text-textDefault">
                     Gear
                     <motion.div
                       animate={{ rotate: navValue === "gear" ? 180 : 0 }}
@@ -363,10 +363,10 @@ export default function NavbarAlt({
                       <div className="grid grid-cols-1 gap-4 lg:grid-cols-10 md:gap-6 lg:gap-8">
                         {/* Column 1: Description - 3/10 */}
                         <div className="lg:col-span-3 md:border-r md:border-borderSubtle md:pr-5">
-                          <h3 className="font-headline text-2xl font-bold text-neutral-900 dark:text-white mb-3">
+                          <h3 className="font-headline text-2xl font-bold text-textDefault mb-3">
                             Gear
                           </h3>
-                          <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                          <p className="text-sm text-textSubtle leading-relaxed">
                             From carbon-plated race shoes to GPS watches and
                             nutrition, we review the latest running tech to
                             uncover the top must-haves for runners
@@ -377,88 +377,88 @@ export default function NavbarAlt({
                         <div className="lg:col-span-3 flex flex-col gap-0.5 md:px-2">
                           <Link
                             href="/gear/category/race-day-shoes"
-                            className="flex items-center gap-3 px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-colors"
+                            className="flex items-center gap-3 px-3 py-2 text-sm text-textSubtle hover:bg-surfaceSubtle rounded-md transition-colors"
                           >
                             <Flag className="h-4 w-4 flex-shrink-0" />
                             <div className="flex-1">
                               <div className="font-semibold">
                                 Race Day Shoes
                               </div>
-                              <div className="text-xs text-neutral-500 dark:text-neutral-400">
+                              <div className="text-xs text-textSubtler">
                                 Carbon plate shoes for PRs
                               </div>
                             </div>
                           </Link>
                           <Link
                             href="/gear/category/daily-trainers"
-                            className="flex items-center gap-3 px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-colors"
+                            className="flex items-center gap-3 px-3 py-2 text-sm text-textSubtle hover:bg-surfaceSubtle rounded-md transition-colors"
                           >
                             <Calendar className="h-4 w-4 flex-shrink-0" />
                             <div className="flex-1">
                               <div className="font-semibold">
                                 Daily Trainers
                               </div>
-                              <div className="text-xs text-neutral-500 dark:text-neutral-400">
+                              <div className="text-xs text-textSubtler">
                                 Everyday runners
                               </div>
                             </div>
                           </Link>
                           <Link
                             href="/gear/category/max-cushion-shoes"
-                            className="flex items-center gap-3 px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-colors"
+                            className="flex items-center gap-3 px-3 py-2 text-sm text-textSubtle hover:bg-surfaceSubtle rounded-md transition-colors"
                           >
                             <Footprints className="h-4 w-4 flex-shrink-0" />
                             <div className="flex-1">
                               <div className="font-semibold">Max Cushion</div>
-                              <div className="text-xs text-neutral-500 dark:text-neutral-400">
+                              <div className="text-xs text-textSubtler">
                                 Recovery and long runs
                               </div>
                             </div>
                           </Link>
                           <Link
                             href="/gear/category/tempo-shoes"
-                            className="flex items-center gap-3 px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-colors"
+                            className="flex items-center gap-3 px-3 py-2 text-sm text-textSubtle hover:bg-surfaceSubtle rounded-md transition-colors"
                           >
                             <Zap className="h-4 w-4 flex-shrink-0" />
                             <div className="flex-1">
                               <div className="font-semibold">Tempo Shoes</div>
-                              <div className="text-xs text-neutral-500 dark:text-neutral-400">
+                              <div className="text-xs text-textSubtler">
                                 Speed work essentials
                               </div>
                             </div>
                           </Link>
                           <Link
                             href="/gear/category/trail-shoes"
-                            className="flex items-center gap-3 px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-colors"
+                            className="flex items-center gap-3 px-3 py-2 text-sm text-textSubtle hover:bg-surfaceSubtle rounded-md transition-colors"
                           >
                             <MountainSnow className="h-4 w-4 flex-shrink-0" />
                             <div className="flex-1">
                               <div className="font-semibold">Trail Shoes</div>
-                              <div className="text-xs text-neutral-500 dark:text-neutral-400">
+                              <div className="text-xs text-textSubtler">
                                 Off-road adventures
                               </div>
                             </div>
                           </Link>
                           <Link
                             href="/gear/category/gps-watches"
-                            className="flex items-center gap-3 px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-colors"
+                            className="flex items-center gap-3 px-3 py-2 text-sm text-textSubtle hover:bg-surfaceSubtle rounded-md transition-colors"
                           >
                             <Watch className="h-4 w-4 flex-shrink-0" />
                             <div className="flex-1">
                               <div className="font-semibold">GPS Watches</div>
-                              <div className="text-xs text-neutral-500 dark:text-neutral-400">
+                              <div className="text-xs text-textSubtler">
                                 Track every mile
                               </div>
                             </div>
                           </Link>
                           <Link
                             href="/gear/category/nutrition"
-                            className="flex items-center gap-3 px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-colors"
+                            className="flex items-center gap-3 px-3 py-2 text-sm text-textSubtle hover:bg-surfaceSubtle rounded-md transition-colors"
                           >
                             <UtensilsCrossed className="h-4 w-4 flex-shrink-0" />
                             <div className="flex-1">
                               <div className="font-semibold">Nutrition</div>
-                              <div className="text-xs text-neutral-500 dark:text-neutral-400">
+                              <div className="text-xs text-textSubtler">
                                 Fuel for distance
                               </div>
                             </div>
@@ -472,7 +472,7 @@ export default function NavbarAlt({
                               href={`/gear/${featuredGear.slug.current}`}
                               className="group block rounded-lg overflow-hidden transition-transform hover:scale-[1.02]"
                             >
-                              <div className="relative w-full overflow-hidden bg-neutral-100 dark:bg-neutral-800">
+                              <div className="relative w-full overflow-hidden bg-surfaceSubtle">
                                 <div className="relative aspect-[16/9]">
                                   {featuredGear.mainImage ? (
                                     <Image
@@ -487,7 +487,7 @@ export default function NavbarAlt({
                                       className="object-cover"
                                     />
                                   ) : (
-                                    <div className="absolute inset-0 flex items-center justify-center text-xs text-neutral-400 dark:text-neutral-500">
+                                    <div className="absolute inset-0 flex items-center justify-center text-xs text-textSubtler">
                                       Image coming soon
                                     </div>
                                   )}
@@ -504,7 +504,7 @@ export default function NavbarAlt({
                               </div>
                             </Link>
                           ) : (
-                            <div className="flex aspect-[16/9] items-center justify-center rounded-lg bg-neutral-100 text-xs text-neutral-400 dark:bg-neutral-800 dark:text-neutral-600">
+                            <div className="flex aspect-[16/9] items-center justify-center rounded-lg bg-surfaceSubtle text-xs text-textSubtler">
                               No featured article
                             </div>
                           )}
@@ -516,7 +516,7 @@ export default function NavbarAlt({
 
                 {/* Races Dropdown */}
                 <NavigationMenu.Item value="races">
-                  <NavigationMenu.Trigger className="group relative flex items-center gap-1 px-3 py-2 text-sm font-semibold text-neutral-700 dark:text-neutral-300 transition-colors duration-200 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:text-neutral-900 dark:hover:text-white data-[state=open]:bg-neutral-100 dark:data-[state=open]:bg-neutral-800 data-[state=open]:text-neutral-900 dark:data-[state=open]:text-white">
+                  <NavigationMenu.Trigger className="group relative flex items-center gap-1 px-3 py-2 text-sm font-semibold text-textSubtle transition-colors duration-200 rounded-md hover:bg-surfaceSubtle hover:text-textDefault data-[state=open]:bg-surfaceSubtle data-[state=open]:text-textDefault">
                     Races
                     <motion.div
                       animate={{ rotate: navValue === "races" ? 180 : 0 }}
@@ -530,10 +530,10 @@ export default function NavbarAlt({
                       <div className="grid grid-cols-1 gap-4 lg:grid-cols-10 md:gap-6 lg:gap-8">
                         {/* Column 1: Description - 3/10 */}
                         <div className="lg:col-span-3 md:border-r md:border-borderSubtle md:pr-5">
-                          <h3 className="font-headline text-2xl font-bold text-neutral-900 dark:text-white mb-3">
+                          <h3 className="font-headline text-2xl font-bold text-textDefault mb-3">
                             Races
                           </h3>
-                          <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                          <p className="text-sm text-textSubtle leading-relaxed">
                             Find your next race with detailed race guides,
                             course analysis, and insider tips on thousands of
                             the world&apos;s greatest races
@@ -544,36 +544,36 @@ export default function NavbarAlt({
                         <div className="lg:col-span-3 flex flex-col gap-0.5 md:px-2">
                           <Link
                             href="/races"
-                            className="flex items-center gap-3 px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-colors"
+                            className="flex items-center gap-3 px-3 py-2 text-sm text-textSubtle hover:bg-surfaceSubtle rounded-md transition-colors"
                           >
                             <FileText className="h-4 w-4 flex-shrink-0" />
                             <div className="flex-1">
                               <div className="font-semibold">Race Guides</div>
-                              <div className="text-xs text-neutral-500 dark:text-neutral-400">
+                              <div className="text-xs text-textSubtler">
                                 Race profiles & analysis
                               </div>
                             </div>
                           </Link>
                           <Link
                             href="/races/calendar"
-                            className="flex items-center gap-3 px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-colors"
+                            className="flex items-center gap-3 px-3 py-2 text-sm text-textSubtle hover:bg-surfaceSubtle rounded-md transition-colors"
                           >
                             <Calendar className="h-4 w-4 flex-shrink-0" />
                             <div className="flex-1">
                               <div className="font-semibold">Race Calendar</div>
-                              <div className="text-xs text-neutral-500 dark:text-neutral-400">
+                              <div className="text-xs text-textSubtler">
                                 View races by date
                               </div>
                             </div>
                           </Link>
                           <Link
                             href="/races/database"
-                            className="flex items-center gap-3 px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-colors"
+                            className="flex items-center gap-3 px-3 py-2 text-sm text-textSubtle hover:bg-surfaceSubtle rounded-md transition-colors"
                           >
                             <Database className="h-4 w-4 flex-shrink-0" />
                             <div className="flex-1">
                               <div className="font-semibold">Race Database</div>
-                              <div className="text-xs text-neutral-500 dark:text-neutral-400">
+                              <div className="text-xs text-textSubtler">
                                 Search races worldwide
                               </div>
                             </div>
@@ -587,7 +587,7 @@ export default function NavbarAlt({
                               href={`/races/${featuredRace.slug.current}`}
                               className="group block rounded-lg overflow-hidden transition-transform hover:scale-[1.02]"
                             >
-                              <div className="relative w-full overflow-hidden bg-neutral-100 dark:bg-neutral-800">
+                              <div className="relative w-full overflow-hidden bg-surfaceSubtle">
                                 <div className="relative aspect-[16/9]">
                                   {featuredRace.mainImage ? (
                                     <Image
@@ -602,7 +602,7 @@ export default function NavbarAlt({
                                       className="object-cover"
                                     />
                                   ) : (
-                                    <div className="absolute inset-0 flex items-center justify-center text-xs text-neutral-400 dark:text-neutral-500">
+                                    <div className="absolute inset-0 flex items-center justify-center text-xs text-textSubtler">
                                       Image coming soon
                                     </div>
                                   )}
@@ -619,7 +619,7 @@ export default function NavbarAlt({
                               </div>
                             </Link>
                           ) : (
-                            <div className="flex aspect-[16/9] items-center justify-center rounded-lg bg-neutral-100 text-xs text-neutral-400 dark:bg-neutral-800 dark:text-neutral-600">
+                            <div className="flex aspect-[16/9] items-center justify-center rounded-lg bg-surfaceSubtle text-xs text-textSubtler">
                               No featured race
                             </div>
                           )}
@@ -634,7 +634,7 @@ export default function NavbarAlt({
                 className="pointer-events-none absolute top-full hidden h-2 translate-y-[6px] items-center justify-center overflow-hidden rounded-full data-[state=hidden]:animate-nav-indicator-out data-[state=visible]:animate-nav-indicator-in lg:flex"
                 style={{ zIndex: 60 }}
               >
-                <span className="h-[2px] w-full rounded-full bg-neutral-900/80 dark:bg-white/80" />
+                <span className="h-[2px] w-full rounded-full bg-asphalt-10/80 dark:bg-asphalt-90/80" />
               </NavigationMenu.Indicator>
 
               <div
@@ -666,7 +666,7 @@ export default function NavbarAlt({
                       : garageDoorCloseTransition
                   }
                 >
-                  <NavigationMenu.Viewport className="pointer-events-auto relative w-full h-[var(--radix-navigation-menu-viewport-height)] origin-top bg-white dark:bg-neutral-900 border-b border-borderSubtle shadow-[0_30px_60px_-40px_rgba(15,23,42,0.45)] transition-[height] duration-300 ease-out" />
+                  <NavigationMenu.Viewport className="pointer-events-auto relative w-full h-[var(--radix-navigation-menu-viewport-height)] origin-top bg-canvas border-b border-borderSubtle shadow-[0_30px_60px_-40px_rgba(15,23,42,0.45)] transition-[height] duration-300 ease-out" />
                 </motion.div>
               </div>
             </NavigationMenu.Root>
@@ -717,7 +717,7 @@ export default function NavbarAlt({
       <Dialog.Root open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
         <Dialog.Portal>
           <Dialog.Overlay className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40" />
-          <Dialog.Content className="fixed top-0 left-0 right-0 bottom-0 z-50 bg-white dark:bg-neutral-900 p-6 overflow-y-auto transition-colors duration-300">
+          <Dialog.Content className="fixed top-0 left-0 right-0 bottom-0 z-50 bg-canvas p-6 overflow-y-auto transition-colors duration-300">
             <Dialog.Title className="sr-only">Navigation Menu</Dialog.Title>
             <Dialog.Description className="sr-only">
               Main navigation menu for Distanz Running
@@ -759,35 +759,35 @@ export default function NavbarAlt({
                 <div className="space-y-4">
                   <Link
                     href="/articles/category/road"
-                    className="block text-xl font-semibold text-neutral-900 dark:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors py-2 px-3 rounded-lg"
+                    className="block text-xl font-semibold text-textDefault hover:bg-surfaceSubtle transition-colors py-2 px-3 rounded-lg"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     Road
                   </Link>
                   <Link
                     href="/articles/category/track"
-                    className="block text-xl font-semibold text-neutral-900 dark:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors py-2 px-3 rounded-lg"
+                    className="block text-xl font-semibold text-textDefault hover:bg-surfaceSubtle transition-colors py-2 px-3 rounded-lg"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     Track
                   </Link>
                   <Link
                     href="/articles/category/trail"
-                    className="block text-xl font-semibold text-neutral-900 dark:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors py-2 px-3 rounded-lg"
+                    className="block text-xl font-semibold text-textDefault hover:bg-surfaceSubtle transition-colors py-2 px-3 rounded-lg"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     Trail
                   </Link>
                   <button
                     onClick={() => setMobileSubMenu("gear")}
-                    className="flex items-center justify-between w-full text-xl font-semibold text-neutral-900 dark:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors py-2 px-3 rounded-lg"
+                    className="flex items-center justify-between w-full text-xl font-semibold text-textDefault hover:bg-surfaceSubtle transition-colors py-2 px-3 rounded-lg"
                   >
                     Gear
                     <ChevronDown className="h-5 w-5" />
                   </button>
                   <button
                     onClick={() => setMobileSubMenu("races")}
-                    className="flex items-center justify-between w-full text-xl font-semibold text-neutral-900 dark:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors py-2 px-3 rounded-lg"
+                    className="flex items-center justify-between w-full text-xl font-semibold text-textDefault hover:bg-surfaceSubtle transition-colors py-2 px-3 rounded-lg"
                   >
                     Races
                     <ChevronDown className="h-5 w-5" />
@@ -826,109 +826,109 @@ export default function NavbarAlt({
                   </Button>
                 </div>
 
-                <h2 className="text-2xl font-bold text-neutral-900 dark:text-white mb-6">
+                <h2 className="text-2xl font-bold text-textDefault mb-6">
                   Gear
                 </h2>
 
                 <div className="space-y-3">
                   <Link
                     href="/gear/category/race-day-shoes"
-                    className="flex items-center gap-3 p-3 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                    className="flex items-center gap-3 p-3 rounded-lg hover:bg-surfaceSubtle transition-colors"
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    <Flag className="h-5 w-5 text-neutral-500" />
+                    <Flag className="h-5 w-5 text-textSubtler" />
                     <div>
-                      <div className="font-semibold text-neutral-900 dark:text-white">
+                      <div className="font-semibold text-textDefault">
                         Race Day Shoes
                       </div>
-                      <div className="text-sm text-neutral-500">
+                      <div className="text-sm text-textSubtler">
                         Carbon plate shoes
                       </div>
                     </div>
                   </Link>
                   <Link
                     href="/gear/category/daily-trainers"
-                    className="flex items-center gap-3 p-3 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                    className="flex items-center gap-3 p-3 rounded-lg hover:bg-surfaceSubtle transition-colors"
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    <Calendar className="h-5 w-5 text-neutral-500" />
+                    <Calendar className="h-5 w-5 text-textSubtler" />
                     <div>
-                      <div className="font-semibold text-neutral-900 dark:text-white">
+                      <div className="font-semibold text-textDefault">
                         Daily Trainers
                       </div>
-                      <div className="text-sm text-neutral-500">
+                      <div className="text-sm text-textSubtler">
                         Everyday runners
                       </div>
                     </div>
                   </Link>
                   <Link
                     href="/gear/category/max-cushion-shoes"
-                    className="flex items-center gap-3 p-3 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                    className="flex items-center gap-3 p-3 rounded-lg hover:bg-surfaceSubtle transition-colors"
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    <Footprints className="h-5 w-5 text-neutral-500" />
+                    <Footprints className="h-5 w-5 text-textSubtler" />
                     <div>
-                      <div className="font-semibold text-neutral-900 dark:text-white">
+                      <div className="font-semibold text-textDefault">
                         Max Cushion
                       </div>
-                      <div className="text-sm text-neutral-500">
+                      <div className="text-sm text-textSubtler">
                         Recovery shoes
                       </div>
                     </div>
                   </Link>
                   <Link
                     href="/gear/category/tempo-shoes"
-                    className="flex items-center gap-3 p-3 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                    className="flex items-center gap-3 p-3 rounded-lg hover:bg-surfaceSubtle transition-colors"
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    <Zap className="h-5 w-5 text-neutral-500" />
+                    <Zap className="h-5 w-5 text-textSubtler" />
                     <div>
-                      <div className="font-semibold text-neutral-900 dark:text-white">
+                      <div className="font-semibold text-textDefault">
                         Tempo Shoes
                       </div>
-                      <div className="text-sm text-neutral-500">Speed work</div>
+                      <div className="text-sm text-textSubtler">Speed work</div>
                     </div>
                   </Link>
                   <Link
                     href="/gear/category/trail-shoes"
-                    className="flex items-center gap-3 p-3 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                    className="flex items-center gap-3 p-3 rounded-lg hover:bg-surfaceSubtle transition-colors"
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    <MountainSnow className="h-5 w-5 text-neutral-500" />
+                    <MountainSnow className="h-5 w-5 text-textSubtler" />
                     <div>
-                      <div className="font-semibold text-neutral-900 dark:text-white">
+                      <div className="font-semibold text-textDefault">
                         Trail Shoes
                       </div>
-                      <div className="text-sm text-neutral-500">Off-road</div>
+                      <div className="text-sm text-textSubtler">Off-road</div>
                     </div>
                   </Link>
-                  <div className="h-px bg-neutral-200 dark:bg-neutral-700 my-3" />
+                  <div className="h-px bg-borderSubtle my-3" />
                   <Link
                     href="/gear/category/gps-watches"
-                    className="flex items-center gap-3 p-3 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                    className="flex items-center gap-3 p-3 rounded-lg hover:bg-surfaceSubtle transition-colors"
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    <Watch className="h-5 w-5 text-neutral-500" />
+                    <Watch className="h-5 w-5 text-textSubtler" />
                     <div>
-                      <div className="font-semibold text-neutral-900 dark:text-white">
+                      <div className="font-semibold text-textDefault">
                         GPS Watches
                       </div>
-                      <div className="text-sm text-neutral-500">
+                      <div className="text-sm text-textSubtler">
                         Track every mile
                       </div>
                     </div>
                   </Link>
                   <Link
                     href="/gear/category/nutrition"
-                    className="flex items-center gap-3 p-3 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                    className="flex items-center gap-3 p-3 rounded-lg hover:bg-surfaceSubtle transition-colors"
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    <UtensilsCrossed className="h-5 w-5 text-neutral-500" />
+                    <UtensilsCrossed className="h-5 w-5 text-textSubtler" />
                     <div>
-                      <div className="font-semibold text-neutral-900 dark:text-white">
+                      <div className="font-semibold text-textDefault">
                         Nutrition
                       </div>
-                      <div className="text-sm text-neutral-500">
+                      <div className="text-sm text-textSubtler">
                         Fuel for distance
                       </div>
                     </div>
@@ -937,14 +937,14 @@ export default function NavbarAlt({
                   {/* Featured Gear Article */}
                   {featuredGear && (
                     <>
-                      <div className="h-px bg-neutral-200 dark:bg-neutral-700 my-3" />
+                      <div className="h-px bg-borderSubtle my-3" />
                       <div className="px-3 py-2">
                         <Link
                           href={`/gear/${featuredGear.slug.current}`}
                           className="block rounded-lg overflow-hidden hover:opacity-90 transition-opacity"
                           onClick={() => setMobileMenuOpen(false)}
                         >
-                          <div className="relative w-full overflow-hidden bg-neutral-100 dark:bg-neutral-800">
+                          <div className="relative w-full overflow-hidden bg-surfaceSubtle">
                             <div className="relative aspect-[16/9]">
                               {featuredGear.mainImage ? (
                                 <Image
@@ -959,7 +959,7 @@ export default function NavbarAlt({
                                   className="object-cover"
                                 />
                               ) : (
-                                <div className="absolute inset-0 flex items-center justify-center text-xs text-neutral-400 dark:text-neutral-500">
+                                <div className="absolute inset-0 flex items-center justify-center text-xs text-textSubtler">
                                   Image coming soon
                                 </div>
                               )}
@@ -996,52 +996,52 @@ export default function NavbarAlt({
                   </Button>
                 </div>
 
-                <h2 className="text-2xl font-bold text-neutral-900 dark:text-white mb-6">
+                <h2 className="text-2xl font-bold text-textDefault mb-6">
                   Races
                 </h2>
 
                 <div className="space-y-3">
                   <Link
                     href="/races"
-                    className="flex items-center gap-3 p-3 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                    className="flex items-center gap-3 p-3 rounded-lg hover:bg-surfaceSubtle transition-colors"
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    <FileText className="h-5 w-5 text-neutral-500" />
+                    <FileText className="h-5 w-5 text-textSubtler" />
                     <div>
-                      <div className="font-semibold text-neutral-900 dark:text-white">
+                      <div className="font-semibold text-textDefault">
                         Race Guides
                       </div>
-                      <div className="text-sm text-neutral-500">
+                      <div className="text-sm text-textSubtler">
                         Race profiles & analysis
                       </div>
                     </div>
                   </Link>
                   <Link
                     href="/races/calendar"
-                    className="flex items-center gap-3 p-3 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                    className="flex items-center gap-3 p-3 rounded-lg hover:bg-surfaceSubtle transition-colors"
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    <Calendar className="h-5 w-5 text-neutral-500" />
+                    <Calendar className="h-5 w-5 text-textSubtler" />
                     <div>
-                      <div className="font-semibold text-neutral-900 dark:text-white">
+                      <div className="font-semibold text-textDefault">
                         Race Calendar
                       </div>
-                      <div className="text-sm text-neutral-500">
+                      <div className="text-sm text-textSubtler">
                         View races by date
                       </div>
                     </div>
                   </Link>
                   <Link
                     href="/races/database"
-                    className="flex items-center gap-3 p-3 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                    className="flex items-center gap-3 p-3 rounded-lg hover:bg-surfaceSubtle transition-colors"
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    <Database className="h-5 w-5 text-neutral-500" />
+                    <Database className="h-5 w-5 text-textSubtler" />
                     <div>
-                      <div className="font-semibold text-neutral-900 dark:text-white">
+                      <div className="font-semibold text-textDefault">
                         Race Database
                       </div>
-                      <div className="text-sm text-neutral-500">
+                      <div className="text-sm text-textSubtler">
                         Search and compare races worldwide
                       </div>
                     </div>
@@ -1050,14 +1050,14 @@ export default function NavbarAlt({
                   {/* Featured Race */}
                   {featuredRace && (
                     <>
-                      <div className="h-px bg-neutral-200 dark:bg-neutral-700 my-3" />
+                      <div className="h-px bg-borderSubtle my-3" />
                       <div className="px-3 py-2">
                         <Link
                           href={`/races/${featuredRace.slug.current}`}
                           className="block rounded-lg overflow-hidden hover:opacity-90 transition-opacity"
                           onClick={() => setMobileMenuOpen(false)}
                         >
-                          <div className="relative w-full overflow-hidden bg-neutral-100 dark:bg-neutral-800">
+                          <div className="relative w-full overflow-hidden bg-surfaceSubtle">
                             <div className="relative aspect-[16/9]">
                               {featuredRace.mainImage ? (
                                 <Image
@@ -1072,7 +1072,7 @@ export default function NavbarAlt({
                                   className="object-cover"
                                 />
                               ) : (
-                                <div className="absolute inset-0 flex items-center justify-center text-xs text-neutral-400 dark:text-neutral-500">
+                                <div className="absolute inset-0 flex items-center justify-center text-xs text-textSubtler">
                                   Image coming soon
                                 </div>
                               )}
