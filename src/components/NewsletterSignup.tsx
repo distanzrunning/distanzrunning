@@ -91,7 +91,7 @@ export default function NewsletterSignup() {
   };
 
   return (
-    <div className="flex border-y border-borderSubtle bg-gradient-to-t from-asphalt-5 dark:from-asphalt-20/50 to-transparent py-12">
+    <div className="flex border-y border-borderSubtle bg-gradient-to-t from-asphalt-95 dark:from-asphalt-20/50 to-transparent py-12">
       <div className="mx-auto flex w-full max-w-7xl flex-col justify-center gap-7 px-4 sm:flex-row sm:items-center sm:justify-between">
         {/* Left: Heading and description */}
         <div className="flex flex-col gap-2">
