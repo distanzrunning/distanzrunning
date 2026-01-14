@@ -152,6 +152,7 @@ export default function NewsletterSignup() {
                   type="submit"
                   data-attr="newsletter-footer-submit"
                   disabled={!email || isSubmitting}
+                  className="w-full sm:w-auto shrink-0"
                 >
                   {isSubmitting ? "Subscribing..." : "Subscribe"}
                 </Button>
