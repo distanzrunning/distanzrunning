@@ -1316,6 +1316,7 @@ function ColorSwatch({
   value: string;
 }) {
   const { showToast } = React.useContext(ToastContext);
+  const [showTick, setShowTick] = useState(false);
 
   const handleCopy = useCallback(
     (e: React.MouseEvent) => {
@@ -1323,17 +1324,42 @@ function ColorSwatch({
       const tokenValue = `var(${cssVar})`;
       navigator.clipboard.writeText(tokenValue);
       showToast(`Copied ${tokenValue}`);
+
+      // Show tick briefly
+      setShowTick(true);
+      setTimeout(() => setShowTick(false), 600);
     },
     [cssVar, showToast],
   );
 
   return (
     <button
-      className="w-full aspect-square md:h-10 md:aspect-auto rounded-sm cursor-copy transition-transform hover:scale-105 shadow-[inset_0_0_0_1px_rgba(0,0,0,0.1)] dark:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.1)]"
+      className="relative w-full aspect-square md:h-10 md:aspect-auto rounded-sm cursor-copy shadow-[inset_0_0_0_1px_rgba(0,0,0,0.1)] dark:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.1)]"
       style={{ backgroundColor: `var(${cssVar})` }}
       onClick={handleCopy}
       onContextMenu={handleCopy}
-    />
+    >
+      {/* Tick icon on copy */}
+      <span
+        className={`absolute inset-0 flex items-center justify-center transition-opacity duration-150 ${
+          showTick ? "opacity-100" : "opacity-0"
+        }`}
+      >
+        <svg
+          height="16"
+          viewBox="0 0 16 16"
+          width="16"
+          className="text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]"
+        >
+          <path
+            fillRule="evenodd"
+            clipRule="evenodd"
+            d="M13.7803 4.21967L14.3107 4.75L6.81066 12.25L1.68934 7.12868L2.21967 6.59835L6.28033 10.659L6.81066 11.1893L7.34099 10.659L13.7803 4.21967Z"
+            fill="currentColor"
+          />
+        </svg>
+      </span>
+    </button>
   );
 }
 
