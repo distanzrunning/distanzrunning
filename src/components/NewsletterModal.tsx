@@ -1,111 +1,120 @@
-'use client'
+"use client";
 
-import { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import Image from 'next/image'
-import posthog from 'posthog-js'
-import { Loader2 } from 'lucide-react'
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
+import posthog from "posthog-js";
+import { Loader2 } from "lucide-react";
 
 type NewsletterModalProps = {
-  isOpen: boolean
-  onClose: () => void
-}
+  isOpen: boolean;
+  onClose: () => void;
+};
 
 export function NewsletterModal({ isOpen, onClose }: NewsletterModalProps) {
-  const [email, setEmail] = useState('')
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [isSubmitted, setIsSubmitted] = useState(false)
-  const [error, setError] = useState('')
-  const [imageLoaded, setImageLoaded] = useState(false)
+  const [email, setEmail] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [error, setError] = useState("");
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   // Combined effect: handle body scroll lock, escape key, and form reset
   useEffect(() => {
-    if (!isOpen) return
+    if (!isOpen) return;
 
     // Lock body scroll
-    document.body.style.overflow = 'hidden'
+    document.body.style.overflow = "hidden";
 
     // Reset form state
-    setEmail('')
-    setIsSubmitted(false)
-    setError('')
-    setIsSubmitting(false)
-    setImageLoaded(false)
+    setEmail("");
+    setIsSubmitted(false);
+    setError("");
+    setIsSubmitting(false);
+    setImageLoaded(false);
 
     // Setup escape key handler
     const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        onClose()
+      if (e.key === "Escape") {
+        onClose();
       }
-    }
+    };
 
-    document.addEventListener('keydown', handleEscape)
+    document.addEventListener("keydown", handleEscape);
 
     // Cleanup function
     return () => {
-      document.body.style.overflow = 'unset'
-      document.removeEventListener('keydown', handleEscape)
-    }
-  }, [isOpen, onClose])
+      document.body.style.overflow = "unset";
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, [isOpen, onClose]);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    
+    e.preventDefault();
+
     if (!email) {
-      setError('Please enter your email address')
-      return
+      setError("Please enter your email address");
+      return;
     }
 
-    setIsSubmitting(true)
-    setError('')
+    setIsSubmitting(true);
+    setError("");
 
     try {
-      const response = await fetch('/api/subscribe', {
-        method: 'POST',
+      const response = await fetch("/api/subscribe", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          email: email
-        })
-      })
+          email: email,
+        }),
+      });
 
-      const data = await response.json()
+      const data = await response.json();
 
       if (response.ok) {
         // Track successful newsletter signup in PostHog
-        posthog.capture('newsletter_signup', {
-          location: 'modal',
-          email_domain: email.split('@')[1], // Track domain without PII
-          source: 'newsletter_modal'
-        })
+        posthog.capture("newsletter_signup", {
+          location: "modal",
+          email_domain: email.split("@")[1], // Track domain without PII
+          source: "newsletter_modal",
+        });
 
-        setIsSubmitted(true)
-        setEmail('')
+        setIsSubmitted(true);
+        setEmail("");
         // Close modal after 3 seconds
         setTimeout(() => {
-          onClose()
-        }, 3000)
+          onClose();
+        }, 3000);
       } else {
         // Handle complex error objects from API
-        let errorMessage = 'Something went wrong. Please try again.'
-        
+        let errorMessage = "Something went wrong. Please try again.";
+
         if (data.error) {
-          errorMessage = typeof data.error === 'string' ? data.error : JSON.stringify(data.error)
+          errorMessage =
+            typeof data.error === "string"
+              ? data.error
+              : JSON.stringify(data.error);
         } else if (data.detail) {
-          errorMessage = typeof data.detail === 'string' ? data.detail : JSON.stringify(data.detail)
+          errorMessage =
+            typeof data.detail === "string"
+              ? data.detail
+              : JSON.stringify(data.detail);
         } else if (data.message) {
-          errorMessage = typeof data.message === 'string' ? data.message : JSON.stringify(data.message)
+          errorMessage =
+            typeof data.message === "string"
+              ? data.message
+              : JSON.stringify(data.message);
         }
-        
-        setError(errorMessage)
+
+        setError(errorMessage);
       }
     } catch (err) {
-      setError('Network error. Please check your connection and try again.')
+      setError("Network error. Please check your connection and try again.");
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
 
   return (
     <AnimatePresence>
@@ -126,15 +135,15 @@ export function NewsletterModal({ isOpen, onClose }: NewsletterModalProps) {
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            transition={{ duration: 0.2, ease: 'easeOut' }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
             className="fixed inset-0 z-50 flex items-center justify-center p-6 sm:p-4"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="border border-neutral-200 dark:border-neutral-700 bg-white/95 dark:bg-neutral-800/95 backdrop-blur-sm backdrop-saturate-150 rounded-2xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-hidden relative transition-colors duration-300">
+            <div className="border border-borderSubtle bg-surface/95 backdrop-blur-sm backdrop-saturate-150 rounded-2xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-hidden relative transition-colors duration-300">
               {/* Loading spinner - covers entire modal until image loads */}
               {!imageLoaded && (
-                <div className="absolute inset-0 flex items-center justify-center z-50 bg-neutral-900 rounded-2xl">
-                  <Loader2 className="w-8 h-8 text-white animate-spin" />
+                <div className="absolute inset-0 flex items-center justify-center z-50 bg-asphalt-10 rounded-2xl">
+                  <Loader2 className="w-8 h-8 text-asphalt-90 animate-spin" />
                 </div>
               )}
 
@@ -160,8 +169,7 @@ export function NewsletterModal({ isOpen, onClose }: NewsletterModalProps) {
               </button>
 
               {/* Hero section with optimized background image and white logo */}
-              <div className="relative h-48 bg-neutral-900 overflow-hidden">
-
+              <div className="relative h-48 bg-asphalt-10 overflow-hidden">
                 {/* Optimized background image - Using JPEG (337KB vs 1.6MB PNG) */}
                 <Image
                   src="/images/berlin_cover.jpg"
@@ -192,11 +200,12 @@ export function NewsletterModal({ isOpen, onClose }: NewsletterModalProps) {
 
               {/* Content section */}
               <div className="px-8 pt-6 pb-6 text-center">
-                <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-2 transition-colors duration-300">
+                <h2 className="text-2xl font-semibold text-textDefault mb-2 transition-colors duration-300">
                   Stay in the Loop
                 </h2>
-                <p className="text-gray-600 dark:text-neutral-300 text-sm leading-relaxed mb-6 transition-colors duration-300">
-                  A curated set of running stories, gear reviews, and race guides every other week.
+                <p className="text-textSubtle text-sm leading-relaxed mb-6 transition-colors duration-300">
+                  A curated set of running stories, gear reviews, and race
+                  guides every other week.
                 </p>
 
                 {isSubmitted ? (
@@ -205,12 +214,24 @@ export function NewsletterModal({ isOpen, onClose }: NewsletterModalProps) {
                     animate={{ opacity: 1, y: 0 }}
                     className="text-center py-8"
                   >
-                    <div className="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <svg className="w-8 h-8 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    <div className="w-16 h-16 bg-success-bg-subtle rounded-full flex items-center justify-center mx-auto mb-4">
+                      <svg
+                        className="w-8 h-8 text-success-text"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M5 13l4 4L19 7"
+                        />
                       </svg>
                     </div>
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Welcome to the team!</h3>
+                    <h3 className="text-lg font-semibold text-textDefault mb-2">
+                      Welcome to the team!
+                    </h3>
                   </motion.div>
                 ) : (
                   <form onSubmit={handleSubmit} className="space-y-4">
@@ -220,42 +241,52 @@ export function NewsletterModal({ isOpen, onClose }: NewsletterModalProps) {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="Email Address"
-                        className="w-full px-4 py-3 border border-gray-200 dark:border-neutral-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-neutral-300 dark:focus:ring-neutral-500 focus:border-transparent text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-neutral-400 bg-white dark:bg-neutral-700 font-sans transition-colors duration-300"
-                        style={{ fontSize: '15px', lineHeight: '1.5' }}
+                        className="w-full px-4 py-3 border border-borderDefault rounded-lg focus:outline-none focus:ring-2 focus:ring-asphalt-60 dark:focus:ring-asphalt-40 focus:border-transparent text-textDefault placeholder-textSubtler bg-surface font-sans transition-colors duration-300"
+                        style={{ fontSize: "15px", lineHeight: "1.5" }}
                         required
                         disabled={isSubmitting}
                       />
                     </div>
-                    
+
                     {error && (
                       <motion.p
                         initial={{ opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="text-red-600 dark:text-red-400 text-sm text-left"
+                        className="text-error-text text-sm text-left"
                       >
                         {error}
                       </motion.p>
                     )}
-                    
+
                     <button
                       type="submit"
                       disabled={isSubmitting}
                       data-attr="newsletter-modal-submit"
-                      className="w-full bg-black dark:bg-white text-white dark:text-gray-900 font-medium py-3 px-4 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors focus:outline-none font-sans disabled:opacity-50 disabled:cursor-not-allowed"
-                      style={{ fontSize: '15px', lineHeight: '1.5' }}
+                      className="w-full bg-asphalt-10 dark:bg-asphalt-90 text-textInverted font-medium py-3 px-4 rounded-lg hover:bg-asphalt-20 dark:hover:bg-asphalt-80 transition-colors focus:outline-none font-sans disabled:opacity-50 disabled:cursor-not-allowed"
+                      style={{ fontSize: "15px", lineHeight: "1.5" }}
                     >
-                      {isSubmitting ? 'Subscribing...' : 'Subscribe'}
+                      {isSubmitting ? "Subscribing..." : "Subscribe"}
                     </button>
 
-                    <p className="text-xs text-gray-500 dark:text-neutral-400 text-center mt-3">
-                      This site is protected by reCAPTCHA and the Google{' '}
-                      <a href="https://policies.google.com/privacy" className="underline hover:text-gray-700 dark:hover:text-neutral-300 transition-colors" target="_blank" rel="noopener noreferrer">
+                    <p className="text-xs text-textSubtler text-center mt-3">
+                      This site is protected by reCAPTCHA and the Google{" "}
+                      <a
+                        href="https://policies.google.com/privacy"
+                        className="underline hover:text-textSubtle transition-colors"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
                         Privacy Policy
-                      </a>{' '}
-                      and{' '}
-                      <a href="https://policies.google.com/terms" className="underline hover:text-gray-700 dark:hover:text-neutral-300 transition-colors" target="_blank" rel="noopener noreferrer">
+                      </a>{" "}
+                      and{" "}
+                      <a
+                        href="https://policies.google.com/terms"
+                        className="underline hover:text-textSubtle transition-colors"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
                         Terms of Service
-                      </a>{' '}
+                      </a>{" "}
                       apply.
                     </p>
                   </form>
@@ -264,7 +295,7 @@ export function NewsletterModal({ isOpen, onClose }: NewsletterModalProps) {
 
               {/* Footer */}
               <div className="px-8 pb-8">
-                <p className="text-xs text-gray-500 dark:text-neutral-400 text-center transition-colors duration-300">
+                <p className="text-xs text-textSubtler text-center transition-colors duration-300">
                   No spam, ever. Unsubscribe at any time.
                 </p>
               </div>
@@ -273,20 +304,20 @@ export function NewsletterModal({ isOpen, onClose }: NewsletterModalProps) {
         </>
       )}
     </AnimatePresence>
-  )
+  );
 }
 
 export function NewsletterButton() {
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleOpenModal = () => {
     // Track when newsletter modal is opened
-    posthog.capture('newsletter_modal_opened', {
-      location: 'homepage'
-    })
-    setIsModalOpen(true)
-  }
-  const handleCloseModal = () => setIsModalOpen(false)
+    posthog.capture("newsletter_modal_opened", {
+      location: "homepage",
+    });
+    setIsModalOpen(true);
+  };
+  const handleCloseModal = () => setIsModalOpen(false);
 
   return (
     <>
@@ -294,16 +325,15 @@ export function NewsletterButton() {
         <button
           onClick={handleOpenModal}
           data-attr="newsletter-modal-open"
-          className="group whitespace-nowrap font-medium text-sm relative m-0 flex cursor-pointer select-none items-center rounded-lg border-none p-0 no-underline outline-none ease-out focus-visible:outline-none active:scale-[0.98] active:duration-100 h-12 gap-2 px-5 justify-center bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200"
+          className="group whitespace-nowrap font-medium text-sm relative m-0 flex cursor-pointer select-none items-center rounded-lg border-none p-0 no-underline outline-none ease-out focus-visible:outline-none active:scale-[0.98] active:duration-100 h-12 gap-2 px-5 justify-center bg-asphalt-10 dark:bg-asphalt-90 text-textInverted hover:bg-asphalt-20 dark:hover:bg-asphalt-80"
         >
-          <span className="font-sans font-semibold text-sm leading-snug">Newsletter</span>
+          <span className="font-sans font-semibold text-sm leading-snug">
+            Newsletter
+          </span>
         </button>
       </div>
 
-      <NewsletterModal
-        isOpen={isModalOpen}
-        onClose={handleCloseModal}
-      />
+      <NewsletterModal isOpen={isModalOpen} onClose={handleCloseModal} />
     </>
-  )
+  );
 }
