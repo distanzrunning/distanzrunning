@@ -5,7 +5,7 @@ export interface IconButtonProps
   /** Icon element (typically an SVG or Lucide icon) */
   children: ReactNode;
   /** Visual style variant */
-  variant?: "primary" | "secondary";
+  variant?: "primary" | "secondary" | "tertiary";
   /** Use inverse colors for dark backgrounds */
   inverse?: boolean;
   /** Size variant - default (40px) or small (32px) */
@@ -94,6 +94,14 @@ const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
           // Secondary disabled
           return "bg-transparent text-asphalt-60 dark:text-asphalt-50 cursor-not-allowed";
         }
+        if (variant === "tertiary") {
+          if (inverse) {
+            // Inverse tertiary disabled: for dark backgrounds
+            return "bg-transparent text-asphalt-50 cursor-not-allowed";
+          }
+          // Tertiary disabled
+          return "bg-transparent text-asphalt-70 dark:text-asphalt-50 cursor-not-allowed";
+        }
       }
 
       if (variant === "primary") {
@@ -118,6 +126,18 @@ const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
           return "bg-transparent text-asphalt-10 hover:bg-asphalt-95/50";
         }
         return "bg-transparent text-asphalt-10 dark:text-asphalt-95 hover:bg-asphalt-95/50 dark:hover:bg-asphalt-20/30";
+      }
+
+      if (variant === "tertiary") {
+        if (inverse) {
+          // Inverse tertiary: muted icon for dark backgrounds, intensifies on hover
+          return "bg-transparent text-asphalt-80 hover:text-asphalt-95 hover:bg-asphalt-20/30";
+        }
+        // Tertiary: muted icon that intensifies on hover
+        if (ignoreDarkMode) {
+          return "bg-transparent text-asphalt-40 hover:text-asphalt-10 hover:bg-asphalt-95/50";
+        }
+        return "bg-transparent text-asphalt-40 dark:text-asphalt-60 hover:text-asphalt-10 dark:hover:text-asphalt-95 hover:bg-asphalt-95/50 dark:hover:bg-asphalt-20/30";
       }
 
       return "";

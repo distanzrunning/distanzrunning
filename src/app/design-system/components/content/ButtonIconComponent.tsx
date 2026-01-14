@@ -7,7 +7,13 @@ import { Search } from "lucide-react";
 interface VariantShowcaseProps {
   title: string;
   id: string;
-  variant: "primary" | "secondary" | "inverse" | "inverse-secondary";
+  variant:
+    | "primary"
+    | "secondary"
+    | "tertiary"
+    | "inverse"
+    | "inverse-secondary"
+    | "inverse-tertiary";
   code: string;
   inverse?: boolean;
 }
@@ -104,7 +110,9 @@ function VariantShowcase({
             variant={
               variant === "secondary" || variant === "inverse-secondary"
                 ? "secondary"
-                : "primary"
+                : variant === "tertiary" || variant === "inverse-tertiary"
+                  ? "tertiary"
+                  : "primary"
             }
             inverse={inverse}
             ignoreDarkMode
@@ -248,6 +256,27 @@ export default function ButtonIconComponent() {
           id="variants-inverse-secondary"
           variant="inverse-secondary"
           code={`<IconButton variant="secondary" inverse aria-label="Search">
+  <SearchIcon />
+</IconButton>`}
+          inverse
+        />
+
+        {/* Tertiary */}
+        <VariantShowcase
+          title="Tertiary"
+          id="variants-tertiary"
+          variant="tertiary"
+          code={`<IconButton variant="tertiary" aria-label="Search">
+  <SearchIcon />
+</IconButton>`}
+        />
+
+        {/* Inverse Tertiary */}
+        <VariantShowcase
+          title="Inverse, Tertiary"
+          id="variants-inverse-tertiary"
+          variant="inverse-tertiary"
+          code={`<IconButton variant="tertiary" inverse aria-label="Search">
   <SearchIcon />
 </IconButton>`}
           inverse
@@ -424,7 +453,8 @@ export default function ButtonIconComponent() {
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">variant</td>
                 <td className="py-3 px-4">
-                  &apos;primary&apos; | &apos;secondary&apos;
+                  &apos;primary&apos; | &apos;secondary&apos; |
+                  &apos;tertiary&apos;
                 </td>
                 <td className="py-3 px-4">&apos;primary&apos;</td>
               </tr>
@@ -557,6 +587,53 @@ export default function ButtonIconComponent() {
                 <td className="py-3 pr-4">Default (dark)</td>
                 <td className="py-3 px-4 font-mono">transparent</td>
                 <td className="py-3 px-4 font-mono">asphalt-95</td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4">Hover (dark)</td>
+                <td className="py-3 px-4 font-mono">asphalt-20/30</td>
+                <td className="py-3 px-4 font-mono">asphalt-95</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3
+          id="colours-tertiary"
+          className="font-serif text-[22px] leading-[1.3] font-medium mb-3 scroll-mt-32"
+        >
+          Tertiary icon button
+        </h3>
+
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse">
+            <thead>
+              <tr className="border-b border-borderDefault">
+                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                  State
+                </th>
+                <th className="text-left py-3 px-4 font-semibold text-sm">
+                  Background
+                </th>
+                <th className="text-left py-3 px-4 font-semibold text-sm">
+                  Icon
+                </th>
+              </tr>
+            </thead>
+            <tbody className="text-sm">
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4">Default (light)</td>
+                <td className="py-3 px-4 font-mono">transparent</td>
+                <td className="py-3 px-4 font-mono">asphalt-40</td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4">Hover (light)</td>
+                <td className="py-3 px-4 font-mono">asphalt-95/50</td>
+                <td className="py-3 px-4 font-mono">asphalt-10</td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4">Default (dark)</td>
+                <td className="py-3 px-4 font-mono">transparent</td>
+                <td className="py-3 px-4 font-mono">asphalt-60</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Hover (dark)</td>

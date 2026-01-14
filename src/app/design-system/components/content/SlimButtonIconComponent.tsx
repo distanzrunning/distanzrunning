@@ -7,7 +7,13 @@ import { Search } from "lucide-react";
 interface VariantShowcaseProps {
   title: string;
   id: string;
-  variant: "primary" | "secondary" | "inverse" | "inverse-secondary";
+  variant:
+    | "primary"
+    | "secondary"
+    | "tertiary"
+    | "inverse"
+    | "inverse-secondary"
+    | "inverse-tertiary";
   code: string;
   inverse?: boolean;
 }
@@ -98,7 +104,9 @@ function VariantShowcase({
             variant={
               variant === "secondary" || variant === "inverse-secondary"
                 ? "secondary"
-                : "primary"
+                : variant === "tertiary" || variant === "inverse-tertiary"
+                  ? "tertiary"
+                  : "primary"
             }
             inverse={inverse}
             ignoreDarkMode
@@ -240,6 +248,27 @@ export default function SlimButtonIconComponent() {
 </IconButton>`}
           inverse
         />
+
+        {/* Tertiary */}
+        <VariantShowcase
+          title="Tertiary"
+          id="variants-tertiary"
+          variant="tertiary"
+          code={`<IconButton size="small" variant="tertiary" aria-label="Search">
+  <SearchIcon />
+</IconButton>`}
+        />
+
+        {/* Inverse Tertiary */}
+        <VariantShowcase
+          title="Inverse, Tertiary"
+          id="variants-inverse-tertiary"
+          variant="inverse-tertiary"
+          code={`<IconButton size="small" variant="tertiary" inverse aria-label="Search">
+  <SearchIcon />
+</IconButton>`}
+          inverse
+        />
       </section>
 
       <hr className="border-t-4 border-textDefault" />
@@ -327,7 +356,8 @@ export default function SlimButtonIconComponent() {
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">variant</td>
                 <td className="py-3 px-4">
-                  &apos;primary&apos; | &apos;secondary&apos;
+                  &apos;primary&apos; | &apos;secondary&apos; |
+                  &apos;tertiary&apos;
                 </td>
                 <td className="py-3 px-4">&apos;primary&apos;</td>
               </tr>

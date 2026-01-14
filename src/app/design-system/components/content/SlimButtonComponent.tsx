@@ -6,7 +6,13 @@ import Button from "@/components/ui/Button";
 interface VariantShowcaseProps {
   title: string;
   id: string;
-  variant: "primary" | "secondary" | "inverse" | "inverse-secondary";
+  variant:
+    | "primary"
+    | "secondary"
+    | "tertiary"
+    | "inverse"
+    | "inverse-secondary"
+    | "inverse-tertiary";
   code: string;
   inverse?: boolean;
 }
@@ -79,7 +85,9 @@ function VariantShowcase({
             variant={
               variant === "secondary" || variant === "inverse-secondary"
                 ? "secondary"
-                : "primary"
+                : variant === "tertiary" || variant === "inverse-tertiary"
+                  ? "tertiary"
+                  : "primary"
             }
             inverse={inverse}
             ignoreDarkMode
@@ -221,6 +229,23 @@ export default function SlimButtonComponent() {
           code={`<Button size="slim" variant="secondary" inverse>Slim button</Button>`}
           inverse
         />
+
+        {/* Tertiary */}
+        <VariantShowcase
+          title="Tertiary"
+          id="variants-tertiary"
+          variant="tertiary"
+          code={`<Button size="slim" variant="tertiary">Slim button</Button>`}
+        />
+
+        {/* Inverse Tertiary */}
+        <VariantShowcase
+          title="Inverse, Tertiary"
+          id="variants-inverse-tertiary"
+          variant="inverse-tertiary"
+          code={`<Button size="slim" variant="tertiary" inverse>Slim button</Button>`}
+          inverse
+        />
       </section>
 
       <hr className="border-t-4 border-textDefault" />
@@ -360,7 +385,8 @@ export default function SlimButtonComponent() {
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">variant</td>
                 <td className="py-3 px-4">
-                  &apos;primary&apos; | &apos;secondary&apos;
+                  &apos;primary&apos; | &apos;secondary&apos; |
+                  &apos;tertiary&apos;
                 </td>
                 <td className="py-3 px-4">&apos;primary&apos;</td>
               </tr>
