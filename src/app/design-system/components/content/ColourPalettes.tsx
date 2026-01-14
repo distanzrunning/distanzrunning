@@ -1346,10 +1346,10 @@ function ColorSwatch({
         }`}
       >
         <svg
-          height="16"
+          height="24"
           viewBox="0 0 16 16"
-          width="16"
-          className="text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]"
+          width="24"
+          className="text-gray-900 dark:text-white drop-shadow-[0_1px_3px_rgba(255,255,255,0.8)] dark:drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]"
         >
           <path
             fillRule="evenodd"
