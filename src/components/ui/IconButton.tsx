@@ -89,10 +89,10 @@ const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
         if (variant === "secondary") {
           if (inverse) {
             // Inverse secondary disabled: for dark backgrounds (no dark mode switch)
-            return "bg-transparent text-asphalt-50 cursor-not-allowed";
+            return "bg-transparent border border-asphalt-30 text-asphalt-50 cursor-not-allowed";
           }
           // Secondary disabled
-          return "bg-transparent text-asphalt-60 dark:text-asphalt-50 cursor-not-allowed";
+          return "bg-transparent border border-asphalt-80 dark:border-asphalt-30 text-asphalt-60 dark:text-asphalt-50 cursor-not-allowed";
         }
         if (variant === "tertiary") {
           if (inverse) {
@@ -119,13 +119,13 @@ const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
       if (variant === "secondary") {
         if (inverse) {
           // Inverse secondary: for dark backgrounds
-          return "bg-transparent text-asphalt-95 hover:bg-asphalt-20/30";
+          return "bg-transparent border border-white text-white hover:bg-white/10";
         }
         // Secondary: blends with theme
         if (ignoreDarkMode) {
-          return "bg-transparent text-asphalt-10 hover:bg-asphalt-95/50";
+          return "bg-transparent border border-asphalt-70 text-asphalt-10 hover:border-asphalt-40 hover:bg-asphalt-95/50";
         }
-        return "bg-transparent text-asphalt-10 dark:text-asphalt-95 hover:bg-asphalt-95/50 dark:hover:bg-asphalt-20/30";
+        return "bg-transparent border border-asphalt-70 dark:border-asphalt-40 text-asphalt-10 dark:text-asphalt-95 hover:border-asphalt-40 dark:hover:border-asphalt-60 hover:bg-asphalt-95/50 dark:hover:bg-asphalt-20/30";
       }
 
       if (variant === "tertiary") {

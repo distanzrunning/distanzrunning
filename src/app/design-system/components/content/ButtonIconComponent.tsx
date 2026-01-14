@@ -568,6 +568,9 @@ export default function ButtonIconComponent() {
                   Background
                 </th>
                 <th className="text-left py-3 px-4 font-semibold text-sm">
+                  Border
+                </th>
+                <th className="text-left py-3 px-4 font-semibold text-sm">
                   Icon
                 </th>
               </tr>
@@ -576,21 +579,25 @@ export default function ButtonIconComponent() {
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Default (light)</td>
                 <td className="py-3 px-4 font-mono">transparent</td>
+                <td className="py-3 px-4 font-mono">asphalt-70</td>
                 <td className="py-3 px-4 font-mono">asphalt-10</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Hover (light)</td>
                 <td className="py-3 px-4 font-mono">asphalt-95/50</td>
+                <td className="py-3 px-4 font-mono">asphalt-40</td>
                 <td className="py-3 px-4 font-mono">asphalt-10</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Default (dark)</td>
                 <td className="py-3 px-4 font-mono">transparent</td>
+                <td className="py-3 px-4 font-mono">asphalt-40</td>
                 <td className="py-3 px-4 font-mono">asphalt-95</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Hover (dark)</td>
                 <td className="py-3 px-4 font-mono">asphalt-20/30</td>
+                <td className="py-3 px-4 font-mono">asphalt-60</td>
                 <td className="py-3 px-4 font-mono">asphalt-95</td>
               </tr>
             </tbody>
