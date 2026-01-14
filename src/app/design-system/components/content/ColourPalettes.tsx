@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, useRef } from "react";
 
 // Link icon for section headers
 function LinkIcon() {
@@ -1206,69 +1206,134 @@ const accentScales: ColorScale[] = [
   },
 ];
 
-// Tooltip component
-function Tooltip({
-  children,
-  content,
+// Toast context for showing copy notifications
+const ToastContext = React.createContext<{
+  showToast: (message: string) => void;
+}>({
+  showToast: () => {},
+});
+
+// Toast component
+function Toast({
+  message,
   visible,
+  onDismiss,
 }: {
-  children: React.ReactNode;
-  content: React.ReactNode;
+  message: string;
   visible: boolean;
+  onDismiss: () => void;
 }) {
   return (
-    <div className="relative">
-      {children}
-      {visible && (
-        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-50 pointer-events-none">
-          <div className="bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-xs px-2 py-1 rounded whitespace-nowrap shadow-lg">
-            {content}
-          </div>
-          <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900 dark:border-t-gray-100" />
-        </div>
-      )}
+    <div
+      className={`fixed bottom-4 left-4 z-50 transition-all duration-300 ${
+        visible
+          ? "opacity-100 translate-y-0"
+          : "opacity-0 translate-y-2 pointer-events-none"
+      }`}
+    >
+      <div
+        className="flex items-center gap-3 px-4 py-3 rounded-lg shadow-lg border border-borderDefault"
+        style={{
+          background: "var(--ds-background-100)",
+        }}
+        role="status"
+        aria-live="polite"
+      >
+        <span className="text-sm text-textDefault">{message}</span>
+        <button
+          type="button"
+          onClick={onDismiss}
+          aria-label="Dismiss toast"
+          className="p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+        >
+          <svg
+            height="16"
+            strokeLinejoin="round"
+            viewBox="0 0 16 16"
+            width="16"
+            style={{ color: "currentcolor" }}
+          >
+            <path
+              fillRule="evenodd"
+              clipRule="evenodd"
+              d="M12.4697 13.5303L13 14.0607L14.0607 13L13.5303 12.4697L9.06065 7.99999L13.5303 3.53032L14.0607 2.99999L13 1.93933L12.4697 2.46966L7.99999 6.93933L3.53032 2.46966L2.99999 1.93933L1.93933 2.99999L2.46966 3.53032L6.93933 7.99999L2.46966 12.4697L1.93933 13L2.99999 14.0607L3.53032 13.5303L7.99999 9.06065L12.4697 13.5303Z"
+              fill="currentColor"
+            />
+          </svg>
+        </button>
+      </div>
     </div>
+  );
+}
+
+// Toast provider component
+function ToastProvider({ children }: { children: React.ReactNode }) {
+  const [toast, setToast] = useState<{ message: string; visible: boolean }>({
+    message: "",
+    visible: false,
+  });
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const showToast = useCallback((message: string) => {
+    // Clear any existing timeout
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+
+    setToast({ message, visible: true });
+
+    // Auto-hide after 2 seconds
+    timeoutRef.current = setTimeout(() => {
+      setToast((prev) => ({ ...prev, visible: false }));
+    }, 2000);
+  }, []);
+
+  const dismissToast = useCallback(() => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    setToast((prev) => ({ ...prev, visible: false }));
+  }, []);
+
+  return (
+    <ToastContext.Provider value={{ showToast }}>
+      {children}
+      <Toast
+        message={toast.message}
+        visible={toast.visible}
+        onDismiss={dismissToast}
+      />
+    </ToastContext.Provider>
   );
 }
 
 // Color swatch component
 function ColorSwatch({
-  step,
   cssVar,
-  value,
 }: {
   step: number;
   cssVar: string;
   value: string;
 }) {
-  const [showTooltip, setShowTooltip] = useState(false);
-  const [copied, setCopied] = useState(false);
+  const { showToast } = React.useContext(ToastContext);
 
   const handleCopy = useCallback(
     (e: React.MouseEvent) => {
       e.preventDefault();
-      navigator.clipboard.writeText(value);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1500);
+      const tokenValue = `var(${cssVar})`;
+      navigator.clipboard.writeText(tokenValue);
+      showToast(`Copied ${tokenValue}`);
     },
-    [value],
+    [cssVar, showToast],
   );
 
   return (
-    <Tooltip
-      content={copied ? "Copied!" : `${step}: ${value}`}
-      visible={showTooltip || copied}
-    >
-      <button
-        className="w-full aspect-square md:h-10 md:aspect-auto rounded-sm cursor-copy transition-transform hover:scale-105 shadow-[inset_0_0_0_1px_rgba(0,0,0,0.1)] dark:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.1)]"
-        style={{ backgroundColor: `var(${cssVar})` }}
-        onClick={handleCopy}
-        onContextMenu={handleCopy}
-        onMouseEnter={() => setShowTooltip(true)}
-        onMouseLeave={() => setShowTooltip(false)}
-        title={`${step}: ${value}`}
-      />
-    </Tooltip>
+    <button
+      className="w-full aspect-square md:h-10 md:aspect-auto rounded-sm cursor-copy transition-transform hover:scale-105 shadow-[inset_0_0_0_1px_rgba(0,0,0,0.1)] dark:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.1)]"
+      style={{ backgroundColor: `var(${cssVar})` }}
+      onClick={handleCopy}
+      onContextMenu={handleCopy}
+    />
   );
 }
 
@@ -1433,29 +1498,31 @@ export default function ColourPalettes() {
   }, []);
 
   return (
-    <div>
-      {/* Page Header */}
-      <div className="mb-12">
-        <h1 className="font-serif text-[32px] md:text-[40px] leading-[1.15] font-medium mb-3">
-          Colors
-        </h1>
-        <p
-          className="text-base md:text-lg text-textSubtle"
-          style={{ lineHeight: 1.5 }}
-        >
-          Learn how to work with our color system. Click any swatch to copy its
-          value.
-        </p>
-      </div>
+    <ToastProvider>
+      <div>
+        {/* Page Header */}
+        <div className="mb-12">
+          <h1 className="font-serif text-[32px] md:text-[40px] leading-[1.15] font-medium mb-3">
+            Colors
+          </h1>
+          <p
+            className="text-base md:text-lg text-textSubtle"
+            style={{ lineHeight: 1.5 }}
+          >
+            Learn how to work with our color system. Click any swatch to copy
+            its value.
+          </p>
+        </div>
 
-      {/* Main content sections - ordered like Geist */}
-      <ColorScalesSection isDark={isDark} />
-      <BackgroundsSection />
-      <ComponentBackgroundsSection />
-      <BordersSection />
-      <SolidColorsSection />
-      <TextAndIconsSection />
-      <MigrationSection />
-    </div>
+        {/* Main content sections - ordered like Geist */}
+        <ColorScalesSection isDark={isDark} />
+        <BackgroundsSection />
+        <ComponentBackgroundsSection />
+        <BordersSection />
+        <SolidColorsSection />
+        <TextAndIconsSection />
+        <MigrationSection />
+      </div>
+    </ToastProvider>
   );
 }
