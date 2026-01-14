@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useCallback, useEffect, useRef } from "react";
+import { Check } from "lucide-react";
 
 // Link icon for section headers
 function LinkIcon() {
@@ -1345,19 +1346,11 @@ function ColorSwatch({
           showTick ? "opacity-100" : "opacity-0"
         }`}
       >
-        <svg
-          height="24"
-          viewBox="0 0 16 16"
-          width="24"
+        <Check
+          size={24}
+          strokeWidth={3}
           className="text-gray-900 dark:text-white drop-shadow-[0_1px_3px_rgba(255,255,255,0.8)] dark:drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]"
-        >
-          <path
-            fillRule="evenodd"
-            clipRule="evenodd"
-            d="M13.7803 4.21967L14.3107 4.75L6.81066 12.25L1.68934 7.12868L2.21967 6.59835L6.28033 10.659L6.81066 11.1893L7.34099 10.659L13.7803 4.21967Z"
-            fill="currentColor"
-          />
-        </svg>
+        />
       </span>
     </button>
   );
