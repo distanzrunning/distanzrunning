@@ -147,26 +147,22 @@ export default function DesignSystemSubsectionPage() {
       if (subsection === "palettes") {
         return (
           <ContentWithTOC
-            tocTitle="Contents"
+            tocTitle="Colours"
             tocItems={[
+              { id: "color-scales", title: "Color Scales" },
               { id: "backgrounds", title: "Backgrounds" },
               {
                 id: "colors-1-3-component-backgrounds",
-                title: "Colors 1-3: Component Backgrounds",
+                title: "Colors 1-3: Backgrounds",
               },
               { id: "colors-4-6-borders", title: "Colors 4-6: Borders" },
               {
-                id: "colors-7-8-high-contrast-backgrounds",
-                title: "Colors 7-8: High Contrast",
+                id: "colors-7-8-solid-colors",
+                title: "Colors 7-8: Solid",
               },
               {
                 id: "colors-9-10-text-and-icons",
                 title: "Colors 9-10: Text & Icons",
-              },
-              { id: "gray-scale", title: "Gray Scale" },
-              {
-                id: "accent-colors",
-                title: "Accent Colors",
               },
               { id: "migration", title: "Migration" },
             ]}

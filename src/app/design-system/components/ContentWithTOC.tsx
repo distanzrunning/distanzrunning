@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 
 interface TOCItem {
   id: string;
@@ -22,48 +22,81 @@ export default function ContentWithTOC({
   mainSectionId,
 }: ContentWithTOCProps) {
   const [activeId, setActiveId] = useState<string>("");
-  const observerRef = useRef<IntersectionObserver | null>(null);
   const clickedRef = useRef(false);
+
+  // Flatten TOC items to get all IDs
+  const getAllIds = useCallback(() => {
+    const ids: string[] = [];
+    if (mainSectionId) ids.push(mainSectionId);
+    tocItems.forEach((item) => {
+      ids.push(item.id);
+      if (item.children) {
+        item.children.forEach((child) => ids.push(child.id));
+      }
+    });
+    return ids;
+  }, [tocItems, mainSectionId]);
 
   // Initialize from URL hash on mount
   useEffect(() => {
-    const hash = window.location.hash.slice(1); // Remove # from hash
+    const hash = window.location.hash.slice(1);
     if (hash) {
       setActiveId(hash);
+    } else {
+      // Set first item as active by default
+      const ids = getAllIds();
+      if (ids.length > 0) {
+        setActiveId(ids[0]);
+      }
     }
-  }, []);
+  }, [getAllIds]);
 
+  // Scroll spy using scroll position
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        // Don't update if user just clicked a link
-        if (clickedRef.current) return;
+    const handleScroll = () => {
+      if (clickedRef.current) return;
 
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveId(entry.target.id);
-            // Update URL hash without scrolling
-            window.history.replaceState(null, "", `#${entry.target.id}`);
+      const ids = getAllIds();
+      const scrollPosition = window.scrollY + 150; // Offset for header
+
+      let currentId = ids[0];
+
+      for (const id of ids) {
+        const element = document.getElementById(id);
+        if (element) {
+          const offsetTop = element.offsetTop;
+          if (scrollPosition >= offsetTop) {
+            currentId = id;
           }
-        });
-      },
-      { rootMargin: "-100px 0px -80% 0px" },
-    );
+        }
+      }
 
-    observerRef.current = observer;
+      if (currentId && currentId !== activeId) {
+        setActiveId(currentId);
+        window.history.replaceState(null, "", `#${currentId}`);
+      }
+    };
 
-    // Observe all headings with IDs
-    const headings = document.querySelectorAll("h2[id], h3[id]");
-    headings.forEach((heading) => observer.observe(heading));
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [activeId, getAllIds]);
 
-    return () => observer.disconnect();
-  }, []);
-
-  const handleClick = (id: string) => {
+  const handleClick = (e: React.MouseEvent, id: string) => {
+    e.preventDefault();
     setActiveId(id);
     clickedRef.current = true;
 
-    // Re-enable observer after scroll completes
+    const element = document.getElementById(id);
+    if (element) {
+      const offsetTop = element.offsetTop - 120; // Account for sticky header
+      window.scrollTo({
+        top: offsetTop,
+        behavior: "smooth",
+      });
+      window.history.pushState(null, "", `#${id}`);
+    }
+
+    // Re-enable scroll spy after scroll completes
     setTimeout(() => {
       clickedRef.current = false;
     }, 1000);
@@ -79,7 +112,7 @@ export default function ContentWithTOC({
     return (
       <a
         href={`#${id}`}
-        onClick={() => handleClick(id)}
+        onClick={(e) => handleClick(e, id)}
         className={`
           flex border-l-2 border-solid py-1.5 pr-4 no-underline transition-colors
           ${

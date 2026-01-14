@@ -1522,7 +1522,7 @@ export default function ColourPalettes() {
         {/* Page Header */}
         <div className="mb-12">
           <h1 className="font-serif text-[32px] md:text-[40px] leading-[1.15] font-medium mb-3">
-            Colors
+            Colours
           </h1>
           <p
             className="text-base md:text-lg text-textSubtle"
