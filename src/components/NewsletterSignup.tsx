@@ -131,7 +131,7 @@ export default function NewsletterSignup() {
               onSubmit={handleSubmit}
               className="flex w-full flex-col items-start"
             >
-              <div className="flex w-full flex-col items-center justify-center gap-4 sm:flex-row sm:justify-start">
+              <div className="flex w-full flex-col items-center justify-center gap-4 sm:flex-row sm:items-center sm:justify-start">
                 <div className="flex w-full flex-col gap-2">
                   <label htmlFor="email" className="sr-only">
                     Email
@@ -152,7 +152,6 @@ export default function NewsletterSignup() {
                   type="submit"
                   data-attr="newsletter-footer-submit"
                   disabled={!email || isSubmitting}
-                  className="w-full sm:w-auto shrink-0"
                 >
                   {isSubmitting ? "Subscribing..." : "Subscribe"}
                 </Button>
