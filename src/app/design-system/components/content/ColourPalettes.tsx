@@ -331,28 +331,27 @@ function BordersSection() {
   );
 }
 
-// Colors 7-8: High Contrast Backgrounds Section
-function HighContrastSection() {
+// Colors 7-8: Solid Colors Section
+function SolidColorsSection() {
   return (
     <section className="mb-16">
-      <SectionHeader id="colors-7-8-high-contrast-backgrounds">
-        Colors 7-8: High Contrast Backgrounds
+      <SectionHeader id="colors-7-8-solid-colors">
+        Colors 7-8: Solid Colors
       </SectionHeader>
       <p className="text-base text-textSubtle mt-4">
-        These two colors are designed for high contrast UI component
-        backgrounds.
+        These two colors are designed for solid UI component backgrounds.
       </p>
 
       <div className="my-5">
         <ColorRowItem
           cssVar="--ds-gray-700"
           label="Color 7"
-          description="High contrast background"
+          description="Solid background"
         />
         <ColorRowItem
           cssVar="--ds-gray-800"
           label="Color 8"
-          description="Hover high contrast background"
+          description="Hover solid background"
           showBorder={false}
         />
       </div>
@@ -1220,12 +1219,95 @@ function ColorScaleRow({
 function GrayScaleSection({ isDark }: { isDark: boolean }) {
   return (
     <section className="mb-16">
-      <SectionHeader id="gray-scale">Gray Scale</SectionHeader>
+      <SectionHeader id="gray">Gray</SectionHeader>
       <p className="text-base text-textSubtle mt-4 mb-8">
-        The full gray scale from 100-1000. Click any swatch to copy the hex
-        value.
+        The gray scale is the foundation of the color system. It provides
+        neutral tones for backgrounds, borders, and text. Click any swatch to
+        copy the hex value.
       </p>
       <ColorScaleRow scale={grayScale} isDark={isDark} />
+    </section>
+  );
+}
+
+// Gray Alpha Scale Section
+function GrayAlphaSection({ isDark }: { isDark: boolean }) {
+  const grayAlphaScale: ColorScale = {
+    name: "Gray Alpha",
+    id: "gray-alpha",
+    steps: [
+      {
+        step: 100,
+        cssVar: "--ds-gray-alpha-100",
+        lightValue: "rgba(0,0,0,0.05)",
+        darkValue: "rgba(255,255,255,0.06)",
+      },
+      {
+        step: 200,
+        cssVar: "--ds-gray-alpha-200",
+        lightValue: "rgba(0,0,0,0.09)",
+        darkValue: "rgba(255,255,255,0.09)",
+      },
+      {
+        step: 300,
+        cssVar: "--ds-gray-alpha-300",
+        lightValue: "rgba(0,0,0,0.13)",
+        darkValue: "rgba(255,255,255,0.13)",
+      },
+      {
+        step: 400,
+        cssVar: "--ds-gray-alpha-400",
+        lightValue: "rgba(0,0,0,0.17)",
+        darkValue: "rgba(255,255,255,0.17)",
+      },
+      {
+        step: 500,
+        cssVar: "--ds-gray-alpha-500",
+        lightValue: "rgba(0,0,0,0.24)",
+        darkValue: "rgba(255,255,255,0.24)",
+      },
+      {
+        step: 600,
+        cssVar: "--ds-gray-alpha-600",
+        lightValue: "rgba(0,0,0,0.38)",
+        darkValue: "rgba(255,255,255,0.51)",
+      },
+      {
+        step: 700,
+        cssVar: "--ds-gray-alpha-700",
+        lightValue: "rgba(0,0,0,0.47)",
+        darkValue: "rgba(255,255,255,0.54)",
+      },
+      {
+        step: 800,
+        cssVar: "--ds-gray-alpha-800",
+        lightValue: "rgba(0,0,0,0.55)",
+        darkValue: "rgba(255,255,255,0.47)",
+      },
+      {
+        step: 900,
+        cssVar: "--ds-gray-alpha-900",
+        lightValue: "rgba(0,0,0,0.65)",
+        darkValue: "rgba(255,255,255,0.61)",
+      },
+      {
+        step: 1000,
+        cssVar: "--ds-gray-alpha-1000",
+        lightValue: "rgba(0,0,0,0.91)",
+        darkValue: "rgba(255,255,255,0.92)",
+      },
+    ],
+  };
+
+  return (
+    <section className="mb-16">
+      <SectionHeader id="gray-alpha">Gray Alpha</SectionHeader>
+      <p className="text-base text-textSubtle mt-4 mb-8">
+        Transparent gray variants for overlays, shadows, and layered effects.
+        These use black with alpha in light mode and white with alpha in dark
+        mode.
+      </p>
+      <ColorScaleRow scale={grayAlphaScale} isDark={isDark} />
     </section>
   );
 }
@@ -1357,14 +1439,15 @@ export default function ColourPalettes() {
         </p>
       </div>
 
-      {/* Main content sections */}
+      {/* Main content sections - ordered like Geist */}
+      <GrayScaleSection isDark={isDark} />
+      <GrayAlphaSection isDark={isDark} />
+      <AccentColorsSection isDark={isDark} />
       <BackgroundsSection />
       <ComponentBackgroundsSection />
       <BordersSection />
-      <HighContrastSection />
+      <SolidColorsSection />
       <TextAndIconsSection />
-      <GrayScaleSection isDark={isDark} />
-      <AccentColorsSection isDark={isDark} />
       <MigrationSection />
     </div>
   );
