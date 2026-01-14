@@ -1348,7 +1348,7 @@ function ColorSwatch({
       >
         <Check
           size={24}
-          strokeWidth={3}
+          strokeWidth={2}
           className="text-gray-900 dark:text-white drop-shadow-[0_1px_3px_rgba(255,255,255,0.8)] dark:drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]"
         />
       </span>
