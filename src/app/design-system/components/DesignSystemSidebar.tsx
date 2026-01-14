@@ -56,15 +56,7 @@ const foundationsSections: SidebarSection[] = [
     ],
     showSeparator: true,
   },
-  {
-    id: "colour",
-    label: "Colour",
-    icon: SwatchBook,
-    subsections: [
-      { id: "palettes", label: "Palettes" },
-      { id: "collections", label: "Collections" },
-    ],
-  },
+  { id: "colours", label: "Colours", icon: SwatchBook },
   {
     id: "grid",
     label: "Grid",

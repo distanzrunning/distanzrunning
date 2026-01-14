@@ -11,7 +11,6 @@ import DesignPrinciples from "../../components/content/DesignPrinciples";
 import UXPrinciples from "../../components/content/UXPrinciples";
 import DesignTokens from "../../components/content/DesignTokens";
 import ColourPalettes from "../../components/content/ColourPalettes";
-import Collections from "../../components/content/Collections";
 import Rules from "../../components/content/Rules";
 import GridSpacing from "../../components/content/GridSpacing";
 import GridLayout from "../../components/content/GridLayout";
@@ -144,7 +143,7 @@ export default function DesignSystemSubsectionPage() {
           </ContentWithTOC>
         );
       }
-      if (subsection === "palettes") {
+      if (subsection === "colours") {
         return (
           <ContentWithTOC
             tocTitle="Colours"
@@ -168,22 +167,6 @@ export default function DesignSystemSubsectionPage() {
             ]}
           >
             <ColourPalettes />
-          </ContentWithTOC>
-        );
-      }
-      if (subsection === "collections") {
-        return (
-          <ContentWithTOC
-            tocTitle="Contents"
-            tocItems={[
-              { id: "road", title: "Road" },
-              { id: "track", title: "Track" },
-              { id: "trail", title: "Trail" },
-              { id: "gear", title: "Gear" },
-              { id: "nutrition", title: "Nutrition" },
-            ]}
-          >
-            <Collections />
           </ContentWithTOC>
         );
       }
