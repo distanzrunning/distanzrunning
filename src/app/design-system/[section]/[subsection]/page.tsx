@@ -149,22 +149,25 @@ export default function DesignSystemSubsectionPage() {
           <ContentWithTOC
             tocTitle="Contents"
             tocItems={[
-              { id: "background", title: "Background" },
-              { id: "gray", title: "Gray" },
+              { id: "backgrounds", title: "Backgrounds" },
+              {
+                id: "colors-1-3-component-backgrounds",
+                title: "Colors 1-3: Component Backgrounds",
+              },
+              { id: "colors-4-6-borders", title: "Colors 4-6: Borders" },
+              {
+                id: "colors-7-8-high-contrast-backgrounds",
+                title: "Colors 7-8: High Contrast",
+              },
+              {
+                id: "colors-9-10-text-and-icons",
+                title: "Colors 9-10: Text & Icons",
+              },
+              { id: "gray-scale", title: "Gray Scale" },
               {
                 id: "accent-colors",
                 title: "Accent Colors",
-                children: [
-                  { id: "pink", title: "Pink" },
-                  { id: "purple", title: "Purple" },
-                  { id: "green", title: "Green" },
-                  { id: "blue", title: "Blue" },
-                  { id: "red", title: "Red" },
-                  { id: "amber", title: "Amber" },
-                  { id: "teal", title: "Teal" },
-                ],
               },
-              { id: "status", title: "Status" },
               { id: "migration", title: "Migration" },
             ]}
           >
