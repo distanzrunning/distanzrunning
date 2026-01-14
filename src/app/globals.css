@@ -284,7 +284,9 @@
     }
   }
 
-  /* Dark Mode - Inverted scale uses lighter shades for text, darker for surfaces */
+  /* Dark Mode - Inverted scale uses lighter shades for text, darker for surfaces
+     Inspired by Claude's warm dark theme: uses 60° hue with ~2-3% saturation
+     Background levels: canvas ~12%, surface ~15%, elevated ~18-22% lightness */
   .dark {
     /* Text colors - Dark mode uses lighter warm greys */
     --color-textDefault:
@@ -309,30 +311,30 @@
 
     /* EXTRA SUBTLE: Barely visible */
     --color-borderExtraSubtle:
-      31, 30, 28; /* Asphalt 10 - warm near-black internal dividers */
+      42, 41, 38; /* Asphalt 15 - warm near-black internal dividers */
 
     /* Legacy aliases */
     --color-borderNeutral: var(--color-borderDefault);
     --color-borderNeutralHover: var(--color-borderDefaultHover);
     --color-borderNeutralSubtle: var(--color-borderSubtle);
 
-    /* Background colors - Systematic surface elevation (inverted) */
-    --color-surface: 31, 30, 28; /* Asphalt 10 - warm dark elevated surfaces */
+    /* Background colors - Warmer, lighter dark theme (Claude-inspired)
+       Uses lifted lightness values for a softer, more pleasant dark experience */
+    --color-surface: 42, 41, 38; /* Asphalt 15 (~15% L) - elevated surfaces */
     --color-surfaceSubtle:
-      42, 41, 38; /* Asphalt 15 - warm dark subtle elevation */
-    --color-surfaceWarm:
-      42, 40, 38; /* Asphalt 15 warm variant - warm-tinted elevation */
+      54, 53, 48; /* Asphalt 20 (~20% L) - subtle elevation */
+    --color-surfaceWarm: 54, 53, 48; /* Asphalt 20 - warm-tinted elevation */
     --color-canvas:
-      20, 20, 19; /* Asphalt 5 - warm near-black page background */
+      31, 30, 28; /* Asphalt 10 (~12% L) - page background (was Asphalt 5) */
 
     /* Elevated Surfaces - Dark mode uses progressively lighter backgrounds
        Combined with subtle shadows for premium layered appearance */
     --color-surfaceElevated1:
-      31, 30, 28; /* Level 1: Cards, dropdowns - Asphalt 10 */
+      42, 41, 38; /* Level 1: Cards, dropdowns - Asphalt 15 */
     --color-surfaceElevated2:
-      42, 41, 38; /* Level 2: Modals, dialogs - Asphalt 15 */
+      54, 53, 48; /* Level 2: Modals, dialogs - Asphalt 20 */
     --color-surfaceElevated3:
-      54, 53, 48; /* Level 3: Popovers, tooltips - Asphalt 20 */
+      66, 64, 58; /* Level 3: Popovers, tooltips - Asphalt 25 */
 
     /* Elevated surface shadows - Dark mode uses deeper, more diffuse shadows */
     --shadow-elevated1:
