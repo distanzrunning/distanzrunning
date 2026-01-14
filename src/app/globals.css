@@ -162,69 +162,302 @@
     --distanz_text-spacing-xs: 0.0025em;
     --distanz_text-line-height-xs: 1.25; /* Reduced from 1.4 */
 
-    /* Distanz Color System - Semantic tokens using warm Asphalt greyscale */
-    /* Light Mode - Uses darker shades for text, lighter shades for surfaces */
-    --color-textDefault:
-      54, 53, 48; /* Asphalt 20 - warm charcoal for headings, primary text */
-    --color-textSubtle:
-      102, 99, 89; /* Asphalt 40 - warm grey for secondary text */
-    --color-textSubtler:
-      126, 123, 111; /* Asphalt 50 - warm muted text, placeholders */
-    --color-textForceTint:
-      245, 244, 237; /* Asphalt 95 - warm white force light text */
-    --color-textForceShade:
-      20, 20, 19; /* Asphalt 5 - warm black force dark text */
-    --color-textInverted:
-      245, 244, 237; /* Asphalt 95 - warm white inverted text */
-    --color-textDisabled:
-      152, 149, 136; /* Asphalt 60 - warm grey disabled text */
-    --color-textAccent: 228, 60, 129; /* Electric Pink - accent text */
-    --color-textAccentSubtle:
-      238, 182, 205; /* Electric Pink 90 - subtle accent */
+    /* ═══════════════════════════════════════════════════════════════════════
+       DISTANZ COLOR SYSTEM - Geist-Style 100-1000 Scales
+       Inspired by Vercel's Geist Design System
+
+       Scale Semantics:
+       100-300: Component backgrounds (subtle fills, hover states)
+       400-600: Borders (subtle to prominent)
+       700-800: High contrast backgrounds (solid fills)
+       900-1000: Text and icons
+
+       Format: OKLCH for perceptual uniformity with RGB fallbacks
+       Warm undertones maintained via 75° hue angle (~40° HSL equivalent)
+       ═══════════════════════════════════════════════════════════════════════ */
+
+    /* ─────────────────────────────────────────────────────────────────────────
+       BACKGROUND SCALE - Canvas and surface colors
+       ───────────────────────────────────────────────────────────────────────── */
+    --ds-background-100: oklch(98.5% 0.004 75); /* #FAF9F5 - Primary canvas */
+    --ds-background-200: oklch(
+      96.5% 0.006 75
+    ); /* #F5F4ED - Secondary surface */
+
+    /* RGB fallbacks for Tailwind opacity support */
+    --ds-background-100-rgb: 250, 249, 245;
+    --ds-background-200-rgb: 245, 244, 237;
+
+    /* ─────────────────────────────────────────────────────────────────────────
+       GRAY SCALE - Warm neutral scale (100-1000)
+       Replaces Asphalt scale with Geist-style naming
+       ───────────────────────────────────────────────────────────────────────── */
+    --ds-gray-100: oklch(98.5% 0.004 75); /* #FAF9F5 - Lightest, subtle bg */
+    --ds-gray-200: oklch(96% 0.006 75); /* #F5F4ED - Light backgrounds */
+    --ds-gray-300: oklch(93% 0.008 75); /* #EBE9DC - Hover states */
+    --ds-gray-400: oklch(87% 0.01 75); /* #DDDACB - Subtle borders */
+    --ds-gray-500: oklch(78% 0.012 75); /* #C1BEAF - Default borders */
+    --ds-gray-600: oklch(68% 0.012 75); /* #A5A295 - Prominent borders */
+    --ds-gray-700: oklch(55% 0.014 75); /* #7E7B6F - High contrast bg */
+    --ds-gray-800: oklch(42% 0.014 75); /* #5A574F - Solid fills */
+    --ds-gray-900: oklch(28% 0.012 75); /* #363530 - Primary text (light) */
+    --ds-gray-1000: oklch(16% 0.008 75); /* #1F1E1C - Maximum contrast */
+
+    /* RGB fallbacks for Tailwind opacity support */
+    --ds-gray-100-rgb: 250, 249, 245;
+    --ds-gray-200-rgb: 245, 244, 237;
+    --ds-gray-300-rgb: 235, 233, 220;
+    --ds-gray-400-rgb: 221, 218, 203;
+    --ds-gray-500-rgb: 193, 190, 175;
+    --ds-gray-600-rgb: 165, 162, 149;
+    --ds-gray-700-rgb: 126, 123, 111;
+    --ds-gray-800-rgb: 90, 87, 79;
+    --ds-gray-900-rgb: 54, 53, 48;
+    --ds-gray-1000-rgb: 31, 30, 28;
+
+    /* ─────────────────────────────────────────────────────────────────────────
+       GRAY ALPHA SCALE - Transparent variants for overlays
+       ───────────────────────────────────────────────────────────────────────── */
+    --ds-gray-alpha-100: oklch(50% 0.01 75 / 0.02);
+    --ds-gray-alpha-200: oklch(50% 0.01 75 / 0.04);
+    --ds-gray-alpha-300: oklch(50% 0.01 75 / 0.07);
+    --ds-gray-alpha-400: oklch(50% 0.01 75 / 0.12);
+    --ds-gray-alpha-500: oklch(50% 0.01 75 / 0.2);
+    --ds-gray-alpha-600: oklch(50% 0.01 75 / 0.32);
+    --ds-gray-alpha-700: oklch(50% 0.01 75 / 0.48);
+    --ds-gray-alpha-800: oklch(50% 0.01 75 / 0.64);
+    --ds-gray-alpha-900: oklch(50% 0.01 75 / 0.8);
+    --ds-gray-alpha-1000: oklch(50% 0.01 75 / 0.92);
+
+    /* ─────────────────────────────────────────────────────────────────────────
+       PINK SCALE - Primary accent (Electric Pink)
+       HSL 333° → OKLCH ~350°
+       ───────────────────────────────────────────────────────────────────────── */
+    --ds-pink-100: oklch(97% 0.015 350); /* #FDF2F6 */
+    --ds-pink-200: oklch(94% 0.03 350); /* #FAE9F0 */
+    --ds-pink-300: oklch(90% 0.055 350); /* #F5D2E1 */
+    --ds-pink-400: oklch(82% 0.095 350); /* #EEB6CD */
+    --ds-pink-500: oklch(72% 0.145 350); /* #E08AAF */
+    --ds-pink-600: oklch(62% 0.185 350); /* #D11B5C - Base Electric Pink */
+    --ds-pink-700: oklch(52% 0.175 350); /* #B8164F */
+    --ds-pink-800: oklch(42% 0.155 350); /* #8E1240 */
+    --ds-pink-900: oklch(32% 0.125 350); /* #6A0D30 */
+    --ds-pink-1000: oklch(22% 0.085 350); /* #450820 */
+
+    /* RGB fallbacks */
+    --ds-pink-100-rgb: 253, 242, 246;
+    --ds-pink-200-rgb: 250, 233, 240;
+    --ds-pink-300-rgb: 245, 210, 225;
+    --ds-pink-400-rgb: 238, 182, 205;
+    --ds-pink-500-rgb: 224, 138, 175;
+    --ds-pink-600-rgb: 209, 27, 92;
+    --ds-pink-700-rgb: 184, 22, 79;
+    --ds-pink-800-rgb: 142, 18, 64;
+    --ds-pink-900-rgb: 106, 13, 48;
+    --ds-pink-1000-rgb: 69, 8, 32;
+
+    /* ─────────────────────────────────────────────────────────────────────────
+       PURPLE SCALE - Secondary accent (Pace Purple)
+       HSL 262° → OKLCH ~290°
+       ───────────────────────────────────────────────────────────────────────── */
+    --ds-purple-100: oklch(97% 0.015 290); /* #F8F5FD */
+    --ds-purple-200: oklch(94% 0.03 290); /* #EDEBFA */
+    --ds-purple-300: oklch(90% 0.055 290); /* #DBD6F5 */
+    --ds-purple-400: oklch(82% 0.095 290); /* #C4B8EE */
+    --ds-purple-500: oklch(72% 0.145 290); /* #A68DE6 */
+    --ds-purple-600: oklch(58% 0.185 290); /* #5E3FD1 - Base Pace Purple */
+    --ds-purple-700: oklch(48% 0.175 290); /* #452BB8 */
+    --ds-purple-800: oklch(38% 0.155 290); /* #36208F */
+    --ds-purple-900: oklch(28% 0.125 290); /* #271666 */
+    --ds-purple-1000: oklch(18% 0.085 290); /* #180D3D */
+
+    /* RGB fallbacks */
+    --ds-purple-100-rgb: 248, 245, 253;
+    --ds-purple-200-rgb: 237, 235, 250;
+    --ds-purple-300-rgb: 219, 214, 245;
+    --ds-purple-400-rgb: 196, 184, 238;
+    --ds-purple-500-rgb: 166, 141, 230;
+    --ds-purple-600-rgb: 94, 63, 209;
+    --ds-purple-700-rgb: 69, 43, 184;
+    --ds-purple-800-rgb: 54, 32, 143;
+    --ds-purple-900-rgb: 39, 22, 102;
+    --ds-purple-1000-rgb: 24, 13, 61;
+
+    /* ─────────────────────────────────────────────────────────────────────────
+       GREEN SCALE - Secondary accent (Volt Green)
+       HSL 146° → OKLCH ~155°
+       ───────────────────────────────────────────────────────────────────────── */
+    --ds-green-100: oklch(97% 0.015 155); /* #F2FDF6 */
+    --ds-green-200: oklch(94% 0.035 155); /* #E6FAEF */
+    --ds-green-300: oklch(90% 0.065 155); /* #CCF5E0 */
+    --ds-green-400: oklch(82% 0.105 155); /* #A3EDCA */
+    --ds-green-500: oklch(72% 0.155 155); /* #6AE0A8 */
+    --ds-green-600: oklch(60% 0.175 155); /* #008C47 - Base Volt Green */
+    --ds-green-700: oklch(50% 0.165 155); /* #00733A */
+    --ds-green-800: oklch(40% 0.145 155); /* #005A2E */
+    --ds-green-900: oklch(30% 0.115 155); /* #004122 */
+    --ds-green-1000: oklch(20% 0.075 155); /* #002816 */
+
+    /* RGB fallbacks */
+    --ds-green-100-rgb: 242, 253, 246;
+    --ds-green-200-rgb: 230, 250, 239;
+    --ds-green-300-rgb: 204, 245, 224;
+    --ds-green-400-rgb: 163, 237, 202;
+    --ds-green-500-rgb: 106, 224, 168;
+    --ds-green-600-rgb: 0, 140, 71;
+    --ds-green-700-rgb: 0, 115, 58;
+    --ds-green-800-rgb: 0, 90, 46;
+    --ds-green-900-rgb: 0, 65, 34;
+    --ds-green-1000-rgb: 0, 40, 22;
+
+    /* ─────────────────────────────────────────────────────────────────────────
+       BLUE SCALE - Tertiary accent (Tech Cyan → Blue/Teal)
+       HSL 190° → OKLCH ~220° (shifted toward blue)
+       ───────────────────────────────────────────────────────────────────────── */
+    --ds-blue-100: oklch(97% 0.015 220); /* #F2F8FD */
+    --ds-blue-200: oklch(94% 0.035 220); /* #E6F7FA */
+    --ds-blue-300: oklch(90% 0.065 220); /* #CCF0F5 */
+    --ds-blue-400: oklch(82% 0.105 220); /* #A3E4ED */
+    --ds-blue-500: oklch(72% 0.155 220); /* #6AD0E0 */
+    --ds-blue-600: oklch(58% 0.155 220); /* #008CB8 - Base Tech Cyan */
+    --ds-blue-700: oklch(48% 0.145 220); /* #007399 */
+    --ds-blue-800: oklch(38% 0.125 220); /* #005A7A */
+    --ds-blue-900: oklch(28% 0.095 220); /* #00415B */
+    --ds-blue-1000: oklch(18% 0.065 220); /* #00283C */
+
+    /* RGB fallbacks */
+    --ds-blue-100-rgb: 242, 248, 253;
+    --ds-blue-200-rgb: 230, 247, 250;
+    --ds-blue-300-rgb: 204, 240, 245;
+    --ds-blue-400-rgb: 163, 228, 237;
+    --ds-blue-500-rgb: 106, 208, 224;
+    --ds-blue-600-rgb: 0, 140, 184;
+    --ds-blue-700-rgb: 0, 115, 153;
+    --ds-blue-800-rgb: 0, 90, 122;
+    --ds-blue-900-rgb: 0, 65, 91;
+    --ds-blue-1000-rgb: 0, 40, 60;
+
+    /* ─────────────────────────────────────────────────────────────────────────
+       RED SCALE - Tertiary accent (Track Red)
+       HSL 0° → OKLCH ~25° (warm red)
+       ───────────────────────────────────────────────────────────────────────── */
+    --ds-red-100: oklch(97% 0.015 25); /* #FDF5F2 */
+    --ds-red-200: oklch(94% 0.035 25); /* #FAE9E9 */
+    --ds-red-300: oklch(90% 0.065 25); /* #F5D2D2 */
+    --ds-red-400: oklch(82% 0.105 25); /* #EDB8B8 */
+    --ds-red-500: oklch(72% 0.155 25); /* #E08A8A */
+    --ds-red-600: oklch(58% 0.185 25); /* #D11B1B - Base Track Red */
+    --ds-red-700: oklch(48% 0.175 25); /* #B81616 */
+    --ds-red-800: oklch(38% 0.155 25); /* #8E1212 */
+    --ds-red-900: oklch(28% 0.125 25); /* #6A0D0D */
+    --ds-red-1000: oklch(18% 0.085 25); /* #450808 */
+
+    /* RGB fallbacks */
+    --ds-red-100-rgb: 253, 245, 242;
+    --ds-red-200-rgb: 250, 233, 233;
+    --ds-red-300-rgb: 245, 210, 210;
+    --ds-red-400-rgb: 237, 184, 184;
+    --ds-red-500-rgb: 224, 138, 138;
+    --ds-red-600-rgb: 209, 27, 27;
+    --ds-red-700-rgb: 184, 22, 22;
+    --ds-red-800-rgb: 142, 18, 18;
+    --ds-red-900-rgb: 106, 13, 13;
+    --ds-red-1000-rgb: 69, 8, 8;
+
+    /* ─────────────────────────────────────────────────────────────────────────
+       AMBER SCALE - Warning/Attention (Signal Orange → Amber)
+       HSL 35° → OKLCH ~60° (warm amber)
+       ───────────────────────────────────────────────────────────────────────── */
+    --ds-amber-100: oklch(97% 0.02 60); /* #FEFBF2 */
+    --ds-amber-200: oklch(94% 0.045 60); /* #FDF5E0 */
+    --ds-amber-300: oklch(90% 0.08 60); /* #FBEBC4 */
+    --ds-amber-400: oklch(82% 0.13 60); /* #F5D88A */
+    --ds-amber-500: oklch(72% 0.175 60); /* #EBC04A */
+    --ds-amber-600: oklch(62% 0.18 60); /* #D69E0A - Amber */
+    --ds-amber-700: oklch(52% 0.165 60); /* #B38208 */
+    --ds-amber-800: oklch(42% 0.145 60); /* #8C6606 */
+    --ds-amber-900: oklch(32% 0.115 60); /* #664A04 */
+    --ds-amber-1000: oklch(22% 0.075 60); /* #402E02 */
+
+    /* RGB fallbacks */
+    --ds-amber-100-rgb: 254, 251, 242;
+    --ds-amber-200-rgb: 253, 245, 224;
+    --ds-amber-300-rgb: 251, 235, 196;
+    --ds-amber-400-rgb: 245, 216, 138;
+    --ds-amber-500-rgb: 235, 192, 74;
+    --ds-amber-600-rgb: 214, 158, 10;
+    --ds-amber-700-rgb: 179, 130, 8;
+    --ds-amber-800-rgb: 140, 102, 6;
+    --ds-amber-900-rgb: 102, 74, 4;
+    --ds-amber-1000-rgb: 64, 46, 2;
+
+    /* ─────────────────────────────────────────────────────────────────────────
+       TEAL SCALE - New accent color
+       OKLCH ~185° (blue-green)
+       ───────────────────────────────────────────────────────────────────────── */
+    --ds-teal-100: oklch(97% 0.015 185); /* #F2FDFC */
+    --ds-teal-200: oklch(94% 0.035 185); /* #E6FAF8 */
+    --ds-teal-300: oklch(90% 0.065 185); /* #CCF5F0 */
+    --ds-teal-400: oklch(82% 0.105 185); /* #A3EDE4 */
+    --ds-teal-500: oklch(72% 0.155 185); /* #6AE0D3 */
+    --ds-teal-600: oklch(58% 0.155 185); /* #0D9488 - Teal */
+    --ds-teal-700: oklch(48% 0.145 185); /* #0A7A70 */
+    --ds-teal-800: oklch(38% 0.125 185); /* #086058 */
+    --ds-teal-900: oklch(28% 0.095 185); /* #054640 */
+    --ds-teal-1000: oklch(18% 0.065 185); /* #032C28 */
+
+    /* RGB fallbacks */
+    --ds-teal-100-rgb: 242, 253, 252;
+    --ds-teal-200-rgb: 230, 250, 248;
+    --ds-teal-300-rgb: 204, 245, 240;
+    --ds-teal-400-rgb: 163, 237, 228;
+    --ds-teal-500-rgb: 106, 224, 211;
+    --ds-teal-600-rgb: 13, 148, 136;
+    --ds-teal-700-rgb: 10, 122, 112;
+    --ds-teal-800-rgb: 8, 96, 88;
+    --ds-teal-900-rgb: 5, 70, 64;
+    --ds-teal-1000-rgb: 3, 44, 40;
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       SEMANTIC TOKENS - Light Mode
+       Map design system scales to semantic usage
+       ═══════════════════════════════════════════════════════════════════════ */
+
+    /* Text colors */
+    --color-textDefault: var(--ds-gray-900-rgb); /* Primary text */
+    --color-textSubtle: var(--ds-gray-700-rgb); /* Secondary text */
+    --color-textSubtler: var(--ds-gray-600-rgb); /* Muted text, placeholders */
+    --color-textForceTint: var(--ds-gray-200-rgb); /* Force light text */
+    --color-textForceShade: var(--ds-gray-1000-rgb); /* Force dark text */
+    --color-textInverted: var(--ds-gray-200-rgb); /* Inverted text */
+    --color-textDisabled: var(--ds-gray-500-rgb); /* Disabled text */
+    --color-textAccent: var(--ds-pink-600-rgb); /* Accent text */
+    --color-textAccentSubtle: var(--ds-pink-400-rgb); /* Subtle accent */
 
     /* Border colors - Systematic two-tier approach */
-    /* DEFAULT: Structural borders for clear visual hierarchy */
-    --color-borderDefault:
-      179, 176, 163; /* Asphalt 70 - warm grey for page wrappers, sidebars */
-    --color-borderDefaultHover:
-      152, 149, 136; /* Asphalt 60 - warm grey hover state */
+    --color-borderDefault: var(--ds-gray-500-rgb); /* Structural borders */
+    --color-borderDefaultHover: var(--ds-gray-600-rgb); /* Hover state */
+    --color-borderSubtle: var(--ds-gray-300-rgb); /* Subtle borders */
+    --color-borderSubtleHover: var(--ds-gray-400-rgb); /* Subtle hover */
+    --color-borderExtraSubtle: var(--ds-gray-200-rgb); /* Barely visible */
 
-    /* SUBTLE: Nested content and light separation */
-    --color-borderSubtle:
-      235, 233, 220; /* Asphalt 90 - warm beige for cards, TOC, nested elements */
-    --color-borderSubtleHover:
-      207, 204, 190; /* Asphalt 80 - warm grey hover state */
-
-    /* EXTRA SUBTLE: Barely visible dividers */
-    --color-borderExtraSubtle:
-      245, 244, 237; /* Asphalt 95 - warm white internal dividers */
-
-    /* Legacy aliases - map old tokens to new system */
-    --color-borderNeutral: var(
-      --color-borderDefault
-    ); /* Default to structural borders */
+    /* Legacy aliases */
+    --color-borderNeutral: var(--color-borderDefault);
     --color-borderNeutralHover: var(--color-borderDefaultHover);
     --color-borderNeutralSubtle: var(--color-borderSubtle);
 
-    /* Background colors - Systematic surface elevation */
-    --color-surface:
-      255, 255, 255; /* White - primary elevated surfaces (cards, modals) */
-    --color-surfaceSubtle:
-      250, 249, 245; /* Asphalt 98 - warm off-white for subtle elevation */
-    --color-surfaceWarm:
-      245, 244, 237; /* Asphalt 95 - warm-tinted elevation for callouts */
-    --color-canvas: 250, 249, 245; /* Asphalt 98 - warm white page background */
+    /* Background/Surface colors */
+    --color-surface: 255, 255, 255; /* Primary surface - white */
+    --color-surfaceSubtle: var(--ds-background-100-rgb); /* Subtle surface */
+    --color-surfaceWarm: var(--ds-gray-200-rgb); /* Warm-tinted surface */
+    --color-canvas: var(--ds-background-100-rgb); /* Page background */
 
-    /* Elevated Surfaces - Layered elevation system for depth hierarchy
-       Each level provides progressive visual separation from the canvas */
-    --color-surfaceElevated1:
-      255, 255, 255; /* Level 1: Cards, dropdowns - pure white */
-    --color-surfaceElevated2:
-      255, 255, 255; /* Level 2: Modals, dialogs - pure white */
-    --color-surfaceElevated3:
-      255, 255, 255; /* Level 3: Popovers, tooltips - pure white */
+    /* Elevated Surfaces */
+    --color-surfaceElevated1: 255, 255, 255;
+    --color-surfaceElevated2: 255, 255, 255;
+    --color-surfaceElevated3: 255, 255, 255;
 
-    /* Elevated surface shadows - Light mode uses subtle shadows for depth */
+    /* Elevated surface shadows */
     --shadow-elevated1:
       0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06);
     --shadow-elevated2:
@@ -234,32 +467,35 @@
 
     /* Legacy aliases */
     --color-neutralBgSubtle: var(--color-surfaceSubtle);
-    --color-greyCold400: 140, 145, 156; /* Legacy - kept for compatibility */
+    --color-greyCold400: 140, 145, 156;
 
-    /* Status/Feedback colors - For forms, validation, alerts */
-    --color-success-text: 0, 140, 71; /* Volt Green 55 */
-    --color-success-text-subtle: 0, 115, 58; /* Volt Green 45 */
-    --color-success-bg: 230, 250, 239; /* Volt Green 95 */
-    --color-success-bg-subtle: 204, 245, 224; /* Volt Green 90 */
-    --color-success-border: 0, 140, 71; /* Volt Green 55 */
+    /* Status colors - Success (Green) */
+    --color-success-text: var(--ds-green-600-rgb);
+    --color-success-text-subtle: var(--ds-green-700-rgb);
+    --color-success-bg: var(--ds-green-200-rgb);
+    --color-success-bg-subtle: var(--ds-green-300-rgb);
+    --color-success-border: var(--ds-green-600-rgb);
 
-    --color-warning-text: 140, 47, 0; /* Signal Orange 55 */
-    --color-warning-text-subtle: 115, 38, 0; /* Signal Orange 45 */
-    --color-warning-bg: 250, 235, 230; /* Signal Orange 95 */
-    --color-warning-bg-subtle: 245, 214, 204; /* Signal Orange 90 */
-    --color-warning-border: 140, 47, 0; /* Signal Orange 55 */
+    /* Status colors - Warning (Amber) */
+    --color-warning-text: var(--ds-amber-700-rgb);
+    --color-warning-text-subtle: var(--ds-amber-800-rgb);
+    --color-warning-bg: var(--ds-amber-200-rgb);
+    --color-warning-bg-subtle: var(--ds-amber-300-rgb);
+    --color-warning-border: var(--ds-amber-600-rgb);
 
-    --color-error-text: 209, 27, 27; /* Track Red 55 */
-    --color-error-text-subtle: 184, 22, 22; /* Track Red 45 */
-    --color-error-bg: 250, 233, 233; /* Track Red 95 */
-    --color-error-bg-subtle: 245, 210, 210; /* Track Red 90 */
-    --color-error-border: 209, 27, 27; /* Track Red 55 */
+    /* Status colors - Error (Red) */
+    --color-error-text: var(--ds-red-600-rgb);
+    --color-error-text-subtle: var(--ds-red-700-rgb);
+    --color-error-bg: var(--ds-red-200-rgb);
+    --color-error-bg-subtle: var(--ds-red-300-rgb);
+    --color-error-border: var(--ds-red-600-rgb);
 
-    --color-info-text: 94, 63, 209; /* Pace Purple 55 */
-    --color-info-text-subtle: 69, 43, 184; /* Pace Purple 45 */
-    --color-info-bg: 237, 235, 250; /* Pace Purple 95 */
-    --color-info-bg-subtle: 219, 214, 245; /* Pace Purple 90 */
-    --color-info-border: 94, 63, 209; /* Pace Purple 55 */
+    /* Status colors - Info (Purple) */
+    --color-info-text: var(--ds-purple-600-rgb);
+    --color-info-text-subtle: var(--ds-purple-700-rgb);
+    --color-info-bg: var(--ds-purple-200-rgb);
+    --color-info-bg-subtle: var(--ds-purple-300-rgb);
+    --color-info-border: var(--ds-purple-600-rgb);
 
     /* Rule (horizontal dividers) - Complete border patterns */
     --rule-default: 1px solid rgb(var(--color-borderSubtle)); /* Light separation - Asphalt 90 */
@@ -284,59 +520,44 @@
     }
   }
 
-  /* Dark Mode - Inverted scale uses lighter shades for text, darker for surfaces
-     Inspired by Claude's warm dark theme: uses 60° hue with ~2-3% saturation
-     Background levels: canvas ~12%, surface ~15%, elevated ~18-22% lightness */
+  /* ═══════════════════════════════════════════════════════════════════════
+     SEMANTIC TOKENS - Dark Mode
+     Inverted scale uses lighter shades for text, darker for surfaces
+     ═══════════════════════════════════════════════════════════════════════ */
   .dark {
-    /* Text colors - Dark mode uses lighter warm greys */
-    --color-textDefault:
-      235, 233, 220; /* Asphalt 90 - warm light grey primary text */
-    --color-textSubtle:
-      179, 176, 163; /* Asphalt 70 - warm grey secondary text */
-    --color-textSubtler: 126, 123, 111; /* Asphalt 50 - warm muted text */
-    --color-textInverted: 20, 20, 19; /* Asphalt 5 - warm black inverted text */
+    /* Text colors - Dark mode uses lighter grays */
+    --color-textDefault: var(--ds-gray-300-rgb); /* Primary text */
+    --color-textSubtle: var(--ds-gray-500-rgb); /* Secondary text */
+    --color-textSubtler: var(--ds-gray-600-rgb); /* Muted text */
+    --color-textForceTint: var(--ds-gray-200-rgb); /* Force light text */
+    --color-textForceShade: var(--ds-gray-1000-rgb); /* Force dark text */
+    --color-textInverted: var(--ds-gray-1000-rgb); /* Inverted text */
+    --color-textDisabled: var(--ds-gray-600-rgb); /* Disabled text */
 
-    /* Border colors - Systematic two-tier approach (inverted from light mode) */
-    /* DEFAULT: Structural borders */
-    --color-borderDefault:
-      78, 76, 69; /* Asphalt 30 - warm grey for page wrappers, sidebars */
-    --color-borderDefaultHover:
-      102, 99, 89; /* Asphalt 40 - warm grey hover state */
-
-    /* SUBTLE: Nested content */
-    --color-borderSubtle:
-      54, 53, 48; /* Asphalt 20 - warm dark grey for cards, TOC */
-    --color-borderSubtleHover:
-      78, 76, 69; /* Asphalt 30 - warm grey hover state */
-
-    /* EXTRA SUBTLE: Barely visible */
-    --color-borderExtraSubtle:
-      42, 41, 38; /* Asphalt 15 - warm near-black internal dividers */
+    /* Border colors - Inverted for dark mode */
+    --color-borderDefault: var(--ds-gray-800-rgb); /* Structural borders */
+    --color-borderDefaultHover: var(--ds-gray-700-rgb); /* Hover state */
+    --color-borderSubtle: var(--ds-gray-900-rgb); /* Subtle borders */
+    --color-borderSubtleHover: var(--ds-gray-800-rgb); /* Subtle hover */
+    --color-borderExtraSubtle: var(--ds-gray-900-rgb); /* Barely visible */
 
     /* Legacy aliases */
     --color-borderNeutral: var(--color-borderDefault);
     --color-borderNeutralHover: var(--color-borderDefaultHover);
     --color-borderNeutralSubtle: var(--color-borderSubtle);
 
-    /* Background colors - Warmer, lighter dark theme (Claude-inspired)
-       Uses lifted lightness values for a softer, more pleasant dark experience */
-    --color-surface: 42, 41, 38; /* Asphalt 15 (~15% L) - elevated surfaces */
-    --color-surfaceSubtle:
-      54, 53, 48; /* Asphalt 20 (~20% L) - subtle elevation */
-    --color-surfaceWarm: 54, 53, 48; /* Asphalt 20 - warm-tinted elevation */
-    --color-canvas:
-      31, 30, 28; /* Asphalt 10 (~12% L) - page background (was Asphalt 5) */
+    /* Background/Surface colors - Warm dark theme */
+    --color-surface: var(--ds-gray-900-rgb); /* Elevated surfaces */
+    --color-surfaceSubtle: var(--ds-gray-900-rgb); /* Subtle elevation */
+    --color-surfaceWarm: var(--ds-gray-900-rgb); /* Warm-tinted surface */
+    --color-canvas: var(--ds-gray-1000-rgb); /* Page background */
 
-    /* Elevated Surfaces - Dark mode uses progressively lighter backgrounds
-       Combined with subtle shadows for premium layered appearance */
-    --color-surfaceElevated1:
-      42, 41, 38; /* Level 1: Cards, dropdowns - Asphalt 15 */
-    --color-surfaceElevated2:
-      54, 53, 48; /* Level 2: Modals, dialogs - Asphalt 20 */
-    --color-surfaceElevated3:
-      66, 64, 58; /* Level 3: Popovers, tooltips - Asphalt 25 */
+    /* Elevated Surfaces - Progressive lightening */
+    --color-surfaceElevated1: var(--ds-gray-900-rgb); /* Level 1 */
+    --color-surfaceElevated2: var(--ds-gray-800-rgb); /* Level 2 */
+    --color-surfaceElevated3: var(--ds-gray-800-rgb); /* Level 3 */
 
-    /* Elevated surface shadows - Dark mode uses deeper, more diffuse shadows */
+    /* Elevated surface shadows - Deeper for dark mode */
     --shadow-elevated1:
       0 1px 3px rgba(0, 0, 0, 0.24), 0 1px 2px rgba(0, 0, 0, 0.16);
     --shadow-elevated2:
@@ -347,38 +568,36 @@
     /* Legacy aliases */
     --color-neutralBgSubtle: var(--color-surfaceSubtle);
 
-    /* Rule (horizontal dividers) - Dark mode inverted */
-    --rule-default: 1px solid rgb(var(--color-borderSubtle)); /* Light separation - Asphalt 20 */
-    --rule-emphasised: 1px solid rgb(var(--color-textDefault)); /* Strong separation - Asphalt 90 */
-    --rule-heavy: 4px solid rgb(var(--color-textDefault)); /* Major section divider - Asphalt 90 */
-    --rule-accent: 4px solid #e43c81; /* Brand accent divider - Electric Pink */
+    /* Rule (horizontal dividers) - Dark mode */
+    --rule-default: 1px solid rgb(var(--color-borderSubtle));
+    --rule-emphasised: 1px solid rgb(var(--color-textDefault));
+    --rule-heavy: 4px solid rgb(var(--color-textDefault));
+    --rule-accent: 4px solid #e43c81;
 
-    /* Status/Feedback colors - Dark mode (lighter text, darker backgrounds) */
-    --color-success-text:
-      74, 222, 128; /* Volt Green 65 - lighter for dark bg */
-    --color-success-text-subtle: 34, 197, 94; /* Volt Green 55 */
-    --color-success-bg: 20, 51, 36; /* Volt Green 15 */
-    --color-success-bg-subtle: 13, 40, 24; /* Volt Green 10 */
-    --color-success-border: 34, 197, 94; /* Volt Green 55 */
+    /* Status colors - Dark mode (lighter text, darker backgrounds) */
+    --color-success-text: var(--ds-green-500-rgb);
+    --color-success-text-subtle: var(--ds-green-600-rgb);
+    --color-success-bg: var(--ds-green-900-rgb);
+    --color-success-bg-subtle: var(--ds-green-1000-rgb);
+    --color-success-border: var(--ds-green-600-rgb);
 
-    --color-warning-text:
-      251, 146, 60; /* Signal Orange 65 - lighter for dark bg */
-    --color-warning-text-subtle: 249, 115, 22; /* Signal Orange 55 */
-    --color-warning-bg: 51, 32, 13; /* Signal Orange 15 */
-    --color-warning-bg-subtle: 40, 24, 10; /* Signal Orange 10 */
-    --color-warning-border: 249, 115, 22; /* Signal Orange 55 */
+    --color-warning-text: var(--ds-amber-500-rgb);
+    --color-warning-text-subtle: var(--ds-amber-600-rgb);
+    --color-warning-bg: var(--ds-amber-900-rgb);
+    --color-warning-bg-subtle: var(--ds-amber-1000-rgb);
+    --color-warning-border: var(--ds-amber-600-rgb);
 
-    --color-error-text: 248, 113, 113; /* Track Red 65 - lighter for dark bg */
-    --color-error-text-subtle: 239, 68, 68; /* Track Red 55 */
-    --color-error-bg: 51, 18, 18; /* Track Red 15 */
-    --color-error-bg-subtle: 45, 18, 18; /* Track Red 10 */
-    --color-error-border: 239, 68, 68; /* Track Red 55 */
+    --color-error-text: var(--ds-red-500-rgb);
+    --color-error-text-subtle: var(--ds-red-600-rgb);
+    --color-error-bg: var(--ds-red-900-rgb);
+    --color-error-bg-subtle: var(--ds-red-1000-rgb);
+    --color-error-border: var(--ds-red-600-rgb);
 
-    --color-info-text: 167, 139, 250; /* Pace Purple 65 - lighter for dark bg */
-    --color-info-text-subtle: 139, 92, 246; /* Pace Purple 55 */
-    --color-info-bg: 35, 28, 51; /* Pace Purple 15 */
-    --color-info-bg-subtle: 27, 21, 40; /* Pace Purple 10 */
-    --color-info-border: 139, 92, 246; /* Pace Purple 55 */
+    --color-info-text: var(--ds-purple-500-rgb);
+    --color-info-text-subtle: var(--ds-purple-600-rgb);
+    --color-info-bg: var(--ds-purple-900-rgb);
+    --color-info-bg-subtle: var(--ds-purple-1000-rgb);
+    --color-info-border: var(--ds-purple-600-rgb);
   }
 
   /* Distanz reset (Distanz design system) */

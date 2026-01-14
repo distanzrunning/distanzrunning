@@ -149,19 +149,23 @@ export default function DesignSystemSubsectionPage() {
           <ContentWithTOC
             tocTitle="Contents"
             tocItems={[
-              { id: "brand", title: "Brand" },
+              { id: "background", title: "Background" },
+              { id: "gray", title: "Gray" },
               {
-                id: "accent",
-                title: "Accent",
+                id: "accent-colors",
+                title: "Accent Colors",
                 children: [
-                  { id: "accent-primary", title: "Primary" },
-                  { id: "accent-secondary", title: "Secondary" },
-                  { id: "accent-tertiary", title: "Tertiary" },
+                  { id: "pink", title: "Pink" },
+                  { id: "purple", title: "Purple" },
+                  { id: "green", title: "Green" },
+                  { id: "blue", title: "Blue" },
+                  { id: "red", title: "Red" },
+                  { id: "amber", title: "Amber" },
+                  { id: "teal", title: "Teal" },
                 ],
               },
-              { id: "greyscale", title: "Greyscale" },
-              { id: "canvas", title: "Canvas" },
               { id: "status", title: "Status" },
+              { id: "migration", title: "Migration" },
             ]}
           >
             <ColourPalettes />

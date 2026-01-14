@@ -1,867 +1,1038 @@
-import ColorSwatchGrid from "../ColorSwatchGrid";
-import ColorTable from "../ColorTable";
+"use client";
+
+import { useState, useCallback, useEffect } from "react";
+
+// Color data with both light and dark mode values
+interface ColorValue {
+  light: string;
+  dark: string;
+}
+
+interface ColorStep {
+  step: number;
+  cssVar: string;
+  values: ColorValue;
+}
+
+interface ColorScale {
+  name: string;
+  id: string;
+  steps: ColorStep[];
+}
+
+// Background colors
+const backgroundScale: ColorScale = {
+  name: "Backgrounds",
+  id: "background",
+  steps: [
+    {
+      step: 100,
+      cssVar: "--ds-background-100",
+      values: { light: "#FAF9F5", dark: "#1F1E1C" },
+    },
+    {
+      step: 200,
+      cssVar: "--ds-background-200",
+      values: { light: "#F5F4ED", dark: "#363530" },
+    },
+  ],
+};
+
+// Gray scale
+const grayScale: ColorScale = {
+  name: "Gray",
+  id: "gray",
+  steps: [
+    {
+      step: 100,
+      cssVar: "--ds-gray-100",
+      values: { light: "#FAF9F5", dark: "#FAF9F5" },
+    },
+    {
+      step: 200,
+      cssVar: "--ds-gray-200",
+      values: { light: "#F5F4ED", dark: "#F5F4ED" },
+    },
+    {
+      step: 300,
+      cssVar: "--ds-gray-300",
+      values: { light: "#EBE9DC", dark: "#EBE9DC" },
+    },
+    {
+      step: 400,
+      cssVar: "--ds-gray-400",
+      values: { light: "#DDDACB", dark: "#DDDACB" },
+    },
+    {
+      step: 500,
+      cssVar: "--ds-gray-500",
+      values: { light: "#C1BEAF", dark: "#C1BEAF" },
+    },
+    {
+      step: 600,
+      cssVar: "--ds-gray-600",
+      values: { light: "#A5A295", dark: "#A5A295" },
+    },
+    {
+      step: 700,
+      cssVar: "--ds-gray-700",
+      values: { light: "#7E7B6F", dark: "#7E7B6F" },
+    },
+    {
+      step: 800,
+      cssVar: "--ds-gray-800",
+      values: { light: "#5A574F", dark: "#5A574F" },
+    },
+    {
+      step: 900,
+      cssVar: "--ds-gray-900",
+      values: { light: "#363530", dark: "#363530" },
+    },
+    {
+      step: 1000,
+      cssVar: "--ds-gray-1000",
+      values: { light: "#1F1E1C", dark: "#1F1E1C" },
+    },
+  ],
+};
+
+// Gray Alpha scale
+const grayAlphaScale: ColorScale = {
+  name: "Gray Alpha",
+  id: "gray-alpha",
+  steps: [
+    {
+      step: 100,
+      cssVar: "--ds-gray-alpha-100",
+      values: { light: "rgba(90,87,79,0.02)", dark: "rgba(250,249,245,0.02)" },
+    },
+    {
+      step: 200,
+      cssVar: "--ds-gray-alpha-200",
+      values: { light: "rgba(90,87,79,0.04)", dark: "rgba(250,249,245,0.04)" },
+    },
+    {
+      step: 300,
+      cssVar: "--ds-gray-alpha-300",
+      values: { light: "rgba(90,87,79,0.07)", dark: "rgba(250,249,245,0.07)" },
+    },
+    {
+      step: 400,
+      cssVar: "--ds-gray-alpha-400",
+      values: { light: "rgba(90,87,79,0.12)", dark: "rgba(250,249,245,0.12)" },
+    },
+    {
+      step: 500,
+      cssVar: "--ds-gray-alpha-500",
+      values: { light: "rgba(90,87,79,0.20)", dark: "rgba(250,249,245,0.20)" },
+    },
+    {
+      step: 600,
+      cssVar: "--ds-gray-alpha-600",
+      values: { light: "rgba(90,87,79,0.32)", dark: "rgba(250,249,245,0.32)" },
+    },
+    {
+      step: 700,
+      cssVar: "--ds-gray-alpha-700",
+      values: { light: "rgba(90,87,79,0.48)", dark: "rgba(250,249,245,0.48)" },
+    },
+    {
+      step: 800,
+      cssVar: "--ds-gray-alpha-800",
+      values: { light: "rgba(90,87,79,0.64)", dark: "rgba(250,249,245,0.64)" },
+    },
+    {
+      step: 900,
+      cssVar: "--ds-gray-alpha-900",
+      values: { light: "rgba(90,87,79,0.80)", dark: "rgba(250,249,245,0.80)" },
+    },
+    {
+      step: 1000,
+      cssVar: "--ds-gray-alpha-1000",
+      values: { light: "rgba(90,87,79,0.92)", dark: "rgba(250,249,245,0.92)" },
+    },
+  ],
+};
+
+// Pink scale (Electric Pink - Primary)
+const pinkScale: ColorScale = {
+  name: "Pink",
+  id: "pink",
+  steps: [
+    {
+      step: 100,
+      cssVar: "--ds-pink-100",
+      values: { light: "#FDF2F6", dark: "#FDF2F6" },
+    },
+    {
+      step: 200,
+      cssVar: "--ds-pink-200",
+      values: { light: "#FAE9F0", dark: "#FAE9F0" },
+    },
+    {
+      step: 300,
+      cssVar: "--ds-pink-300",
+      values: { light: "#F5D2E1", dark: "#F5D2E1" },
+    },
+    {
+      step: 400,
+      cssVar: "--ds-pink-400",
+      values: { light: "#EEB6CD", dark: "#EEB6CD" },
+    },
+    {
+      step: 500,
+      cssVar: "--ds-pink-500",
+      values: { light: "#E08AAF", dark: "#E08AAF" },
+    },
+    {
+      step: 600,
+      cssVar: "--ds-pink-600",
+      values: { light: "#D11B5C", dark: "#D11B5C" },
+    },
+    {
+      step: 700,
+      cssVar: "--ds-pink-700",
+      values: { light: "#B8164F", dark: "#B8164F" },
+    },
+    {
+      step: 800,
+      cssVar: "--ds-pink-800",
+      values: { light: "#8E1240", dark: "#8E1240" },
+    },
+    {
+      step: 900,
+      cssVar: "--ds-pink-900",
+      values: { light: "#6A0D30", dark: "#6A0D30" },
+    },
+    {
+      step: 1000,
+      cssVar: "--ds-pink-1000",
+      values: { light: "#450820", dark: "#450820" },
+    },
+  ],
+};
+
+// Purple scale (Pace Purple - Secondary)
+const purpleScale: ColorScale = {
+  name: "Purple",
+  id: "purple",
+  steps: [
+    {
+      step: 100,
+      cssVar: "--ds-purple-100",
+      values: { light: "#F8F5FD", dark: "#F8F5FD" },
+    },
+    {
+      step: 200,
+      cssVar: "--ds-purple-200",
+      values: { light: "#EDEBFA", dark: "#EDEBFA" },
+    },
+    {
+      step: 300,
+      cssVar: "--ds-purple-300",
+      values: { light: "#DBD6F5", dark: "#DBD6F5" },
+    },
+    {
+      step: 400,
+      cssVar: "--ds-purple-400",
+      values: { light: "#C4B8EE", dark: "#C4B8EE" },
+    },
+    {
+      step: 500,
+      cssVar: "--ds-purple-500",
+      values: { light: "#A68DE6", dark: "#A68DE6" },
+    },
+    {
+      step: 600,
+      cssVar: "--ds-purple-600",
+      values: { light: "#5E3FD1", dark: "#5E3FD1" },
+    },
+    {
+      step: 700,
+      cssVar: "--ds-purple-700",
+      values: { light: "#452BB8", dark: "#452BB8" },
+    },
+    {
+      step: 800,
+      cssVar: "--ds-purple-800",
+      values: { light: "#36208F", dark: "#36208F" },
+    },
+    {
+      step: 900,
+      cssVar: "--ds-purple-900",
+      values: { light: "#271666", dark: "#271666" },
+    },
+    {
+      step: 1000,
+      cssVar: "--ds-purple-1000",
+      values: { light: "#180D3D", dark: "#180D3D" },
+    },
+  ],
+};
+
+// Green scale (Volt Green - Success)
+const greenScale: ColorScale = {
+  name: "Green",
+  id: "green",
+  steps: [
+    {
+      step: 100,
+      cssVar: "--ds-green-100",
+      values: { light: "#F2FDF6", dark: "#F2FDF6" },
+    },
+    {
+      step: 200,
+      cssVar: "--ds-green-200",
+      values: { light: "#E6FAEF", dark: "#E6FAEF" },
+    },
+    {
+      step: 300,
+      cssVar: "--ds-green-300",
+      values: { light: "#CCF5E0", dark: "#CCF5E0" },
+    },
+    {
+      step: 400,
+      cssVar: "--ds-green-400",
+      values: { light: "#A3EDCA", dark: "#A3EDCA" },
+    },
+    {
+      step: 500,
+      cssVar: "--ds-green-500",
+      values: { light: "#6AE0A8", dark: "#6AE0A8" },
+    },
+    {
+      step: 600,
+      cssVar: "--ds-green-600",
+      values: { light: "#008C47", dark: "#008C47" },
+    },
+    {
+      step: 700,
+      cssVar: "--ds-green-700",
+      values: { light: "#00733A", dark: "#00733A" },
+    },
+    {
+      step: 800,
+      cssVar: "--ds-green-800",
+      values: { light: "#005A2E", dark: "#005A2E" },
+    },
+    {
+      step: 900,
+      cssVar: "--ds-green-900",
+      values: { light: "#004122", dark: "#004122" },
+    },
+    {
+      step: 1000,
+      cssVar: "--ds-green-1000",
+      values: { light: "#002816", dark: "#002816" },
+    },
+  ],
+};
+
+// Blue scale (Tech Cyan)
+const blueScale: ColorScale = {
+  name: "Blue",
+  id: "blue",
+  steps: [
+    {
+      step: 100,
+      cssVar: "--ds-blue-100",
+      values: { light: "#F2F8FD", dark: "#F2F8FD" },
+    },
+    {
+      step: 200,
+      cssVar: "--ds-blue-200",
+      values: { light: "#E6F7FA", dark: "#E6F7FA" },
+    },
+    {
+      step: 300,
+      cssVar: "--ds-blue-300",
+      values: { light: "#CCF0F5", dark: "#CCF0F5" },
+    },
+    {
+      step: 400,
+      cssVar: "--ds-blue-400",
+      values: { light: "#A3E4ED", dark: "#A3E4ED" },
+    },
+    {
+      step: 500,
+      cssVar: "--ds-blue-500",
+      values: { light: "#6AD0E0", dark: "#6AD0E0" },
+    },
+    {
+      step: 600,
+      cssVar: "--ds-blue-600",
+      values: { light: "#008CB8", dark: "#008CB8" },
+    },
+    {
+      step: 700,
+      cssVar: "--ds-blue-700",
+      values: { light: "#007399", dark: "#007399" },
+    },
+    {
+      step: 800,
+      cssVar: "--ds-blue-800",
+      values: { light: "#005A7A", dark: "#005A7A" },
+    },
+    {
+      step: 900,
+      cssVar: "--ds-blue-900",
+      values: { light: "#00415B", dark: "#00415B" },
+    },
+    {
+      step: 1000,
+      cssVar: "--ds-blue-1000",
+      values: { light: "#00283C", dark: "#00283C" },
+    },
+  ],
+};
+
+// Red scale (Track Red - Error)
+const redScale: ColorScale = {
+  name: "Red",
+  id: "red",
+  steps: [
+    {
+      step: 100,
+      cssVar: "--ds-red-100",
+      values: { light: "#FDF5F2", dark: "#FDF5F2" },
+    },
+    {
+      step: 200,
+      cssVar: "--ds-red-200",
+      values: { light: "#FAE9E9", dark: "#FAE9E9" },
+    },
+    {
+      step: 300,
+      cssVar: "--ds-red-300",
+      values: { light: "#F5D2D2", dark: "#F5D2D2" },
+    },
+    {
+      step: 400,
+      cssVar: "--ds-red-400",
+      values: { light: "#EDB8B8", dark: "#EDB8B8" },
+    },
+    {
+      step: 500,
+      cssVar: "--ds-red-500",
+      values: { light: "#E08A8A", dark: "#E08A8A" },
+    },
+    {
+      step: 600,
+      cssVar: "--ds-red-600",
+      values: { light: "#D11B1B", dark: "#D11B1B" },
+    },
+    {
+      step: 700,
+      cssVar: "--ds-red-700",
+      values: { light: "#B81616", dark: "#B81616" },
+    },
+    {
+      step: 800,
+      cssVar: "--ds-red-800",
+      values: { light: "#8E1212", dark: "#8E1212" },
+    },
+    {
+      step: 900,
+      cssVar: "--ds-red-900",
+      values: { light: "#6A0D0D", dark: "#6A0D0D" },
+    },
+    {
+      step: 1000,
+      cssVar: "--ds-red-1000",
+      values: { light: "#450808", dark: "#450808" },
+    },
+  ],
+};
+
+// Amber scale (Warning)
+const amberScale: ColorScale = {
+  name: "Amber",
+  id: "amber",
+  steps: [
+    {
+      step: 100,
+      cssVar: "--ds-amber-100",
+      values: { light: "#FEFBF2", dark: "#FEFBF2" },
+    },
+    {
+      step: 200,
+      cssVar: "--ds-amber-200",
+      values: { light: "#FDF5E0", dark: "#FDF5E0" },
+    },
+    {
+      step: 300,
+      cssVar: "--ds-amber-300",
+      values: { light: "#FBEBC4", dark: "#FBEBC4" },
+    },
+    {
+      step: 400,
+      cssVar: "--ds-amber-400",
+      values: { light: "#F5D88A", dark: "#F5D88A" },
+    },
+    {
+      step: 500,
+      cssVar: "--ds-amber-500",
+      values: { light: "#EBC04A", dark: "#EBC04A" },
+    },
+    {
+      step: 600,
+      cssVar: "--ds-amber-600",
+      values: { light: "#D69E0A", dark: "#D69E0A" },
+    },
+    {
+      step: 700,
+      cssVar: "--ds-amber-700",
+      values: { light: "#B38208", dark: "#B38208" },
+    },
+    {
+      step: 800,
+      cssVar: "--ds-amber-800",
+      values: { light: "#8C6606", dark: "#8C6606" },
+    },
+    {
+      step: 900,
+      cssVar: "--ds-amber-900",
+      values: { light: "#664A04", dark: "#664A04" },
+    },
+    {
+      step: 1000,
+      cssVar: "--ds-amber-1000",
+      values: { light: "#402E02", dark: "#402E02" },
+    },
+  ],
+};
+
+// Teal scale
+const tealScale: ColorScale = {
+  name: "Teal",
+  id: "teal",
+  steps: [
+    {
+      step: 100,
+      cssVar: "--ds-teal-100",
+      values: { light: "#F2FDFC", dark: "#F2FDFC" },
+    },
+    {
+      step: 200,
+      cssVar: "--ds-teal-200",
+      values: { light: "#E6FAF8", dark: "#E6FAF8" },
+    },
+    {
+      step: 300,
+      cssVar: "--ds-teal-300",
+      values: { light: "#CCF5F0", dark: "#CCF5F0" },
+    },
+    {
+      step: 400,
+      cssVar: "--ds-teal-400",
+      values: { light: "#A3EDE4", dark: "#A3EDE4" },
+    },
+    {
+      step: 500,
+      cssVar: "--ds-teal-500",
+      values: { light: "#6AE0D3", dark: "#6AE0D3" },
+    },
+    {
+      step: 600,
+      cssVar: "--ds-teal-600",
+      values: { light: "#0D9488", dark: "#0D9488" },
+    },
+    {
+      step: 700,
+      cssVar: "--ds-teal-700",
+      values: { light: "#0A7A70", dark: "#0A7A70" },
+    },
+    {
+      step: 800,
+      cssVar: "--ds-teal-800",
+      values: { light: "#086058", dark: "#086058" },
+    },
+    {
+      step: 900,
+      cssVar: "--ds-teal-900",
+      values: { light: "#054640", dark: "#054640" },
+    },
+    {
+      step: 1000,
+      cssVar: "--ds-teal-1000",
+      values: { light: "#032C28", dark: "#032C28" },
+    },
+  ],
+};
+
+// All scales array
+const allScales = [
+  backgroundScale,
+  grayScale,
+  grayAlphaScale,
+  pinkScale,
+  purpleScale,
+  greenScale,
+  blueScale,
+  redScale,
+  amberScale,
+  tealScale,
+];
+
+// Tooltip component
+function Tooltip({
+  children,
+  content,
+  visible,
+}: {
+  children: React.ReactNode;
+  content: React.ReactNode;
+  visible: boolean;
+}) {
+  return (
+    <div className="relative">
+      {children}
+      {visible && (
+        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-50 pointer-events-none">
+          <div className="bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-xs px-2 py-1 rounded whitespace-nowrap shadow-lg">
+            {content}
+          </div>
+          <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900 dark:border-t-gray-100" />
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Color swatch button component
+function ColorSwatch({
+  step,
+  cssVar,
+  value,
+  isDark,
+}: {
+  step: number;
+  cssVar: string;
+  value: string;
+  isDark: boolean;
+}) {
+  const [showTooltip, setShowTooltip] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      navigator.clipboard.writeText(value);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    },
+    [value],
+  );
+
+  const handleContextMenu = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      navigator.clipboard.writeText(value);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    },
+    [value],
+  );
+
+  return (
+    <Tooltip
+      content={copied ? "Copied!" : `${step}: ${value}`}
+      visible={showTooltip || copied}
+    >
+      <button
+        className="w-full aspect-square md:h-10 md:aspect-auto rounded-sm cursor-copy transition-transform hover:scale-105 shadow-[inset_0_0_0_1px_rgba(0,0,0,0.1)] dark:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.1)]"
+        style={{ backgroundColor: `var(${cssVar})` }}
+        onClick={handleCopy}
+        onContextMenu={handleContextMenu}
+        onMouseEnter={() => setShowTooltip(true)}
+        onMouseLeave={() => setShowTooltip(false)}
+        title={`${step}: ${value}`}
+      />
+    </Tooltip>
+  );
+}
+
+// Color scale row component
+function ColorScaleRow({
+  scale,
+  isDark,
+}: {
+  scale: ColorScale;
+  isDark: boolean;
+}) {
+  return (
+    <div className="flex flex-col items-start gap-2 md:flex-row md:items-center">
+      <div className="w-[100px] flex-shrink-0">
+        <p className="text-sm font-medium text-textDefault" id={scale.id}>
+          {scale.name}
+        </p>
+      </div>
+      <ul aria-describedby={scale.id} className="flex w-full gap-1 md:gap-2">
+        {scale.steps.map((step) => (
+          <li key={step.step} className="w-full max-w-[68px]">
+            <ColorSwatch
+              step={step.step}
+              cssVar={step.cssVar}
+              value={isDark ? step.values.dark : step.values.light}
+              isDark={isDark}
+            />
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+// Usage section component
+function UsageSection() {
+  return (
+    <section className="mt-16">
+      <h2
+        id="usage"
+        className="font-serif text-[28px] leading-[1.2] font-medium mb-4 scroll-mt-32"
+      >
+        Usage
+      </h2>
+      <hr className="border-t border-borderDefault mb-6" />
+
+      <div className="space-y-8">
+        <div>
+          <h3 className="text-base font-semibold text-textDefault mb-2">
+            Scale ranges
+          </h3>
+          <p className="text-sm text-textSubtle mb-4">
+            Each color scale follows a consistent structure for predictable
+            usage:
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="p-4 rounded-lg bg-surfaceSubtle">
+              <code className="text-sm font-mono text-pink-600">100-300</code>
+              <p className="text-sm text-textSubtle mt-1">
+                Backgrounds, subtle fills, hover states
+              </p>
+            </div>
+            <div className="p-4 rounded-lg bg-surfaceSubtle">
+              <code className="text-sm font-mono text-pink-600">400-600</code>
+              <p className="text-sm text-textSubtle mt-1">
+                Borders, from subtle to prominent
+              </p>
+            </div>
+            <div className="p-4 rounded-lg bg-surfaceSubtle">
+              <code className="text-sm font-mono text-pink-600">700-800</code>
+              <p className="text-sm text-textSubtle mt-1">
+                Solid backgrounds, high contrast fills
+              </p>
+            </div>
+            <div className="p-4 rounded-lg bg-surfaceSubtle">
+              <code className="text-sm font-mono text-pink-600">900-1000</code>
+              <p className="text-sm text-textSubtle mt-1">Text and icons</p>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h3 className="text-base font-semibold text-textDefault mb-2">
+            CSS Variables
+          </h3>
+          <p className="text-sm text-textSubtle mb-4">
+            Use CSS custom properties to reference colors. They automatically
+            adapt to light/dark mode:
+          </p>
+          <div className="bg-gray-900 dark:bg-gray-100 rounded-lg p-4 overflow-x-auto">
+            <pre className="text-sm font-mono text-gray-100 dark:text-gray-900">
+              {`.element {
+  background: var(--ds-gray-100);
+  border-color: var(--ds-gray-400);
+  color: var(--ds-gray-1000);
+}`}
+            </pre>
+          </div>
+        </div>
+
+        <div>
+          <h3 className="text-base font-semibold text-textDefault mb-2">
+            Tailwind Classes
+          </h3>
+          <p className="text-sm text-textSubtle mb-4">
+            Colors are available as Tailwind utility classes:
+          </p>
+          <div className="bg-gray-900 dark:bg-gray-100 rounded-lg p-4 overflow-x-auto">
+            <pre className="text-sm font-mono text-gray-100 dark:text-gray-900">
+              {`<div className="bg-gray-100 border-gray-400 text-gray-1000">
+  Content
+</div>`}
+            </pre>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// Semantic colors section
+function SemanticSection() {
+  return (
+    <section className="mt-16">
+      <h2
+        id="semantic"
+        className="font-serif text-[28px] leading-[1.2] font-medium mb-4 scroll-mt-32"
+      >
+        Semantic Colors
+      </h2>
+      <hr className="border-t border-borderDefault mb-6" />
+
+      <p className="text-sm text-textSubtle mb-6">
+        Semantic tokens map color scales to specific purposes. They
+        automatically switch values between light and dark modes.
+      </p>
+
+      <div className="space-y-4">
+        {/* Text colors */}
+        <div className="p-4 rounded-lg border border-borderSubtle">
+          <h3 className="text-sm font-semibold text-textDefault mb-3">Text</h3>
+          <div className="flex flex-wrap gap-4">
+            <div className="flex items-center gap-2">
+              <div className="w-6 h-6 rounded bg-textDefault" />
+              <span className="text-xs font-mono text-textSubtle">
+                textDefault
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-6 h-6 rounded bg-textSubtle" />
+              <span className="text-xs font-mono text-textSubtle">
+                textSubtle
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-6 h-6 rounded bg-textSubtler" />
+              <span className="text-xs font-mono text-textSubtle">
+                textSubtler
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Surface colors */}
+        <div className="p-4 rounded-lg border border-borderSubtle">
+          <h3 className="text-sm font-semibold text-textDefault mb-3">
+            Surfaces
+          </h3>
+          <div className="flex flex-wrap gap-4">
+            <div className="flex items-center gap-2">
+              <div className="w-6 h-6 rounded bg-canvas border border-borderSubtle" />
+              <span className="text-xs font-mono text-textSubtle">canvas</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-6 h-6 rounded bg-surface border border-borderSubtle" />
+              <span className="text-xs font-mono text-textSubtle">surface</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-6 h-6 rounded bg-surfaceSubtle border border-borderSubtle" />
+              <span className="text-xs font-mono text-textSubtle">
+                surfaceSubtle
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Border colors */}
+        <div className="p-4 rounded-lg border border-borderSubtle">
+          <h3 className="text-sm font-semibold text-textDefault mb-3">
+            Borders
+          </h3>
+          <div className="flex flex-wrap gap-4">
+            <div className="flex items-center gap-2">
+              <div className="w-6 h-6 rounded border-2 border-borderDefault" />
+              <span className="text-xs font-mono text-textSubtle">
+                borderDefault
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-6 h-6 rounded border-2 border-borderSubtle" />
+              <span className="text-xs font-mono text-textSubtle">
+                borderSubtle
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Status colors */}
+        <div className="p-4 rounded-lg border border-borderSubtle">
+          <h3 className="text-sm font-semibold text-textDefault mb-3">
+            Status
+          </h3>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="p-3 rounded bg-success-bg border border-success-border">
+              <span className="text-xs font-semibold text-success-text">
+                Success
+              </span>
+            </div>
+            <div className="p-3 rounded bg-warning-bg border border-warning-border">
+              <span className="text-xs font-semibold text-warning-text">
+                Warning
+              </span>
+            </div>
+            <div className="p-3 rounded bg-error-bg border border-error-border">
+              <span className="text-xs font-semibold text-error-text">
+                Error
+              </span>
+            </div>
+            <div className="p-3 rounded bg-info-bg border border-info-border">
+              <span className="text-xs font-semibold text-info-text">Info</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// Migration section
+function MigrationSection() {
+  const mappings = [
+    { old: "asphalt-98", new: "gray-100", usage: "Canvas, lightest" },
+    { old: "asphalt-95", new: "gray-200", usage: "Surface backgrounds" },
+    { old: "asphalt-90", new: "gray-300", usage: "Hover states" },
+    { old: "asphalt-85", new: "gray-400", usage: "Subtle borders" },
+    { old: "asphalt-75", new: "gray-500", usage: "Default borders" },
+    { old: "asphalt-65", new: "gray-600", usage: "Prominent borders" },
+    { old: "asphalt-50", new: "gray-700", usage: "Muted text" },
+    { old: "asphalt-35", new: "gray-800", usage: "Secondary text" },
+    { old: "asphalt-20", new: "gray-900", usage: "Primary text" },
+    { old: "asphalt-10", new: "gray-1000", usage: "Maximum contrast" },
+  ];
+
+  return (
+    <section className="mt-16">
+      <h2
+        id="migration"
+        className="font-serif text-[28px] leading-[1.2] font-medium mb-4 scroll-mt-32"
+      >
+        Migration
+      </h2>
+      <hr className="border-t border-borderDefault mb-6" />
+
+      <p className="text-sm text-textSubtle mb-6">
+        The Asphalt scale (5-98) has been replaced with a Gray scale (100-1000).
+        Legacy class names are preserved for backward compatibility.
+      </p>
+
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="border-b border-borderSubtle">
+              <th className="text-left py-3 pr-4 font-medium text-textSubtle">
+                Old
+              </th>
+              <th className="text-left py-3 pr-4 font-medium text-textSubtle">
+                New
+              </th>
+              <th className="text-left py-3 font-medium text-textSubtle">
+                Usage
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {mappings.map((mapping) => (
+              <tr
+                key={mapping.old}
+                className="border-b border-borderExtraSubtle"
+              >
+                <td className="py-3 pr-4">
+                  <code className="text-xs font-mono px-1.5 py-0.5 rounded bg-surfaceSubtle text-textDefault">
+                    {mapping.old}
+                  </code>
+                </td>
+                <td className="py-3 pr-4">
+                  <code className="text-xs font-mono px-1.5 py-0.5 rounded bg-pink-100 dark:bg-pink-900 text-pink-700 dark:text-pink-300">
+                    {mapping.new}
+                  </code>
+                </td>
+                <td className="py-3 text-textSubtle">{mapping.usage}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  );
+}
 
 export default function ColourPalettes() {
+  const [isDark, setIsDark] = useState(false);
+
+  // Listen for dark mode changes on the document
+  useEffect(() => {
+    const checkDarkMode = () => {
+      setIsDark(document.documentElement.classList.contains("dark"));
+    };
+
+    // Initial check
+    checkDarkMode();
+
+    // Create observer for class changes on html element
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.attributeName === "class") {
+          checkDarkMode();
+        }
+      });
+    });
+
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <div className="space-y-12">
-      {/* Page Title */}
-      <div>
-        <p className="text-sm tracking-wide text-electric-pink mb-2">Colour</p>
-        <h1 className="font-serif text-[40px] leading-[1.15] font-medium mb-4">
-          Palettes
+    <div>
+      {/* Page Header */}
+      <div className="mb-8">
+        <h1 className="font-serif text-[32px] md:text-[40px] leading-[1.15] font-medium mb-3">
+          Colors
         </h1>
-        <p className="text-base text-textSubtle max-w-3xl">
-          Our color palettes are theme-agnostic—each color maintains the same
-          hex value in both light and dark modes. Theme switching is handled
-          through semantic tokens that reference these base colors appropriately
-          for each context.
+        <p
+          className="text-base md:text-lg text-textSubtle"
+          style={{ lineHeight: 1.5 }}
+        >
+          Learn how to work with our color system. Right click to copy raw
+          values.
         </p>
       </div>
 
-      {/* Dark Mode Note */}
-      <div className="bg-surfaceWarm border-l-4 border-electric-pink p-6">
-        <h3 className="font-sans font-semibold text-sm uppercase tracking-wide text-textDefault mb-2">
-          Dark Mode
-        </h3>
-        <p className="text-sm text-textSubtle leading-relaxed">
-          Use the dark mode toggle in the top-right corner to see how the
-          interface adapts. The raw color values shown below remain
-          constant—what changes are the <strong>semantic tokens</strong> (like{" "}
-          <code className="px-1.5 py-0.5 bg-neutralBgSubtle rounded text-xs font-mono">
-            --color-textDefault
-          </code>
-          ) that swap between light and dark variants of our Greyscale palette.
-          For example,{" "}
-          <code className="px-1.5 py-0.5 bg-neutralBgSubtle rounded text-xs font-mono">
-            textDefault
-          </code>{" "}
-          uses Asphalt 5 in light mode but Asphalt 95 in dark mode.
-        </p>
-      </div>
-
-      <hr className="border-t-4 border-textDefault" />
-
-      {/* Brand Section */}
+      {/* Scales Section */}
       <section>
         <h2
-          id="brand"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          id="scales"
+          className="font-serif text-[28px] leading-[1.2] font-medium mb-4 scroll-mt-32"
         >
-          Brand
+          Scales
         </h2>
-
         <hr className="border-t border-borderDefault mb-6" />
 
-        <p className="text-base text-textSubtle mb-6 max-w-3xl">
-          Core monochrome foundation used throughout the design system for text,
-          backgrounds, and structural elements.
+        <p className="text-sm text-textSubtle mb-8">
+          There are 10 color scales in the system. Colors automatically adapt to
+          light and dark modes.
         </p>
 
-        <ColorSwatchGrid
-          swatches={[
-            { name: "Black", hex: "#000000", textColor: "light" },
-            { name: "White", hex: "#FFFFFF", textColor: "dark" },
-          ]}
-        />
-
-        <ColorTable
-          colors={[
-            {
-              name: "Black",
-              hex: "#000000",
-              rgb: "0, 0, 0",
-              hsl: "0°, 0%, 0%",
-              token: "--color-brand-black",
-            },
-            {
-              name: "White",
-              hex: "#FFFFFF",
-              rgb: "255, 255, 255",
-              hsl: "0°, 0%, 100%",
-              token: "--color-brand-white",
-            },
-          ]}
-        />
-      </section>
-
-      <hr className="border-t border-borderDefault" />
-
-      {/* Accent Section */}
-      <section>
-        <h2
-          id="accent"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
-        >
-          Accent
-        </h2>
-
-        <hr className="border-t border-borderDefault mb-6" />
-
-        <p className="text-base text-textSubtle mb-6 max-w-3xl">
-          Purposeful color used for UI interactions, structural highlights, and
-          content categorization.
-        </p>
-
-        {/* Primary - Electric Pink */}
-        <div className="mb-12">
-          <hr className="border-t border-borderSubtle mb-6" />
-          <h3
-            id="accent-primary"
-            className="font-serif text-[24px] leading-[1.3] font-medium mb-3 scroll-mt-32"
-          >
-            Primary
-          </h3>
-          <p className="text-sm text-textSubtle mb-6 max-w-3xl">
-            Electric Pink is the primary accent throughout the interface—used
-            for links, active states, highlights, and navigation markers.
-          </p>
-
-          <ColorSwatchGrid
-            swatches={[
-              { name: "Electric Pink 20", hex: "#520A23", textColor: "light" },
-              { name: "Electric Pink 30", hex: "#7A0F35", textColor: "light" },
-              { name: "Electric Pink 45", hex: "#B8164F", textColor: "light" },
-              { name: "Electric Pink 55", hex: "#D11B5C", textColor: "light" },
-              { name: "Electric Pink 90", hex: "#F5D2E1", textColor: "dark" },
-              { name: "Electric Pink 95", hex: "#FAE9F0", textColor: "dark" },
-            ]}
-          />
-
-          <ColorTable
-            colors={[
-              {
-                name: "Electric Pink 20",
-                hex: "#520A23",
-                rgb: "82, 10, 35",
-                hsl: "333°, 74%, 20%",
-                token: "--color-electric-pink-20",
-              },
-              {
-                name: "Electric Pink 30",
-                hex: "#7A0F35",
-                rgb: "122, 15, 53",
-                hsl: "333°, 74%, 30%",
-                token: "--color-electric-pink-30",
-              },
-              {
-                name: "Electric Pink 45",
-                hex: "#B8164F",
-                rgb: "184, 22, 79",
-                hsl: "333°, 74%, 45%",
-                token: "--color-electric-pink-45",
-              },
-              {
-                name: "Electric Pink 55",
-                hex: "#D11B5C",
-                rgb: "209, 27, 92",
-                hsl: "333°, 74%, 55%",
-                token: "--color-electric-pink-55",
-              },
-              {
-                name: "Electric Pink 90",
-                hex: "#F5D2E1",
-                rgb: "245, 210, 225",
-                hsl: "333°, 74%, 90%",
-                token: "--color-electric-pink-90",
-              },
-              {
-                name: "Electric Pink 95",
-                hex: "#FAE9F0",
-                rgb: "250, 233, 240",
-                hsl: "333°, 74%, 95%",
-                token: "--color-electric-pink-95",
-              },
-            ]}
-          />
-        </div>
-
-        {/* Secondary - Pace Purple & Volt Green */}
-        <div className="mb-12">
-          <hr className="border-t border-borderSubtle mb-6" />
-          <h3
-            id="accent-secondary"
-            className="font-serif text-[24px] leading-[1.3] font-medium mb-3 scroll-mt-32"
-          >
-            Secondary
-          </h3>
-          <p className="text-sm text-textSubtle mb-6 max-w-3xl">
-            Category colors for primary content themes—training content uses
-            Pace Purple, nutrition and wellness use Volt Green.
-          </p>
-
-          <ColorSwatchGrid
-            swatches={[
-              { name: "Pace Purple 45", hex: "#452BB8", textColor: "light" },
-              { name: "Pace Purple 55", hex: "#5E3FD1", textColor: "light" },
-              { name: "Pace Purple 90", hex: "#DBD6F5", textColor: "dark" },
-              { name: "Pace Purple 95", hex: "#EDEBFA", textColor: "dark" },
-              { name: "Volt Green 45", hex: "#00733A", textColor: "light" },
-              { name: "Volt Green 55", hex: "#008C47", textColor: "light" },
-              { name: "Volt Green 90", hex: "#CCF5E0", textColor: "dark" },
-              { name: "Volt Green 95", hex: "#E6FAEF", textColor: "dark" },
-            ]}
-          />
-
-          <ColorTable
-            colors={[
-              {
-                name: "Pace Purple 45",
-                hex: "#452BB8",
-                rgb: "69, 43, 184",
-                hsl: "262°, 60%, 45%",
-                token: "--color-pace-purple-45",
-              },
-              {
-                name: "Pace Purple 55",
-                hex: "#5E3FD1",
-                rgb: "94, 63, 209",
-                hsl: "262°, 60%, 55%",
-                token: "--color-pace-purple-55",
-              },
-              {
-                name: "Pace Purple 90",
-                hex: "#DBD6F5",
-                rgb: "219, 214, 245",
-                hsl: "262°, 60%, 90%",
-                token: "--color-pace-purple-90",
-              },
-              {
-                name: "Pace Purple 95",
-                hex: "#EDEBFA",
-                rgb: "237, 235, 250",
-                hsl: "262°, 60%, 95%",
-                token: "--color-pace-purple-95",
-              },
-              {
-                name: "Volt Green 45",
-                hex: "#00733A",
-                rgb: "0, 115, 58",
-                hsl: "146°, 100%, 45%",
-                token: "--color-volt-green-45",
-              },
-              {
-                name: "Volt Green 55",
-                hex: "#008C47",
-                rgb: "0, 140, 71",
-                hsl: "146°, 100%, 55%",
-                token: "--color-volt-green-55",
-              },
-              {
-                name: "Volt Green 90",
-                hex: "#CCF5E0",
-                rgb: "204, 245, 224",
-                hsl: "146°, 100%, 90%",
-                token: "--color-volt-green-90",
-              },
-              {
-                name: "Volt Green 95",
-                hex: "#E6FAEF",
-                rgb: "230, 250, 239",
-                hsl: "146°, 100%, 95%",
-                token: "--color-volt-green-95",
-              },
-            ]}
-          />
-        </div>
-
-        {/* Tertiary - Tech Cyan, Track Red & Trail Brown */}
-        <div className="mb-12">
-          <hr className="border-t border-borderSubtle mb-6" />
-          <h3
-            id="accent-tertiary"
-            className="font-serif text-[24px] leading-[1.3] font-medium mb-3 scroll-mt-32"
-          >
-            Tertiary
-          </h3>
-          <p className="text-sm text-textSubtle mb-6 max-w-3xl">
-            Supporting category colors for specialized content—gear uses Tech
-            Cyan, road races use Track Red, and trail content uses Trail Brown.
-          </p>
-
-          <ColorSwatchGrid
-            swatches={[
-              { name: "Tech Cyan 45", hex: "#007399", textColor: "light" },
-              { name: "Tech Cyan 55", hex: "#008CB8", textColor: "light" },
-              { name: "Tech Cyan 90", hex: "#CCF0F5", textColor: "dark" },
-              { name: "Tech Cyan 95", hex: "#E6F7FA", textColor: "dark" },
-              { name: "Track Red 45", hex: "#B81616", textColor: "light" },
-              { name: "Track Red 55", hex: "#D11B1B", textColor: "light" },
-              { name: "Track Red 90", hex: "#F5D2D2", textColor: "dark" },
-              { name: "Track Red 95", hex: "#FAE9E9", textColor: "dark" },
-              { name: "Trail Brown 45", hex: "#73391D", textColor: "light" },
-              { name: "Trail Brown 55", hex: "#8C4623", textColor: "light" },
-              { name: "Trail Brown 90", hex: "#F5E6D9", textColor: "dark" },
-              { name: "Trail Brown 95", hex: "#FAF2EC", textColor: "dark" },
-            ]}
-          />
-
-          <ColorTable
-            colors={[
-              {
-                name: "Tech Cyan 45",
-                hex: "#007399",
-                rgb: "0, 115, 153",
-                hsl: "190°, 100%, 45%",
-                token: "--color-tech-cyan-45",
-              },
-              {
-                name: "Tech Cyan 55",
-                hex: "#008CB8",
-                rgb: "0, 140, 184",
-                hsl: "190°, 100%, 55%",
-                token: "--color-tech-cyan-55",
-              },
-              {
-                name: "Tech Cyan 90",
-                hex: "#CCF0F5",
-                rgb: "204, 240, 245",
-                hsl: "190°, 100%, 90%",
-                token: "--color-tech-cyan-90",
-              },
-              {
-                name: "Tech Cyan 95",
-                hex: "#E6F7FA",
-                rgb: "230, 247, 250",
-                hsl: "190°, 100%, 95%",
-                token: "--color-tech-cyan-95",
-              },
-              {
-                name: "Track Red 45",
-                hex: "#B81616",
-                rgb: "184, 22, 22",
-                hsl: "0°, 79%, 45%",
-                token: "--color-track-red-45",
-              },
-              {
-                name: "Track Red 55",
-                hex: "#D11B1B",
-                rgb: "209, 27, 27",
-                hsl: "0°, 79%, 55%",
-                token: "--color-track-red-55",
-              },
-              {
-                name: "Track Red 90",
-                hex: "#F5D2D2",
-                rgb: "245, 210, 210",
-                hsl: "0°, 79%, 90%",
-                token: "--color-track-red-90",
-              },
-              {
-                name: "Track Red 95",
-                hex: "#FAE9E9",
-                rgb: "250, 233, 233",
-                hsl: "0°, 79%, 95%",
-                token: "--color-track-red-95",
-              },
-              {
-                name: "Trail Brown 45",
-                hex: "#73391D",
-                rgb: "115, 57, 29",
-                hsl: "25°, 59%, 45%",
-                token: "--color-trail-brown-45",
-              },
-              {
-                name: "Trail Brown 55",
-                hex: "#8C4623",
-                rgb: "140, 70, 35",
-                hsl: "25°, 59%, 55%",
-                token: "--color-trail-brown-55",
-              },
-              {
-                name: "Trail Brown 90",
-                hex: "#F5E6D9",
-                rgb: "245, 230, 217",
-                hsl: "25°, 59%, 90%",
-                token: "--color-trail-brown-90",
-              },
-              {
-                name: "Trail Brown 95",
-                hex: "#FAF2EC",
-                rgb: "250, 242, 236",
-                hsl: "25°, 59%, 95%",
-                token: "--color-trail-brown-95",
-              },
-            ]}
-          />
+        <div className="space-y-6">
+          {allScales.map((scale) => (
+            <ColorScaleRow key={scale.id} scale={scale} isDark={isDark} />
+          ))}
         </div>
       </section>
 
-      <hr className="border-t border-borderDefault" />
+      {/* Usage Section */}
+      <UsageSection />
 
-      {/* Greyscale Section */}
-      <section>
-        <h2
-          id="greyscale"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
-        >
-          Greyscale
-        </h2>
+      {/* Semantic Section */}
+      <SemanticSection />
 
-        <hr className="border-t border-borderDefault mb-6" />
-
-        <p className="text-base text-textSubtle mb-6 max-w-3xl">
-          21-shade warm greyscale with subtle 40° hue undertones for a refined,
-          premium feel. Features 5% lightness increments for precise control
-          over contrast and hierarchy. The warm tint creates softer transitions
-          and reduces harshness compared to pure neutral greys.
-        </p>
-
-        <div className="bg-surfaceWarm border-l-4 border-trail-brown p-6 mb-6">
-          <h3 className="font-sans font-semibold text-sm uppercase tracking-wide text-textDefault mb-2">
-            Warm Undertones
-          </h3>
-          <p className="text-sm text-textSubtle leading-relaxed">
-            Each shade has a subtle warm undertone (HSL hue ~40°, saturation
-            4-8%) inspired by premium design systems. This creates a more
-            inviting, organic feel while maintaining excellent readability and
-            contrast ratios.
-          </p>
-        </div>
-
-        <ColorSwatchGrid
-          swatches={[
-            { name: "Asphalt 5", hex: "#141413", textColor: "light" },
-            { name: "Asphalt 10", hex: "#1F1E1C", textColor: "light" },
-            { name: "Asphalt 15", hex: "#2A2926", textColor: "light" },
-            { name: "Asphalt 20", hex: "#363530", textColor: "light" },
-            { name: "Asphalt 25", hex: "#42403A", textColor: "light" },
-            { name: "Asphalt 30", hex: "#4E4C45", textColor: "light" },
-            { name: "Asphalt 35", hex: "#5A574F", textColor: "light" },
-            { name: "Asphalt 40", hex: "#666359", textColor: "light" },
-            { name: "Asphalt 45", hex: "#726F64", textColor: "light" },
-            { name: "Asphalt 50", hex: "#7E7B6F", textColor: "light" },
-            { name: "Asphalt 55", hex: "#8B887C", textColor: "dark" },
-            { name: "Asphalt 60", hex: "#989588", textColor: "dark" },
-            { name: "Asphalt 65", hex: "#A5A295", textColor: "dark" },
-            { name: "Asphalt 70", hex: "#B3B0A3", textColor: "dark" },
-            { name: "Asphalt 75", hex: "#C1BEAF", textColor: "dark" },
-            { name: "Asphalt 80", hex: "#CFCCBE", textColor: "dark" },
-            { name: "Asphalt 85", hex: "#DDDACB", textColor: "dark" },
-            { name: "Asphalt 90", hex: "#EBE9DC", textColor: "dark" },
-            { name: "Asphalt 95", hex: "#F5F4ED", textColor: "dark" },
-            { name: "Asphalt 98", hex: "#FAF9F5", textColor: "dark" },
-          ]}
-        />
-
-        <ColorTable
-          colors={[
-            {
-              name: "Asphalt 5",
-              hex: "#141413",
-              rgb: "20, 20, 19",
-              hsl: "40°, 4%, 5%",
-              token: "--color-asphalt-5",
-            },
-            {
-              name: "Asphalt 10",
-              hex: "#1F1E1C",
-              rgb: "31, 30, 28",
-              hsl: "40°, 5%, 10%",
-              token: "--color-asphalt-10",
-            },
-            {
-              name: "Asphalt 15",
-              hex: "#2A2926",
-              rgb: "42, 41, 38",
-              hsl: "40°, 5%, 15%",
-              token: "--color-asphalt-15",
-            },
-            {
-              name: "Asphalt 20",
-              hex: "#363530",
-              rgb: "54, 53, 48",
-              hsl: "40°, 6%, 20%",
-              token: "--color-asphalt-20",
-            },
-            {
-              name: "Asphalt 25",
-              hex: "#42403A",
-              rgb: "66, 64, 58",
-              hsl: "40°, 6%, 25%",
-              token: "--color-asphalt-25",
-            },
-            {
-              name: "Asphalt 30",
-              hex: "#4E4C45",
-              rgb: "78, 76, 69",
-              hsl: "40°, 6%, 30%",
-              token: "--color-asphalt-30",
-            },
-            {
-              name: "Asphalt 35",
-              hex: "#5A574F",
-              rgb: "90, 87, 79",
-              hsl: "40°, 7%, 35%",
-              token: "--color-asphalt-35",
-            },
-            {
-              name: "Asphalt 40",
-              hex: "#666359",
-              rgb: "102, 99, 89",
-              hsl: "40°, 7%, 40%",
-              token: "--color-asphalt-40",
-            },
-            {
-              name: "Asphalt 45",
-              hex: "#726F64",
-              rgb: "114, 111, 100",
-              hsl: "40°, 7%, 45%",
-              token: "--color-asphalt-45",
-            },
-            {
-              name: "Asphalt 50",
-              hex: "#7E7B6F",
-              rgb: "126, 123, 111",
-              hsl: "40°, 7%, 50%",
-              token: "--color-asphalt-50",
-            },
-            {
-              name: "Asphalt 55",
-              hex: "#8B887C",
-              rgb: "139, 136, 124",
-              hsl: "40°, 6%, 55%",
-              token: "--color-asphalt-55",
-            },
-            {
-              name: "Asphalt 60",
-              hex: "#989588",
-              rgb: "152, 149, 136",
-              hsl: "40°, 6%, 60%",
-              token: "--color-asphalt-60",
-            },
-            {
-              name: "Asphalt 65",
-              hex: "#A5A295",
-              rgb: "165, 162, 149",
-              hsl: "40°, 6%, 65%",
-              token: "--color-asphalt-65",
-            },
-            {
-              name: "Asphalt 70",
-              hex: "#B3B0A3",
-              rgb: "179, 176, 163",
-              hsl: "40°, 6%, 70%",
-              token: "--color-asphalt-70",
-            },
-            {
-              name: "Asphalt 75",
-              hex: "#C1BEAF",
-              rgb: "193, 190, 175",
-              hsl: "40°, 6%, 75%",
-              token: "--color-asphalt-75",
-            },
-            {
-              name: "Asphalt 80",
-              hex: "#CFCCBE",
-              rgb: "207, 204, 190",
-              hsl: "40°, 6%, 80%",
-              token: "--color-asphalt-80",
-            },
-            {
-              name: "Asphalt 85",
-              hex: "#DDDACB",
-              rgb: "221, 218, 203",
-              hsl: "40°, 6%, 85%",
-              token: "--color-asphalt-85",
-            },
-            {
-              name: "Asphalt 90",
-              hex: "#EBE9DC",
-              rgb: "235, 233, 220",
-              hsl: "40°, 6%, 90%",
-              token: "--color-asphalt-90",
-            },
-            {
-              name: "Asphalt 95",
-              hex: "#F5F4ED",
-              rgb: "245, 244, 237",
-              hsl: "40°, 8%, 95%",
-              token: "--color-asphalt-95",
-            },
-            {
-              name: "Asphalt 98",
-              hex: "#FAF9F5",
-              rgb: "250, 249, 245",
-              hsl: "40°, 8%, 98%",
-              token: "--color-asphalt-98",
-            },
-          ]}
-        />
-      </section>
-
-      <hr className="border-t border-borderDefault" />
-
-      {/* Canvas Section */}
-      <section>
-        <h2
-          id="canvas"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
-        >
-          Canvas
-        </h2>
-
-        <hr className="border-t border-borderDefault mb-6" />
-
-        <p className="text-base text-textSubtle mb-6 max-w-3xl">
-          Subtle tinted backgrounds for layered sections and containers—warm
-          tones for inviting spaces, cool tones for technical content. Light
-          mode uses three tints per color; dark mode uses single elevated
-          surfaces.
-        </p>
-
-        <ColorSwatchGrid
-          swatches={[
-            { name: "Warm 85", hex: "#E8E6E0", textColor: "dark" },
-            { name: "Warm 90", hex: "#F0EEE8", textColor: "dark" },
-            { name: "Warm 95", hex: "#F8F7F4", textColor: "dark" },
-            { name: "Cool 85", hex: "#E0E6E8", textColor: "dark" },
-            { name: "Cool 90", hex: "#E8EEF0", textColor: "dark" },
-            { name: "Cool 95", hex: "#F4F7F8", textColor: "dark" },
-            { name: "Dark Warm", hex: "#1A1816", textColor: "light" },
-            { name: "Dark Cool", hex: "#16181A", textColor: "light" },
-          ]}
-        />
-
-        <ColorTable
-          colors={[
-            {
-              name: "Warm 85",
-              hex: "#E8E6E0",
-              rgb: "232, 230, 224",
-              hsl: "45°, 15%, 85%",
-              token: "--color-canvas-warm-85",
-            },
-            {
-              name: "Warm 90",
-              hex: "#F0EEE8",
-              rgb: "240, 238, 232",
-              hsl: "45°, 20%, 90%",
-              token: "--color-canvas-warm-90",
-            },
-            {
-              name: "Warm 95",
-              hex: "#F8F7F4",
-              rgb: "248, 247, 244",
-              hsl: "45°, 25%, 95%",
-              token: "--color-canvas-warm-95",
-            },
-            {
-              name: "Cool 85",
-              hex: "#E0E6E8",
-              rgb: "224, 230, 232",
-              hsl: "195°, 15%, 85%",
-              token: "--color-canvas-cool-85",
-            },
-            {
-              name: "Cool 90",
-              hex: "#E8EEF0",
-              rgb: "232, 238, 240",
-              hsl: "195°, 20%, 90%",
-              token: "--color-canvas-cool-90",
-            },
-            {
-              name: "Cool 95",
-              hex: "#F4F7F8",
-              rgb: "244, 247, 248",
-              hsl: "195°, 25%, 95%",
-              token: "--color-canvas-cool-95",
-            },
-            {
-              name: "Dark Warm",
-              hex: "#1A1816",
-              rgb: "26, 24, 22",
-              hsl: "30°, 8%, 9%",
-              token: "--color-canvas-dark-warm",
-            },
-            {
-              name: "Dark Cool",
-              hex: "#16181A",
-              rgb: "22, 24, 26",
-              hsl: "210°, 8%, 9%",
-              token: "--color-canvas-dark-cool",
-            },
-          ]}
-        />
-      </section>
-
-      <hr className="border-t border-borderDefault" />
-
-      {/* Status Section */}
-      <section>
-        <h2
-          id="status"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
-        >
-          Status
-        </h2>
-
-        <hr className="border-t border-borderDefault mb-6" />
-
-        <p className="text-base text-textSubtle mb-6 max-w-3xl">
-          Semantic feedback colors for forms, validation, and alerts. These map
-          category colors to common UI status meanings—success (Volt Green),
-          warning (Tech Cyan), error (Track Red), and info (Pace Purple). Each
-          status has text, background, and border variants for flexible usage.
-        </p>
-
-        <ColorSwatchGrid
-          swatches={[
-            { name: "Success", hex: "#008C47", textColor: "light" },
-            { name: "Success BG", hex: "#E6FAEF", textColor: "dark" },
-            { name: "Warning", hex: "#8C2F00", textColor: "light" },
-            { name: "Warning BG", hex: "#FAEBE6", textColor: "dark" },
-            { name: "Error", hex: "#D11B1B", textColor: "light" },
-            { name: "Error BG", hex: "#FAE9E9", textColor: "dark" },
-            { name: "Info", hex: "#5E3FD1", textColor: "light" },
-            { name: "Info BG", hex: "#EDEBFA", textColor: "dark" },
-          ]}
-        />
-
-        <ColorTable
-          colors={[
-            {
-              name: "Success Text",
-              hex: "#008C47",
-              rgb: "0, 140, 71",
-              hsl: "146°, 100%, 55%",
-              token: "--color-success-text",
-            },
-            {
-              name: "Success Text Subtle",
-              hex: "#00733A",
-              rgb: "0, 115, 58",
-              hsl: "146°, 100%, 45%",
-              token: "--color-success-text-subtle",
-            },
-            {
-              name: "Success Background",
-              hex: "#E6FAEF",
-              rgb: "230, 250, 239",
-              hsl: "146°, 100%, 95%",
-              token: "--color-success-bg",
-            },
-            {
-              name: "Success Background Subtle",
-              hex: "#CCF5E0",
-              rgb: "204, 245, 224",
-              hsl: "146°, 100%, 90%",
-              token: "--color-success-bg-subtle",
-            },
-            {
-              name: "Success Border",
-              hex: "#008C47",
-              rgb: "0, 140, 71",
-              hsl: "146°, 100%, 55%",
-              token: "--color-success-border",
-            },
-            {
-              name: "Warning Text",
-              hex: "#8C2F00",
-              rgb: "140, 47, 0",
-              hsl: "14°, 100%, 55%",
-              token: "--color-warning-text",
-            },
-            {
-              name: "Warning Text Subtle",
-              hex: "#732600",
-              rgb: "115, 38, 0",
-              hsl: "14°, 100%, 45%",
-              token: "--color-warning-text-subtle",
-            },
-            {
-              name: "Warning Background",
-              hex: "#FAEBE6",
-              rgb: "250, 235, 230",
-              hsl: "14°, 100%, 95%",
-              token: "--color-warning-bg",
-            },
-            {
-              name: "Warning Background Subtle",
-              hex: "#F5D6CC",
-              rgb: "245, 214, 204",
-              hsl: "14°, 100%, 90%",
-              token: "--color-warning-bg-subtle",
-            },
-            {
-              name: "Warning Border",
-              hex: "#8C2F00",
-              rgb: "140, 47, 0",
-              hsl: "14°, 100%, 55%",
-              token: "--color-warning-border",
-            },
-            {
-              name: "Error Text",
-              hex: "#D11B1B",
-              rgb: "209, 27, 27",
-              hsl: "0°, 79%, 55%",
-              token: "--color-error-text",
-            },
-            {
-              name: "Error Text Subtle",
-              hex: "#B81616",
-              rgb: "184, 22, 22",
-              hsl: "0°, 79%, 45%",
-              token: "--color-error-text-subtle",
-            },
-            {
-              name: "Error Background",
-              hex: "#FAE9E9",
-              rgb: "250, 233, 233",
-              hsl: "0°, 79%, 95%",
-              token: "--color-error-bg",
-            },
-            {
-              name: "Error Background Subtle",
-              hex: "#F5D2D2",
-              rgb: "245, 210, 210",
-              hsl: "0°, 79%, 90%",
-              token: "--color-error-bg-subtle",
-            },
-            {
-              name: "Error Border",
-              hex: "#D11B1B",
-              rgb: "209, 27, 27",
-              hsl: "0°, 79%, 55%",
-              token: "--color-error-border",
-            },
-            {
-              name: "Info Text",
-              hex: "#5E3FD1",
-              rgb: "94, 63, 209",
-              hsl: "262°, 60%, 55%",
-              token: "--color-info-text",
-            },
-            {
-              name: "Info Text Subtle",
-              hex: "#452BB8",
-              rgb: "69, 43, 184",
-              hsl: "262°, 60%, 45%",
-              token: "--color-info-text-subtle",
-            },
-            {
-              name: "Info Background",
-              hex: "#EDEBFA",
-              rgb: "237, 235, 250",
-              hsl: "262°, 60%, 95%",
-              token: "--color-info-bg",
-            },
-            {
-              name: "Info Background Subtle",
-              hex: "#DBD6F5",
-              rgb: "219, 214, 245",
-              hsl: "262°, 60%, 90%",
-              token: "--color-info-bg-subtle",
-            },
-            {
-              name: "Info Border",
-              hex: "#5E3FD1",
-              rgb: "94, 63, 209",
-              hsl: "262°, 60%, 55%",
-              token: "--color-info-border",
-            },
-          ]}
-        />
-      </section>
+      {/* Migration Section */}
+      <MigrationSection />
     </div>
   );
 }

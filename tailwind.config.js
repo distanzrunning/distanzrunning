@@ -12,86 +12,223 @@ module.exports = {
     extend: {
       colors: {
         // ═══════════════════════════════════════════════════════════════════
-        // GLOBAL PALETTE TOKENS (Static - these values never change)
-        // Source: src/styles/design-tokens.ts
+        // GEIST-STYLE COLOR SYSTEM - 100-1000 Scales
+        // Inspired by Vercel's Geist Design System
+        // Scale Semantics:
+        // 100-300: Component backgrounds (subtle fills, hover states)
+        // 400-600: Borders (subtle to prominent)
+        // 700-800: High contrast backgrounds (solid fills)
+        // 900-1000: Text and icons
         // ═══════════════════════════════════════════════════════════════════
 
         // Brand Core
         black: "#000000",
         white: "#FFFFFF",
 
-        // Electric Pink - Primary accent (HSL: 333°, 74%)
-        "electric-pink": "#D11B5C", // Default = 55 shade
-        "electric-pink-20": "#520A23",
-        "electric-pink-30": "#7A0F35",
-        "electric-pink-45": "#B8164F",
-        "electric-pink-55": "#D11B5C",
-        "electric-pink-90": "#F5D2E1",
-        "electric-pink-95": "#FAE9F0",
+        // ─────────────────────────────────────────────────────────────────
+        // GRAY SCALE - Warm neutral (100-1000)
+        // ─────────────────────────────────────────────────────────────────
+        gray: {
+          100: "#FAF9F5",
+          200: "#F5F4ED",
+          300: "#EBE9DC",
+          400: "#DDDACB",
+          500: "#C1BEAF",
+          600: "#A5A295",
+          700: "#7E7B6F",
+          800: "#5A574F",
+          900: "#363530",
+          1000: "#1F1E1C",
+        },
 
-        // Pace Purple - Secondary accent, Training (HSL: 262°, 60%)
-        "pace-purple": "#5E3FD1", // Default = 55 shade
-        "pace-purple-45": "#452BB8",
-        "pace-purple-55": "#5E3FD1",
-        "pace-purple-90": "#DBD6F5",
-        "pace-purple-95": "#EDEBFA",
+        // ─────────────────────────────────────────────────────────────────
+        // PINK SCALE - Primary accent (100-1000)
+        // ─────────────────────────────────────────────────────────────────
+        pink: {
+          100: "#FDF2F6",
+          200: "#FAE9F0",
+          300: "#F5D2E1",
+          400: "#EEB6CD",
+          500: "#E08AAF",
+          600: "#D11B5C", // Base Electric Pink
+          700: "#B8164F",
+          800: "#8E1240",
+          900: "#6A0D30",
+          1000: "#450820",
+        },
 
-        // Volt Green - Secondary accent, Nutrition/Wellness (HSL: 146°, 100%)
-        "volt-green": "#008C47", // Default = 55 shade
-        "volt-green-45": "#00733A",
-        "volt-green-55": "#008C47",
-        "volt-green-90": "#CCF5E0",
-        "volt-green-95": "#E6FAEF",
+        // ─────────────────────────────────────────────────────────────────
+        // PURPLE SCALE - Secondary accent (100-1000)
+        // ─────────────────────────────────────────────────────────────────
+        purple: {
+          100: "#F8F5FD",
+          200: "#EDEBFA",
+          300: "#DBD6F5",
+          400: "#C4B8EE",
+          500: "#A68DE6",
+          600: "#5E3FD1", // Base Pace Purple
+          700: "#452BB8",
+          800: "#36208F",
+          900: "#271666",
+          1000: "#180D3D",
+        },
 
-        // Tech Cyan - Tertiary accent, Gear (HSL: 190°, 100%)
-        "tech-cyan": "#008CB8", // Default = 55 shade
-        "tech-cyan-45": "#007399",
-        "tech-cyan-55": "#008CB8",
-        "tech-cyan-90": "#CCF0F5",
-        "tech-cyan-95": "#E6F7FA",
+        // ─────────────────────────────────────────────────────────────────
+        // GREEN SCALE - Secondary accent (100-1000)
+        // ─────────────────────────────────────────────────────────────────
+        green: {
+          100: "#F2FDF6",
+          200: "#E6FAEF",
+          300: "#CCF5E0",
+          400: "#A3EDCA",
+          500: "#6AE0A8",
+          600: "#008C47", // Base Volt Green
+          700: "#00733A",
+          800: "#005A2E",
+          900: "#004122",
+          1000: "#002816",
+        },
 
-        // Track Red - Tertiary accent, Road/Races (HSL: 0°, 79%)
-        "track-red": "#D11B1B", // Default = 55 shade
-        "track-red-45": "#B81616",
-        "track-red-55": "#D11B1B",
-        "track-red-90": "#F5D2D2",
-        "track-red-95": "#FAE9E9",
+        // ─────────────────────────────────────────────────────────────────
+        // BLUE SCALE - Tertiary accent (100-1000)
+        // ─────────────────────────────────────────────────────────────────
+        blue: {
+          100: "#F2F8FD",
+          200: "#E6F7FA",
+          300: "#CCF0F5",
+          400: "#A3E4ED",
+          500: "#6AD0E0",
+          600: "#008CB8", // Base Tech Cyan
+          700: "#007399",
+          800: "#005A7A",
+          900: "#00415B",
+          1000: "#00283C",
+        },
 
-        // Trail Brown - Tertiary accent, Trail (HSL: 25°, 59%)
-        "trail-brown": "#8C4623", // Default = 55 shade
+        // ─────────────────────────────────────────────────────────────────
+        // RED SCALE - Tertiary accent (100-1000)
+        // ─────────────────────────────────────────────────────────────────
+        red: {
+          100: "#FDF5F2",
+          200: "#FAE9E9",
+          300: "#F5D2D2",
+          400: "#EDB8B8",
+          500: "#E08A8A",
+          600: "#D11B1B", // Base Track Red
+          700: "#B81616",
+          800: "#8E1212",
+          900: "#6A0D0D",
+          1000: "#450808",
+        },
+
+        // ─────────────────────────────────────────────────────────────────
+        // AMBER SCALE - Warning (100-1000)
+        // ─────────────────────────────────────────────────────────────────
+        amber: {
+          100: "#FEFBF2",
+          200: "#FDF5E0",
+          300: "#FBEBC4",
+          400: "#F5D88A",
+          500: "#EBC04A",
+          600: "#D69E0A",
+          700: "#B38208",
+          800: "#8C6606",
+          900: "#664A04",
+          1000: "#402E02",
+        },
+
+        // ─────────────────────────────────────────────────────────────────
+        // TEAL SCALE - New accent (100-1000)
+        // ─────────────────────────────────────────────────────────────────
+        teal: {
+          100: "#F2FDFC",
+          200: "#E6FAF8",
+          300: "#CCF5F0",
+          400: "#A3EDE4",
+          500: "#6AE0D3",
+          600: "#0D9488",
+          700: "#0A7A70",
+          800: "#086058",
+          900: "#054640",
+          1000: "#032C28",
+        },
+
+        // ═══════════════════════════════════════════════════════════════════
+        // LEGACY ALIASES - Backward compatibility
+        // These map old color names to new 100-1000 scale
+        // ═══════════════════════════════════════════════════════════════════
+
+        // Electric Pink aliases
+        "electric-pink": "#D11B5C",
+        "electric-pink-20": "#450820", // → pink-1000
+        "electric-pink-30": "#6A0D30", // → pink-900
+        "electric-pink-45": "#B8164F", // → pink-700
+        "electric-pink-55": "#D11B5C", // → pink-600
+        "electric-pink-90": "#F5D2E1", // → pink-300
+        "electric-pink-95": "#FAE9F0", // → pink-200
+
+        // Pace Purple aliases
+        "pace-purple": "#5E3FD1",
+        "pace-purple-45": "#452BB8", // → purple-700
+        "pace-purple-55": "#5E3FD1", // → purple-600
+        "pace-purple-90": "#DBD6F5", // → purple-300
+        "pace-purple-95": "#EDEBFA", // → purple-200
+
+        // Volt Green aliases
+        "volt-green": "#008C47",
+        "volt-green-45": "#00733A", // → green-700
+        "volt-green-55": "#008C47", // → green-600
+        "volt-green-90": "#CCF5E0", // → green-300
+        "volt-green-95": "#E6FAEF", // → green-200
+
+        // Tech Cyan aliases
+        "tech-cyan": "#008CB8",
+        "tech-cyan-45": "#007399", // → blue-700
+        "tech-cyan-55": "#008CB8", // → blue-600
+        "tech-cyan-90": "#CCF0F5", // → blue-300
+        "tech-cyan-95": "#E6F7FA", // → blue-200
+
+        // Track Red aliases
+        "track-red": "#D11B1B",
+        "track-red-45": "#B81616", // → red-700
+        "track-red-55": "#D11B1B", // → red-600
+        "track-red-90": "#F5D2D2", // → red-300
+        "track-red-95": "#FAE9E9", // → red-200
+
+        // Trail Brown (kept as-is, not part of new system)
+        "trail-brown": "#8C4623",
         "trail-brown-45": "#73391D",
         "trail-brown-55": "#8C4623",
         "trail-brown-90": "#F5E6D9",
         "trail-brown-95": "#FAF2EC",
 
-        // Signal Orange - Warning states (HSL: 20°, 100%)
-        "signal-orange-45": "#732600",
-        "signal-orange-55": "#8C2F00",
-        "signal-orange-90": "#F5D6CC",
-        "signal-orange-95": "#FAEBE6",
+        // Signal Orange aliases → Amber
+        "signal-orange-45": "#B38208", // → amber-700
+        "signal-orange-55": "#D69E0A", // → amber-600
+        "signal-orange-90": "#FBEBC4", // → amber-300
+        "signal-orange-95": "#FDF5E0", // → amber-200
 
-        // Asphalt Greyscale - Warm undertones with 5% lightness steps
-        // HSL base: 40° hue, 4-8% saturation for subtle warmth
-        "asphalt-5": "#141413", // HSL: 40°, 4%, 5% - near black with warm tint
-        "asphalt-10": "#1F1E1C", // HSL: 40°, 5%, 10%
-        "asphalt-15": "#2A2926", // HSL: 40°, 5%, 15%
-        "asphalt-20": "#363530", // HSL: 40°, 6%, 20%
-        "asphalt-25": "#42403A", // HSL: 40°, 6%, 25%
-        "asphalt-30": "#4E4C45", // HSL: 40°, 6%, 30%
-        "asphalt-35": "#5A574F", // HSL: 40°, 7%, 35%
-        "asphalt-40": "#666359", // HSL: 40°, 7%, 40%
-        "asphalt-45": "#726F64", // HSL: 40°, 7%, 45%
-        "asphalt-50": "#7E7B6F", // HSL: 40°, 7%, 50%
-        "asphalt-55": "#8B887C", // HSL: 40°, 6%, 55%
-        "asphalt-60": "#989588", // HSL: 40°, 6%, 60%
-        "asphalt-65": "#A5A295", // HSL: 40°, 6%, 65%
-        "asphalt-70": "#B3B0A3", // HSL: 40°, 6%, 70%
-        "asphalt-75": "#C1BEAF", // HSL: 40°, 6%, 75%
-        "asphalt-80": "#CFCCBE", // HSL: 40°, 6%, 80%
-        "asphalt-85": "#DDDACB", // HSL: 40°, 6%, 85%
-        "asphalt-90": "#EBE9DC", // HSL: 40°, 6%, 90%
-        "asphalt-95": "#F5F4ED", // HSL: 40°, 8%, 95% - warm white
-        "asphalt-98": "#FAF9F5", // HSL: 40°, 8%, 98% - near white
+        // Asphalt aliases → Gray (backward compatibility)
+        "asphalt-5": "#141413", // Darker than gray-1000
+        "asphalt-10": "#1F1E1C", // → gray-1000
+        "asphalt-15": "#2A2926", // Between gray-900 and gray-1000
+        "asphalt-20": "#363530", // → gray-900
+        "asphalt-25": "#42403A", // Between gray-800 and gray-900
+        "asphalt-30": "#4E4C45", // Between gray-800 and gray-900
+        "asphalt-35": "#5A574F", // → gray-800
+        "asphalt-40": "#666359", // Between gray-700 and gray-800
+        "asphalt-45": "#726F64", // Between gray-700 and gray-800
+        "asphalt-50": "#7E7B6F", // → gray-700
+        "asphalt-55": "#8B887C", // Between gray-600 and gray-700
+        "asphalt-60": "#989588", // Between gray-600 and gray-700
+        "asphalt-65": "#A5A295", // → gray-600
+        "asphalt-70": "#B3B0A3", // Between gray-500 and gray-600
+        "asphalt-75": "#C1BEAF", // → gray-500
+        "asphalt-80": "#CFCCBE", // Between gray-400 and gray-500
+        "asphalt-85": "#DDDACB", // → gray-400
+        "asphalt-90": "#EBE9DC", // → gray-300
+        "asphalt-95": "#F5F4ED", // → gray-200
+        "asphalt-98": "#FAF9F5", // → gray-100
 
         // ═══════════════════════════════════════════════════════════════════
         // SEMANTIC TOKENS (Dynamic - swap between light/dark mode via CSS vars)
