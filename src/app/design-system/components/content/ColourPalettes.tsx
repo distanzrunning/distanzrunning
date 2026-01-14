@@ -1408,9 +1408,9 @@ function ColorScalesSection({ isDark }: { isDark: boolean }) {
 
   return (
     <section className="mb-16">
-      <SectionHeader id="color-scales">Color Scales</SectionHeader>
+      <SectionHeader id="colour-scales">Colour Scales</SectionHeader>
       <p className="text-base text-textSubtle mt-4 mb-8">
-        The complete color system. Each scale ranges from 100-1000, providing
+        The complete colour system. Each scale ranges from 100-1000, providing
         consistent tones for backgrounds, borders, text, and accents. Click any
         swatch to copy its value.
       </p>

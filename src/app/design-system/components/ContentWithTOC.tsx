@@ -88,7 +88,7 @@ export default function ContentWithTOC({
 
     const element = document.getElementById(id);
     if (element) {
-      const offsetTop = element.offsetTop - 120; // Account for sticky header
+      const offsetTop = element.offsetTop - 140; // Account for sticky header + gap above section
       window.scrollTo({
         top: offsetTop,
         behavior: "smooth",

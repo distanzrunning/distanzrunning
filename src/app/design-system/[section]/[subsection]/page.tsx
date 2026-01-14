@@ -149,7 +149,7 @@ export default function DesignSystemSubsectionPage() {
           <ContentWithTOC
             tocTitle="Colours"
             tocItems={[
-              { id: "color-scales", title: "Color Scales" },
+              { id: "colour-scales", title: "Colour Scales" },
               { id: "backgrounds", title: "Backgrounds" },
               {
                 id: "colors-1-3-component-backgrounds",
