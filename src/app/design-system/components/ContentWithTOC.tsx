@@ -81,13 +81,13 @@ export default function ContentWithTOC({
         href={`#${id}`}
         onClick={() => handleClick(id)}
         className={`
-          flex border-l-2 border-solid py-1.5 px-4 no-underline transition-colors
+          flex border-l-2 border-solid py-1.5 pr-4 no-underline transition-colors
           ${
             isActive
               ? "border-asphalt-10 dark:border-asphalt-95 text-textDefault font-medium"
               : "border-borderSubtle text-textSubtle hover:text-textDefault hover:border-asphalt-40 dark:hover:border-asphalt-60"
           }
-          ${isChild ? "text-xs" : "text-sm"}
+          ${isChild ? "text-xs pl-7" : "text-sm pl-4"}
         `}
       >
         {title}
@@ -114,15 +114,12 @@ export default function ContentWithTOC({
               {tocItems.map((item) => (
                 <div key={item.id}>
                   {renderTOCLink(item.id, item.title)}
-                  {item.children && (
-                    <div className="ml-3">
-                      {item.children.map((child) => (
-                        <div key={child.id}>
-                          {renderTOCLink(child.id, child.title, true)}
-                        </div>
-                      ))}
-                    </div>
-                  )}
+                  {item.children &&
+                    item.children.map((child) => (
+                      <div key={child.id}>
+                        {renderTOCLink(child.id, child.title, true)}
+                      </div>
+                    ))}
                 </div>
               ))}
             </div>
