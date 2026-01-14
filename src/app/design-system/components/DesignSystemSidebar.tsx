@@ -127,6 +127,7 @@ const componentsSections: SidebarSection[] = [
       { id: "nav-disclosure", label: "Navigation disclosure" },
       { id: "nav-disclosure-icon", label: "Navigation disclosure + icon" },
       { id: "section-control", label: "Section control" },
+      { id: "toggle", label: "Toggle" },
       { id: "tooltip", label: "Tooltip" },
     ],
   },

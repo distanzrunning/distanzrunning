@@ -162,20 +162,22 @@
     --distanz_text-spacing-xs: 0.0025em;
     --distanz_text-line-height-xs: 1.25; /* Reduced from 1.4 */
 
-    /* Distanz Color System - Semantic tokens using 10-shade Asphalt greyscale */
+    /* Distanz Color System - Semantic tokens using warm Asphalt greyscale */
     /* Light Mode - Uses darker shades for text, lighter shades for surfaces */
     --color-textDefault:
-      51, 51, 51; /* Asphalt 20 (L=20%) - headings, primary text */
-    --color-textSubtle: 102, 102, 102; /* Asphalt 40 (L=40%) - secondary text */
+      54, 53, 48; /* Asphalt 20 - warm charcoal for headings, primary text */
+    --color-textSubtle:
+      102, 99, 89; /* Asphalt 40 - warm grey for secondary text */
     --color-textSubtler:
-      128, 128, 128; /* Asphalt 50 (L=50%) - muted text, placeholders */
+      126, 123, 111; /* Asphalt 50 - warm muted text, placeholders */
     --color-textForceTint:
-      242, 242, 242; /* Asphalt 95 (L=95%) - force light text */
-    --color-textForceShade: 13, 13, 13; /* Asphalt 5 (L=5%) - force dark text */
+      245, 244, 237; /* Asphalt 95 - warm white force light text */
+    --color-textForceShade:
+      20, 20, 19; /* Asphalt 5 - warm black force dark text */
     --color-textInverted:
-      242, 242, 242; /* Asphalt 95 (L=95%) - inverted text */
+      245, 244, 237; /* Asphalt 95 - warm white inverted text */
     --color-textDisabled:
-      153, 153, 153; /* Asphalt 60 (L=60%) - disabled text */
+      152, 149, 136; /* Asphalt 60 - warm grey disabled text */
     --color-textAccent: 228, 60, 129; /* Electric Pink - accent text */
     --color-textAccentSubtle:
       238, 182, 205; /* Electric Pink 90 - subtle accent */
@@ -183,19 +185,19 @@
     /* Border colors - Systematic two-tier approach */
     /* DEFAULT: Structural borders for clear visual hierarchy */
     --color-borderDefault:
-      179, 179, 179; /* Asphalt 70 (L=70%) - page wrappers, sidebars, section dividers */
+      179, 176, 163; /* Asphalt 70 - warm grey for page wrappers, sidebars */
     --color-borderDefaultHover:
-      153, 153, 153; /* Asphalt 60 (L=60%) - hover state */
+      152, 149, 136; /* Asphalt 60 - warm grey hover state */
 
     /* SUBTLE: Nested content and light separation */
     --color-borderSubtle:
-      229, 229, 229; /* Asphalt 90 (L=90%) - cards, TOC, nested elements */
+      235, 233, 220; /* Asphalt 90 - warm beige for cards, TOC, nested elements */
     --color-borderSubtleHover:
-      204, 204, 204; /* Asphalt 80 (L=80%) - hover state */
+      207, 204, 190; /* Asphalt 80 - warm grey hover state */
 
     /* EXTRA SUBTLE: Barely visible dividers */
     --color-borderExtraSubtle:
-      242, 242, 242; /* Asphalt 95 (L=95%) - internal dividers */
+      245, 244, 237; /* Asphalt 95 - warm white internal dividers */
 
     /* Legacy aliases - map old tokens to new system */
     --color-borderNeutral: var(
@@ -208,10 +210,27 @@
     --color-surface:
       255, 255, 255; /* White - primary elevated surfaces (cards, modals) */
     --color-surfaceSubtle:
-      247, 247, 247; /* Near Asphalt 95 (L=97%) - subtle elevation (TOC, sidebars) */
+      250, 249, 245; /* Asphalt 98 - warm off-white for subtle elevation */
     --color-surfaceWarm:
-      248, 247, 244; /* Warm 95 - warm-tinted elevation for callouts */
-    --color-canvas: 242, 242, 242; /* Asphalt 95 (L=95%) - page background */
+      245, 244, 237; /* Asphalt 95 - warm-tinted elevation for callouts */
+    --color-canvas: 250, 249, 245; /* Asphalt 98 - warm white page background */
+
+    /* Elevated Surfaces - Layered elevation system for depth hierarchy
+       Each level provides progressive visual separation from the canvas */
+    --color-surfaceElevated1:
+      255, 255, 255; /* Level 1: Cards, dropdowns - pure white */
+    --color-surfaceElevated2:
+      255, 255, 255; /* Level 2: Modals, dialogs - pure white */
+    --color-surfaceElevated3:
+      255, 255, 255; /* Level 3: Popovers, tooltips - pure white */
+
+    /* Elevated surface shadows - Light mode uses subtle shadows for depth */
+    --shadow-elevated1:
+      0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06);
+    --shadow-elevated2:
+      0 4px 12px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06);
+    --shadow-elevated3:
+      0 12px 32px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.08);
 
     /* Legacy aliases */
     --color-neutralBgSubtle: var(--color-surfaceSubtle);
@@ -267,28 +286,30 @@
 
   /* Dark Mode - Inverted scale uses lighter shades for text, darker for surfaces */
   .dark {
-    /* Text colors - Dark mode uses lighter greys */
-    --color-textDefault: 229, 229, 229; /* Asphalt 90 (L=90%) - primary text */
-    --color-textSubtle: 179, 179, 179; /* Asphalt 70 (L=70%) - secondary text */
-    --color-textSubtler: 128, 128, 128; /* Asphalt 50 (L=50%) - muted text */
-    --color-textInverted: 13, 13, 13; /* Asphalt 5 (L=5%) - inverted text */
+    /* Text colors - Dark mode uses lighter warm greys */
+    --color-textDefault:
+      235, 233, 220; /* Asphalt 90 - warm light grey primary text */
+    --color-textSubtle:
+      179, 176, 163; /* Asphalt 70 - warm grey secondary text */
+    --color-textSubtler: 126, 123, 111; /* Asphalt 50 - warm muted text */
+    --color-textInverted: 20, 20, 19; /* Asphalt 5 - warm black inverted text */
 
     /* Border colors - Systematic two-tier approach (inverted from light mode) */
     /* DEFAULT: Structural borders */
     --color-borderDefault:
-      77, 77, 77; /* Asphalt 30 (L=30%) - page wrappers, sidebars, section dividers */
+      78, 76, 69; /* Asphalt 30 - warm grey for page wrappers, sidebars */
     --color-borderDefaultHover:
-      102, 102, 102; /* Asphalt 40 (L=40%) - hover state */
+      102, 99, 89; /* Asphalt 40 - warm grey hover state */
 
     /* SUBTLE: Nested content */
     --color-borderSubtle:
-      51, 51, 51; /* Asphalt 20 (L=20%) - cards, TOC, nested elements */
+      54, 53, 48; /* Asphalt 20 - warm dark grey for cards, TOC */
     --color-borderSubtleHover:
-      77, 77, 77; /* Asphalt 30 (L=30%) - hover state */
+      78, 76, 69; /* Asphalt 30 - warm grey hover state */
 
     /* EXTRA SUBTLE: Barely visible */
     --color-borderExtraSubtle:
-      26, 26, 26; /* Asphalt 10 (L=10%) - internal dividers */
+      31, 30, 28; /* Asphalt 10 - warm near-black internal dividers */
 
     /* Legacy aliases */
     --color-borderNeutral: var(--color-borderDefault);
@@ -296,13 +317,30 @@
     --color-borderNeutralSubtle: var(--color-borderSubtle);
 
     /* Background colors - Systematic surface elevation (inverted) */
-    --color-surface:
-      26, 26, 26; /* Asphalt 10 (L=10%) - primary elevated surfaces */
+    --color-surface: 31, 30, 28; /* Asphalt 10 - warm dark elevated surfaces */
     --color-surfaceSubtle:
-      19, 19, 19; /* Between Asphalt 5-10 - subtle elevation */
+      42, 41, 38; /* Asphalt 15 - warm dark subtle elevation */
     --color-surfaceWarm:
-      26, 24, 22; /* Dark Warm - warm-tinted elevation for callouts */
-    --color-canvas: 13, 13, 13; /* Asphalt 5 (L=5%) - page background */
+      42, 40, 38; /* Asphalt 15 warm variant - warm-tinted elevation */
+    --color-canvas:
+      20, 20, 19; /* Asphalt 5 - warm near-black page background */
+
+    /* Elevated Surfaces - Dark mode uses progressively lighter backgrounds
+       Combined with subtle shadows for premium layered appearance */
+    --color-surfaceElevated1:
+      31, 30, 28; /* Level 1: Cards, dropdowns - Asphalt 10 */
+    --color-surfaceElevated2:
+      42, 41, 38; /* Level 2: Modals, dialogs - Asphalt 15 */
+    --color-surfaceElevated3:
+      54, 53, 48; /* Level 3: Popovers, tooltips - Asphalt 20 */
+
+    /* Elevated surface shadows - Dark mode uses deeper, more diffuse shadows */
+    --shadow-elevated1:
+      0 1px 3px rgba(0, 0, 0, 0.24), 0 1px 2px rgba(0, 0, 0, 0.16);
+    --shadow-elevated2:
+      0 4px 16px rgba(0, 0, 0, 0.32), 0 2px 6px rgba(0, 0, 0, 0.2);
+    --shadow-elevated3:
+      0 16px 48px rgba(0, 0, 0, 0.4), 0 6px 12px rgba(0, 0, 0, 0.24);
 
     /* Legacy aliases */
     --color-neutralBgSubtle: var(--color-surfaceSubtle);

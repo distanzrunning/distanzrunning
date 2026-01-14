@@ -70,18 +70,28 @@ module.exports = {
         "signal-orange-90": "#F5D6CC",
         "signal-orange-95": "#FAEBE6",
 
-        // Asphalt Greyscale - 10% lightness steps
-        "asphalt-5": "#0D0D0D",
-        "asphalt-10": "#1A1A1A",
-        "asphalt-20": "#333333",
-        "asphalt-30": "#4D4D4D",
-        "asphalt-40": "#666666",
-        "asphalt-50": "#808080",
-        "asphalt-60": "#999999",
-        "asphalt-70": "#B3B3B3",
-        "asphalt-80": "#CCCCCC",
-        "asphalt-90": "#E5E5E5",
-        "asphalt-95": "#F2F2F2",
+        // Asphalt Greyscale - Warm undertones with 5% lightness steps
+        // HSL base: 40° hue, 4-8% saturation for subtle warmth
+        "asphalt-5": "#141413", // HSL: 40°, 4%, 5% - near black with warm tint
+        "asphalt-10": "#1F1E1C", // HSL: 40°, 5%, 10%
+        "asphalt-15": "#2A2926", // HSL: 40°, 5%, 15%
+        "asphalt-20": "#363530", // HSL: 40°, 6%, 20%
+        "asphalt-25": "#42403A", // HSL: 40°, 6%, 25%
+        "asphalt-30": "#4E4C45", // HSL: 40°, 6%, 30%
+        "asphalt-35": "#5A574F", // HSL: 40°, 7%, 35%
+        "asphalt-40": "#666359", // HSL: 40°, 7%, 40%
+        "asphalt-45": "#726F64", // HSL: 40°, 7%, 45%
+        "asphalt-50": "#7E7B6F", // HSL: 40°, 7%, 50%
+        "asphalt-55": "#8B887C", // HSL: 40°, 6%, 55%
+        "asphalt-60": "#989588", // HSL: 40°, 6%, 60%
+        "asphalt-65": "#A5A295", // HSL: 40°, 6%, 65%
+        "asphalt-70": "#B3B0A3", // HSL: 40°, 6%, 70%
+        "asphalt-75": "#C1BEAF", // HSL: 40°, 6%, 75%
+        "asphalt-80": "#CFCCBE", // HSL: 40°, 6%, 80%
+        "asphalt-85": "#DDDACB", // HSL: 40°, 6%, 85%
+        "asphalt-90": "#EBE9DC", // HSL: 40°, 6%, 90%
+        "asphalt-95": "#F5F4ED", // HSL: 40°, 8%, 95% - warm white
+        "asphalt-98": "#FAF9F5", // HSL: 40°, 8%, 98% - near white
 
         // ═══════════════════════════════════════════════════════════════════
         // SEMANTIC TOKENS (Dynamic - swap between light/dark mode via CSS vars)
@@ -114,6 +124,11 @@ module.exports = {
         surfaceWarm: "rgb(var(--color-surfaceWarm))",
         canvas: "rgb(var(--color-canvas))",
         neutralBgSubtle: "rgb(var(--color-neutralBgSubtle))",
+
+        // Elevated surfaces - layered depth hierarchy
+        "surface-elevated-1": "rgb(var(--color-surfaceElevated1))",
+        "surface-elevated-2": "rgb(var(--color-surfaceElevated2))",
+        "surface-elevated-3": "rgb(var(--color-surfaceElevated3))",
 
         // Status colors - Success
         "success-text": "rgb(var(--color-success-text))",
@@ -150,6 +165,10 @@ module.exports = {
         surfaceWarm: "rgb(var(--color-surfaceWarm))",
         canvas: "rgb(var(--color-canvas))",
         neutralBgSubtle: "rgb(var(--color-neutralBgSubtle))",
+        // Elevated surfaces
+        "surface-elevated-1": "rgb(var(--color-surfaceElevated1))",
+        "surface-elevated-2": "rgb(var(--color-surfaceElevated2))",
+        "surface-elevated-3": "rgb(var(--color-surfaceElevated3))",
       },
       keyframes: {
         navContentIn: {
@@ -639,6 +658,28 @@ module.exports = {
         content: "95%", // Standard content width
         wide: "95%", // Wide layouts
       },
+      // ═══════════════════════════════════════════════════════════════════
+      // BORDER RADIUS SYSTEM - Named semantic tokens
+      // Generous, premium radii inspired by modern design systems
+      // ═══════════════════════════════════════════════════════════════════
+      borderRadius: {
+        none: "0",
+        xs: "4px", // Subtle rounding for small elements (tags, badges)
+        sm: "6px", // Default for inputs, small buttons
+        DEFAULT: "8px", // Standard rounding for cards, buttons
+        md: "10px", // Medium elements
+        lg: "12px", // Larger cards, modals
+        xl: "16px", // Feature cards, prominent containers
+        "2xl": "20px", // Large panels, hero sections
+        "3xl": "24px", // Extra large containers
+        "4xl": "32px", // Maximum rounding for special elements
+        full: "9999px", // Pill shapes, circular elements
+        // Fluid responsive radii - scale with viewport
+        "fluid-sm": "clamp(4px, 0.5vw, 8px)",
+        "fluid-md": "clamp(8px, 1vw, 16px)",
+        "fluid-lg": "clamp(12px, 1.5vw, 24px)",
+        "fluid-xl": "clamp(16px, 2vw, 32px)",
+      },
       spacing: {
         18: "4.5rem",
         21: "5.25rem",
@@ -647,6 +688,10 @@ module.exports = {
       boxShadow: {
         "elevation-flyout":
           "0 4px 24px rgba(0, 0, 0, 0.08), 0 0 1px rgba(0, 0, 0, 0.1)",
+        // Elevated surface shadows - use CSS variables for light/dark mode
+        "elevated-1": "var(--shadow-elevated1)",
+        "elevated-2": "var(--shadow-elevated2)",
+        "elevated-3": "var(--shadow-elevated3)",
       },
       animation: {
         rotate: "rotate 3s linear infinite both",

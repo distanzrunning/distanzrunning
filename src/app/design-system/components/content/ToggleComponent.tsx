@@ -1,29 +1,22 @@
 "use client";
 
 import { useState } from "react";
-import Button from "@/components/ui/Button";
+import Toggle from "@/components/ui/Toggle";
 
 interface VariantShowcaseProps {
   title: string;
   id: string;
-  variant:
-    | "primary"
-    | "secondary"
-    | "tertiary"
-    | "inverse"
-    | "inverse-secondary"
-    | "inverse-tertiary";
   code: string;
   inverse?: boolean;
+  size?: "default" | "small";
+  showLabel?: boolean;
 }
 
 // VS Code Dark-style syntax highlighting for JSX
 function highlightCode(code: string) {
-  // Match JSX tags, attributes, and text content
-  const parts = code.split(/(<\/?[A-Z][a-zA-Z]*|>|[a-z]+(?==))/g);
+  const parts = code.split(/(<\/?[A-Z][a-zA-Z]*|>|[a-z]+(?==)|"[^"]*")/g);
 
   return parts.map((part, i) => {
-    // Component tags (e.g., <Button, </Button) - Blue
     if (/^<\/?[A-Z]/.test(part)) {
       return (
         <span key={i} className="text-[#569CD6]">
@@ -31,7 +24,6 @@ function highlightCode(code: string) {
         </span>
       );
     }
-    // Closing bracket - Blue
     if (part === ">") {
       return (
         <span key={i} className="text-[#569CD6]">
@@ -39,18 +31,16 @@ function highlightCode(code: string) {
         </span>
       );
     }
-    // Attributes (e.g., inverse, secondary) - Light Blue
-    if (/^[a-z]+$/.test(part) && parts[i + 1] !== ">") {
+    if (/^".*"$/.test(part)) {
       return (
-        <span key={i} className="text-[#9CDCFE]">
+        <span key={i} className="text-[#CE9178]">
           {part}
         </span>
       );
     }
-    // Default text content - Orange
-    if (part && !part.startsWith("<") && part !== ">") {
+    if (/^[a-z]+$/.test(part)) {
       return (
-        <span key={i} className="text-[#CE9178]">
+        <span key={i} className="text-[#9CDCFE]">
           {part}
         </span>
       );
@@ -62,10 +52,12 @@ function highlightCode(code: string) {
 function VariantShowcase({
   title,
   id,
-  variant,
   code,
   inverse = false,
+  size = "default",
+  showLabel = false,
 }: VariantShowcaseProps) {
+  const [isChecked, setIsChecked] = useState(false);
   const [isDisabled, setIsDisabled] = useState(false);
   const [codeValue, setCodeValue] = useState(code);
 
@@ -78,36 +70,72 @@ function VariantShowcase({
         {title}
       </h3>
 
-      {/* Preview + States container (side-by-side) */}
+      {/* Preview + States container */}
       <div className="flex rounded-t-lg border border-b-0 border-borderSubtle overflow-hidden">
-        {/* Preview area - fixed background regardless of theme */}
+        {/* Preview area */}
         <div
           className={`flex-1 p-8 flex items-center justify-start min-h-[120px] ${
             inverse ? "bg-asphalt-10" : "bg-white"
           }`}
         >
-          <Button
-            variant={
-              variant === "secondary" || variant === "inverse-secondary"
-                ? "secondary"
-                : variant === "tertiary" || variant === "inverse-tertiary"
-                  ? "tertiary"
-                  : "primary"
-            }
+          <Toggle
+            checked={isChecked}
+            onChange={(e) => setIsChecked(e.target.checked)}
+            size={size}
             inverse={inverse}
             ignoreDarkMode
             disabled={isDisabled}
-            className="min-w-[120px]"
-          >
-            Button
-          </Button>
+            label={showLabel ? "Enable feature" : undefined}
+          />
         </div>
 
         {/* States sidebar */}
-        <div className="w-[140px] border-l border-borderSubtle bg-surfaceSubtle dark:bg-neutral-900 p-4 flex flex-col">
-          <span className="text-sm font-medium text-textSubtle mb-3">
+        <div className="w-[140px] border-l border-borderSubtle bg-surfaceSubtle dark:bg-neutral-900 p-4 flex flex-col gap-3">
+          <span className="text-sm font-medium text-textSubtle mb-1">
             States
           </span>
+
+          {/* Checked toggle */}
+          <label className="flex items-center gap-2 cursor-pointer">
+            <div className="relative">
+              <input
+                type="checkbox"
+                checked={isChecked}
+                onChange={(e) => setIsChecked(e.target.checked)}
+                className="peer sr-only"
+              />
+              <div
+                className={`w-[16px] h-[16px] rounded-[3px] border flex items-center justify-center
+                  transition-all duration-150 ease-out cursor-pointer
+                  ${
+                    isChecked
+                      ? "bg-asphalt-10 dark:bg-asphalt-95 border-asphalt-10 dark:border-asphalt-95"
+                      : "bg-white dark:bg-asphalt-10 border-asphalt-40 dark:border-asphalt-60 hover:border-asphalt-50"
+                  }
+                  peer-focus:ring-1 peer-focus:ring-borderNeutral peer-focus:ring-offset-0
+                `}
+              >
+                {isChecked && (
+                  <svg
+                    className="w-3 h-3 text-white dark:text-asphalt-10"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                    viewBox="0 0 12 12"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M2.5 6L5 8.5L9.5 4"
+                    />
+                  </svg>
+                )}
+              </div>
+            </div>
+            <span className="text-sm text-textDefault">checked</span>
+          </label>
+
+          {/* Disabled toggle */}
           <label className="flex items-center gap-2 cursor-pointer">
             <div className="relative">
               <input
@@ -151,13 +179,11 @@ function VariantShowcase({
 
       {/* Editable code box */}
       <div className="relative rounded-b-lg border border-borderSubtle bg-surfaceSubtle dark:bg-neutral-900 overflow-hidden focus-within:border-borderDefault focus-within:ring-1 focus-within:ring-borderNeutral transition-all">
-        {/* Highlighted overlay */}
         <div className="absolute inset-0 p-4 pointer-events-none">
           <pre className="text-sm font-mono">
             <code>{highlightCode(codeValue)}</code>
           </pre>
         </div>
-        {/* Editable textarea */}
         <textarea
           value={codeValue}
           onChange={(e) => setCodeValue(e.target.value)}
@@ -170,22 +196,25 @@ function VariantShowcase({
   );
 }
 
-export default function ButtonComponent() {
+export default function ToggleComponent() {
   return (
     <div className="space-y-4">
       {/* Page Title */}
       <div>
-        <p className="text-sm tracking-wide text-electric-pink mb-2">Buttons</p>
+        <p className="text-sm tracking-wide text-electric-pink mb-2">
+          Controls
+        </p>
         <h1
-          id="button"
+          id="toggle"
           className="font-serif text-[40px] leading-[1.15] font-medium mb-0"
         >
-          Button
+          Toggle
         </h1>
       </div>
 
       <p className="text-base text-textSubtle max-w-3xl">
-        For the primary action.
+        A switch control for binary on/off states. Use toggles for settings that
+        take effect immediately.
       </p>
 
       <hr className="border-t-4 border-textDefault" />
@@ -199,54 +228,34 @@ export default function ButtonComponent() {
           Variants
         </h2>
 
-        {/* Primary (Default) */}
+        {/* Default */}
         <VariantShowcase
-          title="Primary"
-          id="variants-primary"
-          variant="primary"
-          code={`<Button>Button</Button>`}
+          title="Default"
+          id="variants-default"
+          code={`<Toggle checked={checked} onChange={handleChange} />`}
+        />
+
+        {/* With Label */}
+        <VariantShowcase
+          title="With Label"
+          id="variants-with-label"
+          code={`<Toggle label="Enable feature" checked={checked} onChange={handleChange} />`}
+          showLabel
+        />
+
+        {/* Small */}
+        <VariantShowcase
+          title="Small"
+          id="variants-small"
+          code={`<Toggle size="small" checked={checked} onChange={handleChange} />`}
+          size="small"
         />
 
         {/* Inverse */}
         <VariantShowcase
           title="Inverse"
           id="variants-inverse"
-          variant="inverse"
-          code={`<Button inverse>Button</Button>`}
-          inverse
-        />
-
-        {/* Secondary */}
-        <VariantShowcase
-          title="Secondary"
-          id="variants-secondary"
-          variant="secondary"
-          code={`<Button secondary>Button</Button>`}
-        />
-
-        {/* Inverse Secondary */}
-        <VariantShowcase
-          title="Inverse, Secondary"
-          id="variants-inverse-secondary"
-          variant="inverse-secondary"
-          code={`<Button inverse secondary>Button</Button>`}
-          inverse
-        />
-
-        {/* Tertiary */}
-        <VariantShowcase
-          title="Tertiary"
-          id="variants-tertiary"
-          variant="tertiary"
-          code={`<Button variant="tertiary">Button</Button>`}
-        />
-
-        {/* Inverse Tertiary */}
-        <VariantShowcase
-          title="Inverse, Tertiary"
-          id="variants-inverse-tertiary"
-          variant="inverse-tertiary"
-          code={`<Button inverse variant="tertiary">Button</Button>`}
+          code={`<Toggle inverse checked={checked} onChange={handleChange} />`}
           inverse
         />
       </section>
@@ -273,25 +282,61 @@ export default function ButtonComponent() {
 
         <div className="space-y-4 text-base text-textSubtle max-w-3xl">
           <p>
-            Use the <strong>primary button</strong> for the main action on a
-            page or within a form. There should typically be only one primary
-            button visible at a time.
+            Use <strong>toggles</strong> for settings that take immediate
+            effect—the action happens as soon as the user flips the switch.
+            There&apos;s no need for a separate &quot;Save&quot; button.
           </p>
           <p>
-            Use <strong>secondary buttons</strong> for alternative actions, or
-            when multiple buttons are needed alongside a primary action.
+            Use <strong>checkboxes</strong> instead when the setting is part of
+            a form that requires explicit submission, or when selecting multiple
+            items from a list.
           </p>
           <p>
-            Use <strong>tertiary buttons</strong> (ghost buttons) for
-            low-emphasis actions such as &quot;Cancel&quot;, &quot;Learn
-            more&quot;, or navigation links that need button-like affordance.
-            They have no background or border, only text with a subtle hover
-            state.
+            Always provide a clear label that describes what the toggle
+            controls. The label should describe the &quot;on&quot; state.
           </p>
-          <p>
-            Use <strong>inverse variants</strong> when placing buttons on dark
-            backgrounds to maintain visibility and contrast.
-          </p>
+        </div>
+
+        <hr className="border-t border-borderDefault my-8" />
+
+        <h3
+          id="guidelines-toggle-vs-checkbox"
+          className="font-serif text-[22px] leading-[1.3] font-medium mb-3 scroll-mt-32"
+        >
+          Toggle vs Checkbox
+        </h3>
+
+        <div className="overflow-x-auto mb-6">
+          <table className="w-full border-collapse">
+            <thead>
+              <tr className="border-b border-borderDefault">
+                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                  Use Toggle when...
+                </th>
+                <th className="text-left py-3 px-4 font-semibold text-sm">
+                  Use Checkbox when...
+                </th>
+              </tr>
+            </thead>
+            <tbody className="text-sm">
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4">Setting takes immediate effect</td>
+                <td className="py-3 px-4">Part of a form requiring submission</td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4">Binary on/off choice</td>
+                <td className="py-3 px-4">Multiple selections from a list</td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4">Mobile/touch-friendly interface</td>
+                <td className="py-3 px-4">Dense forms with many options</td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4">Enabling/disabling features</td>
+                <td className="py-3 px-4">Agreeing to terms and conditions</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
 
         <hr className="border-t border-borderDefault my-8" />
@@ -305,16 +350,25 @@ export default function ButtonComponent() {
 
         <ul className="space-y-3 text-base text-textSubtle max-w-3xl list-disc pl-5">
           <li>
-            Use clear, action-oriented labels (e.g., &quot;Subscribe&quot;,
-            &quot;Save changes&quot;, &quot;Continue&quot;)
+            Write labels in positive terms—describe the &quot;on&quot; state
+            (e.g., &quot;Enable notifications&quot; not &quot;Disable
+            notifications&quot;)
           </li>
-          <li>Keep button labels concise—ideally 1-3 words</li>
-          <li>Maintain consistent button sizing within the same context</li>
           <li>
-            Ensure sufficient colour contrast for accessibility (WCAG AA
-            minimum)
+            Keep labels concise and clear—avoid technical jargon
           </li>
-          <li>Provide visual feedback for hover, focus, and disabled states</li>
+          <li>
+            Don&apos;t use toggles for destructive actions—use a button with
+            confirmation instead
+          </li>
+          <li>
+            Ensure the toggle is large enough for touch targets (minimum 44×44px
+            touch area)
+          </li>
+          <li>
+            Provide visual feedback for the current state—the toggle should
+            clearly show whether it&apos;s on or off
+          </li>
         </ul>
       </section>
 
@@ -339,48 +393,40 @@ export default function ButtonComponent() {
                   Property
                 </th>
                 <th className="text-left py-3 px-4 font-semibold text-sm">
-                  Value
+                  Default
                 </th>
                 <th className="text-left py-3 px-4 font-semibold text-sm">
-                  Token
+                  Small
                 </th>
               </tr>
             </thead>
             <tbody className="text-sm">
               <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4">Height</td>
-                <td className="py-3 px-4">48px</td>
-                <td className="py-3 px-4 font-mono">h-12</td>
+                <td className="py-3 pr-4">Track width</td>
+                <td className="py-3 px-4">44px</td>
+                <td className="py-3 px-4">36px</td>
               </tr>
               <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4">Horizontal padding</td>
+                <td className="py-3 pr-4">Track height</td>
+                <td className="py-3 px-4">24px</td>
                 <td className="py-3 px-4">20px</td>
-                <td className="py-3 px-4 font-mono">px-5</td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4">Thumb diameter</td>
+                <td className="py-3 px-4">20px</td>
+                <td className="py-3 px-4">16px</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Border radius</td>
-                <td className="py-3 px-4">6px</td>
-                <td className="py-3 px-4 font-mono">rounded-md</td>
+                <td className="py-3 px-4" colSpan={2}>
+                  <span className="font-mono">rounded-full</span> (pill shape)
+                </td>
               </tr>
               <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4">Font family</td>
-                <td className="py-3 px-4">Inter</td>
-                <td className="py-3 px-4 font-mono">font-sans</td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4">Font size</td>
-                <td className="py-3 px-4">14px</td>
-                <td className="py-3 px-4 font-mono">text-sm</td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4">Font weight</td>
-                <td className="py-3 px-4">600</td>
-                <td className="py-3 px-4 font-mono">font-semibold</td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4">Border width (secondary)</td>
-                <td className="py-3 px-4">1px</td>
-                <td className="py-3 px-4 font-mono">border</td>
+                <td className="py-3 pr-4">Transition</td>
+                <td className="py-3 px-4" colSpan={2}>
+                  200ms ease-out
+                </td>
               </tr>
             </tbody>
           </table>
@@ -417,24 +463,23 @@ export default function ButtonComponent() {
             </thead>
             <tbody className="text-sm font-mono">
               <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4">children</td>
-                <td className="py-3 px-4">ReactNode</td>
-                <td className="py-3 px-4 text-textSubtle">required</td>
+                <td className="py-3 pr-4">checked</td>
+                <td className="py-3 px-4">boolean</td>
+                <td className="py-3 px-4">false</td>
               </tr>
               <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4">type</td>
+                <td className="py-3 pr-4">onChange</td>
                 <td className="py-3 px-4">
-                  &apos;button&apos; | &apos;submit&apos; | &apos;reset&apos;
+                  (e: ChangeEvent) =&gt; void
                 </td>
-                <td className="py-3 px-4">&apos;button&apos;</td>
+                <td className="py-3 px-4">undefined</td>
               </tr>
               <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4">variant</td>
+                <td className="py-3 pr-4">size</td>
                 <td className="py-3 px-4">
-                  &apos;primary&apos; | &apos;secondary&apos; |
-                  &apos;tertiary&apos;
+                  &apos;default&apos; | &apos;small&apos;
                 </td>
-                <td className="py-3 px-4">&apos;primary&apos;</td>
+                <td className="py-3 px-4">&apos;default&apos;</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">inverse</td>
@@ -447,14 +492,21 @@ export default function ButtonComponent() {
                 <td className="py-3 px-4">false</td>
               </tr>
               <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4">className</td>
+                <td className="py-3 pr-4">label</td>
                 <td className="py-3 px-4">string</td>
-                <td className="py-3 px-4">&apos;&apos;</td>
+                <td className="py-3 px-4">undefined</td>
               </tr>
               <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4">onClick</td>
-                <td className="py-3 px-4">() =&gt; void</td>
-                <td className="py-3 px-4">undefined</td>
+                <td className="py-3 pr-4">labelPosition</td>
+                <td className="py-3 px-4">
+                  &apos;left&apos; | &apos;right&apos;
+                </td>
+                <td className="py-3 px-4">&apos;right&apos;</td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4">id</td>
+                <td className="py-3 px-4">string</td>
+                <td className="py-3 px-4">auto-generated</td>
               </tr>
             </tbody>
           </table>
@@ -475,10 +527,10 @@ export default function ButtonComponent() {
         <hr className="border-t border-borderDefault mb-6" />
 
         <h3
-          id="colours-primary"
+          id="colours-track"
           className="font-serif text-[22px] leading-[1.3] font-medium mb-3 scroll-mt-32"
         >
-          Primary button
+          Track
         </h3>
 
         <div className="overflow-x-auto mb-8">
@@ -489,134 +541,83 @@ export default function ButtonComponent() {
                   State
                 </th>
                 <th className="text-left py-3 px-4 font-semibold text-sm">
-                  Background
+                  Off
                 </th>
                 <th className="text-left py-3 px-4 font-semibold text-sm">
-                  Text
+                  On
                 </th>
               </tr>
             </thead>
             <tbody className="text-sm">
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Default (light)</td>
-                <td className="py-3 px-4 font-mono">asphalt-10</td>
-                <td className="py-3 px-4 font-mono">white</td>
+                <td className="py-3 px-4 font-mono">asphalt-70</td>
+                <td className="py-3 px-4 font-mono">electric-pink</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Hover (light)</td>
-                <td className="py-3 px-4 font-mono">asphalt-20</td>
-                <td className="py-3 px-4 font-mono">white</td>
+                <td className="py-3 px-4 font-mono">asphalt-60</td>
+                <td className="py-3 px-4 font-mono">electric-pink-45</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Default (dark)</td>
-                <td className="py-3 px-4 font-mono">asphalt-95</td>
-                <td className="py-3 px-4 font-mono">asphalt-10</td>
+                <td className="py-3 px-4 font-mono">asphalt-40</td>
+                <td className="py-3 px-4 font-mono">electric-pink</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Hover (dark)</td>
-                <td className="py-3 px-4 font-mono">asphalt-90</td>
-                <td className="py-3 px-4 font-mono">asphalt-10</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <h3
-          id="colours-secondary"
-          className="font-serif text-[22px] leading-[1.3] font-medium mb-3 scroll-mt-32"
-        >
-          Secondary button
-        </h3>
-
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
-                  State
-                </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
-                  Background
-                </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
-                  Border
-                </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
-                  Text
-                </th>
-              </tr>
-            </thead>
-            <tbody className="text-sm">
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4">Default (light)</td>
-                <td className="py-3 px-4 font-mono">transparent</td>
-                <td className="py-3 px-4 font-mono">asphalt-10</td>
-                <td className="py-3 px-4 font-mono">asphalt-10</td>
+                <td className="py-3 px-4 font-mono">asphalt-50</td>
+                <td className="py-3 px-4 font-mono">electric-pink-45</td>
               </tr>
               <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4">Hover (light)</td>
-                <td className="py-3 px-4 font-mono">asphalt-95</td>
-                <td className="py-3 px-4 font-mono">asphalt-10</td>
-                <td className="py-3 px-4 font-mono">asphalt-10</td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4">Default (dark)</td>
-                <td className="py-3 px-4 font-mono">transparent</td>
-                <td className="py-3 px-4 font-mono">asphalt-95</td>
-                <td className="py-3 px-4 font-mono">asphalt-95</td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4">Hover (dark)</td>
-                <td className="py-3 px-4 font-mono">asphalt-10</td>
-                <td className="py-3 px-4 font-mono">asphalt-95</td>
-                <td className="py-3 px-4 font-mono">asphalt-95</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <h3
-          id="colours-tertiary"
-          className="font-serif text-[22px] leading-[1.3] font-medium mb-3 scroll-mt-32"
-        >
-          Tertiary button
-        </h3>
-
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
-                  State
-                </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
-                  Background
-                </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
-                  Text
-                </th>
-              </tr>
-            </thead>
-            <tbody className="text-sm">
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4">Default (light)</td>
-                <td className="py-3 px-4 font-mono">transparent</td>
-                <td className="py-3 px-4 font-mono">asphalt-20</td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4">Hover (light)</td>
-                <td className="py-3 px-4 font-mono">asphalt-95/70</td>
-                <td className="py-3 px-4 font-mono">asphalt-10</td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4">Default (dark)</td>
-                <td className="py-3 px-4 font-mono">transparent</td>
+                <td className="py-3 pr-4">Disabled (light)</td>
                 <td className="py-3 px-4 font-mono">asphalt-80</td>
+                <td className="py-3 px-4 font-mono">asphalt-60</td>
               </tr>
               <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4">Hover (dark)</td>
-                <td className="py-3 px-4 font-mono">asphalt-20/50</td>
+                <td className="py-3 pr-4">Disabled (dark)</td>
+                <td className="py-3 px-4 font-mono">asphalt-30</td>
+                <td className="py-3 px-4 font-mono">asphalt-40</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3
+          id="colours-thumb"
+          className="font-serif text-[22px] leading-[1.3] font-medium mb-3 scroll-mt-32"
+        >
+          Thumb
+        </h3>
+
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse">
+            <thead>
+              <tr className="border-b border-borderDefault">
+                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                  State
+                </th>
+                <th className="text-left py-3 px-4 font-semibold text-sm">
+                  Colour
+                </th>
+              </tr>
+            </thead>
+            <tbody className="text-sm">
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4">Default (light)</td>
+                <td className="py-3 px-4 font-mono">white</td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4">Default (dark)</td>
                 <td className="py-3 px-4 font-mono">asphalt-95</td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4">Disabled (light)</td>
+                <td className="py-3 px-4 font-mono">asphalt-90</td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4">Disabled (dark)</td>
+                <td className="py-3 px-4 font-mono">asphalt-50</td>
               </tr>
             </tbody>
           </table>

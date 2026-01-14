@@ -4,7 +4,7 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   /** Button content */
   children: ReactNode;
   /** Visual style variant */
-  variant?: "primary" | "secondary";
+  variant?: "primary" | "secondary" | "tertiary";
   /** Use inverse colors for dark backgrounds */
   inverse?: boolean;
   /** Size variant - default (h-12, px-5) or slim (h-9, px-4) */
@@ -27,6 +27,9 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
  *
  * // Secondary button
  * <Button variant="secondary">Cancel</Button>
+ *
+ * // Tertiary/Ghost button (text-only, no background or border)
+ * <Button variant="tertiary">Learn More</Button>
  *
  * // Inverse for dark backgrounds
  * <Button inverse>Learn More</Button>
@@ -92,6 +95,14 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           // Secondary disabled: visible border in both modes
           return "bg-transparent border border-asphalt-80 dark:border-asphalt-30 text-asphalt-60 dark:text-asphalt-50 cursor-not-allowed";
         }
+        if (variant === "tertiary") {
+          if (inverse) {
+            // Inverse tertiary disabled: muted text for dark backgrounds
+            return "bg-transparent text-asphalt-50 cursor-not-allowed";
+          }
+          // Tertiary disabled: muted text
+          return "bg-transparent text-asphalt-60 dark:text-asphalt-50 cursor-not-allowed";
+        }
       }
 
       if (variant === "primary") {
@@ -116,6 +127,18 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           return "bg-transparent border border-asphalt-70 text-asphalt-10 hover:border-asphalt-40 hover:bg-asphalt-95/50";
         }
         return "bg-transparent border border-asphalt-70 dark:border-asphalt-40 text-asphalt-10 dark:text-asphalt-95 hover:border-asphalt-40 dark:hover:border-asphalt-60 hover:bg-asphalt-95/50 dark:hover:bg-asphalt-20/30";
+      }
+
+      if (variant === "tertiary") {
+        if (inverse) {
+          // Inverse tertiary: light text for dark backgrounds, subtle hover
+          return "bg-transparent text-white hover:text-asphalt-90 hover:bg-white/10";
+        }
+        // Tertiary/Ghost: text-only with subtle hover background
+        if (ignoreDarkMode) {
+          return "bg-transparent text-asphalt-20 hover:text-asphalt-10 hover:bg-asphalt-95/70";
+        }
+        return "bg-transparent text-asphalt-20 dark:text-asphalt-80 hover:text-asphalt-10 dark:hover:text-asphalt-95 hover:bg-asphalt-95/70 dark:hover:bg-asphalt-20/50";
       }
 
       return "";

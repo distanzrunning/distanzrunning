@@ -28,6 +28,7 @@ import CheckboxComponent from "../../components/content/CheckboxComponent";
 import BlockquoteComponent from "../../components/content/BlockquoteComponent";
 import PullQuoteComponent from "../../components/content/PullQuoteComponent";
 import CloseComponent from "../../components/content/CloseComponent";
+import ToggleComponent from "../../components/content/ToggleComponent";
 import ContentWithTOC from "../../components/ContentWithTOC";
 
 export default function DesignSystemSubsectionPage() {
@@ -369,6 +370,11 @@ export default function DesignSystemSubsectionPage() {
                     id: "variants-inverse-secondary",
                     title: "Inverse, Secondary",
                   },
+                  { id: "variants-tertiary", title: "Tertiary" },
+                  {
+                    id: "variants-inverse-tertiary",
+                    title: "Inverse, Tertiary",
+                  },
                 ],
               },
               {
@@ -387,6 +393,7 @@ export default function DesignSystemSubsectionPage() {
                 children: [
                   { id: "colours-primary", title: "Primary button" },
                   { id: "colours-secondary", title: "Secondary button" },
+                  { id: "colours-tertiary", title: "Tertiary button" },
                 ],
               },
             ]}
@@ -587,6 +594,50 @@ export default function DesignSystemSubsectionPage() {
             ]}
           >
             <CloseComponent />
+          </ContentWithTOC>
+        );
+      }
+
+      if (subsection === "toggle") {
+        return (
+          <ContentWithTOC
+            tocTitle="Contents"
+            tocItems={[
+              {
+                id: "variants",
+                title: "Variants",
+                children: [
+                  { id: "variants-default", title: "Default" },
+                  { id: "variants-with-label", title: "With Label" },
+                  { id: "variants-small", title: "Small" },
+                  { id: "variants-inverse", title: "Inverse" },
+                ],
+              },
+              {
+                id: "guidelines",
+                title: "Guidelines",
+                children: [
+                  { id: "guidelines-how-to-use", title: "How to use" },
+                  {
+                    id: "guidelines-toggle-vs-checkbox",
+                    title: "Toggle vs Checkbox",
+                  },
+                  { id: "guidelines-best-practices", title: "Best practices" },
+                ],
+              },
+              { id: "anatomy", title: "Anatomy" },
+              { id: "props", title: "Props" },
+              {
+                id: "colours",
+                title: "Colour reference",
+                children: [
+                  { id: "colours-track", title: "Track" },
+                  { id: "colours-thumb", title: "Thumb" },
+                ],
+              },
+            ]}
+          >
+            <ToggleComponent />
           </ContentWithTOC>
         );
       }

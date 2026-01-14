@@ -400,25 +400,46 @@ export default function ColourPalettes() {
         <hr className="border-t border-borderDefault mb-6" />
 
         <p className="text-base text-textSubtle mb-6 max-w-3xl">
-          10-shade systematic greyscale with perfect 10% lightness distribution.
-          Optimized based on actual component usage analysis (1,092
-          occurrences). Named by HSL lightness values for predictable,
-          systematic scaling.
+          21-shade warm greyscale with subtle 40° hue undertones for a refined,
+          premium feel. Features 5% lightness increments for precise control
+          over contrast and hierarchy. The warm tint creates softer transitions
+          and reduces harshness compared to pure neutral greys.
         </p>
+
+        <div className="bg-surfaceWarm border-l-4 border-trail-brown p-6 mb-6">
+          <h3 className="font-sans font-semibold text-sm uppercase tracking-wide text-textDefault mb-2">
+            Warm Undertones
+          </h3>
+          <p className="text-sm text-textSubtle leading-relaxed">
+            Each shade has a subtle warm undertone (HSL hue ~40°, saturation
+            4-8%) inspired by premium design systems. This creates a more
+            inviting, organic feel while maintaining excellent readability and
+            contrast ratios.
+          </p>
+        </div>
 
         <ColorSwatchGrid
           swatches={[
-            { name: "Asphalt 5", hex: "#0D0D0D", textColor: "light" },
-            { name: "Asphalt 10", hex: "#1A1A1A", textColor: "light" },
-            { name: "Asphalt 20", hex: "#333333", textColor: "light" },
-            { name: "Asphalt 30", hex: "#4D4D4D", textColor: "light" },
-            { name: "Asphalt 40", hex: "#666666", textColor: "light" },
-            { name: "Asphalt 50", hex: "#808080", textColor: "light" },
-            { name: "Asphalt 60", hex: "#999999", textColor: "dark" },
-            { name: "Asphalt 70", hex: "#B3B3B3", textColor: "dark" },
-            { name: "Asphalt 80", hex: "#CCCCCC", textColor: "dark" },
-            { name: "Asphalt 90", hex: "#E5E5E5", textColor: "dark" },
-            { name: "Asphalt 95", hex: "#F2F2F2", textColor: "dark" },
+            { name: "Asphalt 5", hex: "#141413", textColor: "light" },
+            { name: "Asphalt 10", hex: "#1F1E1C", textColor: "light" },
+            { name: "Asphalt 15", hex: "#2A2926", textColor: "light" },
+            { name: "Asphalt 20", hex: "#363530", textColor: "light" },
+            { name: "Asphalt 25", hex: "#42403A", textColor: "light" },
+            { name: "Asphalt 30", hex: "#4E4C45", textColor: "light" },
+            { name: "Asphalt 35", hex: "#5A574F", textColor: "light" },
+            { name: "Asphalt 40", hex: "#666359", textColor: "light" },
+            { name: "Asphalt 45", hex: "#726F64", textColor: "light" },
+            { name: "Asphalt 50", hex: "#7E7B6F", textColor: "light" },
+            { name: "Asphalt 55", hex: "#8B887C", textColor: "dark" },
+            { name: "Asphalt 60", hex: "#989588", textColor: "dark" },
+            { name: "Asphalt 65", hex: "#A5A295", textColor: "dark" },
+            { name: "Asphalt 70", hex: "#B3B0A3", textColor: "dark" },
+            { name: "Asphalt 75", hex: "#C1BEAF", textColor: "dark" },
+            { name: "Asphalt 80", hex: "#CFCCBE", textColor: "dark" },
+            { name: "Asphalt 85", hex: "#DDDACB", textColor: "dark" },
+            { name: "Asphalt 90", hex: "#EBE9DC", textColor: "dark" },
+            { name: "Asphalt 95", hex: "#F5F4ED", textColor: "dark" },
+            { name: "Asphalt 98", hex: "#FAF9F5", textColor: "dark" },
           ]}
         />
 
@@ -426,80 +447,143 @@ export default function ColourPalettes() {
           colors={[
             {
               name: "Asphalt 5",
-              hex: "#0D0D0D",
-              rgb: "13, 13, 13",
-              hsl: "0°, 0%, 5%",
+              hex: "#141413",
+              rgb: "20, 20, 19",
+              hsl: "40°, 4%, 5%",
               token: "--color-asphalt-5",
             },
             {
               name: "Asphalt 10",
-              hex: "#1A1A1A",
-              rgb: "26, 26, 26",
-              hsl: "0°, 0%, 10%",
+              hex: "#1F1E1C",
+              rgb: "31, 30, 28",
+              hsl: "40°, 5%, 10%",
               token: "--color-asphalt-10",
             },
             {
+              name: "Asphalt 15",
+              hex: "#2A2926",
+              rgb: "42, 41, 38",
+              hsl: "40°, 5%, 15%",
+              token: "--color-asphalt-15",
+            },
+            {
               name: "Asphalt 20",
-              hex: "#333333",
-              rgb: "51, 51, 51",
-              hsl: "0°, 0%, 20%",
+              hex: "#363530",
+              rgb: "54, 53, 48",
+              hsl: "40°, 6%, 20%",
               token: "--color-asphalt-20",
             },
             {
+              name: "Asphalt 25",
+              hex: "#42403A",
+              rgb: "66, 64, 58",
+              hsl: "40°, 6%, 25%",
+              token: "--color-asphalt-25",
+            },
+            {
               name: "Asphalt 30",
-              hex: "#4D4D4D",
-              rgb: "77, 77, 77",
-              hsl: "0°, 0%, 30%",
+              hex: "#4E4C45",
+              rgb: "78, 76, 69",
+              hsl: "40°, 6%, 30%",
               token: "--color-asphalt-30",
             },
             {
+              name: "Asphalt 35",
+              hex: "#5A574F",
+              rgb: "90, 87, 79",
+              hsl: "40°, 7%, 35%",
+              token: "--color-asphalt-35",
+            },
+            {
               name: "Asphalt 40",
-              hex: "#666666",
-              rgb: "102, 102, 102",
-              hsl: "0°, 0%, 40%",
+              hex: "#666359",
+              rgb: "102, 99, 89",
+              hsl: "40°, 7%, 40%",
               token: "--color-asphalt-40",
             },
             {
+              name: "Asphalt 45",
+              hex: "#726F64",
+              rgb: "114, 111, 100",
+              hsl: "40°, 7%, 45%",
+              token: "--color-asphalt-45",
+            },
+            {
               name: "Asphalt 50",
-              hex: "#808080",
-              rgb: "128, 128, 128",
-              hsl: "0°, 0%, 50%",
+              hex: "#7E7B6F",
+              rgb: "126, 123, 111",
+              hsl: "40°, 7%, 50%",
               token: "--color-asphalt-50",
             },
             {
+              name: "Asphalt 55",
+              hex: "#8B887C",
+              rgb: "139, 136, 124",
+              hsl: "40°, 6%, 55%",
+              token: "--color-asphalt-55",
+            },
+            {
               name: "Asphalt 60",
-              hex: "#999999",
-              rgb: "153, 153, 153",
-              hsl: "0°, 0%, 60%",
+              hex: "#989588",
+              rgb: "152, 149, 136",
+              hsl: "40°, 6%, 60%",
               token: "--color-asphalt-60",
             },
             {
+              name: "Asphalt 65",
+              hex: "#A5A295",
+              rgb: "165, 162, 149",
+              hsl: "40°, 6%, 65%",
+              token: "--color-asphalt-65",
+            },
+            {
               name: "Asphalt 70",
-              hex: "#B3B3B3",
-              rgb: "179, 179, 179",
-              hsl: "0°, 0%, 70%",
+              hex: "#B3B0A3",
+              rgb: "179, 176, 163",
+              hsl: "40°, 6%, 70%",
               token: "--color-asphalt-70",
             },
             {
+              name: "Asphalt 75",
+              hex: "#C1BEAF",
+              rgb: "193, 190, 175",
+              hsl: "40°, 6%, 75%",
+              token: "--color-asphalt-75",
+            },
+            {
               name: "Asphalt 80",
-              hex: "#CCCCCC",
-              rgb: "204, 204, 204",
-              hsl: "0°, 0%, 80%",
+              hex: "#CFCCBE",
+              rgb: "207, 204, 190",
+              hsl: "40°, 6%, 80%",
               token: "--color-asphalt-80",
             },
             {
+              name: "Asphalt 85",
+              hex: "#DDDACB",
+              rgb: "221, 218, 203",
+              hsl: "40°, 6%, 85%",
+              token: "--color-asphalt-85",
+            },
+            {
               name: "Asphalt 90",
-              hex: "#E5E5E5",
-              rgb: "229, 229, 229",
-              hsl: "0°, 0%, 90%",
+              hex: "#EBE9DC",
+              rgb: "235, 233, 220",
+              hsl: "40°, 6%, 90%",
               token: "--color-asphalt-90",
             },
             {
               name: "Asphalt 95",
-              hex: "#F2F2F2",
-              rgb: "242, 242, 242",
-              hsl: "0°, 0%, 95%",
+              hex: "#F5F4ED",
+              rgb: "245, 244, 237",
+              hsl: "40°, 8%, 95%",
               token: "--color-asphalt-95",
+            },
+            {
+              name: "Asphalt 98",
+              hex: "#FAF9F5",
+              rgb: "250, 249, 245",
+              hsl: "40°, 8%, 98%",
+              token: "--color-asphalt-98",
             },
           ]}
         />
