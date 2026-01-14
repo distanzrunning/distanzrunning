@@ -69,6 +69,32 @@ export default function ContentWithTOC({
     }, 1000);
   };
 
+  // Helper to render a TOC link with left border indicator
+  const renderTOCLink = (
+    id: string,
+    title: string,
+    isChild: boolean = false,
+  ) => {
+    const isActive = activeId === id;
+    return (
+      <a
+        href={`#${id}`}
+        onClick={() => handleClick(id)}
+        className={`
+          flex border-l-2 border-solid py-1.5 px-4 no-underline transition-colors
+          ${
+            isActive
+              ? "border-asphalt-10 dark:border-asphalt-95 text-textDefault font-medium"
+              : "border-borderSubtle text-textSubtle hover:text-textDefault hover:border-asphalt-40 dark:hover:border-asphalt-60"
+          }
+          ${isChild ? "text-xs" : "text-sm"}
+        `}
+      >
+        {title}
+      </a>
+    );
+  };
+
   return (
     <div className="grid grid-cols-1 min-[960px]:grid-cols-9 gap-8">
       {/* Main Content */}
@@ -79,94 +105,28 @@ export default function ContentWithTOC({
       {/* Table of Contents - Desktop Only (≥960px) */}
       <aside className="hidden min-[960px]:block min-[960px]:col-span-2">
         <div className="sticky top-40">
-          <div className="bg-surfaceSubtle rounded-lg p-6 border border-borderSubtle">
-            <h4 className="text-sm font-medium text-textDefault mb-4">
+          <nav className="max-h-[calc(100vh-200px)] overflow-y-auto">
+            <h4 className="text-sm font-medium text-textDefault mb-3 px-4">
               {tocTitle}
             </h4>
-            <ol className="space-y-3">
-              <li>
-                {mainSectionId && (
-                  <div className="relative pl-3 group">
-                    <span
-                      className={`absolute left-0 top-0 bottom-0 w-[2px] transition-opacity ${
-                        activeId === mainSectionId
-                          ? "bg-electric-pink opacity-100"
-                          : "bg-borderSubtle opacity-0 group-hover:opacity-100"
-                      }`}
-                    />
-                    <a
-                      href={`#${mainSectionId}`}
-                      onClick={() => handleClick(mainSectionId)}
-                      className={`text-sm transition-colors block ${
-                        activeId === mainSectionId
-                          ? "text-textDefault"
-                          : "text-textSubtle hover:text-textDefault"
-                      }`}
-                    >
-                      {tocTitle}
-                    </a>
-                  </div>
-                )}
-                {!mainSectionId && <></>}
-                <ol
-                  className={
-                    mainSectionId ? "mt-2 ml-3 space-y-2" : "space-y-2"
-                  }
-                >
-                  {tocItems.map((item) => (
-                    <li key={item.id}>
-                      <div className="relative pl-3 group">
-                        <span
-                          className={`absolute left-0 top-0 bottom-0 w-[2px] transition-opacity ${
-                            activeId === item.id
-                              ? "bg-electric-pink opacity-100"
-                              : "bg-borderSubtle opacity-0 group-hover:opacity-100"
-                          }`}
-                        />
-                        <a
-                          href={`#${item.id}`}
-                          onClick={() => handleClick(item.id)}
-                          className={`text-sm transition-colors block ${
-                            activeId === item.id
-                              ? "text-textDefault"
-                              : "text-textSubtle hover:text-textDefault"
-                          }`}
-                        >
-                          {item.title}
-                        </a>
-                      </div>
-                      {item.children && (
-                        <ol className="mt-2 ml-4 space-y-2">
-                          {item.children.map((child) => (
-                            <li key={child.id} className="relative pl-3 group">
-                              <span
-                                className={`absolute left-0 top-0 bottom-0 w-[2px] transition-opacity ${
-                                  activeId === child.id
-                                    ? "bg-electric-pink opacity-100"
-                                    : "bg-borderSubtle opacity-0 group-hover:opacity-100"
-                                }`}
-                              />
-                              <a
-                                href={`#${child.id}`}
-                                onClick={() => handleClick(child.id)}
-                                className={`text-xs transition-colors block ${
-                                  activeId === child.id
-                                    ? "text-textDefault"
-                                    : "text-textSubtle hover:text-textDefault"
-                                }`}
-                              >
-                                {child.title}
-                              </a>
-                            </li>
-                          ))}
-                        </ol>
-                      )}
-                    </li>
-                  ))}
-                </ol>
-              </li>
-            </ol>
-          </div>
+            <div className="flex flex-col">
+              {mainSectionId && renderTOCLink(mainSectionId, tocTitle)}
+              {tocItems.map((item) => (
+                <div key={item.id}>
+                  {renderTOCLink(item.id, item.title)}
+                  {item.children && (
+                    <div className="ml-3">
+                      {item.children.map((child) => (
+                        <div key={child.id}>
+                          {renderTOCLink(child.id, child.title, true)}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </nav>
         </div>
       </aside>
     </div>
