@@ -29,6 +29,7 @@
     "@progress/kendo-react-common": "^13.1.0",
     "@progress/kendo-react-dialogs": "^13.1.0",
     "@progress/kendo-theme-default": "^12.3.0",
+    "@radix-ui/react-context-menu": "^2.2.16",
     "@radix-ui/react-dialog": "^1.1.15",
     "@radix-ui/react-dropdown-menu": "^2.1.5",
     "@radix-ui/react-form": "^0.1.8",

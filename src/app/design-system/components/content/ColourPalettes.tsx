@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState, useCallback, useEffect, useRef } from "react";
-import { Check } from "lucide-react";
+import { Check, MousePointer } from "lucide-react";
+import * as ContextMenu from "@radix-ui/react-context-menu";
 
 // Link icon for section headers
 function LinkIcon() {
@@ -1309,8 +1310,51 @@ function ToastProvider({ children }: { children: React.ReactNode }) {
 }
 
 // Color swatch component
+// Helper to convert hex to HSLA
+function hexToHsla(hex: string): string {
+  // Handle rgba format
+  if (hex.startsWith("rgba")) {
+    return hex.replace("rgba", "HSLA").replace(/,([^,]*)$/, ",$1");
+  }
+
+  // Remove # if present
+  hex = hex.replace("#", "");
+
+  // Parse hex values
+  const r = parseInt(hex.substring(0, 2), 16) / 255;
+  const g = parseInt(hex.substring(2, 4), 16) / 255;
+  const b = parseInt(hex.substring(4, 6), 16) / 255;
+
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  const l = (max + min) / 2;
+
+  let h = 0;
+  let s = 0;
+
+  if (max !== min) {
+    const d = max - min;
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+
+    switch (max) {
+      case r:
+        h = ((g - b) / d + (g < b ? 6 : 0)) / 6;
+        break;
+      case g:
+        h = ((b - r) / d + 2) / 6;
+        break;
+      case b:
+        h = ((r - g) / d + 4) / 6;
+        break;
+    }
+  }
+
+  return `HSLA(${Math.round(h * 360)},${Math.round(s * 100)}%,${Math.round(l * 100)}%,1)`;
+}
+
 function ColorSwatch({
   cssVar,
+  value,
 }: {
   step: number;
   cssVar: string;
@@ -1319,40 +1363,91 @@ function ColorSwatch({
   const { showToast } = React.useContext(ToastContext);
   const [showTick, setShowTick] = useState(false);
 
-  const handleCopy = useCallback(
-    (e: React.MouseEvent) => {
-      e.preventDefault();
-      const tokenValue = `var(${cssVar})`;
-      navigator.clipboard.writeText(tokenValue);
-      showToast(`Copied ${tokenValue}`);
+  const handleCopyToken = useCallback(() => {
+    const tokenValue = `var(${cssVar})`;
+    navigator.clipboard.writeText(tokenValue);
+    showToast(`Copied ${tokenValue}`);
+    setShowTick(true);
+    setTimeout(() => setShowTick(false), 600);
+  }, [cssVar, showToast]);
 
-      // Show tick briefly
-      setShowTick(true);
-      setTimeout(() => setShowTick(false), 600);
-    },
-    [cssVar, showToast],
-  );
+  const handleCopyHex = useCallback(() => {
+    navigator.clipboard.writeText(value);
+    showToast(`Copied ${value}`);
+    setShowTick(true);
+    setTimeout(() => setShowTick(false), 600);
+  }, [value, showToast]);
+
+  const handleCopyHsla = useCallback(() => {
+    const hsla = hexToHsla(value);
+    navigator.clipboard.writeText(hsla);
+    showToast(`Copied ${hsla}`);
+    setShowTick(true);
+    setTimeout(() => setShowTick(false), 600);
+  }, [value, showToast]);
+
+  const hslaValue = hexToHsla(value);
 
   return (
-    <button
-      className="relative w-full aspect-square md:h-10 md:aspect-auto rounded-sm cursor-copy shadow-[inset_0_0_0_1px_rgba(0,0,0,0.1)] dark:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.1)]"
-      style={{ backgroundColor: `var(${cssVar})` }}
-      onClick={handleCopy}
-      onContextMenu={handleCopy}
-    >
-      {/* Tick icon on copy */}
-      <span
-        className={`absolute inset-0 flex items-center justify-center transition-opacity duration-150 ${
-          showTick ? "opacity-100" : "opacity-0"
-        }`}
-      >
-        <Check
-          size={20}
-          strokeWidth={1.5}
-          className="text-gray-900 dark:text-white"
-        />
-      </span>
-    </button>
+    <ContextMenu.Root>
+      <ContextMenu.Trigger asChild>
+        <button
+          className="relative w-full aspect-square md:h-10 md:aspect-auto rounded-sm cursor-copy shadow-[inset_0_0_0_1px_rgba(0,0,0,0.1)] dark:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.1)]"
+          style={{ backgroundColor: `var(${cssVar})` }}
+          onClick={handleCopyToken}
+        >
+          {/* Tick icon on copy */}
+          <span
+            className={`absolute inset-0 flex items-center justify-center transition-opacity duration-150 ${
+              showTick ? "opacity-100" : "opacity-0"
+            }`}
+          >
+            <Check
+              size={20}
+              strokeWidth={1.5}
+              className="text-gray-900 dark:text-white"
+            />
+          </span>
+        </button>
+      </ContextMenu.Trigger>
+
+      <ContextMenu.Portal>
+        <ContextMenu.Content
+          className="min-w-[220px] bg-white dark:bg-neutral-900 rounded-lg shadow-lg border border-borderDefault py-1 z-50"
+          style={{
+            boxShadow:
+              "0 0 0 1px rgba(0,0,0,0.08), 0px 1px 1px rgba(0,0,0,0.02), 0px 4px 8px -4px rgba(0,0,0,0.04), 0px 16px 24px -8px rgba(0,0,0,0.06)",
+          }}
+        >
+          <ContextMenu.Item
+            className="flex items-center justify-between px-3 py-2 text-sm text-textDefault hover:bg-neutral-100 dark:hover:bg-neutral-800 cursor-pointer outline-none"
+            onSelect={handleCopyHex}
+          >
+            Copy HEX
+            <span className="text-[13px] text-textSubtle">{value}</span>
+          </ContextMenu.Item>
+
+          <ContextMenu.Item
+            className="flex items-center justify-between px-3 py-2 text-sm text-textDefault hover:bg-neutral-100 dark:hover:bg-neutral-800 cursor-pointer outline-none"
+            onSelect={handleCopyHsla}
+          >
+            Copy HSLA
+            <span className="text-[13px] text-textSubtle">{hslaValue}</span>
+          </ContextMenu.Item>
+
+          <ContextMenu.Item
+            className="flex items-center justify-between px-3 py-2 text-sm text-textDefault hover:bg-neutral-100 dark:hover:bg-neutral-800 cursor-pointer outline-none"
+            onSelect={handleCopyToken}
+          >
+            Copy token
+            <span className="flex items-center gap-1 text-[13px] text-textSubtle">
+              Left click
+              <MousePointer size={14} />
+            </span>
+          </ContextMenu.Item>
+        </ContextMenu.Content>
+      </ContextMenu.Portal>
+    </ContextMenu.Root>
   );
 }
 
