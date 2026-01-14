@@ -258,7 +258,7 @@ export default function NavbarAlt({
       </header>
 
       {/* Sticky Navigation Bar - Art Newspaper Style */}
-      <nav className="sticky top-0 z-50 bg-white/80 dark:bg-[rgb(31,30,28)]/80 backdrop-blur-md transition-colors duration-300 overflow-visible">
+      <nav className="sticky top-0 z-50 bg-[rgb(250,249,245)]/80 dark:bg-[rgb(31,30,28)]/80 backdrop-blur-md transition-colors duration-300 overflow-visible">
         {/* Bottom Section: Centered Navigation Links - Desktop Only */}
         <div
           className="hidden lg:block relative overflow-visible bg-transparent navbar-border-overlay"
