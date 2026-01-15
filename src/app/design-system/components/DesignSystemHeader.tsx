@@ -1,8 +1,9 @@
 "use client";
 
-import { useTheme } from "next-themes";
+import { useContext } from "react";
 import Image from "next/image";
-import { Search, Monitor, Sun, Moon } from "lucide-react";
+import { Search, Sun, Moon } from "lucide-react";
+import { DarkModeContext } from "@/components/DarkModeProvider";
 
 interface DesignSystemHeaderProps {
   onHomeClick: () => void;
@@ -11,7 +12,7 @@ interface DesignSystemHeaderProps {
 export default function DesignSystemHeader({
   onHomeClick,
 }: DesignSystemHeaderProps) {
-  const { theme, setTheme } = useTheme();
+  const { isDark, toggleDarkMode } = useContext(DarkModeContext);
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-borderSubtle bg-background-100 dark:bg-[#0a0a0a] dark:border-[#242424]">
@@ -67,22 +68,9 @@ export default function DesignSystemHeader({
 
             <button
               type="button"
-              onClick={() => setTheme("system")}
+              onClick={() => isDark && toggleDarkMode()}
               className={`p-1.5 rounded-full transition-colors ${
-                theme === "system"
-                  ? "bg-canvas text-textDefault shadow-sm"
-                  : "text-textSubtle hover:text-textDefault"
-              }`}
-              aria-label="System theme"
-            >
-              <Monitor className="w-4 h-4" />
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setTheme("light")}
-              className={`p-1.5 rounded-full transition-colors ${
-                theme === "light"
+                !isDark
                   ? "bg-canvas text-textDefault shadow-sm"
                   : "text-textSubtle hover:text-textDefault"
               }`}
@@ -93,9 +81,9 @@ export default function DesignSystemHeader({
 
             <button
               type="button"
-              onClick={() => setTheme("dark")}
+              onClick={() => !isDark && toggleDarkMode()}
               className={`p-1.5 rounded-full transition-colors ${
-                theme === "dark"
+                isDark
                   ? "bg-canvas text-textDefault shadow-sm"
                   : "text-textSubtle hover:text-textDefault"
               }`}
