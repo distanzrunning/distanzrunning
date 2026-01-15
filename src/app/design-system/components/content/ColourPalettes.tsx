@@ -597,14 +597,14 @@ const backgroundScale: ColorScale = {
     {
       step: 100,
       cssVar: "--ds-background-100",
-      lightValue: "#FAFAFA",
-      darkValue: "#0A0A0A",
+      lightValue: "#FFFFFF",
+      darkValue: "#000000",
     },
     {
       step: 200,
       cssVar: "--ds-background-200",
-      lightValue: "#FFFFFF",
-      darkValue: "#000000",
+      lightValue: "#F9FAFB",
+      darkValue: "#0A0A0A",
     },
   ],
 };

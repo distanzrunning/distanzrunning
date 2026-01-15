@@ -177,11 +177,11 @@
        BACKGROUND SCALE - Canvas and surface colors (Geist)
        ───────────────────────────────────────────────────────────────────────── */
     --ds-background-100: hsl(0, 0%, 100%); /* #FFFFFF - Primary canvas */
-    --ds-background-200: hsl(0, 0%, 98%); /* #FAFAFA - Secondary surface */
+    --ds-background-200: hsl(210, 20%, 98%); /* #F9FAFB - Secondary surface */
 
     /* RGB fallbacks for Tailwind opacity support */
     --ds-background-100-rgb: 255, 255, 255;
-    --ds-background-200-rgb: 250, 250, 250;
+    --ds-background-200-rgb: 249, 250, 251;
 
     /* ─────────────────────────────────────────────────────────────────────────
        GRAY SCALE - Pure neutral scale (100-1000) - Geist colors
