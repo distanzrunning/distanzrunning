@@ -1616,6 +1616,9 @@ export default function ColourPalettes() {
       <div>
         {/* Page Header */}
         <div className="mb-12">
+          <p className="text-sm font-medium text-textSubtle mb-2">
+            Foundations
+          </p>
           <h1 className="font-serif text-[32px] md:text-[40px] leading-[1.15] font-medium mb-3">
             Colours
           </h1>

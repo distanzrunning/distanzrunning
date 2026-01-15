@@ -57,7 +57,7 @@ export default function DesignSystemSubsectionPage() {
       if (subsection === "design-principles") {
         return (
           <ContentWithTOC
-            tocTitle="Contents"
+            tocTitle="On this page"
             tocItems={[
               { id: "less-is-more", title: "Less is more" },
               { id: "deliberate-typography", title: "Deliberate typography" },
@@ -80,7 +80,7 @@ export default function DesignSystemSubsectionPage() {
       if (subsection === "ux-principles") {
         return (
           <ContentWithTOC
-            tocTitle="Contents"
+            tocTitle="On this page"
             tocItems={[
               { id: "user-centred-design", title: "User-centred design" },
               { id: "accessible-to-all", title: "Accessible to all" },
@@ -103,7 +103,7 @@ export default function DesignSystemSubsectionPage() {
       if (subsection === "design-tokens") {
         return (
           <ContentWithTOC
-            tocTitle="Contents"
+            tocTitle="On this page"
             tocItems={[
               { id: "what-are-tokens", title: "What are design tokens?" },
               {
@@ -146,7 +146,7 @@ export default function DesignSystemSubsectionPage() {
       if (subsection === "colours") {
         return (
           <ContentWithTOC
-            tocTitle="Colours"
+            tocTitle="On this page"
             tocItems={[
               { id: "colour-scales", title: "Colour Scales" },
               { id: "backgrounds", title: "Backgrounds" },
@@ -173,7 +173,7 @@ export default function DesignSystemSubsectionPage() {
       if (subsection === "rules") {
         return (
           <ContentWithTOC
-            tocTitle="Contents"
+            tocTitle="On this page"
             tocItems={[
               {
                 id: "styles",
@@ -197,7 +197,7 @@ export default function DesignSystemSubsectionPage() {
       if (subsection === "grid-spacing") {
         return (
           <ContentWithTOC
-            tocTitle="Contents"
+            tocTitle="On this page"
             tocItems={[
               {
                 id: "gap-and-gutter",
@@ -216,7 +216,7 @@ export default function DesignSystemSubsectionPage() {
       if (subsection === "grid-layout") {
         return (
           <ContentWithTOC
-            tocTitle="Contents"
+            tocTitle="On this page"
             tocItems={[
               { id: "column-grid", title: "Column grid" },
               { id: "main-wrapper", title: "Main wrapper" },
@@ -236,7 +236,7 @@ export default function DesignSystemSubsectionPage() {
       if (subsection === "typefaces") {
         return (
           <ContentWithTOC
-            tocTitle="Contents"
+            tocTitle="On this page"
             tocItems={[
               {
                 id: "eb-garamond",
@@ -265,7 +265,7 @@ export default function DesignSystemSubsectionPage() {
       if (subsection === "modular-scale") {
         return (
           <ContentWithTOC
-            tocTitle="Contents"
+            tocTitle="On this page"
             tocItems={[
               { id: "type-scale", title: "Type scale" },
               { id: "heading-sizes", title: "Heading sizes" },
@@ -279,7 +279,7 @@ export default function DesignSystemSubsectionPage() {
       if (subsection === "line-height") {
         return (
           <ContentWithTOC
-            tocTitle="Contents"
+            tocTitle="On this page"
             tocItems={[
               {
                 id: "multipliers",
@@ -299,7 +299,7 @@ export default function DesignSystemSubsectionPage() {
       if (subsection === "text-styles") {
         return (
           <ContentWithTOC
-            tocTitle="Contents"
+            tocTitle="On this page"
             tocItems={[
               { id: "display", title: "Display" },
               { id: "headings", title: "Headings" },
@@ -315,7 +315,7 @@ export default function DesignSystemSubsectionPage() {
       if (subsection === "iconography") {
         return (
           <ContentWithTOC
-            tocTitle="Contents"
+            tocTitle="On this page"
             tocItems={[
               { id: "sizing", title: "Sizing" },
               { id: "stroke-weight", title: "Stroke weight" },
@@ -343,7 +343,7 @@ export default function DesignSystemSubsectionPage() {
       if (subsection === "button") {
         return (
           <ContentWithTOC
-            tocTitle="Contents"
+            tocTitle="On this page"
             tocItems={[
               {
                 id: "variants",
@@ -392,7 +392,7 @@ export default function DesignSystemSubsectionPage() {
       if (subsection === "button-icon") {
         return (
           <ContentWithTOC
-            tocTitle="Contents"
+            tocTitle="On this page"
             tocItems={[
               {
                 id: "variants",
@@ -435,7 +435,7 @@ export default function DesignSystemSubsectionPage() {
       if (subsection === "slim-button") {
         return (
           <ContentWithTOC
-            tocTitle="Contents"
+            tocTitle="On this page"
             tocItems={[
               {
                 id: "variants",
@@ -469,7 +469,7 @@ export default function DesignSystemSubsectionPage() {
       if (subsection === "slim-button-icon") {
         return (
           <ContentWithTOC
-            tocTitle="Contents"
+            tocTitle="On this page"
             tocItems={[
               {
                 id: "variants",
@@ -502,7 +502,7 @@ export default function DesignSystemSubsectionPage() {
       if (subsection === "checkbox") {
         return (
           <ContentWithTOC
-            tocTitle="Contents"
+            tocTitle="On this page"
             tocItems={[
               {
                 id: "variants",
@@ -520,7 +520,7 @@ export default function DesignSystemSubsectionPage() {
       if (subsection === "blockquote") {
         return (
           <ContentWithTOC
-            tocTitle="Contents"
+            tocTitle="On this page"
             tocItems={[
               {
                 id: "variants",
@@ -540,7 +540,7 @@ export default function DesignSystemSubsectionPage() {
       if (subsection === "pull-quote") {
         return (
           <ContentWithTOC
-            tocTitle="Contents"
+            tocTitle="On this page"
             tocItems={[
               {
                 id: "variants",
@@ -570,7 +570,7 @@ export default function DesignSystemSubsectionPage() {
       if (subsection === "close") {
         return (
           <ContentWithTOC
-            tocTitle="Contents"
+            tocTitle="On this page"
             tocItems={[
               { id: "preview", title: "Preview" },
               { id: "usage", title: "Usage" },
@@ -587,7 +587,7 @@ export default function DesignSystemSubsectionPage() {
       if (subsection === "toggle") {
         return (
           <ContentWithTOC
-            tocTitle="Contents"
+            tocTitle="On this page"
             tocItems={[
               {
                 id: "variants",
