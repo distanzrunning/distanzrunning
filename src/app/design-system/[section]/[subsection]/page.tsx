@@ -1,6 +1,7 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
+import DesignSystemHeader from "../../components/DesignSystemHeader";
 import DesignSystemSidebar from "../../components/DesignSystemSidebar";
 import PlaceholderContent from "../../components/PlaceholderContent";
 import FoundationsOverview from "../../components/content/FoundationsOverview";
@@ -653,9 +654,12 @@ export default function DesignSystemSubsectionPage() {
   };
 
   return (
-    <div className="bg-white dark:bg-[#0c0c0d]">
-      {/* Mobile/Tablet Section Header - visible below 1100px */}
-      <div className="min-[1100px]:hidden sticky top-12 z-40">
+    <div className="bg-background-100 dark:bg-[#0a0a0a] min-h-screen">
+      {/* Geist-style Header */}
+      <DesignSystemHeader onHomeClick={handleHomeClick} />
+
+      {/* Mobile/Tablet Section Header - visible below xl */}
+      <div className="xl:hidden sticky top-16 z-40">
         <DesignSystemSidebar
           section={section}
           activeSubsection={subsection}
@@ -665,9 +669,9 @@ export default function DesignSystemSubsectionPage() {
         />
       </div>
 
-      <div className="flex min-h-screen">
-        {/* Desktop Sidebar - fixed width, hidden below 1100px */}
-        <div className="hidden min-[1100px]:block flex-shrink-0">
+      <div className="flex max-w-[1400px] mx-auto">
+        {/* Desktop Sidebar - hidden below xl */}
+        <div className="hidden xl:block flex-shrink-0">
           <DesignSystemSidebar
             section={section}
             activeSubsection={subsection}
@@ -679,7 +683,7 @@ export default function DesignSystemSubsectionPage() {
 
         {/* Main Content Area */}
         <div className="flex-1 min-w-0">
-          <div className="px-6 min-[960px]:px-8 py-12 max-w-[1200px]">
+          <div className="px-6 xl:px-8 py-12 max-w-[900px]">
             {renderContent()}
           </div>
         </div>

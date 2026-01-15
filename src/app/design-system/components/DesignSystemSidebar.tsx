@@ -252,7 +252,6 @@ export default function DesignSystemSidebar({
   activeSubsection,
   onSectionChange,
   onSubsectionChange,
-  onHomeClick,
 }: DesignSystemSidebarProps) {
   const [expandedSections, setExpandedSections] = useState<string[]>([section]);
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
@@ -428,7 +427,7 @@ export default function DesignSystemSidebar({
   return (
     <>
       {/* Mobile/Tablet Header (< 1100px) */}
-      <div className="min-[1100px]:hidden bg-white dark:bg-neutral-900 border-b border-borderSubtle">
+      <div className="xl:hidden bg-white dark:bg-neutral-900 border-b border-borderSubtle">
         <button
           onClick={() => setMobileNavOpen(!mobileNavOpen)}
           className="w-full flex items-center justify-between px-6 py-3"
@@ -460,27 +459,8 @@ export default function DesignSystemSidebar({
         )}
       </div>
 
-      {/* Desktop Sidebar (≥ 1100px) */}
-      <nav className="hidden min-[1100px]:flex flex-col w-72 bg-canvas dark:bg-[#0a0a0a] border-r border-borderSubtle h-screen sticky top-0">
-        {/* Logo and title - fixed header */}
-        <div className="px-5 py-5 border-b border-borderSubtle">
-          <button
-            onClick={onHomeClick}
-            className="flex items-center gap-3 hover:opacity-70 transition-opacity"
-          >
-            <Image
-              src="/images/distanz_icon_black_round.png"
-              alt="Distanz Running"
-              width={32}
-              height={32}
-              className="dark:invert flex-shrink-0"
-            />
-            <span className="font-serif text-xl leading-tight font-medium text-textDefault">
-              Stride Design System
-            </span>
-          </button>
-        </div>
-
+      {/* Desktop Sidebar (≥ 1280px) - No logo, just navigation */}
+      <nav className="hidden xl:flex flex-col w-[237px] border-r border-borderSubtle dark:border-[#242424] h-[calc(100vh-64px)] sticky top-16">
         {/* Scrollable navigation */}
         <div className="flex-1 overflow-y-auto px-3 py-4">
           {renderNavList()}

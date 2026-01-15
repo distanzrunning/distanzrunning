@@ -1,14 +1,18 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 import { ArrowRight } from "lucide-react";
+import DesignSystemHeader from "./components/DesignSystemHeader";
 
 export default function DesignSystemPage() {
   const router = useRouter();
 
   const handleSectionClick = (section: string) => {
     router.push(`/design-system/${section}/overview`);
+  };
+
+  const handleHomeClick = () => {
+    router.push("/design-system");
   };
 
   const sections = [
@@ -33,24 +37,16 @@ export default function DesignSystemPage() {
   ];
 
   return (
-    <div className="bg-white dark:bg-[#0c0c0d] min-h-screen">
-      {/* Hero Section */}
-      <div className="px-6 md:px-12 lg:px-16 py-16 md:py-24 max-w-[1200px] mx-auto">
-        {/* Logo and title */}
-        <div className="flex items-center gap-4 mb-8">
-          <Image
-            src="/images/distanz_icon_black_round.png"
-            alt="Distanz Running"
-            width={48}
-            height={48}
-            className="dark:invert"
-          />
-          <h1 className="font-serif text-4xl md:text-5xl font-medium text-textDefault">
-            Stride Design System
-          </h1>
-        </div>
+    <div className="bg-background-100 dark:bg-[#0a0a0a] min-h-screen">
+      {/* Geist-style Header */}
+      <DesignSystemHeader onHomeClick={handleHomeClick} />
 
+      {/* Hero Section */}
+      <div className="px-6 md:px-12 lg:px-16 py-16 md:py-24 max-w-[900px] mx-auto">
         {/* Introduction */}
+        <h1 className="font-serif text-4xl md:text-5xl font-medium text-textDefault mb-6">
+          Stride Design System
+        </h1>
         <p className="text-lg md:text-xl text-textSubtle max-w-[720px] mb-16">
           A comprehensive design system for building consistent, accessible, and
           beautiful experiences across Distanz Running products.
