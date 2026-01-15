@@ -18,7 +18,7 @@ export default function DesignSystemHeader({
     <header className="sticky top-0 z-50 w-full border-b border-borderSubtle bg-background-100 dark:bg-[#0a0a0a] dark:border-[#242424]">
       <div className="flex w-full">
         {/* Logo section - matches sidebar width */}
-        <div className="flex items-center gap-4 border-r border-borderSubtle dark:border-[#242424] py-4 pl-6 pr-6 xl:w-[237px] xl:flex-shrink-0">
+        <div className="flex items-center gap-4 border-r border-borderSubtle dark:border-[#242424] py-4 pl-6 pr-6 xl:w-[280px] xl:flex-shrink-0">
           <button
             onClick={onHomeClick}
             className="flex items-center gap-3 text-textDefault no-underline hover:opacity-70 transition-opacity"
