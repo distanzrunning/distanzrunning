@@ -1413,14 +1413,14 @@ function ColorSwatch({
 
       <ContextMenu.Portal>
         <ContextMenu.Content
-          className="min-w-[240px] bg-white dark:bg-neutral-900 rounded-lg shadow-lg border border-borderDefault py-2 z-50"
+          className="min-w-[240px] bg-white dark:bg-neutral-900 rounded-lg shadow-lg border border-borderDefault p-1.5 z-50"
           style={{
             boxShadow:
               "0 0 0 1px rgba(0,0,0,0.08), 0px 1px 1px rgba(0,0,0,0.02), 0px 4px 8px -4px rgba(0,0,0,0.04), 0px 16px 24px -8px rgba(0,0,0,0.06)",
           }}
         >
           <ContextMenu.Item
-            className="flex items-center justify-between gap-4 px-4 py-2.5 text-sm text-textDefault hover:bg-neutral-100 dark:hover:bg-neutral-800 cursor-pointer outline-none"
+            className="flex items-center justify-between gap-4 px-3 py-2 text-sm text-textDefault hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md cursor-pointer outline-none"
             onSelect={handleCopyHex}
           >
             Copy HEX
@@ -1428,7 +1428,7 @@ function ColorSwatch({
           </ContextMenu.Item>
 
           <ContextMenu.Item
-            className="flex items-center justify-between gap-4 px-4 py-2.5 text-sm text-textDefault hover:bg-neutral-100 dark:hover:bg-neutral-800 cursor-pointer outline-none"
+            className="flex items-center justify-between gap-4 px-3 py-2 text-sm text-textDefault hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md cursor-pointer outline-none"
             onSelect={handleCopyHsla}
           >
             Copy HSLA
@@ -1436,7 +1436,7 @@ function ColorSwatch({
           </ContextMenu.Item>
 
           <ContextMenu.Item
-            className="flex items-center justify-between gap-4 px-4 py-2.5 text-sm text-textDefault hover:bg-neutral-100 dark:hover:bg-neutral-800 cursor-pointer outline-none"
+            className="flex items-center justify-between gap-4 px-3 py-2 text-sm text-textDefault hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md cursor-pointer outline-none"
             onSelect={handleCopyToken}
           >
             Copy token
