@@ -659,7 +659,7 @@ export default function DesignSystemSubsectionPage() {
       <DesignSystemHeader onHomeClick={handleHomeClick} />
 
       {/* Mobile/Tablet Section Header - visible below xl */}
-      <div className="xl:hidden sticky top-16 z-40">
+      <div className="xl:hidden sticky top-28 z-30">
         <DesignSystemSidebar
           section={section}
           activeSubsection={subsection}

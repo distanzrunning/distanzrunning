@@ -15,7 +15,7 @@ export default function DesignSystemHeader({
   const { isDark, toggleDarkMode } = useContext(DarkModeContext);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-borderSubtle bg-background-100 dark:bg-[#0a0a0a] dark:border-[#242424]">
+    <header className="sticky top-12 z-40 w-full border-b border-borderSubtle bg-background-100 dark:bg-[#0a0a0a] dark:border-[#242424]">
       <div className="flex w-full">
         {/* Logo section - matches sidebar width */}
         <div className="flex items-center gap-4 border-r border-borderSubtle dark:border-[#242424] py-4 pl-6 pr-6 xl:w-[280px] xl:flex-shrink-0">
