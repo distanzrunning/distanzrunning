@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import {
   ChevronDown,
   Glasses,
@@ -19,8 +20,8 @@ import {
   SignpostBig,
   Compass,
   Network,
-  Image,
-  Puzzle,
+  Image as ImageIcon,
+  Feather,
   LucideIcon,
 } from "lucide-react";
 
@@ -29,7 +30,7 @@ interface SubSection {
   label: string;
 }
 
-interface SidebarSection {
+interface SidebarItem {
   id: string;
   label: string;
   icon?: LucideIcon;
@@ -37,13 +38,22 @@ interface SidebarSection {
   showSeparator?: boolean;
 }
 
+interface SidebarSection {
+  id: string;
+  label: string;
+  items: SidebarItem[];
+}
+
 interface DesignSystemSidebarProps {
   section: string;
   activeSubsection: string;
+  onSectionChange: (section: string) => void;
   onSubsectionChange: (subsection: string) => void;
+  onHomeClick: () => void;
 }
 
-const foundationsSections: SidebarSection[] = [
+// Foundations section items
+const foundationsItems: SidebarItem[] = [
   { id: "overview", label: "Overview", icon: Glasses },
   {
     id: "principles",
@@ -81,7 +91,14 @@ const foundationsSections: SidebarSection[] = [
   { id: "iconography", label: "Iconography", icon: Shapes },
 ];
 
-const componentsSections: SidebarSection[] = [
+// Brand section items (placeholder for now)
+const brandItems: SidebarItem[] = [
+  { id: "overview", label: "Overview", icon: Glasses },
+  { id: "logo", label: "Logo & wordmark", icon: Feather },
+];
+
+// Components section items
+const componentsItems: SidebarItem[] = [
   { id: "overview", label: "Overview", icon: Glasses, showSeparator: true },
   {
     id: "buttons",
@@ -213,7 +230,7 @@ const componentsSections: SidebarSection[] = [
   {
     id: "assets",
     label: "Assets",
-    icon: Image,
+    icon: ImageIcon,
     subsections: [
       { id: "avatar", label: "Avatar" },
       { id: "logo-wordmark", label: "Logo & wordmark" },
@@ -223,57 +240,40 @@ const componentsSections: SidebarSection[] = [
   },
 ];
 
-const patternsSections: SidebarSection[] = [
-  { id: "overview", label: "Overview", icon: Glasses, showSeparator: true },
-  {
-    id: "layout",
-    label: "Layout",
-    icon: Puzzle,
-    subsections: [
-      { id: "footer", label: "Footer" },
-      { id: "footer-secondary", label: "Footer (secondary)" },
-      { id: "masthead", label: "Masthead" },
-      { id: "masthead-secondary", label: "Masthead (secondary)" },
-      { id: "media-promo", label: "Media promo" },
-      { id: "missed-target", label: "Missed target" },
-      { id: "slim-media-promo", label: "Slim media promo" },
-      { id: "table", label: "Table" },
-      { id: "table-collapsable", label: "Table (collapsable)" },
-    ],
-  },
+// All sections
+const allSections: SidebarSection[] = [
+  { id: "foundations", label: "Foundations", items: foundationsItems },
+  { id: "brand", label: "Brand", items: brandItems },
+  { id: "components", label: "Components", items: componentsItems },
 ];
-
-const sectionMap: Record<string, SidebarSection[]> = {
-  foundations: foundationsSections,
-  components: componentsSections,
-  patterns: patternsSections,
-};
 
 export default function DesignSystemSidebar({
   section,
   activeSubsection,
+  onSectionChange,
   onSubsectionChange,
+  onHomeClick,
 }: DesignSystemSidebarProps) {
-  const [expandedSections, setExpandedSections] = useState<string[]>([]);
+  const [expandedSections, setExpandedSections] = useState<string[]>([section]);
+  const [expandedItems, setExpandedItems] = useState<string[]>([]);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
-  const sections = sectionMap[section] || [];
-  const sectionTitle = section.charAt(0).toUpperCase() + section.slice(1);
-
-  // Determine which section should be expanded based on active subsection
-  const getParentSection = (subsectionId: string): string | null => {
-    for (const item of sections) {
-      if (item.subsections?.some((sub) => sub.id === subsectionId)) {
-        return item.id;
+  // Find which item should be expanded based on active subsection
+  const getParentItem = (subsectionId: string): string | null => {
+    for (const sec of allSections) {
+      for (const item of sec.items) {
+        if (item.subsections?.some((sub) => sub.id === subsectionId)) {
+          return item.id;
+        }
       }
     }
     return null;
   };
 
-  const parentSection = getParentSection(activeSubsection);
-  const shouldBeExpanded = parentSection
-    ? [parentSection, ...expandedSections.filter((id) => id !== parentSection)]
-    : expandedSections;
+  const parentItem = getParentItem(activeSubsection);
+  const shouldBeExpanded = parentItem
+    ? [parentItem, ...expandedItems.filter((id) => id !== parentItem)]
+    : expandedItems;
 
   const toggleSection = (id: string) => {
     setExpandedSections((prev) =>
@@ -283,116 +283,168 @@ export default function DesignSystemSidebar({
     );
   };
 
-  const handleClick = (id: string) => {
-    onSubsectionChange(id);
+  const toggleItem = (id: string) => {
+    setExpandedItems((prev) =>
+      prev.includes(id)
+        ? prev.filter((itemId) => itemId !== id)
+        : [...prev, id],
+    );
+  };
+
+  const handleClick = (sectionId: string, subsectionId: string) => {
+    if (sectionId !== section) {
+      onSectionChange(sectionId);
+    }
+    onSubsectionChange(subsectionId);
     setMobileNavOpen(false);
   };
 
-  // Shared navigation list component
+  // Check if an item is active (either directly or one of its subsections)
+  const isItemActive = (sectionId: string, item: SidebarItem): boolean => {
+    if (section !== sectionId) return false;
+    if (item.id === activeSubsection) return true;
+    if (item.subsections?.some((sub) => sub.id === activeSubsection))
+      return true;
+    return false;
+  };
+
+  // Render navigation list
   const renderNavList = () => (
-    <ul className="space-y-1">
-      {sections.map((item) => (
-        <li key={item.id}>
-          {item.subsections ? (
-            // Section with subsections
-            <div>
-              <button
-                onClick={() => toggleSection(item.id)}
-                className={`w-full text-left text-base py-2 px-3 rounded-md transition-colors hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-50 dark:hover:bg-neutral-800/50 flex items-center justify-between ${
-                  item.subsections.some((sub) => sub.id === activeSubsection)
-                    ? "font-medium text-neutral-900 dark:text-white"
-                    : "text-neutral-700 dark:text-neutral-300"
-                }`}
-              >
-                <span className="flex items-center gap-2">
-                  {item.icon && (
-                    <item.icon
-                      className="w-4 h-4"
-                      strokeWidth={
-                        item.subsections.some(
-                          (sub) => sub.id === activeSubsection,
-                        )
-                          ? 2.5
-                          : 1.5
-                      }
-                    />
-                  )}
-                  {item.label}
-                </span>
-                <ChevronDown
-                  className={`w-4 h-4 transition-transform ${
-                    shouldBeExpanded.includes(item.id) ? "rotate-180" : ""
-                  }`}
-                />
-              </button>
-              {shouldBeExpanded.includes(item.id) && (
-                <ul className="ml-3 mt-1 space-y-1 border-l border-borderSubtle pl-3">
-                  {item.subsections.map((sub) => (
-                    <li key={sub.id}>
+    <div className="space-y-6">
+      {allSections.map((sec) => (
+        <div key={sec.id}>
+          {/* Section header */}
+          <button
+            onClick={() => toggleSection(sec.id)}
+            className="w-full text-left text-[11px] font-medium uppercase tracking-wider text-textSubtle hover:text-textDefault transition-colors flex items-center justify-between mb-2 px-3"
+          >
+            <span>{sec.label}</span>
+            <ChevronDown
+              className={`w-3.5 h-3.5 transition-transform ${
+                expandedSections.includes(sec.id) ? "" : "-rotate-90"
+              }`}
+            />
+          </button>
+
+          {/* Section items */}
+          {expandedSections.includes(sec.id) && (
+            <ul className="space-y-0.5">
+              {sec.items.map((item) => (
+                <li key={item.id}>
+                  {item.subsections ? (
+                    // Item with subsections
+                    <div>
                       <button
-                        onClick={() => handleClick(sub.id)}
+                        onClick={() => toggleItem(item.id)}
+                        className={`w-full text-left text-sm py-1.5 px-3 rounded-md transition-colors hover:text-textDefault hover:bg-neutral-50 dark:hover:bg-neutral-800/50 flex items-center justify-between ${
+                          isItemActive(sec.id, item)
+                            ? "font-medium text-textDefault"
+                            : "text-textSubtle"
+                        }`}
+                      >
+                        <span className="flex items-center gap-2">
+                          {item.icon && (
+                            <item.icon
+                              className="w-4 h-4"
+                              strokeWidth={isItemActive(sec.id, item) ? 2 : 1.5}
+                            />
+                          )}
+                          {item.label}
+                        </span>
+                        <ChevronDown
+                          className={`w-3.5 h-3.5 transition-transform ${
+                            shouldBeExpanded.includes(item.id)
+                              ? ""
+                              : "-rotate-90"
+                          }`}
+                        />
+                      </button>
+                      {shouldBeExpanded.includes(item.id) && (
+                        <ul className="ml-6 mt-0.5 space-y-0.5 border-l border-borderSubtle pl-3">
+                          {item.subsections.map((sub) => (
+                            <li key={sub.id}>
+                              <button
+                                onClick={() => handleClick(sec.id, sub.id)}
+                                className={`
+                                  w-full text-left text-sm py-1.5 px-3 rounded-md transition-colors
+                                  ${
+                                    section === sec.id &&
+                                    activeSubsection === sub.id
+                                      ? "bg-neutral-100 dark:bg-neutral-800 text-textDefault font-medium"
+                                      : "text-textSubtle hover:text-textDefault hover:bg-neutral-50 dark:hover:bg-neutral-800/50"
+                                  }
+                                `}
+                              >
+                                {sub.label}
+                              </button>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                      {item.showSeparator && (
+                        <div className="my-3 border-t border-borderSubtle mx-3" />
+                      )}
+                    </div>
+                  ) : (
+                    // Regular item
+                    <div>
+                      <button
+                        onClick={() => handleClick(sec.id, item.id)}
                         className={`
-                          w-full text-left text-base py-2 px-3 rounded-md transition-colors
+                          w-full text-left text-sm py-1.5 px-3 rounded-md transition-colors flex items-center gap-2
                           ${
-                            activeSubsection === sub.id
-                              ? "bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white font-medium"
-                              : "text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-50 dark:hover:bg-neutral-800/50"
+                            section === sec.id && activeSubsection === item.id
+                              ? "bg-neutral-100 dark:bg-neutral-800 text-textDefault font-medium"
+                              : "text-textSubtle hover:text-textDefault hover:bg-neutral-50 dark:hover:bg-neutral-800/50"
                           }
                         `}
                       >
-                        {sub.label}
+                        {item.icon && (
+                          <item.icon
+                            className="w-4 h-4"
+                            strokeWidth={
+                              section === sec.id && activeSubsection === item.id
+                                ? 2
+                                : 1.5
+                            }
+                          />
+                        )}
+                        {item.label}
                       </button>
-                    </li>
-                  ))}
-                </ul>
-              )}
-              {item.showSeparator && (
-                <div className="my-4 border-t border-borderSubtle" />
-              )}
-            </div>
-          ) : (
-            // Regular section
-            <div>
-              <button
-                onClick={() => handleClick(item.id)}
-                className={`
-                  w-full text-left text-base py-2 px-3 rounded-md transition-colors flex items-center gap-2
-                  ${
-                    activeSubsection === item.id
-                      ? "bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white font-medium"
-                      : "text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-50 dark:hover:bg-neutral-800/50"
-                  }
-                `}
-              >
-                {item.icon && (
-                  <item.icon
-                    className="w-4 h-4"
-                    strokeWidth={activeSubsection === item.id ? 2.5 : 1.5}
-                  />
-                )}
-                {item.label}
-              </button>
-              {item.showSeparator && (
-                <div className="my-4 border-t border-borderSubtle" />
-              )}
-            </div>
+                      {item.showSeparator && (
+                        <div className="my-3 border-t border-borderSubtle mx-3" />
+                      )}
+                    </div>
+                  )}
+                </li>
+              ))}
+            </ul>
           )}
-        </li>
+        </div>
       ))}
-    </ul>
+    </div>
   );
 
   return (
     <>
-      {/* Mobile/Tablet Section Header (< 1100px) */}
-      <div className="min-[1100px]:hidden bg-surfaceSubtle dark:bg-neutral-900 border-b border-borderSubtle">
+      {/* Mobile/Tablet Header (< 1100px) */}
+      <div className="min-[1100px]:hidden bg-white dark:bg-neutral-900 border-b border-borderSubtle">
         <button
           onClick={() => setMobileNavOpen(!mobileNavOpen)}
           className="w-full flex items-center justify-between px-6 py-3"
         >
-          <span className="text-base font-medium text-textDefault">
-            {sectionTitle}
-          </span>
+          <div className="flex items-center gap-3">
+            <Image
+              src="/images/distanz_icon_black_round.png"
+              alt="Distanz Running"
+              width={28}
+              height={28}
+              className="dark:invert"
+            />
+            <span className="text-base font-medium text-textDefault">
+              Stride Design System
+            </span>
+          </div>
           <ChevronDown
             className={`w-5 h-5 text-textSubtle transition-transform ${
               mobileNavOpen ? "rotate-180" : ""
@@ -402,15 +454,38 @@ export default function DesignSystemSidebar({
 
         {/* Mobile dropdown navigation */}
         {mobileNavOpen && (
-          <div className="px-6 pb-4 max-h-[60vh] overflow-y-auto">
+          <div className="px-4 pb-4 max-h-[60vh] overflow-y-auto">
             {renderNavList()}
           </div>
         )}
       </div>
 
-      {/* Desktop Sidebar (≥ 1100px) - Fixed width, sticky content */}
-      <nav className="hidden min-[1100px]:block w-64 bg-canvas dark:bg-[#0a0a0a] border-r border-borderSubtle h-full">
-        <div className="px-6 py-8 sticky top-28 max-h-[calc(100vh-7rem)] overflow-y-auto">
+      {/* Desktop Sidebar (≥ 1100px) */}
+      <nav className="hidden min-[1100px]:flex flex-col w-64 bg-canvas dark:bg-[#0a0a0a] border-r border-borderSubtle h-screen sticky top-0">
+        {/* Logo and title - fixed header */}
+        <div className="px-5 py-5 border-b border-borderSubtle">
+          <button
+            onClick={onHomeClick}
+            className="flex items-center gap-3 hover:opacity-70 transition-opacity"
+          >
+            <Image
+              src="/images/distanz_icon_black_round.png"
+              alt="Distanz Running"
+              width={32}
+              height={32}
+              className="dark:invert flex-shrink-0"
+            />
+            <div className="flex flex-col">
+              <span className="font-serif text-lg leading-tight font-medium text-textDefault">
+                Stride
+              </span>
+              <span className="text-[11px] text-textSubtle">Design System</span>
+            </div>
+          </button>
+        </div>
+
+        {/* Scrollable navigation */}
+        <div className="flex-1 overflow-y-auto px-3 py-4">
           {renderNavList()}
         </div>
       </nav>

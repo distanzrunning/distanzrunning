@@ -1,12 +1,10 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
-import DesignSystemTopNav from "../../components/DesignSystemTopNav";
 import DesignSystemSidebar from "../../components/DesignSystemSidebar";
 import PlaceholderContent from "../../components/PlaceholderContent";
 import FoundationsOverview from "../../components/content/FoundationsOverview";
 import ComponentsOverview from "../../components/content/ComponentsOverview";
-import PatternsOverview from "../../components/content/PatternsOverview";
 import DesignPrinciples from "../../components/content/DesignPrinciples";
 import UXPrinciples from "../../components/content/UXPrinciples";
 import DesignTokens from "../../components/content/DesignTokens";
@@ -36,16 +34,16 @@ export default function DesignSystemSubsectionPage() {
   const section = params.section as string;
   const subsection = params.subsection as string;
 
-  const handleSectionChange = (newSection: string | null) => {
-    if (newSection) {
-      router.push(`/design-system/${newSection}/overview`);
-    } else {
-      router.push("/design-system");
-    }
+  const handleSectionChange = (newSection: string) => {
+    router.push(`/design-system/${newSection}/overview`);
   };
 
   const handleSubsectionChange = (newSubsection: string) => {
     router.push(`/design-system/${section}/${newSubsection}`);
+  };
+
+  const handleHomeClick = () => {
+    router.push("/design-system");
   };
 
   const renderContent = () => {
@@ -331,6 +329,19 @@ export default function DesignSystemSubsectionPage() {
           >
             <Iconography />
           </ContentWithTOC>
+        );
+      }
+    }
+
+    // Show Brand content
+    if (section === "brand") {
+      if (subsection === "overview") {
+        // Placeholder for brand overview
+        return <PlaceholderContent title="Brand" subsection="Overview" />;
+      }
+      if (subsection === "logo") {
+        return (
+          <PlaceholderContent title="Brand" subsection="Logo & wordmark" />
         );
       }
     }
@@ -629,13 +640,6 @@ export default function DesignSystemSubsectionPage() {
       }
     }
 
-    // Show Patterns content
-    if (section === "patterns") {
-      if (subsection === "overview") {
-        return <PatternsOverview />;
-      }
-    }
-
     // Format the title based on section and subsection
     const sectionTitle = section.charAt(0).toUpperCase() + section.slice(1);
     const subsectionTitle = subsection
@@ -650,34 +654,34 @@ export default function DesignSystemSubsectionPage() {
 
   return (
     <div className="bg-white dark:bg-[#0c0c0d]">
-      {/* Design System Top Navigation - below main site navbar */}
-      <DesignSystemTopNav
-        activeSection={section}
-        onSectionChange={handleSectionChange}
-      />
-
       {/* Mobile/Tablet Section Header - visible below 1100px */}
-      <div className="min-[1100px]:hidden">
+      <div className="min-[1100px]:hidden sticky top-12 z-40">
         <DesignSystemSidebar
           section={section}
           activeSubsection={subsection}
+          onSectionChange={handleSectionChange}
           onSubsectionChange={handleSubsectionChange}
+          onHomeClick={handleHomeClick}
         />
       </div>
 
-      <div className="flex min-h-screen max-w-[1585px] mx-auto">
+      <div className="flex min-h-screen">
         {/* Desktop Sidebar - fixed width, hidden below 1100px */}
-        <div className="hidden min-[1100px]:block w-64 flex-shrink-0">
+        <div className="hidden min-[1100px]:block flex-shrink-0">
           <DesignSystemSidebar
             section={section}
             activeSubsection={subsection}
+            onSectionChange={handleSectionChange}
             onSubsectionChange={handleSubsectionChange}
+            onHomeClick={handleHomeClick}
           />
         </div>
 
         {/* Main Content Area */}
         <div className="flex-1 min-w-0">
-          <div className="px-6 min-[960px]:px-8 py-12">{renderContent()}</div>
+          <div className="px-6 min-[960px]:px-8 py-12 max-w-[1200px]">
+            {renderContent()}
+          </div>
         </div>
       </div>
     </div>
