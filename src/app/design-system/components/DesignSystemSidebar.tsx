@@ -461,7 +461,7 @@ export default function DesignSystemSidebar({
       </div>
 
       {/* Desktop Sidebar (≥ 1100px) */}
-      <nav className="hidden min-[1100px]:flex flex-col w-64 bg-canvas dark:bg-[#0a0a0a] border-r border-borderSubtle h-screen sticky top-0">
+      <nav className="hidden min-[1100px]:flex flex-col w-72 bg-canvas dark:bg-[#0a0a0a] border-r border-borderSubtle h-screen sticky top-0">
         {/* Logo and title - fixed header */}
         <div className="px-5 py-5 border-b border-borderSubtle">
           <button
@@ -475,12 +475,9 @@ export default function DesignSystemSidebar({
               height={32}
               className="dark:invert flex-shrink-0"
             />
-            <div className="flex flex-col">
-              <span className="font-serif text-lg leading-tight font-medium text-textDefault">
-                Stride
-              </span>
-              <span className="text-[11px] text-textSubtle">Design System</span>
-            </div>
+            <span className="font-serif text-xl leading-tight font-medium text-textDefault">
+              Stride Design System
+            </span>
           </button>
         </div>
 
