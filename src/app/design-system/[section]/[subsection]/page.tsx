@@ -683,9 +683,7 @@ export default function DesignSystemSubsectionPage() {
 
         {/* Main Content Area */}
         <div className="flex-1 min-w-0">
-          <div className="px-6 xl:px-8 py-12 max-w-[900px]">
-            {renderContent()}
-          </div>
+          <div className="px-6 xl:px-8 py-12">{renderContent()}</div>
         </div>
       </div>
     </div>
