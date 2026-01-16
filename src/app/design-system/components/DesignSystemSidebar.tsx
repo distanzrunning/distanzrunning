@@ -245,9 +245,9 @@ export default function DesignSystemSidebar({
       </div>
 
       {/* Desktop Sidebar (≥ 1280px) - Geist: w-[260px], px-6, pb-[14px], pt-4 */}
-      <nav className="hidden xl:flex flex-col w-[260px] border-r border-borderSubtle dark:border-[#242424] min-h-[calc(100vh-112px)] sticky top-28 self-stretch">
+      <nav className="hidden xl:flex flex-col w-[260px] border-r border-borderSubtle dark:border-[#242424] h-[calc(100vh-112px)] sticky top-28 overflow-hidden">
         {/* Scrollable navigation - Geist padding */}
-        <div className="flex-1 overflow-y-auto px-6 pb-[14px] pt-4">
+        <div className="h-full overflow-y-auto px-6 pb-[14px] pt-4">
           {renderNavList()}
         </div>
       </nav>
