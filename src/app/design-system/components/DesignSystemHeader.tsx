@@ -30,7 +30,7 @@ export default function DesignSystemHeader({
               height={28}
               className="dark:invert"
             />
-            <span className="font-serif text-lg font-medium tracking-tight">
+            <span className="font-serif text-xl font-medium tracking-tight">
               Stride Design System
             </span>
           </button>
