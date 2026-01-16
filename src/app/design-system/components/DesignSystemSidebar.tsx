@@ -27,41 +27,51 @@ interface DesignSystemSidebarProps {
 // Flat navigation structure - all items directly listed
 const navigation: NavSection[] = [
   {
-    id: "foundations",
-    label: "Foundations",
+    id: "colors",
+    label: "Colors",
     items: [
-      { id: "overview", label: "Overview", section: "foundations" },
-      {
-        id: "design-principles",
-        label: "Design Principles",
-        section: "foundations",
-      },
-      { id: "ux-principles", label: "UX Principles", section: "foundations" },
-      { id: "design-tokens", label: "Design Tokens", section: "foundations" },
-      { id: "colours", label: "Colours", section: "foundations" },
-      { id: "grid-spacing", label: "Grid Spacing", section: "foundations" },
-      { id: "grid-layout", label: "Grid Layout", section: "foundations" },
-      { id: "rules", label: "Rules", section: "foundations" },
+      { id: "background", label: "Background", section: "foundations" },
+      { id: "gray", label: "Gray", section: "foundations" },
+      { id: "gray-alpha", label: "Gray Alpha", section: "foundations" },
+      { id: "blue", label: "Blue", section: "foundations" },
+      { id: "red", label: "Red", section: "foundations" },
+      { id: "amber", label: "Amber", section: "foundations" },
+      { id: "green", label: "Green", section: "foundations" },
+      { id: "teal", label: "Teal", section: "foundations" },
+      { id: "purple", label: "Purple", section: "foundations" },
+      { id: "pink", label: "Pink", section: "foundations" },
+    ],
+  },
+  {
+    id: "typography",
+    label: "Typography",
+    items: [
       { id: "typefaces", label: "Typefaces", section: "foundations" },
       { id: "modular-scale", label: "Modular Scale", section: "foundations" },
       { id: "line-height", label: "Line Height", section: "foundations" },
       { id: "text-styles", label: "Text Styles", section: "foundations" },
-      { id: "iconography", label: "Iconography", section: "foundations" },
     ],
   },
   {
-    id: "brand",
-    label: "Brand",
+    id: "layout",
+    label: "Layout",
     items: [
-      { id: "overview", label: "Overview", section: "brand" },
-      { id: "logo", label: "Logo & Wordmark", section: "brand" },
+      { id: "grid-spacing", label: "Grid Spacing", section: "foundations" },
+      { id: "grid-layout", label: "Grid Layout", section: "foundations" },
+      { id: "rules", label: "Rules", section: "foundations" },
+    ],
+  },
+  {
+    id: "icons",
+    label: "Icons",
+    items: [
+      { id: "iconography", label: "Iconography", section: "foundations" },
     ],
   },
   {
     id: "components",
     label: "Components",
     items: [
-      { id: "overview", label: "Overview", section: "components" },
       { id: "button", label: "Button", section: "components" },
       { id: "button-icon", label: "Button + Icon", section: "components" },
       { id: "slim-button", label: "Slim Button", section: "components" },
