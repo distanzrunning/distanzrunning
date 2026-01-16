@@ -2,12 +2,13 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Lock } from "lucide-react";
 
 interface NavItem {
   id: string;
   label: string;
   section: string;
+  locked?: boolean;
 }
 
 interface NavSection {
@@ -24,67 +25,108 @@ interface DesignSystemSidebarProps {
   onHomeClick: () => void;
 }
 
-// Flat navigation structure - all items directly listed
+// Navigation structure matching Geist design system
 const navigation: NavSection[] = [
   {
-    id: "colors",
-    label: "Colors",
+    id: "foundations",
+    label: "Foundations",
     items: [
-      { id: "background", label: "Background", section: "foundations" },
-      { id: "gray", label: "Gray", section: "foundations" },
-      { id: "gray-alpha", label: "Gray Alpha", section: "foundations" },
-      { id: "blue", label: "Blue", section: "foundations" },
-      { id: "red", label: "Red", section: "foundations" },
-      { id: "amber", label: "Amber", section: "foundations" },
-      { id: "green", label: "Green", section: "foundations" },
-      { id: "teal", label: "Teal", section: "foundations" },
-      { id: "purple", label: "Purple", section: "foundations" },
-      { id: "pink", label: "Pink", section: "foundations" },
+      { id: "introduction", label: "Introduction", section: "foundations" },
+      { id: "colours", label: "Colors", section: "foundations" },
+      { id: "icons", label: "Icons", section: "foundations" },
+      { id: "typography", label: "Typography", section: "foundations" },
+      { id: "materials", label: "Materials", section: "foundations" },
     ],
   },
   {
-    id: "typography",
-    label: "Typography",
+    id: "resources",
+    label: "Resources",
     items: [
-      { id: "typefaces", label: "Typefaces", section: "foundations" },
-      { id: "modular-scale", label: "Modular Scale", section: "foundations" },
-      { id: "line-height", label: "Line Height", section: "foundations" },
-      { id: "text-styles", label: "Text Styles", section: "foundations" },
+      {
+        id: "upgrade-guide",
+        label: "Upgrade Guide",
+        section: "resources",
+        locked: true,
+      },
+      {
+        id: "icons-logos",
+        label: "Icons & Logos",
+        section: "resources",
+        locked: true,
+      },
+      {
+        id: "guidelines",
+        label: "Guidelines",
+        section: "resources",
+        locked: true,
+      },
+      {
+        id: "changelog",
+        label: "Changelog",
+        section: "resources",
+        locked: true,
+      },
     ],
   },
   {
-    id: "layout",
-    label: "Layout",
+    id: "brands",
+    label: "Brands",
     items: [
-      { id: "grid-spacing", label: "Grid Spacing", section: "foundations" },
-      { id: "grid-layout", label: "Grid Layout", section: "foundations" },
-      { id: "rules", label: "Rules", section: "foundations" },
-    ],
-  },
-  {
-    id: "icons",
-    label: "Icons",
-    items: [
-      { id: "iconography", label: "Iconography", section: "foundations" },
+      { id: "distanz", label: "Distanz", section: "brands" },
+      { id: "stride", label: "Stride", section: "brands" },
     ],
   },
   {
     id: "components",
     label: "Components",
     items: [
-      { id: "button", label: "Button", section: "components" },
-      { id: "button-icon", label: "Button + Icon", section: "components" },
-      { id: "slim-button", label: "Slim Button", section: "components" },
-      {
-        id: "slim-button-icon",
-        label: "Slim Button + Icon",
-        section: "components",
-      },
+      { id: "avatar", label: "Avatar", section: "components" },
+      { id: "badge", label: "Badge", section: "components" },
       { id: "blockquote", label: "Blockquote", section: "components" },
-      { id: "pull-quote", label: "Pull Quote", section: "components" },
-      { id: "close", label: "Close", section: "components" },
-      { id: "toggle", label: "Toggle", section: "components" },
+      { id: "button", label: "Button", section: "components" },
+      { id: "calendar", label: "Calendar", section: "components" },
       { id: "checkbox", label: "Checkbox", section: "components" },
+      { id: "close", label: "Close", section: "components" },
+      { id: "collapse", label: "Collapse", section: "components" },
+      { id: "combobox", label: "Combobox", section: "components" },
+      { id: "context-menu", label: "Context Menu", section: "components" },
+      { id: "description", label: "Description", section: "components" },
+      { id: "drawer", label: "Drawer", section: "components" },
+      { id: "dropdown-menu", label: "Dropdown Menu", section: "components" },
+      { id: "error", label: "Error", section: "components" },
+      { id: "feedback", label: "Feedback", section: "components" },
+      { id: "file-tree", label: "File Tree", section: "components" },
+      { id: "icon-button", label: "Icon Button", section: "components" },
+      { id: "input", label: "Input", section: "components" },
+      { id: "keyboard-input", label: "Keyboard Input", section: "components" },
+      { id: "link", label: "Link", section: "components" },
+      { id: "loading-dots", label: "Loading Dots", section: "components" },
+      { id: "menu", label: "Menu", section: "components" },
+      { id: "modal", label: "Modal", section: "components" },
+      { id: "note", label: "Note", section: "components" },
+      { id: "pagination", label: "Pagination", section: "components" },
+      { id: "progress", label: "Progress", section: "components" },
+      { id: "pull-quote", label: "Pull Quote", section: "components" },
+      { id: "radio", label: "Radio", section: "components" },
+      { id: "scroller", label: "Scroller", section: "components" },
+      { id: "select", label: "Select", section: "components" },
+      { id: "skeleton", label: "Skeleton", section: "components" },
+      { id: "slider", label: "Slider", section: "components" },
+      { id: "snippet", label: "Snippet", section: "components" },
+      { id: "spinner", label: "Spinner", section: "components" },
+      { id: "stack", label: "Stack", section: "components" },
+      { id: "status-dot", label: "Status Dot", section: "components" },
+      { id: "switch", label: "Switch", section: "components" },
+      { id: "table", label: "Table", section: "components" },
+      { id: "tabs", label: "Tabs", section: "components" },
+      { id: "text", label: "Text", section: "components" },
+      { id: "textarea", label: "Textarea", section: "components" },
+      { id: "theme-switcher", label: "Theme Switcher", section: "components" },
+      { id: "toast", label: "Toast", section: "components" },
+      { id: "toggle", label: "Toggle", section: "components" },
+      { id: "toggle-group", label: "Toggle Group", section: "components" },
+      { id: "tooltip", label: "Tooltip", section: "components" },
+      { id: "window", label: "Window", section: "components" },
     ],
   },
 ];
@@ -97,11 +139,13 @@ export default function DesignSystemSidebar({
 }: DesignSystemSidebarProps) {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
-  const handleClick = (itemSection: string, itemId: string) => {
-    if (itemSection !== section) {
-      onSectionChange(itemSection);
+  const handleClick = (item: NavItem) => {
+    if (item.locked) return;
+
+    if (item.section !== section) {
+      onSectionChange(item.section);
     }
-    onSubsectionChange(itemId);
+    onSubsectionChange(item.id);
     setMobileNavOpen(false);
   };
 
@@ -123,17 +167,21 @@ export default function DesignSystemSidebar({
               return (
                 <li key={`${item.section}-${item.id}`}>
                   <button
-                    onClick={() => handleClick(item.section, item.id)}
+                    onClick={() => handleClick(item)}
+                    disabled={item.locked}
                     className={`
-                      w-full text-left text-sm py-1.5 px-3 rounded-md transition-colors
+                      w-full text-left text-sm py-1.5 px-3 rounded-md transition-colors flex items-center justify-between
                       ${
-                        isActive
-                          ? "bg-neutral-100 dark:bg-neutral-800 text-textDefault font-medium"
-                          : "text-textSubtle hover:text-textDefault hover:bg-neutral-50 dark:hover:bg-neutral-800/50"
+                        item.locked
+                          ? "text-textSubtler cursor-not-allowed opacity-50"
+                          : isActive
+                            ? "bg-neutral-100 dark:bg-neutral-800 text-textDefault font-medium"
+                            : "text-textSubtle hover:text-textDefault hover:bg-neutral-50 dark:hover:bg-neutral-800/50"
                       }
                     `}
                   >
-                    {item.label}
+                    <span>{item.label}</span>
+                    {item.locked && <Lock className="w-3 h-3" />}
                   </button>
                 </li>
               );
