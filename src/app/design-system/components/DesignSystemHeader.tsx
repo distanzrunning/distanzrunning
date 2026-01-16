@@ -21,7 +21,7 @@ export default function DesignSystemHeader({
         <div className="flex grow items-center gap-4 border-r border-borderSubtle dark:border-[#242424] py-4 pl-px xl:w-[258px] xl:grow-0">
           <button
             onClick={onHomeClick}
-            className="flex items-center gap-4 text-textDefault no-underline"
+            className="flex items-center gap-3 text-textDefault no-underline"
           >
             <Image
               src="/images/distanz_icon_black.png"
