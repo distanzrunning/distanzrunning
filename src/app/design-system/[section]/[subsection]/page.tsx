@@ -669,7 +669,7 @@ export default function DesignSystemSubsectionPage() {
         />
       </div>
 
-      <div className="flex">
+      <div className="flex min-h-[calc(100vh-112px)]">
         {/* Desktop Sidebar - hidden below xl */}
         <div className="hidden xl:block flex-shrink-0">
           <DesignSystemSidebar

@@ -235,7 +235,7 @@ export default function DesignSystemSidebar({
       </div>
 
       {/* Desktop Sidebar (≥ 1280px) */}
-      <nav className="hidden xl:flex flex-col w-[280px] border-r border-borderSubtle dark:border-[#242424] h-[calc(100vh-112px)] sticky top-28">
+      <nav className="hidden xl:flex flex-col w-[280px] border-r border-borderSubtle dark:border-[#242424] min-h-[calc(100vh-112px)] sticky top-28 self-stretch">
         {/* Scrollable navigation */}
         <div className="flex-1 overflow-y-auto px-3 py-4">
           {renderNavList()}
