@@ -101,7 +101,7 @@ export default function DesignSystemSidebar({
       {navigation.map((navSection) => (
         <div key={navSection.id}>
           {/* Section header */}
-          <div className="text-[11px] font-medium uppercase tracking-wider text-textSubtle mb-2 px-3">
+          <div className="text-[11px] font-medium uppercase tracking-wider text-textDefault mb-2 px-3">
             {navSection.label}
           </div>
 
