@@ -2,7 +2,7 @@
 
 import { useContext } from "react";
 import Image from "next/image";
-import { Search, Sun, Moon } from "lucide-react";
+import { Search, Sun, Moon, Monitor } from "lucide-react";
 import { DarkModeContext } from "@/components/DarkModeProvider";
 
 interface DesignSystemHeaderProps {
@@ -15,40 +15,52 @@ export default function DesignSystemHeader({
   const { isDark, toggleDarkMode } = useContext(DarkModeContext);
 
   return (
-    <header className="sticky top-12 z-40 w-full border-b border-borderSubtle bg-white dark:bg-[#0a0a0a] dark:border-[#242424]">
-      <div className="flex w-full">
+    <header className="sticky top-12 z-40 w-full border-b border-l border-r border-borderSubtle bg-canvas dark:border-[#242424]">
+      <div className="flex w-full pl-[22px]">
         {/* Logo section - matches sidebar width */}
-        <div className="flex items-center gap-4 border-r border-borderSubtle dark:border-[#242424] py-4 pl-6 pr-6 xl:w-[280px] xl:flex-shrink-0">
+        <div className="flex grow items-center gap-4 border-r border-borderSubtle dark:border-[#242424] py-4 pl-px xl:w-[258px] xl:grow-0">
           <button
             onClick={onHomeClick}
-            className="flex items-center gap-3 text-textDefault no-underline hover:opacity-70 transition-opacity"
+            className="flex items-center gap-4 text-textDefault no-underline"
           >
             <Image
-              src="/images/distanz_icon_black_round.png"
+              src="/images/distanz_icon_black.png"
               alt="Distanz Running"
-              width={28}
-              height={28}
-              className="dark:invert"
+              width={27}
+              height={27}
+              className="dark:hidden"
             />
-            <span className="font-serif text-xl font-medium tracking-tight">
+            <Image
+              src="/images/distanz_icon_white.png"
+              alt="Distanz Running"
+              width={27}
+              height={27}
+              className="hidden dark:block"
+            />
+            <p
+              className="text-[16px] font-medium"
+              style={{ letterSpacing: "-0.32px" }}
+            >
               Stride Design System
-            </span>
+            </p>
           </button>
         </div>
 
         {/* Right section with search and theme */}
-        <div className="flex items-center justify-between flex-1 px-4">
+        <div className="flex items-center justify-between p-4 xl:grow">
           {/* Search button - desktop only */}
           <button
             type="button"
-            className="hidden xl:flex h-8 w-[220px] cursor-pointer items-center justify-between rounded-md border border-borderDefault bg-transparent pl-3 pr-2 text-sm text-textSubtle hover:bg-surfaceSubtle transition-colors"
+            className="hidden xl:flex h-8 w-[220px] cursor-pointer items-center justify-between rounded border border-borderDefault bg-transparent pl-2 pr-1.5 font-sans text-sm text-textSubtle outline-none hover:bg-surfaceSubtle"
           >
             <span className="flex items-center gap-2">
               <Search className="w-4 h-4" />
               <span>Search Stride</span>
             </span>
-            <kbd className="hidden sm:inline-flex h-5 items-center gap-1 rounded border border-borderSubtle bg-surfaceSubtle px-1.5 font-mono text-[10px] font-medium text-textSubtle">
-              <span>⌘</span>
+            <kbd className="inline-flex h-5 items-center gap-0 rounded border border-borderSubtle bg-canvas px-1 font-mono text-[11px] font-medium text-textDefault">
+              <span style={{ minWidth: "1em", display: "inline-block" }}>
+                ⌘
+              </span>
               <span>K</span>
             </kbd>
           </button>
@@ -56,41 +68,61 @@ export default function DesignSystemHeader({
           {/* Mobile search icon */}
           <button
             type="button"
-            className="xl:hidden p-2 rounded-full hover:bg-surfaceSubtle transition-colors"
-            aria-label="Search"
+            className="xl:hidden p-2 rounded-full bg-transparent hover:bg-surfaceSubtle transition-colors"
+            aria-label="Open menu"
           >
-            <Search className="w-4 h-4 text-textSubtle" />
+            <Search className="w-4 h-4" />
           </button>
 
-          {/* Theme switcher */}
-          <fieldset className="flex items-center gap-1 p-1 rounded-full border border-borderSubtle bg-surfaceSubtle">
+          {/* Theme switcher - Geist style */}
+          <fieldset className="hidden xl:flex items-center gap-0 rounded-full border border-borderDefault bg-canvas dark:border-[#333] dark:bg-[#111]">
             <legend className="sr-only">Select a display theme:</legend>
 
-            <button
-              type="button"
-              onClick={() => isDark && toggleDarkMode()}
-              className={`p-1.5 rounded-full transition-colors ${
-                !isDark
-                  ? "bg-canvas text-textDefault shadow-sm"
-                  : "text-textSubtle hover:text-textDefault"
-              }`}
-              aria-label="Light theme"
-            >
-              <Sun className="w-4 h-4" />
-            </button>
+            {/* System theme option */}
+            <label className="relative">
+              <input
+                type="radio"
+                name="theme"
+                value="system"
+                className="sr-only peer"
+                aria-label="system"
+              />
+              <span className="flex items-center justify-center w-8 h-8 rounded-full cursor-pointer text-textSubtle hover:text-textDefault peer-checked:bg-surfaceSubtle peer-checked:text-textDefault transition-colors">
+                <Monitor className="w-4 h-4" />
+              </span>
+            </label>
 
-            <button
-              type="button"
-              onClick={() => !isDark && toggleDarkMode()}
-              className={`p-1.5 rounded-full transition-colors ${
-                isDark
-                  ? "bg-canvas text-textDefault shadow-sm"
-                  : "text-textSubtle hover:text-textDefault"
-              }`}
-              aria-label="Dark theme"
-            >
-              <Moon className="w-4 h-4" />
-            </button>
+            {/* Light theme option */}
+            <label className="relative">
+              <input
+                type="radio"
+                name="theme"
+                value="light"
+                checked={!isDark}
+                onChange={() => isDark && toggleDarkMode()}
+                className="sr-only peer"
+                aria-label="light"
+              />
+              <span className="flex items-center justify-center w-8 h-8 rounded-full cursor-pointer text-textSubtle hover:text-textDefault peer-checked:bg-surfaceSubtle peer-checked:text-textDefault transition-colors">
+                <Sun className="w-4 h-4" />
+              </span>
+            </label>
+
+            {/* Dark theme option */}
+            <label className="relative">
+              <input
+                type="radio"
+                name="theme"
+                value="dark"
+                checked={isDark}
+                onChange={() => !isDark && toggleDarkMode()}
+                className="sr-only peer"
+                aria-label="dark"
+              />
+              <span className="flex items-center justify-center w-8 h-8 rounded-full cursor-pointer text-textSubtle hover:text-textDefault peer-checked:bg-surfaceSubtle peer-checked:text-textDefault transition-colors">
+                <Moon className="w-4 h-4" />
+              </span>
+            </label>
           </fieldset>
         </div>
       </div>

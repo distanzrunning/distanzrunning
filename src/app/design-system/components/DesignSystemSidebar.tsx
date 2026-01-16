@@ -202,11 +202,18 @@ export default function DesignSystemSidebar({
         >
           <div className="flex items-center gap-3">
             <Image
-              src="/images/distanz_icon_black_round.png"
+              src="/images/distanz_icon_black.png"
               alt="Distanz Running"
-              width={28}
-              height={28}
-              className="dark:invert"
+              width={27}
+              height={27}
+              className="dark:hidden"
+            />
+            <Image
+              src="/images/distanz_icon_white.png"
+              alt="Distanz Running"
+              width={27}
+              height={27}
+              className="hidden dark:block"
             />
             <span className="text-base font-medium text-textDefault">
               Stride Design System
