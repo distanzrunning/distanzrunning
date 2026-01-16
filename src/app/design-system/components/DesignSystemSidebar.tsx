@@ -149,39 +149,49 @@ export default function DesignSystemSidebar({
     setMobileNavOpen(false);
   };
 
-  // Render flat navigation list
+  // Render flat navigation list - Geist style
   const renderNavList = () => (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {navigation.map((navSection) => (
         <div key={navSection.id}>
-          {/* Section header */}
-          <div className="text-[11px] font-medium uppercase tracking-wider text-textDefault mb-2 px-3">
+          {/* Section header - Geist: h-10, text-[14px] leading-[20px] font-medium */}
+          <p className="text-[14px] leading-[20px] font-medium mb-0.5 flex h-10 items-center gap-2 py-1.5 pl-1 text-black dark:text-white">
             {navSection.label}
-          </div>
+          </p>
 
-          {/* Section items - flat list */}
-          <ul className="space-y-0.5">
+          {/* Section items - flat list with Geist dimensions */}
+          <ul
+            className="relative space-y-0.5"
+            style={{ width: "calc(100% + 8px)" }}
+          >
             {navSection.items.map((item) => {
               const isActive =
                 section === item.section && activeSubsection === item.id;
               return (
-                <li key={`${item.section}-${item.id}`}>
+                <li
+                  key={`${item.section}-${item.id}`}
+                  className={navSection.id === "components" ? "py-[2px]" : ""}
+                >
                   <button
                     onClick={() => handleClick(item)}
                     disabled={item.locked}
                     className={`
-                      w-full text-left text-sm py-1.5 px-3 rounded-md transition-colors flex items-center justify-between
+                      group relative -ml-2 flex h-[40px] w-full items-center gap-2.5 rounded-md px-3 py-1.5 text-[14px] leading-[20px] outline-none transition-colors
                       ${
                         item.locked
-                          ? "text-textSubtler cursor-not-allowed opacity-50"
+                          ? "text-textSubtle cursor-not-allowed"
                           : isActive
-                            ? "bg-neutral-100 dark:bg-neutral-800 text-textDefault font-medium"
-                            : "text-textSubtle hover:text-textDefault hover:bg-neutral-50 dark:hover:bg-neutral-800/50"
+                            ? "bg-black/[0.05] dark:bg-white/[0.1] text-black dark:text-white"
+                            : "text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800"
                       }
                     `}
                   >
-                    <span>{item.label}</span>
-                    {item.locked && <Lock className="w-3 h-3" />}
+                    <span className="flex flex-row items-center gap-2">
+                      {item.label}
+                    </span>
+                    {item.locked && (
+                      <Lock className="w-4 h-4 text-textSubtle ml-auto" />
+                    )}
                   </button>
                 </li>
               );
@@ -234,10 +244,10 @@ export default function DesignSystemSidebar({
         )}
       </div>
 
-      {/* Desktop Sidebar (≥ 1280px) */}
-      <nav className="hidden xl:flex flex-col w-[280px] border-r border-borderSubtle dark:border-[#242424] min-h-[calc(100vh-112px)] sticky top-28 self-stretch">
-        {/* Scrollable navigation */}
-        <div className="flex-1 overflow-y-auto px-3 py-4">
+      {/* Desktop Sidebar (≥ 1280px) - Geist: w-[260px], px-6, pb-[14px], pt-4 */}
+      <nav className="hidden xl:flex flex-col w-[260px] border-r border-borderSubtle dark:border-[#242424] min-h-[calc(100vh-112px)] sticky top-28 self-stretch">
+        {/* Scrollable navigation - Geist padding */}
+        <div className="flex-1 overflow-y-auto px-6 pb-[14px] pt-4">
           {renderNavList()}
         </div>
       </nav>
