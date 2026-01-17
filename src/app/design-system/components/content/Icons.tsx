@@ -241,7 +241,7 @@ function IconCard({ name }: { name: string }) {
     <button
       onClick={handleClick}
       onContextMenu={handleContextMenu}
-      className="group relative flex h-28 w-full cursor-pointer flex-col items-center rounded px-4 text-gray-900 hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors"
+      className="group relative flex h-28 w-full cursor-pointer flex-col items-center px-4 text-gray-900 border border-gray-400 hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors"
       title={name}
     >
       <div className="flex-1" />
