@@ -179,7 +179,15 @@ function ToastProvider({ children }: { children: React.ReactNode }) {
 }
 
 // Icon card component matching Geist design
-function IconCard({ name }: { name: string }) {
+function IconCard({
+  name,
+  isFirstColMobile,
+  isFirstColDesktop,
+}: {
+  name: string;
+  isFirstColMobile?: boolean;
+  isFirstColDesktop?: boolean;
+}) {
   const { showToast } = React.useContext(ToastContext);
   const [showTick, setShowTick] = useState(false);
   const IconComponent = (
@@ -238,11 +246,22 @@ function IconCard({ name }: { name: string }) {
 
   if (!IconComponent) return null;
 
+  // Border logic: bottom border always, left border only if not first column
+  // Mobile: 2 columns, Desktop: 4 columns
+  // We use responsive classes to handle different breakpoints
+  const leftBorderClass = isFirstColMobile
+    ? isFirstColDesktop
+      ? "" // First col on both mobile and desktop - no left border
+      : "md:border-l md:border-borderNeutral" // First col on mobile only - left border on desktop
+    : isFirstColDesktop
+      ? "border-l border-borderNeutral max-md:border-l md:border-l-0" // First col on desktop only - left border on mobile
+      : "border-l border-borderNeutral"; // Not first col on either - always has left border
+
   return (
     <button
       onClick={handleClick}
       onContextMenu={handleContextMenu}
-      className="group relative flex h-28 w-full cursor-pointer flex-col items-center px-4 text-textSubtle border-r border-b border-borderNeutral transition-colors hover:[background:var(--ds-background-100)]"
+      className={`group relative flex h-28 w-full cursor-pointer flex-col items-center px-4 text-textSubtle border-b border-borderNeutral ${leftBorderClass} transition-colors hover:[background:var(--ds-background-100)]`}
       title={name}
     >
       <div className="flex-1" />
@@ -318,20 +337,40 @@ export default function Icons() {
     return projectIconNames.filter((name) => name.toLowerCase().includes(term));
   }, [searchTerm]);
 
+  // Calculate position for border handling
+  const getIconPosition = (index: number) => {
+    const colsMobile = 2;
+    const colsDesktop = 4;
+
+    return {
+      isFirstColMobile: index % colsMobile === 0,
+      isFirstColDesktop: index % colsDesktop === 0,
+    };
+  };
+
   return (
     <ToastProvider>
       <div>
-        {/* Icon Grid - 4 columns desktop, 2 columns mobile */}
+        {/* Search Section */}
+        <Section>
+          <SearchInput value={searchTerm} onChange={setSearchTerm} />
+        </Section>
+
+        {/* Icon Grid - spans full width, no padding */}
         <div>
-          {/* Search within grid width */}
-          <div className="mb-4">
-            <SearchInput value={searchTerm} onChange={setSearchTerm} />
-          </div>
           {filteredIcons.length > 0 ? (
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-0 border-t border-l border-borderNeutral">
-              {filteredIcons.map((name) => (
-                <IconCard key={name} name={name} />
-              ))}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-0 border-t border-borderNeutral">
+              {filteredIcons.map((name, index) => {
+                const pos = getIconPosition(index);
+                return (
+                  <IconCard
+                    key={name}
+                    name={name}
+                    isFirstColMobile={pos.isFirstColMobile}
+                    isFirstColDesktop={pos.isFirstColDesktop}
+                  />
+                );
+              })}
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center py-16 text-center">
