@@ -134,26 +134,21 @@ export default function ContentWithTOC({
 
   return (
     <div className="flex flex-col -m-12 min-h-[calc(100vh-112px)]">
-      {/* Page Header Section - spans full width */}
+      {/* Page Header Section - spans full width including over TOC area */}
       {pageTitle && (
         <>
-          <div className="flex">
-            {/* Header content area */}
-            <div className="flex-1 min-w-0 p-12">
-              <h1 className="text-[24px] md:text-[40px] leading-[1.2] font-semibold text-textDefault mb-3">
-                {pageTitle}
-              </h1>
-              {pageSubtitle && (
-                <p
-                  className="text-[16px] md:text-[20px] text-textSubtle"
-                  style={{ lineHeight: 1.5 }}
-                >
-                  {pageSubtitle}
-                </p>
-              )}
-            </div>
-            {/* Empty space for TOC column alignment (desktop only) */}
-            <div className="hidden xl:block w-[260px] flex-shrink-0" />
+          <div className="p-12">
+            <h1 className="text-[24px] md:text-[40px] leading-[1.2] font-semibold text-textDefault mb-3">
+              {pageTitle}
+            </h1>
+            {pageSubtitle && (
+              <p
+                className="text-[16px] md:text-[20px] text-textSubtle"
+                style={{ lineHeight: 1.5 }}
+              >
+                {pageSubtitle}
+              </p>
+            )}
           </div>
           {/* Full-width divider */}
           <hr className="border-t border-borderNeutral" />
