@@ -18,6 +18,7 @@ import ModularScale from "../../components/content/ModularScale";
 import LineHeight from "../../components/content/LineHeight";
 import TextStyles from "../../components/content/TextStyles";
 import Iconography from "../../components/content/Iconography";
+import Icons from "../../components/content/Icons";
 import ButtonComponent from "../../components/content/ButtonComponent";
 import ButtonIconComponent from "../../components/content/ButtonIconComponent";
 import SlimButtonComponent from "../../components/content/SlimButtonComponent";
@@ -328,6 +329,19 @@ export default function DesignSystemSubsectionPage() {
             ]}
           >
             <Iconography />
+          </ContentWithTOC>
+        );
+      }
+      if (subsection === "icons") {
+        return (
+          <ContentWithTOC
+            tocTitle="On this page"
+            tocItems={[
+              { id: "usage", title: "Usage" },
+              { id: "resources", title: "Resources" },
+            ]}
+          >
+            <Icons />
           </ContentWithTOC>
         );
       }
