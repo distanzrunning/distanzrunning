@@ -693,7 +693,7 @@ export default function DesignSystemPage() {
 
         {/* Main Content Area */}
         <div className="flex-1 min-w-0">
-          <div className="px-6 xl:pl-8 xl:pr-0 py-12">{renderContent()}</div>
+          <div className="p-12">{renderContent()}</div>
         </div>
       </div>
     </div>

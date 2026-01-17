@@ -129,14 +129,14 @@ export default function ContentWithTOC({
   };
 
   return (
-    <div className="flex">
-      {/* Main Content - full width */}
-      <article className="flex-1 min-w-0">{children}</article>
+    <div className="flex -m-12 min-h-[calc(100vh-112px)]">
+      {/* Main Content - full width with padding */}
+      <article className="flex-1 min-w-0 p-12">{children}</article>
 
       {/* Table of Contents - Right Sidebar (≥1280px) */}
-      <aside className="hidden xl:flex flex-col w-[260px] flex-shrink-0 border-l border-borderSubtle">
+      <aside className="hidden xl:block w-[260px] flex-shrink-0 border-l border-borderSubtle">
         <div className="sticky top-28 h-[calc(100vh-112px)] overflow-hidden">
-          <nav className="h-full overflow-y-auto px-6 pb-[14px] pt-4">
+          <nav className="h-full overflow-y-auto px-6 pb-[14px] pt-12">
             <h4 className="text-[14px] leading-[20px] font-medium text-textDefault mb-3">
               {tocTitle}
             </h4>
