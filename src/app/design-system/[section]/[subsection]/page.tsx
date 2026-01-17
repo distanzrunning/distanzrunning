@@ -147,8 +147,7 @@ export default function DesignSystemSubsectionPage() {
           <ContentWithTOC
             tocTitle="On this page"
             tocItems={[
-              { id: "colour-scales", title: "Colour Scales" },
-              { id: "semantic-tokens", title: "Semantic Tokens" },
+              { id: "scales", title: "Scales" },
               { id: "backgrounds", title: "Backgrounds" },
               {
                 id: "colors-1-3-component-backgrounds",
@@ -156,14 +155,13 @@ export default function DesignSystemSubsectionPage() {
               },
               { id: "colors-4-6-borders", title: "Colors 4-6: Borders" },
               {
-                id: "colors-7-8-solid-colors",
+                id: "colors-7-8-high-contrast-backgrounds",
                 title: "Colors 7-8: Solid",
               },
               {
                 id: "colors-9-10-text-and-icons",
                 title: "Colors 9-10: Text & Icons",
               },
-              { id: "migration", title: "Migration" },
             ]}
           >
             <ColourPalettes />

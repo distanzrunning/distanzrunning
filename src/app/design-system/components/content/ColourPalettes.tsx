@@ -1521,7 +1521,7 @@ export default function ColourPalettes() {
     <ToastProvider>
       <div>
         {/* Page Header */}
-        <div className="mb-12">
+        <div className="mb-8">
           <h1 className="text-[24px] md:text-[40px] leading-[1.2] font-semibold text-gray-1000 mb-3">
             Colors
           </h1>
@@ -1533,6 +1533,9 @@ export default function ColourPalettes() {
             values.
           </p>
         </div>
+
+        {/* Divider */}
+        <hr className="border-t border-gray-400 mb-12" />
 
         {/* Sections in Geist order */}
         <ScalesSection isDark={isDark} />
