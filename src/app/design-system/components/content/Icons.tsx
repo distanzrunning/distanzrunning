@@ -4,15 +4,90 @@ import React, { useState, useCallback, useRef, useMemo } from "react";
 import { Check, Search, Copy } from "lucide-react";
 import * as icons from "lucide-react";
 
-// Get all icon names from lucide-react, filtering out non-icon exports
-const allIconNames = Object.keys(icons).filter(
-  (key) =>
-    key !== "default" &&
-    key !== "createLucideIcon" &&
-    key !== "icons" &&
-    typeof (icons as Record<string, unknown>)[key] === "function" &&
-    /^[A-Z]/.test(key),
-);
+// Icons used across the Distanz codebase, sorted alphabetically
+const projectIconNames = [
+  "AlertCircle",
+  "AlertTriangle",
+  "ArrowDown",
+  "ArrowDownRight",
+  "ArrowLeft",
+  "ArrowRight",
+  "ArrowUp",
+  "ArrowUpRight",
+  "Bell",
+  "Bookmark",
+  "Calendar",
+  "Check",
+  "CheckCircle2",
+  "ChevronDown",
+  "ChevronLeft",
+  "ChevronRight",
+  "ChevronUp",
+  "Clock",
+  "Copy",
+  "Database",
+  "Download",
+  "Edit",
+  "Ellipsis",
+  "Expand",
+  "ExternalLink",
+  "Eye",
+  "EyeOff",
+  "FileText",
+  "Filter",
+  "Flag",
+  "Footprints",
+  "Glasses",
+  "Heart",
+  "HelpCircle",
+  "Home",
+  "Info",
+  "Key",
+  "LayoutGrid",
+  "Loader2",
+  "Lock",
+  "Mail",
+  "Medal",
+  "Menu",
+  "MessageCircle",
+  "Minus",
+  "Monitor",
+  "Moon",
+  "MoreHorizontal",
+  "MoreVertical",
+  "Mountain",
+  "MountainSnow",
+  "MousePointer",
+  "Plus",
+  "Route",
+  "RulerDimensionLine",
+  "Scale",
+  "Search",
+  "Settings",
+  "Settings2",
+  "Share2",
+  "Shield",
+  "Shrink",
+  "SlidersHorizontal",
+  "Square",
+  "Star",
+  "Sun",
+  "SwatchBook",
+  "ThermometerSun",
+  "ThumbsUp",
+  "Trash2",
+  "Type",
+  "Unlock",
+  "Upload",
+  "User",
+  "Users",
+  "UtensilsCrossed",
+  "Wallet",
+  "Watch",
+  "X",
+  "XCircle",
+  "Zap",
+];
 
 // Toast context for copy notifications
 const ToastContext = React.createContext<{
@@ -235,14 +310,14 @@ export default function Icons() {
 
   // Filter icons based on search term
   const filteredIcons = useMemo(() => {
-    if (!searchTerm.trim()) return allIconNames;
+    if (!searchTerm.trim()) return projectIconNames;
 
     const term = searchTerm.toLowerCase();
-    return allIconNames.filter((name) => name.toLowerCase().includes(term));
+    return projectIconNames.filter((name) => name.toLowerCase().includes(term));
   }, [searchTerm]);
 
   const iconCount = filteredIcons.length;
-  const totalCount = allIconNames.length;
+  const totalCount = projectIconNames.length;
 
   return (
     <ToastProvider>
