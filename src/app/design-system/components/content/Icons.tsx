@@ -290,10 +290,10 @@ function SearchInput({
         autoComplete="off"
         autoCorrect="off"
         spellCheck="false"
-        type="search"
+        type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full h-10 pl-10 pr-4 text-sm bg-transparent border border-gray-400 rounded-md outline-none placeholder:text-gray-600 focus:border-gray-600 dark:focus:border-gray-500 transition-colors"
+        className="w-full h-10 pl-10 pr-4 text-sm bg-transparent border border-gray-400 outline-none placeholder:text-gray-600 focus:border-borderNeutralHover focus:ring-2 focus:ring-borderNeutral transition-colors"
       />
       <label
         aria-hidden="true"
@@ -316,9 +316,6 @@ export default function Icons() {
     return projectIconNames.filter((name) => name.toLowerCase().includes(term));
   }, [searchTerm]);
 
-  const iconCount = filteredIcons.length;
-  const totalCount = projectIconNames.length;
-
   return (
     <ToastProvider>
       <div>
@@ -339,18 +336,12 @@ export default function Icons() {
         {/* Divider */}
         <hr className="border-t border-gray-400 mb-8" />
 
-        {/* Search Section */}
-        <section className="mb-8">
-          <SearchInput value={searchTerm} onChange={setSearchTerm} />
-          <p className="text-sm text-gray-600 mt-3">
-            {searchTerm
-              ? `Showing ${iconCount} of ${totalCount} icons`
-              : `${totalCount} icons available`}
-          </p>
-        </section>
-
         {/* Icon Grid - 4 columns desktop, 2 columns mobile */}
         <section>
+          {/* Search within grid width */}
+          <div className="mb-4">
+            <SearchInput value={searchTerm} onChange={setSearchTerm} />
+          </div>
           {filteredIcons.length > 0 ? (
             <div className="grid grid-cols-2 md:grid-cols-4 gap-0 border-t border-l border-gray-400">
               {filteredIcons.map((name) => (
