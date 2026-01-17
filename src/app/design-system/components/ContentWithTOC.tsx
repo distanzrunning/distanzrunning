@@ -166,23 +166,19 @@ export default function ContentWithTOC({
       <div className="flex-1 min-w-0 flex flex-col">
         {/* Page Header Section */}
         {pageTitle && (
-          <>
-            <div className="p-12">
-              <h1 className="text-[24px] md:text-[40px] leading-[1.2] font-semibold text-textDefault mb-3">
-                {pageTitle}
-              </h1>
-              {pageSubtitle && (
-                <p
-                  className="text-[16px] md:text-[20px] text-textSubtle"
-                  style={{ lineHeight: 1.5 }}
-                >
-                  {pageSubtitle}
-                </p>
-              )}
-            </div>
-            {/* Divider - spans to right edge (under TOC border) */}
-            <hr className="border-t border-borderNeutral" />
-          </>
+          <div className="p-12">
+            <h1 className="text-[24px] md:text-[40px] leading-[1.2] font-semibold text-textDefault mb-3">
+              {pageTitle}
+            </h1>
+            {pageSubtitle && (
+              <p
+                className="text-[16px] md:text-[20px] text-textSubtle"
+                style={{ lineHeight: 1.5 }}
+              >
+                {pageSubtitle}
+              </p>
+            )}
+          </div>
         )}
 
         {/* Main Content */}
