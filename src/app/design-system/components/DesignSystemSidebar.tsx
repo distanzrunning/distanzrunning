@@ -7,7 +7,6 @@ import { ChevronDown, Lock } from "lucide-react";
 interface NavItem {
   id: string;
   label: string;
-  section: string;
   locked?: boolean;
 }
 
@@ -18,10 +17,8 @@ interface NavSection {
 }
 
 interface DesignSystemSidebarProps {
-  section: string;
-  activeSubsection: string;
-  onSectionChange: (section: string) => void;
-  onSubsectionChange: (subsection: string) => void;
+  activeSlug: string;
+  onNavigate: (slug: string) => void;
   onHomeClick: () => void;
 }
 
@@ -31,121 +28,95 @@ const navigation: NavSection[] = [
     id: "foundations",
     label: "Foundations",
     items: [
-      { id: "introduction", label: "Introduction", section: "foundations" },
-      { id: "colours", label: "Colors", section: "foundations" },
-      { id: "icons", label: "Icons", section: "foundations" },
-      { id: "typography", label: "Typography", section: "foundations" },
-      { id: "materials", label: "Materials", section: "foundations" },
+      { id: "introduction", label: "Introduction" },
+      { id: "colours", label: "Colors" },
+      { id: "icons", label: "Icons" },
+      { id: "typography", label: "Typography" },
+      { id: "materials", label: "Materials" },
     ],
   },
   {
     id: "resources",
     label: "Resources",
     items: [
-      {
-        id: "upgrade-guide",
-        label: "Upgrade Guide",
-        section: "resources",
-        locked: true,
-      },
-      {
-        id: "icons-logos",
-        label: "Icons & Logos",
-        section: "resources",
-        locked: true,
-      },
-      {
-        id: "guidelines",
-        label: "Guidelines",
-        section: "resources",
-        locked: true,
-      },
-      {
-        id: "changelog",
-        label: "Changelog",
-        section: "resources",
-        locked: true,
-      },
+      { id: "upgrade-guide", label: "Upgrade Guide", locked: true },
+      { id: "icons-logos", label: "Icons & Logos", locked: true },
+      { id: "guidelines", label: "Guidelines", locked: true },
+      { id: "changelog", label: "Changelog", locked: true },
     ],
   },
   {
     id: "brands",
     label: "Brands",
     items: [
-      { id: "distanz", label: "Distanz", section: "brands" },
-      { id: "stride", label: "Stride", section: "brands" },
+      { id: "distanz", label: "Distanz" },
+      { id: "stride", label: "Stride" },
     ],
   },
   {
     id: "components",
     label: "Components",
     items: [
-      { id: "avatar", label: "Avatar", section: "components" },
-      { id: "badge", label: "Badge", section: "components" },
-      { id: "blockquote", label: "Blockquote", section: "components" },
-      { id: "button", label: "Button", section: "components" },
-      { id: "calendar", label: "Calendar", section: "components" },
-      { id: "checkbox", label: "Checkbox", section: "components" },
-      { id: "close", label: "Close", section: "components" },
-      { id: "collapse", label: "Collapse", section: "components" },
-      { id: "combobox", label: "Combobox", section: "components" },
-      { id: "context-menu", label: "Context Menu", section: "components" },
-      { id: "description", label: "Description", section: "components" },
-      { id: "drawer", label: "Drawer", section: "components" },
-      { id: "dropdown-menu", label: "Dropdown Menu", section: "components" },
-      { id: "error", label: "Error", section: "components" },
-      { id: "feedback", label: "Feedback", section: "components" },
-      { id: "file-tree", label: "File Tree", section: "components" },
-      { id: "icon-button", label: "Icon Button", section: "components" },
-      { id: "input", label: "Input", section: "components" },
-      { id: "keyboard-input", label: "Keyboard Input", section: "components" },
-      { id: "link", label: "Link", section: "components" },
-      { id: "loading-dots", label: "Loading Dots", section: "components" },
-      { id: "menu", label: "Menu", section: "components" },
-      { id: "modal", label: "Modal", section: "components" },
-      { id: "note", label: "Note", section: "components" },
-      { id: "pagination", label: "Pagination", section: "components" },
-      { id: "progress", label: "Progress", section: "components" },
-      { id: "pull-quote", label: "Pull Quote", section: "components" },
-      { id: "radio", label: "Radio", section: "components" },
-      { id: "scroller", label: "Scroller", section: "components" },
-      { id: "select", label: "Select", section: "components" },
-      { id: "skeleton", label: "Skeleton", section: "components" },
-      { id: "slider", label: "Slider", section: "components" },
-      { id: "snippet", label: "Snippet", section: "components" },
-      { id: "spinner", label: "Spinner", section: "components" },
-      { id: "stack", label: "Stack", section: "components" },
-      { id: "status-dot", label: "Status Dot", section: "components" },
-      { id: "switch", label: "Switch", section: "components" },
-      { id: "table", label: "Table", section: "components" },
-      { id: "tabs", label: "Tabs", section: "components" },
-      { id: "text", label: "Text", section: "components" },
-      { id: "textarea", label: "Textarea", section: "components" },
-      { id: "theme-switcher", label: "Theme Switcher", section: "components" },
-      { id: "toast", label: "Toast", section: "components" },
-      { id: "toggle", label: "Toggle", section: "components" },
-      { id: "toggle-group", label: "Toggle Group", section: "components" },
-      { id: "tooltip", label: "Tooltip", section: "components" },
-      { id: "window", label: "Window", section: "components" },
+      { id: "avatar", label: "Avatar" },
+      { id: "badge", label: "Badge" },
+      { id: "blockquote", label: "Blockquote" },
+      { id: "button", label: "Button" },
+      { id: "calendar", label: "Calendar" },
+      { id: "checkbox", label: "Checkbox" },
+      { id: "close", label: "Close" },
+      { id: "collapse", label: "Collapse" },
+      { id: "combobox", label: "Combobox" },
+      { id: "context-menu", label: "Context Menu" },
+      { id: "description", label: "Description" },
+      { id: "drawer", label: "Drawer" },
+      { id: "dropdown-menu", label: "Dropdown Menu" },
+      { id: "error", label: "Error" },
+      { id: "feedback", label: "Feedback" },
+      { id: "file-tree", label: "File Tree" },
+      { id: "icon-button", label: "Icon Button" },
+      { id: "input", label: "Input" },
+      { id: "keyboard-input", label: "Keyboard Input" },
+      { id: "link", label: "Link" },
+      { id: "loading-dots", label: "Loading Dots" },
+      { id: "menu", label: "Menu" },
+      { id: "modal", label: "Modal" },
+      { id: "note", label: "Note" },
+      { id: "pagination", label: "Pagination" },
+      { id: "progress", label: "Progress" },
+      { id: "pull-quote", label: "Pull Quote" },
+      { id: "radio", label: "Radio" },
+      { id: "scroller", label: "Scroller" },
+      { id: "select", label: "Select" },
+      { id: "skeleton", label: "Skeleton" },
+      { id: "slider", label: "Slider" },
+      { id: "snippet", label: "Snippet" },
+      { id: "spinner", label: "Spinner" },
+      { id: "stack", label: "Stack" },
+      { id: "status-dot", label: "Status Dot" },
+      { id: "switch", label: "Switch" },
+      { id: "table", label: "Table" },
+      { id: "tabs", label: "Tabs" },
+      { id: "text", label: "Text" },
+      { id: "textarea", label: "Textarea" },
+      { id: "theme-switcher", label: "Theme Switcher" },
+      { id: "toast", label: "Toast" },
+      { id: "toggle", label: "Toggle" },
+      { id: "toggle-group", label: "Toggle Group" },
+      { id: "tooltip", label: "Tooltip" },
+      { id: "window", label: "Window" },
     ],
   },
 ];
 
 export default function DesignSystemSidebar({
-  section,
-  activeSubsection,
-  onSectionChange,
-  onSubsectionChange,
+  activeSlug,
+  onNavigate,
 }: DesignSystemSidebarProps) {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   const handleClick = (item: NavItem) => {
     if (item.locked) return;
-
-    if (item.section !== section) {
-      onSectionChange(item.section);
-    }
-    onSubsectionChange(item.id);
+    onNavigate(item.id);
     setMobileNavOpen(false);
   };
 
@@ -165,11 +136,10 @@ export default function DesignSystemSidebar({
             style={{ width: "calc(100% + 8px)" }}
           >
             {navSection.items.map((item) => {
-              const isActive =
-                section === item.section && activeSubsection === item.id;
+              const isActive = activeSlug === item.id;
               return (
                 <li
-                  key={`${item.section}-${item.id}`}
+                  key={item.id}
                   className={navSection.id === "components" ? "py-[2px]" : ""}
                 >
                   <button

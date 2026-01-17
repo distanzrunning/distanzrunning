@@ -8,7 +8,13 @@ export default function DesignSystemPage() {
   const router = useRouter();
 
   const handleSectionClick = (section: string) => {
-    router.push(`/design-system/${section}/overview`);
+    // Map sections to their default pages
+    const defaultPages: Record<string, string> = {
+      foundations: "introduction",
+      brand: "distanz",
+      components: "button",
+    };
+    router.push(`/design-system/${defaultPages[section] || section}`);
   };
 
   const handleHomeClick = () => {
