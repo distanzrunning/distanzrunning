@@ -168,22 +168,22 @@ export default function GridSystemShowcase() {
           Grid adapts across breakpoints for optimal layouts.
         </p>
 
-        <div className="bg-surface dark:bg-[#0c0c0d] rounded-lg p-6 border border-borderNeutral">
+        <div className="bg-surface rounded-lg p-6 border border-borderNeutral">
           <p className="text-sm font-medium mb-4">Article Grid (Responsive)</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div className="bg-canvas dark:bg-[#0a0a0a] rounded-lg p-4 border border-borderNeutral">
+            <div className="bg-canvas rounded-lg p-4 border border-borderNeutral">
               <p className="text-sm text-textSubtle">1 column (mobile)</p>
               <p className="text-xs text-textSubtler mt-1">2 columns (sm)</p>
               <p className="text-xs text-textSubtler">3 columns (lg)</p>
             </div>
-            <div className="bg-canvas dark:bg-[#0a0a0a] rounded-lg p-4 border border-borderNeutral">
+            <div className="bg-canvas rounded-lg p-4 border border-borderNeutral">
               <p className="text-sm text-textSubtle">Article Card</p>
             </div>
-            <div className="bg-canvas dark:bg-[#0a0a0a] rounded-lg p-4 border border-borderNeutral">
+            <div className="bg-canvas rounded-lg p-4 border border-borderNeutral">
               <p className="text-sm text-textSubtle">Article Card</p>
             </div>
           </div>
-          <pre className="mt-4 p-3 bg-canvas dark:bg-[#0a0a0a] rounded text-xs overflow-x-auto">
+          <pre className="mt-4 p-3 bg-canvas rounded text-xs overflow-x-auto">
             <code>{`<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
   {/* Cards */}
 </div>`}</code>
@@ -201,7 +201,7 @@ export default function GridSystemShowcase() {
         </p>
 
         <div className="space-y-4">
-          <div className="bg-surface dark:bg-[#0c0c0d] rounded-lg p-4 border border-borderNeutral">
+          <div className="bg-surface rounded-lg p-4 border border-borderNeutral">
             <div className="flex items-center justify-between">
               <div>
                 <p className="font-medium text-sm">Full Grid</p>
@@ -213,7 +213,7 @@ export default function GridSystemShowcase() {
             </div>
           </div>
 
-          <div className="bg-surface dark:bg-[#0c0c0d] rounded-lg p-4 border border-borderNeutral">
+          <div className="bg-surface rounded-lg p-4 border border-borderNeutral">
             <div className="flex items-center justify-between">
               <div>
                 <p className="font-medium text-sm">Content Container</p>
@@ -225,7 +225,7 @@ export default function GridSystemShowcase() {
             </div>
           </div>
 
-          <div className="bg-surface dark:bg-[#0c0c0d] rounded-lg p-4 border border-borderNeutral">
+          <div className="bg-surface rounded-lg p-4 border border-borderNeutral">
             <div className="flex items-center justify-between">
               <div>
                 <p className="font-medium text-sm">Reading Width (Articles)</p>
@@ -237,7 +237,7 @@ export default function GridSystemShowcase() {
             </div>
           </div>
 
-          <div className="bg-surface dark:bg-[#0c0c0d] rounded-lg p-4 border border-borderNeutral">
+          <div className="bg-surface rounded-lg p-4 border border-borderNeutral">
             <div className="flex items-center justify-between">
               <div>
                 <p className="font-medium text-sm">Form Container</p>

@@ -123,7 +123,7 @@ export default function IconSystemShowcase() {
           icon set with over 1,000 icons designed for clarity at small sizes.
         </p>
         <div className="grid md:grid-cols-2 gap-4 text-sm">
-          <div className="bg-surface dark:bg-[#0c0c0d] rounded p-4">
+          <div className="bg-surface rounded p-4">
             <p className="font-medium text-textDefault mb-2">Why Lucide?</p>
             <ul className="space-y-1 text-textSubtle text-xs list-disc list-inside">
               <li>Consistent 24x24 grid system</li>
@@ -132,9 +132,9 @@ export default function IconSystemShowcase() {
               <li>Actively maintained with regular updates</li>
             </ul>
           </div>
-          <div className="bg-surface dark:bg-[#0c0c0d] rounded p-4">
+          <div className="bg-surface rounded p-4">
             <p className="font-medium text-textDefault mb-2">Installation</p>
-            <pre className="text-xs bg-canvas dark:bg-[#0a0a0a] rounded p-2 overflow-x-auto">
+            <pre className="text-xs bg-canvas rounded p-2 overflow-x-auto">
               <code>npm install lucide-react</code>
             </pre>
           </div>
@@ -152,7 +152,7 @@ export default function IconSystemShowcase() {
           {iconSizes.map((size) => (
             <div
               key={size.name}
-              className="bg-surface dark:bg-[#0c0c0d] rounded-lg p-6 border border-borderNeutral text-center"
+              className="bg-surface rounded-lg p-6 border border-borderNeutral text-center"
             >
               <div className="flex items-center justify-center mb-3">
                 <Home className={size.class} />
@@ -168,7 +168,7 @@ export default function IconSystemShowcase() {
           ))}
         </div>
 
-        <div className="mt-6 bg-surface dark:bg-[#0c0c0d] rounded-lg p-6 border border-borderNeutral">
+        <div className="mt-6 bg-surface rounded-lg p-6 border border-borderNeutral">
           <h4 className="font-medium mb-4 text-sm">Usage Examples</h4>
           <div className="space-y-3 text-sm text-textSubtle">
             <p>
@@ -362,7 +362,7 @@ export default function IconSystemShowcase() {
 
         <div className="space-y-6">
           {/* Button with Icon */}
-          <div className="bg-surface dark:bg-[#0c0c0d] rounded-lg p-6 border border-borderNeutral">
+          <div className="bg-surface rounded-lg p-6 border border-borderNeutral">
             <h4 className="font-medium mb-4">Buttons with Icons</h4>
             <div className="flex flex-wrap gap-4 mb-4">
               <button className="px-4 py-2 bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 rounded-md font-medium flex items-center gap-2 hover:bg-neutral-800 dark:hover:bg-neutral-100 transition-colors">
@@ -378,7 +378,7 @@ export default function IconSystemShowcase() {
                 <ArrowRight className="w-5 h-5" />
               </button>
             </div>
-            <pre className="p-3 bg-canvas dark:bg-[#0a0a0a] rounded text-xs overflow-x-auto">
+            <pre className="p-3 bg-canvas rounded text-xs overflow-x-auto">
               <code>{`import { Plus } from 'lucide-react';
 
 <button className="flex items-center gap-2">
@@ -389,7 +389,7 @@ export default function IconSystemShowcase() {
           </div>
 
           {/* Icon Only Button */}
-          <div className="bg-surface dark:bg-[#0c0c0d] rounded-lg p-6 border border-borderNeutral">
+          <div className="bg-surface rounded-lg p-6 border border-borderNeutral">
             <h4 className="font-medium mb-4">Icon-Only Buttons</h4>
             <div className="flex flex-wrap gap-3 mb-4">
               <button
@@ -411,7 +411,7 @@ export default function IconSystemShowcase() {
                 <MoreVertical className="w-5 h-5" />
               </button>
             </div>
-            <pre className="p-3 bg-canvas dark:bg-[#0a0a0a] rounded text-xs overflow-x-auto">
+            <pre className="p-3 bg-canvas rounded text-xs overflow-x-auto">
               <code>{`import { Search } from 'lucide-react';
 
 <button
@@ -424,7 +424,7 @@ export default function IconSystemShowcase() {
           </div>
 
           {/* Status Indicators */}
-          <div className="bg-surface dark:bg-[#0c0c0d] rounded-lg p-6 border border-borderNeutral">
+          <div className="bg-surface rounded-lg p-6 border border-borderNeutral">
             <h4 className="font-medium mb-4">Status Indicators</h4>
             <div className="space-y-3 mb-4">
               <div className="flex items-center gap-2 text-green-600">
@@ -444,7 +444,7 @@ export default function IconSystemShowcase() {
                 <span className="text-sm">Info message</span>
               </div>
             </div>
-            <pre className="p-3 bg-canvas dark:bg-[#0a0a0a] rounded text-xs overflow-x-auto">
+            <pre className="p-3 bg-canvas rounded text-xs overflow-x-auto">
               <code>{`import { CheckCircle2 } from 'lucide-react';
 
 <div className="flex items-center gap-2 text-green-600">
@@ -455,7 +455,7 @@ export default function IconSystemShowcase() {
           </div>
 
           {/* Loading States */}
-          <div className="bg-surface dark:bg-[#0c0c0d] rounded-lg p-6 border border-borderNeutral">
+          <div className="bg-surface rounded-lg p-6 border border-borderNeutral">
             <h4 className="font-medium mb-4">Loading States</h4>
             <div className="flex items-center gap-4 mb-4">
               <button
@@ -467,7 +467,7 @@ export default function IconSystemShowcase() {
               </button>
               <Loader2 className="w-6 h-6 text-neutral-900 dark:text-white animate-spin" />
             </div>
-            <pre className="p-3 bg-canvas dark:bg-[#0a0a0a] rounded text-xs overflow-x-auto">
+            <pre className="p-3 bg-canvas rounded text-xs overflow-x-auto">
               <code>{`import { Loader2 } from 'lucide-react';
 
 <button disabled>
@@ -535,7 +535,7 @@ export default function IconSystemShowcase() {
       </div>
 
       {/* Resources */}
-      <div className="bg-surface dark:bg-[#0c0c0d] rounded-lg p-6 border border-borderNeutral">
+      <div className="bg-surface rounded-lg p-6 border border-borderNeutral">
         <h3 className="font-serif text-xl font-medium mb-4">Resources</h3>
         <div className="space-y-2 text-sm">
           <a

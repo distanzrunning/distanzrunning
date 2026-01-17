@@ -16,12 +16,12 @@ export default function DesignSystemHeader({
 
   return (
     <header
-      className="sticky top-12 z-40 w-full border-b border-borderSubtle dark:border-[#242424]"
+      className="sticky top-12 z-40 w-full border-b border-borderSubtle"
       style={{ background: "var(--ds-background-100)" }}
     >
       <div className="flex w-full pl-[22px]">
         {/* Logo section - matches sidebar width */}
-        <div className="flex grow items-center gap-4 border-r border-borderSubtle dark:border-[#242424] py-4 pl-px xl:w-[238px] xl:grow-0">
+        <div className="flex grow items-center gap-4 border-r border-borderSubtle py-4 pl-px xl:w-[238px] xl:grow-0">
           <button
             onClick={onHomeClick}
             className="flex items-center gap-4 text-black dark:text-white no-underline"
@@ -78,7 +78,7 @@ export default function DesignSystemHeader({
           </button>
 
           {/* Theme switcher - Geist style */}
-          <fieldset className="hidden xl:flex items-center gap-0 rounded-full border border-borderDefault bg-canvas dark:border-[#333] dark:bg-[#111]">
+          <fieldset className="hidden xl:flex items-center gap-0 rounded-full border border-borderDefault bg-canvas">
             <legend className="sr-only">Select a display theme:</legend>
 
             {/* System theme option */}

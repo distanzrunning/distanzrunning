@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { spacing } from '@/styles/design-tokens';
+import { spacing } from "@/styles/design-tokens";
 
 interface SpacingItemProps {
   name: string;
@@ -33,10 +33,11 @@ export default function SpacingShowcase() {
   return (
     <div className="space-y-12">
       {/* Spacing Scale */}
-      <div className="bg-surface dark:bg-[#0c0c0d] rounded-lg p-6 border border-borderNeutral">
+      <div className="bg-surface rounded-lg p-6 border border-borderNeutral">
         <h3 className="text-lg font-semibold mb-6">Spacing Scale</h3>
         <p className="text-textSubtle mb-6 text-sm">
-          Base unit: 8px (0.5rem). All spacing follows this scale for consistency.
+          Base unit: 8px (0.5rem). All spacing follows this scale for
+          consistency.
         </p>
 
         <div className="space-y-1">
@@ -63,7 +64,7 @@ export default function SpacingShowcase() {
 
         <div className="space-y-8">
           {/* Button Padding Example */}
-          <div className="bg-surface dark:bg-[#0c0c0d] rounded-lg p-6 border border-borderNeutral">
+          <div className="bg-surface rounded-lg p-6 border border-borderNeutral">
             <h4 className="font-medium mb-4">Button Padding</h4>
             <p className="text-textSubtle text-sm mb-6">
               Vertical: 12px (0.75rem), Horizontal: 24px (1.5rem)
@@ -74,52 +75,57 @@ export default function SpacingShowcase() {
           </div>
 
           {/* Card Padding Example */}
-          <div className="bg-surface dark:bg-[#0c0c0d] rounded-lg p-6 border border-borderNeutral">
+          <div className="bg-surface rounded-lg p-6 border border-borderNeutral">
             <h4 className="font-medium mb-4">Card Padding</h4>
             <p className="text-textSubtle text-sm mb-6">
               All sides: 24px (1.5rem)
             </p>
-            <div className="bg-canvas dark:bg-[#0a0a0a] rounded-lg p-6 border border-borderNeutralSubtle">
+            <div className="bg-canvas rounded-lg p-6 border border-borderNeutralSubtle">
               <h5 className="font-semibold mb-2">Card Title</h5>
               <p className="text-textSubtle text-sm">
-                This card demonstrates the standard 24px padding used throughout the application.
+                This card demonstrates the standard 24px padding used throughout
+                the application.
               </p>
             </div>
           </div>
 
           {/* Vertical Rhythm Example */}
-          <div className="bg-surface dark:bg-[#0c0c0d] rounded-lg p-6 border border-borderNeutral">
+          <div className="bg-surface rounded-lg p-6 border border-borderNeutral">
             <h4 className="font-medium mb-4">Vertical Rhythm</h4>
             <p className="text-textSubtle text-sm mb-6">
               Consistent spacing between elements creates visual harmony
             </p>
             <div className="space-y-4">
-              <div className="bg-canvas dark:bg-[#0a0a0a] p-4 rounded border border-borderNeutralSubtle">
+              <div className="bg-canvas p-4 rounded border border-borderNeutralSubtle">
                 <p className="text-sm">16px gap (space-y-4)</p>
               </div>
-              <div className="bg-canvas dark:bg-[#0a0a0a] p-4 rounded border border-borderNeutralSubtle">
+              <div className="bg-canvas p-4 rounded border border-borderNeutralSubtle">
                 <p className="text-sm">16px gap (space-y-4)</p>
               </div>
-              <div className="bg-canvas dark:bg-[#0a0a0a] p-4 rounded border border-borderNeutralSubtle">
+              <div className="bg-canvas p-4 rounded border border-borderNeutralSubtle">
                 <p className="text-sm">16px gap (space-y-4)</p>
               </div>
             </div>
           </div>
 
           {/* Section Spacing Example */}
-          <div className="bg-surface dark:bg-[#0c0c0d] rounded-lg p-6 border border-borderNeutral">
+          <div className="bg-surface rounded-lg p-6 border border-borderNeutral">
             <h4 className="font-medium mb-4">Section Spacing</h4>
             <p className="text-textSubtle text-sm mb-6">
               Major sections use 48px-64px spacing for clear visual separation
             </p>
             <div className="space-y-12">
-              <div className="bg-canvas dark:bg-[#0a0a0a] p-6 rounded border border-borderNeutralSubtle">
+              <div className="bg-canvas p-6 rounded border border-borderNeutralSubtle">
                 <h5 className="font-semibold mb-2">Section 1</h5>
-                <p className="text-textSubtle text-sm">48px gap below (space-y-12)</p>
+                <p className="text-textSubtle text-sm">
+                  48px gap below (space-y-12)
+                </p>
               </div>
-              <div className="bg-canvas dark:bg-[#0a0a0a] p-6 rounded border border-borderNeutralSubtle">
+              <div className="bg-canvas p-6 rounded border border-borderNeutralSubtle">
                 <h5 className="font-semibold mb-2">Section 2</h5>
-                <p className="text-textSubtle text-sm">48px gap below (space-y-12)</p>
+                <p className="text-textSubtle text-sm">
+                  48px gap below (space-y-12)
+                </p>
               </div>
             </div>
           </div>
@@ -127,31 +133,43 @@ export default function SpacingShowcase() {
       </div>
 
       {/* Common Patterns */}
-      <div className="bg-surface dark:bg-[#0c0c0d] rounded-lg p-6 border border-borderNeutral">
+      <div className="bg-surface rounded-lg p-6 border border-borderNeutral">
         <h3 className="text-lg font-semibold mb-4">Common Spacing Patterns</h3>
         <div className="space-y-3">
           <div className="flex items-baseline gap-4 text-sm">
-            <code className="font-mono text-neutral-700 dark:text-neutral-300 w-32">space-y-2</code>
+            <code className="font-mono text-neutral-700 dark:text-neutral-300 w-32">
+              space-y-2
+            </code>
             <span className="text-textSubtle">8px - Tight list items</span>
           </div>
           <div className="flex items-baseline gap-4 text-sm">
-            <code className="font-mono text-neutral-700 dark:text-neutral-300 w-32">space-y-4</code>
+            <code className="font-mono text-neutral-700 dark:text-neutral-300 w-32">
+              space-y-4
+            </code>
             <span className="text-textSubtle">16px - Standard paragraphs</span>
           </div>
           <div className="flex items-baseline gap-4 text-sm">
-            <code className="font-mono text-neutral-700 dark:text-neutral-300 w-32">space-y-6</code>
+            <code className="font-mono text-neutral-700 dark:text-neutral-300 w-32">
+              space-y-6
+            </code>
             <span className="text-textSubtle">24px - Form fields</span>
           </div>
           <div className="flex items-baseline gap-4 text-sm">
-            <code className="font-mono text-neutral-700 dark:text-neutral-300 w-32">space-y-8</code>
+            <code className="font-mono text-neutral-700 dark:text-neutral-300 w-32">
+              space-y-8
+            </code>
             <span className="text-textSubtle">32px - Card groups</span>
           </div>
           <div className="flex items-baseline gap-4 text-sm">
-            <code className="font-mono text-neutral-700 dark:text-neutral-300 w-32">space-y-12</code>
+            <code className="font-mono text-neutral-700 dark:text-neutral-300 w-32">
+              space-y-12
+            </code>
             <span className="text-textSubtle">48px - Major sections</span>
           </div>
           <div className="flex items-baseline gap-4 text-sm">
-            <code className="font-mono text-neutral-700 dark:text-neutral-300 w-32">space-y-16</code>
+            <code className="font-mono text-neutral-700 dark:text-neutral-300 w-32">
+              space-y-16
+            </code>
             <span className="text-textSubtle">64px - Page sections</span>
           </div>
         </div>

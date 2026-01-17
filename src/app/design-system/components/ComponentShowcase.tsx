@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
+import { useState } from "react";
 
 export default function ComponentShowcase() {
-  const [inputValue, setInputValue] = useState('');
-  const [selectedOption, setSelectedOption] = useState('option1');
+  const [inputValue, setInputValue] = useState("");
+  const [selectedOption, setSelectedOption] = useState("option1");
 
   return (
     <div className="space-y-12">
       {/* Buttons */}
-      <div className="bg-surface dark:bg-[#0c0c0d] rounded-lg p-6 border border-borderNeutral">
+      <div className="bg-surface rounded-lg p-6 border border-borderNeutral">
         <h3 className="text-lg font-semibold mb-4">Buttons</h3>
         <p className="text-textSubtle text-sm mb-6">
           Three button variants: Primary, Secondary, and Ghost
@@ -22,7 +22,7 @@ export default function ComponentShowcase() {
             <button className="px-6 py-3 bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 rounded-md font-medium hover:bg-neutral-800 dark:hover:bg-neutral-100 transition-colors">
               Primary Action
             </button>
-            <pre className="mt-3 p-3 bg-canvas dark:bg-[#0a0a0a] rounded text-xs overflow-x-auto">
+            <pre className="mt-3 p-3 bg-canvas rounded text-xs overflow-x-auto">
               <code>{`<button className="px-6 py-3 bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 rounded-md font-medium hover:bg-neutral-800 dark:hover:bg-neutral-100 transition-colors">
   Primary Action
 </button>`}</code>
@@ -35,7 +35,7 @@ export default function ComponentShowcase() {
             <button className="px-6 py-3 border-2 border-neutral-400 dark:border-neutral-500 text-neutral-900 dark:text-white rounded-md font-medium hover:bg-neutral-900 dark:hover:bg-white hover:text-white dark:hover:text-neutral-900 transition-colors">
               Secondary Action
             </button>
-            <pre className="mt-3 p-3 bg-canvas dark:bg-[#0a0a0a] rounded text-xs overflow-x-auto">
+            <pre className="mt-3 p-3 bg-canvas rounded text-xs overflow-x-auto">
               <code>{`<button className="px-6 py-3 border-2 border-neutral-400 dark:border-neutral-500 text-neutral-900 dark:text-white rounded-md font-medium hover:bg-neutral-900 dark:hover:bg-white hover:text-white dark:hover:text-neutral-900 transition-colors">
   Secondary Action
 </button>`}</code>
@@ -48,7 +48,7 @@ export default function ComponentShowcase() {
             <button className="px-6 py-3 text-neutral-700 dark:text-neutral-300 font-medium hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-colors">
               Tertiary Action
             </button>
-            <pre className="mt-3 p-3 bg-canvas dark:bg-[#0a0a0a] rounded text-xs overflow-x-auto">
+            <pre className="mt-3 p-3 bg-canvas rounded text-xs overflow-x-auto">
               <code>{`<button className="px-6 py-3 text-neutral-700 dark:text-neutral-300 font-medium hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-colors">
   Tertiary Action
 </button>`}</code>
@@ -74,7 +74,7 @@ export default function ComponentShowcase() {
       </div>
 
       {/* Forms */}
-      <div className="bg-surface dark:bg-[#0c0c0d] rounded-lg p-6 border border-borderNeutral">
+      <div className="bg-surface rounded-lg p-6 border border-borderNeutral">
         <h3 className="text-lg font-semibold mb-4">Form Elements</h3>
         <p className="text-textSubtle text-sm mb-6">
           Input fields, textareas, and selects with consistent styling
@@ -86,12 +86,12 @@ export default function ComponentShowcase() {
             <label className="block text-sm font-medium mb-2">Text Input</label>
             <input
               type="text"
-              className="w-full px-4 py-3 border border-borderNeutral rounded-md focus:border-neutral-400 dark:border-neutral-500 focus:ring-1 focus:ring-neutral-400 dark:ring-neutral-500 outline-none transition-colors bg-surface dark:bg-[#0c0c0d]"
+              className="w-full px-4 py-3 border border-borderNeutral rounded-md focus:border-neutral-400 dark:border-neutral-500 focus:ring-1 focus:ring-neutral-400 dark:ring-neutral-500 outline-none transition-colors bg-surface"
               placeholder="Enter text..."
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
             />
-            <pre className="mt-3 p-3 bg-canvas dark:bg-[#0a0a0a] rounded text-xs overflow-x-auto">
+            <pre className="mt-3 p-3 bg-canvas rounded text-xs overflow-x-auto">
               <code>{`<input
   type="text"
   className="w-full px-4 py-3 border border-borderNeutral rounded-md focus:border-neutral-400 dark:border-neutral-500 focus:ring-1 focus:ring-neutral-400 dark:ring-neutral-500 outline-none transition-colors"
@@ -104,7 +104,7 @@ export default function ComponentShowcase() {
           <div>
             <label className="block text-sm font-medium mb-2">Textarea</label>
             <textarea
-              className="w-full px-4 py-3 border border-borderNeutral rounded-md focus:border-neutral-400 dark:border-neutral-500 focus:ring-1 focus:ring-neutral-400 dark:ring-neutral-500 outline-none transition-colors resize-y bg-surface dark:bg-[#0c0c0d]"
+              className="w-full px-4 py-3 border border-borderNeutral rounded-md focus:border-neutral-400 dark:border-neutral-500 focus:ring-1 focus:ring-neutral-400 dark:ring-neutral-500 outline-none transition-colors resize-y bg-surface"
               placeholder="Enter longer text..."
               rows={4}
             />
@@ -114,7 +114,7 @@ export default function ComponentShowcase() {
           <div>
             <label className="block text-sm font-medium mb-2">Select</label>
             <select
-              className="w-full px-4 py-3 border border-borderNeutral rounded-md focus:border-neutral-400 dark:border-neutral-500 focus:ring-1 focus:ring-neutral-400 dark:ring-neutral-500 outline-none transition-colors bg-surface dark:bg-[#0c0c0d]"
+              className="w-full px-4 py-3 border border-borderNeutral rounded-md focus:border-neutral-400 dark:border-neutral-500 focus:ring-1 focus:ring-neutral-400 dark:ring-neutral-500 outline-none transition-colors bg-surface"
               value={selectedOption}
               onChange={(e) => setSelectedOption(e.target.value)}
             >
@@ -131,7 +131,10 @@ export default function ComponentShowcase() {
               id="checkbox-example"
               className="w-5 h-5 text-electric-pink border-borderNeutral rounded focus:ring-neutral-400 dark:ring-neutral-500 focus:ring-2"
             />
-            <label htmlFor="checkbox-example" className="text-sm font-medium cursor-pointer">
+            <label
+              htmlFor="checkbox-example"
+              className="text-sm font-medium cursor-pointer"
+            >
               Checkbox label
             </label>
           </div>
@@ -166,7 +169,7 @@ export default function ComponentShowcase() {
       </div>
 
       {/* Cards */}
-      <div className="bg-surface dark:bg-[#0c0c0d] rounded-lg p-6 border border-borderNeutral">
+      <div className="bg-surface rounded-lg p-6 border border-borderNeutral">
         <h3 className="text-lg font-semibold mb-4">Cards</h3>
         <p className="text-textSubtle text-sm mb-6">
           Article cards with hover effects
@@ -174,7 +177,7 @@ export default function ComponentShowcase() {
 
         <div className="grid md:grid-cols-2 gap-6">
           {/* Basic Card */}
-          <div className="bg-canvas dark:bg-[#0a0a0a] rounded-lg overflow-hidden border border-borderNeutral hover:shadow-lg transition-shadow">
+          <div className="bg-canvas rounded-lg overflow-hidden border border-borderNeutral hover:shadow-lg transition-shadow">
             <div className="w-full h-48 bg-gradient-to-br from-electric-pink to-pace-purple" />
             <div className="p-6">
               <p className="text-xs uppercase tracking-wide text-electric-pink font-medium mb-2">
@@ -193,7 +196,7 @@ export default function ComponentShowcase() {
           </div>
 
           {/* Card with Image */}
-          <div className="bg-canvas dark:bg-[#0a0a0a] rounded-lg overflow-hidden border border-borderNeutral hover:shadow-lg transition-shadow">
+          <div className="bg-canvas rounded-lg overflow-hidden border border-borderNeutral hover:shadow-lg transition-shadow">
             <div className="w-full h-48 bg-gradient-to-br from-volt-green to-signal-orange" />
             <div className="p-6">
               <p className="text-xs uppercase tracking-wide text-volt-green font-medium mb-2">
@@ -212,7 +215,7 @@ export default function ComponentShowcase() {
           </div>
         </div>
 
-        <pre className="mt-6 p-3 bg-canvas dark:bg-[#0a0a0a] rounded text-xs overflow-x-auto">
+        <pre className="mt-6 p-3 bg-canvas rounded text-xs overflow-x-auto">
           <code>{`<div className="bg-surface rounded-lg overflow-hidden border border-borderNeutral hover:shadow-lg transition-shadow">
   <div className="w-full h-48 bg-gradient-to-br from-electric-pink to-pace-purple" />
   <div className="p-6">
@@ -227,7 +230,7 @@ export default function ComponentShowcase() {
       </div>
 
       {/* Badges & Tags */}
-      <div className="bg-surface dark:bg-[#0c0c0d] rounded-lg p-6 border border-borderNeutral">
+      <div className="bg-surface rounded-lg p-6 border border-borderNeutral">
         <h3 className="text-lg font-semibold mb-4">Badges & Tags</h3>
         <p className="text-textSubtle text-sm mb-6">
           Category labels and status indicators
@@ -285,7 +288,7 @@ export default function ComponentShowcase() {
       </div>
 
       {/* Alerts */}
-      <div className="bg-surface dark:bg-[#0c0c0d] rounded-lg p-6 border border-borderNeutral">
+      <div className="bg-surface rounded-lg p-6 border border-borderNeutral">
         <h3 className="text-lg font-semibold mb-4">Alerts & Messages</h3>
         <p className="text-textSubtle text-sm mb-6">
           Information, success, warning, and error states

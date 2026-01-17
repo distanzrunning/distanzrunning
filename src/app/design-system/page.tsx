@@ -37,7 +37,7 @@ export default function DesignSystemPage() {
   ];
 
   return (
-    <div className="bg-background-100 dark:bg-[#0a0a0a] min-h-screen">
+    <div className="[background:var(--ds-background-200)] min-h-screen">
       {/* Geist-style Header */}
       <DesignSystemHeader onHomeClick={handleHomeClick} />
 
