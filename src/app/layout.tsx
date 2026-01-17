@@ -7,8 +7,8 @@ import NavbarAltWrapper from "@/components/NavbarAltWrapper";
 import Footer from "@/components/Footer";
 import { DarkModeProvider } from "@/components/DarkModeProvider";
 import ReCaptchaProvider from "@/components/ReCaptchaProvider";
-import { Analytics } from '@vercel/analytics/react';
-import { SpeedInsights } from '@vercel/speed-insights/next';
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 // Distanz Typography System - Adobe Fonts
 // Body/UI: Inter Variable (complete weight spectrum 100-900)
@@ -17,7 +17,8 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 
 export const metadata: Metadata = {
   title: "Distanz Running",
-  description: "The latest running news, gear reviews, and interactive race guides.",
+  description:
+    "The latest running news, gear reviews, and interactive race guides.",
   icons: {
     icon: [
       { url: "/favicon.ico", sizes: "any" },
@@ -27,9 +28,9 @@ export const metadata: Metadata = {
     apple: "/apple-touch-icon.png",
     shortcut: "/favicon.ico",
   },
-  metadataBase: new URL('https://distanzrunning.com'),
+  metadataBase: new URL("https://distanzrunning.com"),
   alternates: {
-    canonical: 'https://distanzrunning.com',
+    canonical: "https://distanzrunning.com",
   },
 };
 
@@ -39,7 +40,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="bg-white dark:bg-[#0c0c0d] transition-colors duration-300">
+    <html lang="en" className="bg-canvas transition-colors duration-300">
       <head>
         {/* Adobe Fonts - Inter Variable + EB Garamond */}
         <link rel="stylesheet" href="https://use.typekit.net/bua7sld.css" />
@@ -105,7 +106,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="font-sans antialiased bg-white dark:bg-[#0c0c0d] text-textDefault min-h-screen flex flex-col distanz-font-features transition-colors duration-300">
+      <body className="font-sans antialiased bg-canvas text-textDefault min-h-screen flex flex-col distanz-font-features transition-colors duration-300">
         <ReCaptchaProvider>
           <DarkModeProvider>
             <AuthProtection>
