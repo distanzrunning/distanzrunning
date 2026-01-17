@@ -667,7 +667,10 @@ export default function DesignSystemSubsectionPage() {
   };
 
   return (
-    <div className="bg-background-100 dark:bg-[#0a0a0a] min-h-screen">
+    <div
+      className="min-h-screen"
+      style={{ background: "var(--ds-background-200)" }}
+    >
       {/* Geist-style Header */}
       <DesignSystemHeader onHomeClick={handleHomeClick} />
 

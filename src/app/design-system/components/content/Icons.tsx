@@ -241,7 +241,7 @@ function IconCard({ name }: { name: string }) {
     <button
       onClick={handleClick}
       onContextMenu={handleContextMenu}
-      className="group relative flex h-28 w-full cursor-pointer flex-col items-center px-4 text-gray-900 border-r border-b border-gray-400 hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors"
+      className="group relative flex h-28 w-full cursor-pointer flex-col items-center px-4 text-gray-900 border-r border-b border-gray-400 transition-colors hover:[background:var(--ds-background-100)]"
       title={name}
     >
       <div className="flex-1" />
@@ -293,7 +293,8 @@ function SearchInput({
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full h-10 pl-10 pr-4 text-sm bg-transparent border border-gray-400 outline-none placeholder:text-gray-600 focus:border-borderNeutralHover focus:ring-2 focus:ring-borderNeutral transition-colors"
+        className="w-full h-10 pl-10 pr-4 text-sm border border-gray-400 outline-none placeholder:text-gray-600 focus:border-borderNeutralHover focus:ring-2 focus:ring-borderNeutral transition-colors"
+        style={{ background: "var(--ds-background-100)" }}
       />
       <label
         aria-hidden="true"
