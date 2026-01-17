@@ -249,8 +249,9 @@ function IconCard({ name }: { name: string }) {
         <DropdownMenu.Content
           className="min-w-[160px] rounded-md border border-borderNeutral bg-white dark:bg-neutral-900 p-1 shadow-lg"
           style={{ zIndex: 50 }}
-          align="center"
-          sideOffset={-60}
+          side="right"
+          align="start"
+          sideOffset={5}
         >
           <DropdownMenu.Item
             className="flex cursor-pointer select-none items-center rounded px-3 py-2 text-sm text-textDefault outline-none hover:bg-gray-100 dark:hover:bg-neutral-800"
