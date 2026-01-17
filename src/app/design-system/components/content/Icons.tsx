@@ -241,7 +241,7 @@ function IconCard({ name }: { name: string }) {
     <button
       onClick={handleClick}
       onContextMenu={handleContextMenu}
-      className="group relative flex h-28 w-full cursor-pointer flex-col items-center px-4 text-gray-900 border border-gray-400 hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors"
+      className="group relative flex h-28 w-full cursor-pointer flex-col items-center px-4 text-gray-900 border-r border-b border-gray-400 hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors"
       title={name}
     >
       <div className="flex-1" />
@@ -352,7 +352,7 @@ export default function Icons() {
         {/* Icon Grid - 4 columns desktop, 2 columns mobile */}
         <section>
           {filteredIcons.length > 0 ? (
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-0">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-0 border-t border-l border-gray-400">
               {filteredIcons.map((name) => (
                 <IconCard key={name} name={name} />
               ))}
