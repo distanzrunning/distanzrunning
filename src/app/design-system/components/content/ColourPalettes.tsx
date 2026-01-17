@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useEffect, useRef } from "react";
 import { Check, MousePointer } from "lucide-react";
 import * as ContextMenu from "@radix-ui/react-context-menu";
+import { Section } from "../ContentWithTOC";
 
 // Link icon for section headers (matches Geist)
 function LinkIcon() {
@@ -951,7 +952,7 @@ function ColorScaleRow({
 // Scales Section (matches Geist)
 function ScalesSection({ isDark }: { isDark: boolean }) {
   return (
-    <section className="mb-16">
+    <Section>
       <SectionHeader id="scales">Scales</SectionHeader>
       <p className="text-[16px] leading-[1.5] text-textSubtle mt-4">
         There are 10 color scales in the system. Right click to copy raw values.
@@ -961,7 +962,7 @@ function ScalesSection({ isDark }: { isDark: boolean }) {
           <ColorScaleRow key={scale.id} scale={scale} isDark={isDark} />
         ))}
       </div>
-    </section>
+    </Section>
   );
 }
 
@@ -998,7 +999,7 @@ function ColorRowItem({
 // Backgrounds Section
 function BackgroundsSection() {
   return (
-    <section className="mb-16">
+    <Section>
       <SectionHeader id="backgrounds">Backgrounds</SectionHeader>
       <p className="text-[16px] leading-[1.5] text-textSubtle mt-4">
         There are two background colors for pages and UI components. In most
@@ -1069,14 +1070,14 @@ function BackgroundsSection() {
           </div>
         </div>
       </div>
-    </section>
+    </Section>
   );
 }
 
 // Colors 1-3: Component Backgrounds Section
 function ComponentBackgroundsSection() {
   return (
-    <section className="mb-16">
+    <Section>
       <SectionHeader id="colors-1-3-component-backgrounds">
         Colors 1–3: Component Backgrounds
       </SectionHeader>
@@ -1202,14 +1203,14 @@ function ComponentBackgroundsSection() {
           </span>
         </div>
       </div>
-    </section>
+    </Section>
   );
 }
 
 // Colors 4-6: Borders Section
 function BordersSection() {
   return (
-    <section className="mb-16">
+    <Section>
       <SectionHeader id="colors-4-6-borders">Colors 4-6: Borders</SectionHeader>
       <p className="text-[16px] leading-[1.5] text-textSubtle mt-4">
         These three colors are designed for UI component borders.
@@ -1249,14 +1250,14 @@ function BordersSection() {
           New Project
         </button>
       </div>
-    </section>
+    </Section>
   );
 }
 
 // Colors 7-8: High Contrast Backgrounds Section
 function HighContrastBackgroundsSection() {
   return (
-    <section className="mb-16">
+    <Section>
       <SectionHeader id="colors-7-8-high-contrast-backgrounds">
         Colors 7-8: High Contrast Backgrounds
       </SectionHeader>
@@ -1376,14 +1377,14 @@ function HighContrastBackgroundsSection() {
           </button>
         </div>
       </div>
-    </section>
+    </Section>
   );
 }
 
 // Colors 9-10: Text and Icons Section
 function TextAndIconsSection() {
   return (
-    <section className="mb-16">
+    <Section>
       <SectionHeader id="colors-9-10-text-and-icons">
         Colors 9-10: Text and Icons
       </SectionHeader>
@@ -1493,7 +1494,7 @@ function TextAndIconsSection() {
           </svg>
         </div>
       </div>
-    </section>
+    </Section>
   );
 }
 

@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useRef, useMemo } from "react";
 import { Check, Search, Copy } from "lucide-react";
 import * as icons from "lucide-react";
+import { Section } from "../ContentWithTOC";
 
 // Icons used across the Distanz codebase, sorted alphabetically
 const projectIconNames = [
@@ -321,7 +322,7 @@ export default function Icons() {
     <ToastProvider>
       <div>
         {/* Icon Grid - 4 columns desktop, 2 columns mobile */}
-        <section>
+        <div>
           {/* Search within grid width */}
           <div className="mb-4">
             <SearchInput value={searchTerm} onChange={setSearchTerm} />
@@ -341,13 +342,10 @@ export default function Icons() {
               </p>
             </div>
           )}
-        </section>
-
-        {/* Divider */}
-        <hr className="border-t border-borderNeutral my-12" />
+        </div>
 
         {/* Usage Section */}
-        <section className="mb-12">
+        <Section>
           <h2
             id="usage"
             className="text-[24px] leading-[1.2] font-semibold text-textDefault mb-4 scroll-mt-32"
@@ -444,10 +442,10 @@ export default function Icons() {
               </table>
             </div>
           </div>
-        </section>
+        </Section>
 
         {/* Resources Section */}
-        <section>
+        <Section>
           <h2
             id="resources"
             className="text-[24px] leading-[1.2] font-semibold text-textDefault mb-4 scroll-mt-32"
@@ -500,7 +498,7 @@ export default function Icons() {
               </svg>
             </a>
           </div>
-        </section>
+        </Section>
       </div>
     </ToastProvider>
   );

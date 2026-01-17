@@ -1,6 +1,34 @@
 "use client";
 
-import { useEffect, useState, useRef, useCallback } from "react";
+import {
+  useEffect,
+  useState,
+  useRef,
+  useCallback,
+  createContext,
+  useContext,
+} from "react";
+
+// Context to allow sections to break out of padding
+const SectionContext = createContext<boolean>(false);
+
+// Section component for use within ContentWithTOC
+export function Section({ children }: { children: React.ReactNode }) {
+  const isInContentWithTOC = useContext(SectionContext);
+
+  if (isInContentWithTOC) {
+    // Break out of parent padding with negative margin, add divider, then re-add padding
+    return (
+      <div className="-mx-12">
+        <hr className="border-t border-borderNeutral" />
+        <div className="p-12">{children}</div>
+      </div>
+    );
+  }
+
+  // Fallback if used outside ContentWithTOC
+  return <div className="py-12">{children}</div>;
+}
 
 interface TOCItem {
   id: string;
@@ -158,7 +186,11 @@ export default function ContentWithTOC({
         )}
 
         {/* Main Content */}
-        <article className="flex-1 p-12">{children}</article>
+        <article className="flex-1 p-12">
+          <SectionContext.Provider value={true}>
+            {children}
+          </SectionContext.Provider>
+        </article>
       </div>
 
       {/* Table of Contents - Right Sidebar (≥1280px) - full height */}
