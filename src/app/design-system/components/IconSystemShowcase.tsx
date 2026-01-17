@@ -76,7 +76,7 @@ function IconDisplay({ icon, name, size = 24 }: IconDisplayProps) {
   return (
     <button
       onClick={handleCopy}
-      className="group relative flex flex-col items-center gap-2 p-4 border-r border-b border-borderNeutral hover:bg-surface-subtle transition-all"
+      className="group relative flex flex-col items-center gap-2 p-4 border border-borderNeutral hover:bg-surface-subtle transition-all"
     >
       <div className="text-textDefault group-hover:text-neutral-900 dark:group-hover:text-white transition-colors">
         {icon}
@@ -216,7 +216,7 @@ export default function IconSystemShowcase() {
           {/* Navigation Icons */}
           <div>
             <h4 className="font-medium mb-4">Navigation & Arrows</h4>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-0 border border-borderNeutral rounded-lg overflow-hidden">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-0">
               <IconDisplay icon={<Home size={24} />} name="Home" />
               <IconDisplay icon={<Search size={24} />} name="Search" />
               <IconDisplay icon={<Menu size={24} />} name="Menu" />
@@ -248,7 +248,7 @@ export default function IconSystemShowcase() {
           {/* User & Communication */}
           <div>
             <h4 className="font-medium mb-4">User & Communication</h4>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-0 border border-borderNeutral rounded-lg overflow-hidden">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-0">
               <IconDisplay icon={<User size={24} />} name="User" />
               <IconDisplay icon={<Bell size={24} />} name="Bell" />
               <IconDisplay icon={<Mail size={24} />} name="Mail" />
@@ -263,7 +263,7 @@ export default function IconSystemShowcase() {
           {/* Actions */}
           <div>
             <h4 className="font-medium mb-4">Actions</h4>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-0 border border-borderNeutral rounded-lg overflow-hidden">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-0">
               <IconDisplay icon={<Plus size={24} />} name="Plus" />
               <IconDisplay icon={<Minus size={24} />} name="Minus" />
               <IconDisplay icon={<X size={24} />} name="X" />
@@ -279,7 +279,7 @@ export default function IconSystemShowcase() {
           {/* Feedback & Status */}
           <div>
             <h4 className="font-medium mb-4">Feedback & Status</h4>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-0 border border-borderNeutral rounded-lg overflow-hidden">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-0">
               <IconDisplay
                 icon={<CheckCircle2 size={24} />}
                 name="CheckCircle2"
@@ -305,7 +305,7 @@ export default function IconSystemShowcase() {
           {/* Social & Engagement */}
           <div>
             <h4 className="font-medium mb-4">Social & Engagement</h4>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-0 border border-borderNeutral rounded-lg overflow-hidden">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-0">
               <IconDisplay icon={<Heart size={24} />} name="Heart" />
               <IconDisplay icon={<Star size={24} />} name="Star" />
               <IconDisplay icon={<Bookmark size={24} />} name="Bookmark" />
@@ -317,7 +317,7 @@ export default function IconSystemShowcase() {
           {/* Utility & Settings */}
           <div>
             <h4 className="font-medium mb-4">Utility & Settings</h4>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-0 border border-borderNeutral rounded-lg overflow-hidden">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-0">
               <IconDisplay
                 icon={<MoreVertical size={24} />}
                 name="MoreVertical"
@@ -345,7 +345,7 @@ export default function IconSystemShowcase() {
           {/* Theme & Brand */}
           <div>
             <h4 className="font-medium mb-4">Theme & Brand</h4>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-0 border border-borderNeutral rounded-lg overflow-hidden">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-0">
               <IconDisplay icon={<Moon size={24} />} name="Moon" />
               <IconDisplay icon={<Sun size={24} />} name="Sun" />
               <IconDisplay icon={<Zap size={24} />} name="Zap" />
