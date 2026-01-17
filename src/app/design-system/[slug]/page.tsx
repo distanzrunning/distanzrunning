@@ -141,6 +141,8 @@ export default function DesignSystemPage() {
       return (
         <ContentWithTOC
           tocTitle="On this page"
+          pageTitle="Colors"
+          pageSubtitle="Learn how to work with our color system. Right click to copy raw values."
           tocItems={[
             { id: "scales", title: "Scales" },
             { id: "backgrounds", title: "Backgrounds" },
@@ -330,6 +332,8 @@ export default function DesignSystemPage() {
       return (
         <ContentWithTOC
           tocTitle="On this page"
+          pageTitle="Icons"
+          pageSubtitle="A collection of icons used across Distanz products. Right click to copy import statement."
           tocItems={[
             { id: "usage", title: "Usage" },
             { id: "resources", title: "Resources" },

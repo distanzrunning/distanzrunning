@@ -1522,23 +1522,6 @@ export default function ColourPalettes() {
   return (
     <ToastProvider>
       <div>
-        {/* Page Header */}
-        <div className="mb-8">
-          <h1 className="text-[24px] md:text-[40px] leading-[1.2] font-semibold text-textDefault mb-3">
-            Colors
-          </h1>
-          <p
-            className="text-[16px] md:text-[20px] text-textSubtle"
-            style={{ lineHeight: 1.5 }}
-          >
-            Learn how to work with our color system. Right click to copy raw
-            values.
-          </p>
-        </div>
-
-        {/* Divider */}
-        <hr className="border-t border-borderNeutral mb-12" />
-
         {/* Sections in Geist order */}
         <ScalesSection isDark={isDark} />
         <BackgroundsSection />

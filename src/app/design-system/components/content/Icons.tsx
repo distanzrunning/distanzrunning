@@ -320,23 +320,6 @@ export default function Icons() {
   return (
     <ToastProvider>
       <div>
-        {/* Page Header - Geist style */}
-        <div className="mb-3">
-          <h1 className="text-[24px] md:text-[40px] leading-[1.2] font-semibold text-textDefault mb-3">
-            Icons
-          </h1>
-          <p
-            className="text-[16px] md:text-[20px] text-textSubtle"
-            style={{ lineHeight: 1.5 }}
-          >
-            A collection of icons used across Distanz products. Right click to
-            copy import statement.
-          </p>
-        </div>
-
-        {/* Divider */}
-        <hr className="border-t border-borderNeutral mb-8" />
-
         {/* Icon Grid - 4 columns desktop, 2 columns mobile */}
         <section>
           {/* Search within grid width */}
