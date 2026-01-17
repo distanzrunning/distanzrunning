@@ -3,7 +3,7 @@
 import React, { useState, useCallback, useRef, useMemo } from "react";
 import { Check, Search } from "lucide-react";
 import * as icons from "lucide-react";
-import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
+import * as ContextMenu from "@radix-ui/react-context-menu";
 import { Section } from "../ContentWithTOC";
 
 // Icons used across the Distanz codebase, sorted alphabetically
@@ -183,6 +183,7 @@ function ToastProvider({ children }: { children: React.ReactNode }) {
 function IconCard({ name }: { name: string }) {
   const { showToast } = React.useContext(ToastContext);
   const [showTick, setShowTick] = useState(false);
+  const triggerRef = useRef<HTMLDivElement>(null);
   const IconComponent = (
     icons as unknown as Record<
       string,
@@ -222,15 +223,29 @@ function IconCard({ name }: { name: string }) {
     }
   }, [name, copyToClipboard, showToast]);
 
+  // Trigger context menu on left click
+  const handleClick = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    // Create and dispatch a context menu event at the click position
+    const contextMenuEvent = new MouseEvent("contextmenu", {
+      bubbles: true,
+      clientX: e.clientX,
+      clientY: e.clientY,
+    });
+    e.currentTarget.dispatchEvent(contextMenuEvent);
+  }, []);
+
   if (!IconComponent) return null;
 
   return (
-    <DropdownMenu.Root>
-      <DropdownMenu.Trigger asChild>
-        <button
+    <ContextMenu.Root>
+      <ContextMenu.Trigger asChild>
+        <div
+          ref={triggerRef}
           data-icon={name}
-          className="group relative flex h-28 w-full cursor-pointer flex-col items-center px-4 text-textSubtle transition-colors hover:[background:var(--ds-background-100)] outline-none focus:outline-none focus-visible:outline-none"
+          className="group relative flex h-28 w-full cursor-pointer flex-col items-center px-4 text-textSubtle transition-colors hover:[background:var(--ds-background-100)] outline-none"
           title={name}
+          onClick={handleClick}
         >
           <div className="flex-1" />
           <div className="-mt-1.5 relative">
@@ -243,43 +258,40 @@ function IconCard({ name }: { name: string }) {
           <p className="text-[13px] text-textSubtle truncate flex-1 pt-4 max-w-full">
             {name}
           </p>
-        </button>
-      </DropdownMenu.Trigger>
-      <DropdownMenu.Portal>
-        <DropdownMenu.Content
+        </div>
+      </ContextMenu.Trigger>
+      <ContextMenu.Portal>
+        <ContextMenu.Content
           className="min-w-[160px] rounded-md border border-borderNeutral bg-white dark:bg-neutral-900 p-1 shadow-lg"
           style={{ zIndex: 50 }}
-          side="right"
-          align="start"
-          sideOffset={5}
         >
-          <DropdownMenu.Item
+          <ContextMenu.Item
             className="flex cursor-pointer select-none items-center rounded px-3 py-2 text-sm text-textDefault outline-none hover:bg-gray-100 dark:hover:bg-neutral-800"
             onSelect={handleCopyImport}
           >
             Copy Import
-          </DropdownMenu.Item>
-          <DropdownMenu.Item
+          </ContextMenu.Item>
+          <ContextMenu.Item
             className="flex cursor-pointer select-none items-center rounded px-3 py-2 text-sm text-textDefault outline-none hover:bg-gray-100 dark:hover:bg-neutral-800"
             onSelect={handleCopyName}
           >
             Copy Name
-          </DropdownMenu.Item>
-          <DropdownMenu.Item
+          </ContextMenu.Item>
+          <ContextMenu.Item
             className="flex cursor-pointer select-none items-center rounded px-3 py-2 text-sm text-textDefault outline-none hover:bg-gray-100 dark:hover:bg-neutral-800"
             onSelect={handleCopyJSX}
           >
             Copy JSX
-          </DropdownMenu.Item>
-          <DropdownMenu.Item
+          </ContextMenu.Item>
+          <ContextMenu.Item
             className="flex cursor-pointer select-none items-center rounded px-3 py-2 text-sm text-textDefault outline-none hover:bg-gray-100 dark:hover:bg-neutral-800"
             onSelect={handleCopySVG}
           >
             Copy SVG
-          </DropdownMenu.Item>
-        </DropdownMenu.Content>
-      </DropdownMenu.Portal>
-    </DropdownMenu.Root>
+          </ContextMenu.Item>
+        </ContextMenu.Content>
+      </ContextMenu.Portal>
+    </ContextMenu.Root>
   );
 }
 
