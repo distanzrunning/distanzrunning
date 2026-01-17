@@ -133,58 +133,58 @@ export default function ContentWithTOC({
   };
 
   return (
-    <div className="flex flex-col -m-12 min-h-[calc(100vh-112px)]">
-      {/* Page Header Section - spans full width including over TOC area */}
-      {pageTitle && (
-        <>
-          <div className="p-12">
-            <h1 className="text-[24px] md:text-[40px] leading-[1.2] font-semibold text-textDefault mb-3">
-              {pageTitle}
-            </h1>
-            {pageSubtitle && (
-              <p
-                className="text-[16px] md:text-[20px] text-textSubtle"
-                style={{ lineHeight: 1.5 }}
-              >
-                {pageSubtitle}
-              </p>
-            )}
-          </div>
-          {/* Full-width divider */}
-          <hr className="border-t border-borderNeutral" />
-        </>
-      )}
+    <div className="flex -m-12 min-h-[calc(100vh-112px)]">
+      {/* Main content column */}
+      <div className="flex-1 min-w-0 flex flex-col">
+        {/* Page Header Section */}
+        {pageTitle && (
+          <>
+            <div className="p-12">
+              <h1 className="text-[24px] md:text-[40px] leading-[1.2] font-semibold text-textDefault mb-3">
+                {pageTitle}
+              </h1>
+              {pageSubtitle && (
+                <p
+                  className="text-[16px] md:text-[20px] text-textSubtle"
+                  style={{ lineHeight: 1.5 }}
+                >
+                  {pageSubtitle}
+                </p>
+              )}
+            </div>
+            {/* Divider - spans to right edge (under TOC border) */}
+            <hr className="border-t border-borderNeutral" />
+          </>
+        )}
 
-      {/* Main content area */}
-      <div className="flex flex-1">
-        {/* Main Content - full width with padding */}
-        <article className="flex-1 min-w-0 p-12">{children}</article>
-
-        {/* Table of Contents - Right Sidebar (≥1280px) */}
-        <aside className="hidden xl:block w-[260px] flex-shrink-0 border-l border-borderSubtle">
-          <div className="sticky top-28 h-[calc(100vh-112px)] overflow-hidden">
-            <nav className="h-full overflow-y-auto px-6 pb-[14px] pt-12">
-              <h4 className="text-[14px] leading-[20px] font-medium text-textDefault mb-3">
-                {tocTitle}
-              </h4>
-              <div className="flex flex-col">
-                {mainSectionId && renderTOCLink(mainSectionId, tocTitle)}
-                {tocItems.map((item) => (
-                  <div key={item.id}>
-                    {renderTOCLink(item.id, item.title)}
-                    {item.children &&
-                      item.children.map((child) => (
-                        <div key={child.id}>
-                          {renderTOCLink(child.id, child.title, true)}
-                        </div>
-                      ))}
-                  </div>
-                ))}
-              </div>
-            </nav>
-          </div>
-        </aside>
+        {/* Main Content */}
+        <article className="flex-1 p-12">{children}</article>
       </div>
+
+      {/* Table of Contents - Right Sidebar (≥1280px) - full height */}
+      <aside className="hidden xl:block w-[260px] flex-shrink-0 border-l border-borderSubtle">
+        <div className="sticky top-28 h-[calc(100vh-112px)] overflow-hidden">
+          <nav className="h-full overflow-y-auto px-6 pb-[14px] pt-12">
+            <h4 className="text-[14px] leading-[20px] font-medium text-textDefault mb-3">
+              {tocTitle}
+            </h4>
+            <div className="flex flex-col">
+              {mainSectionId && renderTOCLink(mainSectionId, tocTitle)}
+              {tocItems.map((item) => (
+                <div key={item.id}>
+                  {renderTOCLink(item.id, item.title)}
+                  {item.children &&
+                    item.children.map((child) => (
+                      <div key={child.id}>
+                        {renderTOCLink(child.id, child.title, true)}
+                      </div>
+                    ))}
+                </div>
+              ))}
+            </div>
+          </nav>
+        </div>
+      </aside>
     </div>
   );
 }
