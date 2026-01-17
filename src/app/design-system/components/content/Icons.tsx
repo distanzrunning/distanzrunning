@@ -338,12 +338,15 @@ export default function Icons() {
           <SearchInput value={searchTerm} onChange={setSearchTerm} />
         </Section>
 
-        {/* Icon Grid - spans full width, no padding, with dividers between rows */}
+        {/* Icon Grid - spans full width, no padding, with dividers between rows and columns */}
         <div>
           {filteredIcons.length > 0 ? (
-            <div className="divide-y divide-borderNeutral border-t border-borderNeutral">
+            <div className="divide-y divide-borderNeutral">
               {iconRows.map((row, rowIndex) => (
-                <div key={rowIndex} className="grid grid-cols-2 md:grid-cols-4">
+                <div
+                  key={rowIndex}
+                  className="grid grid-cols-2 md:grid-cols-4 divide-x divide-borderNeutral"
+                >
                   {row.map((name) => (
                     <IconCard key={name} name={name} />
                   ))}
