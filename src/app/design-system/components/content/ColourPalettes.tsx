@@ -1518,6 +1518,247 @@ function ColorScalesSection({ isDark }: { isDark: boolean }) {
   );
 }
 
+// Semantic Tokens section
+function SemanticTokensSection() {
+  const textTokens = [
+    {
+      token: "text-textDefault",
+      cssVar: "--color-textDefault",
+      usage: "Primary text, headings",
+    },
+    {
+      token: "text-textSubtle",
+      cssVar: "--color-textSubtle",
+      usage: "Secondary text, descriptions",
+    },
+    {
+      token: "text-textSubtler",
+      cssVar: "--color-textSubtler",
+      usage: "Muted text, placeholders",
+    },
+    {
+      token: "text-textDisabled",
+      cssVar: "--color-textDisabled",
+      usage: "Disabled states",
+    },
+    {
+      token: "text-textInverted",
+      cssVar: "--color-textInverted",
+      usage: "Text on dark backgrounds",
+    },
+  ];
+
+  const backgroundTokens = [
+    { token: "bg-canvas", cssVar: "--color-canvas", usage: "Page background" },
+    {
+      token: "bg-surface",
+      cssVar: "--color-surface",
+      usage: "Card/panel backgrounds",
+    },
+    {
+      token: "bg-surfaceSubtle",
+      cssVar: "--color-surfaceSubtle",
+      usage: "Subtle backgrounds, inputs",
+    },
+    {
+      token: "bg-surface-elevated-1",
+      cssVar: "--color-surfaceElevated1",
+      usage: "Elevated level 1",
+    },
+    {
+      token: "bg-surface-elevated-2",
+      cssVar: "--color-surfaceElevated2",
+      usage: "Elevated level 2",
+    },
+    {
+      token: "bg-surface-elevated-3",
+      cssVar: "--color-surfaceElevated3",
+      usage: "Elevated level 3",
+    },
+  ];
+
+  const borderTokens = [
+    {
+      token: "border-borderDefault",
+      cssVar: "--color-borderDefault",
+      usage: "Structural borders",
+    },
+    {
+      token: "border-borderDefaultHover",
+      cssVar: "--color-borderDefaultHover",
+      usage: "Border hover state",
+    },
+    {
+      token: "border-borderSubtle",
+      cssVar: "--color-borderSubtle",
+      usage: "Subtle separators",
+    },
+    {
+      token: "border-borderSubtleHover",
+      cssVar: "--color-borderSubtleHover",
+      usage: "Subtle hover state",
+    },
+    {
+      token: "border-borderExtraSubtle",
+      cssVar: "--color-borderExtraSubtle",
+      usage: "Barely visible borders",
+    },
+  ];
+
+  return (
+    <section className="mb-16">
+      <SectionHeader id="semantic-tokens">Semantic Tokens</SectionHeader>
+      <p className="text-base text-textSubtle mt-4 mb-6">
+        Use these Tailwind classes instead of raw color values. They
+        automatically adapt to light and dark mode.
+      </p>
+
+      {/* Text Tokens */}
+      <h3 className="text-[18px] font-medium text-textDefault mt-8 mb-4">
+        Text
+      </h3>
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="border-b border-borderSubtle">
+              <th className="text-left py-3 pr-4 font-medium text-textSubtle">
+                Tailwind Class
+              </th>
+              <th className="text-left py-3 pr-4 font-medium text-textSubtle">
+                CSS Variable
+              </th>
+              <th className="text-left py-3 font-medium text-textSubtle">
+                Usage
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {textTokens.map((t) => (
+              <tr key={t.token} className="border-b border-borderExtraSubtle">
+                <td className="py-3 pr-4">
+                  <code className="text-xs font-mono px-1.5 py-0.5 rounded bg-surfaceSubtle text-textDefault">
+                    {t.token}
+                  </code>
+                </td>
+                <td className="py-3 pr-4">
+                  <code className="text-xs font-mono text-textSubtle">
+                    {t.cssVar}
+                  </code>
+                </td>
+                <td className="py-3 text-textSubtle">{t.usage}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Background Tokens */}
+      <h3 className="text-[18px] font-medium text-textDefault mt-8 mb-4">
+        Backgrounds
+      </h3>
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="border-b border-borderSubtle">
+              <th className="text-left py-3 pr-4 font-medium text-textSubtle">
+                Tailwind Class
+              </th>
+              <th className="text-left py-3 pr-4 font-medium text-textSubtle">
+                CSS Variable
+              </th>
+              <th className="text-left py-3 font-medium text-textSubtle">
+                Usage
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {backgroundTokens.map((t) => (
+              <tr key={t.token} className="border-b border-borderExtraSubtle">
+                <td className="py-3 pr-4">
+                  <code className="text-xs font-mono px-1.5 py-0.5 rounded bg-surfaceSubtle text-textDefault">
+                    {t.token}
+                  </code>
+                </td>
+                <td className="py-3 pr-4">
+                  <code className="text-xs font-mono text-textSubtle">
+                    {t.cssVar}
+                  </code>
+                </td>
+                <td className="py-3 text-textSubtle">{t.usage}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Border Tokens */}
+      <h3 className="text-[18px] font-medium text-textDefault mt-8 mb-4">
+        Borders
+      </h3>
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="border-b border-borderSubtle">
+              <th className="text-left py-3 pr-4 font-medium text-textSubtle">
+                Tailwind Class
+              </th>
+              <th className="text-left py-3 pr-4 font-medium text-textSubtle">
+                CSS Variable
+              </th>
+              <th className="text-left py-3 font-medium text-textSubtle">
+                Usage
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {borderTokens.map((t) => (
+              <tr key={t.token} className="border-b border-borderExtraSubtle">
+                <td className="py-3 pr-4">
+                  <code className="text-xs font-mono px-1.5 py-0.5 rounded bg-surfaceSubtle text-textDefault">
+                    {t.token}
+                  </code>
+                </td>
+                <td className="py-3 pr-4">
+                  <code className="text-xs font-mono text-textSubtle">
+                    {t.cssVar}
+                  </code>
+                </td>
+                <td className="py-3 text-textSubtle">{t.usage}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Example */}
+      <h3 className="text-[18px] font-medium text-textDefault mt-8 mb-4">
+        Example Usage
+      </h3>
+      <div className="rounded-lg border border-borderSubtle overflow-hidden">
+        <div className="bg-surfaceSubtle px-4 py-2 border-b border-borderSubtle">
+          <code className="text-xs font-mono text-textSubtle">
+            Login form example
+          </code>
+        </div>
+        <pre className="p-4 text-sm font-mono text-textDefault overflow-x-auto bg-canvas">
+          {`<div className="bg-canvas min-h-screen">
+  <div className="bg-surface border border-borderSubtle rounded-lg p-6">
+    <h2 className="text-textDefault font-medium">Sign in</h2>
+    <p className="text-textSubtle">Enter your credentials</p>
+    <input
+      className="bg-surfaceSubtle border border-borderDefault
+                 text-textDefault placeholder:text-textSubtler"
+      placeholder="Email"
+    />
+    <button className="bg-black text-white">Submit</button>
+  </div>
+</div>`}
+        </pre>
+      </div>
+    </section>
+  );
+}
+
 // Migration section
 function MigrationSection() {
   const mappings = [
@@ -1633,6 +1874,7 @@ export default function ColourPalettes() {
 
         {/* Main content sections - ordered like Geist */}
         <ColorScalesSection isDark={isDark} />
+        <SemanticTokensSection />
         <BackgroundsSection />
         <ComponentBackgroundsSection />
         <BordersSection />

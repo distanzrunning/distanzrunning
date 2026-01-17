@@ -148,6 +148,7 @@ export default function DesignSystemSubsectionPage() {
             tocTitle="On this page"
             tocItems={[
               { id: "colour-scales", title: "Colour Scales" },
+              { id: "semantic-tokens", title: "Semantic Tokens" },
               { id: "backgrounds", title: "Backgrounds" },
               {
                 id: "colors-1-3-component-backgrounds",
