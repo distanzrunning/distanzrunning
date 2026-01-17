@@ -179,7 +179,13 @@ function ToastProvider({ children }: { children: React.ReactNode }) {
 }
 
 // Icon card component matching Geist design
-function IconCard({ name }: { name: string }) {
+function IconCard({
+  name,
+  className = "",
+}: {
+  name: string;
+  className?: string;
+}) {
   const { showToast } = React.useContext(ToastContext);
   const [showTick, setShowTick] = useState(false);
   const IconComponent = (
@@ -242,7 +248,7 @@ function IconCard({ name }: { name: string }) {
     <button
       onClick={handleClick}
       onContextMenu={handleContextMenu}
-      className="group relative flex h-28 w-full cursor-pointer flex-col items-center px-4 text-textSubtle transition-colors hover:[background:var(--ds-background-100)]"
+      className={`group relative flex h-28 w-full cursor-pointer flex-col items-center px-4 text-textSubtle transition-colors hover:[background:var(--ds-background-100)] ${className}`}
       title={name}
     >
       <div className="flex-1" />
@@ -342,16 +348,33 @@ export default function Icons() {
         <div>
           {filteredIcons.length > 0 ? (
             <div className="divide-y divide-borderNeutral">
-              {iconRows.map((row, rowIndex) => (
-                <div
-                  key={rowIndex}
-                  className="grid grid-cols-2 md:grid-cols-4 divide-x divide-borderNeutral"
-                >
-                  {row.map((name) => (
-                    <IconCard key={name} name={name} />
-                  ))}
-                </div>
-              ))}
+              {iconRows.map((row, rowIndex) => {
+                const isLastRow = rowIndex === iconRows.length - 1;
+                const isIncompleteRow = row.length < 4;
+                return (
+                  <div
+                    key={rowIndex}
+                    className="grid grid-cols-2 md:grid-cols-4 divide-x divide-borderNeutral"
+                  >
+                    {row.map((name, colIndex) => {
+                      const isLastInRow = colIndex === row.length - 1;
+                      const needsRightBorder =
+                        isLastRow && isIncompleteRow && isLastInRow;
+                      return (
+                        <IconCard
+                          key={name}
+                          name={name}
+                          className={
+                            needsRightBorder
+                              ? "border-r border-borderNeutral"
+                              : ""
+                          }
+                        />
+                      );
+                    })}
+                  </div>
+                );
+              })}
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center py-16 text-center">
