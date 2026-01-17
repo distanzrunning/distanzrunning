@@ -18,13 +18,13 @@ export default function IntroductionShowcase({
         <h1 className="font-serif text-[52px] leading-[1.1] font-medium mb-6">
           The Stride Design System
         </h1>
-        <p className="text-lg text-gray-900 max-w-3xl mb-8">
+        <p className="text-lg text-textSubtle max-w-3xl mb-8">
           The visual language and interface components that define Distanz
           Running's brand and digital experience.
         </p>
 
         {/* Divider */}
-        <div className="border-t border-gray-400 mb-8"></div>
+        <div className="border-t border-borderNeutral mb-8"></div>
 
         {/* Section Links */}
         <ul className="flex flex-col gap-3 list-disc pl-6">

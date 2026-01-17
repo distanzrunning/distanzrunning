@@ -293,7 +293,7 @@ function SearchInput({
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full h-10 pl-10 pr-4 text-sm border border-gray-400 outline-none placeholder:text-gray-600 focus:border-gray-500 focus:ring-2 focus:ring-gray-400 transition-colors"
+        className="w-full h-10 pl-10 pr-4 text-sm border border-gray-400 outline-none placeholder:text-gray-600 focus:border-borderNeutralHover focus:ring-2 focus:ring-borderNeutral transition-colors"
         style={{ background: "var(--ds-background-100)" }}
       />
       <label

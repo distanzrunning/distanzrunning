@@ -42,7 +42,7 @@ export default function GridSpacing() {
         </h1>
       </div>
 
-      <hr className="border-t-4 border-gray-1000" />
+      <hr className="border-t-4 border-textDefault" />
 
       {/* Spacing Scale Section */}
       <section>
@@ -53,19 +53,19 @@ export default function GridSpacing() {
           Spacing scale
         </h2>
 
-        <hr className="border-t border-gray-400 mb-6" />
+        <hr className="border-t border-borderDefault mb-6" />
 
-        <p className="text-base text-gray-900 mb-4">
+        <p className="text-base text-textSubtle mb-4">
           A systematic spacing scale based on an 8px grid. The base unit is 8px
           (spacing-2), with 4px increments available for fine-tuning and 2px for
           micro adjustments.
         </p>
 
-        <div className="[background:var(--ds-gray-100)] border-l-4 border-electric-pink p-6 mb-8">
-          <h3 className="font-sans font-semibold text-sm uppercase tracking-wide text-gray-1000 mb-2">
+        <div className="bg-surfaceWarm border-l-4 border-electric-pink p-6 mb-8">
+          <h3 className="font-sans font-semibold text-sm uppercase tracking-wide text-textDefault mb-2">
             Grid System
           </h3>
-          <ul className="text-sm text-gray-900 leading-relaxed space-y-1">
+          <ul className="text-sm text-textSubtle leading-relaxed space-y-1">
             <li>
               <strong>Primary grid:</strong> 8px increments (spacing-2, 4, 6,
               8...)
@@ -80,17 +80,17 @@ export default function GridSpacing() {
         </div>
 
         {/* Visual spacing scale */}
-        <div className="[background:var(--ds-gray-100)] p-6 mb-8 space-y-3">
+        <div className="bg-surfaceSubtle p-6 mb-8 space-y-3">
           {spacingScale.slice(1, 9).map((item) => (
             <div key={item.token} className="flex items-center gap-4">
-              <span className="font-mono text-sm text-gray-900 w-8">
+              <span className="font-mono text-sm text-textSubtle w-8">
                 {item.token}
               </span>
               <div
                 className="bg-electric-pink h-4"
                 style={{ width: `${item.px}px` }}
               />
-              <span className="text-sm text-gray-900">{item.px}px</span>
+              <span className="text-sm text-textSubtle">{item.px}px</span>
             </div>
           ))}
         </div>
@@ -99,7 +99,7 @@ export default function GridSpacing() {
         <div className="overflow-x-auto mb-8">
           <table className="w-full border-collapse">
             <thead>
-              <tr className="border-b border-gray-400">
+              <tr className="border-b border-borderDefault">
                 <th className="text-left py-3 pr-4 font-semibold text-sm">
                   Token
                 </th>
@@ -119,14 +119,14 @@ export default function GridSpacing() {
             </thead>
             <tbody className="text-sm whitespace-nowrap">
               {spacingScale.map((item) => (
-                <tr key={item.token} className="border-b border-gray-300">
+                <tr key={item.token} className="border-b border-borderSubtle">
                   <td className="py-3 pr-4 font-mono">spacing-{item.token}</td>
                   <td className="py-3 px-4">{item.px}</td>
                   <td className="py-3 px-4">{item.rem}</td>
                   <td className="py-3 px-4 font-mono">
                     p-{item.token}, m-{item.token}, gap-{item.token}
                   </td>
-                  <td className="py-3 px-4 text-gray-900">{item.usage}</td>
+                  <td className="py-3 px-4 text-textSubtle">{item.usage}</td>
                 </tr>
               ))}
             </tbody>
@@ -134,7 +134,7 @@ export default function GridSpacing() {
         </div>
       </section>
 
-      <hr className="border-t border-gray-400" />
+      <hr className="border-t border-borderDefault" />
 
       {/* Gap and Gutter Section */}
       <section>
@@ -145,7 +145,7 @@ export default function GridSpacing() {
           Gap and gutter
         </h2>
 
-        <hr className="border-t border-gray-400 mb-6" />
+        <hr className="border-t border-borderDefault mb-6" />
 
         {/* Grid Gap Subsection */}
         <h3
@@ -154,7 +154,7 @@ export default function GridSpacing() {
         >
           Grid gap
         </h3>
-        <p className="text-base text-gray-900 mb-6">
+        <p className="text-base text-textSubtle mb-6">
           Grid gap is the standard spacing between elements.
         </p>
 
@@ -184,7 +184,7 @@ export default function GridSpacing() {
         <div className="overflow-x-auto mb-8">
           <table className="w-full border-collapse">
             <thead>
-              <tr className="border-b border-gray-400">
+              <tr className="border-b border-borderDefault">
                 <th className="text-left py-3 pr-4 font-semibold text-sm">
                   Grid gap
                 </th>
@@ -200,7 +200,7 @@ export default function GridSpacing() {
               </tr>
             </thead>
             <tbody className="whitespace-nowrap">
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 text-sm">Less than 960px (60rem)</td>
                 <td className="py-3 px-4 text-sm">12</td>
                 <td className="py-3 px-4 text-sm">0.75</td>
@@ -208,7 +208,7 @@ export default function GridSpacing() {
                   --grid-gap
                 </td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 text-sm">
                   Greater than or equal to 960px (60rem)
                 </td>
@@ -219,7 +219,7 @@ export default function GridSpacing() {
           </table>
         </div>
 
-        <hr className="border-t border-gray-400 mb-8" />
+        <hr className="border-t border-borderDefault mb-8" />
 
         {/* Grid Gutter Subsection */}
         <h3
@@ -228,7 +228,7 @@ export default function GridSpacing() {
         >
           Grid gutter
         </h3>
-        <p className="text-base text-gray-900 mb-6">
+        <p className="text-base text-textSubtle mb-6">
           Grid gutter is the space between grid columns, 2x the value of the
           gap.
         </p>
@@ -237,7 +237,7 @@ export default function GridSpacing() {
         <div className="overflow-x-auto mb-8">
           <table className="w-full border-collapse">
             <thead>
-              <tr className="border-b border-gray-400">
+              <tr className="border-b border-borderDefault">
                 <th className="text-left py-3 pr-4 font-semibold text-sm">
                   Grid gutter
                 </th>
@@ -253,7 +253,7 @@ export default function GridSpacing() {
               </tr>
             </thead>
             <tbody className="whitespace-nowrap">
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 text-sm">Less than 960px (60rem)</td>
                 <td className="py-3 px-4 text-sm">24</td>
                 <td className="py-3 px-4 text-sm">1.5</td>
@@ -261,7 +261,7 @@ export default function GridSpacing() {
                   --grid-gutter
                 </td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 text-sm">
                   Greater than or equal to 960px (60rem)
                 </td>
@@ -272,7 +272,7 @@ export default function GridSpacing() {
           </table>
         </div>
 
-        <hr className="border-t border-gray-400 mb-8" />
+        <hr className="border-t border-borderDefault mb-8" />
 
         {/* Grid gutter (medium screen, 6 columns) */}
         <p className="text-base font-semibold mb-4">
@@ -288,7 +288,7 @@ export default function GridSpacing() {
           />
         </figure>
 
-        <hr className="border-t border-gray-400 mb-8" />
+        <hr className="border-t border-borderDefault mb-8" />
 
         {/* Grid gutter (large screen, 12 columns) */}
         <p className="text-base font-semibold mb-4">
@@ -304,7 +304,7 @@ export default function GridSpacing() {
           />
         </figure>
 
-        <hr className="border-t border-gray-400 mb-8" />
+        <hr className="border-t border-borderDefault mb-8" />
 
         {/* Component gutters */}
         <p className="text-base font-semibold mb-4">Component gutters</p>
@@ -318,11 +318,11 @@ export default function GridSpacing() {
           />
         </figure>
 
-        <hr className="border-t border-gray-400 mb-8" />
+        <hr className="border-t border-borderDefault mb-8" />
 
         {/* Outside gutter */}
         <p className="text-base font-semibold mb-4">Outside gutter</p>
-        <p className="text-base text-gray-900 mb-6">
+        <p className="text-base text-textSubtle mb-6">
           Outside gutters provide padding between the grid and the viewport
           edge. They use the same values as the column gutter.
         </p>
@@ -330,7 +330,7 @@ export default function GridSpacing() {
         <div className="overflow-x-auto mb-8">
           <table className="w-full border-collapse">
             <thead>
-              <tr className="border-b border-gray-400">
+              <tr className="border-b border-borderDefault">
                 <th className="text-left py-3 pr-4 font-semibold text-sm">
                   Outside gutter
                 </th>
@@ -346,7 +346,7 @@ export default function GridSpacing() {
               </tr>
             </thead>
             <tbody className="whitespace-nowrap">
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 text-sm">Less than 960px (60rem)</td>
                 <td className="py-3 px-4 text-sm">24</td>
                 <td className="py-3 px-4 text-sm">1.5</td>
@@ -354,7 +354,7 @@ export default function GridSpacing() {
                   --grid-outside-gutter
                 </td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 text-sm">
                   Greater than or equal to 960px (60rem)
                 </td>

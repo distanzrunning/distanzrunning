@@ -14,7 +14,7 @@ export default function Typefaces() {
         </h1>
       </div>
 
-      <hr className="border-t-4 border-gray-1000" />
+      <hr className="border-t-4 border-textDefault" />
 
       {/* EB Garamond Section */}
       <section>
@@ -25,7 +25,7 @@ export default function Typefaces() {
           EB Garamond
         </h2>
 
-        <hr className="border-t border-gray-400 mb-6" />
+        <hr className="border-t border-borderDefault mb-6" />
 
         {/* EB Garamond Regular */}
         <h3
@@ -34,14 +34,14 @@ export default function Typefaces() {
         >
           EB Garamond
         </h3>
-        <p className="text-base text-gray-900 mb-4">
+        <p className="text-base text-textSubtle mb-4">
           Primarily for headlines, display text, and editorial emphasis. A
           classic serif with elegant proportions inspired by the work of Claude
           Garamond.
         </p>
 
         {/* Type specimen */}
-        <div className="[background:var(--ds-gray-100)] p-6 mb-4">
+        <div className="bg-surfaceSubtle p-6 mb-4">
           <p
             className="font-serif text-[40px] font-normal leading-[1.2] mb-4"
             style={{ fontFamily: "var(--font-family-serif)" }}
@@ -66,7 +66,7 @@ export default function Typefaces() {
         <div className="overflow-x-auto mb-8">
           <table className="w-full border-collapse">
             <thead>
-              <tr className="border-b border-gray-400">
+              <tr className="border-b border-borderDefault">
                 <th className="text-left py-3 pr-4 font-semibold text-sm">
                   Font
                 </th>
@@ -82,7 +82,7 @@ export default function Typefaces() {
               </tr>
             </thead>
             <tbody className="text-sm whitespace-nowrap">
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Regular</td>
                 <td className="py-3 px-4">400</td>
                 <td className="py-3 px-4">normal</td>
@@ -90,27 +90,27 @@ export default function Typefaces() {
                   --font-family-serif
                 </td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Regular Italic</td>
                 <td className="py-3 px-4">400</td>
                 <td className="py-3 px-4">italic</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Medium</td>
                 <td className="py-3 px-4">500</td>
                 <td className="py-3 px-4">normal</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Medium Italic</td>
                 <td className="py-3 px-4">500</td>
                 <td className="py-3 px-4">italic</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">SemiBold</td>
                 <td className="py-3 px-4">600</td>
                 <td className="py-3 px-4">normal</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">SemiBold Italic</td>
                 <td className="py-3 px-4">600</td>
                 <td className="py-3 px-4">italic</td>
@@ -119,7 +119,7 @@ export default function Typefaces() {
           </table>
         </div>
 
-        <hr className="border-t border-gray-400 mb-8" />
+        <hr className="border-t border-borderDefault mb-8" />
 
         {/* Italic specimen */}
         <h3
@@ -128,11 +128,11 @@ export default function Typefaces() {
         >
           EB Garamond Italic
         </h3>
-        <p className="text-base text-gray-900 mb-4">
+        <p className="text-base text-textSubtle mb-4">
           For emphasis within body text and pull quotes where Garamond is used.
         </p>
 
-        <div className="[background:var(--ds-gray-100)] p-6 mb-8">
+        <div className="bg-surfaceSubtle p-6 mb-8">
           <p
             className="font-serif text-[28px] font-normal italic leading-[1.2] mb-4"
             style={{ fontFamily: "var(--font-family-serif)" }}
@@ -148,7 +148,7 @@ export default function Typefaces() {
         </div>
       </section>
 
-      <hr className="border-t border-gray-400" />
+      <hr className="border-t border-borderDefault" />
 
       {/* Inter Section */}
       <section>
@@ -159,7 +159,7 @@ export default function Typefaces() {
           Inter
         </h2>
 
-        <hr className="border-t border-gray-400 mb-6" />
+        <hr className="border-t border-borderDefault mb-6" />
 
         {/* Inter Variable */}
         <h3
@@ -168,14 +168,14 @@ export default function Typefaces() {
         >
           Inter Variable
         </h3>
-        <p className="text-base text-gray-900 mb-4">
+        <p className="text-base text-textSubtle mb-4">
           Primary typeface for body text, UI elements, navigation, metadata, and
           captions. A variable font optimized for screen readability with a
           complete weight spectrum from 100-900.
         </p>
 
         {/* Type specimen */}
-        <div className="[background:var(--ds-gray-100)] p-6 mb-4">
+        <div className="bg-surfaceSubtle p-6 mb-4">
           <p
             className="font-sans text-[32px] font-normal leading-[1.2] mb-4"
             style={{ fontFamily: "var(--font-family-sans)" }}
@@ -197,7 +197,7 @@ export default function Typefaces() {
         </div>
 
         {/* Figures specimen */}
-        <div className="[background:var(--ds-gray-100)] p-6 mb-4">
+        <div className="bg-surfaceSubtle p-6 mb-4">
           <p
             className="font-sans text-[20px] font-normal leading-[1.3] mb-0"
             style={{ fontFamily: "var(--font-family-sans)" }}
@@ -210,7 +210,7 @@ export default function Typefaces() {
         <div className="overflow-x-auto mb-8">
           <table className="w-full border-collapse">
             <thead>
-              <tr className="border-b border-gray-400">
+              <tr className="border-b border-borderDefault">
                 <th className="text-left py-3 pr-4 font-semibold text-sm">
                   Font
                 </th>
@@ -226,7 +226,7 @@ export default function Typefaces() {
               </tr>
             </thead>
             <tbody className="text-sm whitespace-nowrap">
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Light</td>
                 <td className="py-3 px-4">300</td>
                 <td className="py-3 px-4">normal</td>
@@ -234,22 +234,22 @@ export default function Typefaces() {
                   --font-family-sans
                 </td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Regular</td>
                 <td className="py-3 px-4">400</td>
                 <td className="py-3 px-4">normal</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Medium</td>
                 <td className="py-3 px-4">500</td>
                 <td className="py-3 px-4">normal</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">SemiBold</td>
                 <td className="py-3 px-4">600</td>
                 <td className="py-3 px-4">normal</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Bold</td>
                 <td className="py-3 px-4">700</td>
                 <td className="py-3 px-4">normal</td>
@@ -258,7 +258,7 @@ export default function Typefaces() {
           </table>
         </div>
 
-        <hr className="border-t border-gray-400 mb-8" />
+        <hr className="border-t border-borderDefault mb-8" />
 
         {/* Weight spectrum */}
         <h3
@@ -267,12 +267,12 @@ export default function Typefaces() {
         >
           Weight spectrum
         </h3>
-        <p className="text-base text-gray-900 mb-4">
+        <p className="text-base text-textSubtle mb-4">
           Inter Variable supports continuous weights from 100-900, allowing
           precise typographic control.
         </p>
 
-        <div className="[background:var(--ds-gray-100)] p-6 mb-8">
+        <div className="bg-surfaceSubtle p-6 mb-8">
           <p
             className="font-sans text-[20px] leading-[1.4] mb-2"
             style={{ fontFamily: "var(--font-family-sans)", fontWeight: 300 }}
@@ -306,7 +306,7 @@ export default function Typefaces() {
         </div>
       </section>
 
-      <hr className="border-t border-gray-400" />
+      <hr className="border-t border-borderDefault" />
 
       {/* Font Roles Section */}
       <section>
@@ -317,9 +317,9 @@ export default function Typefaces() {
           Font roles
         </h2>
 
-        <hr className="border-t border-gray-400 mb-6" />
+        <hr className="border-t border-borderDefault mb-6" />
 
-        <p className="text-base text-gray-900 mb-6">
+        <p className="text-base text-textSubtle mb-6">
           Semantic font tokens map typefaces to their intended use, ensuring
           consistent application across the design system.
         </p>
@@ -327,7 +327,7 @@ export default function Typefaces() {
         <div className="overflow-x-auto">
           <table className="w-full border-collapse">
             <thead>
-              <tr className="border-b border-gray-400">
+              <tr className="border-b border-borderDefault">
                 <th className="text-left py-3 pr-4 font-semibold text-sm">
                   Role
                 </th>
@@ -343,43 +343,43 @@ export default function Typefaces() {
               </tr>
             </thead>
             <tbody className="text-sm">
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Display</td>
                 <td className="py-3 px-4 font-mono">--display-font</td>
                 <td className="py-3 px-4">EB Garamond</td>
                 <td className="py-3 px-4">Large headlines, hero text</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Headline</td>
                 <td className="py-3 px-4 font-mono">--headline-font</td>
                 <td className="py-3 px-4">EB Garamond</td>
                 <td className="py-3 px-4">Article titles, section headers</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Subheading</td>
                 <td className="py-3 px-4 font-mono">--subheading-font</td>
                 <td className="py-3 px-4">EB Garamond</td>
                 <td className="py-3 px-4">Subheadings, secondary titles</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Brand</td>
                 <td className="py-3 px-4 font-mono">--brand-font</td>
                 <td className="py-3 px-4">EB Garamond</td>
                 <td className="py-3 px-4">Brand elements, masthead</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Body</td>
                 <td className="py-3 px-4 font-mono">--body-font</td>
                 <td className="py-3 px-4">Inter</td>
                 <td className="py-3 px-4">Paragraphs, long-form content</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">UI</td>
                 <td className="py-3 px-4 font-mono">--ui-font</td>
                 <td className="py-3 px-4">Inter</td>
                 <td className="py-3 px-4">Buttons, labels, navigation</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Base</td>
                 <td className="py-3 px-4 font-mono">--base-font</td>
                 <td className="py-3 px-4">Inter</td>
@@ -390,7 +390,7 @@ export default function Typefaces() {
         </div>
       </section>
 
-      <hr className="border-t border-gray-400" />
+      <hr className="border-t border-borderDefault" />
 
       {/* Reference Section */}
       <section>
@@ -401,12 +401,12 @@ export default function Typefaces() {
           Reference
         </h2>
 
-        <hr className="border-t border-gray-400 mb-6" />
+        <hr className="border-t border-borderDefault mb-6" />
 
         <div className="overflow-x-auto">
           <table className="w-full border-collapse">
             <thead>
-              <tr className="border-b border-gray-400">
+              <tr className="border-b border-borderDefault">
                 <th className="text-left py-3 pr-4 font-semibold text-sm">
                   CSS Variable
                 </th>
@@ -419,41 +419,41 @@ export default function Typefaces() {
               </tr>
             </thead>
             <tbody className="text-sm whitespace-nowrap">
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 font-mono">--font-family-serif</td>
                 <td className="py-3 px-4 font-mono text-xs">
                   &quot;eb-garamond&quot;, Georgia, serif
                 </td>
                 <td className="py-3 px-4 font-mono">font-serif</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 font-mono">--font-family-sans</td>
                 <td className="py-3 px-4 font-mono text-xs">
                   &quot;inter-variable&quot;, sans-serif
                 </td>
                 <td className="py-3 px-4 font-mono">font-sans</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 font-mono">--font-weight-light</td>
                 <td className="py-3 px-4">300</td>
                 <td className="py-3 px-4 font-mono">font-light</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 font-mono">--font-weight-regular</td>
                 <td className="py-3 px-4">400</td>
                 <td className="py-3 px-4 font-mono">font-normal</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 font-mono">--font-weight-medium</td>
                 <td className="py-3 px-4">500</td>
                 <td className="py-3 px-4 font-mono">font-medium</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 font-mono">--font-weight-semibold</td>
                 <td className="py-3 px-4">600</td>
                 <td className="py-3 px-4 font-mono">font-semibold</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 font-mono">--font-weight-bold</td>
                 <td className="py-3 px-4">700</td>
                 <td className="py-3 px-4 font-mono">font-bold</td>

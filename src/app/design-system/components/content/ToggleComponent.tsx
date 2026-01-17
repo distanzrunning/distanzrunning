@@ -71,7 +71,7 @@ function VariantShowcase({
       </h3>
 
       {/* Preview + States container */}
-      <div className="flex rounded-t-lg border border-b-0 border-gray-300 overflow-hidden">
+      <div className="flex rounded-t-lg border border-b-0 border-borderSubtle overflow-hidden">
         {/* Preview area */}
         <div
           className={`flex-1 p-8 flex items-center justify-start min-h-[120px] ${
@@ -90,8 +90,10 @@ function VariantShowcase({
         </div>
 
         {/* States sidebar */}
-        <div className="w-[140px] border-l border-gray-300 [background:var(--ds-gray-100)] dark:bg-neutral-900 p-4 flex flex-col gap-3">
-          <span className="text-sm font-medium text-gray-900 mb-1">States</span>
+        <div className="w-[140px] border-l border-borderSubtle bg-surfaceSubtle dark:bg-neutral-900 p-4 flex flex-col gap-3">
+          <span className="text-sm font-medium text-textSubtle mb-1">
+            States
+          </span>
 
           {/* Checked toggle */}
           <label className="flex items-center gap-2 cursor-pointer">
@@ -130,7 +132,7 @@ function VariantShowcase({
                 )}
               </div>
             </div>
-            <span className="text-sm text-gray-1000">checked</span>
+            <span className="text-sm text-textDefault">checked</span>
           </label>
 
           {/* Disabled toggle */}
@@ -170,13 +172,13 @@ function VariantShowcase({
                 )}
               </div>
             </div>
-            <span className="text-sm text-gray-1000">disabled</span>
+            <span className="text-sm text-textDefault">disabled</span>
           </label>
         </div>
       </div>
 
       {/* Editable code box */}
-      <div className="relative rounded-b-lg border border-gray-300 [background:var(--ds-gray-100)] dark:bg-neutral-900 overflow-hidden focus-within:border-gray-400 focus-within:ring-1 focus-within:ring-gray-400 transition-all">
+      <div className="relative rounded-b-lg border border-borderSubtle bg-surfaceSubtle dark:bg-neutral-900 overflow-hidden focus-within:border-borderDefault focus-within:ring-1 focus-within:ring-borderNeutral transition-all">
         <div className="absolute inset-0 p-4 pointer-events-none">
           <pre className="text-sm font-mono">
             <code>{highlightCode(codeValue)}</code>
@@ -210,7 +212,7 @@ export default function ToggleComponent() {
         </h1>
       </div>
 
-      <p className="text-base text-gray-900 max-w-3xl">
+      <p className="text-base text-textSubtle max-w-3xl">
         A switch control for binary on/off states. Use toggles for settings that
         take effect immediately.
       </p>
@@ -269,7 +271,7 @@ export default function ToggleComponent() {
           Guidelines
         </h2>
 
-        <hr className="border-t border-gray-400 mb-6" />
+        <hr className="border-t border-borderDefault mb-6" />
 
         <h3
           id="guidelines-how-to-use"
@@ -278,7 +280,7 @@ export default function ToggleComponent() {
           How to use
         </h3>
 
-        <div className="space-y-4 text-base text-gray-900 max-w-3xl">
+        <div className="space-y-4 text-base text-textSubtle max-w-3xl">
           <p>
             Use <strong>toggles</strong> for settings that take immediate
             effect—the action happens as soon as the user flips the switch.
@@ -295,7 +297,7 @@ export default function ToggleComponent() {
           </p>
         </div>
 
-        <hr className="border-t border-gray-400 my-8" />
+        <hr className="border-t border-borderDefault my-8" />
 
         <h3
           id="guidelines-toggle-vs-checkbox"
@@ -307,7 +309,7 @@ export default function ToggleComponent() {
         <div className="overflow-x-auto mb-6">
           <table className="w-full border-collapse">
             <thead>
-              <tr className="border-b border-gray-400">
+              <tr className="border-b border-borderDefault">
                 <th className="text-left py-3 pr-4 font-semibold text-sm">
                   Use Toggle when...
                 </th>
@@ -317,21 +319,19 @@ export default function ToggleComponent() {
               </tr>
             </thead>
             <tbody className="text-sm">
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Setting takes immediate effect</td>
-                <td className="py-3 px-4">
-                  Part of a form requiring submission
-                </td>
+                <td className="py-3 px-4">Part of a form requiring submission</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Binary on/off choice</td>
                 <td className="py-3 px-4">Multiple selections from a list</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Mobile/touch-friendly interface</td>
                 <td className="py-3 px-4">Dense forms with many options</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Enabling/disabling features</td>
                 <td className="py-3 px-4">Agreeing to terms and conditions</td>
               </tr>
@@ -339,7 +339,7 @@ export default function ToggleComponent() {
           </table>
         </div>
 
-        <hr className="border-t border-gray-400 my-8" />
+        <hr className="border-t border-borderDefault my-8" />
 
         <h3
           id="guidelines-best-practices"
@@ -348,13 +348,15 @@ export default function ToggleComponent() {
           Best practices
         </h3>
 
-        <ul className="space-y-3 text-base text-gray-900 max-w-3xl list-disc pl-5">
+        <ul className="space-y-3 text-base text-textSubtle max-w-3xl list-disc pl-5">
           <li>
             Write labels in positive terms—describe the &quot;on&quot; state
             (e.g., &quot;Enable notifications&quot; not &quot;Disable
             notifications&quot;)
           </li>
-          <li>Keep labels concise and clear—avoid technical jargon</li>
+          <li>
+            Keep labels concise and clear—avoid technical jargon
+          </li>
           <li>
             Don&apos;t use toggles for destructive actions—use a button with
             confirmation instead
@@ -381,12 +383,12 @@ export default function ToggleComponent() {
           Anatomy
         </h2>
 
-        <hr className="border-t border-gray-400 mb-6" />
+        <hr className="border-t border-borderDefault mb-6" />
 
         <div className="overflow-x-auto">
           <table className="w-full border-collapse">
             <thead>
-              <tr className="border-b border-gray-400">
+              <tr className="border-b border-borderDefault">
                 <th className="text-left py-3 pr-4 font-semibold text-sm">
                   Property
                 </th>
@@ -399,28 +401,28 @@ export default function ToggleComponent() {
               </tr>
             </thead>
             <tbody className="text-sm">
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Track width</td>
                 <td className="py-3 px-4">44px</td>
                 <td className="py-3 px-4">36px</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Track height</td>
                 <td className="py-3 px-4">24px</td>
                 <td className="py-3 px-4">20px</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Thumb diameter</td>
                 <td className="py-3 px-4">20px</td>
                 <td className="py-3 px-4">16px</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Border radius</td>
                 <td className="py-3 px-4" colSpan={2}>
                   <span className="font-mono">rounded-full</span> (pill shape)
                 </td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Transition</td>
                 <td className="py-3 px-4" colSpan={2}>
                   200ms ease-out
@@ -442,12 +444,12 @@ export default function ToggleComponent() {
           Props
         </h2>
 
-        <hr className="border-t border-gray-400 mb-6" />
+        <hr className="border-t border-borderDefault mb-6" />
 
         <div className="overflow-x-auto">
           <table className="w-full border-collapse">
             <thead>
-              <tr className="border-b border-gray-400">
+              <tr className="border-b border-borderDefault">
                 <th className="text-left py-3 pr-4 font-semibold text-sm">
                   Prop
                 </th>
@@ -460,46 +462,48 @@ export default function ToggleComponent() {
               </tr>
             </thead>
             <tbody className="text-sm font-mono">
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">checked</td>
                 <td className="py-3 px-4">boolean</td>
                 <td className="py-3 px-4">false</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">onChange</td>
-                <td className="py-3 px-4">(e: ChangeEvent) =&gt; void</td>
+                <td className="py-3 px-4">
+                  (e: ChangeEvent) =&gt; void
+                </td>
                 <td className="py-3 px-4">undefined</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">size</td>
                 <td className="py-3 px-4">
                   &apos;default&apos; | &apos;small&apos;
                 </td>
                 <td className="py-3 px-4">&apos;default&apos;</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">inverse</td>
                 <td className="py-3 px-4">boolean</td>
                 <td className="py-3 px-4">false</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">disabled</td>
                 <td className="py-3 px-4">boolean</td>
                 <td className="py-3 px-4">false</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">label</td>
                 <td className="py-3 px-4">string</td>
                 <td className="py-3 px-4">undefined</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">labelPosition</td>
                 <td className="py-3 px-4">
                   &apos;left&apos; | &apos;right&apos;
                 </td>
                 <td className="py-3 px-4">&apos;right&apos;</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">id</td>
                 <td className="py-3 px-4">string</td>
                 <td className="py-3 px-4">auto-generated</td>
@@ -520,7 +524,7 @@ export default function ToggleComponent() {
           Colour reference
         </h2>
 
-        <hr className="border-t border-gray-400 mb-6" />
+        <hr className="border-t border-borderDefault mb-6" />
 
         <h3
           id="colours-track"
@@ -532,7 +536,7 @@ export default function ToggleComponent() {
         <div className="overflow-x-auto mb-8">
           <table className="w-full border-collapse">
             <thead>
-              <tr className="border-b border-gray-400">
+              <tr className="border-b border-borderDefault">
                 <th className="text-left py-3 pr-4 font-semibold text-sm">
                   State
                 </th>
@@ -545,32 +549,32 @@ export default function ToggleComponent() {
               </tr>
             </thead>
             <tbody className="text-sm">
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Default (light)</td>
                 <td className="py-3 px-4 font-mono">asphalt-70</td>
                 <td className="py-3 px-4 font-mono">electric-pink</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Hover (light)</td>
                 <td className="py-3 px-4 font-mono">asphalt-60</td>
                 <td className="py-3 px-4 font-mono">electric-pink-45</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Default (dark)</td>
                 <td className="py-3 px-4 font-mono">asphalt-40</td>
                 <td className="py-3 px-4 font-mono">electric-pink</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Hover (dark)</td>
                 <td className="py-3 px-4 font-mono">asphalt-50</td>
                 <td className="py-3 px-4 font-mono">electric-pink-45</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Disabled (light)</td>
                 <td className="py-3 px-4 font-mono">asphalt-80</td>
                 <td className="py-3 px-4 font-mono">asphalt-60</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Disabled (dark)</td>
                 <td className="py-3 px-4 font-mono">asphalt-30</td>
                 <td className="py-3 px-4 font-mono">asphalt-40</td>
@@ -589,7 +593,7 @@ export default function ToggleComponent() {
         <div className="overflow-x-auto">
           <table className="w-full border-collapse">
             <thead>
-              <tr className="border-b border-gray-400">
+              <tr className="border-b border-borderDefault">
                 <th className="text-left py-3 pr-4 font-semibold text-sm">
                   State
                 </th>
@@ -599,19 +603,19 @@ export default function ToggleComponent() {
               </tr>
             </thead>
             <tbody className="text-sm">
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Default (light)</td>
                 <td className="py-3 px-4 font-mono">white</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Default (dark)</td>
                 <td className="py-3 px-4 font-mono">asphalt-95</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Disabled (light)</td>
                 <td className="py-3 px-4 font-mono">asphalt-90</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Disabled (dark)</td>
                 <td className="py-3 px-4 font-mono">asphalt-50</td>
               </tr>

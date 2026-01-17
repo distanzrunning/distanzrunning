@@ -10,14 +10,14 @@ export default function Collections() {
         >
           Collections
         </h1>
-        <p className="text-base text-gray-900 max-w-3xl">
+        <p className="text-base text-textSubtle max-w-3xl">
           Curated color combinations for specific content types and contexts.
           Collections ensure visual consistency across different sections of the
           site.
         </p>
       </div>
 
-      <hr className="border-t-4 border-gray-1000" />
+      <hr className="border-t-4 border-textDefault" />
 
       {/* Road Collection */}
       <section>
@@ -28,9 +28,9 @@ export default function Collections() {
           Road
         </h2>
 
-        <hr className="border-t border-gray-400 mb-6" />
+        <hr className="border-t border-borderDefault mb-6" />
 
-        <p className="text-base text-gray-900 mb-6 max-w-3xl">
+        <p className="text-base text-textSubtle mb-6 max-w-3xl">
           Professional road running content - races, training, and performance.
         </p>
 
@@ -78,7 +78,7 @@ export default function Collections() {
         </div>
       </section>
 
-      <hr className="border-t border-gray-400" />
+      <hr className="border-t border-borderDefault" />
 
       {/* Track Collection */}
       <section>
@@ -89,9 +89,9 @@ export default function Collections() {
           Track
         </h2>
 
-        <hr className="border-t border-gray-400 mb-6" />
+        <hr className="border-t border-borderDefault mb-6" />
 
-        <p className="text-base text-gray-900 mb-6 max-w-3xl">
+        <p className="text-base text-textSubtle mb-6 max-w-3xl">
           Track and field content - sprint, middle distance, and technical
           training.
         </p>
@@ -140,7 +140,7 @@ export default function Collections() {
         </div>
       </section>
 
-      <hr className="border-t border-gray-400" />
+      <hr className="border-t border-borderDefault" />
 
       {/* Trail Collection */}
       <section>
@@ -151,9 +151,9 @@ export default function Collections() {
           Trail
         </h2>
 
-        <hr className="border-t border-gray-400 mb-6" />
+        <hr className="border-t border-borderDefault mb-6" />
 
-        <p className="text-base text-gray-900 mb-6 max-w-3xl">
+        <p className="text-base text-textSubtle mb-6 max-w-3xl">
           Trail and ultrarunning content - adventure, exploration, and
           endurance.
         </p>
@@ -202,7 +202,7 @@ export default function Collections() {
         </div>
       </section>
 
-      <hr className="border-t border-gray-400" />
+      <hr className="border-t border-borderDefault" />
 
       {/* Gear Collection */}
       <section>
@@ -213,9 +213,9 @@ export default function Collections() {
           Gear
         </h2>
 
-        <hr className="border-t border-gray-400 mb-6" />
+        <hr className="border-t border-borderDefault mb-6" />
 
-        <p className="text-base text-gray-900 mb-6 max-w-3xl">
+        <p className="text-base text-textSubtle mb-6 max-w-3xl">
           Equipment and gear reviews - shoes, watches, nutrition, and
           technology.
         </p>
@@ -264,7 +264,7 @@ export default function Collections() {
         </div>
       </section>
 
-      <hr className="border-t border-gray-400" />
+      <hr className="border-t border-borderDefault" />
 
       {/* Nutrition Collection */}
       <section>
@@ -275,9 +275,9 @@ export default function Collections() {
           Nutrition
         </h2>
 
-        <hr className="border-t border-gray-400 mb-6" />
+        <hr className="border-t border-borderDefault mb-6" />
 
-        <p className="text-base text-gray-900 mb-6 max-w-3xl">
+        <p className="text-base text-textSubtle mb-6 max-w-3xl">
           Nutrition and wellness content - fueling strategies, recovery, and
           health.
         </p>

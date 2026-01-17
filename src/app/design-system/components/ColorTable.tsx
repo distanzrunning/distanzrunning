@@ -15,35 +15,20 @@ export default function ColorTable({ colors }: ColorTableProps) {
     <div className="overflow-x-auto mb-12">
       <table className="w-full border-collapse">
         <thead>
-          <tr className="border-b border-gray-400">
-            <th
-              scope="col"
-              className="text-left py-3 px-4 font-sans font-medium text-sm"
-            >
+          <tr className="border-b border-borderNeutral">
+            <th scope="col" className="text-left py-3 px-4 font-sans font-medium text-sm">
               Name
             </th>
-            <th
-              scope="col"
-              className="text-left py-3 px-4 font-sans font-medium text-sm"
-            >
+            <th scope="col" className="text-left py-3 px-4 font-sans font-medium text-sm">
               Hex
             </th>
-            <th
-              scope="col"
-              className="text-left py-3 px-4 font-sans font-medium text-sm"
-            >
+            <th scope="col" className="text-left py-3 px-4 font-sans font-medium text-sm">
               RGB
             </th>
-            <th
-              scope="col"
-              className="text-left py-3 px-4 font-sans font-medium text-sm"
-            >
+            <th scope="col" className="text-left py-3 px-4 font-sans font-medium text-sm">
               HSL
             </th>
-            <th
-              scope="col"
-              className="text-left py-3 px-4 font-sans font-medium text-sm"
-            >
+            <th scope="col" className="text-left py-3 px-4 font-sans font-medium text-sm">
               Token
             </th>
           </tr>
@@ -52,7 +37,7 @@ export default function ColorTable({ colors }: ColorTableProps) {
           {colors.map((color, index) => (
             <tr
               key={index}
-              className="border-b border-gray-300 hover:bg-neutralBgSubtle transition-colors"
+              className="border-b border-borderNeutralSubtle hover:bg-neutralBgSubtle transition-colors"
             >
               <td className="py-3 px-4 font-sans text-sm whitespace-nowrap">
                 {color.name}
@@ -66,7 +51,7 @@ export default function ColorTable({ colors }: ColorTableProps) {
               <td className="py-3 px-4 font-mono text-sm whitespace-nowrap">
                 {color.hsl}
               </td>
-              <td className="py-3 px-4 font-mono text-sm whitespace-nowrap text-gray-900">
+              <td className="py-3 px-4 font-mono text-sm whitespace-nowrap text-textSubtle">
                 {color.token}
               </td>
             </tr>

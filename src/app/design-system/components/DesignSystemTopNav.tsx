@@ -26,7 +26,7 @@ export default function DesignSystemTopNav({
       className={`relative min-[1100px]:sticky min-[1100px]:top-12 z-40 border-b transition-colors duration-300 ${
         menuOpen
           ? "bg-neutral-900 dark:bg-neutral-950 border-neutral-800"
-          : "bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md border-gray-300 dark:border-gray-400"
+          : "bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md border-borderSubtle"
       }`}
     >
       <div className="flex items-stretch px-6 min-[1100px]:px-8 py-3 min-[1100px]:py-4">
@@ -47,7 +47,7 @@ export default function DesignSystemTopNav({
             className={menuOpen ? "" : "dark:invert"}
           />
           <h1
-            className={`font-serif text-2xl leading-tight ${menuOpen ? "text-white" : "text-gray-1000"}`}
+            className={`font-serif text-2xl leading-tight ${menuOpen ? "text-white" : "text-textDefault"}`}
           >
             Stride Design System
           </h1>
@@ -66,7 +66,7 @@ export default function DesignSystemTopNav({
             className={`min-[1100px]:hidden flex items-center gap-2 text-sm transition-colors ${
               menuOpen
                 ? "text-white hover:text-neutral-300"
-                : "text-gray-900 hover:text-gray-1000"
+                : "text-textSubtle hover:text-textDefault"
             }`}
             aria-label={menuOpen ? "Close menu" : "Open menu"}
           >
@@ -91,8 +91,8 @@ export default function DesignSystemTopNav({
                   onClick={() => onSectionChange(section)}
                   className={`text-base capitalize transition-colors hover:underline ${
                     activeSection === section
-                      ? "font-medium text-gray-1000"
-                      : "text-gray-900 hover:text-gray-1000"
+                      ? "font-medium text-textDefault"
+                      : "text-textSubtle hover:text-textDefault"
                   }`}
                 >
                   {section}

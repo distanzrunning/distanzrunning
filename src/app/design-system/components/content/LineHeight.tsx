@@ -31,7 +31,7 @@ export default function LineHeight() {
         </h1>
       </div>
 
-      <hr className="border-t-4 border-gray-1000" />
+      <hr className="border-t-4 border-textDefault" />
 
       {/* Multipliers Section */}
       <section>
@@ -42,9 +42,9 @@ export default function LineHeight() {
           Multipliers
         </h2>
 
-        <hr className="border-t border-gray-400 mb-6" />
+        <hr className="border-t border-borderDefault mb-6" />
 
-        <p className="text-base text-gray-900 mb-6">
+        <p className="text-base text-textSubtle mb-6">
           Line-height (leading) multipliers provide vertical rhythm across all
           font sizes, ensuring text and headings are readable and legible.
           Larger text uses tighter line heights while smaller text uses looser
@@ -55,7 +55,7 @@ export default function LineHeight() {
         <div className="overflow-x-auto mb-8">
           <table className="w-full border-collapse">
             <thead>
-              <tr className="border-b border-gray-400">
+              <tr className="border-b border-borderDefault">
                 <th className="text-left py-3 pr-4 font-semibold text-sm">
                   Multiplier
                 </th>
@@ -68,34 +68,34 @@ export default function LineHeight() {
               </tr>
             </thead>
             <tbody className="text-sm whitespace-nowrap">
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">1.5</td>
                 <td className="py-3 px-4">
                   Body text, paragraphs (optimal for reading)
                 </td>
                 <td className="py-3 px-4 font-mono">leading-normal</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">1.4</td>
                 <td className="py-3 px-4">Small to medium text (≤20px)</td>
                 <td className="py-3 px-4 font-mono">leading-relaxed</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">1.3</td>
                 <td className="py-3 px-4">Subheadings, UI text</td>
                 <td className="py-3 px-4 font-mono">leading-snug</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">1.2</td>
                 <td className="py-3 px-4">Large headings (≥28px)</td>
                 <td className="py-3 px-4 font-mono">leading-tight</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">1.15</td>
                 <td className="py-3 px-4">Display headlines (≥40px)</td>
                 <td className="py-3 px-4 font-mono">leading-[1.15]</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">1.1</td>
                 <td className="py-3 px-4">Hero text, very large display</td>
                 <td className="py-3 px-4 font-mono">leading-none</td>
@@ -112,9 +112,9 @@ export default function LineHeight() {
           Visual comparison
         </h3>
 
-        <div className="[background:var(--ds-gray-100)] p-6 mb-8 space-y-6">
+        <div className="bg-surfaceSubtle p-6 mb-8 space-y-6">
           <div>
-            <p className="font-sans text-sm text-gray-900 mb-2">
+            <p className="font-sans text-sm text-textSubtle mb-2">
               Line-height: 1.5 (body text)
             </p>
             <p className="font-sans text-base leading-[1.5]">
@@ -123,9 +123,9 @@ export default function LineHeight() {
               of personal excellence. The road stretches endlessly ahead.
             </p>
           </div>
-          <hr className="border-t border-gray-300" />
+          <hr className="border-t border-borderSubtle" />
           <div>
-            <p className="font-sans text-sm text-gray-900 mb-2">
+            <p className="font-sans text-sm text-textSubtle mb-2">
               Line-height: 1.3 (compact)
             </p>
             <p className="font-sans text-base leading-[1.3]">
@@ -134,9 +134,9 @@ export default function LineHeight() {
               of personal excellence. The road stretches endlessly ahead.
             </p>
           </div>
-          <hr className="border-t border-gray-300" />
+          <hr className="border-t border-borderSubtle" />
           <div>
-            <p className="font-sans text-sm text-gray-900 mb-2">
+            <p className="font-sans text-sm text-textSubtle mb-2">
               Line-height: 1.15 (headline)
             </p>
             <p className="font-serif text-[32px] leading-[1.15] font-medium">
@@ -146,7 +146,7 @@ export default function LineHeight() {
         </div>
       </section>
 
-      <hr className="border-t border-gray-400" />
+      <hr className="border-t border-borderDefault" />
 
       {/* Computed Values Section */}
       <section>
@@ -157,9 +157,9 @@ export default function LineHeight() {
           Computed values
         </h2>
 
-        <hr className="border-t border-gray-400 mb-6" />
+        <hr className="border-t border-borderDefault mb-6" />
 
-        <p className="text-base text-gray-900 mb-6">
+        <p className="text-base text-textSubtle mb-6">
           Use whole pixel values when designing with static assets. The
           line-height values below are the result of multiplying font size by
           the appropriate multiplier.
@@ -168,7 +168,7 @@ export default function LineHeight() {
         <div className="overflow-x-auto">
           <table className="w-full border-collapse">
             <thead>
-              <tr className="border-b border-gray-400">
+              <tr className="border-b border-borderDefault">
                 <th className="text-left py-3 pr-4 font-semibold text-sm">
                   Font size (px)
                 </th>
@@ -188,7 +188,7 @@ export default function LineHeight() {
             </thead>
             <tbody className="text-sm whitespace-nowrap">
               {computedValues.map((item, index) => (
-                <tr key={index} className="border-b border-gray-300">
+                <tr key={index} className="border-b border-borderSubtle">
                   <td className="py-3 pr-4">{item.size}</td>
                   <td className="py-3 px-4 font-mono">
                     text-
@@ -210,7 +210,7 @@ export default function LineHeight() {
         </div>
       </section>
 
-      <hr className="border-t border-gray-400" />
+      <hr className="border-t border-borderDefault" />
 
       {/* Reference Section */}
       <section>
@@ -221,12 +221,12 @@ export default function LineHeight() {
           Reference
         </h2>
 
-        <hr className="border-t border-gray-400 mb-6" />
+        <hr className="border-t border-borderDefault mb-6" />
 
         <div className="overflow-x-auto">
           <table className="w-full border-collapse">
             <thead>
-              <tr className="border-b border-gray-400">
+              <tr className="border-b border-borderDefault">
                 <th className="text-left py-3 pr-4 font-semibold text-sm">
                   Tailwind class
                 </th>
@@ -239,39 +239,41 @@ export default function LineHeight() {
               </tr>
             </thead>
             <tbody className="text-sm">
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 font-mono">leading-none</td>
                 <td className="py-3 px-4">1</td>
-                <td className="py-3 px-4 text-gray-900">Single line, icons</td>
+                <td className="py-3 px-4 text-textSubtle">
+                  Single line, icons
+                </td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 font-mono">leading-tight</td>
                 <td className="py-3 px-4">1.25</td>
-                <td className="py-3 px-4 text-gray-900">Large headings</td>
+                <td className="py-3 px-4 text-textSubtle">Large headings</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 font-mono">leading-snug</td>
                 <td className="py-3 px-4">1.375</td>
-                <td className="py-3 px-4 text-gray-900">
+                <td className="py-3 px-4 text-textSubtle">
                   Subheadings, compact text
                 </td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 font-mono">leading-normal</td>
                 <td className="py-3 px-4">1.5</td>
-                <td className="py-3 px-4 text-gray-900">
+                <td className="py-3 px-4 text-textSubtle">
                   Body text, paragraphs
                 </td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 font-mono">leading-relaxed</td>
                 <td className="py-3 px-4">1.625</td>
-                <td className="py-3 px-4 text-gray-900">Long-form content</td>
+                <td className="py-3 px-4 text-textSubtle">Long-form content</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 font-mono">leading-loose</td>
                 <td className="py-3 px-4">2</td>
-                <td className="py-3 px-4 text-gray-900">
+                <td className="py-3 px-4 text-textSubtle">
                   Wide spacing, editorial
                 </td>
               </tr>

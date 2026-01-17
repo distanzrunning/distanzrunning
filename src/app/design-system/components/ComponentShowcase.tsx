@@ -1,20 +1,17 @@
-"use client";
+'use client';
 
-import { useState } from "react";
+import { useState } from 'react';
 
 export default function ComponentShowcase() {
-  const [inputValue, setInputValue] = useState("");
-  const [selectedOption, setSelectedOption] = useState("option1");
+  const [inputValue, setInputValue] = useState('');
+  const [selectedOption, setSelectedOption] = useState('option1');
 
   return (
     <div className="space-y-12">
       {/* Buttons */}
-      <div
-        className="rounded-lg p-6 border border-gray-400"
-        style={{ background: "var(--ds-gray-100)" }}
-      >
+      <div className="bg-surface dark:bg-[#0c0c0d] rounded-lg p-6 border border-borderNeutral">
         <h3 className="text-lg font-semibold mb-4">Buttons</h3>
-        <p className="text-gray-900 text-sm mb-6">
+        <p className="text-textSubtle text-sm mb-6">
           Three button variants: Primary, Secondary, and Ghost
         </p>
 
@@ -25,7 +22,7 @@ export default function ComponentShowcase() {
             <button className="px-6 py-3 bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 rounded-md font-medium hover:bg-neutral-800 dark:hover:bg-neutral-100 transition-colors">
               Primary Action
             </button>
-            <pre className="mt-3 p-3 [background:var(--ds-background-100)] rounded text-xs overflow-x-auto">
+            <pre className="mt-3 p-3 bg-canvas dark:bg-[#0a0a0a] rounded text-xs overflow-x-auto">
               <code>{`<button className="px-6 py-3 bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 rounded-md font-medium hover:bg-neutral-800 dark:hover:bg-neutral-100 transition-colors">
   Primary Action
 </button>`}</code>
@@ -38,7 +35,7 @@ export default function ComponentShowcase() {
             <button className="px-6 py-3 border-2 border-neutral-400 dark:border-neutral-500 text-neutral-900 dark:text-white rounded-md font-medium hover:bg-neutral-900 dark:hover:bg-white hover:text-white dark:hover:text-neutral-900 transition-colors">
               Secondary Action
             </button>
-            <pre className="mt-3 p-3 [background:var(--ds-background-100)] rounded text-xs overflow-x-auto">
+            <pre className="mt-3 p-3 bg-canvas dark:bg-[#0a0a0a] rounded text-xs overflow-x-auto">
               <code>{`<button className="px-6 py-3 border-2 border-neutral-400 dark:border-neutral-500 text-neutral-900 dark:text-white rounded-md font-medium hover:bg-neutral-900 dark:hover:bg-white hover:text-white dark:hover:text-neutral-900 transition-colors">
   Secondary Action
 </button>`}</code>
@@ -51,7 +48,7 @@ export default function ComponentShowcase() {
             <button className="px-6 py-3 text-neutral-700 dark:text-neutral-300 font-medium hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-colors">
               Tertiary Action
             </button>
-            <pre className="mt-3 p-3 [background:var(--ds-background-100)] rounded text-xs overflow-x-auto">
+            <pre className="mt-3 p-3 bg-canvas dark:bg-[#0a0a0a] rounded text-xs overflow-x-auto">
               <code>{`<button className="px-6 py-3 text-neutral-700 dark:text-neutral-300 font-medium hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-colors">
   Tertiary Action
 </button>`}</code>
@@ -77,12 +74,9 @@ export default function ComponentShowcase() {
       </div>
 
       {/* Forms */}
-      <div
-        className="rounded-lg p-6 border border-gray-400"
-        style={{ background: "var(--ds-gray-100)" }}
-      >
+      <div className="bg-surface dark:bg-[#0c0c0d] rounded-lg p-6 border border-borderNeutral">
         <h3 className="text-lg font-semibold mb-4">Form Elements</h3>
-        <p className="text-gray-900 text-sm mb-6">
+        <p className="text-textSubtle text-sm mb-6">
           Input fields, textareas, and selects with consistent styling
         </p>
 
@@ -92,15 +86,15 @@ export default function ComponentShowcase() {
             <label className="block text-sm font-medium mb-2">Text Input</label>
             <input
               type="text"
-              className="w-full px-4 py-3 border border-gray-400 rounded-md focus:border-neutral-400 dark:border-neutral-500 focus:ring-1 focus:ring-neutral-400 dark:ring-neutral-500 outline-none transition-colors [background:var(--ds-gray-100)]"
+              className="w-full px-4 py-3 border border-borderNeutral rounded-md focus:border-neutral-400 dark:border-neutral-500 focus:ring-1 focus:ring-neutral-400 dark:ring-neutral-500 outline-none transition-colors bg-surface dark:bg-[#0c0c0d]"
               placeholder="Enter text..."
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
             />
-            <pre className="mt-3 p-3 [background:var(--ds-background-100)] rounded text-xs overflow-x-auto">
+            <pre className="mt-3 p-3 bg-canvas dark:bg-[#0a0a0a] rounded text-xs overflow-x-auto">
               <code>{`<input
   type="text"
-  className="w-full px-4 py-3 border border-gray-400 rounded-md focus:border-neutral-400 dark:border-neutral-500 focus:ring-1 focus:ring-neutral-400 dark:ring-neutral-500 outline-none transition-colors"
+  className="w-full px-4 py-3 border border-borderNeutral rounded-md focus:border-neutral-400 dark:border-neutral-500 focus:ring-1 focus:ring-neutral-400 dark:ring-neutral-500 outline-none transition-colors"
   placeholder="Enter text..."
 />`}</code>
             </pre>
@@ -110,7 +104,7 @@ export default function ComponentShowcase() {
           <div>
             <label className="block text-sm font-medium mb-2">Textarea</label>
             <textarea
-              className="w-full px-4 py-3 border border-gray-400 rounded-md focus:border-neutral-400 dark:border-neutral-500 focus:ring-1 focus:ring-neutral-400 dark:ring-neutral-500 outline-none transition-colors resize-y [background:var(--ds-gray-100)]"
+              className="w-full px-4 py-3 border border-borderNeutral rounded-md focus:border-neutral-400 dark:border-neutral-500 focus:ring-1 focus:ring-neutral-400 dark:ring-neutral-500 outline-none transition-colors resize-y bg-surface dark:bg-[#0c0c0d]"
               placeholder="Enter longer text..."
               rows={4}
             />
@@ -120,7 +114,7 @@ export default function ComponentShowcase() {
           <div>
             <label className="block text-sm font-medium mb-2">Select</label>
             <select
-              className="w-full px-4 py-3 border border-gray-400 rounded-md focus:border-neutral-400 dark:border-neutral-500 focus:ring-1 focus:ring-neutral-400 dark:ring-neutral-500 outline-none transition-colors [background:var(--ds-gray-100)]"
+              className="w-full px-4 py-3 border border-borderNeutral rounded-md focus:border-neutral-400 dark:border-neutral-500 focus:ring-1 focus:ring-neutral-400 dark:ring-neutral-500 outline-none transition-colors bg-surface dark:bg-[#0c0c0d]"
               value={selectedOption}
               onChange={(e) => setSelectedOption(e.target.value)}
             >
@@ -135,12 +129,9 @@ export default function ComponentShowcase() {
             <input
               type="checkbox"
               id="checkbox-example"
-              className="w-5 h-5 text-electric-pink border-gray-400 rounded focus:ring-neutral-400 dark:ring-neutral-500 focus:ring-2"
+              className="w-5 h-5 text-electric-pink border-borderNeutral rounded focus:ring-neutral-400 dark:ring-neutral-500 focus:ring-2"
             />
-            <label
-              htmlFor="checkbox-example"
-              className="text-sm font-medium cursor-pointer"
-            >
+            <label htmlFor="checkbox-example" className="text-sm font-medium cursor-pointer">
               Checkbox label
             </label>
           </div>
@@ -153,7 +144,7 @@ export default function ComponentShowcase() {
                 type="radio"
                 id="radio1"
                 name="radio-group"
-                className="w-5 h-5 text-electric-pink border-gray-400 focus:ring-neutral-400 dark:ring-neutral-500 focus:ring-2"
+                className="w-5 h-5 text-electric-pink border-borderNeutral focus:ring-neutral-400 dark:ring-neutral-500 focus:ring-2"
               />
               <label htmlFor="radio1" className="text-sm cursor-pointer">
                 Option 1
@@ -164,7 +155,7 @@ export default function ComponentShowcase() {
                 type="radio"
                 id="radio2"
                 name="radio-group"
-                className="w-5 h-5 text-electric-pink border-gray-400 focus:ring-neutral-400 dark:ring-neutral-500 focus:ring-2"
+                className="w-5 h-5 text-electric-pink border-borderNeutral focus:ring-neutral-400 dark:ring-neutral-500 focus:ring-2"
               />
               <label htmlFor="radio2" className="text-sm cursor-pointer">
                 Option 2
@@ -175,28 +166,25 @@ export default function ComponentShowcase() {
       </div>
 
       {/* Cards */}
-      <div
-        className="rounded-lg p-6 border border-gray-400"
-        style={{ background: "var(--ds-gray-100)" }}
-      >
+      <div className="bg-surface dark:bg-[#0c0c0d] rounded-lg p-6 border border-borderNeutral">
         <h3 className="text-lg font-semibold mb-4">Cards</h3>
-        <p className="text-gray-900 text-sm mb-6">
+        <p className="text-textSubtle text-sm mb-6">
           Article cards with hover effects
         </p>
 
         <div className="grid md:grid-cols-2 gap-6">
           {/* Basic Card */}
-          <div className="[background:var(--ds-background-100)] rounded-lg overflow-hidden border border-gray-400 hover:shadow-lg transition-shadow">
+          <div className="bg-canvas dark:bg-[#0a0a0a] rounded-lg overflow-hidden border border-borderNeutral hover:shadow-lg transition-shadow">
             <div className="w-full h-48 bg-gradient-to-br from-electric-pink to-pace-purple" />
             <div className="p-6">
               <p className="text-xs uppercase tracking-wide text-electric-pink font-medium mb-2">
                 CATEGORY
               </p>
               <h4 className="font-bold text-xl mb-2">Article Title</h4>
-              <p className="text-gray-900 text-sm mb-4">
+              <p className="text-textSubtle text-sm mb-4">
                 A brief description of the article content goes here.
               </p>
-              <div className="flex items-center gap-2 text-xs text-gray-600">
+              <div className="flex items-center gap-2 text-xs text-textSubtler">
                 <span>5 min read</span>
                 <span>•</span>
                 <span>Dec 31, 2025</span>
@@ -205,17 +193,17 @@ export default function ComponentShowcase() {
           </div>
 
           {/* Card with Image */}
-          <div className="[background:var(--ds-background-100)] rounded-lg overflow-hidden border border-gray-400 hover:shadow-lg transition-shadow">
+          <div className="bg-canvas dark:bg-[#0a0a0a] rounded-lg overflow-hidden border border-borderNeutral hover:shadow-lg transition-shadow">
             <div className="w-full h-48 bg-gradient-to-br from-volt-green to-signal-orange" />
             <div className="p-6">
               <p className="text-xs uppercase tracking-wide text-volt-green font-medium mb-2">
                 FEATURED
               </p>
               <h4 className="font-bold text-xl mb-2">Featured Article</h4>
-              <p className="text-gray-900 text-sm mb-4">
+              <p className="text-textSubtle text-sm mb-4">
                 Another description showcasing the card design pattern.
               </p>
-              <div className="flex items-center gap-2 text-xs text-gray-600">
+              <div className="flex items-center gap-2 text-xs text-textSubtler">
                 <span>8 min read</span>
                 <span>•</span>
                 <span>Dec 30, 2025</span>
@@ -224,27 +212,24 @@ export default function ComponentShowcase() {
           </div>
         </div>
 
-        <pre className="mt-6 p-3 [background:var(--ds-background-100)] rounded text-xs overflow-x-auto">
-          <code>{`<div className="bg-surface rounded-lg overflow-hidden border border-gray-400 hover:shadow-lg transition-shadow">
+        <pre className="mt-6 p-3 bg-canvas dark:bg-[#0a0a0a] rounded text-xs overflow-x-auto">
+          <code>{`<div className="bg-surface rounded-lg overflow-hidden border border-borderNeutral hover:shadow-lg transition-shadow">
   <div className="w-full h-48 bg-gradient-to-br from-electric-pink to-pace-purple" />
   <div className="p-6">
     <p className="text-xs uppercase tracking-wide text-electric-pink font-medium mb-2">
       CATEGORY
     </p>
     <h4 className="font-bold text-xl mb-2">Article Title</h4>
-    <p className="text-gray-900 text-sm">Description...</p>
+    <p className="text-textSubtle text-sm">Description...</p>
   </div>
 </div>`}</code>
         </pre>
       </div>
 
       {/* Badges & Tags */}
-      <div
-        className="rounded-lg p-6 border border-gray-400"
-        style={{ background: "var(--ds-gray-100)" }}
-      >
+      <div className="bg-surface dark:bg-[#0c0c0d] rounded-lg p-6 border border-borderNeutral">
         <h3 className="text-lg font-semibold mb-4">Badges & Tags</h3>
-        <p className="text-gray-900 text-sm mb-6">
+        <p className="text-textSubtle text-sm mb-6">
           Category labels and status indicators
         </p>
 
@@ -285,13 +270,13 @@ export default function ComponentShowcase() {
           <div>
             <p className="text-sm font-medium mb-3">Subtle Tags</p>
             <div className="flex flex-wrap gap-2">
-              <span className="px-3 py-1 bg-gray-100 dark:bg-gray-800 text-gray-1000 text-xs font-medium rounded-full">
+              <span className="px-3 py-1 bg-gray-100 dark:bg-gray-800 text-textDefault text-xs font-medium rounded-full">
                 5K
               </span>
-              <span className="px-3 py-1 bg-gray-100 dark:bg-gray-800 text-gray-1000 text-xs font-medium rounded-full">
+              <span className="px-3 py-1 bg-gray-100 dark:bg-gray-800 text-textDefault text-xs font-medium rounded-full">
                 10K
               </span>
-              <span className="px-3 py-1 bg-gray-100 dark:bg-gray-800 text-gray-1000 text-xs font-medium rounded-full">
+              <span className="px-3 py-1 bg-gray-100 dark:bg-gray-800 text-textDefault text-xs font-medium rounded-full">
                 Half Marathon
               </span>
             </div>
@@ -300,12 +285,9 @@ export default function ComponentShowcase() {
       </div>
 
       {/* Alerts */}
-      <div
-        className="rounded-lg p-6 border border-gray-400"
-        style={{ background: "var(--ds-gray-100)" }}
-      >
+      <div className="bg-surface dark:bg-[#0c0c0d] rounded-lg p-6 border border-borderNeutral">
         <h3 className="text-lg font-semibold mb-4">Alerts & Messages</h3>
-        <p className="text-gray-900 text-sm mb-6">
+        <p className="text-textSubtle text-sm mb-6">
           Information, success, warning, and error states
         </p>
 

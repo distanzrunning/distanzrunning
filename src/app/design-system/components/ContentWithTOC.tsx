@@ -117,8 +117,8 @@ export default function ContentWithTOC({
           flex border-l-2 border-solid py-1.5 pr-4 no-underline transition-colors
           ${
             isActive
-              ? "border-asphalt-10 dark:border-asphalt-95 text-gray-1000 font-medium"
-              : "border-gray-300 text-gray-900 hover:text-gray-1000 hover:border-asphalt-40 dark:hover:border-asphalt-60"
+              ? "border-asphalt-10 dark:border-asphalt-95 text-textDefault font-medium"
+              : "border-borderSubtle text-textSubtle hover:text-textDefault hover:border-asphalt-40 dark:hover:border-asphalt-60"
           }
           ${isChild ? "text-xs pl-7" : "text-sm pl-4"}
         `}
@@ -139,7 +139,7 @@ export default function ContentWithTOC({
       <aside className="hidden min-[960px]:block min-[960px]:col-span-2">
         <div className="sticky top-40">
           <nav className="max-h-[calc(100vh-200px)] overflow-y-auto">
-            <h4 className="text-sm font-medium text-gray-1000 mb-3 px-4">
+            <h4 className="text-sm font-medium text-textDefault mb-3 px-4">
               {tocTitle}
             </h4>
             <div className="flex flex-col">

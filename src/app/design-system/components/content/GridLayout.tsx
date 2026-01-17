@@ -14,7 +14,7 @@ export default function GridLayout() {
         </h1>
       </div>
 
-      <hr className="border-t-4 border-gray-1000" />
+      <hr className="border-t-4 border-textDefault" />
 
       {/* Column Grid Section */}
       <section>
@@ -25,14 +25,14 @@ export default function GridLayout() {
           Column grid
         </h2>
 
-        <hr className="border-t border-gray-400 mb-6" />
+        <hr className="border-t border-borderDefault mb-6" />
 
-        <p className="text-base text-gray-900 mb-4">
+        <p className="text-base text-textSubtle mb-4">
           Across screen sizes, grid spacing and grid gutters remain fixed to the
           defined values. The number of columns is changeable, and column widths
           are fluid.
         </p>
-        <p className="text-base text-gray-900 mb-8">
+        <p className="text-base text-textSubtle mb-8">
           The recommended max-width of the grid for the web is 1585px.
         </p>
 
@@ -40,7 +40,7 @@ export default function GridLayout() {
         <div className="overflow-x-auto mb-8">
           <table className="w-full border-collapse">
             <thead>
-              <tr className="border-b border-gray-400">
+              <tr className="border-b border-borderDefault">
                 <th className="text-left py-3 pr-4 font-semibold text-sm">
                   Columns
                 </th>
@@ -53,19 +53,19 @@ export default function GridLayout() {
               </tr>
             </thead>
             <tbody className="whitespace-nowrap">
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 text-sm">4</td>
                 <td className="py-3 px-4 text-sm">Less than 600px (37.5rem)</td>
                 <td className="py-3 px-4 text-sm"></td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 text-sm">6</td>
                 <td className="py-3 px-4 text-sm">
                   Greater than or equal to 600px (37.5rem)
                 </td>
                 <td className="py-3 px-4 text-sm font-mono">min-[600px]:</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 text-sm">12</td>
                 <td className="py-3 px-4 text-sm">
                   Greater than or equal to 960px (60rem)
@@ -80,7 +80,7 @@ export default function GridLayout() {
         <div className="overflow-x-auto mb-8">
           <table className="w-full border-collapse">
             <thead>
-              <tr className="border-b border-gray-400">
+              <tr className="border-b border-borderDefault">
                 <th className="text-left py-3 pr-4 font-semibold text-sm">
                   CSS
                 </th>
@@ -90,7 +90,7 @@ export default function GridLayout() {
               </tr>
             </thead>
             <tbody className="whitespace-nowrap">
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 text-sm font-mono">
                   distanz-container
                 </td>
@@ -98,7 +98,7 @@ export default function GridLayout() {
                   Supports column grid with column gutters
                 </td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 text-sm font-mono">
                   distanz-article-container
                 </td>
@@ -110,7 +110,7 @@ export default function GridLayout() {
           </table>
         </div>
 
-        <hr className="border-t border-gray-400 mb-8" />
+        <hr className="border-t border-borderDefault mb-8" />
 
         {/* 4 columns with outside gutters (small screen) */}
         <p className="text-base font-semibold mb-4">
@@ -126,7 +126,7 @@ export default function GridLayout() {
           />
         </figure>
 
-        <hr className="border-t border-gray-400 mb-8" />
+        <hr className="border-t border-borderDefault mb-8" />
 
         {/* 6 columns with outside gutters (medium screen) */}
         <p className="text-base font-semibold mb-4">
@@ -142,7 +142,7 @@ export default function GridLayout() {
           />
         </figure>
 
-        <hr className="border-t border-gray-400 mb-8" />
+        <hr className="border-t border-borderDefault mb-8" />
 
         {/* 12 columns with outside gutters (large screen) */}
         <p className="text-base font-semibold mb-4">
@@ -159,7 +159,7 @@ export default function GridLayout() {
         </figure>
       </section>
 
-      <hr className="border-t border-gray-400" />
+      <hr className="border-t border-borderDefault" />
 
       {/* Main Wrapper Section */}
       <section>
@@ -170,14 +170,14 @@ export default function GridLayout() {
           Main wrapper
         </h2>
 
-        <hr className="border-t border-gray-400 mb-6" />
+        <hr className="border-t border-borderDefault mb-6" />
 
-        <p className="text-base text-gray-900 mb-4">
+        <p className="text-base text-textSubtle mb-4">
           The main wrapper is the outermost layout container that frames all
           page content. It creates a centered, max-width container with vertical
           borders on larger screens, inspired by editorial layouts.
         </p>
-        <p className="text-base text-gray-900 mb-8">
+        <p className="text-base text-textSubtle mb-8">
           On mobile, the wrapper spans full width with no borders. On screens
           768px and above, it gains left and right borders and centers within
           the viewport up to a max-width of 1585px.
@@ -194,7 +194,7 @@ export default function GridLayout() {
           />
         </figure>
 
-        <hr className="border-t border-gray-400 mb-8" />
+        <hr className="border-t border-borderDefault mb-8" />
 
         {/* CSS Classes Table */}
         <h3
@@ -207,7 +207,7 @@ export default function GridLayout() {
         <div className="overflow-x-auto mb-8">
           <table className="w-full border-collapse">
             <thead>
-              <tr className="border-b border-gray-400">
+              <tr className="border-b border-borderDefault">
                 <th className="text-left py-3 pr-4 font-semibold text-sm">
                   CSS
                 </th>
@@ -217,20 +217,20 @@ export default function GridLayout() {
               </tr>
             </thead>
             <tbody className="whitespace-nowrap">
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 text-sm font-mono">main-wrapper</td>
                 <td className="py-3 px-4 text-sm">
                   Outer container with max-width: 1585px, centered with auto
                   margins
                 </td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 text-sm font-mono">main-bordered</td>
                 <td className="py-3 px-4 text-sm">
                   Inner container with left/right borders on screens &ge;768px
                 </td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 text-sm font-mono">v-sep</td>
                 <td className="py-3 px-4 text-sm">
                   Utility class for vertical separator borders only (no width
@@ -241,7 +241,7 @@ export default function GridLayout() {
           </table>
         </div>
 
-        <hr className="border-t border-gray-400 mb-8" />
+        <hr className="border-t border-borderDefault mb-8" />
 
         {/* Responsive Behavior Table */}
         <h3
@@ -254,7 +254,7 @@ export default function GridLayout() {
         <div className="overflow-x-auto mb-8">
           <table className="w-full border-collapse">
             <thead>
-              <tr className="border-b border-gray-400">
+              <tr className="border-b border-borderDefault">
                 <th className="text-left py-3 pr-4 font-semibold text-sm">
                   Screen size
                 </th>
@@ -267,17 +267,17 @@ export default function GridLayout() {
               </tr>
             </thead>
             <tbody className="whitespace-nowrap">
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 text-sm">Less than 768px</td>
                 <td className="py-3 px-4 text-sm">100% (full width)</td>
                 <td className="py-3 px-4 text-sm">None</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 text-sm">768px to 1585px</td>
                 <td className="py-3 px-4 text-sm">100% (full width)</td>
                 <td className="py-3 px-4 text-sm">Left and right borders</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 text-sm">Greater than 1585px</td>
                 <td className="py-3 px-4 text-sm">1585px (centered)</td>
                 <td className="py-3 px-4 text-sm">Left and right borders</td>
@@ -286,7 +286,7 @@ export default function GridLayout() {
           </table>
         </div>
 
-        <hr className="border-t border-gray-400 mb-8" />
+        <hr className="border-t border-borderDefault mb-8" />
 
         {/* Usage Example */}
         <h3
@@ -296,8 +296,8 @@ export default function GridLayout() {
           Usage
         </h3>
 
-        <div className="[background:var(--ds-gray-100)] p-4 rounded mb-8 overflow-x-auto">
-          <pre className="text-sm font-mono text-gray-1000">
+        <div className="bg-surfaceSubtle p-4 rounded mb-8 overflow-x-auto">
+          <pre className="text-sm font-mono text-textDefault">
             {`<div class="main-wrapper">
   <div class="main-bordered">
     <!-- Navbar -->
@@ -309,7 +309,7 @@ export default function GridLayout() {
         </div>
       </section>
 
-      <hr className="border-t border-gray-400" />
+      <hr className="border-t border-borderDefault" />
 
       {/* Resources Section */}
       <section>
@@ -320,7 +320,7 @@ export default function GridLayout() {
           Resources
         </h2>
 
-        <hr className="border-t border-gray-400 mb-6" />
+        <hr className="border-t border-borderDefault mb-6" />
 
         <h3
           id="resources-figma-files"
@@ -333,7 +333,7 @@ export default function GridLayout() {
         <div className="overflow-x-auto">
           <table className="w-full border-collapse">
             <thead>
-              <tr className="border-b border-gray-400">
+              <tr className="border-b border-borderDefault">
                 <th className="text-left py-3 pr-4 font-semibold text-sm">
                   Artboard
                 </th>
@@ -352,42 +352,42 @@ export default function GridLayout() {
               </tr>
             </thead>
             <tbody className="whitespace-nowrap">
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 text-sm">Grid XSM</td>
                 <td className="py-3 px-4 text-sm">312/336px</td>
                 <td className="py-3 px-4 text-sm">4</td>
                 <td className="py-3 px-4 text-sm">12/24</td>
                 <td className="py-3 px-4 text-sm"></td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 text-sm">Grid SM</td>
                 <td className="py-3 px-4 text-sm">552/600px</td>
                 <td className="py-3 px-4 text-sm">6</td>
                 <td className="py-3 px-4 text-sm">12/24</td>
                 <td className="py-3 px-4 text-sm font-mono">min-[600px]:</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 text-sm">Grid MD</td>
                 <td className="py-3 px-4 text-sm">712/760px</td>
                 <td className="py-3 px-4 text-sm">6</td>
                 <td className="py-3 px-4 text-sm">12/24</td>
                 <td className="py-3 px-4 text-sm font-mono">min-[600px]:</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 text-sm">Grid LG</td>
                 <td className="py-3 px-4 text-sm">896/960px</td>
                 <td className="py-3 px-4 text-sm">12</td>
                 <td className="py-3 px-4 text-sm">16/32</td>
                 <td className="py-3 px-4 text-sm font-mono">min-[960px]:</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 text-sm">Grid XLG</td>
                 <td className="py-3 px-4 text-sm">1216/1280px</td>
                 <td className="py-3 px-4 text-sm">12</td>
                 <td className="py-3 px-4 text-sm">16/32</td>
                 <td className="py-3 px-4 text-sm font-mono">min-[960px]:</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 text-sm">Grid MAX</td>
                 <td className="py-3 px-4 text-sm">1521/1585px</td>
                 <td className="py-3 px-4 text-sm">12</td>

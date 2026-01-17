@@ -2,35 +2,32 @@ export default function GridSystemShowcase() {
   return (
     <div className="space-y-12">
       {/* Grid Overview */}
-      <div
-        className="rounded-lg p-6 border border-gray-400"
-        style={{ background: "var(--ds-gray-100)" }}
-      >
+      <div className="bg-surface-subtle rounded-lg p-6 border border-borderNeutral">
         <h3 className="font-serif text-xl font-medium mb-4">
           12-Column Responsive Grid
         </h3>
-        <p className="text-gray-900 mb-4">
+        <p className="text-textSubtle mb-4">
           The Distanz grid system uses a 12-column layout - the industry
           standard that divides evenly into halves, thirds, quarters, and
           sixths. On mobile, it simplifies to 4 columns.
         </p>
-        <div className="space-y-2 text-sm text-gray-900">
+        <div className="space-y-2 text-sm text-textSubtle">
           <p>
-            <strong className="text-gray-1000">Max Width:</strong> 1585px
+            <strong className="text-textDefault">Max Width:</strong> 1585px
           </p>
           <p>
-            <strong className="text-gray-1000">Gap:</strong> 16px (gap-4)
+            <strong className="text-textDefault">Gap:</strong> 16px (gap-4)
           </p>
           <p>
-            <strong className="text-gray-1000">Gutter:</strong> 32px (gap-8)
+            <strong className="text-textDefault">Gutter:</strong> 32px (gap-8)
           </p>
           <p>
-            <strong className="text-gray-1000">Columns:</strong> 4 (mobile) / 12
-            (desktop 768px+)
+            <strong className="text-textDefault">Columns:</strong> 4 (mobile) /
+            12 (desktop 768px+)
           </p>
           <p>
-            <strong className="text-gray-1000">Breakpoints:</strong> sm (640px),
-            md (768px), lg (1024px), xl (1280px), 2xl (1536px)
+            <strong className="text-textDefault">Breakpoints:</strong> sm
+            (640px), md (768px), lg (1024px), xl (1280px), 2xl (1536px)
           </p>
         </div>
       </div>
@@ -40,7 +37,7 @@ export default function GridSystemShowcase() {
         <h3 className="font-serif text-2xl font-medium mb-4">
           Full 12-Column Grid
         </h3>
-        <p className="text-gray-900 mb-6">
+        <p className="text-textSubtle mb-6">
           Each column is highlighted to show the grid structure.
         </p>
 
@@ -48,9 +45,9 @@ export default function GridSystemShowcase() {
           {Array.from({ length: 12 }).map((_, i) => (
             <div
               key={i}
-              className="bg-electric-pink/20 border border-gray-400 rounded p-2 text-center"
+              className="bg-electric-pink/20 border border-neutral-400 dark:border-neutral-500 rounded p-2 text-center"
             >
-              <span className="text-xs font-mono text-gray-900">{i + 1}</span>
+              <span className="text-xs font-mono text-textSubtle">{i + 1}</span>
             </div>
           ))}
         </div>
@@ -61,7 +58,7 @@ export default function GridSystemShowcase() {
         <h3 className="font-serif text-2xl font-medium mb-4">
           Common Grid Layouts
         </h3>
-        <p className="text-gray-900 mb-6">
+        <p className="text-textSubtle mb-6">
           Standard patterns used throughout the site.
         </p>
 
@@ -167,41 +164,26 @@ export default function GridSystemShowcase() {
         <h3 className="font-serif text-2xl font-medium mb-4">
           Responsive Behavior
         </h3>
-        <p className="text-gray-900 mb-6">
+        <p className="text-textSubtle mb-6">
           Grid adapts across breakpoints for optimal layouts.
         </p>
 
-        <div
-          className="rounded-lg p-6 border border-gray-400"
-          style={{ background: "var(--ds-gray-100)" }}
-        >
+        <div className="bg-surface dark:bg-[#0c0c0d] rounded-lg p-6 border border-borderNeutral">
           <p className="text-sm font-medium mb-4">Article Grid (Responsive)</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div
-              className="rounded-lg p-4 border border-gray-400"
-              style={{ background: "var(--ds-background-100)" }}
-            >
-              <p className="text-sm text-gray-900">1 column (mobile)</p>
-              <p className="text-xs text-gray-600 mt-1">2 columns (sm)</p>
-              <p className="text-xs text-gray-600">3 columns (lg)</p>
+            <div className="bg-canvas dark:bg-[#0a0a0a] rounded-lg p-4 border border-borderNeutral">
+              <p className="text-sm text-textSubtle">1 column (mobile)</p>
+              <p className="text-xs text-textSubtler mt-1">2 columns (sm)</p>
+              <p className="text-xs text-textSubtler">3 columns (lg)</p>
             </div>
-            <div
-              className="rounded-lg p-4 border border-gray-400"
-              style={{ background: "var(--ds-background-100)" }}
-            >
-              <p className="text-sm text-gray-900">Article Card</p>
+            <div className="bg-canvas dark:bg-[#0a0a0a] rounded-lg p-4 border border-borderNeutral">
+              <p className="text-sm text-textSubtle">Article Card</p>
             </div>
-            <div
-              className="rounded-lg p-4 border border-gray-400"
-              style={{ background: "var(--ds-background-100)" }}
-            >
-              <p className="text-sm text-gray-900">Article Card</p>
+            <div className="bg-canvas dark:bg-[#0a0a0a] rounded-lg p-4 border border-borderNeutral">
+              <p className="text-sm text-textSubtle">Article Card</p>
             </div>
           </div>
-          <pre
-            className="mt-4 p-3 rounded text-xs overflow-x-auto"
-            style={{ background: "var(--ds-background-100)" }}
-          >
+          <pre className="mt-4 p-3 bg-canvas dark:bg-[#0a0a0a] rounded text-xs overflow-x-auto">
             <code>{`<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
   {/* Cards */}
 </div>`}</code>
@@ -214,105 +196,90 @@ export default function GridSystemShowcase() {
         <h3 className="font-serif text-2xl font-medium mb-4">
           Container Widths
         </h3>
-        <p className="text-gray-900 mb-6">
+        <p className="text-textSubtle mb-6">
           Standard max-width values for different content types.
         </p>
 
         <div className="space-y-4">
-          <div
-            className="rounded-lg p-4 border border-gray-400"
-            style={{ background: "var(--ds-gray-100)" }}
-          >
+          <div className="bg-surface dark:bg-[#0c0c0d] rounded-lg p-4 border border-borderNeutral">
             <div className="flex items-center justify-between">
               <div>
                 <p className="font-medium text-sm">Full Grid</p>
-                <code className="text-xs text-gray-600 font-mono">
+                <code className="text-xs text-textSubtler font-mono">
                   max-w-[1585px]
                 </code>
               </div>
-              <span className="text-xs text-gray-900">1585px</span>
+              <span className="text-xs text-textSubtle">1585px</span>
             </div>
           </div>
 
-          <div
-            className="rounded-lg p-4 border border-gray-400"
-            style={{ background: "var(--ds-gray-100)" }}
-          >
+          <div className="bg-surface dark:bg-[#0c0c0d] rounded-lg p-4 border border-borderNeutral">
             <div className="flex items-center justify-between">
               <div>
                 <p className="font-medium text-sm">Content Container</p>
-                <code className="text-xs text-gray-600 font-mono">
+                <code className="text-xs text-textSubtler font-mono">
                   max-w-7xl
                 </code>
               </div>
-              <span className="text-xs text-gray-900">1280px</span>
+              <span className="text-xs text-textSubtle">1280px</span>
             </div>
           </div>
 
-          <div
-            className="rounded-lg p-4 border border-gray-400"
-            style={{ background: "var(--ds-gray-100)" }}
-          >
+          <div className="bg-surface dark:bg-[#0c0c0d] rounded-lg p-4 border border-borderNeutral">
             <div className="flex items-center justify-between">
               <div>
                 <p className="font-medium text-sm">Reading Width (Articles)</p>
-                <code className="text-xs text-gray-600 font-mono">
+                <code className="text-xs text-textSubtler font-mono">
                   max-w-4xl
                 </code>
               </div>
-              <span className="text-xs text-gray-900">896px</span>
+              <span className="text-xs text-textSubtle">896px</span>
             </div>
           </div>
 
-          <div
-            className="rounded-lg p-4 border border-gray-400"
-            style={{ background: "var(--ds-gray-100)" }}
-          >
+          <div className="bg-surface dark:bg-[#0c0c0d] rounded-lg p-4 border border-borderNeutral">
             <div className="flex items-center justify-between">
               <div>
                 <p className="font-medium text-sm">Form Container</p>
-                <code className="text-xs text-gray-600 font-mono">
+                <code className="text-xs text-textSubtler font-mono">
                   max-w-md
                 </code>
               </div>
-              <span className="text-xs text-gray-900">448px</span>
+              <span className="text-xs text-textSubtle">448px</span>
             </div>
           </div>
         </div>
       </div>
 
       {/* Usage Guidelines */}
-      <div
-        className="rounded-lg p-6 border border-gray-400"
-        style={{ background: "var(--ds-gray-100)" }}
-      >
+      <div className="bg-surface-subtle rounded-lg p-6 border border-borderNeutral">
         <h3 className="font-serif text-xl font-medium mb-4">
           Grid Usage Guidelines
         </h3>
-        <div className="space-y-3 text-sm text-gray-900">
+        <div className="space-y-3 text-sm text-textSubtle">
           <p>
-            <strong className="text-gray-1000">12-Column Grid:</strong> Use for
-            all page layouts - provides flexibility with halves, thirds,
+            <strong className="text-textDefault">12-Column Grid:</strong> Use
+            for all page layouts - provides flexibility with halves, thirds,
             quarters, and sixths.
           </p>
           <p>
-            <strong className="text-gray-1000">4-Column Mobile:</strong>{" "}
+            <strong className="text-textDefault">4-Column Mobile:</strong>{" "}
             Simplifies to 4 columns on screens below 768px.
           </p>
           <p>
-            <strong className="text-gray-1000">Gap:</strong> Use gap-4 (16px)
+            <strong className="text-textDefault">Gap:</strong> Use gap-4 (16px)
             for element spacing within components.
           </p>
           <p>
-            <strong className="text-gray-1000">Gutter:</strong> Use gap-8 (32px)
-            for column spacing in grids.
+            <strong className="text-textDefault">Gutter:</strong> Use gap-8
+            (32px) for column spacing in grids.
           </p>
           <p>
-            <strong className="text-gray-1000">Responsive:</strong> Always
+            <strong className="text-textDefault">Responsive:</strong> Always
             design mobile-first, then add breakpoints for larger screens.
           </p>
           <p>
-            <strong className="text-gray-1000">Containers:</strong> Use
+            <strong className="text-textDefault">Containers:</strong> Use
             max-w-[1585px] for main wrapper, max-w-7xl for general content.
           </p>
         </div>

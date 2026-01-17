@@ -14,7 +14,7 @@ export default function PatternsOverview() {
         </h1>
       </div>
 
-      <p className="text-base text-gray-900 max-w-3xl">
+      <p className="text-base text-textSubtle max-w-3xl">
         Patterns are the ways in which components are grouped together and
         organised in order to serve a particular purpose.
       </p>

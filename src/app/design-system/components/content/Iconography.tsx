@@ -53,13 +53,13 @@ interface IconShowcaseProps {
 
 function IconShowcase({ icon: Icon, name, usage }: IconShowcaseProps) {
   return (
-    <div className="flex items-center gap-4 p-4 rounded-lg [background:var(--ds-gray-100)] border border-gray-300">
-      <div className="flex items-center justify-center w-12 h-12 rounded-lg [background:var(--ds-background-100)] border border-gray-400">
-        <Icon className="w-5 h-5 text-gray-1000" />
+    <div className="flex items-center gap-4 p-4 rounded-lg bg-surfaceSubtle border border-borderSubtle">
+      <div className="flex items-center justify-center w-12 h-12 rounded-lg bg-canvas border border-borderDefault">
+        <Icon className="w-5 h-5 text-textDefault" />
       </div>
       <div className="flex-1 min-w-0">
-        <p className="font-mono text-sm font-medium text-gray-1000">{name}</p>
-        {usage && <p className="text-sm text-gray-900 mt-0.5">{usage}</p>}
+        <p className="font-mono text-sm font-medium text-textDefault">{name}</p>
+        {usage && <p className="text-sm text-textSubtle mt-0.5">{usage}</p>}
       </div>
     </div>
   );
@@ -176,9 +176,9 @@ export default function Iconography() {
         </h1>
       </div>
 
-      <hr className="border-t-4 border-gray-1000" />
+      <hr className="border-t-4 border-textDefault" />
 
-      <p className="text-base text-gray-900">
+      <p className="text-base text-textSubtle">
         We use Lucide React for our icon library. Lucide provides a
         comprehensive set of open-source icons that are consistent,
         customisable, and optimised for web use. All icons are SVG-based and
@@ -194,9 +194,9 @@ export default function Iconography() {
           Sizing
         </h2>
 
-        <hr className="border-t border-gray-400 mb-6" />
+        <hr className="border-t border-borderDefault mb-6" />
 
-        <p className="text-base text-gray-900 mb-6">
+        <p className="text-base text-textSubtle mb-6">
           Icons should be sized consistently based on their context. We use
           three primary sizes throughout the interface.
         </p>
@@ -204,7 +204,7 @@ export default function Iconography() {
         <div className="overflow-x-auto">
           <table className="w-full border-collapse">
             <thead>
-              <tr className="border-b border-gray-400">
+              <tr className="border-b border-borderDefault">
                 <th className="text-left py-3 pr-4 font-semibold text-sm">
                   Size
                 </th>
@@ -223,7 +223,7 @@ export default function Iconography() {
               </tr>
             </thead>
             <tbody className="text-sm">
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Small</td>
                 <td className="py-3 px-4 font-mono">16px</td>
                 <td className="py-3 px-4 font-mono">w-4 h-4</td>
@@ -231,10 +231,10 @@ export default function Iconography() {
                   Inline with text, sidebar navigation
                 </td>
                 <td className="py-3 px-4">
-                  <ChevronDown className="w-4 h-4 text-gray-1000" />
+                  <ChevronDown className="w-4 h-4 text-textDefault" />
                 </td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Medium</td>
                 <td className="py-3 px-4 font-mono">20px</td>
                 <td className="py-3 px-4 font-mono">w-5 h-5</td>
@@ -242,16 +242,16 @@ export default function Iconography() {
                   Buttons, header actions, toolbar icons
                 </td>
                 <td className="py-3 px-4">
-                  <Search className="w-5 h-5 text-gray-1000" />
+                  <Search className="w-5 h-5 text-textDefault" />
                 </td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Large</td>
                 <td className="py-3 px-4 font-mono">24px</td>
                 <td className="py-3 px-4 font-mono">w-6 h-6</td>
                 <td className="py-3 px-4">Mobile menu, prominent actions</td>
                 <td className="py-3 px-4">
-                  <Menu className="w-6 h-6 text-gray-1000" />
+                  <Menu className="w-6 h-6 text-textDefault" />
                 </td>
               </tr>
             </tbody>
@@ -259,7 +259,7 @@ export default function Iconography() {
         </div>
       </section>
 
-      <hr className="border-t border-gray-400" />
+      <hr className="border-t border-borderDefault" />
 
       {/* Stroke Weight Section */}
       <section>
@@ -270,47 +270,49 @@ export default function Iconography() {
           Stroke weight
         </h2>
 
-        <hr className="border-t border-gray-400 mb-6" />
+        <hr className="border-t border-borderDefault mb-6" />
 
-        <p className="text-base text-gray-900 mb-6">
+        <p className="text-base text-textSubtle mb-6">
           Lucide icons support variable stroke width. We use two weights to
           indicate state.
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-          <div className="[background:var(--ds-gray-100)] p-6">
+          <div className="bg-surfaceSubtle p-6">
             <div className="flex items-center gap-4 mb-4">
-              <Type className="w-6 h-6 text-gray-1000" strokeWidth={1.5} />
+              <Type className="w-6 h-6 text-textDefault" strokeWidth={1.5} />
               <div>
-                <p className="font-mono text-sm text-gray-1000">
+                <p className="font-mono text-sm text-textDefault">
                   strokeWidth={"{1.5}"}
                 </p>
-                <p className="text-sm text-gray-900">
+                <p className="text-sm text-textSubtle">
                   Default / inactive state
                 </p>
               </div>
             </div>
           </div>
-          <div className="[background:var(--ds-gray-100)] p-6">
+          <div className="bg-surfaceSubtle p-6">
             <div className="flex items-center gap-4 mb-4">
-              <Type className="w-6 h-6 text-gray-1000" strokeWidth={2.5} />
+              <Type className="w-6 h-6 text-textDefault" strokeWidth={2.5} />
               <div>
-                <p className="font-mono text-sm text-gray-1000">
+                <p className="font-mono text-sm text-textDefault">
                   strokeWidth={"{2.5}"}
                 </p>
-                <p className="text-sm text-gray-900">Active / selected state</p>
+                <p className="text-sm text-textSubtle">
+                  Active / selected state
+                </p>
               </div>
             </div>
           </div>
         </div>
 
-        <p className="text-sm text-gray-900">
+        <p className="text-sm text-textSubtle">
           This pattern is used in the design system sidebar to indicate the
           currently active section.
         </p>
       </section>
 
-      <hr className="border-t border-gray-400" />
+      <hr className="border-t border-borderDefault" />
 
       {/* Colour Section */}
       <section>
@@ -321,39 +323,41 @@ export default function Iconography() {
           Colour
         </h2>
 
-        <hr className="border-t border-gray-400 mb-6" />
+        <hr className="border-t border-borderDefault mb-6" />
 
-        <p className="text-base text-gray-900 mb-6">
+        <p className="text-base text-textSubtle mb-6">
           Icons inherit their colour from the parent text colour using{" "}
-          <code className="font-mono text-sm [background:var(--ds-gray-100)] px-1.5 py-0.5 rounded">
+          <code className="font-mono text-sm bg-surfaceSubtle px-1.5 py-0.5 rounded">
             currentColor
           </code>
           . Apply colour using Tailwind text utilities.
         </p>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-          <div className="[background:var(--ds-gray-100)] p-4 text-center">
-            <Search className="w-6 h-6 mx-auto mb-2 text-gray-1000" />
-            <p className="font-mono text-xs text-gray-900">text-gray-1000</p>
+          <div className="bg-surfaceSubtle p-4 text-center">
+            <Search className="w-6 h-6 mx-auto mb-2 text-textDefault" />
+            <p className="font-mono text-xs text-textSubtle">
+              text-textDefault
+            </p>
           </div>
-          <div className="[background:var(--ds-gray-100)] p-4 text-center">
-            <Search className="w-6 h-6 mx-auto mb-2 text-gray-900" />
-            <p className="font-mono text-xs text-gray-900">text-gray-900</p>
+          <div className="bg-surfaceSubtle p-4 text-center">
+            <Search className="w-6 h-6 mx-auto mb-2 text-textSubtle" />
+            <p className="font-mono text-xs text-textSubtle">text-textSubtle</p>
           </div>
-          <div className="[background:var(--ds-gray-100)] p-4 text-center">
+          <div className="bg-surfaceSubtle p-4 text-center">
             <Search className="w-6 h-6 mx-auto mb-2 text-electric-pink" />
-            <p className="font-mono text-xs text-gray-900">
+            <p className="font-mono text-xs text-textSubtle">
               text-electric-pink
             </p>
           </div>
-          <div className="[background:var(--ds-gray-100)] p-4 text-center">
+          <div className="bg-surfaceSubtle p-4 text-center">
             <Search className="w-6 h-6 mx-auto mb-2 text-volt-green" />
-            <p className="font-mono text-xs text-gray-900">text-volt-green</p>
+            <p className="font-mono text-xs text-textSubtle">text-volt-green</p>
           </div>
         </div>
       </section>
 
-      <hr className="border-t border-gray-400" />
+      <hr className="border-t border-borderDefault" />
 
       {/* Navigation Icons */}
       <section>
@@ -364,12 +368,12 @@ export default function Iconography() {
           Navigation
         </h2>
 
-        <hr className="border-t border-gray-400 mb-6" />
+        <hr className="border-t border-borderDefault mb-6" />
 
         <IconGrid icons={navigationIcons} />
       </section>
 
-      <hr className="border-t border-gray-400" />
+      <hr className="border-t border-borderDefault" />
 
       {/* Theme Icons */}
       <section>
@@ -380,12 +384,12 @@ export default function Iconography() {
           Theme
         </h2>
 
-        <hr className="border-t border-gray-400 mb-6" />
+        <hr className="border-t border-borderDefault mb-6" />
 
         <IconGrid icons={themeIcons} />
       </section>
 
-      <hr className="border-t border-gray-400" />
+      <hr className="border-t border-borderDefault" />
 
       {/* Category Icons */}
       <section>
@@ -396,9 +400,9 @@ export default function Iconography() {
           Categories
         </h2>
 
-        <hr className="border-t border-gray-400 mb-6" />
+        <hr className="border-t border-borderDefault mb-6" />
 
-        <p className="text-base text-gray-900 mb-6">
+        <p className="text-base text-textSubtle mb-6">
           These icons represent different content categories and navigation
           sections throughout the site.
         </p>
@@ -406,7 +410,7 @@ export default function Iconography() {
         <IconGrid icons={categoryIcons} />
       </section>
 
-      <hr className="border-t border-gray-400" />
+      <hr className="border-t border-borderDefault" />
 
       {/* Data Icons */}
       <section>
@@ -417,9 +421,9 @@ export default function Iconography() {
           Data &amp; metrics
         </h2>
 
-        <hr className="border-t border-gray-400 mb-6" />
+        <hr className="border-t border-borderDefault mb-6" />
 
-        <p className="text-base text-gray-900 mb-6">
+        <p className="text-base text-textSubtle mb-6">
           Icons used to represent race data, statistics, and metrics in the race
           calendar and event popups.
         </p>
@@ -427,7 +431,7 @@ export default function Iconography() {
         <IconGrid icons={dataIcons} />
       </section>
 
-      <hr className="border-t border-gray-400" />
+      <hr className="border-t border-borderDefault" />
 
       {/* Design System Icons */}
       <section>
@@ -438,9 +442,9 @@ export default function Iconography() {
           Design system
         </h2>
 
-        <hr className="border-t border-gray-400 mb-6" />
+        <hr className="border-t border-borderDefault mb-6" />
 
-        <p className="text-base text-gray-900 mb-6">
+        <p className="text-base text-textSubtle mb-6">
           Icons used in the design system sidebar navigation to represent
           different foundation sections.
         </p>
@@ -448,7 +452,7 @@ export default function Iconography() {
         <IconGrid icons={designSystemIcons} />
       </section>
 
-      <hr className="border-t border-gray-400" />
+      <hr className="border-t border-borderDefault" />
 
       {/* Usage Guidelines */}
       <section>
@@ -459,57 +463,57 @@ export default function Iconography() {
           Usage guidelines
         </h2>
 
-        <hr className="border-t border-gray-400 mb-6" />
+        <hr className="border-t border-borderDefault mb-6" />
 
         <div className="space-y-4">
           <div>
             <h3 className="font-serif text-[22px] leading-[1.3] font-medium mb-2">
               Import
             </h3>
-            <div className="[background:var(--ds-gray-100)] p-4 font-mono text-sm">
-              <code className="text-gray-1000">
+            <div className="bg-surfaceSubtle p-4 font-mono text-sm">
+              <code className="text-textDefault">
                 {`import { IconName } from "lucide-react";`}
               </code>
             </div>
           </div>
 
-          <hr className="border-t border-gray-300" />
+          <hr className="border-t border-borderSubtle" />
 
           <div>
             <h3 className="font-serif text-[22px] leading-[1.3] font-medium mb-2">
               Basic usage
             </h3>
-            <div className="[background:var(--ds-gray-100)] p-4 font-mono text-sm">
-              <code className="text-gray-1000">
-                {`<Search className="w-5 h-5 text-gray-1000" />`}
+            <div className="bg-surfaceSubtle p-4 font-mono text-sm">
+              <code className="text-textDefault">
+                {`<Search className="w-5 h-5 text-textDefault" />`}
               </code>
             </div>
           </div>
 
-          <hr className="border-t border-gray-300" />
+          <hr className="border-t border-borderSubtle" />
 
           <div>
             <h3 className="font-serif text-[22px] leading-[1.3] font-medium mb-2">
               With custom stroke
             </h3>
-            <div className="[background:var(--ds-gray-100)] p-4 font-mono text-sm">
-              <code className="text-gray-1000">
+            <div className="bg-surfaceSubtle p-4 font-mono text-sm">
+              <code className="text-textDefault">
                 {`<Type className="w-4 h-4" strokeWidth={2.5} />`}
               </code>
             </div>
           </div>
 
-          <hr className="border-t border-gray-300" />
+          <hr className="border-t border-borderSubtle" />
 
           <div>
             <h3 className="font-serif text-[22px] leading-[1.3] font-medium mb-2">
               Accessibility
             </h3>
-            <p className="text-base text-gray-900 mb-4">
+            <p className="text-base text-textSubtle mb-4">
               Icons used as buttons should include an accessible label:
             </p>
-            <div className="[background:var(--ds-gray-100)] p-4 font-mono text-sm overflow-x-auto">
-              <pre className="text-gray-1000">
+            <div className="bg-surfaceSubtle p-4 font-mono text-sm overflow-x-auto">
+              <pre className="text-textDefault">
                 {`<button aria-label="Open search">
   <Search className="w-5 h-5" />
 </button>`}
@@ -519,7 +523,7 @@ export default function Iconography() {
         </div>
       </section>
 
-      <hr className="border-t border-gray-400" />
+      <hr className="border-t border-borderDefault" />
 
       {/* Reference */}
       <section>
@@ -530,12 +534,12 @@ export default function Iconography() {
           Reference
         </h2>
 
-        <hr className="border-t border-gray-400 mb-6" />
+        <hr className="border-t border-borderDefault mb-6" />
 
         <div className="overflow-x-auto">
           <table className="w-full border-collapse">
             <thead>
-              <tr className="border-b border-gray-400">
+              <tr className="border-b border-borderDefault">
                 <th className="text-left py-3 pr-4 font-semibold text-sm">
                   Property
                 </th>
@@ -545,31 +549,31 @@ export default function Iconography() {
               </tr>
             </thead>
             <tbody className="text-sm">
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Library</td>
                 <td className="py-3 px-4 font-mono">lucide-react</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Default stroke</td>
                 <td className="py-3 px-4 font-mono">1.5</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Active stroke</td>
                 <td className="py-3 px-4 font-mono">2.5</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Small size</td>
                 <td className="py-3 px-4 font-mono">16px (w-4 h-4)</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Medium size</td>
                 <td className="py-3 px-4 font-mono">20px (w-5 h-5)</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Large size</td>
                 <td className="py-3 px-4 font-mono">24px (w-6 h-6)</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Documentation</td>
                 <td className="py-3 px-4">
                   <a

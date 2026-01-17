@@ -99,7 +99,7 @@ function VariantShowcase({
       </h3>
 
       {/* Preview + States container (side-by-side) */}
-      <div className="flex rounded-t-lg border border-b-0 border-gray-300 overflow-hidden">
+      <div className="flex rounded-t-lg border border-b-0 border-borderSubtle overflow-hidden">
         {/* Preview area - fixed background regardless of theme */}
         <div
           className={`flex-1 p-8 flex items-center justify-start min-h-[120px] ${
@@ -124,8 +124,10 @@ function VariantShowcase({
         </div>
 
         {/* States sidebar */}
-        <div className="w-[140px] border-l border-gray-300 [background:var(--ds-gray-100)] dark:bg-neutral-900 p-4 flex flex-col">
-          <span className="text-sm font-medium text-gray-900 mb-3">States</span>
+        <div className="w-[140px] border-l border-borderSubtle bg-surfaceSubtle dark:bg-neutral-900 p-4 flex flex-col">
+          <span className="text-sm font-medium text-textSubtle mb-3">
+            States
+          </span>
           <label className="flex items-center gap-2 cursor-pointer">
             <div className="relative">
               <input
@@ -162,13 +164,13 @@ function VariantShowcase({
                 )}
               </div>
             </div>
-            <span className="text-sm text-gray-1000">disabled</span>
+            <span className="text-sm text-textDefault">disabled</span>
           </label>
         </div>
       </div>
 
       {/* Editable code box */}
-      <div className="relative rounded-b-lg border border-gray-300 [background:var(--ds-gray-100)] dark:bg-neutral-900 overflow-hidden focus-within:border-gray-400 focus-within:ring-1 focus-within:ring-gray-400 transition-all">
+      <div className="relative rounded-b-lg border border-borderSubtle bg-surfaceSubtle dark:bg-neutral-900 overflow-hidden focus-within:border-borderDefault focus-within:ring-1 focus-within:ring-borderNeutral transition-all">
         {/* Highlighted overlay */}
         <div className="absolute inset-0 p-4 pointer-events-none">
           <pre className="text-sm font-mono whitespace-pre-wrap">
@@ -202,7 +204,7 @@ export default function ButtonIconComponent() {
         </h1>
       </div>
 
-      <p className="text-base text-gray-900 max-w-3xl">
+      <p className="text-base text-textSubtle max-w-3xl">
         For the primary action.
       </p>
 
@@ -292,7 +294,7 @@ export default function ButtonIconComponent() {
           Guidelines
         </h2>
 
-        <hr className="border-t border-gray-400 mb-6" />
+        <hr className="border-t border-borderDefault mb-6" />
 
         <h3
           id="guidelines-how-to-use"
@@ -301,7 +303,7 @@ export default function ButtonIconComponent() {
           How to use
         </h3>
 
-        <div className="space-y-4 text-base text-gray-900 max-w-3xl">
+        <div className="space-y-4 text-base text-textSubtle max-w-3xl">
           <p>
             Use <strong>icon buttons</strong> for common actions where the icon
             meaning is universally understood (search, close, menu, settings).
@@ -316,7 +318,7 @@ export default function ButtonIconComponent() {
           </p>
         </div>
 
-        <hr className="border-t border-gray-400 my-8" />
+        <hr className="border-t border-borderDefault my-8" />
 
         <h3
           id="guidelines-best-practices"
@@ -325,7 +327,7 @@ export default function ButtonIconComponent() {
           Best practices
         </h3>
 
-        <ul className="space-y-3 text-base text-gray-900 max-w-3xl list-disc pl-5">
+        <ul className="space-y-3 text-base text-textSubtle max-w-3xl list-disc pl-5">
           <li>
             Use icons that are universally recognizable (magnifying glass for
             search, X for close, hamburger for menu)
@@ -354,12 +356,12 @@ export default function ButtonIconComponent() {
           Anatomy
         </h2>
 
-        <hr className="border-t border-gray-400 mb-6" />
+        <hr className="border-t border-borderDefault mb-6" />
 
         <div className="overflow-x-auto">
           <table className="w-full border-collapse">
             <thead>
-              <tr className="border-b border-gray-400">
+              <tr className="border-b border-borderDefault">
                 <th className="text-left py-3 pr-4 font-semibold text-sm">
                   Property
                 </th>
@@ -372,27 +374,27 @@ export default function ButtonIconComponent() {
               </tr>
             </thead>
             <tbody className="text-sm">
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Size (default)</td>
                 <td className="py-3 px-4">40px x 40px</td>
                 <td className="py-3 px-4 font-mono">w-10 h-10</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Size (small)</td>
                 <td className="py-3 px-4">32px x 32px</td>
                 <td className="py-3 px-4 font-mono">w-8 h-8</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Border radius</td>
                 <td className="py-3 px-4">6px</td>
                 <td className="py-3 px-4 font-mono">rounded-md</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Icon size</td>
                 <td className="py-3 px-4">20px</td>
                 <td className="py-3 px-4 font-mono">w-5 h-5</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Border width (secondary)</td>
                 <td className="py-3 px-4">1px</td>
                 <td className="py-3 px-4 font-mono">border</td>
@@ -413,12 +415,12 @@ export default function ButtonIconComponent() {
           Props
         </h2>
 
-        <hr className="border-t border-gray-400 mb-6" />
+        <hr className="border-t border-borderDefault mb-6" />
 
         <div className="overflow-x-auto">
           <table className="w-full border-collapse">
             <thead>
-              <tr className="border-b border-gray-400">
+              <tr className="border-b border-borderDefault">
                 <th className="text-left py-3 pr-4 font-semibold text-sm">
                   Prop
                 </th>
@@ -431,24 +433,24 @@ export default function ButtonIconComponent() {
               </tr>
             </thead>
             <tbody className="text-sm font-mono">
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">children</td>
                 <td className="py-3 px-4">ReactNode</td>
-                <td className="py-3 px-4 text-gray-900">required</td>
+                <td className="py-3 px-4 text-textSubtle">required</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">aria-label</td>
                 <td className="py-3 px-4">string</td>
-                <td className="py-3 px-4 text-gray-900">required</td>
+                <td className="py-3 px-4 text-textSubtle">required</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">type</td>
                 <td className="py-3 px-4">
                   &apos;button&apos; | &apos;submit&apos; | &apos;reset&apos;
                 </td>
                 <td className="py-3 px-4">&apos;button&apos;</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">variant</td>
                 <td className="py-3 px-4">
                   &apos;primary&apos; | &apos;secondary&apos; |
@@ -456,29 +458,29 @@ export default function ButtonIconComponent() {
                 </td>
                 <td className="py-3 px-4">&apos;primary&apos;</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">inverse</td>
                 <td className="py-3 px-4">boolean</td>
                 <td className="py-3 px-4">false</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">size</td>
                 <td className="py-3 px-4">
                   &apos;default&apos; | &apos;small&apos;
                 </td>
                 <td className="py-3 px-4">&apos;default&apos;</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">disabled</td>
                 <td className="py-3 px-4">boolean</td>
                 <td className="py-3 px-4">false</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">className</td>
                 <td className="py-3 px-4">string</td>
                 <td className="py-3 px-4">&apos;&apos;</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">onClick</td>
                 <td className="py-3 px-4">() =&gt; void</td>
                 <td className="py-3 px-4">undefined</td>
@@ -499,7 +501,7 @@ export default function ButtonIconComponent() {
           Colour reference
         </h2>
 
-        <hr className="border-t border-gray-400 mb-6" />
+        <hr className="border-t border-borderDefault mb-6" />
 
         <h3
           id="colours-primary"
@@ -511,7 +513,7 @@ export default function ButtonIconComponent() {
         <div className="overflow-x-auto mb-8">
           <table className="w-full border-collapse">
             <thead>
-              <tr className="border-b border-gray-400">
+              <tr className="border-b border-borderDefault">
                 <th className="text-left py-3 pr-4 font-semibold text-sm">
                   State
                 </th>
@@ -524,22 +526,22 @@ export default function ButtonIconComponent() {
               </tr>
             </thead>
             <tbody className="text-sm">
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Default (light)</td>
                 <td className="py-3 px-4 font-mono">asphalt-10</td>
                 <td className="py-3 px-4 font-mono">white</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Hover (light)</td>
                 <td className="py-3 px-4 font-mono">asphalt-20</td>
                 <td className="py-3 px-4 font-mono">white</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Default (dark)</td>
                 <td className="py-3 px-4 font-mono">asphalt-95</td>
                 <td className="py-3 px-4 font-mono">asphalt-10</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Hover (dark)</td>
                 <td className="py-3 px-4 font-mono">asphalt-90</td>
                 <td className="py-3 px-4 font-mono">asphalt-10</td>
@@ -558,7 +560,7 @@ export default function ButtonIconComponent() {
         <div className="overflow-x-auto">
           <table className="w-full border-collapse">
             <thead>
-              <tr className="border-b border-gray-400">
+              <tr className="border-b border-borderDefault">
                 <th className="text-left py-3 pr-4 font-semibold text-sm">
                   State
                 </th>
@@ -574,25 +576,25 @@ export default function ButtonIconComponent() {
               </tr>
             </thead>
             <tbody className="text-sm">
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Default (light)</td>
                 <td className="py-3 px-4 font-mono">transparent</td>
                 <td className="py-3 px-4 font-mono">asphalt-70</td>
                 <td className="py-3 px-4 font-mono">asphalt-10</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Hover (light)</td>
                 <td className="py-3 px-4 font-mono">asphalt-95/50</td>
                 <td className="py-3 px-4 font-mono">asphalt-40</td>
                 <td className="py-3 px-4 font-mono">asphalt-10</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Default (dark)</td>
                 <td className="py-3 px-4 font-mono">transparent</td>
                 <td className="py-3 px-4 font-mono">asphalt-40</td>
                 <td className="py-3 px-4 font-mono">asphalt-95</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Hover (dark)</td>
                 <td className="py-3 px-4 font-mono">asphalt-20/30</td>
                 <td className="py-3 px-4 font-mono">asphalt-60</td>
@@ -612,7 +614,7 @@ export default function ButtonIconComponent() {
         <div className="overflow-x-auto">
           <table className="w-full border-collapse">
             <thead>
-              <tr className="border-b border-gray-400">
+              <tr className="border-b border-borderDefault">
                 <th className="text-left py-3 pr-4 font-semibold text-sm">
                   State
                 </th>
@@ -625,22 +627,22 @@ export default function ButtonIconComponent() {
               </tr>
             </thead>
             <tbody className="text-sm">
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Default (light)</td>
                 <td className="py-3 px-4 font-mono">transparent</td>
                 <td className="py-3 px-4 font-mono">asphalt-40</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Hover (light)</td>
                 <td className="py-3 px-4 font-mono">asphalt-95/50</td>
                 <td className="py-3 px-4 font-mono">asphalt-10</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Default (dark)</td>
                 <td className="py-3 px-4 font-mono">transparent</td>
                 <td className="py-3 px-4 font-mono">asphalt-60</td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Hover (dark)</td>
                 <td className="py-3 px-4 font-mono">asphalt-20/30</td>
                 <td className="py-3 px-4 font-mono">asphalt-95</td>
