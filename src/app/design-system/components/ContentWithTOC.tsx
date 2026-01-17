@@ -129,17 +129,15 @@ export default function ContentWithTOC({
   };
 
   return (
-    <div className="grid grid-cols-1 min-[960px]:grid-cols-9 gap-8">
-      {/* Main Content */}
-      <article className="col-span-1 min-[960px]:col-span-7">
-        {children}
-      </article>
+    <div className="flex">
+      {/* Main Content - full width */}
+      <article className="flex-1 min-w-0">{children}</article>
 
-      {/* Table of Contents - Desktop Only (≥960px) */}
-      <aside className="hidden min-[960px]:block min-[960px]:col-span-2">
-        <div className="sticky top-40">
-          <nav className="max-h-[calc(100vh-200px)] overflow-y-auto">
-            <h4 className="text-sm font-medium text-textDefault mb-3 px-4">
+      {/* Table of Contents - Right Sidebar (≥1280px) */}
+      <aside className="hidden xl:flex flex-col w-[260px] flex-shrink-0 border-l border-borderSubtle">
+        <div className="sticky top-28 h-[calc(100vh-112px)] overflow-hidden">
+          <nav className="h-full overflow-y-auto px-6 pb-[14px] pt-4">
+            <h4 className="text-[14px] leading-[20px] font-medium text-textDefault mb-3">
               {tocTitle}
             </h4>
             <div className="flex flex-col">

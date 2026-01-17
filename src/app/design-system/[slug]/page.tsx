@@ -277,7 +277,9 @@ export default function DesignSystemPage() {
             {
               id: "multipliers",
               title: "Multipliers",
-              children: [{ id: "visual-comparison", title: "Visual comparison" }],
+              children: [
+                { id: "visual-comparison", title: "Visual comparison" },
+              ],
             },
             { id: "computed-values", title: "Computed values" },
             { id: "reference", title: "Reference" },
@@ -657,7 +659,9 @@ export default function DesignSystemPage() {
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
       .join(" ");
 
-    return <PlaceholderContent title="Design System" subsection={formattedTitle} />;
+    return (
+      <PlaceholderContent title="Design System" subsection={formattedTitle} />
+    );
   };
 
   return (
@@ -689,7 +693,7 @@ export default function DesignSystemPage() {
 
         {/* Main Content Area */}
         <div className="flex-1 min-w-0">
-          <div className="px-6 xl:px-8 py-12">{renderContent()}</div>
+          <div className="px-6 xl:pl-8 xl:pr-0 py-12">{renderContent()}</div>
         </div>
       </div>
     </div>
