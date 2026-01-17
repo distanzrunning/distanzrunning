@@ -414,12 +414,8 @@
     --color-textDefault: var(--ds-gray-900-rgb); /* Primary text */
     --color-textSubtle: var(--ds-gray-700-rgb); /* Secondary text */
     --color-textSubtler: var(--ds-gray-600-rgb); /* Muted text, placeholders */
-    --color-textForceTint: var(--ds-gray-200-rgb); /* Force light text */
-    --color-textForceShade: var(--ds-gray-1000-rgb); /* Force dark text */
     --color-textInverted: var(--ds-gray-200-rgb); /* Inverted text */
     --color-textDisabled: var(--ds-gray-500-rgb); /* Disabled text */
-    --color-textAccent: var(--ds-pink-600-rgb); /* Accent text */
-    --color-textAccentSubtle: var(--ds-pink-400-rgb); /* Subtle accent */
 
     /* Border colors - Systematic two-tier approach */
     --color-borderDefault: var(--ds-gray-500-rgb); /* Structural borders */
@@ -745,8 +741,6 @@
     --color-textDefault: var(--ds-gray-1000-rgb); /* Primary text - bright */
     --color-textSubtle: var(--ds-gray-900-rgb); /* Secondary text */
     --color-textSubtler: var(--ds-gray-600-rgb); /* Muted text */
-    --color-textForceTint: var(--ds-gray-200-rgb); /* Force light text */
-    --color-textForceShade: var(--ds-gray-1000-rgb); /* Force dark text */
     --color-textInverted: var(--ds-gray-100-rgb); /* Inverted text */
     --color-textDisabled: var(--ds-gray-500-rgb); /* Disabled text */
 

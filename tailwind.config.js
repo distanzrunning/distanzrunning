@@ -238,12 +238,8 @@ module.exports = {
         textDefault: "rgb(var(--color-textDefault))",
         textSubtle: "rgb(var(--color-textSubtle))",
         textSubtler: "rgb(var(--color-textSubtler))",
-        textForceTint: "rgb(var(--color-textForceTint))",
-        textForceShade: "rgb(var(--color-textForceShade))",
         textInverted: "rgb(var(--color-textInverted))",
         textDisabled: "rgb(var(--color-textDisabled))",
-        textAccent: "rgb(var(--color-textAccent))",
-        textAccentSubtle: "rgb(var(--color-textAccentSubtle))",
 
         // Border colors
         borderDefault: "rgb(var(--color-borderDefault))",
@@ -408,12 +404,8 @@ module.exports = {
         textDefault: "rgb(var(--color-textDefault))",
         textSubtle: "rgb(var(--color-textSubtle))",
         textSubtler: "rgb(var(--color-textSubtler))",
-        textForceTint: "rgb(var(--color-textForceTint))",
-        textForceShade: "rgb(var(--color-textForceShade))",
         textInverted: "rgb(var(--color-textInverted))",
         textDisabled: "rgb(var(--color-textDisabled))",
-        textAccent: "rgb(var(--color-textAccent))",
-        textAccentSubtle: "rgb(var(--color-textAccentSubtle))",
       },
       borderColor: {
         // Semantic border colors (dynamic via CSS vars)
