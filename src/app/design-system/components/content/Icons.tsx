@@ -3,7 +3,7 @@
 import React, { useState, useCallback, useRef, useMemo } from "react";
 import { Check, Search } from "lucide-react";
 import * as icons from "lucide-react";
-import * as ContextMenu from "@radix-ui/react-context-menu";
+import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { Section } from "../ContentWithTOC";
 
 // Icons used across the Distanz codebase, sorted alphabetically
@@ -225,9 +225,9 @@ function IconCard({ name }: { name: string }) {
   if (!IconComponent) return null;
 
   return (
-    <ContextMenu.Root>
-      <ContextMenu.Trigger asChild>
-        <div
+    <DropdownMenu.Root>
+      <DropdownMenu.Trigger asChild>
+        <button
           data-icon={name}
           className="group relative flex h-28 w-full cursor-pointer flex-col items-center px-4 text-textSubtle transition-colors hover:[background:var(--ds-background-100)]"
           title={name}
@@ -235,7 +235,7 @@ function IconCard({ name }: { name: string }) {
           <div className="flex-1" />
           <div className="-mt-1.5 relative">
             {showTick ? (
-              <Check size={16} className="text-green-600" />
+              <Check size={16} className="text-current" />
             ) : (
               <IconComponent size={16} className="text-current" />
             )}
@@ -243,40 +243,41 @@ function IconCard({ name }: { name: string }) {
           <p className="text-[13px] text-textSubtle truncate flex-1 pt-4 max-w-full">
             {name}
           </p>
-        </div>
-      </ContextMenu.Trigger>
-      <ContextMenu.Portal>
-        <ContextMenu.Content
+        </button>
+      </DropdownMenu.Trigger>
+      <DropdownMenu.Portal>
+        <DropdownMenu.Content
           className="min-w-[160px] rounded-md border border-borderNeutral bg-white dark:bg-neutral-900 p-1 shadow-lg"
           style={{ zIndex: 50 }}
+          sideOffset={5}
         >
-          <ContextMenu.Item
+          <DropdownMenu.Item
             className="flex cursor-pointer select-none items-center rounded px-3 py-2 text-sm text-textDefault outline-none hover:bg-gray-100 dark:hover:bg-neutral-800"
             onSelect={handleCopyImport}
           >
             Copy Import
-          </ContextMenu.Item>
-          <ContextMenu.Item
+          </DropdownMenu.Item>
+          <DropdownMenu.Item
             className="flex cursor-pointer select-none items-center rounded px-3 py-2 text-sm text-textDefault outline-none hover:bg-gray-100 dark:hover:bg-neutral-800"
             onSelect={handleCopyName}
           >
             Copy Name
-          </ContextMenu.Item>
-          <ContextMenu.Item
+          </DropdownMenu.Item>
+          <DropdownMenu.Item
             className="flex cursor-pointer select-none items-center rounded px-3 py-2 text-sm text-textDefault outline-none hover:bg-gray-100 dark:hover:bg-neutral-800"
             onSelect={handleCopyJSX}
           >
             Copy JSX
-          </ContextMenu.Item>
-          <ContextMenu.Item
+          </DropdownMenu.Item>
+          <DropdownMenu.Item
             className="flex cursor-pointer select-none items-center rounded px-3 py-2 text-sm text-textDefault outline-none hover:bg-gray-100 dark:hover:bg-neutral-800"
             onSelect={handleCopySVG}
           >
             Copy SVG
-          </ContextMenu.Item>
-        </ContextMenu.Content>
-      </ContextMenu.Portal>
-    </ContextMenu.Root>
+          </DropdownMenu.Item>
+        </DropdownMenu.Content>
+      </DropdownMenu.Portal>
+    </DropdownMenu.Root>
   );
 }
 
