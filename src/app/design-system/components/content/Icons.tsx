@@ -1,8 +1,9 @@
 "use client";
 
 import React, { useState, useCallback, useRef, useMemo } from "react";
-import { Check, Search, Copy } from "lucide-react";
+import { Check, Search } from "lucide-react";
 import * as icons from "lucide-react";
+import * as ContextMenu from "@radix-ui/react-context-menu";
 import { Section } from "../ContentWithTOC";
 
 // Icons used across the Distanz codebase, sorted alphabetically
@@ -189,84 +190,93 @@ function IconCard({ name }: { name: string }) {
     >
   )[name];
 
-  const handleCopy = useCallback(
-    (e: React.MouseEvent, type: "name" | "import" | "jsx") => {
-      e.stopPropagation();
-      let textToCopy = "";
-
-      switch (type) {
-        case "name":
-          textToCopy = name;
-          break;
-        case "import":
-          textToCopy = `import { ${name} } from "lucide-react";`;
-          break;
-        case "jsx":
-          textToCopy = `<${name} className="w-4 h-4" />`;
-          break;
-      }
-
-      navigator.clipboard.writeText(textToCopy);
-      showToast(`Copied ${type === "name" ? name : type}`);
+  const copyToClipboard = useCallback(
+    (text: string, label: string) => {
+      navigator.clipboard.writeText(text);
+      showToast(`Copied ${label}`);
       setShowTick(true);
       setTimeout(() => setShowTick(false), 600);
     },
-    [name, showToast],
+    [showToast],
   );
 
-  // Default click copies name
-  const handleClick = useCallback(() => {
-    navigator.clipboard.writeText(name);
-    showToast(`Copied ${name}`);
-    setShowTick(true);
-    setTimeout(() => setShowTick(false), 600);
-  }, [name, showToast]);
+  const handleCopyImport = useCallback(() => {
+    copyToClipboard(`import { ${name} } from "lucide-react";`, "import");
+  }, [name, copyToClipboard]);
 
-  // Context menu for additional copy options
-  const handleContextMenu = useCallback(
-    (e: React.MouseEvent) => {
-      e.preventDefault();
-      // Copy import statement on right-click
-      const textToCopy = `import { ${name} } from "lucide-react";`;
-      navigator.clipboard.writeText(textToCopy);
-      showToast("Copied import statement");
-      setShowTick(true);
-      setTimeout(() => setShowTick(false), 600);
-    },
-    [name, showToast],
-  );
+  const handleCopyName = useCallback(() => {
+    copyToClipboard(name, name);
+  }, [name, copyToClipboard]);
+
+  const handleCopyJSX = useCallback(() => {
+    copyToClipboard(`<${name} className="w-4 h-4" />`, "JSX");
+  }, [name, copyToClipboard]);
+
+  const handleCopySVG = useCallback(async () => {
+    // Get the SVG element and copy its outerHTML
+    const iconElement = document.querySelector(`[data-icon="${name}"] svg`);
+    if (iconElement) {
+      copyToClipboard(iconElement.outerHTML, "SVG");
+    } else {
+      showToast("Could not copy SVG");
+    }
+  }, [name, copyToClipboard, showToast]);
 
   if (!IconComponent) return null;
 
   return (
-    <button
-      onClick={handleClick}
-      onContextMenu={handleContextMenu}
-      className="group relative flex h-28 w-full cursor-pointer flex-col items-center px-4 text-textSubtle transition-colors hover:[background:var(--ds-background-100)]"
-      title={name}
-    >
-      <div className="flex-1" />
-      <div className="-mt-1.5 relative">
-        {showTick ? (
-          <Check size={16} className="text-green-600" />
-        ) : (
-          <IconComponent size={16} className="text-current" />
-        )}
-      </div>
-      <p className="text-[13px] text-textSubtle truncate flex-1 pt-4 max-w-full">
-        {name}
-      </p>
-      {/* Copy button overlay on hover */}
-      <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
-        <button
-          onClick={(e) => handleCopy(e, "import")}
-          className="p-1.5 rounded bg-gray-200 dark:bg-neutral-700 hover:bg-gray-300 dark:hover:bg-neutral-600 transition-colors"
-          title="Copy import statement"
+    <ContextMenu.Root>
+      <ContextMenu.Trigger asChild>
+        <div
+          data-icon={name}
+          className="group relative flex h-28 w-full cursor-pointer flex-col items-center px-4 text-textSubtle transition-colors hover:[background:var(--ds-background-100)]"
+          title={name}
         >
-          <Copy size={12} />
-        </button>
-      </div>
-    </button>
+          <div className="flex-1" />
+          <div className="-mt-1.5 relative">
+            {showTick ? (
+              <Check size={16} className="text-green-600" />
+            ) : (
+              <IconComponent size={16} className="text-current" />
+            )}
+          </div>
+          <p className="text-[13px] text-textSubtle truncate flex-1 pt-4 max-w-full">
+            {name}
+          </p>
+        </div>
+      </ContextMenu.Trigger>
+      <ContextMenu.Portal>
+        <ContextMenu.Content
+          className="min-w-[160px] rounded-md border border-borderNeutral bg-white dark:bg-neutral-900 p-1 shadow-lg"
+          style={{ zIndex: 50 }}
+        >
+          <ContextMenu.Item
+            className="flex cursor-pointer select-none items-center rounded px-3 py-2 text-sm text-textDefault outline-none hover:bg-gray-100 dark:hover:bg-neutral-800"
+            onSelect={handleCopyImport}
+          >
+            Copy Import
+          </ContextMenu.Item>
+          <ContextMenu.Item
+            className="flex cursor-pointer select-none items-center rounded px-3 py-2 text-sm text-textDefault outline-none hover:bg-gray-100 dark:hover:bg-neutral-800"
+            onSelect={handleCopyName}
+          >
+            Copy Name
+          </ContextMenu.Item>
+          <ContextMenu.Item
+            className="flex cursor-pointer select-none items-center rounded px-3 py-2 text-sm text-textDefault outline-none hover:bg-gray-100 dark:hover:bg-neutral-800"
+            onSelect={handleCopyJSX}
+          >
+            Copy JSX
+          </ContextMenu.Item>
+          <ContextMenu.Item
+            className="flex cursor-pointer select-none items-center rounded px-3 py-2 text-sm text-textDefault outline-none hover:bg-gray-100 dark:hover:bg-neutral-800"
+            onSelect={handleCopySVG}
+          >
+            Copy SVG
+          </ContextMenu.Item>
+        </ContextMenu.Content>
+      </ContextMenu.Portal>
+    </ContextMenu.Root>
   );
 }
 
