@@ -17,12 +17,12 @@ export function Section({ children }: { children: React.ReactNode }) {
   const isInContentWithTOC = useContext(SectionContext);
 
   if (isInContentWithTOC) {
-    // Break out of parent padding with negative margin, add divider, then re-add padding
+    // Section with padding, followed by divider below
     return (
-      <div className="-mx-12">
-        <hr className="border-t border-borderNeutral" />
+      <>
         <div className="p-12">{children}</div>
-      </div>
+        <hr className="border-t border-borderNeutral" />
+      </>
     );
   }
 
@@ -166,23 +166,27 @@ export default function ContentWithTOC({
       <div className="flex-1 min-w-0 flex flex-col">
         {/* Page Header Section */}
         {pageTitle && (
-          <div className="p-12">
-            <h1 className="text-[24px] md:text-[40px] leading-[1.2] font-semibold text-textDefault mb-3">
-              {pageTitle}
-            </h1>
-            {pageSubtitle && (
-              <p
-                className="text-[16px] md:text-[20px] text-textSubtle"
-                style={{ lineHeight: 1.5 }}
-              >
-                {pageSubtitle}
-              </p>
-            )}
-          </div>
+          <>
+            <div className="p-12">
+              <h1 className="text-[24px] md:text-[40px] leading-[1.2] font-semibold text-textDefault mb-3">
+                {pageTitle}
+              </h1>
+              {pageSubtitle && (
+                <p
+                  className="text-[16px] md:text-[20px] text-textSubtle"
+                  style={{ lineHeight: 1.5 }}
+                >
+                  {pageSubtitle}
+                </p>
+              )}
+            </div>
+            {/* Divider below title */}
+            <hr className="border-t border-borderNeutral" />
+          </>
         )}
 
         {/* Main Content */}
-        <article className="flex-1 p-12">
+        <article className="flex-1">
           <SectionContext.Provider value={true}>
             {children}
           </SectionContext.Provider>
