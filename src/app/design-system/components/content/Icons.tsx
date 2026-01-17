@@ -359,7 +359,7 @@ export default function Icons() {
         {/* Icon Grid - spans full width, no padding */}
         <div>
           {filteredIcons.length > 0 ? (
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-0 border-t border-borderNeutral">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-0">
               {filteredIcons.map((name, index) => {
                 const pos = getIconPosition(index);
                 return (
@@ -382,6 +382,9 @@ export default function Icons() {
             </div>
           )}
         </div>
+
+        {/* Divider after icon grid */}
+        <hr className="border-t border-borderNeutral" />
 
         {/* Usage Section */}
         <Section>
