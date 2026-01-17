@@ -229,7 +229,7 @@ function IconCard({ name }: { name: string }) {
       <DropdownMenu.Trigger asChild>
         <button
           data-icon={name}
-          className="group relative flex h-28 w-full cursor-pointer flex-col items-center px-4 text-textSubtle transition-colors hover:[background:var(--ds-background-100)]"
+          className="group relative flex h-28 w-full cursor-pointer flex-col items-center px-4 text-textSubtle transition-colors hover:[background:var(--ds-background-100)] outline-none focus:outline-none focus-visible:outline-none"
           title={name}
         >
           <div className="flex-1" />
@@ -249,7 +249,8 @@ function IconCard({ name }: { name: string }) {
         <DropdownMenu.Content
           className="min-w-[160px] rounded-md border border-borderNeutral bg-white dark:bg-neutral-900 p-1 shadow-lg"
           style={{ zIndex: 50 }}
-          sideOffset={5}
+          align="center"
+          sideOffset={-60}
         >
           <DropdownMenu.Item
             className="flex cursor-pointer select-none items-center rounded px-3 py-2 text-sm text-textDefault outline-none hover:bg-gray-100 dark:hover:bg-neutral-800"
