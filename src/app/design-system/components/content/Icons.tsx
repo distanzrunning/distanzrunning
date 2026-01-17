@@ -179,23 +179,7 @@ function ToastProvider({ children }: { children: React.ReactNode }) {
 }
 
 // Icon card component matching Geist design
-function IconCard({
-  name,
-  isFirstColMobile,
-  isFirstColDesktop,
-  isFirstRowMobile,
-  isFirstRowDesktop,
-  isLastRowMobile,
-  isLastRowDesktop,
-}: {
-  name: string;
-  isFirstColMobile?: boolean;
-  isFirstColDesktop?: boolean;
-  isFirstRowMobile?: boolean;
-  isFirstRowDesktop?: boolean;
-  isLastRowMobile?: boolean;
-  isLastRowDesktop?: boolean;
-}) {
+function IconCard({ name }: { name: string }) {
   const { showToast } = React.useContext(ToastContext);
   const [showTick, setShowTick] = useState(false);
   const IconComponent = (
@@ -254,56 +238,11 @@ function IconCard({
 
   if (!IconComponent) return null;
 
-  // Border logic:
-  // - Left border: only if not first column (to avoid double border with page edge)
-  // - Top border: only on first row
-  // - Bottom border: only if not last row (to avoid double border with section divider)
-  // Mobile: 2 columns, Desktop: 4 columns
-
-  const borderClasses: string[] = ["border-borderNeutral"];
-
-  // Left border logic
-  if (isFirstColMobile && isFirstColDesktop) {
-    // First col on both - no left border
-  } else if (isFirstColMobile && !isFirstColDesktop) {
-    // First col on mobile only - left border on desktop
-    borderClasses.push("md:border-l");
-  } else if (!isFirstColMobile && isFirstColDesktop) {
-    // First col on desktop only - left border on mobile
-    borderClasses.push("border-l md:border-l-0");
-  } else {
-    // Not first col on either - always has left border
-    borderClasses.push("border-l");
-  }
-
-  // Top border logic (first row)
-  if (isFirstRowMobile && isFirstRowDesktop) {
-    borderClasses.push("border-t");
-  } else if (isFirstRowMobile && !isFirstRowDesktop) {
-    borderClasses.push("border-t md:border-t-0");
-  } else if (!isFirstRowMobile && isFirstRowDesktop) {
-    borderClasses.push("md:border-t");
-  }
-
-  // Bottom border logic (not last row)
-  if (isLastRowMobile && isLastRowDesktop) {
-    // Last row on both - no bottom border
-  } else if (isLastRowMobile && !isLastRowDesktop) {
-    // Last row on mobile only - bottom border on desktop
-    borderClasses.push("md:border-b");
-  } else if (!isLastRowMobile && isLastRowDesktop) {
-    // Last row on desktop only - bottom border on mobile
-    borderClasses.push("border-b md:border-b-0");
-  } else {
-    // Not last row on either - always has bottom border
-    borderClasses.push("border-b");
-  }
-
   return (
     <button
       onClick={handleClick}
       onContextMenu={handleContextMenu}
-      className={`group relative flex h-28 w-full cursor-pointer flex-col items-center px-4 text-textSubtle ${borderClasses.join(" ")} transition-colors hover:[background:var(--ds-background-100)]`}
+      className="group relative flex h-28 w-full cursor-pointer flex-col items-center px-4 text-textSubtle transition-colors hover:[background:var(--ds-background-100)]"
       title={name}
     >
       <div className="flex-1" />
@@ -379,25 +318,17 @@ export default function Icons() {
     return projectIconNames.filter((name) => name.toLowerCase().includes(term));
   }, [searchTerm]);
 
-  // Calculate position for border handling
-  const getIconPosition = (index: number, total: number) => {
-    const colsMobile = 2;
-    const colsDesktop = 4;
-
-    const rowMobile = Math.floor(index / colsMobile);
-    const rowDesktop = Math.floor(index / colsDesktop);
-    const totalRowsMobile = Math.ceil(total / colsMobile);
-    const totalRowsDesktop = Math.ceil(total / colsDesktop);
-
-    return {
-      isFirstColMobile: index % colsMobile === 0,
-      isFirstColDesktop: index % colsDesktop === 0,
-      isFirstRowMobile: rowMobile === 0,
-      isFirstRowDesktop: rowDesktop === 0,
-      isLastRowMobile: rowMobile === totalRowsMobile - 1,
-      isLastRowDesktop: rowDesktop === totalRowsDesktop - 1,
-    };
+  // Group icons into rows for desktop (4 cols) - we'll use CSS to handle mobile (2 cols)
+  const groupIntoRows = (icons: string[], cols: number) => {
+    const rows: string[][] = [];
+    for (let i = 0; i < icons.length; i += cols) {
+      rows.push(icons.slice(i, i + cols));
+    }
+    return rows;
   };
+
+  // Group by 4 for desktop, CSS grid will reflow for mobile
+  const iconRows = groupIntoRows(filteredIcons, 4);
 
   return (
     <ToastProvider>
@@ -407,25 +338,17 @@ export default function Icons() {
           <SearchInput value={searchTerm} onChange={setSearchTerm} />
         </Section>
 
-        {/* Icon Grid - spans full width, no padding */}
+        {/* Icon Grid - spans full width, no padding, with dividers between rows */}
         <div>
           {filteredIcons.length > 0 ? (
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-0">
-              {filteredIcons.map((name, index) => {
-                const pos = getIconPosition(index, filteredIcons.length);
-                return (
-                  <IconCard
-                    key={name}
-                    name={name}
-                    isFirstColMobile={pos.isFirstColMobile}
-                    isFirstColDesktop={pos.isFirstColDesktop}
-                    isFirstRowMobile={pos.isFirstRowMobile}
-                    isFirstRowDesktop={pos.isFirstRowDesktop}
-                    isLastRowMobile={pos.isLastRowMobile}
-                    isLastRowDesktop={pos.isLastRowDesktop}
-                  />
-                );
-              })}
+            <div className="divide-y divide-borderNeutral border-t border-borderNeutral">
+              {iconRows.map((row, rowIndex) => (
+                <div key={rowIndex} className="grid grid-cols-2 md:grid-cols-4">
+                  {row.map((name) => (
+                    <IconCard key={name} name={name} />
+                  ))}
+                </div>
+              ))}
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center py-16 text-center">
