@@ -410,19 +410,31 @@
        Map design system scales to semantic usage
        ═══════════════════════════════════════════════════════════════════════ */
 
-    /* Text colors */
-    --color-textDefault: var(--ds-gray-900-rgb); /* Primary text */
-    --color-textSubtle: var(--ds-gray-700-rgb); /* Secondary text */
-    --color-textSubtler: var(--ds-gray-600-rgb); /* Muted text, placeholders */
+    /* Text colors - Geist mapping */
+    --color-textDefault: var(--ds-gray-1000-rgb); /* Primary text (gray-1000) */
+    --color-textSubtle: var(--ds-gray-900-rgb); /* Secondary text (gray-900) */
+    --color-textSubtler: var(
+      --ds-gray-600-rgb
+    ); /* Muted text, placeholders (gray-600) */
     --color-textInverted: var(--ds-gray-200-rgb); /* Inverted text */
     --color-textDisabled: var(--ds-gray-500-rgb); /* Disabled text */
 
-    /* Border colors - Systematic two-tier approach */
-    --color-borderDefault: var(--ds-gray-500-rgb); /* Structural borders */
-    --color-borderDefaultHover: var(--ds-gray-600-rgb); /* Hover state */
-    --color-borderSubtle: var(--ds-gray-300-rgb); /* Subtle borders */
-    --color-borderSubtleHover: var(--ds-gray-400-rgb); /* Subtle hover */
-    --color-borderExtraSubtle: var(--ds-gray-200-rgb); /* Barely visible */
+    /* Border colors - Geist mapping (Colors 4-6) */
+    --color-borderDefault: var(
+      --ds-gray-400-rgb
+    ); /* Default border (gray-400) */
+    --color-borderDefaultHover: var(
+      --ds-gray-500-rgb
+    ); /* Hover border (gray-500) */
+    --color-borderSubtle: var(
+      --ds-gray-300-rgb
+    ); /* Subtle borders (gray-300) */
+    --color-borderSubtleHover: var(
+      --ds-gray-400-rgb
+    ); /* Subtle hover (gray-400) */
+    --color-borderExtraSubtle: var(
+      --ds-gray-200-rgb
+    ); /* Barely visible (gray-200) */
 
     /* Legacy aliases */
     --color-borderNeutral: var(--color-borderDefault);
