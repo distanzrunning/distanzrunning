@@ -71,7 +71,7 @@ function CheckboxPreview({
         </div>
       </div>
       <span
-        className={`text-sm text-textDefault ${disabled ? "opacity-50" : ""}`}
+        className={`text-sm text-gray-1000 ${disabled ? "opacity-50" : ""}`}
       >
         {label}
       </span>
@@ -141,7 +141,7 @@ function VariantShowcase() {
       </h3>
 
       {/* Preview + States container (side-by-side) */}
-      <div className="flex rounded-t-lg border border-b-0 border-borderSubtle overflow-hidden">
+      <div className="flex rounded-t-lg border border-b-0 border-gray-300 overflow-hidden">
         {/* Preview area */}
         <div className="flex-1 p-8 flex items-center justify-start min-h-[120px] bg-white dark:bg-asphalt-10">
           <CheckboxPreview
@@ -153,10 +153,8 @@ function VariantShowcase() {
         </div>
 
         {/* States sidebar */}
-        <div className="w-[160px] border-l border-borderSubtle bg-surfaceSubtle dark:bg-neutral-900 p-4 flex flex-col">
-          <span className="text-sm font-medium text-textSubtle mb-3">
-            States
-          </span>
+        <div className="w-[160px] border-l border-gray-300 [background:var(--ds-gray-100)] dark:bg-neutral-900 p-4 flex flex-col">
+          <span className="text-sm font-medium text-gray-900 mb-3">States</span>
           <div className="space-y-2">
             <label className="flex items-center gap-2 cursor-pointer">
               <div className="relative">
@@ -194,7 +192,7 @@ function VariantShowcase() {
                   )}
                 </div>
               </div>
-              <span className="text-sm text-textDefault">disabled</span>
+              <span className="text-sm text-gray-1000">disabled</span>
             </label>
             <label className="flex items-center gap-2 cursor-pointer">
               <div className="relative">
@@ -235,14 +233,14 @@ function VariantShowcase() {
                   )}
                 </div>
               </div>
-              <span className="text-sm text-textDefault">isIndeterminate</span>
+              <span className="text-sm text-gray-1000">isIndeterminate</span>
             </label>
           </div>
         </div>
       </div>
 
       {/* Editable code box */}
-      <div className="relative rounded-b-lg border border-borderSubtle bg-surfaceSubtle dark:bg-neutral-900 overflow-hidden focus-within:border-borderDefault focus-within:ring-1 focus-within:ring-borderNeutral transition-all">
+      <div className="relative rounded-b-lg border border-gray-300 [background:var(--ds-gray-100)] dark:bg-neutral-900 overflow-hidden focus-within:border-gray-400 focus-within:ring-1 focus-within:ring-gray-400 transition-all">
         <div className="absolute inset-0 p-4 pointer-events-none">
           <pre className="text-sm font-mono">
             <code>{highlightCode(codeValue)}</code>
@@ -274,7 +272,7 @@ export default function CheckboxComponent() {
         </h1>
       </div>
 
-      <p className="text-base text-textSubtle max-w-3xl">
+      <p className="text-base text-gray-900 max-w-3xl">
         For a set of selectable values. In a group of checkbox inputs, multiple
         values may be selected.
       </p>
@@ -304,12 +302,12 @@ export default function CheckboxComponent() {
           Props
         </h2>
 
-        <hr className="border-t border-borderDefault mb-6" />
+        <hr className="border-t border-gray-400 mb-6" />
 
         <div className="overflow-x-auto">
           <table className="w-full border-collapse">
             <thead>
-              <tr className="border-b border-borderDefault">
+              <tr className="border-b border-gray-400">
                 <th className="text-left py-3 pr-4 font-semibold text-sm">
                   Prop
                 </th>
@@ -322,32 +320,32 @@ export default function CheckboxComponent() {
               </tr>
             </thead>
             <tbody className="text-sm font-mono">
-              <tr className="border-b border-borderSubtle">
+              <tr className="border-b border-gray-300">
                 <td className="py-3 pr-4">isIndeterminate</td>
                 <td className="py-3 px-4">bool</td>
                 <td className="py-3 px-4">false</td>
               </tr>
-              <tr className="border-b border-borderSubtle">
+              <tr className="border-b border-gray-300">
                 <td className="py-3 pr-4">labelText</td>
                 <td className="py-3 px-4">string</td>
-                <td className="py-3 px-4 text-textSubtle">required</td>
+                <td className="py-3 px-4 text-gray-900">required</td>
               </tr>
-              <tr className="border-b border-borderSubtle">
+              <tr className="border-b border-gray-300">
                 <td className="py-3 pr-4">id</td>
                 <td className="py-3 px-4">string</td>
-                <td className="py-3 px-4 text-textSubtle">required</td>
+                <td className="py-3 px-4 text-gray-900">required</td>
               </tr>
-              <tr className="border-b border-borderSubtle">
+              <tr className="border-b border-gray-300">
                 <td className="py-3 pr-4">checked</td>
                 <td className="py-3 px-4">bool</td>
                 <td className="py-3 px-4">false</td>
               </tr>
-              <tr className="border-b border-borderSubtle">
+              <tr className="border-b border-gray-300">
                 <td className="py-3 pr-4">disabled</td>
                 <td className="py-3 px-4">bool</td>
                 <td className="py-3 px-4">false</td>
               </tr>
-              <tr className="border-b border-borderSubtle">
+              <tr className="border-b border-gray-300">
                 <td className="py-3 pr-4">onChange</td>
                 <td className="py-3 px-4">{"(checked: bool) => void"}</td>
                 <td className="py-3 px-4">undefined</td>

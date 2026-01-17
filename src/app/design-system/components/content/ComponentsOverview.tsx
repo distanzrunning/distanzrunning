@@ -14,7 +14,7 @@ export default function ComponentsOverview() {
         </h1>
       </div>
 
-      <p className="text-base text-textSubtle max-w-3xl">
+      <p className="text-base text-gray-900 max-w-3xl">
         Components are the basic building blocks of the design system. They are
         completely modular and independent of pages, groups or context until
         combined, when they begin to form patterns and a meaningful interface.

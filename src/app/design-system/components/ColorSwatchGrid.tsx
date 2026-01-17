@@ -16,9 +16,9 @@ export default function ColorSwatchGrid({ swatches }: ColorSwatchGridProps) {
           <div
             className={`w-32 h-32 rounded-full flex items-center justify-center ${
               swatch.hex === "#FFFFFF"
-                ? "border border-borderNeutral"
+                ? "border border-gray-400"
                 : swatch.hex === "#000000"
-                  ? "dark:border dark:border-borderNeutral"
+                  ? "dark:border dark:border-gray-400"
                   : ""
             }`}
             style={{ backgroundColor: swatch.hex }}

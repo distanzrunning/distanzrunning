@@ -37,17 +37,17 @@ export default function DesignSystemPage() {
   ];
 
   return (
-    <div className="bg-background-100 dark:bg-[#0a0a0a] min-h-screen">
+    <div className="[background:var(--ds-background-200)] min-h-screen">
       {/* Geist-style Header */}
       <DesignSystemHeader onHomeClick={handleHomeClick} />
 
       {/* Hero Section */}
       <div className="px-6 md:px-12 lg:px-16 py-16 md:py-24 max-w-[900px] mx-auto">
         {/* Introduction */}
-        <h1 className="font-serif text-4xl md:text-5xl font-medium text-textDefault mb-6">
+        <h1 className="font-serif text-4xl md:text-5xl font-medium text-gray-1000 mb-6">
           Stride Design System
         </h1>
-        <p className="text-lg md:text-xl text-textSubtle max-w-[720px] mb-16">
+        <p className="text-lg md:text-xl text-gray-900 max-w-[720px] mb-16">
           A comprehensive design system for building consistent, accessible, and
           beautiful experiences across Distanz Running products.
         </p>
@@ -58,13 +58,13 @@ export default function DesignSystemPage() {
             <button
               key={section.id}
               onClick={() => handleSectionClick(section.id)}
-              className="group text-left p-6 rounded-lg border border-borderSubtle hover:border-borderDefault bg-surfaceSubtle hover:bg-surface transition-all"
+              className="group text-left p-6 rounded-lg border border-gray-300 hover:border-gray-400 [background:var(--ds-gray-100)] hover:[background:var(--ds-background-100)] transition-all"
             >
-              <h2 className="text-xl font-medium text-textDefault mb-2 flex items-center gap-2">
+              <h2 className="text-xl font-medium text-gray-1000 mb-2 flex items-center gap-2">
                 {section.title}
                 <ArrowRight className="w-4 h-4 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
               </h2>
-              <p className="text-sm text-textSubtle leading-relaxed">
+              <p className="text-sm text-gray-900 leading-relaxed">
                 {section.description}
               </p>
             </button>

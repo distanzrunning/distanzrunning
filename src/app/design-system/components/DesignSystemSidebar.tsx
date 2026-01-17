@@ -179,7 +179,7 @@ export default function DesignSystemSidebar({
                       group relative -ml-2 flex h-[40px] w-full items-center gap-2.5 rounded-md px-3 py-1.5 text-[14px] leading-[20px] outline-none transition-colors
                       ${
                         item.locked
-                          ? "text-textSubtle cursor-not-allowed"
+                          ? "text-gray-900 cursor-not-allowed"
                           : isActive
                             ? "bg-black/[0.05] dark:bg-white/[0.1] text-black dark:text-white"
                             : "text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800"
@@ -190,7 +190,7 @@ export default function DesignSystemSidebar({
                       {item.label}
                     </span>
                     {item.locked && (
-                      <Lock className="w-4 h-4 text-textSubtle ml-auto" />
+                      <Lock className="w-4 h-4 text-gray-900 ml-auto" />
                     )}
                   </button>
                 </li>
@@ -205,7 +205,7 @@ export default function DesignSystemSidebar({
   return (
     <>
       {/* Mobile/Tablet Header (< 1280px) */}
-      <div className="xl:hidden bg-white dark:bg-neutral-900 border-b border-borderSubtle">
+      <div className="xl:hidden bg-white dark:bg-neutral-900 border-b border-gray-300">
         <button
           onClick={() => setMobileNavOpen(!mobileNavOpen)}
           className="w-full flex items-center justify-between px-6 py-3"
@@ -225,12 +225,12 @@ export default function DesignSystemSidebar({
               height={27}
               className="hidden dark:block"
             />
-            <span className="text-base font-medium text-textDefault">
+            <span className="text-base font-medium text-gray-1000">
               Stride Design System
             </span>
           </div>
           <ChevronDown
-            className={`w-5 h-5 text-textSubtle transition-transform ${
+            className={`w-5 h-5 text-gray-900 transition-transform ${
               mobileNavOpen ? "rotate-180" : ""
             }`}
           />
@@ -245,7 +245,7 @@ export default function DesignSystemSidebar({
       </div>
 
       {/* Desktop Sidebar (≥ 1280px) - Geist: w-[260px], px-6, pb-[14px], pt-4 */}
-      <nav className="hidden xl:flex flex-col w-[260px] border-r border-borderSubtle dark:border-[#242424] h-[calc(100vh-112px)] sticky top-28 overflow-hidden">
+      <nav className="hidden xl:flex flex-col w-[260px] border-r border-gray-300 dark:border-gray-400 h-[calc(100vh-112px)] sticky top-28 overflow-hidden">
         {/* Scrollable navigation - Geist padding */}
         <div className="h-full overflow-y-auto px-6 pb-[14px] pt-4">
           {renderNavList()}

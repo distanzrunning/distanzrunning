@@ -123,7 +123,7 @@ export default function ModularScale() {
         </h1>
       </div>
 
-      <hr className="border-t-4 border-textDefault" />
+      <hr className="border-t-4 border-gray-1000" />
 
       {/* Type Scale Section */}
       <section>
@@ -134,9 +134,9 @@ export default function ModularScale() {
           Type scale
         </h2>
 
-        <hr className="border-t border-borderDefault mb-6" />
+        <hr className="border-t border-gray-400 mb-6" />
 
-        <p className="text-base text-textSubtle mb-6">
+        <p className="text-base text-gray-900 mb-6">
           A harmonious set of type sizes that creates visual rhythm and
           hierarchy. Body text uses fixed sizes based on 16px (1rem). Headings
           use fluid typography that scales smoothly between mobile and desktop
@@ -147,7 +147,7 @@ export default function ModularScale() {
         <div className="overflow-x-auto">
           <table className="w-full border-collapse">
             <thead>
-              <tr className="border-b border-borderDefault">
+              <tr className="border-b border-gray-400">
                 <th className="text-left py-3 pr-4 font-semibold text-sm">
                   Step
                 </th>
@@ -167,18 +167,18 @@ export default function ModularScale() {
             </thead>
             <tbody className="text-sm whitespace-nowrap">
               {typeScale.map((item) => (
-                <tr key={item.step} className="border-b border-borderSubtle">
+                <tr key={item.step} className="border-b border-gray-300">
                   <td className="py-3 pr-4">{item.step}</td>
                   <td className="py-3 px-4">{item.size}</td>
                   <td className="py-3 px-4">
                     {item.fluid ? (
                       <span className="text-electric-pink">Fluid</span>
                     ) : (
-                      <span className="text-textSubtle">Fixed</span>
+                      <span className="text-gray-900">Fixed</span>
                     )}
                   </td>
                   <td className="py-3 px-4 font-mono">text-{item.name}</td>
-                  <td className="py-3 px-4 text-textSubtle">{item.usage}</td>
+                  <td className="py-3 px-4 text-gray-900">{item.usage}</td>
                 </tr>
               ))}
             </tbody>
@@ -186,7 +186,7 @@ export default function ModularScale() {
         </div>
       </section>
 
-      <hr className="border-t border-borderDefault" />
+      <hr className="border-t border-gray-400" />
 
       {/* Heading Sizes Section */}
       <section>
@@ -197,31 +197,31 @@ export default function ModularScale() {
           Heading sizes
         </h2>
 
-        <hr className="border-t border-borderDefault mb-6" />
+        <hr className="border-t border-gray-400 mb-6" />
 
-        <p className="text-base text-textSubtle mb-6">
+        <p className="text-base text-gray-900 mb-6">
           Standardised heading sizes used throughout the design system. All
           headings use the serif typeface (EB Garamond) with medium weight and
           fluid typography that scales between mobile and desktop.
         </p>
 
-        <div className="bg-surfaceSubtle p-6 mb-8 space-y-6">
+        <div className="[background:var(--ds-gray-100)] p-6 mb-8 space-y-6">
           <div>
-            <p className="font-sans text-sm text-textSubtle mb-1">
+            <p className="font-sans text-sm text-gray-900 mb-1">
               h1 — 36–68px (fluid) / font-medium
             </p>
             <h1 className="font-serif text-h1 font-medium">Page Title</h1>
           </div>
-          <hr className="border-t border-borderSubtle" />
+          <hr className="border-t border-gray-300" />
           <div>
-            <p className="font-sans text-sm text-textSubtle mb-1">
+            <p className="font-sans text-sm text-gray-900 mb-1">
               h2 — 32–58px (fluid) / font-medium
             </p>
             <h2 className="font-serif text-h2 font-medium">Section Heading</h2>
           </div>
-          <hr className="border-t border-borderSubtle" />
+          <hr className="border-t border-gray-300" />
           <div>
-            <p className="font-sans text-sm text-textSubtle mb-1">
+            <p className="font-sans text-sm text-gray-900 mb-1">
               h3 — 28–44px (fluid) / font-medium
             </p>
             <h3 className="font-serif text-h3 font-medium">
@@ -234,7 +234,7 @@ export default function ModularScale() {
         <div className="overflow-x-auto">
           <table className="w-full border-collapse">
             <thead>
-              <tr className="border-b border-borderDefault">
+              <tr className="border-b border-gray-400">
                 <th className="text-left py-3 pr-4 font-semibold text-sm">
                   Element
                 </th>
@@ -250,7 +250,7 @@ export default function ModularScale() {
               </tr>
             </thead>
             <tbody className="text-sm whitespace-nowrap">
-              <tr className="border-b border-borderSubtle">
+              <tr className="border-b border-gray-300">
                 <td className="py-3 pr-4">h1</td>
                 <td className="py-3 px-4">36–68px</td>
                 <td className="py-3 px-4">1.1</td>
@@ -258,7 +258,7 @@ export default function ModularScale() {
                   font-serif text-h1 font-medium
                 </td>
               </tr>
-              <tr className="border-b border-borderSubtle">
+              <tr className="border-b border-gray-300">
                 <td className="py-3 pr-4">h2</td>
                 <td className="py-3 px-4">32–58px</td>
                 <td className="py-3 px-4">1.15</td>
@@ -266,7 +266,7 @@ export default function ModularScale() {
                   font-serif text-h2 font-medium
                 </td>
               </tr>
-              <tr className="border-b border-borderSubtle">
+              <tr className="border-b border-gray-300">
                 <td className="py-3 pr-4">h3</td>
                 <td className="py-3 px-4">28–44px</td>
                 <td className="py-3 px-4">1.2</td>
@@ -274,7 +274,7 @@ export default function ModularScale() {
                   font-serif text-h3 font-medium
                 </td>
               </tr>
-              <tr className="border-b border-borderSubtle">
+              <tr className="border-b border-gray-300">
                 <td className="py-3 pr-4">h4</td>
                 <td className="py-3 px-4">24–38px</td>
                 <td className="py-3 px-4">1.2</td>
@@ -282,7 +282,7 @@ export default function ModularScale() {
                   font-serif text-h4 font-medium
                 </td>
               </tr>
-              <tr className="border-b border-borderSubtle">
+              <tr className="border-b border-gray-300">
                 <td className="py-3 pr-4">h5</td>
                 <td className="py-3 px-4">20–28px</td>
                 <td className="py-3 px-4">1.2</td>
@@ -290,7 +290,7 @@ export default function ModularScale() {
                   font-serif text-h5 font-medium
                 </td>
               </tr>
-              <tr className="border-b border-borderSubtle">
+              <tr className="border-b border-gray-300">
                 <td className="py-3 pr-4">h6</td>
                 <td className="py-3 px-4">18–24px</td>
                 <td className="py-3 px-4">1.2</td>
@@ -303,7 +303,7 @@ export default function ModularScale() {
         </div>
       </section>
 
-      <hr className="border-t border-borderDefault" />
+      <hr className="border-t border-gray-400" />
 
       {/* Body Text Section */}
       <section>
@@ -314,16 +314,16 @@ export default function ModularScale() {
           Body text
         </h2>
 
-        <hr className="border-t border-borderDefault mb-6" />
+        <hr className="border-t border-gray-400 mb-6" />
 
-        <p className="text-base text-textSubtle mb-6">
+        <p className="text-base text-gray-900 mb-6">
           Body text sizes for paragraphs, UI elements, and supporting content.
           All body text uses the sans-serif typeface (Inter).
         </p>
 
-        <div className="bg-surfaceSubtle p-6 mb-8 space-y-6">
+        <div className="[background:var(--ds-gray-100)] p-6 mb-8 space-y-6">
           <div>
-            <p className="font-sans text-sm text-textSubtle mb-1">
+            <p className="font-sans text-sm text-gray-900 mb-1">
               Body Large — 18px (text-body-lg)
             </p>
             <p className="font-sans text-body-lg leading-[1.6]">
@@ -331,9 +331,9 @@ export default function ModularScale() {
               while maintaining excellent readability.
             </p>
           </div>
-          <hr className="border-t border-borderSubtle" />
+          <hr className="border-t border-gray-300" />
           <div>
-            <p className="font-sans text-sm text-textSubtle mb-1">
+            <p className="font-sans text-sm text-gray-900 mb-1">
               Body — 16px (text-base)
             </p>
             <p className="font-sans text-base leading-[1.5]">
@@ -341,9 +341,9 @@ export default function ModularScale() {
               content. Optimized for readability with appropriate line height.
             </p>
           </div>
-          <hr className="border-t border-borderSubtle" />
+          <hr className="border-t border-gray-300" />
           <div>
-            <p className="font-sans text-sm text-textSubtle mb-1">
+            <p className="font-sans text-sm text-gray-900 mb-1">
               Body Small — 14px (text-body-sm)
             </p>
             <p className="font-sans text-body-sm leading-[1.5]">
@@ -351,9 +351,9 @@ export default function ModularScale() {
               information that supports the main content.
             </p>
           </div>
-          <hr className="border-t border-borderSubtle" />
+          <hr className="border-t border-gray-300" />
           <div>
-            <p className="font-sans text-sm text-textSubtle mb-1">
+            <p className="font-sans text-sm text-gray-900 mb-1">
               Small — 12px (text-sm)
             </p>
             <p className="font-sans text-sm leading-[1.4]">

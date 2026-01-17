@@ -69,14 +69,14 @@ function VariantShowcase({ title, id, initialText }: VariantShowcaseProps) {
       </h3>
 
       {/* Preview area */}
-      <div className="rounded-t-lg border border-b-0 border-borderSubtle overflow-hidden">
+      <div className="rounded-t-lg border border-b-0 border-gray-300 overflow-hidden">
         <div className="p-8 bg-white dark:bg-asphalt-10">
           <PullQuote>{text}</PullQuote>
         </div>
       </div>
 
       {/* Editable code box */}
-      <div className="relative rounded-b-lg border border-borderSubtle bg-surfaceSubtle dark:bg-neutral-900 overflow-hidden focus-within:border-borderDefault focus-within:ring-1 focus-within:ring-borderNeutral transition-all">
+      <div className="relative rounded-b-lg border border-gray-300 [background:var(--ds-gray-100)] dark:bg-neutral-900 overflow-hidden focus-within:border-gray-400 focus-within:ring-1 focus-within:ring-gray-400 transition-all">
         <div className="absolute inset-0 p-4 pointer-events-none">
           <pre className="text-sm font-mono whitespace-pre-wrap break-words">
             <code>{highlightCode(codeValue)}</code>
@@ -108,7 +108,7 @@ export default function PullQuoteComponent() {
         </h1>
       </div>
 
-      <p className="text-base text-textSubtle max-w-3xl">
+      <p className="text-base text-gray-900 max-w-3xl">
         A brief, attention-grabbing quotation taken from the main text.
       </p>
 
@@ -142,12 +142,12 @@ export default function PullQuoteComponent() {
           Props
         </h2>
 
-        <hr className="border-t border-borderDefault mb-6" />
+        <hr className="border-t border-gray-400 mb-6" />
 
         <div className="overflow-x-auto">
           <table className="w-full border-collapse">
             <thead>
-              <tr className="border-b border-borderDefault">
+              <tr className="border-b border-gray-400">
                 <th className="text-left py-3 pr-4 font-semibold text-sm">
                   Prop
                 </th>
@@ -160,12 +160,12 @@ export default function PullQuoteComponent() {
               </tr>
             </thead>
             <tbody className="text-sm font-mono">
-              <tr className="border-b border-borderSubtle">
+              <tr className="border-b border-gray-300">
                 <td className="py-3 pr-4">children</td>
                 <td className="py-3 px-4">ReactNode</td>
-                <td className="py-3 px-4 text-textSubtle">required</td>
+                <td className="py-3 px-4 text-gray-900">required</td>
               </tr>
-              <tr className="border-b border-borderSubtle">
+              <tr className="border-b border-gray-300">
                 <td className="py-3 pr-4">className</td>
                 <td className="py-3 px-4">string</td>
                 <td className="py-3 px-4">&apos;&apos;</td>
@@ -186,12 +186,12 @@ export default function PullQuoteComponent() {
           Anatomy
         </h2>
 
-        <hr className="border-t border-borderDefault mb-6" />
+        <hr className="border-t border-gray-400 mb-6" />
 
         <div className="overflow-x-auto">
           <table className="w-full border-collapse">
             <thead>
-              <tr className="border-b border-borderDefault">
+              <tr className="border-b border-gray-400">
                 <th className="text-left py-3 pr-4 font-semibold text-sm">
                   Property
                 </th>
@@ -204,52 +204,52 @@ export default function PullQuoteComponent() {
               </tr>
             </thead>
             <tbody className="text-sm">
-              <tr className="border-b border-borderSubtle">
+              <tr className="border-b border-gray-300">
                 <td className="py-3 pr-4">Border width (top/bottom)</td>
                 <td className="py-3 px-4">4px</td>
                 <td className="py-3 px-4 font-mono">border-t-4 border-b-4</td>
               </tr>
-              <tr className="border-b border-borderSubtle">
+              <tr className="border-b border-gray-300">
                 <td className="py-3 pr-4">Vertical margin</td>
                 <td className="py-3 px-4">40px</td>
                 <td className="py-3 px-4 font-mono">my-10</td>
               </tr>
-              <tr className="border-b border-borderSubtle">
+              <tr className="border-b border-gray-300">
                 <td className="py-3 pr-4">Vertical padding</td>
                 <td className="py-3 px-4">24px</td>
                 <td className="py-3 px-4 font-mono">py-6</td>
               </tr>
-              <tr className="border-b border-borderSubtle">
+              <tr className="border-b border-gray-300">
                 <td className="py-3 pr-4">Horizontal padding</td>
                 <td className="py-3 px-4">16px / 32px</td>
                 <td className="py-3 px-4 font-mono">px-4 md:px-8</td>
               </tr>
-              <tr className="border-b border-borderSubtle">
+              <tr className="border-b border-gray-300">
                 <td className="py-3 pr-4">Text alignment</td>
                 <td className="py-3 px-4">Center</td>
                 <td className="py-3 px-4 font-mono">text-center</td>
               </tr>
-              <tr className="border-b border-borderSubtle">
+              <tr className="border-b border-gray-300">
                 <td className="py-3 pr-4">Font family</td>
                 <td className="py-3 px-4">EB Garamond</td>
                 <td className="py-3 px-4 font-mono">font-serif</td>
               </tr>
-              <tr className="border-b border-borderSubtle">
+              <tr className="border-b border-gray-300">
                 <td className="py-3 pr-4">Font size (mobile)</td>
                 <td className="py-3 px-4">24px</td>
                 <td className="py-3 px-4 font-mono">text-[24px]</td>
               </tr>
-              <tr className="border-b border-borderSubtle">
+              <tr className="border-b border-gray-300">
                 <td className="py-3 pr-4">Font size (desktop)</td>
                 <td className="py-3 px-4">28px</td>
                 <td className="py-3 px-4 font-mono">md:text-[28px]</td>
               </tr>
-              <tr className="border-b border-borderSubtle">
+              <tr className="border-b border-gray-300">
                 <td className="py-3 pr-4">Line height (mobile)</td>
                 <td className="py-3 px-4">32px</td>
                 <td className="py-3 px-4 font-mono">leading-[32px]</td>
               </tr>
-              <tr className="border-b border-borderSubtle">
+              <tr className="border-b border-gray-300">
                 <td className="py-3 pr-4">Line height (desktop)</td>
                 <td className="py-3 px-4">38px</td>
                 <td className="py-3 px-4 font-mono">md:leading-[38px]</td>
@@ -270,12 +270,12 @@ export default function PullQuoteComponent() {
           Colour reference
         </h2>
 
-        <hr className="border-t border-borderDefault mb-6" />
+        <hr className="border-t border-gray-400 mb-6" />
 
         <div className="overflow-x-auto">
           <table className="w-full border-collapse">
             <thead>
-              <tr className="border-b border-borderDefault">
+              <tr className="border-b border-gray-400">
                 <th className="text-left py-3 pr-4 font-semibold text-sm">
                   Element
                 </th>
@@ -288,12 +288,12 @@ export default function PullQuoteComponent() {
               </tr>
             </thead>
             <tbody className="text-sm">
-              <tr className="border-b border-borderSubtle">
+              <tr className="border-b border-gray-300">
                 <td className="py-3 pr-4">Border</td>
                 <td className="py-3 px-4 font-mono">electric-pink</td>
                 <td className="py-3 px-4 font-mono">electric-pink</td>
               </tr>
-              <tr className="border-b border-borderSubtle">
+              <tr className="border-b border-gray-300">
                 <td className="py-3 pr-4">Text</td>
                 <td className="py-3 px-4 font-mono">textDefault</td>
                 <td className="py-3 px-4 font-mono">textDefault</td>
@@ -314,7 +314,7 @@ export default function PullQuoteComponent() {
           Guidelines
         </h2>
 
-        <hr className="border-t border-borderDefault mb-6" />
+        <hr className="border-t border-gray-400 mb-6" />
 
         <h3
           id="guidelines-blockquote-vs-pullquote"
@@ -323,7 +323,7 @@ export default function PullQuoteComponent() {
           Blockquote vs Pull-quote
         </h3>
 
-        <div className="space-y-4 text-base text-textSubtle max-w-3xl">
+        <div className="space-y-4 text-base text-gray-900 max-w-3xl">
           <p>
             <strong>Blockquote:</strong> Used to quote text from an external
             source. Features a left border accent and is typically used inline
