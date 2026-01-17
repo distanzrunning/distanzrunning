@@ -39,7 +39,7 @@ function SectionHeader({
       id={id}
       style={{ scrollMarginTop: 32 }}
     >
-      <h2 className="text-[24px] leading-[1.2] font-semibold text-gray-1000">
+      <h2 className="text-[24px] leading-[1.2] font-semibold text-textDefault">
         <div className="absolute left-0 top-[8px] opacity-0 outline-none group-hover:opacity-100 group-focus:opacity-100 transition-opacity">
           <LinkIcon />
         </div>
@@ -74,12 +74,12 @@ function Toast({
       }`}
     >
       <div
-        className="flex items-center gap-3 px-4 py-3 rounded-lg shadow-lg border border-gray-400"
+        className="flex items-center gap-3 px-4 py-3 rounded-lg shadow-lg border border-borderNeutral"
         style={{ background: "var(--ds-background-100)" }}
         role="status"
         aria-live="polite"
       >
-        <span className="text-sm text-gray-1000">{message}</span>
+        <span className="text-sm text-textDefault">{message}</span>
         <button
           type="button"
           onClick={onDismiss}
@@ -222,33 +222,33 @@ function ColorSwatch({
             <Check
               size={20}
               strokeWidth={1.5}
-              className="text-gray-900 dark:text-white"
+              className="text-textSubtle dark:text-white"
             />
           </span>
         </button>
       </ContextMenu.Trigger>
       <ContextMenu.Portal>
-        <ContextMenu.Content className="min-w-[240px] bg-white dark:bg-neutral-900 rounded-lg shadow-lg border border-gray-400 p-1.5 z-50">
+        <ContextMenu.Content className="min-w-[240px] bg-white dark:bg-neutral-900 rounded-lg shadow-lg border border-borderNeutral p-1.5 z-50">
           <ContextMenu.Item
-            className="flex items-center justify-between gap-4 px-3 py-2 text-sm text-gray-1000 hover:bg-gray-100 dark:hover:bg-neutral-800 rounded-md cursor-pointer outline-none"
+            className="flex items-center justify-between gap-4 px-3 py-2 text-sm text-textDefault hover:bg-gray-100 dark:hover:bg-neutral-800 rounded-md cursor-pointer outline-none"
             onSelect={handleCopyHex}
           >
             Copy HEX
-            <span className="text-[13px] text-gray-900">{value}</span>
+            <span className="text-[13px] text-textSubtle">{value}</span>
           </ContextMenu.Item>
           <ContextMenu.Item
-            className="flex items-center justify-between gap-4 px-3 py-2 text-sm text-gray-1000 hover:bg-gray-100 dark:hover:bg-neutral-800 rounded-md cursor-pointer outline-none"
+            className="flex items-center justify-between gap-4 px-3 py-2 text-sm text-textDefault hover:bg-gray-100 dark:hover:bg-neutral-800 rounded-md cursor-pointer outline-none"
             onSelect={handleCopyHsla}
           >
             Copy HSLA
-            <span className="text-[13px] text-gray-900">{hslaValue}</span>
+            <span className="text-[13px] text-textSubtle">{hslaValue}</span>
           </ContextMenu.Item>
           <ContextMenu.Item
-            className="flex items-center justify-between gap-4 px-3 py-2 text-sm text-gray-1000 hover:bg-gray-100 dark:hover:bg-neutral-800 rounded-md cursor-pointer outline-none"
+            className="flex items-center justify-between gap-4 px-3 py-2 text-sm text-textDefault hover:bg-gray-100 dark:hover:bg-neutral-800 rounded-md cursor-pointer outline-none"
             onSelect={handleCopyToken}
           >
             Copy token
-            <span className="flex items-center gap-1.5 text-[13px] text-gray-900">
+            <span className="flex items-center gap-1.5 text-[13px] text-textSubtle">
               Left click <MousePointer size={14} />
             </span>
           </ContextMenu.Item>
@@ -922,7 +922,7 @@ function ColorScaleRow({
     <div className="flex flex-col items-start gap-2 md:flex-row md:items-center">
       <div className="w-[100px] flex-shrink-0">
         <p
-          className="text-[14px] leading-[20px] font-medium text-gray-1000"
+          className="text-[14px] leading-[20px] font-medium text-textDefault"
           id={scale.name}
         >
           {scale.name}
@@ -953,7 +953,7 @@ function ScalesSection({ isDark }: { isDark: boolean }) {
   return (
     <section className="mb-16">
       <SectionHeader id="scales">Scales</SectionHeader>
-      <p className="text-[16px] leading-[1.5] text-gray-900 mt-4">
+      <p className="text-[16px] leading-[1.5] text-textSubtle mt-4">
         There are 10 color scales in the system. Right click to copy raw values.
       </p>
       <div className="mt-10 space-y-6">
@@ -979,16 +979,18 @@ function ColorRowItem({
 }) {
   return (
     <div
-      className={`flex h-10 items-center gap-3 ${showBorder ? "border-b border-gray-400" : ""}`}
+      className={`flex h-10 items-center gap-3 ${showBorder ? "border-b border-borderNeutral" : ""}`}
     >
       <div
         className="h-4 w-4 rounded-full shadow-[inset_0_0_0_1px_rgba(0,0,0,0.1)] dark:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.1)]"
         style={{ background: `var(${cssVar})` }}
       />
-      <p className="text-[14px] leading-[20px] font-medium text-gray-1000 w-[120px]">
+      <p className="text-[14px] leading-[20px] font-medium text-textDefault w-[120px]">
         {label}
       </p>
-      <p className="text-[14px] leading-[20px] text-gray-900">{description}</p>
+      <p className="text-[14px] leading-[20px] text-textSubtle">
+        {description}
+      </p>
     </div>
   );
 }
@@ -998,7 +1000,7 @@ function BackgroundsSection() {
   return (
     <section className="mb-16">
       <SectionHeader id="backgrounds">Backgrounds</SectionHeader>
-      <p className="text-[16px] leading-[1.5] text-gray-900 mt-4">
+      <p className="text-[16px] leading-[1.5] text-textSubtle mt-4">
         There are two background colors for pages and UI components. In most
         instances, you should use Background 1—especially when color is being
         placed on top of the background. Background 2 should be used sparingly
@@ -1019,25 +1021,25 @@ function BackgroundsSection() {
       </div>
       {/* Visual demo */}
       <div
-        className="mt-10 flex h-[700px] w-full flex-col border border-gray-400 md:h-[412px] md:flex-row"
+        className="mt-10 flex h-[700px] w-full flex-col border border-borderNeutral md:h-[412px] md:flex-row"
         style={{ background: "var(--ds-background-100)" }}
       >
         <div
-          className="flex h-[50%] items-center justify-center border-r border-gray-400 md:h-full md:w-[50%]"
+          className="flex h-[50%] items-center justify-center border-r border-borderNeutral md:h-full md:w-[50%]"
           style={{ background: "var(--ds-background-100)" }}
         >
           <div
-            className="relative flex h-[164px] w-[164px] items-center justify-center rounded-[12px] border border-gray-400"
+            className="relative flex h-[164px] w-[164px] items-center justify-center rounded-[12px] border border-borderNeutral"
             style={{ background: "var(--ds-background-100)" }}
           >
             <div
-              className="flex h-6 w-6 items-center justify-center rounded-full text-xs text-gray-900 font-mono"
+              className="flex h-6 w-6 items-center justify-center rounded-full text-xs text-textSubtle font-mono"
               style={{ background: "var(--ds-gray-alpha-100)" }}
             >
               1
             </div>
             <div
-              className="absolute bottom-[-57px] flex h-6 w-6 items-center justify-center rounded-full text-xs text-gray-900 font-mono"
+              className="absolute bottom-[-57px] flex h-6 w-6 items-center justify-center rounded-full text-xs text-textSubtle font-mono"
               style={{ background: "var(--ds-gray-alpha-100)" }}
             >
               2
@@ -1045,21 +1047,21 @@ function BackgroundsSection() {
           </div>
         </div>
         <div
-          className="flex h-[50%] items-center justify-center border-t border-gray-400 md:h-full md:w-[50%] md:border-t-0"
+          className="flex h-[50%] items-center justify-center border-t border-borderNeutral md:h-full md:w-[50%] md:border-t-0"
           style={{ background: "var(--ds-background-200)" }}
         >
           <div
-            className="relative flex h-[164px] w-[164px] items-center justify-center rounded-[12px] border border-gray-400"
+            className="relative flex h-[164px] w-[164px] items-center justify-center rounded-[12px] border border-borderNeutral"
             style={{ background: "var(--ds-background-100)" }}
           >
             <div
-              className="flex h-6 w-6 items-center justify-center rounded-full text-xs text-gray-900 font-mono"
+              className="flex h-6 w-6 items-center justify-center rounded-full text-xs text-textSubtle font-mono"
               style={{ background: "var(--ds-gray-alpha-100)" }}
             >
               1
             </div>
             <div
-              className="absolute bottom-[-57px] flex h-6 w-6 items-center justify-center rounded-full text-xs text-gray-900 font-mono"
+              className="absolute bottom-[-57px] flex h-6 w-6 items-center justify-center rounded-full text-xs text-textSubtle font-mono"
               style={{ background: "var(--ds-gray-alpha-100)" }}
             >
               2
@@ -1078,7 +1080,7 @@ function ComponentBackgroundsSection() {
       <SectionHeader id="colors-1-3-component-backgrounds">
         Colors 1–3: Component Backgrounds
       </SectionHeader>
-      <p className="text-[16px] leading-[1.5] text-gray-900 mt-4">
+      <p className="text-[16px] leading-[1.5] text-textSubtle mt-4">
         These three colors are designed for UI component backgrounds.
       </p>
       <div className="my-5">
@@ -1099,7 +1101,7 @@ function ComponentBackgroundsSection() {
           showBorder={false}
         />
       </div>
-      <p className="text-[16px] leading-[1.5] text-gray-900 mt-4">
+      <p className="text-[16px] leading-[1.5] text-textSubtle mt-4">
         If your UI component&apos;s default background is Background 1, you can
         use Color 1 as your hover background and Color 2 as your active
         background. On smaller UI elements like badges, you can use Color 2 or
@@ -1107,18 +1109,18 @@ function ComponentBackgroundsSection() {
       </p>
       {/* Visual demo */}
       <div
-        className="mt-10 flex w-full flex-col border border-gray-400 md:flex-row"
+        className="mt-10 flex w-full flex-col border border-borderNeutral md:flex-row"
         style={{ background: "var(--ds-background-100)" }}
       >
-        <div className="border-gray-400 p-2 md:p-12">
+        <div className="border-borderNeutral p-2 md:p-12">
           <ul>
             <li className="flex h-10 w-full items-center gap-3 rounded-sm px-3 md:w-[420px]">
-              <span className="text-gray-900">○</span>
-              <p className="text-xs font-mono text-gray-900">
+              <span className="text-textSubtle">○</span>
+              <p className="text-xs font-mono text-textSubtle">
                 APR 26 15:54:21.12
               </p>
-              <div className="h-5 w-px bg-gray-400" />
-              <p className="text-xs font-mono text-gray-900">
+              <div className="h-5 w-px bg-borderNeutral" />
+              <p className="text-xs font-mono text-textSubtle">
                 <span className="hidden md:inline-block">/dashboard</span>
                 /overview
               </p>
@@ -1147,23 +1149,23 @@ function ComponentBackgroundsSection() {
               </p>
             </li>
             <li className="flex h-10 w-full items-center gap-3 rounded-sm px-3 md:w-[420px]">
-              <span className="text-gray-900">○</span>
-              <p className="text-xs font-mono text-gray-900 whitespace-nowrap">
+              <span className="text-textSubtle">○</span>
+              <p className="text-xs font-mono text-textSubtle whitespace-nowrap">
                 APR 26 15:54:21.12
               </p>
-              <div className="h-5 w-px bg-gray-400" />
-              <p className="text-xs font-mono text-gray-900">
+              <div className="h-5 w-px bg-borderNeutral" />
+              <p className="text-xs font-mono text-textSubtle">
                 <span className="hidden md:inline-block">/dashboard</span>
                 /overview
               </p>
             </li>
             <li className="flex h-10 w-full items-center gap-3 rounded-sm px-3 md:w-[420px]">
-              <span className="text-gray-900">○</span>
-              <p className="text-xs font-mono text-gray-900">
+              <span className="text-textSubtle">○</span>
+              <p className="text-xs font-mono text-textSubtle">
                 APR 26 15:54:21.12
               </p>
-              <div className="h-5 w-px bg-gray-400" />
-              <p className="text-xs font-mono text-gray-900">
+              <div className="h-5 w-px bg-borderNeutral" />
+              <p className="text-xs font-mono text-textSubtle">
                 <span className="hidden md:inline-block">/dashboard</span>
                 /overview
               </p>
@@ -1209,7 +1211,7 @@ function BordersSection() {
   return (
     <section className="mb-16">
       <SectionHeader id="colors-4-6-borders">Colors 4-6: Borders</SectionHeader>
-      <p className="text-[16px] leading-[1.5] text-gray-900 mt-4">
+      <p className="text-[16px] leading-[1.5] text-textSubtle mt-4">
         These three colors are designed for UI component borders.
       </p>
       <div className="my-5">
@@ -1232,7 +1234,7 @@ function BordersSection() {
       </div>
       {/* Visual demo */}
       <div
-        className="mt-10 flex h-[136px] w-full items-center justify-center border border-gray-400"
+        className="mt-10 flex h-[136px] w-full items-center justify-center border border-borderNeutral"
         style={{ background: "var(--ds-background-100)" }}
       >
         <button
@@ -1258,7 +1260,7 @@ function HighContrastBackgroundsSection() {
       <SectionHeader id="colors-7-8-high-contrast-backgrounds">
         Colors 7-8: High Contrast Backgrounds
       </SectionHeader>
-      <p className="text-[16px] leading-[1.5] text-gray-900 mt-4">
+      <p className="text-[16px] leading-[1.5] text-textSubtle mt-4">
         These two colors are designed for high contrast UI component
         backgrounds.
       </p>
@@ -1277,10 +1279,10 @@ function HighContrastBackgroundsSection() {
       </div>
       {/* Visual demo */}
       <div
-        className="mt-10 flex h-[260px] w-full flex-col items-center justify-center border border-gray-400 md:h-[136px] md:flex-row"
+        className="mt-10 flex h-[260px] w-full flex-col items-center justify-center border border-borderNeutral md:h-[136px] md:flex-row"
         style={{ background: "var(--ds-background-100)" }}
       >
-        <div className="flex h-[65%] w-full items-center justify-center gap-5 border-gray-400 md:h-full md:w-[50%] md:border-r">
+        <div className="flex h-[65%] w-full items-center justify-center gap-5 border-borderNeutral md:h-full md:w-[50%] md:border-r">
           {/* Gauges */}
           <div className="relative w-8 h-8">
             <svg viewBox="0 0 36 36" className="w-full h-full">
@@ -1385,7 +1387,7 @@ function TextAndIconsSection() {
       <SectionHeader id="colors-9-10-text-and-icons">
         Colors 9-10: Text and Icons
       </SectionHeader>
-      <p className="text-[16px] leading-[1.5] text-gray-900 mt-4">
+      <p className="text-[16px] leading-[1.5] text-textSubtle mt-4">
         These two colors are designed for accessible text and icons.
       </p>
       <div className="my-5">
@@ -1403,10 +1405,10 @@ function TextAndIconsSection() {
       </div>
       {/* Visual demo */}
       <div
-        className="mt-10 flex h-[260px] w-full flex-col items-center justify-center border border-gray-400 md:h-[198px] md:flex-row"
+        className="mt-10 flex h-[260px] w-full flex-col items-center justify-center border border-borderNeutral md:h-[198px] md:flex-row"
         style={{ background: "var(--ds-background-100)" }}
       >
-        <div className="flex h-[65%] w-[63%] items-center justify-center border-gray-400 md:h-full md:w-[50%]">
+        <div className="flex h-[65%] w-[63%] items-center justify-center border-borderNeutral md:h-full md:w-[50%]">
           <div className="flex w-[316px] flex-col gap-1">
             <p
               className="text-[16px] font-semibold"
@@ -1522,11 +1524,11 @@ export default function ColourPalettes() {
       <div>
         {/* Page Header */}
         <div className="mb-8">
-          <h1 className="text-[24px] md:text-[40px] leading-[1.2] font-semibold text-gray-1000 mb-3">
+          <h1 className="text-[24px] md:text-[40px] leading-[1.2] font-semibold text-textDefault mb-3">
             Colors
           </h1>
           <p
-            className="text-[16px] md:text-[20px] text-gray-900"
+            className="text-[16px] md:text-[20px] text-textSubtle"
             style={{ lineHeight: 1.5 }}
           >
             Learn how to work with our color system. Right click to copy raw
@@ -1535,7 +1537,7 @@ export default function ColourPalettes() {
         </div>
 
         {/* Divider */}
-        <hr className="border-t border-gray-400 mb-12" />
+        <hr className="border-t border-borderNeutral mb-12" />
 
         {/* Sections in Geist order */}
         <ScalesSection isDark={isDark} />

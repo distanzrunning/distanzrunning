@@ -114,12 +114,12 @@ function Toast({
       }`}
     >
       <div
-        className="flex items-center gap-3 px-4 py-3 rounded-lg shadow-lg border border-gray-400"
+        className="flex items-center gap-3 px-4 py-3 rounded-lg shadow-lg border border-borderNeutral"
         style={{ background: "var(--ds-background-100)" }}
         role="status"
         aria-live="polite"
       >
-        <span className="text-sm text-gray-1000">{message}</span>
+        <span className="text-sm text-textDefault">{message}</span>
         <button
           type="button"
           onClick={onDismiss}
@@ -241,7 +241,7 @@ function IconCard({ name }: { name: string }) {
     <button
       onClick={handleClick}
       onContextMenu={handleContextMenu}
-      className="group relative flex h-28 w-full cursor-pointer flex-col items-center px-4 text-gray-900 border-r border-b border-gray-400 transition-colors hover:[background:var(--ds-background-100)]"
+      className="group relative flex h-28 w-full cursor-pointer flex-col items-center px-4 text-textSubtle border-r border-b border-borderNeutral transition-colors hover:[background:var(--ds-background-100)]"
       title={name}
     >
       <div className="flex-1" />
@@ -252,7 +252,7 @@ function IconCard({ name }: { name: string }) {
           <IconComponent size={16} className="text-current" />
         )}
       </div>
-      <p className="text-[13px] text-gray-900 truncate flex-1 pt-4 max-w-full">
+      <p className="text-[13px] text-textSubtle truncate flex-1 pt-4 max-w-full">
         {name}
       </p>
       {/* Copy button overlay on hover */}
@@ -293,7 +293,7 @@ function SearchInput({
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full h-10 pl-10 pr-4 text-sm border border-gray-400 outline-none placeholder:text-gray-600 focus:border-borderNeutralHover focus:ring-2 focus:ring-borderNeutral transition-colors"
+        className="w-full h-10 pl-10 pr-4 text-sm border border-borderNeutral outline-none placeholder:text-gray-600 focus:border-borderNeutralHover focus:ring-2 focus:ring-borderNeutral transition-colors"
         style={{ background: "var(--ds-background-100)" }}
       />
       <label
@@ -322,11 +322,11 @@ export default function Icons() {
       <div>
         {/* Page Header - Geist style */}
         <div className="mb-3">
-          <h1 className="text-[24px] md:text-[40px] leading-[1.2] font-semibold text-gray-1000 mb-3">
+          <h1 className="text-[24px] md:text-[40px] leading-[1.2] font-semibold text-textDefault mb-3">
             Icons
           </h1>
           <p
-            className="text-[16px] md:text-[20px] text-gray-900"
+            className="text-[16px] md:text-[20px] text-textSubtle"
             style={{ lineHeight: 1.5 }}
           >
             A collection of icons used across Distanz products. Right click to
@@ -335,7 +335,7 @@ export default function Icons() {
         </div>
 
         {/* Divider */}
-        <hr className="border-t border-gray-400 mb-8" />
+        <hr className="border-t border-borderNeutral mb-8" />
 
         {/* Icon Grid - 4 columns desktop, 2 columns mobile */}
         <section>
@@ -344,7 +344,7 @@ export default function Icons() {
             <SearchInput value={searchTerm} onChange={setSearchTerm} />
           </div>
           {filteredIcons.length > 0 ? (
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-0 border-t border-l border-gray-400">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-0 border-t border-l border-borderNeutral">
               {filteredIcons.map((name) => (
                 <IconCard key={name} name={name} />
               ))}
@@ -352,7 +352,7 @@ export default function Icons() {
           ) : (
             <div className="flex flex-col items-center justify-center py-16 text-center">
               <Search size={48} className="text-gray-400 mb-4" />
-              <p className="text-gray-900 font-medium">No icons found</p>
+              <p className="text-textSubtle font-medium">No icons found</p>
               <p className="text-gray-600 text-sm mt-1">
                 Try a different search term
               </p>
@@ -361,17 +361,17 @@ export default function Icons() {
         </section>
 
         {/* Divider */}
-        <hr className="border-t border-gray-400 my-12" />
+        <hr className="border-t border-borderNeutral my-12" />
 
         {/* Usage Section */}
         <section className="mb-12">
           <h2
             id="usage"
-            className="text-[24px] leading-[1.2] font-semibold text-gray-1000 mb-4 scroll-mt-32"
+            className="text-[24px] leading-[1.2] font-semibold text-textDefault mb-4 scroll-mt-32"
           >
             Usage
           </h2>
-          <p className="text-[16px] leading-[1.5] text-gray-900 mb-6">
+          <p className="text-[16px] leading-[1.5] text-textSubtle mb-6">
             We use{" "}
             <a
               href="https://lucide.dev"
@@ -387,11 +387,11 @@ export default function Icons() {
 
           {/* Installation */}
           <div className="mb-6">
-            <h3 className="text-[14px] leading-[20px] font-medium text-gray-1000 mb-2">
+            <h3 className="text-[14px] leading-[20px] font-medium text-textDefault mb-2">
               Installation
             </h3>
             <pre className="p-4 bg-gray-100 dark:bg-neutral-800 rounded-md overflow-x-auto">
-              <code className="text-sm font-mono text-gray-1000">
+              <code className="text-sm font-mono text-textDefault">
                 npm install lucide-react
               </code>
             </pre>
@@ -399,11 +399,11 @@ export default function Icons() {
 
           {/* Import */}
           <div className="mb-6">
-            <h3 className="text-[14px] leading-[20px] font-medium text-gray-1000 mb-2">
+            <h3 className="text-[14px] leading-[20px] font-medium text-textDefault mb-2">
               Import
             </h3>
             <pre className="p-4 bg-gray-100 dark:bg-neutral-800 rounded-md overflow-x-auto">
-              <code className="text-sm font-mono text-gray-1000">
+              <code className="text-sm font-mono text-textDefault">
                 {`import { Home, Search, Settings } from "lucide-react";`}
               </code>
             </pre>
@@ -411,11 +411,11 @@ export default function Icons() {
 
           {/* Basic usage */}
           <div className="mb-6">
-            <h3 className="text-[14px] leading-[20px] font-medium text-gray-1000 mb-2">
+            <h3 className="text-[14px] leading-[20px] font-medium text-textDefault mb-2">
               Basic usage
             </h3>
             <pre className="p-4 bg-gray-100 dark:bg-neutral-800 rounded-md overflow-x-auto">
-              <code className="text-sm font-mono text-gray-1000">
+              <code className="text-sm font-mono text-textDefault">
                 {`<Home className="w-4 h-4" />
 <Search className="w-5 h-5 text-gray-600" />
 <Settings size={24} strokeWidth={1.5} />`}
@@ -425,20 +425,20 @@ export default function Icons() {
 
           {/* Sizing */}
           <div className="mb-6">
-            <h3 className="text-[14px] leading-[20px] font-medium text-gray-1000 mb-2">
+            <h3 className="text-[14px] leading-[20px] font-medium text-textDefault mb-2">
               Recommended sizes
             </h3>
             <div className="overflow-x-auto">
               <table className="w-full border-collapse text-sm">
                 <thead>
-                  <tr className="border-b border-gray-400">
+                  <tr className="border-b border-borderNeutral">
                     <th className="text-left py-3 pr-4 font-medium">Size</th>
                     <th className="text-left py-3 px-4 font-medium">Class</th>
                     <th className="text-left py-3 px-4 font-medium">Pixels</th>
                     <th className="text-left py-3 px-4 font-medium">Usage</th>
                   </tr>
                 </thead>
-                <tbody className="text-gray-900">
+                <tbody className="text-textSubtle">
                   <tr className="border-b border-gray-200 dark:border-neutral-700">
                     <td className="py-3 pr-4">Small</td>
                     <td className="py-3 px-4 font-mono">w-4 h-4</td>
@@ -467,7 +467,7 @@ export default function Icons() {
         <section>
           <h2
             id="resources"
-            className="text-[24px] leading-[1.2] font-semibold text-gray-1000 mb-4 scroll-mt-32"
+            className="text-[24px] leading-[1.2] font-semibold text-textDefault mb-4 scroll-mt-32"
           >
             Resources
           </h2>
