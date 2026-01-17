@@ -179,13 +179,7 @@ function ToastProvider({ children }: { children: React.ReactNode }) {
 }
 
 // Icon card component matching Geist design
-function IconCard({
-  name,
-  className = "",
-}: {
-  name: string;
-  className?: string;
-}) {
+function IconCard({ name }: { name: string }) {
   const { showToast } = React.useContext(ToastContext);
   const [showTick, setShowTick] = useState(false);
   const IconComponent = (
@@ -248,7 +242,7 @@ function IconCard({
     <button
       onClick={handleClick}
       onContextMenu={handleContextMenu}
-      className={`group relative flex h-28 w-full cursor-pointer flex-col items-center px-4 text-textSubtle transition-colors hover:[background:var(--ds-background-100)] ${className}`}
+      className="group relative flex h-28 w-full cursor-pointer flex-col items-center px-4 text-textSubtle transition-colors hover:[background:var(--ds-background-100)]"
       title={name}
     >
       <div className="flex-1" />
@@ -350,28 +344,20 @@ export default function Icons() {
             <div className="divide-y divide-borderNeutral">
               {iconRows.map((row, rowIndex) => {
                 const isLastRow = rowIndex === iconRows.length - 1;
-                const isIncompleteRow = row.length < 4;
+                const emptyCells = isLastRow ? 4 - row.length : 0;
                 return (
                   <div
                     key={rowIndex}
                     className="grid grid-cols-2 md:grid-cols-4 divide-x divide-borderNeutral"
                   >
-                    {row.map((name, colIndex) => {
-                      const isLastInRow = colIndex === row.length - 1;
-                      const needsRightBorder =
-                        isLastRow && isIncompleteRow && isLastInRow;
-                      return (
-                        <IconCard
-                          key={name}
-                          name={name}
-                          className={
-                            needsRightBorder
-                              ? "border-r border-borderNeutral"
-                              : ""
-                          }
-                        />
-                      );
-                    })}
+                    {row.map((name) => (
+                      <IconCard key={name} name={name} />
+                    ))}
+                    {/* Fill empty cells in last row to close the grid */}
+                    {emptyCells > 0 &&
+                      Array.from({ length: emptyCells }).map((_, i) => (
+                        <div key={`empty-${i}`} className="h-28" />
+                      ))}
                   </div>
                 );
               })}
