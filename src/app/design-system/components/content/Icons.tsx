@@ -318,7 +318,7 @@ function SearchInput({
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full h-11 pl-11 pr-4 text-sm rounded-md border border-borderNeutral outline-none placeholder:text-gray-600 hover:border-borderNeutralHover focus:border-borderNeutralHover focus:ring-2 focus:ring-borderNeutral transition-colors"
+        className="w-full h-11 pl-11 pr-4 text-sm rounded-md border border-borderNeutral outline-none placeholder:text-gray-600 hover:border-borderNeutralHover focus:border-textDefault focus:ring-4 focus:ring-borderNeutral transition-colors"
         style={{ background: "var(--ds-background-100)" }}
       />
       <label
