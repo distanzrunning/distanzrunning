@@ -1423,7 +1423,7 @@ function TextAndIconsSection() {
             <a
               className="mt-2 flex items-center gap-0.5 text-sm no-underline"
               href="#"
-              style={{ color: "var(--ds-blue-900)" }}
+              style={{ color: "var(--ds-pink-900)" }}
             >
               Learn More
               <svg
