@@ -1,46 +1,94 @@
+import { Section } from "../ContentWithTOC";
+
+// Link icon for section headers (matches Geist)
+function LinkIcon() {
+  return (
+    <svg
+      height="16"
+      strokeLinejoin="round"
+      viewBox="0 0 16 16"
+      width="16"
+      style={{ width: 14, height: 14, color: "currentcolor" }}
+    >
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M8.46968 1.46968C10.1433 -0.203925 12.8567 -0.203923 14.5303 1.46968C16.2039 3.14329 16.2039 5.85674 14.5303 7.53034L12.0303 10.0303L10.9697 8.96968L13.4697 6.46968C14.5575 5.38186 14.5575 3.61816 13.4697 2.53034C12.3819 1.44252 10.6182 1.44252 9.53034 2.53034L7.03034 5.03034L5.96968 3.96968L8.46968 1.46968ZM11.5303 5.53034L5.53034 11.5303L4.46968 10.4697L10.4697 4.46968L11.5303 5.53034ZM1.46968 14.5303C3.14329 16.2039 5.85673 16.204 7.53034 14.5303L10.0303 12.0303L8.96968 10.9697L6.46968 13.4697C5.38186 14.5575 3.61816 14.5575 2.53034 13.4697C1.44252 12.3819 1.44252 10.6182 2.53034 9.53034L5.03034 7.03034L3.96968 5.96968L1.46968 8.46968C-0.203923 10.1433 -0.203925 12.8567 1.46968 14.5303Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+}
+
+// Section header with link icon on hover (matches Geist)
+function SectionHeader({
+  id,
+  children,
+}: {
+  id: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <a
+      className="group relative -ml-5 inline-block pl-5 no-underline outline-none text-inherit"
+      href={`#${id}`}
+      id={id}
+      style={{ scrollMarginTop: 128 }}
+    >
+      <h2 className="text-[24px] leading-[1.2] font-semibold text-textDefault">
+        <div className="absolute left-0 top-[8px] opacity-0 outline-none group-hover:opacity-100 group-focus:opacity-100 transition-opacity">
+          <LinkIcon />
+        </div>
+        {children}
+      </h2>
+    </a>
+  );
+}
+
 export default function Typography() {
   return (
-    <div className="space-y-8">
+    <>
       {/* Usage Section */}
-      <section id="usage">
-        <h2 className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32">
-          Usage
-        </h2>
+      <Section>
+        <SectionHeader id="usage">Usage</SectionHeader>
 
-        <hr className="border-t border-borderDefault mb-6" />
-
-        <p className="text-base text-textSubtle mb-6">
+        <p className="text-base text-textSubtle mt-4 mb-6">
           Our typography styles can be consumed as Tailwind classes. The classes
           below pre-set a combination of font-size, line-height, letter-spacing,
           and font-weight for you based on the Geist design system.
         </p>
 
-        <div className="bg-surfaceSubtle border border-borderSubtle rounded-lg p-6 mb-6">
+        <div className="bg-surfaceSubtle border border-borderSubtle rounded-lg p-6">
           <p className="text-copy-14 text-textSubtle mb-4">
-            The <code className="text-label-13-mono px-1.5 py-0.5 bg-gray-100 dark:bg-neutral-800 rounded">strong</code> element
-            can be used as a modifier to change the font weight. For Headings,
-            this reduces the weight (for creating subtle variants), while for Copy
-            text it increases the weight for emphasis.
+            The{" "}
+            <code className="text-label-13-mono px-1.5 py-0.5 bg-gray-100 dark:bg-neutral-800 rounded">
+              strong
+            </code>{" "}
+            element can be used as a modifier to change the font weight. For
+            Headings, this reduces the weight (for creating subtle variants),
+            while for Copy text it increases the weight for emphasis.
           </p>
           <div className="font-mono text-sm text-textSubtle">
-            <code className="block">&lt;p className=&quot;text-heading-32&quot;&gt;</code>
-            <code className="block pl-4">Heading with &lt;strong&gt;subtle&lt;/strong&gt; text</code>
+            <code className="block">
+              &lt;p className=&quot;text-heading-32&quot;&gt;
+            </code>
+            <code className="block pl-4">
+              Heading with &lt;strong&gt;subtle&lt;/strong&gt; text
+            </code>
             <code className="block">&lt;/p&gt;</code>
           </div>
         </div>
-      </section>
+      </Section>
 
       {/* Headings Section */}
-      <section id="headings">
-        <h2 className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32">
-          Headings
-        </h2>
+      <Section>
+        <SectionHeader id="headings">Headings</SectionHeader>
 
-        <hr className="border-t border-borderDefault mb-6" />
-
-        <p className="text-base text-textSubtle mb-6">
+        <p className="text-base text-textSubtle mt-4 mb-6">
           Headings are used to introduce pages or sections. The{" "}
-          <code className="text-label-13-mono px-1.5 py-0.5 bg-gray-100 dark:bg-neutral-800 rounded">strong</code>{" "}
+          <code className="text-label-13-mono px-1.5 py-0.5 bg-gray-100 dark:bg-neutral-800 rounded">
+            strong
+          </code>{" "}
           element reduces the weight for creating subtle variants.
         </p>
 
@@ -181,17 +229,13 @@ export default function Typography() {
             </tbody>
           </table>
         </div>
-      </section>
+      </Section>
 
       {/* Buttons Section */}
-      <section id="buttons">
-        <h2 className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32">
-          Buttons
-        </h2>
+      <Section>
+        <SectionHeader id="buttons">Buttons</SectionHeader>
 
-        <hr className="border-t border-borderDefault mb-6" />
-
-        <p className="text-base text-textSubtle mb-6">
+        <p className="text-base text-textSubtle mt-4 mb-6">
           Button text styles should only be used for button components.
         </p>
 
@@ -247,19 +291,18 @@ export default function Typography() {
             </tbody>
           </table>
         </div>
-      </section>
+      </Section>
 
       {/* Labels Section */}
-      <section id="labels">
-        <h2 className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32">
-          Labels
-        </h2>
+      <Section>
+        <SectionHeader id="labels">Labels</SectionHeader>
 
-        <hr className="border-t border-borderDefault mb-6" />
-
-        <p className="text-base text-textSubtle mb-6">
-          Labels are single-line text with ample line-height to align with icons.
-          Use the <code className="text-label-13-mono px-1.5 py-0.5 bg-gray-100 dark:bg-neutral-800 rounded">strong</code>{" "}
+        <p className="text-base text-textSubtle mt-4 mb-6">
+          Labels are single-line text with ample line-height to align with
+          icons. Use the{" "}
+          <code className="text-label-13-mono px-1.5 py-0.5 bg-gray-100 dark:bg-neutral-800 rounded">
+            strong
+          </code>{" "}
           element to increase weight. Mono variants use monospace font.
         </p>
 
@@ -341,7 +384,10 @@ export default function Typography() {
               <tr className="border-b border-borderSubtle">
                 <td className="py-4 pr-4">
                   <p className="text-label-13">
-                    Label <strong>Strong</strong> <span style={{ fontVariantNumeric: "tabular-nums" }}>123</span>
+                    Label <strong>Strong</strong>{" "}
+                    <span style={{ fontVariantNumeric: "tabular-nums" }}>
+                      123
+                    </span>
                   </p>
                 </td>
                 <td className="py-4 px-4 font-mono text-xs align-top">
@@ -365,7 +411,8 @@ export default function Typography() {
               <tr className="border-b border-borderSubtle">
                 <td className="py-4 pr-4">
                   <p className="text-label-12">
-                    Label <strong>Strong</strong> <span className="uppercase">CAPS</span>
+                    Label <strong>Strong</strong>{" "}
+                    <span className="uppercase">CAPS</span>
                   </p>
                 </td>
                 <td className="py-4 px-4 font-mono text-xs align-top">
@@ -389,19 +436,18 @@ export default function Typography() {
             </tbody>
           </table>
         </div>
-      </section>
+      </Section>
 
       {/* Copy Section */}
-      <section id="copy">
-        <h2 className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32">
-          Copy
-        </h2>
+      <Section>
+        <SectionHeader id="copy">Copy</SectionHeader>
 
-        <hr className="border-t border-borderDefault mb-6" />
-
-        <p className="text-base text-textSubtle mb-6">
-          Copy styles are for multi-line text with higher line height than Labels.
-          Use the <code className="text-label-13-mono px-1.5 py-0.5 bg-gray-100 dark:bg-neutral-800 rounded">strong</code>{" "}
+        <p className="text-base text-textSubtle mt-4 mb-6">
+          Copy styles are for multi-line text with higher line height than
+          Labels. Use the{" "}
+          <code className="text-label-13-mono px-1.5 py-0.5 bg-gray-100 dark:bg-neutral-800 rounded">
+            strong
+          </code>{" "}
           element to increase weight for emphasis.
         </p>
 
@@ -511,17 +557,13 @@ export default function Typography() {
             </tbody>
           </table>
         </div>
-      </section>
+      </Section>
 
       {/* Reference Section */}
-      <section id="reference">
-        <h2 className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32">
-          Quick reference
-        </h2>
+      <Section>
+        <SectionHeader id="reference">Quick reference</SectionHeader>
 
-        <hr className="border-t border-borderDefault mb-6" />
-
-        <p className="text-base text-textSubtle mb-6">
+        <p className="text-base text-textSubtle mt-4 mb-6">
           Complete specifications for all typography utility classes.
         </p>
 
@@ -549,7 +591,10 @@ export default function Typography() {
             <tbody className="text-sm font-mono whitespace-nowrap">
               {/* Headings */}
               <tr className="border-b border-borderSubtle bg-surfaceSubtle">
-                <td colSpan={5} className="py-2 px-4 font-sans font-semibold text-textSubtle">
+                <td
+                  colSpan={5}
+                  className="py-2 px-4 font-sans font-semibold text-textSubtle"
+                >
                   Headings
                 </td>
               </tr>
@@ -626,7 +671,10 @@ export default function Typography() {
 
               {/* Buttons */}
               <tr className="border-b border-borderSubtle bg-surfaceSubtle">
-                <td colSpan={5} className="py-2 px-4 font-sans font-semibold text-textSubtle">
+                <td
+                  colSpan={5}
+                  className="py-2 px-4 font-sans font-semibold text-textSubtle"
+                >
                   Buttons
                 </td>
               </tr>
@@ -654,7 +702,10 @@ export default function Typography() {
 
               {/* Labels */}
               <tr className="border-b border-borderSubtle bg-surfaceSubtle">
-                <td colSpan={5} className="py-2 px-4 font-sans font-semibold text-textSubtle">
+                <td
+                  colSpan={5}
+                  className="py-2 px-4 font-sans font-semibold text-textSubtle"
+                >
                   Labels
                 </td>
               </tr>
@@ -724,7 +775,10 @@ export default function Typography() {
 
               {/* Copy */}
               <tr className="border-b border-borderSubtle bg-surfaceSubtle">
-                <td colSpan={5} className="py-2 px-4 font-sans font-semibold text-textSubtle">
+                <td
+                  colSpan={5}
+                  className="py-2 px-4 font-sans font-semibold text-textSubtle"
+                >
                   Copy
                 </td>
               </tr>
@@ -780,7 +834,7 @@ export default function Typography() {
             </tbody>
           </table>
         </div>
-      </section>
-    </div>
+      </Section>
+    </>
   );
 }
