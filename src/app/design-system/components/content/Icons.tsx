@@ -2,94 +2,207 @@
 
 import React, { useState, useCallback, useRef, useMemo } from "react";
 import { Check, Search } from "lucide-react";
-import * as icons from "lucide-react";
+import * as LucideIcons from "lucide-react";
 import * as ContextMenu from "@radix-ui/react-context-menu";
 import { Section } from "../ContentWithTOC";
 
-// Icons used across the Distanz codebase, sorted alphabetically
-const projectIconNames = [
-  "AlertCircle",
-  "AlertTriangle",
-  "ArrowDown",
-  "ArrowDownRight",
-  "ArrowLeft",
-  "ArrowRight",
-  "ArrowUp",
-  "ArrowUpRight",
-  "Bell",
-  "Bookmark",
-  "Calendar",
-  "Check",
-  "CheckCircle2",
-  "ChevronDown",
-  "ChevronLeft",
-  "ChevronRight",
-  "ChevronUp",
-  "Clock",
-  "Copy",
-  "Database",
-  "Download",
-  "Edit",
-  "Ellipsis",
-  "Expand",
-  "ExternalLink",
-  "Eye",
-  "EyeOff",
-  "FileText",
-  "Filter",
-  "Flag",
-  "Footprints",
-  "Glasses",
-  "Heart",
-  "HelpCircle",
-  "Home",
-  "Info",
-  "Key",
-  "LayoutGrid",
-  "Loader2",
-  "Lock",
-  "Mail",
-  "Medal",
-  "Menu",
-  "MessageCircle",
-  "Minus",
-  "Monitor",
-  "Moon",
-  "MoreHorizontal",
-  "MoreVertical",
-  "Mountain",
-  "MountainSnow",
-  "MousePointer",
-  "Plus",
-  "Route",
-  "RulerDimensionLine",
-  "Scale",
-  "Search",
-  "Settings",
-  "Settings2",
-  "Share2",
-  "Shield",
-  "Shrink",
-  "SlidersHorizontal",
-  "Square",
-  "Star",
-  "Sun",
-  "SwatchBook",
-  "ThermometerSun",
-  "ThumbsUp",
-  "Trash2",
-  "Type",
-  "Unlock",
-  "Upload",
-  "User",
-  "Users",
-  "UtensilsCrossed",
-  "Wallet",
-  "Watch",
-  "X",
-  "XCircle",
-  "Zap",
-];
+// Import icons from other libraries via react-icons
+import { TbApi, TbApiOff, TbCsv, TbGif } from "react-icons/tb";
+import { MdOutlineGifBox } from "react-icons/md";
+import { LuPersonStanding } from "react-icons/lu";
+
+// Icon library types
+type IconLibrary = "lucide" | "tabler" | "material" | "react-icons-lucide";
+
+interface IconDefinition {
+  name: string;
+  displayName: string;
+  library: IconLibrary;
+  component: React.ComponentType<{ size?: number; className?: string }>;
+  importStatement: string;
+}
+
+// Build icon registry from multiple libraries
+const buildIconRegistry = (): IconDefinition[] => {
+  const icons: IconDefinition[] = [];
+
+  // Lucide icons (imported directly from lucide-react)
+  const lucideIconNames = [
+    "AlertCircle",
+    "AlertTriangle",
+    "ArrowDown",
+    "ArrowDownRight",
+    "ArrowLeft",
+    "ArrowRight",
+    "ArrowUp",
+    "ArrowUpRight",
+    "Bell",
+    "Bookmark",
+    "Calendar",
+    "Check",
+    "CheckCircle2",
+    "ChevronDown",
+    "ChevronLeft",
+    "ChevronRight",
+    "ChevronUp",
+    "Clock",
+    "Copy",
+    "Database",
+    "Download",
+    "Edit",
+    "Ellipsis",
+    "Expand",
+    "ExternalLink",
+    "Eye",
+    "EyeOff",
+    "FileText",
+    "Filter",
+    "Flag",
+    "Footprints",
+    "Glasses",
+    "Heart",
+    "HelpCircle",
+    "Home",
+    "Info",
+    "Key",
+    "LayoutGrid",
+    "Loader2",
+    "Lock",
+    "Mail",
+    "Medal",
+    "Menu",
+    "MessageCircle",
+    "Minus",
+    "Monitor",
+    "Moon",
+    "MoreHorizontal",
+    "MoreVertical",
+    "Mountain",
+    "MountainSnow",
+    "MousePointer",
+    "PersonStanding",
+    "Plus",
+    "Route",
+    "RulerDimensionLine",
+    "Scale",
+    "Search",
+    "Settings",
+    "Settings2",
+    "Share2",
+    "Shield",
+    "Shrink",
+    "SlidersHorizontal",
+    "Square",
+    "Star",
+    "Sun",
+    "SwatchBook",
+    "ThermometerSun",
+    "ThumbsUp",
+    "Trash2",
+    "Type",
+    "Unlock",
+    "Upload",
+    "User",
+    "Users",
+    "UtensilsCrossed",
+    "Wallet",
+    "Watch",
+    "X",
+    "XCircle",
+    "Zap",
+  ];
+
+  lucideIconNames.forEach((name) => {
+    const IconComponent = (
+      LucideIcons as unknown as Record<
+        string,
+        React.ComponentType<{ size?: number; className?: string }>
+      >
+    )[name];
+    if (IconComponent) {
+      icons.push({
+        name,
+        displayName: name,
+        library: "lucide",
+        component: IconComponent,
+        importStatement: `import { ${name} } from "lucide-react";`,
+      });
+    }
+  });
+
+  // Tabler icons
+  const tablerIcons: Array<{
+    name: string;
+    displayName: string;
+    component: React.ComponentType<{ size?: number; className?: string }>;
+  }> = [
+    { name: "TbApi", displayName: "Api", component: TbApi },
+    { name: "TbApiOff", displayName: "ApiOff", component: TbApiOff },
+    { name: "TbCsv", displayName: "Csv", component: TbCsv },
+    { name: "TbGif", displayName: "Gif", component: TbGif },
+  ];
+
+  tablerIcons.forEach(({ name, displayName, component }) => {
+    icons.push({
+      name,
+      displayName,
+      library: "tabler",
+      component,
+      importStatement: `import { ${name} } from "react-icons/tb";`,
+    });
+  });
+
+  // Material Design icons
+  const materialIcons: Array<{
+    name: string;
+    displayName: string;
+    component: React.ComponentType<{ size?: number; className?: string }>;
+  }> = [
+    {
+      name: "MdOutlineGifBox",
+      displayName: "GifBox",
+      component: MdOutlineGifBox,
+    },
+  ];
+
+  materialIcons.forEach(({ name, displayName, component }) => {
+    icons.push({
+      name,
+      displayName,
+      library: "material",
+      component,
+      importStatement: `import { ${name} } from "react-icons/md";`,
+    });
+  });
+
+  // React-icons Lucide (for icons not in main lucide-react)
+  const reactIconsLucide: Array<{
+    name: string;
+    displayName: string;
+    component: React.ComponentType<{ size?: number; className?: string }>;
+  }> = [
+    {
+      name: "LuPersonStanding",
+      displayName: "PersonStanding (ri)",
+      component: LuPersonStanding,
+    },
+  ];
+
+  reactIconsLucide.forEach(({ name, displayName, component }) => {
+    icons.push({
+      name,
+      displayName,
+      library: "react-icons-lucide",
+      component,
+      importStatement: `import { ${name} } from "react-icons/lu";`,
+    });
+  });
+
+  // Sort alphabetically by display name
+  return icons.sort((a, b) => a.displayName.localeCompare(b.displayName));
+};
+
+const iconRegistry = buildIconRegistry();
 
 // Toast context for copy notifications
 const ToastContext = React.createContext<{
@@ -179,17 +292,29 @@ function ToastProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
+// Library badge colors
+const libraryColors: Record<IconLibrary, string> = {
+  lucide: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200",
+  tabler:
+    "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200",
+  material: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200",
+  "react-icons-lucide":
+    "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200",
+};
+
+const libraryLabels: Record<IconLibrary, string> = {
+  lucide: "Lucide",
+  tabler: "Tabler",
+  material: "Material",
+  "react-icons-lucide": "Lucide (ri)",
+};
+
 // Icon card component matching Geist design
-function IconCard({ name }: { name: string }) {
+function IconCard({ icon }: { icon: IconDefinition }) {
   const { showToast } = React.useContext(ToastContext);
   const [showTick, setShowTick] = useState(false);
   const triggerRef = useRef<HTMLDivElement>(null);
-  const IconComponent = (
-    icons as unknown as Record<
-      string,
-      React.ComponentType<{ className?: string; size?: number }>
-    >
-  )[name];
+  const IconComponent = icon.component;
 
   const copyToClipboard = useCallback(
     (text: string, label: string) => {
@@ -202,26 +327,28 @@ function IconCard({ name }: { name: string }) {
   );
 
   const handleCopyImport = useCallback(() => {
-    copyToClipboard(`import { ${name} } from "lucide-react";`, "import");
-  }, [name, copyToClipboard]);
+    copyToClipboard(icon.importStatement, "import");
+  }, [icon.importStatement, copyToClipboard]);
 
   const handleCopyName = useCallback(() => {
-    copyToClipboard(name, name);
-  }, [name, copyToClipboard]);
+    copyToClipboard(icon.name, icon.name);
+  }, [icon.name, copyToClipboard]);
 
   const handleCopyJSX = useCallback(() => {
-    copyToClipboard(`<${name} className="w-4 h-4" />`, "JSX");
-  }, [name, copyToClipboard]);
+    copyToClipboard(`<${icon.name} className="w-4 h-4" />`, "JSX");
+  }, [icon.name, copyToClipboard]);
 
   const handleCopySVG = useCallback(async () => {
     // Get the SVG element and copy its outerHTML
-    const iconElement = document.querySelector(`[data-icon="${name}"] svg`);
+    const iconElement = document.querySelector(
+      `[data-icon="${icon.name}"] svg`,
+    );
     if (iconElement) {
       copyToClipboard(iconElement.outerHTML, "SVG");
     } else {
       showToast("Could not copy SVG");
     }
-  }, [name, copyToClipboard, showToast]);
+  }, [icon.name, copyToClipboard, showToast]);
 
   // Trigger context menu on left click
   const handleClick = useCallback((e: React.MouseEvent) => {
@@ -242,10 +369,18 @@ function IconCard({ name }: { name: string }) {
       <ContextMenu.Trigger asChild>
         <div
           ref={triggerRef}
-          data-icon={name}
+          data-icon={icon.name}
           className="group relative flex h-28 w-full cursor-pointer flex-col items-center px-4 text-textSubtle transition-colors hover:[background:var(--ds-background-100)] outline-none"
           onClick={handleClick}
         >
+          {/* Library badge - show on hover for non-lucide icons */}
+          {icon.library !== "lucide" && (
+            <span
+              className={`absolute top-2 right-2 text-[9px] font-medium px-1.5 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity ${libraryColors[icon.library]}`}
+            >
+              {libraryLabels[icon.library]}
+            </span>
+          )}
           <div className="flex-1" />
           <div className="-mt-1.5 relative">
             {showTick ? (
@@ -255,7 +390,7 @@ function IconCard({ name }: { name: string }) {
             )}
           </div>
           <p className="text-[13px] text-textSubtle truncate flex-1 pt-4 max-w-full">
-            {name}
+            {icon.displayName}
           </p>
         </div>
       </ContextMenu.Trigger>
@@ -336,15 +471,20 @@ export default function Icons() {
 
   // Filter icons based on search term
   const filteredIcons = useMemo(() => {
-    if (!searchTerm.trim()) return projectIconNames;
+    if (!searchTerm.trim()) return iconRegistry;
 
     const term = searchTerm.toLowerCase();
-    return projectIconNames.filter((name) => name.toLowerCase().includes(term));
+    return iconRegistry.filter(
+      (icon) =>
+        icon.displayName.toLowerCase().includes(term) ||
+        icon.name.toLowerCase().includes(term) ||
+        icon.library.toLowerCase().includes(term),
+    );
   }, [searchTerm]);
 
   // Group icons into rows for desktop (4 cols) - we'll use CSS to handle mobile (2 cols)
-  const groupIntoRows = (icons: string[], cols: number) => {
-    const rows: string[][] = [];
+  const groupIntoRows = (icons: IconDefinition[], cols: number) => {
+    const rows: IconDefinition[][] = [];
     for (let i = 0; i < icons.length; i += cols) {
       rows.push(icons.slice(i, i + cols));
     }
@@ -374,8 +514,8 @@ export default function Icons() {
                     key={rowIndex}
                     className="grid grid-cols-2 md:grid-cols-4 divide-x divide-borderNeutral"
                   >
-                    {row.map((name) => (
-                      <IconCard key={name} name={name} />
+                    {row.map((icon) => (
+                      <IconCard key={icon.name} icon={icon} />
                     ))}
                     {/* Fill empty cells in last row to close the grid */}
                     {emptyCells > 0 &&
@@ -409,7 +549,8 @@ export default function Icons() {
             Usage
           </h2>
           <p className="text-[16px] leading-[1.5] text-textSubtle mb-6">
-            We use{" "}
+            We use multiple icon libraries to ensure comprehensive coverage. Our
+            primary library is{" "}
             <a
               href="https://lucide.dev"
               target="_blank"
@@ -417,9 +558,35 @@ export default function Icons() {
               className="text-blue-700 hover:underline"
             >
               Lucide React
+            </a>
+            , with additional icons from{" "}
+            <a
+              href="https://tabler.io/icons"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-700 hover:underline"
+            >
+              Tabler Icons
             </a>{" "}
-            for our icon library. Icons are imported individually for optimal
-            tree-shaking.
+            and{" "}
+            <a
+              href="https://fonts.google.com/icons"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-700 hover:underline"
+            >
+              Material Symbols
+            </a>{" "}
+            via{" "}
+            <a
+              href="https://react-icons.github.io/react-icons/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-700 hover:underline"
+            >
+              react-icons
+            </a>
+            .
           </p>
 
           {/* Installation */}
@@ -429,19 +596,43 @@ export default function Icons() {
             </h3>
             <pre className="p-4 bg-gray-100 dark:bg-neutral-800 rounded-md overflow-x-auto">
               <code className="text-sm font-mono text-textDefault">
-                npm install lucide-react
+                {`npm install lucide-react react-icons`}
               </code>
             </pre>
           </div>
 
-          {/* Import */}
+          {/* Import - Lucide */}
           <div className="mb-6">
             <h3 className="text-[14px] leading-[20px] font-medium text-textDefault mb-2">
-              Import
+              Import from Lucide (primary)
             </h3>
             <pre className="p-4 bg-gray-100 dark:bg-neutral-800 rounded-md overflow-x-auto">
               <code className="text-sm font-mono text-textDefault">
                 {`import { Home, Search, Settings } from "lucide-react";`}
+              </code>
+            </pre>
+          </div>
+
+          {/* Import - Tabler */}
+          <div className="mb-6">
+            <h3 className="text-[14px] leading-[20px] font-medium text-textDefault mb-2">
+              Import from Tabler
+            </h3>
+            <pre className="p-4 bg-gray-100 dark:bg-neutral-800 rounded-md overflow-x-auto">
+              <code className="text-sm font-mono text-textDefault">
+                {`import { TbApi, TbApiOff, TbCsv, TbGif } from "react-icons/tb";`}
+              </code>
+            </pre>
+          </div>
+
+          {/* Import - Material */}
+          <div className="mb-6">
+            <h3 className="text-[14px] leading-[20px] font-medium text-textDefault mb-2">
+              Import from Material Design
+            </h3>
+            <pre className="p-4 bg-gray-100 dark:bg-neutral-800 rounded-md overflow-x-auto">
+              <code className="text-sm font-mono text-textDefault">
+                {`import { MdOutlineGifBox } from "react-icons/md";`}
               </code>
             </pre>
           </div>
@@ -453,9 +644,16 @@ export default function Icons() {
             </h3>
             <pre className="p-4 bg-gray-100 dark:bg-neutral-800 rounded-md overflow-x-auto">
               <code className="text-sm font-mono text-textDefault">
-                {`<Home className="w-4 h-4" />
+                {`{/* Lucide icons */}
+<Home className="w-4 h-4" />
 <Search className="w-5 h-5 text-gray-600" />
-<Settings size={24} strokeWidth={1.5} />`}
+
+{/* Tabler icons */}
+<TbApi size={24} />
+<TbCsv className="w-5 h-5" />
+
+{/* Material icons */}
+<MdOutlineGifBox size={20} />`}
               </code>
             </pre>
           </div>
@@ -508,51 +706,80 @@ export default function Icons() {
           >
             Resources
           </h2>
-          <div className="space-y-2">
-            <a
-              href="https://lucide.dev/icons"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 text-blue-700 hover:underline text-sm"
-            >
-              Browse all Lucide icons
-              <svg
-                height="16"
-                strokeLinejoin="round"
-                viewBox="0 0 16 16"
-                width="16"
-                style={{ color: "currentcolor" }}
-              >
-                <path
-                  fillRule="evenodd"
-                  clipRule="evenodd"
-                  d="M11.5 9.75V11.25C11.5 11.3881 11.3881 11.5 11.25 11.5H4.75C4.61193 11.5 4.5 11.3881 4.5 11.25L4.5 4.75C4.5 4.61193 4.61193 4.5 4.75 4.5H6.25H7V3H6.25H4.75C3.7835 3 3 3.7835 3 4.75V11.25C3 12.2165 3.7835 13 4.75 13H11.25C12.2165 13 13 12.2165 13 11.25V9.75V9H11.5V9.75ZM8.5 3H9.25H12.2495C12.6637 3 12.9995 3.33579 12.9995 3.75V6.75V7.5H11.4995V6.75V5.56066L8.53033 8.52978L8 9.06011L6.93934 7.99945L7.46967 7.46912L10.4388 4.5H9.25H8.5V3Z"
-                  fill="currentColor"
-                />
-              </svg>
-            </a>
-            <a
-              href="https://lucide.dev/guide/packages/lucide-react"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 text-blue-700 hover:underline text-sm"
-            >
-              Lucide React documentation
-              <svg
-                height="16"
-                strokeLinejoin="round"
-                viewBox="0 0 16 16"
-                width="16"
-                style={{ color: "currentcolor" }}
-              >
-                <path
-                  fillRule="evenodd"
-                  clipRule="evenodd"
-                  d="M11.5 9.75V11.25C11.5 11.3881 11.3881 11.5 11.25 11.5H4.75C4.61193 11.5 4.5 11.3881 4.5 11.25L4.5 4.75C4.5 4.61193 4.61193 4.5 4.75 4.5H6.25H7V3H6.25H4.75C3.7835 3 3 3.7835 3 4.75V11.25C3 12.2165 3.7835 13 4.75 13H11.25C12.2165 13 13 12.2165 13 11.25V9.75V9H11.5V9.75ZM8.5 3H9.25H12.2495C12.6637 3 12.9995 3.33579 12.9995 3.75V6.75V7.5H11.4995V6.75V5.56066L8.53033 8.52978L8 9.06011L6.93934 7.99945L7.46967 7.46912L10.4388 4.5H9.25H8.5V3Z"
-                  fill="currentColor"
-                />
-              </svg>
-            </a>
+          <div className="space-y-4">
+            <div>
+              <h3 className="text-[14px] leading-[20px] font-medium text-textDefault mb-2">
+                Lucide (Primary)
+              </h3>
+              <div className="space-y-1">
+                <a
+                  href="https://lucide.dev/icons"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 text-blue-700 hover:underline text-sm"
+                >
+                  Browse all Lucide icons
+                  <LucideIcons.ExternalLink size={14} />
+                </a>
+                <a
+                  href="https://lucide.dev/guide/packages/lucide-react"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 text-blue-700 hover:underline text-sm"
+                >
+                  Lucide React documentation
+                  <LucideIcons.ExternalLink size={14} />
+                </a>
+              </div>
+            </div>
+            <div>
+              <h3 className="text-[14px] leading-[20px] font-medium text-textDefault mb-2">
+                Tabler Icons
+              </h3>
+              <div className="space-y-1">
+                <a
+                  href="https://tabler.io/icons"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 text-blue-700 hover:underline text-sm"
+                >
+                  Browse all Tabler icons
+                  <LucideIcons.ExternalLink size={14} />
+                </a>
+              </div>
+            </div>
+            <div>
+              <h3 className="text-[14px] leading-[20px] font-medium text-textDefault mb-2">
+                Material Design Icons
+              </h3>
+              <div className="space-y-1">
+                <a
+                  href="https://fonts.google.com/icons"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 text-blue-700 hover:underline text-sm"
+                >
+                  Browse Material Symbols
+                  <LucideIcons.ExternalLink size={14} />
+                </a>
+              </div>
+            </div>
+            <div>
+              <h3 className="text-[14px] leading-[20px] font-medium text-textDefault mb-2">
+                React Icons
+              </h3>
+              <div className="space-y-1">
+                <a
+                  href="https://react-icons.github.io/react-icons/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 text-blue-700 hover:underline text-sm"
+                >
+                  React Icons documentation
+                  <LucideIcons.ExternalLink size={14} />
+                </a>
+              </div>
+            </div>
           </div>
         </Section>
       </div>
