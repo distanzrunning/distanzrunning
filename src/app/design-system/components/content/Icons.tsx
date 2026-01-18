@@ -244,7 +244,6 @@ function IconCard({ name }: { name: string }) {
           ref={triggerRef}
           data-icon={name}
           className="group relative flex h-28 w-full cursor-pointer flex-col items-center px-4 text-textSubtle transition-colors hover:[background:var(--ds-background-100)] outline-none"
-          title={name}
           onClick={handleClick}
         >
           <div className="flex-1" />
