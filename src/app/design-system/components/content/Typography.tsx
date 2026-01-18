@@ -33,7 +33,7 @@ function SectionHeader({
       className="group relative -ml-5 inline-block pl-5 no-underline outline-none text-inherit"
       href={`#${id}`}
       id={id}
-      style={{ scrollMarginTop: 128 }}
+      style={{ scrollMarginTop: 32 }}
     >
       <h2 className="text-[24px] leading-[1.2] font-semibold text-textDefault">
         <div className="absolute left-0 top-[8px] opacity-0 outline-none group-hover:opacity-100 group-focus:opacity-100 transition-opacity">
