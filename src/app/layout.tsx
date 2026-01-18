@@ -11,8 +11,8 @@ import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
 // Distanz Typography System - Adobe Fonts
-// Body/UI: Inter Variable (complete weight spectrum 100-900)
-// Headings: EB Garamond (400, 500, 600 + italic variants)
+// Body/UI: Libre Franklin (complete weight spectrum 100-900 + italics)
+// Headings: Eczar (400, 500, 600, 700, 800)
 // Adobe Fonts Project ID: bua7sld
 
 export const metadata: Metadata = {
@@ -42,7 +42,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="bg-canvas transition-colors duration-300">
       <head>
-        {/* Adobe Fonts - Inter Variable + EB Garamond */}
+        {/* Adobe Fonts - Libre Franklin + Eczar */}
         <link rel="stylesheet" href="https://use.typekit.net/bua7sld.css" />
 
         {/* Prevent flash of dark mode - ensure light mode by default */}

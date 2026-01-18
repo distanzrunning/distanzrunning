@@ -235,19 +235,20 @@ export default function DesignSystemPage() {
           tocTitle="On this page"
           tocItems={[
             {
-              id: "eb-garamond",
-              title: "EB Garamond",
+              id: "eczar",
+              title: "Eczar",
               children: [
-                { id: "eb-garamond-regular", title: "EB Garamond" },
-                { id: "eb-garamond-italic", title: "EB Garamond Italic" },
+                { id: "eczar-regular", title: "Eczar" },
+                { id: "eczar-weights", title: "Weight spectrum" },
               ],
             },
             {
-              id: "inter",
-              title: "Inter",
+              id: "libre-franklin",
+              title: "Libre Franklin",
               children: [
-                { id: "inter-variable", title: "Inter Variable" },
-                { id: "inter-weights", title: "Weight spectrum" },
+                { id: "libre-franklin-regular", title: "Libre Franklin" },
+                { id: "libre-franklin-weights", title: "Weight spectrum" },
+                { id: "libre-franklin-italic", title: "Libre Franklin Italic" },
               ],
             },
             { id: "font-roles", title: "Font roles" },

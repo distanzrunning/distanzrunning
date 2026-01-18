@@ -416,37 +416,40 @@ module.exports = {
       },
       fontFamily: {
         // Distanz Typography System - Adobe Fonts
-        // Body/UI: inter-variable (complete weight spectrum 100-900)
-        // Headings: eb-garamond (400, 500, 600 + italic variants)
+        // Body/UI: Libre Franklin (complete weight spectrum 100-900 + italics)
+        // Headings: Eczar (400, 500, 600, 700, 800)
         // Adobe Fonts Project ID: bua7sld
 
-        // Sans-serif (Inter Variable) - Body, UI, navigation
+        // Sans-serif (Libre Franklin) - Body, UI, navigation
         sans: [
-          "inter-variable",
-          "Inter",
+          "libre-franklin",
+          "Libre Franklin",
           "-apple-system",
           "BlinkMacSystemFont",
           "Segoe UI",
           "Roboto",
           "sans-serif",
         ],
-        inter: ["inter-variable", "Inter", "sans-serif"],
+        franklin: ["libre-franklin", "Libre Franklin", "sans-serif"],
 
-        // Serif (EB Garamond) - Headings, display
-        serif: ["eb-garamond", "EB Garamond", "Georgia", "serif"],
-        garamond: ["eb-garamond", "EB Garamond", "Georgia", "serif"],
+        // Serif (Eczar) - Headings, display
+        serif: ["eczar", "Eczar", "Georgia", "serif"],
+        eczar: ["eczar", "Eczar", "Georgia", "serif"],
 
         // Legacy aliases for backwards compatibility
-        display: ["eb-garamond", "EB Garamond", "serif"],
-        headline: ["eb-garamond", "EB Garamond", "serif"],
-        body: ["inter-variable", "Inter", "sans-serif"],
-        ui: ["inter-variable", "Inter", "sans-serif"],
-        playfair: ["eb-garamond", "EB Garamond", "serif"],
-        manrope: ["inter-variable", "Inter", "sans-serif"],
-        archivo: ["inter-variable", "Inter", "sans-serif"],
-        bricolage: ["inter-variable", "Inter", "sans-serif"],
-        garvis: ["var(--font-sans)", "Inter", "sans-serif"],
-        quasimoda: ["var(--font-sans)", "Inter", "sans-serif"],
+        display: ["eczar", "Eczar", "serif"],
+        headline: ["eczar", "Eczar", "serif"],
+        body: ["libre-franklin", "Libre Franklin", "sans-serif"],
+        ui: ["libre-franklin", "Libre Franklin", "sans-serif"],
+        // Old font aliases now point to new fonts
+        garamond: ["eczar", "Eczar", "Georgia", "serif"],
+        inter: ["libre-franklin", "Libre Franklin", "sans-serif"],
+        playfair: ["eczar", "Eczar", "serif"],
+        manrope: ["libre-franklin", "Libre Franklin", "sans-serif"],
+        archivo: ["libre-franklin", "Libre Franklin", "sans-serif"],
+        bricolage: ["libre-franklin", "Libre Franklin", "sans-serif"],
+        garvis: ["libre-franklin", "Libre Franklin", "sans-serif"],
+        quasimoda: ["libre-franklin", "Libre Franklin", "sans-serif"],
         mono: [
           "ui-monospace",
           "SFMono-Regular",
