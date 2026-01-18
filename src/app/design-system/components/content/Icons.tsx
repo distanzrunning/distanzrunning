@@ -589,7 +589,7 @@ export default function Icons() {
               href="https://lucide.dev"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-blue-700 hover:underline"
+              className="text-pink-600 hover:underline"
             >
               Lucide React
             </a>
@@ -598,7 +598,7 @@ export default function Icons() {
               href="https://tabler.io/icons"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-blue-700 hover:underline"
+              className="text-pink-600 hover:underline"
             >
               Tabler Icons
             </a>
@@ -607,7 +607,7 @@ export default function Icons() {
               href="https://fonts.google.com/icons"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-blue-700 hover:underline"
+              className="text-pink-600 hover:underline"
             >
               Material Symbols
             </a>
@@ -616,7 +616,7 @@ export default function Icons() {
               href="https://simpleicons.org/"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-blue-700 hover:underline"
+              className="text-pink-600 hover:underline"
             >
               Simple Icons
             </a>{" "}
@@ -625,7 +625,7 @@ export default function Icons() {
               href="https://react-icons.github.io/react-icons/"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-blue-700 hover:underline"
+              className="text-pink-600 hover:underline"
             >
               react-icons
             </a>
@@ -775,7 +775,7 @@ export default function Icons() {
                   href="https://lucide.dev/icons"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-blue-700 hover:underline text-sm"
+                  className="flex items-center gap-2 text-pink-600 hover:underline text-sm"
                 >
                   Browse all Lucide icons
                   <LucideIcons.ExternalLink size={14} />
@@ -784,7 +784,7 @@ export default function Icons() {
                   href="https://lucide.dev/guide/packages/lucide-react"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-blue-700 hover:underline text-sm"
+                  className="flex items-center gap-2 text-pink-600 hover:underline text-sm"
                 >
                   Lucide React documentation
                   <LucideIcons.ExternalLink size={14} />
@@ -800,7 +800,7 @@ export default function Icons() {
                   href="https://tabler.io/icons"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-blue-700 hover:underline text-sm"
+                  className="flex items-center gap-2 text-pink-600 hover:underline text-sm"
                 >
                   Browse all Tabler icons
                   <LucideIcons.ExternalLink size={14} />
@@ -816,7 +816,7 @@ export default function Icons() {
                   href="https://fonts.google.com/icons"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-blue-700 hover:underline text-sm"
+                  className="flex items-center gap-2 text-pink-600 hover:underline text-sm"
                 >
                   Browse Material Symbols
                   <LucideIcons.ExternalLink size={14} />
@@ -832,7 +832,7 @@ export default function Icons() {
                   href="https://simpleicons.org/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-blue-700 hover:underline text-sm"
+                  className="flex items-center gap-2 text-pink-600 hover:underline text-sm"
                 >
                   Browse all Simple Icons
                   <LucideIcons.ExternalLink size={14} />
@@ -848,7 +848,7 @@ export default function Icons() {
                   href="https://react-icons.github.io/react-icons/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-blue-700 hover:underline text-sm"
+                  className="flex items-center gap-2 text-pink-600 hover:underline text-sm"
                 >
                   React Icons documentation
                   <LucideIcons.ExternalLink size={14} />
