@@ -244,12 +244,11 @@ export default function DesignSystemPage() {
               ],
             },
             {
-              id: "libre-franklin",
-              title: "Libre Franklin",
+              id: "inter",
+              title: "Inter",
               children: [
-                { id: "libre-franklin-regular", title: "Libre Franklin" },
-                { id: "libre-franklin-weights", title: "Weight spectrum" },
-                { id: "libre-franklin-italic", title: "Libre Franklin Italic" },
+                { id: "inter-regular", title: "Inter" },
+                { id: "inter-weights", title: "Weight spectrum" },
               ],
             },
             { id: "font-roles", title: "Font roles" },

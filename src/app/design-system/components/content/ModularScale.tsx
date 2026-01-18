@@ -318,7 +318,7 @@ export default function ModularScale() {
 
         <p className="text-base text-textSubtle mb-6">
           Body text sizes for paragraphs, UI elements, and supporting content.
-          All body text uses the sans-serif typeface (Libre Franklin).
+          All body text uses the sans-serif typeface (Inter).
         </p>
 
         <div className="bg-surfaceSubtle p-6 mb-8 space-y-6">

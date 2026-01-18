@@ -8,8 +8,8 @@
  */
 
 export const fonts = {
-  sans: '"libre-franklin", "Libre Franklin", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
-  serif: '"eb-garamond", "EB Garamond", Georgia, "Times New Roman", serif',
+  sans: '"Inter Variable", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+  serif: '"EB Garamond", Georgia, "Times New Roman", serif',
   mono: 'ui-monospace, SFMono-Regular, Menlo, Monaco, "Courier New", monospace',
 } as const;
 
@@ -205,7 +205,7 @@ export const typography = {
     xs: "0.6875rem", // 11px
     sm: "0.75rem", // 12px
 
-    // Body text (Libre Franklin) - fixed sizes
+    // Body text (Inter) - fixed sizes
     base: "1rem", // 16px - standard body
     md: "1rem", // 16px - alias for base
     lg: "1.125rem", // 18px - body large / lead paragraphs

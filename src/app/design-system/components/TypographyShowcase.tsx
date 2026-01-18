@@ -35,9 +35,7 @@ export default function TypographyShowcase() {
         <h3 className="text-lg font-semibold mb-4">Font Families</h3>
         <div className="space-y-4">
           <div>
-            <p className="text-sm text-textSubtle mb-2">
-              Sans-serif (Libre Franklin)
-            </p>
+            <p className="text-sm text-textSubtle mb-2">Sans-serif (Inter)</p>
             <p className="text-2xl font-sans">
               The quick brown fox jumps over the lazy dog
             </p>
@@ -57,11 +55,9 @@ export default function TypographyShowcase() {
         </div>
       </div>
 
-      {/* News Typography (Libre Franklin) */}
+      {/* News Typography (Inter) */}
       <div>
-        <h3 className="text-xl font-semibold mb-6">
-          News Typography - Libre Franklin
-        </h3>
+        <h3 className="text-xl font-semibold mb-6">News Typography - Inter</h3>
         <p className="text-textSubtle mb-8">
           Used for news articles, UI elements, and navigation
         </p>

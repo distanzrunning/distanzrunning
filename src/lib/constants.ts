@@ -34,19 +34,19 @@ export const BRAND = {
   },
   typography: {
     fontFamilies: {
-      // Distanz Typography System - Libre Franklin + EB Garamond
-      sans: "libre-franklin, Libre Franklin, -apple-system, BlinkMacSystemFont, sans-serif", // News, UI, headlines
-      serif: "eb-garamond, EB Garamond, Georgia, Times New Roman, serif", // Features, long-form
+      // Distanz Typography System - Inter + EB Garamond
+      sans: "Inter Variable, Inter, -apple-system, BlinkMacSystemFont, sans-serif", // News, UI, headlines
+      serif: "EB Garamond, Georgia, Times New Roman, serif", // Features, long-form
 
       // Aliases
-      display: "eb-garamond, EB Garamond, serif", // Headlines
-      headline: "eb-garamond, EB Garamond, serif", // Headlines
-      body: "libre-franklin, Libre Franklin, sans-serif", // Body (news)
-      ui: "libre-franklin, Libre Franklin, sans-serif", // UI elements
-      feature: "eb-garamond, EB Garamond, Georgia, serif", // Feature content
+      display: "EB Garamond, serif", // Headlines
+      headline: "EB Garamond, serif", // Headlines
+      body: "Inter Variable, Inter, sans-serif", // Body (news)
+      ui: "Inter Variable, Inter, sans-serif", // UI elements
+      feature: "EB Garamond, Georgia, serif", // Feature content
     },
     weights: {
-      // Libre Franklin weights
+      // Inter weights
       regular: 400,
       medium: 500,
       semibold: 600,
@@ -54,18 +54,18 @@ export const BRAND = {
       extrabold: 800,
     },
     sizes: {
-      // Small Text & Metadata (Libre Franklin)
+      // Small Text & Metadata (Inter)
       label: "11px",
       caption: "12px",
       overline: "12px",
 
-      // UI Elements (Libre Franklin)
+      // UI Elements (Inter)
       buttonSm: "12px",
       button: "14px",
       buttonLg: "16px",
       nav: "14px",
 
-      // Body Text - News (Libre Franklin)
+      // Body Text - News (Inter)
       bodySm: "14px",
       body: "16px",
 
@@ -73,7 +73,7 @@ export const BRAND = {
       bodyFeature: "19px",
       subhead: "22px",
 
-      // Headings - News (Libre Franklin)
+      // Headings - News (Inter)
       h3News: "22px",
       h2News: "28px",
       h1News: "36px",
@@ -95,7 +95,7 @@ export const BRAND = {
 
       // Special Elements
       quote: "26px", // EB Garamond
-      stat: "clamp(48px, 6vw, 96px)", // Libre Franklin
+      stat: "clamp(48px, 6vw, 96px)", // Inter
     },
     lineHeights: {
       superTight: 0.9, // Large stat numbers
