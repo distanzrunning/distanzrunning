@@ -318,12 +318,12 @@ function SearchInput({
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full h-10 pl-10 pr-4 text-sm border border-borderNeutral outline-none placeholder:text-gray-600 focus:border-borderNeutralHover focus:ring-2 focus:ring-borderNeutral transition-colors"
+        className="w-full h-11 pl-11 pr-4 text-sm rounded-md border border-borderNeutral outline-none placeholder:text-gray-600 hover:border-borderNeutralHover focus:border-borderNeutralHover focus:ring-2 focus:ring-borderNeutral transition-colors"
         style={{ background: "var(--ds-background-100)" }}
       />
       <label
         aria-hidden="true"
-        className="absolute left-3 pointer-events-none text-gray-600"
+        className="absolute left-4 pointer-events-none text-gray-600"
       >
         <Search size={16} />
       </label>
