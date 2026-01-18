@@ -16,28 +16,29 @@ export default function Typefaces() {
 
       <hr className="border-t-4 border-textDefault" />
 
-      {/* Eczar Section */}
+      {/* EB Garamond Section */}
       <section>
         <h2
-          id="eczar"
+          id="eb-garamond"
           className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
         >
-          Eczar
+          EB Garamond
         </h2>
 
         <hr className="border-t border-borderDefault mb-6" />
 
-        {/* Eczar Regular */}
+        {/* EB Garamond Regular */}
         <h3
-          id="eczar-regular"
+          id="eb-garamond-regular"
           className="font-serif text-[22px] leading-[1.3] font-medium mb-3 scroll-mt-32"
         >
-          Eczar
+          EB Garamond
         </h3>
         <p className="text-base text-textSubtle mb-4">
           Primarily for headlines, display text, and editorial emphasis. A
-          contemporary serif with strong personality, designed by Vaibhav Singh
-          with origins in Indian Devanagari script traditions.
+          revival of Claude Garamont&apos;s famous humanist typefaces from the
+          mid-16th century, designed by Georg Duffner. Known for its elegance,
+          readability, and timeless classical character.
         </p>
 
         {/* Type specimen */}
@@ -85,7 +86,7 @@ export default function Typefaces() {
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Regular</td>
                 <td className="py-3 px-4">400</td>
-                <td className="py-3 px-4">normal</td>
+                <td className="py-3 px-4">normal / italic</td>
                 <td className="py-3 px-4 font-mono" rowSpan={5}>
                   --font-family-serif
                 </td>
@@ -93,22 +94,22 @@ export default function Typefaces() {
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Medium</td>
                 <td className="py-3 px-4">500</td>
-                <td className="py-3 px-4">normal</td>
+                <td className="py-3 px-4">normal / italic</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">SemiBold</td>
                 <td className="py-3 px-4">600</td>
-                <td className="py-3 px-4">normal</td>
+                <td className="py-3 px-4">normal / italic</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Bold</td>
                 <td className="py-3 px-4">700</td>
-                <td className="py-3 px-4">normal</td>
+                <td className="py-3 px-4">normal / italic</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">ExtraBold</td>
                 <td className="py-3 px-4">800</td>
-                <td className="py-3 px-4">normal</td>
+                <td className="py-3 px-4">normal / italic</td>
               </tr>
             </tbody>
           </table>
@@ -118,14 +119,15 @@ export default function Typefaces() {
 
         {/* Weight spectrum */}
         <h3
-          id="eczar-weights"
+          id="eb-garamond-weights"
           className="font-serif text-[22px] leading-[1.3] font-medium mb-3 scroll-mt-32"
         >
           Weight spectrum
         </h3>
         <p className="text-base text-textSubtle mb-4">
-          Eczar offers five weights from Regular to ExtraBold, providing bold
-          typographic impact for headlines and display text.
+          EB Garamond offers five weights from Regular to ExtraBold, with
+          matching italics for each weight. Its elegant proportions make it
+          ideal for headlines and display text.
         </p>
 
         <div className="bg-surfaceSubtle p-6 mb-8">
@@ -158,6 +160,36 @@ export default function Typefaces() {
             style={{ fontFamily: "var(--font-family-serif)", fontWeight: 800 }}
           >
             ExtraBold 800 — The quick brown fox
+          </p>
+        </div>
+
+        <hr className="border-t border-borderDefault mb-8" />
+
+        {/* Italic specimen */}
+        <h3
+          id="eb-garamond-italic"
+          className="font-serif text-[22px] leading-[1.3] font-medium mb-3 scroll-mt-32"
+        >
+          EB Garamond Italic
+        </h3>
+        <p className="text-base text-textSubtle mb-4">
+          The italic cuts are true italics based on the chancery style, not
+          simply slanted romans. They bring an additional layer of elegance for
+          emphasis and decorative typography.
+        </p>
+
+        <div className="bg-surfaceSubtle p-6 mb-8">
+          <p
+            className="font-serif text-[28px] font-normal italic leading-[1.2] mb-4"
+            style={{ fontFamily: "var(--font-family-serif)" }}
+          >
+            The quick brown fox jumps over the lazy dog.
+          </p>
+          <p
+            className="font-serif text-[16px] font-normal italic leading-[1.4] mb-0"
+            style={{ fontFamily: "var(--font-family-serif)" }}
+          >
+            The quick brown fox jumps over the lazy dog.
           </p>
         </div>
       </section>
@@ -434,25 +466,25 @@ export default function Typefaces() {
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Display</td>
                 <td className="py-3 px-4 font-mono">--display-font</td>
-                <td className="py-3 px-4">Eczar</td>
+                <td className="py-3 px-4">EB Garamond</td>
                 <td className="py-3 px-4">Large headlines, hero text</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Headline</td>
                 <td className="py-3 px-4 font-mono">--headline-font</td>
-                <td className="py-3 px-4">Eczar</td>
+                <td className="py-3 px-4">EB Garamond</td>
                 <td className="py-3 px-4">Article titles, section headers</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Subheading</td>
                 <td className="py-3 px-4 font-mono">--subheading-font</td>
-                <td className="py-3 px-4">Eczar</td>
+                <td className="py-3 px-4">EB Garamond</td>
                 <td className="py-3 px-4">Subheadings, secondary titles</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Brand</td>
                 <td className="py-3 px-4 font-mono">--brand-font</td>
-                <td className="py-3 px-4">Eczar</td>
+                <td className="py-3 px-4">EB Garamond</td>
                 <td className="py-3 px-4">Brand elements, masthead</td>
               </tr>
               <tr className="border-b border-borderSubtle">
@@ -510,7 +542,7 @@ export default function Typefaces() {
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 font-mono">--font-family-serif</td>
                 <td className="py-3 px-4 font-mono text-xs">
-                  &quot;eczar&quot;, Georgia, serif
+                  &quot;eb-garamond&quot;, Georgia, serif
                 </td>
                 <td className="py-3 px-4 font-mono">font-serif</td>
               </tr>

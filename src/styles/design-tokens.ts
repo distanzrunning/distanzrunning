@@ -9,7 +9,7 @@
 
 export const fonts = {
   sans: '"libre-franklin", "Libre Franklin", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
-  serif: '"eczar", "Eczar", Georgia, "Times New Roman", serif',
+  serif: '"eb-garamond", "EB Garamond", Georgia, "Times New Roman", serif',
   mono: 'ui-monospace, SFMono-Regular, Menlo, Monaco, "Courier New", monospace',
 } as const;
 
@@ -211,7 +211,7 @@ export const typography = {
     lg: "1.125rem", // 18px - body large / lead paragraphs
     xl: "1.25rem", // 20px - feature body
 
-    // Headings (Eczar) - max values for fluid scaling
+    // Headings (EB Garamond) - max values for fluid scaling
     // Fluid formula: clamp(min, preferred, max)
     h6: "1.5rem", // 24px → clamp(18px, 2vw, 24px)
     h5: "1.75rem", // 28px → clamp(20px, 2.5vw, 28px)
@@ -220,11 +220,11 @@ export const typography = {
     h2: "3.625rem", // 58px → clamp(32px, 4.5vw, 58px)
     h1: "4.25rem", // 68px → clamp(36px, 5vw, 68px)
 
-    // Display (Eczar) - hero headlines
+    // Display (EB Garamond) - hero headlines
     display: "4.5rem", // 72px → clamp(40px, 6vw, 72px)
     displayLarge: "5.25rem", // 84px → clamp(48px, 7vw, 84px)
 
-    // Feature content (Eczar)
+    // Feature content (EB Garamond)
     featureBody: "1.25rem", // 20px
     featureQuote: "2rem", // 32px → clamp(24px, 3vw, 32px)
   },

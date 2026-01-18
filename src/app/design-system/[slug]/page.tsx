@@ -235,11 +235,12 @@ export default function DesignSystemPage() {
           tocTitle="On this page"
           tocItems={[
             {
-              id: "eczar",
-              title: "Eczar",
+              id: "eb-garamond",
+              title: "EB Garamond",
               children: [
-                { id: "eczar-regular", title: "Eczar" },
-                { id: "eczar-weights", title: "Weight spectrum" },
+                { id: "eb-garamond-regular", title: "EB Garamond" },
+                { id: "eb-garamond-weights", title: "Weight spectrum" },
+                { id: "eb-garamond-italic", title: "EB Garamond Italic" },
               ],
             },
             {

@@ -34,16 +34,16 @@ export const BRAND = {
   },
   typography: {
     fontFamilies: {
-      // Distanz Typography System - Libre Franklin + Eczar
+      // Distanz Typography System - Libre Franklin + EB Garamond
       sans: "libre-franklin, Libre Franklin, -apple-system, BlinkMacSystemFont, sans-serif", // News, UI, headlines
-      serif: "eczar, Eczar, Georgia, Times New Roman, serif", // Features, long-form
+      serif: "eb-garamond, EB Garamond, Georgia, Times New Roman, serif", // Features, long-form
 
       // Aliases
-      display: "eczar, Eczar, serif", // Headlines
-      headline: "eczar, Eczar, serif", // Headlines
+      display: "eb-garamond, EB Garamond, serif", // Headlines
+      headline: "eb-garamond, EB Garamond, serif", // Headlines
       body: "libre-franklin, Libre Franklin, sans-serif", // Body (news)
       ui: "libre-franklin, Libre Franklin, sans-serif", // UI elements
-      feature: "eczar, Eczar, Georgia, serif", // Feature content
+      feature: "eb-garamond, EB Garamond, Georgia, serif", // Feature content
     },
     weights: {
       // Libre Franklin weights
@@ -69,7 +69,7 @@ export const BRAND = {
       bodySm: "14px",
       body: "16px",
 
-      // Body Text - Features (Eczar)
+      // Body Text - Features (EB Garamond)
       bodyFeature: "19px",
       subhead: "22px",
 
@@ -79,7 +79,7 @@ export const BRAND = {
       h1News: "36px",
       displayNews: "48px",
 
-      // Headings - Features (Eczar)
+      // Headings - Features (EB Garamond)
       h3Feature: "24px",
       h2Feature: "30px",
       h1Feature: "40px",
@@ -94,7 +94,7 @@ export const BRAND = {
       h1: "clamp(32px, 4.5vw, 48px)",
 
       // Special Elements
-      quote: "26px", // Eczar
+      quote: "26px", // EB Garamond
       stat: "clamp(48px, 6vw, 96px)", // Libre Franklin
     },
     lineHeights: {

@@ -417,7 +417,7 @@ module.exports = {
       fontFamily: {
         // Distanz Typography System - Adobe Fonts
         // Body/UI: Libre Franklin (complete weight spectrum 100-900 + italics)
-        // Headings: Eczar (400, 500, 600, 700, 800)
+        // Headings: EB Garamond (400, 500, 600, 700, 800)
         // Adobe Fonts Project ID: bua7sld
 
         // Sans-serif (Libre Franklin) - Body, UI, navigation
@@ -432,19 +432,19 @@ module.exports = {
         ],
         franklin: ["libre-franklin", "Libre Franklin", "sans-serif"],
 
-        // Serif (Eczar) - Headings, display
-        serif: ["eczar", "Eczar", "Georgia", "serif"],
-        eczar: ["eczar", "Eczar", "Georgia", "serif"],
+        // Serif (EB Garamond) - Headings, display
+        serif: ["eb-garamond", "EB Garamond", "Georgia", "serif"],
+        garamond: ["eb-garamond", "EB Garamond", "Georgia", "serif"],
 
         // Legacy aliases for backwards compatibility
-        display: ["eczar", "Eczar", "serif"],
-        headline: ["eczar", "Eczar", "serif"],
+        display: ["eb-garamond", "EB Garamond", "serif"],
+        headline: ["eb-garamond", "EB Garamond", "serif"],
         body: ["libre-franklin", "Libre Franklin", "sans-serif"],
         ui: ["libre-franklin", "Libre Franklin", "sans-serif"],
         // Old font aliases now point to new fonts
-        garamond: ["eczar", "Eczar", "Georgia", "serif"],
+        eczar: ["eb-garamond", "EB Garamond", "Georgia", "serif"],
         inter: ["libre-franklin", "Libre Franklin", "sans-serif"],
-        playfair: ["eczar", "Eczar", "serif"],
+        playfair: ["eb-garamond", "EB Garamond", "serif"],
         manrope: ["libre-franklin", "Libre Franklin", "sans-serif"],
         archivo: ["libre-franklin", "Libre Franklin", "sans-serif"],
         bricolage: ["libre-franklin", "Libre Franklin", "sans-serif"],

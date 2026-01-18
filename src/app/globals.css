@@ -73,14 +73,15 @@
   :root {
     /* Distanz Typography System - Adobe Fonts
        Body/UI: Libre Franklin (complete weight spectrum 100-900 + italics)
-       Headings: Eczar (400, 500, 600, 700, 800)
+       Headings: EB Garamond (400, 500, 600, 700, 800)
        Adobe Fonts Project ID: bua7sld */
 
     /* Primary Typefaces - Adobe Fonts */
     --font-family-sans:
       "libre-franklin", "Libre Franklin", -apple-system, BlinkMacSystemFont,
       "Segoe UI", sans-serif;
-    --font-family-serif: "eczar", "Eczar", Georgia, "Times New Roman", serif;
+    --font-family-serif:
+      "eb-garamond", "EB Garamond", Georgia, "Times New Roman", serif;
 
     /* Legacy font variables for backwards compatibility */
     --display-font: var(--font-family-serif);
@@ -1212,7 +1213,7 @@
 
   /* ========================================
      Distanz Typography Utility Classes
-     Based on Libre Franklin + Eczar
+     Based on Libre Franklin + EB Garamond
      ======================================== */
 
   /* ===== BODY/UI TYPOGRAPHY (LIBRE FRANKLIN) ===== */
@@ -1360,9 +1361,9 @@
     text-transform: uppercase;
   }
 
-  /* ===== HEADING TYPOGRAPHY (ECZAR) ===== */
+  /* ===== HEADING TYPOGRAPHY (EB GARAMOND) ===== */
 
-  /* Main Headings (Eczar) */
+  /* Main Headings (EB Garamond) */
   .text-h3-distanz,
   .feature-h3,
   .text-h3-feature {
@@ -1409,9 +1410,9 @@
     color: rgb(var(--color-textDefault));
   }
 
-  /* ===== EXTENDED CONTENT TYPOGRAPHY (ECZAR) ===== */
+  /* ===== EXTENDED CONTENT TYPOGRAPHY (EB GARAMOND) ===== */
 
-  /* Body Text - Features (Eczar) */
+  /* Body Text - Features (EB Garamond) */
   .feature-body {
     font-family: var(--font-family-serif);
     font-weight: 400;
@@ -1421,7 +1422,7 @@
     color: rgb(var(--color-textDefault));
   }
 
-  /* Subhead / Deck (Eczar) */
+  /* Subhead / Deck (EB Garamond) */
   .feature-subhead,
   .text-intro-distanz,
   .text-lead-distanz {
@@ -1434,7 +1435,7 @@
     color: rgb(var(--color-textDefault));
   }
 
-  /* Pull Quote (Eczar) */
+  /* Pull Quote (EB Garamond) */
   .feature-quote,
   .text-quote-distanz {
     font-family: var(--font-family-serif);
@@ -1446,7 +1447,7 @@
     color: rgb(var(--color-textDefault));
   }
 
-  /* Caption (Eczar Italic) */
+  /* Caption (EB Garamond Italic) */
   .feature-caption {
     font-family: var(--font-family-serif);
     font-weight: 400;
@@ -1457,7 +1458,7 @@
     color: rgb(var(--color-textSubtle));
   }
 
-  /* Footnote (Eczar) */
+  /* Footnote (EB Garamond) */
   .feature-footnote {
     font-family: var(--font-family-serif);
     font-weight: 400;

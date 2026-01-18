@@ -231,7 +231,7 @@ export default function PullQuoteComponent() {
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Font family</td>
-                <td className="py-3 px-4">Eczar</td>
+                <td className="py-3 px-4">EB Garamond</td>
                 <td className="py-3 px-4 font-mono">font-serif</td>
               </tr>
               <tr className="border-b border-borderSubtle">

@@ -46,7 +46,7 @@ export default function TypographyShowcase() {
             </code>
           </div>
           <div>
-            <p className="text-sm text-textSubtle mb-2">Serif (Eczar)</p>
+            <p className="text-sm text-textSubtle mb-2">Serif (EB Garamond)</p>
             <p className="text-2xl font-serif">
               The quick brown fox jumps over the lazy dog
             </p>
@@ -192,10 +192,10 @@ export default function TypographyShowcase() {
         </div>
       </div>
 
-      {/* Feature Typography (Eczar) */}
+      {/* Feature Typography (EB Garamond) */}
       <div>
         <h3 className="text-xl font-semibold mb-6">
-          Feature Typography - Eczar
+          Feature Typography - EB Garamond
         </h3>
         <p className="text-textSubtle mb-8">
           Used for long-form content, essays, and feature articles
