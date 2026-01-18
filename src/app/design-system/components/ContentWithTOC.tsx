@@ -193,9 +193,9 @@ export default function ContentWithTOC({
         </article>
       </div>
 
-      {/* Table of Contents - Right Sidebar (≥1280px) - full height */}
+      {/* Table of Contents - Right Sidebar (≥1280px) - full height, sticky to footer */}
       <aside className="hidden xl:block w-[260px] flex-shrink-0 border-l border-borderSubtle">
-        <div className="sticky top-28 h-[calc(100vh-112px)] overflow-hidden">
+        <div className="sticky top-[112px] max-h-[calc(100vh-112px)] overflow-hidden">
           <nav className="h-full overflow-y-auto px-6 pb-[14px] pt-12">
             <h4 className="text-[14px] leading-[20px] font-medium text-textDefault mb-3">
               {tocTitle}
