@@ -10,9 +10,10 @@ import ReCaptchaProvider from "@/components/ReCaptchaProvider";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
-// Distanz Typography System
+// Distanz Typography System - Adobe Fonts
 // Body/UI: Inter Variable (complete weight spectrum)
 // Headings: EB Garamond (serif)
+// Adobe Fonts Project ID: bua7sld
 
 export const metadata: Metadata = {
   title: "Distanz Running",
@@ -41,17 +42,8 @@ export default function RootLayout({
   return (
     <html lang="en" className="bg-canvas transition-colors duration-300">
       <head>
-        {/* Google Fonts - Inter */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=EB+Garamond:ital,wght@0,400..800;1,400..800&display=swap"
-          rel="stylesheet"
-        />
+        {/* Adobe Fonts - Inter + EB Garamond */}
+        <link rel="stylesheet" href="https://use.typekit.net/bua7sld.css" />
 
         {/* Prevent flash of dark mode - ensure light mode by default */}
         <script

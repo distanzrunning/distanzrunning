@@ -131,7 +131,7 @@ export default function Typography() {
         </p>
 
         <CodeBlock
-          code={`<p className="text-heading-32">
+          code={`<p className="text-heading-32 font-serif">
   Heading with <strong>subtle</strong> text
 </p>`}
         />
@@ -170,10 +170,10 @@ export default function Typography() {
             <tbody className="text-sm">
               <tr className="border-b border-borderSubtle">
                 <td className="py-4 pr-4">
-                  <p className="text-heading-72">Heading</p>
+                  <p className="text-heading-72 font-serif">Heading</p>
                 </td>
                 <td className="py-4 px-4 font-mono text-xs align-top">
-                  text-heading-72
+                  text-heading-72 font-serif
                 </td>
                 <td className="py-4 px-4 text-textSubtle align-top">
                   Hero headlines
@@ -181,10 +181,10 @@ export default function Typography() {
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-4 pr-4">
-                  <p className="text-heading-64">Heading</p>
+                  <p className="text-heading-64 font-serif">Heading</p>
                 </td>
                 <td className="py-4 px-4 font-mono text-xs align-top">
-                  text-heading-64
+                  text-heading-64 font-serif
                 </td>
                 <td className="py-4 px-4 text-textSubtle align-top">
                   Large page titles
@@ -192,10 +192,10 @@ export default function Typography() {
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-4 pr-4">
-                  <p className="text-heading-56">Heading</p>
+                  <p className="text-heading-56 font-serif">Heading</p>
                 </td>
                 <td className="py-4 px-4 font-mono text-xs align-top">
-                  text-heading-56
+                  text-heading-56 font-serif
                 </td>
                 <td className="py-4 px-4 text-textSubtle align-top">
                   Page titles
@@ -203,10 +203,10 @@ export default function Typography() {
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-4 pr-4">
-                  <p className="text-heading-48">Heading</p>
+                  <p className="text-heading-48 font-serif">Heading</p>
                 </td>
                 <td className="py-4 px-4 font-mono text-xs align-top">
-                  text-heading-48
+                  text-heading-48 font-serif
                 </td>
                 <td className="py-4 px-4 text-textSubtle align-top">
                   Section titles
@@ -214,10 +214,10 @@ export default function Typography() {
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-4 pr-4">
-                  <p className="text-heading-40">Heading</p>
+                  <p className="text-heading-40 font-serif">Heading</p>
                 </td>
                 <td className="py-4 px-4 font-mono text-xs align-top">
-                  text-heading-40
+                  text-heading-40 font-serif
                 </td>
                 <td className="py-4 px-4 text-textSubtle align-top">
                   Feature headers
@@ -225,12 +225,12 @@ export default function Typography() {
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-4 pr-4">
-                  <p className="text-heading-32">
+                  <p className="text-heading-32 font-serif">
                     Heading <strong>Subtle</strong>
                   </p>
                 </td>
                 <td className="py-4 px-4 font-mono text-xs align-top">
-                  text-heading-32
+                  text-heading-32 font-serif
                 </td>
                 <td className="py-4 px-4 text-textSubtle align-top">
                   Card titles, section headers
@@ -238,12 +238,12 @@ export default function Typography() {
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-4 pr-4">
-                  <p className="text-heading-24">
+                  <p className="text-heading-24 font-serif">
                     Heading <strong>Subtle</strong>
                   </p>
                 </td>
                 <td className="py-4 px-4 font-mono text-xs align-top">
-                  text-heading-24
+                  text-heading-24 font-serif
                 </td>
                 <td className="py-4 px-4 text-textSubtle align-top">
                   Subsection titles
@@ -251,12 +251,12 @@ export default function Typography() {
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-4 pr-4">
-                  <p className="text-heading-20">
+                  <p className="text-heading-20 font-serif">
                     Heading <strong>Subtle</strong>
                   </p>
                 </td>
                 <td className="py-4 px-4 font-mono text-xs align-top">
-                  text-heading-20
+                  text-heading-20 font-serif
                 </td>
                 <td className="py-4 px-4 text-textSubtle align-top">
                   Small headers
@@ -264,12 +264,12 @@ export default function Typography() {
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-4 pr-4">
-                  <p className="text-heading-16">
+                  <p className="text-heading-16 font-serif">
                     Heading <strong>Subtle</strong>
                   </p>
                 </td>
                 <td className="py-4 px-4 font-mono text-xs align-top">
-                  text-heading-16
+                  text-heading-16 font-serif
                 </td>
                 <td className="py-4 px-4 text-textSubtle align-top">
                   Mini headers, labels
@@ -277,10 +277,10 @@ export default function Typography() {
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-4 pr-4">
-                  <p className="text-heading-14">Heading</p>
+                  <p className="text-heading-14 font-serif">Heading</p>
                 </td>
                 <td className="py-4 px-4 font-mono text-xs align-top">
-                  text-heading-14
+                  text-heading-14 font-serif
                 </td>
                 <td className="py-4 px-4 text-textSubtle align-top">
                   Smallest heading
