@@ -7,17 +7,7 @@ import * as ContextMenu from "@radix-ui/react-context-menu";
 import { Section } from "../ContentWithTOC";
 
 // Import icons from other libraries via react-icons
-import {
-  TbApi,
-  TbApiOff,
-  TbCsv,
-  TbGif,
-  TbBrandLinkedin,
-  TbBrandChrome,
-  TbBrandFirefox,
-  TbBrandEdge,
-  TbBrandOpera,
-} from "react-icons/tb";
+import { TbApi, TbApiOff, TbCsv, TbGif } from "react-icons/tb";
 import { MdOutlineGifBox } from "react-icons/md";
 import { LuPersonStanding } from "react-icons/lu";
 import {
@@ -26,6 +16,7 @@ import {
   SiInstagram,
   SiX,
   SiBrave,
+  SiLinkedin,
 } from "react-icons/si";
 
 // Icon library types
@@ -152,7 +143,7 @@ const buildIconRegistry = (): IconDefinition[] => {
     }
   });
 
-  // Tabler icons
+  // Tabler icons (for UI icons not available in Lucide)
   const tablerIcons: Array<{
     name: string;
     displayName: string;
@@ -160,27 +151,6 @@ const buildIconRegistry = (): IconDefinition[] => {
   }> = [
     { name: "TbApi", displayName: "Api", component: TbApi },
     { name: "TbApiOff", displayName: "ApiOff", component: TbApiOff },
-    {
-      name: "TbBrandChrome",
-      displayName: "BrandChrome",
-      component: TbBrandChrome,
-    },
-    { name: "TbBrandEdge", displayName: "BrandEdge", component: TbBrandEdge },
-    {
-      name: "TbBrandFirefox",
-      displayName: "BrandFirefox",
-      component: TbBrandFirefox,
-    },
-    {
-      name: "TbBrandLinkedin",
-      displayName: "BrandLinkedin",
-      component: TbBrandLinkedin,
-    },
-    {
-      name: "TbBrandOpera",
-      displayName: "BrandOpera",
-      component: TbBrandOpera,
-    },
     { name: "TbCsv", displayName: "Csv", component: TbCsv },
     { name: "TbGif", displayName: "Gif", component: TbGif },
   ];
@@ -249,6 +219,7 @@ const buildIconRegistry = (): IconDefinition[] => {
   }> = [
     { name: "SiBrave", displayName: "Brave", component: SiBrave },
     { name: "SiInstagram", displayName: "Instagram", component: SiInstagram },
+    { name: "SiLinkedin", displayName: "Linkedin", component: SiLinkedin },
     { name: "SiStrava", displayName: "Strava", component: SiStrava },
     {
       name: "SiTypescript",
@@ -445,14 +416,12 @@ function IconCard({ icon }: { icon: IconDefinition }) {
           className="group relative flex h-28 w-full cursor-pointer flex-col items-center px-4 text-textSubtle transition-colors hover:[background:var(--ds-background-100)] outline-none"
           onClick={handleClick}
         >
-          {/* Library badge - show on hover for non-lucide icons */}
-          {icon.library !== "lucide" && (
-            <span
-              className={`absolute top-2 right-2 text-[9px] font-medium px-1.5 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity ${libraryColors[icon.library]}`}
-            >
-              {libraryLabels[icon.library]}
-            </span>
-          )}
+          {/* Library badge - always visible */}
+          <span
+            className={`absolute top-2 right-2 text-[9px] font-medium px-1.5 py-0.5 rounded ${libraryColors[icon.library]}`}
+          >
+            {libraryLabels[icon.library]}
+          </span>
           <div className="flex-1" />
           <div className="-mt-1.5 relative">
             {showTick ? (
