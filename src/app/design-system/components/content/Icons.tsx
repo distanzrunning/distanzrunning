@@ -17,6 +17,7 @@ import {
   SiX,
   SiBrave,
   SiLinkedin,
+  SiTailwindcss,
 } from "react-icons/si";
 
 // Icon library types
@@ -221,6 +222,11 @@ const buildIconRegistry = (): IconDefinition[] => {
     { name: "SiInstagram", displayName: "Instagram", component: SiInstagram },
     { name: "SiLinkedin", displayName: "Linkedin", component: SiLinkedin },
     { name: "SiStrava", displayName: "Strava", component: SiStrava },
+    {
+      name: "SiTailwindcss",
+      displayName: "Tailwind CSS",
+      component: SiTailwindcss,
+    },
     {
       name: "SiTypescript",
       displayName: "Typescript",

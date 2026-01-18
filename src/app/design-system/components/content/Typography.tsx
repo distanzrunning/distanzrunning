@@ -1,4 +1,61 @@
+"use client";
+
+import { useState, useCallback } from "react";
+import { Check } from "lucide-react";
+import { SiTailwindcss } from "react-icons/si";
 import { Section } from "../ContentWithTOC";
+
+// Copy icon for code blocks
+function CopyIcon() {
+  return (
+    <svg
+      height="16"
+      strokeLinejoin="round"
+      viewBox="0 0 16 16"
+      width="16"
+      style={{ color: "currentcolor" }}
+    >
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M2.75 0.5C1.7835 0.5 1 1.2835 1 2.25V9.75C1 10.7165 1.7835 11.5 2.75 11.5H3.75H4.5V10H3.75H2.75C2.61193 10 2.5 9.88807 2.5 9.75V2.25C2.5 2.11193 2.61193 2 2.75 2H8.25C8.38807 2 8.5 2.11193 8.5 2.25V3H10V2.25C10 1.2835 9.2165 0.5 8.25 0.5H2.75ZM7.75 4.5C6.7835 4.5 6 5.2835 6 6.25V13.75C6 14.7165 6.7835 15.5 7.75 15.5H13.25C14.2165 15.5 15 14.7165 15 13.75V6.25C15 5.2835 14.2165 4.5 13.25 4.5H7.75ZM7.5 6.25C7.5 6.11193 7.61193 6 7.75 6H13.25C13.3881 6 13.5 6.11193 13.5 6.25V13.75C13.5 13.8881 13.3881 14 13.25 14H7.75C7.61193 14 7.5 13.8881 7.5 13.75V6.25Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+}
+
+// Code block with copy button (matches Geist)
+function CodeBlock({ code }: { code: string }) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = useCallback(() => {
+    navigator.clipboard.writeText(code);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }, [code]);
+
+  return (
+    <div className="group relative">
+      <pre className="bg-[#0a0a0a] dark:bg-[#0a0a0a] text-[#ededed] rounded-lg p-4 overflow-x-auto">
+        <code className="text-[13px] leading-[20px] font-mono">{code}</code>
+      </pre>
+      <button
+        onClick={handleCopy}
+        className="absolute top-3 right-3 p-2 rounded-md bg-[#1a1a1a] border border-[#333] opacity-0 group-hover:opacity-100 transition-opacity hover:bg-[#252525] hover:border-[#444]"
+        aria-label="Copy code"
+      >
+        {copied ? (
+          <Check size={14} className="text-green-500" />
+        ) : (
+          <span className="text-[#888]">
+            <CopyIcon />
+          </span>
+        )}
+      </button>
+    </div>
+  );
+}
 
 // Link icon for section headers (matches Geist)
 function LinkIcon() {
@@ -52,32 +109,32 @@ export default function Typography() {
       <Section>
         <SectionHeader id="usage">Usage</SectionHeader>
 
-        <p className="text-base text-textSubtle mt-4 mb-6">
-          Our typography styles can be consumed as Tailwind classes. The classes
-          below pre-set a combination of font-size, line-height, letter-spacing,
-          and font-weight for you based on the Geist design system.
+        <p className="text-copy-14 text-textSubtle mt-4 mb-4">
+          Our typography styles can be consumed as{" "}
+          <span className="inline-flex items-center gap-1">
+            <SiTailwindcss size={14} className="text-[#06B6D4]" />
+            Tailwind
+          </span>{" "}
+          classes. The classes below pre-set a combination of font-size,
+          line-height, letter-spacing, and font-weight for you based on the
+          Geist design system.
         </p>
 
-        <div className="bg-surfaceSubtle border border-borderSubtle rounded-lg p-6">
-          <p className="text-copy-14 text-textSubtle mb-4">
-            The{" "}
-            <code className="text-label-13-mono px-1.5 py-0.5 bg-gray-100 dark:bg-neutral-800 rounded">
-              strong
-            </code>{" "}
-            element can be used as a modifier to change the font weight. For
-            Headings, this reduces the weight (for creating subtle variants),
-            while for Copy text it increases the weight for emphasis.
-          </p>
-          <div className="font-mono text-sm text-textSubtle">
-            <code className="block">
-              &lt;p className=&quot;text-heading-32&quot;&gt;
-            </code>
-            <code className="block pl-4">
-              Heading with &lt;strong&gt;subtle&lt;/strong&gt; text
-            </code>
-            <code className="block">&lt;/p&gt;</code>
-          </div>
-        </div>
+        <p className="text-copy-14 text-textSubtle mb-6">
+          The{" "}
+          <code className="text-label-13-mono px-1.5 py-0.5 bg-gray-100 dark:bg-neutral-800 rounded">
+            strong
+          </code>{" "}
+          element can be used as a modifier to change the font weight. For
+          Headings, this reduces the weight (for creating subtle variants),
+          while for Copy text it increases the weight for emphasis.
+        </p>
+
+        <CodeBlock
+          code={`<p className="text-heading-32">
+  Heading with <strong>subtle</strong> text
+</p>`}
+        />
       </Section>
 
       {/* Headings Section */}
@@ -100,7 +157,10 @@ export default function Typography() {
                   Example
                 </th>
                 <th className="text-left py-3 px-4 font-semibold text-sm">
-                  Class name
+                  <span className="inline-flex items-center gap-1.5">
+                    <SiTailwindcss size={14} className="text-[#06B6D4]" />
+                    Class name
+                  </span>
                 </th>
                 <th className="text-left py-3 px-4 font-semibold text-sm">
                   Usage
@@ -247,7 +307,10 @@ export default function Typography() {
                   Example
                 </th>
                 <th className="text-left py-3 px-4 font-semibold text-sm">
-                  Class name
+                  <span className="inline-flex items-center gap-1.5">
+                    <SiTailwindcss size={14} className="text-[#06B6D4]" />
+                    Class name
+                  </span>
                 </th>
                 <th className="text-left py-3 px-4 font-semibold text-sm">
                   Usage
@@ -314,7 +377,10 @@ export default function Typography() {
                   Example
                 </th>
                 <th className="text-left py-3 px-4 font-semibold text-sm">
-                  Class name
+                  <span className="inline-flex items-center gap-1.5">
+                    <SiTailwindcss size={14} className="text-[#06B6D4]" />
+                    Class name
+                  </span>
                 </th>
                 <th className="text-left py-3 px-4 font-semibold text-sm">
                   Usage
@@ -459,7 +525,10 @@ export default function Typography() {
                   Example
                 </th>
                 <th className="text-left py-3 px-4 font-semibold text-sm">
-                  Class name
+                  <span className="inline-flex items-center gap-1.5">
+                    <SiTailwindcss size={14} className="text-[#06B6D4]" />
+                    Class name
+                  </span>
                 </th>
                 <th className="text-left py-3 px-4 font-semibold text-sm">
                   Usage
@@ -572,7 +641,10 @@ export default function Typography() {
             <thead>
               <tr className="border-b border-borderDefault">
                 <th className="text-left py-3 pr-4 font-semibold text-sm">
-                  Class
+                  <span className="inline-flex items-center gap-1.5">
+                    <SiTailwindcss size={14} className="text-[#06B6D4]" />
+                    Class
+                  </span>
                 </th>
                 <th className="text-left py-3 px-4 font-semibold text-sm">
                   Font Size
