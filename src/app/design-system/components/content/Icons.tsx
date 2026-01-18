@@ -7,12 +7,34 @@ import * as ContextMenu from "@radix-ui/react-context-menu";
 import { Section } from "../ContentWithTOC";
 
 // Import icons from other libraries via react-icons
-import { TbApi, TbApiOff, TbCsv, TbGif } from "react-icons/tb";
+import {
+  TbApi,
+  TbApiOff,
+  TbCsv,
+  TbGif,
+  TbBrandLinkedin,
+  TbBrandChrome,
+  TbBrandFirefox,
+  TbBrandEdge,
+  TbBrandOpera,
+} from "react-icons/tb";
 import { MdOutlineGifBox } from "react-icons/md";
 import { LuPersonStanding } from "react-icons/lu";
+import {
+  SiTypescript,
+  SiStrava,
+  SiInstagram,
+  SiX,
+  SiBrave,
+} from "react-icons/si";
 
 // Icon library types
-type IconLibrary = "lucide" | "tabler" | "material" | "react-icons-lucide";
+type IconLibrary =
+  | "lucide"
+  | "tabler"
+  | "material"
+  | "react-icons-lucide"
+  | "simple";
 
 interface IconDefinition {
   name: string;
@@ -138,6 +160,27 @@ const buildIconRegistry = (): IconDefinition[] => {
   }> = [
     { name: "TbApi", displayName: "Api", component: TbApi },
     { name: "TbApiOff", displayName: "ApiOff", component: TbApiOff },
+    {
+      name: "TbBrandChrome",
+      displayName: "BrandChrome",
+      component: TbBrandChrome,
+    },
+    { name: "TbBrandEdge", displayName: "BrandEdge", component: TbBrandEdge },
+    {
+      name: "TbBrandFirefox",
+      displayName: "BrandFirefox",
+      component: TbBrandFirefox,
+    },
+    {
+      name: "TbBrandLinkedin",
+      displayName: "BrandLinkedin",
+      component: TbBrandLinkedin,
+    },
+    {
+      name: "TbBrandOpera",
+      displayName: "BrandOpera",
+      component: TbBrandOpera,
+    },
     { name: "TbCsv", displayName: "Csv", component: TbCsv },
     { name: "TbGif", displayName: "Gif", component: TbGif },
   ];
@@ -195,6 +238,33 @@ const buildIconRegistry = (): IconDefinition[] => {
       library: "react-icons-lucide",
       component,
       importStatement: `import { ${name} } from "react-icons/lu";`,
+    });
+  });
+
+  // Simple Icons (brand logos)
+  const simpleIcons: Array<{
+    name: string;
+    displayName: string;
+    component: React.ComponentType<{ size?: number; className?: string }>;
+  }> = [
+    { name: "SiBrave", displayName: "Brave", component: SiBrave },
+    { name: "SiInstagram", displayName: "Instagram", component: SiInstagram },
+    { name: "SiStrava", displayName: "Strava", component: SiStrava },
+    {
+      name: "SiTypescript",
+      displayName: "Typescript",
+      component: SiTypescript,
+    },
+    { name: "SiX", displayName: "X", component: SiX },
+  ];
+
+  simpleIcons.forEach(({ name, displayName, component }) => {
+    icons.push({
+      name,
+      displayName,
+      library: "simple",
+      component,
+      importStatement: `import { ${name} } from "react-icons/si";`,
     });
   });
 
@@ -300,6 +370,7 @@ const libraryColors: Record<IconLibrary, string> = {
   material: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200",
   "react-icons-lucide":
     "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200",
+  simple: "bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-200",
 };
 
 const libraryLabels: Record<IconLibrary, string> = {
@@ -307,6 +378,7 @@ const libraryLabels: Record<IconLibrary, string> = {
   tabler: "Tabler",
   material: "Material",
   "react-icons-lucide": "Lucide (ri)",
+  simple: "Simple",
 };
 
 // Icon card component matching Geist design
@@ -567,8 +639,8 @@ export default function Icons() {
               className="text-blue-700 hover:underline"
             >
               Tabler Icons
-            </a>{" "}
-            and{" "}
+            </a>
+            ,{" "}
             <a
               href="https://fonts.google.com/icons"
               target="_blank"
@@ -576,8 +648,17 @@ export default function Icons() {
               className="text-blue-700 hover:underline"
             >
               Material Symbols
+            </a>
+            , and{" "}
+            <a
+              href="https://simpleicons.org/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-700 hover:underline"
+            >
+              Simple Icons
             </a>{" "}
-            via{" "}
+            (for brand logos) via{" "}
             <a
               href="https://react-icons.github.io/react-icons/"
               target="_blank"
@@ -637,6 +718,18 @@ export default function Icons() {
             </pre>
           </div>
 
+          {/* Import - Simple Icons */}
+          <div className="mb-6">
+            <h3 className="text-[14px] leading-[20px] font-medium text-textDefault mb-2">
+              Import from Simple Icons (brand logos)
+            </h3>
+            <pre className="p-4 bg-gray-100 dark:bg-neutral-800 rounded-md overflow-x-auto">
+              <code className="text-sm font-mono text-textDefault">
+                {`import { SiTypescript, SiStrava, SiInstagram } from "react-icons/si";`}
+              </code>
+            </pre>
+          </div>
+
           {/* Basic usage */}
           <div className="mb-6">
             <h3 className="text-[14px] leading-[20px] font-medium text-textDefault mb-2">
@@ -653,7 +746,11 @@ export default function Icons() {
 <TbCsv className="w-5 h-5" />
 
 {/* Material icons */}
-<MdOutlineGifBox size={20} />`}
+<MdOutlineGifBox size={20} />
+
+{/* Simple Icons (brand logos) */}
+<SiTypescript size={20} />
+<SiStrava className="w-5 h-5" />`}
               </code>
             </pre>
           </div>
@@ -760,6 +857,22 @@ export default function Icons() {
                   className="flex items-center gap-2 text-blue-700 hover:underline text-sm"
                 >
                   Browse Material Symbols
+                  <LucideIcons.ExternalLink size={14} />
+                </a>
+              </div>
+            </div>
+            <div>
+              <h3 className="text-[14px] leading-[20px] font-medium text-textDefault mb-2">
+                Simple Icons
+              </h3>
+              <div className="space-y-1">
+                <a
+                  href="https://simpleicons.org/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 text-blue-700 hover:underline text-sm"
+                >
+                  Browse all Simple Icons
                   <LucideIcons.ExternalLink size={14} />
                 </a>
               </div>
