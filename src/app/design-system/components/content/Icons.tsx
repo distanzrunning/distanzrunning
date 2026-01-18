@@ -333,16 +333,9 @@ function ToastProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
-// Library badge colors
-const libraryColors: Record<IconLibrary, string> = {
-  lucide: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200",
-  tabler:
-    "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200",
-  material: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200",
-  "react-icons-lucide":
-    "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200",
-  simple: "bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-200",
-};
+// Library badge style
+const libraryBadgeStyle =
+  "bg-gray-100 text-gray-600 dark:bg-neutral-800 dark:text-gray-400";
 
 const libraryLabels: Record<IconLibrary, string> = {
   lucide: "Lucide",
@@ -418,7 +411,7 @@ function IconCard({ icon }: { icon: IconDefinition }) {
         >
           {/* Library badge - always visible */}
           <span
-            className={`absolute top-2 right-2 text-[9px] font-medium px-1.5 py-0.5 rounded ${libraryColors[icon.library]}`}
+            className={`absolute top-2 right-2 text-[9px] font-medium px-1.5 py-0.5 rounded ${libraryBadgeStyle}`}
           >
             {libraryLabels[icon.library]}
           </span>
