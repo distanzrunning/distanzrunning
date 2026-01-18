@@ -409,9 +409,9 @@ function IconCard({ icon }: { icon: IconDefinition }) {
           className="group relative flex h-28 w-full cursor-pointer flex-col items-center px-4 text-textSubtle transition-colors hover:[background:var(--ds-background-100)] outline-none"
           onClick={handleClick}
         >
-          {/* Library badge - always visible */}
+          {/* Library badge - show on hover */}
           <span
-            className={`absolute top-2 right-2 text-[9px] font-medium px-1.5 py-0.5 rounded ${libraryBadgeStyle}`}
+            className={`absolute top-2 right-2 text-[9px] font-medium px-1.5 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity ${libraryBadgeStyle}`}
           >
             {libraryLabels[icon.library]}
           </span>
