@@ -17,6 +17,7 @@ import Typefaces from "../components/content/Typefaces";
 import ModularScale from "../components/content/ModularScale";
 import LineHeight from "../components/content/LineHeight";
 import TextStyles from "../components/content/TextStyles";
+import Typography from "../components/content/Typography";
 import Iconography from "../components/content/Iconography";
 import Icons from "../components/content/Icons";
 import ButtonComponent from "../components/content/ButtonComponent";
@@ -344,19 +345,21 @@ export default function DesignSystemPage() {
       );
     }
     if (slug === "typography") {
-      // Typography landing page - could show typefaces or text-styles
       return (
         <ContentWithTOC
           tocTitle="On this page"
+          pageTitle="Typography"
+          pageSubtitle="Pre-set combinations of font-size, line-height, letter-spacing, and font-weight based on the Geist design system."
           tocItems={[
-            { id: "display", title: "Display" },
+            { id: "usage", title: "Usage" },
             { id: "headings", title: "Headings" },
-            { id: "body", title: "Body" },
-            { id: "ui", title: "UI" },
+            { id: "buttons", title: "Buttons" },
+            { id: "labels", title: "Labels" },
+            { id: "copy", title: "Copy" },
             { id: "reference", title: "Quick reference" },
           ]}
         >
-          <TextStyles />
+          <Typography />
         </ContentWithTOC>
       );
     }

@@ -863,6 +863,249 @@ module.exports = {
     require("@tailwindcss/typography"),
     // TODO: Install @tailwindcss/container-queries package
     // require('@tailwindcss/container-queries'),
+
+    // ═══════════════════════════════════════════════════════════════════
+    // GEIST TYPOGRAPHY UTILITIES
+    // Pre-set combinations of font-size, line-height, letter-spacing, and font-weight
+    // Based on Vercel's Geist Design System
+    // ═══════════════════════════════════════════════════════════════════
+    function ({ addUtilities }) {
+      const geistTypography = {
+        // ─────────────────────────────────────────────────────────────────
+        // HEADINGS - Used to introduce pages or sections
+        // ─────────────────────────────────────────────────────────────────
+        ".text-heading-72": {
+          fontSize: "72px",
+          lineHeight: "80px",
+          letterSpacing: "-0.04em",
+          fontWeight: "700",
+          "& strong": { fontWeight: "400" },
+        },
+        ".text-heading-64": {
+          fontSize: "64px",
+          lineHeight: "72px",
+          letterSpacing: "-0.04em",
+          fontWeight: "700",
+          "& strong": { fontWeight: "400" },
+        },
+        ".text-heading-56": {
+          fontSize: "56px",
+          lineHeight: "64px",
+          letterSpacing: "-0.04em",
+          fontWeight: "700",
+          "& strong": { fontWeight: "400" },
+        },
+        ".text-heading-48": {
+          fontSize: "48px",
+          lineHeight: "56px",
+          letterSpacing: "-0.03em",
+          fontWeight: "700",
+          "& strong": { fontWeight: "400" },
+        },
+        ".text-heading-40": {
+          fontSize: "40px",
+          lineHeight: "48px",
+          letterSpacing: "-0.02em",
+          fontWeight: "600",
+          "& strong": { fontWeight: "400" },
+        },
+        ".text-heading-32": {
+          fontSize: "32px",
+          lineHeight: "40px",
+          letterSpacing: "-0.02em",
+          fontWeight: "600",
+          "& strong": { fontWeight: "400" },
+        },
+        ".text-heading-24": {
+          fontSize: "24px",
+          lineHeight: "32px",
+          letterSpacing: "-0.015em",
+          fontWeight: "600",
+          "& strong": { fontWeight: "400" },
+        },
+        ".text-heading-20": {
+          fontSize: "20px",
+          lineHeight: "28px",
+          letterSpacing: "-0.01em",
+          fontWeight: "600",
+          "& strong": { fontWeight: "400" },
+        },
+        ".text-heading-16": {
+          fontSize: "16px",
+          lineHeight: "24px",
+          letterSpacing: "-0.01em",
+          fontWeight: "600",
+          "& strong": { fontWeight: "400" },
+        },
+        ".text-heading-14": {
+          fontSize: "14px",
+          lineHeight: "20px",
+          letterSpacing: "-0.006em",
+          fontWeight: "600",
+        },
+
+        // ─────────────────────────────────────────────────────────────────
+        // BUTTONS - Only for button components
+        // ─────────────────────────────────────────────────────────────────
+        ".text-button-16": {
+          fontSize: "16px",
+          lineHeight: "24px",
+          letterSpacing: "0",
+          fontWeight: "500",
+        },
+        ".text-button-14": {
+          fontSize: "14px",
+          lineHeight: "20px",
+          letterSpacing: "0",
+          fontWeight: "500",
+        },
+        ".text-button-12": {
+          fontSize: "12px",
+          lineHeight: "16px",
+          letterSpacing: "0",
+          fontWeight: "500",
+        },
+
+        // ─────────────────────────────────────────────────────────────────
+        // LABELS - Single-line text with ample line-height for icons
+        // ─────────────────────────────────────────────────────────────────
+        ".text-label-20": {
+          fontSize: "20px",
+          lineHeight: "32px",
+          letterSpacing: "-0.01em",
+          fontWeight: "500",
+        },
+        ".text-label-18": {
+          fontSize: "18px",
+          lineHeight: "28px",
+          letterSpacing: "-0.01em",
+          fontWeight: "500",
+        },
+        ".text-label-16": {
+          fontSize: "16px",
+          lineHeight: "24px",
+          letterSpacing: "0",
+          fontWeight: "400",
+          "& strong": { fontWeight: "500" },
+        },
+        ".text-label-14": {
+          fontSize: "14px",
+          lineHeight: "20px",
+          letterSpacing: "0",
+          fontWeight: "400",
+          "& strong": { fontWeight: "500" },
+        },
+        ".text-label-14-mono": {
+          fontSize: "14px",
+          lineHeight: "20px",
+          letterSpacing: "0",
+          fontWeight: "400",
+          fontFamily:
+            'ui-monospace, SFMono-Regular, "Roboto Mono", Menlo, Monaco, monospace',
+        },
+        ".text-label-13": {
+          fontSize: "13px",
+          lineHeight: "20px",
+          letterSpacing: "0",
+          fontWeight: "400",
+          fontVariantNumeric: "tabular-nums",
+          "& strong": { fontWeight: "500" },
+        },
+        ".text-label-13-mono": {
+          fontSize: "13px",
+          lineHeight: "20px",
+          letterSpacing: "0",
+          fontWeight: "400",
+          fontFamily:
+            'ui-monospace, SFMono-Regular, "Roboto Mono", Menlo, Monaco, monospace',
+        },
+        ".text-label-12": {
+          fontSize: "12px",
+          lineHeight: "16px",
+          letterSpacing: "0",
+          fontWeight: "400",
+          "& strong": { fontWeight: "500" },
+        },
+        ".text-label-12-mono": {
+          fontSize: "12px",
+          lineHeight: "16px",
+          letterSpacing: "0",
+          fontWeight: "400",
+          fontFamily:
+            'ui-monospace, SFMono-Regular, "Roboto Mono", Menlo, Monaco, monospace',
+        },
+
+        // ─────────────────────────────────────────────────────────────────
+        // COPY - Multi-line text with higher line height than Label
+        // ─────────────────────────────────────────────────────────────────
+        ".text-copy-24": {
+          fontSize: "24px",
+          lineHeight: "36px",
+          letterSpacing: "0",
+          fontWeight: "400",
+          "& strong": { fontWeight: "600" },
+        },
+        ".text-copy-20": {
+          fontSize: "20px",
+          lineHeight: "32px",
+          letterSpacing: "0",
+          fontWeight: "400",
+          "& strong": { fontWeight: "600" },
+        },
+        ".text-copy-18": {
+          fontSize: "18px",
+          lineHeight: "28px",
+          letterSpacing: "0",
+          fontWeight: "400",
+          "& strong": { fontWeight: "600" },
+        },
+        ".text-copy-16": {
+          fontSize: "16px",
+          lineHeight: "24px",
+          letterSpacing: "0",
+          fontWeight: "400",
+          "& strong": { fontWeight: "600" },
+        },
+        ".text-copy-14": {
+          fontSize: "14px",
+          lineHeight: "22px",
+          letterSpacing: "0",
+          fontWeight: "400",
+          "& strong": { fontWeight: "600" },
+        },
+        ".text-copy-13": {
+          fontSize: "13px",
+          lineHeight: "20px",
+          letterSpacing: "0",
+          fontWeight: "400",
+        },
+        ".text-copy-13-mono": {
+          fontSize: "13px",
+          lineHeight: "20px",
+          letterSpacing: "0",
+          fontWeight: "400",
+          fontFamily:
+            'ui-monospace, SFMono-Regular, "Roboto Mono", Menlo, Monaco, monospace',
+        },
+
+        // ─────────────────────────────────────────────────────────────────
+        // FOOTER-SPECIFIC TEXT STYLES (keeping legacy)
+        // ─────────────────────────────────────────────────────────────────
+        ".text-footer-heading": {
+          fontSize: "14px",
+          lineHeight: "20px",
+          fontWeight: "500",
+          letterSpacing: "0",
+        },
+        ".text-footer-link": {
+          fontSize: "14px",
+          lineHeight: "20px",
+          fontWeight: "400",
+          letterSpacing: "0",
+        },
+      };
+      addUtilities(geistTypography);
+    },
     function ({ addComponents, theme }) {
       addComponents({
         // Distanz container system (Economist-inspired grid)
