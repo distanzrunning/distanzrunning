@@ -130,7 +130,7 @@ export default function DesignTokens() {
               </tr>
               <tr>
                 <td className="py-3 px-4">font-serif</td>
-                <td className="py-3 px-4">EB Garamond</td>
+                <td className="py-3 px-4">Eczar</td>
                 <td className="py-3 px-4 font-sans text-textSubtle">
                   Typography
                 </td>

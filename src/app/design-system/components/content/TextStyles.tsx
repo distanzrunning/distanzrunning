@@ -55,7 +55,7 @@ export default function TextStyles() {
                 </tr>
                 <tr className="border-b border-borderSubtle">
                   <td className="py-2 pr-4 text-textSubtle">Typeface</td>
-                  <td className="py-2 px-4">EB Garamond (serif)</td>
+                  <td className="py-2 px-4">Eczar (serif)</td>
                 </tr>
                 <tr className="border-b border-borderSubtle">
                   <td className="py-2 pr-4 text-textSubtle">Size</td>
@@ -102,7 +102,7 @@ export default function TextStyles() {
                 </tr>
                 <tr className="border-b border-borderSubtle">
                   <td className="py-2 pr-4 text-textSubtle">Typeface</td>
-                  <td className="py-2 px-4">EB Garamond (serif)</td>
+                  <td className="py-2 px-4">Eczar (serif)</td>
                 </tr>
                 <tr className="border-b border-borderSubtle">
                   <td className="py-2 pr-4 text-textSubtle">Size</td>
@@ -167,7 +167,7 @@ export default function TextStyles() {
                 </tr>
                 <tr className="border-b border-borderSubtle">
                   <td className="py-2 pr-4 text-textSubtle">Typeface</td>
-                  <td className="py-2 px-4">EB Garamond (serif)</td>
+                  <td className="py-2 px-4">Eczar (serif)</td>
                 </tr>
                 <tr className="border-b border-borderSubtle">
                   <td className="py-2 pr-4 text-textSubtle">Size</td>
@@ -212,7 +212,7 @@ export default function TextStyles() {
                 </tr>
                 <tr className="border-b border-borderSubtle">
                   <td className="py-2 pr-4 text-textSubtle">Typeface</td>
-                  <td className="py-2 px-4">EB Garamond (serif)</td>
+                  <td className="py-2 px-4">Eczar (serif)</td>
                 </tr>
                 <tr className="border-b border-borderSubtle">
                   <td className="py-2 pr-4 text-textSubtle">Size</td>
@@ -259,7 +259,7 @@ export default function TextStyles() {
                 </tr>
                 <tr className="border-b border-borderSubtle">
                   <td className="py-2 pr-4 text-textSubtle">Typeface</td>
-                  <td className="py-2 px-4">EB Garamond (serif)</td>
+                  <td className="py-2 px-4">Eczar (serif)</td>
                 </tr>
                 <tr className="border-b border-borderSubtle">
                   <td className="py-2 pr-4 text-textSubtle">Size</td>

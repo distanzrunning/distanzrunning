@@ -201,8 +201,8 @@ export default function ModularScale() {
 
         <p className="text-base text-textSubtle mb-6">
           Standardised heading sizes used throughout the design system. All
-          headings use the serif typeface (EB Garamond) with medium weight and
-          fluid typography that scales between mobile and desktop.
+          headings use the serif typeface (Eczar) with medium weight and fluid
+          typography that scales between mobile and desktop.
         </p>
 
         <div className="bg-surfaceSubtle p-6 mb-8 space-y-6">
@@ -318,7 +318,7 @@ export default function ModularScale() {
 
         <p className="text-base text-textSubtle mb-6">
           Body text sizes for paragraphs, UI elements, and supporting content.
-          All body text uses the sans-serif typeface (Inter).
+          All body text uses the sans-serif typeface (Libre Franklin).
         </p>
 
         <div className="bg-surfaceSubtle p-6 mb-8 space-y-6">

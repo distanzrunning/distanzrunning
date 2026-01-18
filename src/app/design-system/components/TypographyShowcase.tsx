@@ -36,7 +36,7 @@ export default function TypographyShowcase() {
         <div className="space-y-4">
           <div>
             <p className="text-sm text-textSubtle mb-2">
-              Sans-serif (Inter Variable)
+              Sans-serif (Libre Franklin)
             </p>
             <p className="text-2xl font-sans">
               The quick brown fox jumps over the lazy dog
@@ -46,7 +46,7 @@ export default function TypographyShowcase() {
             </code>
           </div>
           <div>
-            <p className="text-sm text-textSubtle mb-2">Serif (EB Garamond)</p>
+            <p className="text-sm text-textSubtle mb-2">Serif (Eczar)</p>
             <p className="text-2xl font-serif">
               The quick brown fox jumps over the lazy dog
             </p>
@@ -57,10 +57,10 @@ export default function TypographyShowcase() {
         </div>
       </div>
 
-      {/* News Typography (Inter) */}
+      {/* News Typography (Libre Franklin) */}
       <div>
         <h3 className="text-xl font-semibold mb-6">
-          News Typography - Inter Variable
+          News Typography - Libre Franklin
         </h3>
         <p className="text-textSubtle mb-8">
           Used for news articles, UI elements, and navigation
@@ -192,10 +192,10 @@ export default function TypographyShowcase() {
         </div>
       </div>
 
-      {/* Feature Typography (EB Garamond) */}
+      {/* Feature Typography (Eczar) */}
       <div>
         <h3 className="text-xl font-semibold mb-6">
-          Feature Typography - EB Garamond
+          Feature Typography - Eczar
         </h3>
         <p className="text-textSubtle mb-8">
           Used for long-form content, essays, and feature articles

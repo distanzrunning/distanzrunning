@@ -72,15 +72,15 @@
 @layer base {
   :root {
     /* Distanz Typography System - Adobe Fonts
-       Body/UI: inter-variable (complete weight spectrum 100-900)
-       Headings: eb-garamond (400, 500, 600 + italic variants)
+       Body/UI: Libre Franklin (complete weight spectrum 100-900 + italics)
+       Headings: Eczar (400, 500, 600, 700, 800)
        Adobe Fonts Project ID: bua7sld */
 
     /* Primary Typefaces - Adobe Fonts */
     --font-family-sans:
-      "inter-variable", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
-      sans-serif;
-    --font-family-serif: "eb-garamond", Georgia, "Times New Roman", serif;
+      "libre-franklin", "Libre Franklin", -apple-system, BlinkMacSystemFont,
+      "Segoe UI", sans-serif;
+    --font-family-serif: "eczar", "Eczar", Georgia, "Times New Roman", serif;
 
     /* Legacy font variables for backwards compatibility */
     --display-font: var(--font-family-serif);
@@ -1212,12 +1212,12 @@
 
   /* ========================================
      Distanz Typography Utility Classes
-     Based on Inter Variable + EB Garamond
+     Based on Libre Franklin + Eczar
      ======================================== */
 
-  /* ===== BODY/UI TYPOGRAPHY (INTER) ===== */
+  /* ===== BODY/UI TYPOGRAPHY (LIBRE FRANKLIN) ===== */
 
-  /* Body Text - Body (Inter) */
+  /* Body Text - Body (Libre Franklin) */
   .text-body-distanz,
   .news-body {
     font-family: var(--font-family-sans);
@@ -1290,7 +1290,7 @@
     color: rgb(var(--color-textDefault));
   }
 
-  /* UI Components (Inter) */
+  /* UI Components (Libre Franklin) */
   .ui-btn,
   .text-button-distanz {
     font-family: var(--font-family-sans);
@@ -1360,9 +1360,9 @@
     text-transform: uppercase;
   }
 
-  /* ===== HEADING TYPOGRAPHY (EB GARAMOND) ===== */
+  /* ===== HEADING TYPOGRAPHY (ECZAR) ===== */
 
-  /* Main Headings (EB Garamond) */
+  /* Main Headings (Eczar) */
   .text-h3-distanz,
   .feature-h3,
   .text-h3-feature {
@@ -1409,9 +1409,9 @@
     color: rgb(var(--color-textDefault));
   }
 
-  /* ===== EXTENDED CONTENT TYPOGRAPHY (EB GARAMOND) ===== */
+  /* ===== EXTENDED CONTENT TYPOGRAPHY (ECZAR) ===== */
 
-  /* Body Text - Features (EB Garamond) */
+  /* Body Text - Features (Eczar) */
   .feature-body {
     font-family: var(--font-family-serif);
     font-weight: 400;
@@ -1421,7 +1421,7 @@
     color: rgb(var(--color-textDefault));
   }
 
-  /* Subhead / Deck (EB Garamond Italic) */
+  /* Subhead / Deck (Eczar) */
   .feature-subhead,
   .text-intro-distanz,
   .text-lead-distanz {
@@ -1434,7 +1434,7 @@
     color: rgb(var(--color-textDefault));
   }
 
-  /* Pull Quote (EB Garamond Italic) */
+  /* Pull Quote (Eczar) */
   .feature-quote,
   .text-quote-distanz {
     font-family: var(--font-family-serif);
@@ -1446,7 +1446,7 @@
     color: rgb(var(--color-textDefault));
   }
 
-  /* Caption (EB Garamond Italic) */
+  /* Caption (Eczar Italic) */
   .feature-caption {
     font-family: var(--font-family-serif);
     font-weight: 400;
@@ -1457,7 +1457,7 @@
     color: rgb(var(--color-textSubtle));
   }
 
-  /* Footnote (EB Garamond) */
+  /* Footnote (Eczar) */
   .feature-footnote {
     font-family: var(--font-family-serif);
     font-weight: 400;
