@@ -164,25 +164,26 @@ function tokenizeHtml(code: string): Token[] {
 }
 
 // Get token color class based on type (Geist/Shiki style)
+// Using Geist color system: pink for keywords, blue for attrs, green for strings
 function getTokenClass(type: TokenType): string {
   switch (type) {
     case "tag":
-      // Pink for tags (like Geist's --shiki-token-keyword)
-      return "text-pink-700 dark:text-pink-400";
+      // Pink for tags (--shiki-token-keyword: pink-900 light / pink-900 dark)
+      return "text-pink-900 dark:text-pink-900";
     case "attr-name":
-      // Blue for attribute names
-      return "text-blue-700 dark:text-blue-400";
+      // Blue for attribute names (--shiki-token-constant: blue-900)
+      return "text-blue-900 dark:text-blue-900";
     case "attr-value":
-      // Green for attribute values (like --shiki-token-string)
-      return "text-green-700 dark:text-green-400";
+      // Green for attribute values (--shiki-token-string: green-900)
+      return "text-green-900 dark:text-green-900";
     case "punctuation":
-      // Gray for punctuation
-      return "text-gray-700 dark:text-gray-400";
+      // Gray for punctuation (--shiki-token-punctuation: gray-1000)
+      return "text-textDefault";
     case "string":
-      return "text-green-700 dark:text-green-400";
+      return "text-green-900 dark:text-green-900";
     case "plain":
     default:
-      return "text-gray-900 dark:text-gray-100";
+      return "text-textDefault";
   }
 }
 
@@ -214,7 +215,7 @@ function CodeBlock({ code }: { code: string }) {
   }, [code]);
 
   return (
-    <div className="group relative border border-gray-400 dark:border-gray-400 rounded-md my-4 overflow-hidden">
+    <div className="group relative border border-borderDefault rounded-md my-4 overflow-hidden">
       {/* Copy button - floating in top right */}
       <button
         onClick={handleCopy}
@@ -222,18 +223,18 @@ function CodeBlock({ code }: { code: string }) {
         aria-label="Copy code"
       >
         {copied ? (
-          <span className="text-green-600 dark:text-green-500">
+          <span className="text-green-700">
             <CheckIcon />
           </span>
         ) : (
-          <span className="text-gray-600 dark:text-gray-500 hover:text-gray-900 dark:hover:text-gray-300">
+          <span className="text-textSubtle hover:text-textDefault">
             <CopyIcon />
           </span>
         )}
       </button>
 
       {/* Code content with padding */}
-      <pre className="bg-white dark:bg-[#0a0a0a] overflow-x-auto py-5">
+      <pre className="bg-surface overflow-x-auto py-5">
         <code className="block text-[13px] leading-[20px] font-mono">
           {lines.map((line, index) => (
             <div
@@ -242,7 +243,7 @@ function CodeBlock({ code }: { code: string }) {
               style={{ fontFeatureSettings: '"liga" off' }}
             >
               {/* Line number */}
-              <span className="select-none w-[32px] min-w-[32px] text-right pr-4 text-gray-500 dark:text-gray-600">
+              <span className="select-none w-[32px] min-w-[32px] text-right pr-4 text-textSubtler">
                 {index + 1}
               </span>
               {/* Line content with syntax highlighting */}
@@ -316,19 +317,19 @@ export default function Typography() {
             Tailwind
           </span>{" "}
           classes. The classes below pre-set a combination of{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded text-gray-900 dark:text-gray-100">
+          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
             font-size
           </code>
           ,{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded text-gray-900 dark:text-gray-100">
+          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
             line-height
           </code>
           ,{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded text-gray-900 dark:text-gray-100">
+          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
             letter-spacing
           </code>
           , and{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded text-gray-900 dark:text-gray-100">
+          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
             font-weight
           </code>{" "}
           for you based on the Geist design system.
@@ -336,7 +337,7 @@ export default function Typography() {
 
         <p className="text-copy-14 text-textSubtle mb-6">
           The{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded text-gray-900 dark:text-gray-100">
+          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
             strong
           </code>{" "}
           element can be used as a modifier to change the font weight. For
@@ -357,7 +358,7 @@ export default function Typography() {
 
         <p className="text-base text-textSubtle mt-4 mb-6">
           Headings are used to introduce pages or sections. The{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded text-gray-900 dark:text-gray-100">
+          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
             strong
           </code>{" "}
           element reduces the weight for creating subtle variants.
@@ -577,7 +578,7 @@ export default function Typography() {
         <p className="text-base text-textSubtle mt-4 mb-6">
           Labels are single-line text with ample line-height to align with
           icons. Use the{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded text-gray-900 dark:text-gray-100">
+          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
             strong
           </code>{" "}
           element to increase weight. Mono variants use monospace font.
@@ -725,7 +726,7 @@ export default function Typography() {
         <p className="text-base text-textSubtle mt-4 mb-6">
           Copy styles are for multi-line text with higher line height than
           Labels. Use the{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded text-gray-900 dark:text-gray-100">
+          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
             strong
           </code>{" "}
           element to increase weight for emphasis.
