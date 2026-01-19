@@ -1,8 +1,99 @@
 "use client";
 
 import { useState, useCallback } from "react";
+import { CircleHelp } from "lucide-react";
 import { SiTailwindcss } from "react-icons/si";
 import { Section } from "../ContentWithTOC";
+
+// Toast notification for copy confirmation
+function Toast({
+  message,
+  isVisible,
+}: {
+  message: string;
+  isVisible: boolean;
+}) {
+  return (
+    <div
+      className={`fixed bottom-6 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 ${
+        isVisible
+          ? "opacity-100 translate-y-0"
+          : "opacity-0 translate-y-2 pointer-events-none"
+      }`}
+    >
+      <div className="bg-textDefault text-canvas px-4 py-2 rounded-md shadow-lg text-sm font-medium">
+        {message}
+      </div>
+    </div>
+  );
+}
+
+// Global toast state management
+let toastTimeout: NodeJS.Timeout | null = null;
+
+function useToast() {
+  const [toast, setToast] = useState({ message: "", isVisible: false });
+
+  const showToast = useCallback((message: string) => {
+    if (toastTimeout) {
+      clearTimeout(toastTimeout);
+    }
+    setToast({ message, isVisible: true });
+    toastTimeout = setTimeout(() => {
+      setToast((prev) => ({ ...prev, isVisible: false }));
+    }, 2000);
+  }, []);
+
+  return { toast, showToast };
+}
+
+// Typography table row with click-to-copy functionality
+function TypographyRow({
+  example,
+  className,
+  usage,
+  onCopy,
+}: {
+  example: React.ReactNode;
+  className: string;
+  usage: string;
+  onCopy: (text: string) => void;
+}) {
+  const handleClick = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      navigator.clipboard.writeText(className);
+      onCopy(className);
+    },
+    [className, onCopy],
+  );
+
+  const handleContextMenu = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      navigator.clipboard.writeText(className);
+      onCopy(className);
+    },
+    [className, onCopy],
+  );
+
+  return (
+    <tr
+      className="border-b border-borderSubtle cursor-pointer hover:bg-surfaceSubtle transition-colors"
+      onClick={handleClick}
+      onContextMenu={handleContextMenu}
+    >
+      <td className="py-4 pr-4">{example}</td>
+      <td className="py-4 px-4 font-mono text-xs align-top">{className}</td>
+      <td className="py-4 px-4 text-textSubtle align-top">
+        <span className="inline-flex items-center gap-2">
+          {usage}
+          <CircleHelp size={14} className="text-textSubtler" />
+        </span>
+      </td>
+    </tr>
+  );
+}
 
 // Copy icon for code blocks
 function CopyIcon() {
@@ -304,8 +395,18 @@ function SectionHeader({
 }
 
 export default function Typography() {
+  const { toast, showToast } = useToast();
+
+  const handleCopy = useCallback(
+    (className: string) => {
+      showToast(`Copied: ${className}`);
+    },
+    [showToast],
+  );
+
   return (
     <>
+      <Toast message={toast.message} isVisible={toast.isVisible} />
       {/* Usage Section */}
       <Section>
         <SectionHeader id="usage">Usage</SectionHeader>
@@ -383,124 +484,82 @@ export default function Typography() {
               </tr>
             </thead>
             <tbody className="text-sm">
-              <tr className="border-b border-borderSubtle">
-                <td className="py-4 pr-4">
-                  <p className="text-heading-72 font-serif">Heading</p>
-                </td>
-                <td className="py-4 px-4 font-mono text-xs align-top">
-                  text-heading-72 font-serif
-                </td>
-                <td className="py-4 px-4 text-textSubtle align-top">
-                  Hero headlines
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-4 pr-4">
-                  <p className="text-heading-64 font-serif">Heading</p>
-                </td>
-                <td className="py-4 px-4 font-mono text-xs align-top">
-                  text-heading-64 font-serif
-                </td>
-                <td className="py-4 px-4 text-textSubtle align-top">
-                  Large page titles
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-4 pr-4">
-                  <p className="text-heading-56 font-serif">Heading</p>
-                </td>
-                <td className="py-4 px-4 font-mono text-xs align-top">
-                  text-heading-56 font-serif
-                </td>
-                <td className="py-4 px-4 text-textSubtle align-top">
-                  Page titles
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-4 pr-4">
-                  <p className="text-heading-48 font-serif">Heading</p>
-                </td>
-                <td className="py-4 px-4 font-mono text-xs align-top">
-                  text-heading-48 font-serif
-                </td>
-                <td className="py-4 px-4 text-textSubtle align-top">
-                  Section titles
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-4 pr-4">
-                  <p className="text-heading-40 font-serif">Heading</p>
-                </td>
-                <td className="py-4 px-4 font-mono text-xs align-top">
-                  text-heading-40 font-serif
-                </td>
-                <td className="py-4 px-4 text-textSubtle align-top">
-                  Feature headers
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-4 pr-4">
+              <TypographyRow
+                example={<p className="text-heading-72 font-serif">Heading</p>}
+                className="text-heading-72 font-serif"
+                usage="Hero headlines"
+                onCopy={handleCopy}
+              />
+              <TypographyRow
+                example={<p className="text-heading-64 font-serif">Heading</p>}
+                className="text-heading-64 font-serif"
+                usage="Large page titles"
+                onCopy={handleCopy}
+              />
+              <TypographyRow
+                example={<p className="text-heading-56 font-serif">Heading</p>}
+                className="text-heading-56 font-serif"
+                usage="Page titles"
+                onCopy={handleCopy}
+              />
+              <TypographyRow
+                example={<p className="text-heading-48 font-serif">Heading</p>}
+                className="text-heading-48 font-serif"
+                usage="Section titles"
+                onCopy={handleCopy}
+              />
+              <TypographyRow
+                example={<p className="text-heading-40 font-serif">Heading</p>}
+                className="text-heading-40 font-serif"
+                usage="Feature headers"
+                onCopy={handleCopy}
+              />
+              <TypographyRow
+                example={
                   <p className="text-heading-32 font-serif">
                     Heading <strong>Subtle</strong>
                   </p>
-                </td>
-                <td className="py-4 px-4 font-mono text-xs align-top">
-                  text-heading-32 font-serif
-                </td>
-                <td className="py-4 px-4 text-textSubtle align-top">
-                  Card titles, section headers
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-4 pr-4">
+                }
+                className="text-heading-32 font-serif"
+                usage="Card titles, section headers"
+                onCopy={handleCopy}
+              />
+              <TypographyRow
+                example={
                   <p className="text-heading-24 font-serif">
                     Heading <strong>Subtle</strong>
                   </p>
-                </td>
-                <td className="py-4 px-4 font-mono text-xs align-top">
-                  text-heading-24 font-serif
-                </td>
-                <td className="py-4 px-4 text-textSubtle align-top">
-                  Subsection titles
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-4 pr-4">
+                }
+                className="text-heading-24 font-serif"
+                usage="Subsection titles"
+                onCopy={handleCopy}
+              />
+              <TypographyRow
+                example={
                   <p className="text-heading-20 font-serif">
                     Heading <strong>Subtle</strong>
                   </p>
-                </td>
-                <td className="py-4 px-4 font-mono text-xs align-top">
-                  text-heading-20 font-serif
-                </td>
-                <td className="py-4 px-4 text-textSubtle align-top">
-                  Small headers
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-4 pr-4">
+                }
+                className="text-heading-20 font-serif"
+                usage="Small headers"
+                onCopy={handleCopy}
+              />
+              <TypographyRow
+                example={
                   <p className="text-heading-16 font-serif">
                     Heading <strong>Subtle</strong>
                   </p>
-                </td>
-                <td className="py-4 px-4 font-mono text-xs align-top">
-                  text-heading-16 font-serif
-                </td>
-                <td className="py-4 px-4 text-textSubtle align-top">
-                  Mini headers, labels
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-4 pr-4">
-                  <p className="text-heading-14 font-serif">Heading</p>
-                </td>
-                <td className="py-4 px-4 font-mono text-xs align-top">
-                  text-heading-14 font-serif
-                </td>
-                <td className="py-4 px-4 text-textSubtle align-top">
-                  Smallest heading
-                </td>
-              </tr>
+                }
+                className="text-heading-16 font-serif"
+                usage="Mini headers, labels"
+                onCopy={handleCopy}
+              />
+              <TypographyRow
+                example={<p className="text-heading-14 font-serif">Heading</p>}
+                className="text-heading-14 font-serif"
+                usage="Smallest heading"
+                onCopy={handleCopy}
+              />
             </tbody>
           </table>
         </div>
@@ -533,39 +592,24 @@ export default function Typography() {
               </tr>
             </thead>
             <tbody className="text-sm">
-              <tr className="border-b border-borderSubtle">
-                <td className="py-4 pr-4">
-                  <p className="text-button-16">Button Text</p>
-                </td>
-                <td className="py-4 px-4 font-mono text-xs align-top">
-                  text-button-16
-                </td>
-                <td className="py-4 px-4 text-textSubtle align-top">
-                  Large buttons
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-4 pr-4">
-                  <p className="text-button-14">Button Text</p>
-                </td>
-                <td className="py-4 px-4 font-mono text-xs align-top">
-                  text-button-14
-                </td>
-                <td className="py-4 px-4 text-textSubtle align-top">
-                  Default buttons
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-4 pr-4">
-                  <p className="text-button-12">Button Text</p>
-                </td>
-                <td className="py-4 px-4 font-mono text-xs align-top">
-                  text-button-12
-                </td>
-                <td className="py-4 px-4 text-textSubtle align-top">
-                  Small buttons
-                </td>
-              </tr>
+              <TypographyRow
+                example={<p className="text-button-16">Button Text</p>}
+                className="text-button-16"
+                usage="Large buttons"
+                onCopy={handleCopy}
+              />
+              <TypographyRow
+                example={<p className="text-button-14">Button Text</p>}
+                className="text-button-14"
+                usage="Default buttons"
+                onCopy={handleCopy}
+              />
+              <TypographyRow
+                example={<p className="text-button-12">Button Text</p>}
+                className="text-button-12"
+                usage="Small buttons"
+                onCopy={handleCopy}
+              />
             </tbody>
           </table>
         </div>
@@ -603,117 +647,80 @@ export default function Typography() {
               </tr>
             </thead>
             <tbody className="text-sm">
-              <tr className="border-b border-borderSubtle">
-                <td className="py-4 pr-4">
-                  <p className="text-label-20">Label Text</p>
-                </td>
-                <td className="py-4 px-4 font-mono text-xs align-top">
-                  text-label-20
-                </td>
-                <td className="py-4 px-4 text-textSubtle align-top">
-                  Large labels
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-4 pr-4">
-                  <p className="text-label-18">Label Text</p>
-                </td>
-                <td className="py-4 px-4 font-mono text-xs align-top">
-                  text-label-18
-                </td>
-                <td className="py-4 px-4 text-textSubtle align-top">
-                  Medium labels
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-4 pr-4">
+              <TypographyRow
+                example={<p className="text-label-20">Label Text</p>}
+                className="text-label-20"
+                usage="Large labels"
+                onCopy={handleCopy}
+              />
+              <TypographyRow
+                example={<p className="text-label-18">Label Text</p>}
+                className="text-label-18"
+                usage="Medium labels"
+                onCopy={handleCopy}
+              />
+              <TypographyRow
+                example={
                   <p className="text-label-16">
                     Label <strong>Strong</strong>
                   </p>
-                </td>
-                <td className="py-4 px-4 font-mono text-xs align-top">
-                  text-label-16
-                </td>
-                <td className="py-4 px-4 text-textSubtle align-top">
-                  Default labels
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-4 pr-4">
+                }
+                className="text-label-16"
+                usage="Default labels"
+                onCopy={handleCopy}
+              />
+              <TypographyRow
+                example={
                   <p className="text-label-14">
                     Label <strong>Strong</strong>
                   </p>
-                </td>
-                <td className="py-4 px-4 font-mono text-xs align-top">
-                  text-label-14
-                </td>
-                <td className="py-4 px-4 text-textSubtle align-top">
-                  Standard labels
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-4 pr-4">
-                  <p className="text-label-14-mono">Label Mono</p>
-                </td>
-                <td className="py-4 px-4 font-mono text-xs align-top">
-                  text-label-14-mono
-                </td>
-                <td className="py-4 px-4 text-textSubtle align-top">
-                  Code, technical labels
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-4 pr-4">
+                }
+                className="text-label-14"
+                usage="Standard labels"
+                onCopy={handleCopy}
+              />
+              <TypographyRow
+                example={<p className="text-label-14-mono">Label Mono</p>}
+                className="text-label-14-mono"
+                usage="Code, technical labels"
+                onCopy={handleCopy}
+              />
+              <TypographyRow
+                example={
                   <p className="text-label-13">
                     Label <strong>Strong</strong>{" "}
                     <span style={{ fontVariantNumeric: "tabular-nums" }}>
                       123
                     </span>
                   </p>
-                </td>
-                <td className="py-4 px-4 font-mono text-xs align-top">
-                  text-label-13
-                </td>
-                <td className="py-4 px-4 text-textSubtle align-top">
-                  Small labels, tabular nums
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-4 pr-4">
-                  <p className="text-label-13-mono">Label Mono</p>
-                </td>
-                <td className="py-4 px-4 font-mono text-xs align-top">
-                  text-label-13-mono
-                </td>
-                <td className="py-4 px-4 text-textSubtle align-top">
-                  Small code labels
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-4 pr-4">
+                }
+                className="text-label-13"
+                usage="Small labels, tabular nums"
+                onCopy={handleCopy}
+              />
+              <TypographyRow
+                example={<p className="text-label-13-mono">Label Mono</p>}
+                className="text-label-13-mono"
+                usage="Small code labels"
+                onCopy={handleCopy}
+              />
+              <TypographyRow
+                example={
                   <p className="text-label-12">
                     Label <strong>Strong</strong>{" "}
                     <span className="uppercase">CAPS</span>
                   </p>
-                </td>
-                <td className="py-4 px-4 font-mono text-xs align-top">
-                  text-label-12
-                </td>
-                <td className="py-4 px-4 text-textSubtle align-top">
-                  Tiny labels, metadata
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-4 pr-4">
-                  <p className="text-label-12-mono">Label Mono</p>
-                </td>
-                <td className="py-4 px-4 font-mono text-xs align-top">
-                  text-label-12-mono
-                </td>
-                <td className="py-4 px-4 text-textSubtle align-top">
-                  Tiny code labels
-                </td>
-              </tr>
+                }
+                className="text-label-12"
+                usage="Tiny labels, metadata"
+                onCopy={handleCopy}
+              />
+              <TypographyRow
+                example={<p className="text-label-12-mono">Label Mono</p>}
+                className="text-label-12-mono"
+                usage="Tiny code labels"
+                onCopy={handleCopy}
+              />
             </tbody>
           </table>
         </div>
@@ -751,93 +758,68 @@ export default function Typography() {
               </tr>
             </thead>
             <tbody className="text-sm">
-              <tr className="border-b border-borderSubtle">
-                <td className="py-4 pr-4">
+              <TypographyRow
+                example={
                   <p className="text-copy-24">
                     Copy text <strong>strong</strong>
                   </p>
-                </td>
-                <td className="py-4 px-4 font-mono text-xs align-top">
-                  text-copy-24
-                </td>
-                <td className="py-4 px-4 text-textSubtle align-top">
-                  Lead paragraphs
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-4 pr-4">
+                }
+                className="text-copy-24"
+                usage="Lead paragraphs"
+                onCopy={handleCopy}
+              />
+              <TypographyRow
+                example={
                   <p className="text-copy-20">
                     Copy text <strong>strong</strong>
                   </p>
-                </td>
-                <td className="py-4 px-4 font-mono text-xs align-top">
-                  text-copy-20
-                </td>
-                <td className="py-4 px-4 text-textSubtle align-top">
-                  Large body text
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-4 pr-4">
+                }
+                className="text-copy-20"
+                usage="Large body text"
+                onCopy={handleCopy}
+              />
+              <TypographyRow
+                example={
                   <p className="text-copy-18">
                     Copy text <strong>strong</strong>
                   </p>
-                </td>
-                <td className="py-4 px-4 font-mono text-xs align-top">
-                  text-copy-18
-                </td>
-                <td className="py-4 px-4 text-textSubtle align-top">
-                  Introductions
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-4 pr-4">
+                }
+                className="text-copy-18"
+                usage="Introductions"
+                onCopy={handleCopy}
+              />
+              <TypographyRow
+                example={
                   <p className="text-copy-16">
                     Copy text <strong>strong</strong>
                   </p>
-                </td>
-                <td className="py-4 px-4 font-mono text-xs align-top">
-                  text-copy-16
-                </td>
-                <td className="py-4 px-4 text-textSubtle align-top">
-                  Default body text
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-4 pr-4">
+                }
+                className="text-copy-16"
+                usage="Default body text"
+                onCopy={handleCopy}
+              />
+              <TypographyRow
+                example={
                   <p className="text-copy-14">
                     Copy text <strong>strong</strong>
                   </p>
-                </td>
-                <td className="py-4 px-4 font-mono text-xs align-top">
-                  text-copy-14
-                </td>
-                <td className="py-4 px-4 text-textSubtle align-top">
-                  Compact body text
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-4 pr-4">
-                  <p className="text-copy-13">Copy text</p>
-                </td>
-                <td className="py-4 px-4 font-mono text-xs align-top">
-                  text-copy-13
-                </td>
-                <td className="py-4 px-4 text-textSubtle align-top">
-                  Small body text
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-4 pr-4">
-                  <p className="text-copy-13-mono">Copy text mono</p>
-                </td>
-                <td className="py-4 px-4 font-mono text-xs align-top">
-                  text-copy-13-mono
-                </td>
-                <td className="py-4 px-4 text-textSubtle align-top">
-                  Code snippets, technical text
-                </td>
-              </tr>
+                }
+                className="text-copy-14"
+                usage="Compact body text"
+                onCopy={handleCopy}
+              />
+              <TypographyRow
+                example={<p className="text-copy-13">Copy text</p>}
+                className="text-copy-13"
+                usage="Small body text"
+                onCopy={handleCopy}
+              />
+              <TypographyRow
+                example={<p className="text-copy-13-mono">Copy text mono</p>}
+                className="text-copy-13-mono"
+                usage="Code snippets, technical text"
+                onCopy={handleCopy}
+              />
             </tbody>
           </table>
         </div>
