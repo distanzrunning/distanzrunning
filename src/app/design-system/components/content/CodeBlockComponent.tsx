@@ -145,6 +145,7 @@ interface Token {
 function tokenizeJsx(code: string): Token[] {
   const tokens: Token[] = [];
   let i = 0;
+  let insideJsxContent = false; // Track if we're inside JSX text content (between > and <)
 
   while (i < code.length) {
     // Check for comments
@@ -164,6 +165,7 @@ function tokenizeJsx(code: string): Token[] {
       if (code[i + 1] === "/") {
         tokens.push({ type: "punctuation", content: "</" });
         i += 2;
+        insideJsxContent = false; // Entering closing tag
         // Get tag name
         let tagName = "";
         while (i < code.length && /[a-zA-Z0-9.]/.test(code[i])) {
@@ -177,9 +179,11 @@ function tokenizeJsx(code: string): Token[] {
         if (code[i] === ">") {
           tokens.push({ type: "punctuation", content: ">" });
           i++;
+          insideJsxContent = true; // Now inside JSX text content
         }
       } else {
         tokens.push({ type: "punctuation", content: "<" });
+        insideJsxContent = false; // Entering a tag, no longer in text content
         i++;
         // Get tag name (can include dots for namespaced components)
         let tagName = "";
@@ -273,11 +277,27 @@ function tokenizeJsx(code: string): Token[] {
         if (code[i] === "/") {
           tokens.push({ type: "punctuation", content: "/" });
           i++;
+          insideJsxContent = false; // Self-closing tag, no content follows
         }
         if (code[i] === ">") {
           tokens.push({ type: "punctuation", content: ">" });
           i++;
+          // Only set insideJsxContent if not self-closing
+          const prevToken = tokens[tokens.length - 2];
+          if (prevToken?.content !== "/") {
+            insideJsxContent = true;
+          }
         }
+      }
+    } else if (insideJsxContent && code[i] !== "{") {
+      // We're inside JSX text content - collect plain text until we hit < or {
+      let text = "";
+      while (i < code.length && code[i] !== "<" && code[i] !== "{") {
+        text += code[i];
+        i++;
+      }
+      if (text) {
+        tokens.push({ type: "plain", content: text });
       }
     } else if (code[i] === '"' || code[i] === "'") {
       // String literal
