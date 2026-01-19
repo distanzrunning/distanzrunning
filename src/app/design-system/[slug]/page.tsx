@@ -1,6 +1,7 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
+import { useState, useEffect, useCallback } from "react";
 import DesignSystemHeader from "../components/DesignSystemHeader";
 import DesignSystemSidebar from "../components/DesignSystemSidebar";
 import PlaceholderContent from "../components/PlaceholderContent";
@@ -34,12 +35,41 @@ import ContentWithTOC from "../components/ContentWithTOC";
 export default function DesignSystemPage() {
   const params = useParams();
   const router = useRouter();
-  const slug = params.slug as string;
+  const initialSlug = params.slug as string;
 
-  const handleNavigation = (newSlug: string) => {
-    // Use push with scroll: false to maintain sidebar scroll position
-    router.push(`/design-system/${newSlug}`, { scroll: false });
-  };
+  // State-based navigation for SPA behavior
+  const [activeSlug, setActiveSlug] = useState(initialSlug);
+
+  // Handle browser back/forward navigation
+  useEffect(() => {
+    const handlePopState = () => {
+      const path = window.location.pathname;
+      const match = path.match(/\/design-system\/(.+)/);
+      if (match) {
+        setActiveSlug(match[1]);
+      }
+    };
+
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, []);
+
+  // Sync state with URL params on initial load
+  useEffect(() => {
+    setActiveSlug(initialSlug);
+  }, [initialSlug]);
+
+  const handleNavigation = useCallback((newSlug: string) => {
+    // Update state immediately for instant navigation
+    setActiveSlug(newSlug);
+    // Update URL without triggering navigation
+    window.history.pushState({}, "", `/design-system/${newSlug}`);
+    // Scroll main content to top
+    const mainContent = document.getElementById("main-content");
+    if (mainContent) {
+      mainContent.scrollTop = 0;
+    }
+  }, []);
 
   const handleHomeClick = () => {
     router.push("/design-system");
@@ -47,10 +77,10 @@ export default function DesignSystemPage() {
 
   const renderContent = () => {
     // Foundations pages
-    if (slug === "introduction") {
+    if (activeSlug === "introduction") {
       return <FoundationsOverview />;
     }
-    if (slug === "design-principles") {
+    if (activeSlug === "design-principles") {
       return (
         <ContentWithTOC
           tocTitle="On this page"
@@ -73,7 +103,7 @@ export default function DesignSystemPage() {
         </ContentWithTOC>
       );
     }
-    if (slug === "ux-principles") {
+    if (activeSlug === "ux-principles") {
       return (
         <ContentWithTOC
           tocTitle="On this page"
@@ -96,7 +126,7 @@ export default function DesignSystemPage() {
         </ContentWithTOC>
       );
     }
-    if (slug === "design-tokens") {
+    if (activeSlug === "design-tokens") {
       return (
         <ContentWithTOC
           tocTitle="On this page"
@@ -139,7 +169,7 @@ export default function DesignSystemPage() {
         </ContentWithTOC>
       );
     }
-    if (slug === "colours") {
+    if (activeSlug === "colours") {
       return (
         <ContentWithTOC
           tocTitle="On this page"
@@ -167,7 +197,7 @@ export default function DesignSystemPage() {
         </ContentWithTOC>
       );
     }
-    if (slug === "rules") {
+    if (activeSlug === "rules") {
       return (
         <ContentWithTOC
           tocTitle="On this page"
@@ -191,7 +221,7 @@ export default function DesignSystemPage() {
         </ContentWithTOC>
       );
     }
-    if (slug === "grid-spacing") {
+    if (activeSlug === "grid-spacing") {
       return (
         <ContentWithTOC
           tocTitle="On this page"
@@ -210,7 +240,7 @@ export default function DesignSystemPage() {
         </ContentWithTOC>
       );
     }
-    if (slug === "grid-layout") {
+    if (activeSlug === "grid-layout") {
       return (
         <ContentWithTOC
           tocTitle="On this page"
@@ -230,7 +260,7 @@ export default function DesignSystemPage() {
         </ContentWithTOC>
       );
     }
-    if (slug === "typefaces") {
+    if (activeSlug === "typefaces") {
       return (
         <ContentWithTOC
           tocTitle="On this page"
@@ -260,7 +290,7 @@ export default function DesignSystemPage() {
         </ContentWithTOC>
       );
     }
-    if (slug === "modular-scale") {
+    if (activeSlug === "modular-scale") {
       return (
         <ContentWithTOC
           tocTitle="On this page"
@@ -274,7 +304,7 @@ export default function DesignSystemPage() {
         </ContentWithTOC>
       );
     }
-    if (slug === "line-height") {
+    if (activeSlug === "line-height") {
       return (
         <ContentWithTOC
           tocTitle="On this page"
@@ -294,7 +324,7 @@ export default function DesignSystemPage() {
         </ContentWithTOC>
       );
     }
-    if (slug === "text-styles") {
+    if (activeSlug === "text-styles") {
       return (
         <ContentWithTOC
           tocTitle="On this page"
@@ -310,7 +340,7 @@ export default function DesignSystemPage() {
         </ContentWithTOC>
       );
     }
-    if (slug === "iconography") {
+    if (activeSlug === "iconography") {
       return (
         <ContentWithTOC
           tocTitle="On this page"
@@ -331,7 +361,7 @@ export default function DesignSystemPage() {
         </ContentWithTOC>
       );
     }
-    if (slug === "icons") {
+    if (activeSlug === "icons") {
       return (
         <ContentWithTOC
           tocTitle="On this page"
@@ -346,7 +376,7 @@ export default function DesignSystemPage() {
         </ContentWithTOC>
       );
     }
-    if (slug === "typography") {
+    if (activeSlug === "typography") {
       return (
         <ContentWithTOC
           tocTitle="On this page"
@@ -365,20 +395,20 @@ export default function DesignSystemPage() {
         </ContentWithTOC>
       );
     }
-    if (slug === "materials") {
+    if (activeSlug === "materials") {
       return <PlaceholderContent title="Foundations" subsection="Materials" />;
     }
 
     // Brand pages
-    if (slug === "distanz") {
+    if (activeSlug === "distanz") {
       return <PlaceholderContent title="Brands" subsection="Distanz" />;
     }
-    if (slug === "stride") {
+    if (activeSlug === "stride") {
       return <PlaceholderContent title="Brands" subsection="Stride" />;
     }
 
     // Components pages
-    if (slug === "button") {
+    if (activeSlug === "button") {
       return (
         <ContentWithTOC
           tocTitle="On this page"
@@ -427,7 +457,7 @@ export default function DesignSystemPage() {
       );
     }
 
-    if (slug === "icon-button") {
+    if (activeSlug === "icon-button") {
       return (
         <ContentWithTOC
           tocTitle="On this page"
@@ -470,7 +500,7 @@ export default function DesignSystemPage() {
       );
     }
 
-    if (slug === "slim-button") {
+    if (activeSlug === "slim-button") {
       return (
         <ContentWithTOC
           tocTitle="On this page"
@@ -502,7 +532,7 @@ export default function DesignSystemPage() {
       );
     }
 
-    if (slug === "slim-button-icon") {
+    if (activeSlug === "slim-button-icon") {
       return (
         <ContentWithTOC
           tocTitle="On this page"
@@ -533,7 +563,7 @@ export default function DesignSystemPage() {
       );
     }
 
-    if (slug === "checkbox") {
+    if (activeSlug === "checkbox") {
       return (
         <ContentWithTOC
           tocTitle="On this page"
@@ -551,7 +581,7 @@ export default function DesignSystemPage() {
       );
     }
 
-    if (slug === "blockquote") {
+    if (activeSlug === "blockquote") {
       return (
         <ContentWithTOC
           tocTitle="On this page"
@@ -571,7 +601,7 @@ export default function DesignSystemPage() {
       );
     }
 
-    if (slug === "pull-quote") {
+    if (activeSlug === "pull-quote") {
       return (
         <ContentWithTOC
           tocTitle="On this page"
@@ -601,7 +631,7 @@ export default function DesignSystemPage() {
       );
     }
 
-    if (slug === "close") {
+    if (activeSlug === "close") {
       return (
         <ContentWithTOC
           tocTitle="On this page"
@@ -618,7 +648,7 @@ export default function DesignSystemPage() {
       );
     }
 
-    if (slug === "toggle" || slug === "switch") {
+    if (activeSlug === "toggle" || activeSlug === "switch") {
       return (
         <ContentWithTOC
           tocTitle="On this page"
@@ -663,7 +693,7 @@ export default function DesignSystemPage() {
     }
 
     // Default placeholder for unimplemented pages
-    const formattedTitle = slug
+    const formattedTitle = activeSlug
       .split("-")
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
       .join(" ");
@@ -684,7 +714,7 @@ export default function DesignSystemPage() {
       {/* Mobile/Tablet Section Header - visible below xl */}
       <div className="xl:hidden sticky top-28 z-30">
         <DesignSystemSidebar
-          activeSlug={slug}
+          activeSlug={activeSlug}
           onNavigate={handleNavigation}
           onHomeClick={handleHomeClick}
         />
@@ -694,14 +724,14 @@ export default function DesignSystemPage() {
         {/* Desktop Sidebar - hidden below xl */}
         <div className="hidden xl:block flex-shrink-0">
           <DesignSystemSidebar
-            activeSlug={slug}
+            activeSlug={activeSlug}
             onNavigate={handleNavigation}
             onHomeClick={handleHomeClick}
           />
         </div>
 
         {/* Main Content Area */}
-        <div className="flex-1 min-w-0">
+        <div id="main-content" className="flex-1 min-w-0 overflow-y-auto">
           <div className="p-12">{renderContent()}</div>
         </div>
       </div>
