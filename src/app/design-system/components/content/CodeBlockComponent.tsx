@@ -131,6 +131,7 @@ type TokenType =
   | "string"
   | "keyword"
   | "function"
+  | "parameter"
   | "comment"
   | "added"
   | "removed";
@@ -339,10 +340,35 @@ function tokenizeJsx(code: string): Token[] {
         }
       }
       if (!foundKeyword) {
-        // Check if previous token was 'function' keyword - next identifier is a function name
+        // Check context from previous tokens
         const lastToken = tokens[tokens.length - 1];
         const prevTokenIsFunction =
           lastToken?.type === "keyword" && lastToken?.content === "function";
+
+        // Check if we're inside function parameters (after function name and open paren)
+        const isInsideParams = (() => {
+          // Look back for pattern: function Name( or Name(
+          let parenDepth = 0;
+          for (let j = tokens.length - 1; j >= 0; j--) {
+            const t = tokens[j];
+            if (t.type === "punctuation" && t.content === ")") parenDepth++;
+            if (t.type === "punctuation" && t.content === "(") {
+              parenDepth--;
+              if (parenDepth < 0) {
+                // Found unmatched open paren, check if preceded by function name
+                const prevToken = tokens[j - 1];
+                if (prevToken?.type === "function") return true;
+              }
+            }
+            // Stop at certain boundaries
+            if (
+              t.type === "punctuation" &&
+              (t.content === "{" || t.content === "}")
+            )
+              break;
+          }
+          return false;
+        })();
 
         // Check for identifier (potential function/class name)
         if (/[a-zA-Z_$]/.test(code[i])) {
@@ -358,6 +384,8 @@ function tokenizeJsx(code: string): Token[] {
 
           if (prevTokenIsFunction || isPascalCase) {
             tokens.push({ type: "function", content: identifier });
+          } else if (isInsideParams) {
+            tokens.push({ type: "parameter", content: identifier });
           } else {
             tokens.push({ type: "plain", content: identifier });
           }
@@ -401,40 +429,49 @@ function tokenizeJsx(code: string): Token[] {
   return tokens;
 }
 
-// Get token color class based on type (Geist-style colors)
+// Get token color class based on type (Geist shiki token colors)
+// --shiki-token-keyword: var(--ds-pink-900)
+// --shiki-token-function: var(--ds-purple-900)
+// --shiki-token-string: var(--ds-green-900)
+// --shiki-token-parameter: var(--ds-amber-900)
+// --shiki-token-comment: var(--ds-gray-900)
+// --shiki-token-punctuation: var(--ds-gray-1000)
 function getTokenClass(type: TokenType): string {
   switch (type) {
     case "tag":
-      // JSX tags like div, h1, p - green: oklch(0.5175 0.1453 147.65)
+      // JSX tags like div, h1, p - green
       return "text-[var(--ds-green-900)]";
     case "attr-name":
       // Attribute names - default text color
-      return "text-textDefault";
+      return "text-[var(--ds-gray-1000)]";
     case "attr-value":
       // Attribute values/strings - default text color
-      return "text-textDefault";
+      return "text-[var(--ds-gray-1000)]";
     case "punctuation":
-      // Punctuation like {, }, <, > - default text color
-      return "text-textDefault";
+      // Punctuation like {, }, <, > - gray-1000
+      return "text-[var(--ds-gray-1000)]";
     case "string":
-      // String literals - default text color
-      return "text-textDefault";
+      // String literals - green
+      return "text-[var(--ds-green-900)]";
     case "keyword":
-      // Keywords like function, return, const, import - pink: oklch(0.535 0.2058 2.84)
+      // Keywords like function, return, const, import - pink
       return "text-[var(--ds-pink-900)]";
     case "function":
-      // Function names like MyComponent - purple: oklch(0.4718 0.2579 304)
+      // Function names like MyComponent - purple
       return "text-[var(--ds-purple-900)]";
+    case "parameter":
+      // Parameters like props - amber
+      return "text-[var(--ds-amber-900)]";
     case "comment":
-      // Comments - subtle grey
-      return "text-textSubtler";
+      // Comments - gray-900
+      return "text-[var(--ds-gray-900)]";
     case "added":
       return "text-[var(--ds-green-900)]";
     case "removed":
       return "text-[var(--ds-red-900)]";
     case "plain":
     default:
-      return "text-textDefault";
+      return "text-[var(--ds-gray-1000)]";
   }
 }
 
