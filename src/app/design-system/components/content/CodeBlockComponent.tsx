@@ -346,6 +346,7 @@ function tokenizeJsx(code: string): Token[] {
         "false",
         "null",
         "undefined",
+        "type",
       ];
       let foundKeyword = false;
       for (const kw of keywords) {
@@ -398,11 +399,9 @@ function tokenizeJsx(code: string): Token[] {
             i++;
           }
 
-          // If previous token was 'function', this is a function name
-          // Also check for PascalCase (likely component/class name)
-          const isPascalCase = /^[A-Z][a-zA-Z0-9]*$/.test(identifier);
-
-          if (prevTokenIsFunction || isPascalCase) {
+          // Only mark as function if directly after 'function' keyword
+          // (PascalCase like CodeBlock, Element should be plain/greyscale)
+          if (prevTokenIsFunction) {
             tokens.push({ type: "function", content: identifier });
           } else if (isInsideParams) {
             tokens.push({ type: "parameter", content: identifier });
@@ -450,34 +449,34 @@ function tokenizeJsx(code: string): Token[] {
 }
 
 // Get token color class based on type (Geist shiki token colors)
-// --shiki-token-keyword: var(--ds-pink-900)
-// --shiki-token-function: var(--ds-purple-900)
-// --shiki-token-string: var(--ds-green-900)
-// --shiki-token-parameter: var(--ds-amber-900)
-// --shiki-token-comment: var(--ds-gray-900)
-// --shiki-token-punctuation: var(--ds-gray-1000)
+// Keywords (import, export, const, function, return, type) - pink
+// Attribute names (aria-label, filename, className) - purple
+// Attribute values ("Hello world", "Table.jsx") - blue
+// String literals and template literals - green
+// JSX tags (div, h1, CodeBlock) - greyscale
+// Function parameters (props) - amber
 function getTokenClass(type: TokenType): string {
   switch (type) {
     case "tag":
-      // JSX tags like div, h1, p - green
-      return "text-[var(--ds-green-900)]";
+      // JSX tags like div, h1, CodeBlock - greyscale
+      return "text-[var(--ds-gray-1000)]";
     case "attr-name":
-      // Attribute names - default text color
-      return "text-[var(--ds-gray-1000)]";
+      // Attribute names like aria-label, filename - purple
+      return "text-[var(--ds-purple-900)]";
     case "attr-value":
-      // Attribute values/strings - default text color
-      return "text-[var(--ds-gray-1000)]";
+      // Attribute values like "Hello world" - blue
+      return "text-[var(--ds-blue-900)]";
     case "punctuation":
       // Punctuation like {, }, <, > - gray-1000
       return "text-[var(--ds-gray-1000)]";
     case "string":
-      // String literals - green
+      // String literals and template literals - green
       return "text-[var(--ds-green-900)]";
     case "keyword":
-      // Keywords like function, return, const, import - pink
+      // Keywords like function, return, const, import, type - pink
       return "text-[var(--ds-pink-900)]";
     case "function":
-      // Function names like MyComponent - purple
+      // Function names after 'function' keyword - purple
       return "text-[var(--ds-purple-900)]";
     case "parameter":
       // Parameters like props - amber
