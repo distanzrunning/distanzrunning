@@ -161,7 +161,7 @@ export default function ContentWithTOC({
   };
 
   return (
-    <div className="flex -m-12 min-h-[calc(100vh-112px)]">
+    <div className="flex -m-12">
       {/* Main content column */}
       <div className="flex-1 min-w-0 flex flex-col">
         {/* Page Header Section */}
@@ -193,29 +193,27 @@ export default function ContentWithTOC({
         </article>
       </div>
 
-      {/* Table of Contents - Right Sidebar (≥1280px) - sticky below headers */}
-      <aside className="hidden xl:block w-[260px] flex-shrink-0 border-l border-borderSubtle">
-        <div className="sticky top-[112px] max-h-[calc(100vh-112px)] overflow-hidden">
-          <nav className="h-full overflow-y-auto px-6 py-6">
-            <h4 className="text-[14px] leading-[20px] font-medium text-textDefault mb-3">
-              {tocTitle}
-            </h4>
-            <div className="flex flex-col">
-              {mainSectionId && renderTOCLink(mainSectionId, tocTitle)}
-              {tocItems.map((item) => (
-                <div key={item.id}>
-                  {renderTOCLink(item.id, item.title)}
-                  {item.children &&
-                    item.children.map((child) => (
-                      <div key={child.id}>
-                        {renderTOCLink(child.id, child.title, true)}
-                      </div>
-                    ))}
-                </div>
-              ))}
-            </div>
-          </nav>
-        </div>
+      {/* Table of Contents - Right Sidebar (≥1280px) */}
+      <aside className="hidden xl:block w-[260px] flex-shrink-0 border-l border-borderSubtle self-start sticky top-[112px] max-h-[calc(100vh-112px)] overflow-hidden">
+        <nav className="h-full overflow-y-auto px-6 py-6">
+          <h4 className="text-[14px] leading-[20px] font-medium text-textDefault mb-3">
+            {tocTitle}
+          </h4>
+          <div className="flex flex-col">
+            {mainSectionId && renderTOCLink(mainSectionId, tocTitle)}
+            {tocItems.map((item) => (
+              <div key={item.id}>
+                {renderTOCLink(item.id, item.title)}
+                {item.children &&
+                  item.children.map((child) => (
+                    <div key={child.id}>
+                      {renderTOCLink(child.id, child.title, true)}
+                    </div>
+                  ))}
+              </div>
+            ))}
+          </div>
+        </nav>
       </aside>
     </div>
   );
