@@ -361,10 +361,20 @@ function tokenizeJsx(code: string): Token[] {
         }
       }
       if (!foundKeyword) {
-        // Check context from previous tokens
-        const lastToken = tokens[tokens.length - 1];
+        // Check context from previous tokens (skip whitespace/plain tokens)
+        const findPrevNonWhitespaceToken = () => {
+          for (let j = tokens.length - 1; j >= 0; j--) {
+            const t = tokens[j];
+            // Skip whitespace-only plain tokens
+            if (t.type === "plain" && /^\s*$/.test(t.content)) continue;
+            return t;
+          }
+          return null;
+        };
+        const prevNonWhitespace = findPrevNonWhitespaceToken();
         const prevTokenIsFunction =
-          lastToken?.type === "keyword" && lastToken?.content === "function";
+          prevNonWhitespace?.type === "keyword" &&
+          prevNonWhitespace?.content === "function";
 
         // Check if we're inside function parameters (after function name and open paren)
         const isInsideParams = (() => {
@@ -450,16 +460,17 @@ function tokenizeJsx(code: string): Token[] {
 
 // Get token color class based on type (Geist shiki token colors)
 // Keywords (import, export, const, function, return, type) - pink
+// Function names after 'function' keyword (MyComponent, Component) - purple
 // Attribute names (aria-label, filename, className) - purple
 // Attribute values ("Hello world", "Table.jsx") - blue
 // String literals and template literals - green
-// JSX tags (div, h1, CodeBlock) - greyscale
+// JSX tags (div, h1, CodeBlock) - green
 // Function parameters (props) - amber
 function getTokenClass(type: TokenType): string {
   switch (type) {
     case "tag":
-      // JSX tags like div, h1, CodeBlock - greyscale
-      return "text-[var(--ds-gray-1000)]";
+      // JSX tags like div, h1, CodeBlock - green
+      return "text-[var(--ds-green-900)]";
     case "attr-name":
       // Attribute names like aria-label, filename - purple
       return "text-[var(--ds-purple-900)]";
