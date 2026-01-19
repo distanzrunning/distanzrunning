@@ -597,13 +597,13 @@ function CodeBlock({
 
   return (
     <div
-      className="relative border border-[var(--ds-gray-400)] rounded-lg overflow-hidden"
+      className="relative border border-[var(--ds-gray-400)] rounded-md overflow-hidden"
       data-code-block
     >
       {/* Header with filename */}
       {filename && (
         <div
-          className="flex items-center justify-between px-4 py-3 border-b border-[var(--ds-gray-400)]"
+          className="flex items-center justify-between px-4 py-2 border-b border-[var(--ds-gray-400)]"
           style={{ background: "var(--ds-background-200)" }}
         >
           <div className="flex items-center gap-2">
