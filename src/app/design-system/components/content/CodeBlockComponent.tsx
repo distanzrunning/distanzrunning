@@ -375,24 +375,32 @@ function tokenizeJsx(code: string): Token[] {
   return tokens;
 }
 
-// Get token color class based on type
+// Get token color class based on type (Geist-style: mostly monochrome with purple keywords)
 function getTokenClass(type: TokenType): string {
   switch (type) {
     case "tag":
-      return "text-[var(--ds-green-900)]";
+      // JSX tags - default text color
+      return "text-textDefault";
     case "attr-name":
-      return "text-[var(--ds-purple-900)]";
+      // Attribute names - default text color
+      return "text-textDefault";
     case "attr-value":
-      return "text-[var(--ds-blue-900)]";
+      // Attribute values/strings - default text color
+      return "text-textDefault";
     case "punctuation":
+      // Punctuation like {, }, <, > - default text color
       return "text-textDefault";
     case "string":
-      return "text-[var(--ds-blue-900)]";
+      // String literals - default text color
+      return "text-textDefault";
     case "keyword":
+      // Keywords like function, return, const, import - purple
       return "text-[var(--ds-purple-900)]";
     case "function":
-      return "text-[var(--ds-blue-900)]";
+      // Function names - default text color
+      return "text-textDefault";
     case "comment":
+      // Comments - subtle grey
       return "text-textSubtler";
     case "added":
       return "text-[var(--ds-green-900)]";
@@ -476,13 +484,7 @@ function CodeBlock({
             className="p-1.5 rounded-md hover:bg-[var(--ds-gray-100)] transition-colors text-textSubtle hover:text-textDefault"
             aria-label="Copy code"
           >
-            {copied ? (
-              <span className="text-[var(--ds-green-900)]">
-                <CheckIcon />
-              </span>
-            ) : (
-              <CopyIcon />
-            )}
+            {copied ? <CheckIcon /> : <CopyIcon />}
           </button>
         </div>
       )}
@@ -494,13 +496,7 @@ function CodeBlock({
           className="absolute top-3 right-3 p-2 rounded-md opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault hover:bg-[var(--ds-gray-100)]"
           aria-label="Copy code"
         >
-          {copied ? (
-            <span className="text-[var(--ds-green-900)]">
-              <CheckIcon />
-            </span>
-          ) : (
-            <CopyIcon />
-          )}
+          {copied ? <CheckIcon /> : <CopyIcon />}
         </button>
       )}
 
@@ -648,16 +644,11 @@ function CodePreview({
               {/* Floating copy button */}
               <button
                 onClick={handleCopyComponentCode}
-                className="absolute top-3 right-3 p-2 rounded-md opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault hover:bg-[var(--ds-gray-100)]"
+                className="absolute top-3 right-3 p-2 rounded-md border border-[var(--ds-gray-400)] opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault hover:bg-[var(--ds-gray-100)]"
+                style={{ background: "var(--ds-background-200)" }}
                 aria-label="Copy code"
               >
-                {copied ? (
-                  <span className="text-[var(--ds-green-900)]">
-                    <CheckIcon />
-                  </span>
-                ) : (
-                  <CopyIcon />
-                )}
+                {copied ? <CheckIcon /> : <CopyIcon />}
               </button>
 
               {/* Component code */}
