@@ -284,20 +284,20 @@ function tokenizeHtml(code: string): Token[] {
 }
 
 // Get token color class based on type (Geist/Shiki style)
-// Using Geist color system: pink for keywords, blue for attrs, green for strings
+// Using Geist color system: purple for tags, blue for attrs, green for strings
 function getTokenClass(type: TokenType): string {
   switch (type) {
     case "tag":
-      // Pink for tags (--shiki-token-keyword: pink-900 light / pink-900 dark)
-      return "text-pink-900 dark:text-pink-900";
+      // Purple for tags (p, strong, div, etc.)
+      return "text-purple-700 dark:text-purple-400";
     case "attr-name":
-      // Blue for attribute names (--shiki-token-constant: blue-900)
-      return "text-blue-900 dark:text-blue-900";
+      // Blue for attribute names (className, etc.)
+      return "text-blue-700 dark:text-blue-400";
     case "attr-value":
-      // Green for attribute values (--shiki-token-string: green-900)
-      return "text-green-900 dark:text-green-900";
+      // Green for attribute values (the string inside quotes)
+      return "text-green-700 dark:text-green-400";
     case "punctuation":
-      // Gray for punctuation (--shiki-token-punctuation: gray-1000)
+      // Gray for punctuation (<, >, =, quotes)
       return "text-textDefault";
     case "string":
       return "text-green-900 dark:text-green-900";
@@ -336,10 +336,11 @@ function CodeBlock({ code }: { code: string }) {
 
   return (
     <div className="group relative border border-borderDefault rounded-md my-4 overflow-hidden">
-      {/* Copy button - floating in top right */}
+      {/* Copy button - positioned in top right with border and background */}
       <button
         onClick={handleCopy}
-        className="absolute top-3 right-3 p-2 rounded-md opacity-0 group-hover:opacity-100 transition-opacity z-10"
+        className="absolute top-3 right-3 p-2 rounded-md border border-borderDefault opacity-0 group-hover:opacity-100 transition-opacity z-10"
+        style={{ background: "var(--ds-background-200)" }}
         aria-label="Copy code"
       >
         {copied ? (
@@ -354,7 +355,10 @@ function CodeBlock({ code }: { code: string }) {
       </button>
 
       {/* Code content with padding */}
-      <pre className="bg-surface overflow-x-auto py-5">
+      <pre
+        className="overflow-x-auto py-5"
+        style={{ background: "var(--ds-background-100)" }}
+      >
         <code className="block text-[13px] leading-[20px] font-mono">
           {lines.map((line, index) => (
             <div
