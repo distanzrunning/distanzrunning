@@ -339,7 +339,32 @@ function tokenizeJsx(code: string): Token[] {
         }
       }
       if (!foundKeyword) {
-        // Plain text
+        // Check if previous token was 'function' keyword - next identifier is a function name
+        const lastToken = tokens[tokens.length - 1];
+        const prevTokenIsFunction =
+          lastToken?.type === "keyword" && lastToken?.content === "function";
+
+        // Check for identifier (potential function/class name)
+        if (/[a-zA-Z_$]/.test(code[i])) {
+          let identifier = "";
+          while (i < code.length && /[a-zA-Z0-9_$]/.test(code[i])) {
+            identifier += code[i];
+            i++;
+          }
+
+          // If previous token was 'function', this is a function name
+          // Also check for PascalCase (likely component/class name)
+          const isPascalCase = /^[A-Z][a-zA-Z0-9]*$/.test(identifier);
+
+          if (prevTokenIsFunction || isPascalCase) {
+            tokens.push({ type: "function", content: identifier });
+          } else {
+            tokens.push({ type: "plain", content: identifier });
+          }
+          continue;
+        }
+
+        // Plain text (non-identifier characters)
         let text = "";
         while (
           i < code.length &&
@@ -347,6 +372,7 @@ function tokenizeJsx(code: string): Token[] {
           code[i] !== '"' &&
           code[i] !== "'" &&
           code[i] !== "`" &&
+          !/[a-zA-Z_$]/.test(code[i]) &&
           !(code.slice(i, i + 2) === "//")
         ) {
           // Check for keywords mid-stream
