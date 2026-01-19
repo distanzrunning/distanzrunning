@@ -615,7 +615,7 @@ function CodeBlock({
           </div>
           <button
             onClick={handleCopy}
-            className="p-1.5 rounded-md hover:bg-[var(--ds-gray-100)] transition-colors text-textSubtle hover:text-textDefault"
+            className="p-1.5 rounded hover:bg-[var(--ds-gray-100)] transition-colors text-textSubtle hover:text-textDefault"
             aria-label="Copy code"
           >
             {copied ? <CheckIcon /> : <CopyIcon />}
@@ -627,7 +627,7 @@ function CodeBlock({
       {!filename && (
         <button
           onClick={handleCopy}
-          className="absolute top-3 right-3 p-2 rounded-md opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault hover:bg-[var(--ds-gray-100)]"
+          className="absolute top-3 right-3 p-2 rounded opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault hover:bg-[var(--ds-gray-100)]"
           aria-label="Copy code"
         >
           {copied ? <CheckIcon /> : <CopyIcon />}
@@ -776,7 +776,7 @@ function CodePreview({
               {/* Floating copy button */}
               <button
                 onClick={handleCopyComponentCode}
-                className="absolute top-3 right-3 p-2 rounded-md border border-[var(--ds-gray-400)] opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault hover:bg-[var(--ds-gray-100)]"
+                className="absolute top-3 right-3 p-2 rounded border border-[var(--ds-gray-400)] opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault hover:bg-[var(--ds-gray-100)]"
                 style={{ background: "var(--ds-background-200)" }}
                 aria-label="Copy code"
               >
