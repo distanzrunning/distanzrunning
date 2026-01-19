@@ -457,12 +457,15 @@ function CodeBlock({
   };
 
   return (
-    <div className="relative" data-code-block>
+    <div
+      className="relative border border-[var(--ds-gray-400)] rounded-lg overflow-hidden"
+      data-code-block
+    >
       {/* Header with filename */}
       {filename && (
         <div
-          className="flex items-center justify-between px-4 py-3 border-b border-borderSubtle"
-          style={{ background: "var(--ds-background-100)" }}
+          className="flex items-center justify-between px-4 py-3"
+          style={{ background: "var(--ds-background-200)" }}
         >
           <div className="flex items-center gap-2">
             <SiReact size={16} className="text-[#61DAFB]" />
