@@ -37,7 +37,8 @@ export default function DesignSystemPage() {
   const slug = params.slug as string;
 
   const handleNavigation = (newSlug: string) => {
-    router.push(`/design-system/${newSlug}`);
+    // Use push with scroll: false to maintain sidebar scroll position
+    router.push(`/design-system/${newSlug}`, { scroll: false });
   };
 
   const handleHomeClick = () => {
