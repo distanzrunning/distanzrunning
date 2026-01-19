@@ -5,24 +5,51 @@ import { CircleHelp } from "lucide-react";
 import { SiTailwindcss } from "react-icons/si";
 import { Section } from "../ContentWithTOC";
 
-// Toast notification for copy confirmation
+// Toast notification for copy confirmation (matches Color page style)
 function Toast({
   message,
   isVisible,
+  onDismiss,
 }: {
   message: string;
   isVisible: boolean;
+  onDismiss: () => void;
 }) {
   return (
     <div
-      className={`fixed bottom-6 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 ${
+      className={`fixed bottom-4 right-4 z-50 transition-all duration-300 ${
         isVisible
           ? "opacity-100 translate-y-0"
           : "opacity-0 translate-y-2 pointer-events-none"
       }`}
     >
-      <div className="bg-textDefault text-canvas px-4 py-2 rounded-md shadow-lg text-sm font-medium">
-        {message}
+      <div
+        className="flex items-center gap-3 px-4 py-3 rounded-lg shadow-lg border border-borderNeutral"
+        style={{ background: "var(--ds-background-100)" }}
+        role="status"
+        aria-live="polite"
+      >
+        <span className="text-sm text-textDefault">{message}</span>
+        <button
+          type="button"
+          onClick={onDismiss}
+          aria-label="Dismiss toast"
+          className="p-1 rounded hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors"
+        >
+          <svg
+            height="16"
+            strokeLinejoin="round"
+            viewBox="0 0 16 16"
+            width="16"
+          >
+            <path
+              fillRule="evenodd"
+              clipRule="evenodd"
+              d="M12.4697 13.5303L13 14.0607L14.0607 13L13.5303 12.4697L9.06065 7.99999L13.5303 3.53032L14.0607 2.99999L13 1.93933L12.4697 2.46966L7.99999 6.93933L3.53032 2.46966L2.99999 1.93933L1.93933 2.99999L2.46966 3.53032L6.93933 7.99999L2.46966 12.4697L1.93933 13L2.99999 14.0607L3.53032 13.5303L7.99999 9.06065L12.4697 13.5303Z"
+              fill="currentColor"
+            />
+          </svg>
+        </button>
       </div>
     </div>
   );
@@ -44,7 +71,14 @@ function useToast() {
     }, 2000);
   }, []);
 
-  return { toast, showToast };
+  const dismissToast = useCallback(() => {
+    if (toastTimeout) {
+      clearTimeout(toastTimeout);
+    }
+    setToast((prev) => ({ ...prev, isVisible: false }));
+  }, []);
+
+  return { toast, showToast, dismissToast };
 }
 
 // Typography table row with click-to-copy functionality
@@ -85,12 +119,7 @@ function TypographyRow({
     >
       <td className="py-4 pr-4">{example}</td>
       <td className="py-4 px-4 font-mono text-xs align-top">{className}</td>
-      <td className="py-4 px-4 text-textSubtle align-top">
-        <span className="inline-flex items-center gap-2">
-          {usage}
-          <CircleHelp size={14} className="text-textSubtler" />
-        </span>
-      </td>
+      <td className="py-4 px-4 text-textSubtle align-top">{usage}</td>
     </tr>
   );
 }
@@ -395,7 +424,7 @@ function SectionHeader({
 }
 
 export default function Typography() {
-  const { toast, showToast } = useToast();
+  const { toast, showToast, dismissToast } = useToast();
 
   const handleCopy = useCallback(
     (className: string) => {
@@ -406,7 +435,11 @@ export default function Typography() {
 
   return (
     <>
-      <Toast message={toast.message} isVisible={toast.isVisible} />
+      <Toast
+        message={toast.message}
+        isVisible={toast.isVisible}
+        onDismiss={dismissToast}
+      />
       {/* Usage Section */}
       <Section>
         <SectionHeader id="usage">Usage</SectionHeader>
@@ -479,7 +512,10 @@ export default function Typography() {
                   </span>
                 </th>
                 <th className="text-left py-3 px-4 font-semibold text-sm">
-                  Usage
+                  <span className="inline-flex items-center gap-2">
+                    Usage
+                    <CircleHelp size={14} className="text-textSubtler" />
+                  </span>
                 </th>
               </tr>
             </thead>
@@ -587,7 +623,10 @@ export default function Typography() {
                   </span>
                 </th>
                 <th className="text-left py-3 px-4 font-semibold text-sm">
-                  Usage
+                  <span className="inline-flex items-center gap-2">
+                    Usage
+                    <CircleHelp size={14} className="text-textSubtler" />
+                  </span>
                 </th>
               </tr>
             </thead>
@@ -642,7 +681,10 @@ export default function Typography() {
                   </span>
                 </th>
                 <th className="text-left py-3 px-4 font-semibold text-sm">
-                  Usage
+                  <span className="inline-flex items-center gap-2">
+                    Usage
+                    <CircleHelp size={14} className="text-textSubtler" />
+                  </span>
                 </th>
               </tr>
             </thead>
@@ -753,7 +795,10 @@ export default function Typography() {
                   </span>
                 </th>
                 <th className="text-left py-3 px-4 font-semibold text-sm">
-                  Usage
+                  <span className="inline-flex items-center gap-2">
+                    Usage
+                    <CircleHelp size={14} className="text-textSubtler" />
+                  </span>
                 </th>
               </tr>
             </thead>
