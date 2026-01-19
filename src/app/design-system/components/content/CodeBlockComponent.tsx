@@ -603,8 +603,11 @@ function CodeBlock({
       {/* Header with filename */}
       {filename && (
         <div
-          className="flex items-center justify-between px-4 py-2 border-b border-[var(--ds-gray-400)]"
-          style={{ background: "var(--ds-background-200)" }}
+          className="flex items-center justify-between h-12 pl-4 pr-3 border-b border-[var(--ds-gray-400)]"
+          style={{
+            background: "var(--ds-background-200)",
+            borderRadius: "6px 6px 0 0",
+          }}
         >
           <div className="flex items-center gap-2">
             <SiReact size={16} className="text-textSubtle" />
