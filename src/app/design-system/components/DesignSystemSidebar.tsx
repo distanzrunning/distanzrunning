@@ -23,7 +23,17 @@ interface DesignSystemSidebarProps {
 }
 
 // Navigation structure - add pages here as they are built
-const navigation: NavSection[] = [];
+const navigation: NavSection[] = [
+  {
+    id: "foundations",
+    label: "Foundations",
+    items: [
+      { id: "colours", label: "Colors" },
+      { id: "icons", label: "Icons" },
+      { id: "typography", label: "Typography" },
+    ],
+  },
+];
 
 export default function DesignSystemSidebar({
   activeSlug,
