@@ -494,8 +494,22 @@ export default function Typography() {
       <Section>
         <SectionHeader id="headings">Headings</SectionHeader>
 
-        <p className="text-base text-textSubtle mt-4 mb-6">
-          Headings are used to introduce pages or sections. The{" "}
+        <p className="text-base text-textSubtle mt-4 mb-4">
+          Headings are used to introduce pages or sections. Use{" "}
+          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+            font-serif
+          </code>{" "}
+          (EB Garamond) for editorial contexts like featured article headlines,
+          article page titles, and pull quotes. Use{" "}
+          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+            font-sans
+          </code>{" "}
+          (Inter) for UI contexts like section titles, card headings, and
+          navigation.
+        </p>
+
+        <p className="text-base text-textSubtle mb-6">
+          The{" "}
           <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
             strong
           </code>{" "}
@@ -524,34 +538,26 @@ export default function Typography() {
               </tr>
             </thead>
             <tbody className="text-sm">
-              <TypographyRow
-                example={<p className="text-heading-72 font-serif">Heading</p>}
-                className="text-heading-72 font-serif"
-                usage="Hero headlines"
-                onCopy={handleCopy}
-              />
-              <TypographyRow
-                example={<p className="text-heading-64 font-serif">Heading</p>}
-                className="text-heading-64 font-serif"
-                usage="Large page titles"
-                onCopy={handleCopy}
-              />
-              <TypographyRow
-                example={<p className="text-heading-56 font-serif">Heading</p>}
-                className="text-heading-56 font-serif"
-                usage="Page titles"
-                onCopy={handleCopy}
-              />
+              {/* Editorial headings - EB Garamond */}
+              <tr className="border-b border-borderSubtle bg-surfaceSubtle">
+                <td
+                  colSpan={3}
+                  className="py-2 px-4 font-semibold text-textSubtle"
+                >
+                  Editorial (font-serif) — Featured headlines, article titles,
+                  pull quotes
+                </td>
+              </tr>
               <TypographyRow
                 example={<p className="text-heading-48 font-serif">Heading</p>}
                 className="text-heading-48 font-serif"
-                usage="Section titles"
+                usage="Featured article headlines"
                 onCopy={handleCopy}
               />
               <TypographyRow
                 example={<p className="text-heading-40 font-serif">Heading</p>}
                 className="text-heading-40 font-serif"
-                usage="Feature headers"
+                usage="Article page titles"
                 onCopy={handleCopy}
               />
               <TypographyRow
@@ -561,7 +567,7 @@ export default function Typography() {
                   </p>
                 }
                 className="text-heading-32 font-serif"
-                usage="Card titles, section headers"
+                usage="Large article titles, pull quotes"
                 onCopy={handleCopy}
               />
               <TypographyRow
@@ -571,33 +577,54 @@ export default function Typography() {
                   </p>
                 }
                 className="text-heading-24 font-serif"
-                usage="Subsection titles"
+                usage="Article subheadings, blockquotes"
+                onCopy={handleCopy}
+              />
+              {/* UI headings - Inter */}
+              <tr className="border-b border-borderSubtle bg-surfaceSubtle">
+                <td
+                  colSpan={3}
+                  className="py-2 px-4 font-semibold text-textSubtle"
+                >
+                  UI (font-sans) — Section titles, card headings, navigation
+                </td>
+              </tr>
+              <TypographyRow
+                example={<p className="text-heading-32">Heading</p>}
+                className="text-heading-32"
+                usage="Page section titles"
+                onCopy={handleCopy}
+              />
+              <TypographyRow
+                example={<p className="text-heading-24">Heading</p>}
+                className="text-heading-24"
+                usage="Card titles, section headers"
                 onCopy={handleCopy}
               />
               <TypographyRow
                 example={
-                  <p className="text-heading-20 font-serif">
+                  <p className="text-heading-20">
                     Heading <strong>Subtle</strong>
                   </p>
                 }
-                className="text-heading-20 font-serif"
-                usage="Small headers"
+                className="text-heading-20"
+                usage="Breaking news headings, subsections"
                 onCopy={handleCopy}
               />
               <TypographyRow
                 example={
-                  <p className="text-heading-16 font-serif">
+                  <p className="text-heading-16">
                     Heading <strong>Subtle</strong>
                   </p>
                 }
-                className="text-heading-16 font-serif"
-                usage="Mini headers, labels"
+                className="text-heading-16"
+                usage="Small card titles, sidebar headers"
                 onCopy={handleCopy}
               />
               <TypographyRow
-                example={<p className="text-heading-14 font-serif">Heading</p>}
-                className="text-heading-14 font-serif"
-                usage="Smallest heading"
+                example={<p className="text-heading-14">Heading</p>}
+                className="text-heading-14"
+                usage="Mini headers, metadata labels"
                 onCopy={handleCopy}
               />
             </tbody>
