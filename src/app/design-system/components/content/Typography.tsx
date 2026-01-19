@@ -44,6 +44,164 @@ function CheckIcon() {
   );
 }
 
+// Token types for syntax highlighting
+type TokenType =
+  | "tag"
+  | "attr-name"
+  | "attr-value"
+  | "punctuation"
+  | "plain"
+  | "string";
+
+interface Token {
+  type: TokenType;
+  content: string;
+}
+
+// Simple HTML tokenizer for syntax highlighting
+function tokenizeHtml(code: string): Token[] {
+  const tokens: Token[] = [];
+  let i = 0;
+
+  while (i < code.length) {
+    // Check for opening tag
+    if (code[i] === "<") {
+      // Check for closing tag
+      if (code[i + 1] === "/") {
+        tokens.push({ type: "punctuation", content: "</" });
+        i += 2;
+        // Get tag name
+        let tagName = "";
+        while (i < code.length && /[a-zA-Z0-9]/.test(code[i])) {
+          tagName += code[i];
+          i++;
+        }
+        if (tagName) {
+          tokens.push({ type: "tag", content: tagName });
+        }
+        // Get closing >
+        if (code[i] === ">") {
+          tokens.push({ type: "punctuation", content: ">" });
+          i++;
+        }
+      } else {
+        tokens.push({ type: "punctuation", content: "<" });
+        i++;
+        // Get tag name
+        let tagName = "";
+        while (i < code.length && /[a-zA-Z0-9]/.test(code[i])) {
+          tagName += code[i];
+          i++;
+        }
+        if (tagName) {
+          tokens.push({ type: "tag", content: tagName });
+        }
+        // Parse attributes
+        while (i < code.length && code[i] !== ">" && code[i] !== "/") {
+          // Skip whitespace
+          if (/\s/.test(code[i])) {
+            tokens.push({ type: "plain", content: code[i] });
+            i++;
+            continue;
+          }
+          // Get attribute name
+          let attrName = "";
+          while (i < code.length && /[a-zA-Z0-9-]/.test(code[i])) {
+            attrName += code[i];
+            i++;
+          }
+          if (attrName) {
+            tokens.push({ type: "attr-name", content: attrName });
+          }
+          // Get equals sign
+          if (code[i] === "=") {
+            tokens.push({ type: "punctuation", content: "=" });
+            i++;
+          }
+          // Get attribute value
+          if (code[i] === '"' || code[i] === "'") {
+            const quote = code[i];
+            tokens.push({ type: "punctuation", content: quote });
+            i++;
+            let attrValue = "";
+            while (i < code.length && code[i] !== quote) {
+              attrValue += code[i];
+              i++;
+            }
+            if (attrValue) {
+              tokens.push({ type: "attr-value", content: attrValue });
+            }
+            if (code[i] === quote) {
+              tokens.push({ type: "punctuation", content: quote });
+              i++;
+            }
+          }
+        }
+        // Handle self-closing or closing
+        if (code[i] === "/") {
+          tokens.push({ type: "punctuation", content: "/" });
+          i++;
+        }
+        if (code[i] === ">") {
+          tokens.push({ type: "punctuation", content: ">" });
+          i++;
+        }
+      }
+    } else {
+      // Plain text
+      let text = "";
+      while (i < code.length && code[i] !== "<") {
+        text += code[i];
+        i++;
+      }
+      if (text) {
+        tokens.push({ type: "plain", content: text });
+      }
+    }
+  }
+
+  return tokens;
+}
+
+// Get token color class based on type (Geist/Shiki style)
+function getTokenClass(type: TokenType): string {
+  switch (type) {
+    case "tag":
+      // Pink for tags (like Geist's --shiki-token-keyword)
+      return "text-pink-700 dark:text-pink-400";
+    case "attr-name":
+      // Blue for attribute names
+      return "text-blue-700 dark:text-blue-400";
+    case "attr-value":
+      // Green for attribute values (like --shiki-token-string)
+      return "text-green-700 dark:text-green-400";
+    case "punctuation":
+      // Gray for punctuation
+      return "text-gray-700 dark:text-gray-400";
+    case "string":
+      return "text-green-700 dark:text-green-400";
+    case "plain":
+    default:
+      return "text-gray-900 dark:text-gray-100";
+  }
+}
+
+// Render a line with syntax highlighting
+function HighlightedLine({ line }: { line: string }) {
+  const tokens = tokenizeHtml(line);
+
+  return (
+    <>
+      {tokens.map((token, i) => (
+        <span key={i} className={getTokenClass(token.type)}>
+          {token.content}
+        </span>
+      ))}
+      {tokens.length === 0 && " "}
+    </>
+  );
+}
+
 // Code block with copy button (matches Geist)
 function CodeBlock({ code }: { code: string }) {
   const [copied, setCopied] = useState(false);
@@ -74,22 +232,22 @@ function CodeBlock({ code }: { code: string }) {
         )}
       </button>
 
-      {/* Code content */}
-      <pre className="bg-white dark:bg-[#0a0a0a] overflow-x-auto">
+      {/* Code content with padding */}
+      <pre className="bg-white dark:bg-[#0a0a0a] overflow-x-auto py-5">
         <code className="block text-[13px] leading-[20px] font-mono">
           {lines.map((line, index) => (
             <div
               key={index}
-              className="flex"
+              className="flex px-5"
               style={{ fontFeatureSettings: '"liga" off' }}
             >
               {/* Line number */}
-              <span className="select-none w-[40px] min-w-[40px] text-right pr-4 text-gray-500 dark:text-gray-600">
+              <span className="select-none w-[32px] min-w-[32px] text-right pr-4 text-gray-500 dark:text-gray-600">
                 {index + 1}
               </span>
-              {/* Line content */}
-              <span className="flex-1 pr-4 text-gray-900 dark:text-gray-100">
-                {line || " "}
+              {/* Line content with syntax highlighting */}
+              <span className="flex-1 pr-4">
+                <HighlightedLine line={line} />
               </span>
             </div>
           ))}
