@@ -311,18 +311,32 @@ export default function Typography() {
 
         <p className="text-copy-14 text-textSubtle mt-4 mb-4">
           Our typography styles can be consumed as{" "}
-          <span className="inline-flex items-center gap-1">
-            <SiTailwindcss size={14} className="text-[#06B6D4]" />
+          <span className="inline-flex items-center gap-1.5 align-bottom">
+            <SiTailwindcss size={14} className="text-[#38bdf8]" />
             Tailwind
           </span>{" "}
-          classes. The classes below pre-set a combination of font-size,
-          line-height, letter-spacing, and font-weight for you based on the
-          Geist design system.
+          classes. The classes below pre-set a combination of{" "}
+          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded text-gray-900 dark:text-gray-100">
+            font-size
+          </code>
+          ,{" "}
+          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded text-gray-900 dark:text-gray-100">
+            line-height
+          </code>
+          ,{" "}
+          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded text-gray-900 dark:text-gray-100">
+            letter-spacing
+          </code>
+          , and{" "}
+          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded text-gray-900 dark:text-gray-100">
+            font-weight
+          </code>{" "}
+          for you based on the Geist design system.
         </p>
 
         <p className="text-copy-14 text-textSubtle mb-6">
           The{" "}
-          <code className="text-label-13-mono px-1.5 py-0.5 bg-gray-100 dark:bg-neutral-800 rounded">
+          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded text-gray-900 dark:text-gray-100">
             strong
           </code>{" "}
           element can be used as a modifier to change the font weight. For
@@ -343,7 +357,7 @@ export default function Typography() {
 
         <p className="text-base text-textSubtle mt-4 mb-6">
           Headings are used to introduce pages or sections. The{" "}
-          <code className="text-label-13-mono px-1.5 py-0.5 bg-gray-100 dark:bg-neutral-800 rounded">
+          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded text-gray-900 dark:text-gray-100">
             strong
           </code>{" "}
           element reduces the weight for creating subtle variants.
@@ -563,7 +577,7 @@ export default function Typography() {
         <p className="text-base text-textSubtle mt-4 mb-6">
           Labels are single-line text with ample line-height to align with
           icons. Use the{" "}
-          <code className="text-label-13-mono px-1.5 py-0.5 bg-gray-100 dark:bg-neutral-800 rounded">
+          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded text-gray-900 dark:text-gray-100">
             strong
           </code>{" "}
           element to increase weight. Mono variants use monospace font.
@@ -711,7 +725,7 @@ export default function Typography() {
         <p className="text-base text-textSubtle mt-4 mb-6">
           Copy styles are for multi-line text with higher line height than
           Labels. Use the{" "}
-          <code className="text-label-13-mono px-1.5 py-0.5 bg-gray-100 dark:bg-neutral-800 rounded">
+          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded text-gray-900 dark:text-gray-100">
             strong
           </code>{" "}
           element to increase weight for emphasis.
