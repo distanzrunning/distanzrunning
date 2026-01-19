@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { Check } from "lucide-react";
 import { SiTailwindcss } from "react-icons/si";
 import { Section } from "../ContentWithTOC";
 
@@ -25,9 +24,30 @@ function CopyIcon() {
   );
 }
 
+// Check icon for copy confirmation
+function CheckIcon() {
+  return (
+    <svg
+      height="16"
+      strokeLinejoin="round"
+      viewBox="0 0 16 16"
+      width="16"
+      style={{ color: "currentcolor" }}
+    >
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M15.5607 3.99999L15.0303 4.53032L6.23744 13.3232C5.55403 14.0066 4.44599 14.0066 3.76257 13.3232L4.2929 12.7929L3.76257 13.3232L0.969676 10.5303L0.439346 9.99999L1.50001 8.93933L2.03034 9.46966L4.82323 12.2626C4.92086 12.3602 5.07915 12.3602 5.17678 12.2626L13.9697 3.46966L14.5 2.93933L15.5607 3.99999Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+}
+
 // Code block with copy button (matches Geist)
 function CodeBlock({ code }: { code: string }) {
   const [copied, setCopied] = useState(false);
+  const lines = code.split("\n");
 
   const handleCopy = useCallback(() => {
     navigator.clipboard.writeText(code);
@@ -36,23 +56,45 @@ function CodeBlock({ code }: { code: string }) {
   }, [code]);
 
   return (
-    <div className="group relative">
-      <pre className="bg-[#0a0a0a] dark:bg-[#0a0a0a] text-[#ededed] rounded-lg p-4 overflow-x-auto">
-        <code className="text-[13px] leading-[20px] font-mono">{code}</code>
-      </pre>
+    <div className="group relative border border-gray-400 dark:border-gray-400 rounded-md my-4 overflow-hidden">
+      {/* Copy button - floating in top right */}
       <button
         onClick={handleCopy}
-        className="absolute top-3 right-3 p-2 rounded-md bg-[#1a1a1a] border border-[#333] opacity-0 group-hover:opacity-100 transition-opacity hover:bg-[#252525] hover:border-[#444]"
+        className="absolute top-3 right-3 p-2 rounded-md opacity-0 group-hover:opacity-100 transition-opacity z-10"
         aria-label="Copy code"
       >
         {copied ? (
-          <Check size={14} className="text-green-500" />
+          <span className="text-green-600 dark:text-green-500">
+            <CheckIcon />
+          </span>
         ) : (
-          <span className="text-[#888]">
+          <span className="text-gray-600 dark:text-gray-500 hover:text-gray-900 dark:hover:text-gray-300">
             <CopyIcon />
           </span>
         )}
       </button>
+
+      {/* Code content */}
+      <pre className="bg-white dark:bg-[#0a0a0a] overflow-x-auto">
+        <code className="block text-[13px] leading-[20px] font-mono">
+          {lines.map((line, index) => (
+            <div
+              key={index}
+              className="flex"
+              style={{ fontFeatureSettings: '"liga" off' }}
+            >
+              {/* Line number */}
+              <span className="select-none w-[40px] min-w-[40px] text-right pr-4 text-gray-500 dark:text-gray-600">
+                {index + 1}
+              </span>
+              {/* Line content */}
+              <span className="flex-1 pr-4 text-gray-900 dark:text-gray-100">
+                {line || " "}
+              </span>
+            </div>
+          ))}
+        </code>
+      </pre>
     </div>
   );
 }
