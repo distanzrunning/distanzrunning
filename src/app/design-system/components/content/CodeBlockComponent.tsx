@@ -464,14 +464,12 @@ function CodeBlock({
       {/* Header with filename */}
       {filename && (
         <div
-          className="flex items-center justify-between px-4 py-3"
+          className="flex items-center justify-between px-4 py-3 border-b border-[var(--ds-gray-400)]"
           style={{ background: "var(--ds-background-200)" }}
         >
           <div className="flex items-center gap-2">
-            <SiReact size={16} className="text-[#61DAFB]" />
-            <span className="text-[13px] font-mono text-textSubtle">
-              {filename}
-            </span>
+            <SiReact size={16} className="text-textSubtle" />
+            <span className="text-[13px] text-textSubtle">{filename}</span>
           </div>
           <button
             onClick={handleCopy}
