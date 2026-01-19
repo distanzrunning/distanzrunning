@@ -113,7 +113,7 @@ function TypographyRow({
 
   return (
     <tr
-      className="border-b border-borderSubtle cursor-pointer hover:bg-surfaceSubtle transition-colors"
+      className="border-b border-borderSubtle cursor-pointer hover:bg-[var(--ds-gray-200)] transition-colors"
       onClick={handleClick}
       onContextMenu={handleContextMenu}
     >
