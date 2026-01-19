@@ -451,6 +451,7 @@ module.exports = {
         garvis: ["inter-variable", "Inter", "sans-serif"],
         quasimoda: ["inter-variable", "Inter", "sans-serif"],
         mono: [
+          "JetBrains Mono",
           "ui-monospace",
           "SFMono-Regular",
           "Menlo",
@@ -1004,7 +1005,7 @@ module.exports = {
           letterSpacing: "0",
           fontWeight: "400",
           fontFamily:
-            'ui-monospace, SFMono-Regular, "Roboto Mono", Menlo, Monaco, monospace',
+            '"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, monospace',
         },
         ".text-label-13": {
           fontSize: "13px",
@@ -1020,7 +1021,7 @@ module.exports = {
           letterSpacing: "0",
           fontWeight: "400",
           fontFamily:
-            'ui-monospace, SFMono-Regular, "Roboto Mono", Menlo, Monaco, monospace',
+            '"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, monospace',
         },
         ".text-label-12": {
           fontSize: "12px",
@@ -1035,7 +1036,7 @@ module.exports = {
           letterSpacing: "0",
           fontWeight: "400",
           fontFamily:
-            'ui-monospace, SFMono-Regular, "Roboto Mono", Menlo, Monaco, monospace',
+            '"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, monospace',
         },
 
         // ─────────────────────────────────────────────────────────────────
@@ -1088,7 +1089,7 @@ module.exports = {
           letterSpacing: "0",
           fontWeight: "400",
           fontFamily:
-            'ui-monospace, SFMono-Regular, "Roboto Mono", Menlo, Monaco, monospace',
+            '"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, monospace',
         },
 
         // ─────────────────────────────────────────────────────────────────
