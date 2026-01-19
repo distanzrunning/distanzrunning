@@ -539,15 +539,6 @@ export default function Typography() {
             </thead>
             <tbody className="text-sm">
               {/* Editorial headings - EB Garamond */}
-              <tr className="border-b border-borderSubtle bg-surfaceSubtle">
-                <td
-                  colSpan={3}
-                  className="py-2 px-4 font-semibold text-textSubtle"
-                >
-                  Editorial (font-serif) — Featured headlines, article titles,
-                  pull quotes
-                </td>
-              </tr>
               <TypographyRow
                 example={<p className="text-heading-48 font-serif">Heading</p>}
                 className="text-heading-48 font-serif"
@@ -581,14 +572,6 @@ export default function Typography() {
                 onCopy={handleCopy}
               />
               {/* UI headings - Inter */}
-              <tr className="border-b border-borderSubtle bg-surfaceSubtle">
-                <td
-                  colSpan={3}
-                  className="py-2 px-4 font-semibold text-textSubtle"
-                >
-                  UI (font-sans) — Section titles, card headings, navigation
-                </td>
-              </tr>
               <TypographyRow
                 example={<p className="text-heading-32">Heading</p>}
                 className="text-heading-32"
