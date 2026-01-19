@@ -817,7 +817,8 @@ const defaultPreviewCode = `function MyComponent(props) {
 }`;
 
 // Component code (shown in the "Show code" accordion)
-const defaultComponentCode = `import { CodeBlock } from '@/components/CodeBlock'
+const defaultComponentCode = `import { CodeBlock } from 'geist/components';
+import type { JSX } from 'react';
 
 const code = \`function MyComponent(props) {
   return (
@@ -828,7 +829,7 @@ const code = \`function MyComponent(props) {
   );
 }\`;
 
-export function Component() {
+export function Component(): JSX.Element {
   return (
     <CodeBlock aria-label="Hello world" filename="Table.jsx" language="jsx">
       {code}
