@@ -30,6 +30,7 @@ import BlockquoteComponent from "../components/content/BlockquoteComponent";
 import PullQuoteComponent from "../components/content/PullQuoteComponent";
 import CloseComponent from "../components/content/CloseComponent";
 import ToggleComponent from "../components/content/ToggleComponent";
+import CodeBlockComponent from "../components/content/CodeBlockComponent";
 import ContentWithTOC from "../components/ContentWithTOC";
 
 export default function DesignSystemPage() {
@@ -688,6 +689,28 @@ export default function DesignSystemPage() {
           ]}
         >
           <ToggleComponent />
+        </ContentWithTOC>
+      );
+    }
+
+    if (activeSlug === "code-block") {
+      return (
+        <ContentWithTOC
+          tocTitle="On this page"
+          pageTitle="Code Block"
+          pageSubtitle="Code Block component used across Distanz documentation and code examples."
+          tocItems={[
+            { id: "default", title: "Default" },
+            { id: "no-filename", title: "No filename" },
+            { id: "highlighted-lines", title: "Highlighted lines" },
+            { id: "added-removed-lines", title: "Added & removed lines" },
+            { id: "referenced-lines", title: "Referenced lines" },
+            { id: "language-switcher", title: "Language switcher" },
+            { id: "hidden-line-numbers", title: "Hidden line numbers" },
+            { id: "props", title: "Props" },
+          ]}
+        >
+          <CodeBlockComponent />
         </ContentWithTOC>
       );
     }

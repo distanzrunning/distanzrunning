@@ -33,6 +33,11 @@ const navigation: NavSection[] = [
       { id: "typography", label: "Typography" },
     ],
   },
+  {
+    id: "components",
+    label: "Components",
+    items: [{ id: "code-block", label: "Code Block" }],
+  },
 ];
 
 export default function DesignSystemSidebar({
