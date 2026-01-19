@@ -418,10 +418,11 @@ module.exports = {
         // Distanz Typography System
         // Body/UI: Inter Variable (complete weight spectrum)
         // Headings: EB Garamond (serif)
+        // Adobe Fonts uses lowercase hyphenated names: "inter-variable", "eb-garamond"
 
         // Sans-serif (Inter) - Body, UI, navigation
         sans: [
-          "Inter Variable",
+          "inter-variable",
           "Inter",
           "-apple-system",
           "BlinkMacSystemFont",
@@ -429,26 +430,26 @@ module.exports = {
           "Roboto",
           "sans-serif",
         ],
-        inter: ["Inter Variable", "Inter", "sans-serif"],
+        inter: ["inter-variable", "Inter", "sans-serif"],
 
         // Serif (EB Garamond) - Headings, display
-        serif: ["EB Garamond", "Georgia", "serif"],
-        garamond: ["EB Garamond", "Georgia", "serif"],
+        serif: ["eb-garamond", "Georgia", "serif"],
+        garamond: ["eb-garamond", "Georgia", "serif"],
 
         // Legacy aliases for backwards compatibility
-        display: ["EB Garamond", "serif"],
-        headline: ["EB Garamond", "serif"],
-        body: ["Inter Variable", "Inter", "sans-serif"],
-        ui: ["Inter Variable", "Inter", "sans-serif"],
+        display: ["eb-garamond", "serif"],
+        headline: ["eb-garamond", "serif"],
+        body: ["inter-variable", "Inter", "sans-serif"],
+        ui: ["inter-variable", "Inter", "sans-serif"],
         // Old font aliases
-        eczar: ["EB Garamond", "Georgia", "serif"],
-        franklin: ["Inter Variable", "Inter", "sans-serif"],
-        playfair: ["EB Garamond", "serif"],
-        manrope: ["Inter Variable", "Inter", "sans-serif"],
-        archivo: ["Inter Variable", "Inter", "sans-serif"],
-        bricolage: ["Inter Variable", "Inter", "sans-serif"],
-        garvis: ["Inter Variable", "Inter", "sans-serif"],
-        quasimoda: ["Inter Variable", "Inter", "sans-serif"],
+        eczar: ["eb-garamond", "Georgia", "serif"],
+        franklin: ["inter-variable", "Inter", "sans-serif"],
+        playfair: ["eb-garamond", "serif"],
+        manrope: ["inter-variable", "Inter", "sans-serif"],
+        archivo: ["inter-variable", "Inter", "sans-serif"],
+        bricolage: ["inter-variable", "Inter", "sans-serif"],
+        garvis: ["inter-variable", "Inter", "sans-serif"],
+        quasimoda: ["inter-variable", "Inter", "sans-serif"],
         mono: [
           "ui-monospace",
           "SFMono-Regular",

@@ -35,15 +35,16 @@ export const BRAND = {
   typography: {
     fontFamilies: {
       // Distanz Typography System - Inter + EB Garamond
-      sans: "Inter Variable, Inter, -apple-system, BlinkMacSystemFont, sans-serif", // News, UI, headlines
-      serif: "EB Garamond, Georgia, Times New Roman, serif", // Features, long-form
+      // Adobe Fonts uses lowercase hyphenated names: "inter-variable", "eb-garamond"
+      sans: "inter-variable, Inter, -apple-system, BlinkMacSystemFont, sans-serif", // News, UI, headlines
+      serif: "eb-garamond, Georgia, Times New Roman, serif", // Features, long-form
 
       // Aliases
-      display: "EB Garamond, serif", // Headlines
-      headline: "EB Garamond, serif", // Headlines
-      body: "Inter Variable, Inter, sans-serif", // Body (news)
-      ui: "Inter Variable, Inter, sans-serif", // UI elements
-      feature: "EB Garamond, Georgia, serif", // Feature content
+      display: "eb-garamond, serif", // Headlines
+      headline: "eb-garamond, serif", // Headlines
+      body: "inter-variable, Inter, sans-serif", // Body (news)
+      ui: "inter-variable, Inter, sans-serif", // UI elements
+      feature: "eb-garamond, Georgia, serif", // Feature content
     },
     weights: {
       // Inter weights

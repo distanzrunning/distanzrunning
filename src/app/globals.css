@@ -73,13 +73,14 @@
   :root {
     /* Distanz Typography System
        Body/UI: Inter Variable (complete weight spectrum)
-       Headings: EB Garamond (serif) */
+       Headings: EB Garamond (serif)
+       Adobe Fonts uses lowercase hyphenated names: "inter-variable", "eb-garamond" */
 
     /* Primary Typefaces */
     --font-family-sans:
-      "Inter Variable", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+      "inter-variable", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
       sans-serif;
-    --font-family-serif: "EB Garamond", Georgia, "Times New Roman", serif;
+    --font-family-serif: "eb-garamond", Georgia, "Times New Roman", serif;
 
     /* Legacy font variables for backwards compatibility */
     --display-font: var(--font-family-serif);

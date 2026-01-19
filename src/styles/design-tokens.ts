@@ -8,8 +8,9 @@
  */
 
 export const fonts = {
-  sans: '"Inter Variable", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
-  serif: '"EB Garamond", Georgia, "Times New Roman", serif',
+  // Adobe Fonts uses lowercase hyphenated names: "inter-variable", "eb-garamond"
+  sans: '"inter-variable", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+  serif: '"eb-garamond", Georgia, "Times New Roman", serif',
   mono: 'ui-monospace, SFMono-Regular, Menlo, Monaco, "Courier New", monospace',
 } as const;
 
