@@ -517,8 +517,8 @@ export default function Typography() {
                 </th>
                 <th className="text-left py-3 px-4 font-semibold text-sm">
                   <span className="inline-flex items-center gap-2">
-                    Usage
                     <CircleHelp size={14} className="text-textSubtler" />
+                    Usage
                   </span>
                 </th>
               </tr>
@@ -628,8 +628,8 @@ export default function Typography() {
                 </th>
                 <th className="text-left py-3 px-4 font-semibold text-sm">
                   <span className="inline-flex items-center gap-2">
-                    Usage
                     <CircleHelp size={14} className="text-textSubtler" />
+                    Usage
                   </span>
                 </th>
               </tr>
@@ -686,8 +686,8 @@ export default function Typography() {
                 </th>
                 <th className="text-left py-3 px-4 font-semibold text-sm">
                   <span className="inline-flex items-center gap-2">
-                    Usage
                     <CircleHelp size={14} className="text-textSubtler" />
+                    Usage
                   </span>
                 </th>
               </tr>
@@ -800,8 +800,8 @@ export default function Typography() {
                 </th>
                 <th className="text-left py-3 px-4 font-semibold text-sm">
                   <span className="inline-flex items-center gap-2">
-                    Usage
                     <CircleHelp size={14} className="text-textSubtler" />
+                    Usage
                   </span>
                 </th>
               </tr>
