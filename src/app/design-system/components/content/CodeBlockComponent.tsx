@@ -375,12 +375,12 @@ function tokenizeJsx(code: string): Token[] {
   return tokens;
 }
 
-// Get token color class based on type (Geist-style: mostly monochrome with purple keywords)
+// Get token color class based on type (Geist-style colors)
 function getTokenClass(type: TokenType): string {
   switch (type) {
     case "tag":
-      // JSX tags - default text color
-      return "text-textDefault";
+      // JSX tags like div, h1, p - green: oklch(0.5175 0.1453 147.65)
+      return "text-[var(--ds-green-900)]";
     case "attr-name":
       // Attribute names - default text color
       return "text-textDefault";
@@ -394,11 +394,11 @@ function getTokenClass(type: TokenType): string {
       // String literals - default text color
       return "text-textDefault";
     case "keyword":
-      // Keywords like function, return, const, import - purple
-      return "text-[var(--ds-purple-900)]";
+      // Keywords like function, return, const, import - pink: oklch(0.535 0.2058 2.84)
+      return "text-[var(--ds-pink-900)]";
     case "function":
-      // Function names - default text color
-      return "text-textDefault";
+      // Function names like MyComponent - purple: oklch(0.4718 0.2579 304)
+      return "text-[var(--ds-purple-900)]";
     case "comment":
       // Comments - subtle grey
       return "text-textSubtler";
