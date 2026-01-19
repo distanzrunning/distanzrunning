@@ -760,12 +760,9 @@ function CodePreview({
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault hover:bg-[var(--ds-gray-100)] transition-colors border-t border-[var(--ds-gray-400)]"
+          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-[var(--ds-gray-400)]"
         >
-          <ChevronDown
-            size={16}
-            className={`transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
-          />
+          <ChevronDown size={16} className={isOpen ? "" : "-rotate-90"} />
           {isOpen ? "Hide code" : "Show code"}
         </button>
 
