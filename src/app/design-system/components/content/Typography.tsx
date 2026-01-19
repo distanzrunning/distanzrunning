@@ -113,13 +113,13 @@ function TypographyRow({
 
   return (
     <tr
-      className="border-b border-borderSubtle cursor-pointer hover:bg-[var(--ds-gray-200)] transition-colors"
+      className="border-b border-borderSubtle cursor-pointer hover:bg-[var(--ds-gray-100)] transition-colors"
       onClick={handleClick}
       onContextMenu={handleContextMenu}
     >
-      <td className="py-4 pr-4">{example}</td>
-      <td className="py-4 px-4 font-mono text-xs align-top">{className}</td>
-      <td className="py-4 px-4 text-textSubtle align-top">{usage}</td>
+      <td className="py-4 pr-4 align-middle">{example}</td>
+      <td className="py-4 px-4 font-mono text-xs align-middle">{className}</td>
+      <td className="py-4 px-4 text-textSubtle align-middle">{usage}</td>
     </tr>
   );
 }
