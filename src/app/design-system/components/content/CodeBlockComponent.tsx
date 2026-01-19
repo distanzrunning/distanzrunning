@@ -521,6 +521,44 @@ function HighlightedLine({ line }: { line: string }) {
   );
 }
 
+// Tokenize entire code block and split into lines for rendering
+// This properly handles multi-line strings like template literals
+function tokenizeFullCode(code: string): Token[][] {
+  const tokens = tokenizeJsx(code);
+  const lines: Token[][] = [[]];
+
+  for (const token of tokens) {
+    // Split token content by newlines
+    const parts = token.content.split("\n");
+
+    for (let i = 0; i < parts.length; i++) {
+      if (i > 0) {
+        // Start a new line
+        lines.push([]);
+      }
+      if (parts[i]) {
+        lines[lines.length - 1].push({ type: token.type, content: parts[i] });
+      }
+    }
+  }
+
+  return lines;
+}
+
+// Render pre-tokenized line
+function RenderTokenLine({ tokens }: { tokens: Token[] }) {
+  return (
+    <>
+      {tokens.map((token, i) => (
+        <span key={i} className={getTokenClass(token.type)}>
+          {token.content}
+        </span>
+      ))}
+      {tokens.length === 0 && " "}
+    </>
+  );
+}
+
 interface CodeBlockProps {
   code: string;
   filename?: string;
@@ -543,7 +581,7 @@ function CodeBlock({
   referencedLines = [],
 }: CodeBlockProps) {
   const [copied, setCopied] = useState(false);
-  const lines = code.split("\n");
+  const tokenizedLines = tokenizeFullCode(code);
 
   const handleCopy = useCallback(() => {
     navigator.clipboard.writeText(code);
@@ -599,7 +637,7 @@ function CodeBlock({
         style={{ background: "var(--ds-background-100)" }}
       >
         <code className="block text-[13px] leading-[20px] font-mono">
-          {lines.map((line, index) => {
+          {tokenizedLines.map((lineTokens, index) => {
             const lineNumber = index + 1;
             const isHighlighted = highlightLines.includes(lineNumber);
             const isAdded = addedLines.includes(lineNumber);
@@ -653,7 +691,7 @@ function CodeBlock({
                 <span
                   className={`flex-1 pr-4 ${isRemoved ? "text-textSubtle line-through" : ""}`}
                 >
-                  <HighlightedLine line={line} />
+                  <RenderTokenLine tokens={lineTokens} />
                 </span>
               </div>
             );
@@ -688,6 +726,7 @@ function CodePreview({
 }: CodePreviewProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [copied, setCopied] = useState(false);
+  const componentCodeLines = tokenizeFullCode(componentCode);
 
   const handleCopyComponentCode = useCallback(() => {
     navigator.clipboard.writeText(componentCode);
@@ -747,7 +786,7 @@ function CodePreview({
               {/* Component code */}
               <pre className="overflow-x-auto py-4">
                 <code className="block text-[13px] leading-[20px] font-mono">
-                  {componentCode.split("\n").map((line, index) => (
+                  {componentCodeLines.map((lineTokens, index) => (
                     <div
                       key={index}
                       className="flex px-4"
@@ -757,7 +796,7 @@ function CodePreview({
                         {index + 1}
                       </span>
                       <span className="flex-1 pr-4">
-                        <HighlightedLine line={line} />
+                        <RenderTokenLine tokens={lineTokens} />
                       </span>
                     </div>
                   ))}
