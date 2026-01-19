@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useCallback } from "react";
+import { ChevronDown } from "lucide-react";
+import { SiReact } from "react-icons/si";
 import { Section } from "../ContentWithTOC";
 
 // Toast notification for copy confirmation
@@ -115,45 +117,6 @@ function CheckIcon() {
         d="M15.5607 3.99999L15.0303 4.53032L6.23744 13.3232C5.55403 14.0066 4.44599 14.0066 3.76257 13.3232L4.2929 12.7929L3.76257 13.3232L0.969676 10.5303L0.439346 9.99999L1.50001 8.93933L2.03034 9.46966L4.82323 12.2626C4.92086 12.3602 5.07915 12.3602 5.17678 12.2626L13.9697 3.46966L14.5 2.93933L15.5607 3.99999Z"
         fill="currentColor"
       />
-    </svg>
-  );
-}
-
-// React file icon
-function ReactIcon() {
-  return (
-    <svg height="16" viewBox="0 0 16 16" width="16">
-      <path
-        d="M8 9.4a1.4 1.4 0 1 0 0-2.8 1.4 1.4 0 0 0 0 2.8Z"
-        fill="currentColor"
-      />
-      <path
-        clipRule="evenodd"
-        d="M8 8.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm1.4-.75a1.4 1.4 0 1 1-2.8 0 1.4 1.4 0 0 1 2.8 0Z"
-        fill="currentColor"
-        fillRule="evenodd"
-      />
-      <path
-        clipRule="evenodd"
-        d="M7.995 10.603c2.957 0 5.598-.656 7.302-1.686.86-.52 1.528-1.136 1.907-1.835.384-.71.47-1.514.135-2.31-.323-.77-.963-1.331-1.752-1.754-.776-.416-1.75-.726-2.842-.937a.65.65 0 1 0-.225 1.28c1.007.195 1.865.474 2.517.824.64.343 1.072.736 1.278 1.228.195.465.163.909-.098 1.392-.256.473-.728.935-1.432 1.361-1.47.89-3.883 1.537-6.79 1.537-2.907 0-5.32-.648-6.79-1.537-.704-.426-1.176-.888-1.432-1.361-.261-.483-.293-.927-.098-1.392.206-.492.638-.885 1.278-1.228.652-.35 1.51-.629 2.517-.823a.65.65 0 0 0-.225-1.281c-1.092.21-2.066.52-2.842.937C.614 3.467-.026 4.028-.35 4.798c-.334.796-.249 1.6.136 2.31.38.699 1.047 1.315 1.907 1.835 1.704 1.03 4.345 1.686 7.302 1.686Zm3.21-.594c-1.476 2.55-3.53 4.392-5.358 4.871-.925.242-1.78.189-2.5-.187-.733-.383-1.256-1.048-1.57-1.868-.303-.795-.396-1.759-.291-2.83a.65.65 0 1 1 1.293.133c-.094.987-.006 1.815.236 2.45.233.612.58.99 1.02 1.22.453.236.999.29 1.639.122 1.426-.374 3.24-1.988 4.582-4.31 1.34-2.32 1.803-4.58 1.429-6.004-.167-.64-.479-1.11-.933-1.416-.44-.298-1-.423-1.643-.335-1.297.178-2.845 1.156-4.16 2.683A.65.65 0 0 1 3.96 3.95c1.44-1.672 3.232-2.847 4.91-3.078.911-.125 1.769.037 2.473.513.69.468 1.156 1.182 1.398 2.106.498 1.907-.108 4.487-1.537 7.018Z"
-        fill="currentColor"
-        fillRule="evenodd"
-      />
-      <path
-        clipRule="evenodd"
-        d="M4.788 10.007c1.488 2.544 3.446 4.439 5.207 5.036.892.303 1.745.313 2.496-.023.765-.342 1.341-.97 1.72-1.763.366-.768.527-1.722.497-2.797a.65.65 0 0 0-1.3.04c.027.99-.108 1.813-.398 2.42-.28.59-.668.964-1.152 1.181-.497.222-1.07.215-1.7-.001-1.398-.476-3.116-2.134-4.473-4.452-1.354-2.312-1.91-4.556-1.622-6a3.003 3.003 0 0 1 .847-1.466c.407-.388.942-.604 1.585-.582 1.305.042 2.902.93 4.306 2.384a.65.65 0 1 0 .946-.89C9.225 2.483 7.367 1.38 5.73 1.326c-.922-.03-1.756.276-2.395.886-.624.595-1.037 1.41-1.197 2.333-.327 1.891.281 4.438 1.65 6.78v-.318Z"
-        fill="currentColor"
-        fillRule="evenodd"
-      />
-    </svg>
-  );
-}
-
-// TypeScript file icon
-function TypeScriptIcon() {
-  return (
-    <svg height="16" viewBox="0 0 16 16" width="16" fill="currentColor">
-      <path d="M0 8v8h16V0H0v8zm12.69-2.87h-1.85V14h-1.46V5.13H7.56V4h5.13v1.13zM7.4 6.86c.17.07.32.21.44.42l.67 1.33c.16.35.34.64.55.88.2.24.43.42.67.54a1.46 1.46 0 0 0 1.37-.12c.19-.12.34-.29.44-.49a1.5 1.5 0 0 0 .16-.7c0-.3-.07-.56-.22-.76a1.74 1.74 0 0 0-.58-.52c-.24-.14-.5-.26-.8-.36-.36-.12-.7-.26-1.03-.42a3.58 3.58 0 0 1-.88-.55c-.25-.22-.46-.48-.61-.79A2.5 2.5 0 0 1 7.35 4.6c0-.4.08-.77.26-1.1.17-.33.42-.62.74-.86.31-.24.7-.43 1.14-.56.45-.13.94-.2 1.49-.2.45 0 .86.05 1.24.14.37.1.7.24 1 .43l-.5.95a2.6 2.6 0 0 0-.78-.37 3.24 3.24 0 0 0-.96-.14c-.35 0-.66.04-.93.13-.27.08-.49.2-.66.36a.84.84 0 0 0-.26.63c0 .24.07.45.22.62.14.17.34.31.58.44.25.12.53.24.85.35.4.14.78.29 1.13.47.35.17.67.38.94.62.28.24.5.52.67.84.17.32.25.7.25 1.14 0 .45-.09.86-.26 1.23a2.6 2.6 0 0 1-.73.93c-.31.25-.69.45-1.13.58-.44.14-.93.2-1.47.2-.6 0-1.13-.08-1.59-.23a3.7 3.7 0 0 1-1.19-.64l.56-.9c.16.11.34.22.55.33z" />
     </svg>
   );
 }
@@ -468,7 +431,7 @@ interface CodeBlockProps {
   referencedLines?: number[];
 }
 
-// Full featured code block component
+// Inner code block component (the actual code display)
 function CodeBlock({
   code,
   filename,
@@ -489,40 +452,35 @@ function CodeBlock({
 
   const handleLineClick = (lineNumber: number) => {
     if (referencedLines.includes(lineNumber)) {
-      // Could implement scroll-to or highlight behavior
       console.log(`Line ${lineNumber} clicked`);
     }
   };
 
   return (
-    <div
-      className="group relative border border-borderDefault rounded-xl overflow-hidden"
-      style={{ background: "var(--ds-background-100)" }}
-    >
+    <div className="relative" data-code-block>
       {/* Header with filename */}
       {filename && (
         <div
           className="flex items-center justify-between px-4 py-3 border-b border-borderSubtle"
           style={{ background: "var(--ds-background-100)" }}
         >
-          <div className="flex items-center gap-2 text-textSubtle">
-            <ReactIcon />
-            <span className="text-[13px] font-mono">{filename}</span>
+          <div className="flex items-center gap-2">
+            <SiReact size={16} className="text-[#61DAFB]" />
+            <span className="text-[13px] font-mono text-textSubtle">
+              {filename}
+            </span>
           </div>
           <button
             onClick={handleCopy}
-            className="p-1.5 rounded-md border border-borderDefault hover:bg-[var(--ds-gray-100)] transition-colors"
-            style={{ background: "var(--ds-background-200)" }}
+            className="p-1.5 rounded-md hover:bg-[var(--ds-gray-100)] transition-colors text-textSubtle hover:text-textDefault"
             aria-label="Copy code"
           >
             {copied ? (
-              <span className="text-green-700">
+              <span className="text-[var(--ds-green-900)]">
                 <CheckIcon />
               </span>
             ) : (
-              <span className="text-textSubtle hover:text-textDefault">
-                <CopyIcon />
-              </span>
+              <CopyIcon />
             )}
           </button>
         </div>
@@ -532,24 +490,24 @@ function CodeBlock({
       {!filename && (
         <button
           onClick={handleCopy}
-          className="absolute top-3 right-3 p-2 rounded-md border border-borderDefault opacity-0 group-hover:opacity-100 transition-opacity z-10"
-          style={{ background: "var(--ds-background-200)" }}
+          className="absolute top-3 right-3 p-2 rounded-md opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault hover:bg-[var(--ds-gray-100)]"
           aria-label="Copy code"
         >
           {copied ? (
-            <span className="text-green-700">
+            <span className="text-[var(--ds-green-900)]">
               <CheckIcon />
             </span>
           ) : (
-            <span className="text-textSubtle hover:text-textDefault">
-              <CopyIcon />
-            </span>
+            <CopyIcon />
           )}
         </button>
       )}
 
       {/* Code content */}
-      <pre className="overflow-x-auto py-4">
+      <pre
+        className="overflow-x-auto py-4"
+        style={{ background: "var(--ds-background-100)" }}
+      >
         <code className="block text-[13px] leading-[20px] font-mono">
           {lines.map((line, index) => {
             const lineNumber = index + 1;
@@ -616,6 +574,118 @@ function CodeBlock({
   );
 }
 
+// Preview wrapper with "Show code" accordion
+interface CodePreviewProps {
+  previewCode: string;
+  previewFilename: string;
+  componentCode: string;
+  showLineNumbers?: boolean;
+  highlightLines?: number[];
+  addedLines?: number[];
+  removedLines?: number[];
+  referencedLines?: number[];
+}
+
+function CodePreview({
+  previewCode,
+  previewFilename,
+  componentCode,
+  showLineNumbers = true,
+  highlightLines = [],
+  addedLines = [],
+  removedLines = [],
+  referencedLines = [],
+}: CodePreviewProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const handleCopyComponentCode = useCallback(() => {
+    navigator.clipboard.writeText(componentCode);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }, [componentCode]);
+
+  return (
+    <div className="border border-[var(--ds-gray-400)] rounded-lg overflow-hidden">
+      {/* Preview area */}
+      <div
+        className="p-6 group"
+        style={{ background: "var(--ds-background-100)" }}
+      >
+        <CodeBlock
+          code={previewCode}
+          filename={previewFilename || undefined}
+          showLineNumbers={showLineNumbers}
+          highlightLines={highlightLines}
+          addedLines={addedLines}
+          removedLines={removedLines}
+          referencedLines={referencedLines}
+        />
+      </div>
+
+      {/* Accordion trigger */}
+      <div style={{ background: "var(--ds-background-200)" }}>
+        <button
+          type="button"
+          onClick={() => setIsOpen(!isOpen)}
+          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault hover:bg-[var(--ds-gray-100)] transition-colors border-t border-[var(--ds-gray-400)]"
+        >
+          <ChevronDown
+            size={16}
+            className={`transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
+          />
+          {isOpen ? "Hide code" : "Show code"}
+        </button>
+
+        {/* Collapsible code section */}
+        {isOpen && (
+          <div
+            className="border-t border-[var(--ds-gray-400)] overflow-x-auto font-mono text-[13px]"
+            style={{ background: "var(--ds-background-100)" }}
+          >
+            <div className="relative group">
+              {/* Floating copy button */}
+              <button
+                onClick={handleCopyComponentCode}
+                className="absolute top-3 right-3 p-2 rounded-md opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault hover:bg-[var(--ds-gray-100)]"
+                aria-label="Copy code"
+              >
+                {copied ? (
+                  <span className="text-[var(--ds-green-900)]">
+                    <CheckIcon />
+                  </span>
+                ) : (
+                  <CopyIcon />
+                )}
+              </button>
+
+              {/* Component code */}
+              <pre className="overflow-x-auto py-4">
+                <code className="block text-[13px] leading-[20px] font-mono">
+                  {componentCode.split("\n").map((line, index) => (
+                    <div
+                      key={index}
+                      className="flex px-4"
+                      style={{ fontFeatureSettings: '"liga" off' }}
+                    >
+                      <span className="select-none w-[32px] min-w-[32px] text-right pr-4 text-textSubtler">
+                        {index + 1}
+                      </span>
+                      <span className="flex-1 pr-4">
+                        <HighlightedLine line={line} />
+                      </span>
+                    </div>
+                  ))}
+                </code>
+              </pre>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 // Link icon for section headers
 function LinkIcon() {
   return (
@@ -661,29 +731,105 @@ function SectionHeader({
   );
 }
 
-// Example code snippets
-const defaultExample = `export default function Page() {
-  return <p>Hello, World!</p>
+// Example code snippets - preview code (what's shown in the code block)
+const defaultPreviewCode = `function MyComponent(props) {
+  return (
+    <div>
+      <h1>Hello, {props.name}!</h1>
+      <p>This is an example React component.</p>
+    </div>
+  );
 }`;
 
-const noFilenameExample = `<CodeBlock code={code} />`;
+// Component code (shown in the "Show code" accordion)
+const defaultComponentCode = `import { CodeBlock } from '@/components/CodeBlock'
 
-const highlightedExample = `export default function Page() {
+const code = \`function MyComponent(props) {
+  return (
+    <div>
+      <h1>Hello, {props.name}!</h1>
+      <p>This is an example React component.</p>
+    </div>
+  );
+}\`;
+
+export function Component() {
+  return (
+    <CodeBlock aria-label="Hello world" filename="Table.jsx" language="jsx">
+      {code}
+    </CodeBlock>
+  );
+}`;
+
+const noFilenamePreviewCode = `<CodeBlock code={code} />`;
+
+const noFilenameComponentCode = `import { CodeBlock } from '@/components/CodeBlock'
+
+export function Component() {
+  return <CodeBlock code={code} />
+}`;
+
+const highlightedPreviewCode = `export default function Page() {
   const name = "World"
   return <p>Hello, {name}!</p>
 }`;
 
-const diffExample = `export default function Page() {
+const highlightedComponentCode = `import { CodeBlock } from '@/components/CodeBlock'
+
+const code = \`export default function Page() {
+  const name = "World"
+  return <p>Hello, {name}!</p>
+}\`;
+
+export function Component() {
+  return (
+    <CodeBlock filename="page.tsx" highlightLines={[2]}>
+      {code}
+    </CodeBlock>
+  );
+}`;
+
+const diffPreviewCode = `export default function Page() {
   const name = "World"
   return <p>Hello, {name}!</p>
 }`;
 
-const referencedExample = `export default function Page() {
+const diffComponentCode = `import { CodeBlock } from '@/components/CodeBlock'
+
+const code = \`export default function Page() {
+  const name = "World"
+  return <p>Hello, {name}!</p>
+}\`;
+
+export function Component() {
+  return (
+    <CodeBlock filename="page.tsx" addedLines={[2]} removedLines={[3]}>
+      {code}
+    </CodeBlock>
+  );
+}`;
+
+const referencedPreviewCode = `export default function Page() {
   const name = "World"
   return <p>Hello, {name}!</p>
 }`;
 
-const languageSwitcherCode = `import { CodeBlock } from '@/components/CodeBlock'
+const referencedComponentCode = `import { CodeBlock } from '@/components/CodeBlock'
+
+const code = \`export default function Page() {
+  const name = "World"
+  return <p>Hello, {name}!</p>
+}\`;
+
+export function Component() {
+  return (
+    <CodeBlock filename="page.tsx" referencedLines={[3]}>
+      {code}
+    </CodeBlock>
+  );
+}`;
+
+const languageSwitcherPreviewCode = `import { CodeBlock } from '@/components/CodeBlock'
 
 export function Example() {
   return (
@@ -695,8 +841,42 @@ export function Example() {
   )
 }`;
 
-const hiddenLineNumbersExample = `export default function Page() {
+const languageSwitcherComponentCode = `import { CodeBlock } from '@/components/CodeBlock'
+import { Tabs } from '@/components/Tabs'
+
+export function Component() {
+  return (
+    <Tabs defaultValue="tsx">
+      <Tabs.List>
+        <Tabs.Trigger value="tsx">TypeScript</Tabs.Trigger>
+        <Tabs.Trigger value="jsx">JavaScript</Tabs.Trigger>
+      </Tabs.List>
+      <Tabs.Content value="tsx">
+        <CodeBlock filename="page.tsx" language="tsx">{tsxCode}</CodeBlock>
+      </Tabs.Content>
+      <Tabs.Content value="jsx">
+        <CodeBlock filename="page.jsx" language="jsx">{jsxCode}</CodeBlock>
+      </Tabs.Content>
+    </Tabs>
+  );
+}`;
+
+const hiddenLineNumbersPreviewCode = `export default function Page() {
   return <p>Hello, World!</p>
+}`;
+
+const hiddenLineNumbersComponentCode = `import { CodeBlock } from '@/components/CodeBlock'
+
+const code = \`export default function Page() {
+  return <p>Hello, World!</p>
+}\`;
+
+export function Component() {
+  return (
+    <CodeBlock filename="page.tsx" showLineNumbers={false}>
+      {code}
+    </CodeBlock>
+  );
 }`;
 
 export default function CodeBlockComponent() {
@@ -717,7 +897,11 @@ export default function CodeBlockComponent() {
           The default code block includes a filename header with a file icon,
           line numbers, and a copy button.
         </p>
-        <CodeBlock code={defaultExample} filename="page.tsx" />
+        <CodePreview
+          previewCode={defaultPreviewCode}
+          previewFilename="Table.jsx"
+          componentCode={defaultComponentCode}
+        />
       </Section>
 
       {/* No Filename Section */}
@@ -727,7 +911,11 @@ export default function CodeBlockComponent() {
           Code blocks can be rendered without a filename header. The copy button
           appears on hover.
         </p>
-        <CodeBlock code={noFilenameExample} />
+        <CodePreview
+          previewCode={noFilenamePreviewCode}
+          previewFilename=""
+          componentCode={noFilenameComponentCode}
+        />
       </Section>
 
       {/* Highlighted Lines Section */}
@@ -741,9 +929,10 @@ export default function CodeBlockComponent() {
           </code>{" "}
           prop with an array of line numbers.
         </p>
-        <CodeBlock
-          code={highlightedExample}
-          filename="page.tsx"
+        <CodePreview
+          previewCode={highlightedPreviewCode}
+          previewFilename="page.tsx"
+          componentCode={highlightedComponentCode}
           highlightLines={[2]}
         />
       </Section>
@@ -764,9 +953,10 @@ export default function CodeBlockComponent() {
           </code>{" "}
           props.
         </p>
-        <CodeBlock
-          code={diffExample}
-          filename="page.tsx"
+        <CodePreview
+          previewCode={diffPreviewCode}
+          previewFilename="page.tsx"
+          componentCode={diffComponentCode}
           addedLines={[2]}
           removedLines={[3]}
         />
@@ -782,9 +972,10 @@ export default function CodeBlockComponent() {
           </code>{" "}
           prop. Useful for linking to specific lines in documentation.
         </p>
-        <CodeBlock
-          code={referencedExample}
-          filename="page.tsx"
+        <CodePreview
+          previewCode={referencedPreviewCode}
+          previewFilename="page.tsx"
+          componentCode={referencedComponentCode}
           referencedLines={[3]}
         />
       </Section>
@@ -796,7 +987,11 @@ export default function CodeBlockComponent() {
           For documentation showing code in multiple languages, use tabs or a
           dropdown to switch between examples.
         </p>
-        <CodeBlock code={languageSwitcherCode} filename="example.tsx" />
+        <CodePreview
+          previewCode={languageSwitcherPreviewCode}
+          previewFilename="example.tsx"
+          componentCode={languageSwitcherComponentCode}
+        />
       </Section>
 
       {/* Hidden Line Numbers Section */}
@@ -811,9 +1006,10 @@ export default function CodeBlockComponent() {
           </code>
           .
         </p>
-        <CodeBlock
-          code={hiddenLineNumbersExample}
-          filename="page.tsx"
+        <CodePreview
+          previewCode={hiddenLineNumbersPreviewCode}
+          previewFilename="page.tsx"
+          componentCode={hiddenLineNumbersComponentCode}
           showLineNumbers={false}
         />
       </Section>

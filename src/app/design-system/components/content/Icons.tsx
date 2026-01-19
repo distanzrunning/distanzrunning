@@ -18,6 +18,7 @@ import {
   SiBrave,
   SiLinkedin,
   SiTailwindcss,
+  SiReact,
 } from "react-icons/si";
 
 // Icon library types
@@ -233,6 +234,7 @@ const buildIconRegistry = (): IconDefinition[] => {
       component: SiTypescript,
     },
     { name: "SiX", displayName: "X", component: SiX },
+    { name: "SiReact", displayName: "React", component: SiReact },
   ];
 
   simpleIcons.forEach(({ name, displayName, component }) => {
