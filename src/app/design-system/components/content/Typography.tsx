@@ -289,18 +289,18 @@ function getTokenClass(type: TokenType): string {
   switch (type) {
     case "tag":
       // Green for tags (p, strong, div, etc.)
-      return "text-green-700 dark:text-green-400";
+      return "text-green-700 dark:text-green-500";
     case "attr-name":
       // Purple for attribute names (className, etc.)
-      return "text-purple-700 dark:text-purple-400";
+      return "text-purple-700 dark:text-purple-500";
     case "attr-value":
       // Blue for attribute values (the string inside quotes)
-      return "text-blue-700 dark:text-blue-400";
+      return "text-blue-700 dark:text-blue-500";
     case "punctuation":
       // Gray for punctuation (<, >, =, quotes)
       return "text-textDefault";
     case "string":
-      return "text-blue-700 dark:text-blue-400";
+      return "text-blue-700 dark:text-blue-500";
     case "plain":
     default:
       return "text-textDefault";
