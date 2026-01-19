@@ -284,23 +284,23 @@ function tokenizeHtml(code: string): Token[] {
 }
 
 // Get token color class based on type (Geist/Shiki style)
-// Using Geist color system: purple for tags, blue for attrs, green for strings
+// Using Geist color system: green for tags, purple for attrs, blue for values
 function getTokenClass(type: TokenType): string {
   switch (type) {
     case "tag":
-      // Purple for tags (p, strong, div, etc.)
-      return "text-purple-700 dark:text-purple-400";
-    case "attr-name":
-      // Blue for attribute names (className, etc.)
-      return "text-blue-700 dark:text-blue-400";
-    case "attr-value":
-      // Green for attribute values (the string inside quotes)
+      // Green for tags (p, strong, div, etc.)
       return "text-green-700 dark:text-green-400";
+    case "attr-name":
+      // Purple for attribute names (className, etc.)
+      return "text-purple-700 dark:text-purple-400";
+    case "attr-value":
+      // Blue for attribute values (the string inside quotes)
+      return "text-blue-700 dark:text-blue-400";
     case "punctuation":
       // Gray for punctuation (<, >, =, quotes)
       return "text-textDefault";
     case "string":
-      return "text-green-900 dark:text-green-900";
+      return "text-blue-700 dark:text-blue-400";
     case "plain":
     default:
       return "text-textDefault";
