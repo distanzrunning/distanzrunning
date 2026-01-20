@@ -1,12 +1,42 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { codeToTokens, type BundledLanguage, type ThemedToken } from "shiki";
+
+// Hook to detect current theme
+function useTheme(): "light" | "dark" {
+  const [theme, setTheme] = useState<"light" | "dark">("dark");
+
+  useEffect(() => {
+    // Check initial theme
+    const checkTheme = () => {
+      const isDark = document.documentElement.classList.contains("dark");
+      setTheme(isDark ? "dark" : "light");
+    };
+
+    checkTheme();
+
+    // Watch for theme changes
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.attributeName === "class") {
+          checkTheme();
+        }
+      });
+    });
+
+    observer.observe(document.documentElement, { attributes: true });
+
+    return () => observer.disconnect();
+  }, []);
+
+  return theme;
+}
 
 // Map language prop to Shiki language
 export function getShikiLanguage(
   language?: string,
-  filename?: string
+  filename?: string,
 ): BundledLanguage {
   const ext = filename?.split(".").pop()?.toLowerCase();
   const lang = language?.toLowerCase() || ext;
@@ -51,22 +81,24 @@ export function getShikiLanguage(
 export function useShikiHighlighter(
   code: string,
   language?: string,
-  filename?: string
+  filename?: string,
 ): ThemedToken[][] | null {
   const [tokenizedLines, setTokenizedLines] = useState<ThemedToken[][] | null>(
-    null
+    null,
   );
+  const theme = useTheme();
 
   useEffect(() => {
     const lang = getShikiLanguage(language, filename);
+    const shikiTheme = theme === "dark" ? "github-dark" : "github-light";
 
     codeToTokens(code, {
       lang,
-      theme: "github-dark",
+      theme: shikiTheme,
     }).then((result) => {
       setTokenizedLines(result.tokens);
     });
-  }, [code, language, filename]);
+  }, [code, language, filename, theme]);
 
   return tokenizedLines;
 }
@@ -74,7 +106,7 @@ export function useShikiHighlighter(
 // Render a single Shiki token with optional diff mode
 export function renderShikiToken(
   token: ThemedToken,
-  diffMode?: "added" | "removed"
+  diffMode?: "added" | "removed",
 ): React.CSSProperties {
   let style: React.CSSProperties = {};
 
