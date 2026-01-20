@@ -618,6 +618,7 @@ function CodeBlock({
   referencedLines = [],
 }: CodeBlockProps) {
   const [copied, setCopied] = useState(false);
+  const [selectedLines, setSelectedLines] = useState<number[]>([]);
   const tokenizedLines = tokenizeFullCode(code);
 
   const handleCopy = useCallback(() => {
@@ -628,7 +629,11 @@ function CodeBlock({
 
   const handleLineClick = (lineNumber: number) => {
     if (referencedLines.includes(lineNumber)) {
-      console.log(`Line ${lineNumber} clicked`);
+      setSelectedLines((prev) =>
+        prev.includes(lineNumber)
+          ? prev.filter((n) => n !== lineNumber)
+          : [...prev, lineNumber],
+      );
     }
   };
 
@@ -683,6 +688,7 @@ function CodeBlock({
             const isAdded = addedLines.includes(lineNumber);
             const isRemoved = removedLines.includes(lineNumber);
             const isReferenced = referencedLines.includes(lineNumber);
+            const isSelected = selectedLines.includes(lineNumber);
 
             let lineBackground = "";
             let linePrefix = "";
@@ -704,7 +710,12 @@ function CodeBlock({
               <div
                 key={index}
                 className={`flex px-4 ${lineBackground}`}
-                style={{ fontFeatureSettings: '"liga" off' }}
+                style={{
+                  fontFeatureSettings: '"liga" off',
+                  boxShadow: isSelected
+                    ? "oklch(0.5279 0.1496 54.65) 2px 0px 0px 0px inset"
+                    : undefined,
+                }}
               >
                 {/* Diff prefix for added/removed lines */}
                 {(addedLines.length > 0 || removedLines.length > 0) && (
@@ -1016,21 +1027,32 @@ export function Component() {
   );
 }`;
 
-const referencedPreviewCode = `export default function Page() {
-  const name = "World"
-  return <p>Hello, {name}!</p>
+const referencedPreviewCode = `function MyComponent(props) {
+  return (
+    <div>
+      <h1>Count: {props.count}</h1>
+    </div>
+  );
 }`;
 
 const referencedComponentCode = `import { CodeBlock } from '@/components/ui/CodeBlock';
 
-const code = \`export default function Page() {
-  const name = "World"
-  return <p>Hello, {name}!</p>
+const code = \`function MyComponent(props) {
+  return (
+    <div>
+      <h1>Count: {props.count}</h1>
+    </div>
+  );
 }\`;
 
 export function Component() {
   return (
-    <CodeBlock filename="page.tsx" referencedLines={[3]}>
+    <CodeBlock
+      aria-label="Hello world"
+      filename="referenced.jsx"
+      referencedLines={[1, 2, 3, 4, 5, 6, 7]}
+      language="jsx"
+    >
       {code}
     </CodeBlock>
   );
@@ -1177,13 +1199,14 @@ export default function CodeBlockComponent() {
           <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
             referencedLines
           </code>{" "}
-          prop. Useful for linking to specific lines in documentation.
+          prop. Click a line number to highlight it with an amber left border.
+          Click again to remove the highlight.
         </p>
         <CodePreview
           previewCode={referencedPreviewCode}
-          previewFilename="page.tsx"
+          previewFilename="referenced.jsx"
           componentCode={referencedComponentCode}
-          referencedLines={[3]}
+          referencedLines={[1, 2, 3, 4, 5, 6, 7]}
         />
       </Section>
 

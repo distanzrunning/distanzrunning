@@ -506,6 +506,7 @@ export function CodeBlock({
   "aria-label": ariaLabel,
 }: CodeBlockProps) {
   const [copied, setCopied] = useState(false);
+  const [selectedLines, setSelectedLines] = useState<number[]>([]);
   const codeContent = code || children || "";
   const tokenizedLines = tokenizeFullCode(codeContent);
 
@@ -517,7 +518,11 @@ export function CodeBlock({
 
   const handleLineClick = (lineNumber: number) => {
     if (referencedLines.includes(lineNumber)) {
-      console.log(`Line ${lineNumber} clicked`);
+      setSelectedLines((prev) =>
+        prev.includes(lineNumber)
+          ? prev.filter((n) => n !== lineNumber)
+          : [...prev, lineNumber],
+      );
     }
   };
 
@@ -573,6 +578,7 @@ export function CodeBlock({
             const isAdded = addedLines.includes(lineNumber);
             const isRemoved = removedLines.includes(lineNumber);
             const isReferenced = referencedLines.includes(lineNumber);
+            const isSelected = selectedLines.includes(lineNumber);
 
             let lineBackground = "";
             let linePrefix = "";
@@ -594,7 +600,12 @@ export function CodeBlock({
               <div
                 key={index}
                 className={`flex px-4 ${lineBackground}`}
-                style={{ fontFeatureSettings: '"liga" off' }}
+                style={{
+                  fontFeatureSettings: '"liga" off',
+                  boxShadow: isSelected
+                    ? "oklch(0.5279 0.1496 54.65) 2px 0px 0px 0px inset"
+                    : undefined,
+                }}
               >
                 {/* Diff prefix for added/removed lines */}
                 {(addedLines.length > 0 || removedLines.length > 0) && (
