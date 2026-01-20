@@ -895,10 +895,24 @@ const noFilenamePreviewCode = `function MyComponent(props) {
   );
 }`;
 
-const noFilenameComponentCode = `import { CodeBlock } from '@/components/CodeBlock'
+const noFilenameComponentCode = `import { CodeBlock } from 'geist/components';
+import type { JSX } from 'react';
 
-export function Component() {
-  return <CodeBlock code={code} />
+const code = \`function MyComponent(props) {
+  return (
+    <div>
+      <h1>Hello, {props.name}!</h1>
+      <p>This is an example React component.</p>
+    </div>
+  );
+}\`;
+
+export function Component(): JSX.Element {
+  return (
+    <CodeBlock aria-label="Hello world" language="jsx">
+      {code}
+    </CodeBlock>
+  );
 }`;
 
 const highlightedPreviewCode = `export default function Page() {
