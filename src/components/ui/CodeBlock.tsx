@@ -606,7 +606,7 @@ export function CodeBlock({
                 <select
                   value={switcher.value}
                   onChange={(e) => switcher.onChange(e.target.value)}
-                  className="absolute inset-0 opacity-0 cursor-pointer w-full"
+                  className="absolute inset-0 opacity-0 cursor-pointer w-full text-[12px]"
                 >
                   {switcher.options.map((option) => (
                     <option key={option.value} value={option.value}>

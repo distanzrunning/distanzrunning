@@ -1369,7 +1369,7 @@ function LanguageSwitcherPreview() {
             <select
               value={language}
               onChange={(e) => setLanguage(e.target.value)}
-              className="absolute inset-0 opacity-0 cursor-pointer w-full"
+              className="absolute inset-0 opacity-0 cursor-pointer w-full text-[12px]"
             >
               {languageOptions.map((option) => (
                 <option key={option.value} value={option.value}>
