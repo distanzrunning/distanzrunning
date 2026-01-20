@@ -546,11 +546,20 @@ function tokenizeFullCode(code: string): Token[][] {
 }
 
 // Render pre-tokenized line
-function RenderTokenLine({ tokens }: { tokens: Token[] }) {
+function RenderTokenLine({
+  tokens,
+  forceColor = false,
+}: {
+  tokens: Token[];
+  forceColor?: boolean;
+}) {
   return (
     <>
       {tokens.map((token, i) => (
-        <span key={i} className={getTokenClass(token.type)}>
+        <span
+          key={i}
+          className={forceColor ? "text-inherit" : getTokenClass(token.type)}
+        >
           {token.content}
         </span>
       ))}
@@ -692,9 +701,12 @@ function CodeBlock({
                 )}
                 {/* Line content */}
                 <span
-                  className={`flex-1 pr-4 ${isRemoved ? "text-textSubtle line-through" : ""}`}
+                  className={`flex-1 pr-4 ${isRemoved ? "text-[var(--ds-red-900)]" : ""} ${isAdded ? "text-[var(--ds-green-900)]" : ""}`}
                 >
-                  <RenderTokenLine tokens={lineTokens} />
+                  <RenderTokenLine
+                    tokens={lineTokens}
+                    forceColor={isRemoved || isAdded}
+                  />
                 </span>
               </div>
             );
