@@ -622,7 +622,7 @@ export function CodeBlock({
                     onClick={() => handleLineClick(lineNumber)}
                     className={`select-none w-[32px] min-w-[32px] text-right pr-4 ${
                       isReferenced
-                        ? "cursor-pointer hover:underline"
+                        ? "cursor-pointer hover:text-black"
                         : "text-textSubtler"
                     }`}
                     style={
