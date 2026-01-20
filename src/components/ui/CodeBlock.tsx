@@ -580,7 +580,7 @@ export function CodeBlock({
               <select
                 value={switcher.value}
                 onChange={(e) => switcher.onChange(e.target.value)}
-                className="text-[13px] text-textSubtle bg-transparent border-none outline-none cursor-pointer px-3 py-2 rounded hover:bg-[var(--ds-gray-200)] dark:hover:bg-[var(--ds-gray-100)] transition-colors"
+                className="text-[13px] text-textSubtle bg-transparent border-none outline-none cursor-pointer px-2 py-1.5 rounded hover:bg-[var(--ds-gray-200)] dark:hover:bg-[var(--ds-gray-100)] transition-colors"
               >
                 {switcher.options.map((option) => (
                   <option key={option.value} value={option.value}>
@@ -592,7 +592,7 @@ export function CodeBlock({
             {/* Copy Button */}
             <button
               onClick={handleCopy}
-              className="p-2.5 rounded hover:bg-[var(--ds-gray-200)] dark:hover:bg-[var(--ds-gray-100)] transition-colors text-textSubtle hover:text-textDefault"
+              className="p-2 rounded hover:bg-[var(--ds-gray-200)] dark:hover:bg-[var(--ds-gray-100)] transition-colors text-textSubtle hover:text-textDefault"
               aria-label="Copy code"
             >
               {copied ? <CheckIcon /> : <CopyIcon />}
