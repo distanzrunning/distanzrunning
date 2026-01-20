@@ -194,7 +194,7 @@ export default function ContentWithTOC({
       </div>
 
       {/* Table of Contents - Right Sidebar (≥1280px) */}
-      <aside className="hidden xl:block w-[260px] flex-shrink-0 border-l border-borderSubtle">
+      <aside className="hidden xl:block w-[260px] flex-shrink-0 border-l border-borderSubtle self-stretch">
         <div className="sticky top-0 max-h-screen overflow-y-auto px-6 py-6">
           <h4 className="text-[14px] leading-[20px] font-medium text-textDefault mb-3">
             {tocTitle}
