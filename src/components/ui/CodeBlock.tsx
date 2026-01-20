@@ -580,7 +580,7 @@ export function CodeBlock({
               <select
                 value={switcher.value}
                 onChange={(e) => switcher.onChange(e.target.value)}
-                className="text-[13px] text-textSubtle bg-transparent border-none outline-none cursor-pointer"
+                className="text-[13px] text-textSubtle bg-transparent border-none outline-none cursor-pointer px-2 py-1 rounded hover:bg-[var(--ds-gray-200)] dark:hover:bg-[var(--ds-gray-100)] transition-colors"
               >
                 {switcher.options.map((option) => (
                   <option key={option.value} value={option.value}>
