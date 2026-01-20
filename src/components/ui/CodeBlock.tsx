@@ -353,8 +353,29 @@ function tokenizeJsx(code: string): Token[] {
   return tokens;
 }
 
-// Get token color class based on type
-function getTokenClass(type: TokenType): string {
+// Get token color class based on type and diff mode
+function getTokenClass(
+  type: TokenType,
+  diffMode?: "added" | "removed",
+): string {
+  // In diff mode, identifiers/plain text get the diff color, others stay greyscale
+  if (diffMode === "added") {
+    // Added lines: keywords like true/false get green, rest is greyscale
+    if (type === "keyword") {
+      return "text-[var(--ds-green-900)]";
+    }
+    return "text-[var(--ds-gray-1000)]";
+  }
+
+  if (diffMode === "removed") {
+    // Removed lines: identifiers/plain text get red, rest is greyscale
+    if (type === "plain" || type === "attr-name") {
+      return "text-[var(--ds-red-900)]";
+    }
+    return "text-[var(--ds-gray-1000)]";
+  }
+
+  // Normal syntax highlighting
   switch (type) {
     case "tag":
       return "text-[var(--ds-green-900)]";
@@ -404,18 +425,15 @@ function tokenizeFullCode(code: string): Token[][] {
 // Render pre-tokenized line
 function RenderTokenLine({
   tokens,
-  forceColor = false,
+  diffMode,
 }: {
   tokens: Token[];
-  forceColor?: boolean;
+  diffMode?: "added" | "removed";
 }) {
   return (
     <>
       {tokens.map((token, i) => (
-        <span
-          key={i}
-          className={forceColor ? "text-inherit" : getTokenClass(token.type)}
-        >
+        <span key={i} className={getTokenClass(token.type, diffMode)}>
           {token.content}
         </span>
       ))}
@@ -591,12 +609,12 @@ export function CodeBlock({
                   </span>
                 )}
                 {/* Line content */}
-                <span
-                  className={`flex-1 pr-4 ${isRemoved ? "text-[var(--ds-red-900)]" : ""} ${isAdded ? "text-[var(--ds-green-900)]" : ""}`}
-                >
+                <span className="flex-1 pr-4">
                   <RenderTokenLine
                     tokens={lineTokens}
-                    forceColor={isRemoved || isAdded}
+                    diffMode={
+                      isAdded ? "added" : isRemoved ? "removed" : undefined
+                    }
                   />
                 </span>
               </div>
