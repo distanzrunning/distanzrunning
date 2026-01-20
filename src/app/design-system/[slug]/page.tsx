@@ -708,6 +708,7 @@ export default function DesignSystemPage() {
             { id: "language-switcher", title: "Language switcher" },
             { id: "hidden-line-numbers", title: "Hidden line numbers" },
             { id: "props", title: "Props" },
+            { id: "syntax-highlighting", title: "Syntax highlighting" },
           ]}
         >
           <CodeBlockComponent />
