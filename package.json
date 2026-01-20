@@ -65,6 +65,7 @@
     "react-instantsearch": "^7.17.0",
     "recharts": "^3.6.0",
     "sanity": "^3.85.1",
+    "shiki": "^3.21.0",
     "styled-components": "^6.1.17",
     "tailwindcss-animate": "^1.0.7"
   },

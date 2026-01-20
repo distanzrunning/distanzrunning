@@ -3,6 +3,11 @@
 import { useState, useCallback } from "react";
 import { ChevronDown } from "lucide-react";
 import { SiReact, SiTypescript, SiNextdotjs, SiLua } from "react-icons/si";
+import type { ThemedToken } from "shiki";
+import {
+  useShikiHighlighter,
+  renderShikiToken,
+} from "@/components/ui/useShikiHighlighter";
 import { Section } from "../ContentWithTOC";
 
 // Toast notification for copy confirmation
@@ -121,486 +126,16 @@ function CheckIcon() {
   );
 }
 
-// Token types for syntax highlighting
-type TokenType =
-  | "tag"
-  | "attr-name"
-  | "attr-value"
-  | "punctuation"
-  | "plain"
-  | "string"
-  | "keyword"
-  | "function"
-  | "parameter"
-  | "comment"
-  | "added"
-  | "removed";
-
-interface Token {
-  type: TokenType;
-  content: string;
-}
-
-// Simple JSX/TSX tokenizer for syntax highlighting
-function tokenizeJsx(code: string): Token[] {
-  const tokens: Token[] = [];
-  let i = 0;
-  let insideJsxContent = false; // Track if we're inside JSX text content (between > and <)
-
-  while (i < code.length) {
-    // Check for comments
-    if (code.slice(i, i + 2) === "//") {
-      let comment = "";
-      while (i < code.length && code[i] !== "\n") {
-        comment += code[i];
-        i++;
-      }
-      tokens.push({ type: "comment", content: comment });
-      continue;
-    }
-
-    // Check for JSX opening tag
-    if (code[i] === "<" && /[A-Za-z\/]/.test(code[i + 1] || "")) {
-      // Check for closing tag
-      if (code[i + 1] === "/") {
-        tokens.push({ type: "punctuation", content: "</" });
-        i += 2;
-        insideJsxContent = false; // Entering closing tag
-        // Get tag name
-        let tagName = "";
-        while (i < code.length && /[a-zA-Z0-9.]/.test(code[i])) {
-          tagName += code[i];
-          i++;
-        }
-        if (tagName) {
-          tokens.push({ type: "tag", content: tagName });
-        }
-        // Get closing >
-        if (code[i] === ">") {
-          tokens.push({ type: "punctuation", content: ">" });
-          i++;
-          insideJsxContent = true; // Now inside JSX text content
-        }
-      } else {
-        tokens.push({ type: "punctuation", content: "<" });
-        insideJsxContent = false; // Entering a tag, no longer in text content
-        i++;
-        // Get tag name (can include dots for namespaced components)
-        let tagName = "";
-        while (i < code.length && /[a-zA-Z0-9.]/.test(code[i])) {
-          tagName += code[i];
-          i++;
-        }
-        if (tagName) {
-          tokens.push({ type: "tag", content: tagName });
-        }
-        // Parse attributes
-        while (i < code.length && code[i] !== ">" && code[i] !== "/") {
-          // Skip whitespace
-          if (/\s/.test(code[i])) {
-            tokens.push({ type: "plain", content: code[i] });
-            i++;
-            continue;
-          }
-          // Check for JSX expression
-          if (code[i] === "{") {
-            tokens.push({ type: "punctuation", content: "{" });
-            i++;
-            let depth = 1;
-            let expr = "";
-            while (i < code.length && depth > 0) {
-              if (code[i] === "{") depth++;
-              if (code[i] === "}") depth--;
-              if (depth > 0) {
-                expr += code[i];
-              }
-              i++;
-            }
-            if (expr) {
-              tokens.push({ type: "plain", content: expr });
-            }
-            tokens.push({ type: "punctuation", content: "}" });
-            continue;
-          }
-          // Get attribute name
-          let attrName = "";
-          while (i < code.length && /[a-zA-Z0-9-]/.test(code[i])) {
-            attrName += code[i];
-            i++;
-          }
-          if (attrName) {
-            tokens.push({ type: "attr-name", content: attrName });
-          }
-          // Get equals sign
-          if (code[i] === "=") {
-            tokens.push({ type: "punctuation", content: "=" });
-            i++;
-          }
-          // Get attribute value
-          if (code[i] === '"' || code[i] === "'") {
-            const quote = code[i];
-            tokens.push({ type: "punctuation", content: quote });
-            i++;
-            let attrValue = "";
-            while (i < code.length && code[i] !== quote) {
-              attrValue += code[i];
-              i++;
-            }
-            if (attrValue) {
-              tokens.push({ type: "attr-value", content: attrValue });
-            }
-            if (code[i] === quote) {
-              tokens.push({ type: "punctuation", content: quote });
-              i++;
-            }
-          } else if (code[i] === "{") {
-            // JSX expression as value
-            tokens.push({ type: "punctuation", content: "{" });
-            i++;
-            let depth = 1;
-            let expr = "";
-            while (i < code.length && depth > 0) {
-              if (code[i] === "{") depth++;
-              if (code[i] === "}") depth--;
-              if (depth > 0) {
-                expr += code[i];
-              }
-              i++;
-            }
-            if (expr) {
-              tokens.push({ type: "attr-value", content: expr });
-            }
-            tokens.push({ type: "punctuation", content: "}" });
-          }
-        }
-        // Handle self-closing or closing
-        if (code[i] === "/") {
-          tokens.push({ type: "punctuation", content: "/" });
-          i++;
-          insideJsxContent = false; // Self-closing tag, no content follows
-        }
-        if (code[i] === ">") {
-          tokens.push({ type: "punctuation", content: ">" });
-          i++;
-          // Only set insideJsxContent if not self-closing
-          const prevToken = tokens[tokens.length - 2];
-          if (prevToken?.content !== "/") {
-            insideJsxContent = true;
-          }
-        }
-      }
-    } else if (insideJsxContent && code[i] !== "{") {
-      // We're inside JSX text content - collect plain text until we hit < or {
-      let text = "";
-      while (i < code.length && code[i] !== "<" && code[i] !== "{") {
-        text += code[i];
-        i++;
-      }
-      if (text) {
-        tokens.push({ type: "plain", content: text });
-      }
-    } else if (code[i] === '"' || code[i] === "'") {
-      // String literal
-      const quote = code[i];
-      let str = quote;
-      i++;
-      while (i < code.length && code[i] !== quote) {
-        str += code[i];
-        i++;
-      }
-      if (i < code.length) {
-        str += code[i];
-        i++;
-      }
-      tokens.push({ type: "string", content: str });
-    } else if (code[i] === "`") {
-      // Template literal
-      let str = "`";
-      i++;
-      while (i < code.length && code[i] !== "`") {
-        str += code[i];
-        i++;
-      }
-      if (i < code.length) {
-        str += code[i];
-        i++;
-      }
-      tokens.push({ type: "string", content: str });
-    } else {
-      // Check for keywords
-      const keywords = [
-        "import",
-        "export",
-        "from",
-        "const",
-        "let",
-        "var",
-        "function",
-        "return",
-        "if",
-        "else",
-        "default",
-        "async",
-        "await",
-        "true",
-        "false",
-        "null",
-        "undefined",
-        "type",
-      ];
-      let foundKeyword = false;
-      for (const kw of keywords) {
-        if (
-          code.slice(i, i + kw.length) === kw &&
-          !/[a-zA-Z0-9]/.test(code[i + kw.length] || "")
-        ) {
-          tokens.push({ type: "keyword", content: kw });
-          i += kw.length;
-          foundKeyword = true;
-          break;
-        }
-      }
-      if (!foundKeyword) {
-        // Check context from previous tokens (skip whitespace/plain tokens)
-        const findPrevNonWhitespaceToken = () => {
-          for (let j = tokens.length - 1; j >= 0; j--) {
-            const t = tokens[j];
-            // Skip whitespace-only plain tokens
-            if (t.type === "plain" && /^\s*$/.test(t.content)) continue;
-            return t;
-          }
-          return null;
-        };
-        const prevNonWhitespace = findPrevNonWhitespaceToken();
-        const prevTokenIsFunction =
-          prevNonWhitespace?.type === "keyword" &&
-          prevNonWhitespace?.content === "function";
-
-        // Check if we're inside function parameters (after function name and open paren)
-        const isInsideParams = (() => {
-          // Look back for pattern: function Name( or Name(
-          let parenDepth = 0;
-          for (let j = tokens.length - 1; j >= 0; j--) {
-            const t = tokens[j];
-            if (t.type === "punctuation" && t.content === ")") parenDepth++;
-            if (t.type === "punctuation" && t.content === "(") {
-              parenDepth--;
-              if (parenDepth < 0) {
-                // Found unmatched open paren, check if preceded by function name
-                const prevToken = tokens[j - 1];
-                if (prevToken?.type === "function") return true;
-              }
-            }
-            // Stop at certain boundaries
-            if (
-              t.type === "punctuation" &&
-              (t.content === "{" || t.content === "}")
-            )
-              break;
-          }
-          return false;
-        })();
-
-        // Handle parentheses as punctuation (needed for isInsideParams to work)
-        if (code[i] === "(" || code[i] === ")") {
-          tokens.push({ type: "punctuation", content: code[i] });
-          i++;
-          continue;
-        }
-
-        // Check for identifier (potential function/class name)
-        if (/[a-zA-Z_$]/.test(code[i])) {
-          let identifier = "";
-          while (i < code.length && /[a-zA-Z0-9_$]/.test(code[i])) {
-            identifier += code[i];
-            i++;
-          }
-
-          // Only mark as function if directly after 'function' keyword
-          // (PascalCase like CodeBlock, Element should be plain/greyscale)
-          if (prevTokenIsFunction) {
-            tokens.push({ type: "function", content: identifier });
-          } else if (isInsideParams) {
-            tokens.push({ type: "parameter", content: identifier });
-          } else {
-            tokens.push({ type: "plain", content: identifier });
-          }
-          continue;
-        }
-
-        // Plain text (non-identifier characters)
-        let text = "";
-        while (
-          i < code.length &&
-          code[i] !== "<" &&
-          code[i] !== '"' &&
-          code[i] !== "'" &&
-          code[i] !== "`" &&
-          !/[a-zA-Z_$]/.test(code[i]) &&
-          !(code.slice(i, i + 2) === "//")
-        ) {
-          // Check for keywords mid-stream
-          let breakForKeyword = false;
-          for (const kw of keywords) {
-            if (
-              code.slice(i, i + kw.length) === kw &&
-              !/[a-zA-Z0-9]/.test(code[i - 1] || "") &&
-              !/[a-zA-Z0-9]/.test(code[i + kw.length] || "")
-            ) {
-              breakForKeyword = true;
-              break;
-            }
-          }
-          if (breakForKeyword) break;
-          text += code[i];
-          i++;
-        }
-        if (text) {
-          tokens.push({ type: "plain", content: text });
-        }
-      }
-    }
-  }
-
-  return tokens;
-}
-
-// Get token color class based on type and diff mode (Geist shiki token colors)
-// Keywords (import, export, const, function, return, type) - pink
-// Function names after 'function' keyword (MyComponent, Component) - purple
-// Attribute names (aria-label, filename, className) - purple
-// Attribute values ("Hello world", "Table.jsx") - blue
-// String literals and template literals - green
-// JSX tags (div, h1, CodeBlock) - green
-// Function parameters (props) - amber
-
-// Check if content is an identifier (not punctuation)
-function isIdentifier(content: string): boolean {
-  return /^[a-zA-Z_$][a-zA-Z0-9_$]*$/.test(content);
-}
-
-function getTokenClass(
-  type: TokenType,
-  diffMode?: "added" | "removed",
-  content?: string,
-): string {
-  // In diff mode, identifiers are red, value keywords (true/false) are green
-  if (diffMode) {
-    // Identifiers/property names are red (but not punctuation in plain tokens)
-    if (type === "plain" && content && isIdentifier(content)) {
-      return "text-[var(--ds-red-900)]";
-    }
-    if (type === "attr-name") {
-      return "text-[var(--ds-red-900)]";
-    }
-    // Value keywords like true/false are green
-    if (type === "keyword") {
-      return "text-[var(--ds-green-900)]";
-    }
-    // Everything else is greyscale
-    return "text-[var(--ds-gray-1000)]";
-  }
-
-  // Normal syntax highlighting
-  switch (type) {
-    case "tag":
-      // JSX tags like div, h1, CodeBlock - green
-      return "text-[var(--ds-green-900)]";
-    case "attr-name":
-      // Attribute names like aria-label, filename - purple
-      return "text-[var(--ds-purple-900)]";
-    case "attr-value":
-      // Attribute values like "Hello world" - blue
-      return "text-[var(--ds-blue-900)]";
-    case "punctuation":
-      // Punctuation like {, }, <, > - gray-1000
-      return "text-[var(--ds-gray-1000)]";
-    case "string":
-      // String literals and template literals - green
-      return "text-[var(--ds-green-900)]";
-    case "keyword":
-      // Keywords like function, return, const, import, type - pink
-      return "text-[var(--ds-pink-900)]";
-    case "function":
-      // Function names after 'function' keyword - purple
-      return "text-[var(--ds-purple-900)]";
-    case "parameter":
-      // Parameters like props - amber
-      return "text-[var(--ds-amber-900)]";
-    case "comment":
-      // Comments - gray-900
-      return "text-[var(--ds-gray-900)]";
-    case "added":
-      return "text-[var(--ds-green-900)]";
-    case "removed":
-      return "text-[var(--ds-red-900)]";
-    case "plain":
-    default:
-      return "text-[var(--ds-gray-1000)]";
-  }
-}
-
-// Render a line with syntax highlighting
-function HighlightedLine({ line }: { line: string }) {
-  const tokens = tokenizeJsx(line);
-
-  return (
-    <>
-      {tokens.map((token, i) => (
-        <span key={i} className={getTokenClass(token.type)}>
-          {token.content}
-        </span>
-      ))}
-      {tokens.length === 0 && " "}
-    </>
-  );
-}
-
-// Tokenize entire code block and split into lines for rendering
-// This properly handles multi-line strings like template literals
-function tokenizeFullCode(code: string): Token[][] {
-  const tokens = tokenizeJsx(code);
-  const lines: Token[][] = [[]];
-
-  for (const token of tokens) {
-    // Split token content by newlines
-    const parts = token.content.split("\n");
-
-    for (let i = 0; i < parts.length; i++) {
-      if (i > 0) {
-        // Start a new line
-        lines.push([]);
-      }
-      if (parts[i]) {
-        lines[lines.length - 1].push({ type: token.type, content: parts[i] });
-      }
-    }
-  }
-
-  return lines;
-}
-
-// Render pre-tokenized line
-function RenderTokenLine({
-  tokens,
+// Render a single Shiki token
+function RenderShikiToken({
+  token,
   diffMode,
 }: {
-  tokens: Token[];
+  token: ThemedToken;
   diffMode?: "added" | "removed";
 }) {
-  return (
-    <>
-      {tokens.map((token, i) => (
-        <span
-          key={i}
-          className={getTokenClass(token.type, diffMode, token.content)}
-        >
-          {token.content}
-        </span>
-      ))}
-      {tokens.length === 0 && " "}
-    </>
-  );
+  const style = renderShikiToken(token, diffMode);
+  return <span style={style}>{token.content}</span>;
 }
 
 interface CodeBlockProps {
@@ -614,10 +149,11 @@ interface CodeBlockProps {
   referencedLines?: number[];
 }
 
-// Inner code block component (the actual code display)
+// Inner code block component using Shiki
 function CodeBlock({
   code,
   filename,
+  language,
   showLineNumbers = true,
   highlightLines = [],
   addedLines = [],
@@ -626,7 +162,19 @@ function CodeBlock({
 }: CodeBlockProps) {
   const [copied, setCopied] = useState(false);
   const [selectedLines, setSelectedLines] = useState<number[]>([]);
-  const tokenizedLines = tokenizeFullCode(code);
+
+  // Use Shiki for syntax highlighting
+  const tokenizedLines = useShikiHighlighter(code, language, filename);
+
+  // Show plain text while loading
+  const lines =
+    tokenizedLines ||
+    code
+      .split("\n")
+      .map(
+        (line) =>
+          [{ content: line, color: "var(--ds-gray-1000)" }] as ThemedToken[],
+      );
 
   const handleCopy = useCallback(() => {
     navigator.clipboard.writeText(code);
@@ -687,7 +235,7 @@ function CodeBlock({
         style={{ background: "var(--ds-background-100)" }}
       >
         <code className="block text-[13px] leading-[20px] font-mono">
-          {tokenizedLines.map((lineTokens, index) => {
+          {lines.map((lineTokens, index) => {
             const lineNumber = index + 1;
             const isHighlighted = highlightLines.includes(lineNumber);
             const isAdded = addedLines.includes(lineNumber);
@@ -748,12 +296,16 @@ function CodeBlock({
                 )}
                 {/* Line content */}
                 <span className="flex-1 pr-4">
-                  <RenderTokenLine
-                    tokens={lineTokens}
-                    diffMode={
-                      isAdded ? "added" : isRemoved ? "removed" : undefined
-                    }
-                  />
+                  {lineTokens.map((token, i) => (
+                    <RenderShikiToken
+                      key={i}
+                      token={token}
+                      diffMode={
+                        isAdded ? "added" : isRemoved ? "removed" : undefined
+                      }
+                    />
+                  ))}
+                  {lineTokens.length === 0 && " "}
                 </span>
               </div>
             );
@@ -768,7 +320,9 @@ function CodeBlock({
 interface CodePreviewProps {
   previewCode: string;
   previewFilename: string;
+  previewLanguage?: string;
   componentCode: string;
+  componentLanguage?: string;
   showLineNumbers?: boolean;
   highlightLines?: number[];
   addedLines?: number[];
@@ -779,7 +333,9 @@ interface CodePreviewProps {
 function CodePreview({
   previewCode,
   previewFilename,
+  previewLanguage,
   componentCode,
+  componentLanguage = "tsx",
   showLineNumbers = true,
   highlightLines = [],
   addedLines = [],
@@ -788,7 +344,20 @@ function CodePreview({
 }: CodePreviewProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [copied, setCopied] = useState(false);
-  const componentCodeLines = tokenizeFullCode(componentCode);
+
+  // Use Shiki for component code highlighting
+  const componentCodeTokens = useShikiHighlighter(
+    componentCode,
+    componentLanguage,
+  );
+  const componentCodeLines =
+    componentCodeTokens ||
+    componentCode
+      .split("\n")
+      .map(
+        (line) =>
+          [{ content: line, color: "var(--ds-gray-1000)" }] as ThemedToken[],
+      );
 
   const handleCopyComponentCode = useCallback(() => {
     navigator.clipboard.writeText(componentCode);
@@ -806,6 +375,7 @@ function CodePreview({
         <CodeBlock
           code={previewCode}
           filename={previewFilename || undefined}
+          language={previewLanguage}
           showLineNumbers={showLineNumbers}
           highlightLines={highlightLines}
           addedLines={addedLines}
@@ -855,7 +425,10 @@ function CodePreview({
                         {index + 1}
                       </span>
                       <span className="flex-1 pr-4">
-                        <RenderTokenLine tokens={lineTokens} />
+                        {lineTokens.map((token, i) => (
+                          <RenderShikiToken key={i} token={token} />
+                        ))}
+                        {lineTokens.length === 0 && " "}
                       </span>
                     </div>
                   ))}
@@ -1223,7 +796,18 @@ function getLanguageIcon(language: string) {
 function LanguageSwitcherCodePreview() {
   const [isOpen, setIsOpen] = useState(false);
   const [copied, setCopied] = useState(false);
-  const componentCodeLines = tokenizeFullCode(languageSwitcherComponentCode);
+  const tokenizedLines = useShikiHighlighter(
+    languageSwitcherComponentCode,
+    "tsx",
+  );
+  const componentCodeLines: ThemedToken[][] =
+    tokenizedLines ||
+    languageSwitcherComponentCode
+      .split("\n")
+      .map(
+        (line) =>
+          [{ content: line, color: "var(--ds-gray-1000)" }] as ThemedToken[],
+      );
 
   const handleCopyComponentCode = useCallback(() => {
     navigator.clipboard.writeText(languageSwitcherComponentCode);
@@ -1282,7 +866,9 @@ function LanguageSwitcherCodePreview() {
                         {index + 1}
                       </span>
                       <span className="flex-1 pr-4">
-                        <RenderTokenLine tokens={lineTokens} />
+                        {lineTokens.map((token, tokenIndex) => (
+                          <RenderShikiToken key={tokenIndex} token={token} />
+                        ))}
                       </span>
                     </div>
                   ))}
@@ -1316,7 +902,25 @@ function LanguageSwitcherPreview() {
   };
 
   const code = getCode();
-  const tokenizedLines = tokenizeFullCode(code);
+  const shikiLanguage =
+    language === "next"
+      ? "tsx"
+      : language === "ts"
+        ? "typescript"
+        : language === "lua"
+          ? "lua"
+          : "jsx";
+  const tokenizedLines = useShikiHighlighter(code, shikiLanguage);
+
+  // Fallback while Shiki is loading
+  const lines: ThemedToken[][] =
+    tokenizedLines ||
+    code
+      .split("\n")
+      .map(
+        (line) =>
+          [{ content: line, color: "var(--ds-gray-1000)" }] as ThemedToken[],
+      );
 
   const handleCopy = useCallback(() => {
     navigator.clipboard.writeText(code);
@@ -1395,7 +999,7 @@ function LanguageSwitcherPreview() {
         style={{ background: "var(--ds-background-100)" }}
       >
         <code className="block text-[13px] leading-[20px] font-mono">
-          {tokenizedLines.map((lineTokens, index) => (
+          {lines.map((lineTokens, index) => (
             <div
               key={index}
               className="flex px-4"
@@ -1405,7 +1009,9 @@ function LanguageSwitcherPreview() {
                 {index + 1}
               </span>
               <span className="flex-1 pr-4">
-                <RenderTokenLine tokens={lineTokens} />
+                {lineTokens.map((token, tokenIndex) => (
+                  <RenderShikiToken key={tokenIndex} token={token} />
+                ))}
               </span>
             </div>
           ))}

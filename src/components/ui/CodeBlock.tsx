@@ -10,6 +10,8 @@ import {
 } from "react-icons/si";
 import { VscJson } from "react-icons/vsc";
 import { FiFile } from "react-icons/fi";
+import type { ThemedToken } from "shiki";
+import { useShikiHighlighter, renderShikiToken } from "./useShikiHighlighter";
 
 // Copy icon
 function CopyIcon() {
@@ -48,419 +50,6 @@ function CheckIcon() {
         fill="currentColor"
       />
     </svg>
-  );
-}
-
-// Token types for syntax highlighting
-type TokenType =
-  | "tag"
-  | "attr-name"
-  | "attr-value"
-  | "punctuation"
-  | "plain"
-  | "string"
-  | "keyword"
-  | "function"
-  | "parameter"
-  | "comment";
-
-interface Token {
-  type: TokenType;
-  content: string;
-}
-
-// Simple JSX/TSX tokenizer for syntax highlighting
-function tokenizeJsx(code: string): Token[] {
-  const tokens: Token[] = [];
-  let i = 0;
-  let insideJsxContent = false;
-
-  while (i < code.length) {
-    // Check for comments
-    if (code.slice(i, i + 2) === "//") {
-      let comment = "";
-      while (i < code.length && code[i] !== "\n") {
-        comment += code[i];
-        i++;
-      }
-      tokens.push({ type: "comment", content: comment });
-      continue;
-    }
-
-    // Check for JSX opening tag
-    if (code[i] === "<" && /[A-Za-z\/]/.test(code[i + 1] || "")) {
-      if (code[i + 1] === "/") {
-        tokens.push({ type: "punctuation", content: "</" });
-        i += 2;
-        insideJsxContent = false;
-        let tagName = "";
-        while (i < code.length && /[a-zA-Z0-9.]/.test(code[i])) {
-          tagName += code[i];
-          i++;
-        }
-        if (tagName) {
-          tokens.push({ type: "tag", content: tagName });
-        }
-        if (code[i] === ">") {
-          tokens.push({ type: "punctuation", content: ">" });
-          i++;
-          insideJsxContent = true;
-        }
-      } else {
-        tokens.push({ type: "punctuation", content: "<" });
-        insideJsxContent = false;
-        i++;
-        let tagName = "";
-        while (i < code.length && /[a-zA-Z0-9.]/.test(code[i])) {
-          tagName += code[i];
-          i++;
-        }
-        if (tagName) {
-          tokens.push({ type: "tag", content: tagName });
-        }
-        // Parse attributes
-        while (i < code.length && code[i] !== ">" && code[i] !== "/") {
-          if (/\s/.test(code[i])) {
-            tokens.push({ type: "plain", content: code[i] });
-            i++;
-            continue;
-          }
-          if (code[i] === "{") {
-            tokens.push({ type: "punctuation", content: "{" });
-            i++;
-            let depth = 1;
-            let expr = "";
-            while (i < code.length && depth > 0) {
-              if (code[i] === "{") depth++;
-              if (code[i] === "}") depth--;
-              if (depth > 0) {
-                expr += code[i];
-              }
-              i++;
-            }
-            if (expr) {
-              tokens.push({ type: "plain", content: expr });
-            }
-            tokens.push({ type: "punctuation", content: "}" });
-            continue;
-          }
-          let attrName = "";
-          while (i < code.length && /[a-zA-Z0-9-]/.test(code[i])) {
-            attrName += code[i];
-            i++;
-          }
-          if (attrName) {
-            tokens.push({ type: "attr-name", content: attrName });
-          }
-          if (code[i] === "=") {
-            tokens.push({ type: "punctuation", content: "=" });
-            i++;
-          }
-          if (code[i] === '"' || code[i] === "'") {
-            const quote = code[i];
-            tokens.push({ type: "punctuation", content: quote });
-            i++;
-            let attrValue = "";
-            while (i < code.length && code[i] !== quote) {
-              attrValue += code[i];
-              i++;
-            }
-            if (attrValue) {
-              tokens.push({ type: "attr-value", content: attrValue });
-            }
-            if (code[i] === quote) {
-              tokens.push({ type: "punctuation", content: quote });
-              i++;
-            }
-          } else if (code[i] === "{") {
-            tokens.push({ type: "punctuation", content: "{" });
-            i++;
-            let depth = 1;
-            let expr = "";
-            while (i < code.length && depth > 0) {
-              if (code[i] === "{") depth++;
-              if (code[i] === "}") depth--;
-              if (depth > 0) {
-                expr += code[i];
-              }
-              i++;
-            }
-            if (expr) {
-              tokens.push({ type: "attr-value", content: expr });
-            }
-            tokens.push({ type: "punctuation", content: "}" });
-          }
-        }
-        if (code[i] === "/") {
-          tokens.push({ type: "punctuation", content: "/" });
-          i++;
-          insideJsxContent = false;
-        }
-        if (code[i] === ">") {
-          tokens.push({ type: "punctuation", content: ">" });
-          i++;
-          const prevToken = tokens[tokens.length - 2];
-          if (prevToken?.content !== "/") {
-            insideJsxContent = true;
-          }
-        }
-      }
-    } else if (insideJsxContent && code[i] !== "{") {
-      let text = "";
-      while (i < code.length && code[i] !== "<" && code[i] !== "{") {
-        text += code[i];
-        i++;
-      }
-      if (text) {
-        tokens.push({ type: "plain", content: text });
-      }
-    } else if (code[i] === '"' || code[i] === "'") {
-      const quote = code[i];
-      let str = quote;
-      i++;
-      while (i < code.length && code[i] !== quote) {
-        str += code[i];
-        i++;
-      }
-      if (i < code.length) {
-        str += code[i];
-        i++;
-      }
-      tokens.push({ type: "string", content: str });
-    } else if (code[i] === "`") {
-      let str = "`";
-      i++;
-      while (i < code.length && code[i] !== "`") {
-        str += code[i];
-        i++;
-      }
-      if (i < code.length) {
-        str += code[i];
-        i++;
-      }
-      tokens.push({ type: "string", content: str });
-    } else {
-      const keywords = [
-        "import",
-        "export",
-        "from",
-        "const",
-        "let",
-        "var",
-        "function",
-        "return",
-        "if",
-        "else",
-        "default",
-        "async",
-        "await",
-        "true",
-        "false",
-        "null",
-        "undefined",
-        "type",
-      ];
-      let foundKeyword = false;
-      for (const kw of keywords) {
-        if (
-          code.slice(i, i + kw.length) === kw &&
-          !/[a-zA-Z0-9]/.test(code[i + kw.length] || "")
-        ) {
-          tokens.push({ type: "keyword", content: kw });
-          i += kw.length;
-          foundKeyword = true;
-          break;
-        }
-      }
-      if (!foundKeyword) {
-        const findPrevNonWhitespaceToken = () => {
-          for (let j = tokens.length - 1; j >= 0; j--) {
-            const t = tokens[j];
-            if (t.type === "plain" && /^\s*$/.test(t.content)) continue;
-            return t;
-          }
-          return null;
-        };
-        const prevNonWhitespace = findPrevNonWhitespaceToken();
-        const prevTokenIsFunction =
-          prevNonWhitespace?.type === "keyword" &&
-          prevNonWhitespace?.content === "function";
-
-        const isInsideParams = (() => {
-          let parenDepth = 0;
-          for (let j = tokens.length - 1; j >= 0; j--) {
-            const t = tokens[j];
-            if (t.type === "punctuation" && t.content === ")") parenDepth++;
-            if (t.type === "punctuation" && t.content === "(") {
-              parenDepth--;
-              if (parenDepth < 0) {
-                const prevToken = tokens[j - 1];
-                if (prevToken?.type === "function") return true;
-              }
-            }
-            if (
-              t.type === "punctuation" &&
-              (t.content === "{" || t.content === "}")
-            )
-              break;
-          }
-          return false;
-        })();
-
-        // Handle parentheses as punctuation (needed for isInsideParams to work)
-        if (code[i] === "(" || code[i] === ")") {
-          tokens.push({ type: "punctuation", content: code[i] });
-          i++;
-          continue;
-        }
-
-        if (/[a-zA-Z_$]/.test(code[i])) {
-          let identifier = "";
-          while (i < code.length && /[a-zA-Z0-9_$]/.test(code[i])) {
-            identifier += code[i];
-            i++;
-          }
-
-          if (prevTokenIsFunction) {
-            tokens.push({ type: "function", content: identifier });
-          } else if (isInsideParams) {
-            tokens.push({ type: "parameter", content: identifier });
-          } else {
-            tokens.push({ type: "plain", content: identifier });
-          }
-          continue;
-        }
-
-        let text = "";
-        while (
-          i < code.length &&
-          code[i] !== "<" &&
-          code[i] !== '"' &&
-          code[i] !== "'" &&
-          code[i] !== "`" &&
-          !/[a-zA-Z_$]/.test(code[i]) &&
-          !(code.slice(i, i + 2) === "//")
-        ) {
-          let breakForKeyword = false;
-          for (const kw of keywords) {
-            if (
-              code.slice(i, i + kw.length) === kw &&
-              !/[a-zA-Z0-9]/.test(code[i - 1] || "") &&
-              !/[a-zA-Z0-9]/.test(code[i + kw.length] || "")
-            ) {
-              breakForKeyword = true;
-              break;
-            }
-          }
-          if (breakForKeyword) break;
-          text += code[i];
-          i++;
-        }
-        if (text) {
-          tokens.push({ type: "plain", content: text });
-        }
-      }
-    }
-  }
-
-  return tokens;
-}
-
-// Check if content is an identifier (not punctuation)
-function isIdentifier(content: string): boolean {
-  return /^[a-zA-Z_$][a-zA-Z0-9_$]*$/.test(content);
-}
-
-// Get token color class based on type and diff mode
-function getTokenClass(
-  type: TokenType,
-  diffMode?: "added" | "removed",
-  content?: string,
-): string {
-  // In diff mode, identifiers are red, value keywords (true/false) are green
-  if (diffMode) {
-    // Identifiers/property names are red (but not punctuation in plain tokens)
-    if (type === "plain" && content && isIdentifier(content)) {
-      return "text-[var(--ds-red-900)]";
-    }
-    if (type === "attr-name") {
-      return "text-[var(--ds-red-900)]";
-    }
-    // Value keywords like true/false are green
-    if (type === "keyword") {
-      return "text-[var(--ds-green-900)]";
-    }
-    // Everything else is greyscale
-    return "text-[var(--ds-gray-1000)]";
-  }
-
-  // Normal syntax highlighting
-  switch (type) {
-    case "tag":
-      return "text-[var(--ds-green-900)]";
-    case "attr-name":
-      return "text-[var(--ds-purple-900)]";
-    case "attr-value":
-      return "text-[var(--ds-blue-900)]";
-    case "punctuation":
-      return "text-[var(--ds-gray-1000)]";
-    case "string":
-      return "text-[var(--ds-green-900)]";
-    case "keyword":
-      return "text-[var(--ds-pink-900)]";
-    case "function":
-      return "text-[var(--ds-purple-900)]";
-    case "parameter":
-      return "text-[var(--ds-amber-900)]";
-    case "comment":
-      return "text-[var(--ds-gray-900)]";
-    case "plain":
-    default:
-      return "text-[var(--ds-gray-1000)]";
-  }
-}
-
-// Tokenize entire code block and split into lines
-function tokenizeFullCode(code: string): Token[][] {
-  const tokens = tokenizeJsx(code);
-  const lines: Token[][] = [[]];
-
-  for (const token of tokens) {
-    const parts = token.content.split("\n");
-
-    for (let i = 0; i < parts.length; i++) {
-      if (i > 0) {
-        lines.push([]);
-      }
-      if (parts[i]) {
-        lines[lines.length - 1].push({ type: token.type, content: parts[i] });
-      }
-    }
-  }
-
-  return lines;
-}
-
-// Render pre-tokenized line
-function RenderTokenLine({
-  tokens,
-  diffMode,
-}: {
-  tokens: Token[];
-  diffMode?: "added" | "removed";
-}) {
-  return (
-    <>
-      {tokens.map((token, i) => (
-        <span
-          key={i}
-          className={getTokenClass(token.type, diffMode, token.content)}
-        >
-          {token.content}
-        </span>
-      ))}
-      {tokens.length === 0 && " "}
-    </>
   );
 }
 
@@ -523,6 +112,18 @@ export interface CodeBlockProps {
   switcher?: SwitcherProps;
 }
 
+// Render a single token
+function RenderToken({
+  token,
+  diffMode,
+}: {
+  token: ThemedToken;
+  diffMode?: "added" | "removed";
+}) {
+  const style = renderShikiToken(token, diffMode);
+  return <span style={style}>{token.content}</span>;
+}
+
 export function CodeBlock({
   code,
   children,
@@ -539,7 +140,9 @@ export function CodeBlock({
   const [copied, setCopied] = useState(false);
   const [selectedLines, setSelectedLines] = useState<number[]>([]);
   const codeContent = code || children || "";
-  const tokenizedLines = tokenizeFullCode(codeContent);
+
+  // Use Shiki for syntax highlighting
+  const tokenizedLines = useShikiHighlighter(codeContent, language, filename);
 
   const handleCopy = useCallback(() => {
     navigator.clipboard.writeText(codeContent);
@@ -554,6 +157,16 @@ export function CodeBlock({
       );
     }
   };
+
+  // Show plain text while loading
+  const lines =
+    tokenizedLines ||
+    codeContent
+      .split("\n")
+      .map(
+        (line) =>
+          [{ content: line, color: "var(--ds-gray-1000)" }] as ThemedToken[],
+      );
 
   return (
     <div
@@ -645,7 +258,7 @@ export function CodeBlock({
         style={{ background: "var(--ds-background-100)" }}
       >
         <code className="block text-[13px] leading-[20px] font-mono">
-          {tokenizedLines.map((lineTokens, index) => {
+          {lines.map((lineTokens, index) => {
             const lineNumber = index + 1;
             const isHighlighted = highlightLines.includes(lineNumber);
             const isAdded = addedLines.includes(lineNumber);
@@ -706,12 +319,16 @@ export function CodeBlock({
                 )}
                 {/* Line content */}
                 <span className="flex-1 pr-4">
-                  <RenderTokenLine
-                    tokens={lineTokens}
-                    diffMode={
-                      isAdded ? "added" : isRemoved ? "removed" : undefined
-                    }
-                  />
+                  {lineTokens.map((token, i) => (
+                    <RenderToken
+                      key={i}
+                      token={token}
+                      diffMode={
+                        isAdded ? "added" : isRemoved ? "removed" : undefined
+                      }
+                    />
+                  ))}
+                  {lineTokens.length === 0 && " "}
                 </span>
               </div>
             );
