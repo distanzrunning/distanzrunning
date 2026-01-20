@@ -913,21 +913,34 @@ export function Component() {
   );
 }`;
 
-const highlightedPreviewCode = `export default function Page() {
-  const name = "World"
-  return <p>Hello, {name}!</p>
+const highlightedPreviewCode = `function MyComponent(props) {
+  return (
+    <div>
+      <h1>Hello, {props.name}!</h1>
+      <p>This is an example React component.</p>
+    </div>
+  );
 }`;
 
 const highlightedComponentCode = `import { CodeBlock } from '@/components/ui/CodeBlock';
 
-const code = \`export default function Page() {
-  const name = "World"
-  return <p>Hello, {name}!</p>
+const code = \`function MyComponent(props) {
+  return (
+    <div>
+      <h1>Hello, {props.name}!</h1>
+      <p>This is an example React component.</p>
+    </div>
+  );
 }\`;
 
 export function Component() {
   return (
-    <CodeBlock filename="page.tsx" highlightLines={[2]}>
+    <CodeBlock
+      aria-label="Hello world"
+      filename="highlighted.jsx"
+      highlightLines={[1, 4]}
+      language="jsx"
+    >
       {code}
     </CodeBlock>
   );
@@ -1075,9 +1088,9 @@ export default function CodeBlockComponent() {
         </p>
         <CodePreview
           previewCode={highlightedPreviewCode}
-          previewFilename="page.tsx"
+          previewFilename="highlighted.jsx"
           componentCode={highlightedComponentCode}
-          highlightLines={[2]}
+          highlightLines={[1, 4]}
         />
       </Section>
 
