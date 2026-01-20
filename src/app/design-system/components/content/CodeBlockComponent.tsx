@@ -886,7 +886,14 @@ export function Component(): JSX.Element {
   );
 }`;
 
-const noFilenamePreviewCode = `<CodeBlock code={code} />`;
+const noFilenamePreviewCode = `function MyComponent(props) {
+  return (
+    <div>
+      <h1>Hello, {props.name}!</h1>
+      <p>This is an example React component.</p>
+    </div>
+  );
+}`;
 
 const noFilenameComponentCode = `import { CodeBlock } from '@/components/CodeBlock'
 
