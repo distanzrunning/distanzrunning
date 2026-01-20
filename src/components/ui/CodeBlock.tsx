@@ -307,6 +307,13 @@ function tokenizeJsx(code: string): Token[] {
           return false;
         })();
 
+        // Handle parentheses as punctuation (needed for isInsideParams to work)
+        if (code[i] === "(" || code[i] === ")") {
+          tokens.push({ type: "punctuation", content: code[i] });
+          i++;
+          continue;
+        }
+
         if (/[a-zA-Z_$]/.test(code[i])) {
           let identifier = "";
           while (i < code.length && /[a-zA-Z0-9_$]/.test(code[i])) {
