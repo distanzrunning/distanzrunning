@@ -353,15 +353,24 @@ function tokenizeJsx(code: string): Token[] {
   return tokens;
 }
 
+// Check if content is an identifier (not punctuation)
+function isIdentifier(content: string): boolean {
+  return /^[a-zA-Z_$][a-zA-Z0-9_$]*$/.test(content);
+}
+
 // Get token color class based on type and diff mode
 function getTokenClass(
   type: TokenType,
   diffMode?: "added" | "removed",
+  content?: string,
 ): string {
   // In diff mode, identifiers are red, value keywords (true/false) are green
   if (diffMode) {
-    // Identifiers/property names are red
-    if (type === "plain" || type === "attr-name") {
+    // Identifiers/property names are red (but not punctuation in plain tokens)
+    if (type === "plain" && content && isIdentifier(content)) {
+      return "text-[var(--ds-red-900)]";
+    }
+    if (type === "attr-name") {
       return "text-[var(--ds-red-900)]";
     }
     // Value keywords like true/false are green
@@ -430,7 +439,10 @@ function RenderTokenLine({
   return (
     <>
       {tokens.map((token, i) => (
-        <span key={i} className={getTokenClass(token.type, diffMode)}>
+        <span
+          key={i}
+          className={getTokenClass(token.type, diffMode, token.content)}
+        >
           {token.content}
         </span>
       ))}
