@@ -620,14 +620,11 @@ export function CodeBlock({
                 {showLineNumbers && (
                   <span
                     onClick={() => handleLineClick(lineNumber)}
-                    className={`select-none w-[32px] min-w-[32px] text-right pr-4 ${
+                    className={`select-none w-[32px] min-w-[32px] text-right pr-4 transition-colors ${
                       isReferenced
-                        ? "cursor-pointer hover:text-black"
+                        ? "cursor-pointer [color:rgb(168,168,168)] hover:![color:black]"
                         : "text-textSubtler"
                     }`}
-                    style={
-                      isReferenced ? { color: "rgb(168, 168, 168)" } : undefined
-                    }
                   >
                     {lineNumber}
                   </span>
