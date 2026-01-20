@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useRef, useEffect } from "react";
+import { useState, useCallback } from "react";
 import {
   SiReact,
   SiTypescript,
@@ -9,7 +9,7 @@ import {
   SiLua,
 } from "react-icons/si";
 import { VscJson } from "react-icons/vsc";
-import { FiFile, FiChevronDown } from "react-icons/fi";
+import { FiFile } from "react-icons/fi";
 
 // Copy icon
 function CopyIcon() {
@@ -538,8 +538,6 @@ export function CodeBlock({
 }: CodeBlockProps) {
   const [copied, setCopied] = useState(false);
   const [selectedLines, setSelectedLines] = useState<number[]>([]);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
   const codeContent = code || children || "";
   const tokenizedLines = tokenizeFullCode(codeContent);
 
@@ -556,24 +554,6 @@ export function CodeBlock({
       );
     }
   };
-
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        setDropdownOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  const currentSwitcherLabel = switcher?.options.find(
-    (o) => o.value === switcher.value,
-  )?.label;
 
   return (
     <div
@@ -595,43 +575,19 @@ export function CodeBlock({
             <span className="text-[13px] text-textSubtle">{filename}</span>
           </div>
           <div className="flex items-center gap-2">
-            {/* Language Switcher Dropdown */}
+            {/* Language Switcher Select */}
             {switcher && (
-              <div className="relative" ref={dropdownRef}>
-                <button
-                  onClick={() => setDropdownOpen(!dropdownOpen)}
-                  className="flex items-center gap-1.5 px-2 py-1 rounded text-[13px] text-textSubtle hover:bg-[var(--ds-gray-100)] transition-colors"
-                >
-                  {currentSwitcherLabel}
-                  <FiChevronDown
-                    size={14}
-                    className={`transition-transform ${dropdownOpen ? "rotate-180" : ""}`}
-                  />
-                </button>
-                {dropdownOpen && (
-                  <div
-                    className="absolute right-0 top-full mt-1 py-1 min-w-[120px] rounded border border-[var(--ds-gray-400)] shadow-lg z-10"
-                    style={{ background: "var(--ds-background-100)" }}
-                  >
-                    {switcher.options.map((option) => (
-                      <button
-                        key={option.value}
-                        onClick={() => {
-                          switcher.onChange(option.value);
-                          setDropdownOpen(false);
-                        }}
-                        className={`w-full text-left px-3 py-1.5 text-[13px] hover:bg-[var(--ds-gray-100)] transition-colors ${
-                          option.value === switcher.value
-                            ? "text-textDefault font-medium"
-                            : "text-textSubtle"
-                        }`}
-                      >
-                        {option.label}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
+              <select
+                value={switcher.value}
+                onChange={(e) => switcher.onChange(e.target.value)}
+                className="text-[13px] text-textSubtle bg-transparent border-none outline-none cursor-pointer"
+              >
+                {switcher.options.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
             )}
             {/* Copy Button */}
             <button

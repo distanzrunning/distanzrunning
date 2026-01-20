@@ -1,15 +1,8 @@
 "use client";
 
-import { useState, useCallback, useRef, useEffect } from "react";
+import { useState, useCallback } from "react";
 import { ChevronDown } from "lucide-react";
-import {
-  SiReact,
-  SiTypescript,
-  SiJavascript,
-  SiNextdotjs,
-  SiLua,
-} from "react-icons/si";
-import { FiChevronDown } from "react-icons/fi";
+import { SiReact, SiTypescript, SiNextdotjs, SiLua } from "react-icons/si";
 import { Section } from "../ContentWithTOC";
 
 // Toast notification for copy confirmation
@@ -1307,8 +1300,6 @@ function LanguageSwitcherCodePreview() {
 function LanguageSwitcherPreview() {
   const [language, setLanguage] = useState("js");
   const [copied, setCopied] = useState(false);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const getCode = () => {
     if (language === "ts" || language === "next")
@@ -1324,7 +1315,6 @@ function LanguageSwitcherPreview() {
     return "language-switcher.jsx";
   };
 
-  const currentLabel = languageOptions.find((o) => o.value === language)?.label;
   const code = getCode();
   const tokenizedLines = tokenizeFullCode(code);
 
@@ -1333,20 +1323,6 @@ function LanguageSwitcherPreview() {
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   }, [code]);
-
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        setDropdownOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
 
   return (
     <div
@@ -1366,42 +1342,18 @@ function LanguageSwitcherPreview() {
           <span className="text-[13px] text-textSubtle">{getFilename()}</span>
         </div>
         <div className="flex items-center gap-2">
-          {/* Language Switcher Dropdown */}
-          <div className="relative" ref={dropdownRef}>
-            <button
-              onClick={() => setDropdownOpen(!dropdownOpen)}
-              className="flex items-center gap-1.5 px-2 py-1 rounded text-[13px] text-textSubtle hover:bg-[var(--ds-gray-100)] transition-colors"
-            >
-              {currentLabel}
-              <FiChevronDown
-                size={14}
-                className={`transition-transform ${dropdownOpen ? "rotate-180" : ""}`}
-              />
-            </button>
-            {dropdownOpen && (
-              <div
-                className="absolute right-0 top-full mt-1 py-1 min-w-[120px] rounded border border-[var(--ds-gray-400)] shadow-lg z-10"
-                style={{ background: "var(--ds-background-100)" }}
-              >
-                {languageOptions.map((option) => (
-                  <button
-                    key={option.value}
-                    onClick={() => {
-                      setLanguage(option.value);
-                      setDropdownOpen(false);
-                    }}
-                    className={`w-full text-left px-3 py-1.5 text-[13px] hover:bg-[var(--ds-gray-100)] transition-colors ${
-                      option.value === language
-                        ? "text-textDefault font-medium"
-                        : "text-textSubtle"
-                    }`}
-                  >
-                    {option.label}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
+          {/* Language Switcher Select */}
+          <select
+            value={language}
+            onChange={(e) => setLanguage(e.target.value)}
+            className="text-[13px] text-textSubtle bg-transparent border-none outline-none cursor-pointer"
+          >
+            {languageOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
           {/* Copy Button */}
           <button
             onClick={handleCopy}
