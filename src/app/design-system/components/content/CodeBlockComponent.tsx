@@ -630,9 +630,7 @@ function CodeBlock({
   const handleLineClick = (lineNumber: number) => {
     if (referencedLines.includes(lineNumber)) {
       setSelectedLines((prev) =>
-        prev.includes(lineNumber)
-          ? prev.filter((n) => n !== lineNumber)
-          : [...prev, lineNumber],
+        prev.includes(lineNumber) ? [] : [lineNumber],
       );
     }
   };
