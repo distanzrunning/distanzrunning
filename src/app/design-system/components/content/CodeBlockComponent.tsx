@@ -946,21 +946,31 @@ export function Component() {
   );
 }`;
 
-const diffPreviewCode = `export default function Page() {
-  const name = "World"
-  return <p>Hello, {name}!</p>
+const diffPreviewCode = `module.exports = {
+  experimental: {
+    appDir: true,
+  },
+  appDir: true,
 }`;
 
 const diffComponentCode = `import { CodeBlock } from '@/components/ui/CodeBlock';
 
-const code = \`export default function Page() {
-  const name = "World"
-  return <p>Hello, {name}!</p>
+const code = \`module.exports = {
+  experimental: {
+    appDir: true,
+  },
+  appDir: true,
 }\`;
 
 export function Component() {
   return (
-    <CodeBlock filename="page.tsx" addedLines={[2]} removedLines={[3]}>
+    <CodeBlock
+      aria-label="Hello world"
+      filename="next.config.js"
+      addedLines={[5]}
+      removedLines={[2, 3, 4]}
+      language="jsx"
+    >
       {code}
     </CodeBlock>
   );
@@ -1112,10 +1122,10 @@ export default function CodeBlockComponent() {
         </p>
         <CodePreview
           previewCode={diffPreviewCode}
-          previewFilename="page.tsx"
+          previewFilename="next.config.js"
           componentCode={diffComponentCode}
-          addedLines={[2]}
-          removedLines={[3]}
+          addedLines={[5]}
+          removedLines={[2, 3, 4]}
         />
       </Section>
 
