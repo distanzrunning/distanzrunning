@@ -358,20 +358,17 @@ function getTokenClass(
   type: TokenType,
   diffMode?: "added" | "removed",
 ): string {
-  // In diff mode, identifiers/plain text get the diff color, others stay greyscale
-  if (diffMode === "added") {
-    // Added lines: keywords like true/false get green, rest is greyscale
-    if (type === "keyword") {
-      return "text-[var(--ds-green-900)]";
-    }
-    return "text-[var(--ds-gray-1000)]";
-  }
-
-  if (diffMode === "removed") {
-    // Removed lines: identifiers/plain text get red, rest is greyscale
+  // In diff mode, identifiers are red, value keywords (true/false) are green
+  if (diffMode) {
+    // Identifiers/property names are red
     if (type === "plain" || type === "attr-name") {
       return "text-[var(--ds-red-900)]";
     }
+    // Value keywords like true/false are green
+    if (type === "keyword") {
+      return "text-[var(--ds-green-900)]";
+    }
+    // Everything else is greyscale
     return "text-[var(--ds-gray-1000)]";
   }
 
