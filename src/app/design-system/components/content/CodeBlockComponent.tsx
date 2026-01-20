@@ -3,10 +3,10 @@
 import { useState, useCallback } from "react";
 import { ChevronDown } from "lucide-react";
 import { SiReact, SiTypescript, SiNextdotjs, SiLua } from "react-icons/si";
-import type { ThemedToken } from "shiki";
 import {
   useShikiHighlighter,
-  renderShikiToken,
+  getTokenStyle,
+  type DualThemeToken,
 } from "@/components/ui/useShikiHighlighter";
 import { Section } from "../ContentWithTOC";
 
@@ -126,15 +126,15 @@ function CheckIcon() {
   );
 }
 
-// Render a single Shiki token
+// Render a single Shiki token with dual theme support
 function RenderShikiToken({
   token,
   diffMode,
 }: {
-  token: ThemedToken;
+  token: DualThemeToken;
   diffMode?: "added" | "removed";
 }) {
-  const style = renderShikiToken(token, diffMode);
+  const style = getTokenStyle(token, diffMode);
   return <span style={style}>{token.content}</span>;
 }
 
@@ -169,12 +169,16 @@ function CodeBlock({
   // Show plain text while loading
   const lines =
     tokenizedLines ||
-    code
-      .split("\n")
-      .map(
-        (line) =>
-          [{ content: line, color: "var(--ds-gray-1000)" }] as ThemedToken[],
-      );
+    code.split("\n").map(
+      (line) =>
+        [
+          {
+            content: line,
+            color: "var(--ds-gray-1000)",
+            darkColor: "var(--ds-gray-1000)",
+          },
+        ] as DualThemeToken[],
+    );
 
   const handleCopy = useCallback(() => {
     navigator.clipboard.writeText(code);
@@ -352,12 +356,16 @@ function CodePreview({
   );
   const componentCodeLines =
     componentCodeTokens ||
-    componentCode
-      .split("\n")
-      .map(
-        (line) =>
-          [{ content: line, color: "var(--ds-gray-1000)" }] as ThemedToken[],
-      );
+    componentCode.split("\n").map(
+      (line) =>
+        [
+          {
+            content: line,
+            color: "var(--ds-gray-1000)",
+            darkColor: "var(--ds-gray-1000)",
+          },
+        ] as DualThemeToken[],
+    );
 
   const handleCopyComponentCode = useCallback(() => {
     navigator.clipboard.writeText(componentCode);
@@ -800,14 +808,18 @@ function LanguageSwitcherCodePreview() {
     languageSwitcherComponentCode,
     "tsx",
   );
-  const componentCodeLines: ThemedToken[][] =
+  const componentCodeLines: DualThemeToken[][] =
     tokenizedLines ||
-    languageSwitcherComponentCode
-      .split("\n")
-      .map(
-        (line) =>
-          [{ content: line, color: "var(--ds-gray-1000)" }] as ThemedToken[],
-      );
+    languageSwitcherComponentCode.split("\n").map(
+      (line) =>
+        [
+          {
+            content: line,
+            color: "var(--ds-gray-1000)",
+            darkColor: "var(--ds-gray-1000)",
+          },
+        ] as DualThemeToken[],
+    );
 
   const handleCopyComponentCode = useCallback(() => {
     navigator.clipboard.writeText(languageSwitcherComponentCode);
@@ -913,14 +925,18 @@ function LanguageSwitcherPreview() {
   const tokenizedLines = useShikiHighlighter(code, shikiLanguage);
 
   // Fallback while Shiki is loading
-  const lines: ThemedToken[][] =
+  const lines: DualThemeToken[][] =
     tokenizedLines ||
-    code
-      .split("\n")
-      .map(
-        (line) =>
-          [{ content: line, color: "var(--ds-gray-1000)" }] as ThemedToken[],
-      );
+    code.split("\n").map(
+      (line) =>
+        [
+          {
+            content: line,
+            color: "var(--ds-gray-1000)",
+            darkColor: "var(--ds-gray-1000)",
+          },
+        ] as DualThemeToken[],
+    );
 
   const handleCopy = useCallback(() => {
     navigator.clipboard.writeText(code);

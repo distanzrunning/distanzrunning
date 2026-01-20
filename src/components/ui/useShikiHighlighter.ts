@@ -1,36 +1,14 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
-import { codeToTokens, type BundledLanguage, type ThemedToken } from "shiki";
+import { useState, useEffect } from "react";
+import { codeToTokens, type BundledLanguage } from "shiki";
 
-// Hook to detect current theme
-function useTheme(): "light" | "dark" {
-  const [theme, setTheme] = useState<"light" | "dark">("dark");
-
-  useEffect(() => {
-    // Check initial theme
-    const checkTheme = () => {
-      const isDark = document.documentElement.classList.contains("dark");
-      setTheme(isDark ? "dark" : "light");
-    };
-
-    checkTheme();
-
-    // Watch for theme changes
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        if (mutation.attributeName === "class") {
-          checkTheme();
-        }
-      });
-    });
-
-    observer.observe(document.documentElement, { attributes: true });
-
-    return () => observer.disconnect();
-  }, []);
-
-  return theme;
+// Token with dual theme colors
+export interface DualThemeToken {
+  content: string;
+  color: string; // Light theme color
+  darkColor: string; // Dark theme color (from --shiki-dark)
+  fontStyle?: number;
 }
 
 // Map language prop to Shiki language
@@ -78,34 +56,51 @@ export function getShikiLanguage(
   }
 }
 
+// Hook that returns tokens with dual theme colors
 export function useShikiHighlighter(
   code: string,
   language?: string,
   filename?: string,
-): ThemedToken[][] | null {
-  const [tokenizedLines, setTokenizedLines] = useState<ThemedToken[][] | null>(
-    null,
-  );
-  const theme = useTheme();
+): DualThemeToken[][] | null {
+  const [tokenizedLines, setTokenizedLines] = useState<
+    DualThemeToken[][] | null
+  >(null);
 
   useEffect(() => {
     const lang = getShikiLanguage(language, filename);
-    const shikiTheme = theme === "dark" ? "github-dark" : "github-light";
 
     codeToTokens(code, {
       lang,
-      theme: shikiTheme,
+      themes: {
+        light: "vitesse-light",
+        dark: "vitesse-dark",
+      },
     }).then((result) => {
-      setTokenizedLines(result.tokens);
+      // Transform tokens to extract both light and dark colors
+      const dualThemeTokens: DualThemeToken[][] = result.tokens.map((line) =>
+        line.map((token) => {
+          const htmlStyle = token.htmlStyle as
+            | Record<string, string>
+            | undefined;
+          return {
+            content: token.content,
+            color: htmlStyle?.color || "inherit",
+            darkColor:
+              htmlStyle?.["--shiki-dark"] || htmlStyle?.color || "inherit",
+            fontStyle: token.fontStyle,
+          };
+        }),
+      );
+      setTokenizedLines(dualThemeTokens);
     });
-  }, [code, language, filename, theme]);
+  }, [code, language, filename]);
 
   return tokenizedLines;
 }
 
-// Render a single Shiki token with optional diff mode
-export function renderShikiToken(
-  token: ThemedToken,
+// Get style for a token (uses CSS custom property for dark mode)
+export function getTokenStyle(
+  token: DualThemeToken,
   diffMode?: "added" | "removed",
 ): React.CSSProperties {
   let style: React.CSSProperties = {};
@@ -130,8 +125,11 @@ export function renderShikiToken(
     else {
       style.color = "var(--ds-gray-1000)";
     }
-  } else if (token.color) {
+  } else {
+    // Use CSS custom property with light as default, dark as override
     style.color = token.color;
+    // The --shiki-dark variable will be applied via CSS when in dark mode
+    (style as Record<string, string>)["--shiki-dark"] = token.darkColor;
   }
 
   if (token.fontStyle === 1) {

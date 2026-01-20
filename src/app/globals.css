@@ -2408,3 +2408,8 @@
   z-index: 70;
   pointer-events: none;
 }
+
+/* Shiki dual theme support - switch to dark colors in dark mode */
+html.dark [data-code-block] span[style*="--shiki-dark"] {
+  color: var(--shiki-dark) !important;
+}

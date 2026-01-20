@@ -10,8 +10,11 @@ import {
 } from "react-icons/si";
 import { VscJson } from "react-icons/vsc";
 import { FiFile } from "react-icons/fi";
-import type { ThemedToken } from "shiki";
-import { useShikiHighlighter, renderShikiToken } from "./useShikiHighlighter";
+import {
+  useShikiHighlighter,
+  getTokenStyle,
+  type DualThemeToken,
+} from "./useShikiHighlighter";
 
 // Copy icon
 function CopyIcon() {
@@ -112,15 +115,15 @@ export interface CodeBlockProps {
   switcher?: SwitcherProps;
 }
 
-// Render a single token
+// Render a single token with dual theme support
 function RenderToken({
   token,
   diffMode,
 }: {
-  token: ThemedToken;
+  token: DualThemeToken;
   diffMode?: "added" | "removed";
 }) {
-  const style = renderShikiToken(token, diffMode);
+  const style = getTokenStyle(token, diffMode);
   return <span style={style}>{token.content}</span>;
 }
 
@@ -159,13 +162,19 @@ export function CodeBlock({
   };
 
   // Show plain text while loading
-  const lines =
+  const lines: DualThemeToken[][] =
     tokenizedLines ||
     codeContent
       .split("\n")
       .map(
         (line) =>
-          [{ content: line, color: "var(--ds-gray-1000)" }] as ThemedToken[],
+          [
+            {
+              content: line,
+              color: "var(--ds-gray-1000)",
+              darkColor: "var(--ds-gray-1000)",
+            },
+          ] as DualThemeToken[],
       );
 
   return (
