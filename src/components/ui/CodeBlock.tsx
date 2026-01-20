@@ -580,7 +580,7 @@ export function CodeBlock({
               <div className="relative rounded hover:bg-[var(--ds-gray-200)] dark:hover:bg-[var(--ds-gray-100)] transition-colors">
                 <div
                   aria-hidden="true"
-                  className="flex items-center gap-1 pointer-events-none text-[13px] text-textSubtle px-2 py-1.5"
+                  className="flex items-center gap-1 pointer-events-none text-[12px] text-textSubtle px-2 py-1.5"
                 >
                   <span>
                     {
