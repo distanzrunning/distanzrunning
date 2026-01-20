@@ -574,20 +574,47 @@ export function CodeBlock({
             {getFileIcon(filename, language)}
             <span className="text-[13px] text-textSubtle">{filename}</span>
           </div>
-          <div className="flex items-center gap-2">
-            {/* Language Switcher Select */}
+          <div className="flex items-center gap-1">
+            {/* Language Switcher - Geist style with visible label overlay */}
             {switcher && (
-              <select
-                value={switcher.value}
-                onChange={(e) => switcher.onChange(e.target.value)}
-                className="text-[13px] text-textSubtle bg-transparent border-none outline-none cursor-pointer px-2 py-1.5 rounded hover:bg-[var(--ds-gray-200)] dark:hover:bg-[var(--ds-gray-100)] transition-colors"
-              >
-                {switcher.options.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
+              <div className="relative">
+                <div
+                  aria-hidden="true"
+                  className="flex items-center gap-1 pointer-events-none text-[13px] text-textSubtle px-2 py-1.5"
+                >
+                  <span>
+                    {
+                      switcher.options.find((o) => o.value === switcher.value)
+                        ?.label
+                    }
+                  </span>
+                  <svg
+                    height="16"
+                    strokeLinejoin="round"
+                    viewBox="0 0 16 16"
+                    width="16"
+                    style={{ color: "currentcolor" }}
+                  >
+                    <path
+                      fillRule="evenodd"
+                      clipRule="evenodd"
+                      d="M14.0607 5.49999L13.5303 6.03032L8.7071 10.8535C8.31658 11.2441 7.68341 11.2441 7.29289 10.8535L2.46966 6.03032L1.93933 5.49999L2.99999 4.43933L3.53032 4.96966L7.99999 9.43933L12.4697 4.96966L13 4.43933L14.0607 5.49999Z"
+                      fill="currentColor"
+                    ></path>
+                  </svg>
+                </div>
+                <select
+                  value={switcher.value}
+                  onChange={(e) => switcher.onChange(e.target.value)}
+                  className="absolute inset-0 opacity-0 cursor-pointer w-full"
+                >
+                  {switcher.options.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
             )}
             {/* Copy Button */}
             <button
