@@ -1,9 +1,15 @@
 "use client";
 
-import { useState, useCallback } from "react";
-import { SiReact, SiTypescript, SiJavascript } from "react-icons/si";
+import { useState, useCallback, useRef, useEffect } from "react";
+import {
+  SiReact,
+  SiTypescript,
+  SiJavascript,
+  SiNextdotjs,
+  SiLua,
+} from "react-icons/si";
 import { VscJson } from "react-icons/vsc";
-import { FiFile } from "react-icons/fi";
+import { FiFile, FiChevronDown } from "react-icons/fi";
 
 // Copy icon
 function CopyIcon() {
@@ -465,9 +471,24 @@ function getFileIcon(filename?: string, language?: string) {
       return <SiJavascript size={16} className="text-textSubtle" />;
     case "json":
       return <VscJson size={16} className="text-textSubtle" />;
+    case "next":
+      return <SiNextdotjs size={16} className="text-textSubtle" />;
+    case "lua":
+      return <SiLua size={16} className="text-textSubtle" />;
     default:
       return <FiFile size={16} className="text-textSubtle" />;
   }
+}
+
+export interface SwitcherOption {
+  label: string;
+  value: string;
+}
+
+export interface SwitcherProps {
+  options: SwitcherOption[];
+  value: string;
+  onChange: (value: string) => void;
 }
 
 export interface CodeBlockProps {
@@ -491,6 +512,8 @@ export interface CodeBlockProps {
   referencedLines?: number[];
   /** Accessible label for the code block */
   "aria-label"?: string;
+  /** Language switcher configuration */
+  switcher?: SwitcherProps;
 }
 
 export function CodeBlock({
@@ -504,9 +527,12 @@ export function CodeBlock({
   removedLines = [],
   referencedLines = [],
   "aria-label": ariaLabel,
+  switcher,
 }: CodeBlockProps) {
   const [copied, setCopied] = useState(false);
   const [selectedLines, setSelectedLines] = useState<number[]>([]);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
   const codeContent = code || children || "";
   const tokenizedLines = tokenizeFullCode(codeContent);
 
@@ -523,6 +549,24 @@ export function CodeBlock({
       );
     }
   };
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const currentSwitcherLabel = switcher?.options.find(
+    (o) => o.value === switcher.value,
+  )?.label;
 
   return (
     <div
@@ -543,13 +587,54 @@ export function CodeBlock({
             {getFileIcon(filename, language)}
             <span className="text-[13px] text-textSubtle">{filename}</span>
           </div>
-          <button
-            onClick={handleCopy}
-            className="p-1.5 rounded hover:bg-[var(--ds-gray-100)] transition-colors text-textSubtle hover:text-textDefault"
-            aria-label="Copy code"
-          >
-            {copied ? <CheckIcon /> : <CopyIcon />}
-          </button>
+          <div className="flex items-center gap-2">
+            {/* Language Switcher Dropdown */}
+            {switcher && (
+              <div className="relative" ref={dropdownRef}>
+                <button
+                  onClick={() => setDropdownOpen(!dropdownOpen)}
+                  className="flex items-center gap-1.5 px-2 py-1 rounded text-[13px] text-textSubtle hover:bg-[var(--ds-gray-100)] transition-colors"
+                >
+                  {currentSwitcherLabel}
+                  <FiChevronDown
+                    size={14}
+                    className={`transition-transform ${dropdownOpen ? "rotate-180" : ""}`}
+                  />
+                </button>
+                {dropdownOpen && (
+                  <div
+                    className="absolute right-0 top-full mt-1 py-1 min-w-[120px] rounded border border-[var(--ds-gray-400)] shadow-lg z-10"
+                    style={{ background: "var(--ds-background-100)" }}
+                  >
+                    {switcher.options.map((option) => (
+                      <button
+                        key={option.value}
+                        onClick={() => {
+                          switcher.onChange(option.value);
+                          setDropdownOpen(false);
+                        }}
+                        className={`w-full text-left px-3 py-1.5 text-[13px] hover:bg-[var(--ds-gray-100)] transition-colors ${
+                          option.value === switcher.value
+                            ? "text-textDefault font-medium"
+                            : "text-textSubtle"
+                        }`}
+                      >
+                        {option.label}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+            {/* Copy Button */}
+            <button
+              onClick={handleCopy}
+              className="p-1.5 rounded hover:bg-[var(--ds-gray-100)] transition-colors text-textSubtle hover:text-textDefault"
+              aria-label="Copy code"
+            >
+              {copied ? <CheckIcon /> : <CopyIcon />}
+            </button>
+          </div>
         </div>
       )}
 

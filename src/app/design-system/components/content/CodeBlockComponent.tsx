@@ -1,8 +1,15 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { ChevronDown } from "lucide-react";
-import { SiReact } from "react-icons/si";
+import {
+  SiReact,
+  SiTypescript,
+  SiJavascript,
+  SiNextdotjs,
+  SiLua,
+} from "react-icons/si";
+import { FiChevronDown } from "react-icons/fi";
 import { Section } from "../ContentWithTOC";
 
 // Toast notification for copy confirmation
@@ -1058,35 +1065,115 @@ export function Component() {
   );
 }`;
 
-const languageSwitcherPreviewCode = `import { CodeBlock } from '@/components/ui/CodeBlock';
-
-export function Example() {
+const languageSwitcherPreviewCodeJs = `function MyComponent(props) {
   return (
-    <CodeBlock
-      code={code}
-      filename="page.tsx"
-      language="tsx"
-    />
-  )
+    <div>
+      <h1>Hello, {props.name}!</h1>
+      <p>Good to see you</p>
+    </div>
+  );
 }`;
 
+const languageSwitcherPreviewCodeTs = `function MyComponent(props: Props) {
+  return (
+    <div>
+      <h1>Hello, {props.name}!</h1>
+      <p>Good to see you</p>
+    </div>
+  );
+}`;
+
+const languageSwitcherPreviewCodeLua = `local b64 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
+local decode_table = ffi.new 'uint8_t[256]'
+for i = 1, #b64 do
+  decode_table[str_byte(b64, i)] = i - 1 -- Base64 values start from 0
+end
+
+function BloomFilter:has(key)
+  local ptr = self.ptr -- uint8_t* pointer to start of base64 string
+  for byte_offset, bit_offset in self:iterator(key) do
+    local sextet = decode_table[ptr[byte_offset]]
+    if band(sextet, lshift(1, bit_offset)) == 0 then
+      return false
+    end
+  end
+  return true
+end`;
+
 const languageSwitcherComponentCode = `import { CodeBlock } from '@/components/ui/CodeBlock';
-import { Tabs } from '@/components/ui/Tabs';
+import { useState } from 'react';
+
+const code = \`function MyComponent(props) {
+  return (
+    <div>
+      <h1>Hello, {props.name}!</h1>
+      <p>Good to see you</p>
+    </div>
+  );
+}\`;
+
+const codeTs = \`function MyComponent(props: Props) {
+  return (
+    <div>
+      <h1>Hello, {props.name}!</h1>
+      <p>Good to see you</p>
+    </div>
+  );
+}\`;
+
+const codeLua = \`local b64 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
+local decode_table = ffi.new 'uint8_t[256]'
+for i = 1, #b64 do
+  decode_table[str_byte(b64, i)] = i - 1 -- Base64 values start from 0
+end
+
+function BloomFilter:has(key)
+  local ptr = self.ptr -- uint8_t* pointer to start of base64 string
+  for byte_offset, bit_offset in self:iterator(key) do
+    local sextet = decode_table[ptr[byte_offset]]
+    if band(sextet, lshift(1, bit_offset)) == 0 then
+      return false
+    end
+  end
+  return true
+end\`;
+
+const languages = [
+  { label: 'JavaScript', value: 'js' },
+  { label: 'TypeScript', value: 'ts' },
+  { label: 'Next.js', value: 'next' },
+  { label: 'Lua', value: 'lua' },
+];
 
 export function Component() {
+  const [language, setLanguage] = useState('js');
+
+  const getCode = () => {
+    if (language === 'ts' || language === 'next') return codeTs;
+    if (language === 'lua') return codeLua;
+    return code;
+  };
+
+  const getFilename = () => {
+    if (language === 'ts') return 'language-switcher.tsx';
+    if (language === 'next') return 'language-switcher.tsx';
+    if (language === 'lua') return 'bloom-filter.lua';
+    return 'language-switcher.jsx';
+  };
+
   return (
-    <Tabs defaultValue="tsx">
-      <Tabs.List>
-        <Tabs.Trigger value="tsx">TypeScript</Tabs.Trigger>
-        <Tabs.Trigger value="jsx">JavaScript</Tabs.Trigger>
-      </Tabs.List>
-      <Tabs.Content value="tsx">
-        <CodeBlock filename="page.tsx" language="tsx">{tsxCode}</CodeBlock>
-      </Tabs.Content>
-      <Tabs.Content value="jsx">
-        <CodeBlock filename="page.jsx" language="jsx">{jsxCode}</CodeBlock>
-      </Tabs.Content>
-    </Tabs>
+    <CodeBlock
+      aria-label="Hello world"
+      filename={getFilename()}
+      language={language}
+      switcher={{
+        options: languages,
+        value: language,
+        onChange: setLanguage,
+      }}
+    >
+      {getCode()}
+    </CodeBlock>
   );
 }`;
 
@@ -1107,6 +1194,243 @@ export function Component() {
     </CodeBlock>
   );
 }`;
+
+// Language options for switcher
+const languageOptions = [
+  { label: "JavaScript", value: "js" },
+  { label: "TypeScript", value: "ts" },
+  { label: "Next.js", value: "next" },
+  { label: "Lua", value: "lua" },
+];
+
+// Get file icon based on language
+function getLanguageIcon(language: string) {
+  switch (language) {
+    case "js":
+      return <SiJavascript size={16} className="text-textSubtle" />;
+    case "ts":
+      return <SiTypescript size={16} className="text-textSubtle" />;
+    case "next":
+      return <SiNextdotjs size={16} className="text-textSubtle" />;
+    case "lua":
+      return <SiLua size={16} className="text-textSubtle" />;
+    default:
+      return <SiReact size={16} className="text-textSubtle" />;
+  }
+}
+
+// Language Switcher Code Preview with accordion
+function LanguageSwitcherCodePreview() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const componentCodeLines = tokenizeFullCode(languageSwitcherComponentCode);
+
+  const handleCopyComponentCode = useCallback(() => {
+    navigator.clipboard.writeText(languageSwitcherComponentCode);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }, []);
+
+  return (
+    <div className="border border-[var(--ds-gray-400)] rounded-lg overflow-hidden">
+      {/* Preview area */}
+      <div
+        className="p-6 group"
+        style={{ background: "var(--ds-background-100)" }}
+      >
+        <LanguageSwitcherPreview />
+      </div>
+
+      {/* Accordion trigger */}
+      <div style={{ background: "var(--ds-background-200)" }}>
+        <button
+          type="button"
+          onClick={() => setIsOpen(!isOpen)}
+          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-[var(--ds-gray-400)]"
+        >
+          <ChevronDown size={16} className={isOpen ? "" : "-rotate-90"} />
+          {isOpen ? "Hide code" : "Show code"}
+        </button>
+
+        {/* Collapsible code section */}
+        {isOpen && (
+          <div
+            className="border-t border-[var(--ds-gray-400)] overflow-x-auto font-mono text-[13px]"
+            style={{ background: "var(--ds-background-100)" }}
+          >
+            <div className="relative group">
+              {/* Floating copy button */}
+              <button
+                onClick={handleCopyComponentCode}
+                className="absolute top-3 right-3 p-2 rounded border border-[var(--ds-gray-400)] opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault hover:bg-[var(--ds-gray-100)]"
+                style={{ background: "var(--ds-background-200)" }}
+                aria-label="Copy code"
+              >
+                {copied ? <CheckIcon /> : <CopyIcon />}
+              </button>
+
+              {/* Component code */}
+              <pre className="overflow-x-auto py-4">
+                <code className="block text-[13px] leading-[20px] font-mono">
+                  {componentCodeLines.map((lineTokens, index) => (
+                    <div
+                      key={index}
+                      className="flex px-4"
+                      style={{ fontFeatureSettings: '"liga" off' }}
+                    >
+                      <span className="select-none w-[32px] min-w-[32px] text-right pr-4 text-textSubtler">
+                        {index + 1}
+                      </span>
+                      <span className="flex-1 pr-4">
+                        <RenderTokenLine tokens={lineTokens} />
+                      </span>
+                    </div>
+                  ))}
+                </code>
+              </pre>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// Interactive Language Switcher Preview
+function LanguageSwitcherPreview() {
+  const [language, setLanguage] = useState("js");
+  const [copied, setCopied] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const getCode = () => {
+    if (language === "ts" || language === "next")
+      return languageSwitcherPreviewCodeTs;
+    if (language === "lua") return languageSwitcherPreviewCodeLua;
+    return languageSwitcherPreviewCodeJs;
+  };
+
+  const getFilename = () => {
+    if (language === "ts") return "language-switcher.tsx";
+    if (language === "next") return "language-switcher.tsx";
+    if (language === "lua") return "bloom-filter.lua";
+    return "language-switcher.jsx";
+  };
+
+  const currentLabel = languageOptions.find((o) => o.value === language)?.label;
+  const code = getCode();
+  const tokenizedLines = tokenizeFullCode(code);
+
+  const handleCopy = useCallback(() => {
+    navigator.clipboard.writeText(code);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }, [code]);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  return (
+    <div
+      className="relative border border-[var(--ds-gray-400)] rounded overflow-hidden"
+      data-code-block
+    >
+      {/* Header with filename and switcher */}
+      <div
+        className="flex items-center justify-between h-12 pl-4 pr-3 border-b border-[var(--ds-gray-400)]"
+        style={{
+          background: "var(--ds-background-200)",
+          borderRadius: "4px 4px 0 0",
+        }}
+      >
+        <div className="flex items-center gap-2">
+          {getLanguageIcon(language)}
+          <span className="text-[13px] text-textSubtle">{getFilename()}</span>
+        </div>
+        <div className="flex items-center gap-2">
+          {/* Language Switcher Dropdown */}
+          <div className="relative" ref={dropdownRef}>
+            <button
+              onClick={() => setDropdownOpen(!dropdownOpen)}
+              className="flex items-center gap-1.5 px-2 py-1 rounded text-[13px] text-textSubtle hover:bg-[var(--ds-gray-100)] transition-colors"
+            >
+              {currentLabel}
+              <FiChevronDown
+                size={14}
+                className={`transition-transform ${dropdownOpen ? "rotate-180" : ""}`}
+              />
+            </button>
+            {dropdownOpen && (
+              <div
+                className="absolute right-0 top-full mt-1 py-1 min-w-[120px] rounded border border-[var(--ds-gray-400)] shadow-lg z-10"
+                style={{ background: "var(--ds-background-100)" }}
+              >
+                {languageOptions.map((option) => (
+                  <button
+                    key={option.value}
+                    onClick={() => {
+                      setLanguage(option.value);
+                      setDropdownOpen(false);
+                    }}
+                    className={`w-full text-left px-3 py-1.5 text-[13px] hover:bg-[var(--ds-gray-100)] transition-colors ${
+                      option.value === language
+                        ? "text-textDefault font-medium"
+                        : "text-textSubtle"
+                    }`}
+                  >
+                    {option.label}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+          {/* Copy Button */}
+          <button
+            onClick={handleCopy}
+            className="p-1.5 rounded hover:bg-[var(--ds-gray-100)] transition-colors text-textSubtle hover:text-textDefault"
+            aria-label="Copy code"
+          >
+            {copied ? <CheckIcon /> : <CopyIcon />}
+          </button>
+        </div>
+      </div>
+
+      {/* Code content */}
+      <pre
+        className="overflow-x-auto py-4"
+        style={{ background: "var(--ds-background-100)" }}
+      >
+        <code className="block text-[13px] leading-[20px] font-mono">
+          {tokenizedLines.map((lineTokens, index) => (
+            <div
+              key={index}
+              className="flex px-4"
+              style={{ fontFeatureSettings: '"liga" off' }}
+            >
+              <span className="select-none w-[32px] min-w-[32px] text-right pr-4 text-textSubtler">
+                {index + 1}
+              </span>
+              <span className="flex-1 pr-4">
+                <RenderTokenLine tokens={lineTokens} />
+              </span>
+            </div>
+          ))}
+        </code>
+      </pre>
+    </div>
+  );
+}
 
 export default function CodeBlockComponent() {
   const { toast, showToast, dismissToast } = useToast();
@@ -1214,14 +1538,11 @@ export default function CodeBlockComponent() {
       <Section>
         <SectionHeader id="language-switcher">Language switcher</SectionHeader>
         <p className="text-copy-14 text-textSubtle mt-4 mb-6">
-          For documentation showing code in multiple languages, use tabs or a
-          dropdown to switch between examples.
+          Use the switcher prop to add a language dropdown to the header. When
+          the user switches languages, the code, filename, and icon update
+          accordingly.
         </p>
-        <CodePreview
-          previewCode={languageSwitcherPreviewCode}
-          previewFilename="example.tsx"
-          componentCode={languageSwitcherComponentCode}
-        />
+        <LanguageSwitcherCodePreview />
       </Section>
 
       {/* Hidden Line Numbers Section */}
