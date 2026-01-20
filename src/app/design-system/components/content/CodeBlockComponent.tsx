@@ -866,8 +866,7 @@ const defaultPreviewCode = `function MyComponent(props) {
 }`;
 
 // Component code (shown in the "Show code" accordion)
-const defaultComponentCode = `import { CodeBlock } from 'geist/components';
-import type { JSX } from 'react';
+const defaultComponentCode = `import { CodeBlock } from '@/components/ui/CodeBlock';
 
 const code = \`function MyComponent(props) {
   return (
@@ -878,7 +877,7 @@ const code = \`function MyComponent(props) {
   );
 }\`;
 
-export function Component(): JSX.Element {
+export function Component() {
   return (
     <CodeBlock aria-label="Hello world" filename="Table.jsx" language="jsx">
       {code}
@@ -895,8 +894,7 @@ const noFilenamePreviewCode = `function MyComponent(props) {
   );
 }`;
 
-const noFilenameComponentCode = `import { CodeBlock } from 'geist/components';
-import type { JSX } from 'react';
+const noFilenameComponentCode = `import { CodeBlock } from '@/components/ui/CodeBlock';
 
 const code = \`function MyComponent(props) {
   return (
@@ -907,7 +905,7 @@ const code = \`function MyComponent(props) {
   );
 }\`;
 
-export function Component(): JSX.Element {
+export function Component() {
   return (
     <CodeBlock aria-label="Hello world" language="jsx">
       {code}
@@ -920,7 +918,7 @@ const highlightedPreviewCode = `export default function Page() {
   return <p>Hello, {name}!</p>
 }`;
 
-const highlightedComponentCode = `import { CodeBlock } from '@/components/CodeBlock'
+const highlightedComponentCode = `import { CodeBlock } from '@/components/ui/CodeBlock';
 
 const code = \`export default function Page() {
   const name = "World"
@@ -940,7 +938,7 @@ const diffPreviewCode = `export default function Page() {
   return <p>Hello, {name}!</p>
 }`;
 
-const diffComponentCode = `import { CodeBlock } from '@/components/CodeBlock'
+const diffComponentCode = `import { CodeBlock } from '@/components/ui/CodeBlock';
 
 const code = \`export default function Page() {
   const name = "World"
@@ -960,7 +958,7 @@ const referencedPreviewCode = `export default function Page() {
   return <p>Hello, {name}!</p>
 }`;
 
-const referencedComponentCode = `import { CodeBlock } from '@/components/CodeBlock'
+const referencedComponentCode = `import { CodeBlock } from '@/components/ui/CodeBlock';
 
 const code = \`export default function Page() {
   const name = "World"
@@ -975,7 +973,7 @@ export function Component() {
   );
 }`;
 
-const languageSwitcherPreviewCode = `import { CodeBlock } from '@/components/CodeBlock'
+const languageSwitcherPreviewCode = `import { CodeBlock } from '@/components/ui/CodeBlock';
 
 export function Example() {
   return (
@@ -987,8 +985,8 @@ export function Example() {
   )
 }`;
 
-const languageSwitcherComponentCode = `import { CodeBlock } from '@/components/CodeBlock'
-import { Tabs } from '@/components/Tabs'
+const languageSwitcherComponentCode = `import { CodeBlock } from '@/components/ui/CodeBlock';
+import { Tabs } from '@/components/ui/Tabs';
 
 export function Component() {
   return (
@@ -1011,7 +1009,7 @@ const hiddenLineNumbersPreviewCode = `export default function Page() {
   return <p>Hello, World!</p>
 }`;
 
-const hiddenLineNumbersComponentCode = `import { CodeBlock } from '@/components/CodeBlock'
+const hiddenLineNumbersComponentCode = `import { CodeBlock } from '@/components/ui/CodeBlock';
 
 const code = \`export default function Page() {
   return <p>Hello, World!</p>
