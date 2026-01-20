@@ -1343,7 +1343,7 @@ function LanguageSwitcherPreview() {
         </div>
         <div className="flex items-center gap-1">
           {/* Language Switcher - Geist style with visible label overlay */}
-          <div className="relative">
+          <div className="relative rounded hover:bg-[var(--ds-gray-200)] dark:hover:bg-[var(--ds-gray-100)] transition-colors">
             <div
               aria-hidden="true"
               className="flex items-center gap-1 pointer-events-none text-[13px] text-textSubtle px-2 py-1.5"
