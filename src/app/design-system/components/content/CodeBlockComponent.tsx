@@ -715,6 +715,9 @@ function CodeBlock({
                   boxShadow: isSelected
                     ? "oklch(0.5279 0.1496 54.65) 2px 0px 0px 0px inset"
                     : undefined,
+                  backgroundColor: isSelected
+                    ? "oklch(0.9593 0.0636 90.52)"
+                    : undefined,
                 }}
               >
                 {/* Diff prefix for added/removed lines */}
@@ -731,9 +734,12 @@ function CodeBlock({
                     onClick={() => handleLineClick(lineNumber)}
                     className={`select-none w-[32px] min-w-[32px] text-right pr-4 ${
                       isReferenced
-                        ? "text-[var(--ds-blue-900)] cursor-pointer hover:underline"
+                        ? "cursor-pointer hover:underline"
                         : "text-textSubtler"
                     }`}
+                    style={
+                      isReferenced ? { color: "rgb(168, 168, 168)" } : undefined
+                    }
                   >
                     {lineNumber}
                   </span>
