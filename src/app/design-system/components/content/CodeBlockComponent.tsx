@@ -1053,7 +1053,6 @@ export function Component() {
   return (
     <CodeBlock
       aria-label="Hello world"
-      filename="referenced.jsx"
       referencedLines={[1, 2, 3, 4, 5, 6, 7]}
       language="jsx"
     >
@@ -1208,7 +1207,7 @@ export default function CodeBlockComponent() {
         </p>
         <CodePreview
           previewCode={referencedPreviewCode}
-          previewFilename="referenced.jsx"
+          previewFilename=""
           componentCode={referencedComponentCode}
           referencedLines={[1, 2, 3, 4, 5, 6, 7]}
         />
