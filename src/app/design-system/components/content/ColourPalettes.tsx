@@ -115,8 +115,7 @@ function Toast({
       }`}
     >
       <div
-        className="flex items-center gap-3 px-4 py-3 rounded-lg shadow-lg border border-borderNeutral"
-        style={{ background: "var(--ds-background-100)" }}
+        className="material-menu flex items-center gap-3 px-4 py-3"
         role="status"
         aria-live="polite"
       >
@@ -269,7 +268,7 @@ function ColorSwatch({
         </button>
       </ContextMenu.Trigger>
       <ContextMenu.Portal>
-        <ContextMenu.Content className="min-w-[240px] bg-white dark:bg-neutral-900 rounded-lg shadow-lg border border-borderNeutral p-1.5 z-50">
+        <ContextMenu.Content className="material-menu min-w-[240px] p-1.5 z-50">
           <ContextMenu.Item
             className="flex items-center justify-between gap-4 px-3 py-2 text-sm text-textDefault hover:bg-gray-100 dark:hover:bg-neutral-800 rounded-md cursor-pointer outline-none"
             onSelect={handleCopyHex}

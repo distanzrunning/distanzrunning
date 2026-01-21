@@ -325,8 +325,7 @@ function Toast({
       }`}
     >
       <div
-        className="flex items-center gap-3 px-4 py-3 rounded-lg shadow-lg border border-borderNeutral"
-        style={{ background: "var(--ds-background-100)" }}
+        className="material-menu flex items-center gap-3 px-4 py-3"
         role="status"
         aria-live="polite"
       >
@@ -486,10 +485,7 @@ function IconCard({ icon }: { icon: IconDefinition }) {
         </div>
       </ContextMenu.Trigger>
       <ContextMenu.Portal>
-        <ContextMenu.Content
-          className="min-w-[160px] rounded-md border border-borderNeutral bg-white dark:bg-neutral-900 p-1 shadow-lg"
-          style={{ zIndex: 50 }}
-        >
+        <ContextMenu.Content className="material-menu min-w-[160px] p-1 z-50">
           <ContextMenu.Item
             className="flex cursor-pointer select-none items-center rounded px-3 py-2 text-sm text-textDefault outline-none hover:bg-gray-100 dark:hover:bg-neutral-800"
             onSelect={handleCopyImport}

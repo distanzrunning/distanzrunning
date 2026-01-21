@@ -25,8 +25,7 @@ function Toast({
       }`}
     >
       <div
-        className="flex items-center gap-3 px-4 py-3 rounded-lg shadow-lg border border-borderNeutral"
-        style={{ background: "var(--ds-background-100)" }}
+        className="material-menu flex items-center gap-3 px-4 py-3"
         role="status"
         aria-live="polite"
       >
