@@ -16,6 +16,63 @@
   color: #000;
 }
 
+/* Material classes - Surface (on the page) */
+.material-base {
+  background: var(--ds-background-100);
+  border: 1px solid var(--ds-gray-400);
+  border-radius: 6px;
+}
+
+.material-small {
+  background: var(--ds-background-100);
+  border: 1px solid var(--ds-gray-400);
+  border-radius: 6px;
+  box-shadow: var(--ds-shadow-small);
+}
+
+.material-medium {
+  background: var(--ds-background-100);
+  border: 1px solid var(--ds-gray-400);
+  border-radius: 12px;
+  box-shadow: var(--ds-shadow-medium);
+}
+
+.material-large {
+  background: var(--ds-background-100);
+  border: 1px solid var(--ds-gray-400);
+  border-radius: 12px;
+  box-shadow: var(--ds-shadow-large);
+}
+
+/* Material classes - Floating (above the page) */
+.material-tooltip {
+  background: var(--ds-background-100);
+  border: 1px solid var(--ds-gray-400);
+  border-radius: 6px;
+  box-shadow: var(--ds-shadow-tooltip);
+}
+
+.material-menu {
+  background: var(--ds-background-100);
+  border: 1px solid var(--ds-gray-400);
+  border-radius: 12px;
+  box-shadow: var(--ds-shadow-menu);
+}
+
+.material-modal {
+  background: var(--ds-background-100);
+  border: 1px solid var(--ds-gray-400);
+  border-radius: 12px;
+  box-shadow: var(--ds-shadow-modal);
+}
+
+.material-fullscreen {
+  background: var(--ds-background-100);
+  border: 1px solid var(--ds-gray-400);
+  border-radius: 16px;
+  box-shadow: var(--ds-shadow-fullscreen);
+}
+
 @property --border-angle {
   inherits: false;
   initial-value: 0deg;
@@ -416,6 +473,31 @@
     --ds-pink-900-rgb: 185, 45, 100;
     --ds-pink-1000-rgb: 60, 20, 38;
 
+    /* ─────────────────────────────────────────────────────────────────────────
+       SHADOWS - Geist shadow system for materials
+       ───────────────────────────────────────────────────────────────────────── */
+    --ds-shadow-border-base: 0 0 0 1px rgba(0, 0, 0, 0.08);
+    --ds-shadow-small: 0px 2px 2px rgba(0, 0, 0, 0.04);
+    --ds-shadow-medium:
+      0px 2px 2px rgba(0, 0, 0, 0.04), 0px 8px 8px -8px rgba(0, 0, 0, 0.04);
+    --ds-shadow-large:
+      0px 2px 2px rgba(0, 0, 0, 0.04), 0px 8px 16px -4px rgba(0, 0, 0, 0.04);
+    --ds-shadow-tooltip:
+      0 0 0 1px rgba(0, 0, 0, 0.08), 0px 1px 1px rgba(0, 0, 0, 0.02),
+      0px 4px 8px rgba(0, 0, 0, 0.04);
+    --ds-shadow-menu:
+      0 0 0 1px rgba(0, 0, 0, 0.08), 0px 1px 1px rgba(0, 0, 0, 0.02),
+      0px 4px 8px -4px rgba(0, 0, 0, 0.04),
+      0px 16px 24px -8px rgba(0, 0, 0, 0.06);
+    --ds-shadow-modal:
+      0 0 0 1px rgba(0, 0, 0, 0.08), 0px 1px 1px rgba(0, 0, 0, 0.02),
+      0px 8px 16px -4px rgba(0, 0, 0, 0.04),
+      0px 24px 32px -8px rgba(0, 0, 0, 0.06);
+    --ds-shadow-fullscreen:
+      0 0 0 1px rgba(0, 0, 0, 0.08), 0px 1px 1px rgba(0, 0, 0, 0.02),
+      0px 8px 16px -4px rgba(0, 0, 0, 0.04),
+      0px 24px 32px -8px rgba(0, 0, 0, 0.06);
+
     /* ═══════════════════════════════════════════════════════════════════════
        SEMANTIC TOKENS - Light Mode
        Map design system scales to semantic usage
@@ -755,6 +837,30 @@
     --ds-pink-800-rgb: 218, 45, 115;
     --ds-pink-900-rgb: 240, 120, 165;
     --ds-pink-1000-rgb: 255, 235, 245;
+
+    /* ─────────────────────────────────────────────────────────────────────────
+       SHADOWS - Dark mode (inverted for dark backgrounds)
+       ───────────────────────────────────────────────────────────────────────── */
+    --ds-shadow-border-base: 0 0 0 1px rgba(255, 255, 255, 0.1);
+    --ds-shadow-small: 0px 2px 2px rgba(0, 0, 0, 0.2);
+    --ds-shadow-medium:
+      0px 2px 2px rgba(0, 0, 0, 0.2), 0px 8px 8px -8px rgba(0, 0, 0, 0.3);
+    --ds-shadow-large:
+      0px 2px 2px rgba(0, 0, 0, 0.2), 0px 8px 16px -4px rgba(0, 0, 0, 0.3);
+    --ds-shadow-tooltip:
+      0 0 0 1px rgba(255, 255, 255, 0.1), 0px 1px 1px rgba(0, 0, 0, 0.1),
+      0px 4px 8px rgba(0, 0, 0, 0.2);
+    --ds-shadow-menu:
+      0 0 0 1px rgba(255, 255, 255, 0.1), 0px 1px 1px rgba(0, 0, 0, 0.1),
+      0px 4px 8px -4px rgba(0, 0, 0, 0.2), 0px 16px 24px -8px rgba(0, 0, 0, 0.3);
+    --ds-shadow-modal:
+      0 0 0 1px rgba(255, 255, 255, 0.1), 0px 1px 1px rgba(0, 0, 0, 0.1),
+      0px 8px 16px -4px rgba(0, 0, 0, 0.2),
+      0px 24px 32px -8px rgba(0, 0, 0, 0.3);
+    --ds-shadow-fullscreen:
+      0 0 0 1px rgba(255, 255, 255, 0.1), 0px 1px 1px rgba(0, 0, 0, 0.1),
+      0px 8px 16px -4px rgba(0, 0, 0, 0.2),
+      0px 24px 32px -8px rgba(0, 0, 0, 0.3);
 
     /* ─────────────────────────────────────────────────────────────────────────
        SEMANTIC TOKENS - Dark Mode

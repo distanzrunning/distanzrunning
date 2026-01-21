@@ -31,6 +31,7 @@ import PullQuoteComponent from "../components/content/PullQuoteComponent";
 import CloseComponent from "../components/content/CloseComponent";
 import ToggleComponent from "../components/content/ToggleComponent";
 import CodeBlockComponent from "../components/content/CodeBlockComponent";
+import Materials from "../components/content/Materials";
 import ContentWithTOC from "../components/ContentWithTOC";
 
 export default function DesignSystemPage() {
@@ -201,7 +202,16 @@ export default function DesignSystemPage() {
       );
     }
     if (activeSlug === "materials") {
-      return <PlaceholderContent title="Foundations" subsection="Materials" />;
+      return (
+        <ContentWithTOC
+          tocTitle="On this page"
+          pageTitle="Materials"
+          pageSubtitle="Presets for radii, fills, strokes, and shadows."
+          mainSectionId="materials"
+        >
+          <Materials />
+        </ContentWithTOC>
+      );
     }
 
     // Brand pages
