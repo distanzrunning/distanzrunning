@@ -1286,170 +1286,31 @@ export default function CodeBlockComponent() {
           Syntax highlighting
         </SectionHeader>
         <p className="text-copy-14 text-textSubtle mt-4 mb-6">
-          The CodeBlock component uses semantic syntax highlighting. Colors
-          indicate the role of the code element.
+          The CodeBlock component uses{" "}
+          <a
+            href="https://shiki.style"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-textDefault underline hover:no-underline"
+          >
+            Shiki
+          </a>{" "}
+          for syntax highlighting, the same engine used by VS Code. It provides
+          accurate, theme-aware highlighting for all major programming
+          languages.
         </p>
 
         <h3 className="text-[16px] font-semibold text-textDefault mt-8 mb-4">
-          Standard highlighting
+          Theme
         </h3>
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
-                  Token type
-                </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
-                  Color
-                </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
-                  Token
-                </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
-                  Examples
-                </th>
-              </tr>
-            </thead>
-            <tbody className="text-sm">
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4">Keywords</td>
-                <td className="py-3 px-4">
-                  <span className="inline-flex items-center gap-2">
-                    <span className="w-3 h-3 rounded-full bg-[var(--ds-pink-900)]"></span>
-                    <span className="text-textSubtle">Pink</span>
-                  </span>
-                </td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  --ds-pink-900
-                </td>
-                <td className="py-3 px-4 font-mono text-[var(--ds-pink-900)]">
-                  import, export, const, function, return, true, false
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4">JSX tags</td>
-                <td className="py-3 px-4">
-                  <span className="inline-flex items-center gap-2">
-                    <span className="w-3 h-3 rounded-full bg-[var(--ds-green-900)]"></span>
-                    <span className="text-textSubtle">Green</span>
-                  </span>
-                </td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  --ds-green-900
-                </td>
-                <td className="py-3 px-4 font-mono text-[var(--ds-green-900)]">
-                  div, h1, CodeBlock, span
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4">Strings</td>
-                <td className="py-3 px-4">
-                  <span className="inline-flex items-center gap-2">
-                    <span className="w-3 h-3 rounded-full bg-[var(--ds-green-900)]"></span>
-                    <span className="text-textSubtle">Green</span>
-                  </span>
-                </td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  --ds-green-900
-                </td>
-                <td className="py-3 px-4 font-mono text-[var(--ds-green-900)]">
-                  "Hello world", `template`
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4">Function names</td>
-                <td className="py-3 px-4">
-                  <span className="inline-flex items-center gap-2">
-                    <span className="w-3 h-3 rounded-full bg-[var(--ds-purple-900)]"></span>
-                    <span className="text-textSubtle">Purple</span>
-                  </span>
-                </td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  --ds-purple-900
-                </td>
-                <td className="py-3 px-4 font-mono text-[var(--ds-purple-900)]">
-                  MyComponent, handleClick
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4">Attribute names</td>
-                <td className="py-3 px-4">
-                  <span className="inline-flex items-center gap-2">
-                    <span className="w-3 h-3 rounded-full bg-[var(--ds-purple-900)]"></span>
-                    <span className="text-textSubtle">Purple</span>
-                  </span>
-                </td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  --ds-purple-900
-                </td>
-                <td className="py-3 px-4 font-mono text-[var(--ds-purple-900)]">
-                  className, aria-label, onClick
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4">Attribute values</td>
-                <td className="py-3 px-4">
-                  <span className="inline-flex items-center gap-2">
-                    <span className="w-3 h-3 rounded-full bg-[var(--ds-blue-900)]"></span>
-                    <span className="text-textSubtle">Blue</span>
-                  </span>
-                </td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  --ds-blue-900
-                </td>
-                <td className="py-3 px-4 font-mono text-[var(--ds-blue-900)]">
-                  "container", "button-primary"
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4">Parameters</td>
-                <td className="py-3 px-4">
-                  <span className="inline-flex items-center gap-2">
-                    <span className="w-3 h-3 rounded-full bg-[var(--ds-amber-900)]"></span>
-                    <span className="text-textSubtle">Amber</span>
-                  </span>
-                </td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  --ds-amber-900
-                </td>
-                <td className="py-3 px-4 font-mono text-[var(--ds-amber-900)]">
-                  props, event, data
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4">Comments</td>
-                <td className="py-3 px-4">
-                  <span className="inline-flex items-center gap-2">
-                    <span className="w-3 h-3 rounded-full bg-[var(--ds-gray-900)]"></span>
-                    <span className="text-textSubtle">Gray</span>
-                  </span>
-                </td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  --ds-gray-900
-                </td>
-                <td className="py-3 px-4 font-mono text-[var(--ds-gray-900)]">
-                  // comment
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4">Plain text & punctuation</td>
-                <td className="py-3 px-4">
-                  <span className="inline-flex items-center gap-2">
-                    <span className="w-3 h-3 rounded-full bg-[var(--ds-gray-1000)]"></span>
-                    <span className="text-textSubtle">Gray</span>
-                  </span>
-                </td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  --ds-gray-1000
-                </td>
-                <td className="py-3 px-4 font-mono text-[var(--ds-gray-1000)]">
-                  {"{ } ( ) = : ;"}
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        <p className="text-copy-14 text-textSubtle mb-4">
+          We use the{" "}
+          <span className="font-semibold text-textDefault">One Light</span> and{" "}
+          <span className="font-semibold text-textDefault">One Dark Pro</span>{" "}
+          themes, which automatically switch based on the current color mode.
+          These themes provide vibrant, readable syntax highlighting inspired by
+          Atom&apos;s classic editor theme.
+        </p>
 
         <h3 className="text-[16px] font-semibold text-textDefault mt-8 mb-4">
           Diff highlighting
