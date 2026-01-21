@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   SiReact,
   SiTypescript,
@@ -53,6 +54,39 @@ function CheckIcon() {
         fill="currentColor"
       />
     </svg>
+  );
+}
+
+// Animated copy/check icon with subtle transition
+function AnimatedCopyIcon({ copied }: { copied: boolean }) {
+  return (
+    <div className="relative w-4 h-4">
+      <AnimatePresence mode="wait">
+        {copied ? (
+          <motion.div
+            key="check"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            transition={{ duration: 0.15, ease: "easeOut" }}
+            className="absolute inset-0"
+          >
+            <CheckIcon />
+          </motion.div>
+        ) : (
+          <motion.div
+            key="copy"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            transition={{ duration: 0.15, ease: "easeOut" }}
+            className="absolute inset-0"
+          >
+            <CopyIcon />
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
   );
 }
 
@@ -164,18 +198,16 @@ export function CodeBlock({
   // Show plain text while loading
   const lines: DualThemeToken[][] =
     tokenizedLines ||
-    codeContent
-      .split("\n")
-      .map(
-        (line) =>
-          [
-            {
-              content: line,
-              color: "var(--ds-gray-1000)",
-              darkColor: "var(--ds-gray-1000)",
-            },
-          ] as DualThemeToken[],
-      );
+    codeContent.split("\n").map(
+      (line) =>
+        [
+          {
+            content: line,
+            color: "var(--ds-gray-1000)",
+            darkColor: "var(--ds-gray-1000)",
+          },
+        ] as DualThemeToken[],
+    );
 
   return (
     <div
@@ -244,7 +276,7 @@ export function CodeBlock({
               className="p-2 rounded hover:bg-[var(--ds-gray-200)] dark:hover:bg-[var(--ds-gray-100)] transition-colors text-textSubtle hover:text-textDefault"
               aria-label="Copy code"
             >
-              {copied ? <CheckIcon /> : <CopyIcon />}
+              <AnimatedCopyIcon copied={copied} />
             </button>
           </div>
         </div>
@@ -257,7 +289,7 @@ export function CodeBlock({
           className="absolute top-3 right-3 p-2 rounded opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault hover:bg-[var(--ds-gray-100)]"
           aria-label="Copy code"
         >
-          {copied ? <CheckIcon /> : <CopyIcon />}
+          <AnimatedCopyIcon copied={copied} />
         </button>
       )}
 
