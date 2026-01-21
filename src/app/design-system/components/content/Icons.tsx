@@ -519,9 +519,11 @@ function IconCard({ icon }: { icon: IconDefinition }) {
 function SearchInput({
   value,
   onChange,
+  inputRef,
 }: {
   value: string;
   onChange: (value: string) => void;
+  inputRef?: React.RefObject<HTMLInputElement | null>;
 }) {
   return (
     <div
@@ -529,6 +531,7 @@ function SearchInput({
       style={{ "--geist-icon-size": "16px" } as React.CSSProperties}
     >
       <input
+        ref={inputRef}
         placeholder="Search icons..."
         aria-label="Search"
         aria-invalid="false"
@@ -554,6 +557,16 @@ function SearchInput({
 
 export default function Icons() {
   const [searchTerm, setSearchTerm] = useState("");
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
+  // Auto-focus search input on mount
+  React.useEffect(() => {
+    // Small delay to ensure the page has scrolled to top first
+    const timer = setTimeout(() => {
+      searchInputRef.current?.focus();
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Filter icons based on search term
   const filteredIcons = useMemo(() => {
@@ -585,7 +598,11 @@ export default function Icons() {
       <div>
         {/* Search Section */}
         <Section>
-          <SearchInput value={searchTerm} onChange={setSearchTerm} />
+          <SearchInput
+            value={searchTerm}
+            onChange={setSearchTerm}
+            inputRef={searchInputRef}
+          />
         </Section>
 
         {/* Icon Grid - spans full width, no padding, with dividers between rows and columns */}
