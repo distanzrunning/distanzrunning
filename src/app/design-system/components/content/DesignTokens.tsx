@@ -363,6 +363,17 @@ export default function DesignTokens() {
               animation-*, easing-*
             </code>
           </div>
+
+          <div className="bg-canvas rounded-lg border border-borderDefault p-6">
+            <h4 className="font-semibold mb-2">Materials</h4>
+            <p className="text-sm text-textSubtle mb-3">
+              Presets combining radii, fills, strokes, and shadows for surfaces
+              and floating elements.
+            </p>
+            <code className="text-xs font-mono text-electric-pink">
+              material-*
+            </code>
+          </div>
         </div>
       </section>
 
