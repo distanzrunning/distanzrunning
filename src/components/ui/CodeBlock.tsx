@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   SiReact,
   SiTypescript,
@@ -56,22 +57,45 @@ function CheckIcon() {
   );
 }
 
-// Animated copy/check icon - instant crossfade
+// Animated copy/check icon with scale + spring
 function AnimatedCopyIcon({ copied }: { copied: boolean }) {
   return (
     <div className="relative w-4 h-4">
-      <div
-        className="absolute inset-0 transition-opacity duration-[50ms]"
-        style={{ opacity: copied ? 0 : 1 }}
-      >
-        <CopyIcon />
-      </div>
-      <div
-        className="absolute inset-0 transition-opacity duration-[50ms]"
-        style={{ opacity: copied ? 1 : 0 }}
-      >
-        <CheckIcon />
-      </div>
+      <AnimatePresence mode="wait" initial={false}>
+        {copied ? (
+          <motion.div
+            key="check"
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0, opacity: 0 }}
+            transition={{
+              type: "spring",
+              stiffness: 500,
+              damping: 25,
+              duration: 0.15,
+            }}
+            className="absolute inset-0"
+          >
+            <CheckIcon />
+          </motion.div>
+        ) : (
+          <motion.div
+            key="copy"
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0, opacity: 0 }}
+            transition={{
+              type: "spring",
+              stiffness: 500,
+              damping: 25,
+              duration: 0.15,
+            }}
+            className="absolute inset-0"
+          >
+            <CopyIcon />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
@@ -272,7 +296,7 @@ export function CodeBlock({
       {!filename && (
         <button
           onClick={handleCopy}
-          className="absolute top-3 right-3 p-2 rounded opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault hover:bg-[var(--ds-gray-100)]"
+          className="absolute top-3 right-3 p-2 rounded border border-transparent opacity-0 group-hover:opacity-100 transition-all z-10 text-textSubtle hover:text-textDefault hover:bg-[var(--ds-background-200)] hover:border-[var(--ds-gray-400)]"
           aria-label="Copy code"
         >
           <AnimatedCopyIcon copied={copied} />
