@@ -217,7 +217,8 @@ const surfaceMaterials: MaterialDefinition[] = [
 const floatingMaterials: MaterialDefinition[] = [
   {
     className: "material-tooltip",
-    usage: "Lightest shadow. Corner 6px. Tooltips will be the only floating element with a triangular stem.",
+    usage:
+      "Lightest shadow. Corner 6px. Tooltips will be the only floating element with a triangular stem.",
   },
   {
     className: "material-menu",
@@ -234,11 +235,7 @@ const floatingMaterials: MaterialDefinition[] = [
 ];
 
 // Material table component
-function MaterialTable({
-  materials,
-}: {
-  materials: MaterialDefinition[];
-}) {
+function MaterialTable({ materials }: { materials: MaterialDefinition[] }) {
   const { showToast } = React.useContext(ToastContext);
 
   const handleCopyClassName = (className: string) => {
@@ -248,44 +245,44 @@ function MaterialTable({
 
   return (
     <div className="overflow-x-auto">
-      <table className="w-full caption-bottom text-sm text-textDefault">
+      <table className="w-full caption-bottom text-sm text-textDefault table-fixed">
         <thead>
           <tr className="transition-colors">
-            <th className="h-10 px-2 text-left align-middle font-medium border-b border-borderNeutral">
+            <th className="h-10 px-4 text-left align-middle font-medium border-b border-borderNeutral w-[45%]">
               <div className="inline-flex gap-1.5 items-center">
                 <ExampleIcon />
                 Example
               </div>
             </th>
-            <th className="h-10 px-2 text-left align-middle font-medium border-b border-borderNeutral">
-              <div className="inline-flex gap-1.5 items-center">
+            <th className="h-10 px-4 text-center align-middle font-medium border-b border-borderNeutral w-[25%]">
+              <div className="inline-flex gap-1.5 items-center justify-center w-full">
                 <SiTailwindcss size={16} className="text-[#38bdf8]" />
                 Class name
               </div>
             </th>
-            <th className="h-10 px-2 text-left align-middle font-medium border-b border-borderNeutral">
-              <div className="inline-flex gap-1.5 items-center">
+            <th className="h-10 px-4 text-right align-middle font-medium border-b border-borderNeutral w-[30%]">
+              <div className="inline-flex gap-1.5 items-center justify-end w-full">
                 <HelpCircle size={16} />
                 Usage
               </div>
             </th>
           </tr>
         </thead>
-        <tbody className="[&_tr:hover]:bg-[var(--ds-gray-100)]">
+        <tbody>
           {materials.map((material) => (
-            <tr key={material.className} className="transition-colors">
-              <td className="px-2 py-2.5 align-middle">
-                <div
-                  className={`${material.className} max-w-[240px] h-[100px]`}
-                />
+            <tr
+              key={material.className}
+              className="transition-colors hover:bg-[var(--ds-gray-100)] cursor-copy border-b border-[var(--ds-gray-400)]"
+              onClick={() => handleCopyClassName(material.className)}
+              style={{ height: 120 }}
+            >
+              <td className="px-4 py-3 align-middle">
+                <div className={`${material.className} w-full h-[100px]`} />
               </td>
-              <td
-                className="px-2 py-2.5 align-middle font-mono text-[13px] cursor-pointer hover:text-[var(--ds-blue-700)]"
-                onClick={() => handleCopyClassName(material.className)}
-              >
+              <td className="px-4 py-3 align-middle text-center font-mono text-[13px]">
                 {material.className}
               </td>
-              <td className="px-2 py-2.5 align-middle max-w-[200px] text-textSubtle">
+              <td className="px-4 py-3 align-middle text-right text-textSubtle">
                 {material.usage}
               </td>
             </tr>
