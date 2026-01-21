@@ -758,19 +758,35 @@ export function Component() {
   );
 }`;
 
-const hiddenLineNumbersPreviewCode = `export default function Page() {
-  return <p>Hello, World!</p>
+const hiddenLineNumbersPreviewCode = `function MyComponent(props) {
+  return (
+    <div>
+      <h1>Hello, {props.name}!</h1>
+      <p>Good to see you</p>
+    </div>
+  );
 }`;
 
-const hiddenLineNumbersComponentCode = `import { CodeBlock } from '@/components/ui/CodeBlock';
+const hiddenLineNumbersComponentCode = `import { CodeBlock } from 'geist/components';
+import type { JSX } from 'react';
 
-const code = \`export default function Page() {
-  return <p>Hello, World!</p>
+const code = \`function MyComponent(props) {
+  return (
+    <div>
+      <h1>Hello, {props.name}!</h1>
+      <p>Good to see you</p>
+    </div>
+  );
 }\`;
 
-export function Component() {
+export function Component(): JSX.Element {
   return (
-    <CodeBlock filename="page.tsx" showLineNumbers={false}>
+    <CodeBlock
+      aria-label="Hello world"
+      filename="hidden-line-numbers.jsx"
+      hideLineNumbers
+      language="jsx"
+    >
       {code}
     </CodeBlock>
   );
@@ -1164,7 +1180,7 @@ export default function CodeBlockComponent() {
         </p>
         <CodePreview
           previewCode={hiddenLineNumbersPreviewCode}
-          previewFilename="page.tsx"
+          previewFilename="hidden-line-numbers.jsx"
           componentCode={hiddenLineNumbersComponentCode}
           showLineNumbers={false}
         />
