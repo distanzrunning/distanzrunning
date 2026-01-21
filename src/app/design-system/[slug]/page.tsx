@@ -65,11 +65,8 @@ export default function DesignSystemPage() {
     setActiveSlug(newSlug);
     // Update URL without triggering navigation
     window.history.pushState({}, "", `/design-system/${newSlug}`);
-    // Scroll main content to top
-    const mainContent = document.getElementById("main-content");
-    if (mainContent) {
-      mainContent.scrollTop = 0;
-    }
+    // Scroll window to top
+    window.scrollTo({ top: 0, behavior: "instant" });
   }, []);
 
   const handleHomeClick = () => {
