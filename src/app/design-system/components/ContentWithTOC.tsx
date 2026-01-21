@@ -2,6 +2,7 @@
 
 import {
   useEffect,
+  useLayoutEffect,
   useState,
   useRef,
   useCallback,
@@ -45,96 +46,99 @@ interface ContentWithTOCProps {
   pageSubtitle?: string;
 }
 
-// Hook to extract TOC items from DOM headings
-function useAutoTOC(
-  containerRef: React.RefObject<HTMLElement | null>,
-  manualItems?: TOCItem[],
+// Helper to scan headings from a container
+function scanHeadingsFromContainer(
+  container: HTMLElement,
   mainSectionId?: string,
 ): TOCItem[] {
+  const headings = container.querySelectorAll("h2[id], h3[id]");
+  const items: TOCItem[] = [];
+  let currentH2: TOCItem | null = null;
+
+  headings.forEach((heading) => {
+    const id = heading.id;
+    // Skip the main section id as it's handled separately
+    if (mainSectionId && id === mainSectionId) return;
+
+    const title = heading.textContent?.trim() || id;
+    const level = heading.tagName.toLowerCase();
+
+    if (level === "h2") {
+      currentH2 = { id, title, children: [] };
+      items.push(currentH2);
+    } else if (level === "h3" && currentH2) {
+      currentH2.children = currentH2.children || [];
+      currentH2.children.push({ id, title });
+    } else if (level === "h3") {
+      // h3 without a parent h2, add as top-level
+      items.push({ id, title });
+    }
+  });
+
+  // Clean up empty children arrays
+  items.forEach((item) => {
+    if (item.children && item.children.length === 0) {
+      delete item.children;
+    }
+  });
+
+  return items;
+}
+
+// Hook to extract TOC items from DOM headings using callback ref
+function useAutoTOC(
+  manualItems?: TOCItem[],
+  mainSectionId?: string,
+): [TOCItem[], (node: HTMLElement | null) => void] {
   const [autoItems, setAutoItems] = useState<TOCItem[]>([]);
-  const [containerElement, setContainerElement] = useState<HTMLElement | null>(
-    null,
+  const observerRef = useRef<MutationObserver | null>(null);
+
+  const callbackRef = useCallback(
+    (node: HTMLElement | null) => {
+      // Cleanup previous observer
+      if (observerRef.current) {
+        observerRef.current.disconnect();
+        observerRef.current = null;
+      }
+
+      // If manual items are provided, don't auto-generate
+      if (manualItems && manualItems.length > 0) {
+        return;
+      }
+
+      if (!node) return;
+
+      // Scan function
+      const scan = () => {
+        const items = scanHeadingsFromContainer(node, mainSectionId);
+        setAutoItems(items);
+      };
+
+      // Initial scan
+      scan();
+
+      // Observe for changes
+      observerRef.current = new MutationObserver(scan);
+      observerRef.current.observe(node, {
+        childList: true,
+        subtree: true,
+      });
+    },
+    [manualItems, mainSectionId],
   );
 
-  // Track when the ref is assigned
+  // Cleanup on unmount
   useEffect(() => {
-    // Poll for the ref to be set (handles initial mount timing)
-    const checkRef = () => {
-      if (containerRef.current && containerRef.current !== containerElement) {
-        setContainerElement(containerRef.current);
+    return () => {
+      if (observerRef.current) {
+        observerRef.current.disconnect();
       }
     };
-
-    checkRef();
-    // Also check after a frame in case ref is set after effect runs
-    const frameId = requestAnimationFrame(checkRef);
-    return () => cancelAnimationFrame(frameId);
-  }, [containerRef, containerElement]);
-
-  useEffect(() => {
-    // If manual items are provided, don't auto-generate
-    if (manualItems && manualItems.length > 0) {
-      return;
-    }
-
-    if (!containerElement) return;
-
-    const scanHeadings = () => {
-      // Find all h2 and h3 elements with ids
-      const headings = containerElement.querySelectorAll("h2[id], h3[id]");
-      const items: TOCItem[] = [];
-      let currentH2: TOCItem | null = null;
-
-      headings.forEach((heading) => {
-        const id = heading.id;
-        // Skip the main section id as it's handled separately
-        if (mainSectionId && id === mainSectionId) return;
-
-        const title = heading.textContent?.trim() || id;
-        const level = heading.tagName.toLowerCase();
-
-        if (level === "h2") {
-          currentH2 = { id, title, children: [] };
-          items.push(currentH2);
-        } else if (level === "h3" && currentH2) {
-          currentH2.children = currentH2.children || [];
-          currentH2.children.push({ id, title });
-        } else if (level === "h3") {
-          // h3 without a parent h2, add as top-level
-          items.push({ id, title });
-        }
-      });
-
-      // Clean up empty children arrays
-      items.forEach((item) => {
-        if (item.children && item.children.length === 0) {
-          delete item.children;
-        }
-      });
-
-      return items;
-    };
-
-    // Initial scan
-    const items = scanHeadings();
-    setAutoItems(items);
-
-    // Also observe for DOM changes in case content loads asynchronously
-    const observer = new MutationObserver(() => {
-      const newItems = scanHeadings();
-      setAutoItems(newItems);
-    });
-
-    observer.observe(containerElement, {
-      childList: true,
-      subtree: true,
-    });
-
-    return () => observer.disconnect();
-  }, [containerElement, manualItems, mainSectionId]);
+  }, []);
 
   // Return manual items if provided, otherwise auto-generated
-  return manualItems && manualItems.length > 0 ? manualItems : autoItems;
+  const items = manualItems && manualItems.length > 0 ? manualItems : autoItems;
+  return [items, callbackRef];
 }
 
 // Header height constant (matches top-28 = 112px)
@@ -153,10 +157,19 @@ export default function ContentWithTOC({
   const [activeId, setActiveId] = useState<string>("");
   const isClickScrolling = useRef(false);
   const activeIdRef = useRef(activeId);
-  const contentRef = useRef<HTMLElement>(null);
+  const contentRef = useRef<HTMLElement | null>(null);
 
   // Auto-generate TOC if not provided
-  const tocItems = useAutoTOC(contentRef, manualTocItems, mainSectionId);
+  const [tocItems, tocCallbackRef] = useAutoTOC(manualTocItems, mainSectionId);
+
+  // Combined ref callback
+  const setContentRef = useCallback(
+    (node: HTMLElement | null) => {
+      contentRef.current = node;
+      tocCallbackRef(node);
+    },
+    [tocCallbackRef],
+  );
 
   // Keep ref in sync with state
   useEffect(() => {
@@ -352,7 +365,7 @@ export default function ContentWithTOC({
         )}
 
         {/* Main Content */}
-        <article ref={contentRef} className="flex-1">
+        <article ref={setContentRef} className="flex-1">
           <SectionContext.Provider value={true}>
             {children}
           </SectionContext.Provider>
