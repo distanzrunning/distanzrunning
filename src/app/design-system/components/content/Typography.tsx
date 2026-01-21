@@ -402,20 +402,51 @@ function LinkIcon() {
   );
 }
 
+// Header height and section padding constants (must match ContentWithTOC)
+const HEADER_HEIGHT = 112;
+const SECTION_PADDING = 48;
+
 // Section header with link icon on hover (matches Geist)
 function SectionHeader({
   id,
   children,
+  onCopyLink,
 }: {
   id: string;
   children: React.ReactNode;
+  onCopyLink?: (message: string) => void;
 }) {
+  const handleClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+
+    // Copy URL with hash to clipboard
+    const url = `${window.location.origin}${window.location.pathname}#${id}`;
+    navigator.clipboard.writeText(url);
+    onCopyLink?.("Copied link to clipboard");
+
+    // Update URL
+    window.history.pushState(null, "", `#${id}`);
+
+    // Scroll to correct position (accounting for header and padding)
+    const element = document.getElementById(id);
+    if (element) {
+      const elementRect = element.getBoundingClientRect();
+      const absoluteElementTop = elementRect.top + window.scrollY;
+      const scrollTarget = absoluteElementTop - HEADER_HEIGHT - SECTION_PADDING;
+
+      window.scrollTo({
+        top: scrollTarget,
+        behavior: "smooth",
+      });
+    }
+  };
+
   return (
-    <a
-      className="group relative -ml-5 inline-block pl-5 no-underline outline-none text-inherit"
-      href={`#${id}`}
+    <button
+      type="button"
+      onClick={handleClick}
+      className="group relative -ml-5 inline-block pl-5 no-underline outline-none text-inherit text-left cursor-pointer bg-transparent border-none"
       id={id}
-      style={{ scrollMarginTop: 32 }}
     >
       <h2 className="text-[24px] leading-[1.2] font-semibold text-textDefault">
         <div className="absolute left-0 top-[8px] opacity-0 outline-none group-hover:opacity-100 group-focus:opacity-100 transition-opacity">
@@ -423,7 +454,7 @@ function SectionHeader({
         </div>
         {children}
       </h2>
-    </a>
+    </button>
   );
 }
 
@@ -446,7 +477,9 @@ export default function Typography() {
       />
       {/* Usage Section */}
       <Section>
-        <SectionHeader id="usage">Usage</SectionHeader>
+        <SectionHeader id="usage" onCopyLink={showToast}>
+          Usage
+        </SectionHeader>
 
         <p className="text-copy-14 text-textSubtle mt-4 mb-4">
           Our typography styles can be consumed as{" "}
@@ -492,7 +525,9 @@ export default function Typography() {
 
       {/* Headings Section */}
       <Section>
-        <SectionHeader id="headings">Headings</SectionHeader>
+        <SectionHeader id="headings" onCopyLink={showToast}>
+          Headings
+        </SectionHeader>
 
         <p className="text-base text-textSubtle mt-4 mb-4">
           Headings are used to introduce pages or sections. Use{" "}
@@ -617,7 +652,9 @@ export default function Typography() {
 
       {/* Buttons Section */}
       <Section>
-        <SectionHeader id="buttons">Buttons</SectionHeader>
+        <SectionHeader id="buttons" onCopyLink={showToast}>
+          Buttons
+        </SectionHeader>
 
         <p className="text-base text-textSubtle mt-4 mb-6">
           Button text styles should only be used for button components.
@@ -670,7 +707,9 @@ export default function Typography() {
 
       {/* Labels Section */}
       <Section>
-        <SectionHeader id="labels">Labels</SectionHeader>
+        <SectionHeader id="labels" onCopyLink={showToast}>
+          Labels
+        </SectionHeader>
 
         <p className="text-base text-textSubtle mt-4 mb-6">
           Labels are single-line text with ample line-height to align with
@@ -784,7 +823,9 @@ export default function Typography() {
 
       {/* Copy Section */}
       <Section>
-        <SectionHeader id="copy">Copy</SectionHeader>
+        <SectionHeader id="copy" onCopyLink={showToast}>
+          Copy
+        </SectionHeader>
 
         <p className="text-base text-textSubtle mt-4 mb-6">
           Copy styles are for multi-line text with higher line height than
@@ -886,7 +927,9 @@ export default function Typography() {
 
       {/* Reference Section */}
       <Section>
-        <SectionHeader id="reference">Quick reference</SectionHeader>
+        <SectionHeader id="reference" onCopyLink={showToast}>
+          Quick reference
+        </SectionHeader>
 
         <p className="text-base text-textSubtle mt-4 mb-6">
           Complete specifications for all typography utility classes.

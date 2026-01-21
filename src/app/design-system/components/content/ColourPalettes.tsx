@@ -25,6 +25,17 @@ function LinkIcon() {
   );
 }
 
+// Header height and section padding constants (must match ContentWithTOC)
+const HEADER_HEIGHT = 112;
+const SECTION_PADDING = 48;
+
+// Toast context for copy notifications (defined early so SectionHeader can use it)
+const ToastContext = React.createContext<{
+  showToast: (message: string) => void;
+}>({
+  showToast: () => {},
+});
+
 // Section header with link icon on hover (matches Geist)
 function SectionHeader({
   id,
@@ -33,12 +44,39 @@ function SectionHeader({
   id: string;
   children: React.ReactNode;
 }) {
+  const { showToast } = React.useContext(ToastContext);
+
+  const handleClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+
+    // Copy URL with hash to clipboard
+    const url = `${window.location.origin}${window.location.pathname}#${id}`;
+    navigator.clipboard.writeText(url);
+    showToast("Copied link to clipboard");
+
+    // Update URL
+    window.history.pushState(null, "", `#${id}`);
+
+    // Scroll to correct position (accounting for header and padding)
+    const element = document.getElementById(id);
+    if (element) {
+      const elementRect = element.getBoundingClientRect();
+      const absoluteElementTop = elementRect.top + window.scrollY;
+      const scrollTarget = absoluteElementTop - HEADER_HEIGHT - SECTION_PADDING;
+
+      window.scrollTo({
+        top: scrollTarget,
+        behavior: "smooth",
+      });
+    }
+  };
+
   return (
-    <a
-      className="group relative -ml-5 inline-block pl-5 no-underline outline-none text-inherit"
-      href={`#${id}`}
+    <button
+      type="button"
+      onClick={handleClick}
+      className="group relative -ml-5 inline-block pl-5 no-underline outline-none text-inherit text-left cursor-pointer bg-transparent border-none"
       id={id}
-      style={{ scrollMarginTop: 32 }}
     >
       <h2 className="text-[24px] leading-[1.2] font-semibold text-textDefault">
         <div className="absolute left-0 top-[8px] opacity-0 outline-none group-hover:opacity-100 group-focus:opacity-100 transition-opacity">
@@ -46,16 +84,9 @@ function SectionHeader({
         </div>
         {children}
       </h2>
-    </a>
+    </button>
   );
 }
-
-// Toast context for copy notifications
-const ToastContext = React.createContext<{
-  showToast: (message: string) => void;
-}>({
-  showToast: () => {},
-});
 
 function Toast({
   message,

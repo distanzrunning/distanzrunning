@@ -489,18 +489,50 @@ function LinkIcon() {
   );
 }
 
+// Header height and section padding constants (must match ContentWithTOC)
+const HEADER_HEIGHT = 112;
+const SECTION_PADDING = 48;
+
 // Section header with link icon on hover
 function SectionHeader({
   id,
   children,
+  onCopyLink,
 }: {
   id: string;
   children: React.ReactNode;
+  onCopyLink?: (message: string) => void;
 }) {
+  const handleClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+
+    // Copy URL with hash to clipboard
+    const url = `${window.location.origin}${window.location.pathname}#${id}`;
+    navigator.clipboard.writeText(url);
+    onCopyLink?.("Copied link to clipboard");
+
+    // Update URL
+    window.history.pushState(null, "", `#${id}`);
+
+    // Scroll to correct position (accounting for header and padding)
+    const element = document.getElementById(id);
+    if (element) {
+      const elementRect = element.getBoundingClientRect();
+      const absoluteElementTop = elementRect.top + window.scrollY;
+      const scrollTarget = absoluteElementTop - HEADER_HEIGHT - SECTION_PADDING;
+
+      window.scrollTo({
+        top: scrollTarget,
+        behavior: "smooth",
+      });
+    }
+  };
+
   return (
-    <a
-      className="group relative -ml-5 inline-block pl-5 no-underline outline-none text-inherit"
-      href={`#${id}`}
+    <button
+      type="button"
+      onClick={handleClick}
+      className="group relative -ml-5 inline-block pl-5 no-underline outline-none text-inherit text-left cursor-pointer bg-transparent border-none"
       id={id}
     >
       <h2 className="text-[24px] leading-[1.2] font-semibold text-textDefault">
@@ -509,7 +541,7 @@ function SectionHeader({
         </div>
         {children}
       </h2>
-    </a>
+    </button>
   );
 }
 
@@ -1083,7 +1115,9 @@ export default function CodeBlockComponent() {
 
       {/* Default Section */}
       <Section>
-        <SectionHeader id="default">Default</SectionHeader>
+        <SectionHeader id="default" onCopyLink={showToast}>
+          Default
+        </SectionHeader>
         <p className="text-copy-14 text-textSubtle mt-4 mb-6">
           The default code block includes a filename header with a file icon,
           line numbers, and a copy button.
@@ -1097,7 +1131,9 @@ export default function CodeBlockComponent() {
 
       {/* No Filename Section */}
       <Section>
-        <SectionHeader id="no-filename">No filename</SectionHeader>
+        <SectionHeader id="no-filename" onCopyLink={showToast}>
+          No filename
+        </SectionHeader>
         <p className="text-copy-14 text-textSubtle mt-4 mb-6">
           Code blocks can be rendered without a filename header. The copy button
           appears on hover.
@@ -1111,7 +1147,9 @@ export default function CodeBlockComponent() {
 
       {/* Highlighted Lines Section */}
       <Section>
-        <SectionHeader id="highlighted-lines">Highlighted lines</SectionHeader>
+        <SectionHeader id="highlighted-lines" onCopyLink={showToast}>
+          Highlighted lines
+        </SectionHeader>
         <p className="text-copy-14 text-textSubtle mt-4 mb-6">
           Specific lines can be highlighted to draw attention to important code.
           Use the{" "}
@@ -1130,7 +1168,7 @@ export default function CodeBlockComponent() {
 
       {/* Added & Removed Lines Section */}
       <Section>
-        <SectionHeader id="added-removed-lines">
+        <SectionHeader id="added-removed-lines" onCopyLink={showToast}>
           Added & removed lines
         </SectionHeader>
         <p className="text-copy-14 text-textSubtle mt-4 mb-6">
@@ -1155,7 +1193,9 @@ export default function CodeBlockComponent() {
 
       {/* Referenced Lines Section */}
       <Section>
-        <SectionHeader id="referenced-lines">Referenced lines</SectionHeader>
+        <SectionHeader id="referenced-lines" onCopyLink={showToast}>
+          Referenced lines
+        </SectionHeader>
         <p className="text-copy-14 text-textSubtle mt-4 mb-6">
           Line numbers can be made clickable using the{" "}
           <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
@@ -1174,7 +1214,9 @@ export default function CodeBlockComponent() {
 
       {/* Language Switcher Section */}
       <Section>
-        <SectionHeader id="language-switcher">Language switcher</SectionHeader>
+        <SectionHeader id="language-switcher" onCopyLink={showToast}>
+          Language switcher
+        </SectionHeader>
         <p className="text-copy-14 text-textSubtle mt-4 mb-6">
           Use the switcher prop to add a language dropdown to the header. When
           the user switches languages, the code, filename, and icon update
@@ -1185,7 +1227,7 @@ export default function CodeBlockComponent() {
 
       {/* Hidden Line Numbers Section */}
       <Section>
-        <SectionHeader id="hidden-line-numbers">
+        <SectionHeader id="hidden-line-numbers" onCopyLink={showToast}>
           Hidden line numbers
         </SectionHeader>
         <p className="text-copy-14 text-textSubtle mt-4 mb-6">
@@ -1205,7 +1247,9 @@ export default function CodeBlockComponent() {
 
       {/* Props Section */}
       <Section>
-        <SectionHeader id="props">Props</SectionHeader>
+        <SectionHeader id="props" onCopyLink={showToast}>
+          Props
+        </SectionHeader>
         <p className="text-copy-14 text-textSubtle mt-4 mb-6">
           Available props for the CodeBlock component.
         </p>
@@ -1299,7 +1343,7 @@ export default function CodeBlockComponent() {
 
       {/* Syntax Highlighting Section */}
       <Section>
-        <SectionHeader id="syntax-highlighting">
+        <SectionHeader id="syntax-highlighting" onCopyLink={showToast}>
           Syntax highlighting
         </SectionHeader>
         <p className="text-copy-14 text-textSubtle mt-4 mb-6">
