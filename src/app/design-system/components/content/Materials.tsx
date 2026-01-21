@@ -248,20 +248,20 @@ function MaterialTable({ materials }: { materials: MaterialDefinition[] }) {
       <table className="w-full caption-bottom text-sm text-textDefault table-fixed">
         <thead>
           <tr className="transition-colors">
-            <th className="h-10 px-4 text-left align-middle font-medium border-b border-borderNeutral w-[45%]">
+            <th className="h-10 px-2 text-left align-middle font-medium border-b border-borderNeutral w-[260px]">
               <div className="inline-flex gap-1.5 items-center">
                 <ExampleIcon />
                 Example
               </div>
             </th>
-            <th className="h-10 px-4 text-center align-middle font-medium border-b border-borderNeutral w-[25%]">
-              <div className="inline-flex gap-1.5 items-center justify-center w-full">
+            <th className="h-10 px-2 text-left align-middle font-medium border-b border-borderNeutral">
+              <div className="inline-flex gap-1.5 items-center">
                 <SiTailwindcss size={16} className="text-[#38bdf8]" />
                 Class name
               </div>
             </th>
-            <th className="h-10 px-4 text-right align-middle font-medium border-b border-borderNeutral w-[30%]">
-              <div className="inline-flex gap-1.5 items-center justify-end w-full">
+            <th className="h-10 px-2 text-left align-middle font-medium border-b border-borderNeutral">
+              <div className="inline-flex gap-1.5 items-center">
                 <HelpCircle size={16} />
                 Usage
               </div>
@@ -276,13 +276,15 @@ function MaterialTable({ materials }: { materials: MaterialDefinition[] }) {
               onClick={() => handleCopyClassName(material.className)}
               style={{ height: 120 }}
             >
-              <td className="px-4 py-3 align-middle">
-                <div className={`${material.className} w-full h-[100px]`} />
+              <td className="px-2 py-2.5 align-middle">
+                <div
+                  className={`${material.className} max-w-[240px] h-[100px]`}
+                />
               </td>
-              <td className="px-4 py-3 align-middle text-center font-mono text-[13px]">
+              <td className="px-2 py-2.5 align-middle text-left font-mono text-[13px]">
                 {material.className}
               </td>
-              <td className="px-4 py-3 align-middle text-right text-textSubtle">
+              <td className="px-2 py-2.5 align-middle text-left text-textSubtle">
                 {material.usage}
               </td>
             </tr>
