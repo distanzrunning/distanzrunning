@@ -1279,19 +1279,21 @@ function BordersSection() {
         style={{ background: "var(--ds-background-100)" }}
       >
         <button
-          className="inline-flex items-center justify-center h-9 px-6 rounded font-sans font-semibold text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-borderNeutral active:scale-[0.98] active:duration-100"
+          className="inline-flex items-center justify-center font-sans font-medium text-sm transition-all duration-150 ease focus:outline-none active:scale-[0.98] active:duration-100"
           style={{
-            background: "transparent",
-            border: "1px solid var(--ds-gray-400)",
+            height: "40px",
+            minWidth: "160px",
+            padding: "0 12px",
+            borderRadius: "6px",
+            background: "var(--ds-background-100)",
+            boxShadow: "0 0 0 1px var(--ds-gray-400)",
             color: "var(--ds-gray-1000)",
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.background = "var(--ds-gray-200)";
-            e.currentTarget.style.borderColor = "var(--ds-gray-500)";
+            e.currentTarget.style.background = "var(--ds-gray-alpha-200)";
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.background = "transparent";
-            e.currentTarget.style.borderColor = "var(--ds-gray-400)";
+            e.currentTarget.style.background = "var(--ds-background-100)";
           }}
         >
           New Project
@@ -1413,13 +1415,17 @@ function HighContrastBackgroundsSection() {
         </div>
         <div className="flex w-full justify-center md:w-[50%] py-6 md:py-0">
           <button
-            className="inline-flex items-center justify-center h-9 px-6 rounded font-sans font-semibold text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-borderNeutral active:scale-[0.98] active:duration-100"
+            className="inline-flex items-center justify-center font-sans font-medium text-sm transition-all duration-150 ease focus:outline-none active:scale-[0.98] active:duration-100"
             style={{
+              height: "40px",
+              minWidth: "160px",
+              padding: "0 12px",
+              borderRadius: "6px",
               background: "var(--ds-blue-700)",
               color: "white",
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.background = "var(--ds-blue-600)";
+              e.currentTarget.style.background = "#0B7BFE";
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.background = "var(--ds-blue-700)";
