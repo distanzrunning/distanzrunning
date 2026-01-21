@@ -56,14 +56,20 @@ function CheckIcon() {
   );
 }
 
-// Copy/check icon - instant swap like Geist (both in DOM, toggle visibility)
+// Copy/check icon - CSS crossfade transition
 function AnimatedCopyIcon({ copied }: { copied: boolean }) {
   return (
     <div className="relative w-4 h-4">
-      <span className={copied ? "hidden" : ""}>
+      <span
+        className="absolute inset-0 transition-opacity duration-150"
+        style={{ opacity: copied ? 0 : 1 }}
+      >
         <CopyIcon />
       </span>
-      <span className={`absolute inset-0 ${copied ? "" : "hidden"}`}>
+      <span
+        className="absolute inset-0 transition-opacity duration-150"
+        style={{ opacity: copied ? 1 : 0 }}
+      >
         <CheckIcon />
       </span>
     </div>
