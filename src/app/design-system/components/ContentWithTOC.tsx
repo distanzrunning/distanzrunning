@@ -178,10 +178,22 @@ export default function ContentWithTOC({
     }
 
     // Re-enable scroll spy after scroll completes
-    // Use longer timeout to account for smooth scroll on slower devices/longer pages
-    setTimeout(() => {
+    // Use scrollend event if supported, otherwise fall back to timeout
+    const enableScrollSpy = () => {
       clickedRef.current = false;
-    }, 1000);
+    };
+
+    if ("onscrollend" in window) {
+      window.addEventListener("scrollend", enableScrollSpy, { once: true });
+      // Fallback timeout in case scrollend doesn't fire
+      setTimeout(() => {
+        window.removeEventListener("scrollend", enableScrollSpy);
+        clickedRef.current = false;
+      }, 2000);
+    } else {
+      // Fallback for browsers without scrollend support
+      setTimeout(enableScrollSpy, 1000);
+    }
   };
 
   // Helper to render a TOC link with left border indicator
