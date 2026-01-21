@@ -31,6 +31,7 @@ const navigation: NavSection[] = [
       { id: "colours", label: "Colours" },
       { id: "icons", label: "Icons" },
       { id: "typography", label: "Typography" },
+      { id: "materials", label: "Materials" },
     ],
   },
   {
