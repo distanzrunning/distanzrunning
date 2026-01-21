@@ -45,6 +45,9 @@ interface ContentWithTOCProps {
   pageSubtitle?: string;
 }
 
+// Header height constant (matches top-28 = 112px)
+const HEADER_HEIGHT = 112;
+
 export default function ContentWithTOC({
   children,
   tocTitle,
@@ -56,6 +59,12 @@ export default function ContentWithTOC({
   const [activeId, setActiveId] = useState<string>("");
   const clickedRef = useRef(false);
   const initialLoadRef = useRef(true);
+  const activeIdRef = useRef<string>("");
+
+  // Keep ref in sync with state for use in scroll handler
+  useEffect(() => {
+    activeIdRef.current = activeId;
+  }, [activeId]);
 
   // Flatten TOC items to get all IDs
   const getAllIds = useCallback(() => {
@@ -75,11 +84,13 @@ export default function ContentWithTOC({
     const hash = window.location.hash.slice(1);
     if (hash) {
       setActiveId(hash);
-      // Browser handles scroll via CSS scroll-padding-top
-      // Just wait briefly before enabling scroll spy
-      setTimeout(() => {
-        initialLoadRef.current = false;
-      }, 100);
+      // Wait for browser to complete hash scroll before enabling scroll spy
+      // Use requestAnimationFrame to wait for paint, then a longer timeout
+      requestAnimationFrame(() => {
+        setTimeout(() => {
+          initialLoadRef.current = false;
+        }, 500);
+      });
     } else {
       // Set first item as active by default
       const ids = getAllIds();
@@ -96,21 +107,39 @@ export default function ContentWithTOC({
       if (clickedRef.current || initialLoadRef.current) return;
 
       const ids = getAllIds();
-      const scrollPosition = window.scrollY + 150; // Offset for header
+      // Use consistent offset that matches the header height
+      const scrollOffset = HEADER_HEIGHT + 20; // Small buffer for visual comfort
+
+      // Check if we're at the bottom of the page
+      const isAtBottom =
+        window.innerHeight + window.scrollY >=
+        document.documentElement.scrollHeight - 10;
+
+      // If at bottom, activate the last section
+      if (isAtBottom && ids.length > 0) {
+        const lastId = ids[ids.length - 1];
+        if (lastId !== activeIdRef.current) {
+          setActiveId(lastId);
+          window.history.replaceState(null, "", `#${lastId}`);
+        }
+        return;
+      }
 
       let currentId = ids[0];
 
       for (const id of ids) {
         const element = document.getElementById(id);
         if (element) {
-          const offsetTop = element.offsetTop;
-          if (scrollPosition >= offsetTop) {
+          // Use getBoundingClientRect for accurate position relative to viewport
+          const rect = element.getBoundingClientRect();
+          const elementTop = rect.top + window.scrollY;
+          if (window.scrollY + scrollOffset >= elementTop) {
             currentId = id;
           }
         }
       }
 
-      if (currentId && currentId !== activeId) {
+      if (currentId && currentId !== activeIdRef.current) {
         setActiveId(currentId);
         window.history.replaceState(null, "", `#${currentId}`);
       }
@@ -118,7 +147,7 @@ export default function ContentWithTOC({
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [activeId, getAllIds]);
+  }, [getAllIds]); // Removed activeId dependency, using ref instead
 
   const handleClick = (e: React.MouseEvent, id: string) => {
     e.preventDefault();
@@ -133,9 +162,10 @@ export default function ContentWithTOC({
     }
 
     // Re-enable scroll spy after scroll completes
+    // Use longer timeout to account for smooth scroll on slower devices/longer pages
     setTimeout(() => {
       clickedRef.current = false;
-    }, 600);
+    }, 1000);
   };
 
   // Helper to render a TOC link with left border indicator
