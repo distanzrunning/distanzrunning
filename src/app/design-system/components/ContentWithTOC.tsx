@@ -101,53 +101,57 @@ export default function ContentWithTOC({
     }
   }, [getAllIds]);
 
+  // Function to determine active section based on scroll position
+  const updateActiveSection = useCallback(() => {
+    const ids = getAllIds();
+    // Use consistent offset that matches the header height
+    const scrollOffset = HEADER_HEIGHT + 20; // Small buffer for visual comfort
+
+    // Check if we're at the bottom of the page
+    const isAtBottom =
+      window.innerHeight + window.scrollY >=
+      document.documentElement.scrollHeight - 10;
+
+    // If at bottom, activate the last section
+    if (isAtBottom && ids.length > 0) {
+      const lastId = ids[ids.length - 1];
+      if (lastId !== activeIdRef.current) {
+        setActiveId(lastId);
+        window.history.replaceState(null, "", `#${lastId}`);
+      }
+      return;
+    }
+
+    let currentId = ids[0];
+
+    for (const id of ids) {
+      const element = document.getElementById(id);
+      if (element) {
+        // Use getBoundingClientRect for accurate position relative to viewport
+        const rect = element.getBoundingClientRect();
+        const elementTop = rect.top + window.scrollY;
+        if (window.scrollY + scrollOffset >= elementTop) {
+          currentId = id;
+        }
+      }
+    }
+
+    if (currentId && currentId !== activeIdRef.current) {
+      setActiveId(currentId);
+      window.history.replaceState(null, "", `#${currentId}`);
+    }
+  }, [getAllIds]);
+
   // Scroll spy using scroll position
   useEffect(() => {
     const handleScroll = () => {
       if (clickedRef.current || initialLoadRef.current) return;
-
-      const ids = getAllIds();
-      // Use consistent offset that matches the header height
-      const scrollOffset = HEADER_HEIGHT + 20; // Small buffer for visual comfort
-
-      // Check if we're at the bottom of the page
-      const isAtBottom =
-        window.innerHeight + window.scrollY >=
-        document.documentElement.scrollHeight - 10;
-
-      // If at bottom, activate the last section
-      if (isAtBottom && ids.length > 0) {
-        const lastId = ids[ids.length - 1];
-        if (lastId !== activeIdRef.current) {
-          setActiveId(lastId);
-          window.history.replaceState(null, "", `#${lastId}`);
-        }
-        return;
-      }
-
-      let currentId = ids[0];
-
-      for (const id of ids) {
-        const element = document.getElementById(id);
-        if (element) {
-          // Use getBoundingClientRect for accurate position relative to viewport
-          const rect = element.getBoundingClientRect();
-          const elementTop = rect.top + window.scrollY;
-          if (window.scrollY + scrollOffset >= elementTop) {
-            currentId = id;
-          }
-        }
-      }
-
-      if (currentId && currentId !== activeIdRef.current) {
-        setActiveId(currentId);
-        window.history.replaceState(null, "", `#${currentId}`);
-      }
+      updateActiveSection();
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [getAllIds]); // Removed activeId dependency, using ref instead
+  }, [updateActiveSection]);
 
   const handleClick = (e: React.MouseEvent, id: string) => {
     e.preventDefault();
@@ -171,10 +175,12 @@ export default function ContentWithTOC({
       });
     }
 
-    // Re-enable scroll spy after scroll completes
+    // Re-enable scroll spy after scroll completes and sync active section
     // Use longer timeout to account for smooth scroll on slower devices/longer pages
     setTimeout(() => {
       clickedRef.current = false;
+      // Sync the active section with actual scroll position
+      updateActiveSection();
     }, 1000);
   };
 
