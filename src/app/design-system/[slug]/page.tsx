@@ -699,6 +699,7 @@ export default function DesignSystemPage() {
           tocTitle="On this page"
           pageTitle="Code Block"
           pageSubtitle="Code Block component used across Distanz documentation and code examples."
+          mainSectionId="code-block"
           tocItems={[
             { id: "default", title: "Default" },
             { id: "no-filename", title: "No filename" },

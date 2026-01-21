@@ -185,7 +185,10 @@ export default function ContentWithTOC({
         {pageTitle && (
           <>
             <div className="p-12">
-              <h1 className="text-[24px] md:text-[40px] leading-[1.2] font-semibold text-textDefault mb-3">
+              <h1
+                id={mainSectionId}
+                className="text-[24px] md:text-[40px] leading-[1.2] font-semibold text-textDefault mb-3"
+              >
                 {pageTitle}
               </h1>
               {pageSubtitle && (
@@ -217,7 +220,8 @@ export default function ContentWithTOC({
             {tocTitle}
           </h4>
           <div className="flex flex-col">
-            {mainSectionId && renderTOCLink(mainSectionId, tocTitle)}
+            {mainSectionId &&
+              renderTOCLink(mainSectionId, pageTitle || tocTitle)}
             {tocItems.map((item) => (
               <div key={item.id}>
                 {renderTOCLink(item.id, item.title)}
