@@ -237,23 +237,33 @@ export default function ContentWithTOC({
     const ids = getAllIds();
     if (ids.length === 0) return;
 
-    // Track which sections are currently visible (by id only, not position)
-    const visibleSections = new Set<string>();
-
     const observer = new IntersectionObserver(
       (entries) => {
         // Don't update during click-initiated scrolling
         if (isClickScrolling.current) return;
 
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            visibleSections.add(entry.target.id);
-          } else {
-            visibleSections.delete(entry.target.id);
+        // Build fresh set of currently visible sections from all observed elements
+        const visibleSections = new Set<string>();
+
+        // Check all observed elements, not just the ones in this callback
+        ids.forEach((id) => {
+          const element = document.getElementById(id);
+          if (element) {
+            const rect = element.getBoundingClientRect();
+            const topBoundary = HEADER_HEIGHT + SECTION_PADDING;
+            const bottomBoundary = window.innerHeight * 0.5;
+
+            // Element is visible if its top is below header and above 50% viewport
+            if (
+              rect.top >= topBoundary - rect.height &&
+              rect.top < bottomBoundary
+            ) {
+              visibleSections.add(id);
+            }
           }
         });
 
-        // Find the topmost visible section by checking current positions
+        // Find the topmost visible section
         if (visibleSections.size > 0) {
           let topmostId = "";
           let topmostPosition = Infinity;
@@ -314,10 +324,28 @@ export default function ContentWithTOC({
     }
   }, [getAllIds]);
 
+  // Ref to track scroll end handler for cleanup
+  const scrollEndHandlerRef = useRef<(() => void) | null>(null);
+  const scrollEndTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
+    null,
+  );
+  const fallbackTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   const handleClick = (e: React.MouseEvent, id: string) => {
     e.preventDefault();
     setActiveId(id);
     isClickScrolling.current = true;
+
+    // Clean up any previous scroll handlers
+    if (scrollEndHandlerRef.current) {
+      window.removeEventListener("scroll", scrollEndHandlerRef.current);
+    }
+    if (scrollEndTimeoutRef.current) {
+      clearTimeout(scrollEndTimeoutRef.current);
+    }
+    if (fallbackTimeoutRef.current) {
+      clearTimeout(fallbackTimeoutRef.current);
+    }
 
     // Update URL
     window.history.pushState(null, "", `#${id}`);
@@ -335,20 +363,30 @@ export default function ContentWithTOC({
     }
 
     // Re-enable intersection observer after scroll settles
-    let scrollTimeout: ReturnType<typeof setTimeout>;
     const handleScrollEnd = () => {
-      clearTimeout(scrollTimeout);
-      scrollTimeout = setTimeout(() => {
+      if (scrollEndTimeoutRef.current) {
+        clearTimeout(scrollEndTimeoutRef.current);
+      }
+      scrollEndTimeoutRef.current = setTimeout(() => {
         isClickScrolling.current = false;
-        window.removeEventListener("scroll", handleScrollEnd);
-      }, 100);
+        if (scrollEndHandlerRef.current) {
+          window.removeEventListener("scroll", scrollEndHandlerRef.current);
+          scrollEndHandlerRef.current = null;
+        }
+      }, 150);
     };
+
+    scrollEndHandlerRef.current = handleScrollEnd;
     window.addEventListener("scroll", handleScrollEnd, { passive: true });
+
     // Fallback in case scroll event doesn't fire (e.g., already at position)
-    setTimeout(() => {
+    fallbackTimeoutRef.current = setTimeout(() => {
       if (isClickScrolling.current) {
         isClickScrolling.current = false;
-        window.removeEventListener("scroll", handleScrollEnd);
+        if (scrollEndHandlerRef.current) {
+          window.removeEventListener("scroll", scrollEndHandlerRef.current);
+          scrollEndHandlerRef.current = null;
+        }
       }
     }, 1000);
   };
