@@ -413,8 +413,7 @@ function CodePreview({
               {/* Floating copy button */}
               <button
                 onClick={handleCopyComponentCode}
-                className="absolute top-3 right-3 p-2 rounded border border-[var(--ds-gray-400)] opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault hover:bg-[var(--ds-gray-100)]"
-                style={{ background: "var(--ds-background-200)" }}
+                className="absolute top-3 right-3 p-2 rounded border border-[var(--ds-gray-400)] opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-[var(--ds-background-200)] hover:bg-[var(--ds-gray-100)]"
                 aria-label="Copy code"
               >
                 {copied ? <CheckIcon /> : <CopyIcon />}
@@ -874,8 +873,7 @@ function LanguageSwitcherCodePreview() {
               {/* Floating copy button */}
               <button
                 onClick={handleCopyComponentCode}
-                className="absolute top-3 right-3 p-2 rounded border border-[var(--ds-gray-400)] opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault hover:bg-[var(--ds-gray-100)]"
-                style={{ background: "var(--ds-background-200)" }}
+                className="absolute top-3 right-3 p-2 rounded border border-[var(--ds-gray-400)] opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-[var(--ds-background-200)] hover:bg-[var(--ds-gray-100)]"
                 aria-label="Copy code"
               >
                 {copied ? <CheckIcon /> : <CopyIcon />}
