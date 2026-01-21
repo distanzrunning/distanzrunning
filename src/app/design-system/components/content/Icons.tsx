@@ -19,7 +19,11 @@ import {
   SiLinkedin,
   SiTailwindcss,
   SiReact,
+  SiNextdotjs,
+  SiLua,
 } from "react-icons/si";
+import { VscJson } from "react-icons/vsc";
+import { FiFile } from "react-icons/fi";
 
 // Icon library types
 type IconLibrary =
@@ -27,7 +31,9 @@ type IconLibrary =
   | "tabler"
   | "material"
   | "react-icons-lucide"
-  | "simple";
+  | "simple"
+  | "vscode"
+  | "feather";
 
 interface IconDefinition {
   name: string;
@@ -235,6 +241,8 @@ const buildIconRegistry = (): IconDefinition[] => {
     },
     { name: "SiX", displayName: "X", component: SiX },
     { name: "SiReact", displayName: "React", component: SiReact },
+    { name: "SiNextdotjs", displayName: "Next.js", component: SiNextdotjs },
+    { name: "SiLua", displayName: "Lua", component: SiLua },
   ];
 
   simpleIcons.forEach(({ name, displayName, component }) => {
@@ -244,6 +252,40 @@ const buildIconRegistry = (): IconDefinition[] => {
       library: "simple",
       component,
       importStatement: `import { ${name} } from "react-icons/si";`,
+    });
+  });
+
+  // VS Code icons
+  const vscodeIcons: Array<{
+    name: string;
+    displayName: string;
+    component: React.ComponentType<{ size?: number; className?: string }>;
+  }> = [{ name: "VscJson", displayName: "JSON", component: VscJson }];
+
+  vscodeIcons.forEach(({ name, displayName, component }) => {
+    icons.push({
+      name,
+      displayName,
+      library: "vscode" as IconLibrary,
+      component,
+      importStatement: `import { ${name} } from "react-icons/vsc";`,
+    });
+  });
+
+  // Feather icons
+  const featherIcons: Array<{
+    name: string;
+    displayName: string;
+    component: React.ComponentType<{ size?: number; className?: string }>;
+  }> = [{ name: "FiFile", displayName: "File", component: FiFile }];
+
+  featherIcons.forEach(({ name, displayName, component }) => {
+    icons.push({
+      name,
+      displayName,
+      library: "feather" as IconLibrary,
+      component,
+      importStatement: `import { ${name} } from "react-icons/fi";`,
     });
   });
 
@@ -351,6 +393,8 @@ const libraryLabels: Record<IconLibrary, string> = {
   material: "Material",
   "react-icons-lucide": "Lucide (ri)",
   simple: "Simple",
+  vscode: "VS Code",
+  feather: "Feather",
 };
 
 // Icon card component matching Geist design

@@ -176,6 +176,7 @@ export default function DesignSystemPage() {
           tocTitle="On this page"
           pageTitle="Colors"
           pageSubtitle="Learn how to work with our color system. Right click to copy raw values."
+          mainSectionId="colours"
           tocItems={[
             { id: "scales", title: "Scales" },
             { id: "backgrounds", title: "Backgrounds" },
@@ -368,6 +369,7 @@ export default function DesignSystemPage() {
           tocTitle="On this page"
           pageTitle="Icons"
           pageSubtitle="A collection of icons used across Distanz products. Right click to copy import statement."
+          mainSectionId="icons"
           tocItems={[
             { id: "usage", title: "Usage" },
             { id: "resources", title: "Resources" },
@@ -383,6 +385,7 @@ export default function DesignSystemPage() {
           tocTitle="On this page"
           pageTitle="Typography"
           pageSubtitle="Pre-set combinations of font-size, line-height, letter-spacing, and font-weight based on the Geist design system."
+          mainSectionId="typography"
           tocItems={[
             { id: "usage", title: "Usage" },
             { id: "headings", title: "Headings" },
