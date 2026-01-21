@@ -248,7 +248,7 @@ function MaterialTable({ materials }: { materials: MaterialDefinition[] }) {
       <table className="w-full caption-bottom text-sm text-textDefault table-fixed">
         <thead>
           <tr className="transition-colors">
-            <th className="h-10 px-2 text-left align-middle font-medium border-b border-borderNeutral w-[260px]">
+            <th className="h-10 px-2 text-left align-middle font-medium border-b border-borderNeutral w-[320px]">
               <div className="inline-flex gap-1.5 items-center">
                 <ExampleIcon />
                 Example
