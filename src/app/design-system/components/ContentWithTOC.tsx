@@ -175,12 +175,10 @@ export default function ContentWithTOC({
       });
     }
 
-    // Re-enable scroll spy after scroll completes and sync active section
+    // Re-enable scroll spy after scroll completes
     // Use longer timeout to account for smooth scroll on slower devices/longer pages
     setTimeout(() => {
       clickedRef.current = false;
-      // Sync the active section with actual scroll position
-      updateActiveSection();
     }, 1000);
   };
 
