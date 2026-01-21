@@ -171,7 +171,7 @@ export default function DesignSystemPage() {
       return (
         <ContentWithTOC
           tocTitle="On this page"
-          pageTitle="Colors"
+          pageTitle="Colours"
           pageSubtitle="Learn how to work with our color system. Right click to copy raw values."
           mainSectionId="colours"
           tocItems={[

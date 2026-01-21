@@ -4,6 +4,7 @@ import React, { useState, useCallback, useEffect, useRef } from "react";
 import { Check, MousePointer } from "lucide-react";
 import * as ContextMenu from "@radix-ui/react-context-menu";
 import { Section } from "../ContentWithTOC";
+import Button from "@/components/ui/Button";
 
 // Link icon for section headers (matches Geist)
 function LinkIcon() {
@@ -1269,17 +1270,9 @@ function BordersSection() {
         className="mt-10 flex h-[136px] w-full items-center justify-center border border-borderNeutral"
         style={{ background: "var(--ds-background-100)" }}
       >
-        <button
-          className="px-6 py-2 text-sm font-medium rounded-md transition-colors"
-          style={{
-            background: "var(--ds-background-100)",
-            border: "1px solid var(--ds-gray-400)",
-            color: "var(--ds-gray-1000)",
-            minWidth: 160,
-          }}
-        >
+        <Button variant="secondary" ignoreDarkMode>
           New Project
-        </button>
+        </Button>
       </div>
     </Section>
   );
@@ -1396,16 +1389,9 @@ function HighContrastBackgroundsSection() {
           </div>
         </div>
         <div className="flex w-full justify-center md:w-[50%] py-6 md:py-0">
-          <button
-            className="px-6 py-2 text-sm font-medium rounded-md transition-colors"
-            style={{
-              background: "var(--ds-blue-700)",
-              color: "#fff",
-              minWidth: 160,
-            }}
-          >
+          <Button variant="primary" ignoreDarkMode>
             Upgrade to Pro
-          </button>
+          </Button>
         </div>
       </div>
     </Section>
