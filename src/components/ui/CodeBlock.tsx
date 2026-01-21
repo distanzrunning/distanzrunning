@@ -272,7 +272,7 @@ export function CodeBlock({
       {!filename && (
         <button
           onClick={handleCopy}
-          className="absolute top-3 right-3 p-2 rounded border border-transparent opacity-0 group-hover:opacity-100 transition-all z-10 text-textSubtle hover:text-textDefault hover:bg-[var(--ds-background-200)] hover:border-[var(--ds-gray-400)]"
+          className="absolute top-1/2 -translate-y-1/2 right-3 p-2 rounded border border-transparent opacity-0 group-hover:opacity-100 transition-all z-10 text-textSubtle hover:text-textDefault hover:bg-[var(--ds-background-200)] hover:border-[var(--ds-gray-400)]"
           aria-label="Copy code"
         >
           <AnimatedCopyIcon copied={copied} />
