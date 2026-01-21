@@ -154,11 +154,19 @@ export default function ContentWithTOC({
     setActiveId(id);
     clickedRef.current = true;
 
-    // Update URL and let browser handle scroll with CSS scroll-padding-top
+    // Update URL
     window.history.pushState(null, "", `#${id}`);
     const element = document.getElementById(id);
     if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
+      // Calculate scroll position manually to ensure section top aligns with header bottom
+      const elementRect = element.getBoundingClientRect();
+      const absoluteElementTop = elementRect.top + window.scrollY;
+      const scrollTarget = absoluteElementTop - HEADER_HEIGHT;
+
+      window.scrollTo({
+        top: scrollTarget,
+        behavior: "smooth",
+      });
     }
 
     // Re-enable scroll spy after scroll completes
