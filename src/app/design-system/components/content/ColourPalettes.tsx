@@ -13,7 +13,6 @@ import {
 } from "lucide-react";
 import * as ContextMenu from "@radix-ui/react-context-menu";
 import { Section } from "../ContentWithTOC";
-import Button from "@/components/ui/Button";
 
 // Link icon for section headers (matches Geist)
 function LinkIcon() {
@@ -1279,9 +1278,24 @@ function BordersSection() {
         className="mt-10 flex h-[136px] w-full items-center justify-center border border-borderNeutral"
         style={{ background: "var(--ds-background-100)" }}
       >
-        <Button variant="secondary" ignoreDarkMode>
+        <button
+          className="inline-flex items-center justify-center h-9 px-6 rounded-md font-sans font-semibold text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-borderNeutral active:scale-[0.98] active:duration-100"
+          style={{
+            background: "transparent",
+            border: "1px solid var(--ds-gray-600)",
+            color: "var(--ds-gray-1000)",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = "var(--ds-gray-200)";
+            e.currentTarget.style.borderColor = "var(--ds-gray-700)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = "transparent";
+            e.currentTarget.style.borderColor = "var(--ds-gray-600)";
+          }}
+        >
           New Project
-        </Button>
+        </button>
       </div>
     </Section>
   );
@@ -1398,9 +1412,21 @@ function HighContrastBackgroundsSection() {
           </div>
         </div>
         <div className="flex w-full justify-center md:w-[50%] py-6 md:py-0">
-          <Button variant="primary" ignoreDarkMode>
+          <button
+            className="inline-flex items-center justify-center h-9 px-6 rounded-md font-sans font-semibold text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-borderNeutral active:scale-[0.98] active:duration-100"
+            style={{
+              background: "var(--ds-blue-700)",
+              color: "white",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = "var(--ds-blue-800)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "var(--ds-blue-700)";
+            }}
+          >
             Upgrade to Pro
-          </Button>
+          </button>
         </div>
       </div>
     </Section>
