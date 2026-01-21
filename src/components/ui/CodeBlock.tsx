@@ -57,23 +57,20 @@ function CheckIcon() {
   );
 }
 
-// Animated copy/check icon with scale + spring
+// Animated copy/check icon using Geist motion timing
+const geistSwift = [0.175, 0.885, 0.32, 1.1] as const;
+
 function AnimatedCopyIcon({ copied }: { copied: boolean }) {
   return (
     <div className="relative w-4 h-4">
-      <AnimatePresence mode="wait" initial={false}>
+      <AnimatePresence mode="popLayout" initial={false}>
         {copied ? (
           <motion.div
             key="check"
-            initial={{ scale: 0, opacity: 0 }}
+            initial={{ scale: 0.6, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0, opacity: 0 }}
-            transition={{
-              type: "spring",
-              stiffness: 500,
-              damping: 25,
-              duration: 0.15,
-            }}
+            exit={{ scale: 0.6, opacity: 0 }}
+            transition={{ duration: 0.15, ease: geistSwift }}
             className="absolute inset-0"
           >
             <CheckIcon />
@@ -81,15 +78,10 @@ function AnimatedCopyIcon({ copied }: { copied: boolean }) {
         ) : (
           <motion.div
             key="copy"
-            initial={{ scale: 0, opacity: 0 }}
+            initial={{ scale: 0.6, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0, opacity: 0 }}
-            transition={{
-              type: "spring",
-              stiffness: 500,
-              damping: 25,
-              duration: 0.15,
-            }}
+            exit={{ scale: 0.6, opacity: 0 }}
+            transition={{ duration: 0.15, ease: geistSwift }}
             className="absolute inset-0"
           >
             <CopyIcon />
