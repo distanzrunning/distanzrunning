@@ -51,18 +51,61 @@ function scanHeadingsFromContainer(
   container: HTMLElement,
   mainSectionId?: string,
 ): TOCItem[] {
-  const headings = container.querySelectorAll("h2[id], h3[id]");
-  const items: TOCItem[] = [];
-  let currentH2: TOCItem | null = null;
+  // Find h2/h3 with IDs directly, OR elements with IDs that contain h2/h3
+  const directHeadings = container.querySelectorAll("h2[id], h3[id]");
+  const wrappedHeadings = container.querySelectorAll(
+    "[id]:has(> h2), [id]:has(> h3)",
+  );
 
-  headings.forEach((heading) => {
+  // Build a map of id -> {element, level, title} to avoid duplicates
+  const headingMap = new Map<
+    string,
+    { level: string; title: string; position: number }
+  >();
+
+  // Process direct headings (h2[id], h3[id])
+  directHeadings.forEach((heading) => {
     const id = heading.id;
-    // Skip the main section id as it's handled separately
     if (mainSectionId && id === mainSectionId) return;
 
     const title = heading.textContent?.trim() || id;
     const level = heading.tagName.toLowerCase();
+    // Use element's position in document for ordering
+    const position = Array.from(container.querySelectorAll("*")).indexOf(
+      heading,
+    );
+    headingMap.set(id, { level, title, position });
+  });
 
+  // Process wrapped headings (button[id] > h2, etc.)
+  wrappedHeadings.forEach((wrapper) => {
+    const id = wrapper.id;
+    if (mainSectionId && id === mainSectionId) return;
+    if (headingMap.has(id)) return; // Already found as direct heading
+
+    const h2 = wrapper.querySelector(":scope > h2");
+    const h3 = wrapper.querySelector(":scope > h3");
+    const heading = h2 || h3;
+
+    if (heading) {
+      const title = heading.textContent?.trim() || id;
+      const level = heading.tagName.toLowerCase();
+      const position = Array.from(container.querySelectorAll("*")).indexOf(
+        wrapper,
+      );
+      headingMap.set(id, { level, title, position });
+    }
+  });
+
+  // Sort by document position and build TOC structure
+  const sortedEntries = Array.from(headingMap.entries()).sort(
+    (a, b) => a[1].position - b[1].position,
+  );
+
+  const items: TOCItem[] = [];
+  let currentH2: TOCItem | null = null;
+
+  sortedEntries.forEach(([id, { level, title }]) => {
     if (level === "h2") {
       currentH2 = { id, title, children: [] };
       items.push(currentH2);
