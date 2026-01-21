@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import {
   SiReact,
   SiTypescript,
@@ -57,37 +56,16 @@ function CheckIcon() {
   );
 }
 
-// Animated copy/check icon using Geist motion timing
-const geistSwift = [0.175, 0.885, 0.32, 1.1] as const;
-
+// Copy/check icon - instant swap like Geist (both in DOM, toggle visibility)
 function AnimatedCopyIcon({ copied }: { copied: boolean }) {
   return (
     <div className="relative w-4 h-4">
-      <AnimatePresence mode="popLayout" initial={false}>
-        {copied ? (
-          <motion.div
-            key="check"
-            initial={{ scale: 0.6, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.6, opacity: 0 }}
-            transition={{ duration: 0.15, ease: geistSwift }}
-            className="absolute inset-0"
-          >
-            <CheckIcon />
-          </motion.div>
-        ) : (
-          <motion.div
-            key="copy"
-            initial={{ scale: 0.6, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.6, opacity: 0 }}
-            transition={{ duration: 0.15, ease: geistSwift }}
-            className="absolute inset-0"
-          >
-            <CopyIcon />
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <span className={copied ? "hidden" : ""}>
+        <CopyIcon />
+      </span>
+      <span className={`absolute inset-0 ${copied ? "" : "hidden"}`}>
+        <CheckIcon />
+      </span>
     </div>
   );
 }
