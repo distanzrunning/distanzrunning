@@ -118,6 +118,8 @@ export default function ContentWithTOC({
   // Function to determine active section based on scroll position
   const updateActiveSection = useCallback(() => {
     const ids = getAllIds();
+    if (ids.length === 0) return;
+
     // Use consistent offset that matches the click scroll target
     // This ensures scroll spy activates sections at the same point they scroll to when clicked
     const scrollOffset = HEADER_HEIGHT + SECTION_PADDING;
@@ -128,7 +130,7 @@ export default function ContentWithTOC({
       document.documentElement.scrollHeight - 10;
 
     // If at bottom, activate the last section
-    if (isAtBottom && ids.length > 0) {
+    if (isAtBottom) {
       const lastId = ids[ids.length - 1];
       if (lastId !== activeIdRef.current) {
         setActiveId(lastId);
@@ -137,21 +139,28 @@ export default function ContentWithTOC({
       return;
     }
 
-    let currentId = ids[0];
+    // Find the current section by checking which section's top is above the scroll offset
+    // We iterate through all sections and pick the last one that's above the threshold
+    let currentId: string | null = null;
 
     for (const id of ids) {
       const element = document.getElementById(id);
       if (element) {
         // Use getBoundingClientRect for accurate position relative to viewport
         const rect = element.getBoundingClientRect();
-        const elementTop = rect.top + window.scrollY;
-        if (window.scrollY + scrollOffset >= elementTop) {
+        // Check if the element's top is at or above the scroll offset from viewport top
+        if (rect.top <= scrollOffset) {
           currentId = id;
         }
       }
     }
 
-    if (currentId && currentId !== activeIdRef.current) {
+    // If no section is above the threshold, use the first one
+    if (!currentId) {
+      currentId = ids[0];
+    }
+
+    if (currentId !== activeIdRef.current) {
       setActiveId(currentId);
       window.history.replaceState(null, "", `#${currentId}`);
     }
