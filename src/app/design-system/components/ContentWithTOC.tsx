@@ -59,14 +59,7 @@ export default function ContentWithTOC({
   pageSubtitle,
 }: ContentWithTOCProps) {
   const [activeId, setActiveId] = useState<string>("");
-  const clickedRef = useRef(false);
-  const initialLoadRef = useRef(true);
-  const activeIdRef = useRef<string>("");
-
-  // Keep ref in sync with state for use in scroll handler
-  useEffect(() => {
-    activeIdRef.current = activeId;
-  }, [activeId]);
+  const isClickScrolling = useRef(false);
 
   // Flatten TOC items to get all IDs
   const getAllIds = useCallback(() => {
@@ -81,116 +74,97 @@ export default function ContentWithTOC({
     return ids;
   }, [tocItems, mainSectionId]);
 
-  // Initialize from URL hash on mount
+  // Scroll spy using Intersection Observer
   useEffect(() => {
-    const hash = window.location.hash.slice(1);
-    if (hash) {
-      setActiveId(hash);
-      // Scroll to the hash element after a brief delay to ensure DOM is ready
-      requestAnimationFrame(() => {
-        const element = document.getElementById(hash);
-        if (element) {
-          const elementRect = element.getBoundingClientRect();
-          const absoluteElementTop = elementRect.top + window.scrollY;
-          const scrollTarget =
-            absoluteElementTop - HEADER_HEIGHT - SECTION_PADDING;
-
-          window.scrollTo({
-            top: scrollTarget,
-            behavior: "instant",
-          });
-        }
-        // Enable scroll spy after scroll completes
-        setTimeout(() => {
-          initialLoadRef.current = false;
-        }, 100);
-      });
-    } else {
-      // Set first item as active by default
-      const ids = getAllIds();
-      if (ids.length > 0) {
-        setActiveId(ids[0]);
-      }
-      initialLoadRef.current = false;
-    }
-  }, [getAllIds]);
-
-  // Function to determine active section based on scroll position
-  const updateActiveSection = useCallback(() => {
     const ids = getAllIds();
     if (ids.length === 0) return;
 
-    // Use consistent offset that matches the click scroll target
-    // This ensures scroll spy activates sections at the same point they scroll to when clicked
-    const scrollOffset = HEADER_HEIGHT + SECTION_PADDING;
+    // Track which sections are currently visible
+    const visibleSections = new Map<string, number>();
 
-    // Check if we're at the bottom of the page
-    const isAtBottom =
-      window.innerHeight + window.scrollY >=
-      document.documentElement.scrollHeight - 10;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        // Don't update during click-initiated scrolling
+        if (isClickScrolling.current) return;
 
-    // If at bottom, activate the last section
-    if (isAtBottom) {
-      const lastId = ids[ids.length - 1];
-      if (lastId !== activeIdRef.current) {
-        setActiveId(lastId);
-        window.history.replaceState(null, "", `#${lastId}`);
-      }
-      return;
-    }
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            visibleSections.set(entry.target.id, entry.boundingClientRect.top);
+          } else {
+            visibleSections.delete(entry.target.id);
+          }
+        });
 
-    // Find the current section by checking which section's top is above the scroll offset
-    // We iterate through all sections and pick the last one that's above the threshold
-    let currentId: string | null = null;
+        // Find the topmost visible section
+        if (visibleSections.size > 0) {
+          let topmostId = "";
+          let topmostPosition = Infinity;
 
-    for (const id of ids) {
+          visibleSections.forEach((top, id) => {
+            if (top < topmostPosition) {
+              topmostPosition = top;
+              topmostId = id;
+            }
+          });
+
+          if (topmostId && topmostId !== activeId) {
+            setActiveId(topmostId);
+            window.history.replaceState(null, "", `#${topmostId}`);
+          }
+        }
+      },
+      {
+        rootMargin: `-${HEADER_HEIGHT + SECTION_PADDING}px 0px -50% 0px`,
+        threshold: 0,
+      },
+    );
+
+    // Observe all section elements
+    ids.forEach((id) => {
       const element = document.getElementById(id);
       if (element) {
-        // Use getBoundingClientRect for accurate position relative to viewport
-        const rect = element.getBoundingClientRect();
-        // Check if the element's top is at or above the scroll offset from viewport top
-        if (rect.top <= scrollOffset) {
-          currentId = id;
-        }
+        observer.observe(element);
       }
-    }
+    });
 
-    // If no section is above the threshold, use the first one
-    if (!currentId) {
-      currentId = ids[0];
-    }
+    return () => observer.disconnect();
+  }, [getAllIds, activeId]);
 
-    if (currentId !== activeIdRef.current) {
-      setActiveId(currentId);
-      window.history.replaceState(null, "", `#${currentId}`);
+  // Initialize from URL hash or set first item as active
+  useEffect(() => {
+    const ids = getAllIds();
+    const hash = window.location.hash.slice(1);
+
+    if (hash && ids.includes(hash)) {
+      setActiveId(hash);
+      // Scroll to the hash element
+      requestAnimationFrame(() => {
+        const element = document.getElementById(hash);
+        if (element) {
+          const rect = element.getBoundingClientRect();
+          const scrollTarget =
+            rect.top + window.scrollY - HEADER_HEIGHT - SECTION_PADDING;
+          window.scrollTo({ top: scrollTarget, behavior: "instant" });
+        }
+      });
+    } else if (ids.length > 0) {
+      setActiveId(ids[0]);
     }
   }, [getAllIds]);
-
-  // Scroll spy using scroll position
-  useEffect(() => {
-    const handleScroll = () => {
-      if (clickedRef.current || initialLoadRef.current) return;
-      updateActiveSection();
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [updateActiveSection]);
 
   const handleClick = (e: React.MouseEvent, id: string) => {
     e.preventDefault();
     setActiveId(id);
-    clickedRef.current = true;
+    isClickScrolling.current = true;
 
     // Update URL
     window.history.pushState(null, "", `#${id}`);
+
     const element = document.getElementById(id);
     if (element) {
-      // Calculate scroll position manually to ensure section top aligns with header bottom
-      // Account for section padding above the title so the full section is visible
-      const elementRect = element.getBoundingClientRect();
-      const absoluteElementTop = elementRect.top + window.scrollY;
-      const scrollTarget = absoluteElementTop - HEADER_HEIGHT - SECTION_PADDING;
+      const rect = element.getBoundingClientRect();
+      const scrollTarget =
+        rect.top + window.scrollY - HEADER_HEIGHT - SECTION_PADDING;
 
       window.scrollTo({
         top: scrollTarget,
@@ -198,23 +172,10 @@ export default function ContentWithTOC({
       });
     }
 
-    // Re-enable scroll spy after scroll completes
-    // Use scrollend event if supported, otherwise fall back to timeout
-    const enableScrollSpy = () => {
-      clickedRef.current = false;
-    };
-
-    if ("onscrollend" in window) {
-      window.addEventListener("scrollend", enableScrollSpy, { once: true });
-      // Fallback timeout in case scrollend doesn't fire
-      setTimeout(() => {
-        window.removeEventListener("scrollend", enableScrollSpy);
-        clickedRef.current = false;
-      }, 2000);
-    } else {
-      // Fallback for browsers without scrollend support
-      setTimeout(enableScrollSpy, 1000);
-    }
+    // Re-enable intersection observer after scroll completes
+    setTimeout(() => {
+      isClickScrolling.current = false;
+    }, 1000);
   };
 
   // Helper to render a TOC link with left border indicator
