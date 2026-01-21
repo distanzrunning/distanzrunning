@@ -62,39 +62,65 @@ function useAutoTOC(
     const container = containerRef.current;
     if (!container) return;
 
-    // Find all h2 and h3 elements with ids
-    const headings = container.querySelectorAll("h2[id], h3[id]");
-    const items: TOCItem[] = [];
-    let currentH2: TOCItem | null = null;
+    const scanHeadings = () => {
+      // Find all h2 and h3 elements with ids
+      const headings = container.querySelectorAll("h2[id], h3[id]");
+      const items: TOCItem[] = [];
+      let currentH2: TOCItem | null = null;
 
-    headings.forEach((heading) => {
-      const id = heading.id;
-      // Skip the main section id as it's handled separately
-      if (mainSectionId && id === mainSectionId) return;
+      headings.forEach((heading) => {
+        const id = heading.id;
+        // Skip the main section id as it's handled separately
+        if (mainSectionId && id === mainSectionId) return;
 
-      const title = heading.textContent?.trim() || id;
-      const level = heading.tagName.toLowerCase();
+        const title = heading.textContent?.trim() || id;
+        const level = heading.tagName.toLowerCase();
 
-      if (level === "h2") {
-        currentH2 = { id, title, children: [] };
-        items.push(currentH2);
-      } else if (level === "h3" && currentH2) {
-        currentH2.children = currentH2.children || [];
-        currentH2.children.push({ id, title });
-      } else if (level === "h3") {
-        // h3 without a parent h2, add as top-level
-        items.push({ id, title });
-      }
+        if (level === "h2") {
+          currentH2 = { id, title, children: [] };
+          items.push(currentH2);
+        } else if (level === "h3" && currentH2) {
+          currentH2.children = currentH2.children || [];
+          currentH2.children.push({ id, title });
+        } else if (level === "h3") {
+          // h3 without a parent h2, add as top-level
+          items.push({ id, title });
+        }
+      });
+
+      // Clean up empty children arrays
+      items.forEach((item) => {
+        if (item.children && item.children.length === 0) {
+          delete item.children;
+        }
+      });
+
+      return items;
+    };
+
+    // Initial scan after a brief delay to ensure content is rendered
+    const initialScan = () => {
+      const items = scanHeadings();
+      setAutoItems(items);
+    };
+
+    // Use requestAnimationFrame to ensure DOM is painted
+    requestAnimationFrame(() => {
+      requestAnimationFrame(initialScan);
     });
 
-    // Clean up empty children arrays
-    items.forEach((item) => {
-      if (item.children && item.children.length === 0) {
-        delete item.children;
-      }
+    // Also observe for DOM changes in case content loads asynchronously
+    const observer = new MutationObserver(() => {
+      const items = scanHeadings();
+      setAutoItems(items);
     });
 
-    setAutoItems(items);
+    observer.observe(container, {
+      childList: true,
+      subtree: true,
+    });
+
+    return () => observer.disconnect();
   }, [containerRef, manualItems, mainSectionId]);
 
   // Return manual items if provided, otherwise auto-generated
