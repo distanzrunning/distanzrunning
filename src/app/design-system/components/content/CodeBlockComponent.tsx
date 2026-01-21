@@ -133,12 +133,12 @@ function CopyIconButton({ copied }: { copied: boolean }) {
   return (
     <div className="relative w-4 h-4">
       <CopyIcon
-        className={`absolute inset-0 transition-all duration-100 ease-out ${
+        className={`absolute inset-0 transition-all duration-150 ease-out ${
           copied ? "opacity-0 scale-75" : "opacity-100 scale-100"
         }`}
       />
       <CheckIcon
-        className={`absolute inset-0 transition-all duration-100 ease-out ${
+        className={`absolute inset-0 transition-all duration-150 ease-out ${
           copied ? "opacity-100 scale-100" : "opacity-0 scale-75"
         }`}
       />
