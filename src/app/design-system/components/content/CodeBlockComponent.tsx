@@ -203,7 +203,7 @@ function CodeBlock({
   const handleCopy = useCallback(() => {
     navigator.clipboard.writeText(code);
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    setTimeout(() => setCopied(false), 1000);
   }, [code]);
 
   const handleLineClick = (lineNumber: number) => {
@@ -390,7 +390,7 @@ function CodePreview({
   const handleCopyComponentCode = useCallback(() => {
     navigator.clipboard.writeText(componentCode);
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    setTimeout(() => setCopied(false), 1000);
   }, [componentCode]);
 
   return (
@@ -859,7 +859,7 @@ function LanguageSwitcherCodePreview() {
   const handleCopyComponentCode = useCallback(() => {
     navigator.clipboard.writeText(languageSwitcherComponentCode);
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    setTimeout(() => setCopied(false), 1000);
   }, []);
 
   return (
@@ -975,7 +975,7 @@ function LanguageSwitcherPreview() {
   const handleCopy = useCallback(() => {
     navigator.clipboard.writeText(code);
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    setTimeout(() => setCopied(false), 1000);
   }, [code]);
 
   return (
