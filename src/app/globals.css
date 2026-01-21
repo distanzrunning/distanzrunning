@@ -845,7 +845,7 @@
     tab-size: 4;
     overscroll-behavior: none;
     -webkit-overflow-scrolling: touch;
-    scroll-padding-top: 64px; /* Header height (112px) minus section padding (48px) = scroll to top of section */
+    scroll-padding-top: 112px; /* Header height */
   }
 
   body {

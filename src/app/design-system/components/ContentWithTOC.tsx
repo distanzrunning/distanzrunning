@@ -30,7 +30,7 @@ export function Section({ children }: { children: React.ReactNode }) {
   return <div className="py-12">{children}</div>;
 }
 
-interface TOCItem {
+export interface TOCItem {
   id: string;
   title: string;
   children?: TOCItem[];
@@ -39,10 +39,66 @@ interface TOCItem {
 interface ContentWithTOCProps {
   children: React.ReactNode;
   tocTitle: string;
-  tocItems: TOCItem[];
+  tocItems?: TOCItem[]; // Now optional - will auto-generate if not provided
   mainSectionId?: string; // Optional h2 id
   pageTitle?: string;
   pageSubtitle?: string;
+}
+
+// Hook to extract TOC items from DOM headings
+function useAutoTOC(
+  containerRef: React.RefObject<HTMLElement | null>,
+  manualItems?: TOCItem[],
+  mainSectionId?: string,
+): TOCItem[] {
+  const [autoItems, setAutoItems] = useState<TOCItem[]>([]);
+
+  useEffect(() => {
+    // If manual items are provided, don't auto-generate
+    if (manualItems && manualItems.length > 0) {
+      return;
+    }
+
+    const container = containerRef.current;
+    if (!container) return;
+
+    // Find all h2 and h3 elements with ids
+    const headings = container.querySelectorAll("h2[id], h3[id]");
+    const items: TOCItem[] = [];
+    let currentH2: TOCItem | null = null;
+
+    headings.forEach((heading) => {
+      const id = heading.id;
+      // Skip the main section id as it's handled separately
+      if (mainSectionId && id === mainSectionId) return;
+
+      const title = heading.textContent?.trim() || id;
+      const level = heading.tagName.toLowerCase();
+
+      if (level === "h2") {
+        currentH2 = { id, title, children: [] };
+        items.push(currentH2);
+      } else if (level === "h3" && currentH2) {
+        currentH2.children = currentH2.children || [];
+        currentH2.children.push({ id, title });
+      } else if (level === "h3") {
+        // h3 without a parent h2, add as top-level
+        items.push({ id, title });
+      }
+    });
+
+    // Clean up empty children arrays
+    items.forEach((item) => {
+      if (item.children && item.children.length === 0) {
+        delete item.children;
+      }
+    });
+
+    setAutoItems(items);
+  }, [containerRef, manualItems, mainSectionId]);
+
+  // Return manual items if provided, otherwise auto-generated
+  return manualItems && manualItems.length > 0 ? manualItems : autoItems;
 }
 
 // Header height constant (matches top-28 = 112px)
@@ -53,13 +109,23 @@ const SECTION_PADDING = 48;
 export default function ContentWithTOC({
   children,
   tocTitle,
-  tocItems,
+  tocItems: manualTocItems,
   mainSectionId,
   pageTitle,
   pageSubtitle,
 }: ContentWithTOCProps) {
   const [activeId, setActiveId] = useState<string>("");
   const isClickScrolling = useRef(false);
+  const activeIdRef = useRef(activeId);
+  const contentRef = useRef<HTMLElement>(null);
+
+  // Auto-generate TOC if not provided
+  const tocItems = useAutoTOC(contentRef, manualTocItems, mainSectionId);
+
+  // Keep ref in sync with state
+  useEffect(() => {
+    activeIdRef.current = activeId;
+  }, [activeId]);
 
   // Flatten TOC items to get all IDs
   const getAllIds = useCallback(() => {
@@ -79,8 +145,8 @@ export default function ContentWithTOC({
     const ids = getAllIds();
     if (ids.length === 0) return;
 
-    // Track which sections are currently visible
-    const visibleSections = new Map<string, number>();
+    // Track which sections are currently visible (by id only, not position)
+    const visibleSections = new Set<string>();
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -89,25 +155,29 @@ export default function ContentWithTOC({
 
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            visibleSections.set(entry.target.id, entry.boundingClientRect.top);
+            visibleSections.add(entry.target.id);
           } else {
             visibleSections.delete(entry.target.id);
           }
         });
 
-        // Find the topmost visible section
+        // Find the topmost visible section by checking current positions
         if (visibleSections.size > 0) {
           let topmostId = "";
           let topmostPosition = Infinity;
 
-          visibleSections.forEach((top, id) => {
-            if (top < topmostPosition) {
-              topmostPosition = top;
-              topmostId = id;
+          visibleSections.forEach((id) => {
+            const element = document.getElementById(id);
+            if (element) {
+              const rect = element.getBoundingClientRect();
+              if (rect.top < topmostPosition) {
+                topmostPosition = rect.top;
+                topmostId = id;
+              }
             }
           });
 
-          if (topmostId && topmostId !== activeId) {
+          if (topmostId && topmostId !== activeIdRef.current) {
             setActiveId(topmostId);
             window.history.replaceState(null, "", `#${topmostId}`);
           }
@@ -128,7 +198,7 @@ export default function ContentWithTOC({
     });
 
     return () => observer.disconnect();
-  }, [getAllIds, activeId]);
+  }, [getAllIds]);
 
   // Initialize from URL hash or set first item as active
   useEffect(() => {
@@ -172,9 +242,22 @@ export default function ContentWithTOC({
       });
     }
 
-    // Re-enable intersection observer after scroll completes
+    // Re-enable intersection observer after scroll settles
+    let scrollTimeout: ReturnType<typeof setTimeout>;
+    const handleScrollEnd = () => {
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        isClickScrolling.current = false;
+        window.removeEventListener("scroll", handleScrollEnd);
+      }, 100);
+    };
+    window.addEventListener("scroll", handleScrollEnd, { passive: true });
+    // Fallback in case scroll event doesn't fire (e.g., already at position)
     setTimeout(() => {
-      isClickScrolling.current = false;
+      if (isClickScrolling.current) {
+        isClickScrolling.current = false;
+        window.removeEventListener("scroll", handleScrollEnd);
+      }
     }, 1000);
   };
 
@@ -233,7 +316,7 @@ export default function ContentWithTOC({
         )}
 
         {/* Main Content */}
-        <article className="flex-1">
+        <article ref={contentRef} className="flex-1">
           <SectionContext.Provider value={true}>
             {children}
           </SectionContext.Provider>
