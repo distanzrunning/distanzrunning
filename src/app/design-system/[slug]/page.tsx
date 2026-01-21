@@ -60,6 +60,15 @@ export default function DesignSystemPage() {
     setActiveSlug(initialSlug);
   }, [initialSlug]);
 
+  // Update document title based on active slug
+  useEffect(() => {
+    const formattedTitle = activeSlug
+      .split("-")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
+    document.title = formattedTitle;
+  }, [activeSlug]);
+
   const handleNavigation = useCallback((newSlug: string) => {
     // Update state immediately for instant navigation
     setActiveSlug(newSlug);
