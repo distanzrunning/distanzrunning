@@ -159,9 +159,11 @@ export default function ContentWithTOC({
     const element = document.getElementById(id);
     if (element) {
       // Calculate scroll position manually to ensure section top aligns with header bottom
+      // Account for 48px padding above the title so the full section is visible
       const elementRect = element.getBoundingClientRect();
       const absoluteElementTop = elementRect.top + window.scrollY;
-      const scrollTarget = absoluteElementTop - HEADER_HEIGHT;
+      const sectionPadding = 48;
+      const scrollTarget = absoluteElementTop - HEADER_HEIGHT - sectionPadding;
 
       window.scrollTo({
         top: scrollTarget,
