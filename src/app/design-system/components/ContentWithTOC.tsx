@@ -47,6 +47,8 @@ interface ContentWithTOCProps {
 
 // Header height constant (matches top-28 = 112px)
 const HEADER_HEIGHT = 112;
+// Section padding (p-12 = 48px)
+const SECTION_PADDING = 48;
 
 export default function ContentWithTOC({
   children,
@@ -104,8 +106,9 @@ export default function ContentWithTOC({
   // Function to determine active section based on scroll position
   const updateActiveSection = useCallback(() => {
     const ids = getAllIds();
-    // Use consistent offset that matches the header height
-    const scrollOffset = HEADER_HEIGHT + 20; // Small buffer for visual comfort
+    // Use consistent offset that matches the click scroll target
+    // This ensures scroll spy activates sections at the same point they scroll to when clicked
+    const scrollOffset = HEADER_HEIGHT + SECTION_PADDING;
 
     // Check if we're at the bottom of the page
     const isAtBottom =
@@ -163,11 +166,10 @@ export default function ContentWithTOC({
     const element = document.getElementById(id);
     if (element) {
       // Calculate scroll position manually to ensure section top aligns with header bottom
-      // Account for 48px padding above the title so the full section is visible
+      // Account for section padding above the title so the full section is visible
       const elementRect = element.getBoundingClientRect();
       const absoluteElementTop = elementRect.top + window.scrollY;
-      const sectionPadding = 48;
-      const scrollTarget = absoluteElementTop - HEADER_HEIGHT - sectionPadding;
+      const scrollTarget = absoluteElementTop - HEADER_HEIGHT - SECTION_PADDING;
 
       window.scrollTo({
         top: scrollTarget,
