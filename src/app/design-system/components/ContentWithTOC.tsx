@@ -55,6 +55,7 @@ export default function ContentWithTOC({
 }: ContentWithTOCProps) {
   const [activeId, setActiveId] = useState<string>("");
   const clickedRef = useRef(false);
+  const initialLoadRef = useRef(true);
 
   // Flatten TOC items to get all IDs
   const getAllIds = useCallback(() => {
@@ -74,19 +75,35 @@ export default function ContentWithTOC({
     const hash = window.location.hash.slice(1);
     if (hash) {
       setActiveId(hash);
+      // Scroll to the hash target after a brief delay to ensure DOM is ready
+      setTimeout(() => {
+        const element = document.getElementById(hash);
+        if (element) {
+          const offsetTop = element.offsetTop - 140;
+          window.scrollTo({
+            top: offsetTop,
+            behavior: "instant",
+          });
+        }
+        // Allow scroll spy to take over after initial scroll
+        setTimeout(() => {
+          initialLoadRef.current = false;
+        }, 100);
+      }, 50);
     } else {
       // Set first item as active by default
       const ids = getAllIds();
       if (ids.length > 0) {
         setActiveId(ids[0]);
       }
+      initialLoadRef.current = false;
     }
   }, [getAllIds]);
 
   // Scroll spy using scroll position
   useEffect(() => {
     const handleScroll = () => {
-      if (clickedRef.current) return;
+      if (clickedRef.current || initialLoadRef.current) return;
 
       const ids = getAllIds();
       const scrollPosition = window.scrollY + 150; // Offset for header
