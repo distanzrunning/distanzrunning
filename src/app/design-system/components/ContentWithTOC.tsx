@@ -75,24 +75,11 @@ export default function ContentWithTOC({
     const hash = window.location.hash.slice(1);
     if (hash) {
       setActiveId(hash);
-      // Use requestAnimationFrame to ensure DOM is painted before scrolling
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          const element = document.getElementById(hash);
-          if (element) {
-            const rect = element.getBoundingClientRect();
-            const scrollTop = window.scrollY + rect.top - 140;
-            window.scrollTo({
-              top: scrollTop,
-              behavior: "instant",
-            });
-          }
-          // Allow scroll spy to take over after initial scroll
-          setTimeout(() => {
-            initialLoadRef.current = false;
-          }, 100);
-        });
-      });
+      // Browser handles scroll via CSS scroll-padding-top
+      // Just wait briefly before enabling scroll spy
+      setTimeout(() => {
+        initialLoadRef.current = false;
+      }, 100);
     } else {
       // Set first item as active by default
       const ids = getAllIds();
@@ -138,21 +125,17 @@ export default function ContentWithTOC({
     setActiveId(id);
     clickedRef.current = true;
 
+    // Update URL and let browser handle scroll with CSS scroll-padding-top
+    window.history.pushState(null, "", `#${id}`);
     const element = document.getElementById(id);
     if (element) {
-      const rect = element.getBoundingClientRect();
-      const scrollTop = window.scrollY + rect.top - 140; // Account for sticky header + gap above section
-      window.scrollTo({
-        top: scrollTop,
-        behavior: "smooth",
-      });
-      window.history.pushState(null, "", `#${id}`);
+      element.scrollIntoView({ behavior: "smooth" });
     }
 
     // Re-enable scroll spy after scroll completes
     setTimeout(() => {
       clickedRef.current = false;
-    }, 800);
+    }, 600);
   };
 
   // Helper to render a TOC link with left border indicator
