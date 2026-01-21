@@ -1,3 +1,5 @@
+import { CodeBlock } from "@/components/ui/CodeBlock";
+
 export default function DesignTokens() {
   return (
     <div className="space-y-4">
@@ -483,15 +485,15 @@ export default function DesignTokens() {
           Tokens are exposed as CSS variables for use in stylesheets:
         </p>
 
-        <div className="bg-asphalt-10 rounded-lg p-4 mb-8 overflow-x-auto">
-          <pre className="text-sm font-mono text-asphalt-90">
-            <code>{`.element {
+        <div className="mb-8">
+          <CodeBlock language="css" showLineNumbers={false}>
+            {`.element {
   color: var(--color-textDefault);
   background: var(--color-surface);
   padding: var(--spacing-4);
   border-radius: var(--radius-md);
-}`}</code>
-          </pre>
+}`}
+          </CodeBlock>
         </div>
 
         <h3
@@ -504,13 +506,11 @@ export default function DesignTokens() {
           Most tokens are mapped to Tailwind utilities for use in JSX:
         </p>
 
-        <div className="bg-asphalt-10 rounded-lg p-4 overflow-x-auto">
-          <pre className="text-sm font-mono text-asphalt-90">
-            <code>{`<div className="text-textDefault bg-surface p-4 rounded-md">
+        <CodeBlock language="html" showLineNumbers={false}>
+          {`<div className="text-textDefault bg-surface p-4 rounded-md">
   Content styled with tokens
-</div>`}</code>
-          </pre>
-        </div>
+</div>`}
+        </CodeBlock>
       </section>
     </div>
   );

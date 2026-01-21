@@ -5,6 +5,7 @@ import { Check, Search } from "lucide-react";
 import * as LucideIcons from "lucide-react";
 import * as ContextMenu from "@radix-ui/react-context-menu";
 import { Section } from "../ContentWithTOC";
+import { CodeBlock } from "@/components/ui/CodeBlock";
 
 // Import icons from other libraries via react-icons
 import { TbApi, TbApiOff, TbCsv, TbGif } from "react-icons/tb";
@@ -710,11 +711,9 @@ export default function Icons() {
             <h3 className="text-[14px] leading-[20px] font-medium text-textDefault mb-2">
               Installation
             </h3>
-            <pre className="p-4 bg-gray-100 dark:bg-neutral-800 rounded-md overflow-x-auto">
-              <code className="text-sm font-mono text-textDefault">
-                {`npm install lucide-react react-icons`}
-              </code>
-            </pre>
+            <CodeBlock language="bash" showLineNumbers={false}>
+              {`npm install lucide-react react-icons`}
+            </CodeBlock>
           </div>
 
           {/* Import - Lucide */}
@@ -722,11 +721,9 @@ export default function Icons() {
             <h3 className="text-[14px] leading-[20px] font-medium text-textDefault mb-2">
               Import from Lucide (primary)
             </h3>
-            <pre className="p-4 bg-gray-100 dark:bg-neutral-800 rounded-md overflow-x-auto">
-              <code className="text-sm font-mono text-textDefault">
-                {`import { Home, Search, Settings } from "lucide-react";`}
-              </code>
-            </pre>
+            <CodeBlock language="tsx" showLineNumbers={false}>
+              {`import { Home, Search, Settings } from "lucide-react";`}
+            </CodeBlock>
           </div>
 
           {/* Import - Tabler */}
@@ -734,11 +731,9 @@ export default function Icons() {
             <h3 className="text-[14px] leading-[20px] font-medium text-textDefault mb-2">
               Import from Tabler
             </h3>
-            <pre className="p-4 bg-gray-100 dark:bg-neutral-800 rounded-md overflow-x-auto">
-              <code className="text-sm font-mono text-textDefault">
-                {`import { TbApi, TbApiOff, TbCsv, TbGif } from "react-icons/tb";`}
-              </code>
-            </pre>
+            <CodeBlock language="tsx" showLineNumbers={false}>
+              {`import { TbApi, TbApiOff, TbCsv, TbGif } from "react-icons/tb";`}
+            </CodeBlock>
           </div>
 
           {/* Import - Material */}
@@ -746,11 +741,9 @@ export default function Icons() {
             <h3 className="text-[14px] leading-[20px] font-medium text-textDefault mb-2">
               Import from Material Design
             </h3>
-            <pre className="p-4 bg-gray-100 dark:bg-neutral-800 rounded-md overflow-x-auto">
-              <code className="text-sm font-mono text-textDefault">
-                {`import { MdOutlineGifBox } from "react-icons/md";`}
-              </code>
-            </pre>
+            <CodeBlock language="tsx" showLineNumbers={false}>
+              {`import { MdOutlineGifBox } from "react-icons/md";`}
+            </CodeBlock>
           </div>
 
           {/* Import - Simple Icons */}
@@ -758,11 +751,9 @@ export default function Icons() {
             <h3 className="text-[14px] leading-[20px] font-medium text-textDefault mb-2">
               Import from Simple Icons (brand logos)
             </h3>
-            <pre className="p-4 bg-gray-100 dark:bg-neutral-800 rounded-md overflow-x-auto">
-              <code className="text-sm font-mono text-textDefault">
-                {`import { SiTypescript, SiStrava, SiInstagram } from "react-icons/si";`}
-              </code>
-            </pre>
+            <CodeBlock language="tsx" showLineNumbers={false}>
+              {`import { SiTypescript, SiStrava, SiInstagram } from "react-icons/si";`}
+            </CodeBlock>
           </div>
 
           {/* Basic usage */}
@@ -770,9 +761,8 @@ export default function Icons() {
             <h3 className="text-[14px] leading-[20px] font-medium text-textDefault mb-2">
               Basic usage
             </h3>
-            <pre className="p-4 bg-gray-100 dark:bg-neutral-800 rounded-md overflow-x-auto">
-              <code className="text-sm font-mono text-textDefault">
-                {`{/* Lucide icons */}
+            <CodeBlock language="tsx" showLineNumbers={false}>
+              {`{/* Lucide icons */}
 <Home className="w-4 h-4" />
 <Search className="w-5 h-5 text-gray-600" />
 
@@ -786,8 +776,7 @@ export default function Icons() {
 {/* Simple Icons (brand logos) */}
 <SiTypescript size={20} />
 <SiStrava className="w-5 h-5" />`}
-              </code>
-            </pre>
+            </CodeBlock>
           </div>
 
           {/* Sizing */}

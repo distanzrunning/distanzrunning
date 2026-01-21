@@ -4,6 +4,7 @@ import { useState, useCallback } from "react";
 import { CircleHelp } from "lucide-react";
 import { SiTailwindcss } from "react-icons/si";
 import { Section } from "../ContentWithTOC";
+import { CodeBlock } from "@/components/ui/CodeBlock";
 
 // Toast notification for copy confirmation (matches Color page style)
 function Toast({
@@ -164,224 +165,6 @@ function CheckIcon() {
   );
 }
 
-// Token types for syntax highlighting
-type TokenType =
-  | "tag"
-  | "attr-name"
-  | "attr-value"
-  | "punctuation"
-  | "plain"
-  | "string";
-
-interface Token {
-  type: TokenType;
-  content: string;
-}
-
-// Simple HTML tokenizer for syntax highlighting
-function tokenizeHtml(code: string): Token[] {
-  const tokens: Token[] = [];
-  let i = 0;
-
-  while (i < code.length) {
-    // Check for opening tag
-    if (code[i] === "<") {
-      // Check for closing tag
-      if (code[i + 1] === "/") {
-        tokens.push({ type: "punctuation", content: "</" });
-        i += 2;
-        // Get tag name
-        let tagName = "";
-        while (i < code.length && /[a-zA-Z0-9]/.test(code[i])) {
-          tagName += code[i];
-          i++;
-        }
-        if (tagName) {
-          tokens.push({ type: "tag", content: tagName });
-        }
-        // Get closing >
-        if (code[i] === ">") {
-          tokens.push({ type: "punctuation", content: ">" });
-          i++;
-        }
-      } else {
-        tokens.push({ type: "punctuation", content: "<" });
-        i++;
-        // Get tag name
-        let tagName = "";
-        while (i < code.length && /[a-zA-Z0-9]/.test(code[i])) {
-          tagName += code[i];
-          i++;
-        }
-        if (tagName) {
-          tokens.push({ type: "tag", content: tagName });
-        }
-        // Parse attributes
-        while (i < code.length && code[i] !== ">" && code[i] !== "/") {
-          // Skip whitespace
-          if (/\s/.test(code[i])) {
-            tokens.push({ type: "plain", content: code[i] });
-            i++;
-            continue;
-          }
-          // Get attribute name
-          let attrName = "";
-          while (i < code.length && /[a-zA-Z0-9-]/.test(code[i])) {
-            attrName += code[i];
-            i++;
-          }
-          if (attrName) {
-            tokens.push({ type: "attr-name", content: attrName });
-          }
-          // Get equals sign
-          if (code[i] === "=") {
-            tokens.push({ type: "punctuation", content: "=" });
-            i++;
-          }
-          // Get attribute value
-          if (code[i] === '"' || code[i] === "'") {
-            const quote = code[i];
-            tokens.push({ type: "punctuation", content: quote });
-            i++;
-            let attrValue = "";
-            while (i < code.length && code[i] !== quote) {
-              attrValue += code[i];
-              i++;
-            }
-            if (attrValue) {
-              tokens.push({ type: "attr-value", content: attrValue });
-            }
-            if (code[i] === quote) {
-              tokens.push({ type: "punctuation", content: quote });
-              i++;
-            }
-          }
-        }
-        // Handle self-closing or closing
-        if (code[i] === "/") {
-          tokens.push({ type: "punctuation", content: "/" });
-          i++;
-        }
-        if (code[i] === ">") {
-          tokens.push({ type: "punctuation", content: ">" });
-          i++;
-        }
-      }
-    } else {
-      // Plain text
-      let text = "";
-      while (i < code.length && code[i] !== "<") {
-        text += code[i];
-        i++;
-      }
-      if (text) {
-        tokens.push({ type: "plain", content: text });
-      }
-    }
-  }
-
-  return tokens;
-}
-
-// Get token color class based on type (Geist/Shiki style)
-// Using design system colors for proper dark mode support
-function getTokenClass(type: TokenType): string {
-  switch (type) {
-    case "tag":
-      // Green for tags (p, strong, div, etc.) - using ds-green-900
-      return "text-[var(--ds-green-900)]";
-    case "attr-name":
-      // Purple for attribute names (className, etc.) - using ds-purple-900
-      return "text-[var(--ds-purple-900)]";
-    case "attr-value":
-      // Blue for attribute values (the string inside quotes) - using ds-blue-900
-      return "text-[var(--ds-blue-900)]";
-    case "punctuation":
-      // Gray for punctuation (<, >, =, quotes)
-      return "text-textDefault";
-    case "string":
-      return "text-[var(--ds-blue-900)]";
-    case "plain":
-    default:
-      return "text-textDefault";
-  }
-}
-
-// Render a line with syntax highlighting
-function HighlightedLine({ line }: { line: string }) {
-  const tokens = tokenizeHtml(line);
-
-  return (
-    <>
-      {tokens.map((token, i) => (
-        <span key={i} className={getTokenClass(token.type)}>
-          {token.content}
-        </span>
-      ))}
-      {tokens.length === 0 && " "}
-    </>
-  );
-}
-
-// Code block with copy button (matches Geist)
-function CodeBlock({ code }: { code: string }) {
-  const [copied, setCopied] = useState(false);
-  const lines = code.split("\n");
-
-  const handleCopy = useCallback(() => {
-    navigator.clipboard.writeText(code);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  }, [code]);
-
-  return (
-    <div className="group relative border border-borderDefault rounded-md my-4 overflow-hidden">
-      {/* Copy button - positioned in top right with border and background */}
-      <button
-        onClick={handleCopy}
-        className="absolute top-3 right-3 p-2 rounded-md border border-borderDefault opacity-0 group-hover:opacity-100 transition-opacity z-10"
-        style={{ background: "var(--ds-background-200)" }}
-        aria-label="Copy code"
-      >
-        {copied ? (
-          <span className="text-green-700">
-            <CheckIcon />
-          </span>
-        ) : (
-          <span className="text-textSubtle hover:text-textDefault">
-            <CopyIcon />
-          </span>
-        )}
-      </button>
-
-      {/* Code content with padding */}
-      <pre
-        className="overflow-x-auto py-5"
-        style={{ background: "var(--ds-background-100)" }}
-      >
-        <code className="block text-[13px] leading-[20px] font-mono">
-          {lines.map((line, index) => (
-            <div
-              key={index}
-              className="flex px-5"
-              style={{ fontFeatureSettings: '"liga" off' }}
-            >
-              {/* Line number */}
-              <span className="select-none w-[32px] min-w-[32px] text-right pr-4 text-textSubtler">
-                {index + 1}
-              </span>
-              {/* Line content with syntax highlighting */}
-              <span className="flex-1 pr-4">
-                <HighlightedLine line={line} />
-              </span>
-            </div>
-          ))}
-        </code>
-      </pre>
-    </div>
-  );
-}
-
 // Link icon for section headers (matches Geist)
 function LinkIcon() {
   return (
@@ -516,11 +299,11 @@ export default function Typography() {
           while for Copy text it increases the weight for emphasis.
         </p>
 
-        <CodeBlock
-          code={`<p className="text-heading-32 font-serif">
+        <CodeBlock language="html">
+          {`<p className="text-heading-32 font-serif">
   Heading with <strong>subtle</strong> text
 </p>`}
-        />
+        </CodeBlock>
       </Section>
 
       {/* Headings Section */}
