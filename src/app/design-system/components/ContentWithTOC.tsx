@@ -86,12 +86,24 @@ export default function ContentWithTOC({
     const hash = window.location.hash.slice(1);
     if (hash) {
       setActiveId(hash);
-      // Wait for browser to complete hash scroll before enabling scroll spy
-      // Use requestAnimationFrame to wait for paint, then a longer timeout
+      // Scroll to the hash element after a brief delay to ensure DOM is ready
       requestAnimationFrame(() => {
+        const element = document.getElementById(hash);
+        if (element) {
+          const elementRect = element.getBoundingClientRect();
+          const absoluteElementTop = elementRect.top + window.scrollY;
+          const scrollTarget =
+            absoluteElementTop - HEADER_HEIGHT - SECTION_PADDING;
+
+          window.scrollTo({
+            top: scrollTarget,
+            behavior: "instant",
+          });
+        }
+        // Enable scroll spy after scroll completes
         setTimeout(() => {
           initialLoadRef.current = false;
-        }, 500);
+        }, 100);
       });
     } else {
       // Set first item as active by default
