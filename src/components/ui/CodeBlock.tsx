@@ -57,18 +57,18 @@ function CheckIcon() {
   );
 }
 
-// Animated copy/check icon with subtle transition
+// Animated copy/check icon with card flip effect
 function AnimatedCopyIcon({ copied }: { copied: boolean }) {
   return (
-    <div className="relative w-4 h-4">
+    <div className="relative w-4 h-4" style={{ perspective: "100px" }}>
       <AnimatePresence mode="wait">
         {copied ? (
           <motion.div
             key="check"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.8 }}
-            transition={{ duration: 0.15, ease: "easeOut" }}
+            initial={{ rotateY: -90, opacity: 0 }}
+            animate={{ rotateY: 0, opacity: 1 }}
+            exit={{ rotateY: 90, opacity: 0 }}
+            transition={{ duration: 0.1, ease: "easeOut" }}
             className="absolute inset-0"
           >
             <CheckIcon />
@@ -76,10 +76,10 @@ function AnimatedCopyIcon({ copied }: { copied: boolean }) {
         ) : (
           <motion.div
             key="copy"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.8 }}
-            transition={{ duration: 0.15, ease: "easeOut" }}
+            initial={{ rotateY: 90, opacity: 0 }}
+            animate={{ rotateY: 0, opacity: 1 }}
+            exit={{ rotateY: -90, opacity: 0 }}
+            transition={{ duration: 0.1, ease: "easeOut" }}
             className="absolute inset-0"
           >
             <CopyIcon />
