@@ -75,21 +75,24 @@ export default function ContentWithTOC({
     const hash = window.location.hash.slice(1);
     if (hash) {
       setActiveId(hash);
-      // Scroll to the hash target after a brief delay to ensure DOM is ready
-      setTimeout(() => {
-        const element = document.getElementById(hash);
-        if (element) {
-          const offsetTop = element.offsetTop - 140;
-          window.scrollTo({
-            top: offsetTop,
-            behavior: "instant",
-          });
-        }
-        // Allow scroll spy to take over after initial scroll
-        setTimeout(() => {
-          initialLoadRef.current = false;
-        }, 100);
-      }, 50);
+      // Use requestAnimationFrame to ensure DOM is painted before scrolling
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          const element = document.getElementById(hash);
+          if (element) {
+            const rect = element.getBoundingClientRect();
+            const scrollTop = window.scrollY + rect.top - 140;
+            window.scrollTo({
+              top: scrollTop,
+              behavior: "instant",
+            });
+          }
+          // Allow scroll spy to take over after initial scroll
+          setTimeout(() => {
+            initialLoadRef.current = false;
+          }, 100);
+        });
+      });
     } else {
       // Set first item as active by default
       const ids = getAllIds();
@@ -137,9 +140,10 @@ export default function ContentWithTOC({
 
     const element = document.getElementById(id);
     if (element) {
-      const offsetTop = element.offsetTop - 140; // Account for sticky header + gap above section
+      const rect = element.getBoundingClientRect();
+      const scrollTop = window.scrollY + rect.top - 140; // Account for sticky header + gap above section
       window.scrollTo({
-        top: offsetTop,
+        top: scrollTop,
         behavior: "smooth",
       });
       window.history.pushState(null, "", `#${id}`);
@@ -148,7 +152,7 @@ export default function ContentWithTOC({
     // Re-enable scroll spy after scroll completes
     setTimeout(() => {
       clickedRef.current = false;
-    }, 1000);
+    }, 800);
   };
 
   // Helper to render a TOC link with left border indicator
@@ -163,7 +167,7 @@ export default function ContentWithTOC({
         href={`#${id}`}
         onClick={(e) => handleClick(e, id)}
         className={`
-          flex border-l-2 border-solid py-1.5 pr-4 no-underline transition-colors
+          flex border-l-2 border-solid py-1.5 pr-4 no-underline transition-all duration-150 ease-out
           ${
             isActive
               ? "border-asphalt-10 dark:border-asphalt-95 text-textDefault font-medium"
