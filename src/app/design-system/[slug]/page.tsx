@@ -55,13 +55,9 @@ export default function DesignSystemPage() {
     return () => window.removeEventListener("popstate", handlePopState);
   }, []);
 
-  // Sync state with URL params on initial load and clear hash
+  // Sync state with URL params on initial load
   useEffect(() => {
     setActiveSlug(initialSlug);
-    // Clear hash from URL on page load so TOC resets
-    if (window.location.hash) {
-      window.history.replaceState(null, "", window.location.pathname);
-    }
   }, [initialSlug]);
 
   const handleNavigation = useCallback((newSlug: string) => {
