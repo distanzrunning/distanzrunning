@@ -72,8 +72,8 @@ export function useShikiHighlighter(
     codeToTokens(code, {
       lang,
       themes: {
-        light: "github-light",
-        dark: "github-dark",
+        light: "one-light",
+        dark: "one-dark-pro",
       },
     }).then((result) => {
       // Transform tokens to extract both light and dark colors
