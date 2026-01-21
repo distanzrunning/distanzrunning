@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import {
   SiReact,
   SiTypescript,
@@ -57,35 +57,34 @@ function CheckIcon() {
   );
 }
 
-// Animated copy/check icon with card flip effect
+// Animated copy/check icon with smooth crossfade
 function AnimatedCopyIcon({ copied }: { copied: boolean }) {
   return (
-    <div className="relative w-4 h-4" style={{ perspective: "100px" }}>
-      <AnimatePresence mode="wait">
-        {copied ? (
-          <motion.div
-            key="check"
-            initial={{ rotateY: -90, opacity: 0 }}
-            animate={{ rotateY: 0, opacity: 1 }}
-            exit={{ rotateY: 90, opacity: 0 }}
-            transition={{ duration: 0.1, ease: "easeOut" }}
-            className="absolute inset-0"
-          >
-            <CheckIcon />
-          </motion.div>
-        ) : (
-          <motion.div
-            key="copy"
-            initial={{ rotateY: 90, opacity: 0 }}
-            animate={{ rotateY: 0, opacity: 1 }}
-            exit={{ rotateY: -90, opacity: 0 }}
-            transition={{ duration: 0.1, ease: "easeOut" }}
-            className="absolute inset-0"
-          >
-            <CopyIcon />
-          </motion.div>
-        )}
-      </AnimatePresence>
+    <div className="relative w-4 h-4">
+      {/* Copy icon */}
+      <motion.div
+        className="absolute inset-0"
+        initial={false}
+        animate={{
+          opacity: copied ? 0 : 1,
+          scale: copied ? 0.8 : 1,
+        }}
+        transition={{ duration: 0.08, ease: "easeOut" }}
+      >
+        <CopyIcon />
+      </motion.div>
+      {/* Check icon */}
+      <motion.div
+        className="absolute inset-0"
+        initial={false}
+        animate={{
+          opacity: copied ? 1 : 0,
+          scale: copied ? 1 : 0.8,
+        }}
+        transition={{ duration: 0.08, ease: "easeOut" }}
+      >
+        <CheckIcon />
+      </motion.div>
     </div>
   );
 }
