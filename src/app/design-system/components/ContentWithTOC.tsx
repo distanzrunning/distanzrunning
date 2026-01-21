@@ -220,8 +220,7 @@ export default function ContentWithTOC({
             {tocTitle}
           </h4>
           <div className="flex flex-col">
-            {mainSectionId &&
-              renderTOCLink(mainSectionId, pageTitle || tocTitle)}
+            {mainSectionId && renderTOCLink(mainSectionId, "Intro")}
             {tocItems.map((item) => (
               <div key={item.id}>
                 {renderTOCLink(item.id, item.title)}
