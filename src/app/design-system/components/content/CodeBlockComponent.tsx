@@ -87,13 +87,14 @@ function useToast() {
 }
 
 // Copy icon for code blocks
-function CopyIcon() {
+function CopyIcon({ className }: { className?: string }) {
   return (
     <svg
       height="16"
       strokeLinejoin="round"
       viewBox="0 0 16 16"
       width="16"
+      className={className}
       style={{ color: "currentcolor" }}
     >
       <path
@@ -107,13 +108,14 @@ function CopyIcon() {
 }
 
 // Check icon for copy confirmation
-function CheckIcon() {
+function CheckIcon({ className }: { className?: string }) {
   return (
     <svg
       height="16"
       strokeLinejoin="round"
       viewBox="0 0 16 16"
       width="16"
+      className={className}
       style={{ color: "currentcolor" }}
     >
       <path
@@ -123,6 +125,24 @@ function CheckIcon() {
         fill="currentColor"
       />
     </svg>
+  );
+}
+
+// Animated copy button with crossfade transition
+function CopyIconButton({ copied }: { copied: boolean }) {
+  return (
+    <div className="relative w-4 h-4">
+      <CopyIcon
+        className={`absolute inset-0 transition-opacity duration-150 ${
+          copied ? "opacity-0" : "opacity-100"
+        }`}
+      />
+      <CheckIcon
+        className={`absolute inset-0 transition-opacity duration-150 ${
+          copied ? "opacity-100" : "opacity-0"
+        }`}
+      />
+    </div>
   );
 }
 
@@ -217,7 +237,7 @@ function CodeBlock({
             className="p-2 rounded hover:bg-[var(--ds-gray-200)] dark:hover:bg-[var(--ds-gray-100)] transition-colors text-textSubtle hover:text-textDefault"
             aria-label="Copy code"
           >
-            {copied ? <CheckIcon /> : <CopyIcon />}
+            <CopyIconButton copied={copied} />
           </button>
         </div>
       )}
@@ -229,7 +249,7 @@ function CodeBlock({
           className="absolute top-3 right-3 p-2 rounded border border-[var(--ds-gray-400)] opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-[var(--ds-background-200)] hover:bg-[var(--ds-gray-100)]"
           aria-label="Copy code"
         >
-          {copied ? <CheckIcon /> : <CopyIcon />}
+          <CopyIconButton copied={copied} />
         </button>
       )}
 
@@ -416,7 +436,7 @@ function CodePreview({
                 className="absolute top-3 right-3 p-2 rounded border border-[var(--ds-gray-400)] opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-[var(--ds-background-200)] hover:bg-[var(--ds-gray-100)]"
                 aria-label="Copy code"
               >
-                {copied ? <CheckIcon /> : <CopyIcon />}
+                <CopyIconButton copied={copied} />
               </button>
 
               {/* Component code */}
@@ -876,7 +896,7 @@ function LanguageSwitcherCodePreview() {
                 className="absolute top-3 right-3 p-2 rounded border border-[var(--ds-gray-400)] opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-[var(--ds-background-200)] hover:bg-[var(--ds-gray-100)]"
                 aria-label="Copy code"
               >
-                {copied ? <CheckIcon /> : <CopyIcon />}
+                <CopyIconButton copied={copied} />
               </button>
 
               {/* Component code */}
@@ -1018,7 +1038,7 @@ function LanguageSwitcherPreview() {
             className="p-2 rounded hover:bg-[var(--ds-gray-200)] dark:hover:bg-[var(--ds-gray-100)] transition-colors text-textSubtle hover:text-textDefault"
             aria-label="Copy code"
           >
-            {copied ? <CheckIcon /> : <CopyIcon />}
+            <CopyIconButton copied={copied} />
           </button>
         </div>
       </div>
