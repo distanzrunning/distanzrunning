@@ -52,6 +52,24 @@ function useAutoTOC(
   mainSectionId?: string,
 ): TOCItem[] {
   const [autoItems, setAutoItems] = useState<TOCItem[]>([]);
+  const [containerElement, setContainerElement] = useState<HTMLElement | null>(
+    null,
+  );
+
+  // Track when the ref is assigned
+  useEffect(() => {
+    // Poll for the ref to be set (handles initial mount timing)
+    const checkRef = () => {
+      if (containerRef.current && containerRef.current !== containerElement) {
+        setContainerElement(containerRef.current);
+      }
+    };
+
+    checkRef();
+    // Also check after a frame in case ref is set after effect runs
+    const frameId = requestAnimationFrame(checkRef);
+    return () => cancelAnimationFrame(frameId);
+  }, [containerRef, containerElement]);
 
   useEffect(() => {
     // If manual items are provided, don't auto-generate
@@ -59,12 +77,11 @@ function useAutoTOC(
       return;
     }
 
-    const container = containerRef.current;
-    if (!container) return;
+    if (!containerElement) return;
 
     const scanHeadings = () => {
       // Find all h2 and h3 elements with ids
-      const headings = container.querySelectorAll("h2[id], h3[id]");
+      const headings = containerElement.querySelectorAll("h2[id], h3[id]");
       const items: TOCItem[] = [];
       let currentH2: TOCItem | null = null;
 
@@ -98,30 +115,23 @@ function useAutoTOC(
       return items;
     };
 
-    // Initial scan after a brief delay to ensure content is rendered
-    const initialScan = () => {
-      const items = scanHeadings();
-      setAutoItems(items);
-    };
-
-    // Use requestAnimationFrame to ensure DOM is painted
-    requestAnimationFrame(() => {
-      requestAnimationFrame(initialScan);
-    });
+    // Initial scan
+    const items = scanHeadings();
+    setAutoItems(items);
 
     // Also observe for DOM changes in case content loads asynchronously
     const observer = new MutationObserver(() => {
-      const items = scanHeadings();
-      setAutoItems(items);
+      const newItems = scanHeadings();
+      setAutoItems(newItems);
     });
 
-    observer.observe(container, {
+    observer.observe(containerElement, {
       childList: true,
       subtree: true,
     });
 
     return () => observer.disconnect();
-  }, [containerRef, manualItems, mainSectionId]);
+  }, [containerElement, manualItems, mainSectionId]);
 
   // Return manual items if provided, otherwise auto-generated
   return manualItems && manualItems.length > 0 ? manualItems : autoItems;
