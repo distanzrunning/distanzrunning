@@ -16,63 +16,6 @@
   color: #000;
 }
 
-/* Material classes - Surface (on the page) */
-.material-base {
-  background: var(--ds-background-100);
-  border: 1px solid var(--ds-gray-400);
-  border-radius: 6px;
-}
-
-.material-small {
-  background: var(--ds-background-100);
-  border: 1px solid var(--ds-gray-400);
-  border-radius: 6px;
-  box-shadow: var(--ds-shadow-small);
-}
-
-.material-medium {
-  background: var(--ds-background-100);
-  border: 1px solid var(--ds-gray-400);
-  border-radius: 12px;
-  box-shadow: var(--ds-shadow-medium);
-}
-
-.material-large {
-  background: var(--ds-background-100);
-  border: 1px solid var(--ds-gray-400);
-  border-radius: 12px;
-  box-shadow: var(--ds-shadow-large);
-}
-
-/* Material classes - Floating (above the page) */
-.material-tooltip {
-  background: var(--ds-background-100);
-  border: 1px solid var(--ds-gray-400);
-  border-radius: 6px;
-  box-shadow: var(--ds-shadow-tooltip);
-}
-
-.material-menu {
-  background: var(--ds-background-100);
-  border: 1px solid var(--ds-gray-400);
-  border-radius: 12px;
-  box-shadow: var(--ds-shadow-menu);
-}
-
-.material-modal {
-  background: var(--ds-background-100);
-  border: 1px solid var(--ds-gray-400);
-  border-radius: 12px;
-  box-shadow: var(--ds-shadow-modal);
-}
-
-.material-fullscreen {
-  background: var(--ds-background-100);
-  border: 1px solid var(--ds-gray-400);
-  border-radius: 16px;
-  box-shadow: var(--ds-shadow-fullscreen);
-}
-
 @property --border-angle {
   inherits: false;
   initial-value: 0deg;

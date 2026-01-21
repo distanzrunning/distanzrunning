@@ -1232,5 +1232,65 @@ module.exports = {
       });
     },
     require("tailwindcss-animate"),
+
+    // ═══════════════════════════════════════════════════════════════════
+    // MATERIAL UTILITIES
+    // Presets combining background, border, border-radius, and box-shadow
+    // Based on Vercel's Geist Design System materials
+    // ═══════════════════════════════════════════════════════════════════
+    function ({ addUtilities }) {
+      const materialUtilities = {
+        // Surface materials - on the page
+        ".material-base": {
+          background: "var(--ds-background-100)",
+          border: "1px solid var(--ds-gray-400)",
+          borderRadius: "6px",
+        },
+        ".material-small": {
+          background: "var(--ds-background-100)",
+          border: "1px solid var(--ds-gray-400)",
+          borderRadius: "6px",
+          boxShadow: "var(--ds-shadow-small)",
+        },
+        ".material-medium": {
+          background: "var(--ds-background-100)",
+          border: "1px solid var(--ds-gray-400)",
+          borderRadius: "12px",
+          boxShadow: "var(--ds-shadow-medium)",
+        },
+        ".material-large": {
+          background: "var(--ds-background-100)",
+          border: "1px solid var(--ds-gray-400)",
+          borderRadius: "12px",
+          boxShadow: "var(--ds-shadow-large)",
+        },
+        // Floating materials - above the page
+        ".material-tooltip": {
+          background: "var(--ds-background-100)",
+          border: "1px solid var(--ds-gray-400)",
+          borderRadius: "6px",
+          boxShadow: "var(--ds-shadow-tooltip)",
+        },
+        ".material-menu": {
+          background: "var(--ds-background-100)",
+          border: "1px solid var(--ds-gray-400)",
+          borderRadius: "12px",
+          boxShadow: "var(--ds-shadow-menu)",
+        },
+        ".material-modal": {
+          background: "var(--ds-background-100)",
+          border: "1px solid var(--ds-gray-400)",
+          borderRadius: "12px",
+          boxShadow: "var(--ds-shadow-modal)",
+        },
+        ".material-fullscreen": {
+          background: "var(--ds-background-100)",
+          border: "1px solid var(--ds-gray-400)",
+          borderRadius: "16px",
+          boxShadow: "var(--ds-shadow-fullscreen)",
+        },
+      };
+      addUtilities(materialUtilities);
+    },
   ],
 };
