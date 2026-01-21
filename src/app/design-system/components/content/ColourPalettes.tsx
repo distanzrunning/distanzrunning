@@ -1,7 +1,16 @@
 "use client";
 
 import React, { useState, useCallback, useEffect, useRef } from "react";
-import { Check, MousePointer } from "lucide-react";
+import {
+  Check,
+  MousePointer,
+  CircleDollarSign,
+  ChartPie,
+  ChartNoAxesColumn,
+  Star,
+  Bell,
+  CircleCheck,
+} from "lucide-react";
 import * as ContextMenu from "@radix-ui/react-context-menu";
 import { Section } from "../ContentWithTOC";
 import Button from "@/components/ui/Button";
@@ -1461,54 +1470,18 @@ function TextAndIconsSection() {
           </div>
         </div>
         <div className="flex h-[35%] w-full items-center justify-center gap-7 border-t md:h-full md:w-[50%] md:gap-5 md:border-l md:border-t-0">
-          <svg
-            height="16"
-            viewBox="0 0 16 16"
-            width="16"
+          <CircleDollarSign
+            size={16}
             style={{ color: "var(--ds-green-900)" }}
-          >
-            <circle cx="8" cy="8" r="6" fill="currentColor" />
-          </svg>
-          <svg
-            height="16"
-            viewBox="0 0 16 16"
-            width="16"
-            style={{ color: "var(--ds-blue-900)" }}
-          >
-            <circle cx="8" cy="8" r="6" fill="currentColor" />
-          </svg>
-          <svg
-            height="16"
-            viewBox="0 0 16 16"
-            width="16"
+          />
+          <ChartPie size={16} style={{ color: "var(--ds-blue-900)" }} />
+          <ChartNoAxesColumn
+            size={16}
             style={{ color: "var(--ds-purple-900)" }}
-          >
-            <circle cx="8" cy="8" r="6" fill="currentColor" />
-          </svg>
-          <svg
-            height="16"
-            viewBox="0 0 16 16"
-            width="16"
-            style={{ color: "var(--ds-amber-900)" }}
-          >
-            <circle cx="8" cy="8" r="6" fill="currentColor" />
-          </svg>
-          <svg
-            height="16"
-            viewBox="0 0 16 16"
-            width="16"
-            style={{ color: "var(--ds-pink-900)" }}
-          >
-            <circle cx="8" cy="8" r="6" fill="currentColor" />
-          </svg>
-          <svg
-            height="16"
-            viewBox="0 0 16 16"
-            width="16"
-            style={{ color: "var(--ds-teal-900)" }}
-          >
-            <circle cx="8" cy="8" r="6" fill="currentColor" />
-          </svg>
+          />
+          <Star size={16} style={{ color: "var(--ds-amber-900)" }} />
+          <Bell size={16} style={{ color: "var(--ds-pink-900)" }} />
+          <CircleCheck size={16} style={{ color: "var(--ds-teal-900)" }} />
         </div>
       </div>
     </Section>
