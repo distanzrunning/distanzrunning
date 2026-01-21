@@ -128,18 +128,18 @@ function CheckIcon({ className }: { className?: string }) {
   );
 }
 
-// Animated copy button with crossfade transition (Geist-style)
+// Animated copy button with rotate + opacity transition
 function CopyIconButton({ copied }: { copied: boolean }) {
   return (
     <div className="relative w-4 h-4">
       <CopyIcon
-        className={`absolute inset-0 transition-opacity duration-100 ease-out ${
-          copied ? "opacity-0" : "opacity-100"
+        className={`absolute inset-0 transition-all duration-100 ease-out ${
+          copied ? "opacity-0 -rotate-12" : "opacity-100 rotate-0"
         }`}
       />
       <CheckIcon
-        className={`absolute inset-0 transition-opacity duration-100 ease-out ${
-          copied ? "opacity-100" : "opacity-0"
+        className={`absolute inset-0 transition-all duration-100 ease-out ${
+          copied ? "opacity-100 rotate-0" : "opacity-0 rotate-12"
         }`}
       />
     </div>
