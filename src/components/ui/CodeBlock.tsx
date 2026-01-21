@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { motion } from "framer-motion";
 import {
   SiReact,
   SiTypescript,
@@ -57,34 +56,22 @@ function CheckIcon() {
   );
 }
 
-// Animated copy/check icon with smooth crossfade
+// Animated copy/check icon - instant crossfade
 function AnimatedCopyIcon({ copied }: { copied: boolean }) {
   return (
     <div className="relative w-4 h-4">
-      {/* Copy icon */}
-      <motion.div
-        className="absolute inset-0"
-        initial={false}
-        animate={{
-          opacity: copied ? 0 : 1,
-          scale: copied ? 0.8 : 1,
-        }}
-        transition={{ duration: 0.08, ease: "easeOut" }}
+      <div
+        className="absolute inset-0 transition-opacity duration-[50ms]"
+        style={{ opacity: copied ? 0 : 1 }}
       >
         <CopyIcon />
-      </motion.div>
-      {/* Check icon */}
-      <motion.div
-        className="absolute inset-0"
-        initial={false}
-        animate={{
-          opacity: copied ? 1 : 0,
-          scale: copied ? 1 : 0.8,
-        }}
-        transition={{ duration: 0.08, ease: "easeOut" }}
+      </div>
+      <div
+        className="absolute inset-0 transition-opacity duration-[50ms]"
+        style={{ opacity: copied ? 1 : 0 }}
       >
         <CheckIcon />
-      </motion.div>
+      </div>
     </div>
   );
 }
