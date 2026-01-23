@@ -2,13 +2,13 @@
 
 import {
   useEffect,
-  useLayoutEffect,
   useState,
   useRef,
   useCallback,
   createContext,
   useContext,
 } from "react";
+import PagePagination from "./PagePagination";
 
 // Context to allow sections to break out of padding
 const SectionContext = createContext<boolean>(false);
@@ -44,6 +44,8 @@ interface ContentWithTOCProps {
   mainSectionId?: string; // Optional h2 id
   pageTitle?: string;
   pageSubtitle?: string;
+  activeSlug?: string;
+  onNavigate?: (slug: string) => void;
 }
 
 // Helper to scan headings from a container
@@ -196,6 +198,8 @@ export default function ContentWithTOC({
   mainSectionId,
   pageTitle,
   pageSubtitle,
+  activeSlug,
+  onNavigate,
 }: ContentWithTOCProps) {
   const [activeId, setActiveId] = useState<string>("");
   const isClickScrolling = useRef(false);
@@ -451,6 +455,13 @@ export default function ContentWithTOC({
             {children}
           </SectionContext.Provider>
         </article>
+
+        {/* Page Pagination */}
+        {activeSlug && onNavigate && (
+          <div className="p-12">
+            <PagePagination activeSlug={activeSlug} onNavigate={onNavigate} />
+          </div>
+        )}
       </div>
 
       {/* Table of Contents - Right Sidebar (≥1280px) */}

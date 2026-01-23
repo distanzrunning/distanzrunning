@@ -33,7 +33,6 @@ import ToggleComponent from "../components/content/ToggleComponent";
 import CodeBlockComponent from "../components/content/CodeBlockComponent";
 import Materials from "../components/content/Materials";
 import ContentWithTOC from "../components/ContentWithTOC";
-import PagePagination from "../components/PagePagination";
 
 export default function DesignSystemPage() {
   const params = useParams();
@@ -91,21 +90,33 @@ export default function DesignSystemPage() {
     }
     if (activeSlug === "design-principles") {
       return (
-        <ContentWithTOC tocTitle="On this page">
+        <ContentWithTOC
+          tocTitle="On this page"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
           <DesignPrinciples />
         </ContentWithTOC>
       );
     }
     if (activeSlug === "ux-principles") {
       return (
-        <ContentWithTOC tocTitle="On this page">
+        <ContentWithTOC
+          tocTitle="On this page"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
           <UXPrinciples />
         </ContentWithTOC>
       );
     }
     if (activeSlug === "design-tokens") {
       return (
-        <ContentWithTOC tocTitle="On this page">
+        <ContentWithTOC
+          tocTitle="On this page"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
           <DesignTokens />
         </ContentWithTOC>
       );
@@ -117,6 +128,8 @@ export default function DesignSystemPage() {
           pageTitle="Colours"
           pageSubtitle="Learn how to work with our color system. Right click to copy raw values."
           mainSectionId="colours"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
         >
           <ColourPalettes />
         </ContentWithTOC>
@@ -124,56 +137,88 @@ export default function DesignSystemPage() {
     }
     if (activeSlug === "rules") {
       return (
-        <ContentWithTOC tocTitle="On this page">
+        <ContentWithTOC
+          tocTitle="On this page"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
           <Rules />
         </ContentWithTOC>
       );
     }
     if (activeSlug === "grid-spacing") {
       return (
-        <ContentWithTOC tocTitle="On this page">
+        <ContentWithTOC
+          tocTitle="On this page"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
           <GridSpacing />
         </ContentWithTOC>
       );
     }
     if (activeSlug === "grid-layout") {
       return (
-        <ContentWithTOC tocTitle="On this page">
+        <ContentWithTOC
+          tocTitle="On this page"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
           <GridLayout />
         </ContentWithTOC>
       );
     }
     if (activeSlug === "typefaces") {
       return (
-        <ContentWithTOC tocTitle="On this page">
+        <ContentWithTOC
+          tocTitle="On this page"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
           <Typefaces />
         </ContentWithTOC>
       );
     }
     if (activeSlug === "modular-scale") {
       return (
-        <ContentWithTOC tocTitle="On this page">
+        <ContentWithTOC
+          tocTitle="On this page"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
           <ModularScale />
         </ContentWithTOC>
       );
     }
     if (activeSlug === "line-height") {
       return (
-        <ContentWithTOC tocTitle="On this page">
+        <ContentWithTOC
+          tocTitle="On this page"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
           <LineHeight />
         </ContentWithTOC>
       );
     }
     if (activeSlug === "text-styles") {
       return (
-        <ContentWithTOC tocTitle="On this page">
+        <ContentWithTOC
+          tocTitle="On this page"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
           <TextStyles />
         </ContentWithTOC>
       );
     }
     if (activeSlug === "iconography") {
       return (
-        <ContentWithTOC tocTitle="On this page">
+        <ContentWithTOC
+          tocTitle="On this page"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
           <Iconography />
         </ContentWithTOC>
       );
@@ -185,6 +230,8 @@ export default function DesignSystemPage() {
           pageTitle="Icons"
           pageSubtitle="A collection of icons used across Distanz products. Right click to copy import statement."
           mainSectionId="icons"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
         >
           <Icons />
         </ContentWithTOC>
@@ -197,6 +244,8 @@ export default function DesignSystemPage() {
           pageTitle="Typography"
           pageSubtitle="Pre-set combinations of font-size, line-height, letter-spacing, and font-weight based on the Geist design system."
           mainSectionId="typography"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
         >
           <Typography />
         </ContentWithTOC>
@@ -209,6 +258,8 @@ export default function DesignSystemPage() {
           pageTitle="Materials"
           pageSubtitle="Presets for radii, fills, strokes, and shadows."
           mainSectionId="materials"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
         >
           <Materials />
         </ContentWithTOC>
@@ -226,7 +277,11 @@ export default function DesignSystemPage() {
     // Components pages
     if (activeSlug === "button") {
       return (
-        <ContentWithTOC tocTitle="On this page">
+        <ContentWithTOC
+          tocTitle="On this page"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
           <ButtonComponent />
         </ContentWithTOC>
       );
@@ -234,7 +289,11 @@ export default function DesignSystemPage() {
 
     if (activeSlug === "icon-button") {
       return (
-        <ContentWithTOC tocTitle="On this page">
+        <ContentWithTOC
+          tocTitle="On this page"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
           <ButtonIconComponent />
         </ContentWithTOC>
       );
@@ -242,7 +301,11 @@ export default function DesignSystemPage() {
 
     if (activeSlug === "slim-button") {
       return (
-        <ContentWithTOC tocTitle="On this page">
+        <ContentWithTOC
+          tocTitle="On this page"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
           <SlimButtonComponent />
         </ContentWithTOC>
       );
@@ -250,7 +313,11 @@ export default function DesignSystemPage() {
 
     if (activeSlug === "slim-button-icon") {
       return (
-        <ContentWithTOC tocTitle="On this page">
+        <ContentWithTOC
+          tocTitle="On this page"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
           <SlimButtonIconComponent />
         </ContentWithTOC>
       );
@@ -258,7 +325,11 @@ export default function DesignSystemPage() {
 
     if (activeSlug === "checkbox") {
       return (
-        <ContentWithTOC tocTitle="On this page">
+        <ContentWithTOC
+          tocTitle="On this page"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
           <CheckboxComponent />
         </ContentWithTOC>
       );
@@ -266,7 +337,11 @@ export default function DesignSystemPage() {
 
     if (activeSlug === "blockquote") {
       return (
-        <ContentWithTOC tocTitle="On this page">
+        <ContentWithTOC
+          tocTitle="On this page"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
           <BlockquoteComponent />
         </ContentWithTOC>
       );
@@ -274,7 +349,11 @@ export default function DesignSystemPage() {
 
     if (activeSlug === "pull-quote") {
       return (
-        <ContentWithTOC tocTitle="On this page">
+        <ContentWithTOC
+          tocTitle="On this page"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
           <PullQuoteComponent />
         </ContentWithTOC>
       );
@@ -282,7 +361,11 @@ export default function DesignSystemPage() {
 
     if (activeSlug === "close") {
       return (
-        <ContentWithTOC tocTitle="On this page">
+        <ContentWithTOC
+          tocTitle="On this page"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
           <CloseComponent />
         </ContentWithTOC>
       );
@@ -290,7 +373,11 @@ export default function DesignSystemPage() {
 
     if (activeSlug === "toggle" || activeSlug === "switch") {
       return (
-        <ContentWithTOC tocTitle="On this page">
+        <ContentWithTOC
+          tocTitle="On this page"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
           <ToggleComponent />
         </ContentWithTOC>
       );
@@ -303,6 +390,8 @@ export default function DesignSystemPage() {
           pageTitle="Code Block"
           pageSubtitle="Code Block component used across Distanz documentation and code examples."
           mainSectionId="code-block"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
         >
           <CodeBlockComponent />
         </ContentWithTOC>
@@ -349,13 +438,7 @@ export default function DesignSystemPage() {
 
         {/* Main Content Area */}
         <div id="main-content" className="flex-1 min-w-0">
-          <div className="p-12">
-            {renderContent()}
-            <PagePagination
-              activeSlug={activeSlug}
-              onNavigate={handleNavigation}
-            />
-          </div>
+          <div className="p-12">{renderContent()}</div>
         </div>
       </div>
     </div>
