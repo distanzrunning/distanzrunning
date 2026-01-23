@@ -463,7 +463,7 @@ export default function AvatarComponent() {
               members={[
                 { src: avatarImages[0], alt: "User 1" },
                 { src: avatarImages[1], alt: "User 2" },
-                { placeholder: true, alt: "Placeholder" },
+                { src: "/logo-bimi.svg", alt: "Distanz" },
               ]}
               size={32}
             />
