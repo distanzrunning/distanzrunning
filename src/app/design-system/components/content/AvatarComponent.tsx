@@ -412,9 +412,10 @@ export function Component() {
 }`;
 
 const placeholderCode = `import { Avatar } from '@/components/ui/Avatar';
+import type { JSX } from 'react';
 
-export function Component() {
-  return <Avatar shimmer size={90} />;
+export function Component(): JSX.Element {
+  return <Avatar placeholder size={90} />;
 }`;
 
 const sizesCode = `import { Avatar } from '@/components/ui/Avatar';
@@ -572,15 +573,14 @@ export default function AvatarComponent() {
           Placeholder
         </SectionHeader>
         <p className="text-copy-14 text-textSubtle mt-4 mb-6">
-          When no image is provided, the avatar displays a placeholder with a
-          subtle shimmer effect. Use the{" "}
+          When no image is provided, use the{" "}
           <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
-            shimmer
+            placeholder
           </code>{" "}
-          prop to show a loading state.
+          prop to display a subtle shimmer animation.
         </p>
         <CodePreview componentCode={placeholderCode}>
-          <Avatar shimmer size={90} />
+          <Avatar placeholder size={90} />
         </CodePreview>
       </Section>
 
@@ -673,7 +673,7 @@ export default function AvatarComponent() {
                 <td className="py-3 px-4 font-mono text-textSubtle">boolean</td>
                 <td className="py-3 px-4 text-textSubtle">false</td>
                 <td className="py-3 px-4 text-textSubtle">
-                  Force placeholder state
+                  Show placeholder with shimmer animation
                 </td>
               </tr>
               <tr className="border-b border-borderSubtle">
@@ -681,17 +681,9 @@ export default function AvatarComponent() {
                 <td className="py-3 px-4 font-mono text-textSubtle">
                   ReactNode
                 </td>
-                <td className="py-3 px-4 text-textSubtle">User icon</td>
+                <td className="py-3 px-4 text-textSubtle">-</td>
                 <td className="py-3 px-4 text-textSubtle">
-                  Custom icon for placeholder
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">shimmer</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">boolean</td>
-                <td className="py-3 px-4 text-textSubtle">false</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Show shimmer loading animation
+                  Custom icon for placeholder (disables shimmer)
                 </td>
               </tr>
             </tbody>

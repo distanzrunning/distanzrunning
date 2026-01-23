@@ -21,12 +21,10 @@ export interface AvatarProps {
   size?: number;
   /** Text to generate initials from when no image */
   fallback?: string;
-  /** Force placeholder state */
+  /** Show placeholder with shimmer animation */
   placeholder?: boolean;
-  /** Custom icon for placeholder */
+  /** Custom icon for placeholder (disables shimmer) */
   placeholderIcon?: React.ReactNode;
-  /** Show shimmer loading animation */
-  shimmer?: boolean;
 }
 
 /** Member object for AvatarGroup */
@@ -87,8 +85,7 @@ export interface AvatarWithIconProps extends Omit<AvatarProps, "shimmer"> {
  * @example
  * <Avatar src="/user.jpg" alt="John Doe" size={40} />
  * <Avatar fallback="John Doe" size={32} />
- * <Avatar placeholder size={32} />
- * <Avatar shimmer size={90} />
+ * <Avatar placeholder size={90} />
  */
 export function Avatar({
   src,
@@ -97,12 +94,11 @@ export function Avatar({
   fallback,
   placeholder = false,
   placeholderIcon,
-  shimmer = false,
 }: AvatarProps) {
   const [imageError, setImageError] = useState(false);
 
-  // Show shimmer loading state
-  if (shimmer) {
+  // Show shimmer placeholder when no src and placeholder is true (without custom icon)
+  if (placeholder && !placeholderIcon && !fallback && !src) {
     return (
       <div
         className="rounded-full overflow-hidden flex-shrink-0 animate-shimmer"
