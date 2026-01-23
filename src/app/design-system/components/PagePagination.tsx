@@ -82,17 +82,17 @@ export default function PagePagination({
           <button
             onClick={() => onNavigate(prevPage.id)}
             aria-label={`Go to previous page: ${prevPage.label}`}
-            className="group flex items-center gap-2 text-left"
+            className="group flex flex-col items-start text-left"
           >
-            <span className="text-textSubtle group-hover:text-textDefault transition-colors">
-              <ChevronLeftIcon />
+            <span className="text-[13px] leading-[18px] text-textSubtle group-hover:text-textDefault transition-colors mb-1">
+              Previous
             </span>
-            <div className="flex flex-col items-start">
-              <span className="text-[13px] leading-[18px] text-textSubtle group-hover:text-textDefault transition-colors mb-1">
-                Previous
-              </span>
+            <div className="flex items-center gap-1">
               <span className="text-[16px] leading-[24px] font-medium text-textDefault">
                 {prevPage.label}
+              </span>
+              <span className="text-textSubtle group-hover:text-textDefault transition-colors">
+                <ChevronLeftIcon />
               </span>
             </div>
           </button>
@@ -105,19 +105,19 @@ export default function PagePagination({
           <button
             onClick={() => onNavigate(nextPage.id)}
             aria-label={`Go to next page: ${nextPage.label}`}
-            className="group flex items-center gap-2 text-right"
+            className="group flex flex-col items-end text-right"
           >
-            <div className="flex flex-col items-start">
-              <span className="text-[13px] leading-[18px] text-textSubtle group-hover:text-textDefault transition-colors mb-1">
-                Next
+            <span className="text-[13px] leading-[18px] text-textSubtle group-hover:text-textDefault transition-colors mb-1">
+              Next
+            </span>
+            <div className="flex items-center gap-1">
+              <span className="text-textSubtle group-hover:text-textDefault transition-colors">
+                <ChevronRightIcon />
               </span>
               <span className="text-[16px] leading-[24px] font-medium text-textDefault">
                 {nextPage.label}
               </span>
             </div>
-            <span className="text-textSubtle group-hover:text-textDefault transition-colors">
-              <ChevronRightIcon />
-            </span>
           </button>
         ) : (
           <div />
