@@ -485,7 +485,10 @@ function IconCard({ icon }: { icon: IconDefinition }) {
         </div>
       </ContextMenu.Trigger>
       <ContextMenu.Portal>
-        <ContextMenu.Content className="material-menu min-w-[160px] p-1 z-50">
+        <ContextMenu.Content
+          className="material-menu min-w-[160px] p-1 z-50"
+          onCloseAutoFocus={(e) => e.preventDefault()}
+        >
           <ContextMenu.Item
             className="flex cursor-pointer select-none items-center rounded px-3 py-2 text-sm text-textDefault outline-none hover:bg-gray-100 dark:hover:bg-neutral-800"
             onSelect={handleCopyImport}
