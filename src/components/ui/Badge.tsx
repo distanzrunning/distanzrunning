@@ -59,7 +59,7 @@ const variantStyles: Record<BadgeVariant, string> = {
   // Solid variants - Geist exact colors
   // Gray: uses gray-900 in both modes with white text
   gray: "bg-[var(--ds-gray-900)] text-white",
-  blue: "bg-[var(--ds-blue-700)] text-white",
+  blue: "bg-[var(--ds-blue-800)] text-white",
   purple: "bg-[var(--ds-purple-700)] text-white",
   // Amber uses dark text for better contrast on the warm background
   amber: "bg-[var(--ds-amber-700)] text-[var(--ds-amber-1000)]",
