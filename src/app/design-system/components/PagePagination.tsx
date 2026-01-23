@@ -111,11 +111,11 @@ export default function PagePagination({
               Next
             </span>
             <div className="flex items-center gap-1">
-              <span className="text-textSubtle group-hover:text-textDefault transition-colors">
-                <ChevronRightIcon />
-              </span>
               <span className="text-[16px] leading-[24px] font-medium text-textDefault">
                 {nextPage.label}
+              </span>
+              <span className="text-textSubtle group-hover:text-textDefault transition-colors">
+                <ChevronRightIcon />
               </span>
             </div>
           </button>
