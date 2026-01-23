@@ -580,9 +580,7 @@ export default function AvatarComponent() {
           prop to show a loading state.
         </p>
         <CodePreview componentCode={placeholderCode}>
-          <div className="flex items-center justify-center">
-            <Avatar shimmer size={90} />
-          </div>
+          <Avatar shimmer size={90} />
         </CodePreview>
       </Section>
 
