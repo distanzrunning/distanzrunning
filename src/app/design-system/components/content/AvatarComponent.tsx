@@ -366,25 +366,26 @@ function AvatarGit({
   );
 }
 
-// Gradient Avatar (half-and-half colour)
+// Gradient Avatar (smooth blended colours like Geist)
 interface GradientAvatarProps {
   size?: number;
-  colorLeft: string;
-  colorRight: string;
+  colors: string[];
+  angle?: number;
 }
 
 function GradientAvatar({
   size = 32,
-  colorLeft,
-  colorRight,
+  colors,
+  angle = 135,
 }: GradientAvatarProps) {
+  const gradient = `linear-gradient(${angle}deg, ${colors.join(", ")})`;
   return (
     <div
       className="rounded-full flex-shrink-0"
       style={{
         width: size,
         height: size,
-        background: `linear-gradient(to right, ${colorLeft} 50%, ${colorRight} 50%)`,
+        background: gradient,
       }}
     />
   );
@@ -399,7 +400,7 @@ interface AvatarWithIconProps {
   icon: React.ReactNode;
   iconBgColor?: string;
   iconColor?: string;
-  gradient?: { colorLeft: string; colorRight: string };
+  gradient?: { colors: string[]; angle?: number };
 }
 
 function AvatarWithIcon({
@@ -412,15 +413,15 @@ function AvatarWithIcon({
   iconColor = "white",
   gradient,
 }: AvatarWithIconProps) {
-  const badgeSize = Math.round(size * 0.4);
+  const badgeSize = Math.round(size * 0.55);
 
   return (
     <div className="relative inline-flex" style={{ width: size, height: size }}>
       {gradient ? (
         <GradientAvatar
           size={size}
-          colorLeft={gradient.colorLeft}
-          colorRight={gradient.colorRight}
+          colors={gradient.colors}
+          angle={gradient.angle}
         />
       ) : (
         <Avatar src={src} alt={alt} size={size} fallback={fallback} />
@@ -669,21 +670,21 @@ export function Component() {
   return (
     <div className="flex flex-col gap-3.5">
       <AvatarWithIcon
-        gradient={{ colorLeft: '#e5e5e5', colorRight: '#a3a3a3' }}
-        icon={<Check size={10} />}
+        gradient={{ colors: ['#ff6b6b', '#feca57', '#48dbfb'], angle: 135 }}
+        icon={<Check size={12} />}
         iconBgColor="var(--ds-gray-900)"
         size={32}
       />
       <AvatarWithIcon
-        gradient={{ colorLeft: '#d4d4d4', colorRight: '#737373' }}
-        icon={<Medal size={10} />}
+        gradient={{ colors: ['#a29bfe', '#74b9ff', '#81ecec'], angle: 45 }}
+        icon={<Medal size={12} />}
         iconBgColor="var(--ds-gray-200)"
         iconColor="var(--ds-gray-900)"
         size={32}
       />
       <AvatarWithIcon
-        gradient={{ colorLeft: '#fafafa', colorRight: '#525252' }}
-        icon={<Star size={10} />}
+        gradient={{ colors: ['#fd79a8', '#e84393', '#6c5ce7'], angle: 180 }}
+        icon={<Star size={12} />}
         iconBgColor="var(--ds-gray-100)"
         iconColor="var(--ds-gray-800)"
         size={32}
@@ -827,22 +828,31 @@ export default function AvatarComponent() {
         <CodePreview componentCode={customIconCode}>
           <div className="flex flex-col gap-3.5">
             <AvatarWithIcon
-              gradient={{ colorLeft: "#e5e5e5", colorRight: "#a3a3a3" }}
+              gradient={{
+                colors: ["#ff6b6b", "#feca57", "#48dbfb"],
+                angle: 135,
+              }}
               size={32}
-              icon={<Check size={10} />}
+              icon={<Check size={12} />}
               iconBgColor="var(--ds-gray-900)"
             />
             <AvatarWithIcon
-              gradient={{ colorLeft: "#d4d4d4", colorRight: "#737373" }}
+              gradient={{
+                colors: ["#a29bfe", "#74b9ff", "#81ecec"],
+                angle: 45,
+              }}
               size={32}
-              icon={<Medal size={10} />}
+              icon={<Medal size={12} />}
               iconBgColor="var(--ds-gray-200)"
               iconColor="var(--ds-gray-900)"
             />
             <AvatarWithIcon
-              gradient={{ colorLeft: "#fafafa", colorRight: "#525252" }}
+              gradient={{
+                colors: ["#fd79a8", "#e84393", "#6c5ce7"],
+                angle: 180,
+              }}
               size={32}
-              icon={<Star size={10} />}
+              icon={<Star size={12} />}
               iconBgColor="var(--ds-gray-100)"
               iconColor="var(--ds-gray-800)"
             />
