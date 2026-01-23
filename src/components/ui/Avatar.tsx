@@ -57,6 +57,8 @@ export interface AvatarGroupProps {
 export interface AvatarBrandProps extends Omit<AvatarProps, "shimmer"> {
   /** Brand for the badge */
   brand: Brand;
+  /** Fixed badge size in pixels (overrides proportional sizing) */
+  badgeSize?: number;
 }
 
 /** Props for AvatarGradient component */
@@ -277,8 +279,9 @@ export function AvatarBrand({
   size = 32,
   fallback,
   brand,
+  badgeSize: customBadgeSize,
 }: AvatarBrandProps) {
-  const badgeSize = Math.round(size * 0.55);
+  const badgeSize = customBadgeSize || Math.round(size * 0.55);
   const iconSize = Math.round(badgeSize * 0.6);
 
   const config = brandConfig[brand];

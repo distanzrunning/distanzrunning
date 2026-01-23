@@ -375,9 +375,9 @@ import type { JSX } from 'react';
 export function Component(): JSX.Element {
   return (
     <div className="flex flex-col gap-4">
-      <AvatarBrand src="/user.jpg" brand="nike" size={48} />
-      <AvatarBrand src="/user.jpg" brand="adidas" size={48} />
-      <AvatarBrand src="/user.jpg" brand="newbalance" size={48} />
+      <AvatarBrand src="/user.jpg" brand="nike" size={64} badgeSize={26} />
+      <AvatarBrand src="/user.jpg" brand="adidas" size={64} badgeSize={26} />
+      <AvatarBrand src="/user.jpg" brand="newbalance" size={64} badgeSize={26} />
     </div>
   );
 }`;
@@ -505,20 +505,23 @@ export default function AvatarComponent() {
             <AvatarBrand
               src={avatarImages[0]}
               alt="Nike athlete"
-              size={48}
+              size={64}
               brand="nike"
+              badgeSize={26}
             />
             <AvatarBrand
               src={avatarImages[1]}
               alt="Adidas athlete"
-              size={48}
+              size={64}
               brand="adidas"
+              badgeSize={26}
             />
             <AvatarBrand
               src={avatarImages[2]}
               alt="New Balance athlete"
-              size={48}
+              size={64}
               brand="newbalance"
+              badgeSize={26}
             />
           </div>
         </CodePreview>
