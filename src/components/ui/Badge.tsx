@@ -56,18 +56,21 @@ export interface BadgePillProps extends Omit<BadgeProps, "variant"> {
 // ============================================================================
 
 const variantStyles: Record<BadgeVariant, string> = {
-  // Solid variants
+  // Solid variants - Geist exact colors
+  // Gray: dark bg in light mode, light bg in dark mode (uses 1000/100 which auto-invert)
   gray: "bg-[var(--ds-gray-1000)] text-[var(--ds-gray-100)]",
   blue: "bg-[var(--ds-blue-700)] text-white",
   purple: "bg-[var(--ds-purple-700)] text-white",
-  amber: "bg-[var(--ds-amber-700)] text-[var(--ds-amber-100)]",
+  // Amber uses dark text (1000) for better contrast on the warm background
+  amber: "bg-[var(--ds-amber-700)] text-[var(--ds-amber-1000)]",
   red: "bg-[var(--ds-red-700)] text-white",
   pink: "bg-[var(--ds-pink-700)] text-white",
   green: "bg-[var(--ds-green-700)] text-white",
   teal: "bg-[var(--ds-teal-700)] text-white",
+  // Inverted: opposite of gray - light bg in light mode, dark bg in dark mode
   inverted: "bg-[var(--ds-gray-100)] text-[var(--ds-gray-1000)]",
 
-  // Subtle variants
+  // Subtle variants - light tinted backgrounds with dark text
   "gray-subtle": "bg-[var(--ds-gray-200)] text-[var(--ds-gray-1000)]",
   "blue-subtle": "bg-[var(--ds-blue-200)] text-[var(--ds-blue-900)]",
   "purple-subtle": "bg-[var(--ds-purple-200)] text-[var(--ds-purple-900)]",
@@ -143,7 +146,7 @@ export const BadgePill = forwardRef<
 >(({ children, size = "md", icon, href, onClick, className = "" }, ref) => {
   const pillStyles = `
     inline-flex items-center justify-center rounded-full font-medium whitespace-nowrap
-    bg-[var(--ds-gray-100)] text-[var(--ds-gray-1000)]
+    bg-[var(--ds-background-100)] text-[var(--ds-gray-1000)]
     border border-[var(--ds-gray-400)]
     hover:bg-[var(--ds-gray-200)] hover:border-[var(--ds-gray-500)]
     transition-colors cursor-pointer
