@@ -57,8 +57,8 @@ export interface BadgePillProps extends Omit<BadgeProps, "variant"> {
 
 const variantStyles: Record<BadgeVariant, string> = {
   // Solid variants - Geist exact colors
-  // Gray: dark in light mode, light in dark mode (contrasts with page)
-  gray: "bg-[var(--ds-gray-900)] text-white dark:bg-[var(--ds-gray-200)] dark:text-[var(--ds-gray-1000)]",
+  // Gray: uses gray-900 in both modes with white text
+  gray: "bg-[var(--ds-gray-900)] text-white",
   blue: "bg-[var(--ds-blue-700)] text-white",
   purple: "bg-[var(--ds-purple-700)] text-white",
   // Amber uses dark text for better contrast on the warm background
@@ -82,15 +82,15 @@ const variantStyles: Record<BadgeVariant, string> = {
 };
 
 const sizeStyles: Record<BadgeSize, string> = {
-  sm: "h-5 px-1.5 text-xs gap-1",
-  md: "h-6 px-2 text-xs gap-1.5",
-  lg: "h-7 px-2.5 text-sm gap-1.5",
+  sm: "h-5 px-2 text-xs gap-1",
+  md: "h-6 px-2.5 text-xs gap-1.5",
+  lg: "h-7 px-3 text-sm gap-1.5",
 };
 
 const pillSizeStyles: Record<BadgeSize, string> = {
   sm: "h-5 px-2.5 text-xs gap-1",
   md: "h-6 px-2.5 text-xs gap-1.5",
-  lg: "h-7 px-2.5 text-sm gap-1.5",
+  lg: "h-7 px-3 text-sm gap-1.5",
 };
 
 const iconSizeStyles: Record<BadgeSize, string> = {
