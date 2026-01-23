@@ -82,9 +82,9 @@ export default function PagePagination({
           <button
             onClick={() => onNavigate(prevPage.id)}
             aria-label={`Go to previous page: ${prevPage.label}`}
-            className="group flex items-center text-left"
+            className="group flex items-end text-left"
           >
-            <span className="text-textSubtle group-hover:text-textDefault transition-colors">
+            <span className="text-textSubtle group-hover:text-textDefault transition-colors mb-0.5">
               <ChevronLeftIcon />
             </span>
             <div className="flex flex-col items-start ml-1">
@@ -105,7 +105,7 @@ export default function PagePagination({
           <button
             onClick={() => onNavigate(nextPage.id)}
             aria-label={`Go to next page: ${nextPage.label}`}
-            className="group flex items-center text-right"
+            className="group flex items-end text-right"
           >
             <div className="flex flex-col items-end mr-1">
               <span className="text-[13px] leading-[18px] text-textSubtle group-hover:text-textDefault transition-colors mb-1">
@@ -115,7 +115,7 @@ export default function PagePagination({
                 {nextPage.label}
               </span>
             </div>
-            <span className="text-textSubtle group-hover:text-textDefault transition-colors">
+            <span className="text-textSubtle group-hover:text-textDefault transition-colors mb-0.5">
               <ChevronRightIcon />
             </span>
           </button>
