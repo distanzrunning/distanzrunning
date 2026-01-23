@@ -1,14 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import {
-  ChevronDown,
-  User,
-  Check,
-  Star,
-  Medal,
-  AlertCircle,
-} from "lucide-react";
+import { ChevronDown, User, Check, Star, Medal } from "lucide-react";
 import { SiGithub, SiGitlab, SiBitbucket } from "react-icons/si";
 import { Section } from "../ContentWithTOC";
 import {
@@ -693,24 +686,6 @@ export function Component() {
   );
 }`;
 
-const placeholderCode = `import { Avatar } from '@/components/ui/Avatar';
-import { User, AlertCircle } from 'lucide-react';
-
-export function Component() {
-  return (
-    <div className="flex gap-4">
-      {/* Default placeholder (User icon) */}
-      <Avatar placeholder />
-
-      {/* Initials fallback */}
-      <Avatar fallback="John Doe" />
-
-      {/* Custom placeholder icon */}
-      <Avatar placeholder placeholderIcon={<AlertCircle size={16} />} />
-    </div>
-  );
-}`;
-
 const sizesCode = `import { Avatar } from '@/components/ui/Avatar';
 
 export function Component() {
@@ -866,32 +841,26 @@ export default function AvatarComponent() {
           Placeholder
         </SectionHeader>
         <p className="text-copy-14 text-textSubtle mt-4 mb-6">
-          When no image is provided, the avatar displays a fallback. Use the{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
-            fallback
-          </code>{" "}
-          prop for initials, or{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
-            placeholder
-          </code>{" "}
-          with{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
-            placeholderIcon
-          </code>{" "}
-          for a custom icon.
+          When no image is provided, the avatar displays a placeholder with a
+          subtle shimmer effect.
         </p>
-        <CodePreview componentCode={placeholderCode}>
-          <div className="flex gap-4">
-            <Avatar placeholder size={40} />
-            <Avatar fallback="John Doe" size={40} />
-            <Avatar fallback="RC" size={40} />
-            <Avatar
-              placeholder
-              placeholderIcon={<AlertCircle size={20} />}
-              size={40}
+        <div className="border border-[var(--ds-gray-400)] rounded-lg overflow-hidden">
+          <div
+            className="p-6 flex items-center justify-center"
+            style={{ background: "var(--ds-background-100)" }}
+          >
+            <div
+              className="rounded-full overflow-hidden flex-shrink-0 animate-shimmer"
+              style={{
+                width: 90,
+                height: 90,
+                background:
+                  "linear-gradient(90deg, var(--ds-gray-300) 0%, var(--ds-gray-200) 50%, var(--ds-gray-300) 100%)",
+                backgroundSize: "200% 100%",
+              }}
             />
           </div>
-        </CodePreview>
+        </div>
       </Section>
 
       {/* Sizes Section */}
