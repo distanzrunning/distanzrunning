@@ -461,13 +461,13 @@ export default function AvatarComponent() {
             {/* First row: 3 avatars, one with placeholder */}
             <AvatarGroup
               members={[
-                { src: avatarImages[0], alt: "User 1" },
-                { src: avatarImages[1], alt: "User 2" },
                 {
                   src: "/images/distanz_icon_white.svg",
                   alt: "Distanz",
                   bgColor: "#000",
                 },
+                { src: avatarImages[0], alt: "User 1" },
+                { src: avatarImages[1], alt: "User 2" },
               ]}
               size={32}
             />
