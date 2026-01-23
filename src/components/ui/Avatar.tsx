@@ -39,6 +39,8 @@ export interface AvatarGroupMember {
   placeholder?: boolean;
   /** Background color for the avatar */
   bgColor?: string;
+  /** Border color for the avatar wrapper (overrides default) */
+  borderColor?: string;
 }
 
 /** Props for AvatarGroup component */
@@ -204,7 +206,7 @@ export function AvatarGroup({ members, limit, size = 32 }: AvatarGroupProps) {
             width: outerSize,
             height: outerSize,
             padding: borderWidth,
-            backgroundColor: "var(--ds-background-100)",
+            backgroundColor: member.borderColor || "var(--ds-background-100)",
           }}
         >
           <Avatar
