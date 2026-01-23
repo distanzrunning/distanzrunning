@@ -1,7 +1,14 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { ChevronDown, User, Zap, Star, Heart, AlertCircle } from "lucide-react";
+import {
+  ChevronDown,
+  User,
+  Check,
+  Star,
+  Medal,
+  AlertCircle,
+} from "lucide-react";
 import { SiGithub, SiGitlab, SiBitbucket } from "react-icons/si";
 import { Section } from "../ContentWithTOC";
 import {
@@ -359,6 +366,30 @@ function AvatarGit({
   );
 }
 
+// Gradient Avatar (half-and-half colour)
+interface GradientAvatarProps {
+  size?: number;
+  colorLeft: string;
+  colorRight: string;
+}
+
+function GradientAvatar({
+  size = 32,
+  colorLeft,
+  colorRight,
+}: GradientAvatarProps) {
+  return (
+    <div
+      className="rounded-full flex-shrink-0"
+      style={{
+        width: size,
+        height: size,
+        background: `linear-gradient(to right, ${colorLeft} 50%, ${colorRight} 50%)`,
+      }}
+    />
+  );
+}
+
 // Avatar with custom icon badge
 interface AvatarWithIconProps {
   src?: string;
@@ -368,6 +399,7 @@ interface AvatarWithIconProps {
   icon: React.ReactNode;
   iconBgColor?: string;
   iconColor?: string;
+  gradient?: { colorLeft: string; colorRight: string };
 }
 
 function AvatarWithIcon({
@@ -378,19 +410,30 @@ function AvatarWithIcon({
   icon,
   iconBgColor = "var(--ds-blue-600)",
   iconColor = "white",
+  gradient,
 }: AvatarWithIconProps) {
   const badgeSize = Math.round(size * 0.4);
 
   return (
-    <div className="relative inline-block">
-      <Avatar src={src} alt={alt} size={size} fallback={fallback} />
+    <div className="relative inline-flex" style={{ width: size, height: size }}>
+      {gradient ? (
+        <GradientAvatar
+          size={size}
+          colorLeft={gradient.colorLeft}
+          colorRight={gradient.colorRight}
+        />
+      ) : (
+        <Avatar src={src} alt={alt} size={size} fallback={fallback} />
+      )}
       <div
-        className="absolute -bottom-0.5 -right-0.5 flex items-center justify-center rounded-full"
+        className="absolute flex items-center justify-center rounded-full"
         style={{
           width: badgeSize,
           height: badgeSize,
           backgroundColor: iconBgColor,
           color: iconColor,
+          bottom: -2,
+          right: -2,
         }}
       >
         <span
@@ -620,25 +663,28 @@ export function Component() {
 }`;
 
 const customIconCode = `import { AvatarWithIcon } from '@/components/ui/Avatar';
-import { Zap, Star, Heart } from 'lucide-react';
+import { Check, Medal, Star } from 'lucide-react';
 
 export function Component() {
   return (
-    <div className="flex gap-4">
+    <div className="flex flex-col gap-4">
       <AvatarWithIcon
-        src="/user.jpg"
-        icon={<Zap size={10} />}
-        iconBgColor="var(--ds-amber-600)"
+        gradient={{ colorLeft: '#e5e5e5', colorRight: '#a3a3a3' }}
+        icon={<Check size={8} />}
+        iconBgColor="var(--ds-gray-900)"
+        size={32}
       />
       <AvatarWithIcon
-        src="/user.jpg"
-        icon={<Star size={10} />}
-        iconBgColor="var(--ds-blue-600)"
+        gradient={{ colorLeft: '#d4d4d4', colorRight: '#737373' }}
+        icon={<Medal size={8} />}
+        iconBgColor="var(--ds-gray-800)"
+        size={32}
       />
       <AvatarWithIcon
-        src="/user.jpg"
-        icon={<Heart size={10} />}
-        iconBgColor="var(--ds-red-600)"
+        gradient={{ colorLeft: '#fafafa', colorRight: '#525252' }}
+        icon={<Star size={8} />}
+        iconBgColor="var(--ds-gray-700)"
+        size={32}
       />
     </div>
   );
@@ -773,30 +819,28 @@ export default function AvatarComponent() {
           <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
             iconBgColor
           </code>{" "}
-          prop.
+          prop. The avatar can also use a gradient background instead of an
+          image.
         </p>
         <CodePreview componentCode={customIconCode}>
-          <div className="flex gap-4">
+          <div className="flex flex-col gap-4">
             <AvatarWithIcon
-              src={avatarImages[0]}
-              alt="Power user"
-              size={40}
-              icon={<Zap size={10} />}
-              iconBgColor="var(--ds-amber-600)"
+              gradient={{ colorLeft: "#e5e5e5", colorRight: "#a3a3a3" }}
+              size={32}
+              icon={<Check size={8} />}
+              iconBgColor="var(--ds-gray-900)"
             />
             <AvatarWithIcon
-              src={avatarImages[1]}
-              alt="Starred user"
-              size={40}
-              icon={<Star size={10} />}
-              iconBgColor="var(--ds-blue-600)"
+              gradient={{ colorLeft: "#d4d4d4", colorRight: "#737373" }}
+              size={32}
+              icon={<Medal size={8} />}
+              iconBgColor="var(--ds-gray-800)"
             />
             <AvatarWithIcon
-              src={avatarImages[2]}
-              alt="Favourite user"
-              size={40}
-              icon={<Heart size={10} />}
-              iconBgColor="var(--ds-red-600)"
+              gradient={{ colorLeft: "#fafafa", colorRight: "#525252" }}
+              size={32}
+              icon={<Star size={8} />}
+              iconBgColor="var(--ds-gray-700)"
             />
           </div>
         </CodePreview>
