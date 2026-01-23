@@ -107,7 +107,7 @@ export default function PagePagination({
             aria-label={`Go to next page: ${nextPage.label}`}
             className="group flex items-center gap-2 text-right"
           >
-            <div className="flex flex-col items-end">
+            <div className="flex flex-col items-start">
               <span className="text-[13px] leading-[18px] text-textSubtle mb-1">
                 Next
               </span>
