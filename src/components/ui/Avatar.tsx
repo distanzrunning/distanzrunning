@@ -189,12 +189,13 @@ export function AvatarGroup({ members, limit, size = 32 }: AvatarGroupProps) {
       {visibleMembers.map((member, index) => (
         <div
           key={index}
-          className="relative rounded-full overflow-hidden"
+          className="relative rounded-full"
           style={{
             marginLeft: index === 0 ? 0 : -overlap,
             width: outerSize,
             height: outerSize,
-            border: `${borderWidth}px solid var(--ds-background-100)`,
+            padding: borderWidth,
+            backgroundColor: "var(--ds-background-100)",
           }}
         >
           <Avatar
@@ -207,12 +208,13 @@ export function AvatarGroup({ members, limit, size = 32 }: AvatarGroupProps) {
       ))}
       {remainingCount > 0 && (
         <div
-          className="relative rounded-full overflow-hidden"
+          className="relative rounded-full"
           style={{
             marginLeft: -overlap,
             width: outerSize,
             height: outerSize,
-            border: `${borderWidth}px solid var(--ds-background-100)`,
+            padding: borderWidth,
+            backgroundColor: "var(--ds-background-100)",
           }}
         >
           <div
