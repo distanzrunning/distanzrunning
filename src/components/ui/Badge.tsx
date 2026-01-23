@@ -66,7 +66,7 @@ const variantStyles: Record<BadgeVariant, string> = {
   red: "bg-[var(--ds-red-900)] text-white",
   pink: "bg-[var(--ds-pink-900)] text-white",
   green: "bg-[var(--ds-green-900)] text-white",
-  teal: "bg-[var(--ds-teal-700)] text-white",
+  teal: "bg-[var(--ds-teal-900)] text-white",
   // Inverted: black bg in light mode, white bg in dark mode (stands out against page)
   inverted: "bg-black text-white dark:bg-white dark:text-black",
 
@@ -78,7 +78,7 @@ const variantStyles: Record<BadgeVariant, string> = {
   "red-subtle": "bg-[var(--ds-red-200)] text-[var(--ds-red-900)]",
   "pink-subtle": "bg-[var(--ds-pink-300)] text-[var(--ds-pink-900)]",
   "green-subtle": "bg-[var(--ds-green-200)] text-[var(--ds-green-900)]",
-  "teal-subtle": "bg-[var(--ds-teal-200)] text-[var(--ds-teal-900)]",
+  "teal-subtle": "bg-[var(--ds-teal-300)] text-[var(--ds-teal-900)]",
 };
 
 const sizeStyles: Record<BadgeSize, string> = {
