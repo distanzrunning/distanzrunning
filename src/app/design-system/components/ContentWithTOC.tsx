@@ -432,7 +432,7 @@ export default function ContentWithTOC({
   return (
     <div className="flex -m-12">
       {/* Main content column */}
-      <div className="flex-1 min-w-0 flex flex-col">
+      <div className="flex-1 min-w-0 flex flex-col min-h-[calc(100vh-112px)]">
         {/* Page Header Section */}
         {pageTitle && (
           <>
