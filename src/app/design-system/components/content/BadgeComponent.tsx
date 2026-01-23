@@ -332,39 +332,39 @@ export function Component() {
   return (
     <div className="flex flex-col gap-2">
       <div className="flex gap-1">
-        <Badge variant="gray">gray</Badge>
-        <Badge variant="gray-subtle">gray-subtle</Badge>
+        <Badge variant="gray">Gray</Badge>
+        <Badge variant="gray-subtle">Gray Subtle</Badge>
       </div>
       <div className="flex gap-1">
-        <Badge variant="blue">blue</Badge>
-        <Badge variant="blue-subtle">blue-subtle</Badge>
+        <Badge variant="blue">Blue</Badge>
+        <Badge variant="blue-subtle">Blue Subtle</Badge>
       </div>
       <div className="flex gap-1">
-        <Badge variant="purple">purple</Badge>
-        <Badge variant="purple-subtle">purple-subtle</Badge>
+        <Badge variant="purple">Purple</Badge>
+        <Badge variant="purple-subtle">Purple Subtle</Badge>
       </div>
       <div className="flex gap-1">
-        <Badge variant="amber">amber</Badge>
-        <Badge variant="amber-subtle">amber-subtle</Badge>
+        <Badge variant="amber">Amber</Badge>
+        <Badge variant="amber-subtle">Amber Subtle</Badge>
       </div>
       <div className="flex gap-1">
-        <Badge variant="red">red</Badge>
-        <Badge variant="red-subtle">red-subtle</Badge>
+        <Badge variant="red">Red</Badge>
+        <Badge variant="red-subtle">Red Subtle</Badge>
       </div>
       <div className="flex gap-1">
-        <Badge variant="pink">pink</Badge>
-        <Badge variant="pink-subtle">pink-subtle</Badge>
+        <Badge variant="pink">Pink</Badge>
+        <Badge variant="pink-subtle">Pink Subtle</Badge>
       </div>
       <div className="flex gap-1">
-        <Badge variant="green">green</Badge>
-        <Badge variant="green-subtle">green-subtle</Badge>
+        <Badge variant="green">Green</Badge>
+        <Badge variant="green-subtle">Green Subtle</Badge>
       </div>
       <div className="flex gap-1">
-        <Badge variant="teal">teal</Badge>
-        <Badge variant="teal-subtle">teal-subtle</Badge>
+        <Badge variant="teal">Teal</Badge>
+        <Badge variant="teal-subtle">Teal Subtle</Badge>
       </div>
       <div>
-        <Badge variant="inverted">inverted</Badge>
+        <Badge variant="inverted">Inverted</Badge>
       </div>
     </div>
   );
@@ -389,20 +389,20 @@ export function Component() {
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-center gap-1">
-        <Badge variant="gray" size="lg" icon={<Shield size={16} />}>gray</Badge>
-        <Badge variant="gray" size="md" icon={<Shield size={14} />}>gray</Badge>
-        <Badge variant="gray" size="sm" icon={<Shield size={12} />}>gray</Badge>
-        <Badge variant="gray-subtle" size="sm" icon={<Shield size={12} />}>gray</Badge>
-        <Badge variant="gray-subtle" size="md" icon={<Shield size={14} />}>gray</Badge>
-        <Badge variant="gray-subtle" size="lg" icon={<Shield size={16} />}>gray</Badge>
+        <Badge variant="gray" size="lg" icon={<Shield size={16} />}>Gray</Badge>
+        <Badge variant="gray" size="md" icon={<Shield size={14} />}>Gray</Badge>
+        <Badge variant="gray" size="sm" icon={<Shield size={12} />}>Gray</Badge>
+        <Badge variant="gray-subtle" size="sm" icon={<Shield size={12} />}>Gray</Badge>
+        <Badge variant="gray-subtle" size="md" icon={<Shield size={14} />}>Gray</Badge>
+        <Badge variant="gray-subtle" size="lg" icon={<Shield size={16} />}>Gray</Badge>
       </div>
       <div className="flex items-center gap-1">
-        <Badge variant="blue" size="lg" icon={<Shield size={16} />}>blue</Badge>
-        <Badge variant="blue" size="md" icon={<Shield size={14} />}>blue</Badge>
-        <Badge variant="blue" size="sm" icon={<Shield size={12} />}>blue</Badge>
-        <Badge variant="blue-subtle" size="sm" icon={<Shield size={12} />}>blue</Badge>
-        <Badge variant="blue-subtle" size="md" icon={<Shield size={14} />}>blue</Badge>
-        <Badge variant="blue-subtle" size="lg" icon={<Shield size={16} />}>blue</Badge>
+        <Badge variant="blue" size="lg" icon={<Shield size={16} />}>Blue</Badge>
+        <Badge variant="blue" size="md" icon={<Shield size={14} />}>Blue</Badge>
+        <Badge variant="blue" size="sm" icon={<Shield size={12} />}>Blue</Badge>
+        <Badge variant="blue-subtle" size="sm" icon={<Shield size={12} />}>Blue</Badge>
+        <Badge variant="blue-subtle" size="md" icon={<Shield size={14} />}>Blue</Badge>
+        <Badge variant="blue-subtle" size="lg" icon={<Shield size={16} />}>Blue</Badge>
       </div>
     </div>
   );
@@ -455,39 +455,39 @@ export default function BadgeComponent() {
         <CodePreview componentCode={variantsCode}>
           <div className="flex flex-col gap-2">
             <div className="flex gap-1">
-              <Badge variant="gray">gray</Badge>
-              <Badge variant="gray-subtle">gray-subtle</Badge>
+              <Badge variant="gray">Gray</Badge>
+              <Badge variant="gray-subtle">Gray Subtle</Badge>
             </div>
             <div className="flex gap-1">
-              <Badge variant="blue">blue</Badge>
-              <Badge variant="blue-subtle">blue-subtle</Badge>
+              <Badge variant="blue">Blue</Badge>
+              <Badge variant="blue-subtle">Blue Subtle</Badge>
             </div>
             <div className="flex gap-1">
-              <Badge variant="purple">purple</Badge>
-              <Badge variant="purple-subtle">purple-subtle</Badge>
+              <Badge variant="purple">Purple</Badge>
+              <Badge variant="purple-subtle">Purple Subtle</Badge>
             </div>
             <div className="flex gap-1">
-              <Badge variant="amber">amber</Badge>
-              <Badge variant="amber-subtle">amber-subtle</Badge>
+              <Badge variant="amber">Amber</Badge>
+              <Badge variant="amber-subtle">Amber Subtle</Badge>
             </div>
             <div className="flex gap-1">
-              <Badge variant="red">red</Badge>
-              <Badge variant="red-subtle">red-subtle</Badge>
+              <Badge variant="red">Red</Badge>
+              <Badge variant="red-subtle">Red Subtle</Badge>
             </div>
             <div className="flex gap-1">
-              <Badge variant="pink">pink</Badge>
-              <Badge variant="pink-subtle">pink-subtle</Badge>
+              <Badge variant="pink">Pink</Badge>
+              <Badge variant="pink-subtle">Pink Subtle</Badge>
             </div>
             <div className="flex gap-1">
-              <Badge variant="green">green</Badge>
-              <Badge variant="green-subtle">green-subtle</Badge>
+              <Badge variant="green">Green</Badge>
+              <Badge variant="green-subtle">Green Subtle</Badge>
             </div>
             <div className="flex gap-1">
-              <Badge variant="teal">teal</Badge>
-              <Badge variant="teal-subtle">teal-subtle</Badge>
+              <Badge variant="teal">Teal</Badge>
+              <Badge variant="teal-subtle">Teal Subtle</Badge>
             </div>
             <div>
-              <Badge variant="inverted">inverted</Badge>
+              <Badge variant="inverted">Inverted</Badge>
             </div>
           </div>
         </CodePreview>
@@ -544,13 +544,25 @@ export default function BadgeComponent() {
               <Badge variant="gray" size="sm" icon={<Shield size={12} />}>
                 gray
               </Badge>
-              <Badge variant="gray-subtle" size="sm" icon={<Shield size={12} />}>
+              <Badge
+                variant="gray-subtle"
+                size="sm"
+                icon={<Shield size={12} />}
+              >
                 gray
               </Badge>
-              <Badge variant="gray-subtle" size="md" icon={<Shield size={14} />}>
+              <Badge
+                variant="gray-subtle"
+                size="md"
+                icon={<Shield size={14} />}
+              >
                 gray
               </Badge>
-              <Badge variant="gray-subtle" size="lg" icon={<Shield size={16} />}>
+              <Badge
+                variant="gray-subtle"
+                size="lg"
+                icon={<Shield size={16} />}
+              >
                 gray
               </Badge>
             </div>
@@ -564,13 +576,25 @@ export default function BadgeComponent() {
               <Badge variant="blue" size="sm" icon={<Shield size={12} />}>
                 blue
               </Badge>
-              <Badge variant="blue-subtle" size="sm" icon={<Shield size={12} />}>
+              <Badge
+                variant="blue-subtle"
+                size="sm"
+                icon={<Shield size={12} />}
+              >
                 blue
               </Badge>
-              <Badge variant="blue-subtle" size="md" icon={<Shield size={14} />}>
+              <Badge
+                variant="blue-subtle"
+                size="md"
+                icon={<Shield size={14} />}
+              >
                 blue
               </Badge>
-              <Badge variant="blue-subtle" size="lg" icon={<Shield size={16} />}>
+              <Badge
+                variant="blue-subtle"
+                size="lg"
+                icon={<Shield size={16} />}
+              >
                 blue
               </Badge>
             </div>
@@ -668,13 +692,25 @@ export default function BadgeComponent() {
               <Badge variant="pink" size="sm" icon={<Shield size={12} />}>
                 pink
               </Badge>
-              <Badge variant="pink-subtle" size="sm" icon={<Shield size={12} />}>
+              <Badge
+                variant="pink-subtle"
+                size="sm"
+                icon={<Shield size={12} />}
+              >
                 pink
               </Badge>
-              <Badge variant="pink-subtle" size="md" icon={<Shield size={14} />}>
+              <Badge
+                variant="pink-subtle"
+                size="md"
+                icon={<Shield size={14} />}
+              >
                 pink
               </Badge>
-              <Badge variant="pink-subtle" size="lg" icon={<Shield size={16} />}>
+              <Badge
+                variant="pink-subtle"
+                size="lg"
+                icon={<Shield size={16} />}
+              >
                 pink
               </Badge>
             </div>
@@ -720,13 +756,25 @@ export default function BadgeComponent() {
               <Badge variant="teal" size="sm" icon={<Shield size={12} />}>
                 teal
               </Badge>
-              <Badge variant="teal-subtle" size="sm" icon={<Shield size={12} />}>
+              <Badge
+                variant="teal-subtle"
+                size="sm"
+                icon={<Shield size={12} />}
+              >
                 teal
               </Badge>
-              <Badge variant="teal-subtle" size="md" icon={<Shield size={14} />}>
+              <Badge
+                variant="teal-subtle"
+                size="md"
+                icon={<Shield size={14} />}
+              >
                 teal
               </Badge>
-              <Badge variant="teal-subtle" size="lg" icon={<Shield size={16} />}>
+              <Badge
+                variant="teal-subtle"
+                size="lg"
+                icon={<Shield size={16} />}
+              >
                 teal
               </Badge>
             </div>
@@ -826,9 +874,7 @@ export default function BadgeComponent() {
                 <td className="py-3 px-4 font-mono text-textSubtle">
                   BadgeVariant
                 </td>
-                <td className="py-3 px-4 text-textSubtle">
-                  &quot;gray&quot;
-                </td>
+                <td className="py-3 px-4 text-textSubtle">&quot;gray&quot;</td>
                 <td className="py-3 px-4 text-textSubtle">
                   Visual style of the badge
                 </td>
