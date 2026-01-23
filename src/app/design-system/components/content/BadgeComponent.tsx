@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { ChevronDown, Shield } from "lucide-react";
+import { ChevronDown, Shield, Zap } from "lucide-react";
 import { Section } from "../ContentWithTOC";
 import {
   useShikiHighlighter,
@@ -9,7 +9,6 @@ import {
   type DualThemeToken,
 } from "@/components/ui/useShikiHighlighter";
 import { Badge, BadgePill } from "@/components/ui/Badge";
-import { SiSlack } from "react-icons/si";
 
 // Toast notification for copy confirmation
 function Toast({
@@ -409,7 +408,7 @@ export function Component() {
 }`;
 
 const pillCode = `import { BadgePill } from '@/components/ui/Badge';
-import { SiSlack } from 'react-icons/si';
+import { Zap } from 'lucide-react';
 
 export function Component() {
   return (
@@ -420,9 +419,9 @@ export function Component() {
         <BadgePill size="lg" href="#">Label</BadgePill>
       </div>
       <div className="flex gap-2">
-        <BadgePill size="sm" href="#" icon={<SiSlack />}>Label</BadgePill>
-        <BadgePill size="md" href="#" icon={<SiSlack />}>Label</BadgePill>
-        <BadgePill size="lg" href="#" icon={<SiSlack />}>Label</BadgePill>
+        <BadgePill size="sm" href="#" icon={<Zap />}>Label</BadgePill>
+        <BadgePill size="md" href="#" icon={<Zap />}>Label</BadgePill>
+        <BadgePill size="lg" href="#" icon={<Zap />}>Label</BadgePill>
       </div>
     </div>
   );
@@ -816,13 +815,13 @@ export default function BadgeComponent() {
               </BadgePill>
             </div>
             <div className="flex gap-2">
-              <BadgePill size="sm" href="#" icon={<SiSlack />}>
+              <BadgePill size="sm" href="#" icon={<Zap />}>
                 Label
               </BadgePill>
-              <BadgePill size="md" href="#" icon={<SiSlack />}>
+              <BadgePill size="md" href="#" icon={<Zap />}>
                 Label
               </BadgePill>
-              <BadgePill size="lg" href="#" icon={<SiSlack />}>
+              <BadgePill size="lg" href="#" icon={<Zap />}>
                 Label
               </BadgePill>
             </div>

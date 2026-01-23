@@ -94,9 +94,9 @@ const pillSizeStyles: Record<BadgeSize, string> = {
 };
 
 const iconSizeStyles: Record<BadgeSize, string> = {
-  sm: "w-3 h-3",
-  md: "w-3.5 h-3.5",
-  lg: "w-4 h-4",
+  sm: "w-3 h-3 [&>svg]:w-full [&>svg]:h-full",
+  md: "w-3.5 h-3.5 [&>svg]:w-full [&>svg]:h-full",
+  lg: "w-4 h-4 [&>svg]:w-full [&>svg]:h-full",
 };
 
 // ============================================================================
@@ -123,11 +123,13 @@ export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
         `}
       >
         {icon && (
-          <span className={`flex-shrink-0 ${iconSizeStyles[size]}`}>
+          <span
+            className={`flex-shrink-0 flex items-center justify-center ${iconSizeStyles[size]}`}
+          >
             {icon}
           </span>
         )}
-        <span>{children}</span>
+        <span className="leading-none">{children}</span>
       </span>
     );
   },
@@ -163,9 +165,13 @@ export const BadgePill = forwardRef<
   const content = (
     <>
       {icon && (
-        <span className={`flex-shrink-0 ${iconSizeStyles[size]}`}>{icon}</span>
+        <span
+          className={`flex-shrink-0 flex items-center justify-center ${iconSizeStyles[size]}`}
+        >
+          {icon}
+        </span>
       )}
-      <span>{children}</span>
+      <span className="leading-none">{children}</span>
     </>
   );
 
