@@ -309,6 +309,22 @@ interface AvatarGitProps {
   provider: "github" | "gitlab" | "bitbucket";
 }
 
+// Brand colors from Simple Icons
+const gitProviderConfig = {
+  github: {
+    icon: SiGithub,
+    color: "#181717", // GitHub brand color
+  },
+  gitlab: {
+    icon: SiGitlab,
+    color: "#FC6D26", // GitLab brand color
+  },
+  bitbucket: {
+    icon: SiBitbucket,
+    color: "#0052CC", // Bitbucket brand color
+  },
+};
+
 function AvatarGit({
   src,
   alt,
@@ -319,22 +335,22 @@ function AvatarGit({
   const badgeSize = Math.round(size * 0.4);
   const iconSize = Math.round(badgeSize * 0.65);
 
-  const ProviderIcon = {
-    github: SiGithub,
-    gitlab: SiGitlab,
-    bitbucket: SiBitbucket,
-  }[provider];
+  const config = gitProviderConfig[provider];
+  const ProviderIcon = config.icon;
 
   return (
     <div className="relative inline-block">
       <Avatar src={src} alt={alt} size={size} fallback={fallback} />
       <div
-        className="absolute -bottom-0.5 -right-0.5 flex items-center justify-center rounded-full bg-[var(--ds-background-100)] border border-[var(--ds-gray-400)]"
-        style={{ width: badgeSize, height: badgeSize }}
+        className="absolute -bottom-0.5 -right-0.5 flex items-center justify-center rounded-full"
+        style={{
+          width: badgeSize,
+          height: badgeSize,
+          backgroundColor: config.color,
+        }}
       >
         <ProviderIcon
-          style={{ width: iconSize, height: iconSize }}
-          className="text-textDefault"
+          style={{ width: iconSize, height: iconSize, color: "white" }}
         />
       </div>
     </div>
@@ -593,10 +609,10 @@ const gitCode = `import { AvatarGit } from '@/components/ui/Avatar';
 
 export function Component() {
   return (
-    <div className="flex gap-4">
-      <AvatarGit src="/user.jpg" provider="github" />
-      <AvatarGit src="/user.jpg" provider="gitlab" />
-      <AvatarGit src="/user.jpg" provider="bitbucket" />
+    <div className="flex flex-col gap-4">
+      <AvatarGit src="/user.jpg" provider="github" size={32} />
+      <AvatarGit src="/user.jpg" provider="gitlab" size={32} />
+      <AvatarGit src="/user.jpg" provider="bitbucket" size={32} />
     </div>
   );
 }`;
@@ -717,26 +733,27 @@ export default function AvatarComponent() {
         </SectionHeader>
         <p className="text-copy-14 text-textSubtle mt-4 mb-6">
           Avatars can display a badge indicating the user&apos;s Git provider.
-          Supported providers include GitHub, GitLab, and Bitbucket.
+          Supported providers include GitHub, GitLab, and Bitbucket. Each badge
+          uses the provider&apos;s brand colour.
         </p>
         <CodePreview componentCode={gitCode}>
-          <div className="flex gap-4">
+          <div className="flex flex-col gap-4">
             <AvatarGit
               src={avatarImages[0]}
               alt="GitHub user"
-              size={40}
+              size={32}
               provider="github"
             />
             <AvatarGit
               src={avatarImages[1]}
               alt="GitLab user"
-              size={40}
+              size={32}
               provider="gitlab"
             />
             <AvatarGit
               src={avatarImages[2]}
               alt="Bitbucket user"
-              size={40}
+              size={32}
               provider="bitbucket"
             />
           </div>

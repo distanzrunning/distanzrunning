@@ -22,6 +22,9 @@ import {
   SiReact,
   SiNextdotjs,
   SiLua,
+  SiGithub,
+  SiGitlab,
+  SiBitbucket,
 } from "react-icons/si";
 import { VscJson } from "react-icons/vsc";
 import { FiFile } from "react-icons/fi";
@@ -230,9 +233,15 @@ const buildIconRegistry = (): IconDefinition[] => {
     displayName: string;
     component: React.ComponentType<{ size?: number; className?: string }>;
   }> = [
+    { name: "SiBitbucket", displayName: "Bitbucket", component: SiBitbucket },
     { name: "SiBrave", displayName: "Brave", component: SiBrave },
+    { name: "SiGithub", displayName: "GitHub", component: SiGithub },
+    { name: "SiGitlab", displayName: "GitLab", component: SiGitlab },
     { name: "SiInstagram", displayName: "Instagram", component: SiInstagram },
     { name: "SiLinkedin", displayName: "Linkedin", component: SiLinkedin },
+    { name: "SiLua", displayName: "Lua", component: SiLua },
+    { name: "SiNextdotjs", displayName: "Next.js", component: SiNextdotjs },
+    { name: "SiReact", displayName: "React", component: SiReact },
     { name: "SiStrava", displayName: "Strava", component: SiStrava },
     {
       name: "SiTailwindcss",
@@ -245,9 +254,6 @@ const buildIconRegistry = (): IconDefinition[] => {
       component: SiTypescript,
     },
     { name: "SiX", displayName: "X", component: SiX },
-    { name: "SiReact", displayName: "React", component: SiReact },
-    { name: "SiNextdotjs", displayName: "Next.js", component: SiNextdotjs },
-    { name: "SiLua", displayName: "Lua", component: SiLua },
   ];
 
   simpleIcons.forEach(({ name, displayName, component }) => {
