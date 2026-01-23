@@ -8,7 +8,12 @@ import {
   getTokenStyle,
   type DualThemeToken,
 } from "@/components/ui/useShikiHighlighter";
-import { Avatar, AvatarGroup, AvatarWithIcon } from "@/components/ui/Avatar";
+import {
+  Avatar,
+  AvatarGroup,
+  AvatarBrand,
+  AvatarWithIcon,
+} from "@/components/ui/Avatar";
 
 // Toast notification for copy confirmation
 function Toast({
@@ -364,15 +369,15 @@ export function Component() {
   );
 }`;
 
-const logoCode = `import { Avatar } from '@/components/ui/Avatar';
+const brandCode = `import { AvatarBrand } from '@/components/ui/Avatar';
 import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
   return (
     <div className="flex flex-col gap-4">
-      <Avatar src="/images/Boston_Icon.svg" size={32} />
-      <Avatar src="/images/NYC_Icon.svg" size={32} />
-      <Avatar src="/images/Tokyo_Icon.svg" size={32} />
+      <AvatarBrand src="/user.jpg" brand="nike" size={32} />
+      <AvatarBrand src="/user.jpg" brand="adidas" size={32} />
+      <AvatarBrand src="/user.jpg" brand="newbalance" size={32} />
     </div>
   );
 }`;
@@ -485,31 +490,35 @@ export default function AvatarComponent() {
         </CodePreview>
       </Section>
 
-      {/* Logo Section */}
+      {/* Brand Section */}
       <Section>
-        <SectionHeader id="logo" onCopyLink={showToast}>
-          Logo
+        <SectionHeader id="brand" onCopyLink={showToast}>
+          Brand
         </SectionHeader>
         <p className="text-copy-14 text-textSubtle mt-4 mb-6">
-          Avatars can display logos or icons. Use the{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
-            bgColor
-          </code>{" "}
-          prop to set a background colour for logos with transparent
-          backgrounds.
+          Avatars can display a badge indicating a brand affiliation. Supported
+          brands include Nike, Adidas, and New Balance. Each badge uses the
+          brand&apos;s colour.
         </p>
-        <CodePreview componentCode={logoCode}>
+        <CodePreview componentCode={brandCode}>
           <div className="flex flex-col gap-4">
-            <Avatar
-              src="/images/Boston_Icon.svg"
-              alt="Boston Marathon"
+            <AvatarBrand
+              src={avatarImages[0]}
+              alt="Nike athlete"
               size={32}
+              brand="nike"
             />
-            <Avatar src="/images/NYC_Icon.svg" alt="NYC Marathon" size={32} />
-            <Avatar
-              src="/images/Tokyo_Icon.svg"
-              alt="Tokyo Marathon"
+            <AvatarBrand
+              src={avatarImages[1]}
+              alt="Adidas athlete"
               size={32}
+              brand="adidas"
+            />
+            <AvatarBrand
+              src={avatarImages[2]}
+              alt="New Balance athlete"
+              size={32}
+              brand="newbalance"
             />
           </div>
         </CodePreview>

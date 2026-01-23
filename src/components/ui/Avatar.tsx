@@ -2,14 +2,14 @@
 
 import { useState } from "react";
 import { User } from "lucide-react";
-import { SiGithub, SiGitlab, SiBitbucket } from "react-icons/si";
+import { SiNike, SiAdidas, SiNewbalance } from "react-icons/si";
 
 // ============================================================================
 // Types
 // ============================================================================
 
-/** Git provider options for AvatarGit */
-export type GitProvider = "github" | "gitlab" | "bitbucket";
+/** Brand options for AvatarBrand */
+export type Brand = "nike" | "adidas" | "newbalance";
 
 /** Props for the base Avatar component */
 export interface AvatarProps {
@@ -53,10 +53,10 @@ export interface AvatarGroupProps {
   size?: number;
 }
 
-/** Props for AvatarGit component */
-export interface AvatarGitProps extends Omit<AvatarProps, "shimmer"> {
-  /** Git provider for the badge */
-  provider: GitProvider;
+/** Props for AvatarBrand component */
+export interface AvatarBrandProps extends Omit<AvatarProps, "shimmer"> {
+  /** Brand for the badge */
+  brand: Brand;
 }
 
 /** Props for AvatarGradient component */
@@ -246,43 +246,43 @@ export function AvatarGroup({ members, limit, size = 32 }: AvatarGroupProps) {
 }
 
 // ============================================================================
-// AvatarGit Component
+// AvatarBrand Component
 // ============================================================================
 
-/** Brand colors and icons for Git providers */
-const gitProviderConfig = {
-  github: {
-    icon: SiGithub,
-    color: "#181717",
+/** Brand colors and icons */
+const brandConfig = {
+  nike: {
+    icon: SiNike,
+    color: "#111111",
   },
-  gitlab: {
-    icon: SiGitlab,
-    color: "#FC6D26",
+  adidas: {
+    icon: SiAdidas,
+    color: "#000000",
   },
-  bitbucket: {
-    icon: SiBitbucket,
-    color: "#0052CC",
+  newbalance: {
+    icon: SiNewbalance,
+    color: "#CF0A2C",
   },
 };
 
 /**
- * Avatar with a Git provider badge (GitHub, GitLab, Bitbucket).
+ * Avatar with a brand badge (Nike, Adidas, New Balance).
  *
  * @example
- * <AvatarGit src="/user.jpg" provider="github" size={32} />
+ * <AvatarBrand src="/user.jpg" brand="nike" size={32} />
  */
-export function AvatarGit({
+export function AvatarBrand({
   src,
   alt,
   size = 32,
   fallback,
-  provider,
-}: AvatarGitProps) {
+  brand,
+}: AvatarBrandProps) {
   const badgeSize = Math.round(size * 0.4);
   const iconSize = Math.round(badgeSize * 0.65);
 
-  const config = gitProviderConfig[provider];
-  const ProviderIcon = config.icon;
+  const config = brandConfig[brand];
+  const BrandIcon = config.icon;
 
   return (
     <div className="relative inline-flex" style={{ width: size, height: size }}>
@@ -297,7 +297,7 @@ export function AvatarGit({
           left: -3,
         }}
       >
-        <ProviderIcon
+        <BrandIcon
           style={{ width: iconSize, height: iconSize, color: "white" }}
         />
       </div>
