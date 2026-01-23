@@ -205,6 +205,7 @@ export default function ContentWithTOC({
   const isClickScrolling = useRef(false);
   const activeIdRef = useRef(activeId);
   const contentRef = useRef<HTMLElement | null>(null);
+  const hasInitializedFromHash = useRef(false);
 
   // Auto-generate TOC if not provided
   const [tocItems, tocCallbackRef] = useAutoTOC(manualTocItems, mainSectionId);
@@ -306,13 +307,19 @@ export default function ContentWithTOC({
     return () => observer.disconnect();
   }, [getAllIds]);
 
-  // Initialize from URL hash or set first item as active
+  // Initialize from URL hash or set first item as active (only once)
   useEffect(() => {
+    // Only initialize once to prevent jumping when accordions open
+    if (hasInitializedFromHash.current) return;
+
     const ids = getAllIds();
+    if (ids.length === 0) return; // Wait for IDs to be available
+
     const hash = window.location.hash.slice(1);
 
     if (hash && ids.includes(hash)) {
       setActiveId(hash);
+      hasInitializedFromHash.current = true;
       // Scroll to the hash element
       requestAnimationFrame(() => {
         const element = document.getElementById(hash);
@@ -325,6 +332,7 @@ export default function ContentWithTOC({
       });
     } else if (ids.length > 0) {
       setActiveId(ids[0]);
+      hasInitializedFromHash.current = true;
     }
   }, [getAllIds]);
 
