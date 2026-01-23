@@ -88,10 +88,10 @@ export default function PagePagination({
               <ChevronLeftIcon />
             </span>
             <div className="flex flex-col items-start">
-              <span className="text-[13px] leading-[18px] text-textSubtle mb-1">
+              <span className="text-[13px] leading-[18px] text-textSubtle group-hover:text-textDefault transition-colors mb-1">
                 Previous
               </span>
-              <span className="text-[16px] leading-[24px] font-medium text-textDefault group-hover:text-textSubtle transition-colors">
+              <span className="text-[16px] leading-[24px] font-medium text-textDefault">
                 {prevPage.label}
               </span>
             </div>
@@ -108,10 +108,10 @@ export default function PagePagination({
             className="group flex items-center gap-2 text-right"
           >
             <div className="flex flex-col items-start">
-              <span className="text-[13px] leading-[18px] text-textSubtle mb-1">
+              <span className="text-[13px] leading-[18px] text-textSubtle group-hover:text-textDefault transition-colors mb-1">
                 Next
               </span>
-              <span className="text-[16px] leading-[24px] font-medium text-textDefault group-hover:text-textSubtle transition-colors">
+              <span className="text-[16px] leading-[24px] font-medium text-textDefault">
                 {nextPage.label}
               </span>
             </div>
