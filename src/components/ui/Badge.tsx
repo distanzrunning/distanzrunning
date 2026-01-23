@@ -82,15 +82,15 @@ const variantStyles: Record<BadgeVariant, string> = {
 };
 
 const sizeStyles: Record<BadgeSize, string> = {
-  sm: "h-5 px-2 text-xs gap-1",
+  sm: "h-5 px-1.5 text-[11px] tracking-[0.2px] gap-1",
   md: "h-6 px-2.5 text-xs gap-1.5",
-  lg: "h-7 px-3 text-sm gap-1.5",
+  lg: "h-8 px-3 text-sm gap-1.5",
 };
 
 const pillSizeStyles: Record<BadgeSize, string> = {
-  sm: "h-5 px-2.5 text-xs gap-1",
+  sm: "h-5 px-1.5 text-[11px] tracking-[0.2px] gap-1",
   md: "h-6 px-2.5 text-xs gap-1.5",
-  lg: "h-7 px-3 text-sm gap-1.5",
+  lg: "h-8 px-3 text-sm gap-1.5",
 };
 
 const iconSizeStyles: Record<BadgeSize, string> = {
