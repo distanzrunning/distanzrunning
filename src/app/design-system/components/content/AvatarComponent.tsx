@@ -387,26 +387,29 @@ import { Check, Medal, Star } from 'lucide-react';
 
 export function Component() {
   return (
-    <div className="flex flex-col gap-3.5">
+    <div className="flex flex-col gap-4">
       <AvatarWithIcon
         gradient={{ colors: ['#ff6b6b', '#feca57', '#48dbfb'], angle: 135 }}
-        icon={<Check size={12} />}
+        icon={<Check size={14} />}
         iconBgColor="var(--ds-gray-900)"
-        size={32}
+        size={64}
+        badgeSize={26}
       />
       <AvatarWithIcon
         gradient={{ colors: ['#a29bfe', '#74b9ff', '#81ecec'], angle: 45 }}
-        icon={<Medal size={12} />}
+        icon={<Medal size={14} />}
         iconBgColor="var(--ds-gray-200)"
         iconColor="var(--ds-gray-900)"
-        size={32}
+        size={64}
+        badgeSize={26}
       />
       <AvatarWithIcon
         gradient={{ colors: ['#fd79a8', '#e84393', '#6c5ce7'], angle: 180 }}
-        icon={<Star size={12} />}
+        icon={<Star size={14} />}
         iconBgColor="var(--ds-gray-100)"
         iconColor="var(--ds-gray-800)"
-        size={32}
+        size={64}
+        badgeSize={26}
       />
     </div>
   );
@@ -542,14 +545,15 @@ export default function AvatarComponent() {
           image.
         </p>
         <CodePreview componentCode={customIconCode}>
-          <div className="flex flex-col gap-3.5">
+          <div className="flex flex-col gap-4">
             <AvatarWithIcon
               gradient={{
                 colors: ["#ff6b6b", "#feca57", "#48dbfb"],
                 angle: 135,
               }}
-              size={32}
-              icon={<Check size={12} />}
+              size={64}
+              badgeSize={26}
+              icon={<Check size={14} />}
               iconBgColor="var(--ds-gray-900)"
             />
             <AvatarWithIcon
@@ -557,8 +561,9 @@ export default function AvatarComponent() {
                 colors: ["#a29bfe", "#74b9ff", "#81ecec"],
                 angle: 45,
               }}
-              size={32}
-              icon={<Medal size={12} />}
+              size={64}
+              badgeSize={26}
+              icon={<Medal size={14} />}
               iconBgColor="var(--ds-gray-200)"
               iconColor="var(--ds-gray-900)"
             />
@@ -567,8 +572,9 @@ export default function AvatarComponent() {
                 colors: ["#fd79a8", "#e84393", "#6c5ce7"],
                 angle: 180,
               }}
-              size={32}
-              icon={<Star size={12} />}
+              size={64}
+              badgeSize={26}
+              icon={<Star size={14} />}
               iconBgColor="var(--ds-gray-100)"
               iconColor="var(--ds-gray-800)"
             />
@@ -752,7 +758,7 @@ export default function AvatarComponent() {
         </div>
 
         <h3 className="text-[16px] font-semibold text-textDefault mt-8 mb-4">
-          AvatarGit
+          AvatarBrand
         </h3>
         <div className="overflow-x-auto">
           <table className="w-full border-collapse">
@@ -774,14 +780,21 @@ export default function AvatarComponent() {
             </thead>
             <tbody className="text-sm">
               <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">provider</td>
+                <td className="py-3 pr-4 font-mono">brand</td>
                 <td className="py-3 px-4 font-mono text-textSubtle">
-                  &quot;github&quot; | &quot;gitlab&quot; |
-                  &quot;bitbucket&quot;
+                  &quot;nike&quot; | &quot;adidas&quot; | &quot;newbalance&quot;
                 </td>
                 <td className="py-3 px-4 text-textSubtle">-</td>
                 <td className="py-3 px-4 text-textSubtle">
-                  Git provider for the badge
+                  Brand for the badge
+                </td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 font-mono">badgeSize</td>
+                <td className="py-3 px-4 font-mono text-textSubtle">number</td>
+                <td className="py-3 px-4 text-textSubtle">size * 0.55</td>
+                <td className="py-3 px-4 text-textSubtle">
+                  Fixed badge size in pixels
                 </td>
               </tr>
               <tr className="border-b border-borderSubtle">
@@ -852,6 +865,14 @@ export default function AvatarComponent() {
                 <td className="py-3 px-4 text-textSubtle">-</td>
                 <td className="py-3 px-4 text-textSubtle">
                   Use gradient background instead of image
+                </td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 font-mono">badgeSize</td>
+                <td className="py-3 px-4 font-mono text-textSubtle">number</td>
+                <td className="py-3 px-4 text-textSubtle">size * 0.55</td>
+                <td className="py-3 px-4 text-textSubtle">
+                  Fixed badge size in pixels
                 </td>
               </tr>
               <tr className="border-b border-borderSubtle">

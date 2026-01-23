@@ -81,6 +81,8 @@ export interface AvatarWithIconProps extends Omit<AvatarProps, "shimmer"> {
   iconColor?: string;
   /** Use gradient background instead of image */
   gradient?: { colors: string[]; angle?: number };
+  /** Fixed badge size in pixels (overrides proportional sizing) */
+  badgeSize?: number;
 }
 
 // ============================================================================
@@ -367,8 +369,9 @@ export function AvatarWithIcon({
   iconBgColor = "var(--ds-blue-600)",
   iconColor = "white",
   gradient,
+  badgeSize: customBadgeSize,
 }: AvatarWithIconProps) {
-  const badgeSize = Math.round(size * 0.55);
+  const badgeSize = customBadgeSize || Math.round(size * 0.55);
 
   return (
     <div className="relative inline-flex" style={{ width: size, height: size }}>
