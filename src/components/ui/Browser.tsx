@@ -54,18 +54,9 @@ function TrafficLights() {
 function NavigationButtons() {
   return (
     <div className="flex items-center gap-4 max-md:hidden">
-      <ArrowLeft
-        size={14}
-        className="text-[var(--ds-gray-900)]"
-      />
-      <ArrowRight
-        size={14}
-        className="text-[var(--ds-gray-900)]"
-      />
-      <RotateCw
-        size={14}
-        className="text-[var(--ds-gray-900)]"
-      />
+      <ArrowLeft size={14} className="text-[var(--ds-gray-900)]" />
+      <ArrowRight size={14} className="text-[var(--ds-gray-900)]" />
+      <RotateCw size={14} className="text-[var(--ds-gray-900)]" />
     </div>
   );
 }
@@ -79,7 +70,10 @@ interface AddressBarProps {
   showCopyButton?: boolean;
 }
 
-function AddressBar({ url = "vercel.com", showCopyButton = true }: AddressBarProps) {
+function AddressBar({
+  url = "www.distanzrunning.com",
+  showCopyButton = true,
+}: AddressBarProps) {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = useCallback(() => {
@@ -130,7 +124,10 @@ function AddressBar({ url = "vercel.com", showCopyButton = true }: AddressBarPro
  * BrowserHeader component - the top bar of the browser frame.
  */
 export const BrowserHeader = forwardRef<HTMLDivElement, BrowserHeaderProps>(
-  ({ url, showNavigation = true, showCopyButton = true, className = "" }, ref) => {
+  (
+    { url, showNavigation = true, showCopyButton = true, className = "" },
+    ref,
+  ) => {
     return (
       <div
         ref={ref}
@@ -151,7 +148,7 @@ export const BrowserHeader = forwardRef<HTMLDivElement, BrowserHeaderProps>(
         <div className="flex items-center flex-1 justify-center gap-4 min-w-0 first:justify-start md:first:max-w-[140px] max-md:first:flex-none last:justify-end md:last:max-w-[140px] max-lg:hidden" />
       </div>
     );
-  }
+  },
 );
 
 BrowserHeader.displayName = "BrowserHeader";
@@ -164,7 +161,7 @@ BrowserHeader.displayName = "BrowserHeader";
  * Browser component - a realistic browser-style frame for showcasing content.
  *
  * @example
- * <Browser url="example.com">
+ * <Browser url="www.distanzrunning.com">
  *   <img src="/screenshot.png" alt="Website screenshot" />
  * </Browser>
  */
@@ -172,12 +169,12 @@ export const Browser = forwardRef<HTMLDivElement, BrowserProps>(
   (
     {
       children,
-      url = "vercel.com",
+      url = "www.distanzrunning.com",
       showNavigation = true,
       showCopyButton = true,
       className = "",
     },
-    ref
+    ref,
   ) => {
     return (
       <div
@@ -192,7 +189,7 @@ export const Browser = forwardRef<HTMLDivElement, BrowserProps>(
         <div className="p-6">{children}</div>
       </div>
     );
-  }
+  },
 );
 
 Browser.displayName = "Browser";

@@ -8,7 +8,7 @@ import {
   getTokenStyle,
   type DualThemeToken,
 } from "@/components/ui/useShikiHighlighter";
-import { Browser, BrowserHeader } from "@/components/ui/Browser";
+import { Browser } from "@/components/ui/Browser";
 
 // Toast notification for copy confirmation
 function Toast({
@@ -251,7 +251,7 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
             color: "var(--ds-gray-1000)",
             darkColor: "var(--ds-gray-1000)",
           },
-        ] as DualThemeToken[]
+        ] as DualThemeToken[],
     );
 
   const handleCopy = useCallback(() => {
@@ -324,51 +324,14 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   );
 }
 
-// Code examples
+// Code example
 const compositionCode = `import { Browser } from '@/components/ui/Browser';
 
 export function Component() {
   return (
-    <Browser url="vercel.com">
+    <Browser url="www.distanzrunning.com">
       {/* Your content here */}
     </Browser>
-  );
-}`;
-
-const withContentCode = `import { Browser } from '@/components/ui/Browser';
-
-export function Component() {
-  return (
-    <Browser url="example.com">
-      <div className="bg-gradient-to-br from-purple-500 to-pink-500 h-48 rounded-lg flex items-center justify-center">
-        <span className="text-white text-2xl font-bold">Your Content</span>
-      </div>
-    </Browser>
-  );
-}`;
-
-const headerOnlyCode = `import { BrowserHeader } from '@/components/ui/Browser';
-
-export function Component() {
-  return (
-    <div className="rounded-lg overflow-hidden border border-[var(--ds-gray-400)]">
-      <BrowserHeader url="standalone-header.com" />
-      <div className="p-6 bg-[var(--ds-background-200)]">
-        Content below header
-      </div>
-    </div>
-  );
-}`;
-
-const customUrlCode = `import { Browser } from '@/components/ui/Browser';
-
-export function Component() {
-  return (
-    <div className="flex flex-col gap-4">
-      <Browser url="github.com/vercel/next.js" />
-      <Browser url="localhost:3000" />
-      <Browser url="app.example.com/dashboard" />
-    </div>
   );
 }`;
 
@@ -393,209 +356,8 @@ export default function BrowserComponent() {
           showcasing website screenshots or any other content.
         </p>
         <CodePreview componentCode={compositionCode}>
-          <Browser url="vercel.com" />
+          <Browser url="www.distanzrunning.com" />
         </CodePreview>
-      </Section>
-
-      {/* With Content Section */}
-      <Section>
-        <SectionHeader id="with-content" onCopyLink={showToast}>
-          With Content
-        </SectionHeader>
-        <p className="text-copy-14 text-textSubtle mt-4 mb-6">
-          Add any content inside the Browser component to display it within the
-          browser frame.
-        </p>
-        <CodePreview componentCode={withContentCode}>
-          <Browser url="example.com">
-            <div className="bg-gradient-to-br from-purple-500 to-pink-500 h-48 rounded-lg flex items-center justify-center">
-              <span className="text-white text-2xl font-bold">Your Content</span>
-            </div>
-          </Browser>
-        </CodePreview>
-      </Section>
-
-      {/* Header Only Section */}
-      <Section>
-        <SectionHeader id="header-only" onCopyLink={showToast}>
-          Header Only
-        </SectionHeader>
-        <p className="text-copy-14 text-textSubtle mt-4 mb-6">
-          Use the{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
-            BrowserHeader
-          </code>{" "}
-          component standalone for custom layouts.
-        </p>
-        <CodePreview componentCode={headerOnlyCode}>
-          <div className="rounded-lg overflow-hidden border border-[var(--ds-gray-400)]">
-            <BrowserHeader url="standalone-header.com" />
-            <div className="p-6 bg-[var(--ds-background-200)]">
-              Content below header
-            </div>
-          </div>
-        </CodePreview>
-      </Section>
-
-      {/* Custom URL Section */}
-      <Section>
-        <SectionHeader id="custom-url" onCopyLink={showToast}>
-          Custom URL
-        </SectionHeader>
-        <p className="text-copy-14 text-textSubtle mt-4 mb-6">
-          Customise the URL displayed in the address bar using the{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
-            url
-          </code>{" "}
-          prop.
-        </p>
-        <CodePreview componentCode={customUrlCode}>
-          <div className="flex flex-col gap-4">
-            <Browser url="github.com/vercel/next.js" />
-            <Browser url="localhost:3000" />
-            <Browser url="app.example.com/dashboard" />
-          </div>
-        </CodePreview>
-      </Section>
-
-      {/* Props Section */}
-      <Section>
-        <SectionHeader id="props" onCopyLink={showToast}>
-          Props
-        </SectionHeader>
-        <p className="text-copy-14 text-textSubtle mt-4 mb-6">
-          Available props for the Browser components.
-        </p>
-
-        <h3 className="text-[16px] font-semibold text-textDefault mt-8 mb-4">
-          Browser
-        </h3>
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
-                  Prop
-                </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
-                  Type
-                </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
-                  Default
-                </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
-                  Description
-                </th>
-              </tr>
-            </thead>
-            <tbody className="text-sm">
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">children</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  ReactNode
-                </td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Content to display inside the browser frame
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">url</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">string</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  &quot;vercel.com&quot;
-                </td>
-                <td className="py-3 px-4 text-textSubtle">
-                  URL to display in the address bar
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">showNavigation</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">boolean</td>
-                <td className="py-3 px-4 text-textSubtle">true</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Whether to show navigation buttons
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">showCopyButton</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">boolean</td>
-                <td className="py-3 px-4 text-textSubtle">true</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Whether to show the copy button in the address bar
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">className</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">string</td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Additional CSS classes
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <h3 className="text-[16px] font-semibold text-textDefault mt-8 mb-4">
-          BrowserHeader
-        </h3>
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
-                  Prop
-                </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
-                  Type
-                </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
-                  Default
-                </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
-                  Description
-                </th>
-              </tr>
-            </thead>
-            <tbody className="text-sm">
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">url</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">string</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  &quot;vercel.com&quot;
-                </td>
-                <td className="py-3 px-4 text-textSubtle">
-                  URL to display in the address bar
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">showNavigation</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">boolean</td>
-                <td className="py-3 px-4 text-textSubtle">true</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Whether to show navigation buttons
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">showCopyButton</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">boolean</td>
-                <td className="py-3 px-4 text-textSubtle">true</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Whether to show the copy button
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">className</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">string</td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Additional CSS classes
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
       </Section>
     </>
   );
