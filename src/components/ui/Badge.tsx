@@ -64,7 +64,7 @@ const variantStyles: Record<BadgeVariant, string> = {
   // Amber uses black text for contrast on the warm background
   amber: "bg-[var(--ds-amber-700)] text-black",
   red: "bg-[var(--ds-red-900)] text-white",
-  pink: "bg-[var(--ds-pink-700)] text-white",
+  pink: "bg-[var(--ds-pink-900)] text-white",
   green: "bg-[var(--ds-green-700)] text-white",
   teal: "bg-[var(--ds-teal-700)] text-white",
   // Inverted: black bg in light mode, white bg in dark mode (stands out against page)
@@ -76,7 +76,7 @@ const variantStyles: Record<BadgeVariant, string> = {
   "purple-subtle": "bg-[var(--ds-purple-200)] text-[var(--ds-purple-900)]",
   "amber-subtle": "bg-[var(--ds-amber-200)] text-[var(--ds-amber-900)]",
   "red-subtle": "bg-[var(--ds-red-200)] text-[var(--ds-red-900)]",
-  "pink-subtle": "bg-[var(--ds-pink-200)] text-[var(--ds-pink-900)]",
+  "pink-subtle": "bg-[var(--ds-pink-300)] text-[var(--ds-pink-900)]",
   "green-subtle": "bg-[var(--ds-green-200)] text-[var(--ds-green-900)]",
   "teal-subtle": "bg-[var(--ds-teal-200)] text-[var(--ds-teal-900)]",
 };
