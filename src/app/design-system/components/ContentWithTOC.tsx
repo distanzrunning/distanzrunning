@@ -59,127 +59,82 @@ function scanHeadingsFromContainer(
     "[id]:has(> h2), [id]:has(> h3)",
   );
 
-  // Build a map of id -> {element, level, title} to avoid duplicates
-  const headingMap = new Map<
-    string,
-    { level: string; title: string; position: number }
-  >();
-
-  // Process direct headings (h2[id], h3[id])
-  directHeadings.forEach((heading) => {
-    const id = heading.id;
-    if (mainSectionId && id === mainSectionId) return;
-
-    const title = heading.textContent?.trim() || id;
-    const level = heading.tagName.toLowerCase();
-    // Use element's position in document for ordering
-    const position = Array.from(container.querySelectorAll("*")).indexOf(
-      heading,
-    );
-    headingMap.set(id, { level, title, position });
-  });
-
-  // Process wrapped headings (button[id] > h2, etc.)
-  wrappedHeadings.forEach((wrapper) => {
-    const id = wrapper.id;
-    if (mainSectionId && id === mainSectionId) return;
-    if (headingMap.has(id)) return; // Already found as direct heading
-
-    const h2 = wrapper.querySelector(":scope > h2");
-    const h3 = wrapper.querySelector(":scope > h3");
-    const heading = h2 || h3;
-
-    if (heading) {
-      const title = heading.textContent?.trim() || id;
-      const level = heading.tagName.toLowerCase();
-      const position = Array.from(container.querySelectorAll("*")).indexOf(
-        wrapper,
-      );
-      headingMap.set(id, { level, title, position });
-    }
-  });
-
-  // Sort by document position and build TOC structure
-  const sortedEntries = Array.from(headingMap.entries()).sort(
-    (a, b) => a[1].position - b[1].position,
-  );
-
-  const items: TOCItem[] = [];
-  let currentH2: TOCItem | null = null;
-
-  sortedEntries.forEach(([id, { level, title }]) => {
-    if (level === "h2") {
-      currentH2 = { id, title, children: [] };
-      items.push(currentH2);
-    } else if (level === "h3" && currentH2) {
-      currentH2.children = currentH2.children || [];
-      currentH2.children.push({ id, title });
-    } else if (level === "h3") {
-      // h3 without a parent h2, add as top-level
-      items.push({ id, title });
-    }
-  });
-
-  // Clean up empty children arrays
-  items.forEach((item) => {
-    if (item.children && item.children.length === 0) {
-      delete item.children;
-    }
-  });
-
-  return items;
-}
-
-// Hook to extract TOC items from DOM headings using callback ref
-function useAutoTOC(
-  manualItems?: TOCItem[],
-  mainSectionId?: string,
-): [TOCItem[], (node: HTMLElement | null) => void] {
-  const [autoItems, setAutoItems] = useState<TOCItem[]>([]);
-  const observerRef = useRef<MutationObserver | null>(null);
-
-  const callbackRef = useCallback(
-    (node: HTMLElement | null) => {
-      // Cleanup previous observer
-      if (observerRef.current) {
-        observerRef.current.disconnect();
-        observerRef.current = null;
-      }
-
-      // If manual items are provided, don't auto-generate
-      if (manualItems && manualItems.length > 0) {
-        return;
-      }
-
-      if (!node) return;
-
-      // Scan function
-      const scan = () => {
-        const items = scanHeadingsFromContainer(node, mainSectionId);
-        setAutoItems(items);
-      };
-
-      // Initial scan
-      scan();
-
-      // Observe for changes
-      observerRef.current = new MutationObserver(scan);
-      observerRef.current.observe(node, {
-        childList: true,
-        subtree: true,
-      });
-    },
-    [manualItems, mainSectionId],
-  );
-
-  // Cleanup on unmount
+  // Track when the ref is assigned
   useEffect(() => {
-    return () => {
-      if (observerRef.current) {
-        observerRef.current.disconnect();
+    // Poll for the ref to be set (handles initial mount timing)
+    const checkRef = () => {
+      if (containerRef.current && containerRef.current !== containerElement) {
+        setContainerElement(containerRef.current);
       }
     };
-  }, []);
+
+    checkRef();
+    // Also check after a frame in case ref is set after effect runs
+    const frameId = requestAnimationFrame(checkRef);
+    return () => cancelAnimationFrame(frameId);
+  }, [containerRef, containerElement]);
+
+  useEffect(() => {
+    // If manual items are provided, don't auto-generate
+    if (manualItems && manualItems.length > 0) {
+      return;
+    }
+
+    if (!containerElement) return;
+
+    const scanHeadings = () => {
+      // Find all h2 and h3 elements with ids
+      const headings = containerElement.querySelectorAll("h2[id], h3[id]");
+      const items: TOCItem[] = [];
+      let currentH2: TOCItem | null = null;
+
+      headings.forEach((heading) => {
+        const id = heading.id;
+        // Skip the main section id as it's handled separately
+        if (mainSectionId && id === mainSectionId) return;
+
+        const title = heading.textContent?.trim() || id;
+        const level = heading.tagName.toLowerCase();
+
+        if (level === "h2") {
+          currentH2 = { id, title, children: [] };
+          items.push(currentH2);
+        } else if (level === "h3" && currentH2) {
+          currentH2.children = currentH2.children || [];
+          currentH2.children.push({ id, title });
+        } else if (level === "h3") {
+          // h3 without a parent h2, add as top-level
+          items.push({ id, title });
+        }
+      });
+
+      // Clean up empty children arrays
+      items.forEach((item) => {
+        if (item.children && item.children.length === 0) {
+          delete item.children;
+        }
+      });
+
+      return items;
+    };
+
+    // Initial scan
+    const items = scanHeadings();
+    setAutoItems(items);
+
+    // Also observe for DOM changes in case content loads asynchronously
+    const observer = new MutationObserver(() => {
+      const newItems = scanHeadings();
+      setAutoItems(newItems);
+    });
+
+    observer.observe(containerElement, {
+      childList: true,
+      subtree: true,
+    });
+
+    return () => observer.disconnect();
+  }, [containerElement, manualItems, mainSectionId]);
 
   // Return manual items if provided, otherwise auto-generated
   const items = manualItems && manualItems.length > 0 ? manualItems : autoItems;

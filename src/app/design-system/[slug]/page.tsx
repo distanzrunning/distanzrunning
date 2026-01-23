@@ -33,6 +33,7 @@ import ToggleComponent from "../components/content/ToggleComponent";
 import CodeBlockComponent from "../components/content/CodeBlockComponent";
 import AvatarComponent from "../components/content/AvatarComponent";
 import BadgeComponent from "../components/content/BadgeComponent";
+import BrowserComponent from "../components/content/BrowserComponent";
 import Materials from "../components/content/Materials";
 import ContentWithTOC from "../components/ContentWithTOC";
 
@@ -411,6 +412,21 @@ export default function DesignSystemPage() {
           onNavigate={handleNavigation}
         >
           <BadgeComponent />
+        </ContentWithTOC>
+      );
+    }
+
+    if (activeSlug === "browser") {
+      return (
+        <ContentWithTOC
+          tocTitle="On this page"
+          pageTitle="Browser"
+          pageSubtitle="The Browser component lets you showcase website screenshots or any other content within a realistic browser-style frame."
+          mainSectionId="browser"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
+          <BrowserComponent />
         </ContentWithTOC>
       );
     }
