@@ -667,23 +667,25 @@ import { Check, Medal, Star } from 'lucide-react';
 
 export function Component() {
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-3.5">
       <AvatarWithIcon
         gradient={{ colorLeft: '#e5e5e5', colorRight: '#a3a3a3' }}
-        icon={<Check size={8} />}
+        icon={<Check size={10} />}
         iconBgColor="var(--ds-gray-900)"
         size={32}
       />
       <AvatarWithIcon
         gradient={{ colorLeft: '#d4d4d4', colorRight: '#737373' }}
-        icon={<Medal size={8} />}
-        iconBgColor="var(--ds-gray-800)"
+        icon={<Medal size={10} />}
+        iconBgColor="var(--ds-gray-200)"
+        iconColor="var(--ds-gray-900)"
         size={32}
       />
       <AvatarWithIcon
         gradient={{ colorLeft: '#fafafa', colorRight: '#525252' }}
-        icon={<Star size={8} />}
-        iconBgColor="var(--ds-gray-700)"
+        icon={<Star size={10} />}
+        iconBgColor="var(--ds-gray-100)"
+        iconColor="var(--ds-gray-800)"
         size={32}
       />
     </div>
@@ -823,24 +825,26 @@ export default function AvatarComponent() {
           image.
         </p>
         <CodePreview componentCode={customIconCode}>
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-3.5">
             <AvatarWithIcon
               gradient={{ colorLeft: "#e5e5e5", colorRight: "#a3a3a3" }}
               size={32}
-              icon={<Check size={8} />}
+              icon={<Check size={10} />}
               iconBgColor="var(--ds-gray-900)"
             />
             <AvatarWithIcon
               gradient={{ colorLeft: "#d4d4d4", colorRight: "#737373" }}
               size={32}
-              icon={<Medal size={8} />}
-              iconBgColor="var(--ds-gray-800)"
+              icon={<Medal size={10} />}
+              iconBgColor="var(--ds-gray-200)"
+              iconColor="var(--ds-gray-900)"
             />
             <AvatarWithIcon
               gradient={{ colorLeft: "#fafafa", colorRight: "#525252" }}
               size={32}
-              icon={<Star size={8} />}
-              iconBgColor="var(--ds-gray-700)"
+              icon={<Star size={10} />}
+              iconBgColor="var(--ds-gray-100)"
+              iconColor="var(--ds-gray-800)"
             />
           </div>
         </CodePreview>
