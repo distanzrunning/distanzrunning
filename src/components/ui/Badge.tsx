@@ -87,6 +87,12 @@ const sizeStyles: Record<BadgeSize, string> = {
   lg: "h-7 px-2.5 text-sm gap-1.5",
 };
 
+const pillSizeStyles: Record<BadgeSize, string> = {
+  sm: "h-5 px-2.5 text-xs gap-1",
+  md: "h-6 px-2.5 text-xs gap-1.5",
+  lg: "h-7 px-2.5 text-sm gap-1.5",
+};
+
 const iconSizeStyles: Record<BadgeSize, string> = {
   sm: "w-3 h-3",
   md: "w-3.5 h-3.5",
@@ -150,7 +156,7 @@ export const BadgePill = forwardRef<
     border border-[var(--ds-gray-400)]
     hover:bg-[var(--ds-gray-200)] hover:border-[var(--ds-gray-500)]
     transition-colors cursor-pointer
-    ${sizeStyles[size]}
+    ${pillSizeStyles[size]}
     ${className}
   `;
 
