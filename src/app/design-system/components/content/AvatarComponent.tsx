@@ -464,7 +464,7 @@ export default function AvatarComponent() {
                 { src: avatarImages[0], alt: "User 1" },
                 { src: avatarImages[1], alt: "User 2" },
                 {
-                  src: "/images/distanz_icon_white.png",
+                  src: "/images/distanz_icon_white.svg",
                   alt: "Distanz",
                   bgColor: "#000",
                 },
