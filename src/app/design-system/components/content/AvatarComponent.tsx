@@ -354,8 +354,8 @@ function AvatarGit({
           width: badgeSize,
           height: badgeSize,
           backgroundColor: config.color,
-          bottom: -2,
-          right: -2,
+          bottom: -5,
+          left: -3,
         }}
       >
         <ProviderIcon
@@ -432,8 +432,8 @@ function AvatarWithIcon({
           height: badgeSize,
           backgroundColor: iconBgColor,
           color: iconColor,
-          bottom: -2,
-          right: -2,
+          bottom: -5,
+          left: -3,
         }}
       >
         <span
