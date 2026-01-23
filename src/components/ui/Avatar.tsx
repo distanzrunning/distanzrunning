@@ -278,8 +278,8 @@ export function AvatarBrand({
   fallback,
   brand,
 }: AvatarBrandProps) {
-  const badgeSize = Math.round(size * 0.4);
-  const iconSize = Math.round(badgeSize * 0.65);
+  const badgeSize = Math.round(size * 0.55);
+  const iconSize = Math.round(badgeSize * 0.6);
 
   const config = brandConfig[brand];
   const BrandIcon = config.icon;
