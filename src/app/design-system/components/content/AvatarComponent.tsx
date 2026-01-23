@@ -339,14 +339,16 @@ function AvatarGit({
   const ProviderIcon = config.icon;
 
   return (
-    <div className="relative inline-block">
+    <div className="relative inline-flex" style={{ width: size, height: size }}>
       <Avatar src={src} alt={alt} size={size} fallback={fallback} />
       <div
-        className="absolute -bottom-0.5 -right-0.5 flex items-center justify-center rounded-full"
+        className="absolute flex items-center justify-center rounded-full"
         style={{
           width: badgeSize,
           height: badgeSize,
           backgroundColor: config.color,
+          bottom: -2,
+          right: -2,
         }}
       >
         <ProviderIcon
