@@ -63,7 +63,7 @@ const variantStyles: Record<BadgeVariant, string> = {
   purple: "bg-[var(--ds-purple-900)] text-white",
   // Amber uses black text for contrast on the warm background
   amber: "bg-[var(--ds-amber-700)] text-black",
-  red: "bg-[var(--ds-red-700)] text-white",
+  red: "bg-[var(--ds-red-900)] text-white",
   pink: "bg-[var(--ds-pink-700)] text-white",
   green: "bg-[var(--ds-green-700)] text-white",
   teal: "bg-[var(--ds-teal-700)] text-white",
