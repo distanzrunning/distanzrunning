@@ -25,6 +25,9 @@ import {
   SiGithub,
   SiGitlab,
   SiBitbucket,
+  SiNike,
+  SiAdidas,
+  SiNewbalance,
 } from "react-icons/si";
 import { VscJson } from "react-icons/vsc";
 import { FiFile } from "react-icons/fi";
@@ -233,6 +236,7 @@ const buildIconRegistry = (): IconDefinition[] => {
     displayName: string;
     component: React.ComponentType<{ size?: number; className?: string }>;
   }> = [
+    { name: "SiAdidas", displayName: "Adidas", component: SiAdidas },
     { name: "SiBitbucket", displayName: "Bitbucket", component: SiBitbucket },
     { name: "SiBrave", displayName: "Brave", component: SiBrave },
     { name: "SiGithub", displayName: "GitHub", component: SiGithub },
@@ -240,7 +244,13 @@ const buildIconRegistry = (): IconDefinition[] => {
     { name: "SiInstagram", displayName: "Instagram", component: SiInstagram },
     { name: "SiLinkedin", displayName: "Linkedin", component: SiLinkedin },
     { name: "SiLua", displayName: "Lua", component: SiLua },
+    {
+      name: "SiNewbalance",
+      displayName: "New Balance",
+      component: SiNewbalance,
+    },
     { name: "SiNextdotjs", displayName: "Next.js", component: SiNextdotjs },
+    { name: "SiNike", displayName: "Nike", component: SiNike },
     { name: "SiReact", displayName: "React", component: SiReact },
     { name: "SiStrava", displayName: "Strava", component: SiStrava },
     {
