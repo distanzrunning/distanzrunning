@@ -76,7 +76,7 @@ export default function PagePagination({
 
   return (
     <nav aria-label="pagination">
-      <div className="flex justify-between items-start">
+      <div className="flex justify-between items-start pt-8">
         {/* Previous page */}
         {prevPage ? (
           <button
