@@ -458,7 +458,7 @@ export default function ContentWithTOC({
 
         {/* Page Pagination */}
         {activeSlug && onNavigate && (
-          <div className="p-12">
+          <div className="px-12 py-8">
             <PagePagination activeSlug={activeSlug} onNavigate={onNavigate} />
           </div>
         )}
