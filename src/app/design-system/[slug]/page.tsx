@@ -31,6 +31,7 @@ import PullQuoteComponent from "../components/content/PullQuoteComponent";
 import CloseComponent from "../components/content/CloseComponent";
 import ToggleComponent from "../components/content/ToggleComponent";
 import CodeBlockComponent from "../components/content/CodeBlockComponent";
+import AvatarComponent from "../components/content/AvatarComponent";
 import Materials from "../components/content/Materials";
 import ContentWithTOC from "../components/ContentWithTOC";
 
@@ -379,6 +380,21 @@ export default function DesignSystemPage() {
           onNavigate={handleNavigation}
         >
           <ToggleComponent />
+        </ContentWithTOC>
+      );
+    }
+
+    if (activeSlug === "avatar") {
+      return (
+        <ContentWithTOC
+          tocTitle="On this page"
+          pageTitle="Avatar"
+          pageSubtitle="Avatars represent users or entities with images, initials, or icons."
+          mainSectionId="avatar"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
+          <AvatarComponent />
         </ContentWithTOC>
       );
     }
