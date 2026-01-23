@@ -25,6 +25,8 @@ export interface AvatarProps {
   placeholder?: boolean;
   /** Custom icon for placeholder (disables shimmer) */
   placeholderIcon?: React.ReactNode;
+  /** Background color for the avatar */
+  bgColor?: string;
 }
 
 /** Member object for AvatarGroup */
@@ -35,6 +37,8 @@ export interface AvatarGroupMember {
   alt?: string;
   /** Force placeholder state */
   placeholder?: boolean;
+  /** Background color for the avatar */
+  bgColor?: string;
 }
 
 /** Props for AvatarGroup component */
@@ -94,6 +98,7 @@ export function Avatar({
   fallback,
   placeholder = false,
   placeholderIcon,
+  bgColor,
 }: AvatarProps) {
   const [imageError, setImageError] = useState(false);
 
@@ -129,8 +134,12 @@ export function Avatar({
 
   return (
     <div
-      className="relative inline-flex items-center justify-center rounded-full bg-[var(--ds-gray-300)] text-textSubtle overflow-hidden flex-shrink-0"
-      style={{ width: size, height: size }}
+      className="relative inline-flex items-center justify-center rounded-full text-textSubtle overflow-hidden flex-shrink-0"
+      style={{
+        width: size,
+        height: size,
+        backgroundColor: bgColor || "var(--ds-gray-300)",
+      }}
     >
       {!showFallback ? (
         <img
@@ -203,6 +212,7 @@ export function AvatarGroup({ members, limit, size = 32 }: AvatarGroupProps) {
             alt={member.alt || `Avatar ${index + 1}`}
             size={innerSize}
             placeholder={member.placeholder}
+            bgColor={member.bgColor}
           />
         </div>
       ))}

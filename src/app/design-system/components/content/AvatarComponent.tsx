@@ -463,7 +463,11 @@ export default function AvatarComponent() {
               members={[
                 { src: avatarImages[0], alt: "User 1" },
                 { src: avatarImages[1], alt: "User 2" },
-                { src: "/logo-bimi.svg", alt: "Distanz" },
+                {
+                  src: "/images/distanz_icon_black.png",
+                  alt: "Distanz",
+                  bgColor: "#fff",
+                },
               ]}
               size={32}
             />
