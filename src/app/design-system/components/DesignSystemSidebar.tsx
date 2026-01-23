@@ -4,13 +4,13 @@ import { useState } from "react";
 import Image from "next/image";
 import { ChevronDown, Lock } from "lucide-react";
 
-interface NavItem {
+export interface NavItem {
   id: string;
   label: string;
   locked?: boolean;
 }
 
-interface NavSection {
+export interface NavSection {
   id: string;
   label: string;
   items: NavItem[];
@@ -23,7 +23,8 @@ interface DesignSystemSidebarProps {
 }
 
 // Navigation structure - add pages here as they are built
-const navigation: NavSection[] = [
+// Exported for use by pagination component
+export const navigation: NavSection[] = [
   {
     id: "foundations",
     label: "Foundations",

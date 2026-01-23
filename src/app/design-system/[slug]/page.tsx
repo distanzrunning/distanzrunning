@@ -33,6 +33,7 @@ import ToggleComponent from "../components/content/ToggleComponent";
 import CodeBlockComponent from "../components/content/CodeBlockComponent";
 import Materials from "../components/content/Materials";
 import ContentWithTOC from "../components/ContentWithTOC";
+import PagePagination from "../components/PagePagination";
 
 export default function DesignSystemPage() {
   const params = useParams();
@@ -348,7 +349,13 @@ export default function DesignSystemPage() {
 
         {/* Main Content Area */}
         <div id="main-content" className="flex-1 min-w-0">
-          <div className="p-12">{renderContent()}</div>
+          <div className="p-12">
+            {renderContent()}
+            <PagePagination
+              activeSlug={activeSlug}
+              onNavigate={handleNavigation}
+            />
+          </div>
         </div>
       </div>
     </div>
