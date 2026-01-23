@@ -57,18 +57,18 @@ export interface BadgePillProps extends Omit<BadgeProps, "variant"> {
 
 const variantStyles: Record<BadgeVariant, string> = {
   // Solid variants - Geist exact colors
-  // Gray: dark bg in light mode, light bg in dark mode (uses 1000/100 which auto-invert)
-  gray: "bg-[var(--ds-gray-1000)] text-[var(--ds-gray-100)]",
+  // Gray: mid-gray background (700) with contrasting text
+  gray: "bg-[var(--ds-gray-700)] text-[var(--ds-gray-100)] dark:text-[var(--ds-gray-1000)]",
   blue: "bg-[var(--ds-blue-700)] text-white",
   purple: "bg-[var(--ds-purple-700)] text-white",
-  // Amber uses dark text (1000) for better contrast on the warm background
+  // Amber uses dark text for better contrast on the warm background
   amber: "bg-[var(--ds-amber-700)] text-[var(--ds-amber-1000)]",
   red: "bg-[var(--ds-red-700)] text-white",
   pink: "bg-[var(--ds-pink-700)] text-white",
   green: "bg-[var(--ds-green-700)] text-white",
   teal: "bg-[var(--ds-teal-700)] text-white",
-  // Inverted: opposite of gray - light bg in light mode, dark bg in dark mode
-  inverted: "bg-[var(--ds-gray-100)] text-[var(--ds-gray-1000)]",
+  // Inverted: pure white bg in light mode, pure black bg in dark mode
+  inverted: "bg-white text-black dark:bg-black dark:text-white",
 
   // Subtle variants - light tinted backgrounds with dark text
   "gray-subtle": "bg-[var(--ds-gray-200)] text-[var(--ds-gray-1000)]",
