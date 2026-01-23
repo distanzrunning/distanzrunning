@@ -241,34 +241,50 @@ function AvatarGroup({ members, limit, size = 32 }: AvatarGroupProps) {
   const visibleMembers = limit ? members.slice(0, limit) : members;
   const remainingCount = limit ? Math.max(0, members.length - limit) : 0;
 
-  const fontSize = Math.round(size * 0.35);
+  // Border is 2px, so inner content should be size to make total size = size + 4
+  // But we want consistent outer size, so we use the size directly for the outer wrapper
+  const borderWidth = 2;
+  const innerSize = size;
+  const outerSize = size + borderWidth * 2;
+  const fontSize = Math.round(innerSize * 0.35);
+  const overlap = outerSize * 0.25;
 
   return (
     <div className="flex items-center">
       {visibleMembers.map((member, index) => (
         <div
           key={index}
-          className="relative rounded-full border-2 border-[var(--ds-background-100)]"
-          style={{ marginLeft: index === 0 ? 0 : -(size * 0.25) }}
+          className="relative rounded-full overflow-hidden"
+          style={{
+            marginLeft: index === 0 ? 0 : -overlap,
+            width: outerSize,
+            height: outerSize,
+            border: `${borderWidth}px solid var(--ds-background-100)`,
+          }}
         >
           <Avatar
             src={member.src}
             alt={member.alt || `Avatar ${index + 1}`}
-            size={size}
+            size={innerSize}
             placeholder={member.placeholder}
           />
         </div>
       ))}
       {remainingCount > 0 && (
         <div
-          className="relative rounded-full border-2 border-[var(--ds-background-100)]"
-          style={{ marginLeft: -(size * 0.25) }}
+          className="relative rounded-full overflow-hidden"
+          style={{
+            marginLeft: -overlap,
+            width: outerSize,
+            height: outerSize,
+            border: `${borderWidth}px solid var(--ds-background-100)`,
+          }}
         >
           <div
             className="flex items-center justify-center rounded-full bg-[var(--ds-gray-300)] text-textDefault font-semibold"
             style={{
-              width: size,
-              height: size,
+              width: innerSize,
+              height: innerSize,
               fontSize,
             }}
           >
