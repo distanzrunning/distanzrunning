@@ -88,11 +88,11 @@ export default function PagePagination({
               Previous
             </span>
             <div className="flex items-center gap-1">
-              <span className="text-[16px] leading-[24px] font-medium text-textDefault">
-                {prevPage.label}
-              </span>
               <span className="text-textSubtle group-hover:text-textDefault transition-colors">
                 <ChevronLeftIcon />
+              </span>
+              <span className="text-[16px] leading-[24px] font-medium text-textDefault">
+                {prevPage.label}
               </span>
             </div>
           </button>
