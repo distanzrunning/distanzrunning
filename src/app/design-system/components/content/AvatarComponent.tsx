@@ -4,6 +4,7 @@ import { useState, useCallback } from "react";
 import { ChevronDown, User, Zap, Star, Heart, AlertCircle } from "lucide-react";
 import { SiGithub, SiGitlab, SiBitbucket } from "react-icons/si";
 import { Section } from "../ContentWithTOC";
+import { CodeBlock } from "@/components/ui/CodeBlock";
 
 // Toast notification for copy confirmation
 function Toast({
@@ -210,55 +211,69 @@ function Avatar({
           {placeholderIcon}
         </span>
       ) : fallback ? (
-        <span
-          className="font-medium text-textSubtle"
-          style={{ fontSize }}
-        >
+        <span className="font-medium text-textSubtle" style={{ fontSize }}>
           {getInitials(fallback)}
         </span>
       ) : (
-        <User className="text-textSubtle" style={{ width: size * 0.5, height: size * 0.5 }} />
+        <User
+          className="text-textSubtle"
+          style={{ width: size * 0.5, height: size * 0.5 }}
+        />
       )}
     </div>
   );
 }
 
-// Avatar Group component (stacked avatars)
+// Avatar Group component (stacked avatars) - Geist style
+interface AvatarGroupMember {
+  src?: string;
+  alt?: string;
+  placeholder?: boolean;
+}
+
 interface AvatarGroupProps {
-  children: React.ReactNode;
-  max?: number;
+  members: AvatarGroupMember[];
+  limit?: number;
   size?: number;
 }
 
-function AvatarGroup({ children, max, size = 32 }: AvatarGroupProps) {
-  const childArray = Array.isArray(children) ? children : [children];
-  const visibleChildren = max ? childArray.slice(0, max) : childArray;
-  const remainingCount = max ? childArray.length - max : 0;
+function AvatarGroup({ members, limit, size = 32 }: AvatarGroupProps) {
+  const visibleMembers = limit ? members.slice(0, limit) : members;
+  const remainingCount = limit ? Math.max(0, members.length - limit) : 0;
 
   const fontSize = Math.round(size * 0.35);
 
   return (
     <div className="flex items-center">
-      {visibleChildren.map((child, index) => (
+      {visibleMembers.map((member, index) => (
         <div
           key={index}
-          className="relative rounded-full border-2 border-[var(--ds-background-200)]"
+          className="relative rounded-full border-2 border-[var(--ds-background-100)]"
           style={{ marginLeft: index === 0 ? 0 : -(size * 0.25) }}
         >
-          {child}
+          <Avatar
+            src={member.src}
+            alt={member.alt || `Avatar ${index + 1}`}
+            size={size}
+            placeholder={member.placeholder}
+          />
         </div>
       ))}
       {remainingCount > 0 && (
         <div
-          className="relative flex items-center justify-center rounded-full bg-[var(--ds-gray-400)] text-textSubtle border-2 border-[var(--ds-background-200)]"
-          style={{
-            width: size,
-            height: size,
-            marginLeft: -(size * 0.25),
-            fontSize,
-          }}
+          className="relative rounded-full border-2 border-[var(--ds-background-100)]"
+          style={{ marginLeft: -(size * 0.25) }}
         >
-          +{remainingCount}
+          <div
+            className="flex items-center justify-center rounded-full bg-[var(--ds-gray-300)] text-textDefault font-semibold"
+            style={{
+              width: size,
+              height: size,
+              fontSize,
+            }}
+          >
+            +{remainingCount}
+          </div>
         </div>
       )}
     </div>
@@ -274,7 +289,13 @@ interface AvatarGitProps {
   provider: "github" | "gitlab" | "bitbucket";
 }
 
-function AvatarGit({ src, alt, size = 32, fallback, provider }: AvatarGitProps) {
+function AvatarGit({
+  src,
+  alt,
+  size = 32,
+  fallback,
+  provider,
+}: AvatarGitProps) {
   const badgeSize = Math.round(size * 0.4);
   const iconSize = Math.round(badgeSize * 0.65);
 
@@ -291,7 +312,10 @@ function AvatarGit({ src, alt, size = 32, fallback, provider }: AvatarGitProps) 
         className="absolute -bottom-0.5 -right-0.5 flex items-center justify-center rounded-full bg-[var(--ds-background-100)] border border-[var(--ds-gray-400)]"
         style={{ width: badgeSize, height: badgeSize }}
       >
-        <ProviderIcon style={{ width: iconSize, height: iconSize }} className="text-textDefault" />
+        <ProviderIcon
+          style={{ width: iconSize, height: iconSize }}
+          className="text-textDefault"
+        />
       </div>
     </div>
   );
@@ -331,7 +355,10 @@ function AvatarWithIcon({
           color: iconColor,
         }}
       >
-        <span style={{ width: badgeSize * 0.6, height: badgeSize * 0.6 }} className="flex items-center justify-center">
+        <span
+          style={{ width: badgeSize * 0.6, height: badgeSize * 0.6 }}
+          className="flex items-center justify-center"
+        >
           {icon}
         </span>
       </div>
@@ -339,7 +366,7 @@ function AvatarWithIcon({
   );
 }
 
-// Code Preview component (simplified for Avatar docs)
+// Code Preview component with CodeBlock for syntax highlighting
 interface CodePreviewProps {
   children: React.ReactNode;
   componentCode: string;
@@ -347,21 +374,11 @@ interface CodePreviewProps {
 
 function CodePreview({ children, componentCode }: CodePreviewProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [copied, setCopied] = useState(false);
-
-  const handleCopy = useCallback(() => {
-    navigator.clipboard.writeText(componentCode);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1000);
-  }, [componentCode]);
 
   return (
     <div className="border border-[var(--ds-gray-400)] rounded-lg overflow-hidden">
       {/* Preview area */}
-      <div
-        className="p-6 flex items-center gap-4 flex-wrap"
-        style={{ background: "var(--ds-background-100)" }}
-      >
+      <div className="p-6" style={{ background: "var(--ds-background-100)" }}>
         {children}
       </div>
 
@@ -378,45 +395,10 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
 
         {/* Collapsible code section */}
         {isOpen && (
-          <div
-            className="border-t border-[var(--ds-gray-400)] overflow-x-auto font-mono text-[13px]"
-            style={{ background: "var(--ds-background-100)" }}
-          >
-            <div className="relative group">
-              {/* Floating copy button */}
-              <button
-                onClick={handleCopy}
-                className="absolute top-3 right-3 p-2 rounded border border-[var(--ds-gray-400)] opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-[var(--ds-background-200)] hover:bg-[var(--ds-gray-100)]"
-                aria-label="Copy code"
-              >
-                {copied ? (
-                  <svg height="16" width="16" viewBox="0 0 16 16">
-                    <path
-                      fillRule="evenodd"
-                      clipRule="evenodd"
-                      d="M15.5607 3.99999L15.0303 4.53032L6.23744 13.3232C5.55403 14.0066 4.44599 14.0066 3.76257 13.3232L4.2929 12.7929L3.76257 13.3232L0.969676 10.5303L0.439346 9.99999L1.50001 8.93933L2.03034 9.46966L4.82323 12.2626C4.92086 12.3602 5.07915 12.3602 5.17678 12.2626L13.9697 3.46966L14.5 2.93933L15.5607 3.99999Z"
-                      fill="currentColor"
-                    />
-                  </svg>
-                ) : (
-                  <svg height="16" width="16" viewBox="0 0 16 16">
-                    <path
-                      fillRule="evenodd"
-                      clipRule="evenodd"
-                      d="M2.75 0.5C1.7835 0.5 1 1.2835 1 2.25V9.75C1 10.7165 1.7835 11.5 2.75 11.5H3.75H4.5V10H3.75H2.75C2.61193 10 2.5 9.88807 2.5 9.75V2.25C2.5 2.11193 2.61193 2 2.75 2H8.25C8.38807 2 8.5 2.11193 8.5 2.25V3H10V2.25C10 1.2835 9.2165 0.5 8.25 0.5H2.75ZM7.75 4.5C6.7835 4.5 6 5.2835 6 6.25V13.75C6 14.7165 6.7835 15.5 7.75 15.5H13.25C14.2165 15.5 15 14.7165 15 13.75V6.25C15 5.2835 14.2165 4.5 13.25 4.5H7.75ZM7.5 6.25C7.5 6.11193 7.61193 6 7.75 6H13.25C13.3881 6 13.5 6.11193 13.5 6.25V13.75C13.5 13.8881 13.3881 14 13.25 14H7.75C7.61193 14 7.5 13.8881 7.5 13.75V6.25Z"
-                      fill="currentColor"
-                    />
-                  </svg>
-                )}
-              </button>
-
-              {/* Code content */}
-              <pre className="overflow-x-auto py-4 px-4">
-                <code className="block text-[13px] leading-[20px] font-mono text-textDefault whitespace-pre">
-                  {componentCode}
-                </code>
-              </pre>
-            </div>
+          <div className="border-t border-[var(--ds-gray-400)]">
+            <CodeBlock language="tsx" showLineNumbers>
+              {componentCode}
+            </CodeBlock>
           </div>
         )}
       </div>
@@ -435,18 +417,32 @@ const avatarImages = [
 ];
 
 // Code examples
-const groupCode = `import { Avatar, AvatarGroup } from '@/components/ui/Avatar';
+const groupCode = `import { AvatarGroup } from '@/components/ui/Avatar';
+import type { JSX } from 'react';
 
-export function Component() {
+export function Component(): JSX.Element {
   return (
-    <AvatarGroup max={4}>
-      <Avatar src="/user1.jpg" alt="User 1" />
-      <Avatar src="/user2.jpg" alt="User 2" />
-      <Avatar src="/user3.jpg" alt="User 3" />
-      <Avatar src="/user4.jpg" alt="User 4" />
-      <Avatar src="/user5.jpg" alt="User 5" />
-      <Avatar src="/user6.jpg" alt="User 6" />
-    </AvatarGroup>
+    <div className="flex flex-col items-stretch justify-start gap-4 flex-initial">
+      <AvatarGroup
+        members={[
+          { src: '/user1.jpg' },
+          { src: '/user2.jpg' },
+          { placeholder: true },
+        ]}
+        size={32}
+      />
+      <AvatarGroup
+        limit={4}
+        members={[
+          { src: '/user1.jpg' },
+          { src: '/user2.jpg' },
+          { src: '/user3.jpg' },
+          { src: '/user4.jpg' },
+          { src: '/user5.jpg' },
+        ]}
+        size={32}
+      />
+    </div>
   );
 }`;
 
@@ -538,17 +534,36 @@ export default function AvatarComponent() {
         <p className="text-copy-14 text-textSubtle mt-4 mb-6">
           Multiple avatars can be stacked together in a group. Use the{" "}
           <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
-            max
+            limit
           </code>{" "}
           prop to limit the number of visible avatars and show a count for the
           remaining.
         </p>
         <CodePreview componentCode={groupCode}>
-          <AvatarGroup max={4} size={32}>
-            {avatarImages.map((src, i) => (
-              <Avatar key={i} src={src} alt={`User ${i + 1}`} size={32} />
-            ))}
-          </AvatarGroup>
+          <div className="flex flex-col items-stretch justify-start gap-4 flex-initial">
+            {/* First row: 3 avatars, one with placeholder */}
+            <AvatarGroup
+              members={[
+                { src: avatarImages[0], alt: "User 1" },
+                { src: avatarImages[1], alt: "User 2" },
+                { placeholder: true, alt: "Placeholder" },
+              ]}
+              size={32}
+            />
+            {/* Second row: 5 avatars with limit=4, showing +2 */}
+            <AvatarGroup
+              limit={4}
+              members={[
+                { src: avatarImages[2], alt: "User 3" },
+                { src: avatarImages[3], alt: "User 4" },
+                { src: avatarImages[4], alt: "User 5" },
+                { src: avatarImages[5], alt: "User 6" },
+                { src: avatarImages[0], alt: "User 7" },
+                { src: avatarImages[1], alt: "User 8" },
+              ]}
+              size={32}
+            />
+          </div>
         </CodePreview>
       </Section>
 
@@ -562,9 +577,26 @@ export default function AvatarComponent() {
           Supported providers include GitHub, GitLab, and Bitbucket.
         </p>
         <CodePreview componentCode={gitCode}>
-          <AvatarGit src={avatarImages[0]} alt="GitHub user" size={40} provider="github" />
-          <AvatarGit src={avatarImages[1]} alt="GitLab user" size={40} provider="gitlab" />
-          <AvatarGit src={avatarImages[2]} alt="Bitbucket user" size={40} provider="bitbucket" />
+          <div className="flex gap-4">
+            <AvatarGit
+              src={avatarImages[0]}
+              alt="GitHub user"
+              size={40}
+              provider="github"
+            />
+            <AvatarGit
+              src={avatarImages[1]}
+              alt="GitLab user"
+              size={40}
+              provider="gitlab"
+            />
+            <AvatarGit
+              src={avatarImages[2]}
+              alt="Bitbucket user"
+              size={40}
+              provider="bitbucket"
+            />
+          </div>
         </CodePreview>
       </Section>
 
@@ -582,27 +614,29 @@ export default function AvatarComponent() {
           prop.
         </p>
         <CodePreview componentCode={customIconCode}>
-          <AvatarWithIcon
-            src={avatarImages[0]}
-            alt="Power user"
-            size={40}
-            icon={<Zap size={10} />}
-            iconBgColor="var(--ds-amber-600)"
-          />
-          <AvatarWithIcon
-            src={avatarImages[1]}
-            alt="Starred user"
-            size={40}
-            icon={<Star size={10} />}
-            iconBgColor="var(--ds-blue-600)"
-          />
-          <AvatarWithIcon
-            src={avatarImages[2]}
-            alt="Favourite user"
-            size={40}
-            icon={<Heart size={10} />}
-            iconBgColor="var(--ds-red-600)"
-          />
+          <div className="flex gap-4">
+            <AvatarWithIcon
+              src={avatarImages[0]}
+              alt="Power user"
+              size={40}
+              icon={<Zap size={10} />}
+              iconBgColor="var(--ds-amber-600)"
+            />
+            <AvatarWithIcon
+              src={avatarImages[1]}
+              alt="Starred user"
+              size={40}
+              icon={<Star size={10} />}
+              iconBgColor="var(--ds-blue-600)"
+            />
+            <AvatarWithIcon
+              src={avatarImages[2]}
+              alt="Favourite user"
+              size={40}
+              icon={<Heart size={10} />}
+              iconBgColor="var(--ds-red-600)"
+            />
+          </div>
         </CodePreview>
       </Section>
 
@@ -627,10 +661,16 @@ export default function AvatarComponent() {
           for a custom icon.
         </p>
         <CodePreview componentCode={placeholderCode}>
-          <Avatar placeholder size={40} />
-          <Avatar fallback="John Doe" size={40} />
-          <Avatar fallback="RC" size={40} />
-          <Avatar placeholder placeholderIcon={<AlertCircle size={20} />} size={40} />
+          <div className="flex gap-4">
+            <Avatar placeholder size={40} />
+            <Avatar fallback="John Doe" size={40} />
+            <Avatar fallback="RC" size={40} />
+            <Avatar
+              placeholder
+              placeholderIcon={<AlertCircle size={20} />}
+              size={40}
+            />
+          </div>
         </CodePreview>
       </Section>
 
@@ -647,11 +687,13 @@ export default function AvatarComponent() {
           prop. Common sizes are 24, 32, 40, 48, and 64 pixels.
         </p>
         <CodePreview componentCode={sizesCode}>
-          <Avatar src={avatarImages[0]} alt="User" size={24} />
-          <Avatar src={avatarImages[0]} alt="User" size={32} />
-          <Avatar src={avatarImages[0]} alt="User" size={40} />
-          <Avatar src={avatarImages[0]} alt="User" size={48} />
-          <Avatar src={avatarImages[0]} alt="User" size={64} />
+          <div className="flex items-center gap-4">
+            <Avatar src={avatarImages[0]} alt="User" size={24} />
+            <Avatar src={avatarImages[0]} alt="User" size={32} />
+            <Avatar src={avatarImages[0]} alt="User" size={40} />
+            <Avatar src={avatarImages[0]} alt="User" size={48} />
+            <Avatar src={avatarImages[0]} alt="User" size={64} />
+          </div>
         </CodePreview>
       </Section>
 
@@ -706,9 +748,7 @@ export default function AvatarComponent() {
                 <td className="py-3 pr-4 font-mono">size</td>
                 <td className="py-3 px-4 font-mono text-textSubtle">number</td>
                 <td className="py-3 px-4 text-textSubtle">32</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Size in pixels
-                </td>
+                <td className="py-3 px-4 text-textSubtle">Size in pixels</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 font-mono">fallback</td>
@@ -728,7 +768,9 @@ export default function AvatarComponent() {
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 font-mono">placeholderIcon</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">ReactNode</td>
+                <td className="py-3 px-4 font-mono text-textSubtle">
+                  ReactNode
+                </td>
                 <td className="py-3 px-4 text-textSubtle">User icon</td>
                 <td className="py-3 px-4 text-textSubtle">
                   Custom icon for placeholder
@@ -761,19 +803,21 @@ export default function AvatarComponent() {
             </thead>
             <tbody className="text-sm">
               <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">children</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">ReactNode</td>
+                <td className="py-3 pr-4 font-mono">members</td>
+                <td className="py-3 px-4 font-mono text-textSubtle">
+                  AvatarGroupMember[]
+                </td>
                 <td className="py-3 px-4 text-textSubtle">-</td>
                 <td className="py-3 px-4 text-textSubtle">
-                  Avatar components to display
+                  Array of avatar members to display
                 </td>
               </tr>
               <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">max</td>
+                <td className="py-3 pr-4 font-mono">limit</td>
                 <td className="py-3 px-4 font-mono text-textSubtle">number</td>
                 <td className="py-3 px-4 text-textSubtle">-</td>
                 <td className="py-3 px-4 text-textSubtle">
-                  Maximum visible avatars
+                  Maximum visible avatars before showing +N
                 </td>
               </tr>
               <tr className="border-b border-borderSubtle">
@@ -781,7 +825,7 @@ export default function AvatarComponent() {
                 <td className="py-3 px-4 font-mono text-textSubtle">number</td>
                 <td className="py-3 px-4 text-textSubtle">32</td>
                 <td className="py-3 px-4 text-textSubtle">
-                  Size in pixels for overflow indicator
+                  Size in pixels for all avatars
                 </td>
               </tr>
             </tbody>
@@ -813,7 +857,8 @@ export default function AvatarComponent() {
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 font-mono">provider</td>
                 <td className="py-3 px-4 font-mono text-textSubtle">
-                  &quot;github&quot; | &quot;gitlab&quot; | &quot;bitbucket&quot;
+                  &quot;github&quot; | &quot;gitlab&quot; |
+                  &quot;bitbucket&quot;
                 </td>
                 <td className="py-3 px-4 text-textSubtle">-</td>
                 <td className="py-3 px-4 text-textSubtle">
@@ -856,7 +901,9 @@ export default function AvatarComponent() {
             <tbody className="text-sm">
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 font-mono">icon</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">ReactNode</td>
+                <td className="py-3 px-4 font-mono text-textSubtle">
+                  ReactNode
+                </td>
                 <td className="py-3 px-4 text-textSubtle">-</td>
                 <td className="py-3 px-4 text-textSubtle">
                   Icon to display in the badge
@@ -865,7 +912,9 @@ export default function AvatarComponent() {
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 font-mono">iconBgColor</td>
                 <td className="py-3 px-4 font-mono text-textSubtle">string</td>
-                <td className="py-3 px-4 text-textSubtle">var(--ds-blue-600)</td>
+                <td className="py-3 px-4 text-textSubtle">
+                  var(--ds-blue-600)
+                </td>
                 <td className="py-3 px-4 text-textSubtle">
                   Background colour for the badge
                 </td>
@@ -874,9 +923,7 @@ export default function AvatarComponent() {
                 <td className="py-3 pr-4 font-mono">iconColor</td>
                 <td className="py-3 px-4 font-mono text-textSubtle">string</td>
                 <td className="py-3 px-4 text-textSubtle">white</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Icon colour
-                </td>
+                <td className="py-3 px-4 text-textSubtle">Icon colour</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 font-mono">...AvatarProps</td>
