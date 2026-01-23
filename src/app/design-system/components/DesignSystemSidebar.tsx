@@ -40,6 +40,7 @@ export const navigation: NavSection[] = [
     label: "Components",
     items: [
       { id: "avatar", label: "Avatar" },
+      { id: "badge", label: "Badge" },
       { id: "code-block", label: "Code Block" },
     ],
   },

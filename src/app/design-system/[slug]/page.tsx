@@ -32,6 +32,7 @@ import CloseComponent from "../components/content/CloseComponent";
 import ToggleComponent from "../components/content/ToggleComponent";
 import CodeBlockComponent from "../components/content/CodeBlockComponent";
 import AvatarComponent from "../components/content/AvatarComponent";
+import BadgeComponent from "../components/content/BadgeComponent";
 import Materials from "../components/content/Materials";
 import ContentWithTOC from "../components/ContentWithTOC";
 
@@ -395,6 +396,21 @@ export default function DesignSystemPage() {
           onNavigate={handleNavigation}
         >
           <AvatarComponent />
+        </ContentWithTOC>
+      );
+    }
+
+    if (activeSlug === "badge") {
+      return (
+        <ContentWithTOC
+          tocTitle="On this page"
+          pageTitle="Badge"
+          pageSubtitle="Badges are used to highlight important information or status."
+          mainSectionId="badge"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
+          <BadgeComponent />
         </ContentWithTOC>
       );
     }
