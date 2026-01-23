@@ -75,23 +75,23 @@ export default function PagePagination({
   if (!prevPage && !nextPage) return null;
 
   return (
-    <nav aria-label="pagination" className="pt-8">
+    <nav aria-label="pagination">
       <div className="flex justify-between items-start">
         {/* Previous page */}
         {prevPage ? (
           <button
             onClick={() => onNavigate(prevPage.id)}
             aria-label={`Go to previous page: ${prevPage.label}`}
-            className="group flex flex-col items-start text-left"
+            className="group flex items-center gap-2 text-left"
           >
-            <span className="text-[13px] leading-[18px] text-textSubtle mb-1">
-              Previous
+            <span className="text-textSubtle group-hover:text-textDefault transition-colors">
+              <ChevronLeftIcon />
             </span>
-            <div className="flex items-center gap-1 text-textDefault group-hover:text-textSubtle transition-colors">
-              <span className="text-textSubtle group-hover:text-textDefault transition-colors">
-                <ChevronLeftIcon />
+            <div className="flex flex-col items-start">
+              <span className="text-[13px] leading-[18px] text-textSubtle mb-1">
+                Previous
               </span>
-              <span className="text-[16px] leading-[24px] font-medium">
+              <span className="text-[16px] leading-[24px] font-medium text-textDefault group-hover:text-textSubtle transition-colors">
                 {prevPage.label}
               </span>
             </div>
@@ -105,19 +105,19 @@ export default function PagePagination({
           <button
             onClick={() => onNavigate(nextPage.id)}
             aria-label={`Go to next page: ${nextPage.label}`}
-            className="group flex flex-col items-end text-right"
+            className="group flex items-center gap-2 text-right"
           >
-            <span className="text-[13px] leading-[18px] text-textSubtle mb-1">
-              Next
-            </span>
-            <div className="flex items-center gap-1 text-textDefault group-hover:text-textSubtle transition-colors">
-              <span className="text-[16px] leading-[24px] font-medium">
+            <div className="flex flex-col items-end">
+              <span className="text-[13px] leading-[18px] text-textSubtle mb-1">
+                Next
+              </span>
+              <span className="text-[16px] leading-[24px] font-medium text-textDefault group-hover:text-textSubtle transition-colors">
                 {nextPage.label}
               </span>
-              <span className="text-textSubtle group-hover:text-textDefault transition-colors">
-                <ChevronRightIcon />
-              </span>
             </div>
+            <span className="text-textSubtle group-hover:text-textDefault transition-colors">
+              <ChevronRightIcon />
+            </span>
           </button>
         ) : (
           <div />
