@@ -124,43 +124,48 @@ const getSizeClasses = (size: ButtonSize, shape: ButtonShape): string => {
   if (shape === "square" || shape === "circle") {
     switch (size) {
       case "tiny":
-        return "h-6 w-6 text-sm";
+        return "h-6 w-6 text-[14px] leading-[20px]";
       case "small":
-        return "h-8 w-8 text-sm";
+        return "h-8 w-8 text-[14px] leading-[20px]";
       case "medium":
-        return "h-10 w-10 text-sm";
+        return "h-10 w-10 text-[14px] leading-[20px]";
       case "large":
-        return "h-12 w-12 text-base";
+        return "h-12 w-12 text-[16px] leading-[24px]";
       default:
-        return "h-10 w-10 text-sm";
+        return "h-10 w-10 text-[14px] leading-[20px]";
     }
   }
 
-  // Regular buttons with text
+  // Regular buttons with text - matches Geist specs exactly
+  // Small: 32px height, 6px padding, 14px font, 20px line-height
+  // Medium: 40px height, 10px padding, 14px font, 20px line-height
+  // Large: 48px height, 14px padding, 16px font, 24px line-height
   switch (size) {
     case "tiny":
-      return "h-6 px-2 text-xs gap-1";
+      return "h-6 px-1.5 text-[14px] leading-[20px] gap-1";
     case "small":
-      return "h-8 px-3 text-sm gap-1.5";
+      return "h-8 px-1.5 text-[14px] leading-[20px] gap-1.5";
     case "medium":
-      return "h-10 px-4 text-sm gap-2";
+      return "h-10 px-2.5 text-[14px] leading-[20px] gap-2";
     case "large":
-      return "h-12 px-5 text-base gap-2";
+      return "h-12 px-3.5 text-[16px] leading-[24px] gap-2";
     default:
-      return "h-10 px-4 text-sm gap-2";
+      return "h-10 px-2.5 text-[14px] leading-[20px] gap-2";
   }
 };
 
-const getShapeClasses = (shape: ButtonShape): string => {
+const getShapeClasses = (shape: ButtonShape, size: ButtonSize): string => {
   switch (shape) {
     case "square":
-      return "rounded-md";
+      // Large uses 8px radius, others use 6px
+      return size === "large" ? "rounded-lg" : "rounded-md";
     case "circle":
       return "rounded-full";
     case "rounded":
       return "rounded-full";
     default:
-      return "rounded-md";
+      // Large uses 8px radius, others use 6px
+      return size === "large" ? "rounded-lg" : "rounded-md";
   }
 };
 
@@ -184,11 +189,12 @@ const getVariantClasses = (
 
   switch (variant) {
     case "default":
+      // Geist uses rgb(23, 23, 23) / #171717 for default button
       return `
-        bg-[var(--ds-gray-1000)] text-[var(--ds-background-100)]
-        hover:bg-[var(--ds-gray-900)]
-        dark:bg-[var(--ds-gray-100)] dark:text-[var(--ds-gray-1000)]
-        dark:hover:bg-[var(--ds-gray-200)]
+        bg-[#171717] text-white
+        hover:bg-[#383838]
+        dark:bg-[#ededed] dark:text-[#171717]
+        dark:hover:bg-[#d4d4d4]
       `;
     case "error":
       return `
@@ -274,13 +280,13 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     const baseClasses = `
       inline-flex items-center justify-center
       font-medium
-      transition-colors duration-150
+      select-none
+      transition-[border-color,background,color,transform,box-shadow] duration-150 ease-out
       focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ds-focus-color)] focus-visible:ring-offset-2
-      active:scale-[0.98]
     `;
 
     const sizeClasses = getSizeClasses(size, shape);
-    const shapeClasses = getShapeClasses(shape);
+    const shapeClasses = getShapeClasses(shape, size);
     const variantClasses = getVariantClasses(variant, disabled, loading);
     const shadowClasses = shadow
       ? "shadow-[var(--ds-shadow-border-small)]"
@@ -356,14 +362,14 @@ export const ButtonLink = forwardRef<HTMLAnchorElement, ButtonLinkProps>(
     const baseClasses = `
       inline-flex items-center justify-center
       font-medium
-      transition-colors duration-150
+      select-none
+      transition-[border-color,background,color,transform,box-shadow] duration-150 ease-out
       focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ds-focus-color)] focus-visible:ring-offset-2
-      active:scale-[0.98]
       no-underline
     `;
 
     const sizeClasses = getSizeClasses(size, shape);
-    const shapeClasses = getShapeClasses(shape);
+    const shapeClasses = getShapeClasses(shape, size);
     const variantClasses = getVariantClasses(variant, false, false);
     const shadowClasses = shadow
       ? "shadow-[var(--ds-shadow-border-small)]"
