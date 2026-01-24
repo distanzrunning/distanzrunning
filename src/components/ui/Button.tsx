@@ -126,7 +126,7 @@ const getSizeClasses = (size: ButtonSize, shape: ButtonShape): string => {
       case "tiny":
         return "h-6 w-6 text-button-12";
       case "small":
-        return "h-8 w-8 text-button-14";
+        return "h-8 w-8 text-button-12";
       case "medium":
         return "h-10 w-10 text-button-14";
       case "large":
@@ -138,14 +138,14 @@ const getSizeClasses = (size: ButtonSize, shape: ButtonShape): string => {
 
   // Regular buttons with text
   // Uses text-button-* typography tokens from design system
-  // Small: 32px height, 6px button padding, text-button-14
+  // Small: 32px height, 6px button padding, text-button-12
   // Medium: 40px height, 10px button padding, text-button-14
   // Large: 48px height, 14px button padding, text-button-16
   switch (size) {
     case "tiny":
       return "h-6 px-1.5 text-button-12 gap-1";
     case "small":
-      return "h-8 px-[6px] text-button-14 gap-1.5";
+      return "h-8 px-[6px] text-button-12 gap-1.5";
     case "medium":
       return "h-10 px-[10px] text-button-14 gap-2";
     case "large":
