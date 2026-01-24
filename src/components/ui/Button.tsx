@@ -236,11 +236,10 @@ const getVariantClasses = (
       `;
     case "tertiary":
       // Transparent bg, shows subtle overlay on hover
-      // Light: black 8% overlay, Dark: white 9% overlay
+      // Uses --ds-hover-overlay token (light: black 8%, dark: white 9%)
       return `
         bg-transparent text-[var(--ds-gray-1000)]
-        hover:bg-[rgba(0,0,0,0.08)]
-        dark:hover:bg-[rgba(255,255,255,0.09)]
+        hover:bg-[var(--ds-hover-overlay)]
       `;
     default:
       return "";

@@ -438,6 +438,17 @@
     --ds-radius-full: 9999px; /* Pills, circular elements */
 
     /* ─────────────────────────────────────────────────────────────────────────
+       HOVER - Interactive overlay values for hover states
+       ───────────────────────────────────────────────────────────────────────── */
+    --ds-hover-overlay: rgba(
+      0,
+      0,
+      0,
+      0.08
+    ); /* Tertiary button, ghost elements */
+    --ds-hover-mix: 15%; /* For color-mix with black on filled buttons */
+
+    /* ─────────────────────────────────────────────────────────────────────────
        SHADOWS - Geist shadow system for materials
        ───────────────────────────────────────────────────────────────────────── */
     --ds-shadow-border-base: 0 0 0 1px rgba(0, 0, 0, 0.08);
@@ -809,6 +820,17 @@
     --ds-radius-large: 12px;
     --ds-radius-xlarge: 16px;
     --ds-radius-full: 9999px;
+
+    /* ─────────────────────────────────────────────────────────────────────────
+       HOVER - Interactive overlay values for hover states (dark mode)
+       ───────────────────────────────────────────────────────────────────────── */
+    --ds-hover-overlay: rgba(
+      255,
+      255,
+      255,
+      0.09
+    ); /* Tertiary button, ghost elements */
+    --ds-hover-mix: 15%; /* For color-mix with white on filled buttons */
 
     /* ─────────────────────────────────────────────────────────────────────────
        SHADOWS - Dark mode (inverted for dark backgrounds)
