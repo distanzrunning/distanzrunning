@@ -209,14 +209,20 @@ const getVariantClasses = (
         dark:hover:bg-[color-mix(in_srgb,var(--ds-gray-1000),black_15%)]
       `;
     case "error":
+      // Light mode: darken on hover
+      // Dark mode: lighten on hover
       return `
         bg-[var(--ds-red-700)] text-white
-        hover:bg-[var(--ds-red-800)]
+        hover:bg-[color-mix(in_srgb,var(--ds-red-700),black_15%)]
+        dark:hover:bg-[color-mix(in_srgb,var(--ds-red-700),white_15%)]
       `;
     case "warning":
+      // Light mode: darken on hover
+      // Dark mode: lighten on hover
       return `
         bg-[var(--ds-amber-700)] text-white
-        hover:bg-[var(--ds-amber-800)]
+        hover:bg-[color-mix(in_srgb,var(--ds-amber-700),black_15%)]
+        dark:hover:bg-[color-mix(in_srgb,var(--ds-amber-700),white_15%)]
       `;
     case "secondary":
       return `
