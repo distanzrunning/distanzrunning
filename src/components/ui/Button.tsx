@@ -191,7 +191,7 @@ const getVariantClasses = (
   if (isDisabled) {
     switch (variant) {
       case "secondary":
-        return "bg-[var(--ds-background-200)] text-[var(--ds-gray-700)] border border-[var(--ds-gray-400)] cursor-not-allowed";
+        return "bg-[var(--ds-background-200)] text-[var(--ds-gray-700)] shadow-[0_0_0_1px_var(--ds-gray-400)] cursor-not-allowed";
       case "tertiary":
         return "bg-transparent text-[var(--ds-gray-600)] cursor-not-allowed";
       default:
@@ -225,16 +225,22 @@ const getVariantClasses = (
         hover:bg-[color-mix(in_srgb,var(--ds-amber-800),black_15%)]
       `;
     case "secondary":
+      // Light: white bg, gray border via box-shadow, darker bg on hover
+      // Dark: dark bg, subtle border via box-shadow, lighter bg on hover
       return `
         bg-[var(--ds-background-100)] text-[var(--ds-gray-1000)]
-        border border-[var(--ds-gray-400)]
-        hover:bg-[var(--ds-gray-100)] hover:border-[var(--ds-gray-500)]
+        shadow-[0_0_0_1px_var(--ds-gray-200)]
+        hover:bg-[var(--ds-gray-100)]
+        dark:shadow-[0_0_0_1px_var(--ds-gray-400)]
+        dark:hover:bg-[var(--ds-gray-200)]
       `;
     case "tertiary":
+      // Transparent bg, shows subtle overlay on hover
+      // Light: black 8% overlay, Dark: white 9% overlay
       return `
-        bg-transparent text-[var(--ds-gray-900)]
-        hover:bg-[var(--ds-gray-100)]
-        dark:hover:bg-[var(--ds-gray-alpha-100)]
+        bg-transparent text-[var(--ds-gray-1000)]
+        hover:bg-[rgba(0,0,0,0.08)]
+        dark:hover:bg-[rgba(255,255,255,0.09)]
       `;
     default:
       return "";
