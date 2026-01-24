@@ -155,6 +155,21 @@ const getSizeClasses = (size: ButtonSize, shape: ButtonShape): string => {
   }
 };
 
+const getIconSize = (size: ButtonSize): string => {
+  switch (size) {
+    case "tiny":
+      return "12px";
+    case "small":
+      return "14px";
+    case "medium":
+      return "16px";
+    case "large":
+      return "20px";
+    default:
+      return "16px";
+  }
+};
+
 const getShapeClasses = (shape: ButtonShape): string => {
   switch (shape) {
     case "square":
@@ -314,6 +329,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 
     // Get spinner size based on button size
     const spinnerSize = size === "large" ? 24 : 16;
+    const iconSize = getIconSize(size);
 
     return (
       <button
@@ -321,6 +337,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         type={type}
         disabled={isDisabled}
         className={combinedClasses}
+        style={{ "--geist-icon-size": iconSize } as React.CSSProperties}
         {...props}
       >
         {loading ? (
@@ -396,8 +413,15 @@ export const ButtonLink = forwardRef<HTMLAnchorElement, ButtonLinkProps>(
       .replace(/\s+/g, " ")
       .trim();
 
+    const iconSize = getIconSize(size);
+
     return (
-      <a ref={ref} className={combinedClasses} {...props}>
+      <a
+        ref={ref}
+        className={combinedClasses}
+        style={{ "--geist-icon-size": iconSize } as React.CSSProperties}
+        {...props}
+      >
         {prefixIcon && <span className="prefix">{prefixIcon}</span>}
         {children && <span className="content px-[6px]">{children}</span>}
         {suffixIcon && <span className="suffix">{suffixIcon}</span>}

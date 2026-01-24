@@ -975,6 +975,13 @@
 }
 
 @layer components {
+  /* Button icon sizing - icons inside buttons inherit size from CSS variable */
+  button svg,
+  a[class*="button"] svg {
+    width: var(--geist-icon-size, 16px);
+    height: var(--geist-icon-size, 16px);
+  }
+
   .layout-grid {
     @apply grid grid-cols-12 gap-x-4 px-6 md:px-8 lg:px-12 xl:px-24;
   }
