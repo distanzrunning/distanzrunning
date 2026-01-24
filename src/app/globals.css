@@ -430,6 +430,15 @@
     --ds-pink-1000-rgb: 60, 20, 38;
 
     /* ─────────────────────────────────────────────────────────────────────────
+       RADIUS - Border radius scale (Geist)
+       ───────────────────────────────────────────────────────────────────────── */
+    --ds-radius-small: 6px; /* Default UI elements, buttons, inputs */
+    --ds-radius-medium: 8px; /* Large buttons, cards */
+    --ds-radius-large: 12px; /* Modals, menus, panels */
+    --ds-radius-xlarge: 16px; /* Fullscreen overlays */
+    --ds-radius-full: 9999px; /* Pills, circular elements */
+
+    /* ─────────────────────────────────────────────────────────────────────────
        SHADOWS - Geist shadow system for materials
        ───────────────────────────────────────────────────────────────────────── */
     --ds-shadow-border-base: 0 0 0 1px rgba(0, 0, 0, 0.08);
@@ -793,6 +802,15 @@
     --ds-pink-800-rgb: 218, 45, 115;
     --ds-pink-900-rgb: 240, 120, 165;
     --ds-pink-1000-rgb: 255, 235, 245;
+
+    /* ─────────────────────────────────────────────────────────────────────────
+       RADIUS - Border radius scale (same in dark mode)
+       ───────────────────────────────────────────────────────────────────────── */
+    --ds-radius-small: 6px;
+    --ds-radius-medium: 8px;
+    --ds-radius-large: 12px;
+    --ds-radius-xlarge: 16px;
+    --ds-radius-full: 9999px;
 
     /* ─────────────────────────────────────────────────────────────────────────
        SHADOWS - Dark mode (inverted for dark backgrounds)
