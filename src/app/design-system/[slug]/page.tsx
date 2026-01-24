@@ -474,7 +474,7 @@ export default function DesignSystemPage() {
         />
       </div>
 
-      <div className="flex min-h-[calc(100vh-112px)]">
+      <div className="flex">
         {/* Desktop Sidebar - hidden below xl */}
         <div className="hidden xl:block flex-shrink-0">
           <DesignSystemSidebar
@@ -485,7 +485,10 @@ export default function DesignSystemPage() {
         </div>
 
         {/* Main Content Area */}
-        <div id="main-content" className="flex-1 min-w-0 flex flex-col">
+        <div
+          id="main-content"
+          className="flex-1 min-w-0 flex flex-col min-h-[calc(100vh-112px)]"
+        >
           <div className="p-12 flex-1 flex flex-col">{renderContent()}</div>
         </div>
       </div>
