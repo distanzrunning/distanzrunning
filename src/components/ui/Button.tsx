@@ -349,13 +349,19 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           </>
         ) : (
           <>
-            {prefixIcon && <span className="flex-shrink-0">{prefixIcon}</span>}
+            {prefixIcon && (
+              <span className="prefix flex-shrink-0">{prefixIcon}</span>
+            )}
             {children && (
-              <span className={isIconOnly ? "px-[6px]" : contentPadding}>
+              <span
+                className={`content ${isIconOnly ? "px-[6px]" : contentPadding}`}
+              >
                 {children}
               </span>
             )}
-            {suffixIcon && <span className="flex-shrink-0">{suffixIcon}</span>}
+            {suffixIcon && (
+              <span className="suffix flex-shrink-0">{suffixIcon}</span>
+            )}
           </>
         )}
       </button>
@@ -423,13 +429,19 @@ export const ButtonLink = forwardRef<HTMLAnchorElement, ButtonLinkProps>(
 
     return (
       <a ref={ref} className={combinedClasses} {...props}>
-        {prefixIcon && <span className="flex-shrink-0">{prefixIcon}</span>}
+        {prefixIcon && (
+          <span className="prefix flex-shrink-0">{prefixIcon}</span>
+        )}
         {children && (
-          <span className={isIconOnly ? "px-[6px]" : contentPadding}>
+          <span
+            className={`content ${isIconOnly ? "px-[6px]" : contentPadding}`}
+          >
             {children}
           </span>
         )}
-        {suffixIcon && <span className="flex-shrink-0">{suffixIcon}</span>}
+        {suffixIcon && (
+          <span className="suffix flex-shrink-0">{suffixIcon}</span>
+        )}
       </a>
     );
   },
