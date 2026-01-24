@@ -71,7 +71,7 @@ interface AddressBarProps {
 }
 
 function AddressBar({
-  url = "www.distanzrunning.com",
+  url = "distanzrunning.com",
   showCopyButton = true,
 }: AddressBarProps) {
   const [copied, setCopied] = useState(false);
@@ -161,7 +161,7 @@ BrowserHeader.displayName = "BrowserHeader";
  * Browser component - a realistic browser-style frame for showcasing content.
  *
  * @example
- * <Browser url="www.distanzrunning.com">
+ * <Browser url="distanzrunning.com">
  *   <img src="/screenshot.png" alt="Website screenshot" />
  * </Browser>
  */
@@ -169,7 +169,7 @@ export const Browser = forwardRef<HTMLDivElement, BrowserProps>(
   (
     {
       children,
-      url = "www.distanzrunning.com",
+      url = "distanzrunning.com",
       showNavigation = true,
       showCopyButton = true,
       className = "",
