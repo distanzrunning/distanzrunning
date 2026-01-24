@@ -203,7 +203,7 @@ const getVariantClasses = (
     case "default":
       return `
         bg-[var(--ds-gray-1000)] text-[var(--ds-background-100)]
-        hover:bg-[var(--ds-gray-900)]
+        hover:bg-[var(--ds-gray-1000-hover)]
       `;
     case "error":
       return `
