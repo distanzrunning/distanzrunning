@@ -326,12 +326,14 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         {loading ? (
           <>
             <Spinner size={spinnerSize} />
-            {children && <span className="content ml-2">{children}</span>}
+            {children && (
+              <span className="content px-[6px] ml-2">{children}</span>
+            )}
           </>
         ) : (
           <>
             {prefixIcon && <span className="prefix">{prefixIcon}</span>}
-            {children && <span className="content">{children}</span>}
+            {children && <span className="content px-[6px]">{children}</span>}
             {suffixIcon && <span className="suffix">{suffixIcon}</span>}
           </>
         )}
@@ -397,7 +399,7 @@ export const ButtonLink = forwardRef<HTMLAnchorElement, ButtonLinkProps>(
     return (
       <a ref={ref} className={combinedClasses} {...props}>
         {prefixIcon && <span className="prefix">{prefixIcon}</span>}
-        {children && <span className="content">{children}</span>}
+        {children && <span className="content px-[6px]">{children}</span>}
         {suffixIcon && <span className="suffix">{suffixIcon}</span>}
       </a>
     );
