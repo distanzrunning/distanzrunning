@@ -155,19 +155,6 @@ const getSizeClasses = (size: ButtonSize, shape: ButtonShape): string => {
   }
 };
 
-// Get content span padding based on size (Geist uses 6px on all sizes)
-const getContentPadding = (size: ButtonSize): string => {
-  switch (size) {
-    case "tiny":
-      return "px-1";
-    case "small":
-    case "medium":
-    case "large":
-    default:
-      return "px-[6px]";
-  }
-};
-
 const getShapeClasses = (shape: ButtonShape): string => {
   switch (shape) {
     case "square":
@@ -310,7 +297,6 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     const sizeClasses = getSizeClasses(size, shape);
     const shapeClasses = getShapeClasses(shape);
     const variantClasses = getVariantClasses(variant, disabled, loading);
-    const contentPadding = getContentPadding(size);
     const shadowClasses = shadow
       ? "shadow-[var(--ds-shadow-border-small)]"
       : "";
@@ -329,9 +315,6 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     // Get spinner size based on button size
     const spinnerSize = size === "large" ? 24 : 16;
 
-    // For icon-only buttons (square/circle), don't add content padding
-    const isIconOnly = shape === "square" || shape === "circle";
-
     return (
       <button
         ref={ref}
@@ -343,25 +326,13 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         {loading ? (
           <>
             <Spinner size={spinnerSize} />
-            {children && (
-              <span className={`ml-2 ${contentPadding}`}>{children}</span>
-            )}
+            {children && <span className="content ml-2">{children}</span>}
           </>
         ) : (
           <>
-            {prefixIcon && (
-              <span className="prefix flex-shrink-0">{prefixIcon}</span>
-            )}
-            {children && (
-              <span
-                className={`content ${isIconOnly ? "px-[6px]" : contentPadding}`}
-              >
-                {children}
-              </span>
-            )}
-            {suffixIcon && (
-              <span className="suffix flex-shrink-0">{suffixIcon}</span>
-            )}
+            {prefixIcon && <span className="prefix">{prefixIcon}</span>}
+            {children && <span className="content">{children}</span>}
+            {suffixIcon && <span className="suffix">{suffixIcon}</span>}
           </>
         )}
       </button>
@@ -408,7 +379,6 @@ export const ButtonLink = forwardRef<HTMLAnchorElement, ButtonLinkProps>(
     const sizeClasses = getSizeClasses(size, shape);
     const shapeClasses = getShapeClasses(shape);
     const variantClasses = getVariantClasses(variant, false, false);
-    const contentPadding = getContentPadding(size);
     const shadowClasses = shadow
       ? "shadow-[var(--ds-shadow-border-small)]"
       : "";
@@ -424,24 +394,11 @@ export const ButtonLink = forwardRef<HTMLAnchorElement, ButtonLinkProps>(
       .replace(/\s+/g, " ")
       .trim();
 
-    // For icon-only buttons (square/circle), don't add content padding
-    const isIconOnly = shape === "square" || shape === "circle";
-
     return (
       <a ref={ref} className={combinedClasses} {...props}>
-        {prefixIcon && (
-          <span className="prefix flex-shrink-0">{prefixIcon}</span>
-        )}
-        {children && (
-          <span
-            className={`content ${isIconOnly ? "px-[6px]" : contentPadding}`}
-          >
-            {children}
-          </span>
-        )}
-        {suffixIcon && (
-          <span className="suffix flex-shrink-0">{suffixIcon}</span>
-        )}
+        {prefixIcon && <span className="prefix">{prefixIcon}</span>}
+        {children && <span className="content">{children}</span>}
+        {suffixIcon && <span className="suffix">{suffixIcon}</span>}
       </a>
     );
   },
