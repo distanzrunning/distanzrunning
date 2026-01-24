@@ -458,15 +458,15 @@ export default function ContentWithTOC({
         )}
 
         {/* Main Content */}
-        <article ref={setContentRef} className="flex-1">
+        <article ref={setContentRef}>
           <SectionContext.Provider value={true}>
             {children}
           </SectionContext.Provider>
         </article>
 
-        {/* Page Pagination */}
+        {/* Page Pagination - flex-1 to fill remaining space, mt-auto pushes to bottom */}
         {activeSlug && onNavigate && (
-          <div className="px-12 pb-8">
+          <div className="flex-1 flex flex-col justify-end px-12 pb-8">
             <PagePagination activeSlug={activeSlug} onNavigate={onNavigate} />
           </div>
         )}
