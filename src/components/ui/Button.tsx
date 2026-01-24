@@ -201,9 +201,10 @@ const getVariantClasses = (
 
   switch (variant) {
     case "default":
+      // Uses white alpha overlay on hover for subtle lightening effect
       return `
         bg-[var(--ds-gray-1000)] text-[var(--ds-background-100)]
-        hover:bg-[var(--ds-gray-1000-hover)]
+        hover:bg-[color-mix(in_srgb,var(--ds-gray-1000),white_15%)]
       `;
     case "error":
       return `
