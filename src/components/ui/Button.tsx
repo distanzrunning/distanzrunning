@@ -154,22 +154,16 @@ const getSizeClasses = (size: ButtonSize, shape: ButtonShape): string => {
   }
 };
 
-const getShapeClasses = (shape: ButtonShape, size: ButtonSize): string => {
+const getShapeClasses = (shape: ButtonShape): string => {
   switch (shape) {
     case "square":
-      // Geist: Large uses medium radius (8px), others use small (6px)
-      return size === "large"
-        ? "rounded-[var(--ds-radius-medium)]"
-        : "rounded-[var(--ds-radius-small)]";
+      return "rounded-[var(--ds-radius-small)]";
     case "circle":
       return "rounded-[var(--ds-radius-full)]";
     case "rounded":
       return "rounded-[var(--ds-radius-full)]";
     default:
-      // Geist: Large uses medium radius (8px), others use small (6px)
-      return size === "large"
-        ? "rounded-[var(--ds-radius-medium)]"
-        : "rounded-[var(--ds-radius-small)]";
+      return "rounded-[var(--ds-radius-small)]";
   }
 };
 
@@ -287,7 +281,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     `;
 
     const sizeClasses = getSizeClasses(size, shape);
-    const shapeClasses = getShapeClasses(shape, size);
+    const shapeClasses = getShapeClasses(shape);
     const variantClasses = getVariantClasses(variant, disabled, loading);
     const shadowClasses = shadow
       ? "shadow-[var(--ds-shadow-border-small)]"
@@ -370,7 +364,7 @@ export const ButtonLink = forwardRef<HTMLAnchorElement, ButtonLinkProps>(
     `;
 
     const sizeClasses = getSizeClasses(size, shape);
-    const shapeClasses = getShapeClasses(shape, size);
+    const shapeClasses = getShapeClasses(shape);
     const variantClasses = getVariantClasses(variant, false, false);
     const shadowClasses = shadow
       ? "shadow-[var(--ds-shadow-border-small)]"

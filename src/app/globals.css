@@ -430,11 +430,10 @@
     --ds-pink-1000-rgb: 60, 20, 38;
 
     /* ─────────────────────────────────────────────────────────────────────────
-       RADIUS - Border radius scale (Geist)
+       RADIUS - Border radius scale (matches Materials page)
        ───────────────────────────────────────────────────────────────────────── */
-    --ds-radius-small: 6px; /* Default UI elements, buttons, inputs */
-    --ds-radius-medium: 8px; /* Large buttons, cards */
-    --ds-radius-large: 12px; /* Modals, menus, panels */
+    --ds-radius-small: 6px; /* Buttons, inputs, tooltips, base surfaces */
+    --ds-radius-large: 12px; /* Menus, modals, medium/large surfaces */
     --ds-radius-xlarge: 16px; /* Fullscreen overlays */
     --ds-radius-full: 9999px; /* Pills, circular elements */
 
@@ -807,7 +806,6 @@
        RADIUS - Border radius scale (same in dark mode)
        ───────────────────────────────────────────────────────────────────────── */
     --ds-radius-small: 6px;
-    --ds-radius-medium: 8px;
     --ds-radius-large: 12px;
     --ds-radius-xlarge: 16px;
     --ds-radius-full: 9999px;
