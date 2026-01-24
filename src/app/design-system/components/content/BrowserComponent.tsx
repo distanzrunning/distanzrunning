@@ -329,7 +329,7 @@ const compositionCode = `import { Browser } from '@/components/ui/Browser';
 
 export function Component() {
   return (
-    <Browser url="www.distanzrunning.com">
+    <Browser url="distanzrunning.com">
       {/* Your content here */}
     </Browser>
   );
@@ -356,7 +356,7 @@ export default function BrowserComponent() {
           showcasing website screenshots or any other content.
         </p>
         <CodePreview componentCode={compositionCode}>
-          <Browser url="www.distanzrunning.com" />
+          <Browser url="distanzrunning.com" />
         </CodePreview>
       </Section>
     </>
