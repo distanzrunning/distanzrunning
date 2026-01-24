@@ -485,8 +485,11 @@ export default function DesignSystemPage() {
         </div>
 
         {/* Main Content Area */}
-        <div id="main-content" className="flex-1 min-w-0">
-          <div className="p-12">{renderContent()}</div>
+        <div
+          id="main-content"
+          className="flex-1 min-w-0 min-h-[calc(100vh-112px)]"
+        >
+          <div className="p-12 h-full">{renderContent()}</div>
         </div>
       </div>
     </div>
