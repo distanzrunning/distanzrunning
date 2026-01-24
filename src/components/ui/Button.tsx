@@ -351,7 +351,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           <>
             {prefixIcon && <span className="flex-shrink-0">{prefixIcon}</span>}
             {children && (
-              <span className={isIconOnly ? "" : contentPadding}>
+              <span className={isIconOnly ? "px-[6px]" : contentPadding}>
                 {children}
               </span>
             )}
@@ -425,7 +425,9 @@ export const ButtonLink = forwardRef<HTMLAnchorElement, ButtonLinkProps>(
       <a ref={ref} className={combinedClasses} {...props}>
         {prefixIcon && <span className="flex-shrink-0">{prefixIcon}</span>}
         {children && (
-          <span className={isIconOnly ? "" : contentPadding}>{children}</span>
+          <span className={isIconOnly ? "px-[6px]" : contentPadding}>
+            {children}
+          </span>
         )}
         {suffixIcon && <span className="flex-shrink-0">{suffixIcon}</span>}
       </a>
