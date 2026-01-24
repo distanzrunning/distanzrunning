@@ -124,34 +124,34 @@ const getSizeClasses = (size: ButtonSize, shape: ButtonShape): string => {
   if (shape === "square" || shape === "circle") {
     switch (size) {
       case "tiny":
-        return "h-6 w-6 text-[14px] leading-[20px]";
+        return "h-6 w-6 text-button-12";
       case "small":
-        return "h-8 w-8 text-[14px] leading-[20px]";
+        return "h-8 w-8 text-button-14";
       case "medium":
-        return "h-10 w-10 text-[14px] leading-[20px]";
+        return "h-10 w-10 text-button-14";
       case "large":
-        return "h-12 w-12 text-[16px] leading-[24px]";
+        return "h-12 w-12 text-button-16";
       default:
-        return "h-10 w-10 text-[14px] leading-[20px]";
+        return "h-10 w-10 text-button-14";
     }
   }
 
-  // Regular buttons with text - matches Geist specs exactly
-  // Geist uses padding on button + padding on inner span
-  // Small: 32px height, 6px button padding, 14px font, 20px line-height
-  // Medium: 40px height, 10px button padding, 14px font, 20px line-height
-  // Large: 48px height, 14px button padding, 16px font, 24px line-height
+  // Regular buttons with text
+  // Uses text-button-* typography tokens from design system
+  // Small: 32px height, 6px button padding, text-button-14
+  // Medium: 40px height, 10px button padding, text-button-14
+  // Large: 48px height, 14px button padding, text-button-16
   switch (size) {
     case "tiny":
-      return "h-6 px-1.5 text-[14px] leading-[20px] gap-1";
+      return "h-6 px-1.5 text-button-12 gap-1";
     case "small":
-      return "h-8 px-[6px] text-[14px] leading-[20px] gap-1.5";
+      return "h-8 px-[6px] text-button-14 gap-1.5";
     case "medium":
-      return "h-10 px-[10px] text-[14px] leading-[20px] gap-2";
+      return "h-10 px-[10px] text-button-14 gap-2";
     case "large":
-      return "h-12 px-[14px] text-[16px] leading-[24px] gap-2";
+      return "h-12 px-[14px] text-button-16 gap-2";
     default:
-      return "h-10 px-[10px] text-[14px] leading-[20px] gap-2";
+      return "h-10 px-[10px] text-button-14 gap-2";
   }
 };
 
@@ -288,7 +288,6 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 
     const baseClasses = `
       inline-flex items-center justify-center
-      font-medium
       select-none
       transition-[border-color,background,color,transform,box-shadow] duration-150 ease-out
       focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ds-focus-color)] focus-visible:ring-offset-2
@@ -380,7 +379,6 @@ export const ButtonLink = forwardRef<HTMLAnchorElement, ButtonLinkProps>(
   ) => {
     const baseClasses = `
       inline-flex items-center justify-center
-      font-medium
       select-none
       transition-[border-color,background,color,transform,box-shadow] duration-150 ease-out
       focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ds-focus-color)] focus-visible:ring-offset-2
