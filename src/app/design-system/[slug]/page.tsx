@@ -21,7 +21,6 @@ import TextStyles from "../components/content/TextStyles";
 import Typography from "../components/content/Typography";
 import Iconography from "../components/content/Iconography";
 import Icons from "../components/content/Icons";
-import ButtonComponent from "../components/content/ButtonComponent";
 import ButtonIconComponent from "../components/content/ButtonIconComponent";
 import SlimButtonComponent from "../components/content/SlimButtonComponent";
 import SlimButtonIconComponent from "../components/content/SlimButtonIconComponent";
@@ -283,10 +282,13 @@ export default function DesignSystemPage() {
       return (
         <ContentWithTOC
           tocTitle="On this page"
+          pageTitle="Button"
+          pageSubtitle="Trigger an action or event, such as submitting a form or displaying a dialog."
+          mainSectionId="button"
           activeSlug={activeSlug}
           onNavigate={handleNavigation}
         >
-          <ButtonComponent />
+          <ButtonComponentNew />
         </ContentWithTOC>
       );
     }
@@ -428,21 +430,6 @@ export default function DesignSystemPage() {
           onNavigate={handleNavigation}
         >
           <BrowserComponent />
-        </ContentWithTOC>
-      );
-    }
-
-    if (activeSlug === "button") {
-      return (
-        <ContentWithTOC
-          tocTitle="On this page"
-          pageTitle="Button"
-          pageSubtitle="Trigger an action or event, such as submitting a form or displaying a dialog."
-          mainSectionId="button"
-          activeSlug={activeSlug}
-          onNavigate={handleNavigation}
-        >
-          <ButtonComponentNew />
         </ContentWithTOC>
       );
     }
