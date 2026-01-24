@@ -189,12 +189,9 @@ const getVariantClasses = (
 
   switch (variant) {
     case "default":
-      // Geist uses rgb(23, 23, 23) / #171717 for default button
       return `
-        bg-[#171717] text-white
-        hover:bg-[#383838]
-        dark:bg-[#ededed] dark:text-[#171717]
-        dark:hover:bg-[#d4d4d4]
+        bg-[var(--ds-gray-1000)] text-[var(--ds-background-100)]
+        hover:bg-[var(--ds-gray-900)]
       `;
     case "error":
       return `
