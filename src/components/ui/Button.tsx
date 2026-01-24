@@ -157,15 +157,15 @@ const getSizeClasses = (size: ButtonSize, shape: ButtonShape): string => {
 const getShapeClasses = (shape: ButtonShape, size: ButtonSize): string => {
   switch (shape) {
     case "square":
-      // Large uses 8px radius, others use 6px
-      return size === "large" ? "rounded-lg" : "rounded-md";
+      // Geist: Large uses 8px radius, others use 6px
+      return size === "large" ? "rounded-[8px]" : "rounded-[6px]";
     case "circle":
       return "rounded-full";
     case "rounded":
       return "rounded-full";
     default:
-      // Large uses 8px radius, others use 6px
-      return size === "large" ? "rounded-lg" : "rounded-md";
+      // Geist: Large uses 8px radius, others use 6px
+      return size === "large" ? "rounded-[8px]" : "rounded-[6px]";
   }
 };
 
