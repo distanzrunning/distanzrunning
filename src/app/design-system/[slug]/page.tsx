@@ -34,6 +34,7 @@ import CodeBlockComponent from "../components/content/CodeBlockComponent";
 import AvatarComponent from "../components/content/AvatarComponent";
 import BadgeComponent from "../components/content/BadgeComponent";
 import BrowserComponent from "../components/content/BrowserComponent";
+import ButtonComponentNew from "../components/content/ButtonComponentNew";
 import Materials from "../components/content/Materials";
 import ContentWithTOC from "../components/ContentWithTOC";
 
@@ -427,6 +428,21 @@ export default function DesignSystemPage() {
           onNavigate={handleNavigation}
         >
           <BrowserComponent />
+        </ContentWithTOC>
+      );
+    }
+
+    if (activeSlug === "button") {
+      return (
+        <ContentWithTOC
+          tocTitle="On this page"
+          pageTitle="Button"
+          pageSubtitle="Trigger an action or event, such as submitting a form or displaying a dialog."
+          mainSectionId="button"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
+          <ButtonComponentNew />
         </ContentWithTOC>
       );
     }

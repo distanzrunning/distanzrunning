@@ -1,162 +1,325 @@
-import { forwardRef, ButtonHTMLAttributes, ReactNode } from "react";
+"use client";
 
-export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+import {
+  forwardRef,
+  ButtonHTMLAttributes,
+  AnchorHTMLAttributes,
+  ReactNode,
+} from "react";
+
+// ============================================================================
+// Types
+// ============================================================================
+
+export type ButtonSize = "tiny" | "small" | "medium" | "large";
+export type ButtonVariant =
+  | "default"
+  | "error"
+  | "warning"
+  | "secondary"
+  | "tertiary";
+export type ButtonShape = "default" | "square" | "circle" | "rounded";
+
+export interface ButtonProps
+  extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "prefix"> {
   /** Button content */
-  children: ReactNode;
+  children?: ReactNode;
+  /** Size variant */
+  size?: ButtonSize;
   /** Visual style variant */
-  variant?: "primary" | "secondary" | "tertiary";
-  /** Use inverse colors for dark backgrounds */
-  inverse?: boolean;
-  /** Size variant - default (h-12, px-5) or slim (h-9, px-4) */
-  size?: "default" | "slim";
-  /** Skip automatic dark mode switching (used by design system docs) */
-  ignoreDarkMode?: boolean;
-  /** Additional CSS classes for custom sizing/layout */
+  variant?: ButtonVariant;
+  /** Shape variant for icon-only buttons */
+  shape?: ButtonShape;
+  /** Icon or element to display before the content */
+  prefixIcon?: ReactNode;
+  /** Icon or element to display after the content */
+  suffixIcon?: ReactNode;
+  /** Show loading spinner (disables button) */
+  loading?: boolean;
+  /** Add shadow effect (typically used with rounded shape) */
+  shadow?: boolean;
+  /** Additional CSS classes */
   className?: string;
 }
 
+export interface ButtonLinkProps
+  extends Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "prefix"> {
+  /** Button content */
+  children?: ReactNode;
+  /** Size variant */
+  size?: ButtonSize;
+  /** Visual style variant */
+  variant?: ButtonVariant;
+  /** Shape variant */
+  shape?: ButtonShape;
+  /** Icon or element to display before the content */
+  prefixIcon?: ReactNode;
+  /** Icon or element to display after the content */
+  suffixIcon?: ReactNode;
+  /** Add shadow effect */
+  shadow?: boolean;
+  /** Additional CSS classes */
+  className?: string;
+}
+
+// ============================================================================
+// Spinner Component
+// ============================================================================
+
+interface SpinnerProps {
+  size?: number;
+  className?: string;
+}
+
+function Spinner({ size = 16, className = "" }: SpinnerProps) {
+  const lines = size <= 16 ? 10 : 12;
+  const duration = size <= 16 ? 1000 : 1200;
+
+  return (
+    <div
+      className={className}
+      style={{ height: size, width: size }}
+      role="status"
+      aria-label="Loading"
+    >
+      <div
+        className="relative left-1/2 top-1/2"
+        style={{ height: size, width: size, color: "currentColor" }}
+      >
+        {Array.from({ length: lines }).map((_, i) => (
+          <div
+            key={i}
+            className="absolute left-[-10%] top-[-3.9%] bg-current rounded-full"
+            style={{
+              height: size <= 16 ? "1.5px" : "8%",
+              width: size <= 16 ? "4px" : "24%",
+              opacity: 0.25,
+              animation: `spinner-fade ${duration}ms linear infinite`,
+              animationDelay: `${-duration + (i * duration) / lines}ms`,
+              transform: `rotate(${(i * 360) / lines}deg) translate(146%)`,
+            }}
+          />
+        ))}
+      </div>
+      <style jsx>{`
+        @keyframes spinner-fade {
+          0% {
+            opacity: 1;
+          }
+          100% {
+            opacity: 0.25;
+          }
+        }
+      `}</style>
+    </div>
+  );
+}
+
+// ============================================================================
+// Style Utilities
+// ============================================================================
+
+const getSizeClasses = (size: ButtonSize, shape: ButtonShape): string => {
+  // Icon-only buttons (square/circle shapes)
+  if (shape === "square" || shape === "circle") {
+    switch (size) {
+      case "tiny":
+        return "h-6 w-6 text-sm";
+      case "small":
+        return "h-8 w-8 text-sm";
+      case "medium":
+        return "h-10 w-10 text-sm";
+      case "large":
+        return "h-12 w-12 text-base";
+      default:
+        return "h-10 w-10 text-sm";
+    }
+  }
+
+  // Regular buttons with text
+  switch (size) {
+    case "tiny":
+      return "h-6 px-2 text-xs gap-1";
+    case "small":
+      return "h-8 px-3 text-sm gap-1.5";
+    case "medium":
+      return "h-10 px-4 text-sm gap-2";
+    case "large":
+      return "h-12 px-5 text-base gap-2";
+    default:
+      return "h-10 px-4 text-sm gap-2";
+  }
+};
+
+const getShapeClasses = (shape: ButtonShape): string => {
+  switch (shape) {
+    case "square":
+      return "rounded-md";
+    case "circle":
+      return "rounded-full";
+    case "rounded":
+      return "rounded-full";
+    default:
+      return "rounded-md";
+  }
+};
+
+const getVariantClasses = (
+  variant: ButtonVariant,
+  disabled: boolean,
+  loading: boolean,
+): string => {
+  const isDisabled = disabled || loading;
+
+  if (isDisabled) {
+    switch (variant) {
+      case "secondary":
+        return "bg-[var(--ds-background-200)] text-[var(--ds-gray-700)] border border-[var(--ds-gray-400)] cursor-not-allowed";
+      case "tertiary":
+        return "bg-transparent text-[var(--ds-gray-600)] cursor-not-allowed";
+      default:
+        return "bg-[var(--ds-gray-300)] text-[var(--ds-gray-600)] cursor-not-allowed";
+    }
+  }
+
+  switch (variant) {
+    case "default":
+      return `
+        bg-[var(--ds-gray-1000)] text-[var(--ds-background-100)]
+        hover:bg-[var(--ds-gray-900)]
+        dark:bg-[var(--ds-gray-100)] dark:text-[var(--ds-gray-1000)]
+        dark:hover:bg-[var(--ds-gray-200)]
+      `;
+    case "error":
+      return `
+        bg-[var(--ds-red-700)] text-white
+        hover:bg-[var(--ds-red-800)]
+      `;
+    case "warning":
+      return `
+        bg-[var(--ds-amber-700)] text-white
+        hover:bg-[var(--ds-amber-800)]
+      `;
+    case "secondary":
+      return `
+        bg-[var(--ds-background-100)] text-[var(--ds-gray-1000)]
+        border border-[var(--ds-gray-400)]
+        hover:bg-[var(--ds-gray-100)] hover:border-[var(--ds-gray-500)]
+      `;
+    case "tertiary":
+      return `
+        bg-transparent text-[var(--ds-gray-900)]
+        hover:bg-[var(--ds-gray-100)]
+        dark:hover:bg-[var(--ds-gray-alpha-100)]
+      `;
+    default:
+      return "";
+  }
+};
+
+// ============================================================================
+// Button Component
+// ============================================================================
+
 /**
- * Shared Button component with consistent design system styles.
- *
- * Styling is fixed (colors, border radius, font, focus ring) but dimensions
- * can be customized via the `size` prop or `className` overrides.
+ * Button component following Geist design system patterns.
  *
  * @example
- * // Primary button (default)
- * <Button>Subscribe</Button>
+ * // Default button
+ * <Button>Upload</Button>
  *
- * // Secondary button
+ * // With sizes
+ * <Button size="small">Small</Button>
+ * <Button size="large">Large</Button>
+ *
+ * // With variants
+ * <Button variant="error">Delete</Button>
  * <Button variant="secondary">Cancel</Button>
+ * <Button variant="tertiary">Learn more</Button>
  *
- * // Tertiary/Ghost button (text-only, no background or border)
- * <Button variant="tertiary">Learn More</Button>
+ * // Icon-only (square or circle shape)
+ * <Button shape="square" aria-label="Upload"><UploadIcon /></Button>
+ * <Button shape="circle" aria-label="Settings"><SettingsIcon /></Button>
  *
- * // Inverse for dark backgrounds
- * <Button inverse>Learn More</Button>
+ * // With prefix/suffix icons
+ * <Button prefix={<ArrowLeftIcon />}>Back</Button>
+ * <Button suffix={<ArrowRightIcon />}>Next</Button>
  *
- * // Slim variant
- * <Button size="slim">Sign In</Button>
+ * // Loading state
+ * <Button loading>Saving...</Button>
  *
- * // Custom dimensions via className
- * <Button className="h-14 px-8">Large Button</Button>
+ * // Rounded with shadow (marketing style)
+ * <Button shape="rounded" shadow variant="secondary">Get Started</Button>
  */
-const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (
     {
       children,
-      variant = "primary",
-      inverse = false,
-      size = "default",
-      ignoreDarkMode = false,
+      size = "medium",
+      variant = "default",
+      shape = "default",
+      prefixIcon,
+      suffixIcon,
+      loading = false,
+      shadow = false,
+      disabled = false,
       className = "",
-      disabled,
       type = "button",
       ...props
     },
     ref,
   ) => {
-    // Size classes
-    const sizeClasses = {
-      default: "h-12 px-5",
-      slim: "h-9 px-4",
-    };
+    const isDisabled = disabled || loading;
 
-    // Base classes (shared across all variants)
     const baseClasses = `
       inline-flex items-center justify-center
-      ${sizeClasses[size]}
-      rounded-md
-      font-sans font-semibold text-sm
-      transition-colors
-      focus:outline-none focus:ring-2 focus:ring-borderNeutral
-      active:scale-[0.98] active:duration-100
+      font-medium
+      transition-colors duration-150
+      focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ds-focus-color)] focus-visible:ring-offset-2
+      active:scale-[0.98]
     `;
 
-    // Variant + inverse color combinations
-    // When ignoreDarkMode is true, no dark: modifiers are used (for design system docs)
-    // When ignoreDarkMode is false, dark: modifiers enable automatic theme switching
-    const getVariantClasses = () => {
-      if (disabled) {
-        // Disabled state: subtle, recessive styling for premium feel
-        // Inverse disabled should match the opposite theme's primary disabled
-        if (variant === "primary") {
-          if (inverse) {
-            // Inverse disabled: dark grey for dark backgrounds (no dark mode switch)
-            return "bg-asphalt-20 text-asphalt-50 cursor-not-allowed";
-          }
-          // Primary disabled: light grey in light mode, dark grey in dark mode
-          return "bg-asphalt-90 dark:bg-asphalt-20 text-asphalt-60 dark:text-asphalt-50 cursor-not-allowed";
-        }
-        if (variant === "secondary") {
-          if (inverse) {
-            // Inverse secondary disabled: light border for dark backgrounds (no dark mode switch)
-            return "bg-transparent border border-asphalt-30 text-asphalt-50 cursor-not-allowed";
-          }
-          // Secondary disabled: visible border in both modes
-          return "bg-transparent border border-asphalt-80 dark:border-asphalt-30 text-asphalt-60 dark:text-asphalt-50 cursor-not-allowed";
-        }
-        if (variant === "tertiary") {
-          if (inverse) {
-            // Inverse tertiary disabled: muted text for dark backgrounds
-            return "bg-transparent text-asphalt-50 cursor-not-allowed";
-          }
-          // Tertiary disabled: muted text
-          return "bg-transparent text-asphalt-60 dark:text-asphalt-50 cursor-not-allowed";
-        }
-      }
+    const sizeClasses = getSizeClasses(size, shape);
+    const shapeClasses = getShapeClasses(shape);
+    const variantClasses = getVariantClasses(variant, disabled, loading);
+    const shadowClasses = shadow
+      ? "shadow-[var(--ds-shadow-border-small)]"
+      : "";
 
-      if (variant === "primary") {
-        if (inverse) {
-          // Inverse primary: light button for dark backgrounds (no dark mode switch)
-          return "bg-white text-asphalt-10 hover:bg-asphalt-95";
-        }
-        // Primary: dark button in light mode, light button in dark mode
-        if (ignoreDarkMode) {
-          return "bg-asphalt-10 text-white hover:bg-asphalt-20";
-        }
-        return "bg-asphalt-10 dark:bg-asphalt-95 text-white dark:text-asphalt-10 hover:bg-asphalt-20 dark:hover:bg-asphalt-90";
-      }
-
-      if (variant === "secondary") {
-        if (inverse) {
-          // Inverse secondary: light border/text for dark backgrounds (no dark mode switch)
-          return "bg-transparent border border-white text-white hover:bg-white/10";
-        }
-        // Secondary: visible border in both light and dark modes
-        if (ignoreDarkMode) {
-          return "bg-transparent border border-asphalt-70 text-asphalt-10 hover:border-asphalt-40 hover:bg-asphalt-95/50";
-        }
-        return "bg-transparent border border-asphalt-70 dark:border-asphalt-40 text-asphalt-10 dark:text-asphalt-95 hover:border-asphalt-40 dark:hover:border-asphalt-60 hover:bg-asphalt-95/50 dark:hover:bg-asphalt-20/30";
-      }
-
-      if (variant === "tertiary") {
-        if (inverse) {
-          // Inverse tertiary: light text for dark backgrounds, subtle hover
-          return "bg-transparent text-white hover:text-asphalt-90 hover:bg-white/10";
-        }
-        // Tertiary/Ghost: text-only with subtle hover background
-        if (ignoreDarkMode) {
-          return "bg-transparent text-asphalt-20 hover:text-asphalt-10 hover:bg-asphalt-95/70";
-        }
-        return "bg-transparent text-asphalt-20 dark:text-asphalt-80 hover:text-asphalt-10 dark:hover:text-asphalt-95 hover:bg-asphalt-95/70 dark:hover:bg-asphalt-20/50";
-      }
-
-      return "";
-    };
-
-    const combinedClasses = `${baseClasses} ${getVariantClasses()} ${className}`
+    const combinedClasses = `
+      ${baseClasses}
+      ${sizeClasses}
+      ${shapeClasses}
+      ${variantClasses}
+      ${shadowClasses}
+      ${className}
+    `
       .replace(/\s+/g, " ")
       .trim();
+
+    // Get spinner size based on button size
+    const spinnerSize = size === "large" ? 24 : 16;
 
     return (
       <button
         ref={ref}
         type={type}
-        disabled={disabled}
+        disabled={isDisabled}
         className={combinedClasses}
         {...props}
       >
-        {children}
+        {loading ? (
+          <>
+            <Spinner size={spinnerSize} />
+            {children && <span className="ml-2">{children}</span>}
+          </>
+        ) : (
+          <>
+            {prefixIcon && <span className="flex-shrink-0">{prefixIcon}</span>}
+            {children && <span>{children}</span>}
+            {suffixIcon && <span className="flex-shrink-0">{suffixIcon}</span>}
+          </>
+        )}
       </button>
     );
   },
@@ -164,4 +327,70 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 
 Button.displayName = "Button";
 
+// ============================================================================
+// ButtonLink Component
+// ============================================================================
+
+/**
+ * Anchor element styled as a button.
+ * Use for links that should look like buttons.
+ *
+ * @example
+ * <ButtonLink href="/signup">Sign Up</ButtonLink>
+ */
+export const ButtonLink = forwardRef<HTMLAnchorElement, ButtonLinkProps>(
+  (
+    {
+      children,
+      size = "medium",
+      variant = "default",
+      shape = "default",
+      prefixIcon,
+      suffixIcon,
+      shadow = false,
+      className = "",
+      ...props
+    },
+    ref,
+  ) => {
+    const baseClasses = `
+      inline-flex items-center justify-center
+      font-medium
+      transition-colors duration-150
+      focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ds-focus-color)] focus-visible:ring-offset-2
+      active:scale-[0.98]
+      no-underline
+    `;
+
+    const sizeClasses = getSizeClasses(size, shape);
+    const shapeClasses = getShapeClasses(shape);
+    const variantClasses = getVariantClasses(variant, false, false);
+    const shadowClasses = shadow
+      ? "shadow-[var(--ds-shadow-border-small)]"
+      : "";
+
+    const combinedClasses = `
+      ${baseClasses}
+      ${sizeClasses}
+      ${shapeClasses}
+      ${variantClasses}
+      ${shadowClasses}
+      ${className}
+    `
+      .replace(/\s+/g, " ")
+      .trim();
+
+    return (
+      <a ref={ref} className={combinedClasses} {...props}>
+        {prefixIcon && <span className="flex-shrink-0">{prefixIcon}</span>}
+        {children && <span>{children}</span>}
+        {suffixIcon && <span className="flex-shrink-0">{suffixIcon}</span>}
+      </a>
+    );
+  },
+);
+
+ButtonLink.displayName = "ButtonLink";
+
+// Default export for backwards compatibility
 export default Button;
