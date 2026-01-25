@@ -540,8 +540,7 @@
     --calendar-button-shadow: rgb(235, 235, 235) 0px 0px 0px 1px;
     --calendar-button-bg: rgb(255, 255, 255);
     --calendar-button-bg-hover: rgb(242, 242, 242);
-    --calendar-button-focus-ring:
-      0 0 0 2px hsla(0, 0%, 100%, 1), 0 0 0 4px oklch(57.61% 0.2508 258.23);
+    --calendar-button-focus-ring: 0 0 0 1px #00000057, 0 0 0 4px #00000029;
 
     /* ═══════════════════════════════════════════════════════════════════════
        SEMANTIC TOKENS - Light Mode
@@ -991,8 +990,7 @@
     --calendar-button-shadow: rgb(46, 46, 46) 0px 0px 0px 1px;
     --calendar-button-bg: rgb(10, 10, 10);
     --calendar-button-bg-hover: rgb(31, 31, 31);
-    --calendar-button-focus-ring:
-      0 0 0 2px hsla(0, 0%, 4%, 1), 0 0 0 4px oklch(57.61% 0.2508 258.23);
+    --calendar-button-focus-ring: 0 0 0 1px #ffffff57, 0 0 0 4px #ffffff29;
 
     /* ─────────────────────────────────────────────────────────────────────────
        SEMANTIC TOKENS - Dark Mode
