@@ -471,7 +471,7 @@ function CalendarDropdown({
 
   return (
     <div
-      className="calendar-dropdown absolute top-full left-0 mt-2 z-50"
+      className="calendar-dropdown absolute bottom-full left-0 mb-2 z-50"
       style={{
         padding: 12,
         borderRadius: 6,
