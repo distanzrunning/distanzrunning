@@ -193,9 +193,10 @@ const getVariantClasses = (
       case "secondary":
         return "bg-[var(--ds-background-200)] text-[var(--ds-gray-700)] shadow-[0_0_0_1px_var(--ds-gray-400)] cursor-not-allowed";
       case "tertiary":
-        return "bg-transparent text-[var(--ds-gray-600)] cursor-not-allowed";
+        return "bg-transparent text-[var(--ds-gray-700)] cursor-not-allowed";
       default:
-        return "bg-[var(--ds-gray-300)] text-[var(--ds-gray-600)] cursor-not-allowed";
+        // Geist: background #f2f2f2 (gray-100), text #8f8f8f (gray-700)
+        return "bg-[var(--ds-gray-100)] text-[var(--ds-gray-700)] cursor-not-allowed";
     }
   }
 
