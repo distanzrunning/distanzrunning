@@ -82,17 +82,17 @@ export default function PagePagination({
           <button
             onClick={() => onNavigate(prevPage.id)}
             aria-label={`Go to previous page: ${prevPage.label}`}
-            className="group flex items-end text-left text-[var(--ds-gray-1000)] hover:text-black dark:hover:text-white transition-colors"
+            className="flex flex-col items-start pl-7 pr-2 py-1 text-[var(--ds-gray-900)] hover:text-black dark:hover:text-white transition-colors duration-200"
           >
-            <span className="mb-0.5">
-              <ChevronLeftIcon />
+            <span className="text-[0.8125rem] leading-[1.125rem] font-normal mb-0.5">
+              Previous
             </span>
-            <div className="flex flex-col items-start ml-1">
-              <span className="text-[0.8125rem] leading-[1.125rem] font-normal mb-1">
-                Previous
-              </span>
-              <span className="text-[1rem] leading-[1.5rem] font-medium">
+            <div className="flex items-center flex-row-reverse">
+              <span className="text-[1rem] leading-[1.5rem] font-medium text-[var(--ds-gray-1000)]">
                 {prevPage.label}
+              </span>
+              <span className="mt-0.5 mr-1">
+                <ChevronLeftIcon />
               </span>
             </div>
           </button>
@@ -105,19 +105,19 @@ export default function PagePagination({
           <button
             onClick={() => onNavigate(nextPage.id)}
             aria-label={`Go to next page: ${nextPage.label}`}
-            className="group flex items-end text-right text-[var(--ds-gray-1000)] hover:text-black dark:hover:text-white transition-colors"
+            className="flex flex-col items-end pl-2 pr-7 py-1 text-[var(--ds-gray-900)] hover:text-black dark:hover:text-white transition-colors duration-200"
           >
-            <div className="flex flex-col items-start mr-1">
-              <span className="text-[0.8125rem] leading-[1.125rem] font-normal mb-1">
-                Next
-              </span>
-              <span className="text-[1rem] leading-[1.5rem] font-medium">
+            <span className="text-[0.8125rem] leading-[1.125rem] font-normal mb-0.5">
+              Next
+            </span>
+            <div className="flex items-center">
+              <span className="text-[1rem] leading-[1.5rem] font-medium text-[var(--ds-gray-1000)]">
                 {nextPage.label}
               </span>
+              <span className="mt-0.5 ml-1">
+                <ChevronRightIcon />
+              </span>
             </div>
-            <span className="mb-0.5">
-              <ChevronRightIcon />
-            </span>
           </button>
         ) : (
           <div />
