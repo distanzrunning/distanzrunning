@@ -1084,8 +1084,8 @@
   /* Button icon sizing - icons inside buttons inherit size from CSS variable */
   button svg,
   a[class*="button"] svg {
-    width: var(--geist-icon-size, 16px);
-    height: var(--geist-icon-size, 16px);
+    width: var(--ds-icon-size, 16px);
+    height: var(--ds-icon-size, 16px);
   }
 
   .layout-grid {

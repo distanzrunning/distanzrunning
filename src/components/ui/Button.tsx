@@ -334,7 +334,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         type={type}
         disabled={isDisabled}
         className={combinedClasses}
-        style={{ "--geist-icon-size": iconSize } as React.CSSProperties}
+        style={{ "--ds-icon-size": iconSize } as React.CSSProperties}
         {...props}
       >
         {loading ? (
@@ -422,7 +422,7 @@ export const ButtonLink = forwardRef<HTMLAnchorElement, ButtonLinkProps>(
       <a
         ref={ref}
         className={combinedClasses}
-        style={{ "--geist-icon-size": iconSize } as React.CSSProperties}
+        style={{ "--ds-icon-size": iconSize } as React.CSSProperties}
         {...props}
       >
         {prefixIcon && <span className="prefix">{prefixIcon}</span>}

@@ -548,7 +548,7 @@ function SearchInput({
   return (
     <div
       className="relative flex items-center w-full"
-      style={{ "--geist-icon-size": "16px" } as React.CSSProperties}
+      style={{ "--ds-icon-size": "16px" } as React.CSSProperties}
     >
       <input
         ref={inputRef}
