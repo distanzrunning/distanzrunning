@@ -242,11 +242,17 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   }, [componentCode]);
 
   return (
-    <div className="border border-[var(--ds-gray-400)] rounded-lg overflow-hidden">
-      <div className="p-6" style={{ background: "var(--ds-background-100)" }}>
+    <div className="border border-[var(--ds-gray-400)] rounded-lg overflow-visible">
+      <div
+        className="p-6 rounded-t-lg"
+        style={{ background: "var(--ds-background-100)" }}
+      >
         {children}
       </div>
-      <div style={{ background: "var(--ds-background-200)" }}>
+      <div
+        className="rounded-b-lg"
+        style={{ background: "var(--ds-background-200)" }}
+      >
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
@@ -593,7 +599,7 @@ export default function CalendarComponent() {
         </SectionHeader>
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={defaultCode}>
-            <div className="flex justify-center pt-12 pb-[340px]">
+            <div className="flex justify-center py-12">
               <div style={{ width: 250 }} className="relative">
                 <div
                   className="relative rounded-md"
