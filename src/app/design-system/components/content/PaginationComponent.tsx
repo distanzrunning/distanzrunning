@@ -393,11 +393,11 @@ export default function PaginationComponent() {
                     Previous
                   </span>
                   <div className="flex items-center">
+                    <span className="mt-0.5 mr-2">
+                      <ChevronLeftIcon />
+                    </span>
                     <span className="text-[1rem] leading-[1.5rem] font-medium text-[var(--ds-gray-1000)]">
                       Button
-                    </span>
-                    <span className="mt-0.5 ml-2">
-                      <ChevronLeftIcon />
                     </span>
                   </div>
                 </button>
