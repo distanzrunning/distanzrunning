@@ -232,7 +232,7 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
             color: "var(--ds-gray-1000)",
             darkColor: "var(--ds-gray-1000)",
           },
-        ] as DualThemeToken[]
+        ] as DualThemeToken[],
     );
 
   const handleCopy = useCallback(() => {
@@ -353,19 +353,53 @@ export default function CalendarComponent() {
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={defaultCode}>
             <div className="flex justify-center py-12">
-              <button
-                type="button"
-                aria-haspopup="dialog"
-                aria-expanded="false"
-                title="Select Date Range"
-                className="flex items-center justify-between gap-2 h-10 px-3 rounded-md border border-[var(--ds-gray-400)] bg-[var(--ds-background-100)] text-[var(--ds-gray-900)] hover:border-[var(--ds-gray-500)] transition-colors text-left font-normal"
-                style={{ width: 250 }}
-              >
-                <span className="flex items-center gap-2">
-                  <CalendarIcon />
-                  <span>Select Date Range</span>
-                </span>
-              </button>
+              <div style={{ width: 250, height: 40 }}>
+                <div
+                  className="relative rounded-md"
+                  style={{ borderRadius: 6 }}
+                >
+                  <button
+                    type="button"
+                    aria-haspopup="dialog"
+                    aria-expanded="false"
+                    title="Select Date Range"
+                    className="flex items-center justify-between w-full text-left cursor-pointer bg-white dark:bg-[rgb(10,10,10)] text-[rgb(23,23,23)] dark:text-[rgb(237,237,237)] transition-[border-color,background,color,transform,box-shadow] duration-150 ease-out"
+                    style={{
+                      height: 40,
+                      paddingLeft: 10,
+                      paddingRight: 10,
+                      borderRadius: 6,
+                      fontSize: 14,
+                      lineHeight: "20px",
+                      fontWeight: 400,
+                      boxShadow: "var(--calendar-button-shadow)",
+                    }}
+                  >
+                    {/* Prefix (icon container) */}
+                    <span
+                      className="flex items-center justify-center flex-shrink-0"
+                      style={{
+                        height: 16,
+                        width: 20,
+                        minWidth: 20,
+                        marginRight: 2,
+                      }}
+                    >
+                      <CalendarIcon />
+                    </span>
+                    {/* Content (text) */}
+                    <span
+                      className="overflow-hidden text-ellipsis whitespace-nowrap flex-1"
+                      style={{
+                        paddingLeft: 6,
+                        paddingRight: 20,
+                      }}
+                    >
+                      Select Date Range
+                    </span>
+                  </button>
+                </div>
+              </div>
             </div>
           </CodePreview>
         </div>

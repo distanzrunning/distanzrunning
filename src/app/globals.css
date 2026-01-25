@@ -536,6 +536,9 @@
     --ds-button-rounded-bg: var(--ds-background-100);
     --ds-button-rounded-text: var(--ds-gray-1000);
 
+    /* Calendar button shadow - uses box-shadow for border effect */
+    --calendar-button-shadow: rgb(235, 235, 235) 0px 0px 0px 1px;
+
     /* ═══════════════════════════════════════════════════════════════════════
        SEMANTIC TOKENS - Light Mode
        Map design system scales to semantic usage
@@ -979,6 +982,9 @@
     --ds-button-rounded-hover-bg: #1f1f1f;
     --ds-button-rounded-bg: #0a0a0a;
     --ds-button-rounded-text: #ededed;
+
+    /* Calendar button shadow - uses box-shadow for border effect (dark mode) */
+    --calendar-button-shadow: rgb(46, 46, 46) 0px 0px 0px 1px;
 
     /* ─────────────────────────────────────────────────────────────────────────
        SEMANTIC TOKENS - Dark Mode
