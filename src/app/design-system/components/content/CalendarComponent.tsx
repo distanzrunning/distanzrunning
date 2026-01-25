@@ -471,7 +471,7 @@ function CalendarDropdown({
 
   return (
     <div
-      className="calendar-dropdown absolute bottom-full left-0 mb-2 z-50"
+      className="calendar-dropdown absolute top-full left-0 mt-2 z-50"
       style={{
         padding: 12,
         borderRadius: 6,
@@ -593,7 +593,7 @@ export default function CalendarComponent() {
         </SectionHeader>
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={defaultCode}>
-            <div className="flex justify-center py-12">
+            <div className="flex justify-center pt-12 pb-[340px]">
               <div style={{ width: 250 }} className="relative">
                 <div
                   className="relative rounded-md"
