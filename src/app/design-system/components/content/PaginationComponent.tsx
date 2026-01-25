@@ -391,7 +391,7 @@ export default function PaginationComponent() {
                 <button
                   onClick={() => {}}
                   aria-label="Go to previous page: Button"
-                  className="block py-1 pl-7 pr-2 text-[var(--ds-gray-900)] hover:text-black dark:hover:text-white transition-colors duration-200"
+                  className="block py-1 pl-7 pr-2 text-left text-[var(--ds-gray-900)] hover:text-black dark:hover:text-white transition-colors duration-200"
                 >
                   <span className="block text-[0.8125rem] leading-[1.125rem] font-normal mb-0.5">
                     Previous
