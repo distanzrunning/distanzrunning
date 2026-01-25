@@ -300,7 +300,7 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
               </button>
 
               {/* Code content */}
-              <pre className="overflow-x-auto py-4">
+              <pre className="overflow-x-auto py-4" data-code-block>
                 <code className="block text-[13px] leading-[20px] font-mono">
                   {lines.map((lineTokens, index) => (
                     <div
