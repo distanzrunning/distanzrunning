@@ -343,26 +343,18 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         style={{ "--ds-icon-size": iconSize } as React.CSSProperties}
         {...props}
       >
-        {loading ? (
-          <>
+        {loading && (
+          <span className="prefix">
             <Spinner size={spinnerSize} />
-            {children && (
-              <span className="content px-[var(--ds-button-content-padding)] ml-2">
-                {children}
-              </span>
-            )}
-          </>
-        ) : (
-          <>
-            {prefixIcon && <span className="prefix">{prefixIcon}</span>}
-            {children && (
-              <span className="content px-[var(--ds-button-content-padding)]">
-                {children}
-              </span>
-            )}
-            {suffixIcon && <span className="suffix">{suffixIcon}</span>}
-          </>
+          </span>
         )}
+        {!loading && prefixIcon && <span className="prefix">{prefixIcon}</span>}
+        {children && (
+          <span className="content px-[var(--ds-button-content-padding)]">
+            {children}
+          </span>
+        )}
+        {!loading && suffixIcon && <span className="suffix">{suffixIcon}</span>}
       </button>
     );
   },
