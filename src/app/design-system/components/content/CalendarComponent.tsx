@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import React, { useState, useCallback, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import { Section } from "../ContentWithTOC";
 import {
@@ -445,15 +445,32 @@ function getCalendarDays(year: number, month: number) {
 function CalendarDropdown({
   isOpen,
   onClose,
+  triggerRef,
 }: {
   isOpen: boolean;
   onClose: () => void;
+  triggerRef: React.RefObject<HTMLButtonElement | null>;
 }) {
   const today = new Date();
   const [currentMonth, setCurrentMonth] = useState(today.getMonth());
   const [currentYear, setCurrentYear] = useState(today.getFullYear());
+  const [openUpward, setOpenUpward] = useState(false);
+  const dropdownRef = React.useRef<HTMLDivElement>(null);
 
   const days = getCalendarDays(currentYear, currentMonth);
+
+  // Calculate position when dropdown opens
+  React.useEffect(() => {
+    if (isOpen && triggerRef.current) {
+      const triggerRect = triggerRef.current.getBoundingClientRect();
+      const dropdownHeight = 320; // Approximate height of dropdown
+      const spaceBelow = window.innerHeight - triggerRect.bottom;
+      const spaceAbove = triggerRect.top;
+
+      // Open upward if more space above and not enough space below
+      setOpenUpward(spaceBelow < dropdownHeight && spaceAbove > spaceBelow);
+    }
+  }, [isOpen, triggerRef]);
 
   const goToPrevMonth = () => {
     if (currentMonth === 0) {
@@ -477,7 +494,10 @@ function CalendarDropdown({
 
   return (
     <div
-      className="calendar-dropdown absolute top-full left-0 mt-2 z-50"
+      ref={dropdownRef}
+      className={`calendar-dropdown absolute left-0 z-50 ${
+        openUpward ? "bottom-full mb-2" : "top-full mt-2"
+      }`}
       style={{
         padding: 12,
         borderRadius: 6,
@@ -583,6 +603,7 @@ export function Component() {
 export default function CalendarComponent() {
   const { toast, showToast, dismissToast } = useToast();
   const [isExpanded, setIsExpanded] = useState(false);
+  const triggerRef = useRef<HTMLButtonElement>(null);
 
   return (
     <>
@@ -606,6 +627,7 @@ export default function CalendarComponent() {
                   style={{ borderRadius: 6 }}
                 >
                   <button
+                    ref={triggerRef}
                     type="button"
                     aria-haspopup="dialog"
                     aria-expanded={isExpanded}
@@ -649,6 +671,7 @@ export default function CalendarComponent() {
                 <CalendarDropdown
                   isOpen={isExpanded}
                   onClose={() => setIsExpanded(false)}
+                  triggerRef={triggerRef}
                 />
               </div>
             </div>
