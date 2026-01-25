@@ -1018,7 +1018,7 @@
     --calendar-day-radius: 4px;
     --calendar-day-color: rgb(237, 237, 237);
     --calendar-day-outside-color: rgb(143, 143, 143);
-    --calendar-day-hover-border: rgb(68, 68, 68);
+    --calendar-day-hover-border: rgb(69, 69, 69);
     --calendar-header-color: rgb(161, 161, 161);
     --calendar-today-bg: oklch(0.717 0.1648 250.794);
     --calendar-today-color: rgb(10, 10, 10);
