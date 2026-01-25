@@ -34,6 +34,7 @@ import AvatarComponent from "../components/content/AvatarComponent";
 import BadgeComponent from "../components/content/BadgeComponent";
 import BrowserComponent from "../components/content/BrowserComponent";
 import ButtonComponentNew from "../components/content/ButtonComponentNew";
+import PaginationComponent from "../components/content/PaginationComponent";
 import Materials from "../components/content/Materials";
 import ContentWithTOC from "../components/ContentWithTOC";
 
@@ -445,6 +446,21 @@ export default function DesignSystemPage() {
           onNavigate={handleNavigation}
         >
           <CodeBlockComponent />
+        </ContentWithTOC>
+      );
+    }
+
+    if (activeSlug === "pagination") {
+      return (
+        <ContentWithTOC
+          tocTitle="On this page"
+          pageTitle="Pagination"
+          pageSubtitle="Navigate between pages with previous and next links."
+          mainSectionId="pagination"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
+          <PaginationComponent />
         </ContentWithTOC>
       );
     }
