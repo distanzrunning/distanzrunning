@@ -84,15 +84,15 @@ export default function PagePagination({
             aria-label={`Go to previous page: ${prevPage.label}`}
             className="flex flex-col items-start py-1 text-[var(--ds-gray-900)] hover:text-black dark:hover:text-white transition-colors duration-200"
           >
-            <span className="text-[0.8125rem] leading-[1.125rem] font-normal mb-0.5 ml-7">
+            <span className="text-[0.8125rem] leading-[1.125rem] font-normal mb-0.5">
               Previous
             </span>
             <div className="flex items-center">
-              <span className="mt-0.5">
-                <ChevronLeftIcon />
-              </span>
-              <span className="text-[1rem] leading-[1.5rem] font-medium text-[var(--ds-gray-1000)] ml-2">
+              <span className="text-[1rem] leading-[1.5rem] font-medium text-[var(--ds-gray-1000)]">
                 {prevPage.label}
+              </span>
+              <span className="mt-0.5 ml-2">
+                <ChevronLeftIcon />
               </span>
             </div>
           </button>
@@ -105,9 +105,9 @@ export default function PagePagination({
           <button
             onClick={() => onNavigate(nextPage.id)}
             aria-label={`Go to next page: ${nextPage.label}`}
-            className="flex flex-col items-end py-1 text-[var(--ds-gray-900)] hover:text-black dark:hover:text-white transition-colors duration-200"
+            className="flex flex-col items-start py-1 text-[var(--ds-gray-900)] hover:text-black dark:hover:text-white transition-colors duration-200"
           >
-            <span className="text-[0.8125rem] leading-[1.125rem] font-normal mb-0.5 mr-7">
+            <span className="text-[0.8125rem] leading-[1.125rem] font-normal mb-0.5">
               Next
             </span>
             <div className="flex items-center">
