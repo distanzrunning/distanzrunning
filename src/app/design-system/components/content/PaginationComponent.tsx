@@ -382,7 +382,7 @@ export default function PaginationComponent() {
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={defaultCode}>
             <nav aria-label="pagination">
-              <div className="flex justify-between items-start pt-8">
+              <div className="flex justify-between items-start">
                 {/* Previous page */}
                 <button
                   onClick={() => {}}
