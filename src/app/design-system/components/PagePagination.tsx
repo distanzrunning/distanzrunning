@@ -82,14 +82,14 @@ export default function PagePagination({
           <button
             onClick={() => onNavigate(prevPage.id)}
             aria-label={`Go to previous page: ${prevPage.label}`}
-            className="flex items-center py-1 text-[var(--ds-gray-900)] hover:text-black dark:hover:text-white transition-colors duration-200"
+            className="flex flex-col items-start py-1 text-[var(--ds-gray-900)] hover:text-black dark:hover:text-white transition-colors duration-200"
           >
-            <span className="mt-0.5 mr-2">
-              <ChevronLeftIcon />
+            <span className="text-[0.8125rem] leading-[1.125rem] font-normal mb-0.5">
+              Previous
             </span>
-            <div className="flex flex-col items-start">
-              <span className="text-[0.8125rem] leading-[1.125rem] font-normal mb-0.5">
-                Previous
+            <div className="flex items-center">
+              <span className="mr-2">
+                <ChevronLeftIcon />
               </span>
               <span className="text-[1rem] leading-[1.5rem] font-medium text-[var(--ds-gray-1000)]">
                 {prevPage.label}
