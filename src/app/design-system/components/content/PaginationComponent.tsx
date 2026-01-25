@@ -343,17 +343,47 @@ function ChevronRightIcon() {
 // Code Example
 // ============================================================================
 
-const defaultCode = `import { Pagination } from '@/components/ui/Pagination';
+const defaultCode = `<nav aria-label="pagination">
+  <div className="flex justify-between items-start">
+    {/* Previous page */}
+    <button
+      onClick={() => onNavigate(prevPage.id)}
+      aria-label="Go to previous page: Button"
+      className="block py-1 pl-7 pr-2 text-[var(--ds-gray-900)] hover:text-black dark:hover:text-white transition-colors duration-200"
+    >
+      <span className="block text-[0.8125rem] leading-[1.125rem] font-normal mb-0.5">
+        Previous
+      </span>
+      <div className="relative flex items-center">
+        <span className="text-[1rem] leading-[1.5rem] font-medium text-[var(--ds-gray-1000)]">
+          Button
+        </span>
+        <span className="absolute left-[-26px] mt-0.5">
+          <ChevronLeftIcon />
+        </span>
+      </div>
+    </button>
 
-export function Component() {
-  return (
-    <Pagination
-      prevPage={{ id: 'button', label: 'Button' }}
-      nextPage={{ id: 'code-block', label: 'Code Block' }}
-      onNavigate={(id) => console.log('Navigate to:', id)}
-    />
-  );
-}`;
+    {/* Next page */}
+    <button
+      onClick={() => onNavigate(nextPage.id)}
+      aria-label="Go to next page: Code Block"
+      className="block py-1 pl-2 pr-7 text-left text-[var(--ds-gray-900)] hover:text-black dark:hover:text-white transition-colors duration-200"
+    >
+      <span className="block text-[0.8125rem] leading-[1.125rem] font-normal mb-0.5">
+        Next
+      </span>
+      <div className="relative flex items-center">
+        <span className="text-[1rem] leading-[1.5rem] font-medium text-[var(--ds-gray-1000)]">
+          Code Block
+        </span>
+        <span className="absolute right-[-26px] mt-0.5">
+          <ChevronRightIcon />
+        </span>
+      </div>
+    </button>
+  </div>
+</nav>`;
 
 // ============================================================================
 // Main Component
