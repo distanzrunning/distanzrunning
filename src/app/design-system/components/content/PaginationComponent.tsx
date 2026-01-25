@@ -382,21 +382,21 @@ export default function PaginationComponent() {
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={defaultCode}>
             <nav aria-label="pagination">
-              <div className="flex justify-between items-start">
+              <div className="flex justify-between items-start pt-8">
                 {/* Previous page */}
                 <button
                   onClick={() => {}}
                   aria-label="Go to previous page: Button"
                   className="group flex items-end text-left"
                 >
-                  <span className="text-[var(--ds-gray-900)] group-hover:text-[var(--ds-gray-1000)] transition-colors mb-0.5">
+                  <span className="text-textSubtle group-hover:text-textDefault transition-colors mb-0.5">
                     <ChevronLeftIcon />
                   </span>
                   <div className="flex flex-col items-start ml-1">
-                    <span className="text-[13px] leading-[18px] font-normal text-[var(--ds-gray-900)] group-hover:text-[var(--ds-gray-1000)] transition-colors mb-1">
+                    <span className="text-[13px] leading-[18px] text-textSubtle group-hover:text-textDefault transition-colors mb-1">
                       Previous
                     </span>
-                    <span className="text-[16px] leading-[24px] font-medium text-[var(--ds-gray-1000)]">
+                    <span className="text-[16px] leading-[24px] font-medium text-textDefault">
                       Button
                     </span>
                   </div>
@@ -408,15 +408,15 @@ export default function PaginationComponent() {
                   aria-label="Go to next page: Code Block"
                   className="group flex items-end text-right"
                 >
-                  <div className="flex flex-col items-end mr-1">
-                    <span className="text-[13px] leading-[18px] font-normal text-[var(--ds-gray-900)] group-hover:text-[var(--ds-gray-1000)] transition-colors mb-1">
+                  <div className="flex flex-col items-start mr-1">
+                    <span className="text-[13px] leading-[18px] text-textSubtle group-hover:text-textDefault transition-colors mb-1">
                       Next
                     </span>
-                    <span className="text-[16px] leading-[24px] font-medium text-[var(--ds-gray-1000)]">
+                    <span className="text-[16px] leading-[24px] font-medium text-textDefault">
                       Code Block
                     </span>
                   </div>
-                  <span className="text-[var(--ds-gray-900)] group-hover:text-[var(--ds-gray-1000)] transition-colors mb-0.5">
+                  <span className="text-textSubtle group-hover:text-textDefault transition-colors mb-0.5">
                     <ChevronRightIcon />
                   </span>
                 </button>
