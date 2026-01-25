@@ -1198,10 +1198,35 @@
     width: 280px;
   }
 
+  .calendar-month-label {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+    color: var(--calendar-day-color);
+    margin: 0;
+  }
+
+  .calendar-nav-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    color: var(--calendar-day-color);
+    border-radius: 4px;
+  }
+
+  .calendar-nav-button:hover {
+    background-color: var(--ds-gray-200);
+  }
+
   .calendar-table {
     display: block;
     table-layout: fixed;
     border-collapse: collapse;
+    border-spacing: 2px;
     width: 256px;
   }
 

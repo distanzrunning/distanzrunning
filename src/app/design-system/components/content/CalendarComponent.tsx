@@ -471,32 +471,51 @@ function CalendarContent() {
   return (
     <>
       {/* Header with month/year and navigation */}
-      <div className="flex items-center justify-between mb-3">
-        <h2
-          className="text-sm font-medium text-[var(--ds-gray-1000)]"
-          style={{ whiteSpace: "nowrap" }}
+      <div
+        className="calendar-header"
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          margin: "-3px 0",
+          height: 25,
+          width: 256,
+        }}
+      >
+        <div
+          style={{
+            overflow: "hidden",
+            marginLeft: -16,
+            paddingLeft: 16,
+            flex: "1 1 0%",
+          }}
         >
-          {MONTH_NAMES[currentMonth]} {currentYear}
-        </h2>
-        <div className="flex items-center gap-1">
-          <button
-            type="button"
-            onClick={goToPrevMonth}
-            aria-label="Previous month"
-            className="p-1 rounded hover:bg-[var(--ds-gray-200)] transition-colors text-[var(--ds-gray-900)]"
-          >
-            <ChevronLeftIcon />
-          </button>
-          <button
-            type="button"
-            onClick={goToNextMonth}
-            aria-label="Next month"
-            className="p-1 rounded hover:bg-[var(--ds-gray-200)] transition-colors text-[var(--ds-gray-900)]"
-          >
-            <ChevronRightIcon />
-          </button>
+          <h2 className="calendar-month-label" style={{ whiteSpace: "nowrap" }}>
+            {MONTH_NAMES[currentMonth]} {currentYear}
+          </h2>
         </div>
+        <button
+          type="button"
+          onClick={goToPrevMonth}
+          aria-label="Previous month"
+          className="calendar-nav-button"
+          style={{ marginLeft: "auto" }}
+        >
+          <ChevronLeftIcon />
+        </button>
+        <span aria-hidden="true" style={{ marginLeft: 5 }} />
+        <button
+          type="button"
+          onClick={goToNextMonth}
+          aria-label="Next month"
+          className="calendar-nav-button"
+        >
+          <ChevronRightIcon />
+        </button>
       </div>
+
+      {/* Spacer */}
+      <div aria-hidden="true" style={{ marginTop: 11 }} />
 
       {/* Calendar grid */}
       <table className="calendar-table" role="grid">
