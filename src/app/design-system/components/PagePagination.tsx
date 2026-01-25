@@ -82,16 +82,16 @@ export default function PagePagination({
           <button
             onClick={() => onNavigate(prevPage.id)}
             aria-label={`Go to previous page: ${prevPage.label}`}
-            className="group flex items-end text-left"
+            className="group flex items-end text-left text-[var(--ds-gray-1000)] hover:text-black dark:hover:text-white transition-colors"
           >
-            <span className="text-[var(--ds-gray-1000)] group-hover:text-black dark:group-hover:text-white transition-colors mb-0.5">
+            <span className="mb-0.5">
               <ChevronLeftIcon />
             </span>
             <div className="flex flex-col items-start ml-1">
-              <span className="text-[0.8125rem] leading-[1.125rem] font-normal text-[var(--ds-gray-1000)] group-hover:text-black dark:group-hover:text-white transition-colors mb-1">
+              <span className="text-[0.8125rem] leading-[1.125rem] font-normal mb-1">
                 Previous
               </span>
-              <span className="text-[1rem] leading-[1.5rem] font-medium text-[var(--ds-gray-1000)]">
+              <span className="text-[1rem] leading-[1.5rem] font-medium">
                 {prevPage.label}
               </span>
             </div>
@@ -105,17 +105,17 @@ export default function PagePagination({
           <button
             onClick={() => onNavigate(nextPage.id)}
             aria-label={`Go to next page: ${nextPage.label}`}
-            className="group flex items-end text-right"
+            className="group flex items-end text-right text-[var(--ds-gray-1000)] hover:text-black dark:hover:text-white transition-colors"
           >
             <div className="flex flex-col items-start mr-1">
-              <span className="text-[0.8125rem] leading-[1.125rem] font-normal text-[var(--ds-gray-1000)] group-hover:text-black dark:group-hover:text-white transition-colors mb-1">
+              <span className="text-[0.8125rem] leading-[1.125rem] font-normal mb-1">
                 Next
               </span>
-              <span className="text-[1rem] leading-[1.5rem] font-medium text-[var(--ds-gray-1000)]">
+              <span className="text-[1rem] leading-[1.5rem] font-medium">
                 {nextPage.label}
               </span>
             </div>
-            <span className="text-[var(--ds-gray-1000)] group-hover:text-black dark:group-hover:text-white transition-colors mb-0.5">
+            <span className="mb-0.5">
               <ChevronRightIcon />
             </span>
           </button>
