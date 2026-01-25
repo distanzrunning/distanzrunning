@@ -430,6 +430,60 @@
     --ds-pink-1000-rgb: 60, 20, 38;
 
     /* ─────────────────────────────────────────────────────────────────────────
+       SPACING - Base spacing scale (matches Geist)
+       ───────────────────────────────────────────────────────────────────────── */
+    --ds-space: 4px;
+    --ds-space-2x: 8px;
+    --ds-space-3x: 12px;
+    --ds-space-4x: 16px;
+    --ds-space-6x: 24px;
+    --ds-space-8x: 32px;
+    --ds-space-10x: 40px;
+    --ds-space-12x: 48px;
+    --ds-space-16x: 64px;
+
+    /* Component size tokens */
+    --ds-space-small: 32px; /* Small buttons, inputs */
+    --ds-space-medium: 40px; /* Default buttons, inputs */
+    --ds-space-large: 48px; /* Large buttons, inputs */
+
+    /* Gap tokens */
+    --ds-space-gap: 24px;
+    --ds-space-gap-half: 12px;
+    --ds-space-gap-quarter: 6px;
+
+    /* ─────────────────────────────────────────────────────────────────────────
+       BUTTON - Button-specific tokens
+       ───────────────────────────────────────────────────────────────────────── */
+    --ds-button-height-tiny: 24px;
+    --ds-button-height-small: var(--ds-space-small);
+    --ds-button-height-medium: var(--ds-space-medium);
+    --ds-button-height-large: var(--ds-space-large);
+
+    --ds-button-padding-tiny: 6px;
+    --ds-button-padding-small: 6px;
+    --ds-button-padding-medium: 10px;
+    --ds-button-padding-large: 14px;
+
+    --ds-button-content-padding: 6px; /* Inner content span padding */
+
+    --ds-button-gap-tiny: 4px;
+    --ds-button-gap-small: 6px;
+    --ds-button-gap-medium: 8px;
+    --ds-button-gap-large: 8px;
+
+    --ds-button-icon-size-tiny: 12px;
+    --ds-button-icon-size-small: 14px;
+    --ds-button-icon-size-medium: 16px;
+    --ds-button-icon-size-large: 20px;
+
+    /* ─────────────────────────────────────────────────────────────────────────
+       MOTION - Transition and animation tokens
+       ───────────────────────────────────────────────────────────────────────── */
+    --ds-transition-duration: 150ms;
+    --ds-transition-timing: ease;
+
+    /* ─────────────────────────────────────────────────────────────────────────
        RADIUS - Border radius scale (matches Materials page)
        ───────────────────────────────────────────────────────────────────────── */
     --ds-radius-small: 6px; /* Buttons, inputs, tooltips, base surfaces */
@@ -812,6 +866,58 @@
     --ds-pink-800-rgb: 218, 45, 115;
     --ds-pink-900-rgb: 240, 120, 165;
     --ds-pink-1000-rgb: 255, 235, 245;
+
+    /* ─────────────────────────────────────────────────────────────────────────
+       SPACING - Base spacing scale (same in dark mode)
+       ───────────────────────────────────────────────────────────────────────── */
+    --ds-space: 4px;
+    --ds-space-2x: 8px;
+    --ds-space-3x: 12px;
+    --ds-space-4x: 16px;
+    --ds-space-6x: 24px;
+    --ds-space-8x: 32px;
+    --ds-space-10x: 40px;
+    --ds-space-12x: 48px;
+    --ds-space-16x: 64px;
+
+    --ds-space-small: 32px;
+    --ds-space-medium: 40px;
+    --ds-space-large: 48px;
+
+    --ds-space-gap: 24px;
+    --ds-space-gap-half: 12px;
+    --ds-space-gap-quarter: 6px;
+
+    /* ─────────────────────────────────────────────────────────────────────────
+       BUTTON - Button-specific tokens (same in dark mode)
+       ───────────────────────────────────────────────────────────────────────── */
+    --ds-button-height-tiny: 24px;
+    --ds-button-height-small: var(--ds-space-small);
+    --ds-button-height-medium: var(--ds-space-medium);
+    --ds-button-height-large: var(--ds-space-large);
+
+    --ds-button-padding-tiny: 6px;
+    --ds-button-padding-small: 6px;
+    --ds-button-padding-medium: 10px;
+    --ds-button-padding-large: 14px;
+
+    --ds-button-content-padding: 6px;
+
+    --ds-button-gap-tiny: 4px;
+    --ds-button-gap-small: 6px;
+    --ds-button-gap-medium: 8px;
+    --ds-button-gap-large: 8px;
+
+    --ds-button-icon-size-tiny: 12px;
+    --ds-button-icon-size-small: 14px;
+    --ds-button-icon-size-medium: 16px;
+    --ds-button-icon-size-large: 20px;
+
+    /* ─────────────────────────────────────────────────────────────────────────
+       MOTION - Transition and animation tokens (same in dark mode)
+       ───────────────────────────────────────────────────────────────────────── */
+    --ds-transition-duration: 150ms;
+    --ds-transition-timing: ease;
 
     /* ─────────────────────────────────────────────────────────────────────────
        RADIUS - Border radius scale (same in dark mode)

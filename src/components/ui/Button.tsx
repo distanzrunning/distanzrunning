@@ -120,53 +120,50 @@ function Spinner({ size = 16, className = "" }: SpinnerProps) {
 // ============================================================================
 
 const getSizeClasses = (size: ButtonSize, shape: ButtonShape): string => {
-  // Icon-only buttons (square/circle shapes)
+  // Icon-only buttons (square/circle shapes) - use height tokens for width too
   if (shape === "square" || shape === "circle") {
     switch (size) {
       case "tiny":
-        return "h-6 w-6 text-button-12";
+        return "h-[var(--ds-button-height-tiny)] w-[var(--ds-button-height-tiny)] text-button-12";
       case "small":
-        return "h-8 w-8 text-button-12";
+        return "h-[var(--ds-button-height-small)] w-[var(--ds-button-height-small)] text-button-12";
       case "medium":
-        return "h-10 w-10 text-button-14";
+        return "h-[var(--ds-button-height-medium)] w-[var(--ds-button-height-medium)] text-button-14";
       case "large":
-        return "h-12 w-12 text-button-16";
+        return "h-[var(--ds-button-height-large)] w-[var(--ds-button-height-large)] text-button-16";
       default:
-        return "h-10 w-10 text-button-14";
+        return "h-[var(--ds-button-height-medium)] w-[var(--ds-button-height-medium)] text-button-14";
     }
   }
 
-  // Regular buttons with text
-  // Uses text-button-* typography tokens from design system
-  // Small: 32px height, 6px button padding, text-button-12
-  // Medium: 40px height, 10px button padding, text-button-14
-  // Large: 48px height, 14px button padding, text-button-16
+  // Regular buttons with text - use design tokens for height, padding, gap
   switch (size) {
     case "tiny":
-      return "h-6 px-1.5 text-button-12 gap-1";
+      return "h-[var(--ds-button-height-tiny)] px-[var(--ds-button-padding-tiny)] text-button-12 gap-[var(--ds-button-gap-tiny)]";
     case "small":
-      return "h-8 px-[6px] text-button-12 gap-1.5";
+      return "h-[var(--ds-button-height-small)] px-[var(--ds-button-padding-small)] text-button-12 gap-[var(--ds-button-gap-small)]";
     case "medium":
-      return "h-10 px-[10px] text-button-14 gap-2";
+      return "h-[var(--ds-button-height-medium)] px-[var(--ds-button-padding-medium)] text-button-14 gap-[var(--ds-button-gap-medium)]";
     case "large":
-      return "h-12 px-[14px] text-button-16 gap-2";
+      return "h-[var(--ds-button-height-large)] px-[var(--ds-button-padding-large)] text-button-16 gap-[var(--ds-button-gap-large)]";
     default:
-      return "h-10 px-[10px] text-button-14 gap-2";
+      return "h-[var(--ds-button-height-medium)] px-[var(--ds-button-padding-medium)] text-button-14 gap-[var(--ds-button-gap-medium)]";
   }
 };
 
 const getIconSize = (size: ButtonSize): string => {
+  // Returns CSS variable reference for icon sizing
   switch (size) {
     case "tiny":
-      return "12px";
+      return "var(--ds-button-icon-size-tiny)";
     case "small":
-      return "14px";
+      return "var(--ds-button-icon-size-small)";
     case "medium":
-      return "16px";
+      return "var(--ds-button-icon-size-medium)";
     case "large":
-      return "20px";
+      return "var(--ds-button-icon-size-large)";
     default:
-      return "16px";
+      return "var(--ds-button-icon-size-medium)";
   }
 };
 
@@ -305,7 +302,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     const baseClasses = `
       inline-flex items-center justify-center
       select-none
-      transition-[border-color,background,color,transform,box-shadow] duration-150 ease-out
+      transition-[border-color,background,color,transform,box-shadow] duration-[var(--ds-transition-duration)] ease-[var(--ds-transition-timing)]
       focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ds-focus-color)] focus-visible:ring-offset-2
     `;
 
@@ -344,13 +341,19 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           <>
             <Spinner size={spinnerSize} />
             {children && (
-              <span className="content px-[6px] ml-2">{children}</span>
+              <span className="content px-[var(--ds-button-content-padding)] ml-2">
+                {children}
+              </span>
             )}
           </>
         ) : (
           <>
             {prefixIcon && <span className="prefix">{prefixIcon}</span>}
-            {children && <span className="content px-[6px]">{children}</span>}
+            {children && (
+              <span className="content px-[var(--ds-button-content-padding)]">
+                {children}
+              </span>
+            )}
             {suffixIcon && <span className="suffix">{suffixIcon}</span>}
           </>
         )}
@@ -390,7 +393,7 @@ export const ButtonLink = forwardRef<HTMLAnchorElement, ButtonLinkProps>(
     const baseClasses = `
       inline-flex items-center justify-center
       select-none
-      transition-[border-color,background,color,transform,box-shadow] duration-150 ease-out
+      transition-[border-color,background,color,transform,box-shadow] duration-[var(--ds-transition-duration)] ease-[var(--ds-transition-timing)]
       focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ds-focus-color)] focus-visible:ring-offset-2
       no-underline
     `;
@@ -423,7 +426,11 @@ export const ButtonLink = forwardRef<HTMLAnchorElement, ButtonLinkProps>(
         {...props}
       >
         {prefixIcon && <span className="prefix">{prefixIcon}</span>}
-        {children && <span className="content px-[6px]">{children}</span>}
+        {children && (
+          <span className="content px-[var(--ds-button-content-padding)]">
+            {children}
+          </span>
+        )}
         {suffixIcon && <span className="suffix">{suffixIcon}</span>}
       </a>
     );
