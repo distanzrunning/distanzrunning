@@ -527,6 +527,15 @@
       0px 8px 16px -4px rgba(0, 0, 0, 0.04),
       0px 24px 32px -8px rgba(0, 0, 0, 0.06);
 
+    /* Rounded shadow button - marketing style */
+    --ds-shadow-button-rounded:
+      0 0 0 1px rgba(0, 0, 0, 0.08), 0 2px 2px 0 rgba(0, 0, 0, 0.04),
+      0 0 0 1px var(--ds-gray-100);
+    --ds-shadow-button-rounded-hover: 0 0 0 1px #ebebeb;
+    --ds-button-rounded-hover-bg: #f2f2f2;
+    --ds-button-rounded-bg: var(--ds-background-100);
+    --ds-button-rounded-text: var(--ds-gray-1000);
+
     /* ═══════════════════════════════════════════════════════════════════════
        SEMANTIC TOKENS - Light Mode
        Map design system scales to semantic usage
@@ -961,6 +970,15 @@
       0 0 0 1px rgba(255, 255, 255, 0.1), 0px 1px 1px rgba(0, 0, 0, 0.1),
       0px 8px 16px -4px rgba(0, 0, 0, 0.2),
       0px 24px 32px -8px rgba(0, 0, 0, 0.3);
+
+    /* Rounded shadow button - marketing style (dark mode) */
+    --ds-shadow-button-rounded:
+      0 0 0 1px rgba(255, 255, 255, 0.145), 0 1px 2px 0 rgba(0, 0, 0, 0.16),
+      0 0 0 1px #000;
+    --ds-shadow-button-rounded-hover: 0 0 0 1px #2e2e2e;
+    --ds-button-rounded-hover-bg: #1f1f1f;
+    --ds-button-rounded-bg: #0a0a0a;
+    --ds-button-rounded-text: #ededed;
 
     /* ─────────────────────────────────────────────────────────────────────────
        SEMANTIC TOKENS - Dark Mode

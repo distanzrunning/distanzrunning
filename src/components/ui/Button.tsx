@@ -184,6 +184,7 @@ const getVariantClasses = (
   variant: ButtonVariant,
   disabled: boolean,
   loading: boolean,
+  shadow: boolean = false,
 ): string => {
   const isDisabled = disabled || loading;
 
@@ -224,6 +225,14 @@ const getVariantClasses = (
         hover:bg-[color-mix(in_srgb,var(--ds-amber-800),black_15%)]
       `;
     case "secondary":
+      // Secondary with shadow prop (rounded marketing style)
+      if (shadow) {
+        return `
+          bg-[var(--ds-button-rounded-bg)] text-[var(--ds-button-rounded-text)]
+          shadow-[var(--ds-shadow-button-rounded)]
+          hover:shadow-[var(--ds-shadow-button-rounded-hover)] hover:bg-[var(--ds-button-rounded-hover-bg)]
+        `;
+      }
       // Light: white bg, gray border via box-shadow, darker bg on hover
       // Dark: dark bg, subtle border via box-shadow, lighter bg on hover
       return `
@@ -308,17 +317,18 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 
     const sizeClasses = getSizeClasses(size, shape);
     const shapeClasses = getShapeClasses(shape);
-    const variantClasses = getVariantClasses(variant, disabled, loading);
-    const shadowClasses = shadow
-      ? "shadow-[var(--ds-shadow-border-small)]"
-      : "";
+    const variantClasses = getVariantClasses(
+      variant,
+      disabled,
+      loading,
+      shadow,
+    );
 
     const combinedClasses = `
       ${baseClasses}
       ${sizeClasses}
       ${shapeClasses}
       ${variantClasses}
-      ${shadowClasses}
       ${className}
     `
       .replace(/\s+/g, " ")
@@ -400,17 +410,13 @@ export const ButtonLink = forwardRef<HTMLAnchorElement, ButtonLinkProps>(
 
     const sizeClasses = getSizeClasses(size, shape);
     const shapeClasses = getShapeClasses(shape);
-    const variantClasses = getVariantClasses(variant, false, false);
-    const shadowClasses = shadow
-      ? "shadow-[var(--ds-shadow-border-small)]"
-      : "";
+    const variantClasses = getVariantClasses(variant, false, false, shadow);
 
     const combinedClasses = `
       ${baseClasses}
       ${sizeClasses}
       ${shapeClasses}
       ${variantClasses}
-      ${shadowClasses}
       ${className}
     `
       .replace(/\s+/g, " ")
