@@ -703,7 +703,7 @@ export default function CalendarComponent() {
                 <Popover.Portal>
                   <Popover.Content
                     className="calendar-dropdown"
-                    sideOffset={8}
+                    sideOffset={0}
                     align="start"
                     style={{
                       zIndex: 2001,
