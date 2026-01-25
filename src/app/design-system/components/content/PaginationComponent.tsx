@@ -340,72 +340,10 @@ function ChevronRightIcon() {
 }
 
 // ============================================================================
-// Pagination Component (Demo)
+// Code Example
 // ============================================================================
 
-interface PaginationDemoProps {
-  prevLabel?: string;
-  prevTitle?: string;
-  nextLabel?: string;
-  nextTitle?: string;
-}
-
-function PaginationDemo({
-  prevLabel = "Previous",
-  prevTitle = "Button",
-  nextLabel = "Next",
-  nextTitle = "Code Block",
-}: PaginationDemoProps) {
-  return (
-    <nav aria-label="pagination">
-      <div className="flex justify-between items-start">
-        {/* Previous page */}
-        <button
-          onClick={() => {}}
-          aria-label={`Go to previous page: ${prevTitle}`}
-          className="group flex items-end text-left"
-        >
-          <span className="text-[var(--ds-gray-900)] group-hover:text-[var(--ds-gray-1000)] transition-colors mb-0.5">
-            <ChevronLeftIcon />
-          </span>
-          <div className="flex flex-col items-start ml-1">
-            <span className="text-[13px] leading-[18px] font-normal text-[var(--ds-gray-900)] group-hover:text-[var(--ds-gray-1000)] transition-colors mb-1">
-              {prevLabel}
-            </span>
-            <span className="text-[16px] leading-[24px] font-medium text-[var(--ds-gray-1000)]">
-              {prevTitle}
-            </span>
-          </div>
-        </button>
-
-        {/* Next page */}
-        <button
-          onClick={() => {}}
-          aria-label={`Go to next page: ${nextTitle}`}
-          className="group flex items-end text-right"
-        >
-          <div className="flex flex-col items-end mr-1">
-            <span className="text-[13px] leading-[18px] font-normal text-[var(--ds-gray-900)] group-hover:text-[var(--ds-gray-1000)] transition-colors mb-1">
-              {nextLabel}
-            </span>
-            <span className="text-[16px] leading-[24px] font-medium text-[var(--ds-gray-1000)]">
-              {nextTitle}
-            </span>
-          </div>
-          <span className="text-[var(--ds-gray-900)] group-hover:text-[var(--ds-gray-1000)] transition-colors mb-0.5">
-            <ChevronRightIcon />
-          </span>
-        </button>
-      </div>
-    </nav>
-  );
-}
-
-// ============================================================================
-// Code Examples
-// ============================================================================
-
-const basicCode = `import { Pagination } from '@/components/ui/Pagination';
+const defaultCode = `import { Pagination } from '@/components/ui/Pagination';
 
 export function Component() {
   return (
@@ -416,63 +354,6 @@ export function Component() {
     />
   );
 }`;
-
-const prevOnlyCode = `import { Pagination } from '@/components/ui/Pagination';
-
-export function Component() {
-  return (
-    <Pagination
-      prevPage={{ id: 'button', label: 'Button' }}
-      onNavigate={(id) => console.log('Navigate to:', id)}
-    />
-  );
-}`;
-
-const nextOnlyCode = `import { Pagination } from '@/components/ui/Pagination';
-
-export function Component() {
-  return (
-    <Pagination
-      nextPage={{ id: 'code-block', label: 'Code Block' }}
-      onNavigate={(id) => console.log('Navigate to:', id)}
-    />
-  );
-}`;
-
-const anatomyCode = `// Pagination anatomy
-<nav aria-label="pagination">
-  <div className="flex justify-between items-start">
-    {/* Previous link */}
-    <button className="group flex items-end text-left">
-      <span className="text-[var(--ds-gray-900)] group-hover:text-[var(--ds-gray-1000)]">
-        <ChevronLeftIcon />
-      </span>
-      <div className="flex flex-col items-start ml-1">
-        <span className="text-[13px] leading-[18px] text-[var(--ds-gray-900)]">
-          Previous
-        </span>
-        <span className="text-[16px] leading-[24px] font-medium text-[var(--ds-gray-1000)]">
-          Button
-        </span>
-      </div>
-    </button>
-
-    {/* Next link */}
-    <button className="group flex items-end text-right">
-      <div className="flex flex-col items-end mr-1">
-        <span className="text-[13px] leading-[18px] text-[var(--ds-gray-900)]">
-          Next
-        </span>
-        <span className="text-[16px] leading-[24px] font-medium text-[var(--ds-gray-1000)]">
-          Code Block
-        </span>
-      </div>
-      <span className="text-[var(--ds-gray-900)] group-hover:text-[var(--ds-gray-1000)]">
-        <ChevronRightIcon />
-      </span>
-    </button>
-  </div>
-</nav>`;
 
 // ============================================================================
 // Main Component
@@ -489,34 +370,20 @@ export default function PaginationComponent() {
         onDismiss={dismissToast}
       />
 
-      {/* Basic Section */}
+      {/* Default Section */}
       <Section>
-        <SectionHeader id="basic" onCopyLink={showToast}>
-          Basic
+        <SectionHeader id="default" onCopyLink={showToast}>
+          Default
         </SectionHeader>
         <p className="mt-2 leading-6 text-[var(--ds-gray-900)] xl:mt-4">
           The pagination component displays previous and next navigation links
           at the bottom of content pages.
         </p>
         <div className="mt-4 xl:mt-7">
-          <CodePreview componentCode={basicCode}>
-            <PaginationDemo />
-          </CodePreview>
-        </div>
-      </Section>
-
-      {/* Previous Only Section */}
-      <Section>
-        <SectionHeader id="previous-only" onCopyLink={showToast}>
-          Previous only
-        </SectionHeader>
-        <p className="mt-2 leading-6 text-[var(--ds-gray-900)] xl:mt-4">
-          When on the last page, only the previous link is displayed.
-        </p>
-        <div className="mt-4 xl:mt-7">
-          <CodePreview componentCode={prevOnlyCode}>
+          <CodePreview componentCode={defaultCode}>
             <nav aria-label="pagination">
               <div className="flex justify-between items-start">
+                {/* Previous page */}
                 <button
                   onClick={() => {}}
                   aria-label="Go to previous page: Button"
@@ -534,26 +401,8 @@ export default function PaginationComponent() {
                     </span>
                   </div>
                 </button>
-                <div />
-              </div>
-            </nav>
-          </CodePreview>
-        </div>
-      </Section>
 
-      {/* Next Only Section */}
-      <Section>
-        <SectionHeader id="next-only" onCopyLink={showToast}>
-          Next only
-        </SectionHeader>
-        <p className="mt-2 leading-6 text-[var(--ds-gray-900)] xl:mt-4">
-          When on the first page, only the next link is displayed.
-        </p>
-        <div className="mt-4 xl:mt-7">
-          <CodePreview componentCode={nextOnlyCode}>
-            <nav aria-label="pagination">
-              <div className="flex justify-between items-start">
-                <div />
+                {/* Next page */}
                 <button
                   onClick={() => {}}
                   aria-label="Go to next page: Code Block"
@@ -574,118 +423,6 @@ export default function PaginationComponent() {
               </div>
             </nav>
           </CodePreview>
-        </div>
-      </Section>
-
-      {/* Anatomy Section */}
-      <Section>
-        <SectionHeader id="anatomy" onCopyLink={showToast}>
-          Anatomy
-        </SectionHeader>
-        <p className="mt-2 leading-6 text-[var(--ds-gray-900)] xl:mt-4">
-          Each pagination link consists of a chevron icon, a label
-          (&quot;Previous&quot; or &quot;Next&quot;), and the page title. The
-          label uses{" "}
-          <code className="px-1.5 py-0.5 rounded bg-[var(--ds-gray-200)] text-[var(--ds-gray-1000)] text-sm">
-            13px/18px
-          </code>{" "}
-          font size with normal weight, while the title uses{" "}
-          <code className="px-1.5 py-0.5 rounded bg-[var(--ds-gray-200)] text-[var(--ds-gray-1000)] text-sm">
-            16px/24px
-          </code>{" "}
-          with medium weight.
-        </p>
-        <div className="mt-4 xl:mt-7">
-          <CodePreview componentCode={anatomyCode}>
-            <div className="flex flex-col gap-6">
-              {/* Anatomy breakdown */}
-              <div className="flex items-center gap-8">
-                {/* Previous anatomy */}
-                <div className="flex items-end">
-                  <div className="flex flex-col items-center mr-2">
-                    <span className="text-[10px] text-[var(--ds-gray-700)] mb-1">
-                      20×20px
-                    </span>
-                    <span className="text-[var(--ds-gray-900)]">
-                      <ChevronLeftIcon />
-                    </span>
-                  </div>
-                  <div className="flex flex-col items-start ml-1">
-                    <div className="flex items-center gap-2">
-                      <span className="text-[13px] leading-[18px] font-normal text-[var(--ds-gray-900)]">
-                        Previous
-                      </span>
-                      <span className="text-[10px] text-[var(--ds-gray-700)]">
-                        13px/18px
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2 mt-1">
-                      <span className="text-[16px] leading-[24px] font-medium text-[var(--ds-gray-1000)]">
-                        Button
-                      </span>
-                      <span className="text-[10px] text-[var(--ds-gray-700)]">
-                        16px/24px medium
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </CodePreview>
-        </div>
-      </Section>
-
-      {/* Accessibility Section */}
-      <Section>
-        <SectionHeader id="accessibility" onCopyLink={showToast}>
-          Accessibility
-        </SectionHeader>
-        <p className="mt-2 leading-6 text-[var(--ds-gray-900)] xl:mt-4">
-          The pagination component uses proper semantic markup with{" "}
-          <code className="px-1.5 py-0.5 rounded bg-[var(--ds-gray-200)] text-[var(--ds-gray-1000)] text-sm">
-            nav
-          </code>{" "}
-          element and{" "}
-          <code className="px-1.5 py-0.5 rounded bg-[var(--ds-gray-200)] text-[var(--ds-gray-1000)] text-sm">
-            aria-label=&quot;pagination&quot;
-          </code>{" "}
-          for screen readers. Each link includes a descriptive{" "}
-          <code className="px-1.5 py-0.5 rounded bg-[var(--ds-gray-200)] text-[var(--ds-gray-1000)] text-sm">
-            aria-label
-          </code>{" "}
-          that announces both the direction and the destination page title.
-        </p>
-        <div className="mt-4 xl:mt-7">
-          <div className="p-6 border border-[var(--ds-gray-400)] rounded-lg bg-[var(--ds-background-100)]">
-            <ul className="list-disc list-inside space-y-2 text-[var(--ds-gray-900)]">
-              <li>
-                Uses{" "}
-                <code className="px-1.5 py-0.5 rounded bg-[var(--ds-gray-200)] text-[var(--ds-gray-1000)] text-sm">
-                  &lt;nav&gt;
-                </code>{" "}
-                landmark element
-              </li>
-              <li>
-                <code className="px-1.5 py-0.5 rounded bg-[var(--ds-gray-200)] text-[var(--ds-gray-1000)] text-sm">
-                  aria-label=&quot;pagination&quot;
-                </code>{" "}
-                identifies the navigation purpose
-              </li>
-              <li>
-                Each link has{" "}
-                <code className="px-1.5 py-0.5 rounded bg-[var(--ds-gray-200)] text-[var(--ds-gray-1000)] text-sm">
-                  aria-label
-                </code>{" "}
-                with full context (e.g., &quot;Go to previous page:
-                Button&quot;)
-              </li>
-              <li>Hover states provide clear visual feedback</li>
-              <li>
-                Color contrast meets WCAG AA requirements for both label and
-                title text
-              </li>
-            </ul>
-          </div>
         </div>
       </Section>
     </>
