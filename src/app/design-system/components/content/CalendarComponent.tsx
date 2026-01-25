@@ -298,7 +298,7 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
 }
 
 // ============================================================================
-// Calendar Icon
+// Icons
 // ============================================================================
 
 function CalendarIcon() {
@@ -317,6 +317,246 @@ function CalendarIcon() {
         fill="currentColor"
       />
     </svg>
+  );
+}
+
+function ChevronLeftIcon() {
+  return (
+    <svg
+      height="16"
+      strokeLinejoin="round"
+      viewBox="0 0 16 16"
+      width="16"
+      style={{ color: "currentcolor" }}
+    >
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M10.5 14.0607L9.96966 13.5303L5.14644 8.7071C4.75592 8.31658 4.75592 7.68341 5.14644 7.29289L9.96966 2.46966L10.5 1.93933L11.5607 2.99999L11.0303 3.53032L6.56065 7.99999L11.0303 12.4697L11.5607 13L10.5 14.0607Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+}
+
+function ChevronRightIcon() {
+  return (
+    <svg
+      height="16"
+      strokeLinejoin="round"
+      viewBox="0 0 16 16"
+      width="16"
+      style={{ color: "currentcolor" }}
+    >
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M5.50001 1.93933L6.03034 2.46966L10.8536 7.29288C11.2441 7.68341 11.2441 8.31657 10.8536 8.7071L6.03034 13.5303L5.50001 14.0607L4.43935 13L4.96968 12.4697L9.43935 7.99999L4.96968 3.53032L4.43935 2.99999L5.50001 1.93933Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+}
+
+// ============================================================================
+// Calendar Dropdown Component
+// ============================================================================
+
+const DAYS_OF_WEEK = ["S", "M", "T", "W", "T", "F", "S"];
+const MONTH_NAMES = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+
+function getCalendarDays(year: number, month: number) {
+  const firstDay = new Date(year, month, 1);
+  const lastDay = new Date(year, month + 1, 0);
+  const daysInMonth = lastDay.getDate();
+  const startDayOfWeek = firstDay.getDay();
+
+  const days: {
+    date: number;
+    isCurrentMonth: boolean;
+    isWeekend: boolean;
+    isToday: boolean;
+  }[] = [];
+
+  // Previous month days
+  const prevMonthLastDay = new Date(year, month, 0).getDate();
+  for (let i = startDayOfWeek - 1; i >= 0; i--) {
+    const date = prevMonthLastDay - i;
+    const dayOfWeek = (startDayOfWeek - i - 1 + 7) % 7;
+    days.push({
+      date,
+      isCurrentMonth: false,
+      isWeekend: dayOfWeek === 0 || dayOfWeek === 6,
+      isToday: false,
+    });
+  }
+
+  // Current month days
+  const today = new Date();
+  for (let date = 1; date <= daysInMonth; date++) {
+    const dayOfWeek = (startDayOfWeek + date - 1) % 7;
+    const isToday =
+      today.getDate() === date &&
+      today.getMonth() === month &&
+      today.getFullYear() === year;
+    days.push({
+      date,
+      isCurrentMonth: true,
+      isWeekend: dayOfWeek === 0 || dayOfWeek === 6,
+      isToday,
+    });
+  }
+
+  // Next month days to fill the grid (always show 5 or 6 rows)
+  const remainingDays = 35 - days.length; // 5 rows
+  const extraRow = days.length > 35 ? 42 - days.length : remainingDays;
+  for (let date = 1; date <= extraRow; date++) {
+    const dayOfWeek = days.length % 7;
+    days.push({
+      date,
+      isCurrentMonth: false,
+      isWeekend: dayOfWeek === 0 || dayOfWeek === 6,
+      isToday: false,
+    });
+  }
+
+  return days;
+}
+
+function CalendarDropdown({
+  isOpen,
+  onClose,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+}) {
+  const today = new Date();
+  const [currentMonth, setCurrentMonth] = useState(today.getMonth());
+  const [currentYear, setCurrentYear] = useState(today.getFullYear());
+
+  const days = getCalendarDays(currentYear, currentMonth);
+
+  const goToPrevMonth = () => {
+    if (currentMonth === 0) {
+      setCurrentMonth(11);
+      setCurrentYear(currentYear - 1);
+    } else {
+      setCurrentMonth(currentMonth - 1);
+    }
+  };
+
+  const goToNextMonth = () => {
+    if (currentMonth === 11) {
+      setCurrentMonth(0);
+      setCurrentYear(currentYear + 1);
+    } else {
+      setCurrentMonth(currentMonth + 1);
+    }
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <div
+      className="calendar-dropdown absolute top-full left-0 mt-2 z-50"
+      style={{
+        padding: 12,
+        borderRadius: 6,
+        background: "var(--ds-background-100)",
+        boxShadow:
+          "0 0 0 1px var(--ds-gray-400), 0px 4px 8px -4px rgba(0, 0, 0, 0.1), 0px 16px 24px -8px rgba(0, 0, 0, 0.15)",
+      }}
+    >
+      {/* Header with month/year and navigation */}
+      <div className="flex items-center justify-between mb-3">
+        <h2
+          className="text-sm font-medium text-[var(--ds-gray-1000)]"
+          style={{ whiteSpace: "nowrap" }}
+        >
+          {MONTH_NAMES[currentMonth]} {currentYear}
+        </h2>
+        <div className="flex items-center gap-1">
+          <button
+            type="button"
+            onClick={goToPrevMonth}
+            aria-label="Previous month"
+            className="p-1 rounded hover:bg-[var(--ds-gray-200)] transition-colors text-[var(--ds-gray-900)]"
+          >
+            <ChevronLeftIcon />
+          </button>
+          <button
+            type="button"
+            onClick={goToNextMonth}
+            aria-label="Next month"
+            className="p-1 rounded hover:bg-[var(--ds-gray-200)] transition-colors text-[var(--ds-gray-900)]"
+          >
+            <ChevronRightIcon />
+          </button>
+        </div>
+      </div>
+
+      {/* Calendar grid */}
+      <table className="calendar-table" role="grid">
+        <thead>
+          <tr>
+            {DAYS_OF_WEEK.map((day, i) => (
+              <th
+                key={i}
+                className="text-xs font-medium text-[var(--ds-gray-900)]"
+                style={{
+                  width: 32,
+                  height: 32,
+                  textAlign: "center",
+                  fontWeight: 500,
+                }}
+              >
+                {day}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {Array.from(
+            { length: Math.ceil(days.length / 7) },
+            (_, weekIndex) => (
+              <tr key={weekIndex}>
+                {days
+                  .slice(weekIndex * 7, weekIndex * 7 + 7)
+                  .map((day, dayIndex) => (
+                    <td key={dayIndex} role="gridcell">
+                      <span
+                        role="button"
+                        tabIndex={day.isToday ? 0 : -1}
+                        className={`
+                      calendar-day
+                      ${!day.isCurrentMonth ? "calendar-day-outside" : ""}
+                      ${day.isWeekend ? "calendar-day-weekend" : ""}
+                      ${day.isToday ? "calendar-day-today" : ""}
+                    `}
+                      >
+                        {day.date}
+                      </span>
+                    </td>
+                  ))}
+              </tr>
+            ),
+          )}
+        </tbody>
+      </table>
+    </div>
   );
 }
 
@@ -354,7 +594,7 @@ export default function CalendarComponent() {
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={defaultCode}>
             <div className="flex justify-center py-12">
-              <div style={{ width: 250, height: 40 }}>
+              <div style={{ width: 250 }} className="relative">
                 <div
                   className="relative rounded-md"
                   style={{ borderRadius: 6 }}
@@ -400,6 +640,10 @@ export default function CalendarComponent() {
                     </span>
                   </button>
                 </div>
+                <CalendarDropdown
+                  isOpen={isExpanded}
+                  onClose={() => setIsExpanded(false)}
+                />
               </div>
             </div>
           </CodePreview>

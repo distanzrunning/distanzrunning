@@ -1155,6 +1155,57 @@
     box-shadow: var(--calendar-button-focus-ring);
   }
 
+  /* Calendar dropdown styles */
+  .calendar-dropdown {
+    min-width: 250px;
+  }
+
+  .calendar-table {
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+
+  .calendar-table th,
+  .calendar-table td {
+    padding: 0;
+  }
+
+  .calendar-day {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+    line-height: 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    color: var(--ds-gray-1000);
+    transition: background-color 0.15s ease;
+  }
+
+  .calendar-day:hover {
+    background-color: var(--ds-gray-200);
+  }
+
+  .calendar-day-outside {
+    color: var(--ds-gray-600);
+  }
+
+  .calendar-day-weekend {
+    color: var(--ds-gray-600);
+  }
+
+  .calendar-day-today {
+    background-color: var(--ds-gray-1000);
+    color: var(--ds-background-100);
+    font-weight: 500;
+  }
+
+  .calendar-day-today:hover {
+    background-color: var(--ds-gray-900);
+  }
+
   .layout-grid {
     @apply grid grid-cols-12 gap-x-4 px-6 md:px-8 lg:px-12 xl:px-24;
   }
