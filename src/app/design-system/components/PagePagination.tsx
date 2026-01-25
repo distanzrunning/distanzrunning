@@ -88,11 +88,11 @@ export default function PagePagination({
               Previous
             </span>
             <div className="flex items-center">
-              <span className="mr-2">
-                <ChevronLeftIcon />
-              </span>
               <span className="text-[1rem] leading-[1.5rem] font-medium text-[var(--ds-gray-1000)]">
                 {prevPage.label}
+              </span>
+              <span className="-ml-[26px] -order-1">
+                <ChevronLeftIcon />
               </span>
             </div>
           </button>
