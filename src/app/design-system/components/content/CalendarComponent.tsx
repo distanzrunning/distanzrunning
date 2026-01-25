@@ -523,9 +523,24 @@ function CalendarContent() {
           {MONTH_NAMES[currentMonth]} {currentYear}
         </caption>
         <thead>
-          <tr>
+          <tr className="calendar-header-row">
             {DAYS_OF_WEEK.map((day, i) => (
-              <th key={i}>{day}</th>
+              <th
+                key={i}
+                abbr={
+                  [
+                    "Sunday",
+                    "Monday",
+                    "Tuesday",
+                    "Wednesday",
+                    "Thursday",
+                    "Friday",
+                    "Saturday",
+                  ][i]
+                }
+              >
+                {day}
+              </th>
             ))}
           </tr>
         </thead>

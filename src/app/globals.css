@@ -553,6 +553,7 @@
     --calendar-day-radius: 4px;
     --calendar-day-color: rgb(23, 23, 23);
     --calendar-day-outside-color: rgb(143, 143, 143);
+    --calendar-header-color: rgb(102, 102, 102);
     --calendar-today-bg: oklch(0.5318 0.2399 256.99);
     --calendar-today-color: rgb(255, 255, 255);
 
@@ -1016,6 +1017,7 @@
     --calendar-day-radius: 4px;
     --calendar-day-color: rgb(237, 237, 237);
     --calendar-day-outside-color: rgb(143, 143, 143);
+    --calendar-header-color: rgb(161, 161, 161);
     --calendar-today-bg: oklch(0.717 0.1648 250.794);
     --calendar-today-color: rgb(10, 10, 10);
 
@@ -1235,12 +1237,23 @@
     padding: 0;
   }
 
+  .calendar-header-row {
+    display: flex;
+    flex-wrap: nowrap;
+    margin-top: 8px;
+    height: 15.5px;
+    vertical-align: middle;
+  }
+
   .calendar-table th {
-    font-size: 14px;
+    display: block;
+    flex: 1 1 0%;
+    font-size: 12px;
     font-weight: 400;
-    color: var(--calendar-day-outside-color);
-    height: 32px;
+    color: var(--calendar-header-color);
+    height: 15.5px;
     text-align: center;
+    text-transform: uppercase;
     vertical-align: middle;
   }
 
