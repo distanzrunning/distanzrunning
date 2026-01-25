@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState, useCallback, useRef, useEffect } from "react";
+import React, { useState, useCallback } from "react";
 import { ChevronDown } from "lucide-react";
+import * as Popover from "@radix-ui/react-popover";
 import { Section } from "../ContentWithTOC";
 import {
   useShikiHighlighter,
@@ -442,55 +443,12 @@ function getCalendarDays(year: number, month: number) {
   return days;
 }
 
-function CalendarDropdown({
-  isOpen,
-  onClose,
-  triggerRef,
-}: {
-  isOpen: boolean;
-  onClose: () => void;
-  triggerRef: React.RefObject<HTMLButtonElement | null>;
-}) {
+function CalendarContent() {
   const today = new Date();
   const [currentMonth, setCurrentMonth] = useState(today.getMonth());
   const [currentYear, setCurrentYear] = useState(today.getFullYear());
-  const [openUpward, setOpenUpward] = useState(false);
-  const dropdownRef = React.useRef<HTMLDivElement>(null);
 
   const days = getCalendarDays(currentYear, currentMonth);
-
-  // Calculate position when dropdown opens
-  React.useEffect(() => {
-    if (isOpen && triggerRef.current) {
-      const triggerRect = triggerRef.current.getBoundingClientRect();
-      const dropdownHeight = 320; // Approximate height of dropdown
-      const spaceBelow = window.innerHeight - triggerRect.bottom;
-      const spaceAbove = triggerRect.top;
-
-      // Open upward if more space above and not enough space below
-      setOpenUpward(spaceBelow < dropdownHeight && spaceAbove > spaceBelow);
-    }
-  }, [isOpen, triggerRef]);
-
-  // Close on click outside
-  React.useEffect(() => {
-    if (!isOpen) return;
-
-    const handleClickOutside = (event: MouseEvent) => {
-      const target = event.target as Node;
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(target) &&
-        triggerRef.current &&
-        !triggerRef.current.contains(target)
-      ) {
-        onClose();
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [isOpen, onClose, triggerRef]);
 
   const goToPrevMonth = () => {
     if (currentMonth === 0) {
@@ -510,22 +468,8 @@ function CalendarDropdown({
     }
   };
 
-  if (!isOpen) return null;
-
   return (
-    <div
-      ref={dropdownRef}
-      className={`calendar-dropdown absolute left-0 z-50 ${
-        openUpward ? "bottom-full mb-2" : "top-full mt-2"
-      }`}
-      style={{
-        padding: 12,
-        borderRadius: 6,
-        background: "var(--ds-background-100)",
-        boxShadow:
-          "0 0 0 1px var(--ds-gray-400), 0px 4px 8px -4px rgba(0, 0, 0, 0.1), 0px 16px 24px -8px rgba(0, 0, 0, 0.15)",
-      }}
-    >
+    <>
       {/* Header with month/year and navigation */}
       <div className="flex items-center justify-between mb-3">
         <h2
@@ -602,7 +546,7 @@ function CalendarDropdown({
           )}
         </tbody>
       </table>
-    </div>
+    </>
   );
 }
 
@@ -622,8 +566,7 @@ export function Component() {
 
 export default function CalendarComponent() {
   const { toast, showToast, dismissToast } = useToast();
-  const [isExpanded, setIsExpanded] = useState(false);
-  const triggerRef = useRef<HTMLButtonElement>(null);
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <>
@@ -641,20 +584,15 @@ export default function CalendarComponent() {
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={defaultCode}>
             <div className="flex justify-center py-12">
-              <div style={{ width: 250 }} className="relative">
-                <div
-                  className="relative rounded-md"
-                  style={{ borderRadius: 6 }}
-                >
+              <Popover.Root open={isOpen} onOpenChange={setIsOpen}>
+                <Popover.Trigger asChild>
                   <button
-                    ref={triggerRef}
                     type="button"
                     aria-haspopup="dialog"
-                    aria-expanded={isExpanded}
-                    onClick={() => setIsExpanded(!isExpanded)}
                     title="Select Date Range"
-                    className={`calendar-trigger-button flex items-center justify-between w-full text-left cursor-pointer text-[rgb(23,23,23)] dark:text-[rgb(237,237,237)] ${isExpanded ? "calendar-trigger-button-expanded" : ""}`}
+                    className={`calendar-trigger-button flex items-center justify-between text-left cursor-pointer text-[rgb(23,23,23)] dark:text-[rgb(237,237,237)] ${isOpen ? "calendar-trigger-button-expanded" : ""}`}
                     style={{
+                      width: 250,
                       height: 40,
                       paddingLeft: 10,
                       paddingRight: 10,
@@ -687,13 +625,24 @@ export default function CalendarComponent() {
                       Select Date Range
                     </span>
                   </button>
-                </div>
-                <CalendarDropdown
-                  isOpen={isExpanded}
-                  onClose={() => setIsExpanded(false)}
-                  triggerRef={triggerRef}
-                />
-              </div>
+                </Popover.Trigger>
+                <Popover.Portal>
+                  <Popover.Content
+                    className="calendar-dropdown z-50"
+                    sideOffset={8}
+                    align="start"
+                    style={{
+                      padding: 12,
+                      borderRadius: 6,
+                      background: "var(--ds-background-100)",
+                      boxShadow:
+                        "0 0 0 1px var(--ds-gray-400), 0px 4px 8px -4px rgba(0, 0, 0, 0.1), 0px 16px 24px -8px rgba(0, 0, 0, 0.15)",
+                    }}
+                  >
+                    <CalendarContent />
+                  </Popover.Content>
+                </Popover.Portal>
+              </Popover.Root>
             </div>
           </CodePreview>
         </div>
