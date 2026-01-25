@@ -375,17 +375,34 @@ import { Upload } from 'lucide-react';
 
 export function Component() {
   return (
-    <div className="flex flex-col md:flex-row items-start gap-4">
-      {/* Square shapes */}
-      <Button shape="square" size="tiny" aria-label="Upload"><Upload size={16} /></Button>
-      <Button shape="square" size="small" aria-label="Upload"><Upload size={16} /></Button>
-      <Button shape="square" aria-label="Upload"><Upload size={16} /></Button>
-      <Button shape="square" size="large" aria-label="Upload"><Upload size={16} /></Button>
-      {/* Circle shapes */}
-      <Button shape="circle" size="tiny" aria-label="Upload"><Upload size={16} /></Button>
-      <Button shape="circle" size="small" aria-label="Upload"><Upload size={16} /></Button>
-      <Button shape="circle" aria-label="Upload"><Upload size={16} /></Button>
-      <Button shape="circle" size="large" aria-label="Upload"><Upload size={16} /></Button>
+    <div className="flex flex-col gap-4">
+      {/* Default variant - Square and Circle */}
+      <div className="flex items-center gap-4">
+        <Button shape="square" size="small" aria-label="Upload"><Upload /></Button>
+        <Button shape="square" aria-label="Upload"><Upload /></Button>
+        <Button shape="square" size="large" aria-label="Upload"><Upload /></Button>
+        <Button shape="circle" size="small" aria-label="Upload"><Upload /></Button>
+        <Button shape="circle" aria-label="Upload"><Upload /></Button>
+        <Button shape="circle" size="large" aria-label="Upload"><Upload /></Button>
+      </div>
+      {/* Secondary variant - Square and Circle */}
+      <div className="flex items-center gap-4">
+        <Button shape="square" size="small" variant="secondary" aria-label="Upload"><Upload /></Button>
+        <Button shape="square" variant="secondary" aria-label="Upload"><Upload /></Button>
+        <Button shape="square" size="large" variant="secondary" aria-label="Upload"><Upload /></Button>
+        <Button shape="circle" size="small" variant="secondary" aria-label="Upload"><Upload /></Button>
+        <Button shape="circle" variant="secondary" aria-label="Upload"><Upload /></Button>
+        <Button shape="circle" size="large" variant="secondary" aria-label="Upload"><Upload /></Button>
+      </div>
+      {/* Tertiary variant - Square and Circle */}
+      <div className="flex items-center gap-4">
+        <Button shape="square" size="small" variant="tertiary" aria-label="Upload"><Upload /></Button>
+        <Button shape="square" variant="tertiary" aria-label="Upload"><Upload /></Button>
+        <Button shape="square" size="large" variant="tertiary" aria-label="Upload"><Upload /></Button>
+        <Button shape="circle" size="small" variant="tertiary" aria-label="Upload"><Upload /></Button>
+        <Button shape="circle" variant="tertiary" aria-label="Upload"><Upload /></Button>
+        <Button shape="circle" size="large" variant="tertiary" aria-label="Upload"><Upload /></Button>
+      </div>
     </div>
   );
 }`;
@@ -551,33 +568,110 @@ export default function ButtonComponentNew() {
         </p>
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={shapesCode}>
-            <div className="flex flex-col md:flex-row items-start justify-between gap-4 flex-initial">
-              {/* Square shapes */}
-              <Button shape="square" size="tiny" aria-label="Upload">
-                <UploadIcon />
-              </Button>
-              <Button shape="square" size="small" aria-label="Upload">
-                <UploadIcon />
-              </Button>
-              <Button shape="square" aria-label="Upload">
-                <UploadIcon />
-              </Button>
-              <Button shape="square" size="large" aria-label="Upload">
-                <UploadIcon />
-              </Button>
-              {/* Circle shapes */}
-              <Button shape="circle" size="tiny" aria-label="Upload">
-                <UploadIcon />
-              </Button>
-              <Button shape="circle" size="small" aria-label="Upload">
-                <UploadIcon />
-              </Button>
-              <Button shape="circle" aria-label="Upload">
-                <UploadIcon />
-              </Button>
-              <Button shape="circle" size="large" aria-label="Upload">
-                <UploadIcon />
-              </Button>
+            <div className="flex flex-col gap-4">
+              {/* Default variant - Square and Circle */}
+              <div className="flex items-center gap-4">
+                <Button shape="square" size="small" aria-label="Upload">
+                  <UploadIcon />
+                </Button>
+                <Button shape="square" aria-label="Upload">
+                  <UploadIcon />
+                </Button>
+                <Button shape="square" size="large" aria-label="Upload">
+                  <UploadIcon />
+                </Button>
+                <Button shape="circle" size="small" aria-label="Upload">
+                  <UploadIcon />
+                </Button>
+                <Button shape="circle" aria-label="Upload">
+                  <UploadIcon />
+                </Button>
+                <Button shape="circle" size="large" aria-label="Upload">
+                  <UploadIcon />
+                </Button>
+              </div>
+              {/* Secondary variant - Square and Circle */}
+              <div className="flex items-center gap-4">
+                <Button
+                  shape="square"
+                  size="small"
+                  variant="secondary"
+                  aria-label="Upload"
+                >
+                  <UploadIcon />
+                </Button>
+                <Button shape="square" variant="secondary" aria-label="Upload">
+                  <UploadIcon />
+                </Button>
+                <Button
+                  shape="square"
+                  size="large"
+                  variant="secondary"
+                  aria-label="Upload"
+                >
+                  <UploadIcon />
+                </Button>
+                <Button
+                  shape="circle"
+                  size="small"
+                  variant="secondary"
+                  aria-label="Upload"
+                >
+                  <UploadIcon />
+                </Button>
+                <Button shape="circle" variant="secondary" aria-label="Upload">
+                  <UploadIcon />
+                </Button>
+                <Button
+                  shape="circle"
+                  size="large"
+                  variant="secondary"
+                  aria-label="Upload"
+                >
+                  <UploadIcon />
+                </Button>
+              </div>
+              {/* Tertiary variant - Square and Circle */}
+              <div className="flex items-center gap-4">
+                <Button
+                  shape="square"
+                  size="small"
+                  variant="tertiary"
+                  aria-label="Upload"
+                >
+                  <UploadIcon />
+                </Button>
+                <Button shape="square" variant="tertiary" aria-label="Upload">
+                  <UploadIcon />
+                </Button>
+                <Button
+                  shape="square"
+                  size="large"
+                  variant="tertiary"
+                  aria-label="Upload"
+                >
+                  <UploadIcon />
+                </Button>
+                <Button
+                  shape="circle"
+                  size="small"
+                  variant="tertiary"
+                  aria-label="Upload"
+                >
+                  <UploadIcon />
+                </Button>
+                <Button shape="circle" variant="tertiary" aria-label="Upload">
+                  <UploadIcon />
+                </Button>
+                <Button
+                  shape="circle"
+                  size="large"
+                  variant="tertiary"
+                  aria-label="Upload"
+                >
+                  <UploadIcon />
+                </Button>
+              </div>
             </div>
           </CodePreview>
         </div>
