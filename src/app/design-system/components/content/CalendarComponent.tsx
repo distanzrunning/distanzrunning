@@ -363,7 +363,7 @@ export default function CalendarComponent() {
                     aria-haspopup="dialog"
                     aria-expanded="false"
                     title="Select Date Range"
-                    className="flex items-center justify-between w-full text-left cursor-pointer bg-white dark:bg-[rgb(10,10,10)] text-[rgb(23,23,23)] dark:text-[rgb(237,237,237)] transition-[border-color,background,color,transform,box-shadow] duration-150 ease-out"
+                    className="calendar-trigger-button flex items-center justify-between w-full text-left cursor-pointer bg-white dark:bg-[rgb(10,10,10)] text-[rgb(23,23,23)] dark:text-[rgb(237,237,237)]"
                     style={{
                       height: 40,
                       paddingLeft: 10,
@@ -372,7 +372,6 @@ export default function CalendarComponent() {
                       fontSize: 14,
                       lineHeight: "20px",
                       fontWeight: 400,
-                      boxShadow: "var(--calendar-button-shadow)",
                     }}
                   >
                     {/* Prefix (icon container) */}
