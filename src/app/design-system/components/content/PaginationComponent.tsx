@@ -387,16 +387,16 @@ export default function PaginationComponent() {
                 <button
                   onClick={() => {}}
                   aria-label="Go to previous page: Button"
-                  className="flex flex-col items-start py-1 text-[var(--ds-gray-900)] hover:text-black dark:hover:text-white transition-colors duration-200"
+                  className="block py-1 pl-7 pr-2 text-[var(--ds-gray-900)] hover:text-black dark:hover:text-white transition-colors duration-200"
                 >
-                  <span className="text-[0.8125rem] leading-[1.125rem] font-normal mb-0.5">
+                  <span className="block text-[0.8125rem] leading-[1.125rem] font-normal mb-0.5">
                     Previous
                   </span>
-                  <div className="flex items-center">
+                  <div className="relative flex items-center">
                     <span className="text-[1rem] leading-[1.5rem] font-medium text-[var(--ds-gray-1000)]">
                       Button
                     </span>
-                    <span className="-ml-[26px] -order-1">
+                    <span className="absolute left-[-26px] mt-0.5">
                       <ChevronLeftIcon />
                     </span>
                   </div>
