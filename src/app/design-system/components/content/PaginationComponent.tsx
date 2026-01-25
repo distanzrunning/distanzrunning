@@ -387,17 +387,17 @@ export default function PaginationComponent() {
                 <button
                   onClick={() => {}}
                   aria-label="Go to previous page: Button"
-                  className="flex flex-col items-start pl-7 pr-2 py-1 text-[var(--ds-gray-900)] hover:text-black dark:hover:text-white transition-colors duration-200"
+                  className="flex flex-col items-start py-1 text-[var(--ds-gray-900)] hover:text-black dark:hover:text-white transition-colors duration-200"
                 >
-                  <span className="text-[0.8125rem] leading-[1.125rem] font-normal mb-0.5">
+                  <span className="text-[0.8125rem] leading-[1.125rem] font-normal mb-0.5 ml-7">
                     Previous
                   </span>
-                  <div className="flex items-center flex-row-reverse">
-                    <span className="text-[1rem] leading-[1.5rem] font-medium text-[var(--ds-gray-1000)]">
-                      Button
-                    </span>
-                    <span className="mt-0.5 mr-1">
+                  <div className="flex items-center">
+                    <span className="mt-0.5">
                       <ChevronLeftIcon />
+                    </span>
+                    <span className="text-[1rem] leading-[1.5rem] font-medium text-[var(--ds-gray-1000)] ml-2">
+                      Button
                     </span>
                   </div>
                 </button>
@@ -406,16 +406,16 @@ export default function PaginationComponent() {
                 <button
                   onClick={() => {}}
                   aria-label="Go to next page: Code Block"
-                  className="flex flex-col items-end pl-2 pr-7 py-1 text-[var(--ds-gray-900)] hover:text-black dark:hover:text-white transition-colors duration-200"
+                  className="flex flex-col items-end py-1 text-[var(--ds-gray-900)] hover:text-black dark:hover:text-white transition-colors duration-200"
                 >
-                  <span className="text-[0.8125rem] leading-[1.125rem] font-normal mb-0.5">
+                  <span className="text-[0.8125rem] leading-[1.125rem] font-normal mb-0.5 mr-7">
                     Next
                   </span>
                   <div className="flex items-center">
-                    <span className="text-[1rem] leading-[1.5rem] font-medium text-[var(--ds-gray-1000)]">
+                    <span className="text-[1rem] leading-[1.5rem] font-medium text-[var(--ds-gray-1000)] mr-2">
                       Code Block
                     </span>
-                    <span className="mt-0.5 ml-1">
+                    <span className="mt-0.5">
                       <ChevronRightIcon />
                     </span>
                   </div>
