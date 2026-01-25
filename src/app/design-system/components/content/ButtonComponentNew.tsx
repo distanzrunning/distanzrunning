@@ -375,7 +375,7 @@ import { Upload } from 'lucide-react';
 
 export function Component() {
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 w-full">
       {/* Default variant - Square and Circle */}
       <div className="flex flex-wrap items-center gap-4">
         <Button shape="square" size="tiny" aria-label="Upload"><Upload /></Button>
@@ -574,7 +574,7 @@ export default function ButtonComponentNew() {
         </p>
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={shapesCode}>
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-4 w-full">
               {/* Default variant - Square and Circle */}
               <div className="flex flex-wrap items-center gap-4">
                 <Button shape="square" size="tiny" aria-label="Upload">
