@@ -519,7 +519,7 @@ const loadingCode = `import { Button } from '@/components/ui/Button';
 
 export function Component() {
   return (
-    <div className="flex flex-col md:flex-row items-start gap-4">
+    <div className="flex flex-col md:flex-row items-start justify-between gap-4 flex-initial">
       <Button loading size="small">Upload</Button>
       <Button loading>Upload</Button>
       <Button loading size="large">Upload</Button>
@@ -531,7 +531,7 @@ const disabledCode = `import { Button } from '@/components/ui/Button';
 
 export function Component() {
   return (
-    <div className="flex flex-col md:flex-row items-start gap-4">
+    <div className="flex flex-col md:flex-row items-start justify-between gap-4 flex-initial">
       <Button disabled size="small">Upload</Button>
       <Button disabled>Upload</Button>
       <Button disabled size="large">Upload</Button>
