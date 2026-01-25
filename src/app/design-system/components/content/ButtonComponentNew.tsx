@@ -543,7 +543,7 @@ const linkCode = `import { ButtonLink } from '@/components/ui/Button';
 
 export function Component() {
   return (
-    <ButtonLink href="#">Sign Up</ButtonLink>
+    <ButtonLink className="w-fit" href="#">Sign Up</ButtonLink>
   );
 }`;
 
@@ -910,7 +910,9 @@ export default function ButtonComponentNew() {
         </p>
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={linkCode}>
-            <ButtonLink href="#">Sign Up</ButtonLink>
+            <ButtonLink className="w-fit" href="#">
+              Sign Up
+            </ButtonLink>
           </CodePreview>
         </div>
       </Section>
