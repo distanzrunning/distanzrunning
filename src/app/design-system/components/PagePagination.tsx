@@ -105,19 +105,19 @@ export default function PagePagination({
           <button
             onClick={() => onNavigate(nextPage.id)}
             aria-label={`Go to next page: ${nextPage.label}`}
-            className="flex items-center py-1 text-[var(--ds-gray-900)] hover:text-black dark:hover:text-white transition-colors duration-200"
+            className="block py-1 pl-2 pr-7 text-[var(--ds-gray-900)] hover:text-black dark:hover:text-white transition-colors duration-200 text-right"
           >
-            <div className="flex flex-col items-end">
-              <span className="text-[0.8125rem] leading-[1.125rem] font-normal mb-0.5">
-                Next
-              </span>
+            <span className="block text-[0.8125rem] leading-[1.125rem] font-normal mb-0.5">
+              Next
+            </span>
+            <div className="relative flex items-center justify-end">
               <span className="text-[1rem] leading-[1.5rem] font-medium text-[var(--ds-gray-1000)]">
                 {nextPage.label}
               </span>
+              <span className="absolute right-[-26px] mt-0.5">
+                <ChevronRightIcon />
+              </span>
             </div>
-            <span className="mt-0.5 ml-2">
-              <ChevronRightIcon />
-            </span>
           </button>
         ) : (
           <div />
