@@ -511,9 +511,13 @@ function CalendarContent() {
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
+          flexWrap: "wrap",
           margin: "-3px 0",
           height: 25,
           width: "100%",
+          maxWidth: "100%",
+          minWidth: 1,
+          position: "relative",
         }}
       >
         <div
@@ -522,6 +526,7 @@ function CalendarContent() {
             marginLeft: -16,
             paddingLeft: 16,
             flex: "1 1 0%",
+            height: 25,
           }}
         >
           <h2 className="calendar-month-label" style={{ whiteSpace: "nowrap" }}>
@@ -531,20 +536,24 @@ function CalendarContent() {
         <button
           type="button"
           onClick={goToPrevMonth}
-          aria-label="Previous month"
+          aria-label="Previous"
           className="calendar-nav-button"
           style={{ marginLeft: "auto" }}
         >
-          <ChevronLeftIcon />
+          <span className="calendar-nav-button-content">
+            <ChevronLeftIcon />
+          </span>
         </button>
         <span aria-hidden="true" style={{ marginLeft: 5 }} />
         <button
           type="button"
           onClick={goToNextMonth}
-          aria-label="Next month"
+          aria-label="Next"
           className="calendar-nav-button"
         >
-          <ChevronRightIcon />
+          <span className="calendar-nav-button-content">
+            <ChevronRightIcon />
+          </span>
         </button>
       </div>
 

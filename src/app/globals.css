@@ -1214,16 +1214,28 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0;
+    width: 24px;
+    height: 16px;
+    padding: 0 6px;
     border: none;
     background: transparent;
     cursor: pointer;
-    color: var(--calendar-day-color);
-    border-radius: 4px;
+    color: rgb(143, 143, 143);
+    border-radius: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    user-select: none;
   }
 
   .calendar-nav-button:hover {
-    background-color: var(--ds-gray-200);
+    color: var(--calendar-day-color);
+  }
+
+  .calendar-nav-button-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .calendar-table {
