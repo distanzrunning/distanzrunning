@@ -35,6 +35,7 @@ import BadgeComponent from "../components/content/BadgeComponent";
 import BrowserComponent from "../components/content/BrowserComponent";
 import ButtonComponentNew from "../components/content/ButtonComponentNew";
 import PaginationComponent from "../components/content/PaginationComponent";
+import CalendarComponent from "../components/content/CalendarComponent";
 import Materials from "../components/content/Materials";
 import ContentWithTOC from "../components/ContentWithTOC";
 
@@ -461,6 +462,21 @@ export default function DesignSystemPage() {
           onNavigate={handleNavigation}
         >
           <PaginationComponent />
+        </ContentWithTOC>
+      );
+    }
+
+    if (activeSlug === "calendar") {
+      return (
+        <ContentWithTOC
+          tocTitle="On this page"
+          pageTitle="Calendar"
+          pageSubtitle="Displays a calendar from which users can select a date or range of dates."
+          mainSectionId="calendar"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
+          <CalendarComponent />
         </ContentWithTOC>
       );
     }
