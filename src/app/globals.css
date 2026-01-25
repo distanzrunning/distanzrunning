@@ -1223,11 +1223,11 @@
   }
 
   .calendar-table {
-    display: block;
+    display: table;
     table-layout: fixed;
-    border-collapse: collapse;
+    border-collapse: separate;
     border-spacing: 2px;
-    width: 256px;
+    width: 100%;
   }
 
   .calendar-table th,

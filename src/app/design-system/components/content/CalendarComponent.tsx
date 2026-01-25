@@ -479,7 +479,7 @@ function CalendarContent() {
           justifyContent: "space-between",
           margin: "-3px 0",
           height: 25,
-          width: 256,
+          width: "100%",
         }}
       >
         <div
