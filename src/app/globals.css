@@ -538,6 +538,7 @@
 
     /* Calendar button - uses box-shadow for border effect */
     --calendar-button-shadow: rgb(235, 235, 235) 0px 0px 0px 1px;
+    --calendar-button-bg: rgb(255, 255, 255);
     --calendar-button-bg-hover: rgb(242, 242, 242);
 
     /* ═══════════════════════════════════════════════════════════════════════
@@ -986,6 +987,7 @@
 
     /* Calendar button - uses box-shadow for border effect (dark mode) */
     --calendar-button-shadow: rgb(46, 46, 46) 0px 0px 0px 1px;
+    --calendar-button-bg: rgb(10, 10, 10);
     --calendar-button-bg-hover: rgb(31, 31, 31);
 
     /* ─────────────────────────────────────────────────────────────────────────
@@ -1128,6 +1130,7 @@
 
   /* Calendar trigger button styles */
   .calendar-trigger-button {
+    background-color: var(--calendar-button-bg);
     box-shadow: var(--calendar-button-shadow);
     transition:
       border-color 0.15s ease,
