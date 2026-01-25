@@ -227,11 +227,7 @@ const getVariantClasses = (
     case "secondary":
       // Secondary with shadow prop (rounded marketing style)
       if (shadow) {
-        return `
-          bg-[var(--ds-button-rounded-bg)] text-[var(--ds-button-rounded-text)]
-          shadow-[var(--ds-shadow-button-rounded)]
-          hover:shadow-[var(--ds-shadow-button-rounded-hover)] hover:bg-[var(--ds-button-rounded-hover-bg)]
-        `;
+        return `button-shadow-rounded`;
       }
       // Light: white bg, gray border via box-shadow, darker bg on hover
       // Dark: dark bg, subtle border via box-shadow, lighter bg on hover

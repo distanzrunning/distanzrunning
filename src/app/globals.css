@@ -1106,6 +1106,18 @@
     height: var(--ds-icon-size, 16px);
   }
 
+  /* Rounded shadow button styles - complex box-shadows need CSS classes */
+  .button-shadow-rounded {
+    background-color: var(--ds-button-rounded-bg);
+    color: var(--ds-button-rounded-text);
+    box-shadow: var(--ds-shadow-button-rounded);
+  }
+
+  .button-shadow-rounded:hover {
+    background-color: var(--ds-button-rounded-hover-bg);
+    box-shadow: var(--ds-shadow-button-rounded-hover);
+  }
+
   .layout-grid {
     @apply grid grid-cols-12 gap-x-4 px-6 md:px-8 lg:px-12 xl:px-24;
   }
