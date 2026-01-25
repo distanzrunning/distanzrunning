@@ -542,6 +542,20 @@
     --calendar-button-bg-hover: rgb(242, 242, 242);
     --calendar-button-focus-ring: 0 0 0 1px #00000057, 0 0 0 4px #00000029;
 
+    /* Calendar popover - Geist design tokens */
+    --calendar-popover-bg: rgb(255, 255, 255);
+    --calendar-popover-radius: 12px;
+    --calendar-popover-shadow:
+      rgba(0, 0, 0, 0.08) 0px 0px 0px 1px, rgba(0, 0, 0, 0.02) 0px 1px 1px 0px,
+      rgba(0, 0, 0, 0.04) 0px 4px 8px -4px,
+      rgba(0, 0, 0, 0.06) 0px 16px 24px -8px,
+      rgb(250, 250, 250) 0px 0px 0px 1px inset;
+    --calendar-day-radius: 4px;
+    --calendar-day-color: rgb(23, 23, 23);
+    --calendar-day-outside-color: rgb(143, 143, 143);
+    --calendar-today-bg: oklch(0.5318 0.2399 256.99);
+    --calendar-today-color: rgb(255, 255, 255);
+
     /* ═══════════════════════════════════════════════════════════════════════
        SEMANTIC TOKENS - Light Mode
        Map design system scales to semantic usage
@@ -992,6 +1006,19 @@
     --calendar-button-bg-hover: rgb(31, 31, 31);
     --calendar-button-focus-ring: 0 0 0 1px #ffffff57, 0 0 0 4px #ffffff29;
 
+    /* Calendar popover - Geist design tokens (dark mode) */
+    --calendar-popover-bg: rgb(10, 10, 10);
+    --calendar-popover-radius: 12px;
+    --calendar-popover-shadow:
+      rgba(255, 255, 255, 0.145) 0px 0px 0px 1px,
+      rgba(0, 0, 0, 0.02) 0px 1px 1px 0px, rgba(0, 0, 0, 0.04) 0px 4px 8px -4px,
+      rgba(0, 0, 0, 0.06) 0px 16px 24px -8px, rgb(0, 0, 0) 0px 0px 0px 1px inset;
+    --calendar-day-radius: 4px;
+    --calendar-day-color: rgb(237, 237, 237);
+    --calendar-day-outside-color: rgb(143, 143, 143);
+    --calendar-today-bg: oklch(0.717 0.1648 250.794);
+    --calendar-today-color: rgb(10, 10, 10);
+
     /* ─────────────────────────────────────────────────────────────────────────
        SEMANTIC TOKENS - Dark Mode
        ───────────────────────────────────────────────────────────────────────── */
@@ -1158,11 +1185,24 @@
   /* Calendar dropdown styles */
   .calendar-dropdown {
     min-width: 250px;
+    background: var(--calendar-popover-bg);
+    border-radius: var(--calendar-popover-radius);
+    box-shadow: var(--calendar-popover-shadow);
+    overflow: hidden;
+  }
+
+  .calendar-content-wrapper {
+    padding: 12px;
+    border-radius: 6px;
+    position: relative;
+    width: 280px;
   }
 
   .calendar-table {
-    border-collapse: separate;
-    border-spacing: 0;
+    display: block;
+    table-layout: fixed;
+    border-collapse: collapse;
+    width: 256px;
   }
 
   .calendar-table th,
@@ -1170,18 +1210,28 @@
     padding: 0;
   }
 
+  .calendar-table th {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--calendar-day-outside-color);
+    height: 32px;
+    text-align: center;
+    vertical-align: middle;
+  }
+
   .calendar-day {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: block;
     width: 32px;
     height: 32px;
     font-size: 14px;
-    line-height: 20px;
-    border-radius: 6px;
+    line-height: 30px;
+    border-radius: var(--calendar-day-radius);
+    border: 1px solid transparent;
     cursor: pointer;
-    color: var(--ds-gray-1000);
-    transition: background-color 0.15s ease;
+    color: var(--calendar-day-color);
+    text-align: center;
+    touch-action: manipulation;
+    z-index: 1;
   }
 
   .calendar-day:hover {
@@ -1189,21 +1239,22 @@
   }
 
   .calendar-day-outside {
-    color: var(--ds-gray-600);
+    color: var(--calendar-day-outside-color);
   }
 
   .calendar-day-weekend {
-    color: var(--ds-gray-600);
+    color: var(--calendar-day-outside-color);
   }
 
   .calendar-day-today {
-    background-color: var(--ds-gray-1000);
-    color: var(--ds-background-100);
-    font-weight: 500;
+    background-color: var(--calendar-today-bg);
+    color: var(--calendar-today-color);
+    font-weight: 400;
   }
 
   .calendar-day-today:hover {
-    background-color: var(--ds-gray-900);
+    background-color: var(--calendar-today-bg);
+    opacity: 0.9;
   }
 
   .layout-grid {

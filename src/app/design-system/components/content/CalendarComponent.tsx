@@ -503,18 +503,7 @@ function CalendarContent() {
         <thead>
           <tr>
             {DAYS_OF_WEEK.map((day, i) => (
-              <th
-                key={i}
-                className="text-xs font-medium text-[var(--ds-gray-900)]"
-                style={{
-                  width: 32,
-                  height: 32,
-                  textAlign: "center",
-                  fontWeight: 500,
-                }}
-              >
-                {day}
-              </th>
+              <th key={i}>{day}</th>
             ))}
           </tr>
         </thead>
@@ -628,18 +617,18 @@ export default function CalendarComponent() {
                 </Popover.Trigger>
                 <Popover.Portal>
                   <Popover.Content
-                    className="calendar-dropdown z-50"
+                    className="calendar-dropdown"
                     sideOffset={8}
                     align="start"
                     style={{
-                      padding: 12,
-                      borderRadius: 6,
-                      background: "var(--ds-background-100)",
-                      boxShadow:
-                        "0 0 0 1px var(--ds-gray-400), 0px 4px 8px -4px rgba(0, 0, 0, 0.1), 0px 16px 24px -8px rgba(0, 0, 0, 0.15)",
+                      zIndex: 2001,
+                      minWidth: "max-content",
+                      width: 280,
                     }}
                   >
-                    <CalendarContent />
+                    <div className="calendar-content-wrapper">
+                      <CalendarContent />
+                    </div>
                   </Popover.Content>
                 </Popover.Portal>
               </Popover.Root>
