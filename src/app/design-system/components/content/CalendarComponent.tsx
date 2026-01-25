@@ -336,6 +336,7 @@ export function Component() {
 
 export default function CalendarComponent() {
   const { toast, showToast, dismissToast } = useToast();
+  const [isExpanded, setIsExpanded] = useState(false);
 
   return (
     <>
@@ -361,9 +362,10 @@ export default function CalendarComponent() {
                   <button
                     type="button"
                     aria-haspopup="dialog"
-                    aria-expanded="false"
+                    aria-expanded={isExpanded}
+                    onClick={() => setIsExpanded(!isExpanded)}
                     title="Select Date Range"
-                    className="calendar-trigger-button flex items-center justify-between w-full text-left cursor-pointer text-[rgb(23,23,23)] dark:text-[rgb(237,237,237)]"
+                    className={`calendar-trigger-button flex items-center justify-between w-full text-left cursor-pointer text-[rgb(23,23,23)] dark:text-[rgb(237,237,237)] ${isExpanded ? "calendar-trigger-button-expanded" : ""}`}
                     style={{
                       height: 40,
                       paddingLeft: 10,
