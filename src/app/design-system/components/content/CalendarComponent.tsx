@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useCallback, useRef } from "react";
+import React, { useState, useCallback, useRef, useEffect } from "react";
 import { ChevronDown } from "lucide-react";
 import { Section } from "../ContentWithTOC";
 import {
@@ -471,6 +471,26 @@ function CalendarDropdown({
       setOpenUpward(spaceBelow < dropdownHeight && spaceAbove > spaceBelow);
     }
   }, [isOpen, triggerRef]);
+
+  // Close on click outside
+  React.useEffect(() => {
+    if (!isOpen) return;
+
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Node;
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(target) &&
+        triggerRef.current &&
+        !triggerRef.current.contains(target)
+      ) {
+        onClose();
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isOpen, onClose, triggerRef]);
 
   const goToPrevMonth = () => {
     if (currentMonth === 0) {
