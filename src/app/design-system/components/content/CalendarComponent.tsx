@@ -519,6 +519,9 @@ function CalendarContent() {
 
       {/* Calendar grid */}
       <table className="calendar-table" role="grid">
+        <caption className="sr-only">
+          {MONTH_NAMES[currentMonth]} {currentYear}
+        </caption>
         <thead>
           <tr>
             {DAYS_OF_WEEK.map((day, i) => (
