@@ -409,57 +409,96 @@ export function Component() {
 }`;
 
 const shapesCode = `import { Button } from '@/components/ui/Button';
-import { Upload } from 'lucide-react';
+
+// Icons inherit size from --ds-icon-size CSS variable set by Button
+function UploadIcon() {
+  return (
+    <svg
+      height="var(--ds-icon-size, 16px)"
+      width="var(--ds-icon-size, 16px)"
+      viewBox="0 0 16 16"
+      fill="currentColor"
+    >
+      <path d="M8.70711 1.39644C8.31659 1.00592 7.68342 1.00592 7.2929 1.39644L2.21968 6.46966L1.68935 6.99999L2.75001 8.06065L3.28034 7.53032L7.25001 3.56065V14.25V15H8.75001V14.25V3.56065L12.7197 7.53032L13.25 8.06065L14.3107 6.99999L13.7803 6.46966L8.70711 1.39644Z" />
+    </svg>
+  );
+}
 
 export function Component() {
   return (
     <div className="flex flex-col gap-4 w-full">
       {/* Default variant - Square and Circle */}
       <div className="flex items-center justify-between">
-        <Button shape="square" size="tiny" aria-label="Upload"><Upload /></Button>
-        <Button shape="square" size="small" aria-label="Upload"><Upload /></Button>
-        <Button shape="square" aria-label="Upload"><Upload /></Button>
-        <Button shape="square" size="large" aria-label="Upload"><Upload /></Button>
-        <Button shape="circle" size="tiny" aria-label="Upload"><Upload /></Button>
-        <Button shape="circle" size="small" aria-label="Upload"><Upload /></Button>
-        <Button shape="circle" aria-label="Upload"><Upload /></Button>
-        <Button shape="circle" size="large" aria-label="Upload"><Upload /></Button>
+        <Button shape="square" size="tiny" aria-label="Upload"><UploadIcon /></Button>
+        <Button shape="square" size="small" aria-label="Upload"><UploadIcon /></Button>
+        <Button shape="square" aria-label="Upload"><UploadIcon /></Button>
+        <Button shape="square" size="large" aria-label="Upload"><UploadIcon /></Button>
+        <Button shape="circle" size="tiny" aria-label="Upload"><UploadIcon /></Button>
+        <Button shape="circle" size="small" aria-label="Upload"><UploadIcon /></Button>
+        <Button shape="circle" aria-label="Upload"><UploadIcon /></Button>
+        <Button shape="circle" size="large" aria-label="Upload"><UploadIcon /></Button>
       </div>
       {/* Secondary variant - Square and Circle */}
       <div className="flex items-center justify-between">
-        <Button shape="square" size="tiny" variant="secondary" aria-label="Upload"><Upload /></Button>
-        <Button shape="square" size="small" variant="secondary" aria-label="Upload"><Upload /></Button>
-        <Button shape="square" variant="secondary" aria-label="Upload"><Upload /></Button>
-        <Button shape="square" size="large" variant="secondary" aria-label="Upload"><Upload /></Button>
-        <Button shape="circle" size="tiny" variant="secondary" aria-label="Upload"><Upload /></Button>
-        <Button shape="circle" size="small" variant="secondary" aria-label="Upload"><Upload /></Button>
-        <Button shape="circle" variant="secondary" aria-label="Upload"><Upload /></Button>
-        <Button shape="circle" size="large" variant="secondary" aria-label="Upload"><Upload /></Button>
+        <Button shape="square" size="tiny" variant="secondary" aria-label="Upload"><UploadIcon /></Button>
+        <Button shape="square" size="small" variant="secondary" aria-label="Upload"><UploadIcon /></Button>
+        <Button shape="square" variant="secondary" aria-label="Upload"><UploadIcon /></Button>
+        <Button shape="square" size="large" variant="secondary" aria-label="Upload"><UploadIcon /></Button>
+        <Button shape="circle" size="tiny" variant="secondary" aria-label="Upload"><UploadIcon /></Button>
+        <Button shape="circle" size="small" variant="secondary" aria-label="Upload"><UploadIcon /></Button>
+        <Button shape="circle" variant="secondary" aria-label="Upload"><UploadIcon /></Button>
+        <Button shape="circle" size="large" variant="secondary" aria-label="Upload"><UploadIcon /></Button>
       </div>
       {/* Tertiary variant - Square and Circle */}
       <div className="flex items-center justify-between">
-        <Button shape="square" size="tiny" variant="tertiary" aria-label="Upload"><Upload /></Button>
-        <Button shape="square" size="small" variant="tertiary" aria-label="Upload"><Upload /></Button>
-        <Button shape="square" variant="tertiary" aria-label="Upload"><Upload /></Button>
-        <Button shape="square" size="large" variant="tertiary" aria-label="Upload"><Upload /></Button>
-        <Button shape="circle" size="tiny" variant="tertiary" aria-label="Upload"><Upload /></Button>
-        <Button shape="circle" size="small" variant="tertiary" aria-label="Upload"><Upload /></Button>
-        <Button shape="circle" variant="tertiary" aria-label="Upload"><Upload /></Button>
-        <Button shape="circle" size="large" variant="tertiary" aria-label="Upload"><Upload /></Button>
+        <Button shape="square" size="tiny" variant="tertiary" aria-label="Upload"><UploadIcon /></Button>
+        <Button shape="square" size="small" variant="tertiary" aria-label="Upload"><UploadIcon /></Button>
+        <Button shape="square" variant="tertiary" aria-label="Upload"><UploadIcon /></Button>
+        <Button shape="square" size="large" variant="tertiary" aria-label="Upload"><UploadIcon /></Button>
+        <Button shape="circle" size="tiny" variant="tertiary" aria-label="Upload"><UploadIcon /></Button>
+        <Button shape="circle" size="small" variant="tertiary" aria-label="Upload"><UploadIcon /></Button>
+        <Button shape="circle" variant="tertiary" aria-label="Upload"><UploadIcon /></Button>
+        <Button shape="circle" size="large" variant="tertiary" aria-label="Upload"><UploadIcon /></Button>
       </div>
     </div>
   );
 }`;
 
 const prefixSuffixCode = `import { Button } from '@/components/ui/Button';
-import { ArrowLeft, ArrowRight } from 'lucide-react';
+
+// Icons inherit size from --ds-icon-size CSS variable set by Button
+function ArrowLeftIcon() {
+  return (
+    <svg
+      height="var(--ds-icon-size, 16px)"
+      width="var(--ds-icon-size, 16px)"
+      viewBox="0 0 16 16"
+      fill="currentColor"
+    >
+      <path d="M6.46966 13.7803L6.99999 14.3107L8.06065 13.25L7.53032 12.7197L3.56065 8.75001H14.25H15V7.25001H14.25H3.56065L7.53032 3.28034L8.06065 2.75001L6.99999 1.68935L6.46966 2.21968L1.39644 7.2929C1.00592 7.68342 1.00592 8.31659 1.39644 8.70711L6.46966 13.7803Z" />
+    </svg>
+  );
+}
+
+function ArrowRightIcon() {
+  return (
+    <svg
+      height="var(--ds-icon-size, 16px)"
+      width="var(--ds-icon-size, 16px)"
+      viewBox="0 0 16 16"
+      fill="currentColor"
+    >
+      <path d="M9.53033 2.21968L9 1.68935L7.93934 2.75001L8.46967 3.28034L12.4393 7.25001H1.75H1V8.75001H1.75H12.4393L8.46967 12.7197L7.93934 13.25L9 14.3107L9.53033 13.7803L14.6036 8.70711C14.9941 8.31659 14.9941 7.68342 14.6036 7.2929L9.53033 2.21968Z" />
+    </svg>
+  );
+}
 
 export function Component() {
   return (
     <div className="flex flex-col md:flex-row items-start gap-4">
-      <Button prefixIcon={<ArrowLeft />}>Upload</Button>
-      <Button suffixIcon={<ArrowRight />}>Upload</Button>
-      <Button prefixIcon={<ArrowLeft />} suffixIcon={<ArrowRight />}>Upload</Button>
+      <Button prefixIcon={<ArrowLeftIcon />}>Upload</Button>
+      <Button suffixIcon={<ArrowRightIcon />}>Upload</Button>
+      <Button prefixIcon={<ArrowLeftIcon />} suffixIcon={<ArrowRightIcon />}>Upload</Button>
     </div>
   );
 }`;
