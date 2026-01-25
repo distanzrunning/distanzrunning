@@ -389,14 +389,14 @@ export default function PaginationComponent() {
                   aria-label="Go to previous page: Button"
                   className="group flex items-end text-left"
                 >
-                  <span className="text-textSubtle group-hover:text-textDefault transition-colors mb-0.5">
+                  <span className="text-[var(--ds-gray-1000)] mb-0.5">
                     <ChevronLeftIcon />
                   </span>
                   <div className="flex flex-col items-start ml-1">
-                    <span className="text-[13px] leading-[18px] text-textSubtle group-hover:text-textDefault transition-colors mb-1">
+                    <span className="text-[0.8125rem] leading-[1.125rem] font-normal text-[var(--ds-gray-1000)] mb-1">
                       Previous
                     </span>
-                    <span className="text-[16px] leading-[24px] font-medium text-textDefault">
+                    <span className="text-[1rem] leading-[1.5rem] font-medium text-[var(--ds-gray-1000)]">
                       Button
                     </span>
                   </div>
@@ -409,14 +409,14 @@ export default function PaginationComponent() {
                   className="group flex items-end text-right"
                 >
                   <div className="flex flex-col items-start mr-1">
-                    <span className="text-[13px] leading-[18px] text-textSubtle group-hover:text-textDefault transition-colors mb-1">
+                    <span className="text-[0.8125rem] leading-[1.125rem] font-normal text-[var(--ds-gray-1000)] mb-1">
                       Next
                     </span>
-                    <span className="text-[16px] leading-[24px] font-medium text-textDefault">
+                    <span className="text-[1rem] leading-[1.5rem] font-medium text-[var(--ds-gray-1000)]">
                       Code Block
                     </span>
                   </div>
-                  <span className="text-textSubtle group-hover:text-textDefault transition-colors mb-0.5">
+                  <span className="text-[var(--ds-gray-1000)] mb-0.5">
                     <ChevronRightIcon />
                   </span>
                 </button>
