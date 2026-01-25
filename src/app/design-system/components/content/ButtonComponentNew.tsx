@@ -377,7 +377,7 @@ export function Component() {
   return (
     <div className="flex flex-col gap-4 w-full">
       {/* Default variant - Square and Circle */}
-      <div className="flex flex-wrap items-center gap-4">
+      <div className="flex items-center justify-between">
         <Button shape="square" size="tiny" aria-label="Upload"><Upload /></Button>
         <Button shape="square" size="small" aria-label="Upload"><Upload /></Button>
         <Button shape="square" aria-label="Upload"><Upload /></Button>
@@ -388,7 +388,7 @@ export function Component() {
         <Button shape="circle" size="large" aria-label="Upload"><Upload /></Button>
       </div>
       {/* Secondary variant - Square and Circle */}
-      <div className="flex flex-wrap items-center gap-4">
+      <div className="flex items-center justify-between">
         <Button shape="square" size="tiny" variant="secondary" aria-label="Upload"><Upload /></Button>
         <Button shape="square" size="small" variant="secondary" aria-label="Upload"><Upload /></Button>
         <Button shape="square" variant="secondary" aria-label="Upload"><Upload /></Button>
@@ -399,7 +399,7 @@ export function Component() {
         <Button shape="circle" size="large" variant="secondary" aria-label="Upload"><Upload /></Button>
       </div>
       {/* Tertiary variant - Square and Circle */}
-      <div className="flex flex-wrap items-center gap-4">
+      <div className="flex items-center justify-between">
         <Button shape="square" size="tiny" variant="tertiary" aria-label="Upload"><Upload /></Button>
         <Button shape="square" size="small" variant="tertiary" aria-label="Upload"><Upload /></Button>
         <Button shape="square" variant="tertiary" aria-label="Upload"><Upload /></Button>
@@ -576,7 +576,7 @@ export default function ButtonComponentNew() {
           <CodePreview componentCode={shapesCode}>
             <div className="flex flex-col gap-4 w-full">
               {/* Default variant - Square and Circle */}
-              <div className="flex flex-wrap items-center gap-4">
+              <div className="flex items-center justify-between">
                 <Button shape="square" size="tiny" aria-label="Upload">
                   <UploadIcon />
                 </Button>
@@ -603,7 +603,7 @@ export default function ButtonComponentNew() {
                 </Button>
               </div>
               {/* Secondary variant - Square and Circle */}
-              <div className="flex flex-wrap items-center gap-4">
+              <div className="flex items-center justify-between">
                 <Button
                   shape="square"
                   size="tiny"
@@ -660,7 +660,7 @@ export default function ButtonComponentNew() {
                 </Button>
               </div>
               {/* Tertiary variant - Square and Circle */}
-              <div className="flex flex-wrap items-center gap-4">
+              <div className="flex items-center justify-between">
                 <Button
                   shape="square"
                   size="tiny"
