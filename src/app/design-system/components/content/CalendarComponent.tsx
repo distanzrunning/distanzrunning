@@ -385,6 +385,16 @@ const MONTH_NAMES = [
   "December",
 ];
 
+const DAY_NAMES = [
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+];
+
 function getCalendarDays(year: number, month: number) {
   const firstDay = new Date(year, month, 1);
   const lastDay = new Date(year, month + 1, 0);
@@ -393,9 +403,11 @@ function getCalendarDays(year: number, month: number) {
 
   const days: {
     date: number;
+    fullDate: Date;
     isCurrentMonth: boolean;
     isWeekend: boolean;
     isToday: boolean;
+    dayOfWeek: number;
   }[] = [];
 
   // Previous month days
@@ -405,9 +417,11 @@ function getCalendarDays(year: number, month: number) {
     const dayOfWeek = (startDayOfWeek - i - 1 + 7) % 7;
     days.push({
       date,
+      fullDate: new Date(year, month - 1, date),
       isCurrentMonth: false,
       isWeekend: dayOfWeek === 0 || dayOfWeek === 6,
       isToday: false,
+      dayOfWeek,
     });
   }
 
@@ -421,9 +435,11 @@ function getCalendarDays(year: number, month: number) {
       today.getFullYear() === year;
     days.push({
       date,
+      fullDate: new Date(year, month, date),
       isCurrentMonth: true,
       isWeekend: dayOfWeek === 0 || dayOfWeek === 6,
       isToday,
+      dayOfWeek,
     });
   }
 
@@ -434,13 +450,31 @@ function getCalendarDays(year: number, month: number) {
     const dayOfWeek = days.length % 7;
     days.push({
       date,
+      fullDate: new Date(year, month + 1, date),
       isCurrentMonth: false,
       isWeekend: dayOfWeek === 0 || dayOfWeek === 6,
       isToday: false,
+      dayOfWeek,
     });
   }
 
   return days;
+}
+
+function formatAriaLabel(day: {
+  fullDate: Date;
+  isToday: boolean;
+  dayOfWeek: number;
+}) {
+  const dayName = DAY_NAMES[day.dayOfWeek];
+  const monthName = MONTH_NAMES[day.fullDate.getMonth()];
+  const date = day.fullDate.getDate();
+  const year = day.fullDate.getFullYear();
+
+  if (day.isToday) {
+    return `Today, ${dayName}, ${monthName} ${date}, ${year}`;
+  }
+  return `${dayName}, ${monthName} ${date}, ${year}`;
 }
 
 function CalendarContent() {
@@ -544,24 +578,29 @@ function CalendarContent() {
             ))}
           </tr>
         </thead>
-        <tbody>
+        <tbody className="calendar-body">
           {Array.from(
             { length: Math.ceil(days.length / 7) },
             (_, weekIndex) => (
-              <tr key={weekIndex}>
+              <tr key={weekIndex} className="calendar-body-row">
                 {days
                   .slice(weekIndex * 7, weekIndex * 7 + 7)
                   .map((day, dayIndex) => (
-                    <td key={dayIndex} role="gridcell">
+                    <td
+                      key={dayIndex}
+                      role="gridcell"
+                      className="calendar-cell"
+                    >
                       <span
                         role="button"
                         tabIndex={day.isToday ? 0 : -1}
+                        aria-label={formatAriaLabel(day)}
                         className={`
-                      calendar-day
-                      ${!day.isCurrentMonth ? "calendar-day-outside" : ""}
-                      ${day.isWeekend ? "calendar-day-weekend" : ""}
-                      ${day.isToday ? "calendar-day-today" : ""}
-                    `}
+                          calendar-day
+                          ${!day.isCurrentMonth ? "calendar-day-outside" : ""}
+                          ${day.isWeekend && !day.isToday ? "calendar-day-weekend" : ""}
+                          ${day.isToday ? "calendar-day-today" : ""}
+                        `}
                       >
                         {day.date}
                       </span>
