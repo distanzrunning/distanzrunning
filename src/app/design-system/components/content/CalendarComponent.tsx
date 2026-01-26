@@ -477,21 +477,54 @@ function formatAriaLabel(day: {
   return `${dayName}, ${monthName} ${date}, ${year}`;
 }
 
-function CalendarContent() {
+interface DateRange {
+  start: Date | null;
+  end: Date | null;
+}
+
+function isSameDay(date1: Date, date2: Date): boolean {
+  return (
+    date1.getDate() === date2.getDate() &&
+    date1.getMonth() === date2.getMonth() &&
+    date1.getFullYear() === date2.getFullYear()
+  );
+}
+
+function isDateInRange(date: Date, start: Date, end: Date): boolean {
+  const time = date.getTime();
+  return time >= start.getTime() && time <= end.getTime();
+}
+
+function CalendarContent({
+  dateRange,
+  onDateSelect,
+}: {
+  dateRange: DateRange;
+  onDateSelect: (date: Date) => void;
+}) {
   const today = new Date();
   const [currentMonth, setCurrentMonth] = useState(today.getMonth());
   const [currentYear, setCurrentYear] = useState(today.getFullYear());
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
   const days = getCalendarDays(currentYear, currentMonth);
 
+  const isStartDate = (day: { fullDate: Date }) => {
+    if (!dateRange.start) return false;
+    return isSameDay(day.fullDate, dateRange.start);
+  };
+
+  const isEndDate = (day: { fullDate: Date }) => {
+    if (!dateRange.end) return false;
+    return isSameDay(day.fullDate, dateRange.end);
+  };
+
+  const isInRange = (day: { fullDate: Date }) => {
+    if (!dateRange.start || !dateRange.end) return false;
+    return isDateInRange(day.fullDate, dateRange.start, dateRange.end);
+  };
+
   const isSelected = (day: { fullDate: Date }) => {
-    if (!selectedDate) return false;
-    return (
-      day.fullDate.getDate() === selectedDate.getDate() &&
-      day.fullDate.getMonth() === selectedDate.getMonth() &&
-      day.fullDate.getFullYear() === selectedDate.getFullYear()
-    );
+    return isStartDate(day) || isEndDate(day);
   };
 
   const goToPrevMonth = () => {
@@ -604,36 +637,53 @@ function CalendarContent() {
               <tr key={weekIndex} className="calendar-body-row">
                 {days
                   .slice(weekIndex * 7, weekIndex * 7 + 7)
-                  .map((day, dayIndex) => (
-                    <td
-                      key={dayIndex}
-                      role="gridcell"
-                      className="calendar-cell"
-                    >
-                      <span
-                        role="button"
-                        tabIndex={day.isToday || isSelected(day) ? 0 : -1}
-                        aria-label={formatAriaLabel(day)}
-                        aria-selected={isSelected(day)}
-                        onClick={() => setSelectedDate(day.fullDate)}
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter" || e.key === " ") {
-                            e.preventDefault();
-                            setSelectedDate(day.fullDate);
-                          }
-                        }}
-                        className={`
-                          calendar-day
-                          ${!day.isCurrentMonth ? "calendar-day-outside" : ""}
-                          ${day.isWeekend && !day.isToday && !isSelected(day) ? "calendar-day-weekend" : ""}
-                          ${day.isToday && !isSelected(day) ? "calendar-day-today" : ""}
-                          ${isSelected(day) ? "calendar-day-selected" : ""}
-                        `}
-                      >
-                        {day.date}
-                      </span>
-                    </td>
-                  ))}
+                  .map((day, dayIndex) => {
+                    const isStart = isStartDate(day);
+                    const isEnd = isEndDate(day);
+                    const inRange = isInRange(day);
+                    const selected = isStart || isEnd;
+
+                    // Determine td classes for range styling
+                    let tdClasses = "calendar-cell";
+                    if (isStart && isEnd) {
+                      // Single day selected (start equals end)
+                      tdClasses +=
+                        " calendar-cell-first-in-range calendar-cell-last-in-range";
+                    } else if (isStart) {
+                      tdClasses += " calendar-cell-first-in-range";
+                    } else if (isEnd) {
+                      tdClasses += " calendar-cell-last-in-range";
+                    } else if (inRange) {
+                      tdClasses += " calendar-cell-in-range";
+                    }
+
+                    return (
+                      <td key={dayIndex} role="gridcell" className={tdClasses}>
+                        <span
+                          role="button"
+                          tabIndex={day.isToday || selected ? 0 : -1}
+                          aria-label={formatAriaLabel(day)}
+                          aria-selected={selected}
+                          onClick={() => onDateSelect(day.fullDate)}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter" || e.key === " ") {
+                              e.preventDefault();
+                              onDateSelect(day.fullDate);
+                            }
+                          }}
+                          className={`
+                            calendar-day
+                            ${!day.isCurrentMonth ? "calendar-day-outside" : ""}
+                            ${day.isWeekend && !day.isToday && !selected ? "calendar-day-weekend" : ""}
+                            ${day.isToday && !selected ? "calendar-day-today" : ""}
+                            ${selected ? "calendar-day-selected" : ""}
+                          `}
+                        >
+                          {day.date}
+                        </span>
+                      </td>
+                    );
+                  })}
               </tr>
             ),
           )}
@@ -657,9 +707,76 @@ export function Component() {
 // Main Component
 // ============================================================================
 
+function formatDateRange(range: DateRange): string {
+  if (!range.start) return "Select Date Range";
+  if (!range.end || isSameDay(range.start, range.end)) {
+    // Single date selected
+    const month = MONTH_NAMES[range.start.getMonth()].slice(0, 3);
+    return `${month} ${range.start.getDate()}`;
+  }
+  // Range selected
+  const startMonth = MONTH_NAMES[range.start.getMonth()].slice(0, 3);
+  const endMonth = MONTH_NAMES[range.end.getMonth()].slice(0, 3);
+  if (startMonth === endMonth) {
+    return `${startMonth} ${range.start.getDate()} - ${range.end.getDate()}`;
+  }
+  return `${startMonth} ${range.start.getDate()} - ${endMonth} ${range.end.getDate()}`;
+}
+
+function CloseIcon() {
+  return (
+    <svg
+      height="16"
+      strokeLinejoin="round"
+      viewBox="0 0 16 16"
+      width="16"
+      style={{ color: "currentcolor" }}
+    >
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M12.4697 13.5303L13 14.0607L14.0607 13L13.5303 12.4697L9.06065 7.99999L13.5303 3.53032L14.0607 2.99999L13 1.93933L12.4697 2.46966L7.99999 6.93933L3.53032 2.46966L2.99999 1.93933L1.93933 2.99999L2.46966 3.53032L6.93933 7.99999L2.46966 12.4697L1.93933 13L2.99999 14.0607L3.53032 13.5303L7.99999 9.06065L12.4697 13.5303Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+}
+
 export default function CalendarComponent() {
   const { toast, showToast, dismissToast } = useToast();
   const [isOpen, setIsOpen] = useState(false);
+  const [dateRange, setDateRange] = useState<DateRange>({
+    start: null,
+    end: null,
+  });
+  const [selectionState, setSelectionState] = useState<"start" | "end">(
+    "start",
+  );
+
+  const handleDateSelect = (date: Date) => {
+    if (selectionState === "start") {
+      // First click - set start date
+      setDateRange({ start: date, end: null });
+      setSelectionState("end");
+    } else {
+      // Second click - set end date
+      if (dateRange.start && date < dateRange.start) {
+        // If clicked date is before start, swap them
+        setDateRange({ start: date, end: dateRange.start });
+      } else {
+        setDateRange({ start: dateRange.start, end: date });
+      }
+      setSelectionState("start");
+    }
+  };
+
+  const handleClearRange = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setDateRange({ start: null, end: null });
+    setSelectionState("start");
+  };
+
+  const hasSelection = dateRange.start !== null;
 
   return (
     <>
@@ -712,11 +829,33 @@ export default function CalendarComponent() {
                       className="overflow-hidden text-ellipsis whitespace-nowrap flex-1"
                       style={{
                         paddingLeft: 6,
-                        paddingRight: 20,
+                        paddingRight: hasSelection ? 8 : 20,
                       }}
                     >
-                      Select Date Range
+                      {formatDateRange(dateRange)}
                     </span>
+                    {/* Clear button */}
+                    {hasSelection && (
+                      <span
+                        role="button"
+                        tabIndex={0}
+                        aria-label="Clear date range"
+                        onClick={handleClearRange}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            handleClearRange(e as unknown as React.MouseEvent);
+                          }
+                        }}
+                        className="flex items-center justify-center flex-shrink-0 rounded hover:bg-[var(--ds-gray-200)] transition-colors"
+                        style={{
+                          height: 20,
+                          width: 20,
+                          minWidth: 20,
+                        }}
+                      >
+                        <CloseIcon />
+                      </span>
+                    )}
                   </button>
                 </Popover.Trigger>
                 <Popover.Portal>
@@ -731,7 +870,10 @@ export default function CalendarComponent() {
                     }}
                   >
                     <div className="calendar-content-wrapper">
-                      <CalendarContent />
+                      <CalendarContent
+                        dateRange={dateRange}
+                        onDateSelect={handleDateSelect}
+                      />
                     </div>
                   </Popover.Content>
                 </Popover.Portal>

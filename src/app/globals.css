@@ -556,6 +556,7 @@
     --calendar-day-hover-border: rgb(201, 201, 201);
     --calendar-day-selected-bg: rgb(23, 23, 23);
     --calendar-day-selected-color: rgb(255, 255, 255);
+    --calendar-range-bg: rgb(234, 234, 234);
     --calendar-header-color: rgb(102, 102, 102);
     --calendar-today-bg: oklch(0.5318 0.2399 256.99);
     --calendar-today-color: rgb(255, 255, 255);
@@ -1023,6 +1024,7 @@
     --calendar-day-hover-border: rgb(69, 69, 69);
     --calendar-day-selected-bg: rgb(237, 237, 237);
     --calendar-day-selected-color: rgb(10, 10, 10);
+    --calendar-range-bg: rgb(41, 41, 41);
     --calendar-header-color: rgb(161, 161, 161);
     --calendar-today-bg: oklch(0.717 0.1648 250.794);
     --calendar-today-color: rgb(10, 10, 10);
@@ -1349,6 +1351,34 @@
   .calendar-day:focus-visible {
     outline: none;
     box-shadow: 0 0 0 2px var(--calendar-day-selected-bg);
+  }
+
+  /* Range selection styles on td */
+  .calendar-cell-in-range {
+    background-color: var(--calendar-range-bg);
+  }
+
+  .calendar-cell-first-in-range {
+    background-color: var(--calendar-range-bg);
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  .calendar-cell-last-in-range {
+    background-color: var(--calendar-range-bg);
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+  }
+
+  .calendar-cell-first-in-range.calendar-cell-last-in-range {
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
   }
 
   .layout-grid {
