@@ -973,18 +973,23 @@ export default function CalendarComponent() {
   const [endTimeInput, setEndTimeInput] = useState("11:59 PM");
 
   // Get display text for timezone
-  const getTimezoneDisplayText = (tz: TimezoneOption) => {
+  const getTimezoneDisplayText = useCallback((tz: TimezoneOption) => {
     return tz === "UTC" ? "UTC" : `Local (${getLocalTimezone()})`;
-  };
+  }, []);
 
   // Measure and update timezone select width
-  React.useEffect(() => {
+  const measureTimezoneWidth = useCallback(() => {
     if (timezoneTextRef.current) {
       const width = timezoneTextRef.current.offsetWidth;
-      // Add padding: 6px left + 22px right for chevron
-      setTimezoneWidth(width + 28);
+      // Add padding: 6px left + 22px right for chevron + 2px buffer
+      setTimezoneWidth(width + 30);
     }
-  }, [timezone]);
+  }, []);
+
+  // Use layout effect for synchronous measurement before paint
+  React.useLayoutEffect(() => {
+    measureTimezoneWidth();
+  }, [timezone, measureTimezoneWidth]);
 
   // Sync input values when date range changes
   React.useEffect(() => {
