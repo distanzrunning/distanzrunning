@@ -1378,22 +1378,22 @@
 
   .calendar-cell-first-in-range {
     background: linear-gradient(
-      to left,
-      var(--calendar-range-bg) 50%,
-      transparent 50%
+      to right,
+      transparent 50%,
+      var(--calendar-range-bg) 50%
     );
-    border-top-left-radius: var(--calendar-day-radius);
-    border-bottom-left-radius: var(--calendar-day-radius);
+    border-top-right-radius: var(--calendar-day-radius);
+    border-bottom-right-radius: var(--calendar-day-radius);
   }
 
   .calendar-cell-last-in-range {
     background: linear-gradient(
-      to right,
-      var(--calendar-range-bg) 50%,
-      transparent 50%
+      to left,
+      transparent 50%,
+      var(--calendar-range-bg) 50%
     );
-    border-top-right-radius: var(--calendar-day-radius);
-    border-bottom-right-radius: var(--calendar-day-radius);
+    border-top-left-radius: var(--calendar-day-radius);
+    border-bottom-left-radius: var(--calendar-day-radius);
   }
 
   .calendar-cell-first-in-range.calendar-cell-last-in-range {
@@ -1417,22 +1417,22 @@
 
   .calendar-cell-preview-start {
     background: linear-gradient(
-      to left,
-      var(--calendar-range-bg) 50%,
-      transparent 50%
+      to right,
+      transparent 50%,
+      var(--calendar-range-bg) 50%
     );
-    border-top-left-radius: var(--calendar-day-radius);
-    border-bottom-left-radius: var(--calendar-day-radius);
+    border-top-right-radius: var(--calendar-day-radius);
+    border-bottom-right-radius: var(--calendar-day-radius);
   }
 
   .calendar-cell-preview-end {
     background: linear-gradient(
-      to right,
-      var(--calendar-range-bg) 50%,
-      transparent 50%
+      to left,
+      transparent 50%,
+      var(--calendar-range-bg) 50%
     );
-    border-top-right-radius: var(--calendar-day-radius);
-    border-bottom-right-radius: var(--calendar-day-radius);
+    border-top-left-radius: var(--calendar-day-radius);
+    border-bottom-left-radius: var(--calendar-day-radius);
   }
 
   /* Hover preview day style (the hovered cell during range selection) */
