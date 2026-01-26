@@ -1364,6 +1364,8 @@
       var(--calendar-range-bg) 50%,
       transparent 50%
     );
+    border-top-left-radius: 50%;
+    border-bottom-left-radius: 50%;
   }
 
   .calendar-cell-last-in-range {
@@ -1372,6 +1374,8 @@
       var(--calendar-range-bg) 50%,
       transparent 50%
     );
+    border-top-right-radius: 50%;
+    border-bottom-right-radius: 50%;
   }
 
   .calendar-cell-first-in-range.calendar-cell-last-in-range {
@@ -1389,6 +1393,8 @@
       var(--calendar-range-bg) 50%,
       transparent 50%
     );
+    border-top-left-radius: 50%;
+    border-bottom-left-radius: 50%;
   }
 
   .calendar-cell-preview-end {
@@ -1397,6 +1403,8 @@
       var(--calendar-range-bg) 50%,
       transparent 50%
     );
+    border-top-right-radius: 50%;
+    border-bottom-right-radius: 50%;
   }
 
   /* Hover preview day style (the hovered cell during range selection) */
