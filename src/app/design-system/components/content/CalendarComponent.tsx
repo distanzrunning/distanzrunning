@@ -999,8 +999,12 @@ export default function CalendarComponent() {
     "start",
   );
   const [timezone, setTimezone] = useState<TimezoneOption>("local");
-  // Initialize width - will be measured on mount (needs to fit longest timezone name)
-  const [timezoneWidth, setTimezoneWidth] = useState<number>(180);
+  // Calculate initial width based on local timezone name
+  const [timezoneWidth, setTimezoneWidth] = useState<number>(() => {
+    // Estimate width: ~7px per character + 32px padding (6 left + 22 right + 4 buffer)
+    const localText = `Local (${getLocalTimezone()})`;
+    return Math.ceil(localText.length * 7) + 32;
+  });
   const timezoneTextRef = useRef<HTMLSpanElement>(null);
   const [startDateInput, setStartDateInput] = useState("");
   const [endDateInput, setEndDateInput] = useState("");
