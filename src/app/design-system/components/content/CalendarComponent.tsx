@@ -965,10 +965,26 @@ export default function CalendarComponent() {
     minutes: 59,
   });
   const [timezone, setTimezone] = useState<TimezoneOption>("UTC");
+  const [timezoneWidth, setTimezoneWidth] = useState<number | null>(null);
+  const timezoneTextRef = useRef<HTMLSpanElement>(null);
   const [startDateInput, setStartDateInput] = useState("");
   const [endDateInput, setEndDateInput] = useState("");
   const [startTimeInput, setStartTimeInput] = useState("12:00 AM");
   const [endTimeInput, setEndTimeInput] = useState("11:59 PM");
+
+  // Get display text for timezone
+  const getTimezoneDisplayText = (tz: TimezoneOption) => {
+    return tz === "UTC" ? "UTC" : `Local (${getLocalTimezone()})`;
+  };
+
+  // Measure and update timezone select width
+  React.useEffect(() => {
+    if (timezoneTextRef.current) {
+      const width = timezoneTextRef.current.offsetWidth;
+      // Add padding: 6px left + 22px right for chevron
+      setTimezoneWidth(width + 28);
+    }
+  }, [timezone]);
 
   // Sync input values when date range changes
   React.useEffect(() => {
@@ -1261,6 +1277,14 @@ export default function CalendarComponent() {
 
                             {/* Timezone Selector */}
                             <div className="mt-2 flex justify-center">
+                              {/* Hidden element to measure text width */}
+                              <span
+                                ref={timezoneTextRef}
+                                className="calendar-select-measure"
+                                aria-hidden="true"
+                              >
+                                {getTimezoneDisplayText(timezone)}
+                              </span>
                               <label
                                 className="calendar-timezone-label"
                                 data-version="v1"
@@ -1271,6 +1295,11 @@ export default function CalendarComponent() {
                                     className="calendar-select"
                                     data-testid="calendar/select/timezone"
                                     value={timezone}
+                                    style={
+                                      timezoneWidth
+                                        ? { width: timezoneWidth }
+                                        : undefined
+                                    }
                                     onChange={(e) =>
                                       setTimezone(
                                         e.target.value as TimezoneOption,

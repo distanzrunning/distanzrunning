@@ -1580,6 +1580,16 @@
     display: inline-block;
   }
 
+  .calendar-select-measure {
+    position: absolute;
+    visibility: hidden;
+    height: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    font-size: 12px;
+    font-family: inherit;
+  }
+
   .calendar-select-container {
     position: relative;
     display: inline-flex;
