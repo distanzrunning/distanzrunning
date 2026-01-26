@@ -1359,26 +1359,23 @@
   }
 
   .calendar-cell-first-in-range {
-    background-color: var(--calendar-range-bg);
-    border-top-left-radius: 4px;
-    border-bottom-left-radius: 4px;
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
+    background: linear-gradient(
+      to left,
+      var(--calendar-range-bg) 50%,
+      transparent 50%
+    );
   }
 
   .calendar-cell-last-in-range {
-    background-color: var(--calendar-range-bg);
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-    border-top-right-radius: 6px;
-    border-bottom-right-radius: 6px;
+    background: linear-gradient(
+      to right,
+      var(--calendar-range-bg) 50%,
+      transparent 50%
+    );
   }
 
   .calendar-cell-first-in-range.calendar-cell-last-in-range {
-    border-top-left-radius: 4px;
-    border-bottom-left-radius: 4px;
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
+    background: transparent;
   }
 
   /* Hover preview range styles (when selecting end date) */
@@ -1387,19 +1384,19 @@
   }
 
   .calendar-cell-preview-start {
-    background-color: var(--calendar-range-bg);
-    border-top-left-radius: 4px;
-    border-bottom-left-radius: 4px;
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
+    background: linear-gradient(
+      to left,
+      var(--calendar-range-bg) 50%,
+      transparent 50%
+    );
   }
 
   .calendar-cell-preview-end {
-    background-color: var(--calendar-range-bg);
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-    border-top-right-radius: 6px;
-    border-bottom-right-radius: 6px;
+    background: linear-gradient(
+      to right,
+      var(--calendar-range-bg) 50%,
+      transparent 50%
+    );
   }
 
   /* Hover preview day style (the hovered cell during range selection) */
