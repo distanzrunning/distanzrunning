@@ -698,20 +698,24 @@ function CalendarContent({
                     // Determine td classes for range styling
                     let tdClasses = "calendar-cell";
 
-                    // Confirmed range classes (when both start and end are set)
-                    if (isStart && isEnd) {
-                      tdClasses +=
-                        " calendar-cell-first-in-range calendar-cell-last-in-range";
-                    } else if (isStart) {
-                      tdClasses += " calendar-cell-first-in-range";
-                    } else if (isEnd) {
-                      tdClasses += " calendar-cell-last-in-range";
-                    } else if (inRange) {
-                      tdClasses += " calendar-cell-in-range";
-                      // Add row boundary classes for rounding
-                      if (dayIndex === 0)
-                        tdClasses += " calendar-cell-row-start";
-                      if (dayIndex === 6) tdClasses += " calendar-cell-row-end";
+                    // Confirmed range classes (only when both start and end are set)
+                    const hasCompleteRange = dateRange.start && dateRange.end;
+                    if (hasCompleteRange) {
+                      if (isStart && isEnd) {
+                        tdClasses +=
+                          " calendar-cell-first-in-range calendar-cell-last-in-range";
+                      } else if (isStart) {
+                        tdClasses += " calendar-cell-first-in-range";
+                      } else if (isEnd) {
+                        tdClasses += " calendar-cell-last-in-range";
+                      } else if (inRange) {
+                        tdClasses += " calendar-cell-in-range";
+                        // Add row boundary classes for rounding
+                        if (dayIndex === 0)
+                          tdClasses += " calendar-cell-row-start";
+                        if (dayIndex === 6)
+                          tdClasses += " calendar-cell-row-end";
+                      }
                     }
 
                     // Preview range classes (when selecting end date)

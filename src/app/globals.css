@@ -1348,6 +1348,13 @@
     color: var(--calendar-day-selected-color);
   }
 
+  /* Today when selected - blue focus ring */
+  .calendar-day.calendar-day-today.calendar-day-selected {
+    background-color: var(--calendar-day-selected-bg);
+    color: var(--calendar-day-selected-color);
+    box-shadow: 0 0 0 2px var(--calendar-today-bg);
+  }
+
   .calendar-day:focus-visible {
     outline: none;
     box-shadow: 0 0 0 2px var(--calendar-day-selected-bg);
