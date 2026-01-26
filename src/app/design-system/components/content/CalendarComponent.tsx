@@ -719,7 +719,7 @@ function CalendarContent({
                     }
 
                     // Preview range classes (when selecting end date)
-                    if (previewStart && !isStart) {
+                    if (previewStart) {
                       tdClasses += " calendar-cell-preview-start";
                     } else if (previewEnd && !hoveredPreview) {
                       tdClasses += " calendar-cell-preview-end";
