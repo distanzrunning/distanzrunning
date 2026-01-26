@@ -965,7 +965,8 @@ export default function CalendarComponent() {
     minutes: 59,
   });
   const [timezone, setTimezone] = useState<TimezoneOption>("UTC");
-  const [timezoneWidth, setTimezoneWidth] = useState<number | null>(null);
+  // Initialize with approximate width for "UTC" (text ~21px + padding 30px)
+  const [timezoneWidth, setTimezoneWidth] = useState<number>(51);
   const timezoneTextRef = useRef<HTMLSpanElement>(null);
   const [startDateInput, setStartDateInput] = useState("");
   const [endDateInput, setEndDateInput] = useState("");
@@ -1300,11 +1301,7 @@ export default function CalendarComponent() {
                                     className="calendar-select"
                                     data-testid="calendar/select/timezone"
                                     value={timezone}
-                                    style={
-                                      timezoneWidth
-                                        ? { width: timezoneWidth }
-                                        : undefined
-                                    }
+                                    style={{ width: timezoneWidth }}
                                     onChange={(e) =>
                                       setTimezone(
                                         e.target.value as TimezoneOption,
