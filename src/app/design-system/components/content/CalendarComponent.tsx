@@ -482,6 +482,13 @@ interface DateRange {
   end: Date | null;
 }
 
+interface TimeValue {
+  hours: number;
+  minutes: number;
+}
+
+type TimezoneOption = "UTC" | "local";
+
 function isSameDay(date1: Date, date2: Date): boolean {
   return (
     date1.getDate() === date2.getDate() &&
@@ -493,6 +500,43 @@ function isSameDay(date1: Date, date2: Date): boolean {
 function isDateInRange(date: Date, start: Date, end: Date): boolean {
   const time = date.getTime();
   return time >= start.getTime() && time <= end.getTime();
+}
+
+function formatDateForInput(date: Date | null): string {
+  if (!date) return "";
+  const month = MONTH_NAMES[date.getMonth()].slice(0, 3);
+  const day = date.getDate();
+  const year = date.getFullYear();
+  return `${month} ${day.toString().padStart(2, "0")}, ${year}`;
+}
+
+function formatTimeForInput(date: Date | null): string {
+  if (!date) return "12:00 AM";
+  let hours = date.getHours();
+  const minutes = date.getMinutes();
+  const ampm = hours >= 12 ? "PM" : "AM";
+  hours = hours % 12;
+  hours = hours ? hours : 12;
+  return `${hours}:${minutes.toString().padStart(2, "0")} ${ampm}`;
+}
+
+function ChevronDownIcon() {
+  return (
+    <svg
+      height="16"
+      strokeLinejoin="round"
+      viewBox="0 0 16 16"
+      width="16"
+      style={{ color: "currentcolor" }}
+    >
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M14.0607 5.49999L13.5303 6.03032L8.7071 10.8535C8.31658 11.2441 7.68341 11.2441 7.29289 10.8535L2.46966 6.03032L1.93933 5.49999L2.99999 4.43933L3.53032 4.96966L7.99999 9.43933L12.4697 4.96966L13 4.43933L14.0607 5.49999Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
 }
 
 function CalendarContent({
@@ -714,6 +758,7 @@ function CalendarContent({
       <table
         className="calendar-table"
         role="grid"
+        aria-multiselectable="true"
         ref={tableRef}
         onKeyDown={handleKeyDown}
         data-testid="calendar/grid"
@@ -893,6 +938,14 @@ function CloseIcon() {
   );
 }
 
+function getLocalTimezone(): string {
+  try {
+    return Intl.DateTimeFormat().resolvedOptions().timeZone;
+  } catch {
+    return "Local";
+  }
+}
+
 export default function CalendarComponent() {
   const { toast, showToast, dismissToast } = useToast();
   const [isOpen, setIsOpen] = useState(false);
@@ -903,6 +956,36 @@ export default function CalendarComponent() {
   const [selectionState, setSelectionState] = useState<"start" | "end">(
     "start",
   );
+  const [startTime, setStartTime] = useState<TimeValue>({
+    hours: 0,
+    minutes: 0,
+  });
+  const [endTime, setEndTime] = useState<TimeValue>({
+    hours: 23,
+    minutes: 59,
+  });
+  const [timezone, setTimezone] = useState<TimezoneOption>("UTC");
+  const [startDateInput, setStartDateInput] = useState("");
+  const [endDateInput, setEndDateInput] = useState("");
+  const [startTimeInput, setStartTimeInput] = useState("12:00 AM");
+  const [endTimeInput, setEndTimeInput] = useState("11:59 PM");
+
+  // Sync input values when date range changes
+  React.useEffect(() => {
+    if (dateRange.start) {
+      setStartDateInput(formatDateForInput(dateRange.start));
+    } else {
+      setStartDateInput("");
+    }
+    if (dateRange.end) {
+      setEndDateInput(formatDateForInput(dateRange.end));
+    } else if (dateRange.start) {
+      // If only start is selected, show it in end too
+      setEndDateInput(formatDateForInput(dateRange.start));
+    } else {
+      setEndDateInput("");
+    }
+  }, [dateRange]);
 
   const handleDateSelect = (date: Date) => {
     if (selectionState === "start") {
@@ -921,10 +1004,22 @@ export default function CalendarComponent() {
     }
   };
 
+  const handleApply = () => {
+    // Apply the date range with times
+    if (dateRange.start && dateRange.end) {
+      setIsOpen(false);
+      showToast("Date range applied");
+    }
+  };
+
   const handleClearRange = (e: React.MouseEvent) => {
     e.stopPropagation();
     setDateRange({ start: null, end: null });
     setSelectionState("start");
+    setStartDateInput("");
+    setEndDateInput("");
+    setStartTimeInput("12:00 AM");
+    setEndTimeInput("11:59 PM");
   };
 
   const hasSelection = dateRange.start !== null;
@@ -1017,18 +1112,199 @@ export default function CalendarComponent() {
                     sideOffset={12}
                     align="start"
                     data-testid="calendar/popover"
+                    tabIndex={-1}
                     style={{
                       zIndex: 2001,
                       minWidth: "max-content",
-                      width: 280,
+                      width: 560,
+                    }}
+                    onKeyDown={(e) => {
+                      if (
+                        e.key === "Enter" &&
+                        dateRange.start &&
+                        dateRange.end
+                      ) {
+                        e.preventDefault();
+                        handleApply();
+                      }
                     }}
                   >
-                    <div className="calendar-content-wrapper">
-                      <CalendarContent
-                        dateRange={dateRange}
-                        onDateSelect={handleDateSelect}
-                        isSelectingEnd={selectionState === "end"}
-                      />
+                    {/* Screen reader only button for focus management */}
+                    <button type="button" className="sr-only">
+                      Calendar dialog
+                    </button>
+                    <div
+                      className="calendar-content-wrapper"
+                      style={{ display: "flex", gap: 0, width: "100%" }}
+                    >
+                      {/* Left side - Inputs */}
+                      <div
+                        className="calendar-inputs-wrapper"
+                        style={{
+                          padding: "12px",
+                          borderRight: "1px solid var(--ds-gray-400)",
+                          width: 200,
+                        }}
+                      >
+                        <div className="space-y-2">
+                          {/* Start Date/Time */}
+                          <div>
+                            <div className="mb-1 flex items-center justify-between">
+                              <label data-version="v1">
+                                <div className="calendar-input-label">
+                                  Start
+                                </div>
+                              </label>
+                            </div>
+                            <div className="flex gap-2">
+                              <div className="calendar-input-container flex-1">
+                                <input
+                                  aria-labelledby="start-date"
+                                  placeholder="Jan 01, 2025"
+                                  aria-invalid="false"
+                                  autoCapitalize="none"
+                                  autoComplete="off"
+                                  autoCorrect="off"
+                                  className="calendar-input"
+                                  data-testid="calendar/input/start-date"
+                                  spellCheck="false"
+                                  type="text"
+                                  value={startDateInput}
+                                  onChange={(e) =>
+                                    setStartDateInput(e.target.value)
+                                  }
+                                />
+                              </div>
+                              <div
+                                className="calendar-input-container"
+                                style={{ width: 80 }}
+                              >
+                                <input
+                                  aria-labelledby="time"
+                                  placeholder="12:00 AM"
+                                  aria-invalid="false"
+                                  autoCapitalize="none"
+                                  autoComplete="off"
+                                  autoCorrect="off"
+                                  className="calendar-input"
+                                  data-testid="calendar/input/start-time"
+                                  spellCheck="false"
+                                  type="text"
+                                  value={startTimeInput}
+                                  onChange={(e) =>
+                                    setStartTimeInput(e.target.value)
+                                  }
+                                />
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* End Date/Time */}
+                          <div>
+                            <div className="mb-1 flex items-center justify-between">
+                              <label data-version="v1">
+                                <div className="calendar-input-label">End</div>
+                              </label>
+                            </div>
+                            <div className="flex gap-2">
+                              <div className="calendar-input-container flex-1">
+                                <input
+                                  aria-labelledby="end-date"
+                                  placeholder="Jan 01, 2025"
+                                  aria-invalid="false"
+                                  autoCapitalize="none"
+                                  autoComplete="off"
+                                  autoCorrect="off"
+                                  className="calendar-input"
+                                  data-testid="calendar/input/end-date"
+                                  spellCheck="false"
+                                  type="text"
+                                  value={endDateInput}
+                                  onChange={(e) =>
+                                    setEndDateInput(e.target.value)
+                                  }
+                                />
+                              </div>
+                              <div
+                                className="calendar-input-container"
+                                style={{ width: 80 }}
+                              >
+                                <input
+                                  aria-labelledby="time"
+                                  placeholder="11:59 PM"
+                                  aria-invalid="false"
+                                  autoCapitalize="none"
+                                  autoComplete="off"
+                                  autoCorrect="off"
+                                  className="calendar-input"
+                                  data-testid="calendar/input/end-time"
+                                  spellCheck="false"
+                                  type="text"
+                                  value={endTimeInput}
+                                  onChange={(e) =>
+                                    setEndTimeInput(e.target.value)
+                                  }
+                                />
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Apply Button */}
+                          <div>
+                            <button
+                              type="button"
+                              onClick={handleApply}
+                              disabled={!dateRange.start || !dateRange.end}
+                              className="calendar-apply-button"
+                              data-testid="calendar/button/apply"
+                            >
+                              <span className="calendar-apply-button-content">
+                                Apply
+                                <span className="calendar-apply-hint">↵</span>
+                              </span>
+                            </button>
+                          </div>
+
+                          {/* Timezone Selector */}
+                          <div className="mt-1 flex justify-center">
+                            <label
+                              className="calendar-timezone-label"
+                              data-version="v1"
+                            >
+                              <div className="calendar-select-container">
+                                <select
+                                  aria-invalid="false"
+                                  className="calendar-select"
+                                  data-testid="calendar/select/timezone"
+                                  value={timezone}
+                                  onChange={(e) =>
+                                    setTimezone(
+                                      e.target.value as TimezoneOption,
+                                    )
+                                  }
+                                >
+                                  <option value="UTC">UTC</option>
+                                  <option value="local">
+                                    Local ({getLocalTimezone()})
+                                  </option>
+                                </select>
+                                <span className="calendar-select-suffix">
+                                  <ChevronDownIcon />
+                                </span>
+                              </div>
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Right side - Calendar */}
+                      <div style={{ padding: "12px", flex: 1 }}>
+                        <CalendarContent
+                          dateRange={dateRange}
+                          onDateSelect={handleDateSelect}
+                          isSelectingEnd={selectionState === "end"}
+                        />
+                      </div>
                     </div>
                   </Popover.Content>
                 </Popover.Portal>
