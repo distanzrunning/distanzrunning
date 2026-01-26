@@ -946,32 +946,67 @@ function getLocalTimezone(): string {
   }
 }
 
+// Helper to get default date range (1 month ago to today)
+function getDefaultDateRange(): DateRange {
+  const today = new Date();
+  const oneMonthAgo = new Date(today);
+  oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+  return { start: oneMonthAgo, end: today };
+}
+
+// Format time for display based on timezone
+function formatTimeForTimezone(
+  date: Date,
+  tz: TimezoneOption,
+  isEndTime: boolean = false,
+): string {
+  if (tz === "UTC") {
+    // For UTC, use midnight start (00:00) and end of day (23:59)
+    const hours = isEndTime ? 23 : 0;
+    const minutes = isEndTime ? 59 : 0;
+    const period = hours >= 12 ? "PM" : "AM";
+    const displayHours = hours % 12 || 12;
+    return `${displayHours}:${minutes.toString().padStart(2, "0")} ${period}`;
+  } else {
+    // For local timezone, use current local time
+    const now = new Date();
+    let hours = now.getHours();
+    let minutes = now.getMinutes();
+
+    if (isEndTime) {
+      // End time is current time minus 1 minute (or 23:59 if showing end of day)
+      minutes = 59;
+      hours = hours === 0 ? 23 : hours - 1;
+    } else {
+      // Start time is current hour, 0 minutes
+      minutes = 0;
+    }
+
+    const period = hours >= 12 ? "PM" : "AM";
+    const displayHours = hours % 12 || 12;
+    return `${displayHours}:${minutes.toString().padStart(2, "0")} ${period}`;
+  }
+}
+
 export default function CalendarComponent() {
   const { toast, showToast, dismissToast } = useToast();
   const [isOpen, setIsOpen] = useState(false);
-  const [dateRange, setDateRange] = useState<DateRange>({
-    start: null,
-    end: null,
-  });
+  const [dateRange, setDateRange] = useState<DateRange>(getDefaultDateRange);
   const [selectionState, setSelectionState] = useState<"start" | "end">(
     "start",
   );
-  const [startTime, setStartTime] = useState<TimeValue>({
-    hours: 0,
-    minutes: 0,
-  });
-  const [endTime, setEndTime] = useState<TimeValue>({
-    hours: 23,
-    minutes: 59,
-  });
   const [timezone, setTimezone] = useState<TimezoneOption>("UTC");
   // Initialize with approximate width for "UTC" (text ~24px + padding 30px)
   const [timezoneWidth, setTimezoneWidth] = useState<number>(54);
   const timezoneTextRef = useRef<HTMLSpanElement>(null);
   const [startDateInput, setStartDateInput] = useState("");
   const [endDateInput, setEndDateInput] = useState("");
-  const [startTimeInput, setStartTimeInput] = useState("12:00 AM");
-  const [endTimeInput, setEndTimeInput] = useState("11:59 PM");
+  const [startTimeInput, setStartTimeInput] = useState(() =>
+    formatTimeForTimezone(new Date(), "UTC", false),
+  );
+  const [endTimeInput, setEndTimeInput] = useState(() =>
+    formatTimeForTimezone(new Date(), "UTC", true),
+  );
 
   // Get display text for timezone
   const getTimezoneDisplayText = useCallback((tz: TimezoneOption) => {
@@ -982,8 +1017,8 @@ export default function CalendarComponent() {
   const measureTimezoneWidth = useCallback(() => {
     if (timezoneTextRef.current) {
       const width = timezoneTextRef.current.offsetWidth;
-      // Add padding: 6px left + 22px right for chevron + 2px buffer
-      setTimezoneWidth(width + 30);
+      // Add padding: 6px left + 22px right for chevron + 4px buffer
+      setTimezoneWidth(width + 32);
     }
   }, []);
 
@@ -991,6 +1026,12 @@ export default function CalendarComponent() {
   React.useLayoutEffect(() => {
     measureTimezoneWidth();
   }, [timezone, measureTimezoneWidth]);
+
+  // Update time inputs when timezone changes
+  React.useEffect(() => {
+    setStartTimeInput(formatTimeForTimezone(new Date(), timezone, false));
+    setEndTimeInput(formatTimeForTimezone(new Date(), timezone, true));
+  }, [timezone]);
 
   // Sync input values when date range changes
   React.useEffect(() => {
@@ -1040,8 +1081,8 @@ export default function CalendarComponent() {
     setSelectionState("start");
     setStartDateInput("");
     setEndDateInput("");
-    setStartTimeInput("12:00 AM");
-    setEndTimeInput("11:59 PM");
+    setStartTimeInput(formatTimeForTimezone(new Date(), timezone, false));
+    setEndTimeInput(formatTimeForTimezone(new Date(), timezone, true));
   };
 
   const hasSelection = dateRange.start !== null;
