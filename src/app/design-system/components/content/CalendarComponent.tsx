@@ -1260,7 +1260,7 @@ export default function CalendarComponent() {
                             </div>
 
                             {/* Timezone Selector */}
-                            <div className="mt-2 flex justify-center pl-4">
+                            <div className="mt-2 flex justify-center">
                               <label
                                 className="calendar-timezone-label"
                                 data-version="v1"
