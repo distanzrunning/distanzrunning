@@ -1214,9 +1214,13 @@
   }
 
   .calendar-inputs-wrapper {
-    border-top: 1px solid var(--ds-gray-200);
+    border-top: 1px solid rgb(242, 242, 242);
     margin: 12px -12px 0;
     padding: 10px 12px 0;
+  }
+
+  :is(.dark, [data-theme="dark"]) .calendar-inputs-wrapper {
+    border-top-color: rgb(26, 26, 26);
   }
 
   .calendar-month-label {
@@ -1475,38 +1479,59 @@
 
   /* Calendar input styles */
   .calendar-input-label {
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 500;
-    line-height: 16px;
-    color: var(--calendar-day-color);
+    line-height: 17px;
+    color: var(--calendar-header-color);
     text-transform: capitalize;
     margin-bottom: 0;
+    max-width: 100%;
   }
 
   .calendar-input-container {
     display: flex;
     align-items: center;
     height: 32px;
-    background: var(--ds-background-100);
-    border: 1px solid var(--ds-gray-400);
+    max-width: 100%;
     border-radius: 6px;
-    padding: 0 8px;
-    transition: border-color 0.15s ease;
+    box-shadow: rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+    transition: box-shadow 0.15s ease;
+  }
+
+  :is(.dark, [data-theme="dark"]) .calendar-input-container {
+    box-shadow: rgba(255, 255, 255, 0.14) 0px 0px 0px 1px;
   }
 
   .calendar-input-container:focus-within {
-    border-color: var(--ds-gray-600);
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 0px 0px 1px;
+  }
+
+  :is(.dark, [data-theme="dark"]) .calendar-input-container:focus-within {
+    box-shadow: rgba(255, 255, 255, 0.36) 0px 0px 0px 1px;
   }
 
   .calendar-input {
     width: 100%;
-    height: 100%;
+    height: 32px;
+    min-width: 0;
     border: none;
-    background: transparent;
+    border-radius: 6px;
+    background-color: rgb(255, 255, 255);
+    padding: 0 12px;
     font-size: 14px;
-    line-height: 20px;
-    color: var(--calendar-day-color);
+    line-height: normal;
+    color: rgb(0, 0, 0);
     outline: none;
+    order: 1;
+    appearance: none;
+    transition:
+      border-color 0.15s ease,
+      box-shadow 0.15s ease;
+  }
+
+  :is(.dark, [data-theme="dark"]) .calendar-input {
+    background-color: rgb(10, 10, 10);
+    color: rgb(255, 255, 255);
   }
 
   .calendar-input::placeholder {
@@ -1564,15 +1589,29 @@
 
   .calendar-select {
     appearance: none;
+    display: block;
     width: 100%;
-    height: 28px;
-    padding: 0 24px 0 8px;
-    background: transparent;
+    height: 24px;
+    padding: 0 22px 0 6px;
+    background-color: rgb(255, 255, 255);
     border: none;
+    border-radius: 4px;
+    box-shadow: rgba(0, 0, 0, 0) 0px 0px 0px 1px;
     font-size: 12px;
-    color: var(--calendar-day-color);
+    line-height: 20px;
+    color: rgb(125, 125, 125);
     cursor: pointer;
     outline: none;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    transition:
+      box-shadow 0.2s ease,
+      color 0.2s ease;
+  }
+
+  :is(.dark, [data-theme="dark"]) .calendar-select {
+    background-color: rgb(10, 10, 10);
+    color: rgb(125, 125, 125);
   }
 
   .calendar-select:focus {
@@ -1581,11 +1620,24 @@
 
   .calendar-select-suffix {
     position: absolute;
-    right: 4px;
+    right: 5px;
     top: 50%;
     transform: translateY(-50%);
+    display: flex;
+    width: 16px;
+    height: 12px;
     pointer-events: none;
-    color: var(--calendar-day-outside-color);
+    color: var(--calendar-header-color);
+    transition: color 0.15s ease;
+  }
+
+  .calendar-select-suffix svg {
+    display: block;
+    width: 16px;
+    height: 12px;
+    min-width: 16px;
+    overflow: hidden;
+    shape-rendering: crispedges;
   }
 
   .layout-grid {
