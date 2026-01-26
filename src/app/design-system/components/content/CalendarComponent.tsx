@@ -965,8 +965,8 @@ export default function CalendarComponent() {
     minutes: 59,
   });
   const [timezone, setTimezone] = useState<TimezoneOption>("UTC");
-  // Initialize with approximate width for "UTC" (text ~21px + padding 30px)
-  const [timezoneWidth, setTimezoneWidth] = useState<number>(51);
+  // Initialize with approximate width for "UTC" (text ~24px + padding 30px)
+  const [timezoneWidth, setTimezoneWidth] = useState<number>(54);
   const timezoneTextRef = useRef<HTMLSpanElement>(null);
   const [startDateInput, setStartDateInput] = useState("");
   const [endDateInput, setEndDateInput] = useState("");
