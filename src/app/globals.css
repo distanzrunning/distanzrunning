@@ -1604,6 +1604,7 @@
     outline: none;
     text-overflow: ellipsis;
     white-space: nowrap;
+    text-align: center;
     transition:
       box-shadow 0.2s ease,
       color 0.2s ease;
@@ -1612,6 +1613,14 @@
   :is(.dark, [data-theme="dark"]) .calendar-select {
     background-color: rgb(10, 10, 10);
     color: rgb(125, 125, 125);
+  }
+
+  .calendar-select:hover {
+    box-shadow: rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+  }
+
+  :is(.dark, [data-theme="dark"]) .calendar-select:hover {
+    box-shadow: rgba(255, 255, 255, 0.14) 0px 0px 0px 1px;
   }
 
   .calendar-select:focus {
