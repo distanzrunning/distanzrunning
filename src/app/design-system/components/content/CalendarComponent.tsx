@@ -946,46 +946,45 @@ function getLocalTimezone(): string {
   }
 }
 
-// Helper to get default date range (1 month ago to today)
+// Helper to get default date range (today to today)
 function getDefaultDateRange(): DateRange {
   const today = new Date();
-  const oneMonthAgo = new Date(today);
-  oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
-  return { start: oneMonthAgo, end: today };
+  return { start: today, end: today };
+}
+
+// Get the local timezone offset in hours
+function getTimezoneOffsetHours(): number {
+  return new Date().getTimezoneOffset() / -60;
 }
 
 // Format time for display based on timezone
+// Local time is always 12:00 AM to 11:59 PM (full day)
+// UTC shows the converted time based on local timezone offset
 function formatTimeForTimezone(
-  date: Date,
   tz: TimezoneOption,
   isEndTime: boolean = false,
 ): string {
+  // Base times in local: 00:00 (midnight) for start, 23:59 for end
+  let hours = isEndTime ? 23 : 0;
+  let minutes = isEndTime ? 59 : 0;
+
   if (tz === "UTC") {
-    // For UTC, use midnight start (00:00) and end of day (23:59)
-    const hours = isEndTime ? 23 : 0;
-    const minutes = isEndTime ? 59 : 0;
-    const period = hours >= 12 ? "PM" : "AM";
-    const displayHours = hours % 12 || 12;
-    return `${displayHours}:${minutes.toString().padStart(2, "0")} ${period}`;
-  } else {
-    // For local timezone, use current local time
-    const now = new Date();
-    let hours = now.getHours();
-    let minutes = now.getMinutes();
+    // Convert local time to UTC by subtracting the offset
+    // e.g., Brussels is UTC+1, so local 00:00 = UTC 23:00 (previous day)
+    const offsetHours = getTimezoneOffsetHours();
+    hours = hours - offsetHours;
 
-    if (isEndTime) {
-      // End time is current time minus 1 minute (or 23:59 if showing end of day)
-      minutes = 59;
-      hours = hours === 0 ? 23 : hours - 1;
-    } else {
-      // Start time is current hour, 0 minutes
-      minutes = 0;
+    // Handle wraparound
+    if (hours < 0) {
+      hours += 24;
+    } else if (hours >= 24) {
+      hours -= 24;
     }
-
-    const period = hours >= 12 ? "PM" : "AM";
-    const displayHours = hours % 12 || 12;
-    return `${displayHours}:${minutes.toString().padStart(2, "0")} ${period}`;
   }
+
+  const period = hours >= 12 ? "PM" : "AM";
+  const displayHours = hours % 12 || 12;
+  return `${displayHours}:${minutes.toString().padStart(2, "0")} ${period}`;
 }
 
 export default function CalendarComponent() {
@@ -995,17 +994,17 @@ export default function CalendarComponent() {
   const [selectionState, setSelectionState] = useState<"start" | "end">(
     "start",
   );
-  const [timezone, setTimezone] = useState<TimezoneOption>("UTC");
-  // Initialize with approximate width for "UTC" (text ~24px + padding 30px)
-  const [timezoneWidth, setTimezoneWidth] = useState<number>(54);
+  const [timezone, setTimezone] = useState<TimezoneOption>("local");
+  // Initialize width - will be measured on mount
+  const [timezoneWidth, setTimezoneWidth] = useState<number>(140);
   const timezoneTextRef = useRef<HTMLSpanElement>(null);
   const [startDateInput, setStartDateInput] = useState("");
   const [endDateInput, setEndDateInput] = useState("");
   const [startTimeInput, setStartTimeInput] = useState(() =>
-    formatTimeForTimezone(new Date(), "UTC", false),
+    formatTimeForTimezone("local", false),
   );
   const [endTimeInput, setEndTimeInput] = useState(() =>
-    formatTimeForTimezone(new Date(), "UTC", true),
+    formatTimeForTimezone("local", true),
   );
 
   // Get display text for timezone
@@ -1029,8 +1028,8 @@ export default function CalendarComponent() {
 
   // Update time inputs when timezone changes
   React.useEffect(() => {
-    setStartTimeInput(formatTimeForTimezone(new Date(), timezone, false));
-    setEndTimeInput(formatTimeForTimezone(new Date(), timezone, true));
+    setStartTimeInput(formatTimeForTimezone(timezone, false));
+    setEndTimeInput(formatTimeForTimezone(timezone, true));
   }, [timezone]);
 
   // Sync input values when date range changes
@@ -1081,8 +1080,8 @@ export default function CalendarComponent() {
     setSelectionState("start");
     setStartDateInput("");
     setEndDateInput("");
-    setStartTimeInput(formatTimeForTimezone(new Date(), timezone, false));
-    setEndTimeInput(formatTimeForTimezone(new Date(), timezone, true));
+    setStartTimeInput(formatTimeForTimezone(timezone, false));
+    setEndTimeInput(formatTimeForTimezone(timezone, true));
   };
 
   const hasSelection = dateRange.start !== null;
