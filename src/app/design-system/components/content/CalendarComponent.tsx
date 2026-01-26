@@ -999,8 +999,8 @@ export default function CalendarComponent() {
     "start",
   );
   const [timezone, setTimezone] = useState<TimezoneOption>("local");
-  // Initialize width - will be measured on mount
-  const [timezoneWidth, setTimezoneWidth] = useState<number>(140);
+  // Initialize width - will be measured on mount (needs to fit longest timezone name)
+  const [timezoneWidth, setTimezoneWidth] = useState<number>(180);
   const timezoneTextRef = useRef<HTMLSpanElement>(null);
   const [startDateInput, setStartDateInput] = useState("");
   const [endDateInput, setEndDateInput] = useState("");
