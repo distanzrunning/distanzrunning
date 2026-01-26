@@ -1360,13 +1360,13 @@
 
   /* Row start/end rounding for multi-row ranges */
   .calendar-cell-in-range.calendar-cell-row-start {
-    border-top-left-radius: 50%;
-    border-bottom-left-radius: 50%;
+    border-top-left-radius: var(--calendar-day-radius);
+    border-bottom-left-radius: var(--calendar-day-radius);
   }
 
   .calendar-cell-in-range.calendar-cell-row-end {
-    border-top-right-radius: 50%;
-    border-bottom-right-radius: 50%;
+    border-top-right-radius: var(--calendar-day-radius);
+    border-bottom-right-radius: var(--calendar-day-radius);
   }
 
   .calendar-cell-first-in-range {
@@ -1375,8 +1375,8 @@
       var(--calendar-range-bg) 50%,
       transparent 50%
     );
-    border-top-left-radius: 50%;
-    border-bottom-left-radius: 50%;
+    border-top-left-radius: var(--calendar-day-radius);
+    border-bottom-left-radius: var(--calendar-day-radius);
   }
 
   .calendar-cell-last-in-range {
@@ -1385,8 +1385,8 @@
       var(--calendar-range-bg) 50%,
       transparent 50%
     );
-    border-top-right-radius: 50%;
-    border-bottom-right-radius: 50%;
+    border-top-right-radius: var(--calendar-day-radius);
+    border-bottom-right-radius: var(--calendar-day-radius);
   }
 
   .calendar-cell-first-in-range.calendar-cell-last-in-range {
@@ -1399,13 +1399,13 @@
   }
 
   .calendar-cell-in-preview-range.calendar-cell-row-start {
-    border-top-left-radius: 50%;
-    border-bottom-left-radius: 50%;
+    border-top-left-radius: var(--calendar-day-radius);
+    border-bottom-left-radius: var(--calendar-day-radius);
   }
 
   .calendar-cell-in-preview-range.calendar-cell-row-end {
-    border-top-right-radius: 50%;
-    border-bottom-right-radius: 50%;
+    border-top-right-radius: var(--calendar-day-radius);
+    border-bottom-right-radius: var(--calendar-day-radius);
   }
 
   .calendar-cell-preview-start {
@@ -1414,8 +1414,8 @@
       var(--calendar-range-bg) 50%,
       transparent 50%
     );
-    border-top-left-radius: 50%;
-    border-bottom-left-radius: 50%;
+    border-top-left-radius: var(--calendar-day-radius);
+    border-bottom-left-radius: var(--calendar-day-radius);
   }
 
   .calendar-cell-preview-end {
@@ -1424,8 +1424,8 @@
       var(--calendar-range-bg) 50%,
       transparent 50%
     );
-    border-top-right-radius: 50%;
-    border-bottom-right-radius: 50%;
+    border-top-right-radius: var(--calendar-day-radius);
+    border-bottom-right-radius: var(--calendar-day-radius);
   }
 
   /* Hover preview day style (the hovered cell during range selection) */
