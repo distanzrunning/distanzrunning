@@ -746,7 +746,7 @@ function CalendarContent({
                             calendar-day
                             ${!day.isCurrentMonth ? "calendar-day-outside" : ""}
                             ${day.isWeekend && !day.isToday && !selected && !hoveredPreview ? "calendar-day-weekend" : ""}
-                            ${day.isToday && !selected && !hoveredPreview ? "calendar-day-today" : ""}
+                            ${day.isToday && !selected ? "calendar-day-today" : ""}
                             ${selected ? "calendar-day-selected" : ""}
                             ${hoveredPreview ? "calendar-day-hover-preview" : ""}
                           `}
