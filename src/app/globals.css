@@ -1358,6 +1358,17 @@
     background-color: var(--calendar-range-bg);
   }
 
+  /* Row start/end rounding for multi-row ranges */
+  .calendar-cell-in-range.calendar-cell-row-start {
+    border-top-left-radius: 50%;
+    border-bottom-left-radius: 50%;
+  }
+
+  .calendar-cell-in-range.calendar-cell-row-end {
+    border-top-right-radius: 50%;
+    border-bottom-right-radius: 50%;
+  }
+
   .calendar-cell-first-in-range {
     background: linear-gradient(
       to left,
@@ -1385,6 +1396,16 @@
   /* Hover preview range styles (when selecting end date) */
   .calendar-cell-in-preview-range {
     background-color: var(--calendar-range-bg);
+  }
+
+  .calendar-cell-in-preview-range.calendar-cell-row-start {
+    border-top-left-radius: 50%;
+    border-bottom-left-radius: 50%;
+  }
+
+  .calendar-cell-in-preview-range.calendar-cell-row-end {
+    border-top-right-radius: 50%;
+    border-bottom-right-radius: 50%;
   }
 
   .calendar-cell-preview-start {

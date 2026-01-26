@@ -708,6 +708,10 @@ function CalendarContent({
                       tdClasses += " calendar-cell-last-in-range";
                     } else if (inRange) {
                       tdClasses += " calendar-cell-in-range";
+                      // Add row boundary classes for rounding
+                      if (dayIndex === 0)
+                        tdClasses += " calendar-cell-row-start";
+                      if (dayIndex === 6) tdClasses += " calendar-cell-row-end";
                     }
 
                     // Preview range classes (when selecting end date)
@@ -717,6 +721,10 @@ function CalendarContent({
                       tdClasses += " calendar-cell-preview-end";
                     } else if (inPreviewRange) {
                       tdClasses += " calendar-cell-in-preview-range";
+                      // Add row boundary classes for rounding
+                      if (dayIndex === 0)
+                        tdClasses += " calendar-cell-row-start";
+                      if (dayIndex === 6) tdClasses += " calendar-cell-row-end";
                     }
 
                     return (
