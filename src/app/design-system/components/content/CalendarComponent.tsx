@@ -990,7 +990,11 @@ function formatTimeForTimezone(
 export default function CalendarComponent() {
   const { toast, showToast, dismissToast } = useToast();
   const [isOpen, setIsOpen] = useState(false);
-  const [dateRange, setDateRange] = useState<DateRange>(getDefaultDateRange);
+  // No dates selected by default - inputs show today as placeholder
+  const [dateRange, setDateRange] = useState<DateRange>({
+    start: null,
+    end: null,
+  });
   const [selectionState, setSelectionState] = useState<"start" | "end">(
     "start",
   );
@@ -1033,11 +1037,13 @@ export default function CalendarComponent() {
   }, [timezone]);
 
   // Sync input values when date range changes
+  // Show today's date as default when no selection
   React.useEffect(() => {
+    const today = new Date();
     if (dateRange.start) {
       setStartDateInput(formatDateForInput(dateRange.start));
     } else {
-      setStartDateInput("");
+      setStartDateInput(formatDateForInput(today));
     }
     if (dateRange.end) {
       setEndDateInput(formatDateForInput(dateRange.end));
@@ -1045,7 +1051,7 @@ export default function CalendarComponent() {
       // If only start is selected, show it in end too
       setEndDateInput(formatDateForInput(dateRange.start));
     } else {
-      setEndDateInput("");
+      setEndDateInput(formatDateForInput(today));
     }
   }, [dateRange]);
 
@@ -1078,8 +1084,10 @@ export default function CalendarComponent() {
     e.stopPropagation();
     setDateRange({ start: null, end: null });
     setSelectionState("start");
-    setStartDateInput("");
-    setEndDateInput("");
+    // Reset to today's date as default
+    const today = new Date();
+    setStartDateInput(formatDateForInput(today));
+    setEndDateInput(formatDateForInput(today));
     setStartTimeInput(formatTimeForTimezone(timezone, false));
     setEndTimeInput(formatTimeForTimezone(timezone, true));
   };
