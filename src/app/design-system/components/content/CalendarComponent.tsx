@@ -999,12 +999,8 @@ export default function CalendarComponent() {
     "start",
   );
   const [timezone, setTimezone] = useState<TimezoneOption>("local");
-  // Calculate initial width based on local timezone name
-  const [timezoneWidth, setTimezoneWidth] = useState<number>(() => {
-    // Estimate width: ~7px per character + 32px padding (6 left + 22 right + 4 buffer)
-    const localText = `Local (${getLocalTimezone()})`;
-    return Math.ceil(localText.length * 7) + 32;
-  });
+  // Width starts as null until measured
+  const [timezoneWidth, setTimezoneWidth] = useState<number | null>(null);
   const timezoneTextRef = useRef<HTMLSpanElement>(null);
   const [startDateInput, setStartDateInput] = useState("");
   const [endDateInput, setEndDateInput] = useState("");
@@ -1105,6 +1101,15 @@ export default function CalendarComponent() {
         isVisible={toast.isVisible}
         onDismiss={dismissToast}
       />
+
+      {/* Hidden element to measure timezone text width - rendered outside popover for immediate measurement */}
+      <span
+        ref={timezoneTextRef}
+        className="calendar-select-measure"
+        aria-hidden="true"
+      >
+        {getTimezoneDisplayText(timezone)}
+      </span>
 
       {/* Default Section */}
       <Section>
@@ -1335,14 +1340,6 @@ export default function CalendarComponent() {
 
                             {/* Timezone Selector */}
                             <div className="mt-2 flex justify-center">
-                              {/* Hidden element to measure text width */}
-                              <span
-                                ref={timezoneTextRef}
-                                className="calendar-select-measure"
-                                aria-hidden="true"
-                              >
-                                {getTimezoneDisplayText(timezone)}
-                              </span>
                               <label
                                 className="calendar-timezone-label"
                                 data-version="v1"
@@ -1353,7 +1350,7 @@ export default function CalendarComponent() {
                                     className="calendar-select"
                                     data-testid="calendar/select/timezone"
                                     value={timezone}
-                                    style={{ width: timezoneWidth }}
+                                    style={{ width: timezoneWidth ?? "auto" }}
                                     onChange={(e) =>
                                       setTimezone(
                                         e.target.value as TimezoneOption,
