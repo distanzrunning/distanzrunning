@@ -498,13 +498,16 @@ function isDateInRange(date: Date, start: Date, end: Date): boolean {
 function CalendarContent({
   dateRange,
   onDateSelect,
+  isSelectingEnd,
 }: {
   dateRange: DateRange;
   onDateSelect: (date: Date) => void;
+  isSelectingEnd: boolean;
 }) {
   const today = new Date();
   const [currentMonth, setCurrentMonth] = useState(today.getMonth());
   const [currentYear, setCurrentYear] = useState(today.getFullYear());
+  const [hoveredDate, setHoveredDate] = useState<Date | null>(null);
 
   const days = getCalendarDays(currentYear, currentMonth);
 
@@ -525,6 +528,46 @@ function CalendarContent({
 
   const isSelected = (day: { fullDate: Date }) => {
     return isStartDate(day) || isEndDate(day);
+  };
+
+  // Preview range logic (when selecting end date and hovering)
+  const isInPreviewRange = (day: { fullDate: Date }) => {
+    if (!isSelectingEnd || !dateRange.start || !hoveredDate) return false;
+    if (isSameDay(day.fullDate, dateRange.start)) return false;
+    if (isSameDay(day.fullDate, hoveredDate)) return false;
+
+    // Determine the actual range based on hover position
+    const start = dateRange.start;
+    const end = hoveredDate;
+    if (end < start) {
+      return isDateInRange(day.fullDate, end, start);
+    }
+    return isDateInRange(day.fullDate, start, end);
+  };
+
+  const isPreviewStart = (day: { fullDate: Date }) => {
+    if (!isSelectingEnd || !dateRange.start || !hoveredDate) return false;
+    if (isSameDay(dateRange.start, hoveredDate)) return false;
+    // The preview start is the earlier of the two dates
+    if (hoveredDate < dateRange.start) {
+      return isSameDay(day.fullDate, hoveredDate);
+    }
+    return isSameDay(day.fullDate, dateRange.start);
+  };
+
+  const isPreviewEnd = (day: { fullDate: Date }) => {
+    if (!isSelectingEnd || !dateRange.start || !hoveredDate) return false;
+    if (isSameDay(dateRange.start, hoveredDate)) return false;
+    // The preview end is the later of the two dates
+    if (hoveredDate < dateRange.start) {
+      return isSameDay(day.fullDate, dateRange.start);
+    }
+    return isSameDay(day.fullDate, hoveredDate);
+  };
+
+  const isHoveredForPreview = (day: { fullDate: Date }) => {
+    if (!isSelectingEnd || !dateRange.start || !hoveredDate) return false;
+    return isSameDay(day.fullDate, hoveredDate);
   };
 
   const goToPrevMonth = () => {
@@ -630,7 +673,10 @@ function CalendarContent({
             ))}
           </tr>
         </thead>
-        <tbody className="calendar-body">
+        <tbody
+          className="calendar-body"
+          onMouseLeave={() => setHoveredDate(null)}
+        >
           {Array.from(
             { length: Math.ceil(days.length / 7) },
             (_, weekIndex) => (
@@ -643,10 +689,17 @@ function CalendarContent({
                     const inRange = isInRange(day);
                     const selected = isStart || isEnd;
 
+                    // Preview state checks
+                    const previewStart = isPreviewStart(day);
+                    const previewEnd = isPreviewEnd(day);
+                    const inPreviewRange = isInPreviewRange(day);
+                    const hoveredPreview = isHoveredForPreview(day);
+
                     // Determine td classes for range styling
                     let tdClasses = "calendar-cell";
+
+                    // Confirmed range classes (when both start and end are set)
                     if (isStart && isEnd) {
-                      // Single day selected (start equals end)
                       tdClasses +=
                         " calendar-cell-first-in-range calendar-cell-last-in-range";
                     } else if (isStart) {
@@ -657,6 +710,15 @@ function CalendarContent({
                       tdClasses += " calendar-cell-in-range";
                     }
 
+                    // Preview range classes (when selecting end date)
+                    if (previewStart && !isStart) {
+                      tdClasses += " calendar-cell-preview-start";
+                    } else if (previewEnd && !hoveredPreview) {
+                      tdClasses += " calendar-cell-preview-end";
+                    } else if (inPreviewRange) {
+                      tdClasses += " calendar-cell-in-preview-range";
+                    }
+
                     return (
                       <td key={dayIndex} role="gridcell" className={tdClasses}>
                         <span
@@ -665,6 +727,7 @@ function CalendarContent({
                           aria-label={formatAriaLabel(day)}
                           aria-selected={selected}
                           onClick={() => onDateSelect(day.fullDate)}
+                          onMouseEnter={() => setHoveredDate(day.fullDate)}
                           onKeyDown={(e) => {
                             if (e.key === "Enter" || e.key === " ") {
                               e.preventDefault();
@@ -674,9 +737,10 @@ function CalendarContent({
                           className={`
                             calendar-day
                             ${!day.isCurrentMonth ? "calendar-day-outside" : ""}
-                            ${day.isWeekend && !day.isToday && !selected ? "calendar-day-weekend" : ""}
-                            ${day.isToday && !selected ? "calendar-day-today" : ""}
+                            ${day.isWeekend && !day.isToday && !selected && !hoveredPreview ? "calendar-day-weekend" : ""}
+                            ${day.isToday && !selected && !hoveredPreview ? "calendar-day-today" : ""}
                             ${selected ? "calendar-day-selected" : ""}
+                            ${hoveredPreview ? "calendar-day-hover-preview" : ""}
                           `}
                         >
                           {day.date}
@@ -873,6 +937,7 @@ export default function CalendarComponent() {
                       <CalendarContent
                         dateRange={dateRange}
                         onDateSelect={handleDateSelect}
+                        isSelectingEnd={selectionState === "end"}
                       />
                     </div>
                   </Popover.Content>
