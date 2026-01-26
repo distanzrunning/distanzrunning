@@ -1202,10 +1202,8 @@
   }
 
   .calendar-content-wrapper {
-    padding: 12px;
     border-radius: 6px;
     position: relative;
-    width: 280px;
   }
 
   .calendar-month-label {
@@ -1255,6 +1253,11 @@
   .calendar-table th,
   .calendar-table td {
     padding: 0;
+  }
+
+  .calendar-table thead {
+    display: block;
+    width: 100%;
   }
 
   .calendar-header-row {
