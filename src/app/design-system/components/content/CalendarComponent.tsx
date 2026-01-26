@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import * as Popover from "@radix-ui/react-popover";
 import { Section } from "../ContentWithTOC";
@@ -64,7 +64,7 @@ function Toast({
 
 function useToast() {
   const [toast, setToast] = useState({ message: "", isVisible: false });
-  const toastTimeoutRef = { current: null as NodeJS.Timeout | null };
+  const toastTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const showToast = useCallback((message: string) => {
     if (toastTimeoutRef.current) clearTimeout(toastTimeoutRef.current);
@@ -508,6 +508,10 @@ function CalendarContent({
   const [currentMonth, setCurrentMonth] = useState(today.getMonth());
   const [currentYear, setCurrentYear] = useState(today.getFullYear());
   const [hoveredDate, setHoveredDate] = useState<Date | null>(null);
+  const [focusedDate, setFocusedDate] = useState<Date>(
+    dateRange.start || today,
+  );
+  const tableRef = useRef<HTMLTableElement>(null);
 
   const days = getCalendarDays(currentYear, currentMonth);
 
@@ -588,6 +592,64 @@ function CalendarContent({
     }
   };
 
+  const isFocusedDate = (day: { fullDate: Date }) => {
+    return isSameDay(day.fullDate, focusedDate);
+  };
+
+  const navigateToDate = (newDate: Date) => {
+    setFocusedDate(newDate);
+    // Update the viewed month if necessary
+    if (
+      newDate.getMonth() !== currentMonth ||
+      newDate.getFullYear() !== currentYear
+    ) {
+      setCurrentMonth(newDate.getMonth());
+      setCurrentYear(newDate.getFullYear());
+    }
+    // Also update hovered date for preview when selecting end
+    if (isSelectingEnd) {
+      setHoveredDate(newDate);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    let newDate: Date | null = null;
+
+    switch (e.key) {
+      case "ArrowLeft":
+        e.preventDefault();
+        newDate = new Date(focusedDate);
+        newDate.setDate(newDate.getDate() - 1);
+        break;
+      case "ArrowRight":
+        e.preventDefault();
+        newDate = new Date(focusedDate);
+        newDate.setDate(newDate.getDate() + 1);
+        break;
+      case "ArrowUp":
+        e.preventDefault();
+        newDate = new Date(focusedDate);
+        newDate.setDate(newDate.getDate() - 7);
+        break;
+      case "ArrowDown":
+        e.preventDefault();
+        newDate = new Date(focusedDate);
+        newDate.setDate(newDate.getDate() + 7);
+        break;
+      case "Enter":
+      case " ":
+        e.preventDefault();
+        onDateSelect(focusedDate);
+        return;
+      default:
+        return;
+    }
+
+    if (newDate) {
+      navigateToDate(newDate);
+    }
+  };
+
   return (
     <>
       {/* Header with month/year and navigation */}
@@ -623,6 +685,7 @@ function CalendarContent({
           type="button"
           onClick={goToPrevMonth}
           aria-label="Previous"
+          data-testid="calendar/nav/prev"
           className="calendar-nav-button"
           style={{ marginLeft: "auto" }}
         >
@@ -635,6 +698,7 @@ function CalendarContent({
           type="button"
           onClick={goToNextMonth}
           aria-label="Next"
+          data-testid="calendar/nav/next"
           className="calendar-nav-button"
         >
           <span className="calendar-nav-button-content">
@@ -647,7 +711,13 @@ function CalendarContent({
       <div aria-hidden="true" style={{ marginTop: 11 }} />
 
       {/* Calendar grid */}
-      <table className="calendar-table" role="grid">
+      <table
+        className="calendar-table"
+        role="grid"
+        ref={tableRef}
+        onKeyDown={handleKeyDown}
+        data-testid="calendar/grid"
+      >
         <caption className="sr-only">
           {MONTH_NAMES[currentMonth]} {currentYear}
         </caption>
@@ -731,21 +801,26 @@ function CalendarContent({
                       if (dayIndex === 6) tdClasses += " calendar-cell-row-end";
                     }
 
+                    const focused = isFocusedDate(day);
+
                     return (
-                      <td key={dayIndex} role="gridcell" className={tdClasses}>
+                      <td
+                        key={dayIndex}
+                        role="gridcell"
+                        aria-selected={selected || inRange}
+                        className={tdClasses}
+                      >
                         <span
                           role="button"
-                          tabIndex={day.isToday || selected ? 0 : -1}
+                          tabIndex={focused ? 0 : -1}
                           aria-label={formatAriaLabel(day)}
-                          aria-selected={selected}
-                          onClick={() => onDateSelect(day.fullDate)}
-                          onMouseEnter={() => setHoveredDate(day.fullDate)}
-                          onKeyDown={(e) => {
-                            if (e.key === "Enter" || e.key === " ") {
-                              e.preventDefault();
-                              onDateSelect(day.fullDate);
-                            }
+                          data-testid={`calendar/cell/date-${day.date}`}
+                          onClick={() => {
+                            onDateSelect(day.fullDate);
+                            setFocusedDate(day.fullDate);
                           }}
+                          onMouseEnter={() => setHoveredDate(day.fullDate)}
+                          onFocus={() => setFocusedDate(day.fullDate)}
                           className={`
                             calendar-day
                             ${!day.isCurrentMonth ? "calendar-day-outside" : ""}
@@ -875,6 +950,8 @@ export default function CalendarComponent() {
                   <button
                     type="button"
                     aria-haspopup="dialog"
+                    aria-expanded={isOpen}
+                    data-testid="calendar/trigger/button"
                     title="Select Date Range"
                     className={`calendar-trigger-button flex items-center justify-between text-left cursor-pointer text-[rgb(23,23,23)] dark:text-[rgb(237,237,237)] ${isOpen ? "calendar-trigger-button-expanded" : ""}`}
                     style={{
@@ -939,6 +1016,7 @@ export default function CalendarComponent() {
                     className="calendar-dropdown"
                     sideOffset={12}
                     align="start"
+                    data-testid="calendar/popover"
                     style={{
                       zIndex: 2001,
                       minWidth: "max-content",
