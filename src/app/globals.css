@@ -554,6 +554,8 @@
     --calendar-day-color: rgb(23, 23, 23);
     --calendar-day-outside-color: rgb(143, 143, 143);
     --calendar-day-hover-border: rgb(201, 201, 201);
+    --calendar-day-selected-bg: rgb(23, 23, 23);
+    --calendar-day-selected-color: rgb(255, 255, 255);
     --calendar-header-color: rgb(102, 102, 102);
     --calendar-today-bg: oklch(0.5318 0.2399 256.99);
     --calendar-today-color: rgb(255, 255, 255);
@@ -1019,6 +1021,8 @@
     --calendar-day-color: rgb(237, 237, 237);
     --calendar-day-outside-color: rgb(143, 143, 143);
     --calendar-day-hover-border: rgb(69, 69, 69);
+    --calendar-day-selected-bg: rgb(237, 237, 237);
+    --calendar-day-selected-color: rgb(10, 10, 10);
     --calendar-header-color: rgb(161, 161, 161);
     --calendar-today-bg: oklch(0.717 0.1648 250.794);
     --calendar-today-color: rgb(10, 10, 10);
@@ -1330,6 +1334,21 @@
   .calendar-day-today:hover {
     border-color: transparent;
     color: var(--calendar-today-color);
+  }
+
+  .calendar-day-selected {
+    background-color: var(--calendar-day-selected-bg);
+    color: var(--calendar-day-selected-color);
+  }
+
+  .calendar-day-selected:hover {
+    border-color: transparent;
+    color: var(--calendar-day-selected-color);
+  }
+
+  .calendar-day:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--calendar-day-selected-bg);
   }
 
   .layout-grid {

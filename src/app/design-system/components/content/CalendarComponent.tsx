@@ -481,8 +481,18 @@ function CalendarContent() {
   const today = new Date();
   const [currentMonth, setCurrentMonth] = useState(today.getMonth());
   const [currentYear, setCurrentYear] = useState(today.getFullYear());
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
   const days = getCalendarDays(currentYear, currentMonth);
+
+  const isSelected = (day: { fullDate: Date }) => {
+    if (!selectedDate) return false;
+    return (
+      day.fullDate.getDate() === selectedDate.getDate() &&
+      day.fullDate.getMonth() === selectedDate.getMonth() &&
+      day.fullDate.getFullYear() === selectedDate.getFullYear()
+    );
+  };
 
   const goToPrevMonth = () => {
     if (currentMonth === 0) {
@@ -602,13 +612,22 @@ function CalendarContent() {
                     >
                       <span
                         role="button"
-                        tabIndex={day.isToday ? 0 : -1}
+                        tabIndex={day.isToday || isSelected(day) ? 0 : -1}
                         aria-label={formatAriaLabel(day)}
+                        aria-selected={isSelected(day)}
+                        onClick={() => setSelectedDate(day.fullDate)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            setSelectedDate(day.fullDate);
+                          }
+                        }}
                         className={`
                           calendar-day
                           ${!day.isCurrentMonth ? "calendar-day-outside" : ""}
-                          ${day.isWeekend && !day.isToday ? "calendar-day-weekend" : ""}
-                          ${day.isToday ? "calendar-day-today" : ""}
+                          ${day.isWeekend && !day.isToday && !isSelected(day) ? "calendar-day-weekend" : ""}
+                          ${day.isToday && !isSelected(day) ? "calendar-day-today" : ""}
+                          ${isSelected(day) ? "calendar-day-selected" : ""}
                         `}
                       >
                         {day.date}
