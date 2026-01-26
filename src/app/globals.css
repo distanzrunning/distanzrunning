@@ -1403,7 +1403,7 @@
   }
 
   /* Hover preview day style (the hovered cell during range selection) */
-  .calendar-day-hover-preview {
+  .calendar-day.calendar-day-hover-preview {
     background-color: var(--calendar-day-selected-bg);
     color: var(--calendar-day-selected-color);
     border: 1px solid var(--calendar-day-selected-color);
