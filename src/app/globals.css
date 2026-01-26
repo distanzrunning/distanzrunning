@@ -1202,8 +1202,21 @@
   }
 
   .calendar-content-wrapper {
+    padding: 12px;
     border-radius: 6px;
     position: relative;
+    width: 280px;
+  }
+
+  .calendar-content-flex {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+
+  .calendar-inputs-wrapper {
+    border-top: 1px solid var(--ds-gray-200);
+    margin: 12px -12px 0;
+    padding: 10px 12px 0;
   }
 
   .calendar-month-label {
