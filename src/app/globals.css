@@ -1633,6 +1633,15 @@
 
   .calendar-select:focus {
     outline: none;
+    box-shadow:
+      0 0 0 1px #00000057,
+      0px 0px 0px 4px #00000029;
+  }
+
+  :is(.dark, [data-theme="dark"]) .calendar-select:focus {
+    box-shadow:
+      0 0 0 1px #ffffff57,
+      0px 0px 0px 4px #ffffff29;
   }
 
   .calendar-select-suffix {
