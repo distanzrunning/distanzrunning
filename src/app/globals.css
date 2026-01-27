@@ -1476,12 +1476,14 @@
   .calendar-day.calendar-day-hover-preview {
     background: var(--ds-gray-1000);
     color: var(--ds-background-100);
+    box-shadow: 0 0 0 2px var(--ds-gray-1000);
   }
 
-  /* Today cell hover preview */
+  /* Today cell hover preview - blue ring */
   .calendar-day.calendar-day-today.calendar-day-hover-preview {
     background: var(--ds-gray-1000);
     color: var(--ds-background-100);
+    box-shadow: 0 0 0 2px var(--ds-blue-900);
   }
 
   /* Calendar input styles */
