@@ -1325,19 +1325,19 @@
     width: 32px;
     height: 32px;
     font-size: 14px;
-    line-height: 32px;
+    line-height: 30px;
     border-radius: var(--calendar-day-radius);
+    border: 1px solid transparent;
     cursor: pointer;
     color: var(--calendar-day-color);
     text-align: center;
     touch-action: manipulation;
     z-index: 1;
-    transition: background-color 0.15s ease;
   }
 
   .calendar-day:hover {
-    background-color: var(--calendar-day-hover-bg);
-    color: var(--calendar-day-color);
+    border-color: var(--ds-gray-500);
+    color: var(--ds-gray-1000);
   }
 
   .calendar-day-outside {
@@ -1349,46 +1349,55 @@
   }
 
   .calendar-day-today {
-    background-color: var(--calendar-today-bg);
-    color: var(--calendar-today-color);
+    background: var(--ds-blue-900);
+    color: var(--ds-background-100);
     font-weight: 400;
   }
 
   .calendar-day-today:hover {
-    background-color: var(--calendar-today-bg);
-    color: var(--calendar-today-color);
+    background: var(--ds-blue-900);
+    color: var(--ds-background-100);
+    border-color: transparent;
   }
 
   .calendar-day-selected {
-    background-color: var(--calendar-day-selected-bg);
-    color: var(--calendar-day-selected-color);
+    background: var(--ds-gray-1000);
+    color: var(--ds-background-100);
   }
 
   .calendar-day-selected:hover {
-    background-color: var(--calendar-day-selected-bg);
-    color: var(--calendar-day-selected-color);
+    background: var(--ds-gray-1000);
+    color: var(--ds-background-100);
+    border-color: transparent;
   }
 
-  /* Today when selected - blue focus ring */
+  /* Today when selected - same as regular selected */
   .calendar-day.calendar-day-today.calendar-day-selected {
-    background-color: var(--calendar-day-selected-bg);
-    color: var(--calendar-day-selected-color);
+    background: var(--ds-gray-1000);
+    color: var(--ds-background-100);
     border-color: transparent;
-    box-shadow: 0 0 0 2px var(--calendar-today-bg);
   }
 
   .calendar-day.calendar-day-today.calendar-day-selected:hover {
-    background-color: var(--calendar-day-selected-bg);
+    background: var(--ds-gray-1000);
+    border-color: transparent;
+  }
+
+  /* Today when selected and focused - use focus ring */
+  .calendar-day.calendar-day-today.calendar-day-selected:focus-visible {
+    box-shadow: var(--ds-focus-ring);
   }
 
   .calendar-day:focus-visible {
     outline: none;
-    box-shadow: 0 0 0 2px var(--calendar-day-selected-bg);
+    box-shadow:
+      0 0 0 1px var(--ds-background-100),
+      0 0 0 2.5px var(--ds-gray-1000);
   }
 
   /* Range selection styles on td */
   .calendar-cell-in-range {
-    background-color: var(--calendar-range-bg);
+    background-color: var(--ds-gray-200);
   }
 
   /* Row start/end rounding for multi-row ranges */
@@ -1406,7 +1415,7 @@
     background: linear-gradient(
       to right,
       transparent 50%,
-      var(--calendar-range-bg) 50%
+      var(--ds-gray-200) 50%
     );
     border-top-right-radius: var(--calendar-day-radius);
     border-bottom-right-radius: var(--calendar-day-radius);
@@ -1416,7 +1425,7 @@
     background: linear-gradient(
       to left,
       transparent 50%,
-      var(--calendar-range-bg) 50%
+      var(--ds-gray-200) 50%
     );
     border-top-left-radius: var(--calendar-day-radius);
     border-bottom-left-radius: var(--calendar-day-radius);
@@ -1428,7 +1437,7 @@
 
   /* Hover preview range styles (when selecting end date) */
   .calendar-cell-in-preview-range {
-    background-color: var(--calendar-range-bg);
+    background-color: var(--ds-gray-200);
   }
 
   .calendar-cell-in-preview-range.calendar-cell-row-start {
@@ -1445,7 +1454,7 @@
     background: linear-gradient(
       to right,
       transparent 50%,
-      var(--calendar-range-bg) 50%
+      var(--ds-gray-200) 50%
     );
     border-top-right-radius: var(--calendar-day-radius);
     border-bottom-right-radius: var(--calendar-day-radius);
@@ -1455,7 +1464,7 @@
     background: linear-gradient(
       to left,
       transparent 50%,
-      var(--calendar-range-bg) 50%
+      var(--ds-gray-200) 50%
     );
     border-top-left-radius: var(--calendar-day-radius);
     border-bottom-left-radius: var(--calendar-day-radius);
@@ -1463,18 +1472,14 @@
 
   /* Hover preview day style (the hovered cell during range selection) */
   .calendar-day.calendar-day-hover-preview {
-    background-color: var(--calendar-day-selected-bg);
-    color: var(--calendar-day-selected-color);
-    border: 1px solid var(--calendar-day-selected-color);
-    box-shadow: 0 0 0 2px var(--calendar-day-selected-bg);
+    background: var(--ds-gray-1000);
+    color: var(--ds-background-100);
   }
 
-  /* Today cell hover preview - black/white background, blue focus ring */
+  /* Today cell hover preview */
   .calendar-day.calendar-day-today.calendar-day-hover-preview {
-    background-color: var(--calendar-day-selected-bg);
-    color: var(--calendar-day-selected-color);
-    border: 1px solid var(--calendar-day-selected-color);
-    box-shadow: 0 0 0 2px var(--calendar-today-bg);
+    background: var(--ds-gray-1000);
+    color: var(--ds-background-100);
   }
 
   /* Calendar input styles */
