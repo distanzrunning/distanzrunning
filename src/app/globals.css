@@ -553,7 +553,7 @@
     --calendar-day-radius: 4px;
     --calendar-day-color: rgb(23, 23, 23);
     --calendar-day-outside-color: rgb(143, 143, 143);
-    --calendar-day-hover-border: rgb(201, 201, 201);
+    --calendar-day-hover-bg: rgb(242, 242, 242);
     --calendar-day-selected-bg: rgb(23, 23, 23);
     --calendar-day-selected-color: rgb(255, 255, 255);
     --calendar-range-bg: rgb(234, 234, 234);
@@ -1021,7 +1021,7 @@
     --calendar-day-radius: 4px;
     --calendar-day-color: rgb(237, 237, 237);
     --calendar-day-outside-color: rgb(143, 143, 143);
-    --calendar-day-hover-border: rgb(69, 69, 69);
+    --calendar-day-hover-bg: rgb(38, 38, 38);
     --calendar-day-selected-bg: rgb(237, 237, 237);
     --calendar-day-selected-color: rgb(10, 10, 10);
     --calendar-range-bg: rgb(41, 41, 41);
@@ -1325,18 +1325,18 @@
     width: 32px;
     height: 32px;
     font-size: 14px;
-    line-height: 30px;
+    line-height: 32px;
     border-radius: var(--calendar-day-radius);
-    border: 1px solid transparent;
     cursor: pointer;
     color: var(--calendar-day-color);
     text-align: center;
     touch-action: manipulation;
     z-index: 1;
+    transition: background-color 0.15s ease;
   }
 
   .calendar-day:hover {
-    border-color: var(--calendar-day-hover-border);
+    background-color: var(--calendar-day-hover-bg);
     color: var(--calendar-day-color);
   }
 
@@ -1355,7 +1355,7 @@
   }
 
   .calendar-day-today:hover {
-    border-color: transparent;
+    background-color: var(--calendar-today-bg);
     color: var(--calendar-today-color);
   }
 
@@ -1365,7 +1365,7 @@
   }
 
   .calendar-day-selected:hover {
-    border-color: transparent;
+    background-color: var(--calendar-day-selected-bg);
     color: var(--calendar-day-selected-color);
   }
 
@@ -1378,7 +1378,7 @@
   }
 
   .calendar-day.calendar-day-today.calendar-day-selected:hover {
-    border-color: transparent;
+    background-color: var(--calendar-day-selected-bg);
   }
 
   .calendar-day:focus-visible {
