@@ -1503,11 +1503,7 @@
   }
 
   .calendar-input-container:focus-within {
-    box-shadow: rgba(0, 0, 0, 0.24) 0px 0px 0px 1px;
-  }
-
-  :is(.dark, [data-theme="dark"]) .calendar-input-container:focus-within {
-    box-shadow: rgba(255, 255, 255, 0.36) 0px 0px 0px 1px;
+    box-shadow: var(--calendar-button-focus-ring);
   }
 
   .calendar-input {
