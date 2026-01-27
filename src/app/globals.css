@@ -1371,23 +1371,29 @@
     border-color: transparent;
   }
 
-  /* Today when selected - same as regular selected */
+  /* Today when selected - keep blue ring */
   .calendar-day.calendar-day-today.calendar-day-selected {
     background: var(--ds-gray-1000);
     color: var(--ds-background-100);
     border-color: transparent;
+    box-shadow:
+      0 0 0 2px var(--ds-background-100),
+      0 0 0 4px var(--ds-blue-900);
   }
 
   .calendar-day.calendar-day-today.calendar-day-selected:hover {
     background: var(--ds-gray-1000);
     border-color: transparent;
+    box-shadow:
+      0 0 0 2px var(--ds-background-100),
+      0 0 0 4px var(--ds-blue-900);
   }
 
-  /* Today when selected and focused - use focus ring */
+  /* Today when selected and focused - keep blue ring */
   .calendar-day.calendar-day-today.calendar-day-selected:focus-visible {
     box-shadow:
       0 0 0 2px var(--ds-background-100),
-      0 0 0 4px var(--ds-gray-1000);
+      0 0 0 4px var(--ds-blue-900);
   }
 
   .calendar-day:focus-visible {
