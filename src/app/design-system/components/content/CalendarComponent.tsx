@@ -1327,7 +1327,6 @@ export default function CalendarComponent() {
                               <button
                                 type="button"
                                 onClick={handleApply}
-                                disabled={!dateRange.start || !dateRange.end}
                                 className="calendar-apply-button"
                                 data-testid="calendar/button/apply"
                               >
