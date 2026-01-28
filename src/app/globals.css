@@ -1321,10 +1321,6 @@
     text-align: center;
     touch-action: manipulation;
     z-index: 1;
-    transition:
-      background 0.15s ease,
-      border-color 0.15s ease,
-      box-shadow 0.15s ease;
   }
 
   .calendar-day:hover {
