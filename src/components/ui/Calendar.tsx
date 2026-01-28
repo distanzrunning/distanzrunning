@@ -870,17 +870,102 @@ export function Calendar({
                 align="start"
                 style={{ zIndex: 2002 }}
               >
-                <div className="calendar-preset-list">
-                  {presets.map((preset) => (
-                    <button
-                      key={preset.value}
-                      type="button"
-                      className={`calendar-preset-item ${selectedPreset === preset.value ? "calendar-preset-item-selected" : ""}`}
-                      onClick={() => handlePresetSelect(preset.value)}
+                <div className="calendar-preset-dropdown-inner">
+                  {/* Left column - Suggestions */}
+                  <div className="calendar-preset-list">
+                    {presets.map((preset) => (
+                      <button
+                        key={preset.value}
+                        type="button"
+                        className={`calendar-preset-item ${selectedPreset === preset.value ? "calendar-preset-item-selected" : ""}`}
+                        onClick={() => handlePresetSelect(preset.value)}
+                      >
+                        {preset.label}
+                      </button>
+                    ))}
+                  </div>
+                  {/* Right column - Hints */}
+                  <div className="calendar-preset-hints">
+                    <p className="calendar-preset-hints-label">
+                      Type relative times
+                    </p>
+                    <div className="calendar-preset-hints-buttons">
+                      <button
+                        type="button"
+                        className="calendar-preset-hint-button"
+                      >
+                        45m
+                      </button>
+                      <button
+                        type="button"
+                        className="calendar-preset-hint-button"
+                      >
+                        12 hours
+                      </button>
+                      <button
+                        type="button"
+                        className="calendar-preset-hint-button"
+                      >
+                        10d
+                      </button>
+                      <button
+                        type="button"
+                        className="calendar-preset-hint-button"
+                      >
+                        2 weeks
+                      </button>
+                      <button
+                        type="button"
+                        className="calendar-preset-hint-button"
+                      >
+                        last month
+                      </button>
+                      <button
+                        type="button"
+                        className="calendar-preset-hint-button"
+                      >
+                        yesterday
+                      </button>
+                      <button
+                        type="button"
+                        className="calendar-preset-hint-button"
+                      >
+                        today
+                      </button>
+                    </div>
+                    <p
+                      className="calendar-preset-hints-label"
+                      style={{ marginTop: 16 }}
                     >
-                      {preset.label}
-                    </button>
-                  ))}
+                      Type fixed times
+                    </p>
+                    <div className="calendar-preset-hints-buttons">
+                      <button
+                        type="button"
+                        className="calendar-preset-hint-button"
+                      >
+                        Jan 1
+                      </button>
+                      <button
+                        type="button"
+                        className="calendar-preset-hint-button"
+                      >
+                        Jan 1 - Jan 2
+                      </button>
+                      <button
+                        type="button"
+                        className="calendar-preset-hint-button"
+                      >
+                        1/1
+                      </button>
+                      <button
+                        type="button"
+                        className="calendar-preset-hint-button"
+                      >
+                        1/1 - 1/2
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </Popover.Content>
             </Popover.Portal>
