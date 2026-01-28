@@ -1346,10 +1346,11 @@
     color: var(--ds-background-100);
   }
 
-  /* Prevent hover border on today and selected states */
+  /* Prevent hover border on today and selected states, preserve text color */
   .calendar-day-today:hover,
   .calendar-day-selected:hover {
     border-color: transparent;
+    color: var(--ds-background-100);
   }
 
   /* Today when selected - keep blue ring */
