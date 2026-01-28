@@ -844,12 +844,12 @@ export function Calendar({
           <Popover.Content
             className="calendar-dropdown"
             sideOffset={12}
-            align="start"
+            align={horizontalLayout ? "center" : "start"}
             data-testid="calendar/popover"
             tabIndex={-1}
             style={{
               zIndex: 2001,
-              width: horizontalLayout ? 476 : 280,
+              width: horizontalLayout ? 500 : 280,
             }}
             onKeyDown={(e) => {
               if (e.key === "Enter" && dateRange.start && dateRange.end) {
