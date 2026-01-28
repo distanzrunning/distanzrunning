@@ -972,7 +972,7 @@ export function Calendar({
               </span>
               {/* Content (text) */}
               <span
-                className="overflow-hidden text-ellipsis whitespace-nowrap flex-1"
+                className="calendar-trigger-content overflow-hidden text-ellipsis whitespace-nowrap flex-1"
                 style={{
                   paddingLeft: 6,
                   paddingRight: hasSelection ? 8 : 20,
