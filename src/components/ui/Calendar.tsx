@@ -849,7 +849,6 @@ export function Calendar({
             tabIndex={-1}
             style={{
               zIndex: 2001,
-              width: horizontalLayout ? 462 : 280,
             }}
             onKeyDown={(e) => {
               if (e.key === "Enter" && dateRange.start && dateRange.end) {
@@ -863,7 +862,9 @@ export function Calendar({
               Calendar dialog
             </button>
             {/* Content wrapper with padding */}
-            <div className="calendar-content-wrapper">
+            <div
+              className={`calendar-content-wrapper ${horizontalLayout ? "calendar-content-wrapper-horizontal" : ""}`}
+            >
               {/* Flex container - column-reverse (vertical) or row (horizontal) */}
               <div
                 className={

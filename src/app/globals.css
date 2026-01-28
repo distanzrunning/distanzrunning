@@ -1193,7 +1193,11 @@
     padding: 12px;
     border-radius: 6px;
     position: relative;
-    width: 280px;
+    width: 256px;
+  }
+
+  .calendar-content-wrapper-horizontal {
+    width: 462px;
   }
 
   .calendar-content-flex {
