@@ -1894,6 +1894,24 @@
     border-left: 1px solid var(--ds-gray-400);
   }
 
+  /* Compact Calendar Styles */
+  .calendar-wrapper-compact {
+    --calendar-compact-width: 180px;
+  }
+
+  .calendar-combobox-wrapper-compact {
+    height: 32px;
+  }
+
+  .calendar-combobox-input-compact {
+    height: 32px;
+    font-size: 13px;
+  }
+
+  .calendar-trigger-button-compact {
+    font-size: 13px;
+  }
+
   .layout-grid {
     @apply grid grid-cols-12 gap-x-4 px-6 md:px-8 lg:px-12 xl:px-24;
   }

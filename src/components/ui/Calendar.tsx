@@ -179,6 +179,7 @@ export interface CalendarProps {
   presets?: CalendarPreset[];
   futurePresets?: CalendarPreset[];
   presetPlaceholder?: string;
+  compact?: boolean;
 }
 
 // ============================================================================
@@ -696,7 +697,10 @@ export function Calendar({
   presets,
   futurePresets,
   presetPlaceholder = "Select Period",
+  compact = false,
 }: CalendarProps) {
+  // Compact mode overrides
+  const effectiveWidth = compact ? 180 : width;
   const [isOpen, setIsOpen] = useState(false);
   const [internalDateRange, setInternalDateRange] = useState<DateRange>({
     start: null,
@@ -829,8 +833,10 @@ export function Calendar({
       </span>
 
       <div
-        className={`calendar-wrapper ${presets && presets.length > 0 ? "calendar-wrapper-with-presets" : ""}`}
-        style={{ width: presets && presets.length > 0 ? "auto" : width }}
+        className={`calendar-wrapper ${presets && presets.length > 0 ? "calendar-wrapper-with-presets" : ""} ${compact ? "calendar-wrapper-compact" : ""}`}
+        style={{
+          width: presets && presets.length > 0 ? "auto" : effectiveWidth,
+        }}
       >
         {/* Presets Combobox */}
         {presets && presets.length > 0 && (
@@ -839,9 +845,12 @@ export function Calendar({
             onOpenChange={setIsPresetDropdownOpen}
           >
             <Popover.Trigger asChild>
-              <div className="calendar-combobox-wrapper" style={{ width }}>
+              <div
+                className={`calendar-combobox-wrapper ${compact ? "calendar-combobox-wrapper-compact" : ""}`}
+                style={{ width: effectiveWidth }}
+              >
                 <input
-                  className="calendar-combobox-input"
+                  className={`calendar-combobox-input ${compact ? "calendar-combobox-input-compact" : ""}`}
                   data-error="false"
                   data-testid="calendar/combobox-input"
                   placeholder={presetPlaceholder}
@@ -915,10 +924,10 @@ export function Calendar({
               aria-expanded={isOpen}
               data-testid="calendar/trigger/button"
               title={placeholder}
-              className={`calendar-trigger-button flex items-center justify-between text-left cursor-pointer text-[rgb(23,23,23)] dark:text-[rgb(237,237,237)] ${isOpen ? "calendar-trigger-button-expanded" : ""} ${presets && presets.length > 0 ? "calendar-trigger-button-with-presets" : ""}`}
+              className={`calendar-trigger-button flex items-center justify-between text-left cursor-pointer text-[rgb(23,23,23)] dark:text-[rgb(237,237,237)] ${isOpen ? "calendar-trigger-button-expanded" : ""} ${presets && presets.length > 0 ? "calendar-trigger-button-with-presets" : ""} ${compact ? "calendar-trigger-button-compact" : ""}`}
               style={{
-                width,
-                height: 40,
+                width: effectiveWidth,
+                height: compact ? 32 : 40,
                 paddingLeft: 10,
                 paddingRight: 10,
                 borderRadius: 6,

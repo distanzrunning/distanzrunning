@@ -379,6 +379,34 @@ export function DateRangePickerWithPresets() {
   );
 }`;
 
+const compactCode = `import { Calendar, DateRange, CalendarPreset } from '@/components/ui/Calendar';
+import { useState } from 'react';
+import { startOfDay, endOfDay, subDays, addDays, addMonths } from 'date-fns';
+
+const presets: CalendarPreset[] = [
+  { label: 'Last 7 days', value: 'last-7d', getRange: () => ({ start: startOfDay(subDays(new Date(), 7)), end: endOfDay(new Date()) }) },
+  { label: 'Last 30 days', value: 'last-30d', getRange: () => ({ start: startOfDay(subDays(new Date(), 30)), end: endOfDay(new Date()) }) },
+];
+
+const futurePresets: CalendarPreset[] = [
+  { label: 'Next 7 days', value: 'next-7d', getRange: () => ({ start: startOfDay(new Date()), end: endOfDay(addDays(new Date(), 7)) }) },
+  { label: 'Next 30 days', value: 'next-30d', getRange: () => ({ start: startOfDay(new Date()), end: endOfDay(addDays(new Date(), 30)) }) },
+];
+
+export function CompactDateRangePicker() {
+  const [dateRange, setDateRange] = useState<DateRange>({ start: null, end: null });
+
+  return (
+    <Calendar
+      compact
+      presets={presets}
+      futurePresets={futurePresets}
+      value={dateRange}
+      onChange={setDateRange}
+    />
+  );
+}`;
+
 // Default presets for the demo
 const defaultPresets: CalendarPreset[] = [
   {
@@ -528,6 +556,33 @@ export default function CalendarComponent() {
           <CodePreview componentCode={presetsCode}>
             <div className="flex justify-center py-12">
               <Calendar
+                placeholder="Select Date Range"
+                presets={defaultPresets}
+                futurePresets={defaultFuturePresets}
+                presetPlaceholder="Select Period"
+              />
+            </div>
+          </CodePreview>
+        </div>
+      </Section>
+
+      {/* Compact Section */}
+      <Section>
+        <SectionHeader id="compact" onCopyLink={showToast}>
+          Compact
+        </SectionHeader>
+        <p className="mt-2 leading-6 text-gray-900 dark:text-gray-100 xl:mt-4">
+          Use{" "}
+          <code className="text-sm bg-[var(--ds-gray-200)] px-1.5 py-0.5 rounded">
+            compact
+          </code>{" "}
+          for a smaller calendar trigger.
+        </p>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={compactCode}>
+            <div className="flex justify-center py-12">
+              <Calendar
+                compact
                 placeholder="Select Date Range"
                 presets={defaultPresets}
                 futurePresets={defaultFuturePresets}
