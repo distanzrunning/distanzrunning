@@ -847,13 +847,13 @@ export function Calendar({
             <Popover.Trigger asChild>
               <div
                 className={`calendar-combobox-wrapper ${compact ? "calendar-combobox-wrapper-compact" : ""}`}
-                style={{ width: effectiveWidth }}
+                style={{ width: compact ? 40 : effectiveWidth }}
               >
                 <input
                   className={`calendar-combobox-input ${compact ? "calendar-combobox-input-compact" : ""}`}
                   data-error="false"
                   data-testid="calendar/combobox-input"
-                  placeholder={presetPlaceholder}
+                  placeholder={compact ? "" : presetPlaceholder}
                   aria-haspopup="dialog"
                   aria-expanded={isPresetDropdownOpen}
                   autoComplete="off"
@@ -862,18 +862,32 @@ export function Calendar({
                   aria-autocomplete="list"
                   role="combobox"
                   type="text"
-                  value={selectedPresetLabel || ""}
+                  value={compact ? "" : selectedPresetLabel || ""}
                   readOnly
                   onClick={() => setIsPresetDropdownOpen(true)}
+                  style={
+                    compact
+                      ? { width: 40, paddingRight: 0, color: "transparent" }
+                      : undefined
+                  }
                 />
-                <span className="calendar-combobox-prefix">
-                  <ClockIcon />
-                </span>
-                <span className="calendar-combobox-suffix">
+                {!compact && (
+                  <span className="calendar-combobox-prefix">
+                    <ClockIcon />
+                  </span>
+                )}
+                <span
+                  className={`calendar-combobox-suffix ${compact ? "calendar-combobox-suffix-compact" : ""}`}
+                >
                   <ChevronDownIcon />
                 </span>
-                {/* Right border divider */}
-                <div aria-hidden="true" className="calendar-combobox-divider" />
+                {/* Right border divider - hidden in compact mode */}
+                {!compact && (
+                  <div
+                    aria-hidden="true"
+                    className="calendar-combobox-divider"
+                  />
+                )}
               </div>
             </Popover.Trigger>
             <Popover.Portal>
@@ -927,10 +941,10 @@ export function Calendar({
               className={`calendar-trigger-button flex items-center justify-between text-left cursor-pointer text-[rgb(23,23,23)] dark:text-[rgb(237,237,237)] ${isOpen ? "calendar-trigger-button-expanded" : ""} ${presets && presets.length > 0 ? "calendar-trigger-button-with-presets" : ""} ${compact ? "calendar-trigger-button-compact" : ""}`}
               style={{
                 width: effectiveWidth,
-                height: compact ? 32 : 40,
+                height: 40,
                 paddingLeft: 10,
                 paddingRight: 10,
-                borderRadius: 6,
+                borderRadius: compact ? undefined : 6,
                 fontSize: 14,
                 lineHeight: "20px",
                 fontWeight: 400,

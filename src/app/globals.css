@@ -1900,16 +1900,56 @@
   }
 
   .calendar-combobox-wrapper-compact {
-    height: 32px;
+    width: 40px;
+    height: 40px;
+    position: relative;
+    display: flex;
+    transition: transform 0.15s ease;
   }
 
   .calendar-combobox-input-compact {
-    height: 32px;
-    font-size: 13px;
+    width: 40px;
+    height: 40px;
+    padding-left: 12px;
+    padding-right: 0;
+    color: transparent;
+    background: var(--ds-background-100);
+    border: none;
+    border-radius: 0 6px 6px 0;
+    box-shadow: inset 0 0 0 1px var(--ds-gray-400);
+    cursor: pointer;
+  }
+
+  .calendar-combobox-input-compact:hover {
+    background: var(--ds-gray-100);
+  }
+
+  .calendar-combobox-input-compact:focus,
+  .calendar-combobox-input-compact:focus-visible {
+    outline: none;
+    box-shadow: inset 0 0 0 1px var(--ds-gray-1000);
+  }
+
+  .calendar-combobox-suffix-compact {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    z-index: 10;
+    color: var(--ds-gray-900);
+    transition:
+      color 0.2s ease,
+      transform 0.2s ease;
   }
 
   .calendar-trigger-button-compact {
-    font-size: 13px;
+    border-radius: 6px 0 0 6px;
+    transform: translateX(-1px);
+  }
+
+  .calendar-trigger-button-compact:hover {
+    z-index: 1;
   }
 
   .layout-grid {
