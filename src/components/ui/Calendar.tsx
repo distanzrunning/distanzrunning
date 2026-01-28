@@ -177,6 +177,7 @@ export interface CalendarProps {
   showTimeInput?: boolean;
   popoverAlignment?: "start" | "center" | "end";
   presets?: CalendarPreset[];
+  futurePresets?: CalendarPreset[];
   presetPlaceholder?: string;
 }
 
@@ -693,6 +694,7 @@ export function Calendar({
   showTimeInput = true,
   popoverAlignment = "start",
   presets,
+  futurePresets,
   presetPlaceholder = "Select Period",
 }: CalendarProps) {
   const [isOpen, setIsOpen] = useState(false);
@@ -884,87 +886,18 @@ export function Calendar({
                       </button>
                     ))}
                   </div>
-                  {/* Right column - Hints */}
-                  <div className="calendar-preset-hints">
-                    <p className="calendar-preset-hints-label">
-                      Type relative times
-                    </p>
-                    <div className="calendar-preset-hints-buttons">
+                  {/* Right column - Future date presets */}
+                  <div className="calendar-preset-future">
+                    {futurePresets.map((preset) => (
                       <button
+                        key={preset.value}
                         type="button"
-                        className="calendar-preset-hint-button"
+                        className={`calendar-preset-item ${selectedPreset === preset.value ? "calendar-preset-item-selected" : ""}`}
+                        onClick={() => handlePresetSelect(preset.value)}
                       >
-                        45m
+                        {preset.label}
                       </button>
-                      <button
-                        type="button"
-                        className="calendar-preset-hint-button"
-                      >
-                        12 hours
-                      </button>
-                      <button
-                        type="button"
-                        className="calendar-preset-hint-button"
-                      >
-                        10d
-                      </button>
-                      <button
-                        type="button"
-                        className="calendar-preset-hint-button"
-                      >
-                        2 weeks
-                      </button>
-                      <button
-                        type="button"
-                        className="calendar-preset-hint-button"
-                      >
-                        last month
-                      </button>
-                      <button
-                        type="button"
-                        className="calendar-preset-hint-button"
-                      >
-                        yesterday
-                      </button>
-                      <button
-                        type="button"
-                        className="calendar-preset-hint-button"
-                      >
-                        today
-                      </button>
-                    </div>
-                    <p
-                      className="calendar-preset-hints-label"
-                      style={{ marginTop: 16 }}
-                    >
-                      Type fixed times
-                    </p>
-                    <div className="calendar-preset-hints-buttons">
-                      <button
-                        type="button"
-                        className="calendar-preset-hint-button"
-                      >
-                        Jan 1
-                      </button>
-                      <button
-                        type="button"
-                        className="calendar-preset-hint-button"
-                      >
-                        Jan 1 - Jan 2
-                      </button>
-                      <button
-                        type="button"
-                        className="calendar-preset-hint-button"
-                      >
-                        1/1
-                      </button>
-                      <button
-                        type="button"
-                        className="calendar-preset-hint-button"
-                      >
-                        1/1 - 1/2
-                      </button>
-                    </div>
+                    ))}
                   </div>
                 </div>
               </Popover.Content>

@@ -447,6 +447,48 @@ const defaultPresets: CalendarPreset[] = [
   },
 ];
 
+// Future presets for race calendar
+const defaultFuturePresets: CalendarPreset[] = [
+  {
+    label: "Next 7 days",
+    value: "next-7-days",
+    getRange: () => {
+      const start = new Date();
+      const end = new Date(start.getTime() + 7 * 24 * 60 * 60 * 1000);
+      return { start, end };
+    },
+  },
+  {
+    label: "Next 30 days",
+    value: "next-30-days",
+    getRange: () => {
+      const start = new Date();
+      const end = new Date(start.getTime() + 30 * 24 * 60 * 60 * 1000);
+      return { start, end };
+    },
+  },
+  {
+    label: "Next 3 months",
+    value: "next-3-months",
+    getRange: () => {
+      const start = new Date();
+      const end = new Date(start);
+      end.setMonth(end.getMonth() + 3);
+      return { start, end };
+    },
+  },
+  {
+    label: "Next 6 months",
+    value: "next-6-months",
+    getRange: () => {
+      const start = new Date();
+      const end = new Date(start);
+      end.setMonth(end.getMonth() + 6);
+      return { start, end };
+    },
+  },
+];
+
 // ============================================================================
 // Main Component
 // ============================================================================
@@ -516,6 +558,7 @@ export default function CalendarComponent() {
               <Calendar
                 placeholder="Select Date Range"
                 presets={defaultPresets}
+                futurePresets={defaultFuturePresets}
                 presetPlaceholder="Select Period"
               />
             </div>

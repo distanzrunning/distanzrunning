@@ -1861,68 +1861,12 @@
     background: var(--ds-gray-300);
   }
 
-  /* Hints column */
-  .calendar-preset-hints {
-    display: block;
+  /* Future presets column (right side) */
+  .calendar-preset-future {
     width: var(--radix-popover-trigger-width);
     flex-shrink: 0;
-    padding: 16px 30px 16px 16px;
+    padding: 8px;
     border-left: 1px solid var(--ds-gray-400);
-  }
-
-  .calendar-preset-hints-label {
-    display: block;
-    margin: 0;
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 20px;
-    color: var(--ds-gray-900);
-  }
-
-  .calendar-preset-hints-buttons {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
-    margin-top: 8px;
-  }
-
-  .calendar-preset-hint-button {
-    display: flex;
-    align-items: center;
-    height: 20px;
-    padding: 0 6px;
-    margin: 0;
-    font-family:
-      ui-monospace, SFMono-Regular, "Roboto Mono", Menlo, Monaco,
-      "Liberation Mono", "DejaVu Sans Mono", "Courier New", monospace;
-    font-size: 13px;
-    font-weight: 400;
-    line-height: normal;
-    text-align: center;
-    color: var(--ds-gray-1000);
-    background-color: rgb(234, 234, 234);
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.15s ease;
-  }
-
-  :is(.dark, [data-theme="dark"]) .calendar-preset-hint-button {
-    background-color: rgb(51, 51, 51);
-  }
-
-  .calendar-preset-hint-button:focus {
-    outline: 2px solid var(--ds-gray-700);
-  }
-
-  @media (hover: hover) {
-    .calendar-preset-hint-button:hover {
-      background-color: #dedede;
-    }
-
-    :is(.dark, [data-theme="dark"]) .calendar-preset-hint-button:hover {
-      background-color: rgb(65, 65, 65);
-    }
   }
 
   .layout-grid {
