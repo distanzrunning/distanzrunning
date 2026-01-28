@@ -1828,11 +1828,14 @@
   }
 
   .calendar-preset-item {
-    display: block;
+    display: flex;
+    align-items: center;
     width: 100%;
-    padding: 8px 12px;
+    height: 36px;
+    padding: 0 8px;
     font-size: 14px;
-    line-height: 20px;
+    font-weight: 400;
+    line-height: normal;
     text-align: left;
     color: var(--ds-gray-1000);
     background: transparent;
@@ -1843,12 +1846,11 @@
   }
 
   .calendar-preset-item:hover {
-    background: var(--ds-gray-200);
+    background: var(--ds-gray-300);
   }
 
   .calendar-preset-item-selected {
-    background: var(--ds-gray-200);
-    font-weight: 500;
+    background: var(--ds-gray-300);
   }
 
   .layout-grid {
