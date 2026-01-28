@@ -350,103 +350,31 @@ export function HorizontalDateRangePicker() {
 
 const presetsCode = `import { Calendar, DateRange, CalendarPreset } from '@/components/ui/Calendar';
 import { useState } from 'react';
+import { startOfDay, endOfDay, subDays, addDays, addMonths } from 'date-fns';
 
-// Past date presets (left column)
 const presets: CalendarPreset[] = [
-  {
-    label: 'Last 24 hours',
-    value: 'last-24-hours',
-    getRange: () => {
-      const end = new Date();
-      const start = new Date(end.getTime() - 24 * 60 * 60 * 1000);
-      return { start, end };
-    },
-  },
-  {
-    label: 'Last 7 days',
-    value: 'last-7-days',
-    getRange: () => {
-      const end = new Date();
-      const start = new Date(end.getTime() - 7 * 24 * 60 * 60 * 1000);
-      return { start, end };
-    },
-  },
-  {
-    label: 'Last 30 days',
-    value: 'last-30-days',
-    getRange: () => {
-      const end = new Date();
-      const start = new Date(end.getTime() - 30 * 24 * 60 * 60 * 1000);
-      return { start, end };
-    },
-  },
-  {
-    label: 'Last 90 days',
-    value: 'last-90-days',
-    getRange: () => {
-      const end = new Date();
-      const start = new Date(end.getTime() - 90 * 24 * 60 * 60 * 1000);
-      return { start, end };
-    },
-  },
+  { label: 'Last 24 hours', value: 'last-24h', getRange: () => ({ start: subDays(new Date(), 1), end: new Date() }) },
+  { label: 'Last 7 days', value: 'last-7d', getRange: () => ({ start: startOfDay(subDays(new Date(), 7)), end: endOfDay(new Date()) }) },
+  { label: 'Last 30 days', value: 'last-30d', getRange: () => ({ start: startOfDay(subDays(new Date(), 30)), end: endOfDay(new Date()) }) },
+  { label: 'Last 90 days', value: 'last-90d', getRange: () => ({ start: startOfDay(subDays(new Date(), 90)), end: endOfDay(new Date()) }) },
 ];
 
-// Future date presets (right column)
 const futurePresets: CalendarPreset[] = [
-  {
-    label: 'Next 7 days',
-    value: 'next-7-days',
-    getRange: () => {
-      const start = new Date();
-      const end = new Date(start.getTime() + 7 * 24 * 60 * 60 * 1000);
-      return { start, end };
-    },
-  },
-  {
-    label: 'Next 30 days',
-    value: 'next-30-days',
-    getRange: () => {
-      const start = new Date();
-      const end = new Date(start.getTime() + 30 * 24 * 60 * 60 * 1000);
-      return { start, end };
-    },
-  },
-  {
-    label: 'Next 3 months',
-    value: 'next-3-months',
-    getRange: () => {
-      const start = new Date();
-      const end = new Date(start);
-      end.setMonth(end.getMonth() + 3);
-      return { start, end };
-    },
-  },
-  {
-    label: 'Next 6 months',
-    value: 'next-6-months',
-    getRange: () => {
-      const start = new Date();
-      const end = new Date(start);
-      end.setMonth(end.getMonth() + 6);
-      return { start, end };
-    },
-  },
+  { label: 'Next 7 days', value: 'next-7d', getRange: () => ({ start: startOfDay(new Date()), end: endOfDay(addDays(new Date(), 7)) }) },
+  { label: 'Next 30 days', value: 'next-30d', getRange: () => ({ start: startOfDay(new Date()), end: endOfDay(addDays(new Date(), 30)) }) },
+  { label: 'Next 3 months', value: 'next-3m', getRange: () => ({ start: startOfDay(new Date()), end: endOfDay(addMonths(new Date(), 3)) }) },
+  { label: 'Next 6 months', value: 'next-6m', getRange: () => ({ start: startOfDay(new Date()), end: endOfDay(addMonths(new Date(), 6)) }) },
 ];
 
 export function DateRangePickerWithPresets() {
-  const [dateRange, setDateRange] = useState<DateRange>({
-    start: null,
-    end: null,
-  });
+  const [dateRange, setDateRange] = useState<DateRange>({ start: null, end: null });
 
   return (
     <Calendar
-      placeholder="Select Date Range"
-      value={dateRange}
-      onChange={setDateRange}
       presets={presets}
       futurePresets={futurePresets}
-      presetPlaceholder="Select Period"
+      value={dateRange}
+      onChange={setDateRange}
     />
   );
 }`;
