@@ -8,7 +8,7 @@ import {
   getTokenStyle,
   type DualThemeToken,
 } from "@/components/ui/useShikiHighlighter";
-import { Calendar } from "@/components/ui/Calendar";
+import { Calendar, CalendarPreset } from "@/components/ui/Calendar";
 
 // ============================================================================
 // Toast Component
@@ -348,6 +348,105 @@ export function HorizontalDateRangePicker() {
   );
 }`;
 
+const presetsCode = `import { Calendar, DateRange, CalendarPreset } from '@/components/ui/Calendar';
+import { useState } from 'react';
+
+const presets: CalendarPreset[] = [
+  {
+    label: 'Last 24 hours',
+    value: 'last-24-hours',
+    getRange: () => {
+      const end = new Date();
+      const start = new Date(end.getTime() - 24 * 60 * 60 * 1000);
+      return { start, end };
+    },
+  },
+  {
+    label: 'Last 7 days',
+    value: 'last-7-days',
+    getRange: () => {
+      const end = new Date();
+      const start = new Date(end.getTime() - 7 * 24 * 60 * 60 * 1000);
+      return { start, end };
+    },
+  },
+  {
+    label: 'Last 30 days',
+    value: 'last-30-days',
+    getRange: () => {
+      const end = new Date();
+      const start = new Date(end.getTime() - 30 * 24 * 60 * 60 * 1000);
+      return { start, end };
+    },
+  },
+  {
+    label: 'Last 90 days',
+    value: 'last-90-days',
+    getRange: () => {
+      const end = new Date();
+      const start = new Date(end.getTime() - 90 * 24 * 60 * 60 * 1000);
+      return { start, end };
+    },
+  },
+];
+
+export function DateRangePickerWithPresets() {
+  const [dateRange, setDateRange] = useState<DateRange>({
+    start: null,
+    end: null,
+  });
+
+  return (
+    <Calendar
+      placeholder="Select Date Range"
+      value={dateRange}
+      onChange={setDateRange}
+      presets={presets}
+      presetPlaceholder="Select Period"
+    />
+  );
+}`;
+
+// Default presets for the demo
+const defaultPresets: CalendarPreset[] = [
+  {
+    label: "Last 24 hours",
+    value: "last-24-hours",
+    getRange: () => {
+      const end = new Date();
+      const start = new Date(end.getTime() - 24 * 60 * 60 * 1000);
+      return { start, end };
+    },
+  },
+  {
+    label: "Last 7 days",
+    value: "last-7-days",
+    getRange: () => {
+      const end = new Date();
+      const start = new Date(end.getTime() - 7 * 24 * 60 * 60 * 1000);
+      return { start, end };
+    },
+  },
+  {
+    label: "Last 30 days",
+    value: "last-30-days",
+    getRange: () => {
+      const end = new Date();
+      const start = new Date(end.getTime() - 30 * 24 * 60 * 60 * 1000);
+      return { start, end };
+    },
+  },
+  {
+    label: "Last 90 days",
+    value: "last-90-days",
+    getRange: () => {
+      const end = new Date();
+      const start = new Date(end.getTime() - 90 * 24 * 60 * 60 * 1000);
+      return { start, end };
+    },
+  },
+];
+
 // ============================================================================
 // Main Component
 // ============================================================================
@@ -372,6 +471,27 @@ export default function CalendarComponent() {
           <CodePreview componentCode={defaultCode}>
             <div className="flex justify-center py-12">
               <Calendar placeholder="Select Date Range" />
+            </div>
+          </CodePreview>
+        </div>
+      </Section>
+
+      {/* Presets Section */}
+      <Section>
+        <SectionHeader id="presets" onCopyLink={showToast}>
+          Presets
+        </SectionHeader>
+        <p className="mt-2 leading-6 text-gray-900 dark:text-gray-100 xl:mt-4">
+          Provide common date ranges.
+        </p>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={presetsCode}>
+            <div className="flex justify-center py-12">
+              <Calendar
+                placeholder="Select Date Range"
+                presets={defaultPresets}
+                presetPlaceholder="Select Period"
+              />
             </div>
           </CodePreview>
         </div>
