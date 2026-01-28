@@ -1815,7 +1815,7 @@
   }
 
   .calendar-preset-dropdown {
-    width: calc(var(--radix-popover-trigger-width) * 2 + 2px);
+    width: calc(var(--radix-popover-trigger-width) * 2);
     min-width: 370px;
     background: var(--calendar-popover-bg);
     border: none;
@@ -1830,7 +1830,8 @@
   }
 
   .calendar-preset-list {
-    flex: 1;
+    width: var(--radix-popover-trigger-width);
+    flex-shrink: 0;
     padding: 8px;
   }
 
@@ -1863,7 +1864,8 @@
   /* Hints column */
   .calendar-preset-hints {
     display: block;
-    flex: 1;
+    width: var(--radix-popover-trigger-width);
+    flex-shrink: 0;
     padding: 16px 30px 16px 16px;
     border-left: 1px solid var(--ds-gray-400);
   }
