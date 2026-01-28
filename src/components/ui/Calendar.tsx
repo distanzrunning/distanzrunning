@@ -866,9 +866,9 @@ export function Calendar({
             <Popover.Portal>
               <Popover.Content
                 className="calendar-preset-dropdown"
-                sideOffset={4}
+                sideOffset={12}
                 align="start"
-                style={{ zIndex: 2002, width }}
+                style={{ zIndex: 2002 }}
               >
                 <div className="calendar-preset-list">
                   {presets.map((preset) => (
