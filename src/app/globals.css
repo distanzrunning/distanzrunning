@@ -1682,6 +1682,12 @@
     position: relative;
     display: flex;
     height: 40px;
+    z-index: 1;
+  }
+
+  .calendar-combobox-wrapper:hover,
+  .calendar-combobox-wrapper:focus-within {
+    z-index: 3;
   }
 
   .calendar-combobox-input {
@@ -1705,27 +1711,22 @@
 
   .calendar-wrapper-with-presets .calendar-combobox-input {
     border-radius: 6px 0 0 6px;
-    /* Right border as divider */
-    box-shadow:
-      var(--ds-gray-400) 0px 0px 0px 1px,
-      var(--ds-gray-400) 1px 0px 0px 0px;
+    box-shadow: var(--ds-gray-400) 0px 0px 0px 1px;
   }
 
   .calendar-wrapper-with-presets .calendar-combobox-input:hover {
-    box-shadow:
-      var(--ds-gray-600) 0px 0px 0px 1px,
-      var(--ds-gray-400) 1px 0px 0px 0px;
+    box-shadow: var(--ds-gray-600) 0px 0px 0px 1px;
     background-color: var(--calendar-button-bg-hover);
   }
 
   .calendar-wrapper-with-presets .calendar-combobox-input:focus {
     box-shadow: var(--calendar-button-focus-ring);
     outline: none;
-    z-index: 1;
   }
 
+  /* Placeholder should be active color */
   .calendar-combobox-input::placeholder {
-    color: var(--ds-gray-700);
+    color: var(--ds-gray-1000);
   }
 
   .calendar-combobox-input:hover {
@@ -1782,28 +1783,24 @@
   /* Calendar trigger button with presets */
   .calendar-trigger-button-with-presets {
     border: none !important;
-    /* No left border - divider belongs to combobox */
-    box-shadow:
-      var(--ds-gray-400) 0px -1px 0px 0px,
-      var(--ds-gray-400) 1px 0px 0px 0px,
-      var(--ds-gray-400) 0px 1px 0px 0px !important;
+    box-shadow: var(--ds-gray-400) 0px 0px 0px 1px !important;
     border-radius: 0 6px 6px 0 !important;
-    transform: translateX(1px);
     background: var(--calendar-button-bg) !important;
+    position: relative;
+    z-index: 2;
   }
 
   .calendar-trigger-button-with-presets:hover {
-    box-shadow:
-      var(--ds-gray-600) 0px -1px 0px 0px,
-      var(--ds-gray-600) 1px 0px 0px 0px,
-      var(--ds-gray-600) 0px 1px 0px 0px !important;
+    box-shadow: var(--ds-gray-600) 0px 0px 0px 1px !important;
     background-color: var(--calendar-button-bg-hover) !important;
+    z-index: 4;
   }
 
   .calendar-trigger-button-with-presets:focus,
   .calendar-trigger-button-with-presets:focus-visible {
     box-shadow: var(--calendar-button-focus-ring) !important;
     outline: none;
+    z-index: 4;
   }
 
   .calendar-preset-dropdown {
