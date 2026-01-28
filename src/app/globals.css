@@ -1674,52 +1674,37 @@
     display: flex;
     flex-direction: row;
     align-items: stretch;
-    border: 1px solid var(--ds-gray-400);
-    border-radius: 6px;
-    background: var(--ds-background-100);
-    transition: border-color 0.15s ease;
-  }
-
-  .calendar-wrapper-with-presets:hover {
-    border-color: var(--ds-gray-600);
-  }
-
-  .calendar-wrapper-with-presets:focus-within {
-    border-color: var(--ds-gray-1000);
-    box-shadow: var(--ds-focus-ring);
+    height: 40px;
   }
 
   /* Preset Combobox Styles */
   .calendar-combobox-wrapper {
     position: relative;
-    margin-bottom: 0;
+    display: flex;
+    height: 40px;
   }
 
   .calendar-combobox-input {
     width: 100%;
     height: 40px;
-    padding: 8px 32px 8px 36px;
+    padding: 0 0 0 40px;
     font-size: 14px;
-    line-height: 20px;
+    line-height: normal;
     color: var(--ds-gray-1000);
-    background: transparent;
-    border: 1px solid var(--ds-gray-400);
+    background: var(--ds-background-100);
+    border: none;
     border-radius: 6px;
+    box-shadow: var(--ds-gray-400) 0px 0px 0px 1px;
     outline: none;
     cursor: pointer;
     transition:
       border-color 0.15s ease,
-      box-shadow 0.15s ease;
+      box-shadow 0.15s ease,
+      background 0.15s ease;
   }
 
   .calendar-wrapper-with-presets .calendar-combobox-input {
-    border: none;
     border-radius: 6px 0 0 6px;
-    background: transparent;
-  }
-
-  .calendar-wrapper-with-presets .calendar-combobox-input:focus {
-    box-shadow: none;
   }
 
   .calendar-combobox-input::placeholder {
@@ -1727,65 +1712,69 @@
   }
 
   .calendar-combobox-input:hover {
-    border-color: var(--ds-gray-600);
-  }
-
-  .calendar-wrapper-with-presets .calendar-combobox-input:hover {
-    border-color: transparent;
+    box-shadow: var(--ds-gray-600) 0px 0px 0px 1px;
   }
 
   .calendar-combobox-input:focus {
-    border-color: var(--ds-gray-1000);
-    box-shadow: var(--ds-focus-ring);
+    box-shadow: var(--ds-gray-1000) 0px 0px 0px 1px;
   }
 
   .calendar-combobox-prefix {
     position: absolute;
-    left: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    left: 12px;
+    top: 12px;
+    display: block;
+    min-width: 16px;
+    width: 16px;
+    height: 16px;
     pointer-events: none;
-    color: var(--ds-gray-900);
+    color: currentColor;
+    z-index: 10;
+    overflow: hidden;
+    shape-rendering: crispedges;
+    transition:
+      color 0.2s ease,
+      transform 0.2s ease;
   }
 
   .calendar-combobox-suffix {
     position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    right: 12px;
+    top: 20px;
+    transform: translateY(-8px);
+    display: block;
+    min-width: 16px;
+    width: 16px;
+    height: 16px;
     pointer-events: none;
     color: var(--ds-gray-700);
+    z-index: 10;
+    overflow: hidden;
+    shape-rendering: crispedges;
+    transition:
+      color 0.2s ease,
+      transform 0.2s ease;
   }
 
   .calendar-combobox-divider {
-    position: absolute;
-    right: 0;
-    top: 8px;
-    bottom: 8px;
-    width: 1px;
-    background: var(--ds-gray-400);
+    display: none;
   }
 
   /* Calendar trigger button with presets */
   .calendar-trigger-button-with-presets {
     border: none !important;
-    background: transparent !important;
-    box-shadow: none !important;
+    box-shadow: var(--ds-gray-400) 0px 0px 0px 1px !important;
+    border-radius: 0 6px 6px 0 !important;
+    transform: translateX(1px);
+    background: var(--ds-background-100) !important;
   }
 
   .calendar-trigger-button-with-presets:hover {
-    border: none !important;
-    background: transparent !important;
+    box-shadow: var(--ds-gray-600) 0px 0px 0px 1px !important;
   }
 
   .calendar-trigger-button-with-presets:focus {
-    box-shadow: none !important;
+    box-shadow: var(--ds-gray-1000) 0px 0px 0px 1px !important;
   }
 
   .calendar-preset-dropdown {
