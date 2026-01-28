@@ -1078,7 +1078,6 @@ export default function CalendarComponent() {
     // Apply the date range with times
     if (dateRange.start && dateRange.end) {
       setIsOpen(false);
-      showToast("Date range applied");
     }
   };
 
