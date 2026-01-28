@@ -853,7 +853,9 @@ export function Calendar({
                   className={`calendar-combobox-input ${compact ? "calendar-combobox-input-compact" : ""}`}
                   data-error="false"
                   data-testid="calendar/combobox-input"
-                  placeholder={compact ? "" : presetPlaceholder}
+                  placeholder={
+                    compact && !isPresetDropdownOpen ? "" : presetPlaceholder
+                  }
                   aria-haspopup="dialog"
                   aria-expanded={isPresetDropdownOpen}
                   autoComplete="off"
@@ -862,13 +864,19 @@ export function Calendar({
                   aria-autocomplete="list"
                   role="combobox"
                   type="text"
-                  value={compact ? "" : selectedPresetLabel || ""}
+                  value={
+                    compact && !isPresetDropdownOpen
+                      ? ""
+                      : selectedPresetLabel || ""
+                  }
                   readOnly
                   onClick={() => setIsPresetDropdownOpen(true)}
                   style={
-                    compact
+                    compact && !isPresetDropdownOpen
                       ? { width: 40, paddingRight: 0, color: "transparent" }
-                      : undefined
+                      : compact
+                        ? { paddingRight: 0 }
+                        : undefined
                   }
                 />
                 {!compact && (
