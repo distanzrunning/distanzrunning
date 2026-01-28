@@ -1686,11 +1686,15 @@
   }
 
   .calendar-combobox-wrapper:hover,
-  .calendar-combobox-wrapper:focus-within {
+  .calendar-combobox-wrapper:focus-within,
+  .calendar-combobox-wrapper:has(
+    .calendar-combobox-input[aria-expanded="true"]
+  ) {
     z-index: 3;
   }
 
-  .calendar-combobox-wrapper:focus-within .calendar-combobox-input {
+  .calendar-combobox-wrapper:focus-within .calendar-combobox-input,
+  .calendar-combobox-input[aria-expanded="true"] {
     box-shadow: var(--calendar-button-focus-ring) !important;
   }
 
