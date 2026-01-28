@@ -1916,7 +1916,7 @@
     color: transparent;
     background: var(--ds-background-100);
     border: none;
-    border-radius: 0 6px 6px 0;
+    border-radius: 0 6px 6px 0 !important;
     box-shadow: 0 0 0 1px var(--ds-gray-400);
     cursor: pointer;
   }
