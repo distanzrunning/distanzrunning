@@ -1719,9 +1719,10 @@
     background-color: var(--calendar-button-bg-hover);
   }
 
-  .calendar-wrapper-with-presets .calendar-combobox-input:focus {
-    box-shadow: var(--calendar-button-focus-ring);
-    outline: none;
+  .calendar-wrapper-with-presets .calendar-combobox-input:focus,
+  .calendar-wrapper-with-presets .calendar-combobox-input:focus-visible {
+    box-shadow: var(--calendar-button-focus-ring) !important;
+    outline: none !important;
   }
 
   /* Placeholder should be active color */
@@ -1734,9 +1735,10 @@
     background-color: var(--calendar-button-bg-hover);
   }
 
-  .calendar-combobox-input:focus {
-    box-shadow: var(--calendar-button-focus-ring);
-    outline: none;
+  .calendar-combobox-input:focus,
+  .calendar-combobox-input:focus-visible {
+    box-shadow: var(--calendar-button-focus-ring) !important;
+    outline: none !important;
   }
 
   .calendar-combobox-prefix {
