@@ -813,9 +813,9 @@ export function Calendar({
 
   const hasSelection = dateRange.start !== null;
   const displayText = hasSelection ? formatDateRange(dateRange) : placeholder;
-  const selectedPresetLabel = presets?.find(
-    (p) => p.value === selectedPreset,
-  )?.label;
+  const selectedPresetLabel =
+    presets?.find((p) => p.value === selectedPreset)?.label ||
+    futurePresets?.find((p) => p.value === selectedPreset)?.label;
 
   return (
     <>
