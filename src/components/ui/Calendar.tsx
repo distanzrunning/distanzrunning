@@ -998,7 +998,7 @@ export function Calendar({
               <div
                 className={`calendar-content-wrapper ${horizontalLayout ? "calendar-content-wrapper-horizontal" : ""}`}
               >
-                {/* Flex container - column (vertical) or row (horizontal) */}
+                {/* Flex container - direction changes based on data-side attribute */}
                 <div
                   className={
                     horizontalLayout
@@ -1006,7 +1006,7 @@ export function Calendar({
                       : "calendar-content-flex"
                   }
                 >
-                  {/* Inputs section (renders above calendar) */}
+                  {/* Inputs section - position depends on popover side (cells always closer to trigger) */}
                   <div className="calendar-inputs-wrapper">
                     <div className="space-y-2">
                       {/* Start Date/Time */}
@@ -1160,7 +1160,7 @@ export function Calendar({
                     </div>
                   </div>
 
-                  {/* Calendar grid (renders below inputs) */}
+                  {/* Calendar grid - always positioned closer to the trigger */}
                   <div>
                     <CalendarContent
                       dateRange={dateRange}

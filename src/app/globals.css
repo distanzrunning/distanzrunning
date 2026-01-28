@@ -1202,16 +1202,27 @@
 
   .calendar-content-flex {
     display: flex;
+    flex-direction: column-reverse;
+  }
+
+  /* When popover opens above trigger, controls should be on top */
+  .calendar-dropdown[data-side="top"] .calendar-content-flex {
     flex-direction: column;
   }
 
   .calendar-content-flex-horizontal {
     display: flex;
-    flex-direction: row;
+    flex-direction: row-reverse;
     gap: 20px;
   }
 
+  /* When popover opens above trigger, controls should be on left */
+  .calendar-dropdown[data-side="top"] .calendar-content-flex-horizontal {
+    flex-direction: row;
+  }
+
   .calendar-content-flex-horizontal .calendar-inputs-wrapper {
+    border-top: none;
     border-bottom: none;
     margin: 0;
     padding: 0;
@@ -1228,12 +1239,26 @@
   }
 
   .calendar-inputs-wrapper {
+    border-top: 1px solid rgb(242, 242, 242);
+    margin: 12px -12px 0;
+    padding: 10px 12px 0;
+  }
+
+  :is(.dark, [data-theme="dark"]) .calendar-inputs-wrapper {
+    border-top-color: rgb(46, 46, 46);
+  }
+
+  /* When popover opens above trigger, border should be on bottom */
+  .calendar-dropdown[data-side="top"] .calendar-inputs-wrapper {
+    border-top: none;
     border-bottom: 1px solid rgb(242, 242, 242);
     margin: 0 -12px 12px;
     padding: 0 12px 10px;
   }
 
-  :is(.dark, [data-theme="dark"]) .calendar-inputs-wrapper {
+  :is(.dark, [data-theme="dark"])
+    .calendar-dropdown[data-side="top"]
+    .calendar-inputs-wrapper {
     border-bottom-color: rgb(46, 46, 46);
   }
 
