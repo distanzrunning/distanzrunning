@@ -1815,7 +1815,8 @@
   }
 
   .calendar-preset-dropdown {
-    min-width: 200px;
+    width: calc(var(--radix-popover-trigger-width) * 2 + 2px);
+    min-width: 370px;
     background: var(--calendar-popover-bg);
     border: none;
     border-radius: var(--calendar-popover-radius);
@@ -1829,8 +1830,8 @@
   }
 
   .calendar-preset-list {
+    flex: 1;
     padding: 8px;
-    min-width: 200px;
   }
 
   .calendar-preset-item {
@@ -1862,7 +1863,7 @@
   /* Hints column */
   .calendar-preset-hints {
     display: block;
-    width: 251px;
+    flex: 1;
     padding: 16px 30px 16px 16px;
     border-left: 1px solid var(--ds-gray-400);
   }
