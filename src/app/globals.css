@@ -1204,16 +1204,29 @@
   .calendar-content-flex-horizontal {
     display: flex;
     flex-direction: row;
-    gap: 16px;
   }
 
   .calendar-content-flex-horizontal .calendar-inputs-wrapper {
-    border-right: 1px solid var(--ds-gray-400);
-    padding-right: 16px;
+    border-top: none;
+    margin: 0;
+    padding: 0 0 0 16px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    min-width: 200px;
+    min-width: 180px;
+    order: 2;
+  }
+
+  .calendar-content-flex-horizontal > div:last-child {
+    order: 1;
+    padding-right: 16px;
+    border-right: 1px solid rgb(242, 242, 242);
+  }
+
+  :is(.dark, [data-theme="dark"])
+    .calendar-content-flex-horizontal
+    > div:last-child {
+    border-right-color: rgb(46, 46, 46);
   }
 
   .calendar-inputs-wrapper {
@@ -1223,7 +1236,7 @@
   }
 
   :is(.dark, [data-theme="dark"]) .calendar-inputs-wrapper {
-    border-top-color: rgb(26, 26, 26);
+    border-top-color: rgb(46, 46, 46);
   }
 
   .calendar-month-label {
