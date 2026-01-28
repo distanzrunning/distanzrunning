@@ -825,8 +825,8 @@ export function Calendar({
       </span>
 
       <div
-        className="calendar-wrapper"
-        style={{ width, display: "inline-block" }}
+        className={`calendar-wrapper ${presets && presets.length > 0 ? "calendar-wrapper-with-presets" : ""}`}
+        style={{ width: presets && presets.length > 0 ? "auto" : width }}
       >
         {/* Presets Combobox */}
         {presets && presets.length > 0 && (
@@ -835,7 +835,7 @@ export function Calendar({
             onOpenChange={setIsPresetDropdownOpen}
           >
             <Popover.Trigger asChild>
-              <div className="calendar-combobox-wrapper">
+              <div className="calendar-combobox-wrapper" style={{ width }}>
                 <input
                   className="calendar-combobox-input"
                   data-error="false"
@@ -859,6 +859,8 @@ export function Calendar({
                 <span className="calendar-combobox-suffix">
                   <ChevronDownIcon />
                 </span>
+                {/* Right border divider */}
+                <div aria-hidden="true" className="calendar-combobox-divider" />
               </div>
             </Popover.Trigger>
             <Popover.Portal>
@@ -893,13 +895,15 @@ export function Calendar({
               aria-expanded={isOpen}
               data-testid="calendar/trigger/button"
               title={placeholder}
-              className={`calendar-trigger-button flex items-center justify-between text-left cursor-pointer text-[rgb(23,23,23)] dark:text-[rgb(237,237,237)] ${isOpen ? "calendar-trigger-button-expanded" : ""}`}
+              className={`calendar-trigger-button flex items-center justify-between text-left cursor-pointer text-[rgb(23,23,23)] dark:text-[rgb(237,237,237)] ${isOpen ? "calendar-trigger-button-expanded" : ""} ${presets && presets.length > 0 ? "calendar-trigger-button-with-presets" : ""}`}
               style={{
                 width,
                 height: 40,
                 paddingLeft: 10,
                 paddingRight: 10,
-                borderRadius: 6,
+                borderRadius: presets && presets.length > 0 ? 0 : 6,
+                borderTopRightRadius: 6,
+                borderBottomRightRadius: 6,
                 fontSize: 14,
                 lineHeight: "20px",
                 fontWeight: 400,

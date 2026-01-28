@@ -1669,10 +1669,29 @@
     shape-rendering: crispedges;
   }
 
+  /* Calendar Wrapper with Presets */
+  .calendar-wrapper-with-presets {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    border: 1px solid var(--ds-gray-400);
+    border-radius: 6px;
+    background: var(--ds-background-100);
+    transition: border-color 0.15s ease;
+  }
+
+  .calendar-wrapper-with-presets:hover {
+    border-color: var(--ds-gray-600);
+  }
+
+  .calendar-wrapper-with-presets:focus-within {
+    border-color: var(--ds-gray-1000);
+    box-shadow: var(--ds-focus-ring);
+  }
+
   /* Preset Combobox Styles */
   .calendar-combobox-wrapper {
     position: relative;
-    width: 100%;
     margin-bottom: 0;
   }
 
@@ -1683,7 +1702,7 @@
     font-size: 14px;
     line-height: 20px;
     color: var(--ds-gray-1000);
-    background: var(--ds-background-100);
+    background: transparent;
     border: 1px solid var(--ds-gray-400);
     border-radius: 6px;
     outline: none;
@@ -1693,12 +1712,26 @@
       box-shadow 0.15s ease;
   }
 
+  .calendar-wrapper-with-presets .calendar-combobox-input {
+    border: none;
+    border-radius: 6px 0 0 6px;
+    background: transparent;
+  }
+
+  .calendar-wrapper-with-presets .calendar-combobox-input:focus {
+    box-shadow: none;
+  }
+
   .calendar-combobox-input::placeholder {
     color: var(--ds-gray-700);
   }
 
   .calendar-combobox-input:hover {
     border-color: var(--ds-gray-600);
+  }
+
+  .calendar-wrapper-with-presets .calendar-combobox-input:hover {
+    border-color: transparent;
   }
 
   .calendar-combobox-input:focus {
@@ -1728,6 +1761,31 @@
     justify-content: center;
     pointer-events: none;
     color: var(--ds-gray-700);
+  }
+
+  .calendar-combobox-divider {
+    position: absolute;
+    right: 0;
+    top: 8px;
+    bottom: 8px;
+    width: 1px;
+    background: var(--ds-gray-400);
+  }
+
+  /* Calendar trigger button with presets */
+  .calendar-trigger-button-with-presets {
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  .calendar-trigger-button-with-presets:hover {
+    border: none !important;
+    background: transparent !important;
+  }
+
+  .calendar-trigger-button-with-presets:focus {
+    box-shadow: none !important;
   }
 
   .calendar-preset-dropdown {
