@@ -998,7 +998,7 @@ export function Calendar({
               <div
                 className={`calendar-content-wrapper ${horizontalLayout ? "calendar-content-wrapper-horizontal" : ""}`}
               >
-                {/* Flex container - column-reverse (vertical) or row (horizontal) */}
+                {/* Flex container - column (vertical) or row (horizontal) */}
                 <div
                   className={
                     horizontalLayout
@@ -1006,7 +1006,7 @@ export function Calendar({
                       : "calendar-content-flex"
                   }
                 >
-                  {/* Inputs section (renders below calendar due to column-reverse) */}
+                  {/* Inputs section (renders above calendar) */}
                   <div className="calendar-inputs-wrapper">
                     <div className="space-y-2">
                       {/* Start Date/Time */}
@@ -1160,7 +1160,7 @@ export function Calendar({
                     </div>
                   </div>
 
-                  {/* Calendar grid (renders on top due to column-reverse) */}
+                  {/* Calendar grid (renders below inputs) */}
                   <div>
                     <CalendarContent
                       dateRange={dateRange}
