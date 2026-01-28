@@ -1807,7 +1807,8 @@
   }
 
   .calendar-trigger-button-with-presets:focus,
-  .calendar-trigger-button-with-presets:focus-visible {
+  .calendar-trigger-button-with-presets:focus-visible,
+  .calendar-trigger-button-with-presets[aria-expanded="true"] {
     box-shadow: var(--calendar-button-focus-ring) !important;
     outline: none;
     z-index: 4;
