@@ -1908,6 +1908,12 @@
     order: 2;
   }
 
+  .calendar-combobox-wrapper-compact:has(
+    .calendar-combobox-input-compact[aria-expanded="true"]
+  ) {
+    width: 180px;
+  }
+
   .calendar-combobox-input-compact {
     position: absolute;
     right: 0;
