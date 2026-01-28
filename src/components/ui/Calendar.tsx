@@ -849,7 +849,7 @@ export function Calendar({
             tabIndex={-1}
             style={{
               zIndex: 2001,
-              width: horizontalLayout ? 500 : 280,
+              width: horizontalLayout ? 462 : 280,
             }}
             onKeyDown={(e) => {
               if (e.key === "Enter" && dateRange.start && dateRange.end) {

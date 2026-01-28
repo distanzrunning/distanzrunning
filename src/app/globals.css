@@ -1203,30 +1203,24 @@
 
   .calendar-content-flex-horizontal {
     display: flex;
-    flex-direction: row;
+    flex-direction: row-reverse;
+    gap: 20px;
   }
 
   .calendar-content-flex-horizontal .calendar-inputs-wrapper {
     border-top: none;
     margin: 0;
-    padding: 0 0 0 16px;
+    padding: 0;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    min-width: 180px;
-    order: 2;
+    width: 194px;
+    min-width: 194px;
   }
 
   .calendar-content-flex-horizontal > div:last-child {
-    order: 1;
-    padding-right: 16px;
-    border-right: 1px solid rgb(242, 242, 242);
-  }
-
-  :is(.dark, [data-theme="dark"])
-    .calendar-content-flex-horizontal
-    > div:last-child {
-    border-right-color: rgb(46, 46, 46);
+    width: 224px;
+    min-width: 224px;
   }
 
   .calendar-inputs-wrapper {
