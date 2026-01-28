@@ -1908,12 +1908,14 @@
     background-color: rgb(51, 51, 51);
   }
 
-  .calendar-preset-hint-button:hover {
-    background-color: rgb(220, 220, 220);
-  }
+  @media (hover: hover) {
+    .calendar-preset-hint-button:hover {
+      background-color: #dedede;
+    }
 
-  :is(.dark, [data-theme="dark"]) .calendar-preset-hint-button:hover {
-    background-color: rgb(65, 65, 65);
+    :is(.dark, [data-theme="dark"]) .calendar-preset-hint-button:hover {
+      background-color: rgb(65, 65, 65);
+    }
   }
 
   .layout-grid {
