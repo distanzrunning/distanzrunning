@@ -976,7 +976,7 @@ export function Calendar({
                   </div>
 
                   {/* Apply Button and Timezone - at bottom for horizontal layout */}
-                  <div>
+                  <div className={horizontalLayout ? "" : "mt-2"}>
                     {/* Apply Button */}
                     <div>
                       <button
