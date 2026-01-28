@@ -148,6 +148,7 @@ export interface CalendarProps {
   value?: DateRange;
   onChange?: (range: DateRange) => void;
   width?: number;
+  horizontalLayout?: boolean;
 }
 
 // ============================================================================
@@ -659,6 +660,7 @@ export function Calendar({
   value,
   onChange,
   width = 250,
+  horizontalLayout = false,
 }: CalendarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [internalDateRange, setInternalDateRange] = useState<DateRange>({
@@ -847,7 +849,7 @@ export function Calendar({
             tabIndex={-1}
             style={{
               zIndex: 2001,
-              width: 280,
+              width: horizontalLayout ? "auto" : 280,
             }}
             onKeyDown={(e) => {
               if (e.key === "Enter" && dateRange.start && dateRange.end) {
@@ -862,8 +864,14 @@ export function Calendar({
             </button>
             {/* Content wrapper with padding */}
             <div className="calendar-content-wrapper">
-              {/* Flex container - column-reverse puts calendar on top, inputs below */}
-              <div className="calendar-content-flex">
+              {/* Flex container - column-reverse (vertical) or row (horizontal) */}
+              <div
+                className={
+                  horizontalLayout
+                    ? "calendar-content-flex-horizontal"
+                    : "calendar-content-flex"
+                }
+              >
                 {/* Inputs section (renders below calendar due to column-reverse) */}
                 <div className="calendar-inputs-wrapper">
                   <div className="space-y-2">

@@ -1201,6 +1201,21 @@
     flex-direction: column-reverse;
   }
 
+  .calendar-content-flex-horizontal {
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+  }
+
+  .calendar-content-flex-horizontal .calendar-inputs-wrapper {
+    border-right: 1px solid var(--ds-gray-400);
+    padding-right: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-width: 200px;
+  }
+
   .calendar-inputs-wrapper {
     border-top: 1px solid rgb(242, 242, 242);
     margin: 12px -12px 0;

@@ -327,6 +327,25 @@ export function DateRangePicker() {
   );
 }`;
 
+const horizontalLayoutCode = `import { Calendar, DateRange } from '@/components/ui/Calendar';
+import { useState } from 'react';
+
+export function HorizontalDateRangePicker() {
+  const [dateRange, setDateRange] = useState<DateRange>({
+    start: null,
+    end: null,
+  });
+
+  return (
+    <Calendar
+      placeholder="Select Date Range"
+      value={dateRange}
+      onChange={setDateRange}
+      horizontalLayout
+    />
+  );
+}`;
+
 // ============================================================================
 // Main Component
 // ============================================================================
@@ -351,6 +370,27 @@ export default function CalendarComponent() {
           <CodePreview componentCode={defaultCode}>
             <div className="flex justify-center py-12">
               <Calendar placeholder="Select Date Range" />
+            </div>
+          </CodePreview>
+        </div>
+      </Section>
+
+      {/* Horizontal Layout Section */}
+      <Section>
+        <SectionHeader id="horizontal-layout" onCopyLink={showToast}>
+          Horizontal Layout
+        </SectionHeader>
+        <p className="mt-2 leading-6 text-gray-900 dark:text-gray-100 xl:mt-4">
+          Use{" "}
+          <code className="text-sm bg-[var(--ds-gray-200)] px-1.5 py-0.5 rounded">
+            horizontalLayout
+          </code>{" "}
+          to align content horizontally within the calendar popover.
+        </p>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={horizontalLayoutCode}>
+            <div className="flex justify-center py-12">
+              <Calendar placeholder="Select Date Range" horizontalLayout />
             </div>
           </CodePreview>
         </div>
