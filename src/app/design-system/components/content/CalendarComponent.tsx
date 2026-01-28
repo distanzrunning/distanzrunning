@@ -1069,6 +1069,8 @@ export default function CalendarComponent() {
         setDateRange({ start: dateRange.start, end: date });
       }
       setSelectionState("start");
+      // Close dropdown after selecting end date
+      setIsOpen(false);
     }
   };
 
