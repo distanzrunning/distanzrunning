@@ -1917,7 +1917,7 @@
     background: var(--ds-background-100);
     border: none;
     border-radius: 0 6px 6px 0;
-    box-shadow: inset 0 0 0 1px var(--ds-gray-400);
+    box-shadow: 0 0 0 1px var(--ds-gray-400);
     cursor: pointer;
   }
 
@@ -1946,7 +1946,7 @@
 
   .calendar-trigger-button-compact {
     order: 1;
-    border-radius: 6px 0 0 6px;
+    border-radius: 6px 0 0 6px !important;
   }
 
   .calendar-trigger-button-compact:hover {
