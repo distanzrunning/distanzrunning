@@ -149,6 +149,8 @@ export interface CalendarProps {
   onChange?: (range: DateRange) => void;
   width?: number;
   horizontalLayout?: boolean;
+  showTimeInput?: boolean;
+  popoverAlignment?: "start" | "center" | "end";
 }
 
 // ============================================================================
@@ -661,6 +663,8 @@ export function Calendar({
   onChange,
   width = 250,
   horizontalLayout = false,
+  showTimeInput = true,
+  popoverAlignment = "start",
 }: CalendarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [internalDateRange, setInternalDateRange] = useState<DateRange>({
@@ -844,7 +848,7 @@ export function Calendar({
           <Popover.Content
             className="calendar-dropdown"
             sideOffset={12}
-            align={horizontalLayout ? "center" : "start"}
+            align={popoverAlignment}
             data-testid="calendar/popover"
             tabIndex={-1}
             style={{
@@ -900,7 +904,7 @@ export function Calendar({
                             onChange={(e) => setStartDateInput(e.target.value)}
                           />
                         </div>
-                        {!horizontalLayout && (
+                        {showTimeInput && (
                           <div
                             className="calendar-input-container"
                             style={{ width: 96 }}
@@ -950,7 +954,7 @@ export function Calendar({
                             onChange={(e) => setEndDateInput(e.target.value)}
                           />
                         </div>
-                        {!horizontalLayout && (
+                        {showTimeInput && (
                           <div
                             className="calendar-input-container"
                             style={{ width: 96 }}

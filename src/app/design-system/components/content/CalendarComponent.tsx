@@ -342,6 +342,8 @@ export function HorizontalDateRangePicker() {
       value={dateRange}
       onChange={setDateRange}
       horizontalLayout
+      showTimeInput={false}
+      popoverAlignment="center"
     />
   );
 }`;
@@ -390,7 +392,12 @@ export default function CalendarComponent() {
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={horizontalLayoutCode}>
             <div className="flex justify-center py-12">
-              <Calendar placeholder="Select Date Range" horizontalLayout />
+              <Calendar
+                placeholder="Select Date Range"
+                horizontalLayout
+                showTimeInput={false}
+                popoverAlignment="center"
+              />
             </div>
           </CodePreview>
         </div>
