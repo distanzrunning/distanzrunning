@@ -476,27 +476,6 @@ export default function CalendarComponent() {
         </div>
       </Section>
 
-      {/* Presets Section */}
-      <Section>
-        <SectionHeader id="presets" onCopyLink={showToast}>
-          Presets
-        </SectionHeader>
-        <p className="mt-2 leading-6 text-gray-900 dark:text-gray-100 xl:mt-4">
-          Provide common date ranges.
-        </p>
-        <div className="mt-4 xl:mt-7">
-          <CodePreview componentCode={presetsCode}>
-            <div className="flex justify-center py-12">
-              <Calendar
-                placeholder="Select Date Range"
-                presets={defaultPresets}
-                presetPlaceholder="Select Period"
-              />
-            </div>
-          </CodePreview>
-        </div>
-      </Section>
-
       {/* Horizontal Layout Section */}
       <Section>
         <SectionHeader id="horizontal-layout" onCopyLink={showToast}>
@@ -517,6 +496,27 @@ export default function CalendarComponent() {
                 horizontalLayout
                 showTimeInput={false}
                 popoverAlignment="center"
+              />
+            </div>
+          </CodePreview>
+        </div>
+      </Section>
+
+      {/* Presets Section */}
+      <Section>
+        <SectionHeader id="presets" onCopyLink={showToast}>
+          Presets
+        </SectionHeader>
+        <p className="mt-2 leading-6 text-gray-900 dark:text-gray-100 xl:mt-4">
+          Provide common date ranges.
+        </p>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={presetsCode}>
+            <div className="flex justify-center py-12">
+              <Calendar
+                placeholder="Select Date Range"
+                presets={defaultPresets}
+                presetPlaceholder="Select Period"
               />
             </div>
           </CodePreview>
