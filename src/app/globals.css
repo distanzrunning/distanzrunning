@@ -1946,7 +1946,7 @@
     color: var(--ds-gray-1000) !important;
     z-index: 10;
     box-shadow: var(--calendar-button-focus-ring) !important;
-    border-radius: 6px !important;
+    border-radius: 0 6px 6px 0 !important;
   }
 
   .calendar-combobox-suffix-compact {
