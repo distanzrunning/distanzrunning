@@ -900,25 +900,29 @@ export function Calendar({
                             onChange={(e) => setStartDateInput(e.target.value)}
                           />
                         </div>
-                        <div
-                          className="calendar-input-container"
-                          style={{ width: 96 }}
-                        >
-                          <input
-                            aria-labelledby="time"
-                            placeholder="12:00 AM"
-                            aria-invalid="false"
-                            autoCapitalize="none"
-                            autoComplete="off"
-                            autoCorrect="off"
-                            className="calendar-input"
-                            data-testid="calendar/input/start-time"
-                            spellCheck="false"
-                            type="text"
-                            value={startTimeInput}
-                            onChange={(e) => setStartTimeInput(e.target.value)}
-                          />
-                        </div>
+                        {!horizontalLayout && (
+                          <div
+                            className="calendar-input-container"
+                            style={{ width: 96 }}
+                          >
+                            <input
+                              aria-labelledby="time"
+                              placeholder="12:00 AM"
+                              aria-invalid="false"
+                              autoCapitalize="none"
+                              autoComplete="off"
+                              autoCorrect="off"
+                              className="calendar-input"
+                              data-testid="calendar/input/start-time"
+                              spellCheck="false"
+                              type="text"
+                              value={startTimeInput}
+                              onChange={(e) =>
+                                setStartTimeInput(e.target.value)
+                              }
+                            />
+                          </div>
+                        )}
                       </div>
                     </div>
 
@@ -946,28 +950,33 @@ export function Calendar({
                             onChange={(e) => setEndDateInput(e.target.value)}
                           />
                         </div>
-                        <div
-                          className="calendar-input-container"
-                          style={{ width: 96 }}
-                        >
-                          <input
-                            aria-labelledby="time"
-                            placeholder="11:59 PM"
-                            aria-invalid="false"
-                            autoCapitalize="none"
-                            autoComplete="off"
-                            autoCorrect="off"
-                            className="calendar-input"
-                            data-testid="calendar/input/end-time"
-                            spellCheck="false"
-                            type="text"
-                            value={endTimeInput}
-                            onChange={(e) => setEndTimeInput(e.target.value)}
-                          />
-                        </div>
+                        {!horizontalLayout && (
+                          <div
+                            className="calendar-input-container"
+                            style={{ width: 96 }}
+                          >
+                            <input
+                              aria-labelledby="time"
+                              placeholder="11:59 PM"
+                              aria-invalid="false"
+                              autoCapitalize="none"
+                              autoComplete="off"
+                              autoCorrect="off"
+                              className="calendar-input"
+                              data-testid="calendar/input/end-time"
+                              spellCheck="false"
+                              type="text"
+                              value={endTimeInput}
+                              onChange={(e) => setEndTimeInput(e.target.value)}
+                            />
+                          </div>
+                        )}
                       </div>
                     </div>
+                  </div>
 
+                  {/* Apply Button and Timezone - at bottom for horizontal layout */}
+                  <div>
                     {/* Apply Button */}
                     <div>
                       <button
@@ -984,7 +993,7 @@ export function Calendar({
                     </div>
 
                     {/* Timezone Selector */}
-                    <div className="mt-2 flex justify-center">
+                    <div className="mt-1 flex justify-center">
                       <label
                         className="calendar-timezone-label"
                         data-version="v1"
