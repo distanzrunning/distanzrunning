@@ -799,7 +799,9 @@ export function Calendar({
   };
 
   const handlePresetSelect = (presetValue: string) => {
-    const preset = presets?.find((p) => p.value === presetValue);
+    const preset =
+      presets?.find((p) => p.value === presetValue) ||
+      futurePresets?.find((p) => p.value === presetValue);
     if (preset) {
       const range = preset.getRange();
       setDateRange(range);
