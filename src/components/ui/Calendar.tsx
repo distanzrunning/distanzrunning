@@ -939,10 +939,7 @@ export function Calendar({
         )}
 
         {/* Wrapper for trigger button in compact mode */}
-        <span
-          className={compact ? "calendar-trigger-wrapper-compact" : ""}
-          style={{ width: compact ? effectiveWidth : undefined }}
-        >
+        <span className={compact ? "calendar-trigger-wrapper-compact" : ""}>
           <Popover.Root open={isOpen} onOpenChange={setIsOpen}>
             <Popover.Trigger asChild>
               <button

@@ -1896,23 +1896,52 @@
 
   /* Compact Calendar Styles */
   .calendar-wrapper-compact {
-    --calendar-compact-width: 180px;
+    --calendar-compact-width: 220px;
     width: 220px !important;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    position: relative;
+  }
+
+  /* Default state: trigger takes 180px (flex-1), combobox takes 40px */
+  .calendar-trigger-wrapper-compact {
+    display: block;
+    position: relative;
+    height: 40px;
+    flex: 1 1 180px;
+    min-width: 40px;
+    order: 1;
+    transition: flex 0.15s ease;
+  }
+
+  .calendar-trigger-button-compact {
+    width: 100%;
+    height: 100%;
+    border-radius: 6px 0 0 6px !important;
+    overflow: hidden;
+  }
+
+  .calendar-trigger-button-compact:hover {
+    z-index: 1;
+  }
+
+  .calendar-trigger-button-compact .calendar-trigger-content {
+    transition:
+      opacity 0.15s ease,
+      width 0.15s ease;
   }
 
   .calendar-combobox-wrapper-compact {
     width: 40px;
     height: 40px;
+    flex: 0 0 40px;
     position: relative;
     display: flex;
-    transition: transform 0.15s ease;
     order: 2;
-  }
-
-  .calendar-combobox-wrapper-compact:has(
-    .calendar-combobox-input-compact[aria-expanded="true"]
-  ) {
-    width: 180px;
+    transition:
+      flex 0.15s ease,
+      width 0.15s ease;
   }
 
   .calendar-combobox-input-compact {
@@ -1929,6 +1958,9 @@
     border-radius: 0 6px 6px 0 !important;
     box-shadow: 0 0 0 1px var(--ds-gray-400);
     cursor: pointer;
+    transition:
+      width 0.15s ease,
+      box-shadow 0.15s ease;
   }
 
   .calendar-combobox-input-compact:hover {
@@ -1939,15 +1971,6 @@
   .calendar-combobox-input-compact:focus-visible {
     outline: none;
     box-shadow: 0 0 0 1px var(--ds-gray-1000);
-  }
-
-  /* Expanded state - extends left to 180px */
-  .calendar-combobox-input-compact[aria-expanded="true"] {
-    width: 180px !important;
-    color: var(--ds-gray-1000) !important;
-    z-index: 10;
-    box-shadow: var(--calendar-button-focus-ring) !important;
-    border-radius: 0 6px 6px 0 !important;
   }
 
   .calendar-combobox-suffix-compact {
@@ -1963,37 +1986,32 @@
       transform 0.2s ease;
   }
 
-  .calendar-trigger-wrapper-compact {
-    display: block;
-    position: relative;
-    height: 40px;
-    border-radius: 6px;
-    order: 1;
-  }
-
-  .calendar-trigger-button-compact {
-    width: 100%;
-    border-radius: 6px 0 0 6px !important;
-  }
-
-  .calendar-trigger-button-compact:hover {
-    z-index: 1;
-  }
-
-  /* When preset dropdown is open, collapse the trigger wrapper to icon only */
+  /* When preset dropdown is OPEN: combobox expands to 180px, trigger collapses to 40px */
   .calendar-wrapper-compact:has(
       .calendar-combobox-input-compact[aria-expanded="true"]
     )
-    .calendar-trigger-wrapper-compact {
-    width: 40px !important;
+    .calendar-combobox-wrapper-compact {
+    flex: 0 0 180px;
+    width: 180px;
+  }
+
+  .calendar-wrapper-compact:has(
+      .calendar-combobox-input-compact[aria-expanded="true"]
+    )
+    .calendar-combobox-input-compact {
+    width: 180px;
+    color: var(--ds-gray-1000);
+    z-index: 10;
+    box-shadow: var(--calendar-button-focus-ring);
   }
 
   .calendar-wrapper-compact:has(
       .calendar-combobox-input-compact[aria-expanded="true"]
     )
-    .calendar-trigger-button-compact {
-    min-width: 40px !important;
-    max-width: 40px !important;
+    .calendar-trigger-wrapper-compact {
+    flex: 0 0 40px;
+    min-width: 40px;
+    max-width: 40px;
   }
 
   .calendar-wrapper-compact:has(
@@ -2001,7 +2019,9 @@
     )
     .calendar-trigger-button-compact
     .calendar-trigger-content {
-    display: none;
+    opacity: 0;
+    width: 0;
+    overflow: hidden;
   }
 
   .layout-grid {
