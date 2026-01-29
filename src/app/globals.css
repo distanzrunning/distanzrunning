@@ -1897,6 +1897,7 @@
   /* Compact Calendar Styles */
   .calendar-wrapper-compact {
     --calendar-compact-width: 180px;
+    width: 220px !important;
   }
 
   .calendar-combobox-wrapper-compact {
