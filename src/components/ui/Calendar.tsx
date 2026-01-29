@@ -900,13 +900,13 @@ export function Calendar({
             </Popover.Trigger>
             <Popover.Portal>
               <Popover.Content
-                className="calendar-preset-dropdown"
+                className={`calendar-preset-dropdown ${compact ? "calendar-preset-dropdown-compact" : ""}`}
                 sideOffset={12}
                 align="start"
                 style={{ zIndex: 2002 }}
               >
                 <div className="calendar-preset-dropdown-inner">
-                  {/* Left column - Suggestions */}
+                  {/* Single column for compact, or left column for normal */}
                   <div className="calendar-preset-list">
                     {presets.map((preset) => (
                       <button
@@ -919,19 +919,21 @@ export function Calendar({
                       </button>
                     ))}
                   </div>
-                  {/* Right column - Future date presets */}
-                  <div className="calendar-preset-future">
-                    {futurePresets.map((preset) => (
-                      <button
-                        key={preset.value}
-                        type="button"
-                        className={`calendar-preset-item ${selectedPreset === preset.value ? "calendar-preset-item-selected" : ""}`}
-                        onClick={() => handlePresetSelect(preset.value)}
-                      >
-                        {preset.label}
-                      </button>
-                    ))}
-                  </div>
+                  {/* Right column - Future date presets (hidden in compact mode) */}
+                  {!compact && futurePresets && (
+                    <div className="calendar-preset-future">
+                      {futurePresets.map((preset) => (
+                        <button
+                          key={preset.value}
+                          type="button"
+                          className={`calendar-preset-item ${selectedPreset === preset.value ? "calendar-preset-item-selected" : ""}`}
+                          onClick={() => handlePresetSelect(preset.value)}
+                        >
+                          {preset.label}
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </Popover.Content>
             </Popover.Portal>

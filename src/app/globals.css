@@ -1894,6 +1894,16 @@
     border-left: 1px solid var(--ds-gray-400);
   }
 
+  /* Compact preset dropdown - single column */
+  .calendar-preset-dropdown-compact {
+    width: 180px;
+    min-width: 180px;
+  }
+
+  .calendar-preset-dropdown-compact .calendar-preset-list {
+    width: 100%;
+  }
+
   /* Compact Calendar Styles */
   .calendar-wrapper-compact {
     --calendar-compact-width: 220px;
@@ -1904,15 +1914,15 @@
     position: relative;
   }
 
-  /* Default state: trigger takes 180px (flex-1), combobox takes 40px */
+  /* Default state: trigger takes 180px, combobox takes 40px */
   .calendar-trigger-wrapper-compact {
     display: block;
     position: relative;
     height: 40px;
-    flex: 1 1 180px;
-    min-width: 40px;
+    width: 180px;
+    flex-shrink: 0;
     order: 1;
-    transition: flex 0.15s ease;
+    transition: width 0.15s ease;
     overflow: visible;
   }
 
@@ -1930,21 +1940,15 @@
   }
 
   .calendar-trigger-button-compact .calendar-trigger-content {
-    transition:
-      opacity 0.15s ease,
-      width 0.15s ease;
+    transition: opacity 0.15s ease;
   }
 
   .calendar-combobox-wrapper-compact {
-    width: 40px;
     height: 40px;
-    flex: 0 0 40px;
     position: relative;
     display: flex;
     order: 2;
-    transition:
-      flex 0.15s ease,
-      width 0.15s ease;
+    transition: width 0.15s ease;
   }
 
   .calendar-combobox-input-compact {
@@ -1994,7 +1998,6 @@
       .calendar-combobox-input-compact[aria-expanded="true"]
     )
     .calendar-combobox-wrapper-compact {
-    flex: 0 0 180px;
     width: 180px;
   }
 
@@ -2012,9 +2015,7 @@
       .calendar-combobox-input-compact[aria-expanded="true"]
     )
     .calendar-trigger-wrapper-compact {
-    flex: 0 0 40px;
-    min-width: 40px;
-    max-width: 40px;
+    width: 40px;
   }
 
   .calendar-wrapper-compact:has(
@@ -2023,7 +2024,6 @@
     .calendar-trigger-button-compact
     .calendar-trigger-content {
     opacity: 0;
-    width: 0;
     overflow: hidden;
   }
 
