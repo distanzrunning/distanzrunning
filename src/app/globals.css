@@ -1906,98 +1906,178 @@
 
   /* Compact Calendar Styles */
   .calendar-wrapper-compact {
-    --calendar-compact-width: 220px;
     width: auto !important;
+  }
+
+  /* Compact container - unified bar with icon, text/input, and chevron */
+  .calendar-compact-container {
     display: flex;
     flex-direction: row;
     align-items: stretch;
+    height: 40px;
+    width: 220px;
+    background: var(--ds-background-100);
+    border-radius: 6px;
+    box-shadow: 0 0 0 1px var(--ds-gray-400);
     position: relative;
+    overflow: hidden;
   }
 
-  /* Calendar icon button on the left - always 40px */
-  .calendar-compact-icon-button {
+  /* Calendar icon trigger on the left */
+  .calendar-compact-icon-trigger {
     display: flex;
     align-items: center;
     justify-content: center;
     width: 40px;
     min-width: 40px;
-    max-width: 40px;
     height: 40px;
     flex-shrink: 0;
-    background: var(--ds-background-100);
+    background: transparent;
     border: none;
-    border-radius: 6px 0 0 6px;
-    box-shadow: 0 0 0 1px var(--ds-gray-400);
     cursor: pointer;
     color: var(--ds-gray-1000);
-    transition:
-      background 0.15s ease,
-      box-shadow 0.15s ease;
-  }
-
-  .calendar-compact-icon-button:hover {
-    background: var(--ds-gray-100);
-  }
-
-  .calendar-compact-icon-button:focus,
-  .calendar-compact-icon-button:focus-visible {
-    outline: none;
-    box-shadow: var(--calendar-button-focus-ring);
+    transition: background 0.15s ease;
+    position: relative;
     z-index: 2;
   }
 
-  /* Combobox wrapper in compact mode */
-  .calendar-combobox-wrapper-compact {
-    height: 40px;
-    position: relative;
-    display: flex;
-    width: 180px;
-  }
-
-  /* Combobox input in compact mode - always fills the wrapper */
-  .calendar-combobox-input-compact {
-    width: 100%;
-    height: 40px;
-    padding-left: 12px;
-    padding-right: 32px;
-    background: var(--ds-background-100);
-    border: none;
-    border-radius: 0 6px 6px 0;
-    box-shadow: 0 0 0 1px var(--ds-gray-400);
-    cursor: pointer;
-    font-size: 14px;
-    color: var(--ds-gray-1000);
-    transition: box-shadow 0.15s ease;
-    /* Remove left border overlap with icon button */
-    margin-left: -1px;
-  }
-
-  .calendar-combobox-input-compact::placeholder {
-    color: var(--ds-gray-900);
-  }
-
-  .calendar-combobox-input-compact:hover {
+  .calendar-compact-icon-trigger:hover {
     background: var(--ds-gray-100);
   }
 
-  .calendar-combobox-input-compact:focus,
-  .calendar-combobox-input-compact:focus-visible {
+  .calendar-compact-icon-trigger:focus,
+  .calendar-compact-icon-trigger:focus-visible {
     outline: none;
-    box-shadow: var(--calendar-button-focus-ring);
-    z-index: 1;
+    box-shadow: inset 0 0 0 1px var(--ds-gray-1000);
+    border-radius: 6px 0 0 6px;
   }
 
-  .calendar-combobox-suffix-compact {
+  /* Middle section containing text, divider, and input */
+  .calendar-compact-middle {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    position: relative;
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  /* "Select Date Range" text - visible when closed */
+  .calendar-compact-date-text {
     position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
+    left: 0;
+    right: 0;
+    padding-left: 8px;
+    padding-right: 8px;
+    font-size: 14px;
+    color: var(--ds-gray-1000);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    opacity: 1;
+    transition: opacity 0.15s ease;
+  }
+
+  /* Divider line */
+  .calendar-compact-divider {
+    position: absolute;
+    right: 0;
+    top: 8px;
+    bottom: 8px;
+    width: 1px;
+    background: var(--ds-gray-400);
+    transition:
+      right 0.15s ease,
+      left 0.15s ease;
+  }
+
+  /* "Select Period" input - hidden when closed */
+  .calendar-compact-preset-input {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 100%;
+    padding-left: 8px;
+    padding-right: 8px;
+    font-size: 14px;
+    color: var(--ds-gray-1000);
+    background: transparent;
+    border: none;
+    outline: none;
+    opacity: 0;
     pointer-events: none;
-    z-index: 10;
+    transition: opacity 0.15s ease;
+  }
+
+  .calendar-compact-preset-input::placeholder {
     color: var(--ds-gray-900);
   }
 
-  /* Hide trigger wrapper in compact mode with presets (icon button is separate) */
+  /* Chevron trigger on the right */
+  .calendar-compact-chevron-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    min-width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: var(--ds-gray-900);
+    transition: background 0.15s ease;
+    position: relative;
+    z-index: 2;
+  }
+
+  .calendar-compact-chevron-trigger:hover {
+    background: var(--ds-gray-100);
+  }
+
+  .calendar-compact-chevron-trigger:focus,
+  .calendar-compact-chevron-trigger:focus-visible {
+    outline: none;
+    box-shadow: inset 0 0 0 1px var(--ds-gray-1000);
+    border-radius: 0 6px 6px 0;
+  }
+
+  /* Chevron rotation when open */
+  .calendar-compact-chevron-trigger[aria-expanded="true"] svg {
+    transform: rotate(180deg);
+  }
+
+  .calendar-compact-chevron-trigger svg {
+    transition: transform 0.2s ease;
+  }
+
+  /* ===== OPEN STATE: when preset dropdown is open ===== */
+  .calendar-compact-container[data-preset-open="true"] {
+    box-shadow: var(--calendar-button-focus-ring);
+  }
+
+  /* Hide the date text when open */
+  .calendar-compact-container[data-preset-open="true"]
+    .calendar-compact-date-text {
+    opacity: 0;
+  }
+
+  /* Move divider to left (after icon) when open */
+  .calendar-compact-container[data-preset-open="true"]
+    .calendar-compact-divider {
+    left: 0;
+    right: auto;
+  }
+
+  /* Show the preset input when open */
+  .calendar-compact-container[data-preset-open="true"]
+    .calendar-compact-preset-input {
+    opacity: 1;
+    pointer-events: auto;
+    padding-left: 16px; /* more padding since divider is now on left */
+  }
+
+  /* Hide trigger wrapper in compact mode with presets (handled by compact container) */
   .calendar-trigger-wrapper-compact {
     display: none;
   }

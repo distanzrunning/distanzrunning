@@ -839,317 +839,13 @@ export function Calendar({
         }}
         data-preset-open={isPresetDropdownOpen}
       >
-        {/* Compact mode: Calendar icon button on the left */}
+        {/* Compact mode with presets: unified container with calendar icon + text/input + chevron */}
         {compact && presets && presets.length > 0 && (
-          <Popover.Root open={isOpen} onOpenChange={setIsOpen}>
-            <Popover.Trigger asChild>
-              <button
-                type="button"
-                aria-haspopup="dialog"
-                aria-expanded={isOpen}
-                data-testid="calendar/trigger/button"
-                title={placeholder}
-                className="calendar-compact-icon-button"
-              >
-                <CalendarIcon />
-              </button>
-            </Popover.Trigger>
-            <Popover.Portal>
-              <Popover.Content
-                className="calendar-dropdown"
-                sideOffset={12}
-                align={popoverAlignment}
-                data-testid="calendar/popover"
-                tabIndex={-1}
-                style={{
-                  zIndex: 2001,
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && dateRange.start && dateRange.end) {
-                    e.preventDefault();
-                    handleApply();
-                  }
-                }}
-              >
-                {/* Screen reader only button for focus management */}
-                <button type="button" className="sr-only">
-                  Calendar dialog
-                </button>
-                {/* Content wrapper with padding */}
-                <div
-                  className={`calendar-content-wrapper ${horizontalLayout ? "calendar-content-wrapper-horizontal" : ""}`}
-                >
-                  {/* Flex container - direction changes based on data-side attribute */}
-                  <div
-                    className={
-                      horizontalLayout
-                        ? "calendar-content-flex-horizontal"
-                        : "calendar-content-flex"
-                    }
-                  >
-                    {/* Inputs section - position depends on popover side (cells always closer to trigger) */}
-                    <div className="calendar-inputs-wrapper">
-                      <div className="space-y-2">
-                        {/* Start Date/Time */}
-                        <div>
-                          <div className="mb-1 flex items-center justify-between">
-                            <label data-version="v1">
-                              <div className="calendar-input-label">Start</div>
-                            </label>
-                          </div>
-                          <div className="flex gap-2">
-                            <div className="calendar-input-container flex-1">
-                              <input
-                                aria-labelledby="start-date"
-                                placeholder="Jan 01, 2025"
-                                aria-invalid="false"
-                                autoCapitalize="none"
-                                autoComplete="off"
-                                autoCorrect="off"
-                                className="calendar-input"
-                                data-testid="calendar/input/start-date"
-                                spellCheck="false"
-                                type="text"
-                                value={startDateInput}
-                                onChange={(e) =>
-                                  setStartDateInput(e.target.value)
-                                }
-                              />
-                            </div>
-                            {showTimeInput && (
-                              <div
-                                className="calendar-input-container"
-                                style={{ width: 96 }}
-                              >
-                                <input
-                                  aria-labelledby="time"
-                                  placeholder="12:00 AM"
-                                  aria-invalid="false"
-                                  autoCapitalize="none"
-                                  autoComplete="off"
-                                  autoCorrect="off"
-                                  className="calendar-input"
-                                  data-testid="calendar/input/start-time"
-                                  spellCheck="false"
-                                  type="text"
-                                  value={startTimeInput}
-                                  onChange={(e) =>
-                                    setStartTimeInput(e.target.value)
-                                  }
-                                />
-                              </div>
-                            )}
-                          </div>
-                        </div>
-
-                        {/* End Date/Time */}
-                        <div>
-                          <div className="mb-1 flex items-center justify-between">
-                            <label data-version="v1">
-                              <div className="calendar-input-label">End</div>
-                            </label>
-                          </div>
-                          <div className="flex gap-2">
-                            <div className="calendar-input-container flex-1">
-                              <input
-                                aria-labelledby="end-date"
-                                placeholder="Jan 01, 2025"
-                                aria-invalid="false"
-                                autoCapitalize="none"
-                                autoComplete="off"
-                                autoCorrect="off"
-                                className="calendar-input"
-                                data-testid="calendar/input/end-date"
-                                spellCheck="false"
-                                type="text"
-                                value={endDateInput}
-                                onChange={(e) =>
-                                  setEndDateInput(e.target.value)
-                                }
-                              />
-                            </div>
-                            {showTimeInput && (
-                              <div
-                                className="calendar-input-container"
-                                style={{ width: 96 }}
-                              >
-                                <input
-                                  aria-labelledby="time"
-                                  placeholder="11:59 PM"
-                                  aria-invalid="false"
-                                  autoCapitalize="none"
-                                  autoComplete="off"
-                                  autoCorrect="off"
-                                  className="calendar-input"
-                                  data-testid="calendar/input/end-time"
-                                  spellCheck="false"
-                                  type="text"
-                                  value={endTimeInput}
-                                  onChange={(e) =>
-                                    setEndTimeInput(e.target.value)
-                                  }
-                                />
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Apply Button and Timezone - at bottom for horizontal layout */}
-                      <div className={horizontalLayout ? "" : "mt-2"}>
-                        {/* Apply Button */}
-                        <div>
-                          <button
-                            type="button"
-                            onClick={handleApply}
-                            className="calendar-apply-button"
-                            data-testid="calendar/button/apply"
-                          >
-                            <span className="calendar-apply-button-content">
-                              Apply
-                              <span className="calendar-apply-hint">↵</span>
-                            </span>
-                          </button>
-                        </div>
-
-                        {/* Timezone Selector */}
-                        <div className="mt-1 flex justify-center">
-                          <label
-                            className="calendar-timezone-label"
-                            data-version="v1"
-                          >
-                            <div className="calendar-select-container">
-                              <select
-                                aria-invalid="false"
-                                className="calendar-select"
-                                data-testid="calendar/select/timezone"
-                                value={timezone}
-                                style={{ width: timezoneWidth ?? "auto" }}
-                                onChange={(e) =>
-                                  setTimezone(e.target.value as TimezoneOption)
-                                }
-                              >
-                                <option value="UTC">UTC</option>
-                                <option value="local">
-                                  Local ({getLocalTimezone()})
-                                </option>
-                              </select>
-                              <span className="calendar-select-suffix">
-                                <ChevronDownIcon />
-                              </span>
-                            </div>
-                          </label>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Calendar grid - always positioned closer to the trigger */}
-                    <div>
-                      <CalendarContent
-                        dateRange={dateRange}
-                        onDateSelect={handleDateSelect}
-                        isSelectingEnd={selectionState === "end"}
-                      />
-                    </div>
-                  </div>
-                </div>
-              </Popover.Content>
-            </Popover.Portal>
-          </Popover.Root>
-        )}
-
-        {/* Presets Combobox */}
-        {presets && presets.length > 0 && (
-          <Popover.Root
-            open={isPresetDropdownOpen}
-            onOpenChange={setIsPresetDropdownOpen}
+          <div
+            className="calendar-compact-container"
+            data-preset-open={isPresetDropdownOpen}
           >
-            <Popover.Trigger asChild>
-              <div
-                className={`calendar-combobox-wrapper ${compact ? "calendar-combobox-wrapper-compact" : ""}`}
-                style={{ width: compact ? undefined : effectiveWidth }}
-              >
-                <input
-                  className={`calendar-combobox-input ${compact ? "calendar-combobox-input-compact" : ""}`}
-                  data-error="false"
-                  data-testid="calendar/combobox-input"
-                  placeholder={presetPlaceholder}
-                  aria-haspopup="dialog"
-                  aria-expanded={isPresetDropdownOpen}
-                  autoComplete="off"
-                  autoCorrect="off"
-                  spellCheck="false"
-                  aria-autocomplete="list"
-                  role="combobox"
-                  type="text"
-                  value={selectedPresetLabel || ""}
-                  readOnly
-                  onClick={() => setIsPresetDropdownOpen(true)}
-                />
-                {!compact && (
-                  <span className="calendar-combobox-prefix">
-                    <ClockIcon />
-                  </span>
-                )}
-                <span
-                  className={`calendar-combobox-suffix ${compact ? "calendar-combobox-suffix-compact" : ""}`}
-                >
-                  <ChevronDownIcon />
-                </span>
-                {/* Right border divider - hidden in compact mode */}
-                {!compact && (
-                  <div
-                    aria-hidden="true"
-                    className="calendar-combobox-divider"
-                  />
-                )}
-              </div>
-            </Popover.Trigger>
-            <Popover.Portal>
-              <Popover.Content
-                className={`calendar-preset-dropdown ${compact ? "calendar-preset-dropdown-compact" : ""}`}
-                sideOffset={12}
-                align={compact ? "end" : "start"}
-                style={{ zIndex: 2002 }}
-              >
-                <div className="calendar-preset-dropdown-inner">
-                  {/* Single column for compact, or left column for normal */}
-                  <div className="calendar-preset-list">
-                    {presets.map((preset) => (
-                      <button
-                        key={preset.value}
-                        type="button"
-                        className={`calendar-preset-item ${selectedPreset === preset.value ? "calendar-preset-item-selected" : ""}`}
-                        onClick={() => handlePresetSelect(preset.value)}
-                      >
-                        {preset.label}
-                      </button>
-                    ))}
-                  </div>
-                  {/* Right column - Future date presets (hidden in compact mode) */}
-                  {!compact && futurePresets && (
-                    <div className="calendar-preset-future">
-                      {futurePresets.map((preset) => (
-                        <button
-                          key={preset.value}
-                          type="button"
-                          className={`calendar-preset-item ${selectedPreset === preset.value ? "calendar-preset-item-selected" : ""}`}
-                          onClick={() => handlePresetSelect(preset.value)}
-                        >
-                          {preset.label}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </Popover.Content>
-            </Popover.Portal>
-          </Popover.Root>
-        )}
-
-        {/* Wrapper for trigger button - only for non-compact mode OR when no presets */}
-        {(!compact || !presets || presets.length === 0) && (
-          <span className={compact ? "calendar-trigger-wrapper-compact" : ""}>
+            {/* Calendar icon - opens calendar popover */}
             <Popover.Root open={isOpen} onOpenChange={setIsOpen}>
               <Popover.Trigger asChild>
                 <button
@@ -1158,74 +854,19 @@ export function Calendar({
                   aria-expanded={isOpen}
                   data-testid="calendar/trigger/button"
                   title={placeholder}
-                  className={`calendar-trigger-button flex items-center justify-between text-left cursor-pointer text-[rgb(23,23,23)] dark:text-[rgb(237,237,237)] ${isOpen ? "calendar-trigger-button-expanded" : ""} ${presets && presets.length > 0 ? "calendar-trigger-button-with-presets" : ""} ${compact ? "calendar-trigger-button-compact" : ""}`}
-                  style={{
-                    width: compact ? undefined : effectiveWidth,
-                    height: 40,
-                    paddingLeft: 10,
-                    paddingRight: 10,
-                    borderRadius: compact ? undefined : 6,
-                    fontSize: 14,
-                    lineHeight: "20px",
-                    fontWeight: 400,
-                  }}
+                  className="calendar-compact-icon-trigger"
                 >
-                  {/* Prefix (icon container) */}
-                  <span
-                    className="flex items-center justify-center flex-shrink-0"
-                    style={{
-                      height: 16,
-                      width: 20,
-                      minWidth: 20,
-                      marginRight: 2,
-                    }}
-                  >
-                    <CalendarIcon />
-                  </span>
-                  {/* Content (text) */}
-                  <span
-                    className="calendar-trigger-content overflow-hidden text-ellipsis whitespace-nowrap flex-1"
-                    style={{
-                      paddingLeft: 6,
-                      paddingRight: hasSelection ? 8 : 20,
-                    }}
-                  >
-                    {displayText}
-                  </span>
-                  {/* Clear button */}
-                  {hasSelection && (
-                    <span
-                      role="button"
-                      tabIndex={0}
-                      aria-label="Clear date range"
-                      onClick={handleClearRange}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter" || e.key === " ") {
-                          handleClearRange(e as unknown as React.MouseEvent);
-                        }
-                      }}
-                      className="flex items-center justify-center flex-shrink-0 rounded hover:bg-[var(--ds-gray-200)] transition-colors"
-                      style={{
-                        height: 20,
-                        width: 20,
-                        minWidth: 20,
-                      }}
-                    >
-                      <CloseIcon />
-                    </span>
-                  )}
+                  <CalendarIcon />
                 </button>
               </Popover.Trigger>
               <Popover.Portal>
                 <Popover.Content
                   className="calendar-dropdown"
                   sideOffset={12}
-                  align={popoverAlignment}
+                  align="start"
                   data-testid="calendar/popover"
                   tabIndex={-1}
-                  style={{
-                    zIndex: 2001,
-                  }}
+                  style={{ zIndex: 2001 }}
                   onKeyDown={(e) => {
                     if (e.key === "Enter" && dateRange.start && dateRange.end) {
                       e.preventDefault();
@@ -1233,15 +874,12 @@ export function Calendar({
                     }
                   }}
                 >
-                  {/* Screen reader only button for focus management */}
                   <button type="button" className="sr-only">
                     Calendar dialog
                   </button>
-                  {/* Content wrapper with padding */}
                   <div
                     className={`calendar-content-wrapper ${horizontalLayout ? "calendar-content-wrapper-horizontal" : ""}`}
                   >
-                    {/* Flex container - direction changes based on data-side attribute */}
                     <div
                       className={
                         horizontalLayout
@@ -1249,10 +887,8 @@ export function Calendar({
                           : "calendar-content-flex"
                       }
                     >
-                      {/* Inputs section - position depends on popover side (cells always closer to trigger) */}
                       <div className="calendar-inputs-wrapper">
                         <div className="space-y-2">
-                          {/* Start Date/Time */}
                           <div>
                             <div className="mb-1 flex items-center justify-between">
                               <label data-version="v1">
@@ -1305,8 +941,6 @@ export function Calendar({
                               )}
                             </div>
                           </div>
-
-                          {/* End Date/Time */}
                           <div>
                             <div className="mb-1 flex items-center justify-between">
                               <label data-version="v1">
@@ -1358,10 +992,7 @@ export function Calendar({
                             </div>
                           </div>
                         </div>
-
-                        {/* Apply Button and Timezone - at bottom for horizontal layout */}
                         <div className={horizontalLayout ? "" : "mt-2"}>
-                          {/* Apply Button */}
                           <div>
                             <button
                               type="button"
@@ -1375,8 +1006,6 @@ export function Calendar({
                               </span>
                             </button>
                           </div>
-
-                          {/* Timezone Selector */}
                           <div className="mt-1 flex justify-center">
                             <label
                               className="calendar-timezone-label"
@@ -1408,8 +1037,6 @@ export function Calendar({
                           </div>
                         </div>
                       </div>
-
-                      {/* Calendar grid - always positioned closer to the trigger */}
                       <div>
                         <CalendarContent
                           dateRange={dateRange}
@@ -1422,8 +1049,427 @@ export function Calendar({
                 </Popover.Content>
               </Popover.Portal>
             </Popover.Root>
-          </span>
+
+            {/* Middle section: "Select Date Range" text (closed) or divider + "Select Period" input (open) */}
+            <div className="calendar-compact-middle">
+              {/* Shown when closed: "Select Date Range" text */}
+              <span className="calendar-compact-date-text">{displayText}</span>
+              {/* Divider - moves position based on open state via CSS */}
+              <div className="calendar-compact-divider" aria-hidden="true" />
+              {/* Shown when open: "Select Period" input */}
+              <input
+                className="calendar-compact-preset-input"
+                placeholder={presetPlaceholder}
+                value={selectedPresetLabel || ""}
+                readOnly
+                tabIndex={-1}
+              />
+            </div>
+
+            {/* Chevron - opens preset dropdown */}
+            <Popover.Root
+              open={isPresetDropdownOpen}
+              onOpenChange={setIsPresetDropdownOpen}
+            >
+              <Popover.Trigger asChild>
+                <button
+                  type="button"
+                  aria-haspopup="dialog"
+                  aria-expanded={isPresetDropdownOpen}
+                  data-testid="calendar/preset-trigger"
+                  className="calendar-compact-chevron-trigger"
+                >
+                  <ChevronDownIcon />
+                </button>
+              </Popover.Trigger>
+              <Popover.Portal>
+                <Popover.Content
+                  className="calendar-preset-dropdown calendar-preset-dropdown-compact"
+                  sideOffset={12}
+                  align="end"
+                  style={{ zIndex: 2002 }}
+                >
+                  <div className="calendar-preset-dropdown-inner">
+                    <div className="calendar-preset-list">
+                      {presets.map((preset) => (
+                        <button
+                          key={preset.value}
+                          type="button"
+                          className={`calendar-preset-item ${selectedPreset === preset.value ? "calendar-preset-item-selected" : ""}`}
+                          onClick={() => handlePresetSelect(preset.value)}
+                        >
+                          {preset.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </Popover.Content>
+              </Popover.Portal>
+            </Popover.Root>
+          </div>
         )}
+
+        {/* Non-compact mode: Presets Combobox */}
+        {!compact && presets && presets.length > 0 && (
+          <Popover.Root
+            open={isPresetDropdownOpen}
+            onOpenChange={setIsPresetDropdownOpen}
+          >
+            <Popover.Trigger asChild>
+              <div
+                className="calendar-combobox-wrapper"
+                style={{ width: effectiveWidth }}
+              >
+                <input
+                  className="calendar-combobox-input"
+                  data-error="false"
+                  data-testid="calendar/combobox-input"
+                  placeholder={presetPlaceholder}
+                  aria-haspopup="dialog"
+                  aria-expanded={isPresetDropdownOpen}
+                  autoComplete="off"
+                  autoCorrect="off"
+                  spellCheck="false"
+                  aria-autocomplete="list"
+                  role="combobox"
+                  type="text"
+                  value={selectedPresetLabel || ""}
+                  readOnly
+                  onClick={() => setIsPresetDropdownOpen(true)}
+                />
+                <span className="calendar-combobox-prefix">
+                  <ClockIcon />
+                </span>
+                <span className="calendar-combobox-suffix">
+                  <ChevronDownIcon />
+                </span>
+                <div aria-hidden="true" className="calendar-combobox-divider" />
+              </div>
+            </Popover.Trigger>
+            <Popover.Portal>
+              <Popover.Content
+                className="calendar-preset-dropdown"
+                sideOffset={12}
+                align="start"
+                style={{ zIndex: 2002 }}
+              >
+                <div className="calendar-preset-dropdown-inner">
+                  <div className="calendar-preset-list">
+                    {presets.map((preset) => (
+                      <button
+                        key={preset.value}
+                        type="button"
+                        className={`calendar-preset-item ${selectedPreset === preset.value ? "calendar-preset-item-selected" : ""}`}
+                        onClick={() => handlePresetSelect(preset.value)}
+                      >
+                        {preset.label}
+                      </button>
+                    ))}
+                  </div>
+                  {futurePresets && (
+                    <div className="calendar-preset-future">
+                      {futurePresets.map((preset) => (
+                        <button
+                          key={preset.value}
+                          type="button"
+                          className={`calendar-preset-item ${selectedPreset === preset.value ? "calendar-preset-item-selected" : ""}`}
+                          onClick={() => handlePresetSelect(preset.value)}
+                        >
+                          {preset.label}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </Popover.Content>
+            </Popover.Portal>
+          </Popover.Root>
+        )}
+
+        {/* Wrapper for trigger button - non-compact mode with presets, OR any mode without presets */}
+        {(!compact || !presets || presets.length === 0) &&
+          !(compact && presets && presets.length > 0) && (
+            <span className={compact ? "calendar-trigger-wrapper-compact" : ""}>
+              <Popover.Root open={isOpen} onOpenChange={setIsOpen}>
+                <Popover.Trigger asChild>
+                  <button
+                    type="button"
+                    aria-haspopup="dialog"
+                    aria-expanded={isOpen}
+                    data-testid="calendar/trigger/button"
+                    title={placeholder}
+                    className={`calendar-trigger-button flex items-center justify-between text-left cursor-pointer text-[rgb(23,23,23)] dark:text-[rgb(237,237,237)] ${isOpen ? "calendar-trigger-button-expanded" : ""} ${presets && presets.length > 0 ? "calendar-trigger-button-with-presets" : ""} ${compact ? "calendar-trigger-button-compact" : ""}`}
+                    style={{
+                      width: compact ? undefined : effectiveWidth,
+                      height: 40,
+                      paddingLeft: 10,
+                      paddingRight: 10,
+                      borderRadius: compact ? undefined : 6,
+                      fontSize: 14,
+                      lineHeight: "20px",
+                      fontWeight: 400,
+                    }}
+                  >
+                    {/* Prefix (icon container) */}
+                    <span
+                      className="flex items-center justify-center flex-shrink-0"
+                      style={{
+                        height: 16,
+                        width: 20,
+                        minWidth: 20,
+                        marginRight: 2,
+                      }}
+                    >
+                      <CalendarIcon />
+                    </span>
+                    {/* Content (text) */}
+                    <span
+                      className="calendar-trigger-content overflow-hidden text-ellipsis whitespace-nowrap flex-1"
+                      style={{
+                        paddingLeft: 6,
+                        paddingRight: hasSelection ? 8 : 20,
+                      }}
+                    >
+                      {displayText}
+                    </span>
+                    {/* Clear button */}
+                    {hasSelection && (
+                      <span
+                        role="button"
+                        tabIndex={0}
+                        aria-label="Clear date range"
+                        onClick={handleClearRange}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            handleClearRange(e as unknown as React.MouseEvent);
+                          }
+                        }}
+                        className="flex items-center justify-center flex-shrink-0 rounded hover:bg-[var(--ds-gray-200)] transition-colors"
+                        style={{
+                          height: 20,
+                          width: 20,
+                          minWidth: 20,
+                        }}
+                      >
+                        <CloseIcon />
+                      </span>
+                    )}
+                  </button>
+                </Popover.Trigger>
+                <Popover.Portal>
+                  <Popover.Content
+                    className="calendar-dropdown"
+                    sideOffset={12}
+                    align={popoverAlignment}
+                    data-testid="calendar/popover"
+                    tabIndex={-1}
+                    style={{
+                      zIndex: 2001,
+                    }}
+                    onKeyDown={(e) => {
+                      if (
+                        e.key === "Enter" &&
+                        dateRange.start &&
+                        dateRange.end
+                      ) {
+                        e.preventDefault();
+                        handleApply();
+                      }
+                    }}
+                  >
+                    {/* Screen reader only button for focus management */}
+                    <button type="button" className="sr-only">
+                      Calendar dialog
+                    </button>
+                    {/* Content wrapper with padding */}
+                    <div
+                      className={`calendar-content-wrapper ${horizontalLayout ? "calendar-content-wrapper-horizontal" : ""}`}
+                    >
+                      {/* Flex container - direction changes based on data-side attribute */}
+                      <div
+                        className={
+                          horizontalLayout
+                            ? "calendar-content-flex-horizontal"
+                            : "calendar-content-flex"
+                        }
+                      >
+                        {/* Inputs section - position depends on popover side (cells always closer to trigger) */}
+                        <div className="calendar-inputs-wrapper">
+                          <div className="space-y-2">
+                            {/* Start Date/Time */}
+                            <div>
+                              <div className="mb-1 flex items-center justify-between">
+                                <label data-version="v1">
+                                  <div className="calendar-input-label">
+                                    Start
+                                  </div>
+                                </label>
+                              </div>
+                              <div className="flex gap-2">
+                                <div className="calendar-input-container flex-1">
+                                  <input
+                                    aria-labelledby="start-date"
+                                    placeholder="Jan 01, 2025"
+                                    aria-invalid="false"
+                                    autoCapitalize="none"
+                                    autoComplete="off"
+                                    autoCorrect="off"
+                                    className="calendar-input"
+                                    data-testid="calendar/input/start-date"
+                                    spellCheck="false"
+                                    type="text"
+                                    value={startDateInput}
+                                    onChange={(e) =>
+                                      setStartDateInput(e.target.value)
+                                    }
+                                  />
+                                </div>
+                                {showTimeInput && (
+                                  <div
+                                    className="calendar-input-container"
+                                    style={{ width: 96 }}
+                                  >
+                                    <input
+                                      aria-labelledby="time"
+                                      placeholder="12:00 AM"
+                                      aria-invalid="false"
+                                      autoCapitalize="none"
+                                      autoComplete="off"
+                                      autoCorrect="off"
+                                      className="calendar-input"
+                                      data-testid="calendar/input/start-time"
+                                      spellCheck="false"
+                                      type="text"
+                                      value={startTimeInput}
+                                      onChange={(e) =>
+                                        setStartTimeInput(e.target.value)
+                                      }
+                                    />
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+
+                            {/* End Date/Time */}
+                            <div>
+                              <div className="mb-1 flex items-center justify-between">
+                                <label data-version="v1">
+                                  <div className="calendar-input-label">
+                                    End
+                                  </div>
+                                </label>
+                              </div>
+                              <div className="flex gap-2">
+                                <div className="calendar-input-container flex-1">
+                                  <input
+                                    aria-labelledby="end-date"
+                                    placeholder="Jan 01, 2025"
+                                    aria-invalid="false"
+                                    autoCapitalize="none"
+                                    autoComplete="off"
+                                    autoCorrect="off"
+                                    className="calendar-input"
+                                    data-testid="calendar/input/end-date"
+                                    spellCheck="false"
+                                    type="text"
+                                    value={endDateInput}
+                                    onChange={(e) =>
+                                      setEndDateInput(e.target.value)
+                                    }
+                                  />
+                                </div>
+                                {showTimeInput && (
+                                  <div
+                                    className="calendar-input-container"
+                                    style={{ width: 96 }}
+                                  >
+                                    <input
+                                      aria-labelledby="time"
+                                      placeholder="11:59 PM"
+                                      aria-invalid="false"
+                                      autoCapitalize="none"
+                                      autoComplete="off"
+                                      autoCorrect="off"
+                                      className="calendar-input"
+                                      data-testid="calendar/input/end-time"
+                                      spellCheck="false"
+                                      type="text"
+                                      value={endTimeInput}
+                                      onChange={(e) =>
+                                        setEndTimeInput(e.target.value)
+                                      }
+                                    />
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Apply Button and Timezone - at bottom for horizontal layout */}
+                          <div className={horizontalLayout ? "" : "mt-2"}>
+                            {/* Apply Button */}
+                            <div>
+                              <button
+                                type="button"
+                                onClick={handleApply}
+                                className="calendar-apply-button"
+                                data-testid="calendar/button/apply"
+                              >
+                                <span className="calendar-apply-button-content">
+                                  Apply
+                                  <span className="calendar-apply-hint">↵</span>
+                                </span>
+                              </button>
+                            </div>
+
+                            {/* Timezone Selector */}
+                            <div className="mt-1 flex justify-center">
+                              <label
+                                className="calendar-timezone-label"
+                                data-version="v1"
+                              >
+                                <div className="calendar-select-container">
+                                  <select
+                                    aria-invalid="false"
+                                    className="calendar-select"
+                                    data-testid="calendar/select/timezone"
+                                    value={timezone}
+                                    style={{ width: timezoneWidth ?? "auto" }}
+                                    onChange={(e) =>
+                                      setTimezone(
+                                        e.target.value as TimezoneOption,
+                                      )
+                                    }
+                                  >
+                                    <option value="UTC">UTC</option>
+                                    <option value="local">
+                                      Local ({getLocalTimezone()})
+                                    </option>
+                                  </select>
+                                  <span className="calendar-select-suffix">
+                                    <ChevronDownIcon />
+                                  </span>
+                                </div>
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Calendar grid - always positioned closer to the trigger */}
+                        <div>
+                          <CalendarContent
+                            dateRange={dateRange}
+                            onDateSelect={handleDateSelect}
+                            isSelectingEnd={selectionState === "end"}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </Popover.Content>
+                </Popover.Portal>
+              </Popover.Root>
+            </span>
+          )}
       </div>
     </>
   );
