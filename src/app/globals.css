@@ -1915,6 +1915,7 @@
     flex-direction: row;
     align-items: stretch;
     height: 40px;
+    width: 220px;
     background: var(--ds-background-100);
     border-radius: 6px;
     box-shadow: 0 0 0 1px var(--ds-gray-400);
@@ -1934,6 +1935,9 @@
     color: var(--ds-gray-1000);
     transition: background 0.15s ease;
     gap: 8px;
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
   }
 
   .calendar-compact-calendar-trigger:hover {
@@ -1964,9 +1968,9 @@
   /* Divider line */
   .calendar-compact-divider {
     width: 1px;
-    margin: 8px 0;
     background: var(--ds-gray-400);
     flex-shrink: 0;
+    align-self: stretch;
   }
 
   /* Preset trigger - right side: "Select Period" text + chevron */
@@ -1982,6 +1986,7 @@
     color: var(--ds-gray-900);
     transition: background 0.15s ease;
     gap: 8px;
+    flex-shrink: 0;
   }
 
   .calendar-compact-preset-trigger:hover {
@@ -2037,6 +2042,14 @@
   .calendar-compact-container[data-preset-open="true"]
     .calendar-compact-calendar-trigger {
     padding: 0 10px;
+    flex: 0 0 auto;
+  }
+
+  /* Expand preset trigger when open */
+  .calendar-compact-container[data-preset-open="true"]
+    .calendar-compact-preset-trigger {
+    flex: 1;
+    min-width: 0;
   }
 
   /* Show the preset text when open */
@@ -2044,6 +2057,8 @@
     .calendar-compact-preset-text {
     display: block;
     color: var(--ds-gray-1000);
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   /* Hide trigger wrapper in compact mode with presets (handled by compact container) */
