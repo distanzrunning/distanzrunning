@@ -1977,15 +1977,15 @@
   .calendar-compact-preset-trigger {
     display: flex;
     align-items: center;
+    justify-content: flex-end;
     height: 40px;
-    padding: 0 10px 0 12px;
+    padding: 0;
     background: transparent;
     border: none;
     border-radius: 0 6px 6px 0;
     cursor: pointer;
     color: var(--ds-gray-900);
     transition: background 0.15s ease;
-    gap: 8px;
     flex-shrink: 0;
   }
 
@@ -2007,12 +2007,16 @@
     text-overflow: ellipsis;
     /* Hidden by default, shown when dropdown is open */
     display: none;
+    padding-left: 12px;
   }
 
   .calendar-compact-chevron {
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 40px;
+    min-width: 40px;
+    height: 40px;
     flex-shrink: 0;
   }
 
