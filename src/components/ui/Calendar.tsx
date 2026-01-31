@@ -839,13 +839,13 @@ export function Calendar({
         }}
         data-preset-open={isPresetDropdownOpen}
       >
-        {/* Compact mode with presets: unified container with calendar icon + text/input + chevron */}
+        {/* Compact mode with presets: unified container with calendar trigger + divider + chevron */}
         {compact && presets && presets.length > 0 && (
           <div
             className="calendar-compact-container"
             data-preset-open={isPresetDropdownOpen}
           >
-            {/* Calendar icon - opens calendar popover */}
+            {/* Calendar trigger - covers icon + "Select Date Range" text, opens calendar popover */}
             <Popover.Root open={isOpen} onOpenChange={setIsOpen}>
               <Popover.Trigger asChild>
                 <button
@@ -854,9 +854,14 @@ export function Calendar({
                   aria-expanded={isOpen}
                   data-testid="calendar/trigger/button"
                   title={placeholder}
-                  className="calendar-compact-icon-trigger"
+                  className="calendar-compact-calendar-trigger"
                 >
-                  <CalendarIcon />
+                  <span className="calendar-compact-icon">
+                    <CalendarIcon />
+                  </span>
+                  <span className="calendar-compact-date-text">
+                    {displayText}
+                  </span>
                 </button>
               </Popover.Trigger>
               <Popover.Portal>
@@ -1050,23 +1055,10 @@ export function Calendar({
               </Popover.Portal>
             </Popover.Root>
 
-            {/* Middle section: "Select Date Range" text (closed) or divider + "Select Period" input (open) */}
-            <div className="calendar-compact-middle">
-              {/* Shown when closed: "Select Date Range" text */}
-              <span className="calendar-compact-date-text">{displayText}</span>
-              {/* Divider - moves position based on open state via CSS */}
-              <div className="calendar-compact-divider" aria-hidden="true" />
-              {/* Shown when open: "Select Period" input */}
-              <input
-                className="calendar-compact-preset-input"
-                placeholder={presetPlaceholder}
-                value={selectedPresetLabel || ""}
-                readOnly
-                tabIndex={-1}
-              />
-            </div>
+            {/* Divider */}
+            <div className="calendar-compact-divider" aria-hidden="true" />
 
-            {/* Chevron - opens preset dropdown */}
+            {/* Preset trigger - covers "Select Period" input + chevron, opens preset dropdown */}
             <Popover.Root
               open={isPresetDropdownOpen}
               onOpenChange={setIsPresetDropdownOpen}
@@ -1077,9 +1069,14 @@ export function Calendar({
                   aria-haspopup="dialog"
                   aria-expanded={isPresetDropdownOpen}
                   data-testid="calendar/preset-trigger"
-                  className="calendar-compact-chevron-trigger"
+                  className="calendar-compact-preset-trigger"
                 >
-                  <ChevronDownIcon />
+                  <span className="calendar-compact-preset-text">
+                    {selectedPresetLabel || presetPlaceholder}
+                  </span>
+                  <span className="calendar-compact-chevron">
+                    <ChevronDownIcon />
+                  </span>
                 </button>
               </Popover.Trigger>
               <Popover.Portal>
