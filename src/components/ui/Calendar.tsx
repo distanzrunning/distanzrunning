@@ -802,7 +802,7 @@ export function Calendar({
     setEndTimeInput(formatTimeForTimezone(timezone, true));
   };
 
-  const handlePresetSelect = (presetValue: string) => {
+  const handlePresetSelect = (presetValue: string, closeDropdown = true) => {
     const preset =
       presets?.find((p) => p.value === presetValue) ||
       futurePresets?.find((p) => p.value === presetValue);
@@ -812,7 +812,9 @@ export function Calendar({
       setSelectedPreset(presetValue);
       setSelectionState("start");
     }
-    setIsPresetDropdownOpen(false);
+    if (closeDropdown) {
+      setIsPresetDropdownOpen(false);
+    }
   };
 
   const hasSelection = dateRange.start !== null;
@@ -855,6 +857,7 @@ export function Calendar({
                   data-testid="calendar/trigger/button"
                   title={placeholder}
                   className="calendar-compact-calendar-trigger"
+                  onClick={() => setIsPresetDropdownOpen(false)}
                 >
                   <span className="calendar-compact-icon">
                     <CalendarIcon />
@@ -1093,7 +1096,9 @@ export function Calendar({
                           key={preset.value}
                           type="button"
                           className={`calendar-preset-item ${selectedPreset === preset.value ? "calendar-preset-item-selected" : ""}`}
-                          onClick={() => handlePresetSelect(preset.value)}
+                          onClick={() =>
+                            handlePresetSelect(preset.value, false)
+                          }
                         >
                           {preset.label}
                         </button>
