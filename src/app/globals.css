@@ -1945,9 +1945,10 @@
   }
 
   .calendar-compact-calendar-trigger:focus,
-  .calendar-compact-calendar-trigger:focus-visible {
+  .calendar-compact-calendar-trigger:focus-visible,
+  .calendar-compact-calendar-trigger[aria-expanded="true"] {
     outline: none;
-    box-shadow: inset 0 0 0 1px var(--ds-gray-1000);
+    box-shadow: var(--calendar-button-focus-ring);
     z-index: 1;
   }
 
@@ -1994,9 +1995,10 @@
   }
 
   .calendar-compact-preset-trigger:focus,
-  .calendar-compact-preset-trigger:focus-visible {
+  .calendar-compact-preset-trigger:focus-visible,
+  .calendar-compact-preset-trigger[aria-expanded="true"] {
     outline: none;
-    box-shadow: inset 0 0 0 1px var(--ds-gray-1000);
+    box-shadow: var(--calendar-button-focus-ring);
     z-index: 1;
   }
 
@@ -2032,12 +2034,6 @@
   }
 
   /* ===== OPEN STATE: when preset dropdown is open ===== */
-  /* Focus ring on preset trigger only, not the whole container */
-  .calendar-compact-preset-trigger[aria-expanded="true"] {
-    box-shadow: inset 0 0 0 1px var(--ds-gray-1000);
-    z-index: 1;
-  }
-
   /* Hide the date text when open */
   .calendar-compact-container[data-preset-open="true"]
     .calendar-compact-date-text {
