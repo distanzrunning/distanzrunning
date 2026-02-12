@@ -1712,6 +1712,7 @@
     width: var(--calendar-width, 250px);
     border-radius: 6px;
     box-shadow: var(--calendar-button-shadow);
+    overflow: hidden;
   }
 
   .calendar-wrapper-stacked .calendar-combobox-wrapper {
