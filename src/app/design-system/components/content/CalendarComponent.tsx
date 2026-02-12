@@ -512,7 +512,7 @@ export default function CalendarComponent() {
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={defaultCode}>
             <div className="flex justify-center py-12">
-              <Calendar placeholder="Select Date Range" />
+              <Calendar placeholder="Select Date Range" width={250} />
             </div>
           </CodePreview>
         </div>
@@ -590,6 +590,228 @@ export default function CalendarComponent() {
               />
             </div>
           </CodePreview>
+        </div>
+      </Section>
+
+      {/* Props Section */}
+      <Section>
+        <SectionHeader id="props" onCopyLink={showToast}>
+          Props
+        </SectionHeader>
+        <p className="text-copy-14 text-textSubtle mt-4 mb-6">
+          Available props for the Calendar component.
+        </p>
+
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse">
+            <thead>
+              <tr className="border-b border-borderDefault">
+                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                  Prop
+                </th>
+                <th className="text-left py-3 px-4 font-semibold text-sm">
+                  Type
+                </th>
+                <th className="text-left py-3 px-4 font-semibold text-sm">
+                  Default
+                </th>
+                <th className="text-left py-3 px-4 font-semibold text-sm">
+                  Description
+                </th>
+              </tr>
+            </thead>
+            <tbody className="text-sm">
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 font-mono">placeholder</td>
+                <td className="py-3 px-4 font-mono text-textSubtle">string</td>
+                <td className="py-3 px-4 text-textSubtle">
+                  &quot;Select Date Range&quot;
+                </td>
+                <td className="py-3 px-4 text-textSubtle">
+                  Placeholder text shown when no date is selected
+                </td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 font-mono">value</td>
+                <td className="py-3 px-4 font-mono text-textSubtle">
+                  DateRange
+                </td>
+                <td className="py-3 px-4 text-textSubtle">-</td>
+                <td className="py-3 px-4 text-textSubtle">
+                  Controlled value with start and end dates
+                </td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 font-mono">onChange</td>
+                <td className="py-3 px-4 font-mono text-textSubtle">
+                  (range: DateRange) =&gt; void
+                </td>
+                <td className="py-3 px-4 text-textSubtle">-</td>
+                <td className="py-3 px-4 text-textSubtle">
+                  Callback fired when the date range changes
+                </td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 font-mono">width</td>
+                <td className="py-3 px-4 font-mono text-textSubtle">number</td>
+                <td className="py-3 px-4 text-textSubtle">250</td>
+                <td className="py-3 px-4 text-textSubtle">
+                  Width of the calendar trigger in pixels
+                </td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 font-mono">horizontalLayout</td>
+                <td className="py-3 px-4 font-mono text-textSubtle">boolean</td>
+                <td className="py-3 px-4 text-textSubtle">false</td>
+                <td className="py-3 px-4 text-textSubtle">
+                  Display popover content in horizontal layout
+                </td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 font-mono">showTimeInput</td>
+                <td className="py-3 px-4 font-mono text-textSubtle">boolean</td>
+                <td className="py-3 px-4 text-textSubtle">true</td>
+                <td className="py-3 px-4 text-textSubtle">
+                  Show time input fields in the popover
+                </td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 font-mono">popoverAlignment</td>
+                <td className="py-3 px-4 font-mono text-textSubtle">
+                  &quot;start&quot; | &quot;center&quot; | &quot;end&quot;
+                </td>
+                <td className="py-3 px-4 text-textSubtle">&quot;start&quot;</td>
+                <td className="py-3 px-4 text-textSubtle">
+                  Alignment of the popover relative to the trigger
+                </td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 font-mono">presets</td>
+                <td className="py-3 px-4 font-mono text-textSubtle">
+                  CalendarPreset[]
+                </td>
+                <td className="py-3 px-4 text-textSubtle">-</td>
+                <td className="py-3 px-4 text-textSubtle">
+                  Array of preset date ranges (shown in left column)
+                </td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 font-mono">futurePresets</td>
+                <td className="py-3 px-4 font-mono text-textSubtle">
+                  CalendarPreset[]
+                </td>
+                <td className="py-3 px-4 text-textSubtle">-</td>
+                <td className="py-3 px-4 text-textSubtle">
+                  Array of future preset date ranges (shown in right column)
+                </td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 font-mono">presetPlaceholder</td>
+                <td className="py-3 px-4 font-mono text-textSubtle">string</td>
+                <td className="py-3 px-4 text-textSubtle">
+                  &quot;Select Period&quot;
+                </td>
+                <td className="py-3 px-4 text-textSubtle">
+                  Placeholder text for the preset dropdown
+                </td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 font-mono">compact</td>
+                <td className="py-3 px-4 font-mono text-textSubtle">boolean</td>
+                <td className="py-3 px-4 text-textSubtle">false</td>
+                <td className="py-3 px-4 text-textSubtle">
+                  Use compact trigger style (requires presets)
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 className="text-[16px] font-semibold text-textDefault mt-8 mb-4">
+          CalendarPreset
+        </h3>
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse">
+            <thead>
+              <tr className="border-b border-borderDefault">
+                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                  Property
+                </th>
+                <th className="text-left py-3 px-4 font-semibold text-sm">
+                  Type
+                </th>
+                <th className="text-left py-3 px-4 font-semibold text-sm">
+                  Description
+                </th>
+              </tr>
+            </thead>
+            <tbody className="text-sm">
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 font-mono">label</td>
+                <td className="py-3 px-4 font-mono text-textSubtle">string</td>
+                <td className="py-3 px-4 text-textSubtle">
+                  Display label for the preset
+                </td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 font-mono">value</td>
+                <td className="py-3 px-4 font-mono text-textSubtle">string</td>
+                <td className="py-3 px-4 text-textSubtle">
+                  Unique identifier for the preset
+                </td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 font-mono">getRange</td>
+                <td className="py-3 px-4 font-mono text-textSubtle">
+                  () =&gt; DateRange
+                </td>
+                <td className="py-3 px-4 text-textSubtle">
+                  Function that returns the date range for this preset
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 className="text-[16px] font-semibold text-textDefault mt-8 mb-4">
+          DateRange
+        </h3>
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse">
+            <thead>
+              <tr className="border-b border-borderDefault">
+                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                  Property
+                </th>
+                <th className="text-left py-3 px-4 font-semibold text-sm">
+                  Type
+                </th>
+                <th className="text-left py-3 px-4 font-semibold text-sm">
+                  Description
+                </th>
+              </tr>
+            </thead>
+            <tbody className="text-sm">
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 font-mono">start</td>
+                <td className="py-3 px-4 font-mono text-textSubtle">
+                  Date | null
+                </td>
+                <td className="py-3 px-4 text-textSubtle">
+                  Start date of the range
+                </td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 font-mono">end</td>
+                <td className="py-3 px-4 font-mono text-textSubtle">
+                  Date | null
+                </td>
+                <td className="py-3 px-4 text-textSubtle">
+                  End date of the range
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </Section>
     </>
