@@ -1750,6 +1750,11 @@
     background-color: var(--calendar-button-bg-hover);
   }
 
+  /* Change inner divider color on hover */
+  .calendar-wrapper-stacked:hover .calendar-trigger-button-with-presets {
+    border-top-color: var(--ds-gray-500);
+  }
+
   .calendar-wrapper-stacked .calendar-trigger-button-with-presets:focus,
   .calendar-wrapper-stacked .calendar-trigger-button-with-presets:focus-visible,
   .calendar-wrapper-stacked
