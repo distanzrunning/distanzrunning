@@ -1725,6 +1725,7 @@
     border-radius: 0 !important;
     width: 100%;
     box-shadow: none;
+    border-bottom: 1px solid var(--ds-gray-400);
   }
 
   .calendar-wrapper-stacked .calendar-combobox-input:hover {
@@ -1742,7 +1743,6 @@
     border-radius: 0 !important;
     width: 100%;
     box-shadow: none !important;
-    border-top: 1px solid var(--ds-gray-400);
   }
 
   .calendar-wrapper-stacked .calendar-trigger-button-with-presets:hover {
@@ -1751,8 +1751,8 @@
   }
 
   /* Change inner divider color on hover */
-  .calendar-wrapper-stacked:hover .calendar-trigger-button-with-presets {
-    border-top-color: var(--ds-gray-500);
+  .calendar-wrapper-stacked:hover .calendar-combobox-input {
+    border-bottom-color: var(--ds-gray-500);
   }
 
   .calendar-wrapper-stacked .calendar-trigger-button-with-presets:focus,
