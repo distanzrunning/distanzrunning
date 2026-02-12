@@ -379,6 +379,38 @@ export function DateRangePickerWithPresets() {
   );
 }`;
 
+const stackedCode = `import { Calendar, DateRange, CalendarPreset } from '@/components/ui/Calendar';
+import { useState } from 'react';
+import { startOfDay, endOfDay, subDays, addDays, addMonths } from 'date-fns';
+
+const presets: CalendarPreset[] = [
+  { label: 'Last 24 hours', value: 'last-24h', getRange: () => ({ start: subDays(new Date(), 1), end: new Date() }) },
+  { label: 'Last 7 days', value: 'last-7d', getRange: () => ({ start: startOfDay(subDays(new Date(), 7)), end: endOfDay(new Date()) }) },
+  { label: 'Last 30 days', value: 'last-30d', getRange: () => ({ start: startOfDay(subDays(new Date(), 30)), end: endOfDay(new Date()) }) },
+  { label: 'Last 90 days', value: 'last-90d', getRange: () => ({ start: startOfDay(subDays(new Date(), 90)), end: endOfDay(new Date()) }) },
+];
+
+const futurePresets: CalendarPreset[] = [
+  { label: 'Next 7 days', value: 'next-7d', getRange: () => ({ start: startOfDay(new Date()), end: endOfDay(addDays(new Date(), 7)) }) },
+  { label: 'Next 30 days', value: 'next-30d', getRange: () => ({ start: startOfDay(new Date()), end: endOfDay(addDays(new Date(), 30)) }) },
+  { label: 'Next 3 months', value: 'next-3m', getRange: () => ({ start: startOfDay(new Date()), end: endOfDay(addMonths(new Date(), 3)) }) },
+  { label: 'Next 6 months', value: 'next-6m', getRange: () => ({ start: startOfDay(new Date()), end: endOfDay(addMonths(new Date(), 6)) }) },
+];
+
+export function StackedDateRangePicker() {
+  const [dateRange, setDateRange] = useState<DateRange>({ start: null, end: null });
+
+  return (
+    <Calendar
+      stacked
+      presets={presets}
+      futurePresets={futurePresets}
+      value={dateRange}
+      onChange={setDateRange}
+    />
+  );
+}`;
+
 const compactCode = `import { Calendar, DateRange, CalendarPreset } from '@/components/ui/Calendar';
 import { useState } from 'react';
 import { startOfDay, endOfDay, subDays, addDays, addMonths } from 'date-fns';
@@ -566,6 +598,33 @@ export default function CalendarComponent() {
         </div>
       </Section>
 
+      {/* Stacked Section */}
+      <Section>
+        <SectionHeader id="stacked" onCopyLink={showToast}>
+          Stacked
+        </SectionHeader>
+        <p className="mt-2 leading-6 text-gray-900 dark:text-gray-100 xl:mt-4">
+          Use{" "}
+          <code className="text-sm bg-[var(--ds-gray-200)] px-1.5 py-0.5 rounded">
+            stacked
+          </code>{" "}
+          to display the preset dropdown above the calendar trigger button.
+        </p>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={stackedCode}>
+            <div className="flex justify-center py-12">
+              <Calendar
+                stacked
+                placeholder="Select Date Range"
+                presets={defaultPresets}
+                futurePresets={defaultFuturePresets}
+                presetPlaceholder="Select Period"
+              />
+            </div>
+          </CodePreview>
+        </div>
+      </Section>
+
       {/* Compact Section */}
       <Section>
         <SectionHeader id="compact" onCopyLink={showToast}>
@@ -721,6 +780,15 @@ export default function CalendarComponent() {
                 <td className="py-3 px-4 text-textSubtle">false</td>
                 <td className="py-3 px-4 text-textSubtle">
                   Use compact trigger style (requires presets)
+                </td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 font-mono">stacked</td>
+                <td className="py-3 px-4 font-mono text-textSubtle">boolean</td>
+                <td className="py-3 px-4 text-textSubtle">false</td>
+                <td className="py-3 px-4 text-textSubtle">
+                  Stack preset dropdown above calendar trigger (requires
+                  presets)
                 </td>
               </tr>
             </tbody>

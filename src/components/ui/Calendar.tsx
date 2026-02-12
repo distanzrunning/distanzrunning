@@ -180,6 +180,7 @@ export interface CalendarProps {
   futurePresets?: CalendarPreset[];
   presetPlaceholder?: string;
   compact?: boolean;
+  stacked?: boolean;
 }
 
 // ============================================================================
@@ -698,6 +699,7 @@ export function Calendar({
   futurePresets,
   presetPlaceholder = "Select Period",
   compact = false,
+  stacked = false,
 }: CalendarProps) {
   // Compact mode overrides
   const effectiveWidth = compact ? 180 : width;
@@ -835,10 +837,16 @@ export function Calendar({
       </span>
 
       <div
-        className={`calendar-wrapper ${presets && presets.length > 0 ? "calendar-wrapper-with-presets" : ""} ${compact ? "calendar-wrapper-compact" : ""}`}
-        style={{
-          width: presets && presets.length > 0 ? "auto" : effectiveWidth,
-        }}
+        className={`calendar-wrapper ${presets && presets.length > 0 ? "calendar-wrapper-with-presets" : ""} ${compact ? "calendar-wrapper-compact" : ""} ${stacked ? "calendar-wrapper-stacked" : ""}`}
+        style={
+          {
+            width:
+              presets && presets.length > 0 && !stacked
+                ? "auto"
+                : effectiveWidth,
+            "--calendar-width": `${effectiveWidth}px`,
+          } as React.CSSProperties
+        }
         data-preset-open={isPresetDropdownOpen}
       >
         {/* Compact mode with presets: unified container with calendar trigger + divider + chevron */}
