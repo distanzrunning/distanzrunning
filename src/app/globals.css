@@ -1713,12 +1713,15 @@
     z-index: 1;
   }
 
-  .calendar-combobox-wrapper:hover,
+  .calendar-combobox-wrapper:hover {
+    z-index: 3;
+  }
+
   .calendar-combobox-wrapper:focus-within,
   .calendar-combobox-wrapper:has(
     .calendar-combobox-input[aria-expanded="true"]
   ) {
-    z-index: 3;
+    z-index: 5;
   }
 
   .calendar-combobox-wrapper:focus-within .calendar-combobox-input,
@@ -1839,7 +1842,7 @@
   .calendar-trigger-button-with-presets[aria-expanded="true"] {
     box-shadow: var(--calendar-button-focus-ring) !important;
     outline: none;
-    z-index: 4;
+    z-index: 5;
   }
 
   .calendar-preset-dropdown {
