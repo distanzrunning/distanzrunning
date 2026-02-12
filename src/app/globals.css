@@ -1719,8 +1719,10 @@
     width: 100%;
   }
 
+  .calendar-wrapper-stacked.calendar-wrapper-with-presets
+    .calendar-combobox-input,
   .calendar-wrapper-stacked .calendar-combobox-input {
-    border-radius: 0;
+    border-radius: 0 !important;
     width: 100%;
     box-shadow: none;
   }
