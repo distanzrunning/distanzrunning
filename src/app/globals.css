@@ -536,10 +536,11 @@
     --ds-button-rounded-bg: var(--ds-background-100);
     --ds-button-rounded-text: var(--ds-gray-1000);
 
-    /* Calendar button - uses box-shadow for border effect */
-    --calendar-button-shadow: rgb(235, 235, 235) 0px 0px 0px 1px;
-    --calendar-button-bg: rgb(255, 255, 255);
-    --calendar-button-bg-hover: rgb(242, 242, 242);
+    /* Calendar button - uses box-shadow for border effect (Geist tokens) */
+    --calendar-button-shadow: var(--ds-gray-400) 0px 0px 0px 1px;
+    --calendar-button-shadow-hover: var(--ds-gray-500) 0px 0px 0px 1px;
+    --calendar-button-bg: var(--ds-background-100);
+    --calendar-button-bg-hover: var(--ds-gray-100);
     --calendar-button-focus-ring: 0 0 0 1px #00000057, 0 0 0 4px #00000029;
 
     /* Calendar popover - Geist design tokens */
@@ -999,10 +1000,11 @@
     --ds-button-rounded-bg: #0a0a0a;
     --ds-button-rounded-text: #ededed;
 
-    /* Calendar button - uses box-shadow for border effect (dark mode) */
-    --calendar-button-shadow: rgb(46, 46, 46) 0px 0px 0px 1px;
-    --calendar-button-bg: rgb(10, 10, 10);
-    --calendar-button-bg-hover: rgb(31, 31, 31);
+    /* Calendar button - uses box-shadow for border effect (Geist dark mode tokens) */
+    --calendar-button-shadow: var(--ds-gray-400) 0px 0px 0px 1px;
+    --calendar-button-shadow-hover: var(--ds-gray-500) 0px 0px 0px 1px;
+    --calendar-button-bg: var(--ds-background-100);
+    --calendar-button-bg-hover: var(--ds-gray-100);
     --calendar-button-focus-ring: 0 0 0 1px #ffffff57, 0 0 0 4px #ffffff29;
 
     /* Calendar popover - Geist design tokens (dark mode) */
@@ -1169,6 +1171,7 @@
 
   .calendar-trigger-button:hover {
     background-color: var(--calendar-button-bg-hover);
+    box-shadow: var(--calendar-button-shadow-hover);
   }
 
   .calendar-trigger-button:focus-visible {
@@ -1748,7 +1751,7 @@
   }
 
   .calendar-wrapper-with-presets .calendar-combobox-input:hover {
-    box-shadow: var(--ds-gray-600) 0px 0px 0px 1px;
+    box-shadow: var(--calendar-button-shadow-hover);
     background-color: var(--calendar-button-bg-hover);
   }
 
@@ -1764,7 +1767,7 @@
   }
 
   .calendar-combobox-input:hover {
-    box-shadow: var(--ds-gray-600) 0px 0px 0px 1px;
+    box-shadow: var(--calendar-button-shadow-hover);
     background-color: var(--calendar-button-bg-hover);
   }
 
@@ -1826,7 +1829,7 @@
   }
 
   .calendar-trigger-button-with-presets:hover {
-    box-shadow: var(--ds-gray-600) 0px 0px 0px 1px !important;
+    box-shadow: var(--calendar-button-shadow-hover) !important;
     background-color: var(--calendar-button-bg-hover) !important;
     z-index: 4;
   }
@@ -1942,6 +1945,7 @@
 
   .calendar-compact-calendar-trigger:hover {
     background: var(--ds-gray-100);
+    z-index: 1;
   }
 
   .calendar-compact-calendar-trigger:focus,
@@ -1949,7 +1953,7 @@
   .calendar-compact-calendar-trigger[aria-expanded="true"] {
     outline: none;
     box-shadow: var(--calendar-button-focus-ring);
-    z-index: 1;
+    z-index: 2;
   }
 
   .calendar-compact-icon {
@@ -1992,6 +1996,7 @@
 
   .calendar-compact-preset-trigger:hover {
     background: var(--ds-gray-100);
+    z-index: 1;
   }
 
   .calendar-compact-preset-trigger:focus,
@@ -1999,7 +2004,7 @@
   .calendar-compact-preset-trigger[aria-expanded="true"] {
     outline: none;
     box-shadow: var(--calendar-button-focus-ring);
-    z-index: 1;
+    z-index: 2;
   }
 
   .calendar-compact-preset-text {
