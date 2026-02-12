@@ -1720,7 +1720,7 @@
   }
 
   .calendar-wrapper-stacked .calendar-combobox-input {
-    border-radius: 6px 6px 0 0;
+    border-radius: 0;
     width: 100%;
     box-shadow: none;
   }
@@ -1737,7 +1737,7 @@
   }
 
   .calendar-wrapper-stacked .calendar-trigger-button-with-presets {
-    border-radius: 0 0 6px 6px !important;
+    border-radius: 0 !important;
     width: 100%;
     box-shadow: none !important;
     border-top: 1px solid var(--ds-gray-400);
