@@ -1710,6 +1710,8 @@
     flex-direction: column;
     height: auto;
     width: var(--calendar-width, 250px);
+    border-radius: 6px;
+    box-shadow: var(--calendar-button-shadow);
   }
 
   .calendar-wrapper-stacked .calendar-combobox-wrapper {
@@ -1719,11 +1721,74 @@
   .calendar-wrapper-stacked .calendar-combobox-input {
     border-radius: 6px 6px 0 0;
     width: 100%;
+    box-shadow: none;
+  }
+
+  .calendar-wrapper-stacked .calendar-combobox-input:hover {
+    box-shadow: none;
+    background-color: var(--calendar-button-bg-hover);
+  }
+
+  .calendar-wrapper-stacked .calendar-combobox-input:focus,
+  .calendar-wrapper-stacked .calendar-combobox-input:focus-visible,
+  .calendar-wrapper-stacked .calendar-combobox-input[aria-expanded="true"] {
+    box-shadow: none !important;
   }
 
   .calendar-wrapper-stacked .calendar-trigger-button-with-presets {
     border-radius: 0 0 6px 6px !important;
     width: 100%;
+    box-shadow: none !important;
+    border-top: 1px solid var(--ds-gray-400);
+  }
+
+  .calendar-wrapper-stacked .calendar-trigger-button-with-presets:hover {
+    box-shadow: none !important;
+    background-color: var(--calendar-button-bg-hover);
+  }
+
+  .calendar-wrapper-stacked .calendar-trigger-button-with-presets:focus,
+  .calendar-wrapper-stacked .calendar-trigger-button-with-presets:focus-visible,
+  .calendar-wrapper-stacked
+    .calendar-trigger-button-with-presets[aria-expanded="true"] {
+    box-shadow: none !important;
+  }
+
+  /* Focus ring on the wrapper when either element is focused */
+  .calendar-wrapper-stacked:has(.calendar-combobox-input:focus),
+  .calendar-wrapper-stacked:has(.calendar-combobox-input:focus-visible),
+  .calendar-wrapper-stacked:has(.calendar-combobox-input[aria-expanded="true"]),
+  .calendar-wrapper-stacked:has(.calendar-trigger-button-with-presets:focus),
+  .calendar-wrapper-stacked:has(
+    .calendar-trigger-button-with-presets:focus-visible
+  ),
+  .calendar-wrapper-stacked:has(
+    .calendar-trigger-button-with-presets[aria-expanded="true"]
+  ) {
+    box-shadow: var(--calendar-button-focus-ring);
+  }
+
+  /* Hover state on wrapper */
+  .calendar-wrapper-stacked:hover {
+    box-shadow: var(--calendar-button-shadow-hover);
+  }
+
+  /* Focus takes precedence over hover */
+  .calendar-wrapper-stacked:hover:has(.calendar-combobox-input:focus),
+  .calendar-wrapper-stacked:hover:has(.calendar-combobox-input:focus-visible),
+  .calendar-wrapper-stacked:hover:has(
+      .calendar-combobox-input[aria-expanded="true"]
+    ),
+  .calendar-wrapper-stacked:hover:has(
+      .calendar-trigger-button-with-presets:focus
+    ),
+  .calendar-wrapper-stacked:hover:has(
+      .calendar-trigger-button-with-presets:focus-visible
+    ),
+  .calendar-wrapper-stacked:hover:has(
+      .calendar-trigger-button-with-presets[aria-expanded="true"]
+    ) {
+    box-shadow: var(--calendar-button-focus-ring);
   }
 
   /* Preset Combobox Styles */
