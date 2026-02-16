@@ -2113,11 +2113,12 @@
     display: none;
   }
 
-  /* Collapse calendar trigger to just icon when open */
+  /* Collapse calendar trigger to just icon when open — match chevron area width (40px) */
   .calendar-compact-container[data-preset-open="true"]
     .calendar-compact-calendar-trigger {
-    padding: 0 10px;
-    flex: 0 0 auto;
+    padding: 0;
+    flex: 0 0 40px;
+    justify-content: center;
   }
 
   /* Expand preset trigger when open */
