@@ -182,6 +182,8 @@ export interface CalendarProps {
   compact?: boolean;
   stacked?: boolean;
   defaultPreset?: string;
+  minDate?: Date;
+  maxDate?: Date;
 }
 
 // ============================================================================
@@ -350,10 +352,14 @@ function CalendarContent({
   dateRange,
   onDateSelect,
   isSelectingEnd,
+  minDate,
+  maxDate,
 }: {
   dateRange: DateRange;
   onDateSelect: (date: Date) => void;
   isSelectingEnd: boolean;
+  minDate?: Date;
+  maxDate?: Date;
 }) {
   const today = new Date();
   const [currentMonth, setCurrentMonth] = useState(today.getMonth());
@@ -610,6 +616,22 @@ function CalendarContent({
                     const inPreviewRange = isInPreviewRange(day);
                     const hoveredPreview = isHoveredForPreview(day);
 
+                    const disabled =
+                      (minDate &&
+                        day.fullDate <
+                          new Date(
+                            minDate.getFullYear(),
+                            minDate.getMonth(),
+                            minDate.getDate(),
+                          )) ||
+                      (maxDate &&
+                        day.fullDate >
+                          new Date(
+                            maxDate.getFullYear(),
+                            maxDate.getMonth(),
+                            maxDate.getDate(),
+                          ));
+
                     let tdClasses = "calendar-cell";
 
                     const hasCompleteRange = dateRange.start && dateRange.end;
@@ -652,22 +674,29 @@ function CalendarContent({
                       >
                         <span
                           role="button"
-                          tabIndex={focused ? 0 : -1}
+                          tabIndex={disabled ? -1 : focused ? 0 : -1}
                           aria-label={formatAriaLabel(day)}
+                          aria-disabled={disabled || undefined}
                           data-testid={`calendar/cell/date-${day.date}`}
                           onClick={() => {
+                            if (disabled) return;
                             onDateSelect(day.fullDate);
                             setFocusedDate(day.fullDate);
                           }}
-                          onMouseEnter={() => setHoveredDate(day.fullDate)}
-                          onFocus={() => setFocusedDate(day.fullDate)}
+                          onMouseEnter={() => {
+                            if (!disabled) setHoveredDate(day.fullDate);
+                          }}
+                          onFocus={() => {
+                            if (!disabled) setFocusedDate(day.fullDate);
+                          }}
                           className={`
                             calendar-day
+                            ${disabled ? "calendar-day-disabled" : ""}
                             ${!day.isCurrentMonth ? "calendar-day-outside" : ""}
                             ${day.isWeekend && !day.isToday && !selected && !hoveredPreview ? "calendar-day-weekend" : ""}
-                            ${day.isToday ? "calendar-day-today" : ""}
-                            ${selected ? "calendar-day-selected" : ""}
-                            ${hoveredPreview ? "calendar-day-hover-preview" : ""}
+                            ${day.isToday && !disabled ? "calendar-day-today" : ""}
+                            ${selected && !disabled ? "calendar-day-selected" : ""}
+                            ${hoveredPreview && !disabled ? "calendar-day-hover-preview" : ""}
                           `}
                         >
                           {day.date}
@@ -702,6 +731,8 @@ export function Calendar({
   compact = false,
   stacked = false,
   defaultPreset,
+  minDate,
+  maxDate,
 }: CalendarProps) {
   // Resolve default preset on initial render
   const resolvedDefault = React.useMemo(() => {
@@ -1072,6 +1103,8 @@ export function Calendar({
                           dateRange={dateRange}
                           onDateSelect={handleDateSelect}
                           isSelectingEnd={selectionState === "end"}
+                          minDate={minDate}
+                          maxDate={maxDate}
                         />
                       </div>
                     </div>
@@ -1485,6 +1518,8 @@ export function Calendar({
                             dateRange={dateRange}
                             onDateSelect={handleDateSelect}
                             isSelectingEnd={selectionState === "end"}
+                            minDate={minDate}
+                            maxDate={maxDate}
                           />
                         </div>
                       </div>

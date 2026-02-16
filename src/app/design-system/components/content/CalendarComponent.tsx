@@ -473,6 +473,31 @@ export function CompactDateRangePicker() {
   );
 }`;
 
+const minMaxDatesCode = `import { Calendar, DateRange } from '@/components/ui/Calendar';
+import { useState } from 'react';
+
+export function MinMaxDateRangePicker() {
+  const [dateRange, setDateRange] = useState<DateRange>({
+    start: null,
+    end: null,
+  });
+
+  // Only allow dates within the last 90 days to today
+  const today = new Date();
+  const ninetyDaysAgo = new Date(today.getTime() - 90 * 24 * 60 * 60 * 1000);
+
+  return (
+    <Calendar
+      placeholder="Select Date Range"
+      value={dateRange}
+      onChange={setDateRange}
+      minDate={ninetyDaysAgo}
+      maxDate={today}
+      width={250}
+    />
+  );
+}`;
+
 // Default presets for the demo
 const defaultPresets: CalendarPreset[] = [
   {
@@ -603,6 +628,10 @@ const presetsWithDefault: CalendarPreset[] = [
     },
   },
 ];
+
+// Min/max dates for the demo (90 days ago to today)
+const demoMaxDate = new Date();
+const demoMinDate = new Date(demoMaxDate.getTime() - 90 * 24 * 60 * 60 * 1000);
 
 // ============================================================================
 // Main Component
@@ -757,6 +786,28 @@ export default function CalendarComponent() {
         </div>
       </Section>
 
+      {/* Min and Max Dates Section */}
+      <Section>
+        <SectionHeader id="min-and-max-dates" onCopyLink={showToast}>
+          Min and max dates
+        </SectionHeader>
+        <p className="mt-2 leading-6 text-gray-900 dark:text-gray-100 xl:mt-4">
+          Constrain the selectable date range with minimum and maximum dates.
+        </p>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={minMaxDatesCode}>
+            <div className="flex justify-center py-12">
+              <Calendar
+                placeholder="Select Date Range"
+                minDate={demoMinDate}
+                maxDate={demoMaxDate}
+                width={250}
+              />
+            </div>
+          </CodePreview>
+        </div>
+      </Section>
+
       {/* Props Section */}
       <Section>
         <SectionHeader id="props" onCopyLink={showToast}>
@@ -903,6 +954,22 @@ export default function CalendarComponent() {
                 <td className="py-3 px-4 text-textSubtle">
                   Value of a preset to select on initial render (requires
                   presets)
+                </td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 font-mono">minDate</td>
+                <td className="py-3 px-4 font-mono text-textSubtle">Date</td>
+                <td className="py-3 px-4 text-textSubtle">-</td>
+                <td className="py-3 px-4 text-textSubtle">
+                  Earliest selectable date
+                </td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 font-mono">maxDate</td>
+                <td className="py-3 px-4 font-mono text-textSubtle">Date</td>
+                <td className="py-3 px-4 text-textSubtle">-</td>
+                <td className="py-3 px-4 text-textSubtle">
+                  Latest selectable date
                 </td>
               </tr>
             </tbody>

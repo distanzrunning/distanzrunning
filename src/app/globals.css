@@ -1390,6 +1390,16 @@
     color: var(--calendar-day-outside-color);
   }
 
+  .calendar-day-disabled {
+    color: var(--calendar-day-outside-color);
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  .calendar-day-disabled:hover {
+    border-color: transparent;
+  }
+
   .calendar-day-today {
     background: var(--ds-blue-900);
     color: var(--ds-background-100);
