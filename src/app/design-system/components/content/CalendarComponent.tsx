@@ -681,28 +681,6 @@ export default function CalendarComponent() {
         </div>
       </Section>
 
-      {/* Presets with Default Value Section */}
-      <Section>
-        <SectionHeader id="presets-with-default-value" onCopyLink={showToast}>
-          Presets with default value
-        </SectionHeader>
-        <p className="mt-2 leading-6 text-gray-900 dark:text-gray-100 xl:mt-4">
-          Provide common date ranges with an additional default value.
-        </p>
-        <div className="mt-4 xl:mt-7">
-          <CodePreview componentCode={presetsWithDefaultCode}>
-            <div className="flex justify-center py-12">
-              <Calendar
-                stacked
-                presets={presetsWithDefault}
-                futurePresets={defaultFuturePresets}
-                defaultPreset="last-14-days"
-              />
-            </div>
-          </CodePreview>
-        </div>
-      </Section>
-
       {/* Stacked Section */}
       <Section>
         <SectionHeader id="stacked" onCopyLink={showToast}>
@@ -724,6 +702,28 @@ export default function CalendarComponent() {
                 presets={defaultPresets}
                 futurePresets={defaultFuturePresets}
                 presetPlaceholder="Select Period"
+              />
+            </div>
+          </CodePreview>
+        </div>
+      </Section>
+
+      {/* Presets with Default Value Section */}
+      <Section>
+        <SectionHeader id="presets-with-default-value" onCopyLink={showToast}>
+          Presets with default value
+        </SectionHeader>
+        <p className="mt-2 leading-6 text-gray-900 dark:text-gray-100 xl:mt-4">
+          Provide common date ranges with an additional default value.
+        </p>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={presetsWithDefaultCode}>
+            <div className="flex justify-center py-12">
+              <Calendar
+                stacked
+                presets={presetsWithDefault}
+                futurePresets={defaultFuturePresets}
+                defaultPreset="last-14-days"
               />
             </div>
           </CodePreview>
