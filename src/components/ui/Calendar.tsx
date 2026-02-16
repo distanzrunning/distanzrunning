@@ -181,6 +181,7 @@ export interface CalendarProps {
   presetPlaceholder?: string;
   compact?: boolean;
   stacked?: boolean;
+  defaultPreset?: string;
 }
 
 // ============================================================================
@@ -700,18 +701,31 @@ export function Calendar({
   presetPlaceholder = "Select Period",
   compact = false,
   stacked = false,
+  defaultPreset,
 }: CalendarProps) {
+  // Resolve default preset on initial render
+  const resolvedDefault = React.useMemo(() => {
+    if (!defaultPreset) return null;
+    const preset =
+      presets?.find((p) => p.value === defaultPreset) ||
+      futurePresets?.find((p) => p.value === defaultPreset);
+    if (!preset) return null;
+    return { value: preset.value, range: preset.getRange() };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // Compact mode overrides
   const effectiveWidth = compact ? 180 : width;
   const [isOpen, setIsOpen] = useState(false);
-  const [internalDateRange, setInternalDateRange] = useState<DateRange>({
-    start: null,
-    end: null,
-  });
+  const [internalDateRange, setInternalDateRange] = useState<DateRange>(
+    resolvedDefault?.range ?? { start: null, end: null },
+  );
   const [selectionState, setSelectionState] = useState<"start" | "end">(
     "start",
   );
-  const [selectedPreset, setSelectedPreset] = useState<string>("");
+  const [selectedPreset, setSelectedPreset] = useState<string>(
+    resolvedDefault?.value ?? "",
+  );
   const [isPresetDropdownOpen, setIsPresetDropdownOpen] = useState(false);
   const [timezone, setTimezone] = useState<TimezoneOption>("local");
   const [timezoneWidth, setTimezoneWidth] = useState<number | null>(null);

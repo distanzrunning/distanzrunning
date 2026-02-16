@@ -379,6 +379,40 @@ export function DateRangePickerWithPresets() {
   );
 }`;
 
+const presetsWithDefaultCode = `import { Calendar, DateRange, CalendarPreset } from '@/components/ui/Calendar';
+import { useState } from 'react';
+import { startOfDay, endOfDay, subDays, addDays, addMonths } from 'date-fns';
+
+const presets: CalendarPreset[] = [
+  { label: 'Last 24 hours', value: 'last-24h', getRange: () => ({ start: subDays(new Date(), 1), end: new Date() }) },
+  { label: 'Last 7 days', value: 'last-7d', getRange: () => ({ start: startOfDay(subDays(new Date(), 7)), end: endOfDay(new Date()) }) },
+  { label: 'Last 14 days', value: 'last-14d', getRange: () => ({ start: startOfDay(subDays(new Date(), 14)), end: endOfDay(new Date()) }) },
+  { label: 'Last 30 days', value: 'last-30d', getRange: () => ({ start: startOfDay(subDays(new Date(), 30)), end: endOfDay(new Date()) }) },
+  { label: 'Last 90 days', value: 'last-90d', getRange: () => ({ start: startOfDay(subDays(new Date(), 90)), end: endOfDay(new Date()) }) },
+];
+
+const futurePresets: CalendarPreset[] = [
+  { label: 'Next 7 days', value: 'next-7d', getRange: () => ({ start: startOfDay(new Date()), end: endOfDay(addDays(new Date(), 7)) }) },
+  { label: 'Next 30 days', value: 'next-30d', getRange: () => ({ start: startOfDay(new Date()), end: endOfDay(addDays(new Date(), 30)) }) },
+  { label: 'Next 3 months', value: 'next-3m', getRange: () => ({ start: startOfDay(new Date()), end: endOfDay(addMonths(new Date(), 3)) }) },
+  { label: 'Next 6 months', value: 'next-6m', getRange: () => ({ start: startOfDay(new Date()), end: endOfDay(addMonths(new Date(), 6)) }) },
+];
+
+export function PresetsWithDefaultValue() {
+  const [dateRange, setDateRange] = useState<DateRange>({ start: null, end: null });
+
+  return (
+    <Calendar
+      stacked
+      presets={presets}
+      futurePresets={futurePresets}
+      defaultPreset="last-14d"
+      value={dateRange}
+      onChange={setDateRange}
+    />
+  );
+}`;
+
 const stackedCode = `import { Calendar, DateRange, CalendarPreset } from '@/components/ui/Calendar';
 import { useState } from 'react';
 import { startOfDay, endOfDay, subDays, addDays, addMonths } from 'date-fns';
@@ -521,6 +555,55 @@ const defaultFuturePresets: CalendarPreset[] = [
   },
 ];
 
+// Presets with "Last 14 days" for the default value demo
+const presetsWithDefault: CalendarPreset[] = [
+  {
+    label: "Last 24 hours",
+    value: "last-24-hours",
+    getRange: () => {
+      const end = new Date();
+      const start = new Date(end.getTime() - 24 * 60 * 60 * 1000);
+      return { start, end };
+    },
+  },
+  {
+    label: "Last 7 days",
+    value: "last-7-days",
+    getRange: () => {
+      const end = new Date();
+      const start = new Date(end.getTime() - 7 * 24 * 60 * 60 * 1000);
+      return { start, end };
+    },
+  },
+  {
+    label: "Last 14 days",
+    value: "last-14-days",
+    getRange: () => {
+      const end = new Date();
+      const start = new Date(end.getTime() - 14 * 24 * 60 * 60 * 1000);
+      return { start, end };
+    },
+  },
+  {
+    label: "Last 30 days",
+    value: "last-30-days",
+    getRange: () => {
+      const end = new Date();
+      const start = new Date(end.getTime() - 30 * 24 * 60 * 60 * 1000);
+      return { start, end };
+    },
+  },
+  {
+    label: "Last 90 days",
+    value: "last-90-days",
+    getRange: () => {
+      const end = new Date();
+      const start = new Date(end.getTime() - 90 * 24 * 60 * 60 * 1000);
+      return { start, end };
+    },
+  },
+];
+
 // ============================================================================
 // Main Component
 // ============================================================================
@@ -592,6 +675,28 @@ export default function CalendarComponent() {
                 presets={defaultPresets}
                 futurePresets={defaultFuturePresets}
                 presetPlaceholder="Select Period"
+              />
+            </div>
+          </CodePreview>
+        </div>
+      </Section>
+
+      {/* Presets with Default Value Section */}
+      <Section>
+        <SectionHeader id="presets-with-default-value" onCopyLink={showToast}>
+          Presets with default value
+        </SectionHeader>
+        <p className="mt-2 leading-6 text-gray-900 dark:text-gray-100 xl:mt-4">
+          Provide common date ranges with an additional default value.
+        </p>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={presetsWithDefaultCode}>
+            <div className="flex justify-center py-12">
+              <Calendar
+                stacked
+                presets={presetsWithDefault}
+                futurePresets={defaultFuturePresets}
+                defaultPreset="last-14-days"
               />
             </div>
           </CodePreview>
@@ -788,6 +893,15 @@ export default function CalendarComponent() {
                 <td className="py-3 px-4 text-textSubtle">false</td>
                 <td className="py-3 px-4 text-textSubtle">
                   Stack preset dropdown above calendar trigger (requires
+                  presets)
+                </td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 font-mono">defaultPreset</td>
+                <td className="py-3 px-4 font-mono text-textSubtle">string</td>
+                <td className="py-3 px-4 text-textSubtle">-</td>
+                <td className="py-3 px-4 text-textSubtle">
+                  Value of a preset to select on initial render (requires
                   presets)
                 </td>
               </tr>
