@@ -681,6 +681,33 @@ export default function CalendarComponent() {
         </div>
       </Section>
 
+      {/* Compact Section */}
+      <Section>
+        <SectionHeader id="compact" onCopyLink={showToast}>
+          Compact
+        </SectionHeader>
+        <p className="mt-2 leading-6 text-gray-900 dark:text-gray-100 xl:mt-4">
+          Use{" "}
+          <code className="text-sm bg-[var(--ds-gray-200)] px-1.5 py-0.5 rounded">
+            compact
+          </code>{" "}
+          for a smaller calendar trigger.
+        </p>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={compactCode}>
+            <div className="flex justify-center py-12">
+              <Calendar
+                compact
+                placeholder="Select Date Range"
+                presets={defaultPresets}
+                futurePresets={defaultFuturePresets}
+                presetPlaceholder="Select Period"
+              />
+            </div>
+          </CodePreview>
+        </div>
+      </Section>
+
       {/* Stacked Section */}
       <Section>
         <SectionHeader id="stacked" onCopyLink={showToast}>
@@ -724,33 +751,6 @@ export default function CalendarComponent() {
                 presets={presetsWithDefault}
                 futurePresets={defaultFuturePresets}
                 defaultPreset="last-14-days"
-              />
-            </div>
-          </CodePreview>
-        </div>
-      </Section>
-
-      {/* Compact Section */}
-      <Section>
-        <SectionHeader id="compact" onCopyLink={showToast}>
-          Compact
-        </SectionHeader>
-        <p className="mt-2 leading-6 text-gray-900 dark:text-gray-100 xl:mt-4">
-          Use{" "}
-          <code className="text-sm bg-[var(--ds-gray-200)] px-1.5 py-0.5 rounded">
-            compact
-          </code>{" "}
-          for a smaller calendar trigger.
-        </p>
-        <div className="mt-4 xl:mt-7">
-          <CodePreview componentCode={compactCode}>
-            <div className="flex justify-center py-12">
-              <Calendar
-                compact
-                placeholder="Select Date Range"
-                presets={defaultPresets}
-                futurePresets={defaultFuturePresets}
-                presetPlaceholder="Select Period"
               />
             </div>
           </CodePreview>
