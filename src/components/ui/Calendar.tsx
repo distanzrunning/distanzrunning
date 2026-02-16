@@ -1251,13 +1251,13 @@ export function Calendar({
                       className="calendar-trigger-content overflow-hidden text-ellipsis whitespace-nowrap flex-1"
                       style={{
                         paddingLeft: 6,
-                        paddingRight: hasSelection ? 8 : 20,
+                        paddingRight: hasSelection && !stacked ? 8 : 20,
                       }}
                     >
                       {displayText}
                     </span>
-                    {/* Clear button */}
-                    {hasSelection && (
+                    {/* Clear button (hidden in stacked mode — preset combobox handles changes) */}
+                    {hasSelection && !stacked && (
                       <span
                         role="button"
                         tabIndex={0}
