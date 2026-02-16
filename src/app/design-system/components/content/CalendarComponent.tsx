@@ -498,6 +498,31 @@ export function MinMaxDateRangePicker() {
   );
 }`;
 
+const sizesCode = `import { Calendar, CalendarPreset } from '@/components/ui/Calendar';
+import { startOfDay, endOfDay, subDays, addDays, addMonths } from 'date-fns';
+
+const presets: CalendarPreset[] = [
+  { label: 'Last 7 days', value: 'last-7d', getRange: () => ({ start: startOfDay(subDays(new Date(), 7)), end: endOfDay(new Date()) }) },
+  { label: 'Last 30 days', value: 'last-30d', getRange: () => ({ start: startOfDay(subDays(new Date(), 30)), end: endOfDay(new Date()) }) },
+];
+
+const futurePresets: CalendarPreset[] = [
+  { label: 'Next 7 days', value: 'next-7d', getRange: () => ({ start: startOfDay(new Date()), end: endOfDay(addDays(new Date(), 7)) }) },
+  { label: 'Next 30 days', value: 'next-30d', getRange: () => ({ start: startOfDay(new Date()), end: endOfDay(addDays(new Date(), 30)) }) },
+];
+
+// Small size (32px height)
+<Calendar size="small" placeholder="Select Date Range" width={250} />
+<Calendar size="small" compact presets={presets} futurePresets={futurePresets} />
+<Calendar size="small" stacked presets={presets} futurePresets={futurePresets} />
+<Calendar size="small" presets={presets} futurePresets={futurePresets} />
+
+// Default / large size (40px height)
+<Calendar placeholder="Select Date Range" width={250} />
+<Calendar compact presets={presets} futurePresets={futurePresets} />
+<Calendar stacked presets={presets} futurePresets={futurePresets} />
+<Calendar presets={presets} futurePresets={futurePresets} />`;
+
 // Default presets for the demo
 const defaultPresets: CalendarPreset[] = [
   {
@@ -683,6 +708,85 @@ export default function CalendarComponent() {
                 showTimeInput={false}
                 popoverAlignment="center"
               />
+            </div>
+          </CodePreview>
+        </div>
+      </Section>
+
+      {/* Sizes Section */}
+      <Section>
+        <SectionHeader id="sizes" onCopyLink={showToast}>
+          Sizes
+        </SectionHeader>
+        <p className="mt-2 leading-6 text-gray-900 dark:text-gray-100 xl:mt-4">
+          Choose between{" "}
+          <code className="text-sm bg-[var(--ds-gray-200)] px-1.5 py-0.5 rounded">
+            large
+          </code>{" "}
+          (default) and{" "}
+          <code className="text-sm bg-[var(--ds-gray-200)] px-1.5 py-0.5 rounded">
+            small
+          </code>{" "}
+          for size.
+        </p>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={sizesCode}>
+            <div className="py-12 space-y-12">
+              <div>
+                <p className="text-sm text-gray-900 dark:text-gray-100 mb-4 font-mono">
+                  small
+                </p>
+                <div className="flex flex-wrap items-start gap-x-4 gap-y-8">
+                  <Calendar
+                    size="small"
+                    placeholder="Select Date Range"
+                    width={250}
+                  />
+                  <Calendar
+                    size="small"
+                    compact
+                    presets={defaultPresets}
+                    futurePresets={defaultFuturePresets}
+                  />
+                  <Calendar
+                    size="small"
+                    stacked
+                    presets={defaultPresets}
+                    futurePresets={defaultFuturePresets}
+                    presetPlaceholder="Select Period"
+                  />
+                  <Calendar
+                    size="small"
+                    presets={defaultPresets}
+                    futurePresets={defaultFuturePresets}
+                    presetPlaceholder="Select Period"
+                  />
+                </div>
+              </div>
+              <div>
+                <p className="text-sm text-gray-900 dark:text-gray-100 mb-4 font-mono">
+                  default / large
+                </p>
+                <div className="flex flex-wrap items-start gap-x-4 gap-y-8">
+                  <Calendar placeholder="Select Date Range" width={250} />
+                  <Calendar
+                    compact
+                    presets={defaultPresets}
+                    futurePresets={defaultFuturePresets}
+                  />
+                  <Calendar
+                    stacked
+                    presets={defaultPresets}
+                    futurePresets={defaultFuturePresets}
+                    presetPlaceholder="Select Period"
+                  />
+                  <Calendar
+                    presets={defaultPresets}
+                    futurePresets={defaultFuturePresets}
+                    presetPlaceholder="Select Period"
+                  />
+                </div>
+              </div>
             </div>
           </CodePreview>
         </div>
@@ -970,6 +1074,18 @@ export default function CalendarComponent() {
                 <td className="py-3 px-4 text-textSubtle">-</td>
                 <td className="py-3 px-4 text-textSubtle">
                   Latest selectable date
+                </td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 font-mono">size</td>
+                <td className="py-3 px-4 font-mono text-textSubtle">
+                  &quot;small&quot; | &quot;default&quot;
+                </td>
+                <td className="py-3 px-4 text-textSubtle">
+                  &quot;default&quot;
+                </td>
+                <td className="py-3 px-4 text-textSubtle">
+                  Size of the calendar trigger (32px or 40px)
                 </td>
               </tr>
             </tbody>

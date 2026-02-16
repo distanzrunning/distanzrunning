@@ -2147,6 +2147,47 @@
     text-overflow: ellipsis;
   }
 
+  /* Small size variant */
+  .calendar-wrapper[data-size="small"] .calendar-combobox-wrapper {
+    height: 32px;
+  }
+
+  .calendar-wrapper[data-size="small"] .calendar-combobox-input {
+    height: 32px;
+    font-size: 14px;
+  }
+
+  .calendar-wrapper[data-size="small"] .calendar-combobox-prefix {
+    top: 8px;
+  }
+
+  .calendar-wrapper[data-size="small"] .calendar-combobox-suffix {
+    top: 16px;
+  }
+
+  .calendar-wrapper[data-size="small"] .calendar-compact-container {
+    height: 32px;
+  }
+
+  .calendar-wrapper[data-size="small"] .calendar-compact-calendar-trigger {
+    height: 32px;
+  }
+
+  .calendar-wrapper[data-size="small"] .calendar-compact-chevron {
+    width: 32px;
+    min-width: 32px;
+    height: 32px;
+  }
+
+  .calendar-wrapper[data-size="small"] .calendar-compact-preset-trigger {
+    height: 32px;
+  }
+
+  .calendar-wrapper[data-size="small"][data-preset-open="true"]
+    .calendar-compact-calendar-trigger {
+    flex: 0 0 32px;
+  }
+
   /* Hide trigger wrapper in compact mode with presets (handled by compact container) */
   .calendar-trigger-wrapper-compact {
     display: none;

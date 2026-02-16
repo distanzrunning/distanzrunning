@@ -184,6 +184,7 @@ export interface CalendarProps {
   defaultPreset?: string;
   minDate?: Date;
   maxDate?: Date;
+  size?: "small" | "default";
 }
 
 // ============================================================================
@@ -733,6 +734,7 @@ export function Calendar({
   defaultPreset,
   minDate,
   maxDate,
+  size = "default",
 }: CalendarProps) {
   // Resolve default preset on initial render
   const resolvedDefault = React.useMemo(() => {
@@ -893,6 +895,7 @@ export function Calendar({
           } as React.CSSProperties
         }
         data-preset-open={isPresetDropdownOpen}
+        data-size={size}
       >
         {/* Compact mode with presets: unified container with calendar trigger + divider + chevron */}
         {compact && presets && presets.length > 0 && (
@@ -1258,7 +1261,7 @@ export function Calendar({
                     className={`calendar-trigger-button flex items-center justify-between text-left cursor-pointer text-[rgb(23,23,23)] dark:text-[rgb(237,237,237)] ${isOpen ? "calendar-trigger-button-expanded" : ""} ${presets && presets.length > 0 ? "calendar-trigger-button-with-presets" : ""} ${compact ? "calendar-trigger-button-compact" : ""}`}
                     style={{
                       width: compact ? undefined : effectiveWidth,
-                      height: 40,
+                      height: size === "small" ? 32 : 40,
                       paddingLeft: 10,
                       paddingRight: 10,
                       borderRadius: compact ? undefined : 6,
