@@ -185,6 +185,7 @@ export interface CalendarProps {
   minDate?: Date;
   maxDate?: Date;
   size?: "small" | "default";
+  showMonthTab?: boolean;
 }
 
 // ============================================================================
@@ -715,6 +716,136 @@ function CalendarContent({
 }
 
 // ============================================================================
+// Month Grid Component (for showMonthTab)
+// ============================================================================
+
+function MonthGrid({
+  dateRange,
+  onMonthSelect,
+  minDate,
+  maxDate,
+}: {
+  dateRange: DateRange;
+  onMonthSelect: (start: Date, end: Date) => void;
+  minDate?: Date;
+  maxDate?: Date;
+}) {
+  const today = new Date();
+  const [currentYear, setCurrentYear] = useState(today.getFullYear());
+
+  const isMonthSelected = (monthIndex: number) => {
+    if (!dateRange.start) return false;
+    return (
+      dateRange.start.getMonth() === monthIndex &&
+      dateRange.start.getFullYear() === currentYear
+    );
+  };
+
+  const isMonthDisabled = (monthIndex: number) => {
+    const monthStart = new Date(currentYear, monthIndex, 1);
+    const monthEnd = new Date(currentYear, monthIndex + 1, 0);
+    if (
+      minDate &&
+      monthEnd <
+        new Date(minDate.getFullYear(), minDate.getMonth(), minDate.getDate())
+    )
+      return true;
+    if (
+      maxDate &&
+      monthStart >
+        new Date(maxDate.getFullYear(), maxDate.getMonth(), maxDate.getDate())
+    )
+      return true;
+    return false;
+  };
+
+  return (
+    <>
+      {/* Year navigation */}
+      <div
+        className="calendar-header"
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          flexWrap: "wrap",
+          margin: "-3px 0",
+          height: 25,
+          width: "100%",
+          maxWidth: "100%",
+          minWidth: 1,
+          position: "relative",
+        }}
+      >
+        <div
+          style={{
+            overflow: "hidden",
+            marginLeft: -16,
+            paddingLeft: 16,
+            flex: "1 1 0%",
+            height: 25,
+          }}
+        >
+          <h2 className="calendar-month-label" style={{ whiteSpace: "nowrap" }}>
+            {currentYear}
+          </h2>
+        </div>
+        <button
+          type="button"
+          onClick={() => setCurrentYear(currentYear - 1)}
+          aria-label="Previous year"
+          className="calendar-nav-button"
+          style={{ marginLeft: "auto" }}
+        >
+          <span className="calendar-nav-button-content">
+            <ChevronLeftIcon />
+          </span>
+        </button>
+        <span aria-hidden="true" style={{ marginLeft: 5 }} />
+        <button
+          type="button"
+          onClick={() => setCurrentYear(currentYear + 1)}
+          aria-label="Next year"
+          className="calendar-nav-button"
+        >
+          <span className="calendar-nav-button-content">
+            <ChevronRightIcon />
+          </span>
+        </button>
+      </div>
+
+      {/* Spacer */}
+      <div aria-hidden="true" style={{ marginTop: 11 }} />
+
+      {/* Month grid */}
+      <div className="calendar-month-grid">
+        {MONTH_NAMES.map((monthName, index) => {
+          const selected = isMonthSelected(index);
+          const disabled = isMonthDisabled(index);
+
+          return (
+            <button
+              key={monthName}
+              type="button"
+              disabled={disabled}
+              onClick={() => {
+                if (disabled) return;
+                const start = new Date(currentYear, index, 1);
+                const end = new Date(currentYear, index + 1, 0);
+                onMonthSelect(start, end);
+              }}
+              className={`calendar-month-cell ${selected ? "calendar-month-cell-selected" : ""} ${disabled ? "calendar-month-cell-disabled" : ""}`}
+            >
+              {monthName.slice(0, 3)}
+            </button>
+          );
+        })}
+      </div>
+    </>
+  );
+}
+
+// ============================================================================
 // Main Calendar Component
 // ============================================================================
 
@@ -735,6 +866,7 @@ export function Calendar({
   minDate,
   maxDate,
   size = "default",
+  showMonthTab = false,
 }: CalendarProps) {
   // Resolve default preset on initial render
   const resolvedDefault = React.useMemo(() => {
@@ -760,6 +892,7 @@ export function Calendar({
     resolvedDefault?.value ?? "",
   );
   const [isPresetDropdownOpen, setIsPresetDropdownOpen] = useState(false);
+  const [calendarTab, setCalendarTab] = useState<"dates" | "months">("dates");
   const [timezone, setTimezone] = useState<TimezoneOption>("local");
   const [timezoneWidth, setTimezoneWidth] = useState<number | null>(null);
   const timezoneTextRef = useRef<HTMLSpanElement>(null);
@@ -849,6 +982,13 @@ export function Calendar({
     setEndDateInput(formatDateForInput(today));
     setStartTimeInput(formatTimeForTimezone(timezone, false));
     setEndTimeInput(formatTimeForTimezone(timezone, true));
+  };
+
+  const handleMonthSelect = (start: Date, end: Date) => {
+    setDateRange({ start, end });
+    setSelectionState("start");
+    setSelectedPreset("");
+    setIsOpen(false);
   };
 
   const handlePresetSelect = (presetValue: string, closeDropdown = true) => {
@@ -1102,13 +1242,41 @@ export function Calendar({
                         </div>
                       </div>
                       <div>
-                        <CalendarContent
-                          dateRange={dateRange}
-                          onDateSelect={handleDateSelect}
-                          isSelectingEnd={selectionState === "end"}
-                          minDate={minDate}
-                          maxDate={maxDate}
-                        />
+                        {showMonthTab && (
+                          <div className="calendar-tab-switcher">
+                            <button
+                              type="button"
+                              className={`calendar-tab-button ${calendarTab === "dates" ? "calendar-tab-button-active" : ""}`}
+                              onClick={() => setCalendarTab("dates")}
+                            >
+                              Dates
+                            </button>
+                            <button
+                              type="button"
+                              className={`calendar-tab-button ${calendarTab === "months" ? "calendar-tab-button-active" : ""}`}
+                              onClick={() => setCalendarTab("months")}
+                            >
+                              Months
+                            </button>
+                          </div>
+                        )}
+                        {(!showMonthTab || calendarTab === "dates") && (
+                          <CalendarContent
+                            dateRange={dateRange}
+                            onDateSelect={handleDateSelect}
+                            isSelectingEnd={selectionState === "end"}
+                            minDate={minDate}
+                            maxDate={maxDate}
+                          />
+                        )}
+                        {showMonthTab && calendarTab === "months" && (
+                          <MonthGrid
+                            dateRange={dateRange}
+                            onMonthSelect={handleMonthSelect}
+                            minDate={minDate}
+                            maxDate={maxDate}
+                          />
+                        )}
                       </div>
                     </div>
                   </div>
@@ -1517,13 +1685,41 @@ export function Calendar({
 
                         {/* Calendar grid - always positioned closer to the trigger */}
                         <div>
-                          <CalendarContent
-                            dateRange={dateRange}
-                            onDateSelect={handleDateSelect}
-                            isSelectingEnd={selectionState === "end"}
-                            minDate={minDate}
-                            maxDate={maxDate}
-                          />
+                          {showMonthTab && (
+                            <div className="calendar-tab-switcher">
+                              <button
+                                type="button"
+                                className={`calendar-tab-button ${calendarTab === "dates" ? "calendar-tab-button-active" : ""}`}
+                                onClick={() => setCalendarTab("dates")}
+                              >
+                                Dates
+                              </button>
+                              <button
+                                type="button"
+                                className={`calendar-tab-button ${calendarTab === "months" ? "calendar-tab-button-active" : ""}`}
+                                onClick={() => setCalendarTab("months")}
+                              >
+                                Months
+                              </button>
+                            </div>
+                          )}
+                          {(!showMonthTab || calendarTab === "dates") && (
+                            <CalendarContent
+                              dateRange={dateRange}
+                              onDateSelect={handleDateSelect}
+                              isSelectingEnd={selectionState === "end"}
+                              minDate={minDate}
+                              maxDate={maxDate}
+                            />
+                          )}
+                          {showMonthTab && calendarTab === "months" && (
+                            <MonthGrid
+                              dateRange={dateRange}
+                              onMonthSelect={handleMonthSelect}
+                              minDate={minDate}
+                              maxDate={maxDate}
+                            />
+                          )}
                         </div>
                       </div>
                     </div>

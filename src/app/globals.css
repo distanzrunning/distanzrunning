@@ -2147,6 +2147,100 @@
     text-overflow: ellipsis;
   }
 
+  /* Calendar Tab Switcher (Dates / Months) */
+  .calendar-tab-switcher {
+    display: flex;
+    background: var(--ds-gray-200);
+    border-radius: 6px;
+    padding: 2px;
+    margin-bottom: 10px;
+  }
+
+  .calendar-tab-button {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 28px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ds-gray-900);
+    background: transparent;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition:
+      background-color 0.15s ease,
+      color 0.15s ease;
+  }
+
+  .calendar-tab-button:hover:not(.calendar-tab-button-active) {
+    color: var(--ds-gray-1000);
+  }
+
+  .calendar-tab-button-active {
+    background: var(--ds-background-100);
+    color: var(--ds-gray-1000);
+    box-shadow: rgba(0, 0, 0, 0.06) 0px 1px 2px;
+  }
+
+  :is(.dark, [data-theme="dark"]) .calendar-tab-button-active {
+    box-shadow: rgba(255, 255, 255, 0.1) 0px 1px 2px;
+  }
+
+  /* Month Grid */
+  .calendar-month-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4px;
+  }
+
+  .calendar-month-cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 36px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--calendar-day-color);
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    transition:
+      border-color 0.15s ease,
+      background-color 0.15s ease,
+      color 0.15s ease;
+  }
+
+  .calendar-month-cell:hover:not(.calendar-month-cell-selected):not(
+      .calendar-month-cell-disabled
+    ) {
+    border-color: var(--ds-gray-500);
+  }
+
+  .calendar-month-cell-selected {
+    background: var(--ds-gray-1000);
+    color: var(--ds-background-100);
+  }
+
+  .calendar-month-cell-selected:hover {
+    border-color: transparent;
+  }
+
+  .calendar-month-cell-disabled {
+    color: var(--calendar-day-outside-color);
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  .calendar-month-cell:focus-visible {
+    outline: none;
+    box-shadow:
+      0 0 0 2px var(--ds-background-100),
+      0 0 0 4px var(--ds-gray-1000);
+  }
+
   /* Small size variant */
   .calendar-wrapper[data-size="small"] .calendar-combobox-wrapper {
     height: 32px;

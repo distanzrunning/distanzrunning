@@ -498,6 +498,26 @@ export function MinMaxDateRangePicker() {
   );
 }`;
 
+const monthTabCode = `import { Calendar, DateRange } from '@/components/ui/Calendar';
+import { useState } from 'react';
+
+export function MonthTabDateRangePicker() {
+  const [dateRange, setDateRange] = useState<DateRange>({
+    start: null,
+    end: null,
+  });
+
+  return (
+    <Calendar
+      placeholder="Select Date Range"
+      value={dateRange}
+      onChange={setDateRange}
+      showMonthTab
+      width={250}
+    />
+  );
+}`;
+
 const sizesCode = `import { Calendar, CalendarPreset } from '@/components/ui/Calendar';
 import { startOfDay, endOfDay, subDays, addDays, addMonths } from 'date-fns';
 
@@ -912,6 +932,32 @@ export default function CalendarComponent() {
         </div>
       </Section>
 
+      {/* Month Tab Section */}
+      <Section>
+        <SectionHeader id="month-tab" onCopyLink={showToast}>
+          Month tab
+        </SectionHeader>
+        <p className="mt-2 leading-6 text-gray-900 dark:text-gray-100 xl:mt-4">
+          Use{" "}
+          <code className="text-sm bg-[var(--ds-gray-200)] px-1.5 py-0.5 rounded">
+            showMonthTab
+          </code>{" "}
+          to add a Dates/Months tab switcher within the calendar popover,
+          allowing selection of an entire month at once.
+        </p>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={monthTabCode}>
+            <div className="flex justify-center py-12">
+              <Calendar
+                placeholder="Select Date Range"
+                showMonthTab
+                width={250}
+              />
+            </div>
+          </CodePreview>
+        </div>
+      </Section>
+
       {/* Props Section */}
       <Section>
         <SectionHeader id="props" onCopyLink={showToast}>
@@ -1086,6 +1132,15 @@ export default function CalendarComponent() {
                 </td>
                 <td className="py-3 px-4 text-textSubtle">
                   Size of the calendar trigger (32px or 40px)
+                </td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 font-mono">showMonthTab</td>
+                <td className="py-3 px-4 font-mono text-textSubtle">boolean</td>
+                <td className="py-3 px-4 text-textSubtle">false</td>
+                <td className="py-3 px-4 text-textSubtle">
+                  Show a Dates/Months tab switcher in the popover for month
+                  selection
                 </td>
               </tr>
             </tbody>
