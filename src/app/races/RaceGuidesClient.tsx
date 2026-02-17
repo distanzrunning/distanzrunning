@@ -18,7 +18,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import type { RaceGuide } from "./page";
 import Slider from "@mui/material/Slider";
 import Box from "@mui/material/Box";
-// @ts-ignore - country-flag-icons doesn't have perfect TypeScript types
 import * as flags from "country-flag-icons/react/3x2";
 import { convertCurrencySync, formatPrice } from "@/lib/raceUtils";
 
@@ -5403,10 +5402,10 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                 setTempElevationFilter(null);
                 setAppliedTemperatureFilter(null);
                 setTempTemperatureFilter(null);
-                setAppliedPriceFilter(null);
-                setTempPriceFilter(null);
-                setAppliedTagsFilter([]);
-                setTempTagsFilter([]);
+                setAppliedPriceRange({ min: 0, max: 500 });
+                setTempPriceRange({ min: 0, max: 500 });
+                setAppliedTagsFilter("");
+                setTempTagsFilter("");
               }}
               className="inline-flex items-center justify-center px-6 py-3 bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 rounded-lg font-medium text-sm hover:bg-neutral-700 dark:hover:bg-neutral-200 transition-colors"
             >
