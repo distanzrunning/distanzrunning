@@ -335,6 +335,9 @@ export default function DesignSystemPage() {
       return (
         <ContentWithTOC
           tocTitle="On this page"
+          pageTitle="Checkbox"
+          pageSubtitle="A control that toggles between two options, checked or unchecked."
+          mainSectionId="checkbox"
           activeSlug={activeSlug}
           onNavigate={handleNavigation}
         >
