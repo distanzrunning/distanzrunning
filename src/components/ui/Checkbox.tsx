@@ -78,7 +78,7 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
                   ? "bg-[var(--ds-gray-1000)] border-[var(--ds-gray-1000)]"
                   : "bg-[var(--ds-background-100)] border-[rgb(143,143,143)]"
               }
-              ${!disabled && !(checked || indeterminate) ? "hover:border-[var(--ds-gray-1000)]" : ""}
+              ${!disabled && !(checked || indeterminate) ? "hover:border-[var(--ds-gray-900)] hover:bg-[var(--ds-gray-200)]" : ""}
               ${disabled ? "" : "peer-focus-visible:shadow-[0_0_0_2px_var(--ds-background-100),0_0_0_4px_var(--ds-focus-color)]"}
             `}
             style={{
