@@ -47,10 +47,13 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
     const checkboxId =
       id || `checkbox-${Math.random().toString(36).substr(2, 9)}`;
 
+    const isActive = checked || indeterminate;
+
     return (
       <label
         htmlFor={checkboxId}
         className={`
+          group/checkbox
           inline-flex items-center gap-3
           ${disabled ? "cursor-not-allowed" : "cursor-pointer"}
           ${disabled ? "opacity-50" : ""}
@@ -71,18 +74,19 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
           <span
             aria-hidden="true"
             className={`
+              checkbox-icon
               relative flex items-center justify-center
-              w-4 h-4 rounded-[4px] border
+              w-4 h-4 rounded-[4px] border border-solid
               ${
-                checked || indeterminate
+                isActive
                   ? "bg-[var(--ds-gray-1000)] border-[var(--ds-gray-1000)]"
-                  : "bg-[var(--ds-background-100)] border-[rgb(143,143,143)]"
+                  : "bg-[var(--ds-background-100)] border-[var(--ds-gray-700)]"
               }
-              ${!disabled && !(checked || indeterminate) ? "hover:border-[var(--ds-gray-900)] hover:bg-[var(--ds-gray-200)]" : ""}
+              ${!disabled && !isActive ? "group-hover/checkbox:border-[var(--ds-gray-900)] group-hover/checkbox:bg-[var(--ds-gray-200)]" : ""}
               ${disabled ? "" : "peer-focus-visible:shadow-[0_0_0_2px_var(--ds-background-100),0_0_0_4px_var(--ds-focus-color)]"}
             `}
             style={{
-              transition: "border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease",
+              transition: "border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease",
             }}
           >
             <svg fill="none" height="16" viewBox="0 0 20 20" width="16">
