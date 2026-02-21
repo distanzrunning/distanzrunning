@@ -256,9 +256,9 @@ export function Choicebox({
       {/* Custom content - shown when selected */}
       {isSelected && children && (
         <div
-          className="px-3 pb-3 pt-3 transition-colors hover:bg-[var(--ds-gray-100)]"
+          className="flex items-center justify-center px-3 pb-3 pt-3 rounded-b-md overflow-hidden transition-colors hover:bg-[var(--ds-gray-100)]"
           style={{
-            borderTop: "1px solid var(--ds-gray-400)",
+            borderTop: `1px solid ${!isDisabled ? "var(--ds-pink-700)" : "var(--ds-gray-400)"}`,
           }}
         >
           {children}
