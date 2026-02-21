@@ -463,10 +463,10 @@ export function CustomContentExample() {
         <span
           className="inline-block text-xs font-medium px-3 py-1 rounded-full text-white"
           style={{
-            background: 'linear-gradient(135deg, var(--ds-pink-700), var(--ds-purple-700))',
+            background: 'var(--ds-pink-700)',
           }}
         >
-          Unlimited
+          Pro
         </span>
       </Choicebox>
     </ChoiceboxGroup>
@@ -587,11 +587,10 @@ function CustomContentDemo() {
         <span
           className="inline-block text-xs font-medium px-3 py-1 rounded-full text-white"
           style={{
-            background:
-              "linear-gradient(135deg, var(--ds-pink-700), var(--ds-purple-700))",
+            background: "var(--ds-pink-700)",
           }}
         >
-          Unlimited
+          Pro
         </span>
       </Choicebox>
     </ChoiceboxGroup>
