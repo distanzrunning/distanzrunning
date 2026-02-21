@@ -256,7 +256,7 @@ export function Choicebox({
       {/* Custom content - shown when selected */}
       {isSelected && children && (
         <div
-          className="px-3 pb-3"
+          className="px-3 pb-3 pt-3 transition-colors hover:bg-[var(--ds-gray-100)]"
           style={{
             borderTop: "1px solid var(--ds-gray-400)",
           }}

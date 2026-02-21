@@ -431,33 +431,43 @@ const customContentCode = `import { ChoiceboxGroup, Choicebox } from '@/componen
 import { useState } from 'react';
 
 export function CustomContentExample() {
-  const [selected, setSelected] = useState('deploy');
+  const [selected, setSelected] = useState('trial');
 
   return (
     <ChoiceboxGroup
       type="single"
-      name="action"
+      name="plan"
       value={selected}
       onChange={(val) => setSelected(val as string)}
-      label="Select an action"
+      label="Select a plan"
     >
       <Choicebox
-        value="deploy"
-        title="Deploy"
-        description="Deploy your project to production"
+        value="trial"
+        title="Pro Trial"
+        description="Free for two weeks"
       >
-        <p className="text-sm text-[var(--ds-gray-900)] pt-3">
-          This will trigger a production deployment pipeline.
-        </p>
+        <span
+          className="inline-block text-xs font-medium px-3 py-1 rounded-full text-white"
+          style={{
+            background: 'linear-gradient(135deg, var(--ds-pink-700), var(--ds-purple-700))',
+          }}
+        >
+          Trial
+        </span>
       </Choicebox>
       <Choicebox
-        value="preview"
-        title="Preview"
-        description="Create a preview deployment"
+        value="pro"
+        title="Pro"
+        description="Get started now"
       >
-        <p className="text-sm text-[var(--ds-gray-900)] pt-3">
-          A preview URL will be generated for testing.
-        </p>
+        <span
+          className="inline-block text-xs font-medium px-3 py-1 rounded-full text-white"
+          style={{
+            background: 'linear-gradient(135deg, var(--ds-pink-700), var(--ds-purple-700))',
+          }}
+        >
+          Unlimited
+        </span>
       </Choicebox>
     </ChoiceboxGroup>
   );
@@ -544,7 +554,7 @@ function SingleInputDisabledDemo() {
 }
 
 function CustomContentDemo() {
-  const [selected, setSelected] = useState("deploy");
+  const [selected, setSelected] = useState("trial");
 
   return (
     <ChoiceboxGroup
@@ -552,25 +562,37 @@ function CustomContentDemo() {
       name="demo-custom"
       value={selected}
       onChange={(val) => setSelected(val as string)}
-      label="Select an action"
+      label="Select a plan"
     >
       <Choicebox
-        value="deploy"
-        title="Deploy"
-        description="Deploy your project to production"
+        value="trial"
+        title="Pro Trial"
+        description="Free for two weeks"
       >
-        <p className="text-sm text-[var(--ds-gray-900)] pt-3">
-          This will trigger a production deployment pipeline.
-        </p>
+        <span
+          className="inline-block text-xs font-medium px-3 py-1 rounded-full text-white"
+          style={{
+            background:
+              "linear-gradient(135deg, var(--ds-pink-700), var(--ds-purple-700))",
+          }}
+        >
+          Trial
+        </span>
       </Choicebox>
       <Choicebox
-        value="preview"
-        title="Preview"
-        description="Create a preview deployment"
+        value="pro"
+        title="Pro"
+        description="Get started now"
       >
-        <p className="text-sm text-[var(--ds-gray-900)] pt-3">
-          A preview URL will be generated for testing.
-        </p>
+        <span
+          className="inline-block text-xs font-medium px-3 py-1 rounded-full text-white"
+          style={{
+            background:
+              "linear-gradient(135deg, var(--ds-pink-700), var(--ds-purple-700))",
+          }}
+        >
+          Unlimited
+        </span>
       </Choicebox>
     </ChoiceboxGroup>
   );
