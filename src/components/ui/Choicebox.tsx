@@ -36,31 +36,32 @@ function RadioIndicator({
   checked: boolean;
   disabled: boolean;
 }) {
+  const radioColor = disabled
+    ? "var(--ds-gray-500)"
+    : checked
+      ? "var(--ds-pink-900)"
+      : "var(--ds-gray-600)";
+
   return (
     <span
       className="inline-flex items-center justify-center flex-shrink-0"
       style={{
-        width: 20,
-        height: 20,
+        width: 16,
+        height: 16,
         borderRadius: "50%",
-        border: `2px solid ${
-          disabled
-            ? "var(--ds-gray-500)"
-            : checked
-              ? "var(--ds-pink-700)"
-              : "var(--ds-gray-600)"
-        }`,
-        transition: "border-color 0.15s ease",
+        border: `1px solid ${radioColor}`,
+        background: checked ? radioColor : "var(--ds-background-100)",
+        transition: "border-color 0.2s ease, background 0.2s ease",
+        position: "relative",
       }}
     >
       {checked && (
         <span
           style={{
-            width: 10,
-            height: 10,
+            width: 6,
+            height: 6,
             borderRadius: "50%",
-            background: disabled ? "var(--ds-gray-500)" : "var(--ds-pink-700)",
-            transition: "background-color 0.15s ease",
+            background: "var(--ds-background-100)",
           }}
         />
       )}
@@ -169,7 +170,7 @@ export function Choicebox({
       aria-selected={isSelected}
       className={`
         flex flex-1 flex-col
-        rounded-lg border border-solid
+        rounded-md border border-solid
         ${isDisabled ? "cursor-not-allowed opacity-50" : "cursor-pointer"}
         ${className}
       `}
@@ -178,7 +179,7 @@ export function Choicebox({
           ? "var(--ds-pink-700)"
           : "var(--ds-gray-400)",
         background: "var(--ds-background-100)",
-        transition: "border-color 0.2s ease",
+        transition: "background 0.15s ease, border 0.15s ease",
       }}
     >
       <input
@@ -193,24 +194,36 @@ export function Choicebox({
       />
 
       {/* Option row */}
-      <div className="flex items-center justify-between gap-6 px-4 py-3">
+      <div
+        className="flex items-center justify-between gap-6 rounded-md p-3"
+        style={{
+          background: isSelected ? "var(--ds-pink-100)" : "transparent",
+          transition: "background 0.15s ease, border 0.15s ease",
+        }}
+      >
         {/* Text content */}
         <div className="flex flex-col gap-1">
           <span
-            className={`text-sm font-medium ${
-              isDisabled
-                ? "text-[var(--ds-gray-500)]"
-                : "text-[var(--ds-gray-1000)]"
-            }`}
+            className="text-sm font-medium leading-5"
+            style={{
+              color: isDisabled
+                ? "var(--ds-gray-500)"
+                : isSelected
+                  ? "var(--ds-pink-700)"
+                  : "var(--ds-gray-1000)",
+            }}
           >
             {title}
           </span>
           <span
-            className={`text-sm ${
-              isDisabled
-                ? "text-[var(--ds-gray-500)]"
-                : "text-[var(--ds-gray-900)]"
-            }`}
+            className="text-sm leading-5"
+            style={{
+              color: isDisabled
+                ? "var(--ds-gray-500)"
+                : isSelected
+                  ? "var(--ds-pink-700)"
+                  : "var(--ds-gray-900)",
+            }}
           >
             {description}
           </span>
@@ -229,7 +242,7 @@ export function Choicebox({
       {/* Custom content - shown when selected */}
       {isSelected && children && (
         <div
-          className="px-4 pb-3"
+          className="px-3 pb-3"
           style={{
             borderTop: "1px solid var(--ds-gray-400)",
           }}
