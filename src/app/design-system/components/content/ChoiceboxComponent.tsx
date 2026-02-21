@@ -364,53 +364,58 @@ export function MultiSelectExample() {
   );
 }`;
 
-const disabledCode = `import { ChoiceboxGroup, Choicebox } from '@/components/ui/Choicebox';
+const disabledGroupCode = `import { ChoiceboxGroup, Choicebox } from '@/components/ui/Choicebox';
 
-export function DisabledExamples() {
+export function DisabledGroupExample() {
   return (
-    <div className="flex flex-col gap-6">
-      {/* Group disabled */}
-      <ChoiceboxGroup
-        type="single"
-        name="disabled-group"
+    <ChoiceboxGroup
+      type="single"
+      name="disabled-group"
+      value="option-a"
+      onChange={() => {}}
+      disabled
+      label="Choicebox group disabled"
+    >
+      <Choicebox
         value="option-a"
-        onChange={() => {}}
-        disabled
-        label="Disabled group"
-      >
-        <Choicebox
-          value="option-a"
-          title="Option A"
-          description="Description for option A"
-        />
-        <Choicebox
-          value="option-b"
-          title="Option B"
-          description="Description for option B"
-        />
-      </ChoiceboxGroup>
+        title="Pro Trial"
+        description="Free for two weeks"
+      />
+      <Choicebox
+        value="option-b"
+        title="Pro"
+        description="Get started now"
+      />
+    </ChoiceboxGroup>
+  );
+}`;
 
-      {/* Single item disabled */}
-      <ChoiceboxGroup
-        type="multi"
-        name="partial-disabled"
-        value={['feature-a']}
-        onChange={() => {}}
-        label="Partially disabled"
-      >
-        <Choicebox
-          value="feature-a"
-          title="Feature A"
-          description="This item is enabled"
-        />
-        <Choicebox
-          value="feature-b"
-          title="Feature B"
-          description="This item is disabled"
-          disabled
-        />
-      </ChoiceboxGroup>
-    </div>
+const disabledInputCode = `import { ChoiceboxGroup, Choicebox } from '@/components/ui/Choicebox';
+import { useState } from 'react';
+
+export function SingleInputDisabledExample() {
+  const [selected, setSelected] = useState<string[]>([]);
+
+  return (
+    <ChoiceboxGroup
+      type="multi"
+      name="partial-disabled"
+      value={selected}
+      onChange={(val) => setSelected(val as string[])}
+      label="Single input disabled"
+    >
+      <Choicebox
+        value="trial"
+        title="Pro Trial"
+        description="Free for two weeks"
+        disabled
+      />
+      <Choicebox
+        value="pro"
+        title="Pro"
+        description="Get started now"
+      />
+    </ChoiceboxGroup>
   );
 }`;
 
@@ -504,6 +509,32 @@ function MultiSelectDemo() {
   );
 }
 
+function SingleInputDisabledDemo() {
+  const [selected, setSelected] = useState<string[]>([]);
+
+  return (
+    <ChoiceboxGroup
+      type="multi"
+      name="demo-partial-disabled"
+      value={selected}
+      onChange={(val) => setSelected(val as string[])}
+      label="Single input disabled"
+    >
+      <Choicebox
+        value="trial"
+        title="Pro Trial"
+        description="Free for two weeks"
+        disabled
+      />
+      <Choicebox
+        value="pro"
+        title="Pro"
+        description="Get started now"
+      />
+    </ChoiceboxGroup>
+  );
+}
+
 function CustomContentDemo() {
   const [selected, setSelected] = useState("deploy");
 
@@ -581,51 +612,42 @@ export default function ChoiceboxComponent() {
         <SectionHeader id="disabled" onCopyLink={showToast}>
           Disabled
         </SectionHeader>
-        <div className="mt-4 xl:mt-7">
-          <CodePreview componentCode={disabledCode}>
-            <div className="flex flex-col gap-6">
-              {/* Group disabled */}
-              <ChoiceboxGroup
-                type="single"
-                name="disabled-group"
-                value="option-a"
-                onChange={() => {}}
-                disabled
-                label="Disabled group"
-              >
-                <Choicebox
-                  value="option-a"
-                  title="Option A"
-                  description="Description for option A"
-                />
-                <Choicebox
-                  value="option-b"
-                  title="Option B"
-                  description="Description for option B"
-                />
-              </ChoiceboxGroup>
 
-              {/* Single item disabled */}
-              <ChoiceboxGroup
-                type="multi"
-                name="partial-disabled"
-                value={["feature-a"]}
-                onChange={() => {}}
-                label="Partially disabled"
-              >
-                <Choicebox
-                  value="feature-a"
-                  title="Feature A"
-                  description="This item is enabled"
-                />
-                <Choicebox
-                  value="feature-b"
-                  title="Feature B"
-                  description="This item is disabled"
-                  disabled
-                />
-              </ChoiceboxGroup>
-            </div>
+        {/* Choicebox group disabled */}
+        <p className="text-copy-14 text-textSubtle mt-4 mb-4">
+          Choicebox group disabled
+        </p>
+        <div className="mb-8">
+          <CodePreview componentCode={disabledGroupCode}>
+            <ChoiceboxGroup
+              type="single"
+              name="disabled-group"
+              value="option-a"
+              onChange={() => {}}
+              disabled
+              label="Choicebox group disabled"
+            >
+              <Choicebox
+                value="option-a"
+                title="Pro Trial"
+                description="Free for two weeks"
+              />
+              <Choicebox
+                value="option-b"
+                title="Pro"
+                description="Get started now"
+              />
+            </ChoiceboxGroup>
+          </CodePreview>
+        </div>
+
+        {/* Single input disabled */}
+        <p className="text-copy-14 text-textSubtle mb-4">
+          Single input disabled
+        </p>
+        <div>
+          <CodePreview componentCode={disabledInputCode}>
+            <SingleInputDisabledDemo />
           </CodePreview>
         </div>
       </Section>
