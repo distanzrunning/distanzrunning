@@ -71,12 +71,13 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
             className="sr-only peer"
             {...props}
           />
+          {/* Geist .check: border/bg on outer box with padding, -margin for layout */}
           <span
             aria-hidden="true"
             className={`
               checkbox-icon
-              relative flex items-center justify-center
-              w-4 h-4 rounded-[4px] border border-solid
+              inline-flex items-center justify-center
+              rounded-[4px] border border-solid
               ${
                 isActive
                   ? "bg-[var(--ds-gray-1000)] border-[var(--ds-gray-1000)]"
@@ -86,34 +87,39 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
               ${disabled ? "" : "peer-focus-visible:shadow-[0_0_0_2px_var(--ds-background-100),0_0_0_4px_var(--ds-focus-color)]"}
             `}
             style={{
+              margin: "-2px",
+              padding: "2px",
               transition: "border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease",
             }}
           >
-            <svg fill="none" height="16" viewBox="0 0 20 20" width="16">
-              {/* Checkmark - visible when checked and not indeterminate */}
-              {checked && !indeterminate && (
-                <path
-                  d="M14 7L8.5 12.5L6 10"
-                  stroke="var(--ds-background-100)"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                />
-              )}
-              {/* Indeterminate dash - visible only when indeterminate */}
-              {indeterminate && (
-                <line
-                  x1="5"
-                  x2="15"
-                  y1="10"
-                  y2="10"
-                  stroke="var(--ds-background-100)"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                />
-              )}
-            </svg>
+            {/* Geist .icon: 16x16 inline-flex wrapper for the SVG */}
+            <span className="inline-flex w-4 h-4 items-center justify-center">
+              <svg fill="none" height="16" viewBox="0 0 20 20" width="16">
+                {/* Checkmark - visible when checked and not indeterminate */}
+                {checked && !indeterminate && (
+                  <path
+                    d="M14 7L8.5 12.5L6 10"
+                    stroke="var(--ds-background-100)"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                  />
+                )}
+                {/* Indeterminate dash - visible only when indeterminate */}
+                {indeterminate && (
+                  <line
+                    x1="5"
+                    x2="15"
+                    y1="10"
+                    y2="10"
+                    stroke="var(--ds-background-100)"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                  />
+                )}
+              </svg>
+            </span>
           </span>
         </span>
         {label && (
