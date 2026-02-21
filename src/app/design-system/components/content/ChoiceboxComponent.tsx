@@ -364,58 +364,66 @@ export function MultiSelectExample() {
   );
 }`;
 
-const disabledGroupCode = `import { ChoiceboxGroup, Choicebox } from '@/components/ui/Choicebox';
-
-export function DisabledGroupExample() {
-  return (
-    <ChoiceboxGroup
-      type="single"
-      name="disabled-group"
-      value="option-a"
-      onChange={() => {}}
-      disabled
-      label="Choicebox group disabled"
-    >
-      <Choicebox
-        value="option-a"
-        title="Pro Trial"
-        description="Free for two weeks"
-      />
-      <Choicebox
-        value="option-b"
-        title="Pro"
-        description="Get started now"
-      />
-    </ChoiceboxGroup>
-  );
-}`;
-
-const disabledInputCode = `import { ChoiceboxGroup, Choicebox } from '@/components/ui/Choicebox';
+const disabledCode = `import { ChoiceboxGroup, Choicebox } from '@/components/ui/Choicebox';
 import { useState } from 'react';
 
-export function SingleInputDisabledExample() {
+export function DisabledExamples() {
   const [selected, setSelected] = useState<string[]>([]);
 
   return (
-    <ChoiceboxGroup
-      type="multi"
-      name="partial-disabled"
-      value={selected}
-      onChange={(val) => setSelected(val as string[])}
-      label="Single input disabled"
-    >
-      <Choicebox
-        value="trial"
-        title="Pro Trial"
-        description="Free for two weeks"
-        disabled
-      />
-      <Choicebox
-        value="pro"
-        title="Pro"
-        description="Get started now"
-      />
-    </ChoiceboxGroup>
+    <div className="flex flex-col gap-6">
+      {/* Choicebox group disabled */}
+      <div className="flex flex-col gap-3">
+        <span className="text-sm text-[var(--ds-gray-900)]">
+          Choicebox group disabled
+        </span>
+        <ChoiceboxGroup
+          type="single"
+          name="disabled-group"
+          value="option-a"
+          onChange={() => {}}
+          disabled
+          label="Choicebox group disabled"
+        >
+          <Choicebox
+            value="option-a"
+            title="Pro Trial"
+            description="Free for two weeks"
+          />
+          <Choicebox
+            value="option-b"
+            title="Pro"
+            description="Get started now"
+          />
+        </ChoiceboxGroup>
+      </div>
+
+      {/* Single input disabled */}
+      <div className="flex flex-col gap-3">
+        <span className="text-sm text-[var(--ds-gray-900)]">
+          Single input disabled
+        </span>
+        <ChoiceboxGroup
+          type="multi"
+          name="partial-disabled"
+          value={selected}
+          onChange={(val) => setSelected(val as string[])}
+          label="Single input disabled"
+        >
+          <Choicebox
+            value="trial"
+            title="Pro Trial"
+            description="Free for two weeks"
+            disabled
+          />
+          <Choicebox
+            value="pro"
+            title="Pro"
+            description="Get started now"
+          />
+        </ChoiceboxGroup>
+      </div>
+    </div>
   );
 }`;
 
@@ -612,42 +620,43 @@ export default function ChoiceboxComponent() {
         <SectionHeader id="disabled" onCopyLink={showToast}>
           Disabled
         </SectionHeader>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={disabledCode}>
+            <div className="flex flex-col gap-6">
+              {/* Choicebox group disabled */}
+              <div className="flex flex-col gap-3">
+                <span className="text-sm text-[var(--ds-gray-900)]">
+                  Choicebox group disabled
+                </span>
+                <ChoiceboxGroup
+                  type="single"
+                  name="disabled-group"
+                  value="option-a"
+                  onChange={() => {}}
+                  disabled
+                  label="Choicebox group disabled"
+                >
+                  <Choicebox
+                    value="option-a"
+                    title="Pro Trial"
+                    description="Free for two weeks"
+                  />
+                  <Choicebox
+                    value="option-b"
+                    title="Pro"
+                    description="Get started now"
+                  />
+                </ChoiceboxGroup>
+              </div>
 
-        {/* Choicebox group disabled */}
-        <p className="text-copy-14 text-textSubtle mt-4 mb-4">
-          Choicebox group disabled
-        </p>
-        <div className="mb-8">
-          <CodePreview componentCode={disabledGroupCode}>
-            <ChoiceboxGroup
-              type="single"
-              name="disabled-group"
-              value="option-a"
-              onChange={() => {}}
-              disabled
-              label="Choicebox group disabled"
-            >
-              <Choicebox
-                value="option-a"
-                title="Pro Trial"
-                description="Free for two weeks"
-              />
-              <Choicebox
-                value="option-b"
-                title="Pro"
-                description="Get started now"
-              />
-            </ChoiceboxGroup>
-          </CodePreview>
-        </div>
-
-        {/* Single input disabled */}
-        <p className="text-copy-14 text-textSubtle mb-4">
-          Single input disabled
-        </p>
-        <div>
-          <CodePreview componentCode={disabledInputCode}>
-            <SingleInputDisabledDemo />
+              {/* Single input disabled */}
+              <div className="flex flex-col gap-3">
+                <span className="text-sm text-[var(--ds-gray-900)]">
+                  Single input disabled
+                </span>
+                <SingleInputDisabledDemo />
+              </div>
+            </div>
           </CodePreview>
         </div>
       </Section>
