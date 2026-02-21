@@ -76,7 +76,7 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
             className={`
               checkbox-icon
               relative flex items-center justify-center
-              w-4 h-4 rounded-[4px] border border-solid
+              w-[18px] h-[18px] rounded-[4px] border border-solid
               ${
                 isActive
                   ? "bg-[var(--ds-gray-1000)] border-[var(--ds-gray-1000)]"
