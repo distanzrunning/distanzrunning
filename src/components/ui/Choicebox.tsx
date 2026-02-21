@@ -181,7 +181,7 @@ export function Choicebox({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       style={{
-        borderColor: isSelected
+        borderColor: isSelected && !isDisabled
           ? "var(--ds-pink-700)"
           : showHover
             ? "var(--ds-gray-500)"
@@ -207,7 +207,7 @@ export function Choicebox({
       <div
         className="flex items-center justify-between gap-6 rounded-md p-3"
         style={{
-          background: isSelected ? "oklch(97.3% 0.014 345)" : "transparent",
+          background: isSelected && !isDisabled ? "oklch(97.3% 0.014 345)" : "transparent",
           transition: "background 0.15s ease, border 0.15s ease",
         }}
       >
@@ -247,7 +247,7 @@ export function Choicebox({
             <Checkbox
               checked={isSelected}
               disabled={isDisabled}
-              color={isSelected ? "var(--ds-pink-700)" : undefined}
+              color={isSelected && !isDisabled ? "var(--ds-pink-700)" : undefined}
             />
           </span>
         )}
