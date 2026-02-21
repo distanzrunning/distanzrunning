@@ -41,7 +41,7 @@ function Toast({
           type="button"
           onClick={onDismiss}
           aria-label="Dismiss toast"
-          className="p-1 rounded hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors"
+          className="p-1 rounded hover:bg-[var(--ds-gray-100)] transition-colors"
         >
           <svg
             height="16"
@@ -336,27 +336,12 @@ export function DisabledCheckboxes() {
 }`;
 
 const indeterminateCode = `import Checkbox from '@/components/ui/Checkbox';
-import { useState } from 'react';
 
 export function IndeterminateCheckbox() {
-  const [checked, setChecked] = useState(false);
-  const [indeterminate, setIndeterminate] = useState(true);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (indeterminate) {
-      setIndeterminate(false);
-      setChecked(true);
-    } else {
-      setChecked(e.target.checked);
-    }
-  };
-
   return (
     <Checkbox
       label="Option 1"
-      checked={checked}
-      indeterminate={indeterminate}
-      onChange={handleChange}
+      indeterminate
     />
   );
 }`;
