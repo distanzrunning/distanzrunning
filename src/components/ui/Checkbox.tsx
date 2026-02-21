@@ -3,11 +3,13 @@
 import { forwardRef, useEffect, useRef, InputHTMLAttributes } from "react";
 
 export interface CheckboxProps
-  extends Omit<InputHTMLAttributes<HTMLInputElement>, "type"> {
+  extends Omit<InputHTMLAttributes<HTMLInputElement>, "type" | "color"> {
   /** Whether the checkbox is in an indeterminate state */
   indeterminate?: boolean;
   /** Label text displayed next to the checkbox */
   label?: string;
+  /** Custom color for checked state (default: --ds-gray-1000) */
+  color?: string;
 }
 
 const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
@@ -18,6 +20,7 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
       onChange,
       disabled,
       label,
+      color,
       className = "",
       id,
       ...props
@@ -53,17 +56,25 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
     const isDisabledIndeterminate = disabled && indeterminate && !checked;
 
     // Box background/border
+    const getBoxStyles = (): React.CSSProperties | undefined => {
+      if (color && isActive) {
+        return { backgroundColor: color, borderColor: color };
+      }
+      return undefined;
+    };
+
     const getBoxClasses = () => {
       if (disabled && checked) {
-        // Disabled checked: bg/border rgb(168,168,168)
         return "bg-[var(--ds-gray-600)] border-[var(--ds-gray-600)]";
       }
       if (disabled) {
-        // Disabled unchecked & disabled indeterminate: bg rgb(242,242,242), border rgb(201,201,201)
         return "bg-[var(--ds-gray-100)] border-[var(--ds-gray-500)]";
       }
-      if (isActive) {
+      if (isActive && !color) {
         return "bg-[var(--ds-gray-1000)] border-[var(--ds-gray-1000)]";
+      }
+      if (isActive && color) {
+        return "";
       }
       return "bg-[var(--ds-background-100)] border-[var(--ds-gray-700)]";
     };
@@ -101,6 +112,7 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
             `}
             style={{
               transition: "border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease",
+              ...getBoxStyles(),
             }}
           >
             <svg

@@ -244,7 +244,11 @@ export function Choicebox({
           <RadioIndicator checked={isSelected} disabled={isDisabled} />
         ) : (
           <span style={{ pointerEvents: "none" }}>
-            <Checkbox checked={isSelected} disabled={isDisabled} />
+            <Checkbox
+              checked={isSelected}
+              disabled={isDisabled}
+              color={isSelected ? "var(--ds-pink-700)" : undefined}
+            />
           </span>
         )}
       </div>
