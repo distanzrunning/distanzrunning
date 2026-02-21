@@ -71,7 +71,6 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
           group/checkbox
           inline-flex items-center gap-3
           ${disabled ? "cursor-not-allowed" : "cursor-pointer"}
-          ${disabled ? "opacity-50" : ""}
           ${className}
         `}
       >
@@ -132,7 +131,7 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
           </span>
         </span>
         {label && (
-          <span className="text-sm text-[var(--ds-gray-1000)] select-none">
+          <span className={`text-sm select-none ${disabled ? "text-[var(--ds-gray-400)]" : "text-[var(--ds-gray-1000)]"}`}>
             {label}
           </span>
         )}
