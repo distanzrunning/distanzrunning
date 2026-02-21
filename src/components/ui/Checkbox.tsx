@@ -76,7 +76,7 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
             className={`
               checkbox-icon
               relative flex items-center justify-center
-              w-[18px] h-[18px] rounded-[4px] border border-solid
+              w-4 h-4 rounded-[4px] border border-solid
               ${
                 isActive
                   ? "bg-[var(--ds-gray-1000)] border-[var(--ds-gray-1000)]"
@@ -91,13 +91,13 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
           >
             <svg
               fill="none"
-              viewBox="0 0 20 20"
+              viewBox="0 0 16 16"
               className="absolute inset-0 w-full h-full"
             >
               {/* Checkmark - visible when checked and not indeterminate */}
               {checked && !indeterminate && (
                 <path
-                  d="M14 7L8.5 12.5L6 10"
+                  d="M11.5 5.5L6.875 10.5L4.5 8"
                   stroke="var(--ds-background-100)"
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -107,10 +107,10 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
               {/* Indeterminate dash - visible only when indeterminate */}
               {indeterminate && (
                 <line
-                  x1="5"
-                  x2="15"
-                  y1="10"
-                  y2="10"
+                  x1="4"
+                  x2="12"
+                  y1="8"
+                  y2="8"
                   stroke="var(--ds-background-100)"
                   strokeLinecap="round"
                   strokeLinejoin="round"
