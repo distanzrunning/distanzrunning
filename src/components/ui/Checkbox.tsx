@@ -54,8 +54,9 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
 
     // Box background/border
     const getBoxClasses = () => {
-      if (isDisabledIndeterminate) {
-        return "bg-[var(--ds-background-100)] border-[var(--ds-gray-200)]";
+      if (disabled && !checked) {
+        // Disabled unchecked & disabled indeterminate: bg rgb(242,242,242), border rgb(201,201,201)
+        return "bg-[var(--ds-gray-100)] border-[var(--ds-gray-400)]";
       }
       if (isActive) {
         return "bg-[var(--ds-gray-1000)] border-[var(--ds-gray-1000)]";
