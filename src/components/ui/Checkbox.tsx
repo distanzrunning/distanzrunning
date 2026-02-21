@@ -47,8 +47,8 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
     const checkboxId =
       id || `checkbox-${Math.random().toString(36).substr(2, 9)}`;
 
-    // Active dark background: checked (always), or indeterminate when not disabled
-    const isActive = checked || (indeterminate && !disabled);
+    // Only checked gets the dark active background
+    const isActive = checked && !indeterminate;
     // Disabled indeterminate: light box with muted dash
     const isDisabledIndeterminate = disabled && indeterminate && !checked;
 
@@ -125,7 +125,7 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
                   x2="12"
                   y1="8"
                   y2="8"
-                  stroke={isDisabledIndeterminate ? "var(--ds-gray-500)" : "var(--ds-background-100)"}
+                  stroke={isDisabledIndeterminate ? "var(--ds-gray-500)" : "var(--ds-gray-700)"}
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth="2"
