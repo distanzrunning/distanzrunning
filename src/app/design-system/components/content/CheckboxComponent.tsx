@@ -378,24 +378,10 @@ function DefaultDemo() {
 }
 
 function IndeterminateDemo() {
-  const [checked, setChecked] = useState(false);
-  const [indeterminate, setIndeterminate] = useState(true);
-
-  const handleChange = () => {
-    if (indeterminate) {
-      setIndeterminate(false);
-      setChecked(true);
-    } else {
-      setChecked(!checked);
-    }
-  };
-
   return (
     <Checkbox
       label="Option 1"
-      checked={checked}
-      indeterminate={indeterminate}
-      onChange={handleChange}
+      indeterminate
     />
   );
 }
