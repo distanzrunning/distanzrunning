@@ -207,7 +207,7 @@ export function Choicebox({
       <div
         className="flex items-center justify-between gap-6 rounded-md p-3"
         style={{
-          background: isSelected ? "var(--ds-pink-100)" : "transparent",
+          background: isSelected ? "oklch(97.3% 0.014 345)" : "transparent",
           transition: "background 0.15s ease, border 0.15s ease",
         }}
       >
