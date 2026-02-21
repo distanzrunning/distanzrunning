@@ -56,7 +56,7 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
     const getBoxClasses = () => {
       if (disabled && !checked) {
         // Disabled unchecked & disabled indeterminate: bg rgb(242,242,242), border rgb(201,201,201)
-        return "bg-[var(--ds-gray-100)] border-[var(--ds-gray-400)]";
+        return "bg-[var(--ds-gray-100)] border-[var(--ds-gray-500)]";
       }
       if (isActive) {
         return "bg-[var(--ds-gray-1000)] border-[var(--ds-gray-1000)]";
@@ -121,7 +121,7 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
                   x2="12"
                   y1="8"
                   y2="8"
-                  stroke={isDisabledIndeterminate ? "var(--ds-gray-400)" : "var(--ds-background-100)"}
+                  stroke={isDisabledIndeterminate ? "var(--ds-gray-500)" : "var(--ds-background-100)"}
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth="2"
@@ -131,7 +131,7 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
           </span>
         </span>
         {label && (
-          <span className={`text-sm select-none ${disabled ? "text-[var(--ds-gray-400)]" : "text-[var(--ds-gray-1000)]"}`}>
+          <span className={`text-sm select-none ${disabled ? "text-[var(--ds-gray-500)]" : "text-[var(--ds-gray-1000)]"}`}>
             {label}
           </span>
         )}
