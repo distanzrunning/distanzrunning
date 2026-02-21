@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useId, type ReactNode } from "react";
+import { createContext, useContext, useId, useState, type ReactNode } from "react";
 import Checkbox from "./Checkbox";
 
 // ============================================================================
@@ -145,11 +145,15 @@ export function Choicebox({
   const reactId = useId();
   const inputId = `choicebox-${value}-${reactId}`;
 
+  const [isHovered, setIsHovered] = useState(false);
+
   const isDisabled = disabled || ctx.groupDisabled;
   const isSelected =
     ctx.type === "single"
       ? ctx.value === value
       : (ctx.value as string[]).includes(value);
+
+  const showHover = isHovered && !isSelected && !isDisabled;
 
   const handleChange = () => {
     if (isDisabled) return;
@@ -174,11 +178,17 @@ export function Choicebox({
         ${isDisabled ? "cursor-not-allowed opacity-50" : "cursor-pointer"}
         ${className}
       `}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
       style={{
         borderColor: isSelected
           ? "var(--ds-pink-700)"
-          : "var(--ds-gray-400)",
-        background: "var(--ds-background-100)",
+          : showHover
+            ? "var(--ds-gray-500)"
+            : "var(--ds-gray-400)",
+        background: showHover
+          ? "var(--ds-gray-100)"
+          : "var(--ds-background-100)",
         transition: "background 0.15s ease, border 0.15s ease",
       }}
     >
