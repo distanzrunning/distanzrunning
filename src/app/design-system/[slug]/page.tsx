@@ -25,6 +25,7 @@ import ButtonIconComponent from "../components/content/ButtonIconComponent";
 import SlimButtonComponent from "../components/content/SlimButtonComponent";
 import SlimButtonIconComponent from "../components/content/SlimButtonIconComponent";
 import CheckboxComponent from "../components/content/CheckboxComponent";
+import ChoiceboxComponent from "../components/content/ChoiceboxComponent";
 import BlockquoteComponent from "../components/content/BlockquoteComponent";
 import PullQuoteComponent from "../components/content/PullQuoteComponent";
 import CloseComponent from "../components/content/CloseComponent";
@@ -342,6 +343,21 @@ export default function DesignSystemPage() {
           onNavigate={handleNavigation}
         >
           <CheckboxComponent />
+        </ContentWithTOC>
+      );
+    }
+
+    if (activeSlug === "choicebox") {
+      return (
+        <ContentWithTOC
+          tocTitle="On this page"
+          pageTitle="Choicebox"
+          pageSubtitle="A card-based selection component for single or multiple choice scenarios with larger tap targets."
+          mainSectionId="choicebox"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
+          <ChoiceboxComponent />
         </ContentWithTOC>
       );
     }

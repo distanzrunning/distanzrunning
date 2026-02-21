@@ -45,6 +45,7 @@ export const navigation: NavSection[] = [
       { id: "button", label: "Button" },
       { id: "calendar", label: "Calendar" },
       { id: "checkbox", label: "Checkbox" },
+      { id: "choicebox", label: "Choicebox" },
       { id: "code-block", label: "Code Block" },
       { id: "pagination", label: "Pagination" },
     ],
