@@ -47,7 +47,21 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
     const checkboxId =
       id || `checkbox-${Math.random().toString(36).substr(2, 9)}`;
 
-    const isActive = checked || indeterminate;
+    // Active dark background: checked (always), or indeterminate when not disabled
+    const isActive = checked || (indeterminate && !disabled);
+    // Disabled indeterminate: light box with muted dash
+    const isDisabledIndeterminate = disabled && indeterminate && !checked;
+
+    // Box background/border
+    const getBoxClasses = () => {
+      if (isDisabledIndeterminate) {
+        return "bg-[var(--ds-background-100)] border-[var(--ds-gray-200)]";
+      }
+      if (isActive) {
+        return "bg-[var(--ds-gray-1000)] border-[var(--ds-gray-1000)]";
+      }
+      return "bg-[var(--ds-background-100)] border-[var(--ds-gray-700)]";
+    };
 
     return (
       <label
@@ -77,11 +91,7 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
               checkbox-icon
               relative flex items-center justify-center
               w-4 h-4 rounded-[4px] border border-solid
-              ${
-                isActive
-                  ? "bg-[var(--ds-gray-1000)] border-[var(--ds-gray-1000)]"
-                  : "bg-[var(--ds-background-100)] border-[var(--ds-gray-700)]"
-              }
+              ${getBoxClasses()}
               ${!disabled && !isActive ? "group-hover/checkbox:bg-[var(--ds-gray-200)]" : ""}
               ${disabled ? "" : "peer-focus-visible:shadow-[0_0_0_2px_var(--ds-background-100),0_0_0_4px_var(--ds-focus-color)]"}
             `}
@@ -111,7 +121,7 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
                   x2="12"
                   y1="8"
                   y2="8"
-                  stroke="var(--ds-background-100)"
+                  stroke={isDisabledIndeterminate ? "var(--ds-gray-400)" : "var(--ds-background-100)"}
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth="2"
