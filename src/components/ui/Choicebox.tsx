@@ -175,7 +175,7 @@ export function Choicebox({
       className={`
         flex flex-1 flex-col
         rounded-md border border-solid
-        ${isDisabled ? "cursor-not-allowed opacity-50" : "cursor-pointer"}
+        ${isDisabled ? "cursor-not-allowed" : "cursor-pointer"}
         ${className}
       `}
       onMouseEnter={() => setIsHovered(true)}
