@@ -36,11 +36,15 @@ function RadioIndicator({
   checked: boolean;
   disabled: boolean;
 }) {
-  const radioColor = disabled
+  const borderColor = disabled
     ? "var(--ds-gray-500)"
     : checked
       ? "var(--ds-pink-900)"
       : "var(--ds-gray-600)";
+
+  const dotColor = disabled
+    ? "var(--ds-gray-500)"
+    : "var(--ds-pink-900)";
 
   return (
     <span
@@ -49,8 +53,8 @@ function RadioIndicator({
         width: 16,
         height: 16,
         borderRadius: "50%",
-        border: `1px solid ${radioColor}`,
-        background: checked ? radioColor : "var(--ds-background-100)",
+        border: `1px solid ${borderColor}`,
+        background: "var(--ds-background-100)",
         transition: "border-color 0.2s ease, background 0.2s ease",
         position: "relative",
       }}
@@ -61,7 +65,7 @@ function RadioIndicator({
             width: 6,
             height: 6,
             borderRadius: "50%",
-            background: "var(--ds-background-100)",
+            background: dotColor,
           }}
         />
       )}
@@ -214,7 +218,7 @@ export function Choicebox({
         {/* Text content */}
         <div className="flex flex-col gap-1">
           <span
-            className="text-sm font-medium leading-5"
+            className="text-[15px] font-medium leading-5"
             style={{
               color: isDisabled
                 ? "var(--ds-gray-500)"
@@ -226,7 +230,7 @@ export function Choicebox({
             {title}
           </span>
           <span
-            className="text-sm leading-5"
+            className="text-[15px] leading-5"
             style={{
               color: isDisabled
                 ? "var(--ds-gray-500)"
