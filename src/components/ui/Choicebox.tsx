@@ -62,8 +62,8 @@ function RadioIndicator({
       {checked && (
         <span
           style={{
-            width: 6,
-            height: 6,
+            width: 8,
+            height: 8,
             borderRadius: "50%",
             background: dotColor,
           }}
@@ -218,7 +218,7 @@ export function Choicebox({
         {/* Text content */}
         <div className="flex flex-col gap-1">
           <span
-            className="text-[15px] font-medium leading-5"
+            className="text-sm font-medium leading-5"
             style={{
               color: isDisabled
                 ? "var(--ds-gray-500)"
@@ -230,7 +230,7 @@ export function Choicebox({
             {title}
           </span>
           <span
-            className="text-[15px] leading-5"
+            className="text-sm leading-5"
             style={{
               color: isDisabled
                 ? "var(--ds-gray-500)"
