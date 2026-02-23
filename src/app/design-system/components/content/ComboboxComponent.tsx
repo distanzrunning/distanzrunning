@@ -249,7 +249,7 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
     <div className="border border-[var(--ds-gray-400)] rounded-lg">
       <div
         className="p-6 rounded-t-lg"
-        style={{ background: "var(--ds-background-100)", overflow: "visible" }}
+        style={{ background: "var(--ds-background-100)" }}
       >
         {children}
       </div>

@@ -8,6 +8,7 @@ import {
   useRef,
   useState,
 } from "react";
+import * as Popover from "@radix-ui/react-popover";
 
 // ============================================================================
 // Types
@@ -147,7 +148,6 @@ export function Combobox({
   const listId = `combobox-list-${reactId}`;
 
   // Refs
-  const comboboxRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
 
@@ -214,29 +214,6 @@ export function Combobox({
     }
   }, [value, isControlled]);
 
-  // Click outside
-  useEffect(() => {
-    if (!isOpen) return;
-
-    const handleMouseDown = (e: MouseEvent) => {
-      if (
-        comboboxRef.current &&
-        !comboboxRef.current.contains(e.target as Node)
-      ) {
-        setIsOpen(false);
-        // Restore input to selected value label
-        if (currentValue) {
-          setInputValue(getLabelForValue(currentValue));
-        } else {
-          setInputValue("");
-        }
-      }
-    };
-
-    document.addEventListener("mousedown", handleMouseDown);
-    return () => document.removeEventListener("mousedown", handleMouseDown);
-  }, [isOpen, currentValue, normalizedOptions]);
-
   // Scroll highlighted option into view
   useEffect(() => {
     if (highlightedIndex >= 0 && listRef.current) {
@@ -244,6 +221,17 @@ export function Combobox({
       items[highlightedIndex]?.scrollIntoView({ block: "nearest" });
     }
   }, [highlightedIndex]);
+
+  // Close handler — restores input text
+  const handleClose = useCallback(() => {
+    setIsOpen(false);
+    if (currentValue) {
+      setInputValue(getLabelForValue(currentValue));
+    } else {
+      setInputValue("");
+    }
+    setHighlightedIndex(-1);
+  }, [currentValue, normalizedOptions]);
 
   // Handlers
   const handleInputChange = useCallback(
@@ -341,25 +329,13 @@ export function Combobox({
         case "Escape": {
           if (isOpen) {
             e.preventDefault();
-            setIsOpen(false);
-            if (currentValue) {
-              setInputValue(getLabelForValue(currentValue));
-            } else {
-              setInputValue("");
-            }
-            setHighlightedIndex(-1);
+            handleClose();
           }
           break;
         }
         case "Tab": {
           if (isOpen) {
-            setIsOpen(false);
-            if (currentValue) {
-              setInputValue(getLabelForValue(currentValue));
-            } else {
-              setInputValue("");
-            }
-            setHighlightedIndex(-1);
+            handleClose();
           }
           break;
         }
@@ -371,8 +347,7 @@ export function Combobox({
       highlightedIndex,
       filteredOptions,
       handleSelect,
-      currentValue,
-      normalizedOptions,
+      handleClose,
     ],
   );
 
@@ -402,179 +377,189 @@ export function Combobox({
         </label>
       )}
 
-      <div
-        ref={comboboxRef}
-        role="combobox"
-        tabIndex={-1}
-        aria-controls={listId}
-        aria-expanded={isOpen}
-        aria-haspopup="listbox"
-        aria-owns={listId}
-        style={{ position: "relative" }}
+      <Popover.Root
+        open={isOpen}
+        onOpenChange={(open) => {
+          if (!open) handleClose();
+        }}
       >
-        {/* Container - inline-block with position relative */}
         <div
-          className={`${fontClass} ${disabled ? "opacity-50" : ""}`}
-          style={{
-            display: "inline-block",
-            position: "relative",
-            height: containerHeight,
-            width: "100%",
-            zIndex: 0,
-          }}
+          role="combobox"
+          tabIndex={-1}
+          aria-controls={listId}
+          aria-expanded={isOpen}
+          aria-haspopup="listbox"
+          aria-owns={listId}
         >
-          {/* Search icon prefix - absolutely positioned */}
-          <div
-            aria-hidden="true"
-            style={{
-              position: "absolute",
-              left: 12,
-              top: "50%",
-              transform: "translateY(-50%)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              width: 16,
-              height: 16,
-              pointerEvents: "none",
-              zIndex: 1,
-              color: "var(--ds-gray-900)",
-            }}
-          >
-            <SearchIcon />
-          </div>
-
-          {/* Input - full width with padding for icons */}
-          <input
-            ref={inputRef}
-            type="text"
-            role="searchbox"
-            id={inputId}
-            aria-autocomplete="list"
-            aria-controls={listId}
-            aria-label={placeholder}
-            aria-invalid={error || undefined}
-            autoComplete="off"
-            spellCheck={false}
-            placeholder={placeholder}
-            value={inputValue}
-            disabled={disabled}
-            onChange={handleInputChange}
-            onFocus={handleInputFocus}
-            onBlur={handleInputBlur}
-            onKeyDown={handleKeyDown}
-            className={`${fontClass}`}
-            style={{
-              appearance: "none",
-              display: "inline-block",
-              width: "100%",
-              height: containerHeight,
-              padding: "0 40px",
-              margin: 0,
-              border: "none",
-              borderRadius: 6,
-              boxShadow: inputBoxShadow,
-              background: "var(--ds-background-100)",
-              color: "var(--ds-gray-1000)",
-              fontFamily: "inherit",
-              fontSize: "inherit",
-              fontWeight: "inherit",
-              outline: "none",
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
-              overflow: "clip",
-              transition: "box-shadow 0.2s ease, outline 0.2s ease",
-              cursor: disabled ? "not-allowed" : "text",
-            }}
-          />
-
-          {/* Clear button - absolutely positioned */}
-          <button
-            type="button"
-            aria-label="Clear selected value"
-            tabIndex={0}
-            onClick={handleClear}
-            disabled={disabled}
-            style={{
-              display: currentValue && !disabled ? "flex" : "none",
-              alignItems: "center",
-              justifyContent: "center",
-              position: "absolute",
-              right: 0,
-              top: "50%",
-              transform: "translateY(-50%)",
-              height: containerHeight,
-              padding: "0 12px",
-              border: "none",
-              borderTopRightRadius: 6,
-              borderBottomRightRadius: 6,
-              background: "transparent",
-              color: "var(--ds-gray-900)",
-              cursor: "pointer",
-              userSelect: "none",
-              order: 2,
-              transition: "color 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease",
-            }}
-          >
-            <XIcon />
-          </button>
-
-          {/* Chevron toggle - absolutely positioned */}
-          <button
-            type="button"
-            aria-label="Open menu"
-            tabIndex={-1}
-            onClick={handleToggle}
-            disabled={disabled}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              position: "absolute",
-              right: 0,
-              top: "50%",
-              transform: "translateY(-50%)",
-              width: 40,
-              height: 30,
-              padding: 0,
-              border: "none",
-              background: "transparent",
-              color: "var(--ds-gray-900)",
-              cursor: disabled ? "not-allowed" : "pointer",
-              userSelect: "none",
-              transition: "color 0.15s ease",
-            }}
-          >
-            <svg
-              height="16"
-              strokeLinejoin="round"
-              viewBox="0 0 16 16"
-              width="16"
+          {/* Anchor for popover positioning */}
+          <Popover.Anchor asChild>
+            <div
+              className={`${fontClass} ${disabled ? "opacity-50" : ""}`}
               style={{
-                color: "currentcolor",
-                transition: "transform 0.15s ease",
-                transform: isOpen ? "rotate(180deg)" : "rotate(0deg)",
+                display: "inline-block",
+                position: "relative",
+                height: containerHeight,
+                width: "100%",
+                zIndex: 0,
               }}
             >
-              <path
-                fillRule="evenodd"
-                clipRule="evenodd"
-                d="M14.0607 5.49999L13.5303 6.03032L8.7071 10.8535C8.31658 11.2441 7.68341 11.2441 7.29289 10.8535L2.46966 6.03032L1.93933 5.49999L2.99999 4.43933L3.53032 4.96966L7.99999 9.43933L12.4697 4.96966L13 4.43933L14.0607 5.49999Z"
-                fill="currentColor"
+              {/* Search icon prefix - absolutely positioned */}
+              <div
+                aria-hidden="true"
+                style={{
+                  position: "absolute",
+                  left: 12,
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: 16,
+                  height: 16,
+                  pointerEvents: "none",
+                  zIndex: 1,
+                  color: "var(--ds-gray-900)",
+                }}
+              >
+                <SearchIcon />
+              </div>
+
+              {/* Input - full width with padding for icons */}
+              <input
+                ref={inputRef}
+                type="text"
+                role="searchbox"
+                id={inputId}
+                aria-autocomplete="list"
+                aria-controls={listId}
+                aria-label={placeholder}
+                aria-invalid={error || undefined}
+                autoComplete="off"
+                spellCheck={false}
+                placeholder={placeholder}
+                value={inputValue}
+                disabled={disabled}
+                onChange={handleInputChange}
+                onFocus={handleInputFocus}
+                onBlur={handleInputBlur}
+                onKeyDown={handleKeyDown}
+                className={`${fontClass}`}
+                style={{
+                  appearance: "none",
+                  display: "inline-block",
+                  width: "100%",
+                  height: containerHeight,
+                  padding: "0 40px",
+                  margin: 0,
+                  border: "none",
+                  borderRadius: 6,
+                  boxShadow: inputBoxShadow,
+                  background: "var(--ds-background-100)",
+                  color: "var(--ds-gray-1000)",
+                  fontFamily: "inherit",
+                  fontSize: "inherit",
+                  fontWeight: "inherit",
+                  outline: "none",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                  overflow: "clip",
+                  transition: "box-shadow 0.2s ease, outline 0.2s ease",
+                  cursor: disabled ? "not-allowed" : "text",
+                }}
               />
-            </svg>
-          </button>
+
+              {/* Clear button - absolutely positioned */}
+              <button
+                type="button"
+                aria-label="Clear selected value"
+                tabIndex={0}
+                onClick={handleClear}
+                disabled={disabled}
+                style={{
+                  display: currentValue && !disabled ? "flex" : "none",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  position: "absolute",
+                  right: 0,
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  height: containerHeight,
+                  padding: "0 12px",
+                  border: "none",
+                  borderTopRightRadius: 6,
+                  borderBottomRightRadius: 6,
+                  background: "transparent",
+                  color: "var(--ds-gray-900)",
+                  cursor: "pointer",
+                  userSelect: "none",
+                  order: 2,
+                  transition:
+                    "color 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease",
+                }}
+              >
+                <XIcon />
+              </button>
+
+              {/* Chevron toggle - absolutely positioned */}
+              <button
+                type="button"
+                aria-label="Open menu"
+                tabIndex={-1}
+                onClick={handleToggle}
+                disabled={disabled}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  position: "absolute",
+                  right: 0,
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  width: 40,
+                  height: 30,
+                  padding: 0,
+                  border: "none",
+                  background: "transparent",
+                  color: "var(--ds-gray-900)",
+                  cursor: disabled ? "not-allowed" : "pointer",
+                  userSelect: "none",
+                  transition: "color 0.15s ease",
+                }}
+              >
+                <svg
+                  height="16"
+                  strokeLinejoin="round"
+                  viewBox="0 0 16 16"
+                  width="16"
+                  style={{
+                    color: "currentcolor",
+                    transition: "transform 0.15s ease",
+                    transform: isOpen ? "rotate(180deg)" : "rotate(0deg)",
+                  }}
+                >
+                  <path
+                    fillRule="evenodd"
+                    clipRule="evenodd"
+                    d="M14.0607 5.49999L13.5303 6.03032L8.7071 10.8535C8.31658 11.2441 7.68341 11.2441 7.29289 10.8535L2.46966 6.03032L1.93933 5.49999L2.99999 4.43933L3.53032 4.96966L7.99999 9.43933L12.4697 4.96966L13 4.43933L14.0607 5.49999Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </button>
+            </div>
+          </Popover.Anchor>
         </div>
 
-        {/* Dropdown list */}
-        {isOpen ? (
-          <div
+        {/* Dropdown list via Radix Portal */}
+        <Popover.Portal>
+          <Popover.Content
+            sideOffset={4}
+            align="start"
+            tabIndex={-1}
+            onOpenAutoFocus={(e) => e.preventDefault()}
+            onCloseAutoFocus={(e) => e.preventDefault()}
+            onInteractOutside={() => handleClose()}
             style={{
-              position: "absolute",
-              top: "calc(100% + 4px)",
-              left: 0,
-              width: listWidth || "100%",
-              zIndex: 2001,
+              width: listWidth || "var(--radix-popover-trigger-width)",
               padding: 8,
               borderRadius: 12,
               background: "var(--ds-background-100)",
@@ -582,6 +567,8 @@ export function Combobox({
                 "rgba(0, 0, 0, 0.08) 0px 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 2px 2px 0px, rgba(0, 0, 0, 0.04) 0px 8px 16px -4px",
               maxHeight: 216,
               overflowY: "hidden",
+              outline: "none",
+              zIndex: 2001,
             }}
           >
             <ul
@@ -652,15 +639,9 @@ export function Combobox({
                 ))
               )}
             </ul>
-          </div>
-        ) : (
-          <ul
-            id={listId}
-            aria-hidden="true"
-            style={{ display: "none", margin: 0, padding: 0, listStyle: "none" }}
-          />
-        )}
-      </div>
+          </Popover.Content>
+        </Popover.Portal>
+      </Popover.Root>
     </div>
   );
 }
