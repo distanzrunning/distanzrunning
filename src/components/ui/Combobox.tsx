@@ -558,7 +558,7 @@ export function Combobox({
         {/* Dropdown list via Radix Portal */}
         <Popover.Portal>
           <Popover.Content
-            sideOffset={4}
+            sideOffset={5}
             align="start"
             tabIndex={-1}
             onOpenAutoFocus={(e) => e.preventDefault()}
