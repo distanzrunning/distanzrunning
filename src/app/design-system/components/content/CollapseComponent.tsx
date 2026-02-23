@@ -314,7 +314,7 @@ export function DefaultExample() {
   return (
     <CollapseGroup>
       <Collapse title="Question A">
-        <p className="text-base mb-4">
+        <p className="text-copy-16 mb-4">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit,
           sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
           Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
@@ -322,7 +322,7 @@ export function DefaultExample() {
         </p>
       </Collapse>
       <Collapse title="Question B">
-        <p className="text-base mb-4">
+        <p className="text-copy-16 mb-4">
           Duis aute irure dolor in reprehenderit in voluptate velit esse
           cillum dolore eu fugiat nulla pariatur.
         </p>
@@ -337,13 +337,13 @@ export function ExpandedExample() {
   return (
     <CollapseGroup>
       <Collapse title="Question A">
-        <p className="text-base mb-4">
+        <p className="text-copy-16 mb-4">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit,
           sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
         </p>
       </Collapse>
       <Collapse title="Question B" defaultExpanded disabled>
-        <p className="text-base mb-4">
+        <p className="text-copy-16 mb-4">
           Duis aute irure dolor in reprehenderit in voluptate velit esse
           cillum dolore eu fugiat nulla pariatur.
         </p>
@@ -358,7 +358,7 @@ export function MultipleExample() {
   return (
     <div>
       <Collapse title="Question A">
-        <p className="text-base mb-4">
+        <p className="text-copy-16 mb-4">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit,
           sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
           Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
@@ -366,7 +366,7 @@ export function MultipleExample() {
         </p>
       </Collapse>
       <Collapse title="Question B">
-        <p className="text-base mb-4">
+        <p className="text-copy-16 mb-4">
           Duis aute irure dolor in reprehenderit in voluptate velit esse
           cillum dolore eu fugiat nulla pariatur.
         </p>
@@ -380,7 +380,7 @@ const smallCode = `import { Collapse } from '@/components/ui/Collapse';
 export function SmallExample() {
   return (
     <Collapse title="Question A" size="small">
-      <p className="text-base mb-4">
+      <p className="text-copy-16 mb-4">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit,
         sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
         Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
@@ -399,7 +399,7 @@ function DefaultDemo() {
     <CollapseGroup>
       <Collapse title="Question A">
         <p
-          className="text-base mb-4"
+          className="text-copy-16 mb-4"
           style={{ color: "var(--ds-gray-1000)" }}
         >
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
@@ -410,7 +410,7 @@ function DefaultDemo() {
       </Collapse>
       <Collapse title="Question B">
         <p
-          className="text-base mb-4"
+          className="text-copy-16 mb-4"
           style={{ color: "var(--ds-gray-1000)" }}
         >
           Duis aute irure dolor in reprehenderit in voluptate velit esse
@@ -426,7 +426,7 @@ function ExpandedDemo() {
     <CollapseGroup>
       <Collapse title="Question A">
         <p
-          className="text-base mb-4"
+          className="text-copy-16 mb-4"
           style={{ color: "var(--ds-gray-1000)" }}
         >
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
@@ -437,7 +437,7 @@ function ExpandedDemo() {
       </Collapse>
       <Collapse title="Question B" defaultExpanded disabled>
         <p
-          className="text-base mb-4"
+          className="text-copy-16 mb-4"
           style={{ color: "var(--ds-gray-1000)" }}
         >
           Duis aute irure dolor in reprehenderit in voluptate velit esse
@@ -453,7 +453,7 @@ function MultipleDemo() {
     <div>
       <Collapse title="Question A">
         <p
-          className="text-base mb-4"
+          className="text-copy-16 mb-4"
           style={{ color: "var(--ds-gray-1000)" }}
         >
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
@@ -464,7 +464,7 @@ function MultipleDemo() {
       </Collapse>
       <Collapse title="Question B">
         <p
-          className="text-base mb-4"
+          className="text-copy-16 mb-4"
           style={{ color: "var(--ds-gray-1000)" }}
         >
           Duis aute irure dolor in reprehenderit in voluptate velit esse
@@ -479,7 +479,7 @@ function SmallDemo() {
   return (
     <Collapse title="Question A" size="small">
       <p
-        className="text-base mb-4"
+        className="text-copy-16 mb-4"
         style={{ color: "var(--ds-gray-1000)" }}
       >
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
