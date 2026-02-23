@@ -15,8 +15,10 @@ import {
 // ============================================================================
 
 interface CollapseGroupContextValue {
-  openId: string | null;
-  setOpenId: (id: string | null) => void;
+  openIds: Set<string>;
+  toggle: (id: string) => void;
+  register: (id: string) => void;
+  multiple: boolean;
   alwaysOpen: boolean;
 }
 
@@ -53,16 +55,46 @@ function ChevronRightIcon() {
 
 export interface CollapseGroupProps {
   children: ReactNode;
+  /** Allow multiple items to be open simultaneously */
+  multiple?: boolean;
   /** When true, one item must always remain open */
   alwaysOpen?: boolean;
   className?: string;
 }
 
-export function CollapseGroup({ children, alwaysOpen = false, className = "" }: CollapseGroupProps) {
-  const [openId, setOpenId] = useState<string | null>(null);
+export function CollapseGroup({ children, multiple = false, alwaysOpen = false, className = "" }: CollapseGroupProps) {
+  const [openIds, setOpenIds] = useState<Set<string>>(new Set());
+
+  const toggle = (id: string) => {
+    setOpenIds((prev) => {
+      const isOpen = prev.has(id);
+      if (isOpen) {
+        if (alwaysOpen && prev.size === 1) return prev;
+        const next = new Set(prev);
+        next.delete(id);
+        return next;
+      }
+      if (multiple) {
+        const next = new Set(prev);
+        next.add(id);
+        return next;
+      }
+      return new Set([id]);
+    });
+  };
+
+  const register = (id: string) => {
+    setOpenIds((prev) => {
+      if (prev.has(id)) return prev;
+      if (!multiple && prev.size > 0) return prev;
+      const next = new Set(prev);
+      next.add(id);
+      return next;
+    });
+  };
 
   return (
-    <CollapseGroupContext.Provider value={{ openId, setOpenId, alwaysOpen }}>
+    <CollapseGroupContext.Provider value={{ openIds, toggle, register, multiple, alwaysOpen }}>
       <div
         className={className}
         style={{ borderTop: "1px solid var(--ds-gray-400)" }}
@@ -109,20 +141,19 @@ export function Collapse({
   // Register default-expanded items with the group
   useEffect(() => {
     if (groupCtx && defaultExpanded) {
-      groupCtx.setOpenId(reactId);
+      groupCtx.register(reactId);
     }
     // Only run on mount
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const isExpanded = groupCtx ? groupCtx.openId === reactId : localOpen;
+  const isExpanded = groupCtx ? groupCtx.openIds.has(reactId) : localOpen;
 
   const handleToggle = () => {
     if (disabled) return;
 
     if (groupCtx) {
-      if (isExpanded && groupCtx.alwaysOpen) return;
-      groupCtx.setOpenId(isExpanded ? null : reactId);
+      groupCtx.toggle(reactId);
     } else {
       setLocalOpen((prev) => !prev);
     }

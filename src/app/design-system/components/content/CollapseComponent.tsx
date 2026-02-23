@@ -352,11 +352,11 @@ export function ExpandedExample() {
   );
 }`;
 
-const multipleCode = `import { Collapse } from '@/components/ui/Collapse';
+const multipleCode = `import { CollapseGroup, Collapse } from '@/components/ui/Collapse';
 
 export function MultipleExample() {
   return (
-    <div>
+    <CollapseGroup multiple>
       <Collapse title="Question A">
         <p className="text-copy-16 mb-4">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit,
@@ -371,7 +371,7 @@ export function MultipleExample() {
           cillum dolore eu fugiat nulla pariatur.
         </p>
       </Collapse>
-    </div>
+    </CollapseGroup>
   );
 }`;
 
@@ -450,7 +450,7 @@ function ExpandedDemo() {
 
 function MultipleDemo() {
   return (
-    <div>
+    <CollapseGroup multiple>
       <Collapse title="Question A">
         <p
           className="text-copy-16 mb-4"
@@ -471,7 +471,7 @@ function MultipleDemo() {
           cillum dolore eu fugiat nulla pariatur.
         </p>
       </Collapse>
-    </div>
+    </CollapseGroup>
   );
 }
 
@@ -591,6 +591,16 @@ export default function CollapseComponent() {
                 <td className="py-3 px-4 text-textSubtle">-</td>
                 <td className="py-3 px-4 text-textSubtle">
                   Collapse items to render in the group
+                </td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 font-mono">multiple</td>
+                <td className="py-3 px-4 font-mono text-textSubtle">
+                  boolean
+                </td>
+                <td className="py-3 px-4 text-textSubtle">false</td>
+                <td className="py-3 px-4 text-textSubtle">
+                  Allow multiple items to be open simultaneously
                 </td>
               </tr>
               <tr className="border-b border-borderSubtle">
