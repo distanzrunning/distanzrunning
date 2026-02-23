@@ -211,7 +211,7 @@ export function Choicebox({
       <div
         className="flex items-center justify-between gap-6 rounded-md p-3"
         style={{
-          background: isSelected && !isDisabled ? "oklch(97.3% 0.014 345)" : "transparent",
+          background: isSelected && !isDisabled ? "color-mix(in oklch, var(--ds-pink-100) 40%, var(--ds-background-100))" : "transparent",
           transition: "background 0.15s ease, border 0.15s ease",
         }}
       >
