@@ -189,12 +189,12 @@ export function Collapse({
 
   const titleStyle =
     size === "small"
-      ? {}
-      : { letterSpacing: "-0.029375rem" };
+      ? { padding: "12px 0" }
+      : { letterSpacing: "-0.029375rem", padding: "24px 0" };
 
   return (
     <div
-      className={`border-b border-[var(--ds-gray-400)] ${className}`}
+      className={`border-b ${!groupCtx ? "border-t" : ""} border-[var(--ds-gray-400)] ${className}`}
     >
       <h3
         style={{ color: "var(--ds-gray-1000)", margin: 0 }}
@@ -215,10 +215,7 @@ export function Collapse({
         >
           <span
             className={titleClasses}
-            style={{
-              ...titleStyle,
-              padding: "24px 0",
-            }}
+            style={titleStyle}
           >
             {title}
           </span>
