@@ -64,7 +64,7 @@ function SearchIcon() {
       strokeLinejoin="round"
       viewBox="0 0 16 16"
       width="16"
-      style={{ width: 14, height: 14, color: "currentcolor" }}
+      style={{ color: "currentcolor" }}
     >
       <path
         fillRule="evenodd"
@@ -89,25 +89,6 @@ function XIcon() {
         fillRule="evenodd"
         clipRule="evenodd"
         d="M12.4697 13.5303L13 14.0607L14.0607 13L13.5303 12.4697L9.06065 7.99999L13.5303 3.53032L14.0607 2.99999L13 1.93933L12.4697 2.46966L7.99999 6.93933L3.53032 2.46966L2.99999 1.93933L1.93933 2.99999L2.46966 3.53032L6.93933 7.99999L2.46966 12.4697L1.93933 13L2.99999 14.0607L3.53032 13.5303L7.99999 9.06065L12.4697 13.5303Z"
-        fill="currentColor"
-      />
-    </svg>
-  );
-}
-
-function ChevronDownIcon() {
-  return (
-    <svg
-      height="16"
-      strokeLinejoin="round"
-      viewBox="0 0 16 16"
-      width="16"
-      style={{ color: "currentcolor" }}
-    >
-      <path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        d="M14.0607 5.49999L13.5303 6.03032L8.7071 10.8535C8.31658 11.2441 7.68341 11.2441 7.29289 10.8535L2.46966 6.03032L1.93933 5.49999L2.99999 4.43933L3.53032 4.96966L7.99999 9.43933L12.4697 4.96966L13 4.43933L14.0607 5.49999Z"
         fill="currentColor"
       />
     </svg>
@@ -393,9 +374,9 @@ export function Combobox({
   const containerHeight = getContainerHeight(size);
   const fontClass = getFontClass(size);
 
-  const containerBorder = error
-    ? "1px solid var(--ds-red-700)"
-    : "1px solid var(--ds-gray-alpha-400)";
+  const inputBoxShadow = error
+    ? "0 0 0 1px var(--ds-red-700)"
+    : "rgba(0, 0, 0, 0.08) 0px 0px 0px 1px";
 
   return (
     <div className={className} style={{ width }}>
@@ -421,34 +402,40 @@ export function Combobox({
         aria-expanded={isOpen}
         aria-haspopup="listbox"
         aria-owns={listId}
-        style={{ position: "relative" }}
       >
-        {/* Container */}
+        {/* Container - inline-block with position relative */}
         <div
-          className={`
-            flex items-center gap-2 px-3
-            ${fontClass}
-            ${disabled ? "opacity-50 cursor-not-allowed" : ""}
-          `}
+          className={`${fontClass} ${disabled ? "opacity-50" : ""}`}
           style={{
+            display: "inline-block",
+            position: "relative",
             height: containerHeight,
-            border: containerBorder,
-            borderRadius: 8,
-            background: "var(--ds-background-100)",
-            color: "var(--ds-gray-1000)",
-            transition: "border-color 150ms ease",
+            width: "100%",
+            zIndex: 0,
           }}
         >
-          {/* Search icon prefix */}
+          {/* Search icon prefix - absolutely positioned */}
           <div
             aria-hidden="true"
-            className="flex-shrink-0"
-            style={{ color: "var(--ds-gray-900)", display: "flex", alignItems: "center" }}
+            style={{
+              position: "absolute",
+              left: 12,
+              top: "50%",
+              transform: "translateY(-50%)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              width: 16,
+              height: 16,
+              pointerEvents: "none",
+              zIndex: 1,
+              color: "var(--ds-gray-900)",
+            }}
           >
             <SearchIcon />
           </div>
 
-          {/* Input */}
+          {/* Input - full width with padding for icons */}
           <input
             ref={inputRef}
             type="text"
@@ -466,59 +453,111 @@ export function Combobox({
             onChange={handleInputChange}
             onFocus={handleInputFocus}
             onKeyDown={handleKeyDown}
-            className={`
-              flex-1 min-w-0 bg-transparent border-none outline-none p-0
-              ${fontClass}
-              placeholder:text-[var(--ds-gray-700)]
-              ${disabled ? "cursor-not-allowed" : ""}
-            `}
+            className={`${fontClass}`}
             style={{
-              color: "inherit",
-              font: "inherit",
+              appearance: "none",
+              display: "inline-block",
+              width: "100%",
+              height: containerHeight,
+              padding: "0 40px",
+              margin: 0,
+              border: "none",
+              borderRadius: 6,
+              boxShadow: inputBoxShadow,
+              background: "var(--ds-background-100)",
+              color: "var(--ds-gray-1000)",
+              fontFamily: "inherit",
+              fontSize: "inherit",
+              fontWeight: "inherit",
+              outline: "none",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+              overflow: "clip",
+              transition: "box-shadow 0.2s ease, outline 0.2s ease",
+              cursor: disabled ? "not-allowed" : "text",
             }}
           />
 
-          {/* Clear button */}
-          {currentValue && !disabled && (
-            <button
-              type="button"
-              aria-label="Clear selected value"
-              tabIndex={0}
-              onClick={handleClear}
-              className="flex-shrink-0 flex items-center justify-center border-none bg-transparent p-0 cursor-pointer"
-              style={{ color: "var(--ds-gray-900)" }}
-            >
-              <XIcon />
-            </button>
-          )}
+          {/* Clear button - absolutely positioned */}
+          <button
+            type="button"
+            aria-label="Clear selected value"
+            tabIndex={0}
+            onClick={handleClear}
+            disabled={disabled}
+            style={{
+              display: currentValue && !disabled ? "flex" : "none",
+              alignItems: "center",
+              justifyContent: "center",
+              position: "absolute",
+              right: 0,
+              top: "50%",
+              transform: "translateY(-50%)",
+              height: containerHeight,
+              padding: "0 12px",
+              border: "none",
+              borderTopRightRadius: 6,
+              borderBottomRightRadius: 6,
+              background: "transparent",
+              color: "var(--ds-gray-900)",
+              cursor: "pointer",
+              userSelect: "none",
+              order: 2,
+              transition: "color 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease",
+            }}
+          >
+            <XIcon />
+          </button>
 
-          {/* Chevron toggle */}
+          {/* Chevron toggle - absolutely positioned */}
           <button
             type="button"
             aria-label="Open menu"
             tabIndex={-1}
             onClick={handleToggle}
             disabled={disabled}
-            className={`
-              flex-shrink-0 flex items-center justify-center border-none bg-transparent p-0
-              ${disabled ? "cursor-not-allowed" : "cursor-pointer"}
-            `}
-            style={{ color: "var(--ds-gray-900)" }}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              position: "absolute",
+              right: 0,
+              top: "50%",
+              transform: "translateY(-50%)",
+              width: 40,
+              height: 30,
+              padding: 0,
+              border: "none",
+              background: "transparent",
+              color: "var(--ds-gray-900)",
+              cursor: disabled ? "not-allowed" : "pointer",
+              userSelect: "none",
+              transition: "color 0.15s ease",
+            }}
           >
-            <span
+            <svg
+              height="16"
+              strokeLinejoin="round"
+              viewBox="0 0 16 16"
+              width="16"
               style={{
-                display: "inline-flex",
-                transition: "transform 200ms ease",
+                color: "currentcolor",
+                transition: "transform 0.15s ease",
                 transform: isOpen ? "rotate(180deg)" : "rotate(0deg)",
               }}
             >
-              <ChevronDownIcon />
-            </span>
+              <path
+                fillRule="evenodd"
+                clipRule="evenodd"
+                d="M14.0607 5.49999L13.5303 6.03032L8.7071 10.8535C8.31658 11.2441 7.68341 11.2441 7.29289 10.8535L2.46966 6.03032L1.93933 5.49999L2.99999 4.43933L3.53032 4.96966L7.99999 9.43933L12.4697 4.96966L13 4.43933L14.0607 5.49999Z"
+                fill="currentColor"
+              />
+            </svg>
           </button>
         </div>
 
         {/* Dropdown list */}
-        {isOpen && filteredOptions.length === 0 && !emptyMessage ? null : isOpen ? (
+        {isOpen ? (
           <ul
             ref={listRef}
             id={listId}
@@ -543,8 +582,9 @@ export function Combobox({
                   height: 36,
                   display: "flex",
                   alignItems: "center",
-                  padding: "0 12px",
+                  padding: "0 8px",
                   color: "var(--ds-gray-700)",
+                  fontSize: 14,
                 }}
               >
                 {emptyMessage}
@@ -562,10 +602,11 @@ export function Combobox({
                     height: 36,
                     display: "flex",
                     alignItems: "center",
-                    padding: "0 12px",
+                    padding: "0 8px",
                     cursor: "pointer",
                     borderRadius: 6,
-                    margin: "0 4px",
+                    fontSize: 14,
+                    scrollMargin: "8px 0",
                     background:
                       index === highlightedIndex
                         ? "var(--ds-gray-100)"
@@ -578,9 +619,11 @@ export function Combobox({
                   <span
                     title={option.label}
                     style={{
+                      display: "block",
                       overflow: "hidden",
                       textOverflow: "ellipsis",
                       whiteSpace: "nowrap",
+                      textAlign: "left",
                     }}
                   >
                     {option.label}
@@ -589,7 +632,13 @@ export function Combobox({
               ))
             )}
           </ul>
-        ) : null}
+        ) : (
+          <ul
+            id={listId}
+            aria-hidden="true"
+            style={{ display: "none", margin: 0, padding: 0, listStyle: "none" }}
+          />
+        )}
       </div>
     </div>
   );
