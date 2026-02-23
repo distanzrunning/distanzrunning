@@ -211,7 +211,11 @@ export function Choicebox({
       <div
         className="flex items-center justify-between gap-6 rounded-md p-3"
         style={{
-          background: isSelected && !isDisabled ? "color-mix(in oklch, var(--ds-pink-100) 40%, var(--ds-background-100))" : "transparent",
+          background: isSelected && !isDisabled
+            ? isHovered
+              ? "var(--ds-pink-200)"
+              : "color-mix(in oklch, var(--ds-pink-100) 40%, var(--ds-background-100))"
+            : "transparent",
           transition: "background 0.15s ease, border 0.15s ease",
         }}
       >
@@ -260,7 +264,7 @@ export function Choicebox({
       {/* Custom content - shown when selected */}
       {isSelected && children && (
         <div
-          className="flex items-center justify-center px-3 pb-3 pt-3 rounded-b-md overflow-hidden transition-colors hover:bg-[var(--ds-gray-100)]"
+          className="flex items-center justify-center px-3 pb-3 pt-3 rounded-b-md overflow-hidden transition-colors hover:bg-[var(--ds-pink-200)]"
           style={{
             borderTop: `1px solid ${!isDisabled ? "var(--ds-pink-700)" : "var(--ds-gray-400)"}`,
           }}
