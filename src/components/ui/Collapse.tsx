@@ -60,7 +60,12 @@ export function CollapseGroup({ children, className = "" }: CollapseGroupProps) 
 
   return (
     <CollapseGroupContext.Provider value={{ openId, setOpenId }}>
-      <div className={className}>{children}</div>
+      <div
+        className={className}
+        style={{ borderTop: "1px solid var(--ds-gray-400)" }}
+      >
+        {children}
+      </div>
     </CollapseGroupContext.Provider>
   );
 }
@@ -157,7 +162,7 @@ export function Collapse({
       className={`border-b border-[var(--ds-gray-400)] ${className}`}
     >
       <h3
-        style={{ color: "var(--ds-gray-1000)" }}
+        style={{ color: "var(--ds-gray-1000)", margin: 0 }}
       >
         <button
           type="button"
@@ -167,8 +172,8 @@ export function Collapse({
           aria-disabled={disabled || undefined}
           onClick={handleToggle}
           className={`
-            flex w-full items-center gap-3 py-4 text-left
-            bg-transparent border-none outline-none
+            flex w-full justify-between items-center text-left
+            bg-transparent border-none outline-none p-0
             ${disabled ? "cursor-default" : "cursor-pointer"}
           `}
           style={{ color: "inherit", font: "inherit" }}
@@ -177,21 +182,19 @@ export function Collapse({
             className={titleClasses}
             style={{
               ...titleStyle,
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
+              padding: "24px 0",
             }}
           >
             {title}
-            <span
-              style={{
-                display: "inline-flex",
-                transition: "transform 200ms ease",
-                transform: isExpanded ? "rotate(90deg)" : "rotate(0deg)",
-              }}
-            >
-              <ChevronRightIcon />
-            </span>
+          </span>
+          <span
+            style={{
+              display: "inline-flex",
+              transition: "transform 200ms ease",
+              transform: isExpanded ? "rotate(90deg)" : "rotate(0deg)",
+            }}
+          >
+            <ChevronRightIcon />
           </span>
         </button>
       </h3>
@@ -203,8 +206,9 @@ export function Collapse({
         aria-labelledby={triggerId}
         style={{
           height: isExpanded ? measuredHeight : 0,
-          overflow: "hidden",
+          overflowY: "hidden",
           transition: "height 200ms ease",
+          willChange: "height",
         }}
       >
         <div ref={contentRef}>
