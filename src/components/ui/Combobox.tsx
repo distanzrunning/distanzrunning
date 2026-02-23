@@ -568,80 +568,91 @@ export function Combobox({
 
         {/* Dropdown list */}
         {isOpen ? (
-          <ul
-            ref={listRef}
-            id={listId}
-            role="listbox"
-            className="material-menu"
+          <div
             style={{
               position: "absolute",
               top: "calc(100% + 4px)",
               left: 0,
               width: listWidth || "100%",
-              zIndex: 50,
-              margin: 0,
-              padding: "4px 0",
-              listStyle: "none",
-              maxHeight: 240,
-              overflowY: "auto",
+              zIndex: 2001,
+              padding: 8,
+              borderRadius: 12,
+              background: "var(--ds-background-100)",
+              boxShadow:
+                "rgba(0, 0, 0, 0.08) 0px 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 2px 2px 0px, rgba(0, 0, 0, 0.04) 0px 8px 16px -4px",
+              maxHeight: 216,
+              overflowY: "hidden",
             }}
           >
-            {filteredOptions.length === 0 ? (
-              <li
-                style={{
-                  height: 36,
-                  display: "flex",
-                  alignItems: "center",
-                  padding: "0 8px",
-                  color: "var(--ds-gray-700)",
-                  fontSize: 14,
-                }}
-              >
-                {emptyMessage}
-              </li>
-            ) : (
-              filteredOptions.map((option, index) => (
+            <ul
+              ref={listRef}
+              id={listId}
+              role="listbox"
+              style={{
+                margin: 0,
+                padding: 0,
+                listStyle: "none",
+                maxHeight: 200,
+                overflowY: "auto",
+              }}
+            >
+              {filteredOptions.length === 0 ? (
                 <li
-                  key={option.value}
-                  role="option"
-                  aria-selected={option.value === currentValue}
-                  data-highlighted={index === highlightedIndex}
-                  onClick={() => handleSelect(option)}
-                  onMouseEnter={() => setHighlightedIndex(index)}
                   style={{
                     height: 36,
                     display: "flex",
                     alignItems: "center",
                     padding: "0 8px",
-                    cursor: "pointer",
-                    borderRadius: 6,
+                    color: "var(--ds-gray-700)",
                     fontSize: 14,
-                    scrollMargin: "8px 0",
-                    background:
-                      index === highlightedIndex
-                        ? "var(--ds-gray-100)"
-                        : option.value === currentValue
-                          ? "var(--ds-gray-100)"
-                          : "transparent",
-                    transition: "background 100ms ease",
                   }}
                 >
-                  <span
-                    title={option.label}
+                  {emptyMessage}
+                </li>
+              ) : (
+                filteredOptions.map((option, index) => (
+                  <li
+                    key={option.value}
+                    role="option"
+                    aria-selected={option.value === currentValue}
+                    data-highlighted={index === highlightedIndex}
+                    onClick={() => handleSelect(option)}
+                    onMouseEnter={() => setHighlightedIndex(index)}
                     style={{
-                      display: "block",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      whiteSpace: "nowrap",
-                      textAlign: "left",
+                      height: 36,
+                      display: "flex",
+                      alignItems: "center",
+                      padding: "0 8px",
+                      cursor: "pointer",
+                      borderRadius: 6,
+                      fontSize: 14,
+                      scrollMargin: "8px 0",
+                      background:
+                        index === highlightedIndex
+                          ? "rgba(0, 0, 0, 0.1)"
+                          : option.value === currentValue
+                            ? "rgba(0, 0, 0, 0.1)"
+                            : "transparent",
+                      transition: "background 100ms ease",
                     }}
                   >
-                    {option.label}
-                  </span>
-                </li>
-              ))
-            )}
-          </ul>
+                    <span
+                      title={option.label}
+                      style={{
+                        display: "block",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                        textAlign: "left",
+                      }}
+                    >
+                      {option.label}
+                    </span>
+                  </li>
+                ))
+              )}
+            </ul>
+          </div>
         ) : (
           <ul
             id={listId}
