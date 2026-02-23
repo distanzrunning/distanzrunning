@@ -359,7 +359,7 @@ export function Combobox({
     ? "0 0 0 1px var(--ds-gray-alpha-600), 0px 0px 0px 4px rgba(0, 0, 0, 0.16)"
     : error
       ? "0 0 0 1px var(--ds-red-700)"
-      : "rgba(0, 0, 0, 0.08) 0px 0px 0px 1px";
+      : "0 0 0 1px var(--ds-gray-alpha-400)";
 
   return (
     <div className={className} style={{ width }}>
@@ -394,7 +394,7 @@ export function Combobox({
           {/* Anchor for popover positioning */}
           <Popover.Anchor asChild>
             <div
-              className={`${fontClass} ${disabled ? "opacity-50" : ""}`}
+              className={fontClass}
               style={{
                 display: "inline-block",
                 position: "relative",
@@ -443,7 +443,7 @@ export function Combobox({
                 onFocus={handleInputFocus}
                 onBlur={handleInputBlur}
                 onKeyDown={handleKeyDown}
-                className={`${fontClass}`}
+                className={`${fontClass} placeholder:text-[var(--ds-gray-700)]`}
                 style={{
                   appearance: "none",
                   display: "inline-block",
@@ -454,8 +454,12 @@ export function Combobox({
                   border: "none",
                   borderRadius: 6,
                   boxShadow: inputBoxShadow,
-                  background: "var(--ds-background-100)",
-                  color: "var(--ds-gray-1000)",
+                  background: disabled
+                    ? "var(--ds-gray-100)"
+                    : "var(--ds-background-100)",
+                  color: disabled
+                    ? "var(--ds-gray-700)"
+                    : "var(--ds-gray-1000)",
                   fontFamily: "inherit",
                   fontSize: "inherit",
                   fontWeight: "inherit",
