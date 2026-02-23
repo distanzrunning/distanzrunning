@@ -356,9 +356,9 @@ export function Combobox({
   const fontClass = getFontClass(size);
 
   const inputBoxShadow = isFocused
-    ? "0 0 0 1px var(--ds-gray-alpha-600), 0px 0px 0px 4px rgba(0, 0, 0, 0.16)"
+    ? "0 0 0 1px var(--ds-gray-alpha-600), 0px 0px 0px 4px #00000029"
     : error
-      ? "0 0 0 1px var(--ds-red-700)"
+      ? "0 0 0 1px var(--ds-red-900), 0 0 0 4px var(--ds-red-300)"
       : "0 0 0 1px var(--ds-gray-alpha-400)";
 
   return (
@@ -418,7 +418,7 @@ export function Combobox({
                   height: 16,
                   pointerEvents: "none",
                   zIndex: 1,
-                  color: "var(--ds-gray-900)",
+                  color: "var(--ds-gray-700)",
                 }}
               >
                 <SearchIcon />
@@ -459,7 +459,9 @@ export function Combobox({
                     : "var(--ds-background-100)",
                   color: disabled
                     ? "var(--ds-gray-700)"
-                    : "var(--ds-gray-1000)",
+                    : error
+                      ? "var(--ds-red-800)"
+                      : "var(--ds-gray-1000)",
                   fontFamily: "inherit",
                   fontSize: "inherit",
                   fontWeight: "inherit",
@@ -493,7 +495,7 @@ export function Combobox({
                   borderTopRightRadius: 6,
                   borderBottomRightRadius: 6,
                   background: "transparent",
-                  color: "var(--ds-gray-900)",
+                  color: error ? "var(--ds-red-800)" : "var(--ds-gray-700)",
                   cursor: "pointer",
                   userSelect: "none",
                   order: 2,
@@ -524,7 +526,7 @@ export function Combobox({
                   padding: 0,
                   border: "none",
                   background: "transparent",
-                  color: "var(--ds-gray-900)",
+                  color: "var(--ds-gray-700)",
                   cursor: disabled ? "not-allowed" : "pointer",
                   userSelect: "none",
                   transition: "color 0.15s ease",
@@ -567,8 +569,7 @@ export function Combobox({
               padding: 8,
               borderRadius: 12,
               background: "var(--ds-background-100)",
-              boxShadow:
-                "rgba(0, 0, 0, 0.08) 0px 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 2px 2px 0px, rgba(0, 0, 0, 0.04) 0px 8px 16px -4px",
+              boxShadow: "var(--ds-shadow-border-large)",
               maxHeight: 216,
               overflowY: "hidden",
               outline: "none",
@@ -594,7 +595,7 @@ export function Combobox({
                     display: "flex",
                     alignItems: "center",
                     padding: "0 8px",
-                    color: "var(--ds-gray-700)",
+                    color: "var(--ds-gray-900)",
                     fontSize: 14,
                   }}
                 >
@@ -620,9 +621,9 @@ export function Combobox({
                       scrollMargin: "8px 0",
                       background:
                         index === highlightedIndex
-                          ? "rgba(0, 0, 0, 0.1)"
+                          ? "var(--ds-gray-alpha-300)"
                           : option.value === currentValue
-                            ? "rgba(0, 0, 0, 0.1)"
+                            ? "var(--ds-gray-alpha-300)"
                             : "transparent",
                       transition: "background 100ms ease",
                     }}
