@@ -342,7 +342,7 @@ export function ExpandedExample() {
           sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
         </p>
       </Collapse>
-      <Collapse title="Question B" defaultExpanded disabled>
+      <Collapse title="Question B" defaultExpanded>
         <p className="text-copy-16 mb-4">
           Duis aute irure dolor in reprehenderit in voluptate velit esse
           cillum dolore eu fugiat nulla pariatur.
@@ -435,7 +435,7 @@ function ExpandedDemo() {
           aliquip ex ea commodo consequat.
         </p>
       </Collapse>
-      <Collapse title="Question B" defaultExpanded disabled>
+      <Collapse title="Question B" defaultExpanded>
         <p
           className="text-copy-16 mb-4"
           style={{ color: "var(--ds-gray-1000)" }}
