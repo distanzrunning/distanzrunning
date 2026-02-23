@@ -31,6 +31,7 @@ import PullQuoteComponent from "../components/content/PullQuoteComponent";
 import CloseComponent from "../components/content/CloseComponent";
 import ToggleComponent from "../components/content/ToggleComponent";
 import CodeBlockComponent from "../components/content/CodeBlockComponent";
+import CollapseComponent from "../components/content/CollapseComponent";
 import AvatarComponent from "../components/content/AvatarComponent";
 import BadgeComponent from "../components/content/BadgeComponent";
 import BrowserComponent from "../components/content/BrowserComponent";
@@ -466,6 +467,21 @@ export default function DesignSystemPage() {
           onNavigate={handleNavigation}
         >
           <CodeBlockComponent />
+        </ContentWithTOC>
+      );
+    }
+
+    if (activeSlug === "collapse") {
+      return (
+        <ContentWithTOC
+          tocTitle="On this page"
+          pageTitle="Collapse"
+          pageSubtitle="A set of headings, vertically stacked, that each reveal a related section of content."
+          mainSectionId="collapse"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
+          <CollapseComponent />
         </ContentWithTOC>
       );
     }
