@@ -211,7 +211,7 @@ export function Collapse({
           willChange: "height",
         }}
       >
-        <div ref={contentRef}>
+        <div ref={contentRef} style={{ overflow: "hidden" }}>
           {children}
         </div>
       </div>
