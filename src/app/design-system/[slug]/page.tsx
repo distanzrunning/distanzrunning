@@ -32,6 +32,7 @@ import CloseComponent from "../components/content/CloseComponent";
 import ToggleComponent from "../components/content/ToggleComponent";
 import CodeBlockComponent from "../components/content/CodeBlockComponent";
 import CollapseComponent from "../components/content/CollapseComponent";
+import ComboboxComponent from "../components/content/ComboboxComponent";
 import AvatarComponent from "../components/content/AvatarComponent";
 import BadgeComponent from "../components/content/BadgeComponent";
 import BrowserComponent from "../components/content/BrowserComponent";
@@ -359,6 +360,21 @@ export default function DesignSystemPage() {
           onNavigate={handleNavigation}
         >
           <ChoiceboxComponent />
+        </ContentWithTOC>
+      );
+    }
+
+    if (activeSlug === "combobox") {
+      return (
+        <ContentWithTOC
+          tocTitle="On this page"
+          pageTitle="Combobox"
+          pageSubtitle="An autocomplete input that filters and selects from a list of options."
+          mainSectionId="combobox"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
+          <ComboboxComponent />
         </ContentWithTOC>
       );
     }
