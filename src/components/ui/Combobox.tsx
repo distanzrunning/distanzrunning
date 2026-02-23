@@ -166,6 +166,7 @@ export function Combobox({
   const currentValue = isControlled ? value : selectedValue;
 
   const [isOpen, setIsOpen] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
   const [inputValue, setInputValue] = useState(() => {
     const initial = isControlled ? value : defaultValue;
     if (initial) {
@@ -259,8 +260,13 @@ export function Combobox({
   const handleInputFocus = useCallback(() => {
     if (!disabled) {
       setIsOpen(true);
+      setIsFocused(true);
     }
   }, [disabled]);
+
+  const handleInputBlur = useCallback(() => {
+    setIsFocused(false);
+  }, []);
 
   const handleSelect = useCallback(
     (option: ComboboxOption) => {
@@ -374,9 +380,11 @@ export function Combobox({
   const containerHeight = getContainerHeight(size);
   const fontClass = getFontClass(size);
 
-  const inputBoxShadow = error
-    ? "0 0 0 1px var(--ds-red-700)"
-    : "rgba(0, 0, 0, 0.08) 0px 0px 0px 1px";
+  const inputBoxShadow = isFocused
+    ? "0 0 0 1px var(--ds-gray-alpha-600), 0px 0px 0px 4px rgba(0, 0, 0, 0.16)"
+    : error
+      ? "0 0 0 1px var(--ds-red-700)"
+      : "rgba(0, 0, 0, 0.08) 0px 0px 0px 1px";
 
   return (
     <div className={className} style={{ width }}>
@@ -402,6 +410,7 @@ export function Combobox({
         aria-expanded={isOpen}
         aria-haspopup="listbox"
         aria-owns={listId}
+        style={{ position: "relative" }}
       >
         {/* Container - inline-block with position relative */}
         <div
@@ -452,6 +461,7 @@ export function Combobox({
             disabled={disabled}
             onChange={handleInputChange}
             onFocus={handleInputFocus}
+            onBlur={handleInputBlur}
             onKeyDown={handleKeyDown}
             className={`${fontClass}`}
             style={{
