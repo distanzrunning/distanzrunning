@@ -335,7 +335,7 @@ const expandedCode = `import { CollapseGroup, Collapse } from '@/components/ui/C
 
 export function ExpandedExample() {
   return (
-    <CollapseGroup>
+    <CollapseGroup alwaysOpen>
       <Collapse title="Question A">
         <p className="text-copy-16 mb-4">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit,
@@ -423,7 +423,7 @@ function DefaultDemo() {
 
 function ExpandedDemo() {
   return (
-    <CollapseGroup>
+    <CollapseGroup alwaysOpen>
       <Collapse title="Question A">
         <p
           className="text-copy-16 mb-4"
@@ -591,6 +591,16 @@ export default function CollapseComponent() {
                 <td className="py-3 px-4 text-textSubtle">-</td>
                 <td className="py-3 px-4 text-textSubtle">
                   Collapse items to render in the group
+                </td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 font-mono">alwaysOpen</td>
+                <td className="py-3 px-4 font-mono text-textSubtle">
+                  boolean
+                </td>
+                <td className="py-3 px-4 text-textSubtle">false</td>
+                <td className="py-3 px-4 text-textSubtle">
+                  When true, one item must always remain open
                 </td>
               </tr>
               <tr className="border-b border-borderSubtle">

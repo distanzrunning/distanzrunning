@@ -17,6 +17,7 @@ import {
 interface CollapseGroupContextValue {
   openId: string | null;
   setOpenId: (id: string | null) => void;
+  alwaysOpen: boolean;
 }
 
 const CollapseGroupContext = createContext<CollapseGroupContextValue | null>(
@@ -52,14 +53,16 @@ function ChevronRightIcon() {
 
 export interface CollapseGroupProps {
   children: ReactNode;
+  /** When true, one item must always remain open */
+  alwaysOpen?: boolean;
   className?: string;
 }
 
-export function CollapseGroup({ children, className = "" }: CollapseGroupProps) {
+export function CollapseGroup({ children, alwaysOpen = false, className = "" }: CollapseGroupProps) {
   const [openId, setOpenId] = useState<string | null>(null);
 
   return (
-    <CollapseGroupContext.Provider value={{ openId, setOpenId }}>
+    <CollapseGroupContext.Provider value={{ openId, setOpenId, alwaysOpen }}>
       <div
         className={className}
         style={{ borderTop: "1px solid var(--ds-gray-400)" }}
@@ -118,6 +121,7 @@ export function Collapse({
     if (disabled) return;
 
     if (groupCtx) {
+      if (isExpanded && groupCtx.alwaysOpen) return;
       groupCtx.setOpenId(isExpanded ? null : reactId);
     } else {
       setLocalOpen((prev) => !prev);
