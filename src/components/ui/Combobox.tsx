@@ -558,7 +558,7 @@ export function Combobox({
         {/* Dropdown list via Radix Portal */}
         <Popover.Portal>
           <Popover.Content
-            sideOffset={0}
+            sideOffset={5}
             align="start"
             tabIndex={-1}
             onOpenAutoFocus={(e) => e.preventDefault()}
@@ -566,7 +566,6 @@ export function Combobox({
             onInteractOutside={() => handleClose()}
             style={{
               width: listWidth || "var(--radix-popover-trigger-width)",
-              marginTop: 5,
               padding: 8,
               borderRadius: 12,
               background: "var(--ds-background-100)",
