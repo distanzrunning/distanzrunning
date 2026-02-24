@@ -532,7 +532,7 @@ export function Combobox({
                 disabled={disabled}
                 className={`text-[var(--ds-gray-700)] ${!disabled ? "hover:text-[var(--ds-gray-1000)]" : ""}`}
                 style={{
-                  display: "flex",
+                  display: currentValue && !disabled ? "none" : "flex",
                   alignItems: "center",
                   justifyContent: "center",
                   position: "absolute",
