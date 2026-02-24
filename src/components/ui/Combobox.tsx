@@ -361,7 +361,7 @@ export function Combobox({
     : error
       ? "0 0 0 1px var(--ds-red-900), 0 0 0 4px var(--ds-red-300)"
       : isHovered && !disabled
-        ? "0 0 0 1px var(--ds-gray-alpha-600)"
+        ? "0 0 0 1px var(--ds-gray-alpha-500)"
         : "0 0 0 1px var(--ds-gray-alpha-400)";
 
   return (
