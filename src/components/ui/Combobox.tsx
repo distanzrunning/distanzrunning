@@ -167,6 +167,7 @@ export function Combobox({
 
   const [isOpen, setIsOpen] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
   const [inputValue, setInputValue] = useState(() => {
     const initial = isControlled ? value : defaultValue;
     if (initial) {
@@ -359,7 +360,9 @@ export function Combobox({
     ? "0 0 0 1px var(--ds-gray-alpha-600), 0px 0px 0px 4px #00000029"
     : error
       ? "0 0 0 1px var(--ds-red-900), 0 0 0 4px var(--ds-red-300)"
-      : "0 0 0 1px var(--ds-gray-alpha-400)";
+      : isHovered && !disabled
+        ? "0 0 0 1px var(--ds-gray-alpha-600)"
+        : "0 0 0 1px var(--ds-gray-alpha-400)";
 
   return (
     <div className={className} style={{ width }}>
@@ -395,6 +398,8 @@ export function Combobox({
           <Popover.Anchor asChild>
             <div
               className={fontClass}
+              onMouseEnter={() => setIsHovered(true)}
+              onMouseLeave={() => setIsHovered(false)}
               style={{
                 display: "inline-block",
                 position: "relative",
