@@ -150,6 +150,7 @@ export function Combobox({
   // Refs
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
+  const chevronRef = useRef<HTMLButtonElement>(null);
 
   // Normalize options
   const normalizedOptions = useMemo<ComboboxOption[]>(
@@ -513,11 +514,21 @@ export function Combobox({
 
               {/* Chevron toggle - absolutely positioned */}
               <button
+                ref={chevronRef}
                 type="button"
-                aria-label="Open menu"
+                aria-label={isOpen ? "Close menu" : "Open menu"}
                 tabIndex={-1}
-                onClick={handleToggle}
+                onClick={() => {
+                  if (disabled) return;
+                  if (isOpen) {
+                    handleClose();
+                  } else {
+                    setIsOpen(true);
+                    inputRef.current?.focus();
+                  }
+                }}
                 disabled={disabled}
+                className={`text-[var(--ds-gray-700)] ${!disabled ? "hover:text-[var(--ds-gray-1000)]" : ""}`}
                 style={{
                   display: "flex",
                   alignItems: "center",
@@ -531,7 +542,6 @@ export function Combobox({
                   padding: 0,
                   border: "none",
                   background: "transparent",
-                  color: "var(--ds-gray-700)",
                   cursor: disabled ? "not-allowed" : "pointer",
                   userSelect: "none",
                   transition: "color 0.15s ease",
@@ -568,7 +578,13 @@ export function Combobox({
             tabIndex={-1}
             onOpenAutoFocus={(e) => e.preventDefault()}
             onCloseAutoFocus={(e) => e.preventDefault()}
-            onInteractOutside={() => handleClose()}
+            onInteractOutside={(e) => {
+              if (chevronRef.current?.contains(e.target as Node)) {
+                e.preventDefault();
+                return;
+              }
+              handleClose();
+            }}
             style={{
               width: listWidth || "var(--radix-popover-trigger-width)",
               padding: 8,
