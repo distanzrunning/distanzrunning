@@ -266,6 +266,8 @@ export function Combobox({
         setSelectedValue(option.value);
       }
       onChange?.(option.value);
+      setIsOpen(false);
+      setHighlightedIndex(-1);
       inputRef.current?.focus();
     },
     [isControlled, onChange],
@@ -642,11 +644,9 @@ export function Combobox({
                       fontSize: 14,
                       scrollMargin: "8px 0",
                       background:
-                        option.value === currentValue
-                          ? "var(--ds-gray-alpha-300)"
-                          : index === highlightedIndex
-                            ? "var(--ds-gray-alpha-200)"
-                            : "transparent",
+                        index === highlightedIndex
+                          ? "var(--ds-gray-alpha-200)"
+                          : "transparent",
                       transition: "background 100ms ease",
                     }}
                   >
