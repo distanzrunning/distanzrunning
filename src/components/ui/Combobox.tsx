@@ -150,6 +150,7 @@ export function Combobox({
   // Refs
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
+  const anchorRef = useRef<HTMLDivElement>(null);
   const chevronRef = useRef<HTMLButtonElement>(null);
 
   // Normalize options
@@ -398,6 +399,7 @@ export function Combobox({
           {/* Anchor for popover positioning */}
           <Popover.Anchor asChild>
             <div
+              ref={anchorRef}
               className={fontClass}
               onMouseEnter={() => setIsHovered(true)}
               onMouseLeave={() => setIsHovered(false)}
@@ -579,7 +581,7 @@ export function Combobox({
             onOpenAutoFocus={(e) => e.preventDefault()}
             onCloseAutoFocus={(e) => e.preventDefault()}
             onInteractOutside={(e) => {
-              if (chevronRef.current?.contains(e.target as Node)) {
+              if (anchorRef.current?.contains(e.target as Node)) {
                 e.preventDefault();
                 return;
               }
