@@ -388,7 +388,7 @@ export function Combobox({
   const fontClass = getFontClass(size);
 
   const inputBoxShadow = isFocused
-    ? "0 0 0 1px var(--ds-gray-alpha-600), 0px 0px 0px 4px #00000029"
+    ? "0 0 0 1px var(--ds-gray-alpha-600), 0px 0px 0px 4px var(--ds-focus-ring)"
     : error
       ? "0 0 0 1px var(--ds-red-900), 0 0 0 4px var(--ds-red-300)"
       : isHovered && !disabled
