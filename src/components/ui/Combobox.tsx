@@ -266,8 +266,6 @@ export function Combobox({
         setSelectedValue(option.value);
       }
       onChange?.(option.value);
-      setIsOpen(false);
-      setHighlightedIndex(-1);
       inputRef.current?.focus();
     },
     [isControlled, onChange],
@@ -489,6 +487,7 @@ export function Combobox({
                 tabIndex={0}
                 onClick={handleClear}
                 disabled={disabled}
+                className={`${error ? "text-[var(--ds-red-800)]" : "text-[var(--ds-gray-700)]"} hover:text-[var(--ds-gray-1000)]`}
                 style={{
                   display: currentValue && !disabled ? "flex" : "none",
                   alignItems: "center",
@@ -503,7 +502,6 @@ export function Combobox({
                   borderTopRightRadius: 6,
                   borderBottomRightRadius: 6,
                   background: "transparent",
-                  color: error ? "var(--ds-red-800)" : "var(--ds-gray-700)",
                   cursor: "pointer",
                   userSelect: "none",
                   order: 2,
@@ -644,10 +642,10 @@ export function Combobox({
                       fontSize: 14,
                       scrollMargin: "8px 0",
                       background:
-                        index === highlightedIndex
+                        option.value === currentValue
                           ? "var(--ds-gray-alpha-300)"
-                          : option.value === currentValue
-                            ? "var(--ds-gray-alpha-300)"
+                          : index === highlightedIndex
+                            ? "var(--ds-gray-alpha-200)"
                             : "transparent",
                       transition: "background 100ms ease",
                     }}
