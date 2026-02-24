@@ -629,8 +629,7 @@ export function Combobox({
               padding: 8,
               borderRadius: 12,
               background: "var(--ds-background-100)",
-              boxShadow:
-                "0 0 0 1px #00000014, 0px 2px 2px #0000000a, 0px 8px 16px -4px #0000000a, 0 0 0 1px var(--ds-background-200)",
+              boxShadow: "var(--ds-shadow-menu)",
               maxHeight: 216,
               overflowY: "hidden",
               outline: "none",
