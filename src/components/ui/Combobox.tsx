@@ -476,6 +476,11 @@ export function Combobox({
                 onChange={handleInputChange}
                 onFocus={handleInputFocus}
                 onBlur={handleInputBlur}
+                onClick={() => {
+                  if (!disabled && !isOpen) {
+                    setIsOpen(true);
+                  }
+                }}
                 onKeyDown={handleKeyDown}
                 className={`${fontClass} placeholder:text-[var(--ds-gray-700)]`}
                 style={{
