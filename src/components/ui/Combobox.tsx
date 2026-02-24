@@ -250,7 +250,11 @@ export function Combobox({
 
   const handleInputFocus = useCallback(() => {
     if (!disabled) {
-      setIsOpen(true);
+      if (justSelectedRef.current) {
+        justSelectedRef.current = false;
+      } else {
+        setIsOpen(true);
+      }
       setIsFocused(true);
     }
   }, [disabled]);
@@ -258,6 +262,8 @@ export function Combobox({
   const handleInputBlur = useCallback(() => {
     setIsFocused(false);
   }, []);
+
+  const justSelectedRef = useRef(false);
 
   const handleSelect = useCallback(
     (option: ComboboxOption) => {
@@ -268,6 +274,7 @@ export function Combobox({
       onChange?.(option.value);
       setIsOpen(false);
       setHighlightedIndex(-1);
+      justSelectedRef.current = true;
       inputRef.current?.focus();
     },
     [isControlled, onChange],
