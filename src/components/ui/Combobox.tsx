@@ -681,10 +681,10 @@ export function Combobox({
                       fontSize: 14,
                       scrollMargin: "8px 0",
                       background:
-                        index === highlightedIndex
-                          ? "var(--ds-gray-alpha-200)"
-                          : option.value === currentValue
-                            ? "var(--ds-gray-alpha-300)"
+                        option.value === currentValue
+                          ? "var(--ds-gray-alpha-300)"
+                          : index === highlightedIndex
+                            ? "var(--ds-gray-alpha-200)"
                             : "transparent",
                       transition: "background 100ms ease",
                     }}
