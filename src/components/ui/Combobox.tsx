@@ -479,9 +479,12 @@ export function Combobox({
                 onChange={handleInputChange}
                 onFocus={handleInputFocus}
                 onBlur={handleInputBlur}
-                onClick={() => {
+                onClick={(e) => {
                   if (!disabled && !isOpen) {
                     setIsOpen(true);
+                  }
+                  if (inputValue) {
+                    (e.target as HTMLInputElement).select();
                   }
                 }}
                 onKeyDown={handleKeyDown}
