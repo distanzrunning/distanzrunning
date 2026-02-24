@@ -306,6 +306,9 @@ export function Combobox({
     }
     onChange?.("");
     onInputChange?.("");
+    setIsOpen(false);
+    setHighlightedIndex(-1);
+    justSelectedRef.current = true;
     inputRef.current?.focus();
   }, [isControlled, onChange, onInputChange]);
 
