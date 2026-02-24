@@ -683,7 +683,9 @@ export function Combobox({
                       background:
                         index === highlightedIndex
                           ? "var(--ds-gray-alpha-200)"
-                          : "transparent",
+                          : option.value === currentValue
+                            ? "var(--ds-gray-alpha-300)"
+                            : "transparent",
                       transition: "background 100ms ease",
                     }}
                   >
