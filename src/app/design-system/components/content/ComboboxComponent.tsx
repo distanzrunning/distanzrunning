@@ -671,7 +671,7 @@ export default function ComboboxComponent() {
         </SectionHeader>
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={sizesCode}>
-            <div className="flex flex-col md:flex-row gap-4">
+            <div className="flex flex-col md:flex-row gap-4 items-center justify-center">
               <Combobox
                 size="small"
                 options={["One", "Two", "Three"]}
