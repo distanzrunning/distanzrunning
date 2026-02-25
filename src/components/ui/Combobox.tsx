@@ -504,9 +504,7 @@ export function Combobox({
                     : "var(--ds-background-100)",
                   color: disabled
                     ? "var(--ds-gray-700)"
-                    : error
-                      ? "var(--ds-red-800)"
-                      : "var(--ds-gray-1000)",
+                    : "var(--ds-gray-1000)",
                   fontFamily: "inherit",
                   fontSize: "inherit",
                   fontWeight: "inherit",
@@ -526,7 +524,7 @@ export function Combobox({
                 tabIndex={0}
                 onClick={handleClear}
                 disabled={disabled}
-                className={`${error ? "text-[var(--ds-red-800)]" : "text-[var(--ds-gray-700)]"} hover:text-[var(--ds-gray-1000)]`}
+                className="text-[var(--ds-gray-700)] hover:text-[var(--ds-gray-1000)]"
                 style={{
                   display: currentValue && !disabled ? "flex" : "none",
                   alignItems: "center",
