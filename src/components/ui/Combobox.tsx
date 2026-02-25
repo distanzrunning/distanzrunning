@@ -613,7 +613,7 @@ export function Combobox({
         <Popover.Portal>
           <Popover.Content
             sideOffset={9}
-            align={listWidth ? "center" : "start"}
+            align="start"
             tabIndex={-1}
             onOpenAutoFocus={(e) => e.preventDefault()}
             onCloseAutoFocus={(e) => e.preventDefault()}
@@ -625,8 +625,7 @@ export function Combobox({
               handleClose();
             }}
             style={{
-              width: listWidth ? "max-content" : "var(--radix-popover-trigger-width)",
-              minWidth: listWidth || undefined,
+              width: listWidth || "var(--radix-popover-trigger-width)",
               padding: 8,
               borderRadius: 12,
               background: "var(--ds-background-100)",
@@ -675,7 +674,7 @@ export function Combobox({
                       height: 36,
                       display: "flex",
                       alignItems: "center",
-                      justifyContent: "space-between",
+                      position: "relative",
                       padding: "0 8px",
                       cursor: "pointer",
                       borderRadius: 6,
@@ -707,7 +706,8 @@ export function Combobox({
                         style={{
                           display: "flex",
                           alignItems: "center",
-                          marginLeft: 8,
+                          position: "absolute",
+                          right: 8,
                           flexShrink: 0,
                           color: "var(--ds-gray-1000)",
                         }}
