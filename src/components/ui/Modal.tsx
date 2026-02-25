@@ -89,7 +89,7 @@ export function Modal({
 
       {/* Content card */}
       <div
-        className={`relative material-modal w-full max-w-[480px] mx-4 p-6 ${className}`}
+        className={`relative material-modal w-full max-w-[540px] mx-4 p-6 overflow-hidden ${className}`}
         onClick={(e) => e.stopPropagation()}
       >
         {title && (
