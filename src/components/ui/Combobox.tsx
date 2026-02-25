@@ -625,7 +625,8 @@ export function Combobox({
               handleClose();
             }}
             style={{
-              width: listWidth || "var(--radix-popover-trigger-width)",
+              width: listWidth ? "max-content" : "var(--radix-popover-trigger-width)",
+              minWidth: listWidth || undefined,
               padding: 8,
               borderRadius: 12,
               background: "var(--ds-background-100)",
