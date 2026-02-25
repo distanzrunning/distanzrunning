@@ -89,7 +89,21 @@ export function Modal({
 
       {/* Content card */}
       <div
-        className={`relative material-modal w-full max-w-[540px] mx-4 p-6 overflow-hidden ${className}`}
+        role="dialog"
+        aria-modal="true"
+        className={`relative w-full mx-4 ${className}`}
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          maxWidth: 540,
+          maxHeight: "min(800px, 80vh)",
+          padding: 24,
+          borderRadius: 12,
+          background: "var(--ds-background-100)",
+          boxShadow: "var(--ds-shadow-modal)",
+          color: "var(--ds-gray-1000)",
+          overflow: "hidden",
+        }}
         onClick={(e) => e.stopPropagation()}
       >
         {title && (
