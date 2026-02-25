@@ -463,11 +463,38 @@ export function ModalExample() {
       <Button size="small" onClick={() => setOpen(true)}>
         Open Modal
       </Button>
-      <Modal open={open} onClose={() => setOpen(false)} title="Select an Option">
-        <Combobox
-          options={["One", "Two", "Three"]}
-          placeholder="Search..."
-        />
+      <Modal open={open} onClose={() => setOpen(false)} title="Create Token">
+        <p style={{ color: "var(--ds-gray-1000)", fontSize: 16, margin: "0 0 24px" }}>
+          Enter a unique name for your token to differentiate it from other tokens
+          and then select the scope.
+        </p>
+        <div style={{
+          background: "var(--ds-gray-100)",
+          borderTop: "1px solid var(--ds-gray-alpha-400)",
+          margin: "-24px -24px 0",
+          padding: 24,
+        }}>
+          <Combobox
+            label="Region"
+            size="small"
+            options={["One", "Two", "Three"]}
+            placeholder="Search..."
+          />
+          <p className="text-copy-13" style={{ color: "var(--ds-gray-900)", marginTop: 10 }}>
+            This is the region where your database reads and writes will take place.
+          </p>
+        </div>
+        <div style={{
+          display: "flex",
+          justifyContent: "space-between",
+          margin: "0 -24px -24px",
+          padding: 16,
+          position: "sticky",
+          bottom: 0,
+        }}>
+          <Button variant="secondary" onClick={() => setOpen(false)}>Cancel</Button>
+          <Button onClick={() => setOpen(false)}>Submit</Button>
+        </div>
       </Modal>
     </>
   );
@@ -501,12 +528,56 @@ function ModalDemo() {
       <Modal
         open={open}
         onClose={() => setOpen(false)}
-        title="Select an Option"
+        title="Create Token"
       >
-        <Combobox
-          options={["One", "Two", "Three"]}
-          placeholder="Search..."
-        />
+        <p
+          style={{
+            color: "var(--ds-gray-1000)",
+            fontSize: 16,
+            margin: "0 0 24px",
+            lineHeight: "24px",
+          }}
+        >
+          Enter a unique name for your token to differentiate it from other
+          tokens and then select the scope.
+        </p>
+        <div
+          style={{
+            background: "var(--ds-gray-100)",
+            borderTop: "1px solid var(--ds-gray-alpha-400)",
+            margin: "-24px -24px 0",
+            padding: 24,
+          }}
+        >
+          <Combobox
+            label="Region"
+            size="small"
+            options={["One", "Two", "Three"]}
+            placeholder="Search..."
+          />
+          <p
+            className="text-copy-13"
+            style={{ color: "var(--ds-gray-900)", marginTop: 10, marginBottom: 0 }}
+          >
+            This is the region where your database reads and writes will take
+            place.
+          </p>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            margin: "0 -24px -24px",
+            padding: 16,
+            position: "sticky",
+            bottom: 0,
+          }}
+        >
+          <Button variant="secondary" onClick={() => setOpen(false)}>
+            Cancel
+          </Button>
+          <Button onClick={() => setOpen(false)}>Submit</Button>
+        </div>
       </Modal>
     </>
   );
