@@ -482,7 +482,7 @@ export function ModalExample() {
       >
         {/* Inset section */}
         <div style={{
-          background: "var(--ds-gray-100)",
+          background: "var(--ds-background-200)",
           borderTop: "1px solid var(--ds-gray-alpha-400)",
           margin: "0 -24px -24px",
           padding: 24,
@@ -552,7 +552,7 @@ function ModalDemo() {
         {/* Inset section */}
         <div
           style={{
-            background: "var(--ds-gray-100)",
+            background: "var(--ds-background-200)",
             borderTop: "1px solid var(--ds-gray-alpha-400)",
             margin: "0 -24px -24px",
             padding: 24,
