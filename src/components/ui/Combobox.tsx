@@ -455,7 +455,7 @@ export function Combobox({
                   height: 16,
                   pointerEvents: "none",
                   zIndex: 1,
-                  color: "var(--ds-gray-700)",
+                  color: error ? "var(--ds-red-800)" : "var(--ds-gray-700)",
                 }}
               >
                 <SearchIcon />
@@ -504,7 +504,9 @@ export function Combobox({
                     : "var(--ds-background-100)",
                   color: disabled
                     ? "var(--ds-gray-700)"
-                    : "var(--ds-gray-1000)",
+                    : error
+                      ? "var(--ds-red-800)"
+                      : "var(--ds-gray-1000)",
                   fontFamily: "inherit",
                   fontSize: "inherit",
                   fontWeight: "inherit",
@@ -524,7 +526,7 @@ export function Combobox({
                 tabIndex={0}
                 onClick={handleClear}
                 disabled={disabled}
-                className="text-[var(--ds-gray-700)] hover:text-[var(--ds-gray-1000)]"
+                className={`${error ? "text-[var(--ds-red-800)]" : "text-[var(--ds-gray-700)]"} hover:text-[var(--ds-gray-1000)]`}
                 style={{
                   display: currentValue && !disabled ? "flex" : "none",
                   alignItems: "center",
@@ -565,7 +567,7 @@ export function Combobox({
                   }
                 }}
                 disabled={disabled}
-                className={`text-[var(--ds-gray-700)] ${!disabled ? "hover:text-[var(--ds-gray-1000)]" : ""}`}
+                className={`${error ? "text-[var(--ds-red-800)]" : "text-[var(--ds-gray-700)]"} ${!disabled ? "hover:text-[var(--ds-gray-1000)]" : ""}`}
                 style={{
                   display: currentValue && !disabled ? "none" : "flex",
                   alignItems: "center",
