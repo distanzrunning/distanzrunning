@@ -460,7 +460,7 @@ export function ModalExample() {
 
   return (
     <>
-      <Button variant="secondary" size="small" onClick={() => setOpen(true)}>
+      <Button size="small" onClick={() => setOpen(true)}>
         Open Modal
       </Button>
       <Modal open={open} onClose={() => setOpen(false)} title="Select an Option">
@@ -495,7 +495,7 @@ function ModalDemo() {
 
   return (
     <>
-      <Button variant="secondary" size="small" onClick={() => setOpen(true)}>
+      <Button size="small" onClick={() => setOpen(true)}>
         Open Modal
       </Button>
       <Modal
