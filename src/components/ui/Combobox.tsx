@@ -455,7 +455,7 @@ export function Combobox({
                   height: 16,
                   pointerEvents: "none",
                   zIndex: 1,
-                  color: error ? "var(--ds-red-800)" : "var(--ds-gray-700)",
+                  color: "var(--ds-gray-700)",
                 }}
               >
                 <SearchIcon />
