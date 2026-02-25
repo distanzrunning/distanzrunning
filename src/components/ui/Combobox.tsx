@@ -651,12 +651,11 @@ export function Combobox({
               {filteredOptions.length === 0 ? (
                 <li
                   style={{
-                    height: 36,
-                    display: "flex",
-                    alignItems: "center",
-                    padding: "0 8px",
+                    padding: "10px 0 4px",
                     color: "var(--ds-gray-900)",
                     fontSize: 14,
+                    textAlign: "center",
+                    userSelect: "none",
                   }}
                 >
                   {emptyMessage}

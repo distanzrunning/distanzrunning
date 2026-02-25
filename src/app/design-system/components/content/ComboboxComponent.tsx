@@ -397,7 +397,8 @@ export function CustomEmptyMessageExample() {
     <Combobox
       options={[]}
       placeholder="Search..."
-      emptyMessage="No countries found"
+      size="small"
+      emptyMessage="Nothing to see here.."
     />
   );
 }`;
@@ -629,7 +630,8 @@ export default function ComboboxComponent() {
             <Combobox
               options={[]}
               placeholder="Search..."
-              emptyMessage="No countries found"
+              size="small"
+              emptyMessage="Nothing to see here.."
             />
           </CodePreview>
         </div>
