@@ -385,7 +385,7 @@ export function CustomWidthListExample() {
         "Short option",
       ]}
       placeholder="Search..."
-      listWidth={256}
+      listWidth={300}
     />
   );
 }`;
@@ -613,7 +613,7 @@ export default function ComboboxComponent() {
                 "Short option",
               ]}
               placeholder="Search..."
-              listWidth={256}
+              listWidth={300}
             />
           </CodePreview>
         </div>
