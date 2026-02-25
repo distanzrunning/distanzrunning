@@ -613,7 +613,7 @@ export function Combobox({
         <Popover.Portal>
           <Popover.Content
             sideOffset={9}
-            align="start"
+            align={listWidth ? "center" : "start"}
             tabIndex={-1}
             onOpenAutoFocus={(e) => e.preventDefault()}
             onCloseAutoFocus={(e) => e.preventDefault()}
