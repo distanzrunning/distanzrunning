@@ -4,29 +4,6 @@ import { useEffect, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 
 // ============================================================================
-// XIcon (internal)
-// ============================================================================
-
-function XIcon() {
-  return (
-    <svg
-      height="16"
-      strokeLinejoin="round"
-      viewBox="0 0 16 16"
-      width="16"
-      style={{ color: "currentcolor" }}
-    >
-      <path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        d="M12.4697 13.5303L13 14.0607L14.0607 13L13.5303 12.4697L9.06065 7.99999L13.5303 3.53032L14.0607 2.99999L13 1.93933L12.4697 2.46966L7.99999 6.93933L3.53032 2.46966L2.99999 1.93933L1.93933 2.99999L2.46966 3.53032L6.93933 7.99999L2.46966 12.4697L1.93933 13L2.99999 14.0607L3.53032 13.5303L7.99999 9.06065L12.4697 13.5303Z"
-        fill="currentColor"
-      />
-    </svg>
-  );
-}
-
-// ============================================================================
 // Types
 // ============================================================================
 
@@ -87,7 +64,7 @@ export function Modal({
         style={{ backgroundColor: "var(--ds-background-100)", opacity: 0.8 }}
       />
 
-      {/* Content card */}
+      {/* Modal wrapper */}
       <div
         role="dialog"
         aria-modal="true"
@@ -97,7 +74,6 @@ export function Modal({
           flexDirection: "column",
           maxWidth: 540,
           maxHeight: "min(800px, 80vh)",
-          padding: 24,
           borderRadius: 12,
           background: "var(--ds-background-100)",
           boxShadow: "var(--ds-shadow-modal)",
@@ -106,39 +82,36 @@ export function Modal({
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        {title && (
-          <div className="flex items-center justify-between mb-4">
-            <h3
-              className="text-heading-16"
-              style={{ color: "var(--ds-gray-1000)", margin: 0 }}
-            >
-              {title}
-            </h3>
-            <button
-              type="button"
-              onClick={onClose}
-              aria-label="Close modal"
-              className="flex items-center justify-center border-none bg-transparent p-0 cursor-pointer"
-              style={{ color: "var(--ds-gray-900)" }}
-            >
-              <XIcon />
-            </button>
-          </div>
-        )}
+        {/* Modal body */}
+        <div
+          style={{
+            padding: 24,
+            overflowX: "hidden",
+            overflowY: "auto",
+            position: "relative",
+            borderTopLeftRadius: 12,
+            borderTopRightRadius: 12,
+          }}
+        >
+          {title && (
+            <header style={{ marginBottom: 24, zIndex: 10 }}>
+              <h3
+                style={{
+                  color: "var(--ds-gray-1000)",
+                  fontSize: 24,
+                  fontWeight: 600,
+                  lineHeight: "32px",
+                  letterSpacing: "-0.029375rem",
+                  margin: 0,
+                }}
+              >
+                {title}
+              </h3>
+            </header>
+          )}
 
-        {!title && (
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label="Close modal"
-            className="absolute top-4 right-4 flex items-center justify-center border-none bg-transparent p-0 cursor-pointer"
-            style={{ color: "var(--ds-gray-900)" }}
-          >
-            <XIcon />
-          </button>
-        )}
-
-        {children}
+          {children}
+        </div>
       </div>
     </div>,
     document.body,
