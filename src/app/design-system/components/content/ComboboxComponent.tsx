@@ -463,21 +463,28 @@ export function ModalExample() {
       <Button size="small" onClick={() => setOpen(true)}>
         Open Modal
       </Button>
-      <Modal open={open} onClose={() => setOpen(false)} title="Create Token">
-        <p style={{
-          color: "var(--ds-gray-1000)",
-          fontSize: 16,
-          lineHeight: "24px",
-          margin: 0,
-        }}>
-          Enter a unique name for your token to differentiate it from other tokens
-          and then select the scope.
-        </p>
+      <Modal
+        open={open}
+        onClose={() => setOpen(false)}
+        title="Create Token"
+        subtitle="Enter a unique name for your token to differentiate it from other tokens and then select the scope."
+        footer={
+          <footer style={{
+            display: "flex",
+            justifyContent: "space-between",
+            flexShrink: 0,
+            padding: 16,
+          }}>
+            <Button variant="secondary" onClick={() => setOpen(false)}>Cancel</Button>
+            <Button onClick={() => setOpen(false)}>Submit</Button>
+          </footer>
+        }
+      >
         {/* Inset section */}
         <div style={{
           background: "var(--ds-gray-100)",
           borderTop: "1px solid var(--ds-gray-alpha-400)",
-          margin: "24px -24px -24px",
+          margin: "0 -24px -24px",
           padding: 24,
         }}>
           <Combobox
@@ -491,17 +498,6 @@ export function ModalExample() {
             This is the region where your database reads and writes will take place.
           </p>
         </div>
-        {/* Footer */}
-        <footer style={{
-          display: "flex",
-          justifyContent: "space-between",
-          flexShrink: 0,
-          margin: "0 -24px -24px",
-          padding: 16,
-        }}>
-          <Button variant="secondary" onClick={() => setOpen(false)}>Cancel</Button>
-          <Button onClick={() => setOpen(false)}>Submit</Button>
-        </footer>
       </Modal>
     </>
   );
@@ -536,24 +532,29 @@ function ModalDemo() {
         open={open}
         onClose={() => setOpen(false)}
         title="Create Token"
+        subtitle="Enter a unique name for your token to differentiate it from other tokens and then select the scope."
+        footer={
+          <footer
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              flexShrink: 0,
+              padding: 16,
+            }}
+          >
+            <Button variant="secondary" onClick={() => setOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={() => setOpen(false)}>Submit</Button>
+          </footer>
+        }
       >
-        <p
-          style={{
-            color: "var(--ds-gray-1000)",
-            fontSize: 16,
-            lineHeight: "24px",
-            margin: 0,
-          }}
-        >
-          Enter a unique name for your token to differentiate it from other
-          tokens and then select the scope.
-        </p>
         {/* Inset section */}
         <div
           style={{
             background: "var(--ds-gray-100)",
             borderTop: "1px solid var(--ds-gray-alpha-400)",
-            margin: "24px -24px -24px",
+            margin: "0 -24px -24px",
             padding: 24,
           }}
         >
@@ -571,21 +572,6 @@ function ModalDemo() {
             place.
           </p>
         </div>
-        {/* Footer actions */}
-        <footer
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            flexShrink: 0,
-            margin: "0 -24px -24px",
-            padding: 16,
-          }}
-        >
-          <Button variant="secondary" onClick={() => setOpen(false)}>
-            Cancel
-          </Button>
-          <Button onClick={() => setOpen(false)}>Submit</Button>
-        </footer>
       </Modal>
     </>
   );

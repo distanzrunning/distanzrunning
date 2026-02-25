@@ -12,10 +12,14 @@ export interface ModalProps {
   open: boolean;
   /** Called when the modal should close */
   onClose: () => void;
-  /** Modal content */
+  /** Modal body content */
   children: ReactNode;
   /** Optional title shown in the modal header */
   title?: string;
+  /** Optional subtitle shown below the title in the header */
+  subtitle?: string;
+  /** Optional footer rendered outside the scrollable body */
+  footer?: ReactNode;
   /** Additional CSS classes for the content card */
   className?: string;
 }
@@ -29,6 +33,8 @@ export function Modal({
   onClose,
   children,
   title,
+  subtitle,
+  footer,
   className = "",
 }: ModalProps) {
   // Body scroll lock
@@ -89,29 +95,45 @@ export function Modal({
             overflowX: "hidden",
             overflowY: "auto",
             position: "relative",
-            borderTopLeftRadius: 12,
-            borderTopRightRadius: 12,
           }}
         >
-          {title && (
-            <header style={{ marginBottom: 24, zIndex: 10 }}>
-              <h3
-                style={{
-                  color: "var(--ds-gray-1000)",
-                  fontSize: 24,
-                  fontWeight: 600,
-                  lineHeight: "32px",
-                  letterSpacing: "-0.029375rem",
-                  margin: 0,
-                }}
-              >
-                {title}
-              </h3>
+          {(title || subtitle) && (
+            <header style={{ marginBottom: 24 }}>
+              {title && (
+                <h3
+                  style={{
+                    color: "var(--ds-gray-1000)",
+                    fontSize: 24,
+                    fontWeight: 600,
+                    lineHeight: "32px",
+                    letterSpacing: "-0.029375rem",
+                    margin: 0,
+                  }}
+                >
+                  {title}
+                </h3>
+              )}
+              {subtitle && (
+                <div
+                  style={{
+                    color: "var(--ds-gray-1000)",
+                    fontSize: 16,
+                    lineHeight: "24px",
+                    fontWeight: 400,
+                    marginTop: title ? 8 : 0,
+                  }}
+                >
+                  {subtitle}
+                </div>
+              )}
             </header>
           )}
 
           {children}
         </div>
+
+        {/* Footer (outside scrollable body) */}
+        {footer}
       </div>
     </div>,
     document.body,
