@@ -674,7 +674,6 @@ export function Combobox({
                       height: 36,
                       display: "flex",
                       alignItems: "center",
-                      position: "relative",
                       padding: "0 8px",
                       cursor: "pointer",
                       borderRadius: 6,
@@ -706,8 +705,7 @@ export function Combobox({
                         style={{
                           display: "flex",
                           alignItems: "center",
-                          position: "absolute",
-                          right: 8,
+                          marginLeft: 8,
                           flexShrink: 0,
                           color: "var(--ds-gray-1000)",
                         }}
