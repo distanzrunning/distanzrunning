@@ -82,7 +82,10 @@ export function Modal({
       onClick={onClose}
     >
       {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/50" />
+      <div
+        className="absolute inset-0"
+        style={{ backgroundColor: "var(--ds-background-100)", opacity: 0.8 }}
+      />
 
       {/* Content card */}
       <div
