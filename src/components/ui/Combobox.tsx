@@ -1,6 +1,6 @@
 "use client";
 
-import {
+import React, {
   useCallback,
   useEffect,
   useId,
@@ -17,6 +17,7 @@ import * as Popover from "@radix-ui/react-popover";
 export interface ComboboxOption {
   value: string;
   label: string;
+  icon?: React.ReactNode;
 }
 
 export type ComboboxSize = "small" | "default" | "large";
@@ -687,6 +688,18 @@ export function Combobox({
                       transition: "background 100ms ease",
                     }}
                   >
+                    {option.icon && (
+                      <span
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          flexShrink: 0,
+                          marginRight: 8,
+                        }}
+                      >
+                        {option.icon}
+                      </span>
+                    )}
                     <span
                       title={option.label}
                       style={{

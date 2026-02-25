@@ -9,6 +9,7 @@ import {
   type DualThemeToken,
 } from "@/components/ui/useShikiHighlighter";
 import { Combobox } from "@/components/ui/Combobox";
+import * as flags from "country-flag-icons/react/3x2";
 import { Modal } from "@/components/ui/Modal";
 import { Button } from "@/components/ui/Button";
 
@@ -404,20 +405,21 @@ export function CustomEmptyMessageExample() {
 }`;
 
 const withLabelCode = `import { Combobox } from '@/components/ui/Combobox';
+import * as flags from 'country-flag-icons/react/3x2';
 
 export function WithLabelExample() {
   return (
     <Combobox
       label="Select your country"
       options={[
-        { value: "us", label: "United States" },
-        { value: "ca", label: "Canada" },
-        { value: "uk", label: "United Kingdom" },
-        { value: "de", label: "Germany" },
-        { value: "fr", label: "France" },
-        { value: "jp", label: "Japan" },
-        { value: "au", label: "Australia" },
-        { value: "br", label: "Brazil" },
+        { value: "us", label: "United States", icon: <flags.US className="w-5 h-3.5 rounded-sm" /> },
+        { value: "ca", label: "Canada", icon: <flags.CA className="w-5 h-3.5 rounded-sm" /> },
+        { value: "gb", label: "United Kingdom", icon: <flags.GB className="w-5 h-3.5 rounded-sm" /> },
+        { value: "de", label: "Germany", icon: <flags.DE className="w-5 h-3.5 rounded-sm" /> },
+        { value: "fr", label: "France", icon: <flags.FR className="w-5 h-3.5 rounded-sm" /> },
+        { value: "jp", label: "Japan", icon: <flags.JP className="w-5 h-3.5 rounded-sm" /> },
+        { value: "au", label: "Australia", icon: <flags.AU className="w-5 h-3.5 rounded-sm" /> },
+        { value: "br", label: "Brazil", icon: <flags.BR className="w-5 h-3.5 rounded-sm" /> },
       ]}
       placeholder="Search..."
     />
@@ -647,14 +649,14 @@ export default function ComboboxComponent() {
             <Combobox
               label="Select your country"
               options={[
-                { value: "us", label: "United States" },
-                { value: "ca", label: "Canada" },
-                { value: "uk", label: "United Kingdom" },
-                { value: "de", label: "Germany" },
-                { value: "fr", label: "France" },
-                { value: "jp", label: "Japan" },
-                { value: "au", label: "Australia" },
-                { value: "br", label: "Brazil" },
+                { value: "us", label: "United States", icon: <flags.US className="w-5 h-3.5 rounded-sm" /> },
+                { value: "ca", label: "Canada", icon: <flags.CA className="w-5 h-3.5 rounded-sm" /> },
+                { value: "gb", label: "United Kingdom", icon: <flags.GB className="w-5 h-3.5 rounded-sm" /> },
+                { value: "de", label: "Germany", icon: <flags.DE className="w-5 h-3.5 rounded-sm" /> },
+                { value: "fr", label: "France", icon: <flags.FR className="w-5 h-3.5 rounded-sm" /> },
+                { value: "jp", label: "Japan", icon: <flags.JP className="w-5 h-3.5 rounded-sm" /> },
+                { value: "au", label: "Australia", icon: <flags.AU className="w-5 h-3.5 rounded-sm" /> },
+                { value: "br", label: "Brazil", icon: <flags.BR className="w-5 h-3.5 rounded-sm" /> },
               ]}
               placeholder="Search..."
             />
