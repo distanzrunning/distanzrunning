@@ -98,7 +98,7 @@ export function Modal({
           }}
         >
           {(title || subtitle) && (
-            <header style={{ marginBottom: 24 }}>
+            <header style={{ marginBottom: 24, zIndex: 10 }}>
               {title && (
                 <h3
                   style={{
@@ -120,7 +120,7 @@ export function Modal({
                     fontSize: 16,
                     lineHeight: "24px",
                     fontWeight: 400,
-                    marginTop: title ? 8 : 0,
+                    margin: 0,
                   }}
                 >
                   {subtitle}
