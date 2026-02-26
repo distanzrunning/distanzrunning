@@ -135,7 +135,6 @@ export function Modal({
         {/* Footer (outside scrollable body) */}
         {footer && (
           <div style={{
-            background: "var(--ds-background-200)",
             borderTop: "1px solid var(--ds-gray-alpha-400)",
             flexShrink: 0,
           }}>
