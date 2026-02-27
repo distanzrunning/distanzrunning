@@ -37,6 +37,7 @@ import AvatarComponent from "../components/content/AvatarComponent";
 import BadgeComponent from "../components/content/BadgeComponent";
 import BrowserComponent from "../components/content/BrowserComponent";
 import ButtonComponentNew from "../components/content/ButtonComponentNew";
+import ModalComponent from "../components/content/ModalComponent";
 import PaginationComponent from "../components/content/PaginationComponent";
 import CalendarComponent from "../components/content/CalendarComponent";
 import Materials from "../components/content/Materials";
@@ -498,6 +499,21 @@ export default function DesignSystemPage() {
           onNavigate={handleNavigation}
         >
           <CollapseComponent />
+        </ContentWithTOC>
+      );
+    }
+
+    if (activeSlug === "modal") {
+      return (
+        <ContentWithTOC
+          tocTitle="On this page"
+          pageTitle="Modal"
+          pageSubtitle="Display popup content that requires attention or provides additional information."
+          mainSectionId="modal"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
+          <ModalComponent />
         </ContentWithTOC>
       );
     }

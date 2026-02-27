@@ -49,6 +49,7 @@ export const navigation: NavSection[] = [
       { id: "combobox", label: "Combobox" },
       { id: "code-block", label: "Code Block" },
       { id: "collapse", label: "Collapse" },
+      { id: "modal", label: "Modal" },
       { id: "pagination", label: "Pagination" },
     ],
   },

@@ -98,7 +98,16 @@ export function Modal({
           }}
         >
           {(title || subtitle) && (
-            <header style={{ marginBottom: 24, zIndex: 10 }}>
+            <header
+              style={{
+                position: "sticky",
+                top: -24,
+                margin: "-24px -24px 24px",
+                padding: "24px 24px 24px",
+                background: "var(--ds-background-100)",
+                zIndex: 10,
+              }}
+            >
               {title && (
                 <h3
                   style={{
