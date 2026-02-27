@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, type ReactNode } from "react";
+import { useEffect, useState, useRef, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 
 // ============================================================================
@@ -24,6 +24,10 @@ export interface ModalProps {
   className?: string;
 }
 
+// Geist motion values
+const DURATION = 300; // ms
+const TIMING = "cubic-bezier(0.175, 0.885, 0.32, 1.1)";
+
 // ============================================================================
 // Modal
 // ============================================================================
@@ -37,9 +41,35 @@ export function Modal({
   footer,
   className = "",
 }: ModalProps) {
+  // Animation state: mounted keeps DOM alive during exit, visible drives CSS
+  const [mounted, setMounted] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    if (open) {
+      // Mount immediately, then trigger visible on next frame for transition
+      setMounted(true);
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          setVisible(true);
+        });
+      });
+    } else {
+      // Start exit animation, unmount after duration
+      setVisible(false);
+      timeoutRef.current = setTimeout(() => {
+        setMounted(false);
+      }, DURATION);
+    }
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, [open]);
+
   // Body scroll lock (compensate for scrollbar width to prevent layout shift)
   useEffect(() => {
-    if (!open) return;
+    if (!mounted) return;
     const scrollbarWidth =
       window.innerWidth - document.documentElement.clientWidth;
     const prevOverflow = document.body.style.overflow;
@@ -52,7 +82,7 @@ export function Modal({
       document.body.style.overflow = prevOverflow;
       document.body.style.paddingRight = prevPaddingRight;
     };
-  }, [open]);
+  }, [mounted]);
 
   // Escape key
   useEffect(() => {
@@ -64,7 +94,7 @@ export function Modal({
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [open, onClose]);
 
-  if (!open || typeof document === "undefined") return null;
+  if (!mounted || typeof document === "undefined") return null;
 
   return createPortal(
     <>
@@ -77,9 +107,10 @@ export function Modal({
           width: "100%",
           height: "100%",
           backgroundColor: "var(--ds-overlay-backdrop-color)",
-          opacity: "var(--ds-overlay-backdrop-opacity)" as unknown as number,
+          opacity: visible ? "var(--ds-overlay-backdrop-opacity)" : (0 as never),
           zIndex: 50,
-          pointerEvents: "all",
+          pointerEvents: visible ? "all" : "none",
+          transition: `opacity ${DURATION}ms ${TIMING}`,
         }}
         onClick={onClose}
       />
@@ -101,80 +132,83 @@ export function Modal({
           pointerEvents: "none",
         }}
       >
-      {/* Modal wrapper */}
-      <div
-        role="dialog"
-        aria-modal="true"
-        className={`relative w-full mx-4 ${className}`}
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          maxWidth: 540,
-          maxHeight: "min(800px, 80vh)",
-          borderRadius: 12,
-          background: "var(--ds-background-100)",
-          boxShadow: "var(--ds-shadow-modal)",
-          color: "var(--ds-gray-1000)",
-          overflow: "hidden",
-          pointerEvents: "all",
-        }}
-      >
-        {/* Modal body */}
+        {/* Modal wrapper */}
         <div
+          role="dialog"
+          aria-modal="true"
+          className={`relative w-full mx-4 ${className}`}
           style={{
-            padding: 24,
-            overflowX: "hidden",
-            overflowY: "auto",
-            position: "relative",
+            display: "flex",
+            flexDirection: "column",
+            maxWidth: 540,
+            maxHeight: "min(800px, 80vh)",
+            borderRadius: 12,
+            background: "var(--ds-background-100)",
+            boxShadow: "var(--ds-shadow-modal)",
+            color: "var(--ds-gray-1000)",
+            overflow: "hidden",
+            pointerEvents: "all",
+            opacity: visible ? 1 : 0,
+            transform: visible ? "scale(1)" : "scale(0.98)",
+            transition: `opacity ${DURATION}ms ${TIMING}, transform ${DURATION}ms ${TIMING}`,
           }}
         >
-          {(title || subtitle) && (
-            <header style={{ marginBottom: 24, zIndex: 10 }}>
-              {title && (
-                <h3
-                  style={{
-                    color: "var(--ds-gray-1000)",
-                    fontSize: 24,
-                    fontWeight: 600,
-                    lineHeight: "32px",
-                    letterSpacing: "-0.029375rem",
-                    margin: 0,
-                  }}
-                >
-                  {title}
-                </h3>
-              )}
-              {subtitle && (
-                <div
-                  style={{
-                    color: "var(--ds-gray-1000)",
-                    fontSize: 16,
-                    lineHeight: "24px",
-                    fontWeight: 400,
-                    margin: 0,
-                  }}
-                >
-                  {subtitle}
-                </div>
-              )}
-            </header>
-          )}
-
-          {children}
-        </div>
-
-        {/* Footer (outside scrollable body) */}
-        {footer && (
+          {/* Modal body */}
           <div
             style={{
-              borderTop: "1px solid var(--ds-gray-alpha-400)",
-              background: "var(--ds-background-200)",
+              padding: 24,
+              overflowX: "hidden",
+              overflowY: "auto",
+              position: "relative",
             }}
           >
-            {footer}
+            {(title || subtitle) && (
+              <header style={{ marginBottom: 24, zIndex: 10 }}>
+                {title && (
+                  <h3
+                    style={{
+                      color: "var(--ds-gray-1000)",
+                      fontSize: 24,
+                      fontWeight: 600,
+                      lineHeight: "32px",
+                      letterSpacing: "-0.029375rem",
+                      margin: 0,
+                    }}
+                  >
+                    {title}
+                  </h3>
+                )}
+                {subtitle && (
+                  <div
+                    style={{
+                      color: "var(--ds-gray-1000)",
+                      fontSize: 16,
+                      lineHeight: "24px",
+                      fontWeight: 400,
+                      margin: 0,
+                    }}
+                  >
+                    {subtitle}
+                  </div>
+                )}
+              </header>
+            )}
+
+            {children}
           </div>
-        )}
-      </div>
+
+          {/* Footer (outside scrollable body) */}
+          {footer && (
+            <div
+              style={{
+                borderTop: "1px solid var(--ds-gray-alpha-400)",
+                background: "var(--ds-background-200)",
+              }}
+            >
+              {footer}
+            </div>
+          )}
+        </div>
       </div>
     </>,
     document.body,
