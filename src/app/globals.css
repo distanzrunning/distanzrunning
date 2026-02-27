@@ -528,7 +528,7 @@
       0px 24px 32px -8px rgba(0, 0, 0, 0.06);
 
     /* Overlay / Backdrop */
-    --ds-overlay-backdrop-color: rgb(23, 23, 23);
+    --ds-overlay-backdrop-color: rgb(250, 250, 250);
     --ds-overlay-backdrop-opacity: 0.8;
 
     /* Focus ring outer glow */
