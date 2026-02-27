@@ -527,6 +527,10 @@
       0px 8px 16px -4px rgba(0, 0, 0, 0.04),
       0px 24px 32px -8px rgba(0, 0, 0, 0.06);
 
+    /* Overlay / Backdrop */
+    --ds-overlay-backdrop-color: rgb(23, 23, 23);
+    --ds-overlay-backdrop-opacity: 0.8;
+
     /* Focus ring outer glow */
     --ds-focus-ring: #00000029;
 
@@ -989,6 +993,10 @@
       0 0 0 1px rgba(255, 255, 255, 0.1), 0px 1px 1px rgba(0, 0, 0, 0.1),
       0px 8px 16px -4px rgba(0, 0, 0, 0.2),
       0px 24px 32px -8px rgba(0, 0, 0, 0.3);
+
+    /* Overlay / Backdrop */
+    --ds-overlay-backdrop-color: rgb(0, 0, 0);
+    --ds-overlay-backdrop-opacity: 0.8;
 
     /* Focus ring outer glow */
     --ds-focus-ring: #ffffff3d;

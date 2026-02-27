@@ -37,13 +37,20 @@ export function Modal({
   footer,
   className = "",
 }: ModalProps) {
-  // Body scroll lock
+  // Body scroll lock (compensate for scrollbar width to prevent layout shift)
   useEffect(() => {
     if (!open) return;
-    const prev = document.body.style.overflow;
+    const scrollbarWidth =
+      window.innerWidth - document.documentElement.clientWidth;
+    const prevOverflow = document.body.style.overflow;
+    const prevPaddingRight = document.body.style.paddingRight;
     document.body.style.overflow = "hidden";
+    if (scrollbarWidth > 0) {
+      document.body.style.paddingRight = `${scrollbarWidth}px`;
+    }
     return () => {
-      document.body.style.overflow = prev;
+      document.body.style.overflow = prevOverflow;
+      document.body.style.paddingRight = prevPaddingRight;
     };
   }, [open]);
 
@@ -60,16 +67,40 @@ export function Modal({
   if (!open || typeof document === "undefined") return null;
 
   return createPortal(
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center"
-      onClick={onClose}
-    >
+    <>
       {/* Backdrop */}
       <div
-        className="absolute inset-0"
-        style={{ backgroundColor: "var(--ds-background-100)", opacity: 0.8 }}
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          backgroundColor: "var(--ds-overlay-backdrop-color)",
+          opacity: "var(--ds-overlay-backdrop-opacity)" as unknown as number,
+          zIndex: 50,
+          pointerEvents: "all",
+        }}
+        onClick={onClose}
       />
 
+      {/* Overlay container */}
+      <div
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100vw",
+          height: "100vh",
+          zIndex: 50,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          overflow: "auto",
+          pointerEvents: "none",
+        }}
+      >
       {/* Modal wrapper */}
       <div
         role="dialog"
@@ -85,8 +116,8 @@ export function Modal({
           boxShadow: "var(--ds-shadow-modal)",
           color: "var(--ds-gray-1000)",
           overflow: "hidden",
+          pointerEvents: "all",
         }}
-        onClick={(e) => e.stopPropagation()}
       >
         {/* Modal body */}
         <div
@@ -144,7 +175,8 @@ export function Modal({
           </div>
         )}
       </div>
-    </div>,
+      </div>
+    </>,
     document.body,
   );
 }
