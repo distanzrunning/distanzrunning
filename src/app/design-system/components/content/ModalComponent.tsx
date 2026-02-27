@@ -443,8 +443,8 @@ export function DisabledActionsExample() {
       <Modal
         open={open}
         onClose={() => setOpen(false)}
-        title="Delete Project"
-        subtitle="This action cannot be undone. Please type the project name to confirm."
+        title="Modal"
+        subtitle="This is a modal."
         footer={
           <footer style={{
             display: "flex",
@@ -455,12 +455,12 @@ export function DisabledActionsExample() {
             bottom: 0,
           }}>
             <Button variant="secondary" onClick={() => setOpen(false)}>Cancel</Button>
-            <Button disabled>Delete</Button>
+            <Button disabled>Submit</Button>
           </footer>
         }
       >
-        <p className="text-copy-14" style={{ color: "var(--ds-gray-900)", margin: 0 }}>
-          Type the project name to enable the delete button.
+        <p className="text-copy-14">
+          Some content contained within the modal.
         </p>
       </Modal>
     </>
@@ -668,8 +668,8 @@ function DisabledActionsDemo() {
       <Modal
         open={open}
         onClose={() => setOpen(false)}
-        title="Delete Project"
-        subtitle="This action cannot be undone. Please type the project name to confirm."
+        title="Modal"
+        subtitle="This is a modal."
         footer={
           <footer
             style={{
@@ -684,15 +684,12 @@ function DisabledActionsDemo() {
             <Button variant="secondary" onClick={() => setOpen(false)}>
               Cancel
             </Button>
-            <Button disabled>Delete</Button>
+            <Button disabled>Submit</Button>
           </footer>
         }
       >
-        <p
-          className="text-copy-14"
-          style={{ color: "var(--ds-gray-900)", margin: 0 }}
-        >
-          Type the project name to enable the delete button.
+        <p className="text-copy-14">
+          Some content contained within the modal.
         </p>
       </Modal>
     </>
