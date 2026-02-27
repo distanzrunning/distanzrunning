@@ -406,23 +406,22 @@ export function SingleButtonExample() {
       <Modal
         open={open}
         onClose={() => setOpen(false)}
-        title="Welcome"
-        subtitle="Your account has been created successfully."
+        title="Create Token"
+        stickyHeader
         footer={
           <footer style={{
             display: "flex",
-            justifyContent: "flex-end",
             flexShrink: 0,
             padding: 16,
             position: "sticky",
             bottom: 0,
           }}>
-            <Button onClick={() => setOpen(false)}>Done</Button>
+            <Button variant="secondary" style={{ width: "100%" }} onClick={() => setOpen(false)}>Cancel</Button>
           </footer>
         }
       >
-        <p className="text-copy-14" style={{ color: "var(--ds-gray-900)", margin: 0 }}>
-          You can now start using all features of the platform.
+        <p className="text-copy-14">
+          Some content contained within the modal.
         </p>
       </Modal>
     </>
@@ -628,28 +627,30 @@ function SingleButtonDemo() {
       <Modal
         open={open}
         onClose={() => setOpen(false)}
-        title="Welcome"
-        subtitle="Your account has been created successfully."
+        title="Create Token"
+        stickyHeader
         footer={
           <footer
             style={{
               display: "flex",
-              justifyContent: "flex-end",
               flexShrink: 0,
               padding: 16,
               position: "sticky",
               bottom: 0,
             }}
           >
-            <Button onClick={() => setOpen(false)}>Done</Button>
+            <Button
+              variant="secondary"
+              style={{ width: "100%" }}
+              onClick={() => setOpen(false)}
+            >
+              Cancel
+            </Button>
           </footer>
         }
       >
-        <p
-          className="text-copy-14"
-          style={{ color: "var(--ds-gray-900)", margin: 0 }}
-        >
-          You can now start using all features of the platform.
+        <p className="text-copy-14">
+          Some content contained within the modal.
         </p>
       </Modal>
     </>
