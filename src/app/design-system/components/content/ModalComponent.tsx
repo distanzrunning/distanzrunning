@@ -365,7 +365,7 @@ export function StickyExample() {
         open={open}
         onClose={() => setOpen(false)}
         title="Terms of Service"
-        subtitle="Please read the following terms carefully."
+        stickyHeader
         footer={
           <footer style={{
             display: "flex",
@@ -582,7 +582,7 @@ function StickyDemo() {
         open={open}
         onClose={() => setOpen(false)}
         title="Terms of Service"
-        subtitle="Please read the following terms carefully."
+        stickyHeader
         footer={
           <footer
             style={{
@@ -912,6 +912,16 @@ export default function ModalComponent() {
                 <td className="py-3 px-4 text-textSubtle">-</td>
                 <td className="py-3 px-4 text-textSubtle">
                   Footer content rendered outside the scrollable body area
+                </td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 font-mono">stickyHeader</td>
+                <td className="py-3 px-4 font-mono text-textSubtle">
+                  boolean
+                </td>
+                <td className="py-3 px-4 text-textSubtle">false</td>
+                <td className="py-3 px-4 text-textSubtle">
+                  Enable sticky header that stays visible when body scrolls
                 </td>
               </tr>
               <tr className="border-b border-borderSubtle">

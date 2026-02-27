@@ -20,6 +20,8 @@ export interface ModalProps {
   subtitle?: string;
   /** Optional footer rendered outside the scrollable body */
   footer?: ReactNode;
+  /** Enable sticky header that stays visible when body scrolls */
+  stickyHeader?: boolean;
   /** Additional CSS classes for the content card */
   className?: string;
 }
@@ -39,6 +41,7 @@ export function Modal({
   title,
   subtitle,
   footer,
+  stickyHeader = false,
   className = "",
 }: ModalProps) {
   // Animation state: mounted keeps DOM alive during exit, visible drives CSS
@@ -156,22 +159,42 @@ export function Modal({
           {/* Modal body */}
           <div
             style={{
-              padding: 24,
+              padding: stickyHeader ? "0 24px 24px" : 24,
               overflowX: "hidden",
               overflowY: "auto",
               position: "relative",
+              borderTopLeftRadius: stickyHeader ? 12 : undefined,
+              borderTopRightRadius: stickyHeader ? 12 : undefined,
             }}
           >
             {(title || subtitle) && (
-              <header style={{ marginBottom: 24, zIndex: 10 }}>
+              <header
+                style={
+                  stickyHeader
+                    ? {
+                        position: "sticky",
+                        top: 0,
+                        zIndex: 10,
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 10,
+                        margin: "0 -24px 24px",
+                        padding: "20px 24px",
+                        background: "var(--ds-background-100)",
+                      }
+                    : { marginBottom: 24, zIndex: 10 }
+                }
+              >
                 {title && (
                   <h3
                     style={{
                       color: "var(--ds-gray-1000)",
-                      fontSize: 24,
+                      fontSize: stickyHeader ? 20 : 24,
                       fontWeight: 600,
-                      lineHeight: "32px",
-                      letterSpacing: "-0.029375rem",
+                      lineHeight: stickyHeader ? "24px" : "32px",
+                      letterSpacing: stickyHeader
+                        ? "-0.47px"
+                        : "-0.029375rem",
                       margin: 0,
                     }}
                   >
