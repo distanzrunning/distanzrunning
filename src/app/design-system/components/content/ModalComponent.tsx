@@ -338,16 +338,9 @@ export function DefaultExample() {
           </footer>
         }
       >
-        <div style={{
-          background: "var(--ds-background-200)",
-          borderTop: "1px solid var(--ds-gray-alpha-400)",
-          margin: "0 -24px -24px",
-          padding: 24,
-        }}>
-          <p className="text-copy-14" style={{ color: "var(--ds-gray-900)", margin: 0 }}>
-            Token content goes here.
-          </p>
-        </div>
+        <p className="text-copy-14">
+          Some content contained within the modal.
+        </p>
       </Modal>
     </>
   );
@@ -540,21 +533,9 @@ function DefaultDemo() {
           </footer>
         }
       >
-        <div
-          style={{
-            background: "var(--ds-background-200)",
-            borderTop: "1px solid var(--ds-gray-alpha-400)",
-            margin: "0 -24px -24px",
-            padding: 24,
-          }}
-        >
-          <p
-            className="text-copy-14"
-            style={{ color: "var(--ds-gray-900)", margin: 0 }}
-          >
-            Token content goes here.
-          </p>
-        </div>
+        <p className="text-copy-14">
+          Some content contained within the modal.
+        </p>
       </Modal>
     </>
   );
