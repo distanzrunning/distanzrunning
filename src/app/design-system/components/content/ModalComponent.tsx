@@ -482,8 +482,8 @@ export function InsetExample() {
       <Modal
         open={open}
         onClose={() => setOpen(false)}
-        title="Environment Variables"
-        subtitle="Add environment variables to your project."
+        title="Modal"
+        subtitle="This is a modal."
         footer={
           <footer style={{
             display: "flex",
@@ -494,21 +494,22 @@ export function InsetExample() {
             bottom: 0,
           }}>
             <Button variant="secondary" onClick={() => setOpen(false)}>Cancel</Button>
-            <Button onClick={() => setOpen(false)}>Save</Button>
+            <Button onClick={() => setOpen(false)}>Submit</Button>
           </footer>
         }
       >
-        {/* Inset section with contrasting background */}
+        {/* Inset section */}
         <div style={{
           background: "var(--ds-background-200)",
           borderTop: "1px solid var(--ds-gray-alpha-400)",
-          margin: "0 -24px -24px",
+          borderBottom: "1px solid var(--ds-gray-alpha-400)",
+          margin: "0 -24px",
           padding: 24,
         }}>
-          <p className="text-copy-14" style={{ color: "var(--ds-gray-900)", margin: 0 }}>
-            The inset section provides a visually distinct area within
-            the modal body, useful for forms or secondary content.
-          </p>
+          <p className="text-copy-14">Content within the inset.</p>
+        </div>
+        <div style={{ paddingTop: 24 }}>
+          <p className="text-copy-14">Content outside the inset.</p>
         </div>
       </Modal>
     </>
@@ -707,8 +708,8 @@ function InsetDemo() {
       <Modal
         open={open}
         onClose={() => setOpen(false)}
-        title="Environment Variables"
-        subtitle="Add environment variables to your project."
+        title="Modal"
+        subtitle="This is a modal."
         footer={
           <footer
             style={{
@@ -723,7 +724,7 @@ function InsetDemo() {
             <Button variant="secondary" onClick={() => setOpen(false)}>
               Cancel
             </Button>
-            <Button onClick={() => setOpen(false)}>Save</Button>
+            <Button onClick={() => setOpen(false)}>Submit</Button>
           </footer>
         }
       >
@@ -731,17 +732,15 @@ function InsetDemo() {
           style={{
             background: "var(--ds-background-200)",
             borderTop: "1px solid var(--ds-gray-alpha-400)",
-            margin: "0 -24px -24px",
+            borderBottom: "1px solid var(--ds-gray-alpha-400)",
+            margin: "0 -24px",
             padding: 24,
           }}
         >
-          <p
-            className="text-copy-14"
-            style={{ color: "var(--ds-gray-900)", margin: 0 }}
-          >
-            The inset section provides a visually distinct area within the modal
-            body, useful for forms or secondary content.
-          </p>
+          <p className="text-copy-14">Content within the inset.</p>
+        </div>
+        <div style={{ paddingTop: 24 }}>
+          <p className="text-copy-14">Content outside the inset.</p>
         </div>
       </Modal>
     </>
