@@ -498,17 +498,10 @@ export function InsetExample() {
           </footer>
         }
       >
-        {/* Inset section */}
-        <div style={{
-          background: "var(--ds-background-200)",
-          borderTop: "1px solid var(--ds-gray-alpha-400)",
-          borderBottom: "1px solid var(--ds-gray-alpha-400)",
-          margin: "0 -24px",
-          padding: 24,
-        }}>
+        <Modal.Inset>
           <p className="text-copy-14">Content within the inset.</p>
-        </div>
-        <div style={{ paddingTop: 24 }}>
+        </Modal.Inset>
+        <div className="pt-6">
           <p className="text-copy-14">Content outside the inset.</p>
         </div>
       </Modal>
@@ -728,18 +721,10 @@ function InsetDemo() {
           </footer>
         }
       >
-        <div
-          style={{
-            background: "var(--ds-background-200)",
-            borderTop: "1px solid var(--ds-gray-alpha-400)",
-            borderBottom: "1px solid var(--ds-gray-alpha-400)",
-            margin: "0 -24px",
-            padding: 24,
-          }}
-        >
+        <Modal.Inset>
           <p className="text-copy-14">Content within the inset.</p>
-        </div>
-        <div style={{ paddingTop: 24 }}>
+        </Modal.Inset>
+        <div className="pt-6">
           <p className="text-copy-14">Content outside the inset.</p>
         </div>
       </Modal>
@@ -929,6 +914,17 @@ export default function ModalComponent() {
                 <td className="py-3 px-4 text-textSubtle">{`""`}</td>
                 <td className="py-3 px-4 text-textSubtle">
                   Additional CSS classes for the modal dialog element
+                </td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 font-mono">Modal.Inset</td>
+                <td className="py-3 px-4 font-mono text-textSubtle">
+                  Component
+                </td>
+                <td className="py-3 px-4 text-textSubtle">-</td>
+                <td className="py-3 px-4 text-textSubtle">
+                  Full-width inset section with contrasting background and
+                  borders
                 </td>
               </tr>
             </tbody>

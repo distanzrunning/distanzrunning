@@ -34,6 +34,22 @@ const TIMING = "cubic-bezier(0.175, 0.885, 0.32, 1.1)";
 // Modal
 // ============================================================================
 
+function ModalInset({ children }: { children: ReactNode }) {
+  return (
+    <div
+      style={{
+        background: "var(--ds-background-200)",
+        borderTop: "1px solid var(--ds-gray-alpha-400)",
+        borderBottom: "1px solid var(--ds-gray-alpha-400)",
+        margin: "0 -24px",
+        padding: 24,
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
 export function Modal({
   open,
   onClose,
@@ -238,3 +254,5 @@ export function Modal({
     document.body,
   );
 }
+
+Modal.Inset = ModalInset;
