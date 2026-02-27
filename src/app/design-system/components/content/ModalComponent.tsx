@@ -331,7 +331,10 @@ export function DefaultExample() {
           <footer style={{
             display: "flex",
             justifyContent: "space-between",
+            flexShrink: 0,
             padding: 16,
+            position: "sticky",
+            bottom: 0,
           }}>
             <Button variant="secondary" onClick={() => setOpen(false)}>Cancel</Button>
             <Button onClick={() => setOpen(false)}>Submit</Button>
@@ -367,7 +370,10 @@ export function StickyExample() {
           <footer style={{
             display: "flex",
             justifyContent: "space-between",
+            flexShrink: 0,
             padding: 16,
+            position: "sticky",
+            bottom: 0,
           }}>
             <Button variant="secondary" onClick={() => setOpen(false)}>Decline</Button>
             <Button onClick={() => setOpen(false)}>Accept</Button>
@@ -406,7 +412,10 @@ export function SingleButtonExample() {
           <footer style={{
             display: "flex",
             justifyContent: "flex-end",
+            flexShrink: 0,
             padding: 16,
+            position: "sticky",
+            bottom: 0,
           }}>
             <Button onClick={() => setOpen(false)}>Done</Button>
           </footer>
@@ -441,7 +450,10 @@ export function DisabledActionsExample() {
           <footer style={{
             display: "flex",
             justifyContent: "space-between",
+            flexShrink: 0,
             padding: 16,
+            position: "sticky",
+            bottom: 0,
           }}>
             <Button variant="secondary" onClick={() => setOpen(false)}>Cancel</Button>
             <Button disabled>Delete</Button>
@@ -477,7 +489,10 @@ export function InsetExample() {
           <footer style={{
             display: "flex",
             justifyContent: "space-between",
+            flexShrink: 0,
             padding: 16,
+            position: "sticky",
+            bottom: 0,
           }}>
             <Button variant="secondary" onClick={() => setOpen(false)}>Cancel</Button>
             <Button onClick={() => setOpen(false)}>Save</Button>
@@ -523,7 +538,10 @@ function DefaultDemo() {
             style={{
               display: "flex",
               justifyContent: "space-between",
+              flexShrink: 0,
               padding: 16,
+              position: "sticky",
+              bottom: 0,
             }}
           >
             <Button variant="secondary" onClick={() => setOpen(false)}>
@@ -570,7 +588,10 @@ function StickyDemo() {
             style={{
               display: "flex",
               justifyContent: "space-between",
+              flexShrink: 0,
               padding: 16,
+              position: "sticky",
+              bottom: 0,
             }}
           >
             <Button variant="secondary" onClick={() => setOpen(false)}>
@@ -614,7 +635,10 @@ function SingleButtonDemo() {
             style={{
               display: "flex",
               justifyContent: "flex-end",
+              flexShrink: 0,
               padding: 16,
+              position: "sticky",
+              bottom: 0,
             }}
           >
             <Button onClick={() => setOpen(false)}>Done</Button>
@@ -650,7 +674,10 @@ function DisabledActionsDemo() {
             style={{
               display: "flex",
               justifyContent: "space-between",
+              flexShrink: 0,
               padding: 16,
+              position: "sticky",
+              bottom: 0,
             }}
           >
             <Button variant="secondary" onClick={() => setOpen(false)}>
@@ -689,7 +716,10 @@ function InsetDemo() {
             style={{
               display: "flex",
               justifyContent: "space-between",
+              flexShrink: 0,
               padding: 16,
+              position: "sticky",
+              bottom: 0,
             }}
           >
             <Button variant="secondary" onClick={() => setOpen(false)}>

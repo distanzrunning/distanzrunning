@@ -472,6 +472,8 @@ export function ModalExample() {
           <footer style={{
             display: "flex",
             justifyContent: "space-between",
+            position: "sticky",
+            bottom: 0,
             flexShrink: 0,
             padding: 16,
           }}>
@@ -538,6 +540,8 @@ function ModalDemo() {
             style={{
               display: "flex",
               justifyContent: "space-between",
+              position: "sticky",
+              bottom: 0,
               flexShrink: 0,
               padding: 16,
             }}

@@ -98,16 +98,7 @@ export function Modal({
           }}
         >
           {(title || subtitle) && (
-            <header
-              style={{
-                position: "sticky",
-                top: -24,
-                margin: "-24px -24px 24px",
-                padding: "24px 24px 24px",
-                background: "var(--ds-background-100)",
-                zIndex: 10,
-              }}
-            >
+            <header style={{ marginBottom: 24, zIndex: 10 }}>
               {title && (
                 <h3
                   style={{
@@ -142,14 +133,7 @@ export function Modal({
         </div>
 
         {/* Footer (outside scrollable body) */}
-        {footer && (
-          <div style={{
-            borderTop: "1px solid var(--ds-gray-alpha-400)",
-            flexShrink: 0,
-          }}>
-            {footer}
-          </div>
-        )}
+        {footer}
       </div>
     </div>,
     document.body,
