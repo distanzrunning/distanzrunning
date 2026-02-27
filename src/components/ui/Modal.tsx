@@ -181,6 +181,7 @@ export function Modal({
                         margin: "0 -24px 24px",
                         padding: "20px 24px",
                         background: "var(--ds-background-100)",
+                        borderBottom: "1px solid var(--ds-gray-alpha-400)",
                       }
                     : { marginBottom: 24, zIndex: 10 }
                 }
