@@ -180,7 +180,7 @@ export function Modal({
                         gap: 10,
                         margin: "0 -24px 24px",
                         padding: "20px 24px",
-                        background: "var(--ds-background-100)",
+                        background: "var(--ds-background-200)",
                         borderBottom: "1px solid var(--ds-gray-alpha-400)",
                       }
                     : { marginBottom: 24, zIndex: 10 }
