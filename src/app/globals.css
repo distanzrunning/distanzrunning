@@ -95,6 +95,8 @@
 
 @layer base {
   :root {
+    color-scheme: light;
+
     /* Distanz Typography System
        Body/UI: Inter Variable (complete weight spectrum)
        Headings: EB Garamond (serif)
@@ -678,6 +680,8 @@
      Geist dark mode uses completely different color values, not just inverted
      ═══════════════════════════════════════════════════════════════════════ */
   .dark {
+    color-scheme: dark;
+
     /* ─────────────────────────────────────────────────────────────────────────
        DARK MODE COLOR SCALES - Geist exact values
        In dark mode, the entire scale shifts to work on dark backgrounds
