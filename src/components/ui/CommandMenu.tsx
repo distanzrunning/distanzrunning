@@ -93,6 +93,10 @@ const CMDK_CSS = `
     font-family: inherit;
   }
 
+  .ds-cmdk-content [cmdk-input]::placeholder {
+    color: var(--ds-gray-700);
+  }
+
   .ds-cmdk-content [cmdk-list] {
     overflow-y: auto;
     padding: 8px;
@@ -133,6 +137,19 @@ const CMDK_CSS = `
   .ds-cmdk-content [cmdk-item][data-disabled="true"] {
     color: var(--ds-gray-600);
     cursor: default;
+  }
+
+  .ds-cmdk-esc-button {
+    display: none;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .ds-cmdk-esc-button {
+      display: flex;
+    }
+    .ds-cmdk-esc-button:hover {
+      background: var(--ds-gray-100);
+    }
   }
 `;
 
@@ -231,9 +248,9 @@ export function CommandMenu({
             <Command.Input placeholder={placeholder} />
             <button
               type="button"
+              className="ds-cmdk-esc-button"
               onClick={onClose}
               style={{
-                display: "flex",
                 alignItems: "center",
                 padding: "0 4px",
                 height: 20,
