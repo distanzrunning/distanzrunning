@@ -327,44 +327,14 @@ function TriggerBox() {
 }
 
 // ============================================================================
-// Demo Icons (simple SVG icons for prefix demos)
+// Demo Icons
 // ============================================================================
 
-function ArrowLeftIcon() {
+function VercelCircleIcon() {
   return (
     <svg height="16" viewBox="0 0 16 16" width="16" style={{ color: "currentcolor" }}>
-      <path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        d="M6.46966 13.5303L6.99999 14.0607L8.06065 13L7.53032 12.4697L3.81065 8.74999H14.25H15V7.24999H14.25H3.81065L7.53032 3.53032L8.06065 2.99999L6.99999 1.93933L6.46966 2.46966L1.46966 7.46966C1.17677 7.76255 1.17677 8.23743 1.46966 8.53032L6.46966 13.5303Z"
-        fill="currentColor"
-      />
-    </svg>
-  );
-}
-
-function ArrowRightIcon() {
-  return (
-    <svg height="16" viewBox="0 0 16 16" width="16" style={{ color: "currentcolor" }}>
-      <path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        d="M9.53034 2.46966L9.00001 1.93933L7.93935 2.99999L8.46968 3.53032L12.1893 7.24999H1.75001H1.00001V8.74999H1.75001H12.1893L8.46968 12.4697L7.93935 13L9.00001 14.0607L9.53034 13.5303L14.5303 8.53032C14.8232 8.23743 14.8232 7.76255 14.5303 7.46966L9.53034 2.46966Z"
-        fill="currentColor"
-      />
-    </svg>
-  );
-}
-
-function RefreshIcon() {
-  return (
-    <svg height="16" viewBox="0 0 16 16" width="16" style={{ color: "currentcolor" }}>
-      <path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        d="M6.34315 2.34315C7.79049 0.895811 10.1095 0.895811 11.5569 2.34315L11.8994 2.68566L12.7929 3.57907L13.5 4.28613V2.50003V1.75003H15V2.50003V6.25003V7.00003H14.25H10.5H9.75V5.50003H10.5H12.2322L11.3358 4.60363L10.9933 4.26112C10.1323 3.40013 8.76777 3.40013 7.90678 4.26112C7.04578 5.12211 7.04578 6.48666 7.90678 7.34766L8.60388 8.04476L7.54322 9.10542L6.84612 8.40832C5.39878 6.96098 5.39878 4.64199 6.34315 2.34315ZM9.65685 13.6569C8.20951 15.1042 5.89052 15.1042 4.44318 13.6569L4.10066 13.3143L3.20712 12.4209L2.5 11.7139V13.5V14.25H1V13.5V9.75003V9.00003H1.75H5.5H6.25V10.5H5.5H3.76777L4.66421 11.3964L5.00672 11.7389C5.86772 12.5999 7.23227 12.5999 8.09326 11.7389C8.95426 10.8779 8.95426 9.51338 8.09326 8.65238L7.39616 7.95528L8.45682 6.89462L9.15392 7.59172C10.6013 9.03906 10.6013 11.358 9.65685 13.6569Z"
-        fill="currentColor"
-      />
+      <circle cx="8" cy="8" r="7.25" stroke="currentColor" strokeWidth="1.5" fill="none" />
+      <path d="M8 4.5L11.5 10.5H4.5L8 4.5Z" fill="currentColor" />
     </svg>
   );
 }
@@ -463,11 +433,11 @@ function LinkExample() {
 }`;
 
 const prefixSuffixCode = `import { ContextMenu } from '@/components/ui/ContextMenu';
+import { LogoVercelCircle } from 'geist/icons';
 
 function PrefixSuffixExample() {
   return (
     <div style={{ display: 'flex', gap: 24 }}>
-      {/* Prefix icons */}
       <ContextMenu>
         <ContextMenu.Trigger>
           <div style={{ /* trigger styles */ }}>
@@ -475,28 +445,20 @@ function PrefixSuffixExample() {
           </div>
         </ContextMenu.Trigger>
         <ContextMenu.Content>
-          <ContextMenu.Item
-            prefix={<ArrowLeftIcon />}
-            onSelect={() => {}}
-          >
-            Back
+          <ContextMenu.Item href="/" prefix={<LogoVercelCircle />} value="hello">
+            Item one
           </ContextMenu.Item>
-          <ContextMenu.Item
-            prefix={<ArrowRightIcon />}
-            onSelect={() => {}}
-          >
-            Forward
+          <ContextMenu.Item href="/" prefix={<LogoVercelCircle />} value="hello">
+            Item Two
           </ContextMenu.Item>
-          <ContextMenu.Item
-            prefix={<RefreshIcon />}
-            onSelect={() => {}}
-          >
-            Reload
+          <ContextMenu.Item href="/" prefix={<LogoVercelCircle />} value="hello">
+            Item Three
+          </ContextMenu.Item>
+          <ContextMenu.Item href="/" prefix={<LogoVercelCircle />} value="hello">
+            Item Four
           </ContextMenu.Item>
         </ContextMenu.Content>
       </ContextMenu>
-
-      {/* Suffix shortcuts */}
       <ContextMenu>
         <ContextMenu.Trigger>
           <div style={{ /* trigger styles */ }}>
@@ -504,23 +466,17 @@ function PrefixSuffixExample() {
           </div>
         </ContextMenu.Trigger>
         <ContextMenu.Content>
-          <ContextMenu.Item
-            suffix="⌘["
-            onSelect={() => {}}
-          >
-            Back
+          <ContextMenu.Item href="/" suffix={<LogoVercelCircle />} value="hello">
+            Item one
           </ContextMenu.Item>
-          <ContextMenu.Item
-            suffix="⌘]"
-            onSelect={() => {}}
-          >
-            Forward
+          <ContextMenu.Item href="/" suffix={<LogoVercelCircle />} value="hello">
+            Item Two
           </ContextMenu.Item>
-          <ContextMenu.Item
-            suffix="⌘R"
-            onSelect={() => {}}
-          >
-            Reload
+          <ContextMenu.Item href="/" suffix={<LogoVercelCircle />} value="hello">
+            Item Three
+          </ContextMenu.Item>
+          <ContextMenu.Item href="/" suffix={<LogoVercelCircle />} value="hello">
+            Item Four
           </ContextMenu.Item>
         </ContextMenu.Content>
       </ContextMenu>
@@ -586,29 +542,27 @@ function PrefixSuffixDemo() {
       className="flex flex-col md:flex-row items-stretch justify-start flex-initial"
       style={{ gap: 24 }}
     >
-      {/* Prefix icons */}
       <ContextMenu>
         <ContextMenu.Trigger>
           <TriggerBox />
         </ContextMenu.Trigger>
         <ContextMenu.Content>
-          <ContextMenu.Item prefix={<ArrowLeftIcon />}>Back</ContextMenu.Item>
-          <ContextMenu.Item prefix={<ArrowRightIcon />}>
-            Forward
-          </ContextMenu.Item>
-          <ContextMenu.Item prefix={<RefreshIcon />}>Reload</ContextMenu.Item>
+          <ContextMenu.Item href="/" prefix={<VercelCircleIcon />} value="hello">Item one</ContextMenu.Item>
+          <ContextMenu.Item href="/" prefix={<VercelCircleIcon />} value="hello">Item Two</ContextMenu.Item>
+          <ContextMenu.Item href="/" prefix={<VercelCircleIcon />} value="hello">Item Three</ContextMenu.Item>
+          <ContextMenu.Item href="/" prefix={<VercelCircleIcon />} value="hello">Item Four</ContextMenu.Item>
         </ContextMenu.Content>
       </ContextMenu>
 
-      {/* Suffix shortcuts */}
       <ContextMenu>
         <ContextMenu.Trigger>
           <TriggerBox />
         </ContextMenu.Trigger>
         <ContextMenu.Content>
-          <ContextMenu.Item suffix="⌘[">Back</ContextMenu.Item>
-          <ContextMenu.Item suffix="⌘]">Forward</ContextMenu.Item>
-          <ContextMenu.Item suffix="⌘R">Reload</ContextMenu.Item>
+          <ContextMenu.Item href="/" suffix={<VercelCircleIcon />} value="hello">Item one</ContextMenu.Item>
+          <ContextMenu.Item href="/" suffix={<VercelCircleIcon />} value="hello">Item Two</ContextMenu.Item>
+          <ContextMenu.Item href="/" suffix={<VercelCircleIcon />} value="hello">Item Three</ContextMenu.Item>
+          <ContextMenu.Item href="/" suffix={<VercelCircleIcon />} value="hello">Item Four</ContextMenu.Item>
         </ContextMenu.Content>
       </ContextMenu>
     </div>
