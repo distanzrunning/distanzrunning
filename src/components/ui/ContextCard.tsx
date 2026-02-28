@@ -38,7 +38,7 @@ const CONTEXT_CARD_CSS = `
     max-width: max-content;
     background: var(--ds-background-100);
     color: var(--ds-gray-1000);
-    box-shadow: var(--ds-shadow-menu);
+    box-shadow: var(--ds-shadow-tooltip);
     user-select: none;
     will-change: transform, opacity;
     animation-duration: 250ms;
@@ -77,6 +77,11 @@ const CONTEXT_CARD_CSS = `
 
   .ds-context-card-arrow {
     fill: var(--ds-background-100);
+    filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.08));
+  }
+
+  :root[data-theme="dark"] .ds-context-card-arrow {
+    filter: drop-shadow(0 0 1px rgba(255, 255, 255, 0.1));
   }
 `;
 
