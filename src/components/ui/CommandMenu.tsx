@@ -141,6 +141,7 @@ const CMDK_CSS = `
 
   .ds-cmdk-esc-button {
     display: none;
+    background: var(--ds-background-100);
   }
 
   @media (hover: hover) and (pointer: fine) {
@@ -148,7 +149,7 @@ const CMDK_CSS = `
       display: flex;
     }
     .ds-cmdk-esc-button:hover {
-      background: var(--ds-gray-100);
+      background: var(--ds-gray-100) !important;
     }
   }
 `;
@@ -256,7 +257,6 @@ export function CommandMenu({
                 height: 20,
                 border: "none",
                 borderRadius: 4,
-                background: "var(--ds-background-100)",
                 boxShadow:
                   "var(--ds-gray-alpha-400) 0px 0px 0px 1px, var(--ds-gray-100) 0px 0px 0px 1px",
                 color: "var(--ds-gray-1000)",
