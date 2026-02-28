@@ -77,11 +77,18 @@ const CONTEXT_CARD_CSS = `
 
   .ds-context-card-arrow {
     fill: var(--ds-background-100);
-    filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.08));
+    overflow: visible;
   }
 
-  :root[data-theme="dark"] .ds-context-card-arrow {
-    filter: drop-shadow(0 0 1px rgba(255, 255, 255, 0.1));
+  .ds-context-card-arrow polygon,
+  .ds-context-card-arrow path {
+    stroke: rgba(0, 0, 0, 0.08);
+    stroke-width: 1px;
+  }
+
+  :root[data-theme="dark"] .ds-context-card-arrow polygon,
+  :root[data-theme="dark"] .ds-context-card-arrow path {
+    stroke: rgba(255, 255, 255, 0.1);
   }
 `;
 
