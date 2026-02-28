@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef, type ReactNode } from "react";
+import { useEffect, useState, useRef, type ReactNode, type RefObject } from "react";
 import { createPortal } from "react-dom";
 
 // ============================================================================
@@ -13,7 +13,7 @@ export interface ModalProps {
   /** Called when the modal should close */
   onClose: () => void;
   /** Modal body content */
-  children: ReactNode;
+  children?: ReactNode;
   /** Optional title shown in the modal header */
   title?: string;
   /** Optional subtitle shown below the title in the header */
@@ -22,6 +22,8 @@ export interface ModalProps {
   footer?: ReactNode;
   /** Enable sticky header that stays visible when body scrolls */
   stickyHeader?: boolean;
+  /** Ref to an element that should receive focus when the modal opens */
+  initialFocusRef?: RefObject<HTMLElement | null>;
   /** Additional CSS classes for the content card */
   className?: string;
 }
@@ -58,6 +60,7 @@ export function Modal({
   subtitle,
   footer,
   stickyHeader = false,
+  initialFocusRef,
   className = "",
 }: ModalProps) {
   // Animation state: mounted keeps DOM alive during exit, visible drives CSS
@@ -102,6 +105,13 @@ export function Modal({
       document.body.style.paddingRight = prevPaddingRight;
     };
   }, [mounted]);
+
+  // Initial focus
+  useEffect(() => {
+    if (visible && initialFocusRef?.current) {
+      initialFocusRef.current.focus();
+    }
+  }, [visible, initialFocusRef]);
 
   // Escape key
   useEffect(() => {

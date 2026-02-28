@@ -509,6 +509,43 @@ export function InsetExample() {
   );
 }`;
 
+const initialFocusCode = `import { Modal } from '@/components/ui/Modal';
+import { Button } from '@/components/ui/Button';
+import { useRef, useState } from 'react';
+
+export function InitialFocusExample() {
+  const [open, setOpen] = useState(false);
+  const initialFocusRef = useRef<HTMLButtonElement>(null);
+
+  return (
+    <>
+      <Button size="small" onClick={() => setOpen(true)}>
+        Open Modal
+      </Button>
+      <Modal
+        open={open}
+        onClose={() => setOpen(false)}
+        title="Initial Focus"
+        subtitle="This Modal is set up to programmatically move the focus onto the Submit button, making it possible to promptly continue with the Enter key."
+        initialFocusRef={initialFocusRef}
+        footer={
+          <footer style={{
+            display: "flex",
+            justifyContent: "space-between",
+            flexShrink: 0,
+            padding: 16,
+            position: "sticky",
+            bottom: 0,
+          }}>
+            <Button variant="secondary" onClick={() => setOpen(false)}>Cancel</Button>
+            <Button ref={initialFocusRef} onClick={() => setOpen(false)}>Submit</Button>
+          </footer>
+        }
+      />
+    </>
+  );
+}`;
+
 // ============================================================================
 // Demo Components
 // ============================================================================
@@ -732,6 +769,45 @@ function InsetDemo() {
   );
 }
 
+function InitialFocusDemo() {
+  const [open, setOpen] = useState(false);
+  const initialFocusRef = useRef<HTMLButtonElement>(null);
+
+  return (
+    <>
+      <Button size="small" onClick={() => setOpen(true)}>
+        Open Modal
+      </Button>
+      <Modal
+        open={open}
+        onClose={() => setOpen(false)}
+        title="Initial Focus"
+        subtitle="This Modal is set up to programmatically move the focus onto the Submit button, making it possible to promptly continue with the Enter key."
+        initialFocusRef={initialFocusRef}
+        footer={
+          <footer
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              flexShrink: 0,
+              padding: 16,
+              position: "sticky",
+              bottom: 0,
+            }}
+          >
+            <Button variant="secondary" onClick={() => setOpen(false)}>
+              Cancel
+            </Button>
+            <Button ref={initialFocusRef} onClick={() => setOpen(false)}>
+              Submit
+            </Button>
+          </footer>
+        }
+      />
+    </>
+  );
+}
+
 // ============================================================================
 // Main Component
 // ============================================================================
@@ -803,6 +879,18 @@ export default function ModalComponent() {
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={insetCode}>
             <InsetDemo />
+          </CodePreview>
+        </div>
+      </Section>
+
+      {/* Control initial focus */}
+      <Section>
+        <SectionHeader id="control-initial-focus" onCopyLink={showToast}>
+          Control initial focus
+        </SectionHeader>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={initialFocusCode}>
+            <InitialFocusDemo />
           </CodePreview>
         </div>
       </Section>
@@ -904,6 +992,16 @@ export default function ModalComponent() {
                 <td className="py-3 px-4 text-textSubtle">false</td>
                 <td className="py-3 px-4 text-textSubtle">
                   Enable sticky header that stays visible when body scrolls
+                </td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 font-mono">initialFocusRef</td>
+                <td className="py-3 px-4 font-mono text-textSubtle">
+                  {"RefObject<HTMLElement>"}
+                </td>
+                <td className="py-3 px-4 text-textSubtle">-</td>
+                <td className="py-3 px-4 text-textSubtle">
+                  Ref to an element that receives focus when the modal opens
                 </td>
               </tr>
               <tr className="border-b border-borderSubtle">
