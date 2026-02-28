@@ -9,7 +9,6 @@ import {
   type DualThemeToken,
 } from "@/components/ui/useShikiHighlighter";
 import { ContextCard } from "@/components/ui/ContextCard";
-import { Button } from "@/components/ui/Button";
 
 // ============================================================================
 // Toast Component
@@ -311,36 +310,40 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
 // ============================================================================
 
 const defaultCode = `import { ContextCard } from '@/components/ui/ContextCard';
-import { Button } from '@/components/ui/Button';
 import type { JSX } from 'react';
 
 function Demo(): JSX.Element {
   return (
     <ContextCard>
-      <div style={{ display: 'flex', gap: 16 }}>
+      <div style={{
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'stretch',
+        justifyContent: 'space-around',
+      }}>
         <ContextCard.Trigger
           content="The Evil Rabbit Jumped over the Fence"
           side="top"
         >
-          <Button>Top</Button>
+          Top
         </ContextCard.Trigger>
         <ContextCard.Trigger
           content="The Evil Rabbit Jumped over the Fence"
           side="bottom"
         >
-          <Button>Bottom</Button>
+          Bottom
         </ContextCard.Trigger>
         <ContextCard.Trigger
           content="The Evil Rabbit Jumped over the Fence"
           side="left"
         >
-          <Button>Left</Button>
+          Left
         </ContextCard.Trigger>
         <ContextCard.Trigger
           content="The Evil Rabbit Jumped over the Fence"
           side="right"
         >
-          <Button>Right</Button>
+          Right
         </ContextCard.Trigger>
       </div>
     </ContextCard>
@@ -354,30 +357,37 @@ function Demo(): JSX.Element {
 function DefaultDemo() {
   return (
     <ContextCard>
-      <div style={{ display: "flex", gap: 16 }}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "stretch",
+          justifyContent: "space-around",
+        }}
+      >
         <ContextCard.Trigger
           content="The Evil Rabbit Jumped over the Fence"
           side="top"
         >
-          <Button>Top</Button>
+          Top
         </ContextCard.Trigger>
         <ContextCard.Trigger
           content="The Evil Rabbit Jumped over the Fence"
           side="bottom"
         >
-          <Button>Bottom</Button>
+          Bottom
         </ContextCard.Trigger>
         <ContextCard.Trigger
           content="The Evil Rabbit Jumped over the Fence"
           side="left"
         >
-          <Button>Left</Button>
+          Left
         </ContextCard.Trigger>
         <ContextCard.Trigger
           content="The Evil Rabbit Jumped over the Fence"
           side="right"
         >
-          <Button>Right</Button>
+          Right
         </ContextCard.Trigger>
       </div>
     </ContextCard>

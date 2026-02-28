@@ -32,17 +32,17 @@ interface ContextCardTriggerProps {
 const CONTEXT_CARD_CSS = `
   .ds-context-card {
     border-radius: 8px;
-    padding: 8px 12px;
-    font-size: 14px;
+    padding: 12px;
+    font-size: 16px;
     line-height: 20px;
-    max-width: 250px;
-    background: var(--ds-gray-1000);
-    color: var(--ds-background-100);
-    box-shadow: var(--ds-shadow-tooltip);
+    max-width: max-content;
+    background: var(--ds-background-100);
+    color: var(--ds-gray-1000);
+    box-shadow: var(--ds-shadow-menu);
     user-select: none;
-    animation-duration: 200ms;
-    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
     will-change: transform, opacity;
+    animation-duration: 250ms;
+    animation-timing-function: cubic-bezier(0.29, -0.31, -0.05, 0.96);
   }
 
   .ds-context-card[data-state="delayed-open"][data-side="top"] {
@@ -76,7 +76,7 @@ const CONTEXT_CARD_CSS = `
   }
 
   .ds-context-card-arrow {
-    fill: var(--ds-gray-1000);
+    fill: var(--ds-background-100);
   }
 `;
 
@@ -92,7 +92,18 @@ function ContextCardTrigger({
 }: ContextCardTriggerProps) {
   return (
     <Tooltip.Root>
-      <Tooltip.Trigger asChild>{children}</Tooltip.Trigger>
+      <Tooltip.Trigger asChild>
+        <div
+          style={{
+            cursor: "pointer",
+            display: "flex",
+            overflow: "hidden",
+            pointerEvents: "all",
+          }}
+        >
+          <span>{children}</span>
+        </div>
+      </Tooltip.Trigger>
       <Tooltip.Portal>
         <Tooltip.Content
           className="ds-context-card"
@@ -100,7 +111,7 @@ function ContextCardTrigger({
           sideOffset={sideOffset}
         >
           {content}
-          <Tooltip.Arrow className="ds-context-card-arrow" width={12} height={6} />
+          <Tooltip.Arrow className="ds-context-card-arrow" width={14} height={7} />
         </Tooltip.Content>
       </Tooltip.Portal>
     </Tooltip.Root>
