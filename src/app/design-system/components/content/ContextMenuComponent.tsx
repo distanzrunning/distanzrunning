@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useCallback, useRef } from "react";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, ArrowRight } from "lucide-react";
 import { Section } from "../ContentWithTOC";
 import {
   useShikiHighlighter,
@@ -326,22 +326,6 @@ function TriggerBox() {
   );
 }
 
-// ============================================================================
-// Demo Icons
-// ============================================================================
-
-function ArrowRightIcon() {
-  return (
-    <svg height="16" viewBox="0 0 16 16" width="16" style={{ color: "currentcolor" }}>
-      <path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        d="M9.53034 2.46966L9.00001 1.93933L7.93935 2.99999L8.46968 3.53032L12.1893 7.24999H1.75001H1.00001V8.74999H1.75001H12.1893L8.46968 12.4697L7.93935 13L9.00001 14.0607L9.53034 13.5303L14.5303 8.53032C14.8232 8.23743 14.8232 7.76255 14.5303 7.46966L9.53034 2.46966Z"
-        fill="currentColor"
-      />
-    </svg>
-  );
-}
 
 
 // ============================================================================
@@ -449,16 +433,16 @@ function PrefixSuffixExample() {
           </div>
         </ContextMenu.Trigger>
         <ContextMenu.Content>
-          <ContextMenu.Item href="/" prefix={<ArrowRightIcon />} value="hello">
+          <ContextMenu.Item href="/" prefix={<ArrowRight size={16} />} value="hello">
             Item one
           </ContextMenu.Item>
-          <ContextMenu.Item href="/" prefix={<ArrowRightIcon />} value="hello">
+          <ContextMenu.Item href="/" prefix={<ArrowRight size={16} />} value="hello">
             Item Two
           </ContextMenu.Item>
-          <ContextMenu.Item href="/" prefix={<ArrowRightIcon />} value="hello">
+          <ContextMenu.Item href="/" prefix={<ArrowRight size={16} />} value="hello">
             Item Three
           </ContextMenu.Item>
-          <ContextMenu.Item href="/" prefix={<ArrowRightIcon />} value="hello">
+          <ContextMenu.Item href="/" prefix={<ArrowRight size={16} />} value="hello">
             Item Four
           </ContextMenu.Item>
         </ContextMenu.Content>
@@ -470,16 +454,16 @@ function PrefixSuffixExample() {
           </div>
         </ContextMenu.Trigger>
         <ContextMenu.Content>
-          <ContextMenu.Item href="/" suffix={<ArrowRightIcon />} value="hello">
+          <ContextMenu.Item href="/" suffix={<ArrowRight size={16} />} value="hello">
             Item one
           </ContextMenu.Item>
-          <ContextMenu.Item href="/" suffix={<ArrowRightIcon />} value="hello">
+          <ContextMenu.Item href="/" suffix={<ArrowRight size={16} />} value="hello">
             Item Two
           </ContextMenu.Item>
-          <ContextMenu.Item href="/" suffix={<ArrowRightIcon />} value="hello">
+          <ContextMenu.Item href="/" suffix={<ArrowRight size={16} />} value="hello">
             Item Three
           </ContextMenu.Item>
-          <ContextMenu.Item href="/" suffix={<ArrowRightIcon />} value="hello">
+          <ContextMenu.Item href="/" suffix={<ArrowRight size={16} />} value="hello">
             Item Four
           </ContextMenu.Item>
         </ContextMenu.Content>
@@ -551,10 +535,10 @@ function PrefixSuffixDemo() {
           <TriggerBox />
         </ContextMenu.Trigger>
         <ContextMenu.Content>
-          <ContextMenu.Item href="/" prefix={<ArrowRightIcon />} value="hello">Item one</ContextMenu.Item>
-          <ContextMenu.Item href="/" prefix={<ArrowRightIcon />} value="hello">Item Two</ContextMenu.Item>
-          <ContextMenu.Item href="/" prefix={<ArrowRightIcon />} value="hello">Item Three</ContextMenu.Item>
-          <ContextMenu.Item href="/" prefix={<ArrowRightIcon />} value="hello">Item Four</ContextMenu.Item>
+          <ContextMenu.Item href="/" prefix={<ArrowRight size={16} />} value="hello">Item one</ContextMenu.Item>
+          <ContextMenu.Item href="/" prefix={<ArrowRight size={16} />} value="hello">Item Two</ContextMenu.Item>
+          <ContextMenu.Item href="/" prefix={<ArrowRight size={16} />} value="hello">Item Three</ContextMenu.Item>
+          <ContextMenu.Item href="/" prefix={<ArrowRight size={16} />} value="hello">Item Four</ContextMenu.Item>
         </ContextMenu.Content>
       </ContextMenu>
 
@@ -563,10 +547,10 @@ function PrefixSuffixDemo() {
           <TriggerBox />
         </ContextMenu.Trigger>
         <ContextMenu.Content>
-          <ContextMenu.Item href="/" suffix={<ArrowRightIcon />} value="hello">Item one</ContextMenu.Item>
-          <ContextMenu.Item href="/" suffix={<ArrowRightIcon />} value="hello">Item Two</ContextMenu.Item>
-          <ContextMenu.Item href="/" suffix={<ArrowRightIcon />} value="hello">Item Three</ContextMenu.Item>
-          <ContextMenu.Item href="/" suffix={<ArrowRightIcon />} value="hello">Item Four</ContextMenu.Item>
+          <ContextMenu.Item href="/" suffix={<ArrowRight size={16} />} value="hello">Item one</ContextMenu.Item>
+          <ContextMenu.Item href="/" suffix={<ArrowRight size={16} />} value="hello">Item Two</ContextMenu.Item>
+          <ContextMenu.Item href="/" suffix={<ArrowRight size={16} />} value="hello">Item Three</ContextMenu.Item>
+          <ContextMenu.Item href="/" suffix={<ArrowRight size={16} />} value="hello">Item Four</ContextMenu.Item>
         </ContextMenu.Content>
       </ContextMenu>
     </div>
