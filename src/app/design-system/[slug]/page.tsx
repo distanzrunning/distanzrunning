@@ -40,6 +40,7 @@ import ButtonComponentNew from "../components/content/ButtonComponentNew";
 import ModalComponent from "../components/content/ModalComponent";
 import CommandMenuComponent from "../components/content/CommandMenuComponent";
 import ContextCardComponent from "../components/content/ContextCardComponent";
+import ContextMenuComponent from "../components/content/ContextMenuComponent";
 import PaginationComponent from "../components/content/PaginationComponent";
 import CalendarComponent from "../components/content/CalendarComponent";
 import Materials from "../components/content/Materials";
@@ -516,6 +517,21 @@ export default function DesignSystemPage() {
           onNavigate={handleNavigation}
         >
           <ContextCardComponent />
+        </ContentWithTOC>
+      );
+    }
+
+    if (activeSlug === "context-menu") {
+      return (
+        <ContentWithTOC
+          tocTitle="On this page"
+          pageTitle="Context Menu"
+          pageSubtitle="Displays a brief heading and subheading to communicate any additional information or context a user needs to continue."
+          mainSectionId="context-menu"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
+          <ContextMenuComponent />
         </ContentWithTOC>
       );
     }
