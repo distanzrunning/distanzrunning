@@ -462,15 +462,18 @@ function LinkExample() {
         </div>
       </ContextMenu.Trigger>
       <ContextMenu.Content>
-        <ContextMenu.LinkItem href="https://vercel.com">
-          Vercel Homepage
-        </ContextMenu.LinkItem>
-        <ContextMenu.LinkItem
-          href="https://github.com"
-          target="_blank"
-        >
-          GitHub
-        </ContextMenu.LinkItem>
+        <ContextMenu.Item href="/" value="hello">
+          Item one
+        </ContextMenu.Item>
+        <ContextMenu.Item href="/" value="hello">
+          Item Two
+        </ContextMenu.Item>
+        <ContextMenu.Item href="/" value="hello">
+          Item Three
+        </ContextMenu.Item>
+        <ContextMenu.Item href="/" value="hello">
+          Item Four
+        </ContextMenu.Item>
       </ContextMenu.Content>
     </ContextMenu>
   );
@@ -585,16 +588,10 @@ function LinkDemo() {
         <TriggerBox />
       </ContextMenu.Trigger>
       <ContextMenu.Content>
-        <ContextMenu.LinkItem href="https://vercel.com">
-          Vercel Homepage
-        </ContextMenu.LinkItem>
-        <ContextMenu.LinkItem href="https://github.com" target="_blank">
-          GitHub
-        </ContextMenu.LinkItem>
-        <ContextMenu.Separator />
-        <ContextMenu.LinkItem href="https://nextjs.org" target="_blank">
-          Next.js Documentation
-        </ContextMenu.LinkItem>
+        <ContextMenu.Item href="/" value="hello">Item one</ContextMenu.Item>
+        <ContextMenu.Item href="/" value="hello">Item Two</ContextMenu.Item>
+        <ContextMenu.Item href="/" value="hello">Item Three</ContextMenu.Item>
+        <ContextMenu.Item href="/" value="hello">Item Four</ContextMenu.Item>
       </ContextMenu.Content>
     </ContextMenu>
   );
@@ -782,42 +779,6 @@ export default function ContextMenuComponent() {
                   Optional element rendered after the label
                 </td>
               </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <p className="text-copy-14 text-textSubtle mt-8 mb-4">
-          ContextMenu.LinkItem props.
-        </p>
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
-                  Prop
-                </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
-                  Type
-                </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
-                  Default
-                </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
-                  Description
-                </th>
-              </tr>
-            </thead>
-            <tbody className="text-sm">
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">children</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  ReactNode
-                </td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Link label content
-                </td>
-              </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 font-mono">href</td>
                 <td className="py-3 px-4 font-mono text-textSubtle">
@@ -825,37 +786,17 @@ export default function ContextMenuComponent() {
                 </td>
                 <td className="py-3 px-4 text-textSubtle">-</td>
                 <td className="py-3 px-4 text-textSubtle">
-                  URL the link navigates to
+                  If provided, renders the item as a link
                 </td>
               </tr>
               <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">target</td>
+                <td className="py-3 pr-4 font-mono">value</td>
                 <td className="py-3 px-4 font-mono text-textSubtle">
                   string
                 </td>
                 <td className="py-3 px-4 text-textSubtle">-</td>
                 <td className="py-3 px-4 text-textSubtle">
-                  Link target attribute (e.g. {`"_blank"`})
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">prefix</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  ReactNode
-                </td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Optional element rendered before the label
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">suffix</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  ReactNode
-                </td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Optional element rendered after the label
+                  Optional text value for the item
                 </td>
               </tr>
             </tbody>

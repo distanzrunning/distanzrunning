@@ -35,19 +35,10 @@ interface ContextMenuItemProps {
   prefix?: ReactNode;
   /** Optional element rendered after the label (e.g. keyboard shortcut) */
   suffix?: ReactNode;
-}
-
-interface ContextMenuLinkItemProps {
-  /** Link label content */
-  children: ReactNode;
-  /** URL the link navigates to */
-  href: string;
-  /** Link target attribute */
-  target?: string;
-  /** Optional element rendered before the label */
-  prefix?: ReactNode;
-  /** Optional element rendered after the label */
-  suffix?: ReactNode;
+  /** If provided, renders as a link */
+  href?: string;
+  /** Optional value for the item */
+  value?: string;
 }
 
 interface ContextMenuLabelProps {
@@ -118,27 +109,6 @@ const CONTEXT_MENU_CSS = `
     cursor: default;
   }
 
-  .ds-context-menu-link-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    height: 40px;
-    padding: 0 8px;
-    border-radius: 6px;
-    font-size: 14px;
-    line-height: 20px;
-    color: var(--ds-gray-1000);
-    cursor: pointer;
-    user-select: none;
-    outline: none;
-    text-decoration: none;
-    transition: background 0.1s ease;
-  }
-
-  .ds-context-menu-link-item[data-highlighted] {
-    background: var(--ds-gray-alpha-200);
-  }
-
   .ds-context-menu-separator {
     height: 1px;
     background: var(--ds-gray-alpha-400);
@@ -187,13 +157,11 @@ function ContextMenuItem({
   disabled = false,
   prefix,
   suffix,
+  href,
+  value,
 }: ContextMenuItemProps) {
-  return (
-    <RadixContextMenu.Item
-      className="ds-context-menu-item"
-      onSelect={onSelect}
-      disabled={disabled}
-    >
+  const content = (
+    <>
       {prefix && (
         <span
           style={{
@@ -222,54 +190,27 @@ function ContextMenuItem({
           {suffix}
         </span>
       )}
-    </RadixContextMenu.Item>
+    </>
   );
-}
 
-function ContextMenuLinkItem({
-  children,
-  href,
-  target,
-  prefix,
-  suffix,
-}: ContextMenuLinkItemProps) {
+  if (href) {
+    return (
+      <RadixContextMenu.Item asChild disabled={disabled} textValue={value}>
+        <a className="ds-context-menu-item" href={href}>
+          {content}
+        </a>
+      </RadixContextMenu.Item>
+    );
+  }
+
   return (
-    <RadixContextMenu.Item asChild>
-      <a
-        className="ds-context-menu-link-item"
-        href={href}
-        target={target}
-        rel={target === "_blank" ? "noopener noreferrer" : undefined}
-      >
-        {prefix && (
-          <span
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              width: 16,
-              height: 16,
-              flexShrink: 0,
-              color: "var(--ds-gray-900)",
-            }}
-          >
-            {prefix}
-          </span>
-        )}
-        <span style={{ flex: 1 }}>{children}</span>
-        {suffix && (
-          <span
-            style={{
-              marginLeft: "auto",
-              fontSize: 12,
-              color: "var(--ds-gray-700)",
-              flexShrink: 0,
-            }}
-          >
-            {suffix}
-          </span>
-        )}
-      </a>
+    <RadixContextMenu.Item
+      className="ds-context-menu-item"
+      onSelect={onSelect}
+      disabled={disabled}
+      textValue={value}
+    >
+      {content}
     </RadixContextMenu.Item>
   );
 }
@@ -302,6 +243,5 @@ export function ContextMenu({ children }: ContextMenuProps) {
 ContextMenu.Trigger = ContextMenuTrigger;
 ContextMenu.Content = ContextMenuContent;
 ContextMenu.Item = ContextMenuItem;
-ContextMenu.LinkItem = ContextMenuLinkItem;
 ContextMenu.Separator = ContextMenuSeparator;
 ContextMenu.Label = ContextMenuLabel;
