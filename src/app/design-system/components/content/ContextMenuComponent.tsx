@@ -369,31 +369,6 @@ function RefreshIcon() {
   );
 }
 
-function CodeIcon() {
-  return (
-    <svg height="16" viewBox="0 0 16 16" width="16" style={{ color: "currentcolor" }}>
-      <path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        d="M4.56065 5.43934L5.09098 5.96967L3.06065 8L5.09098 10.0303L4.56065 10.5607L3.49999 11.6213L2.96966 11.091L0.878677 9.00001C0.292893 8.41422 0.292893 7.46448 0.878677 6.87869L2.96966 4.78771L3.49999 4.25738L4.56065 5.43934ZM11.4393 5.43934L10.909 5.96967L12.9393 8L10.909 10.0303L11.4393 10.5607L12.5 11.6213L13.0303 11.091L15.1213 9.00001C15.7071 8.41422 15.7071 7.46448 15.1213 6.87869L13.0303 4.78771L12.5 4.25738L11.4393 5.43934ZM9.97066 2.01587L10.7793 2.27004L6.77932 15.2344L6.02932 13.9841L9.97066 2.01587Z"
-        fill="currentColor"
-      />
-    </svg>
-  );
-}
-
-function ExternalLinkIcon() {
-  return (
-    <svg height="16" viewBox="0 0 16 16" width="16" style={{ color: "currentcolor" }}>
-      <path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        d="M10.75 1H15.25H16V1.75V6.25V7H14.5V6.25V3.56066L8.53033 9.53033L8 10.0607L6.93934 9L7.46967 8.46967L13.4393 2.5H10.75H10V1H10.75ZM1 3.75C1 2.7835 1.7835 2 2.75 2H7.25H8V3.5H7.25H2.75C2.61193 3.5 2.5 3.61193 2.5 3.75V13.25C2.5 13.3881 2.61193 13.5 2.75 13.5H12.25C12.3881 13.5 12.5 13.3881 12.5 13.25V8.75V8H14V8.75V13.25C14 14.2165 13.2165 15 12.25 15H2.75C1.7835 15 1 14.2165 1 13.25V3.75Z"
-        fill="currentColor"
-      />
-    </svg>
-  );
-}
 
 // ============================================================================
 // Code Examples
@@ -502,19 +477,19 @@ function PrefixSuffixExample() {
         <ContextMenu.Content>
           <ContextMenu.Item
             prefix={<ArrowLeftIcon />}
-            onClick={() => {}}
+            onSelect={() => {}}
           >
             Back
           </ContextMenu.Item>
           <ContextMenu.Item
             prefix={<ArrowRightIcon />}
-            onClick={() => {}}
+            onSelect={() => {}}
           >
             Forward
           </ContextMenu.Item>
           <ContextMenu.Item
             prefix={<RefreshIcon />}
-            onClick={() => {}}
+            onSelect={() => {}}
           >
             Reload
           </ContextMenu.Item>
@@ -531,19 +506,19 @@ function PrefixSuffixExample() {
         <ContextMenu.Content>
           <ContextMenu.Item
             suffix="⌘["
-            onClick={() => {}}
+            onSelect={() => {}}
           >
             Back
           </ContextMenu.Item>
           <ContextMenu.Item
             suffix="⌘]"
-            onClick={() => {}}
+            onSelect={() => {}}
           >
             Forward
           </ContextMenu.Item>
           <ContextMenu.Item
             suffix="⌘R"
-            onClick={() => {}}
+            onSelect={() => {}}
           >
             Reload
           </ContextMenu.Item>
@@ -622,10 +597,6 @@ function PrefixSuffixDemo() {
             Forward
           </ContextMenu.Item>
           <ContextMenu.Item prefix={<RefreshIcon />}>Reload</ContextMenu.Item>
-          <ContextMenu.Separator />
-          <ContextMenu.Item prefix={<CodeIcon />}>
-            View Source
-          </ContextMenu.Item>
         </ContextMenu.Content>
       </ContextMenu>
 
@@ -638,8 +609,6 @@ function PrefixSuffixDemo() {
           <ContextMenu.Item suffix="⌘[">Back</ContextMenu.Item>
           <ContextMenu.Item suffix="⌘]">Forward</ContextMenu.Item>
           <ContextMenu.Item suffix="⌘R">Reload</ContextMenu.Item>
-          <ContextMenu.Separator />
-          <ContextMenu.Item suffix="⌘U">View Source</ContextMenu.Item>
         </ContextMenu.Content>
       </ContextMenu>
     </div>
