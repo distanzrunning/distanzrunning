@@ -414,19 +414,10 @@ function DefaultExample() {
         </div>
       </ContextMenu.Trigger>
       <ContextMenu.Content>
-        <ContextMenu.Item onSelect={() => console.log('Back')}>
-          Back
-        </ContextMenu.Item>
-        <ContextMenu.Item onSelect={() => console.log('Forward')}>
-          Forward
-        </ContextMenu.Item>
-        <ContextMenu.Item onSelect={() => console.log('Reload')}>
-          Reload
-        </ContextMenu.Item>
-        <ContextMenu.Separator />
-        <ContextMenu.Item onSelect={() => console.log('View Source')}>
-          View Source
-        </ContextMenu.Item>
+        <ContextMenu.Item>Item one</ContextMenu.Item>
+        <ContextMenu.Item>Item Two</ContextMenu.Item>
+        <ContextMenu.Item>Item Three</ContextMenu.Item>
+        <ContextMenu.Item>Item Four</ContextMenu.Item>
       </ContextMenu.Content>
     </ContextMenu>
   );
@@ -567,11 +558,10 @@ function DefaultDemo() {
         <TriggerBox />
       </ContextMenu.Trigger>
       <ContextMenu.Content>
-        <ContextMenu.Item>Back</ContextMenu.Item>
-        <ContextMenu.Item>Forward</ContextMenu.Item>
-        <ContextMenu.Item>Reload</ContextMenu.Item>
-        <ContextMenu.Separator />
-        <ContextMenu.Item>View Source</ContextMenu.Item>
+        <ContextMenu.Item>Item one</ContextMenu.Item>
+        <ContextMenu.Item>Item Two</ContextMenu.Item>
+        <ContextMenu.Item>Item Three</ContextMenu.Item>
+        <ContextMenu.Item>Item Four</ContextMenu.Item>
       </ContextMenu.Content>
     </ContextMenu>
   );

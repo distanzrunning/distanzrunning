@@ -59,12 +59,16 @@ interface ContextMenuLabelProps {
 
 const CONTEXT_MENU_CSS = `
   .ds-context-menu-content {
-    min-width: 220px;
-    padding: 4px;
-    border-radius: 8px;
+    padding: 8px;
+    border-radius: 12px;
     background: var(--ds-background-100);
     box-shadow: var(--ds-shadow-menu);
     color: var(--ds-gray-1000);
+    font-size: 14px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    list-style-type: none;
     z-index: 100;
     will-change: transform, opacity;
     animation-duration: 200ms;
@@ -90,15 +94,16 @@ const CONTEXT_MENU_CSS = `
     display: flex;
     align-items: center;
     gap: 8px;
-    height: 32px;
+    height: 40px;
     padding: 0 8px;
-    border-radius: 4px;
+    border-radius: 6px;
     font-size: 14px;
     line-height: 20px;
     color: var(--ds-gray-1000);
     cursor: pointer;
     user-select: none;
     outline: none;
+    text-decoration: none;
     transition: background 0.1s ease;
   }
 
@@ -115,9 +120,9 @@ const CONTEXT_MENU_CSS = `
     display: flex;
     align-items: center;
     gap: 8px;
-    height: 32px;
+    height: 40px;
     padding: 0 8px;
-    border-radius: 4px;
+    border-radius: 6px;
     font-size: 14px;
     line-height: 20px;
     color: var(--ds-gray-1000);
