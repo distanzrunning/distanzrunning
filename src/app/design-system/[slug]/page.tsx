@@ -39,6 +39,7 @@ import BrowserComponent from "../components/content/BrowserComponent";
 import ButtonComponentNew from "../components/content/ButtonComponentNew";
 import ModalComponent from "../components/content/ModalComponent";
 import CommandMenuComponent from "../components/content/CommandMenuComponent";
+import ContextCardComponent from "../components/content/ContextCardComponent";
 import PaginationComponent from "../components/content/PaginationComponent";
 import CalendarComponent from "../components/content/CalendarComponent";
 import Materials from "../components/content/Materials";
@@ -500,6 +501,21 @@ export default function DesignSystemPage() {
           onNavigate={handleNavigation}
         >
           <CollapseComponent />
+        </ContentWithTOC>
+      );
+    }
+
+    if (activeSlug === "context-card") {
+      return (
+        <ContentWithTOC
+          tocTitle="On this page"
+          pageTitle="Context Card"
+          pageSubtitle="Tooltip"
+          mainSectionId="context-card"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
+          <ContextCardComponent />
         </ContentWithTOC>
       );
     }
