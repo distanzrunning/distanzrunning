@@ -1,7 +1,7 @@
 "use client";
 
 import * as Tooltip from "@radix-ui/react-tooltip";
-import { type ReactNode } from "react";
+import { forwardRef, useId, type ReactNode } from "react";
 
 // ============================================================================
 // Types
@@ -31,7 +31,7 @@ interface ContextCardTriggerProps {
 
 const CONTEXT_CARD_CSS = `
   .ds-context-card {
-    border-radius: 8px;
+    border-radius: 6px;
     padding: 12px;
     font-size: 16px;
     line-height: 20px;
@@ -76,25 +76,53 @@ const CONTEXT_CARD_CSS = `
   }
 
   .ds-context-card-arrow {
-    fill: var(--ds-background-100);
-    overflow: visible;
+    position: absolute;
+    pointer-events: none;
   }
 
-  .ds-context-card-arrow polygon,
   .ds-context-card-arrow path {
-    stroke: rgba(0, 0, 0, 0.08);
+    fill: var(--ds-background-100);
+    stroke: var(--ds-gray-400);
     stroke-width: 1px;
-  }
-
-  :root[data-theme="dark"] .ds-context-card-arrow polygon,
-  :root[data-theme="dark"] .ds-context-card-arrow path {
-    stroke: rgba(255, 255, 255, 0.1);
+    shape-rendering: geometricPrecision;
   }
 `;
 
 // ============================================================================
 // Compound Components
 // ============================================================================
+
+/**
+ * Custom curved arrow SVG matching Geist's tooltip arrow.
+ * The path is clipped to a 14×7 rectangle so the flat-edge stroke is hidden.
+ * Uses forwardRef so Radix's asChild can position it correctly.
+ */
+const GeistArrow = forwardRef<SVGSVGElement, React.ComponentPropsWithoutRef<"svg">>(
+  function GeistArrow(props, ref) {
+    const clipId = useId();
+    return (
+      <svg
+        {...props}
+        ref={ref}
+        className={`ds-context-card-arrow ${props.className ?? ""}`}
+        width="14"
+        height="7"
+        viewBox="0 0 14 7"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <defs>
+          <clipPath id={clipId}>
+            <rect width="14" height="7" />
+          </clipPath>
+        </defs>
+        <g clipPath={`url(#${clipId})`}>
+          <path d="M15 -0.5V0.5H12.9834L12.8184 0.508789C12.4377 0.550822 12.0853 0.738056 11.8359 1.03418L8.53027 4.95996C7.73114 5.90893 6.26886 5.90892 5.46973 4.95996L2.16406 1.03418C1.87905 0.695733 1.45907 0.5 1.0166 0.5H-1V-0.5H15Z" />
+        </g>
+      </svg>
+    );
+  }
+);
 
 function ContextCardTrigger({
   children,
@@ -123,7 +151,9 @@ function ContextCardTrigger({
           sideOffset={sideOffset}
         >
           {content}
-          <Tooltip.Arrow className="ds-context-card-arrow" width={14} height={7} />
+          <Tooltip.Arrow asChild width={14} height={7}>
+            <GeistArrow />
+          </Tooltip.Arrow>
         </Tooltip.Content>
       </Tooltip.Portal>
     </Tooltip.Root>
