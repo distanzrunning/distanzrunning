@@ -691,16 +691,16 @@
        ───────────────────────────────────────────────────────────────────────── */
 
     /* Background Scale - Dark mode */
-    --ds-background-100: hsl(
+    --ds-background-100: hsl(0, 0%, 7%); /* #111111 - Elevated surface (lighter) */
+    --ds-background-200: hsl(
       0,
       0%,
       4%
     ); /* #0A0A0A - Primary canvas (near black) */
-    --ds-background-200: hsl(0, 0%, 7%); /* #111111 - Secondary surface */
 
     /* RGB fallbacks */
-    --ds-background-100-rgb: 10, 10, 10;
-    --ds-background-200-rgb: 17, 17, 17;
+    --ds-background-100-rgb: 17, 17, 17;
+    --ds-background-200-rgb: 10, 10, 10;
 
     /* Gray Scale - Dark mode (Geist exact values) */
     --ds-gray-100: hsl(0, 0%, 10%); /* #1A1A1A */
