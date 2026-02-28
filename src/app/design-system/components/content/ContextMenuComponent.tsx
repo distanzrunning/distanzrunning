@@ -330,11 +330,15 @@ function TriggerBox() {
 // Demo Icons
 // ============================================================================
 
-function VercelCircleIcon() {
+function ArrowRightIcon() {
   return (
     <svg height="16" viewBox="0 0 16 16" width="16" style={{ color: "currentcolor" }}>
-      <circle cx="8" cy="8" r="7.25" stroke="currentColor" strokeWidth="1.5" fill="none" />
-      <path d="M8 4.5L11.5 10.5H4.5L8 4.5Z" fill="currentColor" />
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M9.53034 2.46966L9.00001 1.93933L7.93935 2.99999L8.46968 3.53032L12.1893 7.24999H1.75001H1.00001V8.74999H1.75001H12.1893L8.46968 12.4697L7.93935 13L9.00001 14.0607L9.53034 13.5303L14.5303 8.53032C14.8232 8.23743 14.8232 7.76255 14.5303 7.46966L9.53034 2.46966Z"
+        fill="currentColor"
+      />
     </svg>
   );
 }
@@ -433,7 +437,7 @@ function LinkExample() {
 }`;
 
 const prefixSuffixCode = `import { ContextMenu } from '@/components/ui/ContextMenu';
-import { LogoVercelCircle } from 'geist/icons';
+import { ArrowRightIcon } from './icons';
 
 function PrefixSuffixExample() {
   return (
@@ -445,16 +449,16 @@ function PrefixSuffixExample() {
           </div>
         </ContextMenu.Trigger>
         <ContextMenu.Content>
-          <ContextMenu.Item href="/" prefix={<LogoVercelCircle />} value="hello">
+          <ContextMenu.Item href="/" prefix={<ArrowRightIcon />} value="hello">
             Item one
           </ContextMenu.Item>
-          <ContextMenu.Item href="/" prefix={<LogoVercelCircle />} value="hello">
+          <ContextMenu.Item href="/" prefix={<ArrowRightIcon />} value="hello">
             Item Two
           </ContextMenu.Item>
-          <ContextMenu.Item href="/" prefix={<LogoVercelCircle />} value="hello">
+          <ContextMenu.Item href="/" prefix={<ArrowRightIcon />} value="hello">
             Item Three
           </ContextMenu.Item>
-          <ContextMenu.Item href="/" prefix={<LogoVercelCircle />} value="hello">
+          <ContextMenu.Item href="/" prefix={<ArrowRightIcon />} value="hello">
             Item Four
           </ContextMenu.Item>
         </ContextMenu.Content>
@@ -466,16 +470,16 @@ function PrefixSuffixExample() {
           </div>
         </ContextMenu.Trigger>
         <ContextMenu.Content>
-          <ContextMenu.Item href="/" suffix={<LogoVercelCircle />} value="hello">
+          <ContextMenu.Item href="/" suffix={<ArrowRightIcon />} value="hello">
             Item one
           </ContextMenu.Item>
-          <ContextMenu.Item href="/" suffix={<LogoVercelCircle />} value="hello">
+          <ContextMenu.Item href="/" suffix={<ArrowRightIcon />} value="hello">
             Item Two
           </ContextMenu.Item>
-          <ContextMenu.Item href="/" suffix={<LogoVercelCircle />} value="hello">
+          <ContextMenu.Item href="/" suffix={<ArrowRightIcon />} value="hello">
             Item Three
           </ContextMenu.Item>
-          <ContextMenu.Item href="/" suffix={<LogoVercelCircle />} value="hello">
+          <ContextMenu.Item href="/" suffix={<ArrowRightIcon />} value="hello">
             Item Four
           </ContextMenu.Item>
         </ContextMenu.Content>
@@ -547,10 +551,10 @@ function PrefixSuffixDemo() {
           <TriggerBox />
         </ContextMenu.Trigger>
         <ContextMenu.Content>
-          <ContextMenu.Item href="/" prefix={<VercelCircleIcon />} value="hello">Item one</ContextMenu.Item>
-          <ContextMenu.Item href="/" prefix={<VercelCircleIcon />} value="hello">Item Two</ContextMenu.Item>
-          <ContextMenu.Item href="/" prefix={<VercelCircleIcon />} value="hello">Item Three</ContextMenu.Item>
-          <ContextMenu.Item href="/" prefix={<VercelCircleIcon />} value="hello">Item Four</ContextMenu.Item>
+          <ContextMenu.Item href="/" prefix={<ArrowRightIcon />} value="hello">Item one</ContextMenu.Item>
+          <ContextMenu.Item href="/" prefix={<ArrowRightIcon />} value="hello">Item Two</ContextMenu.Item>
+          <ContextMenu.Item href="/" prefix={<ArrowRightIcon />} value="hello">Item Three</ContextMenu.Item>
+          <ContextMenu.Item href="/" prefix={<ArrowRightIcon />} value="hello">Item Four</ContextMenu.Item>
         </ContextMenu.Content>
       </ContextMenu>
 
@@ -559,10 +563,10 @@ function PrefixSuffixDemo() {
           <TriggerBox />
         </ContextMenu.Trigger>
         <ContextMenu.Content>
-          <ContextMenu.Item href="/" suffix={<VercelCircleIcon />} value="hello">Item one</ContextMenu.Item>
-          <ContextMenu.Item href="/" suffix={<VercelCircleIcon />} value="hello">Item Two</ContextMenu.Item>
-          <ContextMenu.Item href="/" suffix={<VercelCircleIcon />} value="hello">Item Three</ContextMenu.Item>
-          <ContextMenu.Item href="/" suffix={<VercelCircleIcon />} value="hello">Item Four</ContextMenu.Item>
+          <ContextMenu.Item href="/" suffix={<ArrowRightIcon />} value="hello">Item one</ContextMenu.Item>
+          <ContextMenu.Item href="/" suffix={<ArrowRightIcon />} value="hello">Item Two</ContextMenu.Item>
+          <ContextMenu.Item href="/" suffix={<ArrowRightIcon />} value="hello">Item Three</ContextMenu.Item>
+          <ContextMenu.Item href="/" suffix={<ArrowRightIcon />} value="hello">Item Four</ContextMenu.Item>
         </ContextMenu.Content>
       </ContextMenu>
     </div>
