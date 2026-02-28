@@ -482,13 +482,7 @@ export function ModalExample() {
           </footer>
         }
       >
-        {/* Inset section */}
-        <div style={{
-          background: "var(--ds-background-200)",
-          borderTop: "1px solid var(--ds-gray-alpha-400)",
-          margin: "0 -24px -24px",
-          padding: 24,
-        }}>
+        <Modal.Inset>
           <Combobox
             label="Region"
             size="small"
@@ -499,7 +493,7 @@ export function ModalExample() {
             style={{ color: "var(--ds-gray-900)", marginTop: 10, marginBottom: 0 }}>
             This is the region where your database reads and writes will take place.
           </p>
-        </div>
+        </Modal.Inset>
       </Modal>
     </>
   );
@@ -553,15 +547,7 @@ function ModalDemo() {
           </footer>
         }
       >
-        {/* Inset section */}
-        <div
-          style={{
-            background: "var(--ds-background-200)",
-            borderTop: "1px solid var(--ds-gray-alpha-400)",
-            margin: "0 -24px -24px",
-            padding: 24,
-          }}
-        >
+        <Modal.Inset>
           <Combobox
             label="Region"
             size="small"
@@ -575,7 +561,7 @@ function ModalDemo() {
             This is the region where your database reads and writes will take
             place.
           </p>
-        </div>
+        </Modal.Inset>
       </Modal>
     </>
   );
