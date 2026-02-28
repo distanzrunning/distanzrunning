@@ -56,7 +56,7 @@ const CMDK_CSS = `
 
   .ds-cmdk-content {
     position: fixed;
-    top: min(120px, 15vh);
+    top: min(80px, 10vh);
     left: 50%;
     transform: translateX(-50%);
     z-index: 100;
@@ -101,7 +101,9 @@ const CMDK_CSS = `
     overflow-y: auto;
     padding: 8px;
     max-height: 436px;
+    height: var(--cmdk-list-height);
     transition: height 0.1s ease;
+    background: var(--ds-background-100);
   }
 
   .ds-cmdk-content [cmdk-group-heading] {
@@ -137,6 +139,16 @@ const CMDK_CSS = `
   .ds-cmdk-content [cmdk-item][data-disabled="true"] {
     color: var(--ds-gray-600);
     cursor: default;
+  }
+
+  .ds-cmdk-content [cmdk-empty] {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 64px;
+    font-size: 14px;
+    color: var(--ds-gray-700);
+    user-select: none;
   }
 
   .ds-cmdk-esc-button {
@@ -272,7 +284,10 @@ export function CommandMenu({
         </div>
 
         {/* Scrollable items — Geist: list */}
-        <Command.List>{children}</Command.List>
+        <Command.List>
+          <Command.Empty>No results found.</Command.Empty>
+          {children}
+        </Command.List>
       </Command.Dialog>
     </>
   );
