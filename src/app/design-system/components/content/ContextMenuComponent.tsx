@@ -438,10 +438,18 @@ function DisabledExample() {
         </div>
       </ContextMenu.Trigger>
       <ContextMenu.Content>
-        <ContextMenu.Item>Item one</ContextMenu.Item>
-        <ContextMenu.Item disabled>Item Two</ContextMenu.Item>
-        <ContextMenu.Item disabled>Item Three</ContextMenu.Item>
-        <ContextMenu.Item>Item Four</ContextMenu.Item>
+        <ContextMenu.Item onClick={() => console.log('value')} value="hello">
+          Item one
+        </ContextMenu.Item>
+        <ContextMenu.Item disabled onClick={() => console.log('value')} value="hello">
+          Item Two
+        </ContextMenu.Item>
+        <ContextMenu.Item disabled onClick={() => console.log('value')} value="hello">
+          Item Three
+        </ContextMenu.Item>
+        <ContextMenu.Item onClick={() => console.log('value')} value="hello">
+          Item Four
+        </ContextMenu.Item>
       </ContextMenu.Content>
     </ContextMenu>
   );
@@ -494,19 +502,19 @@ function PrefixSuffixExample() {
         <ContextMenu.Content>
           <ContextMenu.Item
             prefix={<ArrowLeftIcon />}
-            onSelect={() => {}}
+            onClick={() => {}}
           >
             Back
           </ContextMenu.Item>
           <ContextMenu.Item
             prefix={<ArrowRightIcon />}
-            onSelect={() => {}}
+            onClick={() => {}}
           >
             Forward
           </ContextMenu.Item>
           <ContextMenu.Item
             prefix={<RefreshIcon />}
-            onSelect={() => {}}
+            onClick={() => {}}
           >
             Reload
           </ContextMenu.Item>
@@ -523,19 +531,19 @@ function PrefixSuffixExample() {
         <ContextMenu.Content>
           <ContextMenu.Item
             suffix="⌘["
-            onSelect={() => {}}
+            onClick={() => {}}
           >
             Back
           </ContextMenu.Item>
           <ContextMenu.Item
             suffix="⌘]"
-            onSelect={() => {}}
+            onClick={() => {}}
           >
             Forward
           </ContextMenu.Item>
           <ContextMenu.Item
             suffix="⌘R"
-            onSelect={() => {}}
+            onClick={() => {}}
           >
             Reload
           </ContextMenu.Item>
@@ -740,7 +748,7 @@ export default function ContextMenuComponent() {
                 </td>
               </tr>
               <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">onSelect</td>
+                <td className="py-3 pr-4 font-mono">onClick</td>
                 <td className="py-3 px-4 font-mono text-textSubtle">
                   {"() => void"}
                 </td>

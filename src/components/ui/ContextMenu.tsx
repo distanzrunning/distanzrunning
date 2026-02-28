@@ -27,8 +27,8 @@ interface ContextMenuContentProps {
 interface ContextMenuItemProps {
   /** Item label content */
   children: ReactNode;
-  /** Called when the item is selected */
-  onSelect?: () => void;
+  /** Called when the item is clicked */
+  onClick?: () => void;
   /** Whether the item is disabled */
   disabled?: boolean;
   /** Optional element rendered before the label */
@@ -153,7 +153,7 @@ function ContextMenuContent({ children, width = 160 }: ContextMenuContentProps) 
 
 function ContextMenuItem({
   children,
-  onSelect,
+  onClick,
   disabled = false,
   prefix,
   suffix,
@@ -206,7 +206,7 @@ function ContextMenuItem({
   return (
     <RadixContextMenu.Item
       className="ds-context-menu-item"
-      onSelect={onSelect}
+      onSelect={onClick}
       disabled={disabled}
       textValue={value}
     >
