@@ -421,7 +421,7 @@ function LinkExample() {
 }`;
 
 const prefixSuffixCode = `import { ContextMenu } from '@/components/ui/ContextMenu';
-import { ArrowRightIcon } from './icons';
+import { ArrowRight } from 'lucide-react';
 
 function PrefixSuffixExample() {
   return (

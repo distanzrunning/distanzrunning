@@ -52,8 +52,8 @@ interface ContextMenuLabelProps {
 
 const CONTEXT_MENU_CSS = `
   .ds-context-menu-content {
-    padding: 8px;
-    border-radius: 12px;
+    padding: var(--ds-space-2x);
+    border-radius: var(--ds-radius-large);
     background: var(--ds-background-100);
     box-shadow: var(--ds-shadow-menu);
     color: var(--ds-gray-1000);
@@ -86,10 +86,10 @@ const CONTEXT_MENU_CSS = `
   .ds-context-menu-item {
     display: flex;
     align-items: center;
-    gap: 8px;
-    height: 40px;
-    padding: 0 8px;
-    border-radius: 6px;
+    gap: var(--ds-space-2x);
+    height: var(--ds-space-medium);
+    padding: 0 var(--ds-space-2x);
+    border-radius: var(--ds-radius-small);
     font-size: 14px;
     line-height: 20px;
     color: var(--ds-gray-1000);
@@ -112,14 +112,14 @@ const CONTEXT_MENU_CSS = `
   .ds-context-menu-separator {
     height: 1px;
     background: var(--ds-gray-alpha-400);
-    margin: 4px;
+    margin: var(--ds-space);
   }
 
   .ds-context-menu-label {
     display: flex;
     align-items: center;
-    height: 32px;
-    padding: 0 8px;
+    height: var(--ds-space-small);
+    padding: 0 var(--ds-space-2x);
     font-size: 12px;
     color: var(--ds-gray-700);
     user-select: none;
