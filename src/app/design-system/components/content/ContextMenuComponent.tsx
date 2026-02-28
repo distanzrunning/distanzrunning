@@ -438,15 +438,10 @@ function DisabledExample() {
         </div>
       </ContextMenu.Trigger>
       <ContextMenu.Content>
-        <ContextMenu.Item onSelect={() => console.log('Back')}>
-          Back
-        </ContextMenu.Item>
-        <ContextMenu.Item disabled>Forward</ContextMenu.Item>
-        <ContextMenu.Item onSelect={() => console.log('Reload')}>
-          Reload
-        </ContextMenu.Item>
-        <ContextMenu.Separator />
-        <ContextMenu.Item disabled>View Source</ContextMenu.Item>
+        <ContextMenu.Item>Item one</ContextMenu.Item>
+        <ContextMenu.Item disabled>Item Two</ContextMenu.Item>
+        <ContextMenu.Item disabled>Item Three</ContextMenu.Item>
+        <ContextMenu.Item>Item Four</ContextMenu.Item>
       </ContextMenu.Content>
     </ContextMenu>
   );
@@ -574,11 +569,10 @@ function DisabledDemo() {
         <TriggerBox />
       </ContextMenu.Trigger>
       <ContextMenu.Content>
-        <ContextMenu.Item>Back</ContextMenu.Item>
-        <ContextMenu.Item disabled>Forward</ContextMenu.Item>
-        <ContextMenu.Item>Reload</ContextMenu.Item>
-        <ContextMenu.Separator />
-        <ContextMenu.Item disabled>View Source</ContextMenu.Item>
+        <ContextMenu.Item>Item one</ContextMenu.Item>
+        <ContextMenu.Item disabled>Item Two</ContextMenu.Item>
+        <ContextMenu.Item disabled>Item Three</ContextMenu.Item>
+        <ContextMenu.Item>Item Four</ContextMenu.Item>
       </ContextMenu.Content>
     </ContextMenu>
   );
