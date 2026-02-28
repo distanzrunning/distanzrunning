@@ -307,83 +307,6 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
 }
 
 // ============================================================================
-// Icons for demo items
-// ============================================================================
-
-function SearchIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-      <path
-        d="M11.5 7C11.5 9.48528 9.48528 11.5 7 11.5C4.51472 11.5 2.5 9.48528 2.5 7C2.5 4.51472 4.51472 2.5 7 2.5C9.48528 2.5 11.5 4.51472 11.5 7Z"
-        stroke="currentColor"
-        strokeWidth="1.5"
-      />
-      <path
-        d="M10.5 10.5L14 14"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
-function PlusIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-      <path
-        d="M8 1V15M1 8H15"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
-function RocketIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-      <path
-        d="M8 1C8 1 3 5 3 10L5.5 12.5L8 10L10.5 12.5L13 10C13 5 8 1 8 1Z"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinejoin="round"
-      />
-      <circle cx="8" cy="6" r="1" fill="currentColor" />
-    </svg>
-  );
-}
-
-function HomeIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-      <path
-        d="M2 8L8 2L14 8M4 6.5V13.5H7V10.5H9V13.5H12V6.5"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function SettingsIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-      <circle cx="8" cy="8" r="2" stroke="currentColor" strokeWidth="1.5" />
-      <path
-        d="M13.5 8C13.5 7.5 13.4 7 13.2 6.6L14.5 5.3L12.7 3.5L11.4 4.8C11 4.6 10.5 4.5 10 4.5V2.5H8V4.5C7.5 4.5 7 4.6 6.6 4.8L5.3 3.5L3.5 5.3L4.8 6.6C4.6 7 4.5 7.5 4.5 8C4.5 8.5 4.6 9 4.8 9.4L3.5 10.7L5.3 12.5L6.6 11.2C7 11.4 7.5 11.5 8 11.5V13.5H10V11.5C10.5 11.5 11 11.4 11.4 11.2L12.7 12.5L14.5 10.7L13.2 9.4C13.4 9 13.5 8.5 13.5 8Z"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-// ============================================================================
 // Code Examples
 // ============================================================================
 
@@ -402,42 +325,24 @@ export function DefaultExample() {
       <CommandMenu
         open={open}
         onClose={() => setOpen(false)}
-        placeholder="Search for actions..."
+        placeholder="What do you need?"
       >
         <CommandMenu.Group heading="Suggestions">
-          <CommandMenu.Item
-            icon={<SearchIcon />}
-            onSelect={() => setOpen(false)}
-          >
-            Search Documentation...
-          </CommandMenu.Item>
-          <CommandMenu.Item
-            icon={<PlusIcon />}
-            onSelect={() => setOpen(false)}
-          >
-            Create New Project...
-          </CommandMenu.Item>
-          <CommandMenu.Item
-            icon={<RocketIcon />}
-            onSelect={() => setOpen(false)}
-          >
-            Deploy to Production...
+          <CommandMenu.Item onSelect={() => setOpen(false)}>
+            Figma Import
           </CommandMenu.Item>
         </CommandMenu.Group>
-        <CommandMenu.Group heading="Navigation">
-          <CommandMenu.Item
-            icon={<HomeIcon />}
-            shortcut="⌘H"
-            onSelect={() => setOpen(false)}
-          >
-            Go to Dashboard
+        <CommandMenu.Group heading="Commands">
+          <CommandMenu.Item onSelect={() => setOpen(false)}>
+            Import Extension
           </CommandMenu.Item>
-          <CommandMenu.Item
-            icon={<SettingsIcon />}
-            shortcut="⌘,"
-            onSelect={() => setOpen(false)}
-          >
-            Go to Settings
+          <CommandMenu.Item onSelect={() => setOpen(false)}>
+            Manage Extensions
+          </CommandMenu.Item>
+        </CommandMenu.Group>
+        <CommandMenu.Group heading="Collaboration">
+          <CommandMenu.Item onSelect={() => setOpen(false)}>
+            Flags Explorer
           </CommandMenu.Item>
         </CommandMenu.Group>
       </CommandMenu>
@@ -458,42 +363,24 @@ function DefaultDemo() {
       <CommandMenu
         open={open}
         onClose={() => setOpen(false)}
-        placeholder="Search for actions..."
+        placeholder="What do you need?"
       >
         <CommandMenu.Group heading="Suggestions">
-          <CommandMenu.Item
-            icon={<SearchIcon />}
-            onSelect={() => setOpen(false)}
-          >
-            Search Documentation...
-          </CommandMenu.Item>
-          <CommandMenu.Item
-            icon={<PlusIcon />}
-            onSelect={() => setOpen(false)}
-          >
-            Create New Project...
-          </CommandMenu.Item>
-          <CommandMenu.Item
-            icon={<RocketIcon />}
-            onSelect={() => setOpen(false)}
-          >
-            Deploy to Production...
+          <CommandMenu.Item onSelect={() => setOpen(false)}>
+            Figma Import
           </CommandMenu.Item>
         </CommandMenu.Group>
-        <CommandMenu.Group heading="Navigation">
-          <CommandMenu.Item
-            icon={<HomeIcon />}
-            shortcut="⌘H"
-            onSelect={() => setOpen(false)}
-          >
-            Go to Dashboard
+        <CommandMenu.Group heading="Commands">
+          <CommandMenu.Item onSelect={() => setOpen(false)}>
+            Import Extension
           </CommandMenu.Item>
-          <CommandMenu.Item
-            icon={<SettingsIcon />}
-            shortcut="⌘,"
-            onSelect={() => setOpen(false)}
-          >
-            Go to Settings
+          <CommandMenu.Item onSelect={() => setOpen(false)}>
+            Manage Extensions
+          </CommandMenu.Item>
+        </CommandMenu.Group>
+        <CommandMenu.Group heading="Collaboration">
+          <CommandMenu.Item onSelect={() => setOpen(false)}>
+            Flags Explorer
           </CommandMenu.Item>
         </CommandMenu.Group>
       </CommandMenu>

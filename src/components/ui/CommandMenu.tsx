@@ -82,12 +82,14 @@ function CommandMenuGroup({ heading, children }: CommandMenuGroupProps) {
     <div role="group" aria-label={heading}>
       {heading && (
         <div
+          aria-hidden="true"
           style={{
-            padding: "8px 16px",
-            fontSize: 12,
-            lineHeight: "16px",
-            fontWeight: 500,
-            color: "var(--ds-gray-900)",
+            display: "flex",
+            alignItems: "center",
+            height: 40,
+            padding: "0 8px",
+            fontSize: 13,
+            color: "var(--ds-gray-700)",
             userSelect: "none",
           }}
         >
@@ -144,14 +146,17 @@ function CommandMenuItem({
         display: "flex",
         alignItems: "center",
         gap: 12,
-        padding: "10px 16px",
+        height: 40,
+        minHeight: 40,
+        padding: "0 8px",
+        borderRadius: 6,
         fontSize: 14,
-        lineHeight: "20px",
         color: disabled ? "var(--ds-gray-600)" : "var(--ds-gray-1000)",
         cursor: disabled ? "default" : "pointer",
         background: isActive ? "var(--ds-gray-alpha-200)" : "transparent",
         transition: "background 0.1s ease",
         userSelect: "none",
+        scrollMargin: "8px 0",
       }}
       onClick={() => {
         if (!disabled && onSelect) onSelect();
@@ -347,7 +352,7 @@ export function CommandMenu({
           opacity: visible
             ? "var(--ds-overlay-backdrop-opacity)"
             : (0 as never),
-          zIndex: 50,
+          zIndex: 100,
           pointerEvents: visible ? "all" : "none",
           transition: `opacity ${DURATION}ms ${TIMING}`,
         }}
@@ -362,7 +367,7 @@ export function CommandMenu({
           left: 0,
           width: "100vw",
           height: "100vh",
-          zIndex: 50,
+          zIndex: 100,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
@@ -394,66 +399,77 @@ export function CommandMenu({
             transition: `opacity ${DURATION}ms ${TIMING}, transform ${DURATION}ms ${TIMING}`,
           }}
         >
-          {/* Search input */}
+          {/* Search input — Geist: topSection */}
           <div
             style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 12,
-              padding: "12px 16px",
+              position: "relative",
+              padding: 12,
               borderBottom: "1px solid var(--ds-gray-alpha-400)",
+              background: "var(--ds-background-100)",
             }}
           >
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 16 16"
-              fill="none"
+            {/* Input wrapper — Geist: inputWrapper */}
+            <div
               style={{
-                flexShrink: 0,
-                color: "var(--ds-gray-700)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                gap: 12,
+                padding: "0 4px",
               }}
             >
-              <path
-                d="M11.5 7C11.5 9.48528 9.48528 11.5 7 11.5C4.51472 11.5 2.5 9.48528 2.5 7C2.5 4.51472 4.51472 2.5 7 2.5C9.48528 2.5 11.5 4.51472 11.5 7Z"
-                stroke="currentColor"
-                strokeWidth="1.5"
+              <input
+                ref={inputRef}
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder={placeholder}
+                style={{
+                  flex: 1,
+                  background: "transparent",
+                  border: "none",
+                  outline: "none",
+                  fontSize: 18,
+                  color: "var(--ds-gray-1000)",
+                  padding: 0,
+                  fontFamily: "inherit",
+                }}
+                autoComplete="off"
+                autoCorrect="off"
+                spellCheck={false}
               />
-              <path
-                d="M10.5 10.5L14 14"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-              />
-            </svg>
-            <input
-              ref={inputRef}
-              type="text"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder={placeholder}
-              style={{
-                flex: 1,
-                background: "transparent",
-                border: "none",
-                outline: "none",
-                fontSize: 14,
-                lineHeight: "20px",
-                color: "var(--ds-gray-1000)",
-                padding: 0,
-                fontFamily: "inherit",
-              }}
-              autoComplete="off"
-              autoCorrect="off"
-              spellCheck={false}
-            />
+              <button
+                type="button"
+                onClick={onClose}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  padding: "0 4px",
+                  height: 20,
+                  border: "none",
+                  borderRadius: 4,
+                  background: "var(--ds-background-100)",
+                  boxShadow:
+                    "var(--ds-gray-alpha-400) 0px 0px 0px 1px, var(--ds-gray-100) 0px 0px 0px 1px",
+                  color: "var(--ds-gray-1000)",
+                  fontSize: 12,
+                  cursor: "pointer",
+                  transition: "background 0.2s ease",
+                  fontFamily: "inherit",
+                }}
+              >
+                Esc
+              </button>
+            </div>
           </div>
 
-          {/* Scrollable items */}
+          {/* Scrollable items — Geist: list */}
           <div
             style={{
               overflowY: "auto",
-              padding: "8px 0",
+              padding: 8,
+              maxHeight: 436,
+              transition: "height 0.1s ease",
             }}
           >
             <CommandMenuContext.Provider
