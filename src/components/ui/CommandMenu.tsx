@@ -98,12 +98,10 @@ const CMDK_CSS = `
   }
 
   .ds-cmdk-content [cmdk-list] {
-    overflow: hidden auto;
+    overflow-y: auto;
     overscroll-behavior: contain;
     padding: 8px;
     max-height: 436px;
-    height: min(var(--cmdk-list-height, 300px), 436px);
-    transition: height 0.1s ease;
     background: var(--ds-background-100);
   }
 
