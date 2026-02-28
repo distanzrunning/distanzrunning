@@ -20,6 +20,8 @@ interface ContextMenuTriggerProps {
 interface ContextMenuContentProps {
   /** Menu items, separators, and labels */
   children: ReactNode;
+  /** Width of the menu content */
+  width?: number;
 }
 
 interface ContextMenuItemProps {
@@ -166,10 +168,13 @@ function ContextMenuTrigger({ children }: ContextMenuTriggerProps) {
   );
 }
 
-function ContextMenuContent({ children }: ContextMenuContentProps) {
+function ContextMenuContent({ children, width = 160 }: ContextMenuContentProps) {
   return (
     <RadixContextMenu.Portal>
-      <RadixContextMenu.Content className="ds-context-menu-content">
+      <RadixContextMenu.Content
+        className="ds-context-menu-content"
+        style={{ width }}
+      >
         {children}
       </RadixContextMenu.Content>
     </RadixContextMenu.Portal>
