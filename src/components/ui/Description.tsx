@@ -66,8 +66,8 @@ const DESCRIPTION_CSS = `
     border-radius: var(--ds-radius-small);
     background: var(--ds-gray-1000);
     color: var(--ds-background-100);
-    font-size: 14px;
-    line-height: 20px;
+    font-size: 12px;
+    line-height: 16px;
     text-align: center;
     user-select: none;
     will-change: transform, opacity;
