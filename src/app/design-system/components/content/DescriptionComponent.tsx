@@ -314,7 +314,7 @@ const defaultCode = `import { Description } from '@/components/ui/Description';
 function DefaultExample() {
   return (
     <Description>
-      <Description.Title tooltip="Additional context about this section.">
+      <Description.Title tooltip="Additional context about what this section refers to.">
         Section Title
       </Description.Title>
       <Description.Content>
@@ -331,7 +331,7 @@ function DefaultExample() {
 function DefaultDemo() {
   return (
     <Description>
-      <Description.Title tooltip="Additional context about this section.">
+      <Description.Title tooltip="Additional context about what this section refers to.">
         Section Title
       </Description.Title>
       <Description.Content>Data about this section.</Description.Content>

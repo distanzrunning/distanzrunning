@@ -1,7 +1,7 @@
 "use client";
 
+import * as Tooltip from "@radix-ui/react-tooltip";
 import { type ReactNode } from "react";
-import { ContextCard } from "./ContextCard";
 
 // ============================================================================
 // Types
@@ -59,6 +59,38 @@ const DESCRIPTION_CSS = `
     line-height: 20px;
     color: var(--ds-gray-900);
   }
+
+  .ds-description-tooltip {
+    max-width: 250px;
+    padding: var(--ds-space-2x) var(--ds-space-3x);
+    border-radius: var(--ds-radius-small);
+    background: var(--ds-gray-1000);
+    color: var(--ds-background-100);
+    font-size: 14px;
+    line-height: 20px;
+    text-align: center;
+    user-select: none;
+    will-change: transform, opacity;
+    animation-duration: 0.1s;
+    animation-timing-function: ease-in;
+  }
+
+  .ds-description-tooltip[data-state="delayed-open"] {
+    animation-name: ds-description-tooltip-fade-in;
+  }
+
+  @keyframes ds-description-tooltip-fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  .ds-description-tooltip-arrow {
+    fill: var(--ds-gray-1000);
+  }
 `;
 
 // ============================================================================
@@ -98,13 +130,25 @@ function DescriptionTitle({ children, tooltip }: DescriptionTitleProps) {
     <dt className="ds-description-title">
       {children}
       {tooltip && (
-        <ContextCard delayDuration={200}>
-          <ContextCard.Trigger content={tooltip}>
-            <span className="ds-description-icon">
-              <InfoIcon />
-            </span>
-          </ContextCard.Trigger>
-        </ContextCard>
+        <Tooltip.Provider delayDuration={400}>
+          <Tooltip.Root>
+            <Tooltip.Trigger asChild>
+              <span className="ds-description-icon" tabIndex={0}>
+                <InfoIcon />
+              </span>
+            </Tooltip.Trigger>
+            <Tooltip.Portal>
+              <Tooltip.Content
+                className="ds-description-tooltip"
+                side="top"
+                sideOffset={8}
+              >
+                {tooltip}
+                <Tooltip.Arrow className="ds-description-tooltip-arrow" />
+              </Tooltip.Content>
+            </Tooltip.Portal>
+          </Tooltip.Root>
+        </Tooltip.Provider>
       )}
     </dt>
   );
