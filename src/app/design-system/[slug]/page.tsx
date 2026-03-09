@@ -42,6 +42,7 @@ import CommandMenuComponent from "../components/content/CommandMenuComponent";
 import ContextCardComponent from "../components/content/ContextCardComponent";
 import ContextMenuComponent from "../components/content/ContextMenuComponent";
 import DescriptionComponent from "../components/content/DescriptionComponent";
+import DrawerComponent from "../components/content/DrawerComponent";
 import PaginationComponent from "../components/content/PaginationComponent";
 import CalendarComponent from "../components/content/CalendarComponent";
 import Materials from "../components/content/Materials";
@@ -548,6 +549,21 @@ export default function DesignSystemPage() {
           onNavigate={handleNavigation}
         >
           <DescriptionComponent />
+        </ContentWithTOC>
+      );
+    }
+
+    if (activeSlug === "drawer") {
+      return (
+        <ContentWithTOC
+          tocTitle="On this page"
+          pageTitle="Drawer"
+          pageSubtitle="Display content in a separate view from the existing context."
+          mainSectionId="drawer"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
+          <DrawerComponent />
         </ContentWithTOC>
       );
     }

@@ -53,6 +53,7 @@ export const navigation: NavSection[] = [
       { id: "context-card", label: "Context Card" },
       { id: "context-menu", label: "Context Menu" },
       { id: "description", label: "Description" },
+      { id: "drawer", label: "Drawer" },
       { id: "modal", label: "Modal" },
       { id: "pagination", label: "Pagination" },
     ],
