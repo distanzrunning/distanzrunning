@@ -320,14 +320,9 @@ function DefaultExample() {
         <Button>Open</Button>
       </Drawer.Trigger>
       <Drawer.Content>
-        <Drawer.Header>
-          <Drawer.Title>Drawer Title</Drawer.Title>
-          <Drawer.Description>
-            This is a drawer that slides up from the bottom of the screen.
-          </Drawer.Description>
-        </Drawer.Header>
         <Drawer.Body>
-          <p>Drawer content goes here.</p>
+          <Drawer.Title>A drawer title</Drawer.Title>
+          <Drawer.Description>Drawer body</Drawer.Description>
         </Drawer.Body>
       </Drawer.Content>
     </Drawer>
@@ -344,14 +339,11 @@ function CustomHeightExample() {
         <Button>Open</Button>
       </Drawer.Trigger>
       <Drawer.Content height="75vh">
-        <Drawer.Header>
+        <Drawer.Body>
           <Drawer.Title>Tall Drawer</Drawer.Title>
           <Drawer.Description>
             This drawer has a custom height of 75vh.
           </Drawer.Description>
-        </Drawer.Header>
-        <Drawer.Body>
-          <p>This drawer takes up more vertical space.</p>
         </Drawer.Body>
       </Drawer.Content>
     </Drawer>
@@ -369,23 +361,9 @@ function DefaultDemo() {
         <Button>Open</Button>
       </Drawer.Trigger>
       <Drawer.Content>
-        <Drawer.Header>
-          <Drawer.Title>Drawer Title</Drawer.Title>
-          <Drawer.Description>
-            This is a drawer that slides up from the bottom of the screen.
-          </Drawer.Description>
-        </Drawer.Header>
         <Drawer.Body>
-          <p
-            style={{
-              fontSize: 14,
-              lineHeight: "20px",
-              color: "var(--ds-gray-900)",
-            }}
-          >
-            Drawer content goes here. Use drawers for secondary content or
-            actions on small viewports.
-          </p>
+          <Drawer.Title>A drawer title</Drawer.Title>
+          <Drawer.Description>Drawer body</Drawer.Description>
         </Drawer.Body>
       </Drawer.Content>
     </Drawer>
@@ -399,23 +377,11 @@ function CustomHeightDemo() {
         <Button>Open</Button>
       </Drawer.Trigger>
       <Drawer.Content height="75vh">
-        <Drawer.Header>
+        <Drawer.Body>
           <Drawer.Title>Tall Drawer</Drawer.Title>
           <Drawer.Description>
             This drawer has a custom height of 75vh.
           </Drawer.Description>
-        </Drawer.Header>
-        <Drawer.Body>
-          <p
-            style={{
-              fontSize: 14,
-              lineHeight: "20px",
-              color: "var(--ds-gray-900)",
-            }}
-          >
-            This drawer takes up more vertical space, useful for forms or longer
-            content.
-          </p>
         </Drawer.Body>
       </Drawer.Content>
     </Drawer>

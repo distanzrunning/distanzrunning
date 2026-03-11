@@ -30,10 +30,6 @@ interface DrawerContentProps {
   height?: string | number;
 }
 
-interface DrawerHeaderProps {
-  children: ReactNode;
-}
-
 interface DrawerBodyProps {
   children: ReactNode;
 }
@@ -57,10 +53,28 @@ interface DrawerDescriptionProps {
 const DRAWER_CSS = `
   .ds-drawer-overlay {
     position: fixed;
-    inset: 0;
-    z-index: 50;
-    background: var(--ds-overlay-backdrop-color);
-    opacity: var(--ds-overlay-backdrop-opacity);
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 4999;
+    background-color: rgba(0, 0, 0, 0.4);
+    pointer-events: none;
+    animation: ds-drawer-overlay-fadeIn 400ms cubic-bezier(0.32, 0.72, 0, 1) forwards;
+  }
+
+  .ds-drawer-overlay[data-state="closed"] {
+    animation: ds-drawer-overlay-fadeOut 400ms cubic-bezier(0.32, 0.72, 0, 1) forwards;
+  }
+
+  @keyframes ds-drawer-overlay-fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes ds-drawer-overlay-fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
   }
 
   .ds-drawer-content {
@@ -68,58 +82,69 @@ const DRAWER_CSS = `
     bottom: 0;
     left: 0;
     right: 0;
-    z-index: 50;
+    z-index: 4999;
     display: flex;
     flex-direction: column;
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
-    background: var(--ds-background-100);
+    border: none;
+    background-color: var(--ds-background-100);
+    color: var(--ds-gray-1000);
+    box-shadow:
+      rgba(0, 0, 0, 0.08) 0px 0px 0px 1px,
+      rgba(0, 0, 0, 0.02) 0px 1px 1px 0px,
+      rgba(0, 0, 0, 0.04) 0px 4px 8px -4px,
+      rgba(0, 0, 0, 0.06) 0px 16px 24px -8px,
+      var(--ds-gray-100) 0px 0px 0px 1px;
+    max-width: 100%;
+    max-height: 80vh;
+    min-height: 31px;
+    outline: none;
+    pointer-events: auto;
+    user-select: none;
+    will-change: transform;
+    touch-action: none;
+    overscroll-behavior: none;
+    transition: transform 500ms cubic-bezier(0.32, 0.72, 0, 1);
+  }
+
+  .ds-drawer-inner {
+    background-color: var(--ds-background-100);
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    overflow-y: auto;
+    overscroll-behavior: none;
+    user-select: none;
+    pointer-events: auto;
+    z-index: 1;
     outline: none;
   }
 
-  .ds-drawer-handle-area {
+  .ds-drawer-body {
     display: flex;
-    justify-content: center;
-    padding-top: 12px;
-    padding-bottom: 12px;
-    cursor: grab;
-  }
-
-  .ds-drawer-handle-area:active {
-    cursor: grabbing;
-  }
-
-  .ds-drawer-handle {
-    width: 48px;
-    height: 6px;
-    flex-shrink: 0;
-    border-radius: 9999px;
-    background: var(--ds-gray-300);
-  }
-
-  .ds-drawer-header {
-    padding: 0 24px 16px;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: 8px;
+    flex: 0 1 auto;
+    padding: 48px;
   }
 
   .ds-drawer-title {
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 600;
     line-height: 24px;
     color: var(--ds-gray-1000);
+    text-align: center;
     margin: 0;
   }
 
   .ds-drawer-description {
     font-size: 14px;
     line-height: 20px;
-    color: var(--ds-gray-900);
-    margin: 4px 0 0;
-  }
-
-  .ds-drawer-body {
-    padding: 0 24px 24px;
-    overflow-y: auto;
-    flex: 1;
+    color: var(--ds-gray-1000);
+    text-align: center;
+    margin: 0;
   }
 
   .ds-drawer-footer {
@@ -145,17 +170,12 @@ function DrawerContent({ children, height }: DrawerContentProps) {
         className="ds-drawer-content"
         style={height ? { height } : undefined}
       >
-        <div className="ds-drawer-handle-area">
-          <div className="ds-drawer-handle" />
+        <div className="ds-drawer-inner">
+          {children}
         </div>
-        {children}
       </VaulDrawer.Content>
     </VaulDrawer.Portal>
   );
-}
-
-function DrawerHeader({ children }: DrawerHeaderProps) {
-  return <div className="ds-drawer-header">{children}</div>;
 }
 
 function DrawerBody({ children }: DrawerBodyProps) {
@@ -208,7 +228,6 @@ export function Drawer({
 
 Drawer.Trigger = DrawerTrigger;
 Drawer.Content = DrawerContent;
-Drawer.Header = DrawerHeader;
 Drawer.Body = DrawerBody;
 Drawer.Footer = DrawerFooter;
 Drawer.Title = DrawerTitle;
