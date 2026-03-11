@@ -54,6 +54,7 @@ export const navigation: NavSection[] = [
       { id: "context-menu", label: "Context Menu" },
       { id: "description", label: "Description" },
       { id: "drawer", label: "Drawer" },
+      { id: "empty-state", label: "Empty State" },
       { id: "modal", label: "Modal" },
       { id: "pagination", label: "Pagination" },
     ],

@@ -43,6 +43,7 @@ import ContextCardComponent from "../components/content/ContextCardComponent";
 import ContextMenuComponent from "../components/content/ContextMenuComponent";
 import DescriptionComponent from "../components/content/DescriptionComponent";
 import DrawerComponent from "../components/content/DrawerComponent";
+import EmptyStateComponent from "../components/content/EmptyStateComponent";
 import PaginationComponent from "../components/content/PaginationComponent";
 import CalendarComponent from "../components/content/CalendarComponent";
 import Materials from "../components/content/Materials";
@@ -564,6 +565,21 @@ export default function DesignSystemPage() {
           onNavigate={handleNavigation}
         >
           <DrawerComponent />
+        </ContentWithTOC>
+      );
+    }
+
+    if (activeSlug === "empty-state") {
+      return (
+        <ContentWithTOC
+          tocTitle="On this page"
+          pageTitle="Empty State"
+          pageSubtitle="Fill spaces when no content has been added yet, or is temporarily empty due to the nature of the feature."
+          mainSectionId="empty-state"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
+          <EmptyStateComponent />
         </ContentWithTOC>
       );
     }
