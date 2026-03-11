@@ -48,9 +48,17 @@ const EMPTY_STATE_CSS = `
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 32px;
-    height: 32px;
+    width: 62px;
+    height: 60px;
+    padding: 14px;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 8px;
+    background-color: var(--ds-background-100);
     color: var(--ds-gray-900);
+  }
+
+  :is(.dark, [data-theme="dark"]) .ds-empty-state-icon {
+    border-color: rgba(255, 255, 255, 0.14);
   }
 
   .ds-empty-state-icon svg {
@@ -61,7 +69,7 @@ const EMPTY_STATE_CSS = `
   .ds-empty-state-text {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: stretch;
     gap: var(--ds-space-2x);
   }
 
@@ -69,8 +77,12 @@ const EMPTY_STATE_CSS = `
     font-size: 16px;
     font-weight: 500;
     line-height: 24px;
+    letter-spacing: -0.32px;
     color: var(--ds-gray-1000);
     margin: 0;
+    max-width: 340px;
+    text-align: center;
+    text-wrap: balance;
   }
 
   .ds-empty-state-description {
@@ -78,6 +90,9 @@ const EMPTY_STATE_CSS = `
     line-height: 20px;
     color: var(--ds-gray-900);
     margin: 0;
+    max-width: 340px;
+    text-align: center;
+    text-wrap: balance;
   }
 
   .ds-empty-state-actions {
