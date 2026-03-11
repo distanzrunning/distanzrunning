@@ -742,13 +742,13 @@ export default function EmptyStateComponent() {
         <SectionHeader id="design-framework" onCopyLink={showToast}>
           Design Framework
         </SectionHeader>
-        <p className="text-copy-14 text-textSubtle mt-4 mb-4">
+        <p className="text-copy-16 text-textSubtle mt-4 mb-4">
           When designed thoughtfully, empty states become an essential part of a
           smooth user experience, providing enough context to keep users working
           in a productive way. There are several approaches to explore that will
           match the needs of a developer in different situations:
         </p>
-        <ul className="text-copy-14 text-textSubtle mb-6 space-y-2 list-none pl-0">
+        <ul className="text-copy-16 text-textSubtle mb-6 space-y-2 list-none pl-0">
           <li>
             <strong className="text-textDefault">Blank Slate</strong> — Basic
             empty state for first run experience
@@ -769,12 +769,7 @@ export default function EmptyStateComponent() {
             by tinkering or setting up their environment
           </li>
         </ul>
-        <div
-          className="border border-[var(--ds-gray-400)] rounded-lg p-6"
-          style={{ background: "var(--ds-background-100)" }}
-        >
-          <DesignFrameworkDiagram />
-        </div>
+        <DesignFrameworkDiagram />
       </Section>
 
       {/* Blank Slate */}
