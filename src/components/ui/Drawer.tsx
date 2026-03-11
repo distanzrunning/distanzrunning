@@ -1,6 +1,6 @@
 "use client";
 
-import { type ReactNode, type ComponentProps } from "react";
+import { type ReactNode } from "react";
 import { Drawer as VaulDrawer } from "vaul";
 
 // ============================================================================
@@ -85,17 +85,12 @@ const DRAWER_CSS = `
     z-index: 4999;
     display: flex;
     flex-direction: column;
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
+    border-top-left-radius: var(--ds-radius-small);
+    border-top-right-radius: var(--ds-radius-small);
     border: none;
     background-color: var(--ds-background-100);
     color: var(--ds-gray-1000);
-    box-shadow:
-      rgba(0, 0, 0, 0.08) 0px 0px 0px 1px,
-      rgba(0, 0, 0, 0.02) 0px 1px 1px 0px,
-      rgba(0, 0, 0, 0.04) 0px 4px 8px -4px,
-      rgba(0, 0, 0, 0.06) 0px 16px 24px -8px,
-      var(--ds-gray-100) 0px 0px 0px 1px;
+    box-shadow: var(--ds-shadow-menu), var(--ds-gray-100) 0px 0px 0px 1px;
     max-width: 100%;
     max-height: 80vh;
     min-height: 31px;
@@ -125,15 +120,15 @@ const DRAWER_CSS = `
     flex-direction: column;
     align-items: stretch;
     justify-content: flex-start;
-    gap: 8px;
+    gap: var(--ds-space-2x);
     flex: 0 1 auto;
-    padding: 48px;
+    padding: var(--ds-space-12x);
   }
 
   .ds-drawer-title {
     font-size: 18px;
     font-weight: 600;
-    line-height: 24px;
+    line-height: var(--ds-space-6x);
     color: var(--ds-gray-1000);
     text-align: center;
     margin: 0;
@@ -148,7 +143,7 @@ const DRAWER_CSS = `
   }
 
   .ds-drawer-footer {
-    padding: 16px 24px;
+    padding: var(--ds-space-4x) var(--ds-space-6x);
     border-top: 1px solid var(--ds-gray-alpha-400);
     background: var(--ds-background-200);
   }

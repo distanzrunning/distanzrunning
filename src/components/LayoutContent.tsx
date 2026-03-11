@@ -33,7 +33,7 @@ export default function LayoutContent({
       <div className="main-bordered min-h-screen flex flex-col">
         {navbar}
         {/* Navbar is sticky - no padding needed, scrolls naturally */}
-        <main className="flex-1 bg-canvas transition-colors duration-300">
+        <main className="flex-1 bg-canvas">
           {children}
         </main>
         {!isCalendarPage && footer}

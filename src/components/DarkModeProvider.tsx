@@ -35,6 +35,18 @@ export function DarkModeProvider({ children }: { children: React.ReactNode }) {
 
   const toggleDarkMode = () => {
     const newIsDark = !isDark;
+
+    // Disable all CSS transitions during the theme switch to prevent
+    // color fade artifacts and flashing
+    const style = document.createElement("style");
+    style.setAttribute("data-theme-transition", "");
+    style.textContent = `*, *::before, *::after { transition: none !important; }`;
+    document.head.appendChild(style);
+
+    // Force a reflow so the transition-disable rule takes effect before
+    // the class change
+    window.getComputedStyle(document.documentElement).getPropertyValue("color");
+
     setIsDark(newIsDark);
     if (newIsDark) {
       document.documentElement.classList.add("dark");
@@ -43,6 +55,14 @@ export function DarkModeProvider({ children }: { children: React.ReactNode }) {
       document.documentElement.classList.remove("dark");
       localStorage.setItem("theme", "light");
     }
+
+    // Re-enable transitions on the next frame after the browser has
+    // painted with the new theme colors
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        style.remove();
+      });
+    });
   };
 
   return (

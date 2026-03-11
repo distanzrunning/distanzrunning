@@ -40,7 +40,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="bg-canvas transition-colors duration-300">
+    <html lang="en" className="bg-canvas">
       <head>
         {/* Adobe Fonts - Inter + EB Garamond */}
         <link rel="stylesheet" href="https://use.typekit.net/bua7sld.css" />
@@ -111,7 +111,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="font-sans antialiased bg-canvas text-textDefault min-h-screen flex flex-col distanz-font-features transition-colors duration-300">
+      <body className="font-sans antialiased bg-canvas text-textDefault min-h-screen flex flex-col distanz-font-features">
         <ReCaptchaProvider>
           <DarkModeProvider>
             <AuthProtection>
