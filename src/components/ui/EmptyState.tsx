@@ -97,16 +97,17 @@ const EMPTY_STATE_CSS = `
 
   .ds-empty-state-actions {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: var(--ds-space-2x);
+    gap: var(--ds-space-3x);
   }
 
   .ds-empty-state-btn-secondary {
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 32px;
-    padding: 0 12px;
+    height: 40px;
+    padding: 0 16px;
     font-size: 14px;
     font-weight: 500;
     line-height: 20px;
