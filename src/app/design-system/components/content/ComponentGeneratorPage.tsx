@@ -39,15 +39,20 @@ const ESM_MAP: Record<string, string> = {
 };
 
 function resolveImports(code: string): string {
-  // Replace: import ... from "react" → import ... from "https://esm.sh/react@18"
-  // Also handles: export ... from "react"
-  return code.replace(
-    /((?:import|export)\s+.*?\s+from\s+)(["'])([^"']+)\2/g,
+  // Replace bare specifiers: import ... from "react" → import ... from "https://esm.sh/react@18"
+  let resolved = code.replace(
+    /((?:import|export)\s+[\s\S]*?\s+from\s+)(["'])([^"']+)\2/g,
     (match, prefix, quote, specifier) => {
-      const resolved = ESM_MAP[specifier];
-      return resolved ? `${prefix}${quote}${resolved}${quote}` : match;
+      const url = ESM_MAP[specifier];
+      return url ? `${prefix}${quote}${url}${quote}` : match;
     }
   );
+
+  // Always prepend React default import — classic JSX transform emits React.createElement()
+  // which requires React in scope. Duplicate ESM imports are deduplicated by the browser.
+  resolved = `import React from "${ESM_MAP["react"]}";\n${resolved}`;
+
+  return resolved;
 }
 
 function buildPreviewHtml(transpiledCode: string): string {
