@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
     // Use TypeScript's own compiler — handles ALL TypeScript syntax perfectly
     const result = ts.transpileModule(cleaned, {
       compilerOptions: {
-        target: ts.ScriptTarget.ES2020,
+        target: ts.ScriptTarget.ES2015,
         module: ts.ModuleKind.ES2020,
         jsx: ts.JsxEmit.React,
         jsxFactory: "React.createElement",
