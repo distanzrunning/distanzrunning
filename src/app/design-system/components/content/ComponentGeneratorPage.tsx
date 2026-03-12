@@ -30,78 +30,99 @@ interface Toast {
 // ============================================================================
 
 function buildPreviewHtml(transpiledCode: string): string {
-  // Escape </script to prevent premature tag closing
-  const safeCode = transpiledCode.replace(/<\/script/gi, "<\\/script");
+  // JSON.stringify the code to safely embed it as a string literal
+  const codeString = JSON.stringify(transpiledCode);
 
-  return [
-    "<!DOCTYPE html><html><head>",
-    '<meta charset="utf-8" />',
-    '<script src="https://unpkg.com/react@18/umd/react.production.min.js"><\/script>',
-    '<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"><\/script>',
-    '<script src="https://cdn.tailwindcss.com"><\/script>',
-    '<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"><\/script>',
-    "<style>",
-    ":root{",
-    "--ds-gray-100:#fafafa;--ds-gray-200:#f5f5f5;--ds-gray-300:#ebebeb;--ds-gray-400:#e0e0e0;--ds-gray-500:#c7c7c7;--ds-gray-600:#a0a0a0;--ds-gray-700:#8c8c8c;--ds-gray-800:#6e6e6e;--ds-gray-900:#444444;--ds-gray-1000:#171717;",
-    "--ds-blue-100:#eef6ff;--ds-blue-200:#d8ebff;--ds-blue-300:#b7d9ff;--ds-blue-400:#85bfff;--ds-blue-500:#4da3ff;--ds-blue-600:#2b8dff;--ds-blue-700:#0070f3;--ds-blue-800:#0060d1;--ds-blue-900:#004fa8;--ds-blue-1000:#003580;",
-    "--ds-red-100:#fff0f0;--ds-red-200:#ffd9d9;--ds-red-300:#ffb3b3;--ds-red-400:#ff8080;--ds-red-500:#ff4d4d;--ds-red-600:#f03;--ds-red-700:#e00;--ds-red-800:#c00;--ds-red-900:#a00;--ds-red-1000:#700;",
-    "--ds-amber-100:#fff8eb;--ds-amber-200:#ffeccc;--ds-amber-300:#ffdb99;--ds-amber-400:#ffc266;--ds-amber-500:#ffa833;--ds-amber-600:#ff9500;--ds-amber-700:#e08200;--ds-amber-800:#b86a00;--ds-amber-900:#8f5200;--ds-amber-1000:#663b00;",
-    "--ds-green-100:#eefbf4;--ds-green-200:#d3f5e4;--ds-green-300:#a8ebc8;--ds-green-400:#6ddba1;--ds-green-500:#33cc7a;--ds-green-600:#1db965;--ds-green-700:#18a957;--ds-green-800:#128e47;--ds-green-900:#0d7339;--ds-green-1000:#085a2b;",
-    "--ds-purple-100:#f5f0ff;--ds-purple-200:#e8dbff;--ds-purple-300:#d4b8ff;--ds-purple-400:#b78fff;--ds-purple-500:#9966ff;--ds-purple-600:#8247e5;--ds-purple-700:#6b2ec2;--ds-purple-800:#56209f;--ds-purple-900:#41177c;--ds-purple-1000:#2d105a;",
-    "--ds-pink-100:#fff0f8;--ds-pink-200:#ffd6ed;--ds-pink-300:#ffadd6;--ds-pink-400:#ff80bf;--ds-pink-500:#ff4da6;--ds-pink-600:#f0278a;--ds-pink-700:#d61e78;--ds-pink-800:#b31664;--ds-pink-900:#8f0e50;--ds-pink-1000:#6b073c;",
-    "--ds-teal-100:#edfcfc;--ds-teal-200:#d1f7f7;--ds-teal-300:#a3eded;--ds-teal-400:#6ee0e0;--ds-teal-500:#33cccc;--ds-teal-600:#20b8b8;--ds-teal-700:#18a3a3;--ds-teal-800:#128888;--ds-teal-900:#0d6e6e;--ds-teal-1000:#085454;",
-    "--ds-background-100:#ffffff;--ds-background-200:#fafafa;",
-    "--ds-space-2x:8px;--ds-space-3x:12px;--ds-space-4x:16px;--ds-space-6x:24px;--ds-space-8x:32px;--ds-space-gap:16px;--ds-space-gap-half:8px;",
-    "--ds-radius-small:8px;--ds-radius-large:12px;--ds-radius-xlarge:16px;--ds-radius-full:9999px;",
-    "--ds-shadow-small:0 1px 2px rgba(0,0,0,0.04);--ds-shadow-medium:0 2px 4px rgba(0,0,0,0.06);--ds-shadow-large:0 4px 8px rgba(0,0,0,0.08);",
-    "--ds-button-height-tiny:24px;--ds-button-height-small:32px;--ds-button-height-medium:40px;--ds-button-height-large:48px;",
-    "}",
-    "*{margin:0;padding:0;box-sizing:border-box;}",
-    "body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:24px;background:var(--ds-background-100);color:var(--ds-gray-1000);}",
-    "</style></head><body><div id=\"root\"></div>",
-    "<script>",
-    // Module shims
-    "var exports={};var module={exports:exports};",
-    // Lucide icon shim: convert lucide UMD icons to React components
-    "function createLucideIcon(n){var d=lucide.icons[n];if(!d)return function(){return null};return function(p){",
-    "var ch=(d[2]||[]).map(function(c,i){return React.createElement(c[0],Object.assign({key:i},c[1]))});",
-    "return React.createElement('svg',Object.assign({xmlns:'http://www.w3.org/2000/svg',width:24,height:24,",
-    "viewBox:'0 0 24 24',fill:'none',stroke:'currentColor',strokeWidth:2,",
-    "strokeLinecap:'round',strokeLinejoin:'round'},p),ch);};}",
-    "var lucideReact={};",
-    "if(typeof lucide!=='undefined'&&lucide.icons){Object.keys(lucide.icons).forEach(function(k){",
-    "var p=k.replace(/(^|-)([a-z])/g,function(_,__,c){return c.toUpperCase()});",
-    "lucideReact[p]=createLucideIcon(k);});}",
-    // require shim
-    "function require(m){if(m==='react')return React;if(m==='react-dom'||m==='react-dom/client')return ReactDOM;if(m==='lucide-react')return lucideReact;return{};}",
-    "<\/script>",
-    // Catch any uncaught errors from script tags
-    "<script>",
-    "window.onerror=function(msg,src,line,col,err){",
-    "document.getElementById('root').innerHTML='<pre style=\"color:#e00;white-space:pre-wrap;font-size:13px;padding:24px\">Script error: '+msg+'\\nLine: '+line+', Col: '+col+'</pre>';",
-    "return true;};",
-    "<\/script>",
-    // Component code in its own script tag
-    "<script>",
-    "try{",
-    safeCode,
-    "}catch(e){document.getElementById('root').innerHTML='<pre style=\"color:#e00;white-space:pre-wrap;font-size:13px;padding:24px\">Component error: '+e.message+'\\n'+e.stack+'</pre>';}",
-    "<\/script>",
-    // Mount the component
-    "<script>",
-    "try{",
-    "var C=exports.default||module.exports.default;",
-    "if(!C){for(var k in exports){if(typeof exports[k]==='function'&&k!=='__esModule'){C=exports[k];break;}}}",
-    "if(!C){for(var k in module.exports){if(typeof module.exports[k]==='function'){C=module.exports[k];break;}}}",
-    "if(C&&typeof C==='function'){",
-    "var root=ReactDOM.createRoot(document.getElementById('root'));",
-    "root.render(React.createElement(C));",
-    "}else{",
-    "document.getElementById('root').innerHTML='<pre style=\"color:#e00;padding:24px;font-size:13px\">No component found in exports.\\n\\nexports keys: '+Object.keys(exports).join(', ')+'\\nmodule.exports keys: '+Object.keys(module.exports).join(', ')+'</pre>';",
-    "}",
-    "}catch(e){document.getElementById('root').innerHTML='<pre style=\"color:#e00;white-space:pre-wrap;font-size:13px;padding:24px\">Mount error: '+e.message+'\\n'+e.stack+'</pre>';}",
-    "<\/script></body></html>",
-  ].join("\n");
+  return `<!DOCTYPE html>
+<html><head>
+<meta charset="utf-8" />
+<script src="https://cdn.tailwindcss.com"><\/script>
+<style>
+:root {
+  --ds-gray-100:#fafafa;--ds-gray-200:#f5f5f5;--ds-gray-300:#ebebeb;--ds-gray-400:#e0e0e0;--ds-gray-500:#c7c7c7;--ds-gray-600:#a0a0a0;--ds-gray-700:#8c8c8c;--ds-gray-800:#6e6e6e;--ds-gray-900:#444444;--ds-gray-1000:#171717;
+  --ds-blue-100:#eef6ff;--ds-blue-200:#d8ebff;--ds-blue-300:#b7d9ff;--ds-blue-400:#85bfff;--ds-blue-500:#4da3ff;--ds-blue-600:#2b8dff;--ds-blue-700:#0070f3;--ds-blue-800:#0060d1;--ds-blue-900:#004fa8;--ds-blue-1000:#003580;
+  --ds-red-100:#fff0f0;--ds-red-200:#ffd9d9;--ds-red-300:#ffb3b3;--ds-red-400:#ff8080;--ds-red-500:#ff4d4d;--ds-red-600:#f03;--ds-red-700:#e00;--ds-red-800:#c00;--ds-red-900:#a00;--ds-red-1000:#700;
+  --ds-amber-100:#fff8eb;--ds-amber-200:#ffeccc;--ds-amber-300:#ffdb99;--ds-amber-400:#ffc266;--ds-amber-500:#ffa833;--ds-amber-600:#ff9500;--ds-amber-700:#e08200;--ds-amber-800:#b86a00;--ds-amber-900:#8f5200;--ds-amber-1000:#663b00;
+  --ds-green-100:#eefbf4;--ds-green-200:#d3f5e4;--ds-green-300:#a8ebc8;--ds-green-400:#6ddba1;--ds-green-500:#33cc7a;--ds-green-600:#1db965;--ds-green-700:#18a957;--ds-green-800:#128e47;--ds-green-900:#0d7339;--ds-green-1000:#085a2b;
+  --ds-purple-100:#f5f0ff;--ds-purple-200:#e8dbff;--ds-purple-300:#d4b8ff;--ds-purple-400:#b78fff;--ds-purple-500:#9966ff;--ds-purple-600:#8247e5;--ds-purple-700:#6b2ec2;--ds-purple-800:#56209f;--ds-purple-900:#41177c;--ds-purple-1000:#2d105a;
+  --ds-pink-100:#fff0f8;--ds-pink-200:#ffd6ed;--ds-pink-300:#ffadd6;--ds-pink-400:#ff80bf;--ds-pink-500:#ff4da6;--ds-pink-600:#f0278a;--ds-pink-700:#d61e78;--ds-pink-800:#b31664;--ds-pink-900:#8f0e50;--ds-pink-1000:#6b073c;
+  --ds-teal-100:#edfcfc;--ds-teal-200:#d1f7f7;--ds-teal-300:#a3eded;--ds-teal-400:#6ee0e0;--ds-teal-500:#33cccc;--ds-teal-600:#20b8b8;--ds-teal-700:#18a3a3;--ds-teal-800:#128888;--ds-teal-900:#0d6e6e;--ds-teal-1000:#085454;
+  --ds-background-100:#ffffff;--ds-background-200:#fafafa;
+  --ds-space-2x:8px;--ds-space-3x:12px;--ds-space-4x:16px;--ds-space-6x:24px;--ds-space-8x:32px;--ds-space-gap:16px;--ds-space-gap-half:8px;
+  --ds-radius-small:8px;--ds-radius-large:12px;--ds-radius-xlarge:16px;--ds-radius-full:9999px;
+  --ds-shadow-small:0 1px 2px rgba(0,0,0,0.04);--ds-shadow-medium:0 2px 4px rgba(0,0,0,0.06);--ds-shadow-large:0 4px 8px rgba(0,0,0,0.08);
+  --ds-button-height-tiny:24px;--ds-button-height-small:32px;--ds-button-height-medium:40px;--ds-button-height-large:48px;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; padding:24px; background:var(--ds-background-100); color:var(--ds-gray-1000); }
+.error-boundary { color:#e00; padding:1rem; border:2px solid #e00; margin:1rem; border-radius:8px; background:#fff0f0; white-space:pre-wrap; font-size:13px; font-family:monospace; }
+</style>
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@18",
+    "react-dom": "https://esm.sh/react-dom@18",
+    "react-dom/client": "https://esm.sh/react-dom@18/client",
+    "react/jsx-runtime": "https://esm.sh/react@18/jsx-runtime",
+    "lucide-react": "https://esm.sh/lucide-react@latest"
+  }
+}
+<\/script>
+</head>
+<body>
+<div id="root"></div>
+<script type="module">
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+  render() {
+    if (this.state.hasError) {
+      return React.createElement('div', { className: 'error-boundary' },
+        React.createElement('strong', null, 'Component Error\\n'),
+        React.createElement('pre', null, this.state.error?.toString())
+      );
+    }
+    return this.props.children;
+  }
+}
+
+async function loadComponent() {
+  try {
+    const code = ${codeString};
+    const blob = new Blob([code], { type: 'application/javascript' });
+    const url = URL.createObjectURL(blob);
+    const mod = await import(url);
+    URL.revokeObjectURL(url);
+
+    const App = mod.default || Object.values(mod).find(v => typeof v === 'function');
+
+    if (!App) {
+      document.getElementById('root').innerHTML =
+        '<div class="error-boundary"><strong>No component found<\\/strong><pre>exports: ' +
+        Object.keys(mod).join(', ') + '<\\/pre><\\/div>';
+      return;
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(React.createElement(ErrorBoundary, null, React.createElement(App)));
+  } catch (error) {
+    document.getElementById('root').innerHTML =
+      '<div class="error-boundary"><strong>Load Error<\\/strong><pre>' +
+      error.toString() + '<\\/pre><\\/div>';
+  }
+}
+
+loadComponent();
+<\/script>
+</body></html>`;
 }
 
 // ============================================================================
@@ -623,7 +644,7 @@ export default function ComponentGeneratorPage() {
                   <iframe
                     srcDoc={buildPreviewHtml(transpiledCode)}
                     className="w-full h-full border-0"
-                    sandbox="allow-scripts"
+                    sandbox="allow-scripts allow-same-origin"
                     title="Component preview"
                   />
                 ) : null

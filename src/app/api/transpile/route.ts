@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
     const result = ts.transpileModule(cleaned, {
       compilerOptions: {
         target: ts.ScriptTarget.ES2020,
-        module: ts.ModuleKind.CommonJS,
+        module: ts.ModuleKind.ES2020,
         jsx: ts.JsxEmit.React,
         jsxFactory: "React.createElement",
         jsxFragmentFactory: "React.Fragment",
