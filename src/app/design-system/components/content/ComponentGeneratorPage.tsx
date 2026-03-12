@@ -31,24 +31,73 @@ interface Toast {
 // ============================================================================
 
 function cleanGeneratedCode(code: string): string {
-  // Strip markdown code fences if Claude included them
-  let cleaned = code.replace(/^```\w*\n?/gm, "").replace(/```\s*$/gm, "");
+  let cleaned = code;
+
+  // If code fences exist, extract ONLY the content between them
+  // (Claude may add explanatory text before/after the fences)
+  const fenceMatch = cleaned.match(/```(?:tsx?|jsx?|javascript|typescript)?\s*\n([\s\S]*?)```/);
+  if (fenceMatch) {
+    cleaned = fenceMatch[1];
+  } else {
+    // No complete fences — try stripping an opening fence without closing
+    const openFence = cleaned.match(/```(?:tsx?|jsx?|javascript|typescript)?\s*\n([\s\S]*)/);
+    if (openFence) {
+      cleaned = openFence[1];
+    }
+    // Also strip any stray fence markers
+    cleaned = cleaned.replace(/^```\w*\n?/gm, "").replace(/```\s*$/gm, "");
+  }
+
   // Strip "use client" directive (not needed in iframe)
   cleaned = cleaned.replace(/^["']use client["'];?\s*/m, "");
   return cleaned.trim();
 }
 
-function buildPreviewHtml(code: string): string {
+function stripTypeScriptManually(code: string): string {
+  // Fallback: strip common TypeScript syntax that Sucrase can't handle
+  return code
+    // Remove interface/type declarations (full blocks)
+    .replace(/^(export\s+)?(interface|type)\s+\w[\s\S]*?^\}/gm, "")
+    // Remove single-line type aliases
+    .replace(/^(export\s+)?type\s+\w+\s*=\s*[^;]+;/gm, "")
+    // Remove type annotations from function params and variables
+    .replace(/:\s*(?:React\.)?(?:FC|FunctionComponent|ReactNode|ReactElement|JSX\.Element|HTMLAttributes|ButtonHTMLAttributes|FormEvent|ChangeEvent|MouseEvent|KeyboardEvent|CSSProperties|string|number|boolean|void|null|undefined|any|never|unknown)(?:<[^>]+>)?(?:\s*\|\s*(?:React\.)?(?:string|number|boolean|void|null|undefined|any|never|unknown|ReactNode))*(?:\[\])?/g, "")
+    // Remove generic type params from function declarations
+    .replace(/<(?:(?:string|number|boolean|T|K|V|Props|HTMLFormElement|HTMLInputElement|HTMLDivElement|HTMLButtonElement|HTMLElement)[,\s]?)+>/g, "")
+    // Remove "as Type" assertions
+    .replace(/\s+as\s+\w+(?:<[^>]+>)?/g, "")
+    // Remove import type statements
+    .replace(/import\s+type\s+.*?;\s*/g, "")
+    // Remove inline type imports { type X }
+    .replace(/,?\s*type\s+\w+\s*,?/g, (match) => match.startsWith(",") ? "" : "");
+}
+
+function transpileCode(code: string): string {
   try {
-    const cleaned = cleanGeneratedCode(code);
-    // Sucrase handles imports (converts to require()), JSX, and TypeScript
-    const transpiledCode = transform(cleaned, {
+    return transform(code, {
       transforms: ["typescript", "jsx", "imports"],
       jsxRuntime: "classic",
       jsxPragma: "React.createElement",
       jsxFragmentPragma: "React.Fragment",
       production: true,
     }).code;
+  } catch {
+    // Fallback: strip TS types manually, then transpile JSX + imports only
+    const stripped = stripTypeScriptManually(code);
+    return transform(stripped, {
+      transforms: ["jsx", "imports"],
+      jsxRuntime: "classic",
+      jsxPragma: "React.createElement",
+      jsxFragmentPragma: "React.Fragment",
+      production: true,
+    }).code;
+  }
+}
+
+function buildPreviewHtml(code: string): string {
+  try {
+    const cleaned = cleanGeneratedCode(code);
+    const transpiledCode = transpileCode(cleaned);
 
     // Build HTML by concatenation to avoid template literal issues
     // (transpiled code may contain backticks and ${} expressions)
