@@ -2,7 +2,6 @@
 
 import { useState, useRef, useCallback, useEffect } from "react";
 import { Sparkles, Copy, Download, Trash2, Loader2, Check, Eye, Code, Bot, User, Send } from "lucide-react";
-import { transform } from "sucrase";
 import { Button } from "@/components/ui/Button";
 import IconButton from "@/components/ui/IconButton";
 import { CodeBlock } from "@/components/ui/CodeBlock";
@@ -30,119 +29,8 @@ interface Toast {
 // Iframe Preview
 // ============================================================================
 
-function cleanGeneratedCode(code: string): string {
-  let cleaned = code;
-
-  // If code fences exist, extract ONLY the content between them
-  // (Claude may add explanatory text before/after the fences)
-  const fenceMatch = cleaned.match(/```(?:tsx?|jsx?|javascript|typescript)?\s*\n([\s\S]*?)```/);
-  if (fenceMatch) {
-    cleaned = fenceMatch[1];
-  } else {
-    // No complete fences — try stripping an opening fence without closing
-    const openFence = cleaned.match(/```(?:tsx?|jsx?|javascript|typescript)?\s*\n([\s\S]*)/);
-    if (openFence) {
-      cleaned = openFence[1];
-    }
-    // Also strip any stray fence markers
-    cleaned = cleaned.replace(/^```\w*\n?/gm, "").replace(/```\s*$/gm, "");
-  }
-
-  // Strip "use client" directive (not needed in iframe)
-  cleaned = cleaned.replace(/^["']use client["'];?\s*/m, "");
-  return cleaned.trim();
-}
-
-/**
- * Strip all TypeScript syntax from code so Sucrase only needs to handle JSX + imports.
- * Uses line-by-line parsing with brace counting for reliable block removal.
- */
-function stripTypeScript(code: string): string {
-  const lines = code.split("\n");
-  const result: string[] = [];
-  let skipDepth = 0;
-  let skipping = false;
-
-  for (const line of lines) {
-    const trimmed = line.trim();
-
-    // Skip import type statements entirely
-    if (/^import\s+type\s+/.test(trimmed)) continue;
-
-    // Detect start of interface/type block declarations
-    if (!skipping && /^(export\s+)?(interface|type)\s+\w+/.test(trimmed)) {
-      // Single-line type alias ending with semicolon
-      if (/^(export\s+)?type\s+\w+.*=.*;$/.test(trimmed) && !trimmed.includes("{")) {
-        continue;
-      }
-      // Block with braces — count depth
-      skipping = true;
-      skipDepth = 0;
-      for (const ch of trimmed) {
-        if (ch === "{") skipDepth++;
-        if (ch === "}") skipDepth--;
-      }
-      if (skipDepth <= 0) skipping = false;
-      continue;
-    }
-
-    // Continue skipping inside a block declaration
-    if (skipping) {
-      for (const ch of trimmed) {
-        if (ch === "{") skipDepth++;
-        if (ch === "}") skipDepth--;
-      }
-      if (skipDepth <= 0) skipping = false;
-      continue;
-    }
-
-    let processed = line;
-
-    // Strip inline `type` imports: import { type X, Y } -> import { Y }
-    processed = processed.replace(/\{\s*type\s+\w+\s*,\s*/g, "{ ");
-    processed = processed.replace(/,\s*type\s+\w+\s*(?=\s*[,}])/g, "");
-
-    // Strip generic type params on hooks/functions: useState<string>( -> useState(
-    // Requires a word char before < to avoid matching JSX tags
-    processed = processed.replace(/(\w)<[\w.[\]|&<>,\s?]+>\s*(?=\()/g, "$1");
-
-    // Strip return type annotations: ): Type => or ): Type { -> ) => or ) {
-    processed = processed.replace(/\)\s*:\s*[\w.[\]|&<>,\s]+(?=\s*(?:=>|\{))/g, ")");
-
-    // Strip param/variable type annotations: (e: React.FormEvent<...>) -> (e)
-    // Match `: Type` after an identifier, but NOT inside object literals (after {)
-    // Only strip when followed by , or ) or = or ;
-    processed = processed.replace(/(\w)\s*:\s*[\w.[\]|&<>,\s?]+(?=\s*[,)=;])/g, "$1");
-
-    // Strip `as Type` assertions
-    processed = processed.replace(/\s+as\s+(?:const|[\w.[\]<>,\s]+?)(?=\s*[;,)\]}])/g, "");
-
-    // Strip `: PropsInterface` after destructured params: }: Props) -> })
-    processed = processed.replace(/}:\s*\w+(?:\[\])?(?=\s*\))/g, "}");
-
-    result.push(processed);
-  }
-
-  return result.join("\n");
-}
-
-function transpileCode(code: string): string {
-  // Always strip TypeScript first (Sucrase's TS transform has issues in browser bundles),
-  // then use Sucrase only for JSX and import transforms
-  const stripped = stripTypeScript(code);
-  return transform(stripped, {
-    transforms: ["jsx", "imports"],
-    jsxRuntime: "classic",
-    jsxPragma: "React.createElement",
-    jsxFragmentPragma: "React.Fragment",
-    production: true,
-  }).code;
-}
-
-function buildPreviewHtml(code: string): string {
+function buildPreviewHtml(transpiledCode: string): string {
   try {
-    const cleaned = cleanGeneratedCode(code);
-    const transpiledCode = transpileCode(cleaned);
 
     // Build HTML by concatenation to avoid template literal issues
     // (transpiled code may contain backticks and ${} expressions)
@@ -242,19 +130,7 @@ function buildPreviewHtml(code: string): string {
     return htmlParts.join('\n') + scriptParts.join('\n');
   } catch (e: unknown) {
     const msg = e instanceof Error ? e.message : String(e);
-    // Log the problematic code for debugging
-    console.error("Transpilation failed:", msg);
-    const lines = code.split("\n");
-    const match = msg.match(/\((\d+):\d+\)/);
-    const errLine = match ? parseInt(match[1]) : -1;
-    const context = errLine > 0
-      ? lines.slice(Math.max(0, errLine - 3), errLine + 2).map((l, i) => {
-          const lineNum = Math.max(1, errLine - 2) + i;
-          return (lineNum === errLine ? ">>> " : "    ") + lineNum + ": " + l;
-        }).join("\n")
-      : "";
-    const debugInfo = context ? "\n\nNear line " + errLine + ":\n" + context : "";
-    return "<!DOCTYPE html><html><body><pre style='color:var(--ds-red-700);padding:24px;font-size:13px;white-space:pre-wrap'>Transpilation error:\n" + msg + debugInfo + "</pre></body></html>";
+    return "<!DOCTYPE html><html><body><pre style='color:var(--ds-red-700);padding:24px;font-size:13px;white-space:pre-wrap'>Preview error: " + msg + "</pre></body></html>";
   }
 }
 
@@ -324,6 +200,8 @@ export default function ComponentGeneratorPage() {
   const [inputValue, setInputValue] = useState("");
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [generatedCode, setGeneratedCode] = useState("");
+  const [transpiledCode, setTranspiledCode] = useState("");
+  const [transpileError, setTranspileError] = useState("");
   const [componentName, setComponentName] = useState("");
   const [activeTab, setActiveTab] = useState<"preview" | "code">("preview");
   const [toast, setToast] = useState<Toast | null>(null);
@@ -444,11 +322,31 @@ export default function ComponentGeneratorPage() {
         }
       }
 
-      // Clean any markdown fences from the final output
-      const finalCode = cleanGeneratedCode(accumulated);
-      setGeneratedCode(finalCode);
-      const name = extractName(finalCode);
+      // Store the raw generated code (for Code tab)
+      setGeneratedCode(accumulated);
+      const name = extractName(accumulated);
       setComponentName(name);
+
+      // Transpile server-side (Sucrase works reliably in Node.js)
+      try {
+        const transpileRes = await fetch("/api/transpile", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ code: accumulated }),
+        });
+        const transpileData = await transpileRes.json();
+        if (transpileRes.ok) {
+          setTranspiledCode(transpileData.code);
+          setTranspileError("");
+        } else {
+          setTranspileError(transpileData.error || "Transpilation failed");
+          setTranspiledCode("");
+        }
+      } catch {
+        setTranspileError("Failed to connect to transpile service");
+        setTranspiledCode("");
+      }
+
       setState("preview");
 
       // Update thinking message to completion message
@@ -518,6 +416,8 @@ export default function ComponentGeneratorPage() {
 
   const handleDelete = useCallback(() => {
     setGeneratedCode("");
+    setTranspiledCode("");
+    setTranspileError("");
     setComponentName("");
     setMessages([]);
     setInputValue("");
@@ -743,14 +643,20 @@ export default function ComponentGeneratorPage() {
                     <Loader2 className="w-5 h-5 animate-spin" />
                     <span className="text-copy-14">Generating preview...</span>
                   </div>
-                ) : (
+                ) : transpileError ? (
+                  <div className="p-6">
+                    <pre className="text-copy-13 whitespace-pre-wrap" style={{ color: "var(--ds-red-700)" }}>
+                      {transpileError}
+                    </pre>
+                  </div>
+                ) : transpiledCode ? (
                   <iframe
-                    srcDoc={buildPreviewHtml(generatedCode)}
+                    srcDoc={buildPreviewHtml(transpiledCode)}
                     className="w-full h-full border-0"
                     sandbox="allow-scripts"
                     title="Component preview"
                   />
-                )
+                ) : null
               ) : (
                 <div className="h-full overflow-auto [&_[data-code-block]]:border-0 [&_[data-code-block]]:rounded-none">
                   <CodeBlock
