@@ -50,126 +50,102 @@ function buildPreviewHtml(code: string): string {
       production: true,
     }).code;
 
-    return `<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
-  <style>
-    :root {
-      --ds-gray-100: #fafafa; --ds-gray-200: #f5f5f5; --ds-gray-300: #ebebeb;
-      --ds-gray-400: #e0e0e0; --ds-gray-500: #c7c7c7; --ds-gray-600: #a0a0a0;
-      --ds-gray-700: #8c8c8c; --ds-gray-800: #6e6e6e; --ds-gray-900: #444444;
-      --ds-gray-1000: #171717;
-      --ds-blue-100: #eef6ff; --ds-blue-200: #d8ebff; --ds-blue-300: #b7d9ff;
-      --ds-blue-400: #85bfff; --ds-blue-500: #4da3ff; --ds-blue-600: #2b8dff;
-      --ds-blue-700: #0070f3; --ds-blue-800: #0060d1; --ds-blue-900: #004fa8;
-      --ds-blue-1000: #003580;
-      --ds-red-100: #fff0f0; --ds-red-200: #ffd9d9; --ds-red-300: #ffb3b3;
-      --ds-red-400: #ff8080; --ds-red-500: #ff4d4d; --ds-red-600: #f03;
-      --ds-red-700: #e00; --ds-red-800: #c00; --ds-red-900: #a00;
-      --ds-red-1000: #700;
-      --ds-amber-100: #fff8eb; --ds-amber-200: #ffeccc; --ds-amber-300: #ffdb99;
-      --ds-amber-400: #ffc266; --ds-amber-500: #ffa833; --ds-amber-600: #ff9500;
-      --ds-amber-700: #e08200; --ds-amber-800: #b86a00; --ds-amber-900: #8f5200;
-      --ds-amber-1000: #663b00;
-      --ds-green-100: #eefbf4; --ds-green-200: #d3f5e4; --ds-green-300: #a8ebc8;
-      --ds-green-400: #6ddba1; --ds-green-500: #33cc7a; --ds-green-600: #1db965;
-      --ds-green-700: #18a957; --ds-green-800: #128e47; --ds-green-900: #0d7339;
-      --ds-green-1000: #085a2b;
-      --ds-purple-100: #f5f0ff; --ds-purple-200: #e8dbff; --ds-purple-300: #d4b8ff;
-      --ds-purple-400: #b78fff; --ds-purple-500: #9966ff; --ds-purple-600: #8247e5;
-      --ds-purple-700: #6b2ec2; --ds-purple-800: #56209f; --ds-purple-900: #41177c;
-      --ds-purple-1000: #2d105a;
-      --ds-pink-100: #fff0f8; --ds-pink-200: #ffd6ed; --ds-pink-300: #ffadd6;
-      --ds-pink-400: #ff80bf; --ds-pink-500: #ff4da6; --ds-pink-600: #f0278a;
-      --ds-pink-700: #d61e78; --ds-pink-800: #b31664; --ds-pink-900: #8f0e50;
-      --ds-pink-1000: #6b073c;
-      --ds-teal-100: #edfcfc; --ds-teal-200: #d1f7f7; --ds-teal-300: #a3eded;
-      --ds-teal-400: #6ee0e0; --ds-teal-500: #33cccc; --ds-teal-600: #20b8b8;
-      --ds-teal-700: #18a3a3; --ds-teal-800: #128888; --ds-teal-900: #0d6e6e;
-      --ds-teal-1000: #085454;
-      --ds-background-100: #ffffff; --ds-background-200: #fafafa;
-      --ds-space-2x: 8px; --ds-space-3x: 12px; --ds-space-4x: 16px;
-      --ds-space-6x: 24px; --ds-space-8x: 32px;
-      --ds-space-gap: 16px; --ds-space-gap-half: 8px;
-      --ds-radius-small: 8px; --ds-radius-large: 12px; --ds-radius-xlarge: 16px; --ds-radius-full: 9999px;
-      --ds-shadow-small: 0px 1px 2px rgba(0,0,0,0.04);
-      --ds-shadow-medium: 0px 2px 4px rgba(0,0,0,0.06);
-      --ds-shadow-large: 0px 4px 8px rgba(0,0,0,0.08);
-      --ds-button-height-tiny: 24px; --ds-button-height-small: 32px;
-      --ds-button-height-medium: 40px; --ds-button-height-large: 48px;
-    }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 24px; background: var(--ds-background-100); color: var(--ds-gray-1000); }
-  </style>
-</head>
-<body>
-  <div id="root"></div>
-  <script>
-    // Provide module shims for transpiled code
-    var exports = {};
-    var module = { exports: exports };
+    // Build HTML by concatenation to avoid template literal issues
+    // (transpiled code may contain backticks and ${} expressions)
+    const htmlParts = [
+      '<!DOCTYPE html><html><head>',
+      '<meta charset="utf-8" />',
+      '<meta name="viewport" content="width=device-width, initial-scale=1" />',
+      '<script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin><\/script>',
+      '<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin><\/script>',
+      '<script src="https://cdn.tailwindcss.com"><\/script>',
+      '<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"><\/script>',
+      '<style>',
+      ':root {',
+      '--ds-gray-100:#fafafa;--ds-gray-200:#f5f5f5;--ds-gray-300:#ebebeb;',
+      '--ds-gray-400:#e0e0e0;--ds-gray-500:#c7c7c7;--ds-gray-600:#a0a0a0;',
+      '--ds-gray-700:#8c8c8c;--ds-gray-800:#6e6e6e;--ds-gray-900:#444444;',
+      '--ds-gray-1000:#171717;',
+      '--ds-blue-100:#eef6ff;--ds-blue-200:#d8ebff;--ds-blue-300:#b7d9ff;',
+      '--ds-blue-400:#85bfff;--ds-blue-500:#4da3ff;--ds-blue-600:#2b8dff;',
+      '--ds-blue-700:#0070f3;--ds-blue-800:#0060d1;--ds-blue-900:#004fa8;',
+      '--ds-blue-1000:#003580;',
+      '--ds-red-100:#fff0f0;--ds-red-200:#ffd9d9;--ds-red-300:#ffb3b3;',
+      '--ds-red-400:#ff8080;--ds-red-500:#ff4d4d;--ds-red-600:#f03;',
+      '--ds-red-700:#e00;--ds-red-800:#c00;--ds-red-900:#a00;--ds-red-1000:#700;',
+      '--ds-amber-100:#fff8eb;--ds-amber-200:#ffeccc;--ds-amber-300:#ffdb99;',
+      '--ds-amber-400:#ffc266;--ds-amber-500:#ffa833;--ds-amber-600:#ff9500;',
+      '--ds-amber-700:#e08200;--ds-amber-800:#b86a00;--ds-amber-900:#8f5200;',
+      '--ds-amber-1000:#663b00;',
+      '--ds-green-100:#eefbf4;--ds-green-200:#d3f5e4;--ds-green-300:#a8ebc8;',
+      '--ds-green-400:#6ddba1;--ds-green-500:#33cc7a;--ds-green-600:#1db965;',
+      '--ds-green-700:#18a957;--ds-green-800:#128e47;--ds-green-900:#0d7339;',
+      '--ds-green-1000:#085a2b;',
+      '--ds-purple-100:#f5f0ff;--ds-purple-200:#e8dbff;--ds-purple-300:#d4b8ff;',
+      '--ds-purple-400:#b78fff;--ds-purple-500:#9966ff;--ds-purple-600:#8247e5;',
+      '--ds-purple-700:#6b2ec2;--ds-purple-800:#56209f;--ds-purple-900:#41177c;',
+      '--ds-purple-1000:#2d105a;',
+      '--ds-pink-100:#fff0f8;--ds-pink-200:#ffd6ed;--ds-pink-300:#ffadd6;',
+      '--ds-pink-400:#ff80bf;--ds-pink-500:#ff4da6;--ds-pink-600:#f0278a;',
+      '--ds-pink-700:#d61e78;--ds-pink-800:#b31664;--ds-pink-900:#8f0e50;',
+      '--ds-pink-1000:#6b073c;',
+      '--ds-teal-100:#edfcfc;--ds-teal-200:#d1f7f7;--ds-teal-300:#a3eded;',
+      '--ds-teal-400:#6ee0e0;--ds-teal-500:#33cccc;--ds-teal-600:#20b8b8;',
+      '--ds-teal-700:#18a3a3;--ds-teal-800:#128888;--ds-teal-900:#0d6e6e;',
+      '--ds-teal-1000:#085454;',
+      '--ds-background-100:#ffffff;--ds-background-200:#fafafa;',
+      '--ds-space-2x:8px;--ds-space-3x:12px;--ds-space-4x:16px;',
+      '--ds-space-6x:24px;--ds-space-8x:32px;',
+      '--ds-space-gap:16px;--ds-space-gap-half:8px;',
+      '--ds-radius-small:8px;--ds-radius-large:12px;--ds-radius-xlarge:16px;--ds-radius-full:9999px;',
+      '--ds-shadow-small:0px 1px 2px rgba(0,0,0,0.04);',
+      '--ds-shadow-medium:0px 2px 4px rgba(0,0,0,0.06);',
+      '--ds-shadow-large:0px 4px 8px rgba(0,0,0,0.08);',
+      '--ds-button-height-tiny:24px;--ds-button-height-small:32px;',
+      '--ds-button-height-medium:40px;--ds-button-height-large:48px;',
+      '}',
+      '*{margin:0;padding:0;box-sizing:border-box;}',
+      "body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:24px;background:var(--ds-background-100);color:var(--ds-gray-1000);}",
+      '</style></head><body><div id="root"></div>',
+      '<script id="__code" type="text/plain">',
+    ];
 
-    // Lucide icons: create React SVG components from lucide icon data
-    function createLucideIcon(name) {
-      var iconData = lucide.icons[name];
-      if (!iconData) return function() { return null; };
-      return function LucideIcon(props) {
-        var attrs = iconData[1] || {};
-        var children = (iconData[2] || []).map(function(child, i) {
-          return React.createElement(child[0], Object.assign({ key: i }, child[1]));
-        });
-        return React.createElement('svg', Object.assign({
-          xmlns: 'http://www.w3.org/2000/svg',
-          width: props.size || (props.className && props.className.match(/w-(\\d+)/) ? parseInt(props.className.match(/w-(\\d+)/)[1]) * 4 : 24),
-          height: props.size || (props.className && props.className.match(/h-(\\d+)/) ? parseInt(props.className.match(/h-(\\d+)/)[1]) * 4 : 24),
-          viewBox: '0 0 24 24',
-          fill: 'none',
-          stroke: 'currentColor',
-          strokeWidth: 2,
-          strokeLinecap: 'round',
-          strokeLinejoin: 'round',
-        }, { className: props.className, style: props.style }), children);
-      };
-    }
+    // Encode the transpiled code as base64 to avoid any escaping issues
+    const codeBase64 = btoa(unescape(encodeURIComponent(transpiledCode)));
 
-    // Build lucide-react shim with all available icons as PascalCase components
-    var lucideReact = {};
-    if (typeof lucide !== 'undefined' && lucide.icons) {
-      Object.keys(lucide.icons).forEach(function(key) {
-        // Convert kebab-case to PascalCase
-        var pascal = key.replace(/(^|-)([a-z])/g, function(_, _p, c) { return c.toUpperCase(); });
-        lucideReact[pascal] = createLucideIcon(key);
-      });
-    }
+    const scriptParts = [
+      '<\/script>',
+      '<script>',
+      'var exports={};var module={exports:exports};',
+      // Lucide icon shim
+      'function createLucideIcon(n){var d=lucide.icons[n];if(!d)return function(){return null};return function(p){',
+      'var ch=(d[2]||[]).map(function(c,i){return React.createElement(c[0],Object.assign({key:i},c[1]))});',
+      "return React.createElement('svg',Object.assign({xmlns:'http://www.w3.org/2000/svg',",
+      "width:p&&p.className&&p.className.match(/w-(\\d+)/)?parseInt(p.className.match(/w-(\\d+)/)[1])*4:24,",
+      "height:p&&p.className&&p.className.match(/h-(\\d+)/)?parseInt(p.className.match(/h-(\\d+)/)[1])*4:24,",
+      "viewBox:'0 0 24 24',fill:'none',stroke:'currentColor',strokeWidth:2,",
+      "strokeLinecap:'round',strokeLinejoin:'round'},{className:p&&p.className,style:p&&p.style}),ch);};}",
+      'var lucideReact={};',
+      "if(typeof lucide!=='undefined'&&lucide.icons){Object.keys(lucide.icons).forEach(function(k){",
+      "var p=k.replace(/(^|-)([a-z])/g,function(_,__,c){return c.toUpperCase()});",
+      'lucideReact[p]=createLucideIcon(k);});}',
+      "function require(m){if(m==='react')return React;if(m==='react-dom'||m==='react-dom/client')return ReactDOM;if(m==='lucide-react')return lucideReact;return{};}",
+      'try{',
+      // Decode and eval the base64-encoded transpiled code
+      "var __code=decodeURIComponent(escape(atob('" + codeBase64 + "')));",
+      'var __fn=new Function("exports","module","require",__code);',
+      '__fn(exports,module,require);',
+      "var Component=exports.default||module.exports.default;",
+      "if(Component&&typeof Component==='function'){",
+      "ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(Component));",
+      "}else{document.getElementById('root').innerHTML='<p style=\"color:var(--ds-red-700)\">No default export found</p>';}",
+      '}catch(e){',
+      "document.getElementById('root').innerHTML='<pre style=\"color:var(--ds-red-700);white-space:pre-wrap;font-size:13px\">'+e.message+'</pre>';",
+      '}',
+      '<\/script></body></html>',
+    ];
 
-    function require(mod) {
-      if (mod === 'react') return React;
-      if (mod === 'react-dom') return ReactDOM;
-      if (mod === 'react-dom/client') return ReactDOM;
-      if (mod === 'lucide-react') return lucideReact;
-      return {};
-    }
-
-    try {
-      ${transpiledCode}
-      var Component = exports.default || module.exports.default || module.exports;
-      if (Component && typeof Component === 'function') {
-        ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(Component));
-      } else {
-        document.getElementById('root').innerHTML = '<p style="color:var(--ds-red-700)">No default export found</p>';
-      }
-    } catch (e) {
-      document.getElementById('root').innerHTML = '<pre style="color:var(--ds-red-700);white-space:pre-wrap;font-size:13px">' + e.message + '</pre>';
-    }
-  </script>
-</body>
-</html>`;
+    return htmlParts.join('\n') + scriptParts.join('\n');
   } catch (e: unknown) {
     const msg = e instanceof Error ? e.message : String(e);
     return `<!DOCTYPE html><html><body><pre style="color:red;padding:24px;font-size:13px">Transpilation error:\n${msg}</pre></body></html>`;
