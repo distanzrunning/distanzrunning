@@ -12,6 +12,8 @@ const SYSTEM_PROMPT = `You are a React component generator for a design system b
 - Use a single functional component with a descriptive PascalCase name.
 - Include proper TypeScript interface for props.
 - Do NOT use TypeScript enums (use objects with "as const" instead).
+- Keep components concise. Avoid excessive inline styles — reuse Tailwind utilities where possible.
+- Aim for under 150 lines of code. If a component would be very large, simplify the implementation.
 
 ## Styling Rules
 - Use CSS custom properties (var(--ds-*)) for all design token values.
@@ -133,7 +135,7 @@ export async function POST(request: NextRequest) {
 
     const stream = await client.messages.stream({
       model: "claude-sonnet-4-20250514",
-      max_tokens: 4096,
+      max_tokens: 8192,
       system: SYSTEM_PROMPT,
       messages: [{ role: "user", content: userMessage }],
     });
