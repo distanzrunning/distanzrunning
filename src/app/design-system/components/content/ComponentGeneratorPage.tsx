@@ -148,7 +148,19 @@ function buildPreviewHtml(code: string): string {
     return htmlParts.join('\n') + scriptParts.join('\n');
   } catch (e: unknown) {
     const msg = e instanceof Error ? e.message : String(e);
-    return `<!DOCTYPE html><html><body><pre style="color:red;padding:24px;font-size:13px">Transpilation error:\n${msg}</pre></body></html>`;
+    // Log the problematic code for debugging
+    console.error("Transpilation failed:", msg);
+    const lines = code.split("\n");
+    const match = msg.match(/\((\d+):\d+\)/);
+    const errLine = match ? parseInt(match[1]) : -1;
+    const context = errLine > 0
+      ? lines.slice(Math.max(0, errLine - 3), errLine + 2).map((l, i) => {
+          const lineNum = Math.max(1, errLine - 2) + i;
+          return (lineNum === errLine ? ">>> " : "    ") + lineNum + ": " + l;
+        }).join("\n")
+      : "";
+    const debugInfo = context ? "\n\nNear line " + errLine + ":\n" + context : "";
+    return "<!DOCTYPE html><html><body><pre style='color:var(--ds-red-700);padding:24px;font-size:13px;white-space:pre-wrap'>Transpilation error:\n" + msg + debugInfo + "</pre></body></html>";
   }
 }
 
