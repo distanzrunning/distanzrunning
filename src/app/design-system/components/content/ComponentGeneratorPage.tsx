@@ -5,7 +5,7 @@ import { Sparkles, Copy, Download, Trash2, Loader2, Check, Eye, Code, Bot, User,
 import { transform } from "sucrase";
 import { Button } from "@/components/ui/Button";
 import IconButton from "@/components/ui/IconButton";
-import { Avatar } from "@/components/ui/Avatar";
+import { CodeBlock } from "@/components/ui/CodeBlock";
 
 // ============================================================================
 // Types
@@ -30,9 +30,19 @@ interface Toast {
 // Iframe Preview
 // ============================================================================
 
+function prepareCodeForPreview(code: string): string {
+  // Strip "use client" directive
+  let cleaned = code.replace(/^["']use client["'];?\s*/m, "");
+  // Strip import statements (they become require() calls which don't exist in browser)
+  cleaned = cleaned.replace(/^import\s+.*?from\s+['"].*?['"];?\s*$/gm, "");
+  cleaned = cleaned.replace(/^import\s+['"].*?['"];?\s*$/gm, "");
+  return cleaned;
+}
+
 function buildPreviewHtml(code: string): string {
   try {
-    const transpiledCode = transform(code, {
+    const cleaned = prepareCodeForPreview(code);
+    const transpiledCode = transform(cleaned, {
       transforms: ["typescript", "jsx"],
       jsxRuntime: "classic",
       jsxPragma: "React.createElement",
@@ -48,6 +58,7 @@ function buildPreviewHtml(code: string): string {
   <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
   <style>
     :root {
       --ds-gray-100: #fafafa; --ds-gray-200: #f5f5f5; --ds-gray-300: #ebebeb;
@@ -100,10 +111,55 @@ function buildPreviewHtml(code: string): string {
 <body>
   <div id="root"></div>
   <script>
+    // Provide module shims for transpiled code
+    var exports = {};
+    var module = { exports: exports };
+
+    // Lucide icons: create React SVG components from lucide icon data
+    function createLucideIcon(name) {
+      var iconData = lucide.icons[name];
+      if (!iconData) return function() { return null; };
+      return function LucideIcon(props) {
+        var attrs = iconData[1] || {};
+        var children = (iconData[2] || []).map(function(child, i) {
+          return React.createElement(child[0], Object.assign({ key: i }, child[1]));
+        });
+        return React.createElement('svg', Object.assign({
+          xmlns: 'http://www.w3.org/2000/svg',
+          width: props.size || (props.className && props.className.match(/w-(\\d+)/) ? parseInt(props.className.match(/w-(\\d+)/)[1]) * 4 : 24),
+          height: props.size || (props.className && props.className.match(/h-(\\d+)/) ? parseInt(props.className.match(/h-(\\d+)/)[1]) * 4 : 24),
+          viewBox: '0 0 24 24',
+          fill: 'none',
+          stroke: 'currentColor',
+          strokeWidth: 2,
+          strokeLinecap: 'round',
+          strokeLinejoin: 'round',
+        }, { className: props.className, style: props.style }), children);
+      };
+    }
+
+    // Build lucide-react shim with all available icons as PascalCase components
+    var lucideReact = {};
+    if (typeof lucide !== 'undefined' && lucide.icons) {
+      Object.keys(lucide.icons).forEach(function(key) {
+        // Convert kebab-case to PascalCase
+        var pascal = key.replace(/(^|-)([a-z])/g, function(_, _p, c) { return c.toUpperCase(); });
+        lucideReact[pascal] = createLucideIcon(key);
+      });
+    }
+
+    function require(mod) {
+      if (mod === 'react') return React;
+      if (mod === 'react-dom') return ReactDOM;
+      if (mod === 'react-dom/client') return ReactDOM;
+      if (mod === 'lucide-react') return lucideReact;
+      return {};
+    }
+
     try {
       ${transpiledCode}
-      const Component = typeof exports !== 'undefined' ? exports.default : null;
-      if (Component) {
+      var Component = exports.default || module.exports.default || module.exports;
+      if (Component && typeof Component === 'function') {
         ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(Component));
       } else {
         document.getElementById('root').innerHTML = '<p style="color:var(--ds-red-700)">No default export found</p>';
@@ -130,18 +186,20 @@ function ChatBubble({ message }: { message: ChatMessage }) {
   return (
     <div className={`flex gap-3 ${isUser ? "flex-row-reverse" : ""}`}>
       {/* Avatar */}
-      <div className="flex-shrink-0 mt-0.5">
-        <Avatar
-          size={28}
-          placeholderIcon={
-            isUser ? (
-              <User className="w-3.5 h-3.5" />
-            ) : (
-              <Bot className="w-3.5 h-3.5" />
-            )
-          }
-          bgColor={isUser ? "var(--ds-gray-1000)" : "var(--ds-purple-700)"}
-        />
+      <div
+        className="flex-shrink-0 mt-0.5 flex items-center justify-center rounded-full"
+        style={{
+          width: "28px",
+          height: "28px",
+          backgroundColor: isUser ? "var(--ds-blue-700)" : "var(--ds-gray-1000)",
+          color: "white",
+        }}
+      >
+        {isUser ? (
+          <User className="w-3.5 h-3.5" />
+        ) : (
+          <Bot className="w-3.5 h-3.5" />
+        )}
       </div>
 
       {/* Message bubble */}
@@ -155,10 +213,10 @@ function ChatBubble({ message }: { message: ChatMessage }) {
           className="rounded-lg px-3 py-2 text-copy-14"
           style={{
             backgroundColor: isUser
-              ? "var(--ds-gray-1000)"
+              ? "var(--ds-blue-100)"
               : "var(--ds-background-200)",
-            color: isUser ? "white" : "var(--ds-gray-1000)",
-            border: isUser ? "none" : "1px solid var(--ds-gray-400)",
+            color: "var(--ds-gray-1000)",
+            border: isUser ? "1px solid var(--ds-blue-300)" : "1px solid var(--ds-gray-400)",
           }}
         >
           {message.isThinking ? (
@@ -602,18 +660,14 @@ export default function ComponentGeneratorPage() {
                   title="Component preview"
                 />
               ) : (
-                <pre
-                  className="p-4 text-copy-13 leading-relaxed h-full overflow-auto"
-                  style={{
-                    margin: 0,
-                    whiteSpace: "pre-wrap",
-                    wordBreak: "break-word",
-                    color: "var(--ds-gray-1000)",
-                    fontFamily: "'Geist Mono', 'SF Mono', 'Fira Code', monospace",
-                  }}
-                >
-                  {generatedCode}
-                </pre>
+                <div className="h-full overflow-auto">
+                  <CodeBlock
+                    code={generatedCode}
+                    language="tsx"
+                    filename={componentName ? `${componentName}.tsx` : undefined}
+                    showLineNumbers
+                  />
+                </div>
               )}
             </div>
           </div>
