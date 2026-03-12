@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { transform } from "sucrase";
+import ts from "typescript";
 
 export async function POST(request: NextRequest) {
   try {
@@ -32,16 +32,21 @@ export async function POST(request: NextRequest) {
 
     cleaned = cleaned.trim();
 
-    // Sucrase works correctly in Node.js — handles all TypeScript syntax
-    const result = transform(cleaned, {
-      transforms: ["typescript", "jsx", "imports"],
-      jsxRuntime: "classic",
-      jsxPragma: "React.createElement",
-      jsxFragmentPragma: "React.Fragment",
-      production: true,
+    // Use TypeScript's own compiler — handles ALL TypeScript syntax perfectly
+    const result = ts.transpileModule(cleaned, {
+      compilerOptions: {
+        target: ts.ScriptTarget.ES2020,
+        module: ts.ModuleKind.CommonJS,
+        jsx: ts.JsxEmit.React,
+        jsxFactory: "React.createElement",
+        jsxFragmentFactory: "React.Fragment",
+        esModuleInterop: true,
+        allowJs: true,
+        removeComments: false,
+      },
     });
 
-    return Response.json({ code: result.code });
+    return Response.json({ code: result.outputText });
   } catch (e: unknown) {
     const msg = e instanceof Error ? e.message : String(e);
     return Response.json({ error: msg }, { status: 422 });
