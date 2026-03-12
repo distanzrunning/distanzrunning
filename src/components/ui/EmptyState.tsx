@@ -117,6 +117,15 @@ const EMPTY_STATE_CSS = `
     color: var(--ds-gray-1000);
     box-shadow: var(--ds-gray-400) 0px 0px 0px 1px;
     cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .ds-empty-state-btn-secondary:hover {
+    background-color: var(--ds-gray-100);
+  }
+
+  :is(.dark, [data-theme="dark"]) .ds-empty-state-btn-secondary:hover {
+    background-color: var(--ds-gray-200);
   }
 
   .ds-empty-state-link {
