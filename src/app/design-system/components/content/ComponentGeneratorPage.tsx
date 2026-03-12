@@ -1,14 +1,25 @@
 "use client";
 
 import { useState, useRef, useCallback, useEffect } from "react";
-import { Sparkles, Copy, Download, Trash2, RefreshCw, Loader2, Check, Eye, Code } from "lucide-react";
+import { Sparkles, Copy, Download, Trash2, Loader2, Check, Eye, Code, Bot, User, Send } from "lucide-react";
 import { transform } from "sucrase";
+import { Button } from "@/components/ui/Button";
+import IconButton from "@/components/ui/IconButton";
+import { Avatar } from "@/components/ui/Avatar";
 
 // ============================================================================
 // Types
 // ============================================================================
 
 type GeneratorState = "idle" | "generating" | "preview" | "refining" | "deploying";
+
+interface ChatMessage {
+  id: string;
+  role: "user" | "assistant";
+  content: string;
+  isThinking?: boolean;
+  code?: string;
+}
 
 interface Toast {
   message: string;
@@ -37,7 +48,6 @@ function buildPreviewHtml(code: string): string {
   <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://unpkg.com/lucide-static@latest/font/lucide.min.css" />
   <style>
     :root {
       --ds-gray-100: #fafafa; --ds-gray-200: #f5f5f5; --ds-gray-300: #ebebeb;
@@ -111,20 +121,81 @@ function buildPreviewHtml(code: string): string {
 }
 
 // ============================================================================
+// Chat Message Component
+// ============================================================================
+
+function ChatBubble({ message }: { message: ChatMessage }) {
+  const isUser = message.role === "user";
+
+  return (
+    <div className={`flex gap-3 ${isUser ? "flex-row-reverse" : ""}`}>
+      {/* Avatar */}
+      <div className="flex-shrink-0 mt-0.5">
+        <Avatar
+          size={28}
+          placeholderIcon={
+            isUser ? (
+              <User className="w-3.5 h-3.5" />
+            ) : (
+              <Bot className="w-3.5 h-3.5" />
+            )
+          }
+          bgColor={isUser ? "var(--ds-gray-1000)" : "var(--ds-purple-700)"}
+        />
+      </div>
+
+      {/* Message bubble */}
+      <div
+        className={`flex flex-col gap-1 max-w-[85%] ${isUser ? "items-end" : "items-start"}`}
+      >
+        <span className="text-label-12 text-textSubtler">
+          {isUser ? "You" : "Generator"}
+        </span>
+        <div
+          className="rounded-lg px-3 py-2 text-copy-14"
+          style={{
+            backgroundColor: isUser
+              ? "var(--ds-gray-1000)"
+              : "var(--ds-background-200)",
+            color: isUser ? "white" : "var(--ds-gray-1000)",
+            border: isUser ? "none" : "1px solid var(--ds-gray-400)",
+          }}
+        >
+          {message.isThinking ? (
+            <div className="flex items-center gap-2" style={{ color: "var(--ds-gray-600)" }}>
+              <Loader2 className="w-3.5 h-3.5 animate-spin" />
+              <span className="text-copy-13">Generating component...</span>
+            </div>
+          ) : (
+            <p className="m-0 whitespace-pre-wrap">{message.content}</p>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ============================================================================
 // Component
 // ============================================================================
 
 export default function ComponentGeneratorPage() {
   const [state, setState] = useState<GeneratorState>("idle");
-  const [prompt, setPrompt] = useState("");
-  const [refinement, setRefinement] = useState("");
+  const [inputValue, setInputValue] = useState("");
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [generatedCode, setGeneratedCode] = useState("");
   const [componentName, setComponentName] = useState("");
   const [activeTab, setActiveTab] = useState<"preview" | "code">("preview");
   const [toast, setToast] = useState<Toast | null>(null);
   const [copied, setCopied] = useState(false);
   const abortRef = useRef<AbortController | null>(null);
-  const iframeRef = useRef<HTMLIFrameElement>(null);
+  const chatEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
+
+  // Auto-scroll chat to bottom
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   // Auto-dismiss toast
   useEffect(() => {
@@ -137,26 +208,50 @@ export default function ComponentGeneratorPage() {
     setToast({ message, type });
   };
 
-  // Extract component name from generated code
   const extractName = (code: string): string => {
     const match = code.match(/export\s+default\s+function\s+(\w+)/);
     return match ? match[1] : "GeneratedComponent";
   };
 
+  const addMessage = (role: "user" | "assistant", content: string, extras?: Partial<ChatMessage>) => {
+    const msg: ChatMessage = {
+      id: Date.now().toString() + Math.random().toString(36).slice(2),
+      role,
+      content,
+      ...extras,
+    };
+    setMessages((prev) => [...prev, msg]);
+    return msg.id;
+  };
+
+  const updateMessage = (id: string, updates: Partial<ChatMessage>) => {
+    setMessages((prev) =>
+      prev.map((m) => (m.id === id ? { ...m, ...updates } : m))
+    );
+  };
+
   // Generate component via streaming API
-  const handleGenerate = useCallback(async (isRefinement = false) => {
-    const currentPrompt = isRefinement ? refinement : prompt;
-    if (!currentPrompt.trim()) return;
+  const handleGenerate = useCallback(async () => {
+    const text = inputValue.trim();
+    if (!text) return;
+
+    const isRefinement = generatedCode.length > 0;
+
+    // Add user message
+    addMessage("user", text);
+    setInputValue("");
+
+    // Add thinking message
+    const thinkingId = addMessage("assistant", "", { isThinking: true });
 
     setState(isRefinement ? "refining" : "generating");
-    if (!isRefinement) setGeneratedCode("");
 
     abortRef.current = new AbortController();
 
     try {
       const body: Record<string, string> = isRefinement
-        ? { prompt, refinement: currentPrompt, previousCode: generatedCode }
-        : { prompt: currentPrompt };
+        ? { prompt: messages.find((m) => m.role === "user")?.content || text, refinement: text, previousCode: generatedCode }
+        : { prompt: text };
 
       const res = await fetch("/api/generate-component", {
         method: "POST",
@@ -167,7 +262,10 @@ export default function ComponentGeneratorPage() {
 
       if (!res.ok) {
         const err = await res.json();
-        showToast(err.error || "Generation failed", "error");
+        updateMessage(thinkingId, {
+          isThinking: false,
+          content: err.error || "Generation failed. Please try again.",
+        });
         setState(generatedCode ? "preview" : "idle");
         return;
       }
@@ -176,7 +274,7 @@ export default function ComponentGeneratorPage() {
       if (!reader) return;
 
       const decoder = new TextDecoder();
-      let accumulated = isRefinement ? "" : "";
+      let accumulated = "";
 
       while (true) {
         const { done, value } = await reader.read();
@@ -209,16 +307,24 @@ export default function ComponentGeneratorPage() {
       const name = extractName(accumulated);
       setComponentName(name);
       setState("preview");
-      if (isRefinement) {
-        setRefinement("");
-        showToast("Component refined", "success");
-      }
+
+      // Update thinking message to completion message
+      updateMessage(thinkingId, {
+        isThinking: false,
+        content: isRefinement
+          ? `Updated ${name}. Check the preview to see the changes.`
+          : `Generated ${name}. You can preview it on the right, refine it by sending another message, or deploy it to your UI library.`,
+        code: accumulated,
+      });
     } catch (e: unknown) {
       if (e instanceof DOMException && e.name === "AbortError") return;
-      showToast("Generation failed", "error");
+      updateMessage(thinkingId, {
+        isThinking: false,
+        content: "Generation failed. Please try again.",
+      });
       setState(generatedCode ? "preview" : "idle");
     }
-  }, [prompt, refinement, generatedCode]);
+  }, [inputValue, generatedCode, messages]);
 
   // Deploy component
   const handleDeploy = useCallback(async (overwrite = false) => {
@@ -253,6 +359,7 @@ export default function ComponentGeneratorPage() {
       }
 
       showToast(`Deployed to ${data.path}`, "success");
+      addMessage("assistant", `Deployed ${componentName} to ${data.path}`);
       setState("preview");
     } catch {
       showToast("Deploy failed", "error");
@@ -260,180 +367,243 @@ export default function ComponentGeneratorPage() {
     }
   }, [generatedCode, componentName]);
 
-  // Copy code to clipboard
   const handleCopy = useCallback(async () => {
     await navigator.clipboard.writeText(generatedCode);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   }, [generatedCode]);
 
-  // Reset everything
   const handleDelete = useCallback(() => {
     setGeneratedCode("");
     setComponentName("");
-    setPrompt("");
-    setRefinement("");
+    setMessages([]);
+    setInputValue("");
     setState("idle");
     if (abortRef.current) abortRef.current.abort();
   }, []);
 
   const isLoading = state === "generating" || state === "refining" || state === "deploying";
+  const hasPreview = generatedCode.length > 0;
 
   return (
-    <div className="flex flex-col gap-8 max-w-full">
+    <div className="flex flex-col gap-6 max-w-full">
       {/* Header */}
       <div>
         <h1 className="text-heading-32 text-textDefault mb-2">Component Generator</h1>
         <p className="text-copy-16 text-textSubtle">
-          Generate React components using natural language. Components use design system tokens and can be deployed directly to the UI library.
+          Describe a component in natural language to generate, preview, and deploy it.
         </p>
       </div>
 
-      {/* Prompt Input */}
+      {/* Main layout: Chat left, Preview right */}
       <div
-        className="flex flex-col gap-3 rounded-lg p-5"
+        className="flex gap-0 rounded-lg overflow-hidden"
         style={{
           border: "1px solid var(--ds-gray-400)",
-          backgroundColor: "var(--ds-background-100)",
+          height: "calc(100vh - 320px)",
+          minHeight: "500px",
         }}
       >
-        <label className="text-label-14 text-textDefault font-medium">
-          Describe your component
-        </label>
-        <textarea
-          value={prompt}
-          onChange={(e) => setPrompt(e.target.value)}
-          placeholder="e.g. A notification banner with an icon, title, message, and dismiss button. Support success, warning, and error variants."
-          disabled={isLoading}
-          rows={3}
-          className="w-full resize-none rounded-md px-3 py-2 text-copy-14 text-textDefault placeholder:text-textSubtler outline-none transition-colors"
-          style={{
-            border: "1px solid var(--ds-gray-400)",
-            backgroundColor: "var(--ds-background-200)",
-          }}
-          onFocus={(e) => (e.target.style.borderColor = "var(--ds-gray-600)")}
-          onBlur={(e) => (e.target.style.borderColor = "var(--ds-gray-400)")}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" && e.metaKey && !isLoading && prompt.trim()) {
-              handleGenerate(false);
-            }
-          }}
-        />
-        <div className="flex items-center justify-between">
-          <span className="text-copy-13 text-textSubtler">
-            {prompt.trim() ? "⌘ Enter to generate" : ""}
-          </span>
-          <button
-            onClick={() => handleGenerate(false)}
-            disabled={isLoading || !prompt.trim()}
-            className="flex items-center gap-2 rounded-md px-4 text-button-14 font-medium text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            style={{
-              height: "var(--ds-button-height-medium)",
-              backgroundColor: isLoading && state === "generating" ? "var(--ds-gray-800)" : "var(--ds-gray-1000)",
-            }}
-          >
-            {state === "generating" ? (
-              <Loader2 className="w-4 h-4 animate-spin" />
-            ) : (
-              <Sparkles className="w-4 h-4" />
-            )}
-            {state === "generating" ? "Generating..." : "Generate"}
-          </button>
-        </div>
-      </div>
-
-      {/* Preview Area */}
-      {(generatedCode || isLoading) && (
+        {/* ============================================================ */}
+        {/* LEFT: Chat Panel */}
+        {/* ============================================================ */}
         <div
-          className="flex flex-col rounded-lg overflow-hidden"
-          style={{ border: "1px solid var(--ds-gray-400)" }}
+          className="flex flex-col"
+          style={{
+            width: hasPreview ? "400px" : "100%",
+            minWidth: "340px",
+            borderRight: hasPreview ? "1px solid var(--ds-gray-400)" : "none",
+            backgroundColor: "var(--ds-background-100)",
+            transition: "width 0.3s ease",
+          }}
         >
-          {/* Tabs + Actions bar */}
-          <div
-            className="flex items-center justify-between px-4"
-            style={{
-              height: "48px",
-              borderBottom: "1px solid var(--ds-gray-400)",
-              backgroundColor: "var(--ds-background-200)",
-            }}
-          >
-            {/* Tabs */}
-            <div className="flex items-center gap-1">
-              <button
-                onClick={() => setActiveTab("preview")}
-                className="flex items-center gap-1.5 rounded-md px-3 py-1.5 text-label-13 transition-colors"
-                style={{
-                  backgroundColor: activeTab === "preview" ? "var(--ds-background-100)" : "transparent",
-                  color: activeTab === "preview" ? "var(--ds-gray-1000)" : "var(--ds-gray-700)",
-                  boxShadow: activeTab === "preview" ? "var(--ds-gray-400) 0px 0px 0px 1px" : "none",
-                }}
-              >
-                <Eye className="w-3.5 h-3.5" />
-                Preview
-              </button>
-              <button
-                onClick={() => setActiveTab("code")}
-                className="flex items-center gap-1.5 rounded-md px-3 py-1.5 text-label-13 transition-colors"
-                style={{
-                  backgroundColor: activeTab === "code" ? "var(--ds-background-100)" : "transparent",
-                  color: activeTab === "code" ? "var(--ds-gray-1000)" : "var(--ds-gray-700)",
-                  boxShadow: activeTab === "code" ? "var(--ds-gray-400) 0px 0px 0px 1px" : "none",
-                }}
-              >
-                <Code className="w-3.5 h-3.5" />
-                Code
-              </button>
-            </div>
-
-            {/* Actions */}
-            {state === "preview" && (
-              <div className="flex items-center gap-1">
-                <button
-                  onClick={handleCopy}
-                  className="flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-label-13 transition-colors hover:bg-[var(--ds-gray-200)]"
-                  style={{ color: "var(--ds-gray-700)" }}
-                  title="Copy code"
+          {/* Chat messages */}
+          <div className="flex-1 overflow-y-auto p-4">
+            {messages.length === 0 ? (
+              <div className="flex flex-col items-center justify-center h-full gap-4 text-center px-6">
+                <div
+                  className="flex items-center justify-center rounded-lg"
+                  style={{
+                    width: "48px",
+                    height: "48px",
+                    backgroundColor: "var(--ds-purple-100)",
+                    color: "var(--ds-purple-700)",
+                  }}
                 >
-                  {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-                  {copied ? "Copied" : "Copy"}
-                </button>
-                <button
-                  onClick={() => handleDeploy()}
-                  disabled={state !== "preview"}
-                  className="flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-label-13 transition-colors hover:bg-[var(--ds-gray-200)]"
-                  style={{ color: "var(--ds-gray-700)" }}
-                  title="Deploy to ui/"
-                >
-                  <Download className="w-3.5 h-3.5" />
-                  Deploy
-                </button>
-                <button
-                  onClick={handleDelete}
-                  className="flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-label-13 transition-colors hover:bg-[var(--ds-red-100)]"
-                  style={{ color: "var(--ds-red-700)" }}
-                  title="Discard"
-                >
-                  <Trash2 className="w-3.5 h-3.5" />
-                </button>
+                  <Sparkles className="w-6 h-6" />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <p className="text-label-14 text-textDefault font-medium">
+                    Describe a component
+                  </p>
+                  <p className="text-copy-13 text-textSubtler">
+                    e.g. &quot;A notification banner with success, warning, and error variants&quot;
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <div className="flex flex-col gap-4">
+                {messages.map((msg) => (
+                  <ChatBubble key={msg.id} message={msg} />
+                ))}
+                <div ref={chatEndRef} />
               </div>
             )}
           </div>
 
-          {/* Content */}
-          <div style={{ minHeight: "400px", backgroundColor: "var(--ds-background-100)" }}>
-            {activeTab === "preview" ? (
-              <iframe
-                ref={iframeRef}
-                srcDoc={generatedCode ? buildPreviewHtml(generatedCode) : ""}
-                className="w-full border-0"
-                style={{ minHeight: "400px" }}
-                sandbox="allow-scripts"
-                title="Component preview"
-              />
-            ) : (
-              <div className="overflow-auto" style={{ maxHeight: "600px" }}>
+          {/* Input area */}
+          <div
+            className="flex items-end gap-2 p-3"
+            style={{
+              borderTop: "1px solid var(--ds-gray-400)",
+              backgroundColor: "var(--ds-background-200)",
+            }}
+          >
+            <textarea
+              ref={inputRef}
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              placeholder={hasPreview ? "Describe changes..." : "Describe your component..."}
+              disabled={isLoading}
+              rows={1}
+              className="flex-1 resize-none rounded-md px-3 py-2 text-copy-14 text-textDefault placeholder:text-textSubtler outline-none"
+              style={{
+                border: "1px solid var(--ds-gray-400)",
+                backgroundColor: "var(--ds-background-100)",
+                minHeight: "40px",
+                maxHeight: "120px",
+              }}
+              onFocus={(e) => (e.target.style.borderColor = "var(--ds-gray-600)")}
+              onBlur={(e) => (e.target.style.borderColor = "var(--ds-gray-400)")}
+              onInput={(e) => {
+                const target = e.target as HTMLTextAreaElement;
+                target.style.height = "auto";
+                target.style.height = Math.min(target.scrollHeight, 120) + "px";
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey && !isLoading && inputValue.trim()) {
+                  e.preventDefault();
+                  handleGenerate();
+                }
+              }}
+            />
+            <Button
+              size="medium"
+              variant="default"
+              shape="square"
+              onClick={handleGenerate}
+              disabled={isLoading || !inputValue.trim()}
+              loading={isLoading}
+            >
+              {!isLoading && <Send className="w-4 h-4" />}
+            </Button>
+          </div>
+        </div>
+
+        {/* ============================================================ */}
+        {/* RIGHT: Preview/Code Panel */}
+        {/* ============================================================ */}
+        {hasPreview && (
+          <div
+            className="flex flex-col flex-1 min-w-0"
+            style={{ backgroundColor: "var(--ds-background-100)" }}
+          >
+            {/* Toolbar */}
+            <div
+              className="flex items-center justify-between px-3 flex-shrink-0"
+              style={{
+                height: "48px",
+                borderBottom: "1px solid var(--ds-gray-400)",
+                backgroundColor: "var(--ds-background-200)",
+              }}
+            >
+              {/* Toggle: Preview / Code */}
+              <div
+                className="flex items-center rounded-md p-0.5"
+                style={{
+                  backgroundColor: "var(--ds-gray-200)",
+                  border: "1px solid var(--ds-gray-400)",
+                }}
+              >
+                <button
+                  onClick={() => setActiveTab("preview")}
+                  className="flex items-center gap-1.5 rounded px-2.5 py-1 text-label-13 transition-colors"
+                  style={{
+                    backgroundColor: activeTab === "preview" ? "var(--ds-background-100)" : "transparent",
+                    color: activeTab === "preview" ? "var(--ds-gray-1000)" : "var(--ds-gray-600)",
+                    boxShadow: activeTab === "preview" ? "var(--ds-shadow-small)" : "none",
+                  }}
+                >
+                  <Eye className="w-3.5 h-3.5" />
+                  Preview
+                </button>
+                <button
+                  onClick={() => setActiveTab("code")}
+                  className="flex items-center gap-1.5 rounded px-2.5 py-1 text-label-13 transition-colors"
+                  style={{
+                    backgroundColor: activeTab === "code" ? "var(--ds-background-100)" : "transparent",
+                    color: activeTab === "code" ? "var(--ds-gray-1000)" : "var(--ds-gray-600)",
+                    boxShadow: activeTab === "code" ? "var(--ds-shadow-small)" : "none",
+                  }}
+                >
+                  <Code className="w-3.5 h-3.5" />
+                  Code
+                </button>
+              </div>
+
+              {/* Actions */}
+              <div className="flex items-center gap-1">
+                {componentName && (
+                  <span
+                    className="text-label-12 rounded px-2 py-0.5 mr-2"
+                    style={{
+                      backgroundColor: "var(--ds-gray-200)",
+                      color: "var(--ds-gray-800)",
+                    }}
+                  >
+                    {componentName}
+                  </span>
+                )}
+                <IconButton
+                  variant="tertiary"
+                  size="small"
+                  aria-label={copied ? "Copied" : "Copy code"}
+                  onClick={handleCopy}
+                >
+                  {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                </IconButton>
+                <IconButton
+                  variant="tertiary"
+                  size="small"
+                  aria-label="Deploy to ui/"
+                  onClick={() => handleDeploy()}
+                  disabled={state === "deploying"}
+                >
+                  <Download className="w-4 h-4" />
+                </IconButton>
+                <IconButton
+                  variant="tertiary"
+                  size="small"
+                  aria-label="Discard"
+                  onClick={handleDelete}
+                >
+                  <Trash2 className="w-4 h-4" />
+                </IconButton>
+              </div>
+            </div>
+
+            {/* Content area */}
+            <div className="flex-1 overflow-auto">
+              {activeTab === "preview" ? (
+                <iframe
+                  srcDoc={buildPreviewHtml(generatedCode)}
+                  className="w-full h-full border-0"
+                  sandbox="allow-scripts"
+                  title="Component preview"
+                />
+              ) : (
                 <pre
-                  className="p-4 text-copy-13 leading-relaxed"
+                  className="p-4 text-copy-13 leading-relaxed h-full overflow-auto"
                   style={{
                     margin: 0,
                     whiteSpace: "pre-wrap",
@@ -442,85 +612,13 @@ export default function ComponentGeneratorPage() {
                     fontFamily: "'Geist Mono', 'SF Mono', 'Fira Code', monospace",
                   }}
                 >
-                  {generatedCode || (isLoading ? "Generating..." : "")}
+                  {generatedCode}
                 </pre>
-              </div>
-            )}
-          </div>
-
-          {/* Refine bar */}
-          {state === "preview" && (
-            <div
-              className="flex items-center gap-3 px-4 py-3"
-              style={{ borderTop: "1px solid var(--ds-gray-400)", backgroundColor: "var(--ds-background-200)" }}
-            >
-              <RefreshCw className="w-4 h-4 flex-shrink-0" style={{ color: "var(--ds-gray-600)" }} />
-              <input
-                type="text"
-                value={refinement}
-                onChange={(e) => setRefinement(e.target.value)}
-                placeholder="Describe refinements... e.g. add a loading state, change colors"
-                className="flex-1 bg-transparent text-copy-14 text-textDefault placeholder:text-textSubtler outline-none"
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && refinement.trim()) {
-                    handleGenerate(true);
-                  }
-                }}
-              />
-              <button
-                onClick={() => handleGenerate(true)}
-                disabled={!refinement.trim() || isLoading}
-                className="flex items-center gap-1.5 rounded-md px-3 text-button-14 font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                style={{
-                  height: "var(--ds-button-height-small)",
-                  backgroundColor: "var(--ds-background-100)",
-                  color: "var(--ds-gray-1000)",
-                  boxShadow: "var(--ds-gray-400) 0px 0px 0px 1px",
-                }}
-              >
-                Refine
-              </button>
+              )}
             </div>
-          )}
-        </div>
-      )}
-
-      {/* Component name display */}
-      {state === "preview" && componentName && (
-        <div className="flex items-center gap-2 text-copy-13 text-textSubtle">
-          <span>Component:</span>
-          <code
-            className="rounded px-1.5 py-0.5 text-copy-13"
-            style={{
-              backgroundColor: "var(--ds-gray-200)",
-              color: "var(--ds-gray-900)",
-            }}
-          >
-            {componentName}
-          </code>
-          <span style={{ color: "var(--ds-gray-500)" }}>·</span>
-          <span>
-            Deploy target:{" "}
-            <code
-              className="rounded px-1.5 py-0.5 text-copy-13"
-              style={{
-                backgroundColor: "var(--ds-gray-200)",
-                color: "var(--ds-gray-900)",
-              }}
-            >
-              src/components/ui/{componentName}.tsx
-            </code>
-          </span>
-        </div>
-      )}
-
-      {/* Deploying overlay */}
-      {state === "deploying" && (
-        <div className="flex items-center gap-2 text-copy-14 text-textSubtle">
-          <Loader2 className="w-4 h-4 animate-spin" />
-          Deploying {componentName}...
-        </div>
-      )}
+          </div>
+        )}
+      </div>
 
       {/* Toast */}
       {toast && (
