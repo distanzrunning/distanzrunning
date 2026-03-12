@@ -75,9 +75,17 @@ function buildPreviewHtml(transpiledCode: string): string {
     // require shim
     "function require(m){if(m==='react')return React;if(m==='react-dom'||m==='react-dom/client')return ReactDOM;if(m==='lucide-react')return lucideReact;return{};}",
     "<\/script>",
+    // Catch any uncaught errors from script tags
+    "<script>",
+    "window.onerror=function(msg,src,line,col,err){",
+    "document.getElementById('root').innerHTML='<pre style=\"color:#e00;white-space:pre-wrap;font-size:13px;padding:24px\">Script error: '+msg+'\\nLine: '+line+', Col: '+col+'</pre>';",
+    "return true;};",
+    "<\/script>",
     // Component code in its own script tag
     "<script>",
+    "try{",
     safeCode,
+    "}catch(e){document.getElementById('root').innerHTML='<pre style=\"color:#e00;white-space:pre-wrap;font-size:13px;padding:24px\">Component error: '+e.message+'\\n'+e.stack+'</pre>';}",
     "<\/script>",
     // Mount the component
     "<script>",
