@@ -30,20 +30,11 @@ interface Toast {
 // Iframe Preview
 // ============================================================================
 
-function prepareCodeForPreview(code: string): string {
-  // Strip "use client" directive
-  let cleaned = code.replace(/^["']use client["'];?\s*/m, "");
-  // Strip import statements (they become require() calls which don't exist in browser)
-  cleaned = cleaned.replace(/^import\s+.*?from\s+['"].*?['"];?\s*$/gm, "");
-  cleaned = cleaned.replace(/^import\s+['"].*?['"];?\s*$/gm, "");
-  return cleaned;
-}
-
 function buildPreviewHtml(code: string): string {
   try {
-    const cleaned = prepareCodeForPreview(code);
-    const transpiledCode = transform(cleaned, {
-      transforms: ["typescript", "jsx"],
+    // Sucrase handles imports (converts to require()), JSX, and TypeScript
+    const transpiledCode = transform(code, {
+      transforms: ["typescript", "jsx", "imports"],
       jsxRuntime: "classic",
       jsxPragma: "React.createElement",
       jsxFragmentPragma: "React.Fragment",
@@ -664,7 +655,6 @@ export default function ComponentGeneratorPage() {
                   <CodeBlock
                     code={generatedCode}
                     language="tsx"
-                    filename={componentName ? `${componentName}.tsx` : undefined}
                     showLineNumbers
                   />
                 </div>
