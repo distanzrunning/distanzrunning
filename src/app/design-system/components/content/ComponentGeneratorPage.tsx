@@ -29,9 +29,31 @@ interface Toast {
 // Iframe Preview
 // ============================================================================
 
+// Replace bare module specifiers with full esm.sh URLs so blob modules can resolve them
+const ESM_MAP: Record<string, string> = {
+  "react": "https://esm.sh/react@18",
+  "react-dom": "https://esm.sh/react-dom@18",
+  "react-dom/client": "https://esm.sh/react-dom@18/client",
+  "react/jsx-runtime": "https://esm.sh/react@18/jsx-runtime",
+  "lucide-react": "https://esm.sh/lucide-react@latest",
+};
+
+function resolveImports(code: string): string {
+  // Replace: import ... from "react" → import ... from "https://esm.sh/react@18"
+  // Also handles: export ... from "react"
+  return code.replace(
+    /((?:import|export)\s+.*?\s+from\s+)(["'])([^"']+)\2/g,
+    (match, prefix, quote, specifier) => {
+      const resolved = ESM_MAP[specifier];
+      return resolved ? `${prefix}${quote}${resolved}${quote}` : match;
+    }
+  );
+}
+
 function buildPreviewHtml(transpiledCode: string): string {
-  // JSON.stringify the code to safely embed it as a string literal
-  const codeString = JSON.stringify(transpiledCode);
+  // Resolve bare imports to full URLs so blob modules can load them
+  const resolvedCode = resolveImports(transpiledCode);
+  const codeString = JSON.stringify(resolvedCode);
 
   return `<!DOCTYPE html>
 <html><head>
