@@ -14,6 +14,8 @@ const SYSTEM_PROMPT = `You are a React component generator for a design system b
 - Do NOT use TypeScript enums (use objects with "as const" instead).
 - Keep components concise. Avoid excessive inline styles — reuse Tailwind utilities where possible.
 - Aim for under 150 lines of code. If a component would be very large, simplify the implementation.
+- IMPORTANT: The component will be previewed by rendering it with NO props. Use default prop values so the component is always visible. Do NOT conditionally return null based on props like "isOpen" — always render content.
+- For modal/dialog components, do NOT use an isOpen prop. Always show the modal content directly.
 
 ## Styling Rules
 - Use CSS custom properties (var(--ds-*)) for all design token values.
@@ -176,7 +178,7 @@ export async function POST(request: NextRequest) {
         Connection: "keep-alive",
       },
     });
-  } catch (error) {
+  } catch {
     return new Response(
       JSON.stringify({ error: "Failed to generate component" }),
       { status: 500, headers: { "Content-Type": "application/json" } },

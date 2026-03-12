@@ -75,22 +75,23 @@ function buildPreviewHtml(transpiledCode: string): string {
     // require shim
     "function require(m){if(m==='react')return React;if(m==='react-dom'||m==='react-dom/client')return ReactDOM;if(m==='lucide-react')return lucideReact;return{};}",
     "<\/script>",
-    // Component code in its own script tag (avoids base64/new Function complexity)
+    // Component code in its own script tag
     "<script>",
-    "try{",
     safeCode,
-    "}catch(e){document.getElementById('root').innerHTML='<pre style=\"color:#e00;white-space:pre-wrap;font-size:13px;padding:24px\">Runtime error: '+e.message+'<\\/pre>';}",
     "<\/script>",
     // Mount the component
     "<script>",
     "try{",
-    "var C=exports.default||module.exports.default||module.exports;",
+    "var C=exports.default||module.exports.default;",
+    "if(!C){for(var k in exports){if(typeof exports[k]==='function'&&k!=='__esModule'){C=exports[k];break;}}}",
+    "if(!C){for(var k in module.exports){if(typeof module.exports[k]==='function'){C=module.exports[k];break;}}}",
     "if(C&&typeof C==='function'){",
-    "ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(C));",
-    "}else if(!document.getElementById('root').innerHTML){",
-    "document.getElementById('root').innerHTML='<p style=\"color:#e00\">No default export found</p>';",
+    "var root=ReactDOM.createRoot(document.getElementById('root'));",
+    "root.render(React.createElement(C));",
+    "}else{",
+    "document.getElementById('root').innerHTML='<pre style=\"color:#e00;padding:24px;font-size:13px\">No component found in exports.\\n\\nexports keys: '+Object.keys(exports).join(', ')+'\\nmodule.exports keys: '+Object.keys(module.exports).join(', ')+'</pre>';",
     "}",
-    "}catch(e){document.getElementById('root').innerHTML='<pre style=\"color:#e00;white-space:pre-wrap;font-size:13px;padding:24px\">Mount error: '+e.message+'<\\/pre>';}",
+    "}catch(e){document.getElementById('root').innerHTML='<pre style=\"color:#e00;white-space:pre-wrap;font-size:13px;padding:24px\">Mount error: '+e.message+'\\n'+e.stack+'</pre>';}",
     "<\/script></body></html>",
   ].join("\n");
 }
