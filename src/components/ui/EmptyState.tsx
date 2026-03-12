@@ -99,7 +99,7 @@ const EMPTY_STATE_CSS = `
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: var(--ds-space-3x);
+    gap: var(--ds-space-6x);
   }
 
   .ds-empty-state-btn-secondary {
@@ -107,7 +107,7 @@ const EMPTY_STATE_CSS = `
     align-items: center;
     justify-content: center;
     height: 40px;
-    padding: 0 16px;
+    padding: 0 10px;
     font-size: 14px;
     font-weight: 500;
     line-height: 20px;
