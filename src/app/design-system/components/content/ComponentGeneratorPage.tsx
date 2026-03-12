@@ -29,36 +29,39 @@ interface Toast {
 // Iframe Preview
 // ============================================================================
 
-// Replace bare module specifiers with full esm.sh URLs so blob modules can resolve them
-const ESM_MAP: Record<string, string> = {
-  "react": "https://esm.sh/react@18",
-  "react-dom": "https://esm.sh/react-dom@18",
-  "react-dom/client": "https://esm.sh/react-dom@18/client",
-  "react/jsx-runtime": "https://esm.sh/react@18/jsx-runtime",
-  "lucide-react": "https://esm.sh/lucide-react@latest",
-};
+// Prepare transpiled ESM code for inline embedding in a single <script type="module">.
+// Strips import/export statements since the wrapper provides all dependencies,
+// and captures the default export as __Component__ for mounting.
+function prepareForInline(code: string): string {
+  // Remove all import lines — the wrapper script provides React, hooks, lucide icons, etc.
+  let prepared = code.replace(/^\s*import\s+[\s\S]*?\s+from\s+["'][^"']+["'];?\s*$/gm, "");
 
-function resolveImports(code: string): string {
-  // Replace bare specifiers: import ... from "react" → import ... from "https://esm.sh/react@18"
-  let resolved = code.replace(
-    /((?:import|export)\s+[\s\S]*?\s+from\s+)(["'])([^"']+)\2/g,
-    (match, prefix, quote, specifier) => {
-      const url = ESM_MAP[specifier];
-      return url ? `${prefix}${quote}${url}${quote}` : match;
-    }
-  );
+  // Capture default export as __Component__
+  const defaultFnMatch = prepared.match(/export\s+default\s+function\s+(\w+)/);
+  const defaultClassMatch = prepared.match(/export\s+default\s+class\s+(\w+)/);
 
-  // Always prepend React default import — classic JSX transform emits React.createElement()
-  // which requires React in scope. Duplicate ESM imports are deduplicated by the browser.
-  resolved = `import React from "${ESM_MAP["react"]}";\n${resolved}`;
+  if (defaultFnMatch) {
+    prepared = prepared.replace(/export\s+default\s+function\s+/, "function ");
+    prepared += `\nvar __Component__ = ${defaultFnMatch[1]};`;
+  } else if (defaultClassMatch) {
+    prepared = prepared.replace(/export\s+default\s+class\s+/, "class ");
+    prepared += `\nvar __Component__ = ${defaultClassMatch[1]};`;
+  } else {
+    // export default <expression> (arrow function, etc.)
+    prepared = prepared.replace(/export\s+default\s+/, "var __Component__ = ");
+  }
 
-  return resolved;
+  // Remove remaining named exports
+  prepared = prepared.replace(/^\s*export\s+\{[^}]*\};?\s*$/gm, "");
+  prepared = prepared.replace(/^\s*export\s+(const|let|var|function|class)\s+/gm, "$1 ");
+
+  return prepared;
 }
 
 function buildPreviewHtml(transpiledCode: string): string {
-  // Resolve bare imports to full URLs so blob modules can load them
-  const resolvedCode = resolveImports(transpiledCode);
-  const codeString = JSON.stringify(resolvedCode);
+  const componentCode = prepareForInline(transpiledCode);
+  // Escape </script to prevent premature tag closing in srcdoc
+  const safeCode = componentCode.replace(/<\/script/gi, "<\\/script");
 
   return `<!DOCTYPE html>
 <html><head>
@@ -90,7 +93,6 @@ body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif
     "react": "https://esm.sh/react@18",
     "react-dom": "https://esm.sh/react-dom@18",
     "react-dom/client": "https://esm.sh/react-dom@18/client",
-    "react/jsx-runtime": "https://esm.sh/react@18/jsx-runtime",
     "lucide-react": "https://esm.sh/lucide-react@latest"
   }
 }
@@ -99,8 +101,14 @@ body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif
 <body>
 <div id="root"></div>
 <script type="module">
-import React from 'react';
+// Import all dependencies — these resolve via the import map above
+import React, { useState, useEffect, useRef, useCallback, useMemo, useReducer, useContext, createContext, Fragment } from 'react';
 import ReactDOM from 'react-dom/client';
+import * as LucideIcons from 'lucide-react';
+
+// Destructure all lucide icons into scope so component code can reference them
+const { ${""} } = LucideIcons;
+for (const [k, v] of Object.entries(LucideIcons)) { window[k] = v; }
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -113,7 +121,8 @@ class ErrorBoundary extends React.Component {
   render() {
     if (this.state.hasError) {
       return React.createElement('div', { className: 'error-boundary' },
-        React.createElement('strong', null, 'Component Error\\n'),
+        React.createElement('strong', null, 'Component Error'),
+        React.createElement('br'),
         React.createElement('pre', null, this.state.error?.toString())
       );
     }
@@ -121,33 +130,21 @@ class ErrorBoundary extends React.Component {
   }
 }
 
-async function loadComponent() {
-  try {
-    const code = ${codeString};
-    const blob = new Blob([code], { type: 'application/javascript' });
-    const url = URL.createObjectURL(blob);
-    const mod = await import(url);
-    URL.revokeObjectURL(url);
-
-    const App = mod.default || Object.values(mod).find(v => typeof v === 'function');
-
-    if (!App) {
-      document.getElementById('root').innerHTML =
-        '<div class="error-boundary"><strong>No component found<\\/strong><pre>exports: ' +
-        Object.keys(mod).join(', ') + '<\\/pre><\\/div>';
-      return;
-    }
-
+try {
+  // === Generated component code (imports stripped, default export captured) ===
+  ${safeCode}
+  // === Mount ===
+  if (typeof __Component__ === 'function' || (typeof __Component__ === 'object' && __Component__)) {
     const root = ReactDOM.createRoot(document.getElementById('root'));
-    root.render(React.createElement(ErrorBoundary, null, React.createElement(App)));
-  } catch (error) {
+    root.render(React.createElement(ErrorBoundary, null, React.createElement(__Component__)));
+  } else {
     document.getElementById('root').innerHTML =
-      '<div class="error-boundary"><strong>Load Error<\\/strong><pre>' +
-      error.toString() + '<\\/pre><\\/div>';
+      '<div class="error-boundary">No component found. Make sure the code uses export default.</div>';
   }
+} catch (e) {
+  document.getElementById('root').innerHTML =
+    '<div class="error-boundary"><strong>Error</strong><br/>' + e.message + '</div>';
 }
-
-loadComponent();
 <\/script>
 </body></html>`;
 }
