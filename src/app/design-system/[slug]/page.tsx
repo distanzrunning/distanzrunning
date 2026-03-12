@@ -46,6 +46,7 @@ import DrawerComponent from "../components/content/DrawerComponent";
 import EmptyStateComponent from "../components/content/EmptyStateComponent";
 import PaginationComponent from "../components/content/PaginationComponent";
 import CalendarComponent from "../components/content/CalendarComponent";
+import ComponentGeneratorPage from "../components/content/ComponentGeneratorPage";
 import Materials from "../components/content/Materials";
 import ContentWithTOC from "../components/ContentWithTOC";
 
@@ -642,6 +643,10 @@ export default function DesignSystemPage() {
           <CalendarComponent />
         </ContentWithTOC>
       );
+    }
+
+    if (activeSlug === "component-generator") {
+      return <ComponentGeneratorPage />;
     }
 
     // Default placeholder for unimplemented pages

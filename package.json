@@ -13,6 +13,7 @@
     "@ag-grid-community/core": "^32.3.5",
     "@ag-grid-community/react": "^32.3.5",
     "@ag-grid-community/styles": "^32.3.5",
+    "@anthropic-ai/sdk": "^0.78.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@fortawesome/fontawesome-svg-core": "^6.7.2",
@@ -69,6 +70,7 @@
     "sanity": "^3.85.1",
     "shiki": "^3.21.0",
     "styled-components": "^6.1.17",
+    "sucrase": "^3.35.1",
     "tailwindcss-animate": "^1.0.7",
     "vaul": "^1.1.2"
   },

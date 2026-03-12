@@ -59,6 +59,13 @@ export const navigation: NavSection[] = [
       { id: "pagination", label: "Pagination" },
     ],
   },
+  {
+    id: "tools",
+    label: "Tools",
+    items: [
+      { id: "component-generator", label: "Component Generator" },
+    ],
+  },
 ];
 
 export default function DesignSystemSidebar({

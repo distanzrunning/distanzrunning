@@ -341,11 +341,12 @@ function InformationalExample() {
         <EmptyState.Title>Title</EmptyState.Title>
         <EmptyState.Description>
           This should detail the actions you can take on this screen,
-          as well as why it&apos;s valuable.
+          as well as why it's valuable.
         </EmptyState.Description>
       </EmptyState.Text>
       <EmptyState.Actions>
         <button
+          type="button"
           className="ds-empty-state-btn-secondary"
         >
           Primary Action
@@ -814,7 +815,7 @@ export default function EmptyStateComponent() {
                   ReactNode
                 </td>
                 <td className="py-3 px-4 text-textSubtle">
-                  Icon element, rendered at 32x32
+                  Icon element (32×32) inside a bordered container
                 </td>
               </tr>
               <tr className="border-b border-borderSubtle">
