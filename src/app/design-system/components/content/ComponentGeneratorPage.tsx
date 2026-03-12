@@ -53,45 +53,90 @@ function cleanGeneratedCode(code: string): string {
   return cleaned.trim();
 }
 
-function stripTypeScriptManually(code: string): string {
-  // Fallback: strip common TypeScript syntax that Sucrase can't handle
-  return code
-    // Remove interface/type declarations (full blocks)
-    .replace(/^(export\s+)?(interface|type)\s+\w[\s\S]*?^\}/gm, "")
-    // Remove single-line type aliases
-    .replace(/^(export\s+)?type\s+\w+\s*=\s*[^;]+;/gm, "")
-    // Remove type annotations from function params and variables
-    .replace(/:\s*(?:React\.)?(?:FC|FunctionComponent|ReactNode|ReactElement|JSX\.Element|HTMLAttributes|ButtonHTMLAttributes|FormEvent|ChangeEvent|MouseEvent|KeyboardEvent|CSSProperties|string|number|boolean|void|null|undefined|any|never|unknown)(?:<[^>]+>)?(?:\s*\|\s*(?:React\.)?(?:string|number|boolean|void|null|undefined|any|never|unknown|ReactNode))*(?:\[\])?/g, "")
-    // Remove generic type params from function declarations
-    .replace(/<(?:(?:string|number|boolean|T|K|V|Props|HTMLFormElement|HTMLInputElement|HTMLDivElement|HTMLButtonElement|HTMLElement)[,\s]?)+>/g, "")
-    // Remove "as Type" assertions
-    .replace(/\s+as\s+\w+(?:<[^>]+>)?/g, "")
-    // Remove import type statements
-    .replace(/import\s+type\s+.*?;\s*/g, "")
-    // Remove inline type imports { type X }
-    .replace(/,?\s*type\s+\w+\s*,?/g, (match) => match.startsWith(",") ? "" : "");
+/**
+ * Strip all TypeScript syntax from code so Sucrase only needs to handle JSX + imports.
+ * Uses line-by-line parsing with brace counting for reliable block removal.
+ */
+function stripTypeScript(code: string): string {
+  const lines = code.split("\n");
+  const result: string[] = [];
+  let skipDepth = 0;
+  let skipping = false;
+
+  for (const line of lines) {
+    const trimmed = line.trim();
+
+    // Skip import type statements entirely
+    if (/^import\s+type\s+/.test(trimmed)) continue;
+
+    // Detect start of interface/type block declarations
+    if (!skipping && /^(export\s+)?(interface|type)\s+\w+/.test(trimmed)) {
+      // Single-line type alias ending with semicolon
+      if (/^(export\s+)?type\s+\w+.*=.*;$/.test(trimmed) && !trimmed.includes("{")) {
+        continue;
+      }
+      // Block with braces — count depth
+      skipping = true;
+      skipDepth = 0;
+      for (const ch of trimmed) {
+        if (ch === "{") skipDepth++;
+        if (ch === "}") skipDepth--;
+      }
+      if (skipDepth <= 0) skipping = false;
+      continue;
+    }
+
+    // Continue skipping inside a block declaration
+    if (skipping) {
+      for (const ch of trimmed) {
+        if (ch === "{") skipDepth++;
+        if (ch === "}") skipDepth--;
+      }
+      if (skipDepth <= 0) skipping = false;
+      continue;
+    }
+
+    let processed = line;
+
+    // Strip inline `type` imports: import { type X, Y } -> import { Y }
+    processed = processed.replace(/\{\s*type\s+\w+\s*,\s*/g, "{ ");
+    processed = processed.replace(/,\s*type\s+\w+\s*(?=\s*[,}])/g, "");
+
+    // Strip generic type params on hooks/functions: useState<string>( -> useState(
+    // Requires a word char before < to avoid matching JSX tags
+    processed = processed.replace(/(\w)<[\w.[\]|&<>,\s?]+>\s*(?=\()/g, "$1");
+
+    // Strip return type annotations: ): Type => or ): Type { -> ) => or ) {
+    processed = processed.replace(/\)\s*:\s*[\w.[\]|&<>,\s]+(?=\s*(?:=>|\{))/g, ")");
+
+    // Strip param/variable type annotations: (e: React.FormEvent<...>) -> (e)
+    // Match `: Type` after an identifier, but NOT inside object literals (after {)
+    // Only strip when followed by , or ) or = or ;
+    processed = processed.replace(/(\w)\s*:\s*[\w.[\]|&<>,\s?]+(?=\s*[,)=;])/g, "$1");
+
+    // Strip `as Type` assertions
+    processed = processed.replace(/\s+as\s+(?:const|[\w.[\]<>,\s]+?)(?=\s*[;,)\]}])/g, "");
+
+    // Strip `: PropsInterface` after destructured params: }: Props) -> })
+    processed = processed.replace(/}:\s*\w+(?:\[\])?(?=\s*\))/g, "}");
+
+    result.push(processed);
+  }
+
+  return result.join("\n");
 }
 
 function transpileCode(code: string): string {
-  try {
-    return transform(code, {
-      transforms: ["typescript", "jsx", "imports"],
-      jsxRuntime: "classic",
-      jsxPragma: "React.createElement",
-      jsxFragmentPragma: "React.Fragment",
-      production: true,
-    }).code;
-  } catch {
-    // Fallback: strip TS types manually, then transpile JSX + imports only
-    const stripped = stripTypeScriptManually(code);
-    return transform(stripped, {
-      transforms: ["jsx", "imports"],
-      jsxRuntime: "classic",
-      jsxPragma: "React.createElement",
-      jsxFragmentPragma: "React.Fragment",
-      production: true,
-    }).code;
-  }
+  // Always strip TypeScript first (Sucrase's TS transform has issues in browser bundles),
+  // then use Sucrase only for JSX and import transforms
+  const stripped = stripTypeScript(code);
+  return transform(stripped, {
+    transforms: ["jsx", "imports"],
+    jsxRuntime: "classic",
+    jsxPragma: "React.createElement",
+    jsxFragmentPragma: "React.Fragment",
+    production: true,
+  }).code;
 }
 
 function buildPreviewHtml(code: string): string {
