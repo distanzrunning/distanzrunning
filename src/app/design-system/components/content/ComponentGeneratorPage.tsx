@@ -30,10 +30,19 @@ interface Toast {
 // Iframe Preview
 // ============================================================================
 
+function cleanGeneratedCode(code: string): string {
+  // Strip markdown code fences if Claude included them
+  let cleaned = code.replace(/^```\w*\n?/gm, "").replace(/```\s*$/gm, "");
+  // Strip "use client" directive (not needed in iframe)
+  cleaned = cleaned.replace(/^["']use client["'];?\s*/m, "");
+  return cleaned.trim();
+}
+
 function buildPreviewHtml(code: string): string {
   try {
+    const cleaned = cleanGeneratedCode(code);
     // Sucrase handles imports (converts to require()), JSX, and TypeScript
-    const transpiledCode = transform(code, {
+    const transpiledCode = transform(cleaned, {
       transforms: ["typescript", "jsx", "imports"],
       jsxRuntime: "classic",
       jsxPragma: "React.createElement",
@@ -353,7 +362,10 @@ export default function ComponentGeneratorPage() {
         }
       }
 
-      const name = extractName(accumulated);
+      // Clean any markdown fences from the final output
+      const finalCode = cleanGeneratedCode(accumulated);
+      setGeneratedCode(finalCode);
+      const name = extractName(finalCode);
       setComponentName(name);
       setState("preview");
 
@@ -644,14 +656,21 @@ export default function ComponentGeneratorPage() {
             {/* Content area */}
             <div className="flex-1 overflow-auto">
               {activeTab === "preview" ? (
-                <iframe
-                  srcDoc={buildPreviewHtml(generatedCode)}
-                  className="w-full h-full border-0"
-                  sandbox="allow-scripts"
-                  title="Component preview"
-                />
+                state === "generating" || state === "refining" ? (
+                  <div className="flex items-center justify-center h-full gap-2" style={{ color: "var(--ds-gray-600)" }}>
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                    <span className="text-copy-14">Generating preview...</span>
+                  </div>
+                ) : (
+                  <iframe
+                    srcDoc={buildPreviewHtml(generatedCode)}
+                    className="w-full h-full border-0"
+                    sandbox="allow-scripts"
+                    title="Component preview"
+                  />
+                )
               ) : (
-                <div className="h-full overflow-auto">
+                <div className="h-full overflow-auto [&_[data-code-block]]:border-0 [&_[data-code-block]]:rounded-none">
                   <CodeBlock
                     code={generatedCode}
                     language="tsx"
