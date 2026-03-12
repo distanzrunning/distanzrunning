@@ -100,6 +100,42 @@ const EMPTY_STATE_CSS = `
     align-items: center;
     gap: var(--ds-space-2x);
   }
+
+  .ds-empty-state-btn-secondary {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 32px;
+    padding: 0 12px;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+    border: none;
+    border-radius: 6px;
+    background-color: var(--ds-background-100);
+    color: var(--ds-gray-1000);
+    box-shadow: var(--ds-gray-400) 0px 0px 0px 1px;
+    cursor: pointer;
+  }
+
+  .ds-empty-state-link {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    font-size: 14px;
+    color: var(--ds-gray-800);
+    text-decoration: none;
+    transition: color 0.1s ease;
+  }
+
+  .ds-empty-state-link:hover {
+    color: var(--ds-gray-1000);
+  }
+
+  .ds-empty-state-link svg {
+    width: 16px;
+    height: 16px;
+  }
 `;
 
 // ============================================================================

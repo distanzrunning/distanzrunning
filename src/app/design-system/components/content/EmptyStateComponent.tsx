@@ -319,9 +319,9 @@ function BlankSlateExample() {
         <FileText />
       </EmptyState.Icon>
       <EmptyState.Text>
-        <EmptyState.Title>No documents yet</EmptyState.Title>
+        <EmptyState.Title>Title</EmptyState.Title>
         <EmptyState.Description>
-          Create your first document to get started.
+          A message conveying the state of the product.
         </EmptyState.Description>
       </EmptyState.Text>
     </EmptyState>
@@ -338,46 +338,27 @@ function InformationalExample() {
         <FileText />
       </EmptyState.Icon>
       <EmptyState.Text>
-        <EmptyState.Title>No results found</EmptyState.Title>
+        <EmptyState.Title>Title</EmptyState.Title>
         <EmptyState.Description>
-          Try adjusting your search or filter to find what you're looking for.
+          This should detail the actions you can take on this screen,
+          as well as why it&apos;s valuable.
         </EmptyState.Description>
       </EmptyState.Text>
       <EmptyState.Actions>
         <button
-          className="inline-flex items-center gap-1.5 text-sm font-medium"
-          style={{ color: 'var(--ds-blue-900)' }}
+          className="ds-empty-state-btn-secondary"
+        >
+          Primary Action
+        </button>
+        <a
+          href="/"
+          target="_blank"
+          rel="noopener"
+          className="ds-empty-state-link"
         >
           Learn more
-          <ExternalLink size={14} />
-        </button>
-      </EmptyState.Actions>
-    </EmptyState>
-  );
-}`;
-
-const withActionCode = `import { EmptyState } from '@/components/ui/EmptyState';
-import { FileText } from 'lucide-react';
-
-function WithActionExample() {
-  return (
-    <EmptyState>
-      <EmptyState.Icon>
-        <FileText />
-      </EmptyState.Icon>
-      <EmptyState.Text>
-        <EmptyState.Title>No deployments</EmptyState.Title>
-        <EmptyState.Description>
-          Deploy your project to see it listed here.
-        </EmptyState.Description>
-      </EmptyState.Text>
-      <EmptyState.Actions>
-        <button
-          className="h-8 px-3 text-sm font-medium rounded-md text-white"
-          style={{ background: 'var(--ds-gray-1000)' }}
-        >
-          Deploy Now
-        </button>
+          <ExternalLink size={16} />
+        </a>
       </EmptyState.Actions>
     </EmptyState>
   );
@@ -394,9 +375,9 @@ function BlankSlateDemo() {
         <FileText />
       </EmptyState.Icon>
       <EmptyState.Text>
-        <EmptyState.Title>No documents yet</EmptyState.Title>
+        <EmptyState.Title>Title</EmptyState.Title>
         <EmptyState.Description>
-          Create your first document to get started.
+          A message conveying the state of the product.
         </EmptyState.Description>
       </EmptyState.Text>
     </EmptyState>
@@ -410,43 +391,25 @@ function InformationalDemo() {
         <FileText />
       </EmptyState.Icon>
       <EmptyState.Text>
-        <EmptyState.Title>No results found</EmptyState.Title>
+        <EmptyState.Title>Title</EmptyState.Title>
         <EmptyState.Description>
-          Try adjusting your search or filter to find what you're looking for.
+          This should detail the actions you can take on this screen, as well as
+          why it&apos;s valuable.
         </EmptyState.Description>
       </EmptyState.Text>
       <EmptyState.Actions>
-        <button
-          className="inline-flex items-center gap-1.5 text-sm font-medium"
-          style={{ color: "var(--ds-blue-900)" }}
+        <button className="ds-empty-state-btn-secondary" type="button">
+          Primary Action
+        </button>
+        <a
+          href="/"
+          target="_blank"
+          rel="noopener"
+          className="ds-empty-state-link"
         >
           Learn more
-          <ExternalLink size={14} />
-        </button>
-      </EmptyState.Actions>
-    </EmptyState>
-  );
-}
-
-function WithActionDemo() {
-  return (
-    <EmptyState>
-      <EmptyState.Icon>
-        <FileText />
-      </EmptyState.Icon>
-      <EmptyState.Text>
-        <EmptyState.Title>No deployments</EmptyState.Title>
-        <EmptyState.Description>
-          Deploy your project to see it listed here.
-        </EmptyState.Description>
-      </EmptyState.Text>
-      <EmptyState.Actions>
-        <button
-          className="h-8 px-3 text-sm font-medium rounded-md text-white"
-          style={{ background: "var(--ds-gray-1000)" }}
-        >
-          Deploy Now
-        </button>
+          <ExternalLink size={16} />
+        </a>
       </EmptyState.Actions>
     </EmptyState>
   );
@@ -798,21 +761,6 @@ export default function EmptyStateComponent() {
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={informationalCode}>
             <InformationalDemo />
-          </CodePreview>
-        </div>
-      </Section>
-
-      {/* With Action */}
-      <Section>
-        <SectionHeader id="with-action" onCopyLink={showToast}>
-          With Action
-        </SectionHeader>
-        <p className="text-copy-14 text-textSubtle mt-4 mb-4">
-          Use when you want to guide the user to a specific next step with a prominent call-to-action button.
-        </p>
-        <div className="mt-4 xl:mt-7">
-          <CodePreview componentCode={withActionCode}>
-            <WithActionDemo />
           </CodePreview>
         </div>
       </Section>
