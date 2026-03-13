@@ -134,15 +134,21 @@ export async function POST(request: NextRequest) {
     let messages: { role: "user" | "assistant"; content: string }[];
 
     if (refinement && previousCode && history?.length) {
-      // Include conversation history so Claude has full context
+      // Include conversation history so Claude has full context.
+      // The last assistant message in history already contains the code,
+      // so we only include previousCode if it differs (e.g. user edited it).
       messages = history.map((m: { role: string; content: string }) => ({
         role: m.role as "user" | "assistant",
         content: m.content,
       }));
-      // Add the current code context + refinement as the latest message
+      // Add the refinement request — reference the code only if it changed
+      const lastAssistantCode = [...history].reverse().find((m: { role: string }) => m.role === "assistant")?.content;
+      const codeChanged = lastAssistantCode !== previousCode;
       messages.push({
         role: "user",
-        content: `Here is the current component code:\n\n${previousCode}\n\nPlease refine it with the following changes: ${refinement}`,
+        content: codeChanged
+          ? `Here is the current component code:\n\n${previousCode}\n\nPlease refine it with the following changes: ${refinement}`
+          : `Please refine the component with the following changes: ${refinement}`,
       });
     } else {
       messages = [{ role: "user", content: prompt }];
@@ -170,6 +176,15 @@ export async function POST(request: NextRequest) {
                 ),
               );
             }
+          }
+          // Check if the response was truncated due to max_tokens
+          const finalMessage = await stream.finalMessage();
+          if (finalMessage.stop_reason === "max_tokens") {
+            controller.enqueue(
+              encoder.encode(
+                `data: ${JSON.stringify({ error: "Response was truncated — the component may be too complex. Try simplifying your prompt." })}\n\n`,
+              ),
+            );
           }
           controller.enqueue(encoder.encode("data: [DONE]\n\n"));
           controller.close();

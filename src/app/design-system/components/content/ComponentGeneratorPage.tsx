@@ -392,7 +392,11 @@ export default function ComponentGeneratorPage() {
 
       while (true) {
         const { done, value } = await reader.read();
-        if (done) break;
+        if (done) {
+          // Flush the decoder and process any remaining buffered SSE data
+          sseBuffer += decoder.decode();
+          break;
+        }
 
         sseBuffer += decoder.decode(value, { stream: true });
         const lines = sseBuffer.split("\n");
@@ -412,6 +416,24 @@ export default function ComponentGeneratorPage() {
               if (parsed.text) {
                 accumulated += parsed.text;
                 setGeneratedCode(accumulated);
+              }
+            } catch {
+              // skip malformed JSON
+            }
+          }
+        }
+      }
+
+      // Process any remaining data left in the SSE buffer after stream ends
+      if (sseBuffer.trim()) {
+        const remaining = sseBuffer.trim();
+        if (remaining.startsWith("data: ")) {
+          const data = remaining.slice(6);
+          if (data !== "[DONE]") {
+            try {
+              const parsed = JSON.parse(data);
+              if (parsed.text) {
+                accumulated += parsed.text;
               }
             } catch {
               // skip malformed JSON
