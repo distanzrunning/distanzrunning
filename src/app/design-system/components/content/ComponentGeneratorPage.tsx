@@ -120,43 +120,65 @@ function buildPreviewHtml(transpiledCode: string, isDark: boolean): string {
   const componentCode = prepareForInline(transpiledCode);
   const encodedCode = JSON.stringify(componentCode).replace(/<\//g, "<\\/");
 
+  // Output the correct token values directly based on isDark — no class-based switching
+  // needed for custom properties. This avoids any srcDoc parsing issues with html class attributes.
+  const grayTokens = isDark
+    ? "--ds-gray-100:#1a1a1a;--ds-gray-200:#1f1f1f;--ds-gray-300:#292929;--ds-gray-400:#2e2e2e;--ds-gray-500:#454545;--ds-gray-600:#878787;--ds-gray-700:#8f8f8f;--ds-gray-800:#7d7d7d;--ds-gray-900:#a1a1a1;--ds-gray-1000:#ededed;"
+    : "--ds-gray-100:#fafafa;--ds-gray-200:#f5f5f5;--ds-gray-300:#ebebeb;--ds-gray-400:#e0e0e0;--ds-gray-500:#c7c7c7;--ds-gray-600:#a0a0a0;--ds-gray-700:#8c8c8c;--ds-gray-800:#6e6e6e;--ds-gray-900:#444444;--ds-gray-1000:#171717;";
+  const grayAlphaTokens = isDark
+    ? "--ds-gray-alpha-100:rgba(255,255,255,0.06);--ds-gray-alpha-200:rgba(255,255,255,0.09);--ds-gray-alpha-300:rgba(255,255,255,0.13);--ds-gray-alpha-400:rgba(255,255,255,0.14);--ds-gray-alpha-500:rgba(255,255,255,0.24);--ds-gray-alpha-600:rgba(255,255,255,0.51);--ds-gray-alpha-700:rgba(255,255,255,0.54);--ds-gray-alpha-800:rgba(255,255,255,0.47);--ds-gray-alpha-900:rgba(255,255,255,0.61);--ds-gray-alpha-1000:rgba(255,255,255,0.92);"
+    : "--ds-gray-alpha-100:rgba(0,0,0,0.05);--ds-gray-alpha-200:rgba(0,0,0,0.09);--ds-gray-alpha-300:rgba(0,0,0,0.13);--ds-gray-alpha-400:rgba(0,0,0,0.17);--ds-gray-alpha-500:rgba(0,0,0,0.24);--ds-gray-alpha-600:rgba(0,0,0,0.4);--ds-gray-alpha-700:rgba(0,0,0,0.49);--ds-gray-alpha-800:rgba(0,0,0,0.62);--ds-gray-alpha-900:rgba(0,0,0,0.77);--ds-gray-alpha-1000:rgba(0,0,0,0.92);";
+  const blueTokens = isDark
+    ? "--ds-blue-100:#101c30;--ds-blue-200:#11233d;--ds-blue-300:#143052;--ds-blue-400:#163961;--ds-blue-500:#194574;--ds-blue-600:#0099ff;--ds-blue-700:#0070f3;--ds-blue-800:#0062d4;--ds-blue-900:#52a9ff;--ds-blue-1000:#ebf8ff;"
+    : "--ds-blue-100:#eef6ff;--ds-blue-200:#d8ebff;--ds-blue-300:#b7d9ff;--ds-blue-400:#85bfff;--ds-blue-500:#4da3ff;--ds-blue-600:#2b8dff;--ds-blue-700:#0070f3;--ds-blue-800:#0060d1;--ds-blue-900:#004fa8;--ds-blue-1000:#003580;";
+  const redTokens = isDark
+    ? "--ds-red-100:#32171b;--ds-red-200:#411c21;--ds-red-300:#5a2229;--ds-red-400:#6c2730;--ds-red-500:#842d38;--ds-red-600:#d75555;--ds-red-700:#d75555;--ds-red-800:#c83c3c;--ds-red-900:#ff6c6c;--ds-red-1000:#ffebeb;"
+    : "--ds-red-100:#fff0f0;--ds-red-200:#ffd9d9;--ds-red-300:#ffb3b3;--ds-red-400:#ff8080;--ds-red-500:#ff4d4d;--ds-red-600:#f03;--ds-red-700:#e00;--ds-red-800:#c00;--ds-red-900:#a00;--ds-red-1000:#700;";
+  const amberTokens = isDark
+    ? "--ds-amber-100:#291a00;--ds-amber-200:#332000;--ds-amber-300:#4d3000;--ds-amber-400:#593700;--ds-amber-500:#714700;--ds-amber-600:#da9e24;--ds-amber-700:#f5a400;--ds-amber-800:#e68c00;--ds-amber-900:#e68c00;--ds-amber-1000:#fff5dc;"
+    : "--ds-amber-100:#fff8eb;--ds-amber-200:#ffeccc;--ds-amber-300:#ffdb99;--ds-amber-400:#ffc266;--ds-amber-500:#ffa833;--ds-amber-600:#ff9500;--ds-amber-700:#e08200;--ds-amber-800:#b86a00;--ds-amber-900:#8f5200;--ds-amber-1000:#663b00;";
+  const greenTokens = isDark
+    ? "--ds-green-100:#0f2716;--ds-green-200:#11311c;--ds-green-300:#143820;--ds-green-400:#144526;--ds-green-500:#1e5e34;--ds-green-600:#328c50;--ds-green-700:#2fa34c;--ds-green-800:#248b3d;--ds-green-900:#66d982;--ds-green-1000:#e6fdeb;"
+    : "--ds-green-100:#eefbf4;--ds-green-200:#d3f5e4;--ds-green-300:#a8ebc8;--ds-green-400:#6ddba1;--ds-green-500:#33cc7a;--ds-green-600:#1db965;--ds-green-700:#18a957;--ds-green-800:#128e47;--ds-green-900:#0d7339;--ds-green-1000:#085a2b;";
+  const purpleTokens = isDark
+    ? "--ds-purple-100:#261a32;--ds-purple-200:#2f2040;--ds-purple-300:#3e2a58;--ds-purple-400:#483069;--ds-purple-500:#56387e;--ds-purple-600:#7950be;--ds-purple-700:#7950be;--ds-purple-800:#643ca0;--ds-purple-900:#b482eb;--ds-purple-1000:#f8f0ff;"
+    : "--ds-purple-100:#f5f0ff;--ds-purple-200:#e8dbff;--ds-purple-300:#d4b8ff;--ds-purple-400:#b78fff;--ds-purple-500:#9966ff;--ds-purple-600:#8247e5;--ds-purple-700:#6b2ec2;--ds-purple-800:#56209f;--ds-purple-900:#41177c;--ds-purple-1000:#2d105a;";
+  const pinkTokens = isDark
+    ? "--ds-pink-100:#301828;--ds-pink-200:#3c1e2a;--ds-pink-300:#4e2636;--ds-pink-400:#502638;--ds-pink-500:#642d44;--ds-pink-600:#a03c64;--ds-pink-700:#eb377d;--ds-pink-800:#da2d73;--ds-pink-900:#f078a5;--ds-pink-1000:#ffebf5;"
+    : "--ds-pink-100:#fff0f8;--ds-pink-200:#ffd6ed;--ds-pink-300:#ffadd6;--ds-pink-400:#ff80bf;--ds-pink-500:#ff4da6;--ds-pink-600:#f0278a;--ds-pink-700:#d61e78;--ds-pink-800:#b31664;--ds-pink-900:#8f0e50;--ds-pink-1000:#6b073c;";
+  const tealTokens = isDark
+    ? "--ds-teal-100:#0c231f;--ds-teal-200:#0f2b26;--ds-teal-300:#143832;--ds-teal-400:#123a33;--ds-teal-500:#1e554b;--ds-teal-600:#3c8c7d;--ds-teal-700:#1aa390;--ds-teal-800:#118b7a;--ds-teal-900:#66d9c3;--ds-teal-1000:#e1fdf8;"
+    : "--ds-teal-100:#edfcfc;--ds-teal-200:#d1f7f7;--ds-teal-300:#a3eded;--ds-teal-400:#6ee0e0;--ds-teal-500:#33cccc;--ds-teal-600:#20b8b8;--ds-teal-700:#18a3a3;--ds-teal-800:#128888;--ds-teal-900:#0d6e6e;--ds-teal-1000:#085454;";
+  const bgTokens = isDark
+    ? "--ds-background-100:#0a0a0a;--ds-background-200:#000000;"
+    : "--ds-background-100:#ffffff;--ds-background-200:#fafafa;";
+  const shadowTokens = isDark
+    ? "--ds-shadow-small:0 1px 2px rgba(0,0,0,0.3);--ds-shadow-medium:0 2px 4px rgba(0,0,0,0.4);--ds-shadow-large:0 4px 8px rgba(0,0,0,0.5);"
+    : "--ds-shadow-small:0 1px 2px rgba(0,0,0,0.04);--ds-shadow-medium:0 2px 4px rgba(0,0,0,0.06);--ds-shadow-large:0 4px 8px rgba(0,0,0,0.08);";
+
   const lines = [
     `<!DOCTYPE html><html class="${isDark ? "dark" : ""}"><head>`,
     '<meta charset="utf-8" />',
+    // Set dark class via JS as well, in case srcDoc HTML attribute is stripped
+    isDark ? "<script>document.documentElement.classList.add('dark')</" + "script>" : "",
     '<script src="https://cdn.tailwindcss.com"></' + 'script>',
     "<script>tailwind.config={darkMode:'class'}</" + "script>",
     "<style>",
-    // Light mode tokens
-    ":root {",
-    "--ds-gray-100:#fafafa;--ds-gray-200:#f5f5f5;--ds-gray-300:#ebebeb;--ds-gray-400:#e0e0e0;--ds-gray-500:#c7c7c7;--ds-gray-600:#a0a0a0;--ds-gray-700:#8c8c8c;--ds-gray-800:#6e6e6e;--ds-gray-900:#444444;--ds-gray-1000:#171717;",
-    "--ds-gray-alpha-100:rgba(0,0,0,0.05);--ds-gray-alpha-200:rgba(0,0,0,0.09);--ds-gray-alpha-300:rgba(0,0,0,0.13);--ds-gray-alpha-400:rgba(0,0,0,0.17);--ds-gray-alpha-500:rgba(0,0,0,0.24);--ds-gray-alpha-600:rgba(0,0,0,0.4);--ds-gray-alpha-700:rgba(0,0,0,0.49);--ds-gray-alpha-800:rgba(0,0,0,0.62);--ds-gray-alpha-900:rgba(0,0,0,0.77);--ds-gray-alpha-1000:rgba(0,0,0,0.92);",
-    "--ds-blue-100:#eef6ff;--ds-blue-200:#d8ebff;--ds-blue-300:#b7d9ff;--ds-blue-400:#85bfff;--ds-blue-500:#4da3ff;--ds-blue-600:#2b8dff;--ds-blue-700:#0070f3;--ds-blue-800:#0060d1;--ds-blue-900:#004fa8;--ds-blue-1000:#003580;",
-    "--ds-red-100:#fff0f0;--ds-red-200:#ffd9d9;--ds-red-300:#ffb3b3;--ds-red-400:#ff8080;--ds-red-500:#ff4d4d;--ds-red-600:#f03;--ds-red-700:#e00;--ds-red-800:#c00;--ds-red-900:#a00;--ds-red-1000:#700;",
-    "--ds-amber-100:#fff8eb;--ds-amber-200:#ffeccc;--ds-amber-300:#ffdb99;--ds-amber-400:#ffc266;--ds-amber-500:#ffa833;--ds-amber-600:#ff9500;--ds-amber-700:#e08200;--ds-amber-800:#b86a00;--ds-amber-900:#8f5200;--ds-amber-1000:#663b00;",
-    "--ds-green-100:#eefbf4;--ds-green-200:#d3f5e4;--ds-green-300:#a8ebc8;--ds-green-400:#6ddba1;--ds-green-500:#33cc7a;--ds-green-600:#1db965;--ds-green-700:#18a957;--ds-green-800:#128e47;--ds-green-900:#0d7339;--ds-green-1000:#085a2b;",
-    "--ds-purple-100:#f5f0ff;--ds-purple-200:#e8dbff;--ds-purple-300:#d4b8ff;--ds-purple-400:#b78fff;--ds-purple-500:#9966ff;--ds-purple-600:#8247e5;--ds-purple-700:#6b2ec2;--ds-purple-800:#56209f;--ds-purple-900:#41177c;--ds-purple-1000:#2d105a;",
-    "--ds-pink-100:#fff0f8;--ds-pink-200:#ffd6ed;--ds-pink-300:#ffadd6;--ds-pink-400:#ff80bf;--ds-pink-500:#ff4da6;--ds-pink-600:#f0278a;--ds-pink-700:#d61e78;--ds-pink-800:#b31664;--ds-pink-900:#8f0e50;--ds-pink-1000:#6b073c;",
-    "--ds-teal-100:#edfcfc;--ds-teal-200:#d1f7f7;--ds-teal-300:#a3eded;--ds-teal-400:#6ee0e0;--ds-teal-500:#33cccc;--ds-teal-600:#20b8b8;--ds-teal-700:#18a3a3;--ds-teal-800:#128888;--ds-teal-900:#0d6e6e;--ds-teal-1000:#085454;",
-    "--ds-background-100:#ffffff;--ds-background-200:#fafafa;",
+    `:root {${isDark ? "color-scheme:dark;" : ""}`,
+    grayTokens,
+    grayAlphaTokens,
+    blueTokens,
+    redTokens,
+    amberTokens,
+    greenTokens,
+    purpleTokens,
+    pinkTokens,
+    tealTokens,
+    bgTokens,
     "--ds-space-2x:8px;--ds-space-3x:12px;--ds-space-4x:16px;--ds-space-6x:24px;--ds-space-8x:32px;--ds-space-gap:16px;--ds-space-gap-half:8px;",
     "--ds-radius-small:8px;--ds-radius-large:12px;--ds-radius-xlarge:16px;--ds-radius-full:9999px;",
-    "--ds-shadow-small:0 1px 2px rgba(0,0,0,0.04);--ds-shadow-medium:0 2px 4px rgba(0,0,0,0.06);--ds-shadow-large:0 4px 8px rgba(0,0,0,0.08);",
+    shadowTokens,
     "--ds-button-height-tiny:24px;--ds-button-height-small:32px;--ds-button-height-medium:40px;--ds-button-height-large:48px;",
-    "}",
-    // Dark mode tokens
-    "html.dark {",
-    "color-scheme:dark;",
-    "--ds-gray-100:#1a1a1a;--ds-gray-200:#1f1f1f;--ds-gray-300:#292929;--ds-gray-400:#2e2e2e;--ds-gray-500:#454545;--ds-gray-600:#878787;--ds-gray-700:#8f8f8f;--ds-gray-800:#7d7d7d;--ds-gray-900:#a1a1a1;--ds-gray-1000:#ededed;",
-    "--ds-gray-alpha-100:rgba(255,255,255,0.06);--ds-gray-alpha-200:rgba(255,255,255,0.09);--ds-gray-alpha-300:rgba(255,255,255,0.13);--ds-gray-alpha-400:rgba(255,255,255,0.14);--ds-gray-alpha-500:rgba(255,255,255,0.24);--ds-gray-alpha-600:rgba(255,255,255,0.51);--ds-gray-alpha-700:rgba(255,255,255,0.54);--ds-gray-alpha-800:rgba(255,255,255,0.47);--ds-gray-alpha-900:rgba(255,255,255,0.61);--ds-gray-alpha-1000:rgba(255,255,255,0.92);",
-    "--ds-blue-100:#101c30;--ds-blue-200:#11233d;--ds-blue-300:#143052;--ds-blue-400:#163961;--ds-blue-500:#194574;--ds-blue-600:#0099ff;--ds-blue-700:#0070f3;--ds-blue-800:#0062d4;--ds-blue-900:#52a9ff;--ds-blue-1000:#ebf8ff;",
-    "--ds-red-100:#32171b;--ds-red-200:#411c21;--ds-red-300:#5a2229;--ds-red-400:#6c2730;--ds-red-500:#842d38;--ds-red-600:#d75555;--ds-red-700:#d75555;--ds-red-800:#c83c3c;--ds-red-900:#ff6c6c;--ds-red-1000:#ffebeb;",
-    "--ds-amber-100:#291a00;--ds-amber-200:#332000;--ds-amber-300:#4d3000;--ds-amber-400:#593700;--ds-amber-500:#714700;--ds-amber-600:#da9e24;--ds-amber-700:#f5a400;--ds-amber-800:#e68c00;--ds-amber-900:#e68c00;--ds-amber-1000:#fff5dc;",
-    "--ds-green-100:#0f2716;--ds-green-200:#11311c;--ds-green-300:#143820;--ds-green-400:#144526;--ds-green-500:#1e5e34;--ds-green-600:#328c50;--ds-green-700:#2fa34c;--ds-green-800:#248b3d;--ds-green-900:#66d982;--ds-green-1000:#e6fdeb;",
-    "--ds-purple-100:#261a32;--ds-purple-200:#2f2040;--ds-purple-300:#3e2a58;--ds-purple-400:#483069;--ds-purple-500:#56387e;--ds-purple-600:#7950be;--ds-purple-700:#7950be;--ds-purple-800:#643ca0;--ds-purple-900:#b482eb;--ds-purple-1000:#f8f0ff;",
-    "--ds-pink-100:#301828;--ds-pink-200:#3c1e2a;--ds-pink-300:#4e2636;--ds-pink-400:#502638;--ds-pink-500:#642d44;--ds-pink-600:#a03c64;--ds-pink-700:#eb377d;--ds-pink-800:#da2d73;--ds-pink-900:#f078a5;--ds-pink-1000:#ffebf5;",
-    "--ds-teal-100:#0c231f;--ds-teal-200:#0f2b26;--ds-teal-300:#143832;--ds-teal-400:#123a33;--ds-teal-500:#1e554b;--ds-teal-600:#3c8c7d;--ds-teal-700:#1aa390;--ds-teal-800:#118b7a;--ds-teal-900:#66d9c3;--ds-teal-1000:#e1fdf8;",
-    "--ds-background-100:#0a0a0a;--ds-background-200:#000000;",
-    "--ds-shadow-small:0 1px 2px rgba(0,0,0,0.3);--ds-shadow-medium:0 2px 4px rgba(0,0,0,0.4);--ds-shadow-large:0 4px 8px rgba(0,0,0,0.5);",
     "}",
     "*{margin:0;padding:0;box-sizing:border-box;}",
     "body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:24px;background:var(--ds-background-100);color:var(--ds-gray-1000);}",
