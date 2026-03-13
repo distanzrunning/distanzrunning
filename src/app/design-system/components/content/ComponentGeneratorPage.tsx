@@ -60,14 +60,12 @@ function prepareForInline(code: string): string {
 
 function buildPreviewHtml(transpiledCode: string): string {
   const componentCode = prepareForInline(transpiledCode);
-  // Escape </script to prevent premature tag closing in srcdoc.
-  // In transpiled code, </script can only appear inside string/template literals
-  // where \x2f (hex escape for /) is valid JavaScript.
-  const safeCode = componentCode.replace(/<\/script/gi, "<\\x2fscript");
+  // JSON-encode the component code so it's safely embedded as a string literal.
+  // This avoids all </script escaping issues and allows eval() to catch syntax errors
+  // at runtime instead of failing at parse time (which would blank the iframe).
+  const encodedCode = JSON.stringify(componentCode);
 
-  // Build HTML via string concatenation — NOT template literals — because
-  // the component code may contain backticks that would break template literals.
-  const prefix = [
+  const lines = [
     "<!DOCTYPE html><html><head>",
     '<meta charset="utf-8" />',
     '<script src="https://cdn.tailwindcss.com"></' + 'script>',
@@ -105,6 +103,11 @@ function buildPreviewHtml(transpiledCode: string): string {
     "import React, { useState, useEffect, useRef, useCallback, useMemo, useReducer, useContext, createContext, Fragment } from 'react';",
     "import ReactDOM from 'react-dom/client';",
     "import * as LucideIcons from 'lucide-react';",
+    "",
+    "// Expose React hooks and utilities as globals for eval'd component code",
+    "Object.assign(window, { React, useState, useEffect, useRef, useCallback, useMemo, useReducer, useContext, createContext, Fragment, ReactDOM });",
+    "",
+    "// Expose lucide icons without clobbering built-in constructors",
     "var _existingKeys = new Set(Object.getOwnPropertyNames(window));",
     "for (var _k in LucideIcons) { try { if (!_existingKeys.has(_k)) { window[_k] = LucideIcons[_k]; } } catch(e) {} }",
     "",
@@ -123,11 +126,11 @@ function buildPreviewHtml(transpiledCode: string): string {
     "  }",
     "}",
     "",
+    "// Evaluate component code via indirect eval — catches syntax errors at runtime",
+    "// instead of failing at parse time (which would blank the entire iframe).",
+    "var __code = " + encodedCode + ";",
     "try {",
-  ].join("\n");
-
-  const suffix = [
-    "",
+    "  (0, eval)(__code);",
     "  if (typeof __Component__ === 'function' || (typeof __Component__ === 'object' && __Component__)) {",
     "    var root = ReactDOM.createRoot(document.getElementById('root'));",
     "    root.render(React.createElement(ErrorBoundary, null, React.createElement(__Component__)));",
@@ -135,12 +138,12 @@ function buildPreviewHtml(transpiledCode: string): string {
     "    document.getElementById('root').innerHTML = '<div class=\"error-boundary\">No component found. Make sure the code uses export default.</div>';",
     "  }",
     "} catch (e) {",
-    "  document.getElementById('root').innerHTML = '<div class=\"error-boundary\"><strong>Error</strong><br/>' + e.message + '</div>';",
+    "  document.getElementById('root').innerHTML = '<div class=\"error-boundary\"><strong>Error</strong><br/><pre>' + e.message + '</pre></div>';",
     "}",
     "</" + "script></body></html>",
-  ].join("\n");
+  ];
 
-  return prefix + "\n" + safeCode + "\n" + suffix;
+  return lines.join("\n");
 }
 
 // ============================================================================
