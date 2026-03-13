@@ -58,11 +58,8 @@ export default function DesignSystemPage() {
   // State-based navigation for SPA behavior
   const [activeSlug, setActiveSlug] = useState(initialSlug);
 
-  // Pages that render full-width without sidebar by default
-  const isFullWidthPage = activeSlug === "component-generator";
-
-  // Sidebar state — starts closed on full-width pages, open otherwise
-  const [sidebarOpen, setSidebarOpen] = useState(!isFullWidthPage);
+  // Sidebar state — starts open on all pages
+  const [sidebarOpen, setSidebarOpen] = useState(true);
 
   // Handle browser back/forward navigation
   useEffect(() => {
@@ -99,9 +96,6 @@ export default function DesignSystemPage() {
     window.history.pushState({}, "", `/design-system/${newSlug}`);
     // Scroll window to top
     window.scrollTo({ top: 0, behavior: "instant" });
-    // Auto-close sidebar for full-width pages, open for others
-    const fullWidthSlugs = ["component-generator"];
-    setSidebarOpen(!fullWidthSlugs.includes(newSlug));
   }, []);
 
   const handleHomeClick = () => {
