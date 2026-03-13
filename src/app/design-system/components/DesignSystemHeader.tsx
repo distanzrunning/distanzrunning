@@ -2,9 +2,17 @@
 
 import { useContext } from "react";
 import Image from "next/image";
-import { Search, Sun, Moon, Monitor, Sparkles, ExternalLink } from "lucide-react";
+import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
+import {
+  Search,
+  Sun,
+  Moon,
+  Monitor,
+  Sparkles,
+  ExternalLink,
+  Ellipsis,
+} from "lucide-react";
 import { DarkModeContext } from "@/components/DarkModeProvider";
-import { Button } from "@/components/ui/Button";
 
 interface DesignSystemHeaderProps {
   onHomeClick: () => void;
@@ -24,6 +32,62 @@ export default function DesignSystemHeader({
       className="sticky top-0 z-40 w-full border-b border-borderSubtle"
       style={{ background: "var(--ds-background-100)" }}
     >
+      <style>{`
+        .ds-header-dropdown-content {
+          min-width: 180px;
+          padding: 4px;
+          border-radius: 8px;
+          background: var(--ds-background-100);
+          border: 1px solid var(--ds-gray-alpha-400);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+          color: var(--ds-gray-1000);
+          font-size: 14px;
+          z-index: 100;
+          will-change: transform, opacity;
+          animation-duration: 150ms;
+          animation-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.1);
+        }
+        .ds-header-dropdown-content[data-state="open"] {
+          animation-name: ds-dropdown-in;
+        }
+        @keyframes ds-dropdown-in {
+          from { opacity: 0; transform: scale(0.96) translateY(-4px); }
+          to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .ds-header-dropdown-item {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          height: 36px;
+          padding: 0 8px;
+          border-radius: 6px;
+          font-size: 14px;
+          line-height: 20px;
+          color: var(--ds-gray-1000);
+          cursor: pointer;
+          user-select: none;
+          outline: none;
+          text-decoration: none;
+          transition: background 0.1s ease;
+        }
+        .ds-header-dropdown-item[data-highlighted] {
+          background: var(--ds-gray-alpha-200);
+        }
+        .ds-header-dropdown-separator {
+          height: 1px;
+          background: var(--ds-gray-alpha-400);
+          margin: 4px;
+        }
+        .ds-header-dropdown-label {
+          display: flex;
+          align-items: center;
+          height: 28px;
+          padding: 0 8px;
+          font-size: 12px;
+          color: var(--ds-gray-700);
+          user-select: none;
+        }
+      `}</style>
       <div className="flex w-full pl-[22px]">
         {/* Logo section - matches sidebar width */}
         <div className="flex grow items-center gap-4 border-r border-borderSubtle py-4 pl-px xl:w-[238px] xl:grow-0">
@@ -85,78 +149,84 @@ export default function DesignSystemHeader({
             </button>
           </div>
 
-          {/* Right: Generator + Theme + Back to site */}
-          <div className="flex items-center gap-3">
-            {/* Component Generator button */}
-            <Button
-              size="small"
-              variant={activeSlug === "component-generator" ? "default" : "secondary"}
-              onClick={() => onNavigate?.("component-generator")}
-              prefix={<Sparkles className="w-3.5 h-3.5" />}
-            >
-              <span className="hidden sm:inline">Generator</span>
-            </Button>
+          {/* Right: Ellipsis dropdown menu */}
+          <DropdownMenu.Root>
+            <DropdownMenu.Trigger asChild>
+              <button
+                className="flex items-center justify-center w-8 h-8 rounded-md text-textSubtle hover:text-textDefault hover:bg-surfaceSubtle transition-colors outline-none"
+                aria-label="Menu"
+              >
+                <Ellipsis className="w-5 h-5" />
+              </button>
+            </DropdownMenu.Trigger>
 
-            {/* Theme switcher - Geist style */}
-            <fieldset className="hidden xl:flex items-center gap-0 rounded-full border border-borderDefault bg-canvas">
-              <legend className="sr-only">Select a display theme:</legend>
+            <DropdownMenu.Portal>
+              <DropdownMenu.Content
+                className="ds-header-dropdown-content"
+                sideOffset={8}
+                align="end"
+              >
+                {/* Generator */}
+                <DropdownMenu.Item
+                  className="ds-header-dropdown-item"
+                  onSelect={() => onNavigate?.("component-generator")}
+                >
+                  <Sparkles className="w-4 h-4 shrink-0" />
+                  <span>Generator</span>
+                </DropdownMenu.Item>
 
-              {/* System theme option */}
-              <label className="relative">
-                <input
-                  type="radio"
-                  name="theme"
-                  value="system"
-                  className="sr-only peer"
-                  aria-label="system"
-                />
-                <span className="flex items-center justify-center w-8 h-8 rounded-full cursor-pointer text-textSubtle hover:text-textDefault peer-checked:bg-surfaceSubtle peer-checked:text-textDefault transition-colors">
-                  <Monitor className="w-4 h-4" />
-                </span>
-              </label>
+                <DropdownMenu.Separator className="ds-header-dropdown-separator" />
 
-              {/* Light theme option */}
-              <label className="relative">
-                <input
-                  type="radio"
-                  name="theme"
-                  value="light"
-                  checked={!isDark}
-                  onChange={() => isDark && toggleDarkMode()}
-                  className="sr-only peer"
-                  aria-label="light"
-                />
-                <span className="flex items-center justify-center w-8 h-8 rounded-full cursor-pointer text-textSubtle hover:text-textDefault peer-checked:bg-surfaceSubtle peer-checked:text-textDefault transition-colors">
-                  <Sun className="w-4 h-4" />
-                </span>
-              </label>
+                {/* Theme switcher label */}
+                <DropdownMenu.Label className="ds-header-dropdown-label">
+                  Theme
+                </DropdownMenu.Label>
 
-              {/* Dark theme option */}
-              <label className="relative">
-                <input
-                  type="radio"
-                  name="theme"
-                  value="dark"
-                  checked={isDark}
-                  onChange={() => !isDark && toggleDarkMode()}
-                  className="sr-only peer"
-                  aria-label="dark"
-                />
-                <span className="flex items-center justify-center w-8 h-8 rounded-full cursor-pointer text-textSubtle hover:text-textDefault peer-checked:bg-surfaceSubtle peer-checked:text-textDefault transition-colors">
-                  <Moon className="w-4 h-4" />
-                </span>
-              </label>
-            </fieldset>
+                {/* Theme toggle row */}
+                <div className="flex items-center gap-0.5 px-2 pb-1.5">
+                  {[
+                    { value: "system", icon: Monitor, label: "System" },
+                    { value: "light", icon: Sun, label: "Light" },
+                    { value: "dark", icon: Moon, label: "Dark" },
+                  ].map(({ value, icon: Icon, label }) => {
+                    const isActive =
+                      (value === "light" && !isDark) ||
+                      (value === "dark" && isDark);
+                    return (
+                      <button
+                        key={value}
+                        onClick={() => {
+                          if (value === "light" && isDark) toggleDarkMode();
+                          if (value === "dark" && !isDark) toggleDarkMode();
+                        }}
+                        className={`flex items-center justify-center w-8 h-8 rounded-md transition-colors ${
+                          isActive
+                            ? "bg-[var(--ds-gray-alpha-200)] text-[var(--ds-gray-1000)]"
+                            : "text-[var(--ds-gray-900)] hover:bg-[var(--ds-gray-alpha-200)]"
+                        }`}
+                        aria-label={label}
+                      >
+                        <Icon className="w-4 h-4" />
+                      </button>
+                    );
+                  })}
+                </div>
 
-            {/* Back to site */}
-            <a
-              href="/"
-              className="flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-sm text-textSubtle hover:text-textDefault hover:bg-surfaceSubtle transition-colors"
-            >
-              <span className="hidden sm:inline">Back to site</span>
-              <ExternalLink className="w-3.5 h-3.5" />
-            </a>
-          </div>
+                <DropdownMenu.Separator className="ds-header-dropdown-separator" />
+
+                {/* Back to site */}
+                <DropdownMenu.Item
+                  className="ds-header-dropdown-item"
+                  asChild
+                >
+                  <a href="/" className="no-underline">
+                    <ExternalLink className="w-4 h-4 shrink-0" />
+                    <span>Back to site</span>
+                  </a>
+                </DropdownMenu.Item>
+              </DropdownMenu.Content>
+            </DropdownMenu.Portal>
+          </DropdownMenu.Root>
         </div>
       </div>
     </header>
