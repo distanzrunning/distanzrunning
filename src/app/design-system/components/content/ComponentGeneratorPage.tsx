@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useCallback, useEffect } from "react";
-import { Sparkles, Copy, Download, Trash2, Loader2, Check, Eye, Code, Bot, User, Send } from "lucide-react";
+import { Sparkles, Copy, Download, Trash2, Loader2, Check, Eye, Code, Bot, User, Send, X } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import IconButton from "@/components/ui/IconButton";
 import { CodeBlock } from "@/components/ui/CodeBlock";
@@ -105,7 +105,8 @@ function buildPreviewHtml(transpiledCode: string): string {
     "import React, { useState, useEffect, useRef, useCallback, useMemo, useReducer, useContext, createContext, Fragment } from 'react';",
     "import ReactDOM from 'react-dom/client';",
     "import * as LucideIcons from 'lucide-react';",
-    "for (var _k in LucideIcons) { try { window[_k] = LucideIcons[_k]; } catch(e) {} }",
+    "var _existingKeys = new Set(Object.getOwnPropertyNames(window));",
+    "for (var _k in LucideIcons) { try { if (!_existingKeys.has(_k)) { window[_k] = LucideIcons[_k]; } } catch(e) {} }",
     "",
     "class ErrorBoundary extends React.Component {",
     "  constructor(props) { super(props); this.state = { hasError: false, error: null }; }",
@@ -217,6 +218,19 @@ export default function ComponentGeneratorPage() {
   const abortRef = useRef<AbortController | null>(null);
   const chatEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const messagesRef = useRef<ChatMessage[]>([]);
+
+  // Keep messagesRef in sync
+  useEffect(() => {
+    messagesRef.current = messages;
+  }, [messages]);
+
+  // Abort in-flight requests on unmount
+  useEffect(() => {
+    return () => {
+      abortRef.current?.abort();
+    };
+  }, []);
 
   // Auto-scroll chat to bottom
   useEffect(() => {
@@ -235,8 +249,11 @@ export default function ComponentGeneratorPage() {
   };
 
   const extractName = (code: string): string => {
-    const match = code.match(/export\s+default\s+function\s+(\w+)/);
-    return match ? match[1] : "GeneratedComponent";
+    const fnMatch = code.match(/export\s+default\s+function\s+(\w+)/);
+    if (fnMatch) return fnMatch[1];
+    const classMatch = code.match(/export\s+default\s+class\s+(\w+)/);
+    if (classMatch) return classMatch[1];
+    return "GeneratedComponent";
   };
 
   const addMessage = (role: "user" | "assistant", content: string, extras?: Partial<ChatMessage>) => {
@@ -275,8 +292,9 @@ export default function ComponentGeneratorPage() {
     abortRef.current = new AbortController();
 
     try {
+      const firstUserMsg = messagesRef.current.find((m) => m.role === "user");
       const body: Record<string, string> = isRefinement
-        ? { prompt: messages.find((m) => m.role === "user")?.content || text, refinement: text, previousCode: generatedCode }
+        ? { prompt: firstUserMsg?.content || text, refinement: text, previousCode: generatedCode }
         : { prompt: text };
 
       const res = await fetch("/api/generate-component", {
@@ -301,13 +319,16 @@ export default function ComponentGeneratorPage() {
 
       const decoder = new TextDecoder();
       let accumulated = "";
+      let sseBuffer = "";
 
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
 
-        const chunk = decoder.decode(value, { stream: true });
-        const lines = chunk.split("\n");
+        sseBuffer += decoder.decode(value, { stream: true });
+        const lines = sseBuffer.split("\n");
+        // Keep the last (potentially incomplete) line in the buffer
+        sseBuffer = lines.pop() || "";
 
         for (const line of lines) {
           if (line.startsWith("data: ")) {
@@ -661,7 +682,7 @@ export default function ComponentGeneratorPage() {
                   <iframe
                     srcDoc={buildPreviewHtml(transpiledCode)}
                     className="w-full h-full border-0"
-                    sandbox="allow-scripts allow-same-origin"
+                    sandbox="allow-scripts"
                     title="Component preview"
                   />
                 ) : null
@@ -688,7 +709,7 @@ export default function ComponentGeneratorPage() {
             color: "white",
           }}
         >
-          {toast.type === "success" ? <Check className="w-4 h-4" /> : null}
+          {toast.type === "success" ? <Check className="w-4 h-4" /> : <X className="w-4 h-4" />}
           {toast.message}
         </div>
       )}
