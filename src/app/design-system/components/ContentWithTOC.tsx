@@ -21,7 +21,7 @@ export function Section({ children }: { children: React.ReactNode }) {
     // Section with padding, followed by divider below
     return (
       <>
-        <div className="p-12">{children}</div>
+        <div className="p-12 xl:pr-[280px]">{children}</div>
         <hr className="border-t border-borderNeutral" />
       </>
     );
@@ -430,13 +430,13 @@ export default function ContentWithTOC({
   };
 
   return (
-    <div className="flex flex-1 min-h-[calc(100vh-65px)]">
+    <div className="relative flex-1 min-h-[calc(100vh-65px)]">
       {/* Main content column */}
       <div className="flex-1 min-w-0 flex flex-col">
         {/* Page Header Section */}
         {pageTitle && (
           <>
-            <div className="p-12">
+            <div className="p-12 xl:pr-[280px]">
               <h1
                 id={mainSectionId}
                 className="text-[24px] md:text-[40px] leading-[1.2] font-semibold text-textDefault mb-3"
@@ -466,14 +466,14 @@ export default function ContentWithTOC({
 
         {/* Page Pagination - flex-1 to fill remaining space, mt-auto pushes to bottom */}
         {activeSlug && onNavigate && (
-          <div className="flex-1 flex flex-col justify-end px-12 pb-8">
+          <div className="flex-1 flex flex-col justify-end px-12 xl:pr-[280px] pb-8">
             <PagePagination activeSlug={activeSlug} onNavigate={onNavigate} />
           </div>
         )}
       </div>
 
-      {/* Table of Contents - Right Sidebar (≥1280px) */}
-      <aside className="hidden xl:block w-[260px] flex-shrink-0 border-l border-borderSubtle">
+      {/* Table of Contents - fixed overlay on right (≥1280px) */}
+      <aside className="hidden xl:block absolute top-0 right-0 w-[260px] h-full border-l border-borderSubtle">
         <div className="sticky top-28 max-h-[calc(100vh-112px)] overflow-y-auto px-6 py-6">
           <h4 className="text-[14px] leading-[20px] font-medium text-textDefault mb-3">
             {tocTitle}
