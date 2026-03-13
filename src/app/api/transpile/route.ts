@@ -97,7 +97,12 @@ export async function POST(request: NextRequest) {
       const errorMsg = errors
         .map((d) => ts.flattenDiagnosticMessageText(d.messageText, "\n"))
         .join("\n");
-      return Response.json({ error: errorMsg }, { status: 422 });
+      // Include a tail snippet of the code to help debug truncation issues
+      const tail = cleaned.slice(-200);
+      return Response.json(
+        { error: errorMsg, codeTail: `...${tail}`, codeLength: cleaned.length },
+        { status: 422 },
+      );
     }
 
     return Response.json({ code: result.outputText });

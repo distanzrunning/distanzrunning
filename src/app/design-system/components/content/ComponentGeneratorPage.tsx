@@ -462,7 +462,12 @@ export default function ComponentGeneratorPage() {
           setTranspiledCode(transpileData.code);
           setTranspileError("");
         } else {
-          setTranspileError(transpileData.error || "Transpilation failed");
+          // Include debug info (code tail + length) if available
+          let errMsg = transpileData.error || "Transpilation failed";
+          if (transpileData.codeTail) {
+            errMsg += `\n\nCode ends with (${transpileData.codeLength} chars total):\n${transpileData.codeTail}`;
+          }
+          setTranspileError(errMsg);
           setTranspiledCode("");
         }
       } catch {

@@ -1,6 +1,9 @@
 import { NextRequest } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
 
+// Allow up to 60s for AI streaming (default 10s causes truncated code)
+export const maxDuration = 60;
+
 const SYSTEM_PROMPT = `You are a React component generator for a design system built on the Geist design system.
 
 ## Output Rules
