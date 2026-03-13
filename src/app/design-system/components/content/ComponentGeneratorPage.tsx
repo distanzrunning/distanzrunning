@@ -61,14 +61,16 @@ function prepareForInline(code: string): string {
 function buildPreviewHtml(transpiledCode: string): string {
   const componentCode = prepareForInline(transpiledCode);
   // Escape </script to prevent premature tag closing in srcdoc
-  const safeCode = componentCode.replace(/<\/script/gi, "<\\/script");
+  // Inside <script>, "</script" would close the tag prematurely.
+  // Replace with "<\x2fscript" which JS evaluates to "</script" but HTML parser won't match.
+  const safeCode = componentCode.replace(/<\/script/gi, "<\\x2fscript");
 
   // Build HTML via string concatenation — NOT template literals — because
   // the component code may contain backticks that would break template literals.
   const prefix = [
     "<!DOCTYPE html><html><head>",
     '<meta charset="utf-8" />',
-    '<script src="https://cdn.tailwindcss.com"><\/script>',
+    '<script src="https://cdn.tailwindcss.com"></' + 'script>',
     "<style>",
     ":root {",
     "--ds-gray-100:#fafafa;--ds-gray-200:#f5f5f5;--ds-gray-300:#ebebeb;--ds-gray-400:#e0e0e0;--ds-gray-500:#c7c7c7;--ds-gray-600:#a0a0a0;--ds-gray-700:#8c8c8c;--ds-gray-800:#6e6e6e;--ds-gray-900:#444444;--ds-gray-1000:#171717;",
@@ -96,7 +98,7 @@ function buildPreviewHtml(transpiledCode: string): string {
     '"react-dom/client":"https://esm.sh/react-dom@18/client",',
     '"lucide-react":"https://esm.sh/lucide-react@latest"',
     "}}",
-    "<\\/script>",
+    "</" + "script>",
     "</head><body>",
     '<div id="root"></div>',
     '<script type="module">',
@@ -134,7 +136,7 @@ function buildPreviewHtml(transpiledCode: string): string {
     "} catch (e) {",
     "  document.getElementById('root').innerHTML = '<div class=\"error-boundary\"><strong>Error</strong><br/>' + e.message + '</div>';",
     "}",
-    "<\\/script></body></html>",
+    "</" + "script></body></html>",
   ].join("\n");
 
   return prefix + "\n" + safeCode + "\n" + suffix;
