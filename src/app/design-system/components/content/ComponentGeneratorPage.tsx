@@ -63,7 +63,10 @@ function buildPreviewHtml(transpiledCode: string): string {
   // JSON-encode the component code so it's safely embedded as a string literal.
   // This avoids all </script escaping issues and allows eval() to catch syntax errors
   // at runtime instead of failing at parse time (which would blank the iframe).
-  const encodedCode = JSON.stringify(componentCode);
+  // JSON.stringify doesn't escape "/", so "</script" in the code would break HTML parsing.
+  // Replace "</" with "<\/" which is valid JSON (escaped forward slash) and prevents
+  // the HTML parser from seeing any closing tags inside the string.
+  const encodedCode = JSON.stringify(componentCode).replace(/<\//g, "<\\/");
 
   const lines = [
     "<!DOCTYPE html><html><head>",
@@ -296,8 +299,14 @@ export default function ComponentGeneratorPage() {
 
     try {
       const firstUserMsg = messagesRef.current.find((m) => m.role === "user");
-      const body: Record<string, string> = isRefinement
-        ? { prompt: firstUserMsg?.content || text, refinement: text, previousCode: generatedCode }
+      // Build conversation history for refinements (exclude thinking messages)
+      const history = isRefinement
+        ? messagesRef.current
+            .filter((m) => !m.isThinking && m.content)
+            .map((m) => ({ role: m.role, content: m.role === "assistant" && m.code ? m.code : m.content }))
+        : undefined;
+      const body: Record<string, unknown> = isRefinement
+        ? { prompt: firstUserMsg?.content || text, refinement: text, previousCode: generatedCode, history }
         : { prompt: text };
 
       const res = await fetch("/api/generate-component", {
@@ -683,6 +692,7 @@ export default function ComponentGeneratorPage() {
                   </div>
                 ) : transpiledCode ? (
                   <iframe
+                    key={transpiledCode}
                     srcDoc={buildPreviewHtml(transpiledCode)}
                     className="w-full h-full border-0"
                     sandbox="allow-scripts allow-same-origin"

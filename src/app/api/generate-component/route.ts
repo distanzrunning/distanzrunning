@@ -111,7 +111,7 @@ export default function StatusCard({ title, description, variant = "success", ch
 
 export async function POST(request: NextRequest) {
   try {
-    const { prompt, refinement, previousCode } = await request.json();
+    const { prompt, refinement, previousCode, history } = await request.json();
 
     if (!prompt) {
       return new Response(JSON.stringify({ error: "Prompt is required" }), {
@@ -130,16 +130,29 @@ export async function POST(request: NextRequest) {
 
     const client = new Anthropic({ apiKey });
 
-    let userMessage = prompt;
-    if (refinement && previousCode) {
-      userMessage = `Here is the current component code:\n\n${previousCode}\n\nPlease refine it with the following changes: ${refinement}`;
+    // Build messages array with conversation history for refinements
+    let messages: { role: "user" | "assistant"; content: string }[];
+
+    if (refinement && previousCode && history?.length) {
+      // Include conversation history so Claude has full context
+      messages = history.map((m: { role: string; content: string }) => ({
+        role: m.role as "user" | "assistant",
+        content: m.content,
+      }));
+      // Add the current code context + refinement as the latest message
+      messages.push({
+        role: "user",
+        content: `Here is the current component code:\n\n${previousCode}\n\nPlease refine it with the following changes: ${refinement}`,
+      });
+    } else {
+      messages = [{ role: "user", content: prompt }];
     }
 
     const stream = await client.messages.stream({
       model: "claude-sonnet-4-20250514",
       max_tokens: 8192,
       system: SYSTEM_PROMPT,
-      messages: [{ role: "user", content: userMessage }],
+      messages,
     });
 
     const encoder = new TextEncoder();
