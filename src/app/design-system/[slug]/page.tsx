@@ -695,7 +695,7 @@ export default function DesignSystemPage() {
         {/* Main Content Area */}
         <div
           id="main-content"
-          className="flex-1 min-w-0 flex flex-col min-h-[calc(100vh-65px)]"
+          className="flex-1 min-w-0 overflow-hidden flex flex-col min-h-[calc(100vh-65px)]"
         >
           <div className="flex-1 flex flex-col">{renderContent()}</div>
         </div>
