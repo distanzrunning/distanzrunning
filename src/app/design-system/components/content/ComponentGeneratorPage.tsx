@@ -124,6 +124,7 @@ function buildPreviewHtml(transpiledCode: string, isDark: boolean): string {
     `<!DOCTYPE html><html class="${isDark ? "dark" : ""}"><head>`,
     '<meta charset="utf-8" />',
     '<script src="https://cdn.tailwindcss.com"></' + 'script>',
+    "<script>tailwind.config={darkMode:'class'}</" + "script>",
     "<style>",
     // Light mode tokens
     ":root {",

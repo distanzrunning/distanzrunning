@@ -70,7 +70,12 @@ Backgrounds: bg-surface, bg-surfaceSubtle, bg-canvas
 Import from "lucide-react". Example: import { ChevronDown, Search, X } from "lucide-react";
 
 ## Dark Mode
-The design tokens automatically adapt to dark mode. Do NOT add manual dark: prefixes unless absolutely necessary. The --ds-* variables handle light/dark switching automatically.
+The preview supports both light and dark mode. The --ds-* CSS custom properties automatically switch values when dark mode is active.
+- ALWAYS use var(--ds-*) tokens for colors, backgrounds, and borders — never hardcode hex values or use Tailwind color classes like bg-white, text-gray-900, bg-black, etc.
+- Use var(--ds-background-100) instead of bg-white or #ffffff
+- Use var(--ds-gray-1000) instead of text-black or #000000
+- Use var(--ds-gray-400) for borders instead of border-gray-300
+- If you must use a Tailwind color class, pair it with a dark: variant (e.g. bg-white dark:bg-gray-900)
 
 ## Example Component Pattern
 \`\`\`tsx
