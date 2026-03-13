@@ -2,7 +2,7 @@
 
 import { useContext } from "react";
 import Image from "next/image";
-import { Search, Sun, Moon, Monitor, Sparkles } from "lucide-react";
+import { Search, Sun, Moon, Monitor, Sparkles, ExternalLink } from "lucide-react";
 import { DarkModeContext } from "@/components/DarkModeProvider";
 
 interface DesignSystemHeaderProps {
@@ -20,7 +20,7 @@ export default function DesignSystemHeader({
 
   return (
     <header
-      className="sticky top-12 z-40 w-full border-b border-borderSubtle"
+      className="sticky top-0 z-40 w-full border-b border-borderSubtle"
       style={{ background: "var(--ds-background-100)" }}
     >
       <div className="flex w-full pl-[22px]">
@@ -53,98 +53,113 @@ export default function DesignSystemHeader({
           </button>
         </div>
 
-        {/* Right section with search and theme */}
+        {/* Right section with search and actions */}
         <div className="flex items-center justify-between p-4 xl:grow">
-          {/* Search button - desktop only */}
-          <button
-            type="button"
-            className="hidden xl:flex h-8 w-[220px] cursor-pointer items-center justify-between rounded border border-borderDefault bg-transparent pl-2 pr-1.5 font-sans text-sm text-textSubtle outline-none hover:bg-surfaceSubtle"
-          >
-            <span className="flex items-center gap-2">
+          {/* Left: Search */}
+          <div className="flex items-center gap-3">
+            {/* Search button - desktop only */}
+            <button
+              type="button"
+              className="hidden xl:flex h-8 w-[220px] cursor-pointer items-center justify-between rounded border border-borderDefault bg-transparent pl-2 pr-1.5 font-sans text-sm text-textSubtle outline-none hover:bg-surfaceSubtle"
+            >
+              <span className="flex items-center gap-2">
+                <Search className="w-4 h-4" />
+                <span>Search Stride</span>
+              </span>
+              <kbd className="inline-flex h-5 items-center gap-0 rounded border border-borderSubtle bg-canvas px-1 font-mono text-[11px] font-medium text-textDefault">
+                <span style={{ minWidth: "1em", display: "inline-block" }}>
+                  ⌘
+                </span>
+                <span>K</span>
+              </kbd>
+            </button>
+
+            {/* Mobile search icon */}
+            <button
+              type="button"
+              className="xl:hidden p-2 rounded-full bg-transparent hover:bg-surfaceSubtle transition-colors"
+              aria-label="Search"
+            >
               <Search className="w-4 h-4" />
-              <span>Search Stride</span>
-            </span>
-            <kbd className="inline-flex h-5 items-center gap-0 rounded border border-borderSubtle bg-canvas px-1 font-mono text-[11px] font-medium text-textDefault">
-              <span style={{ minWidth: "1em", display: "inline-block" }}>
-                ⌘
-              </span>
-              <span>K</span>
-            </kbd>
-          </button>
+            </button>
+          </div>
 
-          {/* Mobile search icon */}
-          <button
-            type="button"
-            className="xl:hidden p-2 rounded-full bg-transparent hover:bg-surfaceSubtle transition-colors"
-            aria-label="Open menu"
-          >
-            <Search className="w-4 h-4" />
-          </button>
+          {/* Right: Generator + Theme + Back to site */}
+          <div className="flex items-center gap-3">
+            {/* Component Generator button */}
+            <button
+              type="button"
+              onClick={() => onNavigate?.("component-generator")}
+              className={`flex items-center gap-2 rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
+                activeSlug === "component-generator"
+                  ? "bg-black text-white dark:bg-white dark:text-black"
+                  : "border border-borderDefault text-textDefault hover:bg-surfaceSubtle"
+              }`}
+            >
+              <Sparkles className="w-4 h-4" />
+              <span className="hidden sm:inline">Generator</span>
+            </button>
 
-          {/* Component Generator button */}
-          <button
-            type="button"
-            onClick={() => onNavigate?.("component-generator")}
-            className={`flex items-center gap-2 rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
-              activeSlug === "component-generator"
-                ? "bg-black text-white dark:bg-white dark:text-black"
-                : "border border-borderDefault text-textDefault hover:bg-surfaceSubtle"
-            }`}
-          >
-            <Sparkles className="w-4 h-4" />
-            <span className="hidden sm:inline">Generator</span>
-          </button>
+            {/* Theme switcher - Geist style */}
+            <fieldset className="hidden xl:flex items-center gap-0 rounded-full border border-borderDefault bg-canvas">
+              <legend className="sr-only">Select a display theme:</legend>
 
-          {/* Theme switcher - Geist style */}
-          <fieldset className="hidden xl:flex items-center gap-0 rounded-full border border-borderDefault bg-canvas">
-            <legend className="sr-only">Select a display theme:</legend>
+              {/* System theme option */}
+              <label className="relative">
+                <input
+                  type="radio"
+                  name="theme"
+                  value="system"
+                  className="sr-only peer"
+                  aria-label="system"
+                />
+                <span className="flex items-center justify-center w-8 h-8 rounded-full cursor-pointer text-textSubtle hover:text-textDefault peer-checked:bg-surfaceSubtle peer-checked:text-textDefault transition-colors">
+                  <Monitor className="w-4 h-4" />
+                </span>
+              </label>
 
-            {/* System theme option */}
-            <label className="relative">
-              <input
-                type="radio"
-                name="theme"
-                value="system"
-                className="sr-only peer"
-                aria-label="system"
-              />
-              <span className="flex items-center justify-center w-8 h-8 rounded-full cursor-pointer text-textSubtle hover:text-textDefault peer-checked:bg-surfaceSubtle peer-checked:text-textDefault transition-colors">
-                <Monitor className="w-4 h-4" />
-              </span>
-            </label>
+              {/* Light theme option */}
+              <label className="relative">
+                <input
+                  type="radio"
+                  name="theme"
+                  value="light"
+                  checked={!isDark}
+                  onChange={() => isDark && toggleDarkMode()}
+                  className="sr-only peer"
+                  aria-label="light"
+                />
+                <span className="flex items-center justify-center w-8 h-8 rounded-full cursor-pointer text-textSubtle hover:text-textDefault peer-checked:bg-surfaceSubtle peer-checked:text-textDefault transition-colors">
+                  <Sun className="w-4 h-4" />
+                </span>
+              </label>
 
-            {/* Light theme option */}
-            <label className="relative">
-              <input
-                type="radio"
-                name="theme"
-                value="light"
-                checked={!isDark}
-                onChange={() => isDark && toggleDarkMode()}
-                className="sr-only peer"
-                aria-label="light"
-              />
-              <span className="flex items-center justify-center w-8 h-8 rounded-full cursor-pointer text-textSubtle hover:text-textDefault peer-checked:bg-surfaceSubtle peer-checked:text-textDefault transition-colors">
-                <Sun className="w-4 h-4" />
-              </span>
-            </label>
+              {/* Dark theme option */}
+              <label className="relative">
+                <input
+                  type="radio"
+                  name="theme"
+                  value="dark"
+                  checked={isDark}
+                  onChange={() => !isDark && toggleDarkMode()}
+                  className="sr-only peer"
+                  aria-label="dark"
+                />
+                <span className="flex items-center justify-center w-8 h-8 rounded-full cursor-pointer text-textSubtle hover:text-textDefault peer-checked:bg-surfaceSubtle peer-checked:text-textDefault transition-colors">
+                  <Moon className="w-4 h-4" />
+                </span>
+              </label>
+            </fieldset>
 
-            {/* Dark theme option */}
-            <label className="relative">
-              <input
-                type="radio"
-                name="theme"
-                value="dark"
-                checked={isDark}
-                onChange={() => !isDark && toggleDarkMode()}
-                className="sr-only peer"
-                aria-label="dark"
-              />
-              <span className="flex items-center justify-center w-8 h-8 rounded-full cursor-pointer text-textSubtle hover:text-textDefault peer-checked:bg-surfaceSubtle peer-checked:text-textDefault transition-colors">
-                <Moon className="w-4 h-4" />
-              </span>
-            </label>
-          </fieldset>
+            {/* Back to site */}
+            <a
+              href="/"
+              className="flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-sm text-textSubtle hover:text-textDefault hover:bg-surfaceSubtle transition-colors"
+            >
+              <span className="hidden sm:inline">Back to site</span>
+              <ExternalLink className="w-3.5 h-3.5" />
+            </a>
+          </div>
         </div>
       </div>
     </header>

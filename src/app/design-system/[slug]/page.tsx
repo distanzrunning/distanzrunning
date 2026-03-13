@@ -679,14 +679,14 @@ export default function DesignSystemPage() {
         /* Full-width layout (no sidebar) for tools like Component Generator */
         <div
           id="main-content"
-          className="flex-1 min-w-0 flex flex-col min-h-[calc(100vh-112px)]"
+          className="flex-1 min-w-0 flex flex-col min-h-[calc(100vh-65px)]"
         >
           <div className="p-12 flex-1 flex flex-col">{renderContent()}</div>
         </div>
       ) : (
         <>
           {/* Mobile/Tablet Section Header - visible below xl */}
-          <div className="xl:hidden sticky top-28 z-30">
+          <div className="xl:hidden sticky top-[65px] z-30">
             <DesignSystemSidebar
               activeSlug={activeSlug}
               onNavigate={handleNavigation}
@@ -707,7 +707,7 @@ export default function DesignSystemPage() {
             {/* Main Content Area */}
             <div
               id="main-content"
-              className="flex-1 min-w-0 flex flex-col min-h-[calc(100vh-112px)]"
+              className="flex-1 min-w-0 flex flex-col min-h-[calc(100vh-65px)]"
             >
               <div className="p-12 flex-1 flex flex-col">{renderContent()}</div>
             </div>
