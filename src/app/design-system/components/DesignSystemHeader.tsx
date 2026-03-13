@@ -2,15 +2,19 @@
 
 import { useContext } from "react";
 import Image from "next/image";
-import { Search, Sun, Moon, Monitor } from "lucide-react";
+import { Search, Sun, Moon, Monitor, Sparkles } from "lucide-react";
 import { DarkModeContext } from "@/components/DarkModeProvider";
 
 interface DesignSystemHeaderProps {
   onHomeClick: () => void;
+  onNavigate?: (slug: string) => void;
+  activeSlug?: string;
 }
 
 export default function DesignSystemHeader({
   onHomeClick,
+  onNavigate,
+  activeSlug,
 }: DesignSystemHeaderProps) {
   const { isDark, toggleDarkMode } = useContext(DarkModeContext);
 
@@ -75,6 +79,20 @@ export default function DesignSystemHeader({
             aria-label="Open menu"
           >
             <Search className="w-4 h-4" />
+          </button>
+
+          {/* Component Generator button */}
+          <button
+            type="button"
+            onClick={() => onNavigate?.("component-generator")}
+            className={`flex items-center gap-2 rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
+              activeSlug === "component-generator"
+                ? "bg-black text-white dark:bg-white dark:text-black"
+                : "border border-borderDefault text-textDefault hover:bg-surfaceSubtle"
+            }`}
+          >
+            <Sparkles className="w-4 h-4" />
+            <span className="hidden sm:inline">Generator</span>
           </button>
 
           {/* Theme switcher - Geist style */}

@@ -99,6 +99,9 @@ export default function DesignSystemPage() {
     router.push("/design-system");
   };
 
+  // Pages that render full-width without sidebar
+  const isFullWidth = activeSlug === "component-generator";
+
   const renderContent = () => {
     // Foundations pages
     if (activeSlug === "introduction") {
@@ -666,35 +669,51 @@ export default function DesignSystemPage() {
       style={{ background: "var(--ds-background-200)" }}
     >
       {/* Geist-style Header */}
-      <DesignSystemHeader onHomeClick={handleHomeClick} />
+      <DesignSystemHeader
+        onHomeClick={handleHomeClick}
+        onNavigate={handleNavigation}
+        activeSlug={activeSlug}
+      />
 
-      {/* Mobile/Tablet Section Header - visible below xl */}
-      <div className="xl:hidden sticky top-28 z-30">
-        <DesignSystemSidebar
-          activeSlug={activeSlug}
-          onNavigate={handleNavigation}
-          onHomeClick={handleHomeClick}
-        />
-      </div>
-
-      <div className="flex">
-        {/* Desktop Sidebar - hidden below xl */}
-        <div className="hidden xl:block flex-shrink-0">
-          <DesignSystemSidebar
-            activeSlug={activeSlug}
-            onNavigate={handleNavigation}
-            onHomeClick={handleHomeClick}
-          />
-        </div>
-
-        {/* Main Content Area */}
+      {isFullWidth ? (
+        /* Full-width layout (no sidebar) for tools like Component Generator */
         <div
           id="main-content"
           className="flex-1 min-w-0 flex flex-col min-h-[calc(100vh-112px)]"
         >
           <div className="p-12 flex-1 flex flex-col">{renderContent()}</div>
         </div>
-      </div>
+      ) : (
+        <>
+          {/* Mobile/Tablet Section Header - visible below xl */}
+          <div className="xl:hidden sticky top-28 z-30">
+            <DesignSystemSidebar
+              activeSlug={activeSlug}
+              onNavigate={handleNavigation}
+              onHomeClick={handleHomeClick}
+            />
+          </div>
+
+          <div className="flex">
+            {/* Desktop Sidebar - hidden below xl */}
+            <div className="hidden xl:block flex-shrink-0">
+              <DesignSystemSidebar
+                activeSlug={activeSlug}
+                onNavigate={handleNavigation}
+                onHomeClick={handleHomeClick}
+              />
+            </div>
+
+            {/* Main Content Area */}
+            <div
+              id="main-content"
+              className="flex-1 min-w-0 flex flex-col min-h-[calc(100vh-112px)]"
+            >
+              <div className="p-12 flex-1 flex flex-col">{renderContent()}</div>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }
