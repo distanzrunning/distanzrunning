@@ -470,7 +470,7 @@ export default function ComponentGeneratorPage() {
   const hasPreview = generatedCode.length > 0;
 
   return (
-    <div className="flex flex-col gap-6 p-12 flex-1">
+    <div className="flex flex-col gap-6 p-12 xl:pr-[280px] flex-1">
       {/* Header */}
       <div>
         <h1 className="text-heading-32 text-textDefault mb-2">Component Generator</h1>

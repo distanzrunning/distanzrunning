@@ -103,7 +103,7 @@ export default function DesignSystemPage() {
   const renderContent = () => {
     // Foundations pages
     if (activeSlug === "introduction") {
-      return <div className="p-12"><FoundationsOverview /></div>;
+      return <div className="p-12 xl:pr-[280px]"><FoundationsOverview /></div>;
     }
     if (activeSlug === "design-principles") {
       return (
@@ -285,10 +285,10 @@ export default function DesignSystemPage() {
 
     // Brand pages
     if (activeSlug === "distanz") {
-      return <div className="p-12"><PlaceholderContent title="Brands" subsection="Distanz" /></div>;
+      return <div className="p-12 xl:pr-[280px]"><PlaceholderContent title="Brands" subsection="Distanz" /></div>;
     }
     if (activeSlug === "stride") {
-      return <div className="p-12"><PlaceholderContent title="Brands" subsection="Stride" /></div>;
+      return <div className="p-12 xl:pr-[280px]"><PlaceholderContent title="Brands" subsection="Stride" /></div>;
     }
 
     // Components pages
@@ -657,7 +657,7 @@ export default function DesignSystemPage() {
       .join(" ");
 
     return (
-      <div className="p-12"><PlaceholderContent title="Design System" subsection={formattedTitle} /></div>
+      <div className="p-12 xl:pr-[280px]"><PlaceholderContent title="Design System" subsection={formattedTitle} /></div>
     );
   };
 
