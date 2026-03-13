@@ -7,7 +7,6 @@ import {
   Search,
   Sun,
   Moon,
-  Monitor,
   Sparkles,
   ExternalLink,
   Ellipsis,
@@ -70,6 +69,12 @@ export default function DesignSystemHeader({
           text-decoration: none;
           transition: background 0.1s ease;
         }
+        .ds-header-dropdown-item .ds-item-icon {
+          margin-left: auto;
+          display: flex;
+          align-items: center;
+          color: var(--ds-gray-900);
+        }
         .ds-header-dropdown-item[data-highlighted] {
           background: var(--ds-gray-alpha-200);
         }
@@ -77,15 +82,6 @@ export default function DesignSystemHeader({
           height: 1px;
           background: var(--ds-gray-alpha-400);
           margin: 4px;
-        }
-        .ds-header-dropdown-label {
-          display: flex;
-          align-items: center;
-          height: 28px;
-          padding: 0 8px;
-          font-size: 12px;
-          color: var(--ds-gray-700);
-          user-select: none;
         }
       `}</style>
       <div className="flex w-full pl-[22px]">
@@ -171,48 +167,11 @@ export default function DesignSystemHeader({
                   className="ds-header-dropdown-item"
                   onSelect={() => onNavigate?.("component-generator")}
                 >
-                  <Sparkles className="w-4 h-4 shrink-0" />
                   <span>Generator</span>
+                  <span className="ds-item-icon">
+                    <Sparkles className="w-4 h-4" />
+                  </span>
                 </DropdownMenu.Item>
-
-                <DropdownMenu.Separator className="ds-header-dropdown-separator" />
-
-                {/* Theme switcher label */}
-                <DropdownMenu.Label className="ds-header-dropdown-label">
-                  Theme
-                </DropdownMenu.Label>
-
-                {/* Theme toggle row */}
-                <div className="flex items-center gap-0.5 px-2 pb-1.5">
-                  {[
-                    { value: "system", icon: Monitor, label: "System" },
-                    { value: "light", icon: Sun, label: "Light" },
-                    { value: "dark", icon: Moon, label: "Dark" },
-                  ].map(({ value, icon: Icon, label }) => {
-                    const isActive =
-                      (value === "light" && !isDark) ||
-                      (value === "dark" && isDark);
-                    return (
-                      <button
-                        key={value}
-                        onClick={() => {
-                          if (value === "light" && isDark) toggleDarkMode();
-                          if (value === "dark" && !isDark) toggleDarkMode();
-                        }}
-                        className={`flex items-center justify-center w-8 h-8 rounded-md transition-colors ${
-                          isActive
-                            ? "bg-[var(--ds-gray-alpha-200)] text-[var(--ds-gray-1000)]"
-                            : "text-[var(--ds-gray-900)] hover:bg-[var(--ds-gray-alpha-200)]"
-                        }`}
-                        aria-label={label}
-                      >
-                        <Icon className="w-4 h-4" />
-                      </button>
-                    );
-                  })}
-                </div>
-
-                <DropdownMenu.Separator className="ds-header-dropdown-separator" />
 
                 {/* Back to site */}
                 <DropdownMenu.Item
@@ -220,10 +179,39 @@ export default function DesignSystemHeader({
                   asChild
                 >
                   <a href="/" className="no-underline">
-                    <ExternalLink className="w-4 h-4 shrink-0" />
                     <span>Back to site</span>
+                    <span className="ds-item-icon">
+                      <ExternalLink className="w-4 h-4" />
+                    </span>
                   </a>
                 </DropdownMenu.Item>
+
+                <DropdownMenu.Separator className="ds-header-dropdown-separator" />
+
+                {/* Theme toggle */}
+                <div
+                  className="flex items-center justify-between rounded-md px-2 mx-1 mb-1 h-9"
+                  style={{ background: "var(--ds-gray-alpha-100)" }}
+                >
+                  <span
+                    className="text-xs"
+                    style={{ color: "var(--ds-gray-700)" }}
+                  >
+                    {isDark ? "Dark" : "Light"}
+                  </span>
+                  <button
+                    onClick={() => toggleDarkMode()}
+                    className="flex items-center justify-center w-7 h-7 rounded-md transition-colors hover:bg-[var(--ds-gray-alpha-200)]"
+                    style={{ color: "var(--ds-gray-900)" }}
+                    aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+                  >
+                    {isDark ? (
+                      <Sun className="w-3.5 h-3.5" />
+                    ) : (
+                      <Moon className="w-3.5 h-3.5" />
+                    )}
+                  </button>
+                </div>
               </DropdownMenu.Content>
             </DropdownMenu.Portal>
           </DropdownMenu.Root>
