@@ -105,7 +105,7 @@ function buildPreviewHtml(transpiledCode: string): string {
     "import React, { useState, useEffect, useRef, useCallback, useMemo, useReducer, useContext, createContext, Fragment } from 'react';",
     "import ReactDOM from 'react-dom/client';",
     "import * as LucideIcons from 'lucide-react';",
-    "for (var _k in LucideIcons) { window[_k] = LucideIcons[_k]; }",
+    "for (var _k in LucideIcons) { try { window[_k] = LucideIcons[_k]; } catch(e) {} }",
     "",
     "class ErrorBoundary extends React.Component {",
     "  constructor(props) { super(props); this.state = { hasError: false, error: null }; }",
