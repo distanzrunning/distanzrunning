@@ -1,8 +1,7 @@
 import { NextRequest } from "next/server";
-import Anthropic from "@anthropic-ai/sdk";
 
-// Allow up to 60s for AI streaming (default 10s causes truncated code)
-export const maxDuration = 60;
+// Edge Runtime — no 10s serverless timeout, supports long-lived streaming
+export const runtime = "edge";
 
 const SYSTEM_PROMPT = `You are a React component generator for a design system built on the Geist design system.
 
@@ -131,20 +130,14 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const client = new Anthropic({ apiKey });
-
     // Build messages array with conversation history for refinements
     let messages: { role: "user" | "assistant"; content: string }[];
 
     if (refinement && previousCode && history?.length) {
-      // Include conversation history so Claude has full context.
-      // The last assistant message in history already contains the code,
-      // so we only include previousCode if it differs (e.g. user edited it).
       messages = history.map((m: { role: string; content: string }) => ({
         role: m.role as "user" | "assistant",
         content: m.content,
       }));
-      // Add the refinement request — reference the code only if it changed
       const lastAssistantCode = [...history].reverse().find((m: { role: string }) => m.role === "assistant")?.content;
       const codeChanged = lastAssistantCode !== previousCode;
       messages.push({
@@ -157,45 +150,108 @@ export async function POST(request: NextRequest) {
       messages = [{ role: "user", content: prompt }];
     }
 
-    const stream = await client.messages.stream({
-      model: "claude-sonnet-4-20250514",
-      max_tokens: 8192,
-      system: SYSTEM_PROMPT,
-      messages,
+    // Use raw fetch to Anthropic API — works reliably on Edge Runtime
+    const anthropicRes = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": apiKey,
+        "anthropic-version": "2023-06-01",
+      },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-20250514",
+        max_tokens: 8192,
+        system: SYSTEM_PROMPT,
+        messages,
+        stream: true,
+      }),
     });
 
+    if (!anthropicRes.ok) {
+      const errText = await anthropicRes.text();
+      return new Response(
+        JSON.stringify({ error: `Anthropic API error: ${anthropicRes.status} ${errText}` }),
+        { status: 502, headers: { "Content-Type": "application/json" } },
+      );
+    }
+
+    // Pipe the Anthropic SSE stream, extracting text deltas into our own SSE format
     const encoder = new TextEncoder();
+    const decoder = new TextDecoder();
+    const anthropicReader = anthropicRes.body!.getReader();
+
     const readable = new ReadableStream({
       async start(controller) {
+        let buffer = "";
         try {
-          for await (const event of stream) {
-            if (
-              event.type === "content_block_delta" &&
-              event.delta.type === "text_delta"
-            ) {
-              controller.enqueue(
-                encoder.encode(
-                  `data: ${JSON.stringify({ text: event.delta.text })}\n\n`,
-                ),
-              );
+          while (true) {
+            const { done, value } = await anthropicReader.read();
+            if (done) break;
+
+            buffer += decoder.decode(value, { stream: true });
+            const lines = buffer.split("\n");
+            buffer = lines.pop() || "";
+
+            for (const line of lines) {
+              if (!line.startsWith("data: ")) continue;
+              const data = line.slice(6).trim();
+              if (!data || data === "[DONE]") continue;
+
+              try {
+                const event = JSON.parse(data);
+
+                if (event.type === "content_block_delta" && event.delta?.text) {
+                  controller.enqueue(
+                    encoder.encode(`data: ${JSON.stringify({ text: event.delta.text })}\n\n`),
+                  );
+                }
+
+                // Detect truncation
+                if (event.type === "message_delta" && event.delta?.stop_reason === "max_tokens") {
+                  controller.enqueue(
+                    encoder.encode(
+                      `data: ${JSON.stringify({ error: "Response was truncated — the component may be too complex. Try simplifying your prompt." })}\n\n`,
+                    ),
+                  );
+                }
+              } catch {
+                // skip malformed JSON
+              }
             }
           }
-          // Check if the response was truncated due to max_tokens
-          const finalMessage = await stream.finalMessage();
-          if (finalMessage.stop_reason === "max_tokens") {
-            controller.enqueue(
-              encoder.encode(
-                `data: ${JSON.stringify({ error: "Response was truncated — the component may be too complex. Try simplifying your prompt." })}\n\n`,
-              ),
-            );
+
+          // Flush remaining buffer
+          if (buffer.trim()) {
+            const remaining = buffer.trim();
+            if (remaining.startsWith("data: ")) {
+              const data = remaining.slice(6).trim();
+              if (data && data !== "[DONE]") {
+                try {
+                  const event = JSON.parse(data);
+                  if (event.type === "content_block_delta" && event.delta?.text) {
+                    controller.enqueue(
+                      encoder.encode(`data: ${JSON.stringify({ text: event.delta.text })}\n\n`),
+                    );
+                  }
+                  if (event.type === "message_delta" && event.delta?.stop_reason === "max_tokens") {
+                    controller.enqueue(
+                      encoder.encode(
+                        `data: ${JSON.stringify({ error: "Response was truncated — the component may be too complex. Try simplifying your prompt." })}\n\n`,
+                      ),
+                    );
+                  }
+                } catch {
+                  // skip
+                }
+              }
+            }
           }
+
           controller.enqueue(encoder.encode("data: [DONE]\n\n"));
           controller.close();
         } catch (err) {
           controller.enqueue(
-            encoder.encode(
-              `data: ${JSON.stringify({ error: String(err) })}\n\n`,
-            ),
+            encoder.encode(`data: ${JSON.stringify({ error: String(err) })}\n\n`),
           );
           controller.close();
         }
