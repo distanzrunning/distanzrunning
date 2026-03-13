@@ -103,7 +103,7 @@ export default function DesignSystemPage() {
   const renderContent = () => {
     // Foundations pages
     if (activeSlug === "introduction") {
-      return <div className="p-12 xl:pr-[280px]"><FoundationsOverview /></div>;
+      return <div><FoundationsOverview /></div>;
     }
     if (activeSlug === "design-principles") {
       return (
@@ -285,10 +285,10 @@ export default function DesignSystemPage() {
 
     // Brand pages
     if (activeSlug === "distanz") {
-      return <div className="p-12 xl:pr-[280px]"><PlaceholderContent title="Brands" subsection="Distanz" /></div>;
+      return <div><PlaceholderContent title="Brands" subsection="Distanz" /></div>;
     }
     if (activeSlug === "stride") {
-      return <div className="p-12 xl:pr-[280px]"><PlaceholderContent title="Brands" subsection="Stride" /></div>;
+      return <div><PlaceholderContent title="Brands" subsection="Stride" /></div>;
     }
 
     // Components pages
@@ -657,7 +657,7 @@ export default function DesignSystemPage() {
       .join(" ");
 
     return (
-      <div className="p-12 xl:pr-[280px]"><PlaceholderContent title="Design System" subsection={formattedTitle} /></div>
+      <div><PlaceholderContent title="Design System" subsection={formattedTitle} /></div>
     );
   };
 
@@ -697,7 +697,7 @@ export default function DesignSystemPage() {
           id="main-content"
           className="flex-1 min-w-0 flex flex-col min-h-[calc(100vh-65px)]"
         >
-          <div className="flex-1 flex flex-col">{renderContent()}</div>
+          <div className="flex-1 flex flex-col relative p-12">{renderContent()}</div>
         </div>
       </div>
     </div>
