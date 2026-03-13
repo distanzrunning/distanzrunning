@@ -430,7 +430,7 @@ export default function ContentWithTOC({
   };
 
   return (
-    <div className="relative flex-1 min-h-[calc(100vh-65px)]">
+    <div className="flex flex-1 min-h-[calc(100vh-65px)]">
       {/* Main content column */}
       <div className="flex-1 min-w-0 flex flex-col">
         {/* Page Header Section */}
@@ -472,9 +472,9 @@ export default function ContentWithTOC({
         )}
       </div>
 
-      {/* Table of Contents - fixed overlay on right (≥1280px) */}
-      <aside className="hidden xl:block absolute top-0 right-0 w-[260px] h-full border-l border-borderSubtle">
-        <div className="sticky top-28 max-h-[calc(100vh-112px)] overflow-y-auto px-6 py-6">
+      {/* Table of Contents - Right Sidebar (≥1280px) */}
+      <aside className="hidden xl:block w-[260px] flex-shrink-0 border-l border-borderSubtle">
+        <div className="sticky top-[65px] max-h-[calc(100vh-65px)] overflow-y-auto px-6 py-6">
           <h4 className="text-[14px] leading-[20px] font-medium text-textDefault mb-3">
             {tocTitle}
           </h4>
