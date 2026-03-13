@@ -38,6 +38,7 @@ export default function DesignSystemHeader({
           border-radius: 8px;
           background: var(--ds-background-100);
           border: 1px solid var(--ds-gray-alpha-400);
+          overflow: hidden;
           box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
           color: var(--ds-gray-1000);
           font-size: 14px;
@@ -186,31 +187,40 @@ export default function DesignSystemHeader({
                   </a>
                 </DropdownMenu.Item>
 
-                <DropdownMenu.Separator className="ds-header-dropdown-separator" />
-
-                {/* Theme toggle */}
+                {/* Theme toggle footer */}
                 <div
-                  className="flex items-center justify-between rounded-md px-2 mx-1 mb-1 h-9"
+                  className="flex items-center justify-center -mx-1 -mb-1 mt-1 rounded-b-lg py-2"
                   style={{ background: "var(--ds-gray-alpha-100)" }}
                 >
-                  <span
-                    className="text-xs"
-                    style={{ color: "var(--ds-gray-700)" }}
+                  <div
+                    className="inline-flex items-center rounded-full p-0.5"
+                    style={{ background: "var(--ds-gray-alpha-200)" }}
                   >
-                    {isDark ? "Dark" : "Light"}
-                  </span>
-                  <button
-                    onClick={() => toggleDarkMode()}
-                    className="flex items-center justify-center w-7 h-7 rounded-md transition-colors hover:bg-[var(--ds-gray-alpha-200)]"
-                    style={{ color: "var(--ds-gray-900)" }}
-                    aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
-                  >
-                    {isDark ? (
+                    <button
+                      onClick={() => isDark && toggleDarkMode()}
+                      className="flex items-center justify-center w-7 h-7 rounded-full transition-colors"
+                      style={{
+                        background: !isDark ? "var(--ds-background-100)" : "transparent",
+                        color: !isDark ? "var(--ds-gray-1000)" : "var(--ds-gray-700)",
+                        boxShadow: !isDark ? "0 1px 2px rgba(0,0,0,0.1)" : "none",
+                      }}
+                      aria-label="Light mode"
+                    >
                       <Sun className="w-3.5 h-3.5" />
-                    ) : (
+                    </button>
+                    <button
+                      onClick={() => !isDark && toggleDarkMode()}
+                      className="flex items-center justify-center w-7 h-7 rounded-full transition-colors"
+                      style={{
+                        background: isDark ? "var(--ds-background-100)" : "transparent",
+                        color: isDark ? "var(--ds-gray-1000)" : "var(--ds-gray-700)",
+                        boxShadow: isDark ? "0 1px 2px rgba(0,0,0,0.1)" : "none",
+                      }}
+                      aria-label="Dark mode"
+                    >
                       <Moon className="w-3.5 h-3.5" />
-                    )}
-                  </button>
+                    </button>
+                  </div>
                 </div>
               </DropdownMenu.Content>
             </DropdownMenu.Portal>
