@@ -58,6 +58,12 @@ export default function DesignSystemPage() {
   // State-based navigation for SPA behavior
   const [activeSlug, setActiveSlug] = useState(initialSlug);
 
+  // Pages that render full-width without sidebar by default
+  const isFullWidthPage = activeSlug === "component-generator";
+
+  // Sidebar state — starts closed on full-width pages, open otherwise
+  const [sidebarOpen, setSidebarOpen] = useState(!isFullWidthPage);
+
   // Handle browser back/forward navigation
   useEffect(() => {
     const handlePopState = () => {
@@ -93,14 +99,14 @@ export default function DesignSystemPage() {
     window.history.pushState({}, "", `/design-system/${newSlug}`);
     // Scroll window to top
     window.scrollTo({ top: 0, behavior: "instant" });
+    // Auto-close sidebar for full-width pages, open for others
+    const fullWidthSlugs = ["component-generator"];
+    setSidebarOpen(!fullWidthSlugs.includes(newSlug));
   }, []);
 
   const handleHomeClick = () => {
     router.push("/design-system");
   };
-
-  // Pages that render full-width without sidebar
-  const isFullWidth = activeSlug === "component-generator";
 
   const renderContent = () => {
     // Foundations pages
@@ -673,47 +679,42 @@ export default function DesignSystemPage() {
         onHomeClick={handleHomeClick}
         onNavigate={handleNavigation}
         activeSlug={activeSlug}
+        sidebarOpen={sidebarOpen}
+        onToggleSidebar={() => setSidebarOpen((prev) => !prev)}
       />
 
-      {isFullWidth ? (
-        /* Full-width layout (no sidebar) for tools like Component Generator */
+      {/* Mobile/Tablet Section Header - visible below xl */}
+      <div className="xl:hidden sticky top-[65px] z-30">
+        <DesignSystemSidebar
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+          onHomeClick={handleHomeClick}
+        />
+      </div>
+
+      <div className="flex">
+        {/* Desktop Sidebar - collapsible */}
         <div
-          id="main-content"
-          className="flex-1 min-w-0 flex flex-col min-h-[calc(100vh-65px)]"
+          className="hidden xl:block flex-shrink-0 overflow-hidden transition-all duration-200 ease-in-out"
+          style={{ width: sidebarOpen ? 260 : 0 }}
         >
-          <div className="p-12 flex-1 flex flex-col">{renderContent()}</div>
-        </div>
-      ) : (
-        <>
-          {/* Mobile/Tablet Section Header - visible below xl */}
-          <div className="xl:hidden sticky top-[65px] z-30">
+          <div className="w-[260px]">
             <DesignSystemSidebar
               activeSlug={activeSlug}
               onNavigate={handleNavigation}
               onHomeClick={handleHomeClick}
             />
           </div>
+        </div>
 
-          <div className="flex">
-            {/* Desktop Sidebar - hidden below xl */}
-            <div className="hidden xl:block flex-shrink-0">
-              <DesignSystemSidebar
-                activeSlug={activeSlug}
-                onNavigate={handleNavigation}
-                onHomeClick={handleHomeClick}
-              />
-            </div>
-
-            {/* Main Content Area */}
-            <div
-              id="main-content"
-              className="flex-1 min-w-0 flex flex-col min-h-[calc(100vh-65px)]"
-            >
-              <div className="p-12 flex-1 flex flex-col">{renderContent()}</div>
-            </div>
-          </div>
-        </>
-      )}
+        {/* Main Content Area */}
+        <div
+          id="main-content"
+          className="flex-1 min-w-0 flex flex-col min-h-[calc(100vh-65px)]"
+        >
+          <div className="p-12 flex-1 flex flex-col">{renderContent()}</div>
+        </div>
+      </div>
     </div>
   );
 }

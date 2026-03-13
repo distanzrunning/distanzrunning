@@ -10,6 +10,7 @@ import {
   Sparkles,
   ExternalLink,
   Ellipsis,
+  PanelLeft,
 } from "lucide-react";
 import { DarkModeContext } from "@/components/DarkModeProvider";
 
@@ -17,12 +18,16 @@ interface DesignSystemHeaderProps {
   onHomeClick: () => void;
   onNavigate?: (slug: string) => void;
   activeSlug?: string;
+  sidebarOpen?: boolean;
+  onToggleSidebar?: () => void;
 }
 
 export default function DesignSystemHeader({
   onHomeClick,
   onNavigate,
   activeSlug,
+  sidebarOpen,
+  onToggleSidebar,
 }: DesignSystemHeaderProps) {
   const { isDark, toggleDarkMode } = useContext(DarkModeContext);
 
@@ -87,7 +92,13 @@ export default function DesignSystemHeader({
       `}</style>
       <div className="flex w-full pl-[22px]">
         {/* Logo section - matches sidebar width */}
-        <div className="flex grow items-center gap-4 border-r border-borderSubtle py-4 pl-px xl:w-[238px] xl:grow-0">
+        <div
+          className={`flex grow items-center gap-4 py-4 pl-px ${
+            sidebarOpen !== false
+              ? "border-r border-borderSubtle xl:w-[238px] xl:grow-0"
+              : ""
+          }`}
+        >
           <button
             onClick={onHomeClick}
             className="flex items-center gap-4 text-black dark:text-white no-underline"
@@ -117,8 +128,24 @@ export default function DesignSystemHeader({
 
         {/* Right section with search and actions */}
         <div className="flex items-center justify-between p-4 xl:grow">
-          {/* Left: Search */}
+          {/* Left: Sidebar toggle + Search */}
           <div className="flex items-center gap-3">
+            {/* Sidebar toggle - desktop only */}
+            {onToggleSidebar && (
+              <button
+                type="button"
+                onClick={onToggleSidebar}
+                className={`hidden xl:flex items-center justify-center w-8 h-8 rounded-md transition-colors outline-none ${
+                  sidebarOpen
+                    ? "text-textDefault bg-surfaceSubtle"
+                    : "text-textSubtle hover:text-textDefault hover:bg-surfaceSubtle"
+                }`}
+                aria-label={sidebarOpen ? "Hide sidebar" : "Show sidebar"}
+              >
+                <PanelLeft className="w-4 h-4" />
+              </button>
+            )}
+
             {/* Search button - desktop only */}
             <button
               type="button"
