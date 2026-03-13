@@ -58,8 +58,6 @@ export default function DesignSystemPage() {
   // State-based navigation for SPA behavior
   const [activeSlug, setActiveSlug] = useState(initialSlug);
 
-  // Sidebar state — starts open on all pages
-  const [sidebarOpen, setSidebarOpen] = useState(true);
 
   // Handle browser back/forward navigation
   useEffect(() => {
@@ -673,8 +671,6 @@ export default function DesignSystemPage() {
         onHomeClick={handleHomeClick}
         onNavigate={handleNavigation}
         activeSlug={activeSlug}
-        sidebarOpen={sidebarOpen}
-        onToggleSidebar={() => setSidebarOpen((prev) => !prev)}
       />
 
       {/* Mobile/Tablet Section Header - visible below xl */}
@@ -687,18 +683,13 @@ export default function DesignSystemPage() {
       </div>
 
       <div className="flex">
-        {/* Desktop Sidebar - collapsible */}
-        <div
-          className="hidden xl:block flex-shrink-0 overflow-hidden transition-all duration-200 ease-in-out"
-          style={{ width: sidebarOpen ? 260 : 0 }}
-        >
-          <div className="w-[260px]">
-            <DesignSystemSidebar
-              activeSlug={activeSlug}
-              onNavigate={handleNavigation}
-              onHomeClick={handleHomeClick}
-            />
-          </div>
+        {/* Desktop Sidebar */}
+        <div className="hidden xl:block flex-shrink-0">
+          <DesignSystemSidebar
+            activeSlug={activeSlug}
+            onNavigate={handleNavigation}
+            onHomeClick={handleHomeClick}
+          />
         </div>
 
         {/* Main Content Area */}
