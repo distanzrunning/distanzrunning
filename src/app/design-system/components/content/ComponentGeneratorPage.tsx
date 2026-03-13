@@ -60,9 +60,9 @@ function prepareForInline(code: string): string {
 
 function buildPreviewHtml(transpiledCode: string): string {
   const componentCode = prepareForInline(transpiledCode);
-  // Escape </script to prevent premature tag closing in srcdoc
-  // Inside <script>, "</script" would close the tag prematurely.
-  // Replace with "<\x2fscript" which JS evaluates to "</script" but HTML parser won't match.
+  // Escape </script to prevent premature tag closing in srcdoc.
+  // In transpiled code, </script can only appear inside string/template literals
+  // where \x2f (hex escape for /) is valid JavaScript.
   const safeCode = componentCode.replace(/<\/script/gi, "<\\x2fscript");
 
   // Build HTML via string concatenation — NOT template literals — because
@@ -682,7 +682,7 @@ export default function ComponentGeneratorPage() {
                   <iframe
                     srcDoc={buildPreviewHtml(transpiledCode)}
                     className="w-full h-full border-0"
-                    sandbox="allow-scripts"
+                    sandbox="allow-scripts allow-same-origin"
                     title="Component preview"
                   />
                 ) : null
