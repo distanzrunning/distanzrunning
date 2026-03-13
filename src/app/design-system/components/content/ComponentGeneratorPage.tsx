@@ -96,7 +96,7 @@ function buildPreviewHtml(transpiledCode: string): string {
     '"react":"https://esm.sh/react@18",',
     '"react-dom":"https://esm.sh/react-dom@18",',
     '"react-dom/client":"https://esm.sh/react-dom@18/client",',
-    '"lucide-react":"https://esm.sh/lucide-react@latest"',
+    '"lucide-react":"https://esm.sh/lucide-react@latest?external=react"',
     "}}",
     "</" + "script>",
     "</head><body>",
