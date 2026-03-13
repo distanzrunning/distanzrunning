@@ -147,7 +147,7 @@ export default function DesignSystemHeader({
           </div>
 
           {/* Right: Ellipsis dropdown menu */}
-          <DropdownMenu.Root>
+          <DropdownMenu.Root modal={false}>
             <DropdownMenu.Trigger asChild>
               <button
                 className="flex items-center justify-center w-8 h-8 rounded-md text-textSubtle hover:text-textDefault hover:bg-surfaceSubtle transition-colors outline-none"
