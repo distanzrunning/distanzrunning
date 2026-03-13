@@ -4,6 +4,7 @@ import { useContext } from "react";
 import Image from "next/image";
 import { Search, Sun, Moon, Monitor, Sparkles, ExternalLink } from "lucide-react";
 import { DarkModeContext } from "@/components/DarkModeProvider";
+import { Button } from "@/components/ui/Button";
 
 interface DesignSystemHeaderProps {
   onHomeClick: () => void;
@@ -87,18 +88,14 @@ export default function DesignSystemHeader({
           {/* Right: Generator + Theme + Back to site */}
           <div className="flex items-center gap-3">
             {/* Component Generator button */}
-            <button
-              type="button"
+            <Button
+              size="small"
+              variant={activeSlug === "component-generator" ? "default" : "secondary"}
               onClick={() => onNavigate?.("component-generator")}
-              className={`flex items-center gap-2 rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
-                activeSlug === "component-generator"
-                  ? "bg-black text-white dark:bg-white dark:text-black"
-                  : "border border-borderDefault text-textDefault hover:bg-surfaceSubtle"
-              }`}
+              prefix={<Sparkles className="w-3.5 h-3.5" />}
             >
-              <Sparkles className="w-4 h-4" />
               <span className="hidden sm:inline">Generator</span>
-            </button>
+            </Button>
 
             {/* Theme switcher - Geist style */}
             <fieldset className="hidden xl:flex items-center gap-0 rounded-full border border-borderDefault bg-canvas">
