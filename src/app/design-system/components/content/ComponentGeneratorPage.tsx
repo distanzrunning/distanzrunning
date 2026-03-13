@@ -26,6 +26,63 @@ interface Toast {
 }
 
 // ============================================================================
+// Code Extraction
+// ============================================================================
+
+/**
+ * Extract actual code from AI output that may include markdown fences or
+ * explanatory text before/after the code block.
+ */
+function extractCodeFromResponse(raw: string): string {
+  let cleaned = raw;
+
+  // Strip markdown code fences if present
+  const fenceMatch = cleaned.match(
+    /```(?:tsx?|jsx?|javascript|typescript)?\s*\n([\s\S]*?)```/,
+  );
+  if (fenceMatch) {
+    cleaned = fenceMatch[1];
+  } else {
+    const openFence = cleaned.match(
+      /```(?:tsx?|jsx?|javascript|typescript)?\s*\n([\s\S]*)/,
+    );
+    if (openFence) {
+      cleaned = openFence[1];
+    }
+    cleaned = cleaned
+      .replace(/^```\w*\n?/gm, "")
+      .replace(/```\s*$/gm, "");
+  }
+
+  // If the response starts with non-code text (AI explanation), find where code begins
+  const lines = cleaned.split("\n");
+  const codeStartIdx = lines.findIndex((line) => {
+    const trimmed = line.trim();
+    return (
+      /^["']use client["']/.test(trimmed) ||
+      trimmed.startsWith("import ") ||
+      trimmed.startsWith("import{") ||
+      trimmed.startsWith("export ") ||
+      trimmed.startsWith("const ") ||
+      trimmed.startsWith("let ") ||
+      trimmed.startsWith("var ") ||
+      trimmed.startsWith("function ") ||
+      trimmed.startsWith("class ") ||
+      trimmed.startsWith("interface ") ||
+      trimmed.startsWith("type ") ||
+      trimmed.startsWith("//") ||
+      trimmed.startsWith("/*")
+    );
+  });
+
+  if (codeStartIdx > 0) {
+    cleaned = lines.slice(codeStartIdx).join("\n");
+  }
+
+  return cleaned.trim();
+}
+
+// ============================================================================
 // Iframe Preview
 // ============================================================================
 
@@ -363,17 +420,20 @@ export default function ComponentGeneratorPage() {
         }
       }
 
-      // Store the raw generated code (for Code tab)
-      setGeneratedCode(accumulated);
-      const name = extractName(accumulated);
+      // Clean up AI output — strip markdown fences and explanatory text
+      const cleanCode = extractCodeFromResponse(accumulated);
+
+      // Store the cleaned code (for Code tab)
+      setGeneratedCode(cleanCode);
+      const name = extractName(cleanCode);
       setComponentName(name);
 
-      // Transpile server-side (Sucrase works reliably in Node.js)
+      // Transpile server-side
       try {
         const transpileRes = await fetch("/api/transpile", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ code: accumulated }),
+          body: JSON.stringify({ code: cleanCode }),
         });
         const transpileData = await transpileRes.json();
         if (transpileRes.ok) {
@@ -396,7 +456,7 @@ export default function ComponentGeneratorPage() {
         content: isRefinement
           ? `Updated ${name}. Check the preview to see the changes.`
           : `Generated ${name}. You can preview it on the right, refine it by sending another message, or deploy it to your UI library.`,
-        code: accumulated,
+        code: cleanCode,
       });
     } catch (e: unknown) {
       if (e instanceof DOMException && e.name === "AbortError") return;
