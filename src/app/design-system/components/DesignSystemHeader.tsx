@@ -189,7 +189,7 @@ export default function DesignSystemHeader({
 
                 {/* Theme toggle footer */}
                 <div
-                  className="flex items-center justify-center -mx-1 -mb-1 mt-1 rounded-b-lg py-2"
+                  className="flex items-center justify-center -mx-1 -mb-1 mt-1 rounded-b-[8px] py-2"
                   style={{ background: "var(--ds-gray-alpha-100)" }}
                 >
                   <div
