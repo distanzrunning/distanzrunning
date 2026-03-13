@@ -32,15 +32,7 @@ export default function LayoutContent({
   }
 
   if (isDesignSystem) {
-    return (
-      <div className="main-wrapper">
-        <div className="main-bordered min-h-screen flex flex-col">
-          <main className="flex-1 bg-canvas">
-            {children}
-          </main>
-        </div>
-      </div>
-    );
+    return <>{children}</>;
   }
 
   return (
