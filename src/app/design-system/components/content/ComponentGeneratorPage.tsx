@@ -181,7 +181,7 @@ function buildPreviewHtml(transpiledCode: string, isDark: boolean): string {
     "--ds-button-height-tiny:24px;--ds-button-height-small:32px;--ds-button-height-medium:40px;--ds-button-height-large:48px;",
     "}",
     "*{margin:0;padding:0;box-sizing:border-box;}",
-    "body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:24px;background:var(--ds-background-100);color:var(--ds-gray-1000);min-height:100vh;}",
+    "body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:24px;background:transparent;color:var(--ds-gray-1000);min-height:100vh;}",
     ".error-boundary{color:#e00;padding:1rem;border:2px solid #e00;margin:1rem;border-radius:8px;background:#fff0f0;white-space:pre-wrap;font-size:13px;font-family:monospace;}",
     "</style>",
     '<script type="importmap">',
@@ -822,19 +822,13 @@ export default function ComponentGeneratorPage() {
                     </pre>
                   </div>
                 ) : transpiledCode ? (
-                  <div className="p-4 h-full">
-                    <iframe
-                      key={`${transpiledCode}-${isDark}`}
-                      srcDoc={buildPreviewHtml(transpiledCode, isDark)}
-                      className="w-full h-full border-0 rounded-lg"
-                      style={{
-                        boxShadow: "var(--ds-shadow-medium)",
-                        backgroundColor: "var(--ds-background-100)",
-                      }}
-                      sandbox="allow-scripts allow-same-origin"
-                      title="Component preview"
-                    />
-                  </div>
+                  <iframe
+                    key={`${transpiledCode}-${isDark}`}
+                    srcDoc={buildPreviewHtml(transpiledCode, isDark)}
+                    className="w-full h-full border-0"
+                    sandbox="allow-scripts allow-same-origin"
+                    title="Component preview"
+                  />
                 ) : null
               ) : (
                 <div className="h-full overflow-auto [&_[data-code-block]]:border-0 [&_[data-code-block]]:rounded-none">
