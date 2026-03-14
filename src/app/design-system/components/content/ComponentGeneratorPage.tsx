@@ -181,7 +181,7 @@ function buildPreviewHtml(transpiledCode: string, isDark: boolean): string {
     "--ds-button-height-tiny:24px;--ds-button-height-small:32px;--ds-button-height-medium:40px;--ds-button-height-large:48px;",
     "}",
     "*{margin:0;padding:0;box-sizing:border-box;}",
-    "body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:24px;background:var(--ds-background-100);color:var(--ds-gray-1000);}",
+    "body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:24px;background:var(--ds-background-100);color:var(--ds-gray-1000);min-height:100vh;}",
     ".error-boundary{color:#e00;padding:1rem;border:2px solid #e00;margin:1rem;border-radius:8px;background:#fff0f0;white-space:pre-wrap;font-size:13px;font-family:monospace;}",
     "</style>",
     '<script type="importmap">',
@@ -256,8 +256,8 @@ function ChatBubble({ message }: { message: ChatMessage }) {
         style={{
           width: "28px",
           height: "28px",
-          backgroundColor: isUser ? "var(--ds-blue-700)" : "var(--ds-gray-1000)",
-          color: "white",
+          backgroundColor: isUser ? "var(--ds-blue-700)" : "var(--ds-purple-700)",
+          color: "var(--ds-background-100)",
         }}
       >
         {isUser ? (
@@ -800,7 +800,15 @@ export default function ComponentGeneratorPage() {
             </div>
 
             {/* Content area */}
-            <div className="flex-1 overflow-auto">
+            <div
+              className="flex-1 overflow-auto"
+              style={activeTab === "preview" ? {
+                backgroundColor: "var(--ds-background-200)",
+                backgroundImage: `linear-gradient(45deg, var(--ds-gray-alpha-100) 25%, transparent 25%, transparent 75%, var(--ds-gray-alpha-100) 75%), linear-gradient(45deg, var(--ds-gray-alpha-100) 25%, transparent 25%, transparent 75%, var(--ds-gray-alpha-100) 75%)`,
+                backgroundSize: "20px 20px",
+                backgroundPosition: "0 0, 10px 10px",
+              } : undefined}
+            >
               {activeTab === "preview" ? (
                 state === "generating" || state === "refining" ? (
                   <div className="flex items-center justify-center h-full gap-2" style={{ color: "var(--ds-gray-600)" }}>
@@ -814,13 +822,19 @@ export default function ComponentGeneratorPage() {
                     </pre>
                   </div>
                 ) : transpiledCode ? (
-                  <iframe
-                    key={`${transpiledCode}-${isDark}`}
-                    srcDoc={buildPreviewHtml(transpiledCode, isDark)}
-                    className="w-full h-full border-0"
-                    sandbox="allow-scripts allow-same-origin"
-                    title="Component preview"
-                  />
+                  <div className="p-4 h-full">
+                    <iframe
+                      key={`${transpiledCode}-${isDark}`}
+                      srcDoc={buildPreviewHtml(transpiledCode, isDark)}
+                      className="w-full h-full border-0 rounded-lg"
+                      style={{
+                        boxShadow: "var(--ds-shadow-medium)",
+                        backgroundColor: "var(--ds-background-100)",
+                      }}
+                      sandbox="allow-scripts allow-same-origin"
+                      title="Component preview"
+                    />
+                  </div>
                 ) : null
               ) : (
                 <div className="h-full overflow-auto [&_[data-code-block]]:border-0 [&_[data-code-block]]:rounded-none">
