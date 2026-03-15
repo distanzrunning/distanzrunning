@@ -328,7 +328,7 @@ export function Feedback({
                         key={emoji.id}
                         type="button"
                         role="radio"
-                        className="feedback-emoji"
+                        className={`feedback-emoji${selectedEmotion === emoji.id ? " feedback-emoji--selected" : ""}`}
                         aria-checked={selectedEmotion === emoji.id}
                         aria-label={`Select ${emoji.label} emoji`}
                         onClick={() =>
@@ -336,23 +336,6 @@ export function Feedback({
                             selectedEmotion === emoji.id ? null : emoji.id,
                           )
                         }
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          width: 32,
-                          height: 32,
-                          borderRadius: "50%",
-                          border: "none",
-                          cursor: "pointer",
-                          padding: 0,
-                          background:
-                            selectedEmotion === emoji.id
-                              ? "var(--ds-gray-200)"
-                              : "transparent",
-                          color: "var(--ds-gray-900)",
-                          transition: "background 0.2s ease, border-color 0.2s ease",
-                        }}
                       >
                         {emoji.icon}
                       </button>
@@ -425,6 +408,23 @@ export function Feedback({
         }
         .feedback-textarea-wrapper:focus-within {
           box-shadow: 0 0 0 1px var(--ds-gray-alpha-600), 0px 0px 0px 4px rgba(0, 0, 0, 0.16);
+        }
+        .feedback-emoji {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 32px;
+          height: 32px;
+          border-radius: 50%;
+          border: none;
+          cursor: pointer;
+          padding: 0;
+          background: transparent;
+          color: var(--ds-gray-900);
+          transition: background 0.2s ease, border-color 0.2s ease;
+        }
+        .feedback-emoji--selected {
+          background: var(--ds-gray-200);
         }
         @media (hover: hover) {
           .feedback-emoji:hover {
