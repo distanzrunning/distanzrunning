@@ -329,6 +329,21 @@ function InlineExample() {
   );
 }`;
 
+const withMetadataCode = `import { Feedback } from '@/components/ui/Feedback';
+
+function FeedbackWithMetadataExample() {
+  return (
+    <Feedback
+      metadata={{
+        userId: "user_12345",
+        location: "post-checkout",
+        orderId: "order_123456",
+      }}
+      onSubmit={(data) => console.log(data)}
+    />
+  );
+}`;
+
 const withSelectCode = `import { FeedbackWithSelect } from '@/components/ui/Feedback';
 
 const topics = [
@@ -380,6 +395,21 @@ const withSelectTopics = [
   { label: "Nutrition", value: "Nutrition" },
   { label: "Injury Prevention", value: "Injury Prevention" },
 ];
+
+function WithMetadataDemo() {
+  return (
+    <div style={{ display: "flex", justifyContent: "center" }}>
+      <Feedback
+        metadata={{
+          userId: "user_12345",
+          location: "post-checkout",
+          orderId: "order_123456",
+        }}
+        onSubmit={(data) => console.log(data)}
+      />
+    </div>
+  );
+}
 
 function WithSelectDemo() {
   return (
@@ -435,6 +465,18 @@ export default function FeedbackComponent() {
         </p>
         <CodePreview componentCode={withSelectCode}>
           <WithSelectDemo />
+        </CodePreview>
+      </Section>
+
+      <Section>
+        <SectionHeader id="feedback-with-metadata" onCopyLink={showToast}>
+          Feedback with Metadata
+        </SectionHeader>
+        <p className="text-copy-16 text-textSubtle mt-3 mb-6" style={{ lineHeight: 1.5 }}>
+          Feedback with additional metadata included in the submission.
+        </p>
+        <CodePreview componentCode={withMetadataCode}>
+          <WithMetadataDemo />
         </CodePreview>
       </Section>
 

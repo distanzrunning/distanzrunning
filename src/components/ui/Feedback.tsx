@@ -11,7 +11,9 @@ export interface FeedbackProps {
   /** Text shown on the trigger button (default: "Feedback") */
   buttonLabel?: string;
   /** Callback when feedback is submitted */
-  onSubmit?: (data: { emotion: string; feedback: string }) => void;
+  onSubmit?: (data: { emotion: string; feedback: string; metadata?: Record<string, string> }) => void;
+  /** Optional metadata to include with the submission */
+  metadata?: Record<string, string>;
   className?: string;
 }
 
@@ -710,6 +712,7 @@ export function FeedbackWithSelect({
 export function Feedback({
   buttonLabel = "Feedback",
   onSubmit,
+  metadata,
   className,
 }: FeedbackProps) {
   const [isOpen, setIsOpen] = useState(false);
@@ -724,7 +727,7 @@ export function Feedback({
     (e: React.FormEvent) => {
       e.preventDefault();
       if (selectedEmotion) {
-        onSubmit?.({ emotion: selectedEmotion, feedback: feedbackText });
+        onSubmit?.({ emotion: selectedEmotion, feedback: feedbackText, metadata });
         setSubmitted(true);
         setTimeout(() => {
           setIsOpen(false);
