@@ -1,6 +1,6 @@
 "use client";
 
-import { forwardRef, type ReactNode, type HTMLAttributes } from "react";
+import React, { forwardRef, type ReactNode, type HTMLAttributes } from "react";
 
 // ============================================================================
 // Types
@@ -84,16 +84,18 @@ function EntityField({ children }: EntityFieldProps) {
 }
 
 /** A list container that renders Entity items with optional dividers */
-function EntityList({ children, dividers = true, bordered = false, className = "", ...rest }: EntityListProps) {
+function EntityList({ children, dividers = true, bordered = false, className = "", style, ...rest }: EntityListProps) {
+  const borderedStyles: React.CSSProperties | undefined = bordered ? {
+    borderRadius: 6,
+    backgroundColor: "var(--ds-background-100)",
+    boxShadow: "var(--ds-gray-alpha-400) 0px 0px 0px 1px, var(--ds-background-100) 0px 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 4px 6px 0px",
+    overflow: "hidden",
+  } : undefined;
+
   return (
     <ul
       className={`list-none m-0 p-0 ${dividers ? "divide-y divide-[var(--ds-gray-400)]" : ""} ${className}`}
-      style={bordered ? {
-        borderRadius: 6,
-        backgroundColor: "var(--ds-background-100)",
-        boxShadow: "var(--ds-gray-alpha-400) 0px 0px 0px 1px, var(--ds-background-100) 0px 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 4px 6px 0px",
-        overflow: "hidden",
-      } : undefined}
+      style={{ ...borderedStyles, ...style }}
       {...rest}
     >
       {children}

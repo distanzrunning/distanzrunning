@@ -329,7 +329,10 @@ function DefaultExample() {
         }
       />
       <Entity.Field>
-        <p className="text-copy-14 text-gray-900">
+        <p
+          className="text-copy-14"
+          style={{ color: 'var(--ds-gray-900)', margin: 0 }}
+        >
           Published 2h ago
         </p>
       </Entity.Field>
@@ -383,7 +386,8 @@ function ListExample() {
   );
 }`;
 
-const listCheckboxCode = `import { Entity } from '@/components/ui/Entity';
+const listCheckboxCode = `import { useState } from 'react';
+import { Entity } from '@/components/ui/Entity';
 import Checkbox from '@/components/ui/Checkbox';
 
 const categories = [
@@ -447,7 +451,10 @@ function DefaultDemo() {
         }
       />
       <Entity.Field>
-        <p className="text-copy-14" style={{ color: "var(--ds-gray-900)", margin: 0 }}>
+        <p
+          className="text-copy-14"
+          style={{ color: "var(--ds-gray-900)", margin: 0 }}
+        >
           Published 2h ago
         </p>
       </Entity.Field>
