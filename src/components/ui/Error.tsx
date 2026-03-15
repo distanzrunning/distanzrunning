@@ -81,7 +81,7 @@ function Error({
         style={{
           fontSize,
           lineHeight,
-          color: "var(--ds-gray-1000)",
+          color: "var(--ds-red-900)",
         }}
       >
         {label && (
