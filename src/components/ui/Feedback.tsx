@@ -408,12 +408,12 @@ export function Feedback({
         }
         .feedback-textarea-wrapper {
           border-radius: 6px;
-          box-shadow: rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+          box-shadow: 0 0 0 1px var(--ds-gray-alpha-400);
           overflow: hidden;
           transition: box-shadow 0.15s ease;
         }
         .feedback-textarea-wrapper:focus-within {
-          box-shadow: 0 0 0 1px var(--ds-gray-1000);
+          box-shadow: 0 0 0 1px var(--ds-gray-alpha-600), 0px 0px 0px 4px rgba(0, 0, 0, 0.16);
         }
         .feedback-send-btn {
           display: flex;
