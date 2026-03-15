@@ -319,12 +319,11 @@ function DefaultExample() {
   return (
     <Entity>
       <Entity.Content
-        title="Eliud Kipchoge"
-        subtitle="Marathon · 2:01:09 PB"
+        title="The Art of the Marathon Taper"
+        subtitle="By Sarah Chen · 8 min read"
         thumbnail={
           <Avatar
-            src="/avatars/kipchoge.jpg"
-            alt="Eliud Kipchoge"
+            fallback="SC"
             size={32}
           />
         }
@@ -438,11 +437,11 @@ function DefaultDemo() {
   return (
     <Entity>
       <Entity.Content
-        title="Eliud Kipchoge"
-        subtitle="Marathon · 2:01:09 PB"
+        title="The Art of the Marathon Taper"
+        subtitle="By Sarah Chen · 8 min read"
         thumbnail={
           <Avatar
-            fallback="EK"
+            fallback="SC"
             size={32}
           />
         }
