@@ -388,7 +388,7 @@ export function Feedback({
           border: none;
           background: var(--ds-background-100);
           color: var(--ds-gray-1000);
-          box-shadow: var(--ds-gray-alpha-400) 0px 0px 0px 1px;
+          box-shadow: 0 0 0 1px var(--ds-gray-200);
           font-size: 14px;
           line-height: 20px;
           font-weight: 500;
@@ -401,6 +401,12 @@ export function Feedback({
         }
         .feedback-trigger:hover {
           background: var(--ds-gray-100);
+        }
+        :is(.dark, [data-theme="dark"]) .feedback-trigger {
+          box-shadow: 0 0 0 1px var(--ds-gray-400);
+        }
+        :is(.dark, [data-theme="dark"]) .feedback-trigger:hover {
+          background: var(--ds-gray-200);
         }
         .feedback-trigger:focus-visible {
           outline: 2px solid var(--ds-focus-ring);
