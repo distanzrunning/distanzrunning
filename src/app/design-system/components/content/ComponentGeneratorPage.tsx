@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/Button";
 import IconButton from "@/components/ui/IconButton";
 import { CodeBlock } from "@/components/ui/CodeBlock";
 import { DarkModeContext } from "@/components/DarkModeProvider";
+import { ContextCard } from "@/components/ui/ContextCard";
 
 // ============================================================================
 // Types
@@ -758,44 +759,52 @@ export default function ComponentGeneratorPage() {
               </div>
 
               {/* Actions */}
-              <div className="flex items-center gap-1">
-                {componentName && (
-                  <span
-                    className="text-label-12 rounded px-2 py-0.5 mr-2"
-                    style={{
-                      backgroundColor: "var(--ds-gray-200)",
-                      color: "var(--ds-gray-800)",
-                    }}
-                  >
-                    {componentName}
-                  </span>
-                )}
-                <IconButton
-                  variant="tertiary"
-                  size="small"
-                  aria-label={copied ? "Copied" : "Copy code"}
-                  onClick={handleCopy}
-                >
-                  {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-                </IconButton>
-                <IconButton
-                  variant="tertiary"
-                  size="small"
-                  aria-label="Deploy to ui/"
-                  onClick={() => handleDeploy()}
-                  disabled={state === "deploying"}
-                >
-                  <Download className="w-4 h-4" />
-                </IconButton>
-                <IconButton
-                  variant="tertiary"
-                  size="small"
-                  aria-label="Discard"
-                  onClick={handleDelete}
-                >
-                  <Trash2 className="w-4 h-4" />
-                </IconButton>
-              </div>
+              <ContextCard delayDuration={300}>
+                <div className="flex items-center gap-1">
+                  {componentName && (
+                    <span
+                      className="text-label-12 rounded px-2 py-0.5 mr-2"
+                      style={{
+                        backgroundColor: "var(--ds-gray-200)",
+                        color: "var(--ds-gray-800)",
+                      }}
+                    >
+                      {componentName}
+                    </span>
+                  )}
+                  <ContextCard.Trigger content={<span className="text-copy-13">{copied ? "Copied!" : "Copy code"}</span>} side="bottom">
+                    <IconButton
+                      variant="tertiary"
+                      size="small"
+                      aria-label={copied ? "Copied" : "Copy code"}
+                      onClick={handleCopy}
+                    >
+                      {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                    </IconButton>
+                  </ContextCard.Trigger>
+                  <ContextCard.Trigger content={<span className="text-copy-13">Deploy to ui/</span>} side="bottom">
+                    <IconButton
+                      variant="tertiary"
+                      size="small"
+                      aria-label="Deploy to ui/"
+                      onClick={() => handleDeploy()}
+                      disabled={state === "deploying"}
+                    >
+                      <Download className="w-4 h-4" />
+                    </IconButton>
+                  </ContextCard.Trigger>
+                  <ContextCard.Trigger content={<span className="text-copy-13">Discard</span>} side="bottom">
+                    <IconButton
+                      variant="tertiary"
+                      size="small"
+                      aria-label="Discard"
+                      onClick={handleDelete}
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </IconButton>
+                  </ContextCard.Trigger>
+                </div>
+              </ContextCard>
             </div>
 
             {/* Content area */}
