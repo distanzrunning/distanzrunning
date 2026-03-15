@@ -435,7 +435,10 @@ export function Feedback({
           touch-action: manipulation;
         }
         .feedback-send-btn:hover {
-          background: var(--ds-gray-900);
+          background: color-mix(in srgb, var(--ds-gray-1000), white 15%);
+        }
+        :is(.dark, [data-theme="dark"]) .feedback-send-btn:hover {
+          background: color-mix(in srgb, var(--ds-gray-1000), black 15%);
         }
         .feedback-send-btn:focus-visible {
           outline: 2px solid var(--ds-focus-ring);
