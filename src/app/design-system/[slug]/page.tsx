@@ -47,6 +47,7 @@ import EmptyStateComponent from "../components/content/EmptyStateComponent";
 import EntityComponent from "../components/content/EntityComponent";
 import ErrorComponent from "../components/content/ErrorComponent";
 import FeedbackComponent from "../components/content/FeedbackComponent";
+import GaugeComponent from "../components/content/GaugeComponent";
 import PaginationComponent from "../components/content/PaginationComponent";
 import CalendarComponent from "../components/content/CalendarComponent";
 import ComponentGeneratorPage from "../components/content/ComponentGeneratorPage";
@@ -630,6 +631,21 @@ export default function DesignSystemPage() {
           onNavigate={handleNavigation}
         >
           <FeedbackComponent />
+        </ContentWithTOC>
+      );
+    }
+
+    if (activeSlug === "gauge") {
+      return (
+        <ContentWithTOC
+          tocTitle="On this page"
+          pageTitle="Gauge"
+          pageSubtitle="A circular visual for conveying a percentage."
+          mainSectionId="gauge"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
+          <GaugeComponent />
         </ContentWithTOC>
       );
     }
