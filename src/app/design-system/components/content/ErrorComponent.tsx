@@ -400,7 +400,7 @@ function CustomLabelDemo() {
 
 function NoLabelDemo() {
   return (
-    <Error label="Email Error">
+    <Error>
       This email address is already in use.
     </Error>
   );
