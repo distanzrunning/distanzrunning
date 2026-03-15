@@ -34,6 +34,8 @@ export interface EntityListProps extends HTMLAttributes<HTMLUListElement> {
   children: ReactNode;
   /** Show divider lines between items (default: true) */
   dividers?: boolean;
+  /** Wrap list in a bordered card container */
+  bordered?: boolean;
 }
 
 export interface SkeletonProps {
@@ -82,10 +84,16 @@ function EntityField({ children }: EntityFieldProps) {
 }
 
 /** A list container that renders Entity items with optional dividers */
-function EntityList({ children, dividers = true, className = "", ...rest }: EntityListProps) {
+function EntityList({ children, dividers = true, bordered = false, className = "", ...rest }: EntityListProps) {
   return (
     <ul
       className={`list-none m-0 p-0 ${dividers ? "divide-y divide-[var(--ds-gray-400)]" : ""} ${className}`}
+      style={bordered ? {
+        borderRadius: 6,
+        backgroundColor: "var(--ds-background-100)",
+        boxShadow: "rgba(0, 0, 0, 0.08) 0px 0px 0px 1px, rgb(250, 250, 250) 0px 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 4px 6px 0px",
+        overflow: "hidden",
+      } : undefined}
       {...rest}
     >
       {children}

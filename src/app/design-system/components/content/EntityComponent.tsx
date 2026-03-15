@@ -366,7 +366,7 @@ const items = [
 
 function ListExample() {
   return (
-    <Entity.List>
+    <Entity.List bordered>
       {items.map((item) => (
         <Entity key={item.name}>
           <Entity.Content
@@ -399,7 +399,7 @@ function ListCheckboxExample() {
   });
 
   return (
-    <Entity.List dividers={false}>
+    <Entity.List bordered dividers={false}>
       {items.map((item) => (
         <Entity
           key={item.name}
@@ -480,7 +480,7 @@ const listItems = [
 
 function ListDemo() {
   return (
-    <Entity.List>
+    <Entity.List bordered>
       {listItems.map((item) => (
         <Entity key={item.name}>
           <Entity.Content title={item.name} subtitle={item.time} />
@@ -501,7 +501,7 @@ function ListCheckboxDemo() {
   });
 
   return (
-    <Entity.List dividers={false}>
+    <Entity.List bordered dividers={false}>
       {listItems.map((item) => (
         <Entity
           key={item.name}
