@@ -86,7 +86,7 @@ function Error({
       >
         {label && (
           <b style={{ fontWeight: 600 }}>
-            {label}:
+            {label}:{" "}
           </b>
         )}
         {children}
