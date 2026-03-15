@@ -1,22 +1,26 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
+
+// ============================================================================
+// Types
+// ============================================================================
 
 export interface FeedbackProps {
-  question?: string;
+  /** Text shown on the trigger button (default: "Feedback") */
+  buttonLabel?: string;
+  /** Callback when feedback is submitted */
   onSubmit?: (data: { emotion: string; feedback: string }) => void;
   className?: string;
 }
 
-interface EmojiOption {
-  id: string;
-  label: string;
-  icon: React.ReactNode;
-}
+// ============================================================================
+// Emoji Icons (Geist exact SVG paths)
+// ============================================================================
 
 function HateItIcon() {
   return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+    <svg width="16" height="16" strokeLinejoin="round" viewBox="0 0 16 16" style={{ color: "currentcolor" }}>
       <path
         fillRule="evenodd"
         clipRule="evenodd"
@@ -35,7 +39,7 @@ function HateItIcon() {
 
 function NotGreatIcon() {
   return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+    <svg width="16" height="16" strokeLinejoin="round" viewBox="0 0 16 16" style={{ color: "currentcolor" }}>
       <path
         fillRule="evenodd"
         clipRule="evenodd"
@@ -48,7 +52,7 @@ function NotGreatIcon() {
 
 function ItsOkayIcon() {
   return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+    <svg width="16" height="16" strokeLinejoin="round" viewBox="0 0 16 16" style={{ color: "currentcolor" }}>
       <path
         fillRule="evenodd"
         clipRule="evenodd"
@@ -61,7 +65,7 @@ function ItsOkayIcon() {
 
 function LoveItIcon() {
   return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+    <svg width="16" height="16" strokeLinejoin="round" viewBox="0 0 16 16" style={{ color: "currentcolor" }}>
       <path
         fillRule="evenodd"
         clipRule="evenodd"
@@ -78,6 +82,29 @@ function LoveItIcon() {
   );
 }
 
+function MarkdownIcon() {
+  return (
+    <svg fill="none" height="14" viewBox="0 0 22 14" width="22">
+      <path
+        clipRule="evenodd"
+        d="M19.5 1.25H2.5C1.80964 1.25 1.25 1.80964 1.25 2.5V11.5C1.25 12.1904 1.80964 12.75 2.5 12.75H19.5C20.1904 12.75 20.75 12.1904 20.75 11.5V2.5C20.75 1.80964 20.1904 1.25 19.5 1.25ZM2.5 0C1.11929 0 0 1.11929 0 2.5V11.5C0 12.8807 1.11929 14 2.5 14H19.5C20.8807 14 22 12.8807 22 11.5V2.5C22 1.11929 20.8807 0 19.5 0H2.5ZM3 3.5H4H4.25H4.6899L4.98715 3.82428L7 6.02011L9.01285 3.82428L9.3101 3.5H9.75H10H11V4.5V10.5H9V6.79807L7.73715 8.17572L7 8.97989L6.26285 8.17572L5 6.79807V10.5H3V4.5V3.5ZM15 7V3.5H17V7H19.5L17 9.5L16 10.5L15 9.5L12.5 7H15Z"
+        fill="var(--ds-gray-700)"
+        fillRule="evenodd"
+      />
+    </svg>
+  );
+}
+
+// ============================================================================
+// Emoji options
+// ============================================================================
+
+interface EmojiOption {
+  id: string;
+  label: string;
+  icon: React.ReactNode;
+}
+
 const emojiOptions: EmojiOption[] = [
   { id: "hate", label: "Hate it", icon: <HateItIcon /> },
   { id: "not-great", label: "Not great", icon: <NotGreatIcon /> },
@@ -85,170 +112,316 @@ const emojiOptions: EmojiOption[] = [
   { id: "love", label: "Love it!", icon: <LoveItIcon /> },
 ];
 
+// ============================================================================
+// Feedback Component
+// ============================================================================
+
 export function Feedback({
-  question = "Was this helpful?",
+  buttonLabel = "Feedback",
   onSubmit,
   className,
 }: FeedbackProps) {
+  const [isOpen, setIsOpen] = useState(false);
   const [selectedEmotion, setSelectedEmotion] = useState<string | null>(null);
   const [feedbackText, setFeedbackText] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const popoverRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
 
-  const handleSubmit = () => {
-    if (selectedEmotion) {
-      onSubmit?.({ emotion: selectedEmotion, feedback: feedbackText });
-      setSubmitted(true);
+  const handleSubmit = useCallback(
+    (e: React.FormEvent) => {
+      e.preventDefault();
+      if (selectedEmotion) {
+        onSubmit?.({ emotion: selectedEmotion, feedback: feedbackText });
+        setSubmitted(true);
+        setTimeout(() => {
+          setIsOpen(false);
+          // Reset after close animation
+          setTimeout(() => {
+            setSubmitted(false);
+            setSelectedEmotion(null);
+            setFeedbackText("");
+          }, 200);
+        }, 1500);
+      }
+    },
+    [selectedEmotion, feedbackText, onSubmit],
+  );
+
+  // Close on click outside
+  useEffect(() => {
+    if (!isOpen) return;
+    function handleClickOutside(e: MouseEvent) {
+      if (
+        popoverRef.current &&
+        !popoverRef.current.contains(e.target as Node) &&
+        triggerRef.current &&
+        !triggerRef.current.contains(e.target as Node)
+      ) {
+        setIsOpen(false);
+      }
     }
-  };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isOpen]);
 
-  if (submitted) {
-    return (
-      <div
-        className={className}
-        style={{
-          display: "inline-flex",
-          alignItems: "center",
-          justifyContent: "center",
-          borderRadius: 30,
-          height: 48,
-          padding: "0 24px",
-          boxShadow: "var(--ds-gray-alpha-400) 0px 0px 0px 1px",
-          fontSize: 14,
-          lineHeight: "20px",
-          color: "var(--ds-gray-900)",
-        }}
-      >
-        Thank you for your feedback!
-      </div>
-    );
-  }
+  // Close on Escape
+  useEffect(() => {
+    if (!isOpen) return;
+    function handleEscape(e: KeyboardEvent) {
+      if (e.key === "Escape") setIsOpen(false);
+    }
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
+  }, [isOpen]);
 
   return (
-    <div
-      className={className}
-      style={{
-        display: "inline-flex",
-        flexDirection: "column",
-        borderRadius: 30,
-        boxShadow: "var(--ds-gray-alpha-400) 0px 0px 0px 1px",
-        overflow: "hidden",
-        transition: "all 0.2s ease",
-      }}
-    >
-      {/* Trigger row */}
-      <div
+    <div className={className} style={{ position: "relative", display: "inline-block" }}>
+      {/* Trigger button */}
+      <button
+        ref={triggerRef}
+        type="button"
+        onClick={() => setIsOpen(!isOpen)}
+        aria-haspopup="dialog"
+        aria-expanded={isOpen}
         style={{
           display: "flex",
           alignItems: "center",
-          gap: 12,
-          height: 48,
-          padding: "0 20px",
-          width: 274,
+          justifyContent: "center",
+          height: 32,
+          padding: "0 12px",
+          borderRadius: 6,
+          border: "none",
+          background: "var(--ds-gray-1000)",
+          color: "var(--ds-background-100)",
+          fontSize: 14,
+          lineHeight: "20px",
+          fontWeight: 500,
+          cursor: "pointer",
+          fontFamily: "inherit",
+          transition: "border-color 0.15s ease, background 0.15s ease, color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease",
+          userSelect: "none",
+          touchAction: "manipulation",
+          maxWidth: "100%",
         }}
       >
         <span
           style={{
-            fontSize: 14,
-            lineHeight: "20px",
-            color: "var(--ds-gray-900)",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
             whiteSpace: "nowrap",
+            padding: "0 6px",
           }}
         >
-          {question}
+          {buttonLabel}
         </span>
-        <div style={{ display: "flex", alignItems: "center", gap: 8, marginLeft: "auto" }}>
-          {emojiOptions.map((emoji) => (
-            <button
-              key={emoji.id}
-              type="button"
-              onClick={() => setSelectedEmotion(emoji.id)}
-              title={emoji.label}
-              aria-label={emoji.label}
+      </button>
+
+      {/* Popover */}
+      {isOpen && (
+        <div
+          ref={popoverRef}
+          role="dialog"
+          style={{
+            position: "absolute",
+            bottom: "calc(100% + 8px)",
+            left: "50%",
+            transform: "translateX(-50%)",
+            width: 340,
+            borderRadius: 12,
+            background: "var(--ds-background-100)",
+            boxShadow:
+              "rgba(0, 0, 0, 0.08) 0px 0px 0px 1px, rgba(0, 0, 0, 0.02) 0px 1px 1px 0px, rgba(0, 0, 0, 0.04) 0px 4px 8px -4px, rgba(0, 0, 0, 0.06) 0px 16px 24px -8px, var(--ds-gray-100) 0px 0px 0px 1px",
+            overflow: "hidden",
+            zIndex: 101,
+            animation: "feedbackFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
+          }}
+        >
+          {submitted ? (
+            <div
               style={{
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                width: 28,
-                height: 28,
-                borderRadius: "50%",
-                border: "none",
-                cursor: "pointer",
-                padding: 0,
-                background:
-                  selectedEmotion === emoji.id
-                    ? "var(--ds-gray-200)"
-                    : "transparent",
-                opacity: selectedEmotion && selectedEmotion !== emoji.id ? 0.4 : 1,
-                transition: "all 0.15s ease",
+                padding: 24,
+                fontSize: 14,
+                lineHeight: "20px",
                 color: "var(--ds-gray-900)",
               }}
             >
-              {emoji.icon}
-            </button>
-          ))}
-        </div>
-      </div>
+              Thank you for your feedback!
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit}>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 8,
+                  padding: 8,
+                }}
+              >
+                {/* Textarea */}
+                <label>
+                  <div
+                    style={{
+                      borderRadius: 6,
+                      boxShadow: "rgba(0, 0, 0, 0.08) 0px 0px 0px 1px",
+                      overflow: "hidden",
+                      transition: "box-shadow 0.15s ease",
+                    }}
+                  >
+                    <textarea
+                      placeholder="Your feedback..."
+                      value={feedbackText}
+                      onChange={(e) => setFeedbackText(e.target.value)}
+                      autoCapitalize="off"
+                      autoComplete="off"
+                      autoCorrect="off"
+                      spellCheck={false}
+                      style={{
+                        display: "flex",
+                        width: "100%",
+                        height: 100,
+                        borderRadius: 6,
+                        border: "none",
+                        padding: "10px 12px",
+                        fontSize: 14,
+                        lineHeight: "normal",
+                        color: "var(--ds-gray-1000)",
+                        background: "var(--ds-background-100)",
+                        resize: "none",
+                        outline: "none",
+                        fontFamily: "inherit",
+                        boxSizing: "border-box",
+                        appearance: "none",
+                      }}
+                    />
+                  </div>
+                </label>
 
-      {/* Expanded form */}
-      {selectedEmotion && (
-        <div
-          style={{
-            padding: "0 20px 16px",
-            display: "flex",
-            flexDirection: "column",
-            gap: 12,
-          }}
-        >
-          <textarea
-            value={feedbackText}
-            onChange={(e) => setFeedbackText(e.target.value)}
-            placeholder="Your feedback..."
-            style={{
-              width: "100%",
-              height: 100,
-              borderRadius: 8,
-              border: "1px solid var(--ds-gray-alpha-400)",
-              padding: "8px 12px",
-              fontSize: 14,
-              lineHeight: "20px",
-              color: "var(--ds-gray-900)",
-              background: "var(--ds-background-100)",
-              resize: "none",
-              outline: "none",
-              fontFamily: "inherit",
-              boxSizing: "border-box",
-            }}
-          />
-          <div style={{ display: "flex", justifyContent: "flex-end" }}>
-            <button
-              type="button"
-              onClick={handleSubmit}
-              style={{
-                height: 32,
-                padding: "0 12px",
-                borderRadius: 6,
-                border: "none",
-                background: "var(--ds-gray-1000)",
-                color: "var(--ds-background-100)",
-                fontSize: 14,
-                lineHeight: "20px",
-                fontWeight: 500,
-                cursor: "pointer",
-                fontFamily: "inherit",
-                transition: "opacity 0.15s ease",
-              }}
-              onMouseEnter={(e) => {
-                (e.target as HTMLButtonElement).style.opacity = "0.8";
-              }}
-              onMouseLeave={(e) => {
-                (e.target as HTMLButtonElement).style.opacity = "1";
-              }}
-            >
-              Send
-            </button>
-          </div>
+                {/* Markdown tip */}
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "flex-end",
+                    gap: 4,
+                    fontSize: 12,
+                    lineHeight: "16px",
+                    fontWeight: 400,
+                    color: "var(--ds-gray-900)",
+                  }}
+                >
+                  <MarkdownIcon />
+                  <span>supported.</span>
+                </div>
+
+                {/* Actions: emojis + send */}
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  {/* Emoji buttons */}
+                  <span
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 1,
+                    }}
+                  >
+                    {emojiOptions.map((emoji) => (
+                      <button
+                        key={emoji.id}
+                        type="button"
+                        role="radio"
+                        aria-checked={selectedEmotion === emoji.id}
+                        aria-label={`Select ${emoji.label} emoji`}
+                        onClick={() =>
+                          setSelectedEmotion(
+                            selectedEmotion === emoji.id ? null : emoji.id,
+                          )
+                        }
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          width: 32,
+                          height: 32,
+                          borderRadius: "50%",
+                          border: "none",
+                          cursor: "pointer",
+                          padding: 0,
+                          background:
+                            selectedEmotion === emoji.id
+                              ? "var(--ds-gray-200)"
+                              : "transparent",
+                          color: "var(--ds-gray-900)",
+                          transition: "background 0.2s ease, border-color 0.2s ease",
+                        }}
+                      >
+                        {emoji.icon}
+                      </button>
+                    ))}
+                  </span>
+
+                  {/* Send button */}
+                  <button
+                    type="submit"
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      height: 32,
+                      padding: "0 6px",
+                      borderRadius: 6,
+                      border: "none",
+                      background: "var(--ds-gray-1000)",
+                      color: "var(--ds-background-100)",
+                      fontSize: 14,
+                      lineHeight: "20px",
+                      fontWeight: 500,
+                      cursor: "pointer",
+                      fontFamily: "inherit",
+                      transition: "border-color 0.15s ease, background 0.15s ease, color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease",
+                      userSelect: "none",
+                      touchAction: "manipulation",
+                    }}
+                  >
+                    <span
+                      style={{
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                        padding: "0 6px",
+                      }}
+                    >
+                      Send
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </form>
+          )}
         </div>
       )}
+
+      {/* Keyframe animation */}
+      <style>{`
+        @keyframes feedbackFadeIn {
+          from {
+            opacity: 0;
+            transform: translateX(-50%) scale(0.95);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(-50%) scale(1);
+          }
+        }
+      `}</style>
     </div>
   );
 }

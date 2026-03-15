@@ -319,29 +319,13 @@ function DefaultExample() {
   );
 }`;
 
-const inlineCode = `import { Feedback } from '@/components/ui/Feedback';
+const customLabelCode = `import { Feedback } from '@/components/ui/Feedback';
 
-function InlineExample() {
+function CustomLabelExample() {
   return (
     <Feedback
-      question="Was this helpful?"
+      buttonLabel="Rate this article"
       onSubmit={(data) => console.log(data)}
-    />
-  );
-}`;
-
-const withSelectCode = `import { Feedback } from '@/components/ui/Feedback';
-
-function FeedbackWithSelectExample() {
-  return (
-    <Feedback
-      question="Rate this article"
-      onSubmit={(data) => {
-        console.log({
-          ...data,
-          topic: "Race Coverage",
-        });
-      }}
     />
   );
 }`;
@@ -351,14 +335,13 @@ const withMetadataCode = `import { Feedback } from '@/components/ui/Feedback';
 function FeedbackWithMetadataExample() {
   return (
     <Feedback
-      question="How was your experience?"
+      buttonLabel="How was this race report?"
       onSubmit={(data) => {
         console.log({
           ...data,
           metadata: {
-            page: "/training-plans/marathon",
-            section: "Week 12 Long Run",
-            userId: "runner-42",
+            page: "/races/boston-marathon-2026",
+            section: "Race Report",
           },
         });
       }}
@@ -372,50 +355,41 @@ function FeedbackWithMetadataExample() {
 
 function DefaultDemo() {
   return (
-    <Feedback
-      onSubmit={(data) => console.log(data)}
-    />
+    <div style={{ display: "flex", justifyContent: "center", paddingTop: 220 }}>
+      <Feedback
+        onSubmit={(data) => console.log(data)}
+      />
+    </div>
   );
 }
 
-function InlineDemo() {
+function CustomLabelDemo() {
   return (
-    <Feedback
-      question="Was this helpful?"
-      onSubmit={(data) => console.log(data)}
-    />
-  );
-}
-
-function FeedbackWithSelectDemo() {
-  return (
-    <Feedback
-      question="Rate this article"
-      onSubmit={(data) => {
-        console.log({
-          ...data,
-          topic: "Race Coverage",
-        });
-      }}
-    />
+    <div style={{ display: "flex", justifyContent: "center", paddingTop: 220 }}>
+      <Feedback
+        buttonLabel="Rate this article"
+        onSubmit={(data) => console.log(data)}
+      />
+    </div>
   );
 }
 
 function FeedbackWithMetadataDemo() {
   return (
-    <Feedback
-      question="How was your experience?"
-      onSubmit={(data) => {
-        console.log({
-          ...data,
-          metadata: {
-            page: "/training-plans/marathon",
-            section: "Week 12 Long Run",
-            userId: "runner-42",
-          },
-        });
-      }}
-    />
+    <div style={{ display: "flex", justifyContent: "center", paddingTop: 220 }}>
+      <Feedback
+        buttonLabel="How was this race report?"
+        onSubmit={(data) => {
+          console.log({
+            ...data,
+            metadata: {
+              page: "/races/boston-marathon-2026",
+              section: "Race Report",
+            },
+          });
+        }}
+      />
+    </div>
   );
 }
 
@@ -433,7 +407,7 @@ export default function FeedbackComponent() {
           Default
         </SectionHeader>
         <p className="text-copy-16 text-textSubtle mt-3 mb-6" style={{ lineHeight: 1.5 }}>
-          Should only be used on desktop.
+          A button that opens a feedback popover with a textarea, emoji selection, and submit. Should only be used on desktop.
         </p>
         <CodePreview componentCode={defaultCode}>
           <DefaultDemo />
@@ -441,26 +415,14 @@ export default function FeedbackComponent() {
       </Section>
 
       <Section>
-        <SectionHeader id="inline" onCopyLink={showToast}>
-          Inline
+        <SectionHeader id="custom-label" onCopyLink={showToast}>
+          Custom label
         </SectionHeader>
         <p className="text-copy-16 text-textSubtle mt-3 mb-6" style={{ lineHeight: 1.5 }}>
-          The inline feedback widget with emoji selection and text input.
+          The trigger button label can be customized via the buttonLabel prop.
         </p>
-        <CodePreview componentCode={inlineCode}>
-          <InlineDemo />
-        </CodePreview>
-      </Section>
-
-      <Section>
-        <SectionHeader id="feedback-with-select" onCopyLink={showToast}>
-          Feedback with Select
-        </SectionHeader>
-        <p className="text-copy-16 text-textSubtle mt-3 mb-6" style={{ lineHeight: 1.5 }}>
-          Feedback with pre-defined list of topics. Topics could include Race Coverage, Training Plans, or Gear Reviews.
-        </p>
-        <CodePreview componentCode={withSelectCode}>
-          <FeedbackWithSelectDemo />
+        <CodePreview componentCode={customLabelCode}>
+          <CustomLabelDemo />
         </CodePreview>
       </Section>
 
@@ -469,7 +431,7 @@ export default function FeedbackComponent() {
           Feedback with metadata
         </SectionHeader>
         <p className="text-copy-16 text-textSubtle mt-3 mb-6" style={{ lineHeight: 1.5 }}>
-          Feedback with arbitrary key-value metadata. Useful for attaching context like the current training plan page or gear review section.
+          Attach arbitrary metadata to the feedback submission, such as the current race report page or training plan section.
         </p>
         <CodePreview componentCode={withMetadataCode}>
           <FeedbackWithMetadataDemo />
