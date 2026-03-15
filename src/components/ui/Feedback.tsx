@@ -393,7 +393,6 @@ export function FeedbackWithSelect({
   const [feedbackText, setFeedbackText] = useState("");
   const [selectedTopic, setSelectedTopic] = useState("");
   const [submitted, setSubmitted] = useState(false);
-  const [popoverPos, setPopoverPos] = useState<{ top: number; left: number } | null>(null);
   const popoverRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
 
@@ -434,15 +433,6 @@ export function FeedbackWithSelect({
   }, [isOpen]);
 
   useEffect(() => {
-    if (!isOpen || !triggerRef.current) return;
-    const rect = triggerRef.current.getBoundingClientRect();
-    setPopoverPos({
-      top: rect.bottom + 8, // 8px gap below trigger
-      left: rect.left + rect.width / 2,
-    });
-  }, [isOpen]);
-
-  useEffect(() => {
     if (!isOpen) return;
     function handleEscape(e: KeyboardEvent) {
       if (e.key === "Escape") setIsOpen(false);
@@ -473,14 +463,14 @@ export function FeedbackWithSelect({
         </span>
       </button>
 
-      {isOpen && popoverPos && (
+      {isOpen && (
         <div
           ref={popoverRef}
           role="dialog"
           style={{
-            position: "fixed",
-            top: popoverPos.top,
-            left: popoverPos.left,
+            position: "absolute",
+            top: "calc(100% + 8px)",
+            left: "50%",
             transform: "translateX(-50%)",
             width: 340,
             borderRadius: 12,
@@ -717,7 +707,6 @@ export function Feedback({
   const [selectedEmotion, setSelectedEmotion] = useState<string | null>(null);
   const [feedbackText, setFeedbackText] = useState("");
   const [submitted, setSubmitted] = useState(false);
-  const [popoverPos, setPopoverPos] = useState<{ top: number; left: number } | null>(null);
   const popoverRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
 
@@ -758,16 +747,6 @@ export function Feedback({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [isOpen]);
 
-  // Calculate popover position when opened
-  useEffect(() => {
-    if (!isOpen || !triggerRef.current) return;
-    const rect = triggerRef.current.getBoundingClientRect();
-    setPopoverPos({
-      top: rect.bottom + 8, // 8px gap below trigger
-      left: rect.left + rect.width / 2,
-    });
-  }, [isOpen]);
-
   // Close on Escape
   useEffect(() => {
     if (!isOpen) return;
@@ -802,14 +781,14 @@ export function Feedback({
       </button>
 
       {/* Popover */}
-      {isOpen && popoverPos && (
+      {isOpen && (
         <div
           ref={popoverRef}
           role="dialog"
           style={{
-            position: "fixed",
-            top: popoverPos.top,
-            left: popoverPos.left,
+            position: "absolute",
+            top: "calc(100% + 8px)",
+            left: "50%",
             transform: "translateX(-50%)",
             width: 340,
             borderRadius: 12,
