@@ -195,27 +195,7 @@ export function Feedback({
         onClick={() => setIsOpen(!isOpen)}
         aria-haspopup="dialog"
         aria-expanded={isOpen}
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          height: 32,
-          padding: "0 12px",
-          borderRadius: 6,
-          border: "none",
-          background: "var(--ds-background-100)",
-          color: "var(--ds-gray-1000)",
-          boxShadow: "var(--ds-gray-alpha-400) 0px 0px 0px 1px",
-          fontSize: 14,
-          lineHeight: "20px",
-          fontWeight: 500,
-          cursor: "pointer",
-          fontFamily: "inherit",
-          transition: "border-color 0.15s ease, background 0.15s ease, color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease",
-          userSelect: "none",
-          touchAction: "manipulation",
-          maxWidth: "100%",
-        }}
+        className="feedback-trigger"
       >
         <span
           style={{
@@ -275,14 +255,7 @@ export function Feedback({
               >
                 {/* Textarea */}
                 <label>
-                  <div
-                    style={{
-                      borderRadius: 6,
-                      boxShadow: "rgba(0, 0, 0, 0.08) 0px 0px 0px 1px",
-                      overflow: "hidden",
-                      transition: "box-shadow 0.15s ease",
-                    }}
-                  >
+                  <div className="feedback-textarea-wrapper">
                     <textarea
                       placeholder="Your feedback..."
                       value={feedbackText}
@@ -383,25 +356,7 @@ export function Feedback({
                   {/* Send button */}
                   <button
                     type="submit"
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      height: 32,
-                      padding: "0 6px",
-                      borderRadius: 6,
-                      border: "none",
-                      background: "var(--ds-gray-1000)",
-                      color: "var(--ds-background-100)",
-                      fontSize: 14,
-                      lineHeight: "20px",
-                      fontWeight: 500,
-                      cursor: "pointer",
-                      fontFamily: "inherit",
-                      transition: "border-color 0.15s ease, background 0.15s ease, color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease",
-                      userSelect: "none",
-                      touchAction: "manipulation",
-                    }}
+                    className="feedback-send-btn"
                   >
                     <span
                       style={{
@@ -421,8 +376,71 @@ export function Feedback({
         </div>
       )}
 
-      {/* Keyframe animation */}
+      {/* Styles */}
       <style>{`
+        .feedback-trigger {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          height: 32px;
+          padding: 0 12px;
+          border-radius: 6px;
+          border: none;
+          background: var(--ds-background-100);
+          color: var(--ds-gray-1000);
+          box-shadow: var(--ds-gray-alpha-400) 0px 0px 0px 1px;
+          font-size: 14px;
+          line-height: 20px;
+          font-weight: 500;
+          cursor: pointer;
+          font-family: inherit;
+          transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+          user-select: none;
+          touch-action: manipulation;
+          max-width: 100%;
+        }
+        .feedback-trigger:hover {
+          background: var(--ds-gray-100);
+        }
+        .feedback-trigger:focus-visible {
+          outline: 2px solid var(--ds-focus-ring);
+          outline-offset: 2px;
+        }
+        .feedback-textarea-wrapper {
+          border-radius: 6px;
+          box-shadow: rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+          overflow: hidden;
+          transition: box-shadow 0.15s ease;
+        }
+        .feedback-textarea-wrapper:focus-within {
+          box-shadow: 0 0 0 1px var(--ds-gray-1000);
+        }
+        .feedback-send-btn {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          height: 32px;
+          padding: 0 6px;
+          border-radius: 6px;
+          border: none;
+          background: var(--ds-gray-1000);
+          color: var(--ds-background-100);
+          font-size: 14px;
+          line-height: 20px;
+          font-weight: 500;
+          cursor: pointer;
+          font-family: inherit;
+          transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+          user-select: none;
+          touch-action: manipulation;
+        }
+        .feedback-send-btn:hover {
+          background: var(--ds-gray-900);
+        }
+        .feedback-send-btn:focus-visible {
+          outline: 2px solid var(--ds-focus-ring);
+          outline-offset: 2px;
+        }
         @keyframes feedbackFadeIn {
           from {
             opacity: 0;
