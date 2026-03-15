@@ -412,7 +412,15 @@ export function FeedbackWithSelect({
   const [submitted, setSubmitted] = useState(false);
   const popoverRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const selectRef = useRef<HTMLSelectElement>(null);
   const direction = usePopoverDirection(isOpen, triggerRef);
+
+  // Focus the select when popover opens
+  useEffect(() => {
+    if (isOpen && !submitted && selectRef.current) {
+      selectRef.current.focus();
+    }
+  }, [isOpen, submitted]);
 
   const handleSubmit = useCallback(
     (e: React.FormEvent) => {
@@ -522,6 +530,7 @@ export function FeedbackWithSelect({
                 <label htmlFor="feedback-select">
                   <div className="feedback-select-wrapper">
                     <select
+                      ref={selectRef}
                       id="feedback-select"
                       className="feedback-select"
                       aria-labelledby={selectLabel}
@@ -824,6 +833,7 @@ export function Feedback({
                 <label>
                   <div className="feedback-textarea-wrapper">
                     <textarea
+                      autoFocus
                       placeholder="Your feedback..."
                       value={feedbackText}
                       onChange={(e) => setFeedbackText(e.target.value)}

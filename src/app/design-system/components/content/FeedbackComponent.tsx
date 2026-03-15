@@ -431,7 +431,7 @@ export default function FeedbackComponent() {
           Feedback with Select
         </SectionHeader>
         <p className="text-copy-16 text-textSubtle mt-3 mb-6" style={{ lineHeight: 1.5 }}>
-          A feedback popover with a topic dropdown above the textarea. The select has the same focus ring as the input.
+          Feedback with pre-defined list of topics.
         </p>
         <CodePreview componentCode={withSelectCode}>
           <WithSelectDemo />
