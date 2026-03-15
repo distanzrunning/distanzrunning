@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/Button";
 import IconButton from "@/components/ui/IconButton";
 import { CodeBlock } from "@/components/ui/CodeBlock";
 import { DarkModeContext } from "@/components/DarkModeProvider";
-import { ContextCard } from "@/components/ui/ContextCard";
+import * as Tooltip from "@radix-ui/react-tooltip";
 
 // ============================================================================
 // Types
@@ -759,7 +759,7 @@ export default function ComponentGeneratorPage() {
               </div>
 
               {/* Actions */}
-              <ContextCard delayDuration={300}>
+              <Tooltip.Provider delayDuration={300}>
                 <div className="flex items-center gap-1">
                   {componentName && (
                     <span
@@ -772,39 +772,87 @@ export default function ComponentGeneratorPage() {
                       {componentName}
                     </span>
                   )}
-                  <ContextCard.Trigger content={<span className="text-copy-13">{copied ? "Copied!" : "Copy code"}</span>} side="bottom">
-                    <IconButton
-                      variant="tertiary"
-                      size="small"
-                      aria-label={copied ? "Copied" : "Copy code"}
-                      onClick={handleCopy}
-                    >
-                      {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-                    </IconButton>
-                  </ContextCard.Trigger>
-                  <ContextCard.Trigger content={<span className="text-copy-13">Deploy to ui/</span>} side="bottom">
-                    <IconButton
-                      variant="tertiary"
-                      size="small"
-                      aria-label="Deploy to ui/"
-                      onClick={() => handleDeploy()}
-                      disabled={state === "deploying"}
-                    >
-                      <Download className="w-4 h-4" />
-                    </IconButton>
-                  </ContextCard.Trigger>
-                  <ContextCard.Trigger content={<span className="text-copy-13">Discard</span>} side="bottom">
-                    <IconButton
-                      variant="tertiary"
-                      size="small"
-                      aria-label="Discard"
-                      onClick={handleDelete}
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </IconButton>
-                  </ContextCard.Trigger>
+                  <Tooltip.Root>
+                    <Tooltip.Trigger asChild>
+                      <IconButton
+                        variant="tertiary"
+                        size="small"
+                        aria-label={copied ? "Copied" : "Copy code"}
+                        onClick={handleCopy}
+                      >
+                        {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                      </IconButton>
+                    </Tooltip.Trigger>
+                    <Tooltip.Portal>
+                      <Tooltip.Content
+                        className="rounded-md px-3 py-1.5 text-copy-13 z-[100]"
+                        style={{
+                          backgroundColor: "var(--ds-gray-1000)",
+                          color: "var(--ds-background-100)",
+                          boxShadow: "var(--ds-shadow-medium)",
+                        }}
+                        side="bottom"
+                        sideOffset={5}
+                      >
+                        {copied ? "Copied!" : "Copy code"}
+                      </Tooltip.Content>
+                    </Tooltip.Portal>
+                  </Tooltip.Root>
+                  <Tooltip.Root>
+                    <Tooltip.Trigger asChild>
+                      <IconButton
+                        variant="tertiary"
+                        size="small"
+                        aria-label="Deploy to ui/"
+                        onClick={() => handleDeploy()}
+                        disabled={state === "deploying"}
+                      >
+                        <Download className="w-4 h-4" />
+                      </IconButton>
+                    </Tooltip.Trigger>
+                    <Tooltip.Portal>
+                      <Tooltip.Content
+                        className="rounded-md px-3 py-1.5 text-copy-13 z-[100]"
+                        style={{
+                          backgroundColor: "var(--ds-gray-1000)",
+                          color: "var(--ds-background-100)",
+                          boxShadow: "var(--ds-shadow-medium)",
+                        }}
+                        side="bottom"
+                        sideOffset={5}
+                      >
+                        Deploy to ui/
+                      </Tooltip.Content>
+                    </Tooltip.Portal>
+                  </Tooltip.Root>
+                  <Tooltip.Root>
+                    <Tooltip.Trigger asChild>
+                      <IconButton
+                        variant="tertiary"
+                        size="small"
+                        aria-label="Discard"
+                        onClick={handleDelete}
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </IconButton>
+                    </Tooltip.Trigger>
+                    <Tooltip.Portal>
+                      <Tooltip.Content
+                        className="rounded-md px-3 py-1.5 text-copy-13 z-[100]"
+                        style={{
+                          backgroundColor: "var(--ds-gray-1000)",
+                          color: "var(--ds-background-100)",
+                          boxShadow: "var(--ds-shadow-medium)",
+                        }}
+                        side="bottom"
+                        sideOffset={5}
+                      >
+                        Discard
+                      </Tooltip.Content>
+                    </Tooltip.Portal>
+                  </Tooltip.Root>
                 </div>
-              </ContextCard>
+              </Tooltip.Provider>
             </div>
 
             {/* Content area */}
