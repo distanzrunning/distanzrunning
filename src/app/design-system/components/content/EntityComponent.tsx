@@ -319,19 +319,19 @@ function DefaultExample() {
   return (
     <Entity>
       <Entity.Content
-        title="Evil Rabbit"
-        subtitle="Glenn Hitchcock (@gln)"
+        title="Eliud Kipchoge"
+        subtitle="Marathon · 2:01:09 PB"
         thumbnail={
           <Avatar
-            src="https://vercel.com/api/www/avatar?s=64&u=evilrabbit"
-            alt="Evil Rabbit"
+            src="/avatars/kipchoge.jpg"
+            alt="Eliud Kipchoge"
             size={32}
           />
         }
       />
       <Entity.Field>
         <p className="text-copy-14 text-gray-900">
-          Connected 1h ago
+          Published 2h ago
         </p>
       </Entity.Field>
     </Entity>
@@ -358,24 +358,24 @@ function SkeletonExample() {
 const listCode = `import { Entity } from '@/components/ui/Entity';
 import { Button } from '@/components/ui/Button';
 
-const items = [
-  { name: 'GitHub Desktop on MacBook Pro', time: 'Last used just now' },
-  { name: 'VS Code on Windows 11', time: 'Last used 10min ago' },
-  { name: 'Terminal on Ubuntu 24.04', time: 'Last used 25min ago' },
+const races = [
+  { name: 'Berlin Marathon 2025', date: 'Sep 28, 2025' },
+  { name: 'Chicago Marathon 2025', date: 'Oct 12, 2025' },
+  { name: 'New York City Marathon 2025', date: 'Nov 2, 2025' },
 ];
 
 function ListExample() {
   return (
     <Entity.List bordered>
-      {items.map((item) => (
-        <Entity key={item.name}>
+      {races.map((race) => (
+        <Entity key={race.name}>
           <Entity.Content
-            title={item.name}
-            subtitle={item.time}
+            title={race.name}
+            subtitle={race.date}
           />
           <Entity.Field>
             <Button size="small" variant="secondary">
-              Decline
+              Remove
             </Button>
           </Entity.Field>
         </Entity>
@@ -387,42 +387,42 @@ function ListExample() {
 const listCheckboxCode = `import { Entity } from '@/components/ui/Entity';
 import Checkbox from '@/components/ui/Checkbox';
 
-const items = [
-  { name: 'GitHub Desktop on MacBook Pro', time: 'Last used just now' },
-  { name: 'VS Code on Windows 11', time: 'Last used 10min ago' },
-  { name: 'Terminal on Ubuntu 24.04', time: 'Last used 25min ago' },
+const categories = [
+  { name: 'Road Racing', desc: 'Marathons, halfs, and 10Ks' },
+  { name: 'Trail Running', desc: 'Ultras, mountain, and fell races' },
+  { name: 'Track & Field', desc: '800m through 10,000m' },
 ];
 
 function ListCheckboxExample() {
   const [checked, setChecked] = useState<Record<string, boolean>>({
-    [items[0].name]: true,
+    [categories[0].name]: true,
   });
 
   return (
     <Entity.List bordered dividers={false}>
-      {items.map((item) => (
+      {categories.map((cat) => (
         <Entity
-          key={item.name}
+          key={cat.name}
           hoverable
           onClick={() =>
             setChecked((prev) => ({
               ...prev,
-              [item.name]: !prev[item.name],
+              [cat.name]: !prev[cat.name],
             }))
           }
         >
           <Checkbox
-            checked={!!checked[item.name]}
+            checked={!!checked[cat.name]}
             onChange={() =>
               setChecked((prev) => ({
                 ...prev,
-                [item.name]: !prev[item.name],
+                [cat.name]: !prev[cat.name],
               }))
             }
           />
           <Entity.Content
-            title={item.name}
-            subtitle={item.time}
+            title={cat.name}
+            subtitle={cat.desc}
           />
         </Entity>
       ))}
@@ -438,19 +438,18 @@ function DefaultDemo() {
   return (
     <Entity>
       <Entity.Content
-        title="Evil Rabbit"
-        subtitle="Glenn Hitchcock (@gln)"
+        title="Eliud Kipchoge"
+        subtitle="Marathon · 2:01:09 PB"
         thumbnail={
           <Avatar
-            src="https://vercel.com/api/www/avatar?s=64&u=evilrabbit"
-            alt="Evil Rabbit"
+            fallback="EK"
             size={32}
           />
         }
       />
       <Entity.Field>
         <p className="text-copy-14" style={{ color: "var(--ds-gray-900)", margin: 0 }}>
-          Connected 1h ago
+          Published 2h ago
         </p>
       </Entity.Field>
     </Entity>
@@ -472,21 +471,21 @@ function SkeletonDemo() {
   );
 }
 
-const listItems = [
-  { name: "GitHub Desktop on MacBook Pro", time: "Last used just now" },
-  { name: "VS Code on Windows 11", time: "Last used 10min ago" },
-  { name: "Terminal on Ubuntu 24.04", time: "Last used 25min ago" },
+const raceItems = [
+  { name: "Berlin Marathon 2025", date: "Sep 28, 2025" },
+  { name: "Chicago Marathon 2025", date: "Oct 12, 2025" },
+  { name: "New York City Marathon 2025", date: "Nov 2, 2025" },
 ];
 
 function ListDemo() {
   return (
     <Entity.List bordered>
-      {listItems.map((item) => (
-        <Entity key={item.name}>
-          <Entity.Content title={item.name} subtitle={item.time} />
+      {raceItems.map((race) => (
+        <Entity key={race.name}>
+          <Entity.Content title={race.name} subtitle={race.date} />
           <Entity.Field>
             <Button size="small" variant="secondary">
-              Decline
+              Remove
             </Button>
           </Entity.Field>
         </Entity>
@@ -495,34 +494,40 @@ function ListDemo() {
   );
 }
 
+const categoryItems = [
+  { name: "Road Racing", desc: "Marathons, halfs, and 10Ks" },
+  { name: "Trail Running", desc: "Ultras, mountain, and fell races" },
+  { name: "Track & Field", desc: "800m through 10,000m" },
+];
+
 function ListCheckboxDemo() {
   const [checked, setChecked] = useState<Record<string, boolean>>({
-    [listItems[0].name]: true,
+    [categoryItems[0].name]: true,
   });
 
   return (
     <Entity.List bordered dividers={false}>
-      {listItems.map((item) => (
+      {categoryItems.map((cat) => (
         <Entity
-          key={item.name}
+          key={cat.name}
           hoverable
           onClick={() =>
             setChecked((prev) => ({
               ...prev,
-              [item.name]: !prev[item.name],
+              [cat.name]: !prev[cat.name],
             }))
           }
         >
           <Checkbox
-            checked={!!checked[item.name]}
+            checked={!!checked[cat.name]}
             onChange={() =>
               setChecked((prev) => ({
                 ...prev,
-                [item.name]: !prev[item.name],
+                [cat.name]: !prev[cat.name],
               }))
             }
           />
-          <Entity.Content title={item.name} subtitle={item.time} />
+          <Entity.Content title={cat.name} subtitle={cat.desc} />
         </Entity>
       ))}
     </Entity.List>
@@ -543,7 +548,7 @@ export default function EntityComponent() {
           Default
         </SectionHeader>
         <p className="text-copy-16 text-textSubtle mt-3 mb-6" style={{ lineHeight: 1.5 }}>
-          A single entity row with a thumbnail, text content, and a field on the right.
+          A single entity row with a thumbnail, text content, and a metadata field.
         </p>
         <CodePreview componentCode={defaultCode}>
           <DefaultDemo />
@@ -567,8 +572,8 @@ export default function EntityComponent() {
           Entity with List
         </SectionHeader>
         <p className="text-copy-16 text-textSubtle mt-3 mb-6" style={{ lineHeight: 1.5 }}>
-          Multiple entities rendered in a list with dividers between each item. The right column
-          typically contains actions related to the entity.
+          Multiple entities rendered in a bordered list with dividers between each item. The right
+          column typically contains actions related to the entity.
         </p>
         <CodePreview componentCode={listCode}>
           <ListDemo />
