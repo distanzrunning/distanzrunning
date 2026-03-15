@@ -399,17 +399,17 @@ function ListCheckboxExample() {
   });
 
   return (
-    <Entity.List>
+    <Entity.List dividers={false}>
       {items.map((item) => (
         <Entity
           key={item.name}
+          hoverable
           onClick={() =>
             setChecked((prev) => ({
               ...prev,
               [item.name]: !prev[item.name],
             }))
           }
-          style={{ cursor: 'pointer' }}
         >
           <Checkbox
             checked={!!checked[item.name]}
@@ -501,17 +501,17 @@ function ListCheckboxDemo() {
   });
 
   return (
-    <Entity.List>
+    <Entity.List dividers={false}>
       {listItems.map((item) => (
         <Entity
           key={item.name}
+          hoverable
           onClick={() =>
             setChecked((prev) => ({
               ...prev,
               [item.name]: !prev[item.name],
             }))
           }
-          style={{ cursor: "pointer" }}
         >
           <Checkbox
             checked={!!checked[item.name]}

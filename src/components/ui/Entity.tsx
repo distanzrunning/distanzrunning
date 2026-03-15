@@ -11,6 +11,8 @@ export interface EntityProps extends HTMLAttributes<HTMLElement> {
   children: ReactNode;
   /** Padding inside the entity row (default: 16px) */
   padding?: number;
+  /** Render as a button with hover background */
+  hoverable?: boolean;
 }
 
 export interface EntityContentProps {
@@ -30,6 +32,8 @@ export interface EntityFieldProps {
 export interface EntityListProps extends HTMLAttributes<HTMLUListElement> {
   /** Entity items */
   children: ReactNode;
+  /** Show divider lines between items (default: true) */
+  dividers?: boolean;
 }
 
 export interface SkeletonProps {
@@ -77,11 +81,11 @@ function EntityField({ children }: EntityFieldProps) {
   );
 }
 
-/** A list container that renders Entity items with dividers */
-function EntityList({ children, className = "", ...rest }: EntityListProps) {
+/** A list container that renders Entity items with optional dividers */
+function EntityList({ children, dividers = true, className = "", ...rest }: EntityListProps) {
   return (
     <ul
-      className={`list-none m-0 p-0 divide-y divide-[var(--ds-gray-400)] ${className}`}
+      className={`list-none m-0 p-0 ${dividers ? "divide-y divide-[var(--ds-gray-400)]" : ""} ${className}`}
       {...rest}
     >
       {children}
@@ -108,7 +112,23 @@ function EntitySkeleton({ width = "100%", height = 20 }: SkeletonProps) {
 // ============================================================================
 
 const Entity = forwardRef<HTMLElement, EntityProps>(
-  ({ children, padding = 16, className = "", style, ...rest }, ref) => {
+  ({ children, padding = 16, hoverable = false, className = "", style, ...rest }, ref) => {
+    if (hoverable) {
+      return (
+        <button
+          ref={ref as React.Ref<HTMLButtonElement>}
+          type="button"
+          className={`flex flex-col items-stretch w-full text-left bg-transparent border-none outline-none transition-colors hover:bg-[var(--ds-gray-100)] ${className}`}
+          style={{ padding: `${padding}px`, cursor: "pointer", ...style }}
+          {...(rest as HTMLAttributes<HTMLButtonElement>)}
+        >
+          <section className="flex flex-row items-center gap-4">
+            {children}
+          </section>
+        </button>
+      );
+    }
+
     return (
       <li
         ref={ref as React.Ref<HTMLLIElement>}
