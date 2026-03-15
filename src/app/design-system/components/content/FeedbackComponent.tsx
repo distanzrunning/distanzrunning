@@ -355,7 +355,7 @@ function FeedbackWithMetadataExample() {
 
 function DefaultDemo() {
   return (
-    <div style={{ display: "flex", justifyContent: "center", paddingTop: 220 }}>
+    <div style={{ display: "flex", justifyContent: "center" }}>
       <Feedback
         onSubmit={(data) => console.log(data)}
       />
@@ -365,7 +365,7 @@ function DefaultDemo() {
 
 function CustomLabelDemo() {
   return (
-    <div style={{ display: "flex", justifyContent: "center", paddingTop: 220 }}>
+    <div style={{ display: "flex", justifyContent: "center" }}>
       <Feedback
         buttonLabel="Rate this article"
         onSubmit={(data) => console.log(data)}
@@ -376,7 +376,7 @@ function CustomLabelDemo() {
 
 function FeedbackWithMetadataDemo() {
   return (
-    <div style={{ display: "flex", justifyContent: "center", paddingTop: 220 }}>
+    <div style={{ display: "flex", justifyContent: "center" }}>
       <Feedback
         buttonLabel="How was this race report?"
         onSubmit={(data) => {

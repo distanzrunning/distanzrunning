@@ -125,6 +125,7 @@ export function Feedback({
   const [selectedEmotion, setSelectedEmotion] = useState<string | null>(null);
   const [feedbackText, setFeedbackText] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [popoverPos, setPopoverPos] = useState<{ top: number; left: number } | null>(null);
   const popoverRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
 
@@ -165,6 +166,16 @@ export function Feedback({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [isOpen]);
 
+  // Calculate popover position when opened
+  useEffect(() => {
+    if (!isOpen || !triggerRef.current) return;
+    const rect = triggerRef.current.getBoundingClientRect();
+    setPopoverPos({
+      top: rect.top - 8, // 8px gap above trigger
+      left: rect.left + rect.width / 2,
+    });
+  }, [isOpen]);
+
   // Close on Escape
   useEffect(() => {
     if (!isOpen) return;
@@ -192,8 +203,9 @@ export function Feedback({
           padding: "0 12px",
           borderRadius: 6,
           border: "none",
-          background: "var(--ds-gray-1000)",
-          color: "var(--ds-background-100)",
+          background: "var(--ds-background-100)",
+          color: "var(--ds-gray-1000)",
+          boxShadow: "var(--ds-gray-alpha-400) 0px 0px 0px 1px",
           fontSize: 14,
           lineHeight: "20px",
           fontWeight: 500,
@@ -218,15 +230,15 @@ export function Feedback({
       </button>
 
       {/* Popover */}
-      {isOpen && (
+      {isOpen && popoverPos && (
         <div
           ref={popoverRef}
           role="dialog"
           style={{
-            position: "absolute",
-            bottom: "calc(100% + 8px)",
-            left: "50%",
-            transform: "translateX(-50%)",
+            position: "fixed",
+            top: popoverPos.top,
+            left: popoverPos.left,
+            transform: "translateX(-50%) translateY(-100%)",
             width: 340,
             borderRadius: 12,
             background: "var(--ds-background-100)",
@@ -414,11 +426,11 @@ export function Feedback({
         @keyframes feedbackFadeIn {
           from {
             opacity: 0;
-            transform: translateX(-50%) scale(0.95);
+            transform: translateX(-50%) translateY(-100%) scale(0.95);
           }
           to {
             opacity: 1;
-            transform: translateX(-50%) scale(1);
+            transform: translateX(-50%) translateY(-100%) scale(1);
           }
         }
       `}</style>
