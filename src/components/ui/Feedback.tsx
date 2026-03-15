@@ -656,6 +656,11 @@ export function FeedbackWithSelect({
           overflow: hidden;
           transition: box-shadow 0.15s ease;
         }
+        @media (hover: hover) {
+          .feedback-select-wrapper:hover {
+            box-shadow: 0 0 0 1px var(--ds-gray-alpha-500);
+          }
+        }
         .feedback-select-wrapper:focus-within {
           box-shadow: 0 0 0 1px var(--ds-gray-alpha-600), 0px 0px 0px 4px rgba(0, 0, 0, 0.16);
         }
@@ -992,6 +997,11 @@ export function Feedback({
           box-shadow: 0 0 0 1px var(--ds-gray-alpha-400);
           overflow: hidden;
           transition: box-shadow 0.15s ease;
+        }
+        @media (hover: hover) {
+          .feedback-textarea-wrapper:hover {
+            box-shadow: 0 0 0 1px var(--ds-gray-alpha-500);
+          }
         }
         .feedback-textarea-wrapper:focus-within {
           box-shadow: 0 0 0 1px var(--ds-gray-alpha-600), 0px 0px 0px 4px rgba(0, 0, 0, 0.16);
