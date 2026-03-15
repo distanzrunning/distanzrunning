@@ -8,7 +8,7 @@ import {
   getTokenStyle,
   type DualThemeToken,
 } from "@/components/ui/useShikiHighlighter";
-import { Feedback } from "@/components/ui/Feedback";
+import { Feedback, FeedbackInline } from "@/components/ui/Feedback";
 
 // ============================================================================
 // Toast Component
@@ -319,32 +319,23 @@ function DefaultExample() {
   );
 }`;
 
-const customLabelCode = `import { Feedback } from '@/components/ui/Feedback';
+const inlineCode = `import { FeedbackInline } from '@/components/ui/Feedback';
 
-function CustomLabelExample() {
+function InlineExample() {
   return (
-    <Feedback
-      buttonLabel="Rate this article"
+    <FeedbackInline
       onSubmit={(data) => console.log(data)}
     />
   );
 }`;
 
-const withMetadataCode = `import { Feedback } from '@/components/ui/Feedback';
+const inlineCustomLabelCode = `import { FeedbackInline } from '@/components/ui/Feedback';
 
-function FeedbackWithMetadataExample() {
+function InlineCustomLabelExample() {
   return (
-    <Feedback
-      buttonLabel="How was this race report?"
-      onSubmit={(data) => {
-        console.log({
-          ...data,
-          metadata: {
-            page: "/races/boston-marathon-2026",
-            section: "Race Report",
-          },
-        });
-      }}
+    <FeedbackInline
+      label="How was this race report?"
+      onSubmit={(data) => console.log(data)}
     />
   );
 }`;
@@ -363,31 +354,22 @@ function DefaultDemo() {
   );
 }
 
-function CustomLabelDemo() {
+function InlineDemo() {
   return (
     <div style={{ display: "flex", justifyContent: "center" }}>
-      <Feedback
-        buttonLabel="Rate this article"
+      <FeedbackInline
         onSubmit={(data) => console.log(data)}
       />
     </div>
   );
 }
 
-function FeedbackWithMetadataDemo() {
+function InlineCustomLabelDemo() {
   return (
     <div style={{ display: "flex", justifyContent: "center" }}>
-      <Feedback
-        buttonLabel="How was this race report?"
-        onSubmit={(data) => {
-          console.log({
-            ...data,
-            metadata: {
-              page: "/races/boston-marathon-2026",
-              section: "Race Report",
-            },
-          });
-        }}
+      <FeedbackInline
+        label="How was this race report?"
+        onSubmit={(data) => console.log(data)}
       />
     </div>
   );
@@ -415,26 +397,26 @@ export default function FeedbackComponent() {
       </Section>
 
       <Section>
-        <SectionHeader id="custom-label" onCopyLink={showToast}>
-          Custom label
+        <SectionHeader id="inline" onCopyLink={showToast}>
+          Inline
         </SectionHeader>
         <p className="text-copy-16 text-textSubtle mt-3 mb-6" style={{ lineHeight: 1.5 }}>
-          The trigger button label can be customized via the buttonLabel prop.
+          A pill-shaped inline widget with emoji selection. Selecting an emoji expands to reveal a textarea and send button. No popover or modal.
         </p>
-        <CodePreview componentCode={customLabelCode}>
-          <CustomLabelDemo />
+        <CodePreview componentCode={inlineCode}>
+          <InlineDemo />
         </CodePreview>
       </Section>
 
       <Section>
-        <SectionHeader id="feedback-with-metadata" onCopyLink={showToast}>
-          Feedback with metadata
+        <SectionHeader id="inline-custom-label" onCopyLink={showToast}>
+          Inline custom label
         </SectionHeader>
         <p className="text-copy-16 text-textSubtle mt-3 mb-6" style={{ lineHeight: 1.5 }}>
-          Attach arbitrary metadata to the feedback submission, such as the current race report page or training plan section.
+          The inline variant label can be customized via the label prop.
         </p>
-        <CodePreview componentCode={withMetadataCode}>
-          <FeedbackWithMetadataDemo />
+        <CodePreview componentCode={inlineCustomLabelCode}>
+          <InlineCustomLabelDemo />
         </CodePreview>
       </Section>
 

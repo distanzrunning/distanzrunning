@@ -116,6 +116,230 @@ const emojiOptions: EmojiOption[] = [
 // Feedback Component
 // ============================================================================
 
+// ============================================================================
+// Inline Feedback Types
+// ============================================================================
+
+export interface FeedbackInlineProps {
+  /** Text shown as the label (default: "Was this helpful?") */
+  label?: string;
+  /** Callback when feedback is submitted */
+  onSubmit?: (data: { emotion: string; feedback: string }) => void;
+  className?: string;
+}
+
+// ============================================================================
+// Inline Feedback Component
+// ============================================================================
+
+export function FeedbackInline({
+  label = "Was this helpful?",
+  onSubmit,
+  className,
+}: FeedbackInlineProps) {
+  const [selectedEmotion, setSelectedEmotion] = useState<string | null>(null);
+  const [feedbackText, setFeedbackText] = useState("");
+  const [submitted, setSubmitted] = useState(false);
+
+  const handleSubmit = useCallback(
+    (e: React.FormEvent) => {
+      e.preventDefault();
+      if (selectedEmotion) {
+        onSubmit?.({ emotion: selectedEmotion, feedback: feedbackText });
+        setSubmitted(true);
+        setTimeout(() => {
+          setSubmitted(false);
+          setSelectedEmotion(null);
+          setFeedbackText("");
+        }, 2000);
+      }
+    },
+    [selectedEmotion, feedbackText, onSubmit],
+  );
+
+  const isExpanded = selectedEmotion !== null && !submitted;
+
+  return (
+    <div className={`feedback-inline-wrapper ${isExpanded ? "feedback-inline-wrapper--expanded" : ""} ${className || ""}`}>
+      {submitted ? (
+        <div className="feedback-inline-trigger">
+          <p
+            style={{
+              color: "var(--ds-gray-900)",
+              fontSize: 14,
+              lineHeight: "20px",
+              fontWeight: 400,
+              margin: 0,
+            }}
+          >
+            Thank you for your feedback!
+          </p>
+        </div>
+      ) : (
+        <>
+          {/* Trigger row: label + emojis */}
+          <div className="feedback-inline-trigger">
+            <p
+              style={{
+                color: "var(--ds-gray-900)",
+                fontSize: 14,
+                lineHeight: "20px",
+                fontWeight: 400,
+                margin: 0,
+              }}
+            >
+              {label}
+            </p>
+            <span
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 1,
+              }}
+            >
+              {emojiOptions.map((emoji) => (
+                <button
+                  key={emoji.id}
+                  type="button"
+                  role="radio"
+                  className={`feedback-emoji${selectedEmotion === emoji.id ? " feedback-emoji--selected" : ""}`}
+                  aria-checked={selectedEmotion === emoji.id}
+                  aria-label={`Select ${emoji.label} emoji`}
+                  onClick={() =>
+                    setSelectedEmotion(
+                      selectedEmotion === emoji.id ? null : emoji.id,
+                    )
+                  }
+                >
+                  {emoji.icon}
+                </button>
+              ))}
+            </span>
+          </div>
+
+          {/* Expanded form */}
+          {isExpanded && (
+            <div>
+              <form onSubmit={handleSubmit}>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 8,
+                    padding: "0 8px 8px",
+                  }}
+                >
+                  <label>
+                    <div className="feedback-textarea-wrapper">
+                      <textarea
+                        id="feedback-textarea"
+                        placeholder="Your feedback..."
+                        value={feedbackText}
+                        onChange={(e) => setFeedbackText(e.target.value)}
+                        autoCapitalize="off"
+                        autoComplete="off"
+                        autoCorrect="off"
+                        spellCheck={false}
+                        style={{
+                          display: "flex",
+                          width: "100%",
+                          height: 100,
+                          borderRadius: 6,
+                          border: "none",
+                          padding: "10px 12px",
+                          fontSize: 14,
+                          lineHeight: "normal",
+                          color: "var(--ds-gray-1000)",
+                          background: "var(--ds-background-100)",
+                          resize: "none",
+                          outline: "none",
+                          fontFamily: "inherit",
+                          boxSizing: "border-box",
+                          appearance: "none",
+                        }}
+                      />
+                    </div>
+                  </label>
+
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "flex-end",
+                      gap: 4,
+                      fontSize: 12,
+                      lineHeight: "16px",
+                      fontWeight: 400,
+                      color: "var(--ds-gray-900)",
+                    }}
+                  >
+                    <MarkdownIcon />
+                    <span>supported.</span>
+                  </div>
+                </div>
+
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "flex-end",
+                    padding: 12,
+                    background: "var(--ds-background-200)",
+                    borderTop: "1px solid var(--ds-gray-200)",
+                    borderRadius: "0 0 30px 30px",
+                  }}
+                >
+                  <button
+                    type="submit"
+                    className="feedback-send-btn"
+                  >
+                    <span
+                      style={{
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                        padding: "0 6px",
+                      }}
+                    >
+                      Send
+                    </span>
+                  </button>
+                </div>
+              </form>
+            </div>
+          )}
+        </>
+      )}
+
+      <style>{`
+        .feedback-inline-wrapper {
+          display: inline-flex;
+          flex-direction: column;
+          border-radius: 30px;
+          border: 1px solid var(--ds-gray-200);
+          background: var(--ds-background-100);
+          overflow: hidden;
+          transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        :is(.dark, [data-theme="dark"]) .feedback-inline-wrapper {
+          border-color: var(--ds-gray-400);
+        }
+        .feedback-inline-trigger {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          height: 48px;
+          padding: 0 8px 0 20px;
+        }
+      `}</style>
+    </div>
+  );
+}
+
+// ============================================================================
+// Feedback (Popover) Component
+// ============================================================================
+
 export function Feedback({
   buttonLabel = "Feedback",
   onSubmit,
