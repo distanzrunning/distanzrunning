@@ -245,6 +245,7 @@ export function Feedback({
             </div>
           ) : (
             <form onSubmit={handleSubmit}>
+              {/* Form content area */}
               <div
                 style={{
                   display: "flex",
@@ -301,15 +302,19 @@ export function Feedback({
                   <MarkdownIcon />
                   <span>supported.</span>
                 </div>
+              </div>
 
-                {/* Actions: emojis + send */}
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-                >
+              {/* Actions bar */}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  padding: 12,
+                  background: "var(--ds-background-200)",
+                  borderTop: "1px solid var(--ds-gray-200)",
+                }}
+              >
                   {/* Emoji buttons */}
                   <span
                     style={{
@@ -370,7 +375,6 @@ export function Feedback({
                     </span>
                   </button>
                 </div>
-              </div>
             </form>
           )}
         </div>
