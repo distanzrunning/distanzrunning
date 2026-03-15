@@ -1149,7 +1149,7 @@
     line-height: inherit;
     scroll-behavior: smooth;
     color: rgb(var(--color-textDefault));
-    background-color: rgb(var(--color-canvas));
+    background-color: var(--ds-background-200);
     overscroll-behavior: none;
     position: relative;
   }
