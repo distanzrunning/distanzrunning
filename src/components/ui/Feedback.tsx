@@ -328,6 +328,7 @@ export function Feedback({
                         key={emoji.id}
                         type="button"
                         role="radio"
+                        className="feedback-emoji"
                         aria-checked={selectedEmotion === emoji.id}
                         aria-label={`Select ${emoji.label} emoji`}
                         onClick={() =>
@@ -424,6 +425,11 @@ export function Feedback({
         }
         .feedback-textarea-wrapper:focus-within {
           box-shadow: 0 0 0 1px var(--ds-gray-alpha-600), 0px 0px 0px 4px rgba(0, 0, 0, 0.16);
+        }
+        @media (hover: hover) {
+          .feedback-emoji:hover {
+            background: var(--ds-blue-300);
+          }
         }
         .feedback-send-btn {
           display: flex;
