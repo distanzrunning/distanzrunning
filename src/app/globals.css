@@ -608,7 +608,7 @@
     --color-surface: 255, 255, 255; /* Primary surface - white */
     --color-surfaceSubtle: var(--ds-background-100-rgb); /* Subtle surface */
     --color-surfaceWarm: var(--ds-gray-200-rgb); /* Warm-tinted surface */
-    --color-canvas: var(--ds-background-100-rgb); /* Page background */
+    --color-canvas: var(--ds-background-200-rgb); /* Page background */
 
     /* Elevated Surfaces */
     --color-surfaceElevated1: 255, 255, 255;
@@ -1062,7 +1062,7 @@
     --color-surface: var(--ds-gray-100-rgb); /* Elevated surfaces */
     --color-surfaceSubtle: var(--ds-gray-200-rgb); /* Subtle elevation */
     --color-surfaceWarm: var(--ds-gray-200-rgb); /* Warm-tinted surface */
-    --color-canvas: 10, 10, 10; /* Page background - near black */
+    --color-canvas: var(--ds-background-200-rgb); /* Page background */
 
     /* Elevated Surfaces - Progressive lightening */
     --color-surfaceElevated1: var(--ds-gray-200-rgb); /* Level 1 */
