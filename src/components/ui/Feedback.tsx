@@ -437,7 +437,7 @@ export function FeedbackWithSelect({
     if (!isOpen || !triggerRef.current) return;
     const rect = triggerRef.current.getBoundingClientRect();
     setPopoverPos({
-      top: rect.top - 8,
+      top: rect.bottom + 8, // 8px gap below trigger
       left: rect.left + rect.width / 2,
     });
   }, [isOpen]);
@@ -481,7 +481,7 @@ export function FeedbackWithSelect({
             position: "fixed",
             top: popoverPos.top,
             left: popoverPos.left,
-            transform: "translateX(-50%) translateY(-100%)",
+            transform: "translateX(-50%)",
             width: 340,
             borderRadius: 12,
             background: "var(--ds-background-100)",
@@ -763,7 +763,7 @@ export function Feedback({
     if (!isOpen || !triggerRef.current) return;
     const rect = triggerRef.current.getBoundingClientRect();
     setPopoverPos({
-      top: rect.top - 8, // 8px gap above trigger
+      top: rect.bottom + 8, // 8px gap below trigger
       left: rect.left + rect.width / 2,
     });
   }, [isOpen]);
@@ -810,7 +810,7 @@ export function Feedback({
             position: "fixed",
             top: popoverPos.top,
             left: popoverPos.left,
-            transform: "translateX(-50%) translateY(-100%)",
+            transform: "translateX(-50%)",
             width: 340,
             borderRadius: 12,
             background: "var(--ds-background-100)",
@@ -1064,11 +1064,11 @@ export function Feedback({
         @keyframes feedbackFadeIn {
           from {
             opacity: 0;
-            transform: translateX(-50%) translateY(-100%) scale(0.95);
+            transform: translateX(-50%) scale(0.95);
           }
           to {
             opacity: 1;
-            transform: translateX(-50%) translateY(-100%) scale(1);
+            transform: translateX(-50%) scale(1);
           }
         }
       `}</style>
