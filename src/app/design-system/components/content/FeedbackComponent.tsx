@@ -8,7 +8,7 @@ import {
   getTokenStyle,
   type DualThemeToken,
 } from "@/components/ui/useShikiHighlighter";
-import { Feedback, FeedbackInline } from "@/components/ui/Feedback";
+import { Feedback, FeedbackInline, FeedbackWithSelect } from "@/components/ui/Feedback";
 
 // ============================================================================
 // Toast Component
@@ -329,12 +329,21 @@ function InlineExample() {
   );
 }`;
 
-const inlineCustomLabelCode = `import { FeedbackInline } from '@/components/ui/Feedback';
+const withSelectCode = `import { FeedbackWithSelect } from '@/components/ui/Feedback';
 
-function InlineCustomLabelExample() {
+const topics = [
+  { label: "Race Reports", value: "Race Reports" },
+  { label: "Training Plans", value: "Training Plans" },
+  { label: "Gear Reviews", value: "Gear Reviews" },
+  { label: "Nutrition", value: "Nutrition" },
+  { label: "Injury Prevention", value: "Injury Prevention" },
+];
+
+function FeedbackWithSelectExample() {
   return (
-    <FeedbackInline
-      label="How was this race report?"
+    <FeedbackWithSelect
+      options={topics}
+      selectPlaceholder="Select a topic..."
       onSubmit={(data) => console.log(data)}
     />
   );
@@ -364,11 +373,20 @@ function InlineDemo() {
   );
 }
 
-function InlineCustomLabelDemo() {
+const withSelectTopics = [
+  { label: "Race Reports", value: "Race Reports" },
+  { label: "Training Plans", value: "Training Plans" },
+  { label: "Gear Reviews", value: "Gear Reviews" },
+  { label: "Nutrition", value: "Nutrition" },
+  { label: "Injury Prevention", value: "Injury Prevention" },
+];
+
+function WithSelectDemo() {
   return (
     <div style={{ display: "flex", justifyContent: "center" }}>
-      <FeedbackInline
-        label="How was this race report?"
+      <FeedbackWithSelect
+        options={withSelectTopics}
+        selectPlaceholder="Select a topic..."
         onSubmit={(data) => console.log(data)}
       />
     </div>
@@ -409,14 +427,14 @@ export default function FeedbackComponent() {
       </Section>
 
       <Section>
-        <SectionHeader id="inline-custom-label" onCopyLink={showToast}>
-          Inline custom label
+        <SectionHeader id="feedback-with-select" onCopyLink={showToast}>
+          Feedback with Select
         </SectionHeader>
         <p className="text-copy-16 text-textSubtle mt-3 mb-6" style={{ lineHeight: 1.5 }}>
-          The inline variant label can be customized via the label prop.
+          A feedback popover with a topic dropdown above the textarea. The select has the same focus ring as the input.
         </p>
-        <CodePreview componentCode={inlineCustomLabelCode}>
-          <InlineCustomLabelDemo />
+        <CodePreview componentCode={withSelectCode}>
+          <WithSelectDemo />
         </CodePreview>
       </Section>
 

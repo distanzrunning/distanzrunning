@@ -337,6 +337,369 @@ export function FeedbackInline({
 }
 
 // ============================================================================
+// Chevron Down Icon (for select)
+// ============================================================================
+
+function ChevronDownIcon() {
+  return (
+    <svg height="16" strokeLinejoin="round" viewBox="0 0 16 16" width="16" style={{ color: "currentcolor" }}>
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M14.0607 5.49999L13.5303 6.03032L8.7071 10.8535C8.31658 11.2441 7.68341 11.2441 7.29289 10.8535L2.46966 6.03032L1.93933 5.49999L2.99999 4.43933L3.53032 4.96966L7.99999 9.43933L12.4697 4.96966L13 4.43933L14.0607 5.49999Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+}
+
+// ============================================================================
+// Feedback with Select Types
+// ============================================================================
+
+export interface SelectOption {
+  label: string;
+  value: string;
+}
+
+export interface FeedbackWithSelectProps {
+  /** Text shown on the trigger button (default: "Feedback") */
+  buttonLabel?: string;
+  /** Placeholder for the select (default: "Select a topic...") */
+  selectPlaceholder?: string;
+  /** Options for the select dropdown */
+  options: SelectOption[];
+  /** Label for the select (for accessibility) */
+  selectLabel?: string;
+  /** Callback when feedback is submitted */
+  onSubmit?: (data: { emotion: string; feedback: string; topic: string }) => void;
+  className?: string;
+}
+
+// ============================================================================
+// Feedback with Select Component
+// ============================================================================
+
+export function FeedbackWithSelect({
+  buttonLabel = "Feedback",
+  selectPlaceholder = "Select a topic...",
+  options,
+  selectLabel = "Product topic selection",
+  onSubmit,
+  className,
+}: FeedbackWithSelectProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedEmotion, setSelectedEmotion] = useState<string | null>(null);
+  const [feedbackText, setFeedbackText] = useState("");
+  const [selectedTopic, setSelectedTopic] = useState("");
+  const [submitted, setSubmitted] = useState(false);
+  const [popoverPos, setPopoverPos] = useState<{ top: number; left: number } | null>(null);
+  const popoverRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+
+  const handleSubmit = useCallback(
+    (e: React.FormEvent) => {
+      e.preventDefault();
+      if (selectedEmotion) {
+        onSubmit?.({ emotion: selectedEmotion, feedback: feedbackText, topic: selectedTopic });
+        setSubmitted(true);
+        setTimeout(() => {
+          setIsOpen(false);
+          setTimeout(() => {
+            setSubmitted(false);
+            setSelectedEmotion(null);
+            setFeedbackText("");
+            setSelectedTopic("");
+          }, 200);
+        }, 1500);
+      }
+    },
+    [selectedEmotion, feedbackText, selectedTopic, onSubmit],
+  );
+
+  useEffect(() => {
+    if (!isOpen) return;
+    function handleClickOutside(e: MouseEvent) {
+      if (
+        popoverRef.current &&
+        !popoverRef.current.contains(e.target as Node) &&
+        triggerRef.current &&
+        !triggerRef.current.contains(e.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen || !triggerRef.current) return;
+    const rect = triggerRef.current.getBoundingClientRect();
+    setPopoverPos({
+      top: rect.top - 8,
+      left: rect.left + rect.width / 2,
+    });
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    function handleEscape(e: KeyboardEvent) {
+      if (e.key === "Escape") setIsOpen(false);
+    }
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
+  }, [isOpen]);
+
+  return (
+    <div className={className} style={{ position: "relative", display: "inline-block" }}>
+      <button
+        ref={triggerRef}
+        type="button"
+        onClick={() => setIsOpen(!isOpen)}
+        aria-haspopup="dialog"
+        aria-expanded={isOpen}
+        className="feedback-trigger"
+      >
+        <span
+          style={{
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+            padding: "0 6px",
+          }}
+        >
+          {buttonLabel}
+        </span>
+      </button>
+
+      {isOpen && popoverPos && (
+        <div
+          ref={popoverRef}
+          role="dialog"
+          style={{
+            position: "fixed",
+            top: popoverPos.top,
+            left: popoverPos.left,
+            transform: "translateX(-50%) translateY(-100%)",
+            width: 340,
+            borderRadius: 12,
+            background: "var(--ds-background-100)",
+            boxShadow:
+              "rgba(0, 0, 0, 0.08) 0px 0px 0px 1px, rgba(0, 0, 0, 0.02) 0px 1px 1px 0px, rgba(0, 0, 0, 0.04) 0px 4px 8px -4px, rgba(0, 0, 0, 0.06) 0px 16px 24px -8px, var(--ds-gray-100) 0px 0px 0px 1px",
+            overflow: "hidden",
+            zIndex: 101,
+            animation: "feedbackFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
+          }}
+        >
+          {submitted ? (
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                padding: 24,
+                fontSize: 14,
+                lineHeight: "20px",
+                color: "var(--ds-gray-900)",
+              }}
+            >
+              Thank you for your feedback!
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit}>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 8,
+                  padding: 8,
+                }}
+              >
+                {/* Select dropdown */}
+                <label htmlFor="feedback-select">
+                  <div className="feedback-select-wrapper">
+                    <select
+                      id="feedback-select"
+                      className="feedback-select"
+                      aria-labelledby={selectLabel}
+                      value={selectedTopic}
+                      onChange={(e) => setSelectedTopic(e.target.value)}
+                    >
+                      <option disabled value="">{selectPlaceholder}</option>
+                      {options.map((opt) => (
+                        <option key={opt.value} label={opt.label} value={opt.value}>
+                          {opt.label}
+                        </option>
+                      ))}
+                    </select>
+                    <span className="feedback-select-suffix">
+                      <ChevronDownIcon />
+                    </span>
+                  </div>
+                </label>
+
+                {/* Textarea */}
+                <label>
+                  <div className="feedback-textarea-wrapper">
+                    <textarea
+                      id="feedback-textarea"
+                      placeholder="Your feedback..."
+                      value={feedbackText}
+                      onChange={(e) => setFeedbackText(e.target.value)}
+                      autoCapitalize="off"
+                      autoComplete="off"
+                      autoCorrect="off"
+                      spellCheck={false}
+                      style={{
+                        display: "flex",
+                        width: "100%",
+                        height: 100,
+                        borderRadius: 6,
+                        border: "none",
+                        padding: "10px 12px",
+                        fontSize: 14,
+                        lineHeight: "normal",
+                        color: "var(--ds-gray-1000)",
+                        background: "var(--ds-background-100)",
+                        resize: "none",
+                        outline: "none",
+                        fontFamily: "inherit",
+                        boxSizing: "border-box",
+                        appearance: "none",
+                      }}
+                    />
+                  </div>
+                </label>
+
+                {/* Markdown tip */}
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "flex-end",
+                    gap: 4,
+                    fontSize: 12,
+                    lineHeight: "16px",
+                    fontWeight: 400,
+                    color: "var(--ds-gray-900)",
+                  }}
+                >
+                  <MarkdownIcon />
+                  <span>supported.</span>
+                </div>
+              </div>
+
+              {/* Actions bar */}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  padding: 12,
+                  background: "var(--ds-background-200)",
+                  borderTop: "1px solid var(--ds-gray-200)",
+                }}
+              >
+                <span
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 1,
+                  }}
+                >
+                  {emojiOptions.map((emoji) => (
+                    <button
+                      key={emoji.id}
+                      type="button"
+                      role="radio"
+                      className={`feedback-emoji${selectedEmotion === emoji.id ? " feedback-emoji--selected" : ""}`}
+                      aria-checked={selectedEmotion === emoji.id}
+                      aria-label={`Select ${emoji.label} emoji`}
+                      onClick={() =>
+                        setSelectedEmotion(
+                          selectedEmotion === emoji.id ? null : emoji.id,
+                        )
+                      }
+                    >
+                      {emoji.icon}
+                    </button>
+                  ))}
+                </span>
+
+                <button
+                  type="submit"
+                  className="feedback-send-btn"
+                >
+                  <span
+                    style={{
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                      padding: "0 6px",
+                    }}
+                  >
+                    Send
+                  </span>
+                </button>
+              </div>
+            </form>
+          )}
+        </div>
+      )}
+
+      <style>{`
+        .feedback-select-wrapper {
+          position: relative;
+          border-radius: 6px;
+          box-shadow: 0 0 0 1px var(--ds-gray-alpha-400);
+          overflow: hidden;
+          transition: box-shadow 0.15s ease;
+        }
+        .feedback-select-wrapper:focus-within {
+          box-shadow: 0 0 0 1px var(--ds-gray-alpha-600), 0px 0px 0px 4px rgba(0, 0, 0, 0.16);
+        }
+        .feedback-select {
+          display: flex;
+          width: 100%;
+          height: 40px;
+          border-radius: 6px;
+          border: none;
+          padding: 0 36px 0 12px;
+          font-size: 14px;
+          line-height: 20px;
+          color: var(--ds-gray-1000);
+          background: var(--ds-background-100);
+          outline: none;
+          font-family: inherit;
+          box-sizing: border-box;
+          appearance: none;
+          -webkit-appearance: none;
+          cursor: pointer;
+        }
+        .feedback-select:invalid,
+        .feedback-select option[value=""][disabled] {
+          color: var(--ds-gray-700);
+        }
+        .feedback-select option {
+          color: var(--ds-gray-1000);
+        }
+        .feedback-select-suffix {
+          position: absolute;
+          right: 10px;
+          top: 50%;
+          transform: translateY(-50%);
+          pointer-events: none;
+          display: flex;
+          align-items: center;
+          color: var(--ds-gray-900);
+        }
+      `}</style>
+    </div>
+  );
+}
+
+// ============================================================================
 // Feedback (Popover) Component
 // ============================================================================
 
