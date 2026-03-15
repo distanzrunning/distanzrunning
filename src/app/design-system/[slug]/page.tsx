@@ -45,6 +45,7 @@ import DescriptionComponent from "../components/content/DescriptionComponent";
 import DrawerComponent from "../components/content/DrawerComponent";
 import EmptyStateComponent from "../components/content/EmptyStateComponent";
 import EntityComponent from "../components/content/EntityComponent";
+import ErrorComponent from "../components/content/ErrorComponent";
 import PaginationComponent from "../components/content/PaginationComponent";
 import CalendarComponent from "../components/content/CalendarComponent";
 import ComponentGeneratorPage from "../components/content/ComponentGeneratorPage";
@@ -598,6 +599,21 @@ export default function DesignSystemPage() {
           onNavigate={handleNavigation}
         >
           <EntityComponent />
+        </ContentWithTOC>
+      );
+    }
+
+    if (activeSlug === "error") {
+      return (
+        <ContentWithTOC
+          tocTitle="On this page"
+          pageTitle="Error"
+          pageSubtitle="Good error design is clear, useful, and friendly. Designing concise and accurate error messages unblocks users and builds trust by meeting people where they are."
+          mainSectionId="error"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
+          <ErrorComponent />
         </ContentWithTOC>
       );
     }
