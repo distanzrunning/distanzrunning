@@ -44,6 +44,7 @@ import ContextMenuComponent from "../components/content/ContextMenuComponent";
 import DescriptionComponent from "../components/content/DescriptionComponent";
 import DrawerComponent from "../components/content/DrawerComponent";
 import EmptyStateComponent from "../components/content/EmptyStateComponent";
+import EntityComponent from "../components/content/EntityComponent";
 import PaginationComponent from "../components/content/PaginationComponent";
 import CalendarComponent from "../components/content/CalendarComponent";
 import ComponentGeneratorPage from "../components/content/ComponentGeneratorPage";
@@ -582,6 +583,21 @@ export default function DesignSystemPage() {
           onNavigate={handleNavigation}
         >
           <EmptyStateComponent />
+        </ContentWithTOC>
+      );
+    }
+
+    if (activeSlug === "entity") {
+      return (
+        <ContentWithTOC
+          tocTitle="On this page"
+          pageTitle="Entity"
+          pageSubtitle="Displays up-to-two columns of content. The left column can contain arbitrary content, and the right column typically contains controls or actions related to the content in the left column."
+          mainSectionId="entity"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
+          <EntityComponent />
         </ContentWithTOC>
       );
     }

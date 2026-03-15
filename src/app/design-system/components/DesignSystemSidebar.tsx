@@ -55,6 +55,7 @@ export const navigation: NavSection[] = [
       { id: "description", label: "Description" },
       { id: "drawer", label: "Drawer" },
       { id: "empty-state", label: "Empty State" },
+      { id: "entity", label: "Entity" },
       { id: "modal", label: "Modal" },
       { id: "pagination", label: "Pagination" },
     ],
