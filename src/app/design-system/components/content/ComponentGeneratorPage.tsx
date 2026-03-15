@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useRef, useCallback, useEffect, useContext } from "react";
-import { Sparkles, Copy, Download, Trash2, Loader2, Check, Eye, Code, Bot, User, Send, X } from "lucide-react";
+import { useState, useRef, useCallback, useEffect, useContext, useMemo } from "react";
+import { Sparkles, Copy, Download, Trash2, Loader2, Check, Eye, Code, Bot, User, Send, X, Square } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import IconButton from "@/components/ui/IconButton";
 import { CodeBlock } from "@/components/ui/CodeBlock";
@@ -318,6 +318,20 @@ export default function ComponentGeneratorPage() {
   const chatEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const messagesRef = useRef<ChatMessage[]>([]);
+  const iframeKeyRef = useRef(0);
+
+  // Memoize preview HTML to avoid rebuilding on every render (#11)
+  const previewHtml = useMemo(
+    () => (transpiledCode ? buildPreviewHtml(transpiledCode, isDark) : ""),
+    [transpiledCode, isDark],
+  );
+
+  // Increment iframe key only when inputs change, avoiding full-code-string keys (#3)
+  const iframeKey = useMemo(() => {
+    if (transpiledCode) iframeKeyRef.current += 1;
+    return iframeKeyRef.current;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [transpiledCode, isDark]);
 
   // Keep messagesRef in sync
   useEffect(() => {
@@ -379,6 +393,14 @@ export default function ComponentGeneratorPage() {
 
     const isRefinement = generatedCode.length > 0;
 
+    // Snapshot conversation history BEFORE adding new messages (avoids stale messagesRef race)
+    const historySnapshot = isRefinement
+      ? messagesRef.current
+          .filter((m) => !m.isThinking && m.content)
+          .map((m) => ({ role: m.role, content: m.role === "assistant" && m.code ? m.code : m.content }))
+      : undefined;
+    const firstUserMsg = messagesRef.current.find((m) => m.role === "user");
+
     // Add user message
     addMessage("user", text);
     setInputValue("");
@@ -389,17 +411,11 @@ export default function ComponentGeneratorPage() {
     setState(isRefinement ? "refining" : "generating");
 
     abortRef.current = new AbortController();
+    let accumulated = "";
 
     try {
-      const firstUserMsg = messagesRef.current.find((m) => m.role === "user");
-      // Build conversation history for refinements (exclude thinking messages)
-      const history = isRefinement
-        ? messagesRef.current
-            .filter((m) => !m.isThinking && m.content)
-            .map((m) => ({ role: m.role, content: m.role === "assistant" && m.code ? m.code : m.content }))
-        : undefined;
       const body: Record<string, unknown> = isRefinement
-        ? { prompt: firstUserMsg?.content || text, refinement: text, previousCode: generatedCode, history }
+        ? { prompt: firstUserMsg?.content || text, refinement: text, previousCode: generatedCode, history: historySnapshot }
         : { prompt: text };
 
       const res = await fetch("/api/generate-component", {
@@ -423,7 +439,6 @@ export default function ComponentGeneratorPage() {
       if (!reader) return;
 
       const decoder = new TextDecoder();
-      let accumulated = "";
       let sseBuffer = "";
 
       while (true) {
@@ -451,7 +466,6 @@ export default function ComponentGeneratorPage() {
               }
               if (parsed.text) {
                 accumulated += parsed.text;
-                setGeneratedCode(accumulated);
               }
             } catch {
               // skip malformed JSON
@@ -522,14 +536,51 @@ export default function ComponentGeneratorPage() {
         code: cleanCode,
       });
     } catch (e: unknown) {
-      if (e instanceof DOMException && e.name === "AbortError") return;
+      if (e instanceof DOMException && e.name === "AbortError") {
+        // User cancelled — use whatever was accumulated so far
+        if (accumulated.length > 50) {
+          const cleanCode = extractCodeFromResponse(accumulated);
+          setGeneratedCode(cleanCode);
+          setComponentName(extractName(cleanCode));
+          try {
+            const transpileRes = await fetch("/api/transpile", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ code: cleanCode }),
+            });
+            const transpileData = await transpileRes.json();
+            if (transpileRes.ok) {
+              setTranspiledCode(transpileData.code);
+              setTranspileError("");
+            } else {
+              setTranspileError(transpileData.error || "Transpilation failed");
+              setTranspiledCode("");
+            }
+          } catch {
+            setTranspileError("Failed to connect to transpile service");
+            setTranspiledCode("");
+          }
+          updateMessage(thinkingId, {
+            isThinking: false,
+            content: "Generation cancelled. Showing partial result.",
+          });
+          setState("preview");
+        } else {
+          updateMessage(thinkingId, {
+            isThinking: false,
+            content: "Generation cancelled.",
+          });
+          setState(generatedCode ? "preview" : "idle");
+        }
+        return;
+      }
       updateMessage(thinkingId, {
         isThinking: false,
         content: "Generation failed. Please try again.",
       });
       setState(generatedCode ? "preview" : "idle");
     }
-  }, [inputValue, generatedCode, messages]);
+  }, [inputValue, generatedCode]);
 
   // Deploy component
   const handleDeploy = useCallback(async (overwrite = false) => {
@@ -590,7 +641,7 @@ export default function ComponentGeneratorPage() {
   }, []);
 
   const isLoading = state === "generating" || state === "refining" || state === "deploying";
-  const hasPreview = generatedCode.length > 0;
+  const hasPreview = generatedCode.length > 0 && state !== "generating";
 
   return (
     <div className="flex flex-col gap-6 p-12 flex-1">
@@ -694,16 +745,26 @@ export default function ComponentGeneratorPage() {
                 }
               }}
             />
-            <Button
-              size="medium"
-              variant="default"
-              shape="square"
-              onClick={handleGenerate}
-              disabled={isLoading || !inputValue.trim()}
-              loading={isLoading}
-            >
-              {!isLoading && <Send className="w-4 h-4" />}
-            </Button>
+            {isLoading ? (
+              <Button
+                size="medium"
+                variant="default"
+                shape="square"
+                onClick={() => abortRef.current?.abort()}
+              >
+                <Square className="w-3.5 h-3.5" />
+              </Button>
+            ) : (
+              <Button
+                size="medium"
+                variant="default"
+                shape="square"
+                onClick={handleGenerate}
+                disabled={!inputValue.trim()}
+              >
+                <Send className="w-4 h-4" />
+              </Button>
+            )}
           </div>
         </div>
 
@@ -879,8 +940,8 @@ export default function ComponentGeneratorPage() {
                   </div>
                 ) : transpiledCode ? (
                   <iframe
-                    key={`${transpiledCode}-${isDark}`}
-                    srcDoc={buildPreviewHtml(transpiledCode, isDark)}
+                    key={iframeKey}
+                    srcDoc={previewHtml}
                     className="w-full h-full border-0"
                     sandbox="allow-scripts allow-same-origin"
                     title="Component preview"
