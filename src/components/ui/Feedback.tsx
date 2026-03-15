@@ -432,6 +432,7 @@ export function Feedback({
         @media (hover: hover) {
           .feedback-emoji:hover {
             background: var(--ds-pink-300);
+            color: var(--ds-pink-800);
           }
         }
         .feedback-send-btn {
