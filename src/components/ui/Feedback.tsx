@@ -117,6 +117,34 @@ const emojiOptions: EmojiOption[] = [
 // ============================================================================
 
 // ============================================================================
+// Popover direction helper
+// ============================================================================
+
+const POPOVER_HEIGHT_ESTIMATE = 320; // rough height of the popover content
+const POPOVER_GAP = 8;
+
+function usePopoverDirection(
+  isOpen: boolean,
+  triggerRef: React.RefObject<HTMLButtonElement | null>,
+) {
+  const [direction, setDirection] = useState<"below" | "above">("below");
+
+  useEffect(() => {
+    if (!isOpen || !triggerRef.current) return;
+    const rect = triggerRef.current.getBoundingClientRect();
+    const spaceBelow = window.innerHeight - rect.bottom - POPOVER_GAP;
+    const spaceAbove = rect.top - POPOVER_GAP;
+    setDirection(
+      spaceBelow >= POPOVER_HEIGHT_ESTIMATE || spaceBelow >= spaceAbove
+        ? "below"
+        : "above",
+    );
+  }, [isOpen, triggerRef]);
+
+  return direction;
+}
+
+// ============================================================================
 // Inline Feedback Types
 // ============================================================================
 
@@ -395,6 +423,7 @@ export function FeedbackWithSelect({
   const [submitted, setSubmitted] = useState(false);
   const popoverRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const direction = usePopoverDirection(isOpen, triggerRef);
 
   const handleSubmit = useCallback(
     (e: React.FormEvent) => {
@@ -469,7 +498,9 @@ export function FeedbackWithSelect({
           role="dialog"
           style={{
             position: "absolute",
-            top: "calc(100% + 8px)",
+            ...(direction === "below"
+              ? { top: "calc(100% + 8px)" }
+              : { bottom: "calc(100% + 8px)" }),
             left: "50%",
             transform: "translateX(-50%)",
             width: 340,
@@ -709,6 +740,7 @@ export function Feedback({
   const [submitted, setSubmitted] = useState(false);
   const popoverRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const direction = usePopoverDirection(isOpen, triggerRef);
 
   const handleSubmit = useCallback(
     (e: React.FormEvent) => {
@@ -787,7 +819,9 @@ export function Feedback({
           role="dialog"
           style={{
             position: "absolute",
-            top: "calc(100% + 8px)",
+            ...(direction === "below"
+              ? { top: "calc(100% + 8px)" }
+              : { bottom: "calc(100% + 8px)" }),
             left: "50%",
             transform: "translateX(-50%)",
             width: 340,
