@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect, useCallback } from "react";
+import { Button } from "@/components/ui/Button";
 
 // ============================================================================
 // Types
@@ -317,21 +318,9 @@ export function FeedbackInline({
                     borderRadius: "0 0 30px 30px",
                   }}
                 >
-                  <button
-                    type="submit"
-                    className="feedback-send-btn"
-                  >
-                    <span
-                      style={{
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        whiteSpace: "nowrap",
-                        padding: "0 6px",
-                      }}
-                    >
-                      Send
-                    </span>
-                  </button>
+                  <Button type="submit" size="small">
+                    Send
+                  </Button>
                 </div>
               </form>
             </div>
@@ -472,25 +461,17 @@ export function FeedbackWithSelect({
 
   return (
     <div className={className} style={{ position: "relative", display: "inline-block" }}>
-      <button
+      <Button
         ref={triggerRef}
         type="button"
+        size="small"
+        variant="secondary"
         onClick={() => setIsOpen(!isOpen)}
         aria-haspopup="dialog"
         aria-expanded={isOpen}
-        className="feedback-trigger"
       >
-        <span
-          style={{
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            whiteSpace: "nowrap",
-            padding: "0 6px",
-          }}
-        >
-          {buttonLabel}
-        </span>
-      </button>
+        {buttonLabel}
+      </Button>
 
       {isOpen && (
         <div
@@ -648,21 +629,9 @@ export function FeedbackWithSelect({
                   ))}
                 </span>
 
-                <button
-                  type="submit"
-                  className="feedback-send-btn"
-                >
-                  <span
-                    style={{
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      whiteSpace: "nowrap",
-                      padding: "0 6px",
-                    }}
-                  >
-                    Send
-                  </span>
-                </button>
+                <Button type="submit" size="small">
+                  Send
+                </Button>
               </div>
             </form>
           )}
@@ -792,25 +761,17 @@ export function Feedback({
   return (
     <div className={className} style={{ position: "relative", display: "inline-block" }}>
       {/* Trigger button */}
-      <button
+      <Button
         ref={triggerRef}
         type="button"
+        size="small"
+        variant="secondary"
         onClick={() => setIsOpen(!isOpen)}
         aria-haspopup="dialog"
         aria-expanded={isOpen}
-        className="feedback-trigger"
       >
-        <span
-          style={{
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            whiteSpace: "nowrap",
-            padding: "0 6px",
-          }}
-        >
-          {buttonLabel}
-        </span>
-      </button>
+        {buttonLabel}
+      </Button>
 
       {/* Popover */}
       {isOpen && (
@@ -948,21 +909,9 @@ export function Feedback({
                   </span>
 
                   {/* Send button */}
-                  <button
-                    type="submit"
-                    className="feedback-send-btn"
-                  >
-                    <span
-                      style={{
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        whiteSpace: "nowrap",
-                        padding: "0 6px",
-                      }}
-                    >
-                      Send
-                    </span>
-                  </button>
+                  <Button type="submit" size="small">
+                    Send
+                  </Button>
                 </div>
             </form>
           )}
@@ -971,40 +920,6 @@ export function Feedback({
 
       {/* Styles */}
       <style>{`
-        .feedback-trigger {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          height: 32px;
-          padding: 0 12px;
-          border-radius: 6px;
-          border: none;
-          background: var(--ds-background-100);
-          color: var(--ds-gray-1000);
-          box-shadow: 0 0 0 1px var(--ds-gray-200);
-          font-size: 14px;
-          line-height: 20px;
-          font-weight: 500;
-          cursor: pointer;
-          font-family: inherit;
-          transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
-          user-select: none;
-          touch-action: manipulation;
-          max-width: 100%;
-        }
-        .feedback-trigger:hover {
-          background: var(--ds-gray-100);
-        }
-        :is(.dark, [data-theme="dark"]) .feedback-trigger {
-          box-shadow: 0 0 0 1px var(--ds-gray-400);
-        }
-        :is(.dark, [data-theme="dark"]) .feedback-trigger:hover {
-          background: var(--ds-gray-200);
-        }
-        .feedback-trigger:focus-visible {
-          outline: 2px solid var(--ds-focus-ring);
-          outline-offset: 2px;
-        }
         .feedback-textarea-wrapper {
           border-radius: 6px;
           box-shadow: 0 0 0 1px var(--ds-gray-alpha-400);
@@ -1044,35 +959,6 @@ export function Feedback({
             background: var(--ds-pink-300);
             color: var(--ds-pink-800);
           }
-        }
-        .feedback-send-btn {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          height: 32px;
-          padding: 0 6px;
-          border-radius: 6px;
-          border: none;
-          background: var(--ds-gray-1000);
-          color: var(--ds-background-100);
-          font-size: 14px;
-          line-height: 20px;
-          font-weight: 500;
-          cursor: pointer;
-          font-family: inherit;
-          transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
-          user-select: none;
-          touch-action: manipulation;
-        }
-        .feedback-send-btn:hover {
-          background: color-mix(in srgb, var(--ds-gray-1000), white 15%);
-        }
-        :is(.dark, [data-theme="dark"]) .feedback-send-btn:hover {
-          background: color-mix(in srgb, var(--ds-gray-1000), black 15%);
-        }
-        .feedback-send-btn:focus-visible {
-          outline: 2px solid var(--ds-focus-ring);
-          outline-offset: 2px;
         }
         @keyframes feedbackFadeIn {
           from {
