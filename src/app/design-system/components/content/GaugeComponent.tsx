@@ -506,10 +506,10 @@ function ArcPriorityDemo() {
 function IndeterminateDemo() {
   return (
     <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-      <Gauge value={25} size={20} indeterminate color="var(--ds-red-800)" />
-      <Gauge value={25} size={32} indeterminate color="var(--ds-red-800)" />
-      <Gauge value={25} size={64} indeterminate color="var(--ds-red-800)" />
-      <Gauge value={25} size={128} indeterminate color="var(--ds-red-800)" />
+      <Gauge value={25} size={20} indeterminate />
+      <Gauge value={25} size={32} indeterminate />
+      <Gauge value={25} size={64} indeterminate />
+      <Gauge value={25} size={128} indeterminate />
     </div>
   );
 }

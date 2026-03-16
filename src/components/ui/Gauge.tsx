@@ -100,7 +100,9 @@ export function Gauge({
   const percentToPx = circumference / 100;
   const clampedValue = Math.max(0, Math.min(100, value));
 
-  const resolvedColor = color || getDefaultColor(clampedValue);
+  const resolvedColor = indeterminate
+    ? "var(--ds-gray-alpha-400)"
+    : color || getDefaultColor(clampedValue);
 
   // Calculate stroke percentages
   const offsetFactor = arcPriority === "equal" ? 0.5 : 0;
@@ -228,16 +230,9 @@ export function Gauge({
         .gauge-circle {
           animation: gaugeAppear 0.5s ease forwards;
         }
-        .gauge-indeterminate svg {
-          animation: gaugeIndeterminateSpin 2s linear infinite;
-        }
         @keyframes gaugeAppear {
           from { opacity: 0; transform: scale(0.9); }
           to { opacity: 1; transform: scale(1); }
-        }
-        @keyframes gaugeIndeterminateSpin {
-          from { transform: rotate(-90deg); }
-          to { transform: rotate(270deg); }
         }
       `}</style>
     </div>
