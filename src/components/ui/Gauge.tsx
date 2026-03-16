@@ -136,10 +136,19 @@ export function Gauge({
   const secondaryDash = (secondaryPercent / 100) * circumference;
   const secondaryGap = circumference - secondaryDash;
 
-  // Offset for secondary arc (starts after primary + gap)
-  const primaryOffset = 0;
+  // Offset calculations
   const gapPx = (gap / 100) * circumference;
-  const secondaryOffset = -(primaryDash + gapPx);
+  let primaryOffset: number;
+  let secondaryOffset: number;
+
+  if (arcPriority === "equal" && !indeterminate && clampedValue > 0 && clampedValue < 100) {
+    // Center arcs symmetrically: primary centered at top, secondary at bottom
+    primaryOffset = primaryDash / 2;
+    secondaryOffset = -(primaryDash / 2 + gapPx);
+  } else {
+    primaryOffset = 0;
+    secondaryOffset = -(primaryDash + gapPx);
+  }
 
   const hasContent = showLabel || children || indeterminate;
 
