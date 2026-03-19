@@ -59,6 +59,7 @@ export const navigation: NavSection[] = [
       { id: "error", label: "Error" },
       { id: "feedback", label: "Feedback" },
       { id: "gauge", label: "Gauge" },
+      { id: "grid", label: "Grid" },
       { id: "modal", label: "Modal" },
       { id: "pagination", label: "Pagination" },
     ],
