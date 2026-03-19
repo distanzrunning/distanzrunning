@@ -164,6 +164,8 @@ export function Grid({
         ...style,
       }}
     >
+      {/* Cells first, then guides — matches Geist DOM order */}
+      {children}
       {showGuides && (
         <GridGuides
           rows={rows}
@@ -173,7 +175,6 @@ export function Grid({
           debug={debug}
         />
       )}
-      {children}
     </div>
   );
 }
