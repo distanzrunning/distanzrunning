@@ -112,8 +112,8 @@ function GridGuides({
             key={`guide-${x}-${y}`}
             aria-hidden="true"
             style={{
-              gridColumn: x,
-              gridRow: y,
+              gridColumn: `${x} / ${x + 1}`,
+              gridRow: `${y} / ${y + 1}`,
               position: "absolute",
               inset: 0,
               borderRight,
@@ -157,9 +157,7 @@ export function Grid({
         gridTemplateColumns: `repeat(${columns}, 1fr)`,
         position: "relative",
         width: "100%",
-        ...(debug
-          ? { border: `1px solid ${DEBUG_COLOR}` }
-          : { borderBottom: `1px solid ${GUIDE_COLOR}` }),
+        border: `1px solid ${debug ? DEBUG_COLOR : GUIDE_COLOR}`,
         ...(squareCells ? { aspectRatio: `${columns} / ${rows}` } : {}),
         ...style,
       }}
