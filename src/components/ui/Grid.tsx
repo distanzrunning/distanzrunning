@@ -110,7 +110,7 @@ function GridGuides({
     }
   }
   return (
-    <div aria-hidden="true" style={{ display: "contents", zIndex: 1, pointerEvents: "none" }}>
+    <div aria-hidden="true" style={{ display: "contents", pointerEvents: "none" }}>
       {guides}
     </div>
   );
@@ -132,6 +132,8 @@ export function Grid({
   className,
   style,
 }: GridProps) {
+  const borderColor = debug ? DEBUG_COLOR : GUIDE_COLOR;
+
   return (
     <div
       className={className}
@@ -141,13 +143,13 @@ export function Grid({
         gridTemplateColumns: `repeat(${columns}, 1fr)`,
         position: "relative",
         width: "100%",
-        ...(debug
-          ? { border: `1px solid ${DEBUG_COLOR}` }
-          : { borderBottom: `1px solid ${GUIDE_COLOR}` }),
+        border: `1px solid ${borderColor}`,
         ...(squareCells ? { aspectRatio: `${columns} / ${rows}` } : {}),
         ...style,
       }}
     >
+      {/* Cells first, then guides — matches Geist DOM order */}
+      {children}
       {showGuides && (
         <GridGuides
           rows={rows}
@@ -157,7 +159,6 @@ export function Grid({
           debug={debug}
         />
       )}
-      {children}
     </div>
   );
 }
