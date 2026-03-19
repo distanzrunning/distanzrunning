@@ -310,10 +310,11 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
 // ============================================================================
 
 const gridCode = `import { Grid } from '@/components/ui/Grid';
+import type { JSX } from 'react';
 
-function GridExample() {
+export function Component(): JSX.Element {
   return (
-    <Grid rows={2} columns={5} squareCells debug />
+    <Grid columns={5} rows={2} squareCells debug />
   );
 }`;
 
