@@ -142,6 +142,9 @@ export function Grid({
         position: "relative",
         width: "100%",
         ...(squareCells ? { aspectRatio: `${columns} / ${rows}` } : {}),
+        ...(debug
+          ? { borderBottom: `1px solid ${DEBUG_COLOR}` }
+          : {}),
         ...style,
       }}
     >
