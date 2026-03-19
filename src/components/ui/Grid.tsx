@@ -87,19 +87,41 @@ function GridGuides({
       }
 
       guides.push(
-        <div
-          key={`guide-${x}-${y}`}
-          aria-hidden="true"
-          style={{
-            gridColumn: x,
-            gridRow: y,
-            position: "absolute",
-            inset: 0,
-            borderRight,
-            borderBottom,
-            pointerEvents: "none",
-          }}
-        />
+        debug ? (
+          <div
+            key={`guide-${x}-${y}`}
+            aria-hidden="true"
+            style={{
+              gridColumn: x,
+              gridRow: y,
+              position: "relative",
+            }}
+          >
+            <div
+              style={{
+                position: "absolute",
+                inset: 0,
+                borderRight,
+                borderBottom,
+                pointerEvents: "none",
+              }}
+            />
+          </div>
+        ) : (
+          <div
+            key={`guide-${x}-${y}`}
+            aria-hidden="true"
+            style={{
+              gridColumn: x,
+              gridRow: y,
+              position: "absolute",
+              inset: 0,
+              borderRight,
+              borderBottom,
+              pointerEvents: "none",
+            }}
+          />
+        )
       );
     }
   }
