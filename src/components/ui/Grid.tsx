@@ -93,19 +93,13 @@ function GridGuides({
           style={{
             gridColumn: x,
             gridRow: y,
-            position: "relative",
+            position: "absolute",
+            inset: 0,
+            borderRight,
+            borderBottom,
+            pointerEvents: "none",
           }}
-        >
-          <div
-            style={{
-              position: "absolute",
-              inset: 0,
-              borderRight,
-              borderBottom,
-              pointerEvents: "none",
-            }}
-          />
-        </div>
+        />
       );
     }
   }
