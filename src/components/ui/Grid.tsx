@@ -19,6 +19,8 @@ export interface GridProps {
   hideColumnGuides?: boolean;
   /** Use square aspect ratio for cells based on columns/rows */
   squareCells?: boolean;
+  /** Debug mode: amber guide lines with dashed edges */
+  debug?: boolean;
   children?: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
@@ -37,6 +39,14 @@ export interface GridCellProps {
 }
 
 // ============================================================================
+// Guide colors
+// ============================================================================
+
+const GUIDE_COLOR = "var(--ds-gray-400)";
+const DEBUG_COLOR = "rgba(255, 204, 109, 0.7)";
+const DEBUG_EDGE_COLOR = "rgba(255, 204, 109, 0.1)";
+
+// ============================================================================
 // Guide Overlay
 // ============================================================================
 
@@ -45,17 +55,37 @@ function GridGuides({
   columns,
   hideRowGuides,
   hideColumnGuides,
+  debug,
 }: {
   rows: number;
   columns: number;
   hideRowGuides?: boolean;
   hideColumnGuides?: boolean;
+  debug?: boolean;
 }) {
   const guides = [];
   for (let y = 1; y <= rows; y++) {
     for (let x = 1; x <= columns; x++) {
       const isLastCol = x === columns;
       const isLastRow = y === rows;
+      const hideRight = isLastCol || hideColumnGuides;
+      const hideBottom = isLastRow || hideRowGuides;
+
+      let borderRight: string;
+      let borderBottom: string;
+
+      if (debug) {
+        borderRight = hideRight
+          ? `1px dashed ${DEBUG_EDGE_COLOR}`
+          : `1px solid ${DEBUG_COLOR}`;
+        borderBottom = hideBottom
+          ? `1px dashed ${DEBUG_EDGE_COLOR}`
+          : `1px solid ${DEBUG_COLOR}`;
+      } else {
+        borderRight = hideRight ? "none" : `1px solid ${GUIDE_COLOR}`;
+        borderBottom = hideBottom ? "none" : `1px solid ${GUIDE_COLOR}`;
+      }
+
       guides.push(
         <div
           key={`guide-${x}-${y}`}
@@ -63,22 +93,27 @@ function GridGuides({
           style={{
             gridColumn: x,
             gridRow: y,
-            borderRight:
-              isLastCol || hideColumnGuides
-                ? "none"
-                : "1px solid var(--ds-gray-alpha-400)",
-            borderBottom:
-              isLastRow || hideRowGuides
-                ? "none"
-                : "1px solid var(--ds-gray-alpha-400)",
-            pointerEvents: "none",
-            minHeight: 0,
+            position: "relative",
           }}
-        />
+        >
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              borderRight,
+              borderBottom,
+              pointerEvents: "none",
+            }}
+          />
+        </div>
       );
     }
   }
-  return <>{guides}</>;
+  return (
+    <div aria-hidden="true" style={{ display: "contents", zIndex: 1, pointerEvents: "none" }}>
+      {guides}
+    </div>
+  );
 }
 
 // ============================================================================
@@ -92,6 +127,7 @@ export function Grid({
   hideRowGuides = false,
   hideColumnGuides = false,
   squareCells = false,
+  debug = false,
   children,
   className,
   style,
@@ -115,6 +151,7 @@ export function Grid({
           columns={columns}
           hideRowGuides={hideRowGuides}
           hideColumnGuides={hideColumnGuides}
+          debug={debug}
         />
       )}
       {children}

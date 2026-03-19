@@ -313,7 +313,7 @@ const gridCode = `import { Grid } from '@/components/ui/Grid';
 
 function GridExample() {
   return (
-    <Grid rows={2} columns={5} squareCells />
+    <Grid rows={2} columns={5} squareCells debug />
   );
 }`;
 
@@ -433,7 +433,7 @@ const cellStyle: React.CSSProperties = {
 };
 
 function GridDemo() {
-  return <Grid rows={2} columns={5} squareCells />;
+  return <Grid rows={2} columns={5} squareCells debug />;
 }
 
 function BasicGridDemo() {
