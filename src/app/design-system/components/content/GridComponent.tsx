@@ -319,10 +319,11 @@ export function Component(): JSX.Element {
 }`;
 
 const basicGridCode = `import { Grid, GridCell } from '@/components/ui/Grid';
+import type { JSX } from 'react';
 
-function BasicGridExample() {
+export function Component(): JSX.Element {
   return (
-    <Grid rows={2} columns={3}>
+    <Grid columns={3} rows={2}>
       <GridCell>1</GridCell>
       <GridCell>2</GridCell>
       <GridCell>3</GridCell>
@@ -426,63 +427,56 @@ function SpecificClippingExample() {
 // Demo Components
 // ============================================================================
 
-const cellStyle: React.CSSProperties = {
-  backgroundColor: "var(--ds-gray-alpha-100)",
-  borderRadius: 4,
-  fontWeight: 500,
-  minHeight: 48,
-};
-
 function GridDemo() {
   return <Grid rows={2} columns={5} squareCells debug />;
 }
 
 function BasicGridDemo() {
   return (
-    <Grid rows={2} columns={3} style={{ minHeight: 120 }}>
-      <GridCell style={cellStyle}>1</GridCell>
-      <GridCell style={cellStyle}>2</GridCell>
-      <GridCell style={cellStyle}>3</GridCell>
-      <GridCell style={cellStyle}>4</GridCell>
-      <GridCell style={cellStyle}>5</GridCell>
-      <GridCell style={cellStyle}>6</GridCell>
+    <Grid rows={2} columns={3}>
+      <GridCell>1</GridCell>
+      <GridCell>2</GridCell>
+      <GridCell>3</GridCell>
+      <GridCell>4</GridCell>
+      <GridCell>5</GridCell>
+      <GridCell>6</GridCell>
     </Grid>
   );
 }
 
 function SolidCellsDemo() {
   return (
-    <Grid rows={2} columns={3} style={{ minHeight: 120 }}>
-      <GridCell solid style={{ ...cellStyle, backgroundColor: "var(--ds-background-100)" }}>1</GridCell>
-      <GridCell solid style={{ ...cellStyle, backgroundColor: "var(--ds-background-100)" }}>2</GridCell>
-      <GridCell solid style={{ ...cellStyle, backgroundColor: "var(--ds-background-100)" }}>3</GridCell>
-      <GridCell solid style={{ ...cellStyle, backgroundColor: "var(--ds-background-100)" }}>4</GridCell>
-      <GridCell solid style={{ ...cellStyle, backgroundColor: "var(--ds-background-100)" }}>5</GridCell>
-      <GridCell solid style={{ ...cellStyle, backgroundColor: "var(--ds-background-100)" }}>6</GridCell>
+    <Grid rows={2} columns={3}>
+      <GridCell solid>1</GridCell>
+      <GridCell solid>2</GridCell>
+      <GridCell solid>3</GridCell>
+      <GridCell solid>4</GridCell>
+      <GridCell solid>5</GridCell>
+      <GridCell solid>6</GridCell>
     </Grid>
   );
 }
 
 function ResponsiveGridDemo() {
   return (
-    <Grid rows={2} columns={3} style={{ minHeight: 120 }}>
-      <GridCell style={cellStyle}>1</GridCell>
-      <GridCell style={cellStyle}>2</GridCell>
-      <GridCell style={cellStyle}>3</GridCell>
-      <GridCell style={cellStyle}>4</GridCell>
-      <GridCell style={cellStyle}>5</GridCell>
-      <GridCell style={cellStyle}>6</GridCell>
+    <Grid rows={2} columns={3}>
+      <GridCell>1</GridCell>
+      <GridCell>2</GridCell>
+      <GridCell>3</GridCell>
+      <GridCell>4</GridCell>
+      <GridCell>5</GridCell>
+      <GridCell>6</GridCell>
     </Grid>
   );
 }
 
 function ResponsiveClippingDemo() {
   return (
-    <Grid rows={2} columns={3} style={{ minHeight: 120 }}>
-      <GridCell row="1" column="1 / 3" style={cellStyle}>1 + 2</GridCell>
-      <GridCell style={cellStyle}>3</GridCell>
-      <GridCell style={cellStyle}>4</GridCell>
-      <GridCell row="2" column="2 / 4" style={cellStyle}>5 + 6</GridCell>
+    <Grid rows={2} columns={3}>
+      <GridCell row="1" column="1 / 3">1 + 2</GridCell>
+      <GridCell>3</GridCell>
+      <GridCell>4</GridCell>
+      <GridCell row="2" column="2 / 4">5 + 6</GridCell>
     </Grid>
   );
 }
@@ -495,67 +489,28 @@ function HiddenColumnGuidesDemo() {
   return <Grid rows={3} columns={12} hideColumnGuides squareCells />;
 }
 
-const overlayCellBase: React.CSSProperties = {
-  borderRadius: 4,
-  fontWeight: 500,
-  minHeight: 48,
-  border: "1px solid var(--ds-gray-alpha-400)",
-};
-
 function OverlayingCellsDemo() {
   return (
-    <Grid rows={3} columns={12} style={{ minHeight: 180 }}>
-      <GridCell
-        row="1 / 3"
-        column="1 / 3"
-        solid
-        style={{ ...overlayCellBase, backgroundColor: "var(--ds-blue-100)" }}
-      >
-        1
+    <Grid rows={3} columns={12}>
+      <GridCell row="1 / 3" column="1 / 3" solid>1</GridCell>
+      <GridCell row="2 / 4" column="2 / 4" solid>2</GridCell>
+      <GridCell row="2 / 4" column="3 / 10">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed at felis
       </GridCell>
-      <GridCell
-        row="2 / 4"
-        column="2 / 4"
-        solid
-        style={{ ...overlayCellBase, backgroundColor: "var(--ds-amber-100)", zIndex: 2 }}
-      >
-        2
-      </GridCell>
-      <GridCell
-        row="2 / 4"
-        column="3 / 10"
-        style={{ ...overlayCellBase, backgroundColor: "var(--ds-gray-alpha-100)", fontSize: "0.75rem" }}
-      >
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-      </GridCell>
-      <GridCell
-        row="1 / -1"
-        column="7 / 12"
-        solid
-        style={{ ...overlayCellBase, backgroundColor: "var(--ds-green-100)", zIndex: 2 }}
-      >
-        3
-      </GridCell>
-      <GridCell
-        row="1 / 3"
-        column="11 / 13"
-        solid
-        style={{ ...overlayCellBase, backgroundColor: "var(--ds-purple-100)" }}
-      >
-        4
-      </GridCell>
+      <GridCell row="1 / -1" column="7 / 12" solid>3</GridCell>
+      <GridCell row="1 / 3" column="11 / 13" solid>4</GridCell>
     </Grid>
   );
 }
 
 function SpecificClippingDemo() {
   return (
-    <Grid rows={4} columns={3} style={{ minHeight: 240 }}>
-      <GridCell row="1 / 3" column="1 / 2" style={cellStyle}>1</GridCell>
-      <GridCell row="1 / 2" column="3 / 4" style={cellStyle}>2</GridCell>
-      <GridCell row="2 / 4" column="2 / 3" style={cellStyle}>3</GridCell>
-      <GridCell row="4 / 5" column="1 / 2" style={cellStyle}>4</GridCell>
-      <GridCell row="3 / 5" column="3 / 4" style={cellStyle}>5</GridCell>
+    <Grid rows={4} columns={3}>
+      <GridCell row="1 / 3" column="1 / 2">1</GridCell>
+      <GridCell row="1 / 2" column="3 / 4">2</GridCell>
+      <GridCell row="2 / 4" column="2 / 3">3</GridCell>
+      <GridCell row="4 / 5" column="1 / 2">4</GridCell>
+      <GridCell row="3 / 5" column="3 / 4">5</GridCell>
     </Grid>
   );
 }

@@ -132,6 +132,8 @@ export function Grid({
   className,
   style,
 }: GridProps) {
+  const borderColor = debug ? DEBUG_COLOR : GUIDE_COLOR;
+
   return (
     <div
       className={className}
@@ -141,10 +143,8 @@ export function Grid({
         gridTemplateColumns: `repeat(${columns}, 1fr)`,
         position: "relative",
         width: "100%",
+        border: `1px solid ${borderColor}`,
         ...(squareCells ? { aspectRatio: `${columns} / ${rows}` } : {}),
-        ...(debug
-          ? { border: `1px solid ${DEBUG_COLOR}` }
-          : {}),
         ...style,
       }}
     >
@@ -180,14 +180,15 @@ export function GridCell({
       style={{
         gridRow: row || "auto",
         gridColumn: column || "auto",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: "8px 12px",
+        display: "block",
+        padding: 48,
+        marginRight: 1,
+        marginBottom: 1,
+        overflow: "hidden",
         position: "relative",
-        zIndex: 1,
-        fontSize: "0.875rem",
-        color: "var(--ds-gray-900)",
+        zIndex: 2,
+        fontSize: "1rem",
+        color: "var(--ds-gray-1000)",
         ...(solid ? { backgroundColor: "var(--ds-background-100)" } : {}),
         ...style,
       }}
