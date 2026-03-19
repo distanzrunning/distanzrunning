@@ -132,8 +132,6 @@ export function Grid({
   className,
   style,
 }: GridProps) {
-  const borderColor = debug ? DEBUG_COLOR : GUIDE_COLOR;
-
   return (
     <div
       className={className}
@@ -143,7 +141,9 @@ export function Grid({
         gridTemplateColumns: `repeat(${columns}, 1fr)`,
         position: "relative",
         width: "100%",
-        border: `1px solid ${borderColor}`,
+        ...(debug
+          ? { border: `1px solid ${DEBUG_COLOR}` }
+          : { borderBottom: `1px solid ${GUIDE_COLOR}` }),
         ...(squareCells ? { aspectRatio: `${columns} / ${rows}` } : {}),
         ...style,
       }}
