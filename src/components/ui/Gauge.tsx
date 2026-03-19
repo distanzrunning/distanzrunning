@@ -142,9 +142,10 @@ export function Gauge({
   let secondaryOffset: number;
 
   if (arcPriority === "equal" && !indeterminate && clampedValue > 0 && clampedValue < 100) {
-    // Center arcs symmetrically: primary centered at top, secondary at bottom
-    primaryOffset = primaryDash / 2;
-    secondaryOffset = -(primaryDash / 2 + gapPx);
+    // Center arcs symmetrically: primary on left, secondary on right, gaps at top/bottom
+    const quarterCircle = circumference / 4;
+    primaryOffset = primaryDash / 2 + quarterCircle;
+    secondaryOffset = -(primaryDash / 2 + gapPx) + quarterCircle;
   } else {
     primaryOffset = 0;
     secondaryOffset = -(primaryDash + gapPx);
