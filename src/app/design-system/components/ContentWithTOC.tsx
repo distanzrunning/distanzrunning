@@ -9,21 +9,28 @@ import {
   useContext,
 } from "react";
 import PagePagination from "./PagePagination";
+import { Grid, GridCell } from "@/components/ui/Grid";
 
 // Context to allow sections to break out of padding
 const SectionContext = createContext<boolean>(false);
 
 // Section component for use within ContentWithTOC
+// Uses Grid layout to match Geist design system inner content structure
 export function Section({ children }: { children: React.ReactNode }) {
   const isInContentWithTOC = useContext(SectionContext);
 
   if (isInContentWithTOC) {
-    // Section with padding, followed by divider below
     return (
-      <>
-        <div className="p-12">{children}</div>
-        <hr className="border-t border-borderNeutral" />
-      </>
+      <Grid
+        columns={1}
+        rows={1}
+        showGuides={false}
+        style={{ border: "none", borderBottom: "1px solid var(--ds-gray-400)" }}
+      >
+        <GridCell style={{ margin: 0, overflow: "visible" }}>
+          {children}
+        </GridCell>
+      </Grid>
     );
   }
 
@@ -433,10 +440,15 @@ export default function ContentWithTOC({
     <div className="flex flex-1 min-h-[calc(100vh-65px)]">
       {/* Main content column */}
       <div className="flex-1 min-w-0 flex flex-col">
-        {/* Page Header Section */}
+        {/* Page Header Section — Grid with no borders, matching Geist */}
         {pageTitle && (
-          <>
-            <div className="p-12">
+          <Grid
+            columns={1}
+            rows={1}
+            showGuides={false}
+            style={{ border: "none" }}
+          >
+            <GridCell style={{ margin: 0, overflow: "visible" }}>
               <h1
                 id={mainSectionId}
                 className="text-[24px] md:text-[40px] leading-[1.2] font-semibold text-textDefault mb-3"
@@ -451,10 +463,8 @@ export default function ContentWithTOC({
                   {pageSubtitle}
                 </p>
               )}
-            </div>
-            {/* Divider below title */}
-            <hr className="border-t border-borderNeutral" />
-          </>
+            </GridCell>
+          </Grid>
         )}
 
         {/* Main Content */}
