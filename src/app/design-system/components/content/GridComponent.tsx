@@ -397,7 +397,12 @@ import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
   return (
-    <Grid columns={12} rows={3} hideRowGuides squareCells />
+    <Grid
+      columns={12}
+      height="preserve-aspect-ratio"
+      hideGuides="row"
+      rows={3}
+    />
   );
 }`;
 
