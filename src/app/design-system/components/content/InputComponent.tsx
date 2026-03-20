@@ -558,6 +558,13 @@ function DisabledDemo() {
         suffixStyling={false}
         placeholder="Disabled with prefix and suffix"
       />
+      <Input
+        disabled
+        prefix="distanz/"
+        suffix={<UploadIcon />}
+        suffixStyling={false}
+        placeholder="Default"
+      />
     </div>
   );
 }
