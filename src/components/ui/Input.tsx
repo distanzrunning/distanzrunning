@@ -137,36 +137,33 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
         }}
       >
         {/* Prefix */}
-        {hasPrefix && prefixStyling && (
+        {hasPrefix && (
           <span
-            className="ds-input-prefix"
             style={{
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               padding: `0 ${config.paddingX}px`,
               height: "100%",
-              color: "var(--ds-gray-900)",
+              color: "var(--ds-gray-600)",
               fontSize: config.fontSize,
               lineHeight: "20px",
               whiteSpace: "nowrap",
-              borderRight: "1px solid var(--ds-gray-alpha-400)",
               flexShrink: 0,
-            }}
-          >
-            {prefix}
-          </span>
-        )}
-        {hasPrefix && !prefixStyling && (
-          <span
-            className="ds-input-prefix-nostyle"
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              paddingLeft: config.paddingX,
-              color: "var(--ds-gray-900)",
-              flexShrink: 0,
+              order: 0,
+              position: "relative",
+              cursor: "default",
+              transition: "color 0.15s ease",
+              ...(prefixStyling
+                ? {
+                    background: "var(--ds-background-200)",
+                    borderTopLeftRadius: config.borderRadius,
+                    borderBottomLeftRadius: config.borderRadius,
+                  }
+                : {
+                    background: "var(--ds-background-100)",
+                    marginRight: -config.paddingX,
+                  }),
             }}
           >
             {prefix}
@@ -185,49 +182,62 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
             height: "100%",
             border: "none",
             outline: "none",
-            background: "transparent",
+            background: "var(--ds-background-100)",
             fontSize: config.fontSize,
             lineHeight: "20px",
             color: "var(--ds-gray-1000)",
             fontFamily: "inherit",
-            paddingLeft: hasPrefix && !prefixStyling ? 8 : hasPrefix && prefixStyling ? config.paddingX : config.paddingX,
-            paddingRight: hasSuffix && !suffixStyling ? 8 : hasSuffix && suffixStyling ? config.paddingX : config.paddingX,
+            paddingLeft: config.paddingX,
+            paddingRight: config.paddingX,
             minWidth: 0,
+            order: 1,
+            borderRadius: config.borderRadius,
+            ...(hasPrefix && prefixStyling
+              ? {
+                  borderLeft: "1px solid var(--ds-gray-alpha-400)",
+                  borderTopLeftRadius: 0,
+                  borderBottomLeftRadius: 0,
+                }
+              : {}),
+            ...(hasSuffix && suffixStyling
+              ? {
+                  borderRight: "1px solid var(--ds-gray-alpha-400)",
+                  borderTopRightRadius: 0,
+                  borderBottomRightRadius: 0,
+                }
+              : {}),
           }}
           {...props}
         />
 
         {/* Suffix */}
-        {hasSuffix && suffixStyling && (
+        {hasSuffix && (
           <span
-            className="ds-input-suffix"
             style={{
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               padding: `0 ${config.paddingX}px`,
               height: "100%",
-              color: "var(--ds-gray-900)",
+              color: "var(--ds-gray-600)",
               fontSize: config.fontSize,
               lineHeight: "20px",
               whiteSpace: "nowrap",
-              borderLeft: "1px solid var(--ds-gray-alpha-400)",
               flexShrink: 0,
-            }}
-          >
-            {suffix}
-          </span>
-        )}
-        {hasSuffix && !suffixStyling && (
-          <span
-            className="ds-input-suffix-nostyle"
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              paddingRight: config.paddingX,
-              color: "var(--ds-gray-900)",
-              flexShrink: 0,
+              order: 2,
+              position: "relative",
+              cursor: "default",
+              transition: "color 0.15s ease",
+              ...(suffixStyling
+                ? {
+                    background: "var(--ds-background-200)",
+                    borderTopRightRadius: config.borderRadius,
+                    borderBottomRightRadius: config.borderRadius,
+                  }
+                : {
+                    background: "var(--ds-background-100)",
+                    marginLeft: -config.paddingX,
+                  }),
             }}
           >
             {suffix}
