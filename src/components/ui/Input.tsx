@@ -247,10 +247,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
         .ds-input-container {
           box-shadow: 0 0 0 1px var(--ds-gray-alpha-400);
         }
-        @media (hover: hover) {
-          .ds-input-container:not(.ds-input-container--error):not(.ds-input-container--disabled):hover {
-            box-shadow: 0 0 0 1px var(--ds-gray-alpha-500);
-          }
+        .ds-input-container:not(.ds-input-container--error):not(.ds-input-container--disabled):hover {
+          box-shadow: 0 0 0 1px var(--ds-gray-alpha-500);
         }
         .ds-input-container:focus-within:not(.ds-input-container--error) {
           box-shadow: 0 0 0 1px var(--ds-gray-alpha-600), 0px 0px 0px 4px #00000029 !important;
