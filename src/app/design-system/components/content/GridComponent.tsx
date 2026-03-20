@@ -314,91 +314,73 @@ import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
   return (
-    <Grid.System debug guideWidth={1} unstable_useContainer>
-      <Grid columns={5} height="preserve-aspect-ratio" rows={2} />
-    </Grid.System>
+    <Grid columns={5} rows={2} squareCells debug />
   );
 }`;
 
-const basicGridCode = `import { Grid } from '@/components/ui/Grid';
+const basicGridCode = `import { Grid, GridCell } from '@/components/ui/Grid';
 import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
   return (
-    <Grid.System guideWidth={1} unstable_useContainer>
-      <Grid columns={3} rows={2}>
-        <Grid.Cell>1</Grid.Cell>
-        <Grid.Cell>2</Grid.Cell>
-        <Grid.Cell>3</Grid.Cell>
-        <Grid.Cell>4</Grid.Cell>
-        <Grid.Cell>5</Grid.Cell>
-        <Grid.Cell>6</Grid.Cell>
-      </Grid>
-    </Grid.System>
+    <Grid columns={3} rows={2}>
+      <GridCell>1</GridCell>
+      <GridCell>2</GridCell>
+      <GridCell>3</GridCell>
+      <GridCell>4</GridCell>
+      <GridCell>5</GridCell>
+      <GridCell>6</GridCell>
+    </Grid>
   );
 }`;
 
-const solidCellsCode = `import { Grid } from '@/components/ui/Grid';
+const solidCellsCode = `import { Grid, GridCell } from '@/components/ui/Grid';
 import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
   return (
-    <Grid.System guideWidth={1} unstable_useContainer>
-      <Grid columns={3} rows={2}>
-        <Grid.Cell>1</Grid.Cell>
-        <Grid.Cell>2</Grid.Cell>
-        <Grid.Cell>3</Grid.Cell>
-        <Grid.Cell>4</Grid.Cell>
-        <Grid.Cell>5</Grid.Cell>
-        <Grid.Cell>6</Grid.Cell>
-      </Grid>
-    </Grid.System>
+    <Grid columns={3} rows={2}>
+      <GridCell solid>1</GridCell>
+      <GridCell solid>2</GridCell>
+      <GridCell solid>3</GridCell>
+      <GridCell solid>4</GridCell>
+      <GridCell solid>5</GridCell>
+      <GridCell solid>6</GridCell>
+    </Grid>
   );
 }`;
 
-const responsiveGridCode = `import { Grid } from '@/components/ui/Grid';
+const responsiveGridCode = `import { Grid, GridCell } from '@/components/ui/Grid';
 import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
   return (
-    <Grid.System guideWidth={1} unstable_useContainer>
-      <Grid columns={3} rows={2}>
-        <Grid.Cell>1</Grid.Cell>
-        <Grid.Cell>2</Grid.Cell>
-        <Grid.Cell>3</Grid.Cell>
-        <Grid.Cell>4</Grid.Cell>
-        <Grid.Cell>5</Grid.Cell>
-        <Grid.Cell>6</Grid.Cell>
-      </Grid>
-    </Grid.System>
+    <Grid columns={3} rows={2}>
+      <GridCell>1</GridCell>
+      <GridCell>2</GridCell>
+      <GridCell>3</GridCell>
+      <GridCell>4</GridCell>
+      <GridCell>5</GridCell>
+      <GridCell>6</GridCell>
+    </Grid>
   );
 }`;
 
-const responsiveClippingCode = `import { Grid } from '@/components/ui/Grid';
+const responsiveClippingCode = `import { Grid, GridCell } from '@/components/ui/Grid';
 import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
   return (
-    <Grid.System unstable_useContainer>
-      <Grid columns={{ sm: 1, md: 2, lg: 3 }} rows={{ sm: 6, md: 3, lg: 2 }}>
-        <Grid.Cell
-        column={{ sm: '1', md: '1/3' }}
-        row={{ sm: '1/3', md: 1 }}
-        solid
-      >
-          1 + 2
-        </Grid.Cell>
-        <Grid.Cell>3</Grid.Cell>
-        <Grid.Cell>4</Grid.Cell>
-        <Grid.Cell
-          column={{ sm: 1, md: '1/3', lg: '2/4' }}
-          row={{ sm: '5/7', md: 3, lg: 2 }}
-          solid
-        >
-          5 + 6
-        </Grid.Cell>
-      </Grid>
-    </Grid.System>
+    <Grid columns={3} rows={2}>
+      <GridCell row="1" column="1 / 3" solid>
+        1 + 2
+      </GridCell>
+      <GridCell>3</GridCell>
+      <GridCell>4</GridCell>
+      <GridCell row="2" column="2 / 4" solid>
+        5 + 6
+      </GridCell>
+    </Grid>
   );
 }`;
 
@@ -407,14 +389,7 @@ import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
   return (
-    <Grid.System unstable_useContainer>
-      <Grid
-        columns={12}
-        height="preserve-aspect-ratio"
-        hideGuides="row"
-        rows={3}
-      />
-    </Grid.System>
+    <Grid columns={12} rows={3} hideRowGuides squareCells />
   );
 }`;
 
@@ -423,50 +398,39 @@ import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
   return (
-    <Grid.System unstable_useContainer>
-      <Grid
-        columns={12}
-        height="preserve-aspect-ratio"
-        hideGuides="column"
-        rows={3}
-      />
-    </Grid.System>
+    <Grid columns={12} rows={3} hideColumnGuides squareCells />
   );
 }`;
 
-const overlayingCellsCode = `import { Grid } from '@/components/ui/Grid';
+const overlayingCellsCode = `import { Grid, GridCell } from '@/components/ui/Grid';
 import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
   return (
-    <Grid.System unstable_useContainer>
-      <Grid columns={12} rows={3}>
-        <Grid.Cell row="1 / 3" column="1 / 3" solid>1</Grid.Cell>
-        <Grid.Cell row="2 / 4" column="2 / 4" solid>2</Grid.Cell>
-        <Grid.Cell row="2 / 4" column="3 / 10">
-          Lorem ipsum dolor sit amet
-        </Grid.Cell>
-        <Grid.Cell row="1 / -1" column="7 / 12" solid>3</Grid.Cell>
-        <Grid.Cell row="1 / 3" column="11 / 13" solid>4</Grid.Cell>
-      </Grid>
-    </Grid.System>
+    <Grid columns={12} rows={3}>
+      <GridCell row="1 / 3" column="1 / 3" solid>1</GridCell>
+      <GridCell row="2 / 4" column="2 / 4" solid>2</GridCell>
+      <GridCell row="2 / 4" column="3 / 10">
+        Lorem ipsum dolor sit amet
+      </GridCell>
+      <GridCell row="1 / -1" column="7 / 12" solid>3</GridCell>
+      <GridCell row="1 / 3" column="11 / 13" solid>4</GridCell>
+    </Grid>
   );
 }`;
 
-const specificClippingCode = `import { Grid } from '@/components/ui/Grid';
+const specificClippingCode = `import { Grid, GridCell } from '@/components/ui/Grid';
 import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
   return (
-    <Grid.System guideWidth={1} unstable_useContainer>
-      <Grid columns={3} rows={4}>
-        <Grid.Cell row="1 / 3" column="1 / 2">1</Grid.Cell>
-        <Grid.Cell row="1 / 2" column="3 / 4">2</Grid.Cell>
-        <Grid.Cell row="2 / 4" column="2 / 3">3</Grid.Cell>
-        <Grid.Cell row="4 / 5" column="1 / 2">4</Grid.Cell>
-        <Grid.Cell row="3 / 5" column="3 / 4">5</Grid.Cell>
-      </Grid>
-    </Grid.System>
+    <Grid columns={3} rows={4}>
+      <GridCell row="1 / 3" column="1 / 2">1</GridCell>
+      <GridCell row="1 / 2" column="3 / 4">2</GridCell>
+      <GridCell row="2 / 4" column="2 / 3">3</GridCell>
+      <GridCell row="4 / 5" column="1 / 2">4</GridCell>
+      <GridCell row="3 / 5" column="3 / 4">5</GridCell>
+    </Grid>
   );
 }`;
 
