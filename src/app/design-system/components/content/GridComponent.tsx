@@ -516,7 +516,7 @@ function OverlayingCellsDemo() {
 
 function SpecificClippingDemo() {
   return (
-    <Grid rows={4} columns={3} style={{ gridTemplateRows: "repeat(4, 1fr)" }}>
+    <Grid rows={4} columns={3} style={{ gridTemplateRows: "118px 59px 59px 118px" }}>
       <GridCell row="1 / 3" column="1 / 2">1</GridCell>
       <GridCell row="1 / 2" column="3 / 4">2</GridCell>
       <GridCell row="2 / 4" column="2 / 3">3</GridCell>
