@@ -446,7 +446,7 @@ export default function ContentWithTOC({
             columns={1}
             rows={1}
             showGuides={false}
-            style={{ border: "none" }}
+            style={{ border: "none", borderBottom: "1px solid var(--ds-gray-400)" }}
           >
             <GridCell style={{ margin: 0, overflow: "visible" }}>
               <h1
