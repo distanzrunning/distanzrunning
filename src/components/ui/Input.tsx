@@ -42,8 +42,8 @@ interface SizeConfig {
 
 const sizeConfigs: Record<InputSize, SizeConfig> = {
   small: { height: 32, fontSize: 14, iconSize: 16, paddingX: 10, borderRadius: 6 },
-  default: { height: 40, fontSize: 14, iconSize: 16, paddingX: 12, borderRadius: 8 },
-  large: { height: 48, fontSize: 16, iconSize: 20, paddingX: 14, borderRadius: 10 },
+  default: { height: 40, fontSize: 14, iconSize: 16, paddingX: 12, borderRadius: 6 },
+  large: { height: 48, fontSize: 16, iconSize: 24, paddingX: 14, borderRadius: 6 },
 };
 
 // ============================================================================
@@ -258,8 +258,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
         .ds-input-container {
           box-shadow: 0 0 0 1px var(--ds-gray-alpha-400);
         }
-        .ds-input-container:focus-within {
-          box-shadow: 0 0 0 1px var(--ds-gray-1000), 0 0 0 4px var(--ds-gray-alpha-200);
+        .ds-input-container:focus-within:not(.ds-input-container--error) {
+          box-shadow: 0 0 0 1px var(--ds-gray-alpha-600), 0px 0px 0px 4px #00000029 !important;
         }
         .ds-input-container--error {
           box-shadow: 0 0 0 1px var(--ds-red-900) !important;
