@@ -340,12 +340,12 @@ import type { JSX } from 'react';
 export function Component(): JSX.Element {
   return (
     <Grid columns={3} rows={2}>
-      <Grid.Cell solid>1</Grid.Cell>
-      <Grid.Cell solid>2</Grid.Cell>
-      <Grid.Cell solid>3</Grid.Cell>
-      <Grid.Cell solid>4</Grid.Cell>
-      <Grid.Cell solid>5</Grid.Cell>
-      <Grid.Cell solid>6</Grid.Cell>
+      <Grid.Cell>1</Grid.Cell>
+      <Grid.Cell>2</Grid.Cell>
+      <Grid.Cell>3</Grid.Cell>
+      <Grid.Cell>4</Grid.Cell>
+      <Grid.Cell>5</Grid.Cell>
+      <Grid.Cell>6</Grid.Cell>
     </Grid>
   );
 }`;
