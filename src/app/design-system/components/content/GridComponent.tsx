@@ -425,11 +425,21 @@ import type { JSX } from 'react';
 export function Component(): JSX.Element {
   return (
     <Grid columns={3} rows={4}>
-      <GridCell row="1 / 3" column="1 / 2">1</GridCell>
-      <GridCell row="1 / 2" column="3 / 4">2</GridCell>
-      <GridCell row="2 / 4" column="2 / 3">3</GridCell>
-      <GridCell row="4 / 5" column="1 / 2">4</GridCell>
-      <GridCell row="3 / 5" column="3 / 4">5</GridCell>
+      <GridCell column="1 / 2" row="1 / 3" solid>
+        1
+      </GridCell>
+      <GridCell column="3 / 4" row="1 / 2" solid>
+        2
+      </GridCell>
+      <GridCell column="2 / 3" row="2 / 4">
+        3
+      </GridCell>
+      <GridCell column="1 / 2" row="4 / 5" solid>
+        4
+      </GridCell>
+      <GridCell column="3 / 4" row="3 / 5" solid>
+        5
+      </GridCell>
     </Grid>
   );
 }`;
