@@ -153,7 +153,7 @@ export function Grid({
       className={className}
       style={{
         display: "grid",
-        gridTemplateRows: `repeat(${rows}, 1fr)`,
+        gridTemplateRows: squareCells ? `repeat(${rows}, 1fr)` : `repeat(${rows}, auto)`,
         gridTemplateColumns: `repeat(${columns}, 1fr)`,
         position: "relative",
         width: "100%",
