@@ -257,16 +257,20 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
           box-shadow: 0 0 0 1px var(--ds-red-900), 0 0 0 4px var(--ds-red-200) !important;
         }
         .ds-input-container--disabled {
-          opacity: 0.5;
           cursor: not-allowed;
-          pointer-events: none;
         }
         .ds-input-field::placeholder {
           color: var(--ds-gray-700);
         }
         .ds-input-field:disabled {
           cursor: not-allowed;
-          color: var(--ds-gray-700);
+          color: var(--ds-gray-600);
+          background: var(--ds-gray-100);
+          -webkit-text-fill-color: var(--ds-gray-600);
+        }
+        .ds-input-field:disabled::placeholder {
+          color: var(--ds-gray-600);
+          -webkit-text-fill-color: var(--ds-gray-600);
         }
       `}</style>
     </div>

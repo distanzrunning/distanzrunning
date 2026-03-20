@@ -544,11 +544,20 @@ function PrefixSuffixDemo() {
 
 function DisabledDemo() {
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 16, maxWidth: 400 }}>
-      <Input disabled placeholder="Disabled placeholder" />
+    <div className="flex flex-col items-start justify-start gap-4 flex-initial">
+      <Input disabled placeholder="Disabled with placeholder" />
       <Input disabled value="Disabled with value" readOnly />
-      <Input disabled prefix={<SearchIcon />} prefixStyling={false} placeholder="Disabled prefix" />
-      <Input disabled prefix="https://" suffix=".com" placeholder="domain" />
+      <Input disabled prefix={<UploadIcon />} placeholder="Disabled with prefix" />
+      <Input disabled suffix={<UploadIcon />} placeholder="Disabled with suffix" />
+      <Input disabled prefix="https://" suffix=".com" placeholder="Disabled with prefix and suffix" />
+      <Input
+        disabled
+        prefix={<UploadIcon />}
+        prefixStyling={false}
+        suffix={<UploadIcon />}
+        suffixStyling={false}
+        placeholder="Disabled with prefix and suffix"
+      />
     </div>
   );
 }
