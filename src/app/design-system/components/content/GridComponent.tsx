@@ -501,16 +501,15 @@ function HiddenColumnGuidesDemo() {
 }
 
 function OverlayingCellsDemo() {
-  const cellStyle = { padding: 16 };
   return (
     <Grid rows={3} columns={12}>
-      <GridCell column="1 / 3" row="1 / 3" solid style={cellStyle}>1</GridCell>
-      <GridCell column="2 / 4" row="2 / 4" style={cellStyle}>2</GridCell>
-      <GridCell column="3 / 10" row="2 / 4" style={cellStyle}>
+      <GridCell column="1 / 3" row="1 / 3" solid>1</GridCell>
+      <GridCell column="2 / 4" row="2 / 4">2</GridCell>
+      <GridCell column="3 / 10" row="2 / 4">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed at felis
       </GridCell>
-      <GridCell column="7 / 12" row="1 / -1" solid style={cellStyle}>3</GridCell>
-      <GridCell column="11 / 13" row="1 / 3" solid style={cellStyle}>4</GridCell>
+      <GridCell column="7 / 12" row="1 / -1" solid>3</GridCell>
+      <GridCell column="11 / 13" row="1 / 3" solid>4</GridCell>
     </Grid>
   );
 }
