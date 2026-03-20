@@ -49,6 +49,7 @@ import ErrorComponent from "../components/content/ErrorComponent";
 import FeedbackComponent from "../components/content/FeedbackComponent";
 import GaugeComponent from "../components/content/GaugeComponent";
 import GridComponent from "../components/content/GridComponent";
+import InputComponent from "../components/content/InputComponent";
 import PaginationComponent from "../components/content/PaginationComponent";
 import CalendarComponent from "../components/content/CalendarComponent";
 import ComponentGeneratorPage from "../components/content/ComponentGeneratorPage";
@@ -662,6 +663,21 @@ export default function DesignSystemPage() {
           onNavigate={handleNavigation}
         >
           <GridComponent />
+        </ContentWithTOC>
+      );
+    }
+
+    if (activeSlug === "input") {
+      return (
+        <ContentWithTOC
+          tocTitle="On this page"
+          pageTitle="Input"
+          pageSubtitle="Retrieve text input from a user."
+          mainSectionId="input"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
+          <InputComponent />
         </ContentWithTOC>
       );
     }
