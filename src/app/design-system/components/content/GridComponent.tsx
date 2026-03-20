@@ -560,7 +560,7 @@ export default function GridComponent() {
           Solid cells
         </SectionHeader>
         <p className="text-copy-16 text-textSubtle mt-3 mb-6" style={{ lineHeight: 1.5 }}>
-          Using the <code>solid</code> prop on cells will occlude the guides that the cell overlaps.
+          Using the <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">solid</code> prop on cells will occlude the guides that the cell overlaps.
         </p>
         <CodePreview componentCode={solidCellsCode}>
           <SolidCellsDemo />
@@ -572,7 +572,7 @@ export default function GridComponent() {
           Responsive grid
         </SectionHeader>
         <p className="text-copy-16 text-textSubtle mt-3 mb-6" style={{ lineHeight: 1.5 }}>
-          Grid component with responsive <code>rows</code> and <code>columns</code> props at all 3 breakpoints.
+          Grid component with responsive <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">rows</code> and <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">columns</code> props at all 3 breakpoints.
         </p>
         <CodePreview componentCode={responsiveGridCode}>
           <ResponsiveGridDemo />
@@ -584,7 +584,7 @@ export default function GridComponent() {
           Responsive Grid with responsive guide clipping cells
         </SectionHeader>
         <p className="text-copy-16 text-textSubtle mt-3 mb-6" style={{ lineHeight: 1.5 }}>
-          Grid component with responsive <code>rows</code> and <code>columns</code> props at all 3 breakpoints as well as guide clipping on specific cells.
+          Grid component with responsive <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">rows</code> and <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">columns</code> props at all 3 breakpoints as well as guide clipping on specific cells.
         </p>
         <CodePreview componentCode={responsiveClippingCode}>
           <ResponsiveClippingDemo />
