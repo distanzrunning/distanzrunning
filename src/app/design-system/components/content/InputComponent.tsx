@@ -492,7 +492,7 @@ export function Component(): JSX.Element {
 
 function DefaultDemo() {
   return (
-    <div style={{ display: "flex", gap: 16, alignItems: "flex-start" }}>
+    <div className="flex flex-col md:flex-row items-start justify-between gap-4 flex-initial">
       <Input size="small" placeholder="Small" />
       <Input placeholder="Default" />
       <Input size="large" placeholder="Large" />

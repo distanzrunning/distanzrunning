@@ -108,7 +108,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
     .join(" ");
 
   return (
-    <div className="ds-input-wrapper">
+    <div className="ds-input-wrapper" style={{ flex: 1, minWidth: 0 }}>
       {label && (
         <label
           htmlFor={inputId}
