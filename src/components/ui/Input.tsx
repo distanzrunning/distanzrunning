@@ -133,7 +133,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
           height: config.height,
           borderRadius: config.borderRadius,
           background: "var(--ds-background-100)",
-          transition: "box-shadow 0.15s ease, border-color 0.15s ease",
+          transition: "box-shadow 0.15s ease",
+          overflow: "hidden",
         }}
       >
         {/* Prefix */}
@@ -155,15 +156,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
               cursor: "default",
               transition: "color 0.15s ease",
               ...(prefixStyling
-                ? {
-                    background: "var(--ds-background-200)",
-                    borderTopLeftRadius: config.borderRadius,
-                    borderBottomLeftRadius: config.borderRadius,
-                  }
-                : {
-                    background: "var(--ds-background-100)",
-                    marginRight: -config.paddingX,
-                  }),
+                ? { background: "var(--ds-background-200)" }
+                : { marginRight: -config.paddingX }),
             }}
           >
             {prefix}
@@ -191,20 +185,12 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
             paddingRight: config.paddingX,
             minWidth: 0,
             order: 1,
-            borderRadius: config.borderRadius,
+            borderRadius: 0,
             ...(hasPrefix && prefixStyling
-              ? {
-                  borderLeft: "1px solid var(--ds-gray-alpha-400)",
-                  borderTopLeftRadius: 0,
-                  borderBottomLeftRadius: 0,
-                }
+              ? { borderLeft: "1px solid var(--ds-gray-alpha-400)" }
               : {}),
             ...(hasSuffix && suffixStyling
-              ? {
-                  borderRight: "1px solid var(--ds-gray-alpha-400)",
-                  borderTopRightRadius: 0,
-                  borderBottomRightRadius: 0,
-                }
+              ? { borderRight: "1px solid var(--ds-gray-alpha-400)" }
               : {}),
           }}
           {...props}
@@ -229,15 +215,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
               cursor: "default",
               transition: "color 0.15s ease",
               ...(suffixStyling
-                ? {
-                    background: "var(--ds-background-200)",
-                    borderTopRightRadius: config.borderRadius,
-                    borderBottomRightRadius: config.borderRadius,
-                  }
-                : {
-                    background: "var(--ds-background-100)",
-                    marginLeft: -config.paddingX,
-                  }),
+                ? { background: "var(--ds-background-200)" }
+                : { marginLeft: -config.paddingX }),
             }}
           >
             {suffix}

@@ -533,7 +533,7 @@ function PrefixSuffixDemo() {
         placeholder="Default"
       />
       <Input
-        prefix="vercel/"
+        prefix="distanz/"
         suffix={<UploadIcon />}
         suffixStyling={false}
         placeholder="Default"
