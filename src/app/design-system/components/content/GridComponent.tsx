@@ -314,7 +314,9 @@ import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
   return (
-    <Grid columns={5} rows={2} squareCells debug />
+    <Grid.System debug guideWidth={1} unstable_useContainer>
+      <Grid columns={5} height="preserve-aspect-ratio" rows={2} />
+    </Grid.System>
   );
 }`;
 
@@ -323,14 +325,16 @@ import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
   return (
-    <Grid columns={3} rows={2}>
-      <Grid.Cell>1</Grid.Cell>
-      <Grid.Cell>2</Grid.Cell>
-      <Grid.Cell>3</Grid.Cell>
-      <Grid.Cell>4</Grid.Cell>
-      <Grid.Cell>5</Grid.Cell>
-      <Grid.Cell>6</Grid.Cell>
-    </Grid>
+    <Grid.System guideWidth={1} unstable_useContainer>
+      <Grid columns={3} rows={2}>
+        <Grid.Cell>1</Grid.Cell>
+        <Grid.Cell>2</Grid.Cell>
+        <Grid.Cell>3</Grid.Cell>
+        <Grid.Cell>4</Grid.Cell>
+        <Grid.Cell>5</Grid.Cell>
+        <Grid.Cell>6</Grid.Cell>
+      </Grid>
+    </Grid.System>
   );
 }`;
 
@@ -339,14 +343,16 @@ import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
   return (
-    <Grid columns={3} rows={2}>
-      <Grid.Cell>1</Grid.Cell>
-      <Grid.Cell>2</Grid.Cell>
-      <Grid.Cell>3</Grid.Cell>
-      <Grid.Cell>4</Grid.Cell>
-      <Grid.Cell>5</Grid.Cell>
-      <Grid.Cell>6</Grid.Cell>
-    </Grid>
+    <Grid.System guideWidth={1} unstable_useContainer>
+      <Grid columns={3} rows={2}>
+        <Grid.Cell>1</Grid.Cell>
+        <Grid.Cell>2</Grid.Cell>
+        <Grid.Cell>3</Grid.Cell>
+        <Grid.Cell>4</Grid.Cell>
+        <Grid.Cell>5</Grid.Cell>
+        <Grid.Cell>6</Grid.Cell>
+      </Grid>
+    </Grid.System>
   );
 }`;
 
@@ -355,14 +361,16 @@ import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
   return (
-    <Grid columns={3} rows={2}>
-      <Grid.Cell>1</Grid.Cell>
-      <Grid.Cell>2</Grid.Cell>
-      <Grid.Cell>3</Grid.Cell>
-      <Grid.Cell>4</Grid.Cell>
-      <Grid.Cell>5</Grid.Cell>
-      <Grid.Cell>6</Grid.Cell>
-    </Grid>
+    <Grid.System guideWidth={1} unstable_useContainer>
+      <Grid columns={3} rows={2}>
+        <Grid.Cell>1</Grid.Cell>
+        <Grid.Cell>2</Grid.Cell>
+        <Grid.Cell>3</Grid.Cell>
+        <Grid.Cell>4</Grid.Cell>
+        <Grid.Cell>5</Grid.Cell>
+        <Grid.Cell>6</Grid.Cell>
+      </Grid>
+    </Grid.System>
   );
 }`;
 
@@ -371,24 +379,26 @@ import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
   return (
-    <Grid columns={{ sm: 1, md: 2, lg: 3 }} rows={{ sm: 6, md: 3, lg: 2 }}>
-      <Grid.Cell
+    <Grid.System unstable_useContainer>
+      <Grid columns={{ sm: 1, md: 2, lg: 3 }} rows={{ sm: 6, md: 3, lg: 2 }}>
+        <Grid.Cell
         column={{ sm: '1', md: '1/3' }}
         row={{ sm: '1/3', md: 1 }}
         solid
       >
-        1 + 2
-      </Grid.Cell>
-      <Grid.Cell>3</Grid.Cell>
-      <Grid.Cell>4</Grid.Cell>
-      <Grid.Cell
-        column={{ sm: 1, md: '1/3', lg: '2/4' }}
-        row={{ sm: '5/7', md: 3, lg: 2 }}
-        solid
-      >
-        5 + 6
-      </Grid.Cell>
-    </Grid>
+          1 + 2
+        </Grid.Cell>
+        <Grid.Cell>3</Grid.Cell>
+        <Grid.Cell>4</Grid.Cell>
+        <Grid.Cell
+          column={{ sm: 1, md: '1/3', lg: '2/4' }}
+          row={{ sm: '5/7', md: 3, lg: 2 }}
+          solid
+        >
+          5 + 6
+        </Grid.Cell>
+      </Grid>
+    </Grid.System>
   );
 }`;
 
@@ -397,12 +407,14 @@ import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
   return (
-    <Grid
-      columns={12}
-      height="preserve-aspect-ratio"
-      hideGuides="row"
-      rows={3}
-    />
+    <Grid.System unstable_useContainer>
+      <Grid
+        columns={12}
+        height="preserve-aspect-ratio"
+        hideGuides="row"
+        rows={3}
+      />
+    </Grid.System>
   );
 }`;
 
@@ -411,12 +423,14 @@ import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
   return (
-    <Grid
-      columns={12}
-      height="preserve-aspect-ratio"
-      hideGuides="column"
-      rows={3}
-    />
+    <Grid.System unstable_useContainer>
+      <Grid
+        columns={12}
+        height="preserve-aspect-ratio"
+        hideGuides="column"
+        rows={3}
+      />
+    </Grid.System>
   );
 }`;
 
@@ -425,15 +439,17 @@ import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
   return (
-    <Grid columns={12} rows={3}>
-      <Grid.Cell row="1 / 3" column="1 / 3" solid>1</Grid.Cell>
-      <Grid.Cell row="2 / 4" column="2 / 4" solid>2</Grid.Cell>
-      <Grid.Cell row="2 / 4" column="3 / 10">
-        Lorem ipsum dolor sit amet
-      </Grid.Cell>
-      <Grid.Cell row="1 / -1" column="7 / 12" solid>3</Grid.Cell>
-      <Grid.Cell row="1 / 3" column="11 / 13" solid>4</Grid.Cell>
-    </Grid>
+    <Grid.System unstable_useContainer>
+      <Grid columns={12} rows={3}>
+        <Grid.Cell row="1 / 3" column="1 / 3" solid>1</Grid.Cell>
+        <Grid.Cell row="2 / 4" column="2 / 4" solid>2</Grid.Cell>
+        <Grid.Cell row="2 / 4" column="3 / 10">
+          Lorem ipsum dolor sit amet
+        </Grid.Cell>
+        <Grid.Cell row="1 / -1" column="7 / 12" solid>3</Grid.Cell>
+        <Grid.Cell row="1 / 3" column="11 / 13" solid>4</Grid.Cell>
+      </Grid>
+    </Grid.System>
   );
 }`;
 
@@ -442,13 +458,15 @@ import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
   return (
-    <Grid columns={3} rows={4}>
-      <Grid.Cell row="1 / 3" column="1 / 2">1</Grid.Cell>
-      <Grid.Cell row="1 / 2" column="3 / 4">2</Grid.Cell>
-      <Grid.Cell row="2 / 4" column="2 / 3">3</Grid.Cell>
-      <Grid.Cell row="4 / 5" column="1 / 2">4</Grid.Cell>
-      <Grid.Cell row="3 / 5" column="3 / 4">5</Grid.Cell>
-    </Grid>
+    <Grid.System guideWidth={1} unstable_useContainer>
+      <Grid columns={3} rows={4}>
+        <Grid.Cell row="1 / 3" column="1 / 2">1</Grid.Cell>
+        <Grid.Cell row="1 / 2" column="3 / 4">2</Grid.Cell>
+        <Grid.Cell row="2 / 4" column="2 / 3">3</Grid.Cell>
+        <Grid.Cell row="4 / 5" column="1 / 2">4</Grid.Cell>
+        <Grid.Cell row="3 / 5" column="3 / 4">5</Grid.Cell>
+      </Grid>
+    </Grid.System>
   );
 }`;
 
