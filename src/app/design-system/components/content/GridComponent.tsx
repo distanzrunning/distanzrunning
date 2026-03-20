@@ -408,13 +408,13 @@ import type { JSX } from 'react';
 export function Component(): JSX.Element {
   return (
     <Grid columns={12} rows={3}>
-      <GridCell row="1 / 3" column="1 / 3" solid>1</GridCell>
-      <GridCell row="2 / 4" column="2 / 4" solid>2</GridCell>
-      <GridCell row="2 / 4" column="3 / 10">
-        Lorem ipsum dolor sit amet
+      <GridCell column="1 / 3" row="1 / 3" solid>1</GridCell>
+      <GridCell column="2 / 4" row="2 / 4">2</GridCell>
+      <GridCell column="3 / 10" row="2 / 4">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed at felis
       </GridCell>
-      <GridCell row="1 / -1" column="7 / 12" solid>3</GridCell>
-      <GridCell row="1 / 3" column="11 / 13" solid>4</GridCell>
+      <GridCell column="7 / 12" row="1 / -1" solid>3</GridCell>
+      <GridCell column="11 / 13" row="1 / 3" solid>4</GridCell>
     </Grid>
   );
 }`;
@@ -501,15 +501,16 @@ function HiddenColumnGuidesDemo() {
 }
 
 function OverlayingCellsDemo() {
+  const cellStyle = { padding: 16 };
   return (
     <Grid rows={3} columns={12}>
-      <GridCell row="1 / 3" column="1 / 3" solid>1</GridCell>
-      <GridCell row="2 / 4" column="2 / 4" solid>2</GridCell>
-      <GridCell row="2 / 4" column="3 / 10">
+      <GridCell column="1 / 3" row="1 / 3" solid style={cellStyle}>1</GridCell>
+      <GridCell column="2 / 4" row="2 / 4" style={cellStyle}>2</GridCell>
+      <GridCell column="3 / 10" row="2 / 4" style={cellStyle}>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed at felis
       </GridCell>
-      <GridCell row="1 / -1" column="7 / 12" solid>3</GridCell>
-      <GridCell row="1 / 3" column="11 / 13" solid>4</GridCell>
+      <GridCell column="7 / 12" row="1 / -1" solid style={cellStyle}>3</GridCell>
+      <GridCell column="11 / 13" row="1 / 3" solid style={cellStyle}>4</GridCell>
     </Grid>
   );
 }
