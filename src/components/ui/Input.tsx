@@ -264,13 +264,14 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
         }
         .ds-input-field:disabled {
           cursor: not-allowed;
-          color: var(--ds-gray-600);
+          color: var(--ds-gray-700);
           background: var(--ds-gray-100);
-          -webkit-text-fill-color: var(--ds-gray-600);
+          opacity: 1;
+          -webkit-text-fill-color: var(--ds-gray-700);
         }
         .ds-input-field:disabled::placeholder {
-          color: var(--ds-gray-600);
-          -webkit-text-fill-color: var(--ds-gray-600);
+          color: var(--ds-gray-700);
+          -webkit-text-fill-color: var(--ds-gray-700);
         }
       `}</style>
     </div>
