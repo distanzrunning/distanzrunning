@@ -1,6 +1,6 @@
 "use client";
 
-import React, { forwardRef, useId } from "react";
+import React, { forwardRef, useId, useState } from "react";
 
 // ============================================================================
 // Types
@@ -93,6 +93,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
   const generatedId = useId();
   const inputId = idProp || generatedId;
   const config = sizeConfigs[size];
+  const [isHovered, setIsHovered] = useState(false);
 
   const hasPrefix = prefix !== undefined;
   const hasSuffix = suffix !== undefined;
@@ -127,6 +128,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
       )}
       <div
         className={containerClass}
+        onMouseEnter={() => !disabled && !error && setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
         style={{
           display: "flex",
           alignItems: "center",
@@ -135,6 +138,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
           background: "var(--ds-background-100)",
           transition: "box-shadow 0.15s ease",
           overflow: "hidden",
+          ...(isHovered ? { boxShadow: "0 0 0 1px var(--ds-gray-alpha-500)" } : {}),
         }}
       >
         {/* Prefix */}
@@ -156,8 +160,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
               cursor: "default",
               transition: "color 0.15s ease",
               ...(prefixStyling
-                ? { background: "var(--ds-background-200)" }
-                : { marginRight: -config.paddingX }),
+                ? { background: disabled ? "var(--ds-gray-100)" : "var(--ds-background-200)" }
+                : { marginRight: -config.paddingX, ...(disabled ? { background: "var(--ds-gray-100)" } : {}) }),
+              ...(disabled ? { cursor: "not-allowed", color: "var(--ds-gray-700)" } : {}),
             }}
           >
             {prefix}
@@ -215,8 +220,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
               cursor: "default",
               transition: "color 0.15s ease",
               ...(suffixStyling
-                ? { background: "var(--ds-background-200)" }
-                : { marginLeft: -config.paddingX }),
+                ? { background: disabled ? "var(--ds-gray-100)" : "var(--ds-background-200)" }
+                : { marginLeft: -config.paddingX, ...(disabled ? { background: "var(--ds-gray-100)" } : {}) }),
+              ...(disabled ? { cursor: "not-allowed", color: "var(--ds-gray-700)" } : {}),
             }}
           >
             {suffix}
@@ -246,9 +252,6 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
       <style>{`
         .ds-input-container {
           box-shadow: 0 0 0 1px var(--ds-gray-alpha-400);
-        }
-        .ds-input-container:not(.ds-input-container--error):not(.ds-input-container--disabled):hover {
-          box-shadow: 0 0 0 1px var(--ds-gray-alpha-500);
         }
         .ds-input-container:focus-within:not(.ds-input-container--error) {
           box-shadow: 0 0 0 1px var(--ds-gray-alpha-600), 0px 0px 0px 4px #00000029 !important;
