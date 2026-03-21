@@ -94,19 +94,22 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
   const inputId = idProp || generatedId;
   const config = sizeConfigs[size];
   const [isHovered, setIsHovered] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
 
   const hasPrefix = prefix !== undefined;
   const hasSuffix = suffix !== undefined;
 
-  const containerClass = [
-    "ds-input-container",
-    `ds-input-container--${size}`,
-    error ? "ds-input-container--error" : "",
-    disabled ? "ds-input-container--disabled" : "",
-    className || "",
-  ]
-    .filter(Boolean)
-    .join(" ");
+  // Compute box-shadow based on state
+  let containerShadow = "0 0 0 1px var(--ds-gray-alpha-400)";
+  if (error) {
+    containerShadow = isFocused
+      ? "0 0 0 1px var(--ds-red-900), 0 0 0 4px var(--ds-red-200)"
+      : "0 0 0 1px var(--ds-red-900)";
+  } else if (isFocused) {
+    containerShadow = "0 0 0 1px var(--ds-gray-alpha-600), 0px 0px 0px 4px #00000029";
+  } else if (isHovered) {
+    containerShadow = "0 0 0 1px var(--ds-gray-alpha-500)";
+  }
 
   return (
     <div className="ds-input-wrapper">
@@ -127,18 +130,23 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
         </label>
       )}
       <div
-        className={containerClass}
-        onMouseEnter={() => !disabled && !error && setIsHovered(true)}
+        className={className}
+        onMouseEnter={() => !disabled && setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
+        onFocusCapture={() => setIsFocused(true)}
+        onBlurCapture={() => setIsFocused(false)}
         style={{
           display: "flex",
           alignItems: "center",
           height: config.height,
+          maxWidth: "100%",
           borderRadius: config.borderRadius,
           background: "var(--ds-background-100)",
           transition: "box-shadow 0.15s ease",
           overflow: "hidden",
-          ...(isHovered ? { boxShadow: "0 0 0 1px var(--ds-gray-alpha-500)" } : {}),
+          boxShadow: containerShadow,
+          fontSize: config.fontSize,
+          ...(disabled ? { cursor: "not-allowed" } : {}),
         }}
       >
         {/* Prefix */}
@@ -160,7 +168,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
               cursor: "default",
               transition: "color 0.15s ease",
               ...(prefixStyling
-                ? { background: disabled ? "var(--ds-gray-100)" : "var(--ds-background-200)" }
+                ? { background: "var(--ds-background-200)" }
                 : { marginRight: -config.paddingX, ...(disabled ? { background: "var(--ds-gray-100)" } : {}) }),
               ...(disabled ? { cursor: "not-allowed", color: "var(--ds-gray-700)" } : {}),
             }}
@@ -220,7 +228,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
               cursor: "default",
               transition: "color 0.15s ease",
               ...(suffixStyling
-                ? { background: disabled ? "var(--ds-gray-100)" : "var(--ds-background-200)" }
+                ? { background: "var(--ds-background-200)" }
                 : { marginLeft: -config.paddingX, ...(disabled ? { background: "var(--ds-gray-100)" } : {}) }),
               ...(disabled ? { cursor: "not-allowed", color: "var(--ds-gray-700)" } : {}),
             }}
@@ -250,28 +258,10 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
       )}
 
       <style>{`
-        .ds-input-container {
-          box-shadow: 0 0 0 1px var(--ds-gray-alpha-400);
-        }
-        .ds-input-container:focus-within:not(.ds-input-container--error) {
-          box-shadow: 0 0 0 1px var(--ds-gray-alpha-600), 0px 0px 0px 4px #00000029 !important;
-        }
-        .ds-input-container--error {
-          box-shadow: 0 0 0 1px var(--ds-red-900) !important;
-        }
-        .ds-input-container--error:focus-within {
-          box-shadow: 0 0 0 1px var(--ds-red-900), 0 0 0 4px var(--ds-red-200) !important;
-        }
-        .ds-input-container--disabled {
-          cursor: not-allowed;
-        }
         .ds-input-field::placeholder {
           color: var(--ds-gray-700);
         }
         .ds-input-field:disabled {
-          cursor: not-allowed;
-          color: var(--ds-gray-700);
-          background: var(--ds-gray-100);
           opacity: 1;
           -webkit-text-fill-color: var(--ds-gray-700);
         }
