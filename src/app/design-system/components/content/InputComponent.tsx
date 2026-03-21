@@ -562,6 +562,48 @@ function DisabledDemo() {
   );
 }
 
+function EscBadge({ onClick }: { onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      style={{
+        display: "flex",
+        alignItems: "center",
+        background: "transparent",
+        border: "none",
+        cursor: "pointer",
+        padding: "0 12px",
+        height: "100%",
+        marginLeft: -12,
+        order: 2,
+        flexShrink: 0,
+        color: "var(--ds-gray-600)",
+      }}
+    >
+      <kbd
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          minWidth: 20,
+          minHeight: 20,
+          padding: "0 4px",
+          borderRadius: 4,
+          boxShadow: "0 0 0 1px var(--ds-gray-alpha-400)",
+          fontSize: 13,
+          fontWeight: 500,
+          fontFamily: "inherit",
+          color: "var(--ds-gray-800)",
+          lineHeight: "22px",
+        }}
+      >
+        <span>Esc</span>
+      </kbd>
+    </button>
+  );
+}
+
 function SearchDemo() {
   const [value, setValue] = useState("");
   return (
@@ -570,6 +612,8 @@ function SearchDemo() {
         type="search"
         prefix={<SearchIcon />}
         prefixStyling={false}
+        suffix={value ? <EscBadge onClick={() => setValue("")} /> : undefined}
+        suffixStyling={false}
         placeholder="Enter some text..."
         aria-label="Search"
         value={value}

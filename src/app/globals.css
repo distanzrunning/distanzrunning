@@ -1184,6 +1184,10 @@
     color: var(--ds-gray-700);
     -webkit-text-fill-color: var(--ds-gray-700);
   }
+  .ds-input-field[type="search"]::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+    display: none;
+  }
 
   /* Button icon sizing - icons inside buttons inherit size from CSS variable */
   button svg,
