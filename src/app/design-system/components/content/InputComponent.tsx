@@ -573,11 +573,7 @@ function EscBadge({ onClick }: { onClick: () => void }) {
         background: "transparent",
         border: "none",
         cursor: "pointer",
-        padding: "0 12px",
-        height: "100%",
-        marginLeft: -12,
-        order: 2,
-        flexShrink: 0,
+        padding: 0,
         color: "var(--ds-gray-600)",
       }}
     >
