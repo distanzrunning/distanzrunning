@@ -565,12 +565,13 @@ function DisabledDemo() {
 function SearchDemo() {
   const [value, setValue] = useState("");
   return (
-    <div style={{ maxWidth: 400 }}>
+    <div style={{ width: "100%" }}>
       <Input
         type="search"
         prefix={<SearchIcon />}
         prefixStyling={false}
-        placeholder="Search..."
+        placeholder="Enter some text..."
+        aria-label="Search"
         value={value}
         onChange={(e) => setValue(e.target.value)}
         onKeyDown={(e) => {
