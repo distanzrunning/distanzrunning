@@ -16,6 +16,22 @@
   color: #000;
 }
 
+/* Input component styles */
+.ds-input-container:hover:not(.ds-input--disabled):not(.ds-input--error) {
+  box-shadow: 0 0 0 1px var(--ds-gray-alpha-500) !important;
+}
+.ds-input-field::placeholder {
+  color: var(--ds-gray-700);
+}
+.ds-input-field:disabled {
+  opacity: 1;
+  -webkit-text-fill-color: var(--ds-gray-700);
+}
+.ds-input-field:disabled::placeholder {
+  color: var(--ds-gray-700);
+  -webkit-text-fill-color: var(--ds-gray-700);
+}
+
 @property --border-angle {
   inherits: false;
   initial-value: 0deg;

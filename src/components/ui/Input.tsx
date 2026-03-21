@@ -1,6 +1,7 @@
 "use client";
 
 import React, { forwardRef, useId, useState } from "react";
+// Note: hover handled via CSS in globals.css (.ds-input-container:hover)
 
 // ============================================================================
 // Types
@@ -93,13 +94,12 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
   const generatedId = useId();
   const inputId = idProp || generatedId;
   const config = sizeConfigs[size];
-  const [isHovered, setIsHovered] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
 
   const hasPrefix = prefix !== undefined;
   const hasSuffix = suffix !== undefined;
 
-  // Compute box-shadow based on state
+  // Compute box-shadow based on state (hover handled via CSS in globals.css)
   let containerShadow = "0 0 0 1px var(--ds-gray-alpha-400)";
   if (error) {
     containerShadow = isFocused
@@ -107,8 +107,6 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
       : "0 0 0 1px var(--ds-red-900)";
   } else if (isFocused) {
     containerShadow = "0 0 0 1px var(--ds-gray-alpha-600), 0px 0px 0px 4px #00000029";
-  } else if (isHovered) {
-    containerShadow = "0 0 0 1px var(--ds-gray-alpha-500)";
   }
 
   return (
@@ -130,9 +128,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
         </label>
       )}
       <div
-        className={className}
-        onMouseEnter={() => !disabled && setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
+        className={`ds-input-container${error ? " ds-input--error" : ""}${disabled ? " ds-input--disabled" : ""}${className ? ` ${className}` : ""}`}
         onFocusCapture={() => setIsFocused(true)}
         onBlurCapture={() => setIsFocused(false)}
         style={{
@@ -257,19 +253,6 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
         </div>
       )}
 
-      <style>{`
-        .ds-input-field::placeholder {
-          color: var(--ds-gray-700);
-        }
-        .ds-input-field:disabled {
-          opacity: 1;
-          -webkit-text-fill-color: var(--ds-gray-700);
-        }
-        .ds-input-field:disabled::placeholder {
-          color: var(--ds-gray-700);
-          -webkit-text-fill-color: var(--ds-gray-700);
-        }
-      `}</style>
     </div>
   );
 });
