@@ -99,15 +99,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
   const hasPrefix = prefix !== undefined;
   const hasSuffix = suffix !== undefined;
 
-  // Compute box-shadow based on state (hover handled via CSS in globals.css)
-  let containerShadow = "0 0 0 1px var(--ds-gray-alpha-400)";
-  if (error) {
-    containerShadow = isFocused
-      ? "0 0 0 1px var(--ds-red-900), 0 0 0 4px var(--ds-red-200)"
-      : "0 0 0 1px var(--ds-red-900)";
-  } else if (isFocused) {
-    containerShadow = "0 0 0 1px var(--ds-gray-alpha-600), 0px 0px 0px 4px #00000029";
-  }
+  // Focus shadow applied via data attribute, hover/default via CSS
 
   return (
     <div className="ds-input-wrapper">
@@ -129,6 +121,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
       )}
       <div
         className={`ds-input-container${error ? " ds-input--error" : ""}${disabled ? " ds-input--disabled" : ""}${className ? ` ${className}` : ""}`}
+        data-focused={isFocused || undefined}
         onFocusCapture={() => setIsFocused(true)}
         onBlurCapture={() => setIsFocused(false)}
         style={{
@@ -140,7 +133,6 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
           background: "var(--ds-background-100)",
           transition: "box-shadow 0.15s ease",
           overflow: "hidden",
-          boxShadow: containerShadow,
           fontSize: config.fontSize,
           ...(disabled ? { cursor: "not-allowed" } : {}),
         }}

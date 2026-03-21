@@ -17,8 +17,20 @@
 }
 
 /* Input component styles */
+.ds-input-container {
+  box-shadow: 0 0 0 1px var(--ds-gray-alpha-400);
+}
 .ds-input-container:hover:not(.ds-input--disabled):not(.ds-input--error) {
-  box-shadow: 0 0 0 1px var(--ds-gray-alpha-500) !important;
+  box-shadow: 0 0 0 1px var(--ds-gray-alpha-500);
+}
+.ds-input-container[data-focused]:not(.ds-input--error) {
+  box-shadow: 0 0 0 1px var(--ds-gray-alpha-600), 0px 0px 0px 4px #00000029;
+}
+.ds-input-container.ds-input--error {
+  box-shadow: 0 0 0 1px var(--ds-red-900);
+}
+.ds-input-container.ds-input--error[data-focused] {
+  box-shadow: 0 0 0 1px var(--ds-red-900), 0 0 0 4px var(--ds-red-200);
 }
 .ds-input-field::placeholder {
   color: var(--ds-gray-700);
