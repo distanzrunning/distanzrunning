@@ -1,7 +1,6 @@
 "use client";
 
-import React, { forwardRef, useId, useState } from "react";
-// Note: hover handled via CSS in globals.css (.ds-input-container:hover)
+import React, { forwardRef, useId } from "react";
 
 // ============================================================================
 // Types
@@ -94,12 +93,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
   const generatedId = useId();
   const inputId = idProp || generatedId;
   const config = sizeConfigs[size];
-  const [isFocused, setIsFocused] = useState(false);
-
   const hasPrefix = prefix !== undefined;
   const hasSuffix = suffix !== undefined;
-
-  // Focus shadow applied via data attribute, hover/default via CSS
 
   return (
     <div className="ds-input-wrapper">
@@ -121,9 +116,6 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
       )}
       <div
         className={`ds-input-container${error ? " ds-input--error" : ""}${disabled ? " ds-input--disabled" : ""}${className ? ` ${className}` : ""}`}
-        data-focused={isFocused || undefined}
-        onFocusCapture={() => setIsFocused(true)}
-        onBlurCapture={() => setIsFocused(false)}
         style={{
           display: "flex",
           alignItems: "center",
