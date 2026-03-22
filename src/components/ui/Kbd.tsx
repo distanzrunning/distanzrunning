@@ -64,7 +64,7 @@ export const Kbd = forwardRef<HTMLElement, KbdProps>(
     const sizeStyle = sizeStyles[size];
 
     const baseStyle: React.CSSProperties = {
-      display: "flex",
+      display: "inline-flex",
       justifyContent: "center",
       alignItems: "center",
       boxShadow: "0 0 0 1px var(--ds-gray-alpha-400)",
