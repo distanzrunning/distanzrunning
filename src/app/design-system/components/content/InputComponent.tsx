@@ -652,18 +652,22 @@ function CommandKBadge({ dirty }: { dirty: boolean }) {
   const kbdBase: React.CSSProperties = {
     display: "flex",
     justifyContent: "center",
+    alignItems: "center",
     minHeight: 20,
     minWidth: 20,
     padding: "0 4px",
     borderRadius: 4,
     boxShadow: "0 0 0 1px var(--ds-gray-alpha-400)",
-    fontSize: 13,
-    fontWeight: 500,
-    lineHeight: "22px",
     fontFamily: "inherit",
     color: "var(--ds-gray-800)",
     overflow: "hidden",
     position: "relative",
+  };
+
+  const textStyle: React.CSSProperties = {
+    fontSize: 12,
+    lineHeight: "20px",
+    fontWeight: 500,
   };
 
   return (
@@ -675,7 +679,7 @@ function CommandKBadge({ dirty }: { dirty: boolean }) {
         gap: 2,
       }}
     >
-      {/* First kbd: contains both ⌘ and Esc, crossfades via translate */}
+      {/* First kbd: contains both Esc and ⌘, crossfades via translate */}
       <kbd
         style={{
           ...kbdBase,
@@ -684,26 +688,23 @@ function CommandKBadge({ dirty }: { dirty: boolean }) {
           transition: `width ${duration} ${spring}, translate ${duration} ${spring}`,
         }}
       >
-        <span>
+        <span style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+          {/* Esc: position absolute, slides in from right */}
           <span
             style={{
-              display: "block",
+              ...textStyle,
               position: "absolute",
-              fontSize: 12,
-              lineHeight: "20px",
-              fontWeight: 500,
               translate: dirty ? "0" : "32px",
               transition: `translate ${duration} ${spring}`,
             }}
           >
             Esc
           </span>
+          {/* ⌘: inline, slides out to left */}
           <span
             style={{
+              ...textStyle,
               display: "inline-block",
-              fontSize: 12,
-              lineHeight: "20px",
-              fontWeight: 500,
               translate: dirty ? "-20px" : "0",
               transition: `translate ${duration} ${spring}`,
             }}
@@ -717,13 +718,12 @@ function CommandKBadge({ dirty }: { dirty: boolean }) {
         style={{
           ...kbdBase,
           marginLeft: 4,
-          padding: "0 4px",
           textAlign: "center",
           translate: dirty ? "32px" : "0",
           transition: `translate ${duration} ${spring}`,
         }}
       >
-        <span>K</span>
+        <span style={textStyle}>K</span>
       </kbd>
     </span>
   );
