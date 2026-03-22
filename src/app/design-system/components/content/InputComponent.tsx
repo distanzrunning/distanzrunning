@@ -757,18 +757,19 @@ function CommandKDemo() {
 
 function ErrorDemo() {
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 24, maxWidth: 400 }}>
-      <Input size="small" error errorMessage="An error message." placeholder="Small" />
-      <Input error errorMessage="An error message." placeholder="Default" />
-      <Input size="large" error errorMessage="An error message." placeholder="Large" />
+    <div className="flex flex-col items-start justify-start gap-8 flex-initial">
+      <Input size="xSmall" error errorMessage="An error message." placeholder="long-error@gmail.com" />
+      <Input size="small" error errorMessage="An error message." placeholder="long-error@gmail.com" />
+      <Input error errorMessage="An error message." placeholder="long-error@gmail.com" />
+      <Input size="large" error errorMessage="An error message." placeholder="long-error@gmail.com" />
     </div>
   );
 }
 
 function LabelDemo() {
   return (
-    <div style={{ maxWidth: 400 }}>
-      <Input label="Email address" placeholder="you@example.com" />
+    <div className="flex flex-col items-start justify-start flex-initial">
+      <Input label="Label" placeholder="Label" />
     </div>
   );
 }

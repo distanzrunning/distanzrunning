@@ -6,7 +6,7 @@ import React, { forwardRef, useId } from "react";
 // Types
 // ============================================================================
 
-export type InputSize = "small" | "default" | "large";
+export type InputSize = "xSmall" | "small" | "default" | "large";
 
 export interface InputProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size" | "prefix"> {
@@ -41,9 +41,10 @@ interface SizeConfig {
 }
 
 const sizeConfigs: Record<InputSize, SizeConfig> = {
-  small: { height: 32, fontSize: 14, iconSize: 16, paddingX: 10, borderRadius: 6 },
-  default: { height: 40, fontSize: 14, iconSize: 16, paddingX: 12, borderRadius: 6 },
-  large: { height: 48, fontSize: 16, iconSize: 24, paddingX: 14, borderRadius: 6 },
+  xSmall: { height: 24, fontSize: 12, iconSize: 12, paddingX: 8, borderRadius: 6 },
+  small: { height: 32, fontSize: 14, iconSize: 16, paddingX: 12, borderRadius: 6 },
+  default: { height: 40, fontSize: 14, iconSize: 20, paddingX: 12, borderRadius: 6 },
+  large: { height: 48, fontSize: 16, iconSize: 24, paddingX: 12, borderRadius: 8 },
 };
 
 // ============================================================================
