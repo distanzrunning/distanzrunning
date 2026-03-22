@@ -562,6 +562,29 @@ function DisabledDemo() {
   );
 }
 
+function KbdInline({ children }: { children: React.ReactNode }) {
+  return (
+    <kbd
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        justifyContent: "center",
+        minWidth: 18,
+        height: 18,
+        padding: "0 3px",
+        borderRadius: 3,
+        boxShadow: "0 0 0 1px var(--ds-gray-alpha-400)",
+        fontSize: 11,
+        fontFamily: "inherit",
+        fontWeight: 500,
+        color: "var(--ds-gray-900)",
+      }}
+    >
+      {children}
+    </kbd>
+  );
+}
+
 function EscBadge({ onClick }: { onClick: () => void }) {
   return (
     <button
@@ -630,15 +653,15 @@ function CommandKDemo() {
     alignItems: "center",
     justifyContent: "center",
     minWidth: 20,
-    height: 20,
+    minHeight: 20,
     padding: "0 4px",
     borderRadius: 4,
-    border: "1px solid var(--ds-gray-alpha-400)",
-    background: "var(--ds-background-200)",
+    boxShadow: "0 0 0 1px var(--ds-gray-alpha-400)",
     fontSize: 12,
-    lineHeight: 1,
+    fontWeight: 500,
+    lineHeight: "20px",
     fontFamily: "inherit",
-    color: "var(--ds-gray-900)",
+    color: "var(--ds-gray-800)",
   };
 
   const badge = value ? (
@@ -651,13 +674,15 @@ function CommandKDemo() {
   );
 
   return (
-    <div style={{ maxWidth: 400 }}>
+    <div style={{ width: "100%" }}>
       <Input
+        type="search"
         prefix={<SearchIcon />}
         prefixStyling={false}
         suffix={badge}
         suffixStyling={false}
-        placeholder="Search documentation..."
+        placeholder="Enter some text..."
+        aria-label="Search"
         value={value}
         onChange={(e) => setValue(e.target.value)}
         onKeyDown={(e) => {
@@ -747,8 +772,11 @@ export default function InputComponent() {
         <SectionHeader id="command-k" onCopyLink={showToast}>
           {"\u2318"}K
         </SectionHeader>
+        <p className="text-copy-16 text-textSubtle mt-3" style={{ lineHeight: 1.5 }}>
+          Displays the <KbdInline>{"\u2318"}</KbdInline> <KbdInline>K</KbdInline> shortcut to indicate that the input supports a command palette.
+        </p>
         <p className="text-copy-16 text-textSubtle mt-3 mb-6" style={{ lineHeight: 1.5 }}>
-          Search input with a keyboard shortcut badge in the suffix. Shows <kbd style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", minWidth: 18, height: 18, padding: "0 3px", borderRadius: 3, border: "1px solid var(--ds-gray-alpha-400)", background: "var(--ds-background-200)", fontSize: 11, fontFamily: "inherit", color: "var(--ds-gray-900)" }}>{"\u2318"}</kbd><kbd style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", minWidth: 18, height: 18, padding: "0 3px", borderRadius: 3, border: "1px solid var(--ds-gray-alpha-400)", background: "var(--ds-background-200)", fontSize: 11, fontFamily: "inherit", color: "var(--ds-gray-900)" }}>K</kbd> when empty and <kbd style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", minWidth: 18, height: 18, padding: "0 3px", borderRadius: 3, border: "1px solid var(--ds-gray-alpha-400)", background: "var(--ds-background-200)", fontSize: 11, fontFamily: "inherit", color: "var(--ds-gray-900)" }}>Esc</kbd> when dirty.
+          Transitions to showing <KbdInline>Esc</KbdInline> when the field is dirty.
         </p>
         <CodePreview componentCode={commandKCode}>
           <CommandKDemo />
