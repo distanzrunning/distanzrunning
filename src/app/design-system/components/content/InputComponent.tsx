@@ -646,20 +646,24 @@ function SearchDemo() {
 }
 
 function CommandKBadge({ dirty }: { dirty: boolean }) {
-  const kbdStyle: React.CSSProperties = {
-    display: "inline-flex",
-    alignItems: "center",
+  const spring = "cubic-bezier(0.175, 0.885, 0.32, 1.1)";
+  const duration = "0.56s";
+
+  const kbdBase: React.CSSProperties = {
+    display: "flex",
     justifyContent: "center",
-    minWidth: 20,
     minHeight: 20,
+    minWidth: 20,
     padding: "0 4px",
     borderRadius: 4,
     boxShadow: "0 0 0 1px var(--ds-gray-alpha-400)",
-    fontSize: 12,
+    fontSize: 13,
     fontWeight: 500,
-    lineHeight: "20px",
+    lineHeight: "22px",
     fontFamily: "inherit",
     color: "var(--ds-gray-800)",
+    overflow: "hidden",
+    position: "relative",
   };
 
   return (
@@ -669,49 +673,57 @@ function CommandKBadge({ dirty }: { dirty: boolean }) {
         flexDirection: "row",
         alignItems: "center",
         gap: 2,
-        position: "relative",
-        overflow: "hidden",
       }}
     >
-      {/* First kbd: shows ⌘ or Esc */}
-      <kbd style={kbdStyle}>
-        <span style={{ position: "relative", display: "inline-grid" }}>
+      {/* First kbd: contains both ⌘ and Esc, crossfades via translate */}
+      <kbd
+        style={{
+          ...kbdBase,
+          marginLeft: 4,
+          width: dirty ? 28 : 20,
+          transition: `width ${duration} ${spring}, translate ${duration} ${spring}`,
+        }}
+      >
+        <span>
           <span
             style={{
-              gridArea: "1 / 1",
-              transition: "opacity 0.15s ease, transform 0.15s ease",
-              opacity: dirty ? 1 : 0,
-              transform: dirty ? "translateX(0)" : "translateX(8px)",
+              display: "block",
+              position: "absolute",
+              fontSize: 12,
+              lineHeight: "20px",
+              fontWeight: 500,
+              translate: dirty ? "0" : "32px",
+              transition: `translate ${duration} ${spring}`,
             }}
           >
             Esc
           </span>
           <span
             style={{
-              gridArea: "1 / 1",
-              transition: "opacity 0.15s ease, transform 0.15s ease",
-              opacity: dirty ? 0 : 1,
-              transform: dirty ? "translateX(-8px)" : "translateX(0)",
+              display: "inline-block",
+              fontSize: 12,
+              lineHeight: "20px",
+              fontWeight: 500,
+              translate: dirty ? "-20px" : "0",
+              transition: `translate ${duration} ${spring}`,
             }}
           >
             {"\u2318"}
           </span>
         </span>
       </kbd>
-      {/* Second kbd: K, slides out when dirty */}
+      {/* K kbd: slides out to the right when dirty */}
       <kbd
         style={{
-          ...kbdStyle,
-          transition: "opacity 0.15s ease, transform 0.15s ease, width 0.15s ease",
-          opacity: dirty ? 0 : 1,
-          transform: dirty ? "translateX(8px)" : "translateX(0)",
-          width: dirty ? 0 : 20,
-          minWidth: dirty ? 0 : 20,
-          padding: dirty ? 0 : "0 4px",
-          overflow: "hidden",
+          ...kbdBase,
+          marginLeft: 4,
+          padding: "0 4px",
+          textAlign: "center",
+          translate: dirty ? "32px" : "0",
+          transition: `translate ${duration} ${spring}`,
         }}
       >
-        K
+        <span>K</span>
       </kbd>
     </span>
   );
