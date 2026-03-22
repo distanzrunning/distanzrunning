@@ -587,11 +587,11 @@ function EscBadge({ onClick }: { onClick: () => void }) {
           padding: "0 4px",
           borderRadius: 4,
           boxShadow: "0 0 0 1px var(--ds-gray-alpha-400)",
-          fontSize: 13,
+          fontSize: 12,
           fontWeight: 500,
           fontFamily: "inherit",
           color: "var(--ds-gray-800)",
-          lineHeight: "22px",
+          lineHeight: "20px",
         }}
       >
         <span>Esc</span>
