@@ -676,6 +676,7 @@ function CommandKBadge({ dirty }: { dirty: boolean }) {
         display: "flex",
         flexDirection: "row",
         alignItems: "center",
+        justifyContent: "flex-end",
         gap: 2,
       }}
     >
