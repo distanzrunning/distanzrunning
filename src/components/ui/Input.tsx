@@ -105,11 +105,12 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
           className="ds-input-label"
           style={{
             display: "block",
-            fontSize: 14,
-            lineHeight: "20px",
-            fontWeight: 500,
-            color: "var(--ds-gray-1000)",
+            fontSize: 13,
+            maxWidth: "100%",
+            color: "var(--ds-gray-800)",
+            textTransform: "capitalize",
             marginBottom: 8,
+            cursor: "text",
           }}
         >
           {label}
