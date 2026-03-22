@@ -678,6 +678,8 @@ function CommandKBadge({ dirty }: { dirty: boolean }) {
         alignItems: "center",
         gap: 2,
         overflow: "hidden",
+        padding: 1,
+        margin: -1,
       }}
     >
       {/* ⌘ kbd: slides out to the left when dirty */}
