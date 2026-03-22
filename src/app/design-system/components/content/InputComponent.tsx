@@ -645,9 +645,7 @@ function SearchDemo() {
   );
 }
 
-function CommandKDemo() {
-  const [value, setValue] = useState("");
-
+function CommandKBadge({ dirty }: { dirty: boolean }) {
   const kbdStyle: React.CSSProperties = {
     display: "inline-flex",
     alignItems: "center",
@@ -664,14 +662,63 @@ function CommandKDemo() {
     color: "var(--ds-gray-800)",
   };
 
-  const badge = value ? (
-    <kbd style={kbdStyle}>Esc</kbd>
-  ) : (
-    <span style={{ display: "flex", gap: 2 }}>
-      <kbd style={kbdStyle}>{"\u2318"}</kbd>
-      <kbd style={kbdStyle}>K</kbd>
+  return (
+    <span
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 2,
+        position: "relative",
+        overflow: "hidden",
+      }}
+    >
+      {/* First kbd: shows ⌘ or Esc */}
+      <kbd style={kbdStyle}>
+        <span style={{ position: "relative", display: "inline-grid" }}>
+          <span
+            style={{
+              gridArea: "1 / 1",
+              transition: "opacity 0.15s ease, transform 0.15s ease",
+              opacity: dirty ? 1 : 0,
+              transform: dirty ? "translateX(0)" : "translateX(8px)",
+            }}
+          >
+            Esc
+          </span>
+          <span
+            style={{
+              gridArea: "1 / 1",
+              transition: "opacity 0.15s ease, transform 0.15s ease",
+              opacity: dirty ? 0 : 1,
+              transform: dirty ? "translateX(-8px)" : "translateX(0)",
+            }}
+          >
+            {"\u2318"}
+          </span>
+        </span>
+      </kbd>
+      {/* Second kbd: K, slides out when dirty */}
+      <kbd
+        style={{
+          ...kbdStyle,
+          transition: "opacity 0.15s ease, transform 0.15s ease, width 0.15s ease",
+          opacity: dirty ? 0 : 1,
+          transform: dirty ? "translateX(8px)" : "translateX(0)",
+          width: dirty ? 0 : 20,
+          minWidth: dirty ? 0 : 20,
+          padding: dirty ? 0 : "0 4px",
+          overflow: "hidden",
+        }}
+      >
+        K
+      </kbd>
     </span>
   );
+}
+
+function CommandKDemo() {
+  const [value, setValue] = useState("");
 
   return (
     <div style={{ width: "100%" }}>
@@ -679,7 +726,7 @@ function CommandKDemo() {
         type="search"
         prefix={<SearchIcon />}
         prefixStyling={false}
-        suffix={badge}
+        suffix={<CommandKBadge dirty={!!value} />}
         suffixStyling={false}
         placeholder="Enter some text..."
         aria-label="Search"
