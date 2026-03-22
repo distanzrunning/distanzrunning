@@ -50,6 +50,7 @@ import FeedbackComponent from "../components/content/FeedbackComponent";
 import GaugeComponent from "../components/content/GaugeComponent";
 import GridComponent from "../components/content/GridComponent";
 import InputComponent from "../components/content/InputComponent";
+import KeyboardInputComponent from "../components/content/KeyboardInputComponent";
 import PaginationComponent from "../components/content/PaginationComponent";
 import CalendarComponent from "../components/content/CalendarComponent";
 import ComponentGeneratorPage from "../components/content/ComponentGeneratorPage";
@@ -678,6 +679,21 @@ export default function DesignSystemPage() {
           onNavigate={handleNavigation}
         >
           <InputComponent />
+        </ContentWithTOC>
+      );
+    }
+
+    if (activeSlug === "keyboard-input") {
+      return (
+        <ContentWithTOC
+          tocTitle="On this page"
+          pageTitle="Keyboard Input"
+          pageSubtitle="Display keyboard input that triggers an action."
+          mainSectionId="keyboard-input"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
+          <KeyboardInputComponent />
         </ContentWithTOC>
       );
     }

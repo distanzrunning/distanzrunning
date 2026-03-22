@@ -61,6 +61,7 @@ export const navigation: NavSection[] = [
       { id: "gauge", label: "Gauge" },
       { id: "grid", label: "Grid" },
       { id: "input", label: "Input" },
+      { id: "keyboard-input", label: "Keyboard Input" },
       { id: "modal", label: "Modal" },
       { id: "pagination", label: "Pagination" },
     ],
