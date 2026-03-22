@@ -9,6 +9,7 @@ import {
   type DualThemeToken,
 } from "@/components/ui/useShikiHighlighter";
 import { Input } from "@/components/ui/Input";
+import { Kbd } from "@/components/ui/Kbd";
 
 // ============================================================================
 // Toast Component
@@ -562,29 +563,6 @@ function DisabledDemo() {
   );
 }
 
-function KbdInline({ children }: { children: React.ReactNode }) {
-  return (
-    <kbd
-      style={{
-        display: "inline-flex",
-        alignItems: "center",
-        justifyContent: "center",
-        minWidth: 18,
-        height: 18,
-        padding: "0 3px",
-        borderRadius: 3,
-        boxShadow: "0 0 0 1px var(--ds-gray-alpha-400)",
-        fontSize: 11,
-        fontFamily: "inherit",
-        fontWeight: 500,
-        color: "var(--ds-gray-900)",
-      }}
-    >
-      {children}
-    </kbd>
-  );
-}
-
 function EscBadge({ onClick }: { onClick: () => void }) {
   return (
     <button
@@ -600,25 +578,7 @@ function EscBadge({ onClick }: { onClick: () => void }) {
         color: "var(--ds-gray-600)",
       }}
     >
-      <kbd
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          minWidth: 20,
-          minHeight: 20,
-          padding: "0 4px",
-          borderRadius: 4,
-          boxShadow: "0 0 0 1px var(--ds-gray-alpha-400)",
-          fontSize: 12,
-          fontWeight: 500,
-          fontFamily: "inherit",
-          color: "var(--ds-gray-800)",
-          lineHeight: "20px",
-        }}
-      >
-        <span>Esc</span>
-      </kbd>
+      <Kbd size="small">Esc</Kbd>
     </button>
   );
 }
@@ -836,10 +796,10 @@ export default function InputComponent() {
           {"\u2318"}K
         </SectionHeader>
         <p className="text-copy-16 text-textSubtle mt-3" style={{ lineHeight: 1.5 }}>
-          Displays the <KbdInline>{"\u2318"}</KbdInline> <KbdInline>K</KbdInline> shortcut to indicate that the input supports a command palette.
+          Displays the <Kbd size="small">{"\u2318"}</Kbd> <Kbd size="small">K</Kbd> shortcut to indicate that the input supports a command palette.
         </p>
         <p className="text-copy-16 text-textSubtle mt-3 mb-6" style={{ lineHeight: 1.5 }}>
-          Transitions to showing <KbdInline>Esc</KbdInline> when the field is dirty.
+          Transitions to showing <Kbd size="small">Esc</Kbd> when the field is dirty.
         </p>
         <CodePreview componentCode={commandKCode}>
           <CommandKDemo />
