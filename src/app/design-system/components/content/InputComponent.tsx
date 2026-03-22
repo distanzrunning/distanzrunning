@@ -676,20 +676,43 @@ function CommandKBadge({ dirty }: { dirty: boolean }) {
         display: "flex",
         flexDirection: "row",
         alignItems: "center",
-        justifyContent: "flex-end",
         gap: 2,
+        overflow: "hidden",
       }}
     >
-      {/* First kbd: contains both Esc and ⌘, crossfades via translate */}
+      {/* ⌘ kbd: slides out to the left when dirty */}
+      <kbd
+        style={{
+          ...kbdBase,
+          marginLeft: 4,
+          textAlign: "center",
+          translate: dirty ? "-32px" : "0",
+          transition: `translate ${duration} ${spring}`,
+        }}
+      >
+        <span style={textStyle}>{"\u2318"}</span>
+      </kbd>
+      {/* Second kbd: contains both K and Esc, crossfades via translate */}
       <kbd
         style={{
           ...kbdBase,
           marginLeft: 4,
           width: dirty ? 28 : 20,
-          transition: `width ${duration} ${spring}, translate ${duration} ${spring}`,
+          transition: `width ${duration} ${spring}`,
         }}
       >
         <span style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+          {/* K: inline, slides out to right */}
+          <span
+            style={{
+              ...textStyle,
+              display: "inline-block",
+              translate: dirty ? "32px" : "0",
+              transition: `translate ${duration} ${spring}`,
+            }}
+          >
+            K
+          </span>
           {/* Esc: position absolute, slides in from right */}
           <span
             style={{
@@ -701,30 +724,7 @@ function CommandKBadge({ dirty }: { dirty: boolean }) {
           >
             Esc
           </span>
-          {/* ⌘: inline, slides out to left */}
-          <span
-            style={{
-              ...textStyle,
-              display: "inline-block",
-              translate: dirty ? "-20px" : "0",
-              transition: `translate ${duration} ${spring}`,
-            }}
-          >
-            {"\u2318"}
-          </span>
         </span>
-      </kbd>
-      {/* K kbd: slides out to the right when dirty */}
-      <kbd
-        style={{
-          ...kbdBase,
-          marginLeft: 4,
-          textAlign: "center",
-          translate: dirty ? "32px" : "0",
-          transition: `translate ${duration} ${spring}`,
-        }}
-      >
-        <span style={textStyle}>K</span>
       </kbd>
     </span>
   );
