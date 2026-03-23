@@ -54,6 +54,7 @@ export function Menu({ children, position = "bottom-start" }: MenuProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
   const containerRef = useRef<HTMLDivElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
   const itemCountRef = useRef(0);
 
   // Reset item count on each render cycle
@@ -68,10 +69,10 @@ export function Menu({ children, position = "bottom-start" }: MenuProps) {
     if (!isOpen) return;
 
     function handleClickOutside(e: MouseEvent) {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(e.target as Node)
-      ) {
+      const target = e.target as Node;
+      const inTrigger = containerRef.current?.contains(target);
+      const inDropdown = dropdownRef.current?.contains(target);
+      if (!inTrigger && !inDropdown) {
         setIsOpen(false);
       }
     }
@@ -142,6 +143,7 @@ export function Menu({ children, position = "bottom-start" }: MenuProps) {
           createPortal(
             <MenuDropdown
               containerRef={containerRef}
+              dropdownRef={dropdownRef}
               position={position}
               positionStyles={positionStyles}
             >
@@ -160,11 +162,13 @@ export function Menu({ children, position = "bottom-start" }: MenuProps) {
 
 function MenuDropdown({
   containerRef,
+  dropdownRef,
   position,
   positionStyles,
   children,
 }: {
   containerRef: React.RefObject<HTMLDivElement | null>;
+  dropdownRef: React.RefObject<HTMLDivElement | null>;
   position: MenuPosition;
   positionStyles: React.CSSProperties;
   children: ReactNode;
@@ -197,6 +201,7 @@ function MenuDropdown({
   return (
     <>
       <div
+        ref={dropdownRef}
         role="menu"
         style={{
           position: "absolute",
@@ -454,6 +459,8 @@ export function MenuItem({
     return (
       <a
         href={href}
+        target="_blank"
+        rel="noopener noreferrer"
         role="menuitem"
         style={itemStyle}
         tabIndex={0}
