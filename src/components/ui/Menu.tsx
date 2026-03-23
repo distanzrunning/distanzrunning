@@ -135,7 +135,7 @@ export function Menu({ children, position = "bottom-start" }: MenuProps) {
         registerItem,
       }}
     >
-      <div ref={containerRef} style={{ position: "relative", display: "inline-block" }}>
+      <div ref={containerRef} style={{ position: "relative", display: "inline-block", zIndex: 100 }}>
         {trigger}
         {isOpen && (
           <div
