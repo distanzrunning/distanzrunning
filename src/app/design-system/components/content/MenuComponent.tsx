@@ -666,10 +666,10 @@ export default function MenuComponent() {
         <SectionHeader id="default" onCopyLink={showToast}>
           Default
         </SectionHeader>
-        <p className="mt-3 text-sm text-textSubtle">
+        <p className="text-copy-16 text-textSubtle mt-3 mb-6" style={{ lineHeight: 1.5 }}>
           Menu extends the{" "}
           <a
-            href="/design-system/components/button"
+            href="/design-system/button"
             className="text-textDefault underline hover:no-underline"
           >
             Button
