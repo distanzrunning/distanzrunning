@@ -670,7 +670,7 @@ export default function MenuComponent() {
           Menu extends the{" "}
           <a
             href="/design-system/button"
-            className="text-textDefault underline hover:no-underline"
+            className="text-textSubtle underline hover:text-textDefault transition-colors"
           >
             Button
           </a>{" "}
