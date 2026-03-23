@@ -51,6 +51,7 @@ import GaugeComponent from "../components/content/GaugeComponent";
 import GridComponent from "../components/content/GridComponent";
 import InputComponent from "../components/content/InputComponent";
 import KeyboardInputComponent from "../components/content/KeyboardInputComponent";
+import LoadingDotsComponent from "../components/content/LoadingDotsComponent";
 import PaginationComponent from "../components/content/PaginationComponent";
 import CalendarComponent from "../components/content/CalendarComponent";
 import ComponentGeneratorPage from "../components/content/ComponentGeneratorPage";
@@ -694,6 +695,21 @@ export default function DesignSystemPage() {
           onNavigate={handleNavigation}
         >
           <KeyboardInputComponent />
+        </ContentWithTOC>
+      );
+    }
+
+    if (activeSlug === "loading-dots") {
+      return (
+        <ContentWithTOC
+          tocTitle="On this page"
+          pageTitle="Loading Dots"
+          pageSubtitle="Indicate an action running in the background."
+          mainSectionId="loading-dots"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
+          <LoadingDotsComponent />
         </ContentWithTOC>
       );
     }
