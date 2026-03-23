@@ -10,6 +10,7 @@ import React, {
   type ReactNode,
   type ButtonHTMLAttributes,
 } from "react";
+import { createPortal } from "react-dom";
 
 // ============================================================================
 // Types
@@ -135,44 +136,95 @@ export function Menu({ children, position = "bottom-start" }: MenuProps) {
         registerItem,
       }}
     >
-      <div ref={containerRef} style={{ position: "relative", display: "inline-block", zIndex: 100 }}>
+      <div ref={containerRef} style={{ position: "relative", display: "inline-block" }}>
         {trigger}
-        {isOpen && (
-          <div
-            role="menu"
-            style={{
-              position: "absolute",
-              ...positionStyles,
-              background: "var(--ds-background-100)",
-              borderRadius: 12,
-              boxShadow: "var(--ds-shadow-menu)",
-              padding: 8,
-              minWidth: 200,
-              zIndex: 50,
-              listStyle: "none",
-              fontSize: 14,
-              overflowY: "auto",
-              overscrollBehavior: "contain",
-              animation: "menu-enter 150ms ease-out",
-            }}
-          >
-            {items}
-          </div>
-        )}
-        <style jsx>{`
-          @keyframes menu-enter {
-            from {
-              opacity: 0;
-              transform: scale(0.96);
-            }
-            to {
-              opacity: 1;
-              transform: scale(1);
-            }
-          }
-        `}</style>
+        {isOpen && typeof document !== "undefined" &&
+          createPortal(
+            <MenuDropdown
+              containerRef={containerRef}
+              position={position}
+              positionStyles={positionStyles}
+            >
+              {items}
+            </MenuDropdown>,
+            document.body,
+          )}
       </div>
     </MenuContext.Provider>
+  );
+}
+
+// ============================================================================
+// MenuDropdown (Portal)
+// ============================================================================
+
+function MenuDropdown({
+  containerRef,
+  position,
+  positionStyles,
+  children,
+}: {
+  containerRef: React.RefObject<HTMLDivElement | null>;
+  position: MenuPosition;
+  positionStyles: React.CSSProperties;
+  children: ReactNode;
+}) {
+  const [coords, setCoords] = useState({ top: 0, left: 0 });
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    const scrollY = window.scrollY;
+    const scrollX = window.scrollX;
+
+    let top = 0;
+    let left = 0;
+
+    if (position.startsWith("bottom")) {
+      top = rect.bottom + scrollY + 4;
+      left = position === "bottom-end" ? rect.right + scrollX : rect.left + scrollX;
+    } else if (position.startsWith("left")) {
+      left = rect.left + scrollX - 4;
+      top = position === "left-end" ? rect.bottom + scrollY : rect.top + scrollY;
+    } else if (position.startsWith("right")) {
+      left = rect.right + scrollX + 4;
+      top = position === "right-end" ? rect.bottom + scrollY : rect.top + scrollY;
+    }
+
+    setCoords({ top, left });
+  }, [containerRef, position]);
+
+  return (
+    <>
+      <div
+        role="menu"
+        style={{
+          position: "absolute",
+          top: coords.top,
+          left: position === "bottom-end" ? undefined : coords.left,
+          right: position === "bottom-end" ? document.documentElement.clientWidth - coords.left : undefined,
+          background: "var(--ds-background-100)",
+          borderRadius: 12,
+          boxShadow: "var(--ds-shadow-menu)",
+          padding: 8,
+          minWidth: 200,
+          zIndex: 2001,
+          listStyle: "none",
+          fontSize: 14,
+          overflowY: "auto",
+          overscrollBehavior: "contain",
+          animation: "menu-enter 150ms ease-out",
+        }}
+      >
+        {children}
+      </div>
+      <style>{`
+        @keyframes menu-enter {
+          from { opacity: 0; transform: scale(0.96); }
+          to { opacity: 1; transform: scale(1); }
+        }
+      `}</style>
+    </>
   );
 }
 
