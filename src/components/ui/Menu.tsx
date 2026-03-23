@@ -399,7 +399,7 @@ export function MenuItem({
     borderRadius: 6,
     fontSize: 14,
     color: destructive ? "var(--ds-red-900)" : "var(--ds-gray-1000)",
-    cursor: isDisabled ? "not-allowed" : "pointer",
+    cursor: isDisabled ? "default" : "pointer",
     opacity: isDisabled ? 0.5 : 1,
     background: "transparent",
     border: "none",

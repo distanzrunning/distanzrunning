@@ -551,10 +551,10 @@ function DisabledItemsDemo() {
   return (
     <Menu>
       <MenuButton>Actions</MenuButton>
-      <MenuItem onClick={() => console.log("edit")}>Edit</MenuItem>
-      <MenuItem disabled>Duplicate</MenuItem>
-      <MenuItem disabled>Archive</MenuItem>
-      <MenuItem onClick={() => console.log("delete")}>Delete</MenuItem>
+      <MenuItem onClick={() => console.log("one")}>One</MenuItem>
+      <MenuItem onClick={() => console.log("two")}>Two</MenuItem>
+      <MenuItem disabled>Three</MenuItem>
+      <MenuItem destructive onClick={() => console.log("delete")}>Delete</MenuItem>
     </Menu>
   );
 }
