@@ -329,7 +329,7 @@ export function Component(): JSX.Element {
 
 function DefaultDemo() {
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+    <div className="flex flex-col items-start justify-between gap-6 flex-initial">
       <LoadingDots />
       <LoadingDots size={4} />
     </div>

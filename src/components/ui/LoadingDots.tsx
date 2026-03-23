@@ -6,7 +6,7 @@ import React, { forwardRef } from "react";
 
 /** Props for the LoadingDots component */
 export interface LoadingDotsProps {
-  /** Dot size in pixels (default: 3) */
+  /** Dot size in pixels (default: 2) */
   size?: number;
   /** Optional text to show before the dots (e.g. "Loading") */
   children?: React.ReactNode;
@@ -17,53 +17,43 @@ export interface LoadingDotsProps {
 }
 
 // ============================================================================
-// Constants
-// ============================================================================
-
-const DEFAULT_SIZE = 3;
-const DOT_GAP = 2;
-const DOT_DELAYS = [0, 160, 320];
-
-// ============================================================================
 // LoadingDots Component
 // ============================================================================
 
-/**
- * Animated loading dots component with staggered pulsing animation.
- *
- * Renders 3 dots that pulse with staggered timing, matching the Geist
- * design system pattern.
- *
- * @example
- * <LoadingDots />
- * <LoadingDots size={4}>Loading</LoadingDots>
- */
 export const LoadingDots = forwardRef<HTMLSpanElement, LoadingDotsProps>(
-  ({ size = DEFAULT_SIZE, children, className = "", style }, ref) => {
-    const containerStyle: React.CSSProperties = {
-      gap: children ? undefined : `${DOT_GAP}px`,
-      color: "var(--ds-gray-1000)",
-      ...style,
-    };
+  ({ size = 2, children, className = "", style }, ref) => {
+    const hasText = children !== undefined;
 
     const dotStyle: React.CSSProperties = {
+      display: "block",
       width: size,
       height: size,
-      marginLeft: children ? `${DOT_GAP}px` : undefined,
+      borderRadius: "50%",
+      backgroundColor: "var(--ds-gray-800)",
+      margin: "0 1px",
+      animationName: "loading-dot",
+      animationDuration: "1.4s",
+      animationFillMode: "both",
+      animationIterationCount: "infinite",
     };
 
     return (
       <span
         ref={ref}
         className={`loading-dots ${className}`.trim()}
-        style={containerStyle}
+        style={{
+          display: hasText ? "inline-flex" : "flex",
+          alignItems: "center",
+          ...style,
+        }}
         data-geist-loading-dots=""
       >
-        {children && (
-          <div className="loading-dots__spacer">
+        {hasText && (
+          <div style={{ marginRight: 12 }}>
             <p
               style={{
                 fontSize: 14,
+                lineHeight: "20px",
                 color: "var(--ds-gray-900)",
                 margin: 0,
               }}
@@ -72,13 +62,9 @@ export const LoadingDots = forwardRef<HTMLSpanElement, LoadingDotsProps>(
             </p>
           </div>
         )}
-        {DOT_DELAYS.map((delay) => (
-          <span
-            key={delay}
-            className="loading-dots__dot"
-            style={{ ...dotStyle, animationDelay: `${delay}ms` }}
-          />
-        ))}
+        <span style={{ ...dotStyle, animationDelay: "0s" }} />
+        <span style={{ ...dotStyle, animationDelay: "0.2s" }} />
+        <span style={{ ...dotStyle, animationDelay: "0.4s" }} />
       </span>
     );
   },
