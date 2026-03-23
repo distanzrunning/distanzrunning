@@ -523,11 +523,11 @@ function DefaultDemo() {
   return (
     <Menu>
       <MenuButton>Actions</MenuButton>
-      <MenuItem onClick={() => console.log("edit")}>Edit</MenuItem>
-      <MenuItem onClick={() => console.log("duplicate")}>Duplicate</MenuItem>
-      <MenuSeparator />
-      <MenuItem onClick={() => console.log("archive")}>Archive</MenuItem>
-      <MenuItem onClick={() => console.log("delete")}>Delete</MenuItem>
+      <MenuItem onClick={() => console.log("one")}>One</MenuItem>
+      <MenuItem onClick={() => console.log("two")}>Two</MenuItem>
+      <MenuItem onClick={() => console.log("three")}>Three</MenuItem>
+      <MenuItem href="https://vercel.com">Test for Link</MenuItem>
+      <MenuItem destructive onClick={() => console.log("delete")}>Delete</MenuItem>
     </Menu>
   );
 }

@@ -146,9 +146,13 @@ export function Menu({ children, position = "bottom-start" }: MenuProps) {
               background: "var(--ds-background-100)",
               borderRadius: 12,
               boxShadow: "var(--ds-shadow-menu)",
-              padding: 4,
-              minWidth: 160,
+              padding: 8,
+              minWidth: 200,
               zIndex: 50,
+              listStyle: "none",
+              fontSize: 14,
+              overflowY: "auto",
+              overscrollBehavior: "contain",
               animation: "menu-enter 150ms ease-out",
             }}
           >
@@ -280,6 +284,7 @@ interface MenuItemProps {
   onClick?: () => void;
   disabled?: boolean;
   locked?: boolean;
+  destructive?: boolean;
   href?: string;
   children: ReactNode;
   prefix?: ReactNode;
@@ -290,6 +295,7 @@ export function MenuItem({
   onClick,
   disabled = false,
   locked = false,
+  destructive = false,
   href,
   children,
   prefix,
@@ -332,11 +338,11 @@ export function MenuItem({
     display: "flex",
     alignItems: "center",
     gap: 8,
-    padding: "8px 12px",
-    borderRadius: 8,
+    padding: "0 8px",
+    height: 40,
+    borderRadius: 6,
     fontSize: 14,
-    lineHeight: "20px",
-    color: "var(--ds-gray-1000)",
+    color: destructive ? "var(--ds-red-900)" : "var(--ds-gray-1000)",
     cursor: isDisabled ? "not-allowed" : "pointer",
     opacity: isDisabled ? 0.5 : 1,
     background: "transparent",
@@ -346,6 +352,7 @@ export function MenuItem({
     textDecoration: "none",
     transition: "background 150ms ease",
     outline: "none",
+    listStyle: "none",
   };
 
   const content = (
