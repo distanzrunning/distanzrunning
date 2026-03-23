@@ -526,7 +526,7 @@ function DefaultDemo() {
       <MenuItem onClick={() => console.log("one")}>One</MenuItem>
       <MenuItem onClick={() => console.log("two")}>Two</MenuItem>
       <MenuItem onClick={() => console.log("three")}>Three</MenuItem>
-      <MenuItem href="https://vercel.com">Test for Link</MenuItem>
+      <MenuItem href="https://distanzrunning.com">Test for Link</MenuItem>
       <MenuItem destructive onClick={() => console.log("delete")}>Delete</MenuItem>
     </Menu>
   );

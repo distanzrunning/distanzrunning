@@ -431,20 +431,23 @@ export function MenuItem({
     </>
   );
 
+  const hoverBg = destructive ? "var(--ds-red-100)" : "var(--ds-gray-alpha-100)";
+  const activeBg = destructive ? "var(--ds-red-200)" : "var(--ds-gray-alpha-200)";
+
   const hoverHandlers = isDisabled
     ? {}
     : {
         onMouseEnter: (e: React.MouseEvent<HTMLElement>) => {
-          e.currentTarget.style.background = "var(--ds-gray-alpha-100)";
+          e.currentTarget.style.background = hoverBg;
         },
         onMouseLeave: (e: React.MouseEvent<HTMLElement>) => {
           e.currentTarget.style.background = "transparent";
         },
         onMouseDown: (e: React.MouseEvent<HTMLElement>) => {
-          e.currentTarget.style.background = "var(--ds-gray-alpha-200)";
+          e.currentTarget.style.background = activeBg;
         },
         onMouseUp: (e: React.MouseEvent<HTMLElement>) => {
-          e.currentTarget.style.background = "var(--ds-gray-alpha-100)";
+          e.currentTarget.style.background = hoverBg;
         },
       };
 
