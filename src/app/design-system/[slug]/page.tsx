@@ -52,6 +52,7 @@ import GridComponent from "../components/content/GridComponent";
 import InputComponent from "../components/content/InputComponent";
 import KeyboardInputComponent from "../components/content/KeyboardInputComponent";
 import LoadingDotsComponent from "../components/content/LoadingDotsComponent";
+import MaterialComponent from "../components/content/MaterialComponent";
 import PaginationComponent from "../components/content/PaginationComponent";
 import CalendarComponent from "../components/content/CalendarComponent";
 import ComponentGeneratorPage from "../components/content/ComponentGeneratorPage";
@@ -710,6 +711,21 @@ export default function DesignSystemPage() {
           onNavigate={handleNavigation}
         >
           <LoadingDotsComponent />
+        </ContentWithTOC>
+      );
+    }
+
+    if (activeSlug === "material") {
+      return (
+        <ContentWithTOC
+          tocTitle="On this page"
+          pageTitle="Material"
+          pageSubtitle="Various surfaces with shadows, built on top of <Stack>."
+          mainSectionId="material"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
+          <MaterialComponent />
         </ContentWithTOC>
       );
     }
