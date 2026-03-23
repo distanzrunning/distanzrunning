@@ -53,6 +53,7 @@ import InputComponent from "../components/content/InputComponent";
 import KeyboardInputComponent from "../components/content/KeyboardInputComponent";
 import LoadingDotsComponent from "../components/content/LoadingDotsComponent";
 import MaterialComponent from "../components/content/MaterialComponent";
+import MenuComponent from "../components/content/MenuComponent";
 import PaginationComponent from "../components/content/PaginationComponent";
 import CalendarComponent from "../components/content/CalendarComponent";
 import ComponentGeneratorPage from "../components/content/ComponentGeneratorPage";
@@ -726,6 +727,21 @@ export default function DesignSystemPage() {
           onNavigate={handleNavigation}
         >
           <MaterialComponent />
+        </ContentWithTOC>
+      );
+    }
+
+    if (activeSlug === "menu") {
+      return (
+        <ContentWithTOC
+          tocTitle="On this page"
+          pageTitle="Menu"
+          pageSubtitle="Dropdown menu opened via button. Supports typeahead and keyboard navigation."
+          mainSectionId="menu"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
+          <MenuComponent />
         </ContentWithTOC>
       );
     }
