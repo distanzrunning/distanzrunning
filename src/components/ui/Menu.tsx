@@ -274,10 +274,9 @@ export function MenuButton({
     variant === "secondary"
       ? `
         bg-[var(--ds-background-100)] text-[var(--ds-gray-1000)]
-        shadow-[0_0_0_1px_var(--ds-gray-200)]
-        hover:bg-[var(--ds-gray-100)]
-        dark:shadow-[0_0_0_1px_var(--ds-gray-400)]
-        dark:hover:bg-[var(--ds-gray-200)]
+        shadow-[0_0_0_1px_var(--ds-gray-400)]
+        hover:bg-[var(--ds-gray-100)] hover:shadow-[0_0_0_1px_var(--ds-gray-alpha-500)]
+        dark:hover:bg-[var(--ds-gray-200)] dark:hover:shadow-[0_0_0_1px_var(--ds-gray-alpha-500)]
       `
       : `
         bg-[var(--ds-gray-1000)] text-[var(--ds-background-100)]
