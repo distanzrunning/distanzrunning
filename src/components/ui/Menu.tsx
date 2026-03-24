@@ -194,7 +194,9 @@ function MenuDropdown({
       top = rect.bottom + scrollY + 4;
       left = position === "bottom-end" ? rect.right + scrollX : rect.left + scrollX;
     } else if (position.startsWith("left")) {
-      left = rect.left + scrollX - 4;
+      // For left positions, we store the right edge of viewport minus button's left edge
+      // This will be used as CSS `right` to position dropdown to the left of the button
+      left = rect.left + scrollX;
       top = position === "left-end" ? rect.bottom + scrollY : rect.top + scrollY;
     } else if (position.startsWith("right")) {
       left = rect.right + scrollX + 4;
@@ -212,8 +214,12 @@ function MenuDropdown({
         style={{
           position: "absolute",
           top: coords.top,
-          left: position === "bottom-end" ? undefined : coords.left,
-          right: position === "bottom-end" ? document.documentElement.clientWidth - coords.left : undefined,
+          left: position.startsWith("left") || position === "bottom-end" ? undefined : coords.left,
+          right: position.startsWith("left")
+            ? document.documentElement.clientWidth - coords.left + 4
+            : position === "bottom-end"
+              ? document.documentElement.clientWidth - coords.left
+              : undefined,
           background: "var(--ds-background-100)",
           borderRadius: 12,
           boxShadow: "var(--ds-shadow-menu)",
