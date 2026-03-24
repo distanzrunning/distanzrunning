@@ -473,10 +473,9 @@ import type { JSX } from 'react';
 export function Component(): JSX.Element {
   return (
     <Menu position="left-start">
-      <MenuButton variant="secondary">Left Start</MenuButton>
-      <MenuItem onClick={() => console.log('item 1')}>Item 1</MenuItem>
-      <MenuItem onClick={() => console.log('item 2')}>Item 2</MenuItem>
-      <MenuItem onClick={() => console.log('item 3')}>Item 3</MenuItem>
+      <MenuButton>Left Start</MenuButton>
+      <MenuItem>One</MenuItem>
+      <MenuItem>Two</MenuItem>
     </Menu>
   );
 }`;
@@ -632,10 +631,9 @@ function PrefixSuffixDemo() {
 function MenuPositionDemo() {
   return (
     <Menu position="left-start">
-      <MenuButton variant="secondary">Left Start</MenuButton>
-      <MenuItem onClick={() => console.log("item 1")}>Item 1</MenuItem>
-      <MenuItem onClick={() => console.log("item 2")}>Item 2</MenuItem>
-      <MenuItem onClick={() => console.log("item 3")}>Item 3</MenuItem>
+      <MenuButton>Left Start</MenuButton>
+      <MenuItem onClick={() => console.log("one")}>One</MenuItem>
+      <MenuItem onClick={() => console.log("two")}>Two</MenuItem>
     </Menu>
   );
 }
