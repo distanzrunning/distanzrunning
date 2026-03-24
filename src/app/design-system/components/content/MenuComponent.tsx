@@ -709,7 +709,7 @@ export default function MenuComponent() {
         <SectionHeader id="locked-items" onCopyLink={showToast}>
           Locked items
         </SectionHeader>
-        <p className="text-copy-16 text-gray-900 mt-2 leading-6 xl:mt-4" style={{ lineHeight: 1.5 }}>
+        <p className="text-copy-16 mt-2 leading-6 xl:mt-4" style={{ lineHeight: 1.5, color: "var(--ds-gray-900)" }}>
           Use <code>MenuItemLocked</code> to indicate an action that requires additional permissions. The item is rendered as disabled with a lock icon suffix.
         </p>
         <div className="mt-6">
@@ -734,7 +734,7 @@ export default function MenuComponent() {
         <SectionHeader id="custom-trigger" onCopyLink={showToast}>
           Custom trigger
         </SectionHeader>
-        <p className="text-copy-16 text-gray-900 mt-2 leading-6 xl:mt-4" style={{ lineHeight: 1.5 }}>
+        <p className="text-copy-16 mt-2 leading-6 xl:mt-4" style={{ lineHeight: 1.5, color: "var(--ds-gray-900)" }}>
           The trigger is still wrapped by an unstyled button.
         </p>
         <div className="mt-6">
@@ -748,7 +748,7 @@ export default function MenuComponent() {
         <SectionHeader id="prefix-and-suffix" onCopyLink={showToast}>
           Prefix and suffix
         </SectionHeader>
-        <p className="text-copy-16 text-gray-900 mt-2 leading-6 xl:mt-4" style={{ lineHeight: 1.5 }}>
+        <p className="text-copy-16 mt-2 leading-6 xl:mt-4" style={{ lineHeight: 1.5, color: "var(--ds-gray-900)" }}>
           The trigger is still wrapped by an unstyled button.
         </p>
         <div className="mt-6">
@@ -762,7 +762,7 @@ export default function MenuComponent() {
         <SectionHeader id="menu-position" onCopyLink={showToast}>
           Menu position
         </SectionHeader>
-        <p className="text-copy-16 text-gray-900 mt-2 leading-6 xl:mt-4" style={{ lineHeight: 1.5 }}>
+        <p className="text-copy-16 mt-2 leading-6 xl:mt-4" style={{ lineHeight: 1.5, color: "var(--ds-gray-900)" }}>
           The position will automatically adapt based on the window bounds.
         </p>
         <div className="mt-6">
