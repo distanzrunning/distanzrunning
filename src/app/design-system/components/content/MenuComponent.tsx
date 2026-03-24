@@ -382,9 +382,9 @@ export function Component(): JSX.Element {
   return (
     <Menu>
       <MenuButton>Links</MenuButton>
-      <MenuItem href="https://vercel.com">Vercel</MenuItem>
-      <MenuItem href="https://nextjs.org">Next.js</MenuItem>
-      <MenuItem href="https://turbo.build">Turborepo</MenuItem>
+      <MenuItem href="/design-system/menu#custom-trigger">One</MenuItem>
+      <MenuItem href="#">Two</MenuItem>
+      <MenuItem href="#">Three</MenuItem>
     </Menu>
   );
 }`;
@@ -572,9 +572,9 @@ function LinkItemsDemo() {
   return (
     <Menu>
       <MenuButton>Links</MenuButton>
-      <MenuItem href="https://vercel.com">Vercel</MenuItem>
-      <MenuItem href="https://nextjs.org">Next.js</MenuItem>
-      <MenuItem href="https://turbo.build">Turborepo</MenuItem>
+      <MenuItem href="/design-system/menu#custom-trigger">One</MenuItem>
+      <MenuItem href="#">Two</MenuItem>
+      <MenuItem href="#">Three</MenuItem>
     </Menu>
   );
 }
