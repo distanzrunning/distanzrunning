@@ -712,7 +712,7 @@ export default function CalendarComponent() {
         <SectionHeader id="horizontal-layout" onCopyLink={showToast}>
           Horizontal Layout
         </SectionHeader>
-        <p className="mt-2 leading-6 text-gray-900 dark:text-gray-100 xl:mt-4">
+        <p className="mt-2 leading-6 text-[var(--ds-gray-900)] xl:mt-4">
           Use{" "}
           <code className="text-sm bg-[var(--ds-gray-200)] px-1.5 py-0.5 rounded">
             horizontalLayout
@@ -738,7 +738,7 @@ export default function CalendarComponent() {
         <SectionHeader id="sizes" onCopyLink={showToast}>
           Sizes
         </SectionHeader>
-        <p className="mt-2 leading-6 text-gray-900 dark:text-gray-100 xl:mt-4">
+        <p className="mt-2 leading-6 text-[var(--ds-gray-900)] xl:mt-4">
           Choose between{" "}
           <code className="text-sm bg-[var(--ds-gray-200)] px-1.5 py-0.5 rounded">
             large
@@ -753,7 +753,7 @@ export default function CalendarComponent() {
           <CodePreview componentCode={sizesCode}>
             <div className="py-12 space-y-12">
               <div>
-                <p className="text-sm text-gray-900 dark:text-gray-100 mb-4 font-mono">
+                <p className="text-sm text-[var(--ds-gray-900)] mb-4 font-mono">
                   small
                 </p>
                 <div className="flex flex-wrap items-start gap-x-4 gap-y-8">
@@ -784,7 +784,7 @@ export default function CalendarComponent() {
                 </div>
               </div>
               <div>
-                <p className="text-sm text-gray-900 dark:text-gray-100 mb-4 font-mono">
+                <p className="text-sm text-[var(--ds-gray-900)] mb-4 font-mono">
                   default / large
                 </p>
                 <div className="flex flex-wrap items-start gap-x-4 gap-y-8">
@@ -817,7 +817,7 @@ export default function CalendarComponent() {
         <SectionHeader id="presets" onCopyLink={showToast}>
           Presets
         </SectionHeader>
-        <p className="mt-2 leading-6 text-gray-900 dark:text-gray-100 xl:mt-4">
+        <p className="mt-2 leading-6 text-[var(--ds-gray-900)] xl:mt-4">
           Provide common date ranges.
         </p>
         <div className="mt-4 xl:mt-7">
@@ -839,7 +839,7 @@ export default function CalendarComponent() {
         <SectionHeader id="compact" onCopyLink={showToast}>
           Compact
         </SectionHeader>
-        <p className="mt-2 leading-6 text-gray-900 dark:text-gray-100 xl:mt-4">
+        <p className="mt-2 leading-6 text-[var(--ds-gray-900)] xl:mt-4">
           Use{" "}
           <code className="text-sm bg-[var(--ds-gray-200)] px-1.5 py-0.5 rounded">
             compact
@@ -866,7 +866,7 @@ export default function CalendarComponent() {
         <SectionHeader id="stacked" onCopyLink={showToast}>
           Stacked
         </SectionHeader>
-        <p className="mt-2 leading-6 text-gray-900 dark:text-gray-100 xl:mt-4">
+        <p className="mt-2 leading-6 text-[var(--ds-gray-900)] xl:mt-4">
           Use{" "}
           <code className="text-sm bg-[var(--ds-gray-200)] px-1.5 py-0.5 rounded">
             stacked
@@ -893,7 +893,7 @@ export default function CalendarComponent() {
         <SectionHeader id="presets-with-default-value" onCopyLink={showToast}>
           Presets with default value
         </SectionHeader>
-        <p className="mt-2 leading-6 text-gray-900 dark:text-gray-100 xl:mt-4">
+        <p className="mt-2 leading-6 text-[var(--ds-gray-900)] xl:mt-4">
           Provide common date ranges with an additional default value.
         </p>
         <div className="mt-4 xl:mt-7">
@@ -915,7 +915,7 @@ export default function CalendarComponent() {
         <SectionHeader id="min-and-max-dates" onCopyLink={showToast}>
           Min and max dates
         </SectionHeader>
-        <p className="mt-2 leading-6 text-gray-900 dark:text-gray-100 xl:mt-4">
+        <p className="mt-2 leading-6 text-[var(--ds-gray-900)] xl:mt-4">
           Constrain the selectable date range with minimum and maximum dates.
         </p>
         <div className="mt-4 xl:mt-7">
@@ -937,7 +937,7 @@ export default function CalendarComponent() {
         <SectionHeader id="month-tab" onCopyLink={showToast}>
           Month tab
         </SectionHeader>
-        <p className="mt-2 leading-6 text-gray-900 dark:text-gray-100 xl:mt-4">
+        <p className="mt-2 leading-6 text-[var(--ds-gray-900)] xl:mt-4">
           Use{" "}
           <code className="text-sm bg-[var(--ds-gray-200)] px-1.5 py-0.5 rounded">
             showMonthTab
