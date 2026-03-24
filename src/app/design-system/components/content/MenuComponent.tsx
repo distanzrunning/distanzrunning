@@ -709,12 +709,8 @@ export default function MenuComponent() {
         <SectionHeader id="locked-items" onCopyLink={showToast}>
           Locked items
         </SectionHeader>
-        <p className="mt-3 text-sm text-textSubtle">
-          Use{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
-            MenuItemLocked
-          </code>{" "}
-          to indicate an action that requires additional permissions.
+        <p className="text-copy-16 text-gray-900 mt-2 leading-6 xl:mt-4" style={{ lineHeight: 1.5 }}>
+          Use <code>MenuItemLocked</code> to indicate an action that requires additional permissions. The item is rendered as disabled with a lock icon suffix.
         </p>
         <div className="mt-6">
           <CodePreview componentCode={lockedItemsCode}>
@@ -738,7 +734,7 @@ export default function MenuComponent() {
         <SectionHeader id="custom-trigger" onCopyLink={showToast}>
           Custom trigger
         </SectionHeader>
-        <p className="mt-3 text-sm text-textSubtle">
+        <p className="text-copy-16 text-gray-900 mt-2 leading-6 xl:mt-4" style={{ lineHeight: 1.5 }}>
           The trigger is still wrapped by an unstyled button.
         </p>
         <div className="mt-6">
@@ -752,7 +748,7 @@ export default function MenuComponent() {
         <SectionHeader id="prefix-and-suffix" onCopyLink={showToast}>
           Prefix and suffix
         </SectionHeader>
-        <p className="mt-3 text-sm text-textSubtle">
+        <p className="text-copy-16 text-gray-900 mt-2 leading-6 xl:mt-4" style={{ lineHeight: 1.5 }}>
           The trigger is still wrapped by an unstyled button.
         </p>
         <div className="mt-6">
@@ -766,7 +762,7 @@ export default function MenuComponent() {
         <SectionHeader id="menu-position" onCopyLink={showToast}>
           Menu position
         </SectionHeader>
-        <p className="mt-3 text-sm text-textSubtle">
+        <p className="text-copy-16 text-gray-900 mt-2 leading-6 xl:mt-4" style={{ lineHeight: 1.5 }}>
           The position will automatically adapt based on the window bounds.
         </p>
         <div className="mt-6">
