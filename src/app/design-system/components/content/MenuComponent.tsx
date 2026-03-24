@@ -421,9 +421,9 @@ import type { JSX } from 'react';
 function ThreeDotsIcon() {
   return (
     <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-      <circle cx="8" cy="2.5" r="1.5" />
+      <circle cx="2.5" cy="8" r="1.5" />
       <circle cx="8" cy="8" r="1.5" />
-      <circle cx="8" cy="13.5" r="1.5" />
+      <circle cx="13.5" cy="8" r="1.5" />
     </svg>
   );
 }
@@ -488,9 +488,9 @@ export function Component(): JSX.Element {
 function ThreeDotsIcon() {
   return (
     <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-      <circle cx="8" cy="2.5" r="1.5" />
+      <circle cx="2.5" cy="8" r="1.5" />
       <circle cx="8" cy="8" r="1.5" />
-      <circle cx="8" cy="13.5" r="1.5" />
+      <circle cx="13.5" cy="8" r="1.5" />
     </svg>
   );
 }
