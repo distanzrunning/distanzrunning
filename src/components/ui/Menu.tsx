@@ -31,6 +31,7 @@ interface MenuContextValue {
   setActiveIndex: (index: number) => void;
   itemCount: number;
   registerItem: () => number;
+  menuWidth?: number;
 }
 
 const MenuContext = createContext<MenuContextValue | null>(null);
@@ -48,9 +49,10 @@ function useMenuContext() {
 interface MenuProps {
   children: ReactNode;
   position?: MenuPosition;
+  width?: number;
 }
 
-export function Menu({ children, position = "bottom-start" }: MenuProps) {
+export function Menu({ children, position = "bottom-start", width }: MenuProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -135,6 +137,7 @@ export function Menu({ children, position = "bottom-start" }: MenuProps) {
         setActiveIndex,
         itemCount: itemCountRef.current,
         registerItem,
+        menuWidth: width,
       }}
     >
       <div ref={containerRef} style={{ position: "relative", display: "inline-block" }}>
@@ -146,6 +149,7 @@ export function Menu({ children, position = "bottom-start" }: MenuProps) {
               dropdownRef={dropdownRef}
               position={position}
               positionStyles={positionStyles}
+              menuWidth={width}
             >
               {items}
             </MenuDropdown>,
@@ -165,11 +169,13 @@ function MenuDropdown({
   dropdownRef,
   position,
   positionStyles,
+  menuWidth,
   children,
 }: {
   containerRef: React.RefObject<HTMLDivElement | null>;
   dropdownRef: React.RefObject<HTMLDivElement | null>;
   position: MenuPosition;
+  menuWidth?: number;
   positionStyles: React.CSSProperties;
   children: ReactNode;
 }) {
@@ -212,7 +218,8 @@ function MenuDropdown({
           borderRadius: 12,
           boxShadow: "var(--ds-shadow-menu)",
           padding: 8,
-          minWidth: 200,
+          width: menuWidth || 200,
+          minWidth: menuWidth || 200,
           zIndex: 2001,
           listStyle: "none",
           fontSize: 14,
