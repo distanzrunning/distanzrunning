@@ -1189,6 +1189,18 @@
     display: none;
   }
 
+  /* Inline code styling */
+  code:not(pre code) {
+    background-color: var(--ds-gray-100);
+    border: 1px solid var(--ds-gray-300);
+    border-radius: 6px;
+    color: var(--ds-gray-800);
+    font-family: var(--font-mono, ui-monospace, SFMono-Regular, "Roboto Mono", Menlo, Monaco, "Liberation Mono", "DejaVu Sans Mono", "Courier New", monospace);
+    font-size: 0.857em;
+    line-height: 24px;
+    padding: 2px 3.6px;
+  }
+
   /* Button icon sizing - icons inside buttons inherit size from CSS variable */
   button svg,
   a[class*="button"] svg {
