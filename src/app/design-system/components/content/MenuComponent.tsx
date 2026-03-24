@@ -361,18 +361,16 @@ export function Component(): JSX.Element {
   );
 }`;
 
-const lockedItemsCode = `import { Menu, MenuButton, MenuItem, MenuSeparator } from '@/components/ui/Menu';
+const lockedItemsCode = `import { Menu, MenuButton, MenuItem } from '@/components/ui/Menu';
 import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
   return (
     <Menu>
       <MenuButton>Actions</MenuButton>
+      <MenuItem onClick={() => console.log('view')}>View Details</MenuItem>
       <MenuItem onClick={() => console.log('edit')}>Edit</MenuItem>
-      <MenuItem locked>Duplicate</MenuItem>
-      <MenuSeparator />
-      <MenuItem locked>Archive</MenuItem>
-      <MenuItem onClick={() => console.log('delete')}>Delete</MenuItem>
+      <MenuItem locked>Delete</MenuItem>
     </Menu>
   );
 }`;
@@ -563,11 +561,9 @@ function LockedItemsDemo() {
   return (
     <Menu>
       <MenuButton>Actions</MenuButton>
+      <MenuItem onClick={() => console.log("view")}>View Details</MenuItem>
       <MenuItem onClick={() => console.log("edit")}>Edit</MenuItem>
-      <MenuItem locked>Duplicate</MenuItem>
-      <MenuSeparator />
-      <MenuItem locked>Archive</MenuItem>
-      <MenuItem onClick={() => console.log("delete")}>Delete</MenuItem>
+      <MenuItem locked>Delete</MenuItem>
     </Menu>
   );
 }
