@@ -621,9 +621,9 @@ function PrefixSuffixDemo() {
         <MenuButton variant="secondary" size="small" shape="square">
           <ThreeDotsIcon />
         </MenuButton>
-        <MenuItem prefix={<PersonIcon />} onClick={() => console.log("left")}>Left</MenuItem>
-        <MenuItem prefix={<PersonIcon />} onClick={() => console.log("center")}>Center</MenuItem>
-        <MenuItem prefix={<PersonIcon />} onClick={() => console.log("right")}>Right</MenuItem>
+        <MenuItem suffix={<PersonIcon />} onClick={() => console.log("left")}>Left</MenuItem>
+        <MenuItem suffix={<PersonIcon />} onClick={() => console.log("center")}>Center</MenuItem>
+        <MenuItem suffix={<PersonIcon />} onClick={() => console.log("right")}>Right</MenuItem>
       </Menu>
     </div>
   );
