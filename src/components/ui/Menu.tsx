@@ -243,6 +243,7 @@ interface MenuButtonProps
   size?: "small" | "default";
   shape?: "square";
   chevron?: boolean;
+  unstyled?: boolean;
   children: ReactNode;
 }
 
@@ -251,11 +252,27 @@ export function MenuButton({
   size = "default",
   shape,
   chevron,
+  unstyled,
   children,
   className = "",
   ...props
 }: MenuButtonProps) {
   const { isOpen, setIsOpen } = useMenuContext();
+
+  if (unstyled) {
+    return (
+      <button
+        type="button"
+        className={`inline-flex items-center justify-center cursor-pointer bg-transparent border-none p-0 outline-none focus-visible:ring-2 focus-visible:ring-[var(--ds-focus-color)] focus-visible:ring-offset-2 rounded-full ${className}`}
+        onClick={() => setIsOpen(!isOpen)}
+        aria-expanded={isOpen}
+        aria-haspopup="menu"
+        {...props}
+      >
+        {children}
+      </button>
+    );
+  }
 
   const baseStyles = `
     inline-flex items-center justify-center select-none cursor-pointer border-none

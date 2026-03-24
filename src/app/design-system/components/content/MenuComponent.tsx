@@ -2,6 +2,7 @@
 
 import React, { useState, useCallback, useRef } from "react";
 import { ChevronDown } from "lucide-react";
+import { Avatar } from "@/components/ui/Avatar";
 import { Section } from "../ContentWithTOC";
 import {
   useShikiHighlighter,
@@ -582,16 +583,11 @@ function LinkItemsDemo() {
 function CustomTriggerDemo() {
   return (
     <Menu>
-      <MenuButton
-        variant="secondary"
-        shape="square"
-        style={{ borderRadius: "50%", overflow: "hidden" }}
-      >
-        <img
-          src="https://vercel.com/api/www/avatar?u=evilrabbit&s=44"
-          alt="Avatar"
-          width={32}
-          height={32}
+      <MenuButton unstyled aria-label="Menu">
+        <Avatar
+          src="https://vercel.com/api/www/avatar?u=evilrabbit&s=60"
+          alt="Avatar for evilrabbit"
+          size={30}
         />
       </MenuButton>
       <MenuItem onClick={() => console.log("profile")}>Profile</MenuItem>
