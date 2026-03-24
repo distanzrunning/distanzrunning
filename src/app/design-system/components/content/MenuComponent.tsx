@@ -590,9 +590,9 @@ function CustomTriggerDemo() {
           size={30}
         />
       </MenuButton>
-      <MenuItem onClick={() => console.log("profile")}>Profile</MenuItem>
-      <MenuItem onClick={() => console.log("settings")}>Settings</MenuItem>
-      <MenuItem onClick={() => console.log("logout")}>Log Out</MenuItem>
+      <MenuItem onClick={() => console.log("one")}>One</MenuItem>
+      <MenuItem onClick={() => console.log("two")}>Two</MenuItem>
+      <MenuItem onClick={() => console.log("three")}>Three</MenuItem>
     </Menu>
   );
 }
