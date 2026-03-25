@@ -172,7 +172,7 @@ export function Modal({
             maxWidth: 540,
             maxHeight: "min(800px, 80vh)",
             borderRadius: 12,
-            background: "var(--ds-background-100)",
+            background: "var(--ds-background-200)",
             boxShadow: "var(--ds-shadow-modal)",
             color: "var(--ds-gray-1000)",
             overflow: "hidden",

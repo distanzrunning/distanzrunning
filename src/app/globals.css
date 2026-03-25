@@ -534,8 +534,8 @@
     --ds-overlay-backdrop-color: rgb(250, 250, 250);
     --ds-overlay-backdrop-opacity: 0.8;
 
-    /* Modal header/footer section background (contrasting in light, same as body in dark) */
-    --ds-modal-section-bg: var(--ds-background-200);
+    /* Modal header/footer section background */
+    --ds-modal-section-bg: var(--ds-background-100);
 
     /* Focus ring outer glow */
     --ds-focus-ring: #00000029;
@@ -1002,8 +1002,8 @@
     --ds-overlay-backdrop-color: rgb(0, 0, 0);
     --ds-overlay-backdrop-opacity: 0.8;
 
-    /* Modal header/footer section background (contrasts with body in dark mode) */
-    --ds-modal-section-bg: var(--ds-background-200);
+    /* Modal header/footer section background */
+    --ds-modal-section-bg: var(--ds-background-100);
 
     /* Focus ring outer glow */
     --ds-focus-ring: #ffffff3d;
