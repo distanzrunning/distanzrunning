@@ -415,55 +415,40 @@ export function Component(): JSX.Element {
   );
 }`;
 
-const prefixSuffixCode = `import { Menu, MenuButton, MenuItem, MenuSeparator } from '@/components/ui/Menu';
+const prefixSuffixCode = `import { Menu, MenuButton, MenuItem } from '@/components/ui/Menu';
+import { MoreHorizontal, Accessibility } from 'lucide-react';
 import type { JSX } from 'react';
-
-function ThreeDotsIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-      <circle cx="2.5" cy="8" r="1.5" />
-      <circle cx="8" cy="8" r="1.5" />
-      <circle cx="13.5" cy="8" r="1.5" />
-    </svg>
-  );
-}
-
-function EditIcon() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
-      <path d="M11.013 1.427a1.75 1.75 0 012.474 0l1.086 1.086a1.75 1.75 0 010 2.474l-8.61 8.61c-.21.21-.47.364-.756.445l-3.251.93a.75.75 0 01-.927-.928l.929-3.25a1.75 1.75 0 01.445-.758l8.61-8.61zm1.414 1.06a.25.25 0 00-.354 0L3.462 11.098a.25.25 0 00-.064.108l-.631 2.208 2.208-.63a.25.25 0 00.108-.064l8.61-8.61a.25.25 0 000-.355l-1.086-1.086z" />
-    </svg>
-  );
-}
-
-function TrashIcon() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
-      <path fillRule="evenodd" d="M6.5 1.75a.25.25 0 01.25-.25h2.5a.25.25 0 01.25.25V3h-3V1.75zm4.5 0V3h2.25a.75.75 0 010 1.5H2.75a.75.75 0 010-1.5H5V1.75C5 .784 5.784 0 6.75 0h2.5C10.216 0 11 .784 11 1.75zM4.496 6.675a.75.75 0 10-1.492.15l.66 6.6A1.75 1.75 0 005.405 15h5.19a1.75 1.75 0 001.741-1.575l.66-6.6a.75.75 0 00-1.492-.15l-.66 6.6a.25.25 0 01-.249.225h-5.19a.25.25 0 01-.249-.225l-.66-6.6z" />
-    </svg>
-  );
-}
 
 export function Component(): JSX.Element {
   return (
-    <Menu>
-      <MenuButton variant="secondary" size="small" shape="square">
-        <ThreeDotsIcon />
-      </MenuButton>
-      <MenuItem
-        prefix={<EditIcon />}
-        suffix={<kbd>\u2318E</kbd>}
-        onClick={() => console.log('edit')}
-      >
-        Edit
-      </MenuItem>
-      <MenuItem
-        prefix={<TrashIcon />}
-        onClick={() => console.log('delete')}
-      >
-        Delete
-      </MenuItem>
-    </Menu>
+    <div className="flex flex-row items-stretch justify-start gap-6">
+      <Menu width={150}>
+        <MenuButton
+          aria-label="Menu"
+          variant="secondary"
+          size="small"
+          shape="square"
+        >
+          <MoreHorizontal size={16} />
+        </MenuButton>
+        <MenuItem prefix={<Accessibility size={16} />}>Left</MenuItem>
+        <MenuItem prefix={<Accessibility size={16} />}>Center</MenuItem>
+        <MenuItem prefix={<Accessibility size={16} />}>Right</MenuItem>
+      </Menu>
+      <Menu width={150}>
+        <MenuButton
+          aria-label="Menu"
+          variant="secondary"
+          size="small"
+          shape="square"
+        >
+          <MoreHorizontal size={16} />
+        </MenuButton>
+        <MenuItem suffix={<Accessibility size={16} />}>Left</MenuItem>
+        <MenuItem suffix={<Accessibility size={16} />}>Center</MenuItem>
+        <MenuItem suffix={<Accessibility size={16} />}>Right</MenuItem>
+      </Menu>
+    </div>
   );
 }`;
 
