@@ -66,6 +66,7 @@ export const navigation: NavSection[] = [
       { id: "material", label: "Material" },
       { id: "menu", label: "Menu" },
       { id: "modal", label: "Modal" },
+      { id: "multi-select", label: "Multi Select" },
       { id: "pagination", label: "Pagination" },
     ],
   },

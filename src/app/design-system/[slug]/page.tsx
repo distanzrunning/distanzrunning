@@ -55,6 +55,7 @@ import LoadingDotsComponent from "../components/content/LoadingDotsComponent";
 import MaterialComponent from "../components/content/MaterialComponent";
 import MenuComponent from "../components/content/MenuComponent";
 import PaginationComponent from "../components/content/PaginationComponent";
+import MultiSelectComponent from "../components/content/MultiSelectComponent";
 import CalendarComponent from "../components/content/CalendarComponent";
 import ComponentGeneratorPage from "../components/content/ComponentGeneratorPage";
 import Materials from "../components/content/Materials";
@@ -772,6 +773,21 @@ export default function DesignSystemPage() {
           onNavigate={handleNavigation}
         >
           <ModalComponent />
+        </ContentWithTOC>
+      );
+    }
+
+    if (activeSlug === "multi-select") {
+      return (
+        <ContentWithTOC
+          tocTitle="On this page"
+          pageTitle="Multi Select"
+          pageSubtitle="A keyboard-navigable dropdown for selecting multiple items with advanced focus management."
+          mainSectionId="multi-select"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
+          <MultiSelectComponent />
         </ContentWithTOC>
       );
     }
