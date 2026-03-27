@@ -48,7 +48,7 @@ export function MultiSelect({
   const [isOpen, setIsOpen] = useState(false);
   const [activeRow, setActiveRow] = useState(-1);
   const [activeFocus, setActiveFocus] = useState<"checkbox" | "button">(
-    "checkbox",
+    "button",
   );
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -138,7 +138,7 @@ export function MultiSelect({
   useEffect(() => {
     if (!isOpen) {
       setActiveRow(-1);
-      setActiveFocus("checkbox");
+      setActiveFocus("button");
     }
   }, [isOpen]);
 
