@@ -158,11 +158,11 @@ export function MultiSelect({
       switch (e.key) {
         case "ArrowDown":
           e.preventDefault();
-          setActiveRow((prev) => Math.min(prev + 1, items.length - 1));
+          setActiveRow((prev) => prev === -1 ? 0 : Math.min(prev + 1, items.length - 1));
           break;
         case "ArrowUp":
           e.preventDefault();
-          setActiveRow((prev) => Math.max(prev - 1, 0));
+          setActiveRow((prev) => prev === -1 ? items.length - 1 : Math.max(prev - 1, 0));
           break;
         case "ArrowRight":
           e.preventDefault();
@@ -405,7 +405,9 @@ function MultiSelectRow({
   onMouseEnter: () => void;
 }) {
   const [hoverArea, setHoverArea] = useState<"checkbox" | "button" | null>(null);
-  const displayLabel = hoverArea === "checkbox" ? checkboxActionLabel : buttonActionLabel;
+  // Mouse hover takes priority, then keyboard focus
+  const activeArea = hoverArea ?? (isActive ? activeFocus : null);
+  const displayLabel = activeArea === "checkbox" ? checkboxActionLabel : buttonActionLabel;
 
   return (
     <div
