@@ -320,8 +320,8 @@ export function Component(): JSX.Element {
         { value: 'components', label: 'Components' },
         { value: 'design-tokens', label: 'Design Tokens' },
       ]}
-      defaultSelected={['analytics', 'performance']}
-      placeholder="Select items..."
+      defaultSelected={['design-system', 'components']}
+      placeholder="No items selected"
     />
   );
 }`;
@@ -345,33 +345,29 @@ export function Component(): JSX.Element {
   );
 }`;
 
-const controlledStateCode = `import { MultiSelect } from '@/components/ui/MultiSelect';
-import { useState } from 'react';
+const controlledStateCode = `import { useState } from 'react';
+import { MultiSelect } from '@/components/ui/MultiSelect';
 import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
-  const [selected, setSelected] = useState<string[]>(['dashboard', 'api']);
+  const [selected, setSelected] = useState(['analytics']);
 
   return (
-    <div>
-      <MultiSelect
-        items={[
-          { value: 'dashboard', label: 'Dashboard' },
-          { value: 'api', label: 'API Access' },
-          { value: 'webhooks', label: 'Webhooks' },
-          { value: 'sso', label: 'SSO' },
-          { value: 'audit-logs', label: 'Audit Logs' },
-        ]}
-        selected={selected}
-        onChange={setSelected}
-        placeholder="Select features..."
-      />
-      <div style={{ marginTop: 16, display: 'flex', gap: 16 }}>
-        <a onClick={() => setSelected([])}>Clear All</a>
-        <a onClick={() => setSelected(['dashboard', 'api'])}>Core Features</a>
-        <a onClick={() => setSelected(['webhooks', 'sso', 'audit-logs'])}>Advanced Features</a>
-      </div>
-    </div>
+    <MultiSelect
+      items={[
+        { value: 'analytics', label: 'Analytics' },
+        { value: 'monitoring', label: 'Monitoring' },
+        { value: 'security', label: 'Security' },
+        { value: 'performance', label: 'Performance' },
+        { value: 'logging', label: 'Logging' },
+      ]}
+      selected={selected}
+      onChange={setSelected}
+      placeholder="No features selected"
+      formatSelection={(sel, items) =>
+        \`Selected: \${sel.map(v => items.find(i => i.value === v)?.label ?? v).join(', ')}\`
+      }
+    />
   );
 }`;
 
