@@ -395,17 +395,22 @@ function SelectActionsDemo() {
 
 function KeyboardNavDemo() {
   return (
-    <MultiSelect
-      items={[
-        { value: "design", label: "Design" },
-        { value: "engineering", label: "Engineering" },
-        { value: "marketing", label: "Marketing" },
-        { value: "sales", label: "Sales" },
-        { value: "support", label: "Support" },
-      ]}
-      defaultSelected={["engineering"]}
-      placeholder="Select teams..."
-    />
+    <div className="space-y-4">
+      <MultiSelect
+        items={[
+          { value: "design", label: "Design" },
+          { value: "engineering", label: "Engineering" },
+          { value: "marketing", label: "Marketing" },
+          { value: "sales", label: "Sales" },
+          { value: "support", label: "Support" },
+        ]}
+        defaultSelected={["engineering"]}
+        placeholder="Select teams..."
+      />
+      <p className="text-copy-14" style={{ color: "var(--ds-gray-900)" }}>
+        Try keyboard navigation: ↑ ↓ for rows, ← → for checkbox/button focus, Tab to cycle through all elements
+      </p>
+    </div>
   );
 }
 
@@ -569,13 +574,6 @@ export default function MultiSelectComponent() {
             <KeyboardNavDemo />
           </CodePreview>
         </div>
-        <p
-          className="text-copy-14 text-textSubtle mt-4"
-          style={{ lineHeight: 1.5 }}
-        >
-          Try keyboard navigation: ↑ ↓ for rows, ← → for
-          checkbox/button focus, Tab to cycle through all elements
-        </p>
       </Section>
 
       <Section>
