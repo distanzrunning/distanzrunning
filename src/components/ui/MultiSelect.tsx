@@ -340,8 +340,8 @@ function MultiSelectDropdown({
           borderRadius: 12,
           boxShadow: "var(--ds-shadow-menu)",
           padding: 8,
-          width: coords.width,
-          minWidth: 200,
+          minWidth: Math.max(coords.width, 200),
+          width: "max-content",
           zIndex: 2001,
           fontSize: 14,
           overflowY: "auto",
@@ -515,7 +515,7 @@ function MultiSelectRow({
         className="multiselect-row-button"
       >
         <div style={{ display: "flex", alignItems: "center" }}>
-          <span style={{ fontSize: 14, lineHeight: "20px", color: "var(--ds-gray-1000)" }}>
+          <span style={{ fontSize: 14, lineHeight: "20px", color: "var(--ds-gray-1000)", whiteSpace: "nowrap" }}>
             {item.label}
           </span>
         </div>
