@@ -531,13 +531,6 @@ export default function MultiSelectComponent() {
             <SelectActionsDemo />
           </CodePreview>
         </div>
-        <p
-          className="text-copy-14 text-textSubtle mt-4"
-          style={{ lineHeight: 1.5 }}
-        >
-          Hover over items to see action labels. Different actions appear based
-          on selection state.
-        </p>
       </Section>
 
       <Section>
