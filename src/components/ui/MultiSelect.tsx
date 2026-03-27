@@ -107,9 +107,9 @@ export function MultiSelect({
         .filter((item) => item.value !== value)
         .every((item) => selected.includes(item.value));
 
-      if (!isSelected) return "Select Only";
-      if (allOthersSelected) return "Select All";
-      return "Toggle";
+      if (!isSelected) return "Only";
+      if (allOthersSelected) return "Check All";
+      return "Check All";
     },
     [selected, items],
   );
@@ -315,7 +315,7 @@ function MultiSelectDropdown({
     setCoords({
       top: rect.bottom + scrollY + 4,
       left: rect.left + scrollX,
-      width: Math.max(rect.width, 260),
+      width: Math.max(rect.width, 200),
     });
   }, [containerRef]);
 
@@ -341,7 +341,7 @@ function MultiSelectDropdown({
           boxShadow: "var(--ds-shadow-menu)",
           padding: 8,
           width: coords.width,
-          minWidth: 260,
+          minWidth: 200,
           zIndex: 2001,
           fontSize: 14,
           overflowY: "auto",
@@ -402,80 +402,89 @@ function MultiSelectRow({
       role="option"
       aria-selected={isSelected}
       onMouseEnter={onMouseEnter}
+      className="group"
       style={{
         display: "flex",
         alignItems: "center",
-        gap: 8,
-        padding: "0 8px",
-        height: 40,
-        borderRadius: 6,
-        fontSize: 14,
-        color: "var(--ds-gray-1000)",
-        cursor: "pointer",
-        background: isActive ? "rgba(0,0,0,0.05)" : "transparent",
-        transition: "background 150ms ease",
         position: "relative",
       }}
     >
-      {/* Checkbox */}
-      <button
-        type="button"
-        onClick={(e) => {
-          e.stopPropagation();
-          onToggle();
-        }}
-        tabIndex={-1}
-        aria-label={`Toggle ${item.label}`}
+      {/* Checkbox Area */}
+      <div
         style={{
-          width: 16,
-          height: 16,
-          borderRadius: 4,
-          flexShrink: 0,
           display: "flex",
           alignItems: "center",
+          height: 32,
+          width: 24,
           justifyContent: "center",
-          cursor: "pointer",
-          background: isSelected
-            ? "var(--ds-gray-1000)"
-            : "var(--ds-background-100)",
-          boxShadow: isSelected
-            ? "none"
-            : "inset 0 0 0 1px var(--ds-gray-400)",
-          border: "none",
-          padding: 0,
-          outline:
-            isActive && activeFocus === "checkbox"
-              ? "2px solid var(--ds-focus-color)"
-              : "none",
-          outlineOffset: 1,
-          transition: "background 150ms ease, box-shadow 150ms ease",
+          flexShrink: 0,
         }}
       >
-        {isSelected && (
-          <svg
-            width="10"
-            height="10"
-            viewBox="0 0 12 12"
-            fill="none"
-            stroke="var(--ds-background-100)"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
+        <label
+          onClick={(e) => {
+            e.preventDefault();
+            onToggle();
+          }}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            width: 24,
+            height: 32,
+            borderRadius: 6,
+            cursor: "pointer",
+            fontSize: 13,
+          }}
+        >
+          <span
+            style={{
+              display: "flex",
+              alignItems: "center",
+              height: 20,
+              width: 20,
+              margin: -2,
+              padding: 2,
+              position: "relative",
+            }}
           >
-            <path d="M2 6L5 9L10 3" />
-          </svg>
-        )}
-      </button>
+            <span
+              aria-hidden="true"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: 16,
+                height: 16,
+                borderRadius: 4,
+                position: "relative",
+                background: isSelected ? "var(--ds-gray-1000)" : "transparent",
+                border: isSelected
+                  ? "1px solid var(--ds-gray-1000)"
+                  : "1px solid var(--ds-gray-alpha-400)",
+                transition: "border-color 0.2s, background 0.2s, box-shadow 0.2s",
+                outline:
+                  isActive && activeFocus === "checkbox"
+                    ? "2px solid var(--ds-focus-color)"
+                    : "none",
+                outlineOffset: 1,
+              }}
+            >
+              <svg fill="none" height="16" viewBox="0 0 20 20" width="16" style={{ display: "block", flexShrink: 0 }}>
+                <path
+                  d="M14 7L8.5 12.5L6 10"
+                  stroke="var(--ds-background-100)"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  style={{ visibility: isSelected ? "visible" : "hidden" }}
+                />
+              </svg>
+            </span>
+          </span>
+        </label>
+      </div>
 
-      {/* Label */}
-      <span
-        style={{ flex: 1, userSelect: "none" }}
-        onClick={onToggle}
-      >
-        {item.label}
-      </span>
-
-      {/* Action Button - visible on hover/active */}
+      {/* Button Area */}
       <button
         type="button"
         onClick={(e) => {
@@ -483,35 +492,63 @@ function MultiSelectRow({
           onAction();
         }}
         tabIndex={-1}
-        className="multiselect-action-btn"
+        aria-label={`${item.label}. ${actionLabel}`}
         style={{
-          fontSize: 12,
-          color: "var(--ds-gray-900)",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "baseline",
+          flex: 1,
+          width: "100%",
+          padding: 6,
+          borderRadius: 6,
           background: "transparent",
           border: "none",
-          padding: "2px 6px",
-          borderRadius: 4,
           cursor: "pointer",
-          flexShrink: 0,
-          opacity: isActive ? 1 : 0,
-          transition: "opacity 150ms ease",
           outline:
             isActive && activeFocus === "button"
               ? "2px solid var(--ds-focus-color)"
               : "none",
           outlineOffset: 1,
-          whiteSpace: "nowrap",
+          userSelect: "none",
+          fontSize: 14,
         }}
+        className="multiselect-row-button"
       >
-        {actionLabel}
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <span style={{ fontSize: 14, lineHeight: "20px", color: "var(--ds-gray-1000)" }}>
+            {item.label}
+          </span>
+        </div>
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <span
+            aria-hidden="true"
+            className="multiselect-action-label"
+            style={{
+              fontWeight: 400,
+              opacity: isActive ? 1 : 0,
+              minWidth: 64,
+              textAlign: "right",
+              color: "var(--ds-gray-900)",
+              marginLeft: "auto",
+              padding: "2px 4px",
+              borderRadius: 2,
+              fontSize: 12,
+              transition: "opacity 150ms ease",
+            }}
+          >
+            {actionLabel}
+          </span>
+        </div>
       </button>
 
       <style>{`
-        .multiselect-action-btn {
-          opacity: 0;
-        }
-        div[role="option"]:hover .multiselect-action-btn {
+        .group:hover .multiselect-action-label,
+        .multiselect-row-button:hover .multiselect-action-label,
+        .multiselect-row-button:focus-visible .multiselect-action-label {
           opacity: 1 !important;
+        }
+        .multiselect-row-button:hover {
+          background: var(--ds-gray-alpha-100) !important;
         }
       `}</style>
     </div>

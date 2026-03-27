@@ -316,11 +316,9 @@ export function Component(): JSX.Element {
   return (
     <MultiSelect
       items={[
-        { value: 'analytics', label: 'Analytics' },
-        { value: 'performance', label: 'Performance' },
-        { value: 'security', label: 'Security' },
-        { value: 'notifications', label: 'Notifications' },
-        { value: 'billing', label: 'Billing' },
+        { value: 'design-system', label: 'Design System' },
+        { value: 'components', label: 'Components' },
+        { value: 'design-tokens', label: 'Design Tokens' },
       ]}
       defaultSelected={['analytics', 'performance']}
       placeholder="Select items..."
@@ -385,13 +383,11 @@ function SelectActionsDemo() {
   return (
     <MultiSelect
       items={[
-        { value: "analytics", label: "Analytics" },
-        { value: "performance", label: "Performance" },
-        { value: "security", label: "Security" },
-        { value: "notifications", label: "Notifications" },
-        { value: "billing", label: "Billing" },
+        { value: "design-system", label: "Design System" },
+        { value: "components", label: "Components" },
+        { value: "design-tokens", label: "Design Tokens" },
       ]}
-      defaultSelected={["analytics", "performance"]}
+      defaultSelected={["design-system", "components"]}
       placeholder="Select items..."
     />
   );
