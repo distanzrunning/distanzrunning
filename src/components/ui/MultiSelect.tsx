@@ -80,12 +80,9 @@ export function MultiSelect({
   const smartAction = useCallback(
     (value: string) => {
       const isSelected = selected.includes(value);
-      const othersSelected = selected.filter((v) => v !== value);
-      const allOthersSelected = items
-        .filter((item) => item.value !== value)
-        .every((item) => selected.includes(item.value));
+      const allSelected = items.every((item) => selected.includes(item.value));
 
-      if (!isSelected) {
+      if (allSelected || !isSelected) {
         // Only: select just this item
         updateSelected([value]);
       } else {
@@ -96,19 +93,26 @@ export function MultiSelect({
     [selected, items, updateSelected],
   );
 
-  // Get action label for an item
-  const getActionLabel = useCallback(
+  // Get action label for the button area
+  const getButtonActionLabel = useCallback(
     (value: string): string => {
       const isSelected = selected.includes(value);
-      const allOthersSelected = items
-        .filter((item) => item.value !== value)
-        .every((item) => selected.includes(item.value));
+      const allSelected = items.every((item) => selected.includes(item.value));
 
+      if (allSelected) return "Only";
       if (!isSelected) return "Only";
-      if (allOthersSelected) return "Check All";
       return "Check All";
     },
     [selected, items],
+  );
+
+  // Get action label for the checkbox area
+  const getCheckboxActionLabel = useCallback(
+    (value: string): string => {
+      const isSelected = selected.includes(value);
+      return isSelected ? "Uncheck" : "Check";
+    },
+    [selected],
   );
 
   // Click outside to close
@@ -262,7 +266,8 @@ export function MultiSelect({
             activeFocus={activeFocus}
             onToggleItem={toggleItem}
             onSmartAction={smartAction}
-            getActionLabel={getActionLabel}
+            getButtonActionLabel={getButtonActionLabel}
+            getCheckboxActionLabel={getCheckboxActionLabel}
             onKeyDown={handleKeyDown}
             setActiveRow={setActiveRow}
           />,
@@ -285,7 +290,8 @@ function MultiSelectDropdown({
   activeFocus,
   onToggleItem,
   onSmartAction,
-  getActionLabel,
+  getButtonActionLabel,
+  getCheckboxActionLabel,
   onKeyDown,
   setActiveRow,
 }: {
@@ -297,7 +303,8 @@ function MultiSelectDropdown({
   activeFocus: "checkbox" | "button";
   onToggleItem: (value: string) => void;
   onSmartAction: (value: string) => void;
-  getActionLabel: (value: string) => string;
+  getButtonActionLabel: (value: string) => string;
+  getCheckboxActionLabel: (value: string) => string;
   onKeyDown: (e: React.KeyboardEvent) => void;
   setActiveRow: (index: number) => void;
 }) {
@@ -354,7 +361,8 @@ function MultiSelectDropdown({
             isSelected={selected.includes(item.value)}
             isActive={activeRow === index}
             activeFocus={activeFocus}
-            actionLabel={getActionLabel(item.value)}
+            buttonActionLabel={getButtonActionLabel(item.value)}
+            checkboxActionLabel={getCheckboxActionLabel(item.value)}
             onToggle={() => onToggleItem(item.value)}
             onAction={() => onSmartAction(item.value)}
             onMouseEnter={() => setActiveRow(index)}
@@ -380,7 +388,8 @@ function MultiSelectRow({
   isSelected,
   isActive,
   activeFocus,
-  actionLabel,
+  buttonActionLabel,
+  checkboxActionLabel,
   onToggle,
   onAction,
   onMouseEnter,
@@ -389,16 +398,21 @@ function MultiSelectRow({
   isSelected: boolean;
   isActive: boolean;
   activeFocus: "checkbox" | "button";
-  actionLabel: string;
+  buttonActionLabel: string;
+  checkboxActionLabel: string;
   onToggle: () => void;
   onAction: () => void;
   onMouseEnter: () => void;
 }) {
+  const [hoverArea, setHoverArea] = useState<"checkbox" | "button" | null>(null);
+  const displayLabel = hoverArea === "checkbox" ? checkboxActionLabel : buttonActionLabel;
+
   return (
     <div
       role="option"
       aria-selected={isSelected}
       onMouseEnter={onMouseEnter}
+      onMouseLeave={() => setHoverArea(null)}
       className="group"
       style={{
         display: "flex",
@@ -408,6 +422,7 @@ function MultiSelectRow({
     >
       {/* Checkbox Area */}
       <div
+        onMouseEnter={() => setHoverArea("checkbox")}
         style={{
           display: "flex",
           alignItems: "center",
@@ -484,12 +499,13 @@ function MultiSelectRow({
       {/* Button Area */}
       <button
         type="button"
+        onMouseEnter={() => setHoverArea("button")}
         onClick={(e) => {
           e.stopPropagation();
           onAction();
         }}
         tabIndex={-1}
-        aria-label={`${item.label}. ${actionLabel}`}
+        aria-label={`${item.label}. ${buttonActionLabel}`}
         style={{
           display: "flex",
           justifyContent: "space-between",
@@ -533,7 +549,7 @@ function MultiSelectRow({
               transition: "opacity 150ms ease",
             }}
           >
-            {actionLabel}
+            {displayLabel}
           </span>
         </div>
       </button>
