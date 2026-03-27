@@ -40,7 +40,7 @@ function ModalInset({ children }: { children: ReactNode }) {
   return (
     <div
       style={{
-        background: "var(--ds-background-200)",
+        background: "var(--ds-modal-section-bg)",
         borderTop: "1px solid var(--ds-gray-alpha-400)",
         borderBottom: "1px solid var(--ds-gray-alpha-400)",
         margin: "0 -24px",
@@ -172,7 +172,7 @@ export function Modal({
             maxWidth: 540,
             maxHeight: "min(800px, 80vh)",
             borderRadius: 12,
-            background: "var(--ds-background-200)",
+            background: "var(--ds-modal-panel-bg)",
             boxShadow: "var(--ds-shadow-modal)",
             color: "var(--ds-gray-1000)",
             overflow: "hidden",
