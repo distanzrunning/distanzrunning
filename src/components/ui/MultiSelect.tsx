@@ -86,14 +86,11 @@ export function MultiSelect({
         .every((item) => selected.includes(item.value));
 
       if (!isSelected) {
-        // Select Only: select just this item
+        // Only: select just this item
         updateSelected([value]);
-      } else if (allOthersSelected) {
-        // Select All: all others are selected, so select all including this
-        updateSelected(items.map((item) => item.value));
       } else {
-        // Toggle: deselect this item
-        updateSelected(othersSelected);
+        // Check All: select all items
+        updateSelected(items.map((item) => item.value));
       }
     },
     [selected, items, updateSelected],
