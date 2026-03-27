@@ -425,6 +425,11 @@ function ControlledStateDemo() {
     { value: "logging", label: "Logging" },
   ];
 
+  const formatSelection = (sel: string[], allItems: { value: string; label: string }[]) => {
+    const labels = sel.map((v) => allItems.find((i) => i.value === v)?.label ?? v);
+    return `Selected: ${labels.join(", ")}`;
+  };
+
   const linkStyle: React.CSSProperties = {
     background: "none",
     border: "none",
@@ -445,9 +450,10 @@ function ControlledStateDemo() {
         selected={selected}
         onChange={setSelected}
         placeholder="No features selected"
+        formatSelection={formatSelection}
       />
       <div style={{ display: "flex", flexDirection: "column", gap: 8, flexWrap: "wrap" }}>
-        <p className="text-copy-14" style={{ color: "var(--ds-gray-900)", lineHeight: "20px" }}>
+        <p className="text-copy-14" style={{ color: "var(--ds-pink-700)", lineHeight: "20px" }}>
           <button type="button" onClick={() => setSelected([])} style={linkStyle} role="link">
             Clear All
           </button>

@@ -25,6 +25,7 @@ interface MultiSelectProps {
   onChange?: (selected: string[]) => void;
   placeholder?: string;
   className?: string;
+  formatSelection?: (selected: string[], items: MultiSelectItem[]) => string;
 }
 
 // ============================================================================
@@ -38,6 +39,7 @@ export function MultiSelect({
   onChange,
   placeholder = "Select items...",
   className = "",
+  formatSelection,
 }: MultiSelectProps) {
   const isControlled = controlledSelected !== undefined;
   const [internalSelected, setInternalSelected] = useState<string[]>(
@@ -200,7 +202,9 @@ export function MultiSelect({
   const selectionText =
     selected.length === 0
       ? placeholder
-      : `Selected: ${selected.map((v) => items.find((i) => i.value === v)?.label ?? v).join(", ")}`;
+      : formatSelection
+        ? formatSelection(selected, items)
+        : `${selected.length} selected`;
 
   return (
     <div
