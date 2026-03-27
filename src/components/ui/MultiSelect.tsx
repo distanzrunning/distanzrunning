@@ -446,6 +446,8 @@ function MultiSelectRow({
             borderRadius: 6,
             cursor: "pointer",
             fontSize: 13,
+            background: isActive && activeFocus === "checkbox" ? "var(--ds-gray-100)" : "transparent",
+            transition: "background 150ms ease",
           }}
         >
           <span
@@ -474,11 +476,6 @@ function MultiSelectRow({
                   ? "1px solid var(--ds-gray-1000)"
                   : "1px solid var(--ds-gray-alpha-400)",
                 transition: "border-color 0.2s, background 0.2s, box-shadow 0.2s",
-                outline:
-                  isActive && activeFocus === "checkbox"
-                    ? "2px solid var(--ds-focus-color)"
-                    : "none",
-                outlineOffset: 1,
               }}
             >
               <svg fill="none" height="16" viewBox="0 0 20 20" width="16" style={{ display: "block", flexShrink: 0 }}>
@@ -514,14 +511,11 @@ function MultiSelectRow({
           width: "100%",
           padding: 6,
           borderRadius: 6,
-          background: "transparent",
+          background: isActive && activeFocus === "button" ? "var(--ds-gray-alpha-100)" : "transparent",
           border: "none",
           cursor: "pointer",
-          outline:
-            isActive && activeFocus === "button"
-              ? "2px solid var(--ds-focus-color)"
-              : "none",
-          outlineOffset: 1,
+          outline: "none",
+          transition: "background 150ms ease",
           userSelect: "none",
           fontSize: 14,
         }}
