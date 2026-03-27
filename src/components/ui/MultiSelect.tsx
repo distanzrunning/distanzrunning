@@ -196,11 +196,11 @@ export function MultiSelect({
     [isOpen, activeRow, activeFocus, items, toggleItem, smartAction],
   );
 
-  // Selection count text
+  // Selection text
   const selectionText =
     selected.length === 0
       ? placeholder
-      : `${selected.length} selected`;
+      : `Selected: ${selected.map((v) => items.find((i) => i.value === v)?.label ?? v).join(", ")}`;
 
   return (
     <div

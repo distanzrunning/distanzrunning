@@ -415,75 +415,51 @@ function KeyboardNavDemo() {
 }
 
 function ControlledStateDemo() {
-  const [selected, setSelected] = useState<string[]>(["dashboard", "api"]);
+  const [selected, setSelected] = useState<string[]>(["analytics"]);
+
+  const items = [
+    { value: "analytics", label: "Analytics" },
+    { value: "monitoring", label: "Monitoring" },
+    { value: "security", label: "Security" },
+    { value: "performance", label: "Performance" },
+    { value: "logging", label: "Logging" },
+  ];
+
+  const linkStyle: React.CSSProperties = {
+    background: "none",
+    border: "none",
+    color: "var(--ds-pink-700)",
+    textDecoration: "none",
+    cursor: "pointer",
+    padding: 0,
+    fontSize: 14,
+    lineHeight: "20px",
+    fontWeight: 400,
+    outline: "none",
+  };
 
   return (
-    <div>
+    <div className="space-y-4">
       <MultiSelect
-        items={[
-          { value: "dashboard", label: "Dashboard" },
-          { value: "api", label: "API Access" },
-          { value: "webhooks", label: "Webhooks" },
-          { value: "sso", label: "SSO" },
-          { value: "audit-logs", label: "Audit Logs" },
-        ]}
+        items={items}
         selected={selected}
         onChange={setSelected}
-        placeholder="Select features..."
+        placeholder="No features selected"
       />
-      <div
-        style={{
-          marginTop: 16,
-          display: "flex",
-          gap: 16,
-          fontSize: 14,
-        }}
-      >
-        <button
-          type="button"
-          onClick={() => setSelected([])}
-          style={{
-            background: "none",
-            border: "none",
-            color: "var(--ds-blue-900)",
-            textDecoration: "underline",
-            cursor: "pointer",
-            padding: 0,
-            fontSize: 14,
-          }}
-        >
-          Clear All
-        </button>
-        <button
-          type="button"
-          onClick={() => setSelected(["dashboard", "api"])}
-          style={{
-            background: "none",
-            border: "none",
-            color: "var(--ds-blue-900)",
-            textDecoration: "underline",
-            cursor: "pointer",
-            padding: 0,
-            fontSize: 14,
-          }}
-        >
-          Core Features
-        </button>
-        <button
-          type="button"
-          onClick={() => setSelected(["webhooks", "sso", "audit-logs"])}
-          style={{
-            background: "none",
-            border: "none",
-            color: "var(--ds-blue-900)",
-            textDecoration: "underline",
-            cursor: "pointer",
-            padding: 0,
-            fontSize: 14,
-          }}
-        >
-          Advanced Features
-        </button>
+      <div style={{ display: "flex", flexDirection: "column", gap: 8, flexWrap: "wrap" }}>
+        <p className="text-copy-14" style={{ color: "var(--ds-gray-900)", lineHeight: "20px" }}>
+          <button type="button" onClick={() => setSelected([])} style={linkStyle} role="link">
+            Clear All
+          </button>
+          {", "}
+          <button type="button" onClick={() => setSelected(["analytics", "monitoring"])} style={linkStyle} role="link">
+            Core Features
+          </button>
+          {", "}
+          <button type="button" onClick={() => setSelected(["security", "performance", "logging"])} style={linkStyle} role="link">
+            Advanced Features
+          </button>
+        </p>
       </div>
     </div>
   );
