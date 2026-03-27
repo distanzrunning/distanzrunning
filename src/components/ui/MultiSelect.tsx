@@ -325,7 +325,7 @@ function MultiSelectDropdown({
 
   // Focus the dropdown for keyboard events
   useEffect(() => {
-    dropdownRef.current?.focus();
+    dropdownRef.current?.focus({ preventScroll: true });
   }, [dropdownRef]);
 
   return (
