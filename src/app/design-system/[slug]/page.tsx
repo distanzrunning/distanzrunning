@@ -56,6 +56,7 @@ import MaterialComponent from "../components/content/MaterialComponent";
 import MenuComponent from "../components/content/MenuComponent";
 import PaginationComponent from "../components/content/PaginationComponent";
 import MultiSelectComponent from "../components/content/MultiSelectComponent";
+import NoteComponent from "../components/content/NoteComponent";
 import CalendarComponent from "../components/content/CalendarComponent";
 import ComponentGeneratorPage from "../components/content/ComponentGeneratorPage";
 import Materials from "../components/content/Materials";
@@ -788,6 +789,21 @@ export default function DesignSystemPage() {
           onNavigate={handleNavigation}
         >
           <MultiSelectComponent />
+        </ContentWithTOC>
+      );
+    }
+
+    if (activeSlug === "note") {
+      return (
+        <ContentWithTOC
+          tocTitle="On this page"
+          pageTitle="Note"
+          pageSubtitle="Display text that requires attention or provides additional information."
+          mainSectionId="note"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
+          <NoteComponent />
         </ContentWithTOC>
       );
     }
