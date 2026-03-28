@@ -81,6 +81,8 @@ function WarningIcon({ color }: { color: string }) {
 
 interface TypeConfig {
   borderColor: string;
+  fillBorderColor: string;
+  textColor: string;
   iconColor: string;
   fillBg: string;
   className: string;
@@ -90,6 +92,8 @@ interface TypeConfig {
 const typeConfigs: Record<NoteType, TypeConfig> = {
   default: {
     borderColor: "var(--ds-gray-400)",
+    fillBorderColor: "var(--ds-gray-300)",
+    textColor: "var(--ds-gray-800)",
     iconColor: "currentColor",
     fillBg: "var(--ds-gray-alpha-100)",
     className: "",
@@ -97,27 +101,35 @@ const typeConfigs: Record<NoteType, TypeConfig> = {
   },
   success: {
     borderColor: "var(--ds-blue-400)",
+    fillBorderColor: "var(--ds-blue-100)",
+    textColor: "var(--ds-blue-900)",
     iconColor: "var(--ds-blue-900)",
-    fillBg: "var(--ds-blue-100)",
+    fillBg: "var(--ds-blue-200)",
     className: "geist-success",
     icon: (color) => <SuccessIcon color={color} />,
   },
   error: {
     borderColor: "var(--ds-red-400)",
+    fillBorderColor: "var(--ds-red-100)",
+    textColor: "var(--ds-red-900)",
     iconColor: "var(--ds-red-900)",
-    fillBg: "var(--ds-red-100)",
+    fillBg: "var(--ds-red-200)",
     className: "geist-error",
     icon: (color) => <ErrorIcon color={color} />,
   },
   warning: {
     borderColor: "var(--ds-amber-400)",
+    fillBorderColor: "var(--ds-amber-100)",
+    textColor: "var(--ds-amber-900)",
     iconColor: "var(--ds-amber-900)",
-    fillBg: "var(--ds-amber-100)",
+    fillBg: "var(--ds-amber-200)",
     className: "geist-warning",
     icon: (color) => <WarningIcon color={color} />,
   },
   secondary: {
     borderColor: "var(--ds-gray-400)",
+    fillBorderColor: "var(--ds-gray-300)",
+    textColor: "var(--ds-gray-800)",
     iconColor: "currentColor",
     fillBg: "var(--ds-gray-alpha-100)",
     className: "geist-secondary",
@@ -125,15 +137,19 @@ const typeConfigs: Record<NoteType, TypeConfig> = {
   },
   violet: {
     borderColor: "var(--ds-purple-400)",
+    fillBorderColor: "var(--ds-purple-100)",
+    textColor: "var(--ds-purple-900)",
     iconColor: "currentColor",
-    fillBg: "var(--ds-purple-100)",
+    fillBg: "var(--ds-purple-200)",
     className: "geist-violet",
     icon: (color) => <InfoIcon color={color} />,
   },
   cyan: {
     borderColor: "var(--ds-teal-400)",
+    fillBorderColor: "var(--ds-teal-100)",
+    textColor: "var(--ds-teal-900)",
     iconColor: "currentColor",
-    fillBg: "var(--ds-teal-100)",
+    fillBg: "var(--ds-teal-200)",
     className: "geist-cyan",
     icon: (color) => <InfoIcon color={color} />,
   },
@@ -199,17 +215,21 @@ export const Note = forwardRef<HTMLDivElement, NoteProps>(
     const showLabel = label !== false && label !== undefined;
     const contentGap = showLabel ? "4px" : sizeConfig.gap;
 
+    const borderColor = fill ? typeConfig.fillBorderColor : typeConfig.borderColor;
+    const paddingRight = action ? "8px" : undefined;
+
     const containerStyle: React.CSSProperties = {
       display: "flex",
       alignItems: "center",
       justifyContent: "space-between",
       flexGrow: 1,
-      border: `1px solid ${typeConfig.borderColor}`,
-      borderRadius: 6,
+      border: `1px solid ${borderColor}`,
+      borderRadius: action ? 10 : 6,
       padding: sizeConfig.padding,
+      ...(paddingRight ? { paddingRight } : {}),
       fontSize: sizeConfig.fontSize,
       lineHeight: 1.5,
-      color: "var(--ds-gray-800)",
+      color: typeConfig.textColor,
       wordBreak: "break-word",
       gap: 12,
       ...(fill ? { backgroundColor: typeConfig.fillBg } : {}),
