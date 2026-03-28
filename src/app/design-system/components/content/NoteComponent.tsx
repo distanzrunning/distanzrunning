@@ -9,6 +9,7 @@ import {
   type DualThemeToken,
 } from "@/components/ui/useShikiHighlighter";
 import { Note } from "@/components/ui/Note";
+import { Button } from "@/components/ui/Button";
 
 // Toast notification for copy confirmation
 function Toast({
@@ -330,12 +331,9 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
 
 function UpgradeButton() {
   return (
-    <button
-      type="button"
-      className="h-8 px-3 text-sm font-medium rounded-md border border-[var(--ds-gray-alpha-400)] bg-[var(--ds-background-100)] text-textDefault hover:bg-[var(--ds-gray-100)] transition-colors whitespace-nowrap"
-    >
+    <Button size="small">
       Upgrade
-    </button>
+    </Button>
   );
 }
 
