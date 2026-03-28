@@ -497,7 +497,7 @@ function TypeSection({
           {/* Outline + action + link */}
           <Note type={typeName} action={<UpgradeButton />}>
             This note details some {typeName} information. Check{" "}
-            <a href="#" className="underline">
+            <a href="#" className="ds-note-link">
               the documentation
             </a>{" "}
             to learn more.
@@ -513,7 +513,7 @@ function TypeSection({
           {/* Filled + action + link */}
           <Note type={typeName} fill action={<UpgradeButton />}>
             This filled note details some {typeName} information. Check{" "}
-            <a href="#" className="underline">
+            <a href="#" className="ds-note-link">
               the documentation
             </a>{" "}
             to learn more.

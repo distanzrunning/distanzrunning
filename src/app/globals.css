@@ -1203,6 +1203,17 @@
     font-family: var(--font-mono);
   }
 
+  /* Note inline links */
+  .ds-note-link {
+    color: var(--ds-blue-1000);
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .ds-note-link:hover {
+    text-decoration: underline;
+  }
+
   /* Button icon sizing - icons inside buttons inherit size from CSS variable */
   button svg,
   a[class*="button"] svg {
