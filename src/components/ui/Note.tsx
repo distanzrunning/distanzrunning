@@ -240,6 +240,7 @@ export const Note = forwardRef<HTMLDivElement, NoteProps>(
           {action && (
             <div style={{ flexShrink: 0 }}>{action}</div>
           )}
+      </div>
     );
   },
 );
