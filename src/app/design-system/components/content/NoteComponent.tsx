@@ -541,7 +541,7 @@ export default function NoteComponent() {
           Default
         </SectionHeader>
         <CodePreview componentCode={defaultCode}>
-          <div className="flex flex-col md:flex-row gap-4">
+          <div className="flex flex-col md:flex-row items-start justify-start gap-6 flex-initial">
             <Note size="small">A small note.</Note>
             <Note>A default note.</Note>
             <Note size="large">A large note.</Note>
