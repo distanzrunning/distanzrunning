@@ -361,9 +361,15 @@ import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
   return (
-    <Note action={<button>Upgrade</button>}>
-      This note details some important information.
-    </Note>
+    <div className="flex flex-col items-start justify-start gap-6 flex-initial">
+      <Note action={<button>Upgrade</button>}>
+        This note details some information.
+      </Note>
+      <Note action={<button>Upgrade</button>}>
+        This note details a large amount information that could potentially wrap
+        into two or more lines, forcing the height of the Note to be larger.
+      </Note>
+    </div>
   );
 }`;
 
@@ -555,14 +561,13 @@ export default function NoteComponent() {
           Action
         </SectionHeader>
         <CodePreview componentCode={actionCode}>
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col items-start justify-start gap-6 flex-initial">
             <Note action={<UpgradeButton />}>
-              This note details some important information.
+              This note details some information.
             </Note>
             <Note action={<UpgradeButton />}>
-              This note details some important information that wraps to
-              multiple lines to demonstrate how the action button stays aligned
-              to the right side of the note component.
+              This note details a large amount information that could potentially wrap
+              into two or more lines, forcing the height of the Note to be larger.
             </Note>
           </div>
         </CodePreview>
