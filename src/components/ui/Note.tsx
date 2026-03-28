@@ -143,6 +143,7 @@ interface SizeConfig {
   padding: string;
   fontSize: string;
   gap: string;
+  lineHeightPx: number;
 }
 
 const sizeConfigs: Record<NoteSize, SizeConfig> = {
@@ -150,16 +151,19 @@ const sizeConfigs: Record<NoteSize, SizeConfig> = {
     padding: "6px 8px",
     fontSize: "13px",
     gap: "8px",
+    lineHeightPx: 20,
   },
   default: {
     padding: "8px 12px",
     fontSize: "14px",
     gap: "12px",
+    lineHeightPx: 21,
   },
   large: {
     padding: "11px 12px",
     fontSize: "16px",
     gap: "12px",
+    lineHeightPx: 24,
   },
 };
 
@@ -228,7 +232,7 @@ export const Note = forwardRef<HTMLDivElement, NoteProps>(
             }}
           >
             {showIcon && (
-              <span style={{ display: "flex", height: 16 }}>
+              <span style={{ display: "flex", height: sizeConfig.lineHeightPx, alignItems: "center" }}>
                 {typeConfig.icon(typeConfig.iconColor)}
               </span>
             )}
