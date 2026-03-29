@@ -681,6 +681,8 @@ export default function NoteComponent() {
               <Note type="violet" fill>This is a fill note of type <code>violet</code>.</Note>
               <Note type="cyan">This is a note of type <code>cyan</code>.</Note>
               <Note type="cyan" fill>This is a fill note of type <code>cyan</code>.</Note>
+              <Note type="rotate-ccw">This is a note of type <code>rotate-ccw</code>.</Note>
+              <Note type="rotate-ccw" fill>This is a fill note of type <code>rotate-ccw</code>.</Note>
             </div>
 
             {/* Custom label */}
@@ -710,6 +712,8 @@ export default function NoteComponent() {
               <Note type="violet" label="violet" fill>This is a fill note of type <code>violet</code>.</Note>
               <Note type="cyan" label="cyan">This is a note of type <code>cyan</code>.</Note>
               <Note type="cyan" label="cyan" fill>This is a fill note of type <code>cyan</code>.</Note>
+              <Note type="rotate-ccw" label="rotate-ccw">This is a note of type <code>rotate-ccw</code>.</Note>
+              <Note type="rotate-ccw" label="rotate-ccw" fill>This is a fill note of type <code>rotate-ccw</code>.</Note>
             </div>
 
             {/* No label */}
@@ -739,6 +743,8 @@ export default function NoteComponent() {
               <Note type="violet" label={false} fill>This is a fill note of type <code>violet</code>.</Note>
               <Note type="cyan" label={false}>This is a note of type <code>cyan</code>.</Note>
               <Note type="cyan" label={false} fill>This is a fill note of type <code>cyan</code>.</Note>
+              <Note type="rotate-ccw" label={false}>This is a note of type <code>rotate-ccw</code>.</Note>
+              <Note type="rotate-ccw" label={false} fill>This is a fill note of type <code>rotate-ccw</code>.</Note>
             </div>
           </div>
         </CodePreview>

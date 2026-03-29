@@ -18,7 +18,8 @@ export type NoteType =
   | "tertiary"
   | "alert"
   | "lite"
-  | "ghost";
+  | "ghost"
+  | "rotate-ccw";
 
 /** Note size options */
 export type NoteSize = "small" | "default" | "large";
@@ -191,6 +192,15 @@ const typeConfigs: Record<NoteType, TypeConfig> = {
     iconColor: "currentColor",
     fillBg: "transparent",
     className: "geist-ghost",
+    icon: (color) => <InfoIcon color={color} />,
+  },
+  "rotate-ccw": {
+    borderColor: "var(--ds-gray-400)",
+    fillBorderColor: "var(--ds-gray-400)",
+    textColor: "var(--ds-gray-800)",
+    iconColor: "currentColor",
+    fillBg: "transparent",
+    className: "geist-rotate-ccw",
     icon: (color) => <InfoIcon color={color} />,
   },
 };
