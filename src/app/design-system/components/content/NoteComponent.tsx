@@ -652,47 +652,64 @@ export default function NoteComponent() {
           Labels
         </SectionHeader>
 
-        {/* Default label (icon variants) */}
-        <h3 className="text-[16px] font-semibold text-textDefault mt-6 mb-4">
-          Default label
-        </h3>
-        <div className="flex flex-col gap-4 mb-8">
-          <Note type="default">This note details some default information.</Note>
-          <Note type="success">This note details some success information.</Note>
-          <Note type="error">This note details some error information.</Note>
-          <Note type="warning">This note details some warning information.</Note>
-          <Note type="secondary">This note details some secondary information.</Note>
-          <Note type="violet">This note details some violet information.</Note>
-          <Note type="cyan">This note details some cyan information.</Note>
-        </div>
-
-        {/* Custom label */}
-        <h3 className="text-[16px] font-semibold text-textDefault mt-6 mb-4">
-          Custom label
-        </h3>
-        <div className="flex flex-col gap-4 mb-8">
-          <Note type="default" label="Note">This note details some default information.</Note>
-          <Note type="success" label="Success">This note details some success information.</Note>
-          <Note type="error" label="Error">This note details some error information.</Note>
-          <Note type="warning" label="Warning">This note details some warning information.</Note>
-          <Note type="secondary" label="Secondary">This note details some secondary information.</Note>
-          <Note type="violet" label="Violet">This note details some violet information.</Note>
-          <Note type="cyan" label="Cyan">This note details some cyan information.</Note>
-        </div>
-
-        {/* No label */}
-        <h3 className="text-[16px] font-semibold text-textDefault mt-6 mb-4">
-          No label
-        </h3>
         <CodePreview componentCode={labelsCode}>
-          <div className="flex flex-col gap-4">
-            <Note type="default" label={false}>This note details some default information.</Note>
-            <Note type="success" label={false}>This note details some success information.</Note>
-            <Note type="error" label={false}>This note details some error information.</Note>
-            <Note type="warning" label={false}>This note details some warning information.</Note>
-            <Note type="secondary" label={false}>This note details some secondary information.</Note>
-            <Note type="violet" label={false}>This note details some violet information.</Note>
-            <Note type="cyan" label={false}>This note details some cyan information.</Note>
+          <div className="flex flex-col items-stretch justify-start gap-6 flex-initial">
+            {/* Default label */}
+            <div className="flex flex-col items-stretch justify-start gap-2 flex-initial">
+              <h3 className="text-heading-16">Default label</h3>
+              <Note type="secondary">This is a note of type <code>secondary</code>.</Note>
+              <Note type="secondary" fill>This is a fill note of type <code>secondary</code>.</Note>
+              <Note type="warning">This is a note of type <code>warning</code>.</Note>
+              <Note type="warning" fill>This is a fill note of type <code>warning</code>.</Note>
+              <Note type="success">This is a note of type <code>success</code>.</Note>
+              <Note type="success" fill>This is a fill note of type <code>success</code>.</Note>
+              <Note type="default">This is a note of type <code>default</code>.</Note>
+              <Note type="default" fill>This is a fill note of type <code>default</code>.</Note>
+              <Note type="error">This is a note of type <code>error</code>.</Note>
+              <Note type="error" fill>This is a fill note of type <code>error</code>.</Note>
+              <Note type="violet">This is a note of type <code>violet</code>.</Note>
+              <Note type="violet" fill>This is a fill note of type <code>violet</code>.</Note>
+              <Note type="cyan">This is a note of type <code>cyan</code>.</Note>
+              <Note type="cyan" fill>This is a fill note of type <code>cyan</code>.</Note>
+            </div>
+
+            {/* Custom label */}
+            <div className="flex flex-col items-stretch justify-start gap-2 flex-initial">
+              <h3 className="text-heading-16">Custom label</h3>
+              <Note type="secondary" label="secondary">This is a note of type <code>secondary</code>.</Note>
+              <Note type="secondary" label="secondary" fill>This is a fill note of type <code>secondary</code>.</Note>
+              <Note type="warning" label="warning">This is a note of type <code>warning</code>.</Note>
+              <Note type="warning" label="warning" fill>This is a fill note of type <code>warning</code>.</Note>
+              <Note type="success" label="success">This is a note of type <code>success</code>.</Note>
+              <Note type="success" label="success" fill>This is a fill note of type <code>success</code>.</Note>
+              <Note type="default" label="default">This is a note of type <code>default</code>.</Note>
+              <Note type="default" label="default" fill>This is a fill note of type <code>default</code>.</Note>
+              <Note type="error" label="error">This is a note of type <code>error</code>.</Note>
+              <Note type="error" label="error" fill>This is a fill note of type <code>error</code>.</Note>
+              <Note type="violet" label="violet">This is a note of type <code>violet</code>.</Note>
+              <Note type="violet" label="violet" fill>This is a fill note of type <code>violet</code>.</Note>
+              <Note type="cyan" label="cyan">This is a note of type <code>cyan</code>.</Note>
+              <Note type="cyan" label="cyan" fill>This is a fill note of type <code>cyan</code>.</Note>
+            </div>
+
+            {/* No label */}
+            <div className="flex flex-col items-stretch justify-start gap-2 flex-initial">
+              <h3 className="text-heading-16">No label</h3>
+              <Note type="secondary" label={false}>This is a note of type <code>secondary</code>.</Note>
+              <Note type="secondary" label={false} fill>This is a fill note of type <code>secondary</code>.</Note>
+              <Note type="warning" label={false}>This is a note of type <code>warning</code>.</Note>
+              <Note type="warning" label={false} fill>This is a fill note of type <code>warning</code>.</Note>
+              <Note type="success" label={false}>This is a note of type <code>success</code>.</Note>
+              <Note type="success" label={false} fill>This is a fill note of type <code>success</code>.</Note>
+              <Note type="default" label={false}>This is a note of type <code>default</code>.</Note>
+              <Note type="default" label={false} fill>This is a fill note of type <code>default</code>.</Note>
+              <Note type="error" label={false}>This is a note of type <code>error</code>.</Note>
+              <Note type="error" label={false} fill>This is a fill note of type <code>error</code>.</Note>
+              <Note type="violet" label={false}>This is a note of type <code>violet</code>.</Note>
+              <Note type="violet" label={false} fill>This is a fill note of type <code>violet</code>.</Note>
+              <Note type="cyan" label={false}>This is a note of type <code>cyan</code>.</Note>
+              <Note type="cyan" label={false} fill>This is a fill note of type <code>cyan</code>.</Note>
+            </div>
           </div>
         </CodePreview>
       </Section>
