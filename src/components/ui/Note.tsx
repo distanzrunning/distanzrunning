@@ -96,10 +96,10 @@ interface TypeConfig {
 const typeConfigs: Record<NoteType, TypeConfig> = {
   default: {
     borderColor: "var(--ds-gray-400)",
-    fillBorderColor: "var(--ds-gray-300)",
+    fillBorderColor: "var(--ds-gray-400)",
     textColor: "var(--ds-gray-800)",
     iconColor: "currentColor",
-    fillBg: "var(--ds-gray-alpha-100)",
+    fillBg: "transparent",
     className: "",
     icon: (color) => <InfoIcon color={color} />,
   },
