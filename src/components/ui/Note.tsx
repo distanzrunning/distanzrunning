@@ -14,7 +14,11 @@ export type NoteType =
   | "warning"
   | "secondary"
   | "violet"
-  | "cyan";
+  | "cyan"
+  | "tertiary"
+  | "alert"
+  | "lite"
+  | "ghost";
 
 /** Note size options */
 export type NoteSize = "small" | "default" | "large";
@@ -151,6 +155,42 @@ const typeConfigs: Record<NoteType, TypeConfig> = {
     iconColor: "currentColor",
     fillBg: "var(--ds-teal-200)",
     className: "geist-cyan",
+    icon: (color) => <InfoIcon color={color} />,
+  },
+  tertiary: {
+    borderColor: "var(--ds-gray-300)",
+    fillBorderColor: "var(--ds-gray-200)",
+    textColor: "var(--ds-gray-800)",
+    iconColor: "currentColor",
+    fillBg: "var(--ds-gray-100)",
+    className: "geist-tertiary",
+    icon: (color) => <InfoIcon color={color} />,
+  },
+  alert: {
+    borderColor: "var(--ds-gray-400)",
+    fillBorderColor: "var(--ds-gray-300)",
+    textColor: "var(--ds-gray-800)",
+    iconColor: "currentColor",
+    fillBg: "var(--ds-gray-alpha-100)",
+    className: "geist-alert",
+    icon: (color) => <InfoIcon color={color} />,
+  },
+  lite: {
+    borderColor: "var(--ds-gray-300)",
+    fillBorderColor: "var(--ds-gray-200)",
+    textColor: "var(--ds-gray-800)",
+    iconColor: "currentColor",
+    fillBg: "var(--ds-gray-100)",
+    className: "geist-lite",
+    icon: (color) => <InfoIcon color={color} />,
+  },
+  ghost: {
+    borderColor: "var(--ds-gray-300)",
+    fillBorderColor: "var(--ds-gray-200)",
+    textColor: "var(--ds-gray-800)",
+    iconColor: "currentColor",
+    fillBg: "var(--ds-gray-100)",
+    className: "geist-ghost",
     icon: (color) => <InfoIcon color={color} />,
   },
 };

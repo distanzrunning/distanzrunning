@@ -671,6 +671,14 @@ export default function NoteComponent() {
               <Note type="violet" fill>This is a fill note of type <code>violet</code>.</Note>
               <Note type="cyan">This is a note of type <code>cyan</code>.</Note>
               <Note type="cyan" fill>This is a fill note of type <code>cyan</code>.</Note>
+              <Note type="tertiary">This is a note of type <code>tertiary</code>.</Note>
+              <Note type="tertiary" fill>This is a fill note of type <code>tertiary</code>.</Note>
+              <Note type="alert">This is a note of type <code>alert</code>.</Note>
+              <Note type="alert" fill>This is a fill note of type <code>alert</code>.</Note>
+              <Note type="lite">This is a note of type <code>lite</code>.</Note>
+              <Note type="lite" fill>This is a fill note of type <code>lite</code>.</Note>
+              <Note type="ghost">This is a note of type <code>ghost</code>.</Note>
+              <Note type="ghost" fill>This is a fill note of type <code>ghost</code>.</Note>
             </div>
 
             {/* Custom label */}
@@ -690,6 +698,14 @@ export default function NoteComponent() {
               <Note type="violet" label="violet" fill>This is a fill note of type <code>violet</code>.</Note>
               <Note type="cyan" label="cyan">This is a note of type <code>cyan</code>.</Note>
               <Note type="cyan" label="cyan" fill>This is a fill note of type <code>cyan</code>.</Note>
+              <Note type="tertiary" label="tertiary">This is a note of type <code>tertiary</code>.</Note>
+              <Note type="tertiary" label="tertiary" fill>This is a fill note of type <code>tertiary</code>.</Note>
+              <Note type="alert" label="alert">This is a note of type <code>alert</code>.</Note>
+              <Note type="alert" label="alert" fill>This is a fill note of type <code>alert</code>.</Note>
+              <Note type="lite" label="lite">This is a note of type <code>lite</code>.</Note>
+              <Note type="lite" label="lite" fill>This is a fill note of type <code>lite</code>.</Note>
+              <Note type="ghost" label="ghost">This is a note of type <code>ghost</code>.</Note>
+              <Note type="ghost" label="ghost" fill>This is a fill note of type <code>ghost</code>.</Note>
             </div>
 
             {/* No label */}
@@ -709,6 +725,14 @@ export default function NoteComponent() {
               <Note type="violet" label={false} fill>This is a fill note of type <code>violet</code>.</Note>
               <Note type="cyan" label={false}>This is a note of type <code>cyan</code>.</Note>
               <Note type="cyan" label={false} fill>This is a fill note of type <code>cyan</code>.</Note>
+              <Note type="tertiary" label={false}>This is a note of type <code>tertiary</code>.</Note>
+              <Note type="tertiary" label={false} fill>This is a fill note of type <code>tertiary</code>.</Note>
+              <Note type="alert" label={false}>This is a note of type <code>alert</code>.</Note>
+              <Note type="alert" label={false} fill>This is a fill note of type <code>alert</code>.</Note>
+              <Note type="lite" label={false}>This is a note of type <code>lite</code>.</Note>
+              <Note type="lite" label={false} fill>This is a fill note of type <code>lite</code>.</Note>
+              <Note type="ghost" label={false}>This is a note of type <code>ghost</code>.</Note>
+              <Note type="ghost" label={false} fill>This is a fill note of type <code>ghost</code>.</Note>
             </div>
           </div>
         </CodePreview>

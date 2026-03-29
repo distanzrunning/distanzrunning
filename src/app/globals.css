@@ -1211,6 +1211,10 @@
   .geist-secondary ::selection { background: var(--ds-gray-900); color: var(--ds-background-100); }
   .geist-violet ::selection { background: var(--ds-purple-900); color: var(--ds-background-100); }
   .geist-cyan ::selection { background: var(--ds-teal-900); color: var(--ds-background-100); }
+  .geist-tertiary ::selection { background: var(--ds-gray-900); color: var(--ds-background-100); }
+  .geist-alert ::selection { background: var(--ds-gray-900); color: var(--ds-background-100); }
+  .geist-lite ::selection { background: var(--ds-gray-900); color: var(--ds-background-100); }
+  .geist-ghost ::selection { background: var(--ds-gray-900); color: var(--ds-background-100); }
 
   /* Note disabled overrides */
   .ds-note-disabled .ds-note-link {
