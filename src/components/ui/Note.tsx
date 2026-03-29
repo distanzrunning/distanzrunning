@@ -215,7 +215,10 @@ export const Note = forwardRef<HTMLDivElement, NoteProps>(
     const showLabel = label !== false && label !== undefined;
     const contentGap = showLabel ? "4px" : sizeConfig.gap;
 
-    const borderColor = fill ? typeConfig.fillBorderColor : typeConfig.borderColor;
+    const borderColor = disabled
+      ? "var(--ds-gray-alpha-400)"
+      : fill ? typeConfig.fillBorderColor : typeConfig.borderColor;
+    const textColor = disabled ? "var(--ds-gray-600)" : typeConfig.textColor;
     const paddingRight = action ? "8px" : undefined;
 
     const containerStyle: React.CSSProperties = {
@@ -229,11 +232,10 @@ export const Note = forwardRef<HTMLDivElement, NoteProps>(
       ...(paddingRight ? { paddingRight } : {}),
       fontSize: sizeConfig.fontSize,
       lineHeight: 1.5,
-      color: typeConfig.textColor,
+      color: textColor,
       wordBreak: "break-word",
       gap: 12,
-      ...(fill ? { backgroundColor: typeConfig.fillBg } : {}),
-      ...(disabled ? { opacity: 0.5, pointerEvents: "none" as const } : {}),
+      ...(fill && !disabled ? { backgroundColor: typeConfig.fillBg } : {}),
     };
 
     return (

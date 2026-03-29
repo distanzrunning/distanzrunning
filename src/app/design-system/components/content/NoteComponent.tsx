@@ -631,13 +631,13 @@ export default function NoteComponent() {
           Disabled
         </SectionHeader>
         <CodePreview componentCode={disabledCode}>
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col items-stretch justify-start gap-6 flex-initial">
             <Note type="warning" fill disabled action={<UpgradeButton />}>
-              This filled note details some warning information.
+              This note details a warning.
             </Note>
             <Note type="warning" fill disabled action={<UpgradeButton />}>
-              This filled note details some warning information. Check{" "}
-              <a href="#" className="underline">
+              This filled note details some success information. Check{" "}
+              <a href="#" className="ds-note-link">
                 the documentation
               </a>{" "}
               to learn more.
