@@ -659,26 +659,28 @@ export default function NoteComponent() {
               <h3 className="text-heading-16">Default label</h3>
               <Note type="secondary">This is a note of type <code>secondary</code>.</Note>
               <Note type="secondary" fill>This is a fill note of type <code>secondary</code>.</Note>
+              <Note type="tertiary">This is a note of type <code>tertiary</code>.</Note>
+              <Note type="tertiary" fill>This is a fill note of type <code>tertiary</code>.</Note>
               <Note type="warning">This is a note of type <code>warning</code>.</Note>
               <Note type="warning" fill>This is a fill note of type <code>warning</code>.</Note>
               <Note type="success">This is a note of type <code>success</code>.</Note>
               <Note type="success" fill>This is a fill note of type <code>success</code>.</Note>
               <Note type="default">This is a note of type <code>default</code>.</Note>
               <Note type="default" fill>This is a fill note of type <code>default</code>.</Note>
-              <Note type="error">This is a note of type <code>error</code>.</Note>
-              <Note type="error" fill>This is a fill note of type <code>error</code>.</Note>
-              <Note type="violet">This is a note of type <code>violet</code>.</Note>
-              <Note type="violet" fill>This is a fill note of type <code>violet</code>.</Note>
-              <Note type="cyan">This is a note of type <code>cyan</code>.</Note>
-              <Note type="cyan" fill>This is a fill note of type <code>cyan</code>.</Note>
-              <Note type="tertiary">This is a note of type <code>tertiary</code>.</Note>
-              <Note type="tertiary" fill>This is a fill note of type <code>tertiary</code>.</Note>
               <Note type="alert">This is a note of type <code>alert</code>.</Note>
               <Note type="alert" fill>This is a fill note of type <code>alert</code>.</Note>
+              <Note type="error">This is a note of type <code>error</code>.</Note>
+              <Note type="error" fill>This is a fill note of type <code>error</code>.</Note>
               <Note type="lite">This is a note of type <code>lite</code>.</Note>
               <Note type="lite" fill>This is a fill note of type <code>lite</code>.</Note>
               <Note type="ghost">This is a note of type <code>ghost</code>.</Note>
               <Note type="ghost" fill>This is a fill note of type <code>ghost</code>.</Note>
+              <Note type="alert">This is a note of type <code>alert</code>.</Note>
+              <Note type="alert" fill>This is a fill note of type <code>alert</code>.</Note>
+              <Note type="violet">This is a note of type <code>violet</code>.</Note>
+              <Note type="violet" fill>This is a fill note of type <code>violet</code>.</Note>
+              <Note type="cyan">This is a note of type <code>cyan</code>.</Note>
+              <Note type="cyan" fill>This is a fill note of type <code>cyan</code>.</Note>
             </div>
 
             {/* Custom label */}
@@ -686,26 +688,28 @@ export default function NoteComponent() {
               <h3 className="text-heading-16">Custom label</h3>
               <Note type="secondary" label="secondary">This is a note of type <code>secondary</code>.</Note>
               <Note type="secondary" label="secondary" fill>This is a fill note of type <code>secondary</code>.</Note>
+              <Note type="tertiary" label="tertiary">This is a note of type <code>tertiary</code>.</Note>
+              <Note type="tertiary" label="tertiary" fill>This is a fill note of type <code>tertiary</code>.</Note>
               <Note type="warning" label="warning">This is a note of type <code>warning</code>.</Note>
               <Note type="warning" label="warning" fill>This is a fill note of type <code>warning</code>.</Note>
               <Note type="success" label="success">This is a note of type <code>success</code>.</Note>
               <Note type="success" label="success" fill>This is a fill note of type <code>success</code>.</Note>
               <Note type="default" label="default">This is a note of type <code>default</code>.</Note>
               <Note type="default" label="default" fill>This is a fill note of type <code>default</code>.</Note>
-              <Note type="error" label="error">This is a note of type <code>error</code>.</Note>
-              <Note type="error" label="error" fill>This is a fill note of type <code>error</code>.</Note>
-              <Note type="violet" label="violet">This is a note of type <code>violet</code>.</Note>
-              <Note type="violet" label="violet" fill>This is a fill note of type <code>violet</code>.</Note>
-              <Note type="cyan" label="cyan">This is a note of type <code>cyan</code>.</Note>
-              <Note type="cyan" label="cyan" fill>This is a fill note of type <code>cyan</code>.</Note>
-              <Note type="tertiary" label="tertiary">This is a note of type <code>tertiary</code>.</Note>
-              <Note type="tertiary" label="tertiary" fill>This is a fill note of type <code>tertiary</code>.</Note>
               <Note type="alert" label="alert">This is a note of type <code>alert</code>.</Note>
               <Note type="alert" label="alert" fill>This is a fill note of type <code>alert</code>.</Note>
+              <Note type="error" label="error">This is a note of type <code>error</code>.</Note>
+              <Note type="error" label="error" fill>This is a fill note of type <code>error</code>.</Note>
               <Note type="lite" label="lite">This is a note of type <code>lite</code>.</Note>
               <Note type="lite" label="lite" fill>This is a fill note of type <code>lite</code>.</Note>
               <Note type="ghost" label="ghost">This is a note of type <code>ghost</code>.</Note>
               <Note type="ghost" label="ghost" fill>This is a fill note of type <code>ghost</code>.</Note>
+              <Note type="alert" label="alert">This is a note of type <code>alert</code>.</Note>
+              <Note type="alert" label="alert" fill>This is a fill note of type <code>alert</code>.</Note>
+              <Note type="violet" label="violet">This is a note of type <code>violet</code>.</Note>
+              <Note type="violet" label="violet" fill>This is a fill note of type <code>violet</code>.</Note>
+              <Note type="cyan" label="cyan">This is a note of type <code>cyan</code>.</Note>
+              <Note type="cyan" label="cyan" fill>This is a fill note of type <code>cyan</code>.</Note>
             </div>
 
             {/* No label */}
@@ -713,26 +717,28 @@ export default function NoteComponent() {
               <h3 className="text-heading-16">No label</h3>
               <Note type="secondary" label={false}>This is a note of type <code>secondary</code>.</Note>
               <Note type="secondary" label={false} fill>This is a fill note of type <code>secondary</code>.</Note>
+              <Note type="tertiary" label={false}>This is a note of type <code>tertiary</code>.</Note>
+              <Note type="tertiary" label={false} fill>This is a fill note of type <code>tertiary</code>.</Note>
               <Note type="warning" label={false}>This is a note of type <code>warning</code>.</Note>
               <Note type="warning" label={false} fill>This is a fill note of type <code>warning</code>.</Note>
               <Note type="success" label={false}>This is a note of type <code>success</code>.</Note>
               <Note type="success" label={false} fill>This is a fill note of type <code>success</code>.</Note>
               <Note type="default" label={false}>This is a note of type <code>default</code>.</Note>
               <Note type="default" label={false} fill>This is a fill note of type <code>default</code>.</Note>
-              <Note type="error" label={false}>This is a note of type <code>error</code>.</Note>
-              <Note type="error" label={false} fill>This is a fill note of type <code>error</code>.</Note>
-              <Note type="violet" label={false}>This is a note of type <code>violet</code>.</Note>
-              <Note type="violet" label={false} fill>This is a fill note of type <code>violet</code>.</Note>
-              <Note type="cyan" label={false}>This is a note of type <code>cyan</code>.</Note>
-              <Note type="cyan" label={false} fill>This is a fill note of type <code>cyan</code>.</Note>
-              <Note type="tertiary" label={false}>This is a note of type <code>tertiary</code>.</Note>
-              <Note type="tertiary" label={false} fill>This is a fill note of type <code>tertiary</code>.</Note>
               <Note type="alert" label={false}>This is a note of type <code>alert</code>.</Note>
               <Note type="alert" label={false} fill>This is a fill note of type <code>alert</code>.</Note>
+              <Note type="error" label={false}>This is a note of type <code>error</code>.</Note>
+              <Note type="error" label={false} fill>This is a fill note of type <code>error</code>.</Note>
               <Note type="lite" label={false}>This is a note of type <code>lite</code>.</Note>
               <Note type="lite" label={false} fill>This is a fill note of type <code>lite</code>.</Note>
               <Note type="ghost" label={false}>This is a note of type <code>ghost</code>.</Note>
               <Note type="ghost" label={false} fill>This is a fill note of type <code>ghost</code>.</Note>
+              <Note type="alert" label={false}>This is a note of type <code>alert</code>.</Note>
+              <Note type="alert" label={false} fill>This is a fill note of type <code>alert</code>.</Note>
+              <Note type="violet" label={false}>This is a note of type <code>violet</code>.</Note>
+              <Note type="violet" label={false} fill>This is a fill note of type <code>violet</code>.</Note>
+              <Note type="cyan" label={false}>This is a note of type <code>cyan</code>.</Note>
+              <Note type="cyan" label={false} fill>This is a fill note of type <code>cyan</code>.</Note>
             </div>
           </div>
         </CodePreview>
