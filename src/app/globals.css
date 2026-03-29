@@ -1204,13 +1204,13 @@
   }
 
   /* Note text selection colors */
-  [role="note"] ::selection { background: var(--ds-gray-200); color: var(--ds-gray-900); }
-  .geist-success ::selection { background: var(--ds-blue-200); color: var(--ds-blue-900); }
-  .geist-error ::selection { background: var(--ds-red-200); color: var(--ds-red-900); }
-  .geist-warning ::selection { background: var(--ds-amber-200); color: var(--ds-amber-900); }
-  .geist-secondary ::selection { background: var(--ds-gray-200); color: var(--ds-gray-900); }
-  .geist-violet ::selection { background: var(--ds-purple-200); color: var(--ds-purple-900); }
-  .geist-cyan ::selection { background: var(--ds-teal-200); color: var(--ds-teal-900); }
+  [role="note"] ::selection { background: var(--ds-gray-400); color: var(--ds-gray-1000); }
+  .geist-success ::selection { background: var(--ds-blue-400); color: var(--ds-blue-1000); }
+  .geist-error ::selection { background: var(--ds-red-400); color: var(--ds-red-1000); }
+  .geist-warning ::selection { background: var(--ds-amber-400); color: var(--ds-amber-1000); }
+  .geist-secondary ::selection { background: var(--ds-gray-400); color: var(--ds-gray-1000); }
+  .geist-violet ::selection { background: var(--ds-purple-400); color: var(--ds-purple-1000); }
+  .geist-cyan ::selection { background: var(--ds-teal-400); color: var(--ds-teal-1000); }
 
   /* Note inline links */
   .ds-note-link {
