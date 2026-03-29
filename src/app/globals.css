@@ -1219,7 +1219,9 @@
   .ds-note-disabled button {
     background: var(--ds-gray-100) !important;
     color: var(--ds-gray-600) !important;
-    border: 1px solid var(--ds-gray-alpha-400) !important;
+    border-width: 1px !important;
+    border-style: solid !important;
+    border-color: var(--ds-gray-alpha-400) !important;
     box-shadow: none !important;
     pointer-events: none;
   }
