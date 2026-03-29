@@ -69,6 +69,7 @@ export const navigation: NavSection[] = [
       { id: "multi-select", label: "Multi Select" },
       { id: "note", label: "Note" },
       { id: "pagination", label: "Pagination" },
+      { id: "phone", label: "Phone" },
     ],
   },
 ];
