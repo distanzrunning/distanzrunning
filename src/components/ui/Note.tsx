@@ -241,7 +241,7 @@ export const Note = forwardRef<HTMLDivElement, NoteProps>(
     return (
       <div
         ref={ref}
-        className={`${typeConfig.className} ${className}`.trim()}
+        className={`${typeConfig.className}${disabled ? " ds-note-disabled" : ""} ${className}`.trim()}
         style={containerStyle}
         role="note"
       >
@@ -255,7 +255,7 @@ export const Note = forwardRef<HTMLDivElement, NoteProps>(
           >
             {showIcon && (
               <span style={{ display: "flex", height: sizeConfig.lineHeightPx, alignItems: "center" }}>
-                {typeConfig.icon(typeConfig.iconColor)}
+                {typeConfig.icon(disabled ? "var(--ds-gray-600)" : typeConfig.iconColor)}
               </span>
             )}
             {showLabel && (

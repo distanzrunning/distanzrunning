@@ -329,9 +329,9 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
 // Upgrade Button (reusable action)
 // ============================================================================
 
-function UpgradeButton() {
+function UpgradeButton({ disabled }: { disabled?: boolean } = {}) {
   return (
-    <Button size="small">
+    <Button size="small" disabled={disabled}>
       Upgrade
     </Button>
   );
@@ -632,10 +632,10 @@ export default function NoteComponent() {
         </SectionHeader>
         <CodePreview componentCode={disabledCode}>
           <div className="flex flex-col items-stretch justify-start gap-6 flex-initial">
-            <Note type="warning" fill disabled action={<UpgradeButton />}>
+            <Note type="warning" fill disabled action={<UpgradeButton disabled />}>
               This note details a warning.
             </Note>
-            <Note type="warning" fill disabled action={<UpgradeButton />}>
+            <Note type="warning" fill disabled action={<UpgradeButton disabled />}>
               This filled note details some success information. Check{" "}
               <a href="#" className="ds-note-link">
                 the documentation

@@ -1212,6 +1212,11 @@
   .geist-violet ::selection { background: var(--ds-purple-900); color: var(--ds-background-100); }
   .geist-cyan ::selection { background: var(--ds-teal-900); color: var(--ds-background-100); }
 
+  /* Note disabled link override */
+  .ds-note-disabled .ds-note-link {
+    color: var(--ds-gray-600);
+  }
+
   /* Note inline links */
   .ds-note-link {
     color: var(--ds-blue-1000);
