@@ -355,15 +355,16 @@ export function Component(): JSX.Element {
 }`;
 
 const actionCode = `import { Note } from '@/components/ui/Note';
+import { Button } from '@/components/ui/Button';
 import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
   return (
     <div className="flex flex-col items-start justify-start gap-6 flex-initial">
-      <Note action={<button>Upgrade</button>}>
+      <Note action={<Button size="small">Upgrade</Button>}>
         This note details some information.
       </Note>
-      <Note action={<button>Upgrade</button>}>
+      <Note action={<Button size="small">Upgrade</Button>}>
         This note details a large amount information that could potentially wrap
         into two or more lines, forcing the height of the Note to be larger.
       </Note>
@@ -372,91 +373,248 @@ export function Component(): JSX.Element {
 }`;
 
 const successCode = `import { Note } from '@/components/ui/Note';
-import type { JSX } from 'react';
-
-export function Component(): JSX.Element {
-  return (
-    <Note type="success">
-      This note details some success information.
-    </Note>
-  );
-}`;
-
-const errorCode = `import { Note } from '@/components/ui/Note';
-import type { JSX } from 'react';
-
-export function Component(): JSX.Element {
-  return (
-    <Note type="error">
-      This note details some error information.
-    </Note>
-  );
-}`;
-
-const warningCode = `import { Note } from '@/components/ui/Note';
-import type { JSX } from 'react';
-
-export function Component(): JSX.Element {
-  return (
-    <Note type="warning">
-      This note details some warning information.
-    </Note>
-  );
-}`;
-
-const secondaryCode = `import { Note } from '@/components/ui/Note';
-import type { JSX } from 'react';
-
-export function Component(): JSX.Element {
-  return (
-    <Note type="secondary">
-      This note details some secondary information.
-    </Note>
-  );
-}`;
-
-const violetCode = `import { Note } from '@/components/ui/Note';
-import type { JSX } from 'react';
-
-export function Component(): JSX.Element {
-  return (
-    <Note type="violet">
-      This note details some violet information.
-    </Note>
-  );
-}`;
-
-const cyanCode = `import { Note } from '@/components/ui/Note';
-import type { JSX } from 'react';
-
-export function Component(): JSX.Element {
-  return (
-    <Note type="cyan">
-      This note details some cyan information.
-    </Note>
-  );
-}`;
-
-const disabledCode = `import { Note } from '@/components/ui/Note';
-import type { JSX } from 'react';
-
-export function Component(): JSX.Element {
-  return (
-    <Note type="warning" fill disabled action={<button>Upgrade</button>}>
-      This filled note details some warning information.
-    </Note>
-  );
-}`;
-
-const labelsCode = `import { Note } from '@/components/ui/Note';
+import { Button } from '@/components/ui/Button';
 import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
   return (
     <div className="flex flex-col gap-4">
-      <Note type="success">Default label with icon.</Note>
-      <Note type="warning" label="Warning">Custom label text.</Note>
-      <Note type="error" label={false}>No label or icon.</Note>
+      <Note type="success">
+        This note details some success information.
+      </Note>
+      <Note type="success" action={<Button size="small">Upgrade</Button>}>
+        This note details some success information.
+      </Note>
+      <Note type="success" action={<Button size="small">Upgrade</Button>}>
+        This note details some success information. Check{' '}
+        <a href="#">the documentation</a> to learn more.
+      </Note>
+      <Note type="success" fill>
+        This filled note details some success information.
+      </Note>
+      <Note type="success" fill action={<Button size="small">Upgrade</Button>}>
+        This filled note details some success information.
+      </Note>
+      <Note type="success" fill action={<Button size="small">Upgrade</Button>}>
+        This filled note details some success information. Check{' '}
+        <a href="#">the documentation</a> to learn more.
+      </Note>
+    </div>
+  );
+}`;
+
+const errorCode = `import { Note } from '@/components/ui/Note';
+import { Button } from '@/components/ui/Button';
+import type { JSX } from 'react';
+
+export function Component(): JSX.Element {
+  return (
+    <div className="flex flex-col gap-4">
+      <Note type="error">
+        This note details some error information.
+      </Note>
+      <Note type="error" action={<Button size="small">Upgrade</Button>}>
+        This note details some error information.
+      </Note>
+      <Note type="error" action={<Button size="small">Upgrade</Button>}>
+        This note details some error information. Check{' '}
+        <a href="#">the documentation</a> to learn more.
+      </Note>
+      <Note type="error" fill>
+        This filled note details some error information.
+      </Note>
+      <Note type="error" fill action={<Button size="small">Upgrade</Button>}>
+        This filled note details some error information.
+      </Note>
+      <Note type="error" fill action={<Button size="small">Upgrade</Button>}>
+        This filled note details some error information. Check{' '}
+        <a href="#">the documentation</a> to learn more.
+      </Note>
+    </div>
+  );
+}`;
+
+const warningCode = `import { Note } from '@/components/ui/Note';
+import { Button } from '@/components/ui/Button';
+import type { JSX } from 'react';
+
+export function Component(): JSX.Element {
+  return (
+    <div className="flex flex-col gap-4">
+      <Note type="warning">
+        This note details some warning information.
+      </Note>
+      <Note type="warning" action={<Button size="small">Upgrade</Button>}>
+        This note details some warning information.
+      </Note>
+      <Note type="warning" action={<Button size="small">Upgrade</Button>}>
+        This note details some warning information. Check{' '}
+        <a href="#">the documentation</a> to learn more.
+      </Note>
+      <Note type="warning" fill>
+        This filled note details some warning information.
+      </Note>
+      <Note type="warning" fill action={<Button size="small">Upgrade</Button>}>
+        This filled note details some warning information.
+      </Note>
+      <Note type="warning" fill action={<Button size="small">Upgrade</Button>}>
+        This filled note details some warning information. Check{' '}
+        <a href="#">the documentation</a> to learn more.
+      </Note>
+    </div>
+  );
+}`;
+
+const secondaryCode = `import { Note } from '@/components/ui/Note';
+import { Button } from '@/components/ui/Button';
+import type { JSX } from 'react';
+
+export function Component(): JSX.Element {
+  return (
+    <div className="flex flex-col gap-4">
+      <Note type="secondary">
+        This note details some secondary information.
+      </Note>
+      <Note type="secondary" action={<Button size="small">Upgrade</Button>}>
+        This note details some secondary information.
+      </Note>
+      <Note type="secondary" action={<Button size="small">Upgrade</Button>}>
+        This note details some secondary information. Check{' '}
+        <a href="#">the documentation</a> to learn more.
+      </Note>
+      <Note type="secondary" fill>
+        This filled note details some secondary information.
+      </Note>
+      <Note type="secondary" fill action={<Button size="small">Upgrade</Button>}>
+        This filled note details some secondary information.
+      </Note>
+      <Note type="secondary" fill action={<Button size="small">Upgrade</Button>}>
+        This filled note details some secondary information. Check{' '}
+        <a href="#">the documentation</a> to learn more.
+      </Note>
+    </div>
+  );
+}`;
+
+const violetCode = `import { Note } from '@/components/ui/Note';
+import { Button } from '@/components/ui/Button';
+import type { JSX } from 'react';
+
+export function Component(): JSX.Element {
+  return (
+    <div className="flex flex-col gap-4">
+      <Note type="violet">
+        This note details some violet information.
+      </Note>
+      <Note type="violet" action={<Button size="small">Upgrade</Button>}>
+        This note details some violet information.
+      </Note>
+      <Note type="violet" action={<Button size="small">Upgrade</Button>}>
+        This note details some violet information. Check{' '}
+        <a href="#">the documentation</a> to learn more.
+      </Note>
+      <Note type="violet" fill>
+        This filled note details some violet information.
+      </Note>
+      <Note type="violet" fill action={<Button size="small">Upgrade</Button>}>
+        This filled note details some violet information.
+      </Note>
+      <Note type="violet" fill action={<Button size="small">Upgrade</Button>}>
+        This filled note details some violet information. Check{' '}
+        <a href="#">the documentation</a> to learn more.
+      </Note>
+    </div>
+  );
+}`;
+
+const cyanCode = `import { Note } from '@/components/ui/Note';
+import { Button } from '@/components/ui/Button';
+import type { JSX } from 'react';
+
+export function Component(): JSX.Element {
+  return (
+    <div className="flex flex-col gap-4">
+      <Note type="cyan">
+        This note details some cyan information.
+      </Note>
+      <Note type="cyan" action={<Button size="small">Upgrade</Button>}>
+        This note details some cyan information.
+      </Note>
+      <Note type="cyan" action={<Button size="small">Upgrade</Button>}>
+        This note details some cyan information. Check{' '}
+        <a href="#">the documentation</a> to learn more.
+      </Note>
+      <Note type="cyan" fill>
+        This filled note details some cyan information.
+      </Note>
+      <Note type="cyan" fill action={<Button size="small">Upgrade</Button>}>
+        This filled note details some cyan information.
+      </Note>
+      <Note type="cyan" fill action={<Button size="small">Upgrade</Button>}>
+        This filled note details some cyan information. Check{' '}
+        <a href="#">the documentation</a> to learn more.
+      </Note>
+    </div>
+  );
+}`;
+
+const disabledCode = `import { Note } from '@/components/ui/Note';
+import { Button } from '@/components/ui/Button';
+import type { JSX } from 'react';
+
+export function Component(): JSX.Element {
+  return (
+    <div className="flex flex-col gap-6">
+      <Note type="warning" fill disabled action={<Button size="small" disabled>Upgrade</Button>}>
+        This note details a warning.
+      </Note>
+      <Note type="warning" fill disabled action={<Button size="small" disabled>Upgrade</Button>}>
+        This filled note details some warning information. Check{' '}
+        <a href="#">the documentation</a> to learn more.
+      </Note>
+    </div>
+  );
+}`;
+
+const labelsCode = `import { Fragment } from 'react';
+import { Note } from '@/components/ui/Note';
+import type { NoteType } from '@/components/ui/Note';
+import type { JSX } from 'react';
+
+const types: NoteType[] = ['default', 'success', 'error', 'warning', 'secondary', 'violet', 'cyan'];
+
+export function Component(): JSX.Element {
+  return (
+    <div className="flex flex-col gap-6">
+      {/* Default label (icon only) */}
+      <div className="flex flex-col gap-2">
+        {types.map((type) => (
+          <Fragment key={type}>
+            <Note type={type}>This is a note of type <code>{type}</code>.</Note>
+            <Note type={type} fill>This is a fill note of type <code>{type}</code>.</Note>
+          </Fragment>
+        ))}
+      </div>
+
+      {/* Custom label text */}
+      <div className="flex flex-col gap-2">
+        {types.map((type) => (
+          <Fragment key={type}>
+            <Note type={type} label={type}>This is a note of type <code>{type}</code>.</Note>
+            <Note type={type} label={type} fill>This is a fill note of type <code>{type}</code>.</Note>
+          </Fragment>
+        ))}
+      </div>
+
+      {/* No label or icon */}
+      <div className="flex flex-col gap-2">
+        {types.map((type) => (
+          <Fragment key={type}>
+            <Note type={type} label={false}>This is a note of type <code>{type}</code>.</Note>
+            <Note type={type} label={false} fill>This is a fill note of type <code>{type}</code>.</Note>
+          </Fragment>
+        ))}
+      </div>
     </div>
   );
 }`;
