@@ -354,10 +354,6 @@ export default function PhoneComponent() {
         <SectionHeader id="composition" onCopyLink={showToast}>
           Composition
         </SectionHeader>
-        <p className="mt-2 leading-6 xl:mt-4" style={{ fontSize: 16, lineHeight: "24px", color: "var(--ds-gray-900)" }}>
-          The Phone component provides a realistic phone-style frame for
-          showcasing website screenshots or any other content.
-        </p>
         <CodePreview componentCode={compositionCode}>
           <div className="w-full max-w-xs mx-auto">
             <Phone url="distanzrunning.com">
