@@ -73,6 +73,7 @@ export const navigation: NavSection[] = [
       { id: "progress", label: "Progress" },
       { id: "project-banner", label: "Project Banner" },
       { id: "radio", label: "Radio" },
+      { id: "relative-time-card", label: "Relative Time Card" },
     ],
   },
 ];

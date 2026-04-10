@@ -59,6 +59,7 @@ import PhoneComponent from "../components/content/PhoneComponent";
 import ProgressComponent from "../components/content/ProgressComponent";
 import ProjectBannerComponent from "../components/content/ProjectBannerComponent";
 import RadioComponent from "../components/content/RadioComponent";
+import RelativeTimeCardComponent from "../components/content/RelativeTimeCardComponent";
 import MultiSelectComponent from "../components/content/MultiSelectComponent";
 import NoteComponent from "../components/content/NoteComponent";
 import CalendarComponent from "../components/content/CalendarComponent";
@@ -883,6 +884,21 @@ export default function DesignSystemPage() {
           onNavigate={handleNavigation}
         >
           <RadioComponent />
+        </ContentWithTOC>
+      );
+    }
+
+    if (activeSlug === "relative-time-card") {
+      return (
+        <ContentWithTOC
+          tocTitle="On this page"
+          pageTitle="Relative Time Card"
+          pageSubtitle="Popover to show a given date in local time."
+          mainSectionId="relative-time-card"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
+          <RelativeTimeCardComponent />
         </ContentWithTOC>
       );
     }
