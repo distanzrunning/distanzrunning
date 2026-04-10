@@ -12,6 +12,7 @@ import {
   ProjectBanner,
   ProjectBannerAction,
 } from "@/components/ui/ProjectBanner";
+import * as Tooltip from "@radix-ui/react-tooltip";
 
 // ============================================================================
 // Toast Component
@@ -458,23 +459,45 @@ function SuccessDemo() {
 
 function WarningDemo() {
   return (
-    <ProjectBanner
-      variant="warning"
-      icon={<RollbackIcon />}
-      action={
-        <ProjectBannerAction variant="warning" onClick={() => {}}>
-          Undo Rollback
-        </ProjectBannerAction>
-      }
-    >
-      This project was rolled back by{" "}
-      <span
-        className="underline decoration-dashed underline-offset-[5px] cursor-default"
-        title="johnphamous"
+    <Tooltip.Provider delayDuration={200}>
+      <ProjectBanner
+        variant="warning"
+        icon={<RollbackIcon />}
+        action={
+          <ProjectBannerAction variant="warning" onClick={() => {}}>
+            Undo Rollback
+          </ProjectBannerAction>
+        }
       >
-        @johnphamous
-      </span>
-    </ProjectBanner>
+        This project was rolled back by{" "}
+        <Tooltip.Root>
+          <Tooltip.Trigger asChild>
+            <span
+              className="underline decoration-dashed underline-offset-[5px] cursor-default"
+              tabIndex={0}
+            >
+              @johnphamous
+            </span>
+          </Tooltip.Trigger>
+          <Tooltip.Portal>
+            <Tooltip.Content
+              className="rounded-md px-3 py-1.5 text-xs leading-none shadow-md"
+              style={{
+                background: "var(--ds-gray-1000)",
+                color: "var(--ds-background-100)",
+              }}
+              side="top"
+              sideOffset={5}
+            >
+              johnphamous
+              <Tooltip.Arrow
+                style={{ fill: "var(--ds-gray-1000)" }}
+              />
+            </Tooltip.Content>
+          </Tooltip.Portal>
+        </Tooltip.Root>
+      </ProjectBanner>
+    </Tooltip.Provider>
   );
 }
 
