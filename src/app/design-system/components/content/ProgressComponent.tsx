@@ -311,22 +311,24 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
 // ============================================================================
 
 const defaultCode = `import { Progress } from '@/components/ui/Progress';
+import type { JSX } from 'react';
 
-function DefaultExample() {
+export function Component(): JSX.Element {
   return <Progress value={30} />;
 }`;
 
 const customMaxCode = `import { Progress } from '@/components/ui/Progress';
+import type { JSX } from 'react';
 
-function CustomMaxExample() {
-  return <Progress value={30} max={40} />;
+export function Component(): JSX.Element {
+  return <Progress max={40} value={30} />;
 }`;
 
-const dynamicColorsCode = `import { useState } from 'react';
-import { Progress } from '@/components/ui/Progress';
+const dynamicColorsCode = `import { Progress } from '@/components/ui/Progress';
 import { Button } from '@/components/ui/Button';
+import { useState, type JSX } from 'react';
 
-function DynamicColorsExample() {
+export function Component(): JSX.Element {
   const [value, setValue] = useState(0);
 
   const getColor = (v: number) => {
@@ -337,19 +339,23 @@ function DynamicColorsExample() {
   };
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col items-start justify-start gap-6 flex-initial">
       <Progress value={value} color={getColor(value)} />
-      <div className="flex gap-4">
+      <div className="flex flex-row items-stretch justify-start gap-4 flex-initial">
         <Button
           size="small"
-          onClick={() => setValue((v) => Math.min(v + 10, 100))}
+          onClick={() => {
+            if (value < 100) setValue(value + 10);
+          }}
         >
           Increase
         </Button>
         <Button
           size="small"
           variant="secondary"
-          onClick={() => setValue((v) => Math.max(v - 10, 0))}
+          onClick={() => {
+            if (value > 0) setValue(value - 10);
+          }}
         >
           Decrease
         </Button>
@@ -359,10 +365,11 @@ function DynamicColorsExample() {
 }`;
 
 const themedCode = `import { Progress } from '@/components/ui/Progress';
+import type { JSX } from 'react';
 
-function ThemedExample() {
+export function Component(): JSX.Element {
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col items-stretch justify-start gap-6 flex-initial">
       <Progress value={100} color="var(--ds-blue-700)" />
       <Progress value={10} color="var(--ds-red-700)" />
       <Progress value={40} color="var(--ds-amber-700)" />
@@ -372,17 +379,25 @@ function ThemedExample() {
 }`;
 
 const withStopsCode = `import { ProgressWithStops } from '@/components/ui/Progress';
+import type { JSX } from 'react';
 
-function WithStopsExample() {
-  const stops = [10, 20, 30, 40, 50, 60, 70, 80, 90, 95].map(
-    (position) => ({ position })
-  );
-
+export function Component(): JSX.Element {
   return (
     <ProgressWithStops
       value={30}
       color="var(--ds-blue-700)"
-      stops={stops}
+      stops={[
+        { position: 10 },
+        { position: 20 },
+        { position: 30 },
+        { position: 40 },
+        { position: 50 },
+        { position: 60 },
+        { position: 70 },
+        { position: 80 },
+        { position: 90 },
+        { position: 95 },
+      ]}
     />
   );
 }`;
@@ -410,19 +425,23 @@ function DynamicColorsDemo() {
   };
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col items-start justify-start gap-6 flex-initial">
       <Progress value={value} color={getColor(value)} />
-      <div className="flex gap-4">
+      <div className="flex flex-row items-stretch justify-start gap-4 flex-initial">
         <Button
           size="small"
-          onClick={() => setValue((v) => Math.min(v + 10, 100))}
+          onClick={() => {
+            if (value < 100) setValue(value + 10);
+          }}
         >
           Increase
         </Button>
         <Button
           size="small"
           variant="secondary"
-          onClick={() => setValue((v) => Math.max(v - 10, 0))}
+          onClick={() => {
+            if (value > 0) setValue(value - 10);
+          }}
         >
           Decrease
         </Button>
@@ -433,7 +452,7 @@ function DynamicColorsDemo() {
 
 function ThemedDemo() {
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col items-stretch justify-start gap-6 flex-initial">
       <Progress value={100} color="var(--ds-blue-700)" />
       <Progress value={10} color="var(--ds-red-700)" />
       <Progress value={40} color="var(--ds-amber-700)" />
