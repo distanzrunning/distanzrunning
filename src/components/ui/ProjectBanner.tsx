@@ -105,6 +105,15 @@ export interface ProjectBannerActionProps {
   href?: string;
 }
 
+const variantActionClasses: Record<ProjectBannerVariant, string> = {
+  success:
+    "text-[var(--ds-blue-1000)] decoration-[var(--ds-blue-400)] hover:text-[var(--ds-blue-900)] hover:decoration-[var(--ds-blue-500)]",
+  warning:
+    "text-[var(--ds-amber-1000)] decoration-[var(--ds-amber-400)] hover:text-[var(--ds-amber-900)] hover:decoration-[var(--ds-amber-500)]",
+  error:
+    "text-[var(--ds-red-1000)] decoration-[var(--ds-red-400)] hover:text-[var(--ds-red-900)] hover:decoration-[var(--ds-red-500)]",
+};
+
 export function ProjectBannerAction({
   variant,
   children,
@@ -113,12 +122,11 @@ export function ProjectBannerAction({
 }: ProjectBannerActionProps) {
   const styles = variantStyles[variant];
 
-  const className =
+  const baseClassName =
     "cursor-pointer bg-transparent py-1 font-sans font-medium underline border-none underline-offset-[5px] outline-none px-0 h-6 my-[-1px] rounded-sm transition-colors";
+  const className = `${baseClassName} ${variantActionClasses[variant]}`;
 
   const style = {
-    color: styles.actionText,
-    textDecorationColor: styles.actionDecoration,
     "--banner-focus-color": styles.focusColor,
   } as React.CSSProperties;
 
