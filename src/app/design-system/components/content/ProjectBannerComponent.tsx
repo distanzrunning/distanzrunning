@@ -478,16 +478,16 @@ function WarningDemo() {
           </Tooltip.Trigger>
           <Tooltip.Portal>
             <Tooltip.Content
-              className="z-50 rounded-md px-3 py-1.5 text-xs leading-none animate-in fade-in-0 zoom-in-95"
+              className="z-[100] max-w-[250px] rounded-md px-3 py-2 text-xs leading-4 text-center select-none"
               style={{
                 background: "var(--ds-gray-1000)",
                 color: "var(--ds-background-100)",
                 boxShadow: "var(--ds-shadow-tooltip)",
               }}
               side="top"
-              sideOffset={5}
+              sideOffset={8}
             >
-              johnphamous
+              John Phamous — Team Member
               <Tooltip.Arrow
                 style={{ fill: "var(--ds-gray-1000)" }}
               />
