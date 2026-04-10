@@ -471,20 +471,18 @@ function WarningDemo() {
       >
         This project was rolled back by{" "}
         <Tooltip.Root>
-          <Tooltip.Trigger asChild>
-            <span
-              className="underline decoration-dashed underline-offset-[5px] cursor-default"
-              tabIndex={0}
-            >
-              @johnphamous
-            </span>
+          <Tooltip.Trigger
+            className="underline decoration-dashed underline-offset-[5px] cursor-default bg-transparent border-none p-0 font-inherit text-inherit text-[inherit] leading-inherit outline-none"
+          >
+            @johnphamous
           </Tooltip.Trigger>
           <Tooltip.Portal>
             <Tooltip.Content
-              className="rounded-md px-3 py-1.5 text-xs leading-none shadow-md"
+              className="z-50 rounded-md px-3 py-1.5 text-xs leading-none animate-in fade-in-0 zoom-in-95"
               style={{
                 background: "var(--ds-gray-1000)",
                 color: "var(--ds-background-100)",
+                boxShadow: "var(--ds-shadow-tooltip)",
               }}
               side="top"
               sideOffset={5}
