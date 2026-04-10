@@ -352,36 +352,19 @@ export function Component(): JSX.Element {
   );
 }`;
 
-const headlessCode = `import { RadioGroup } from '@/components/ui/Radio';
+const headlessCode = `import { RadioGroup, Radio } from '@/components/ui/Radio';
 import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
   return (
-    <RadioGroup name="headless" defaultValue="option-1">
-      <label className="flex items-center justify-between w-full">
-        <span className="text-sm text-[var(--ds-gray-1000)]">Option 1</span>
-        <input
-          type="radio"
-          name="headless"
-          value="option-1"
-          defaultChecked
-          className="sr-only peer"
-        />
-        <span className="w-4 h-4 rounded-full border border-[var(--ds-gray-alpha-400)] peer-checked:border-[var(--ds-gray-1000)] flex items-center justify-center">
-          <span className="hidden peer-checked:block w-2 h-2 rounded-full bg-[var(--ds-gray-1000)]" />
-        </span>
+    <RadioGroup name="headless" defaultValue="one">
+      <label style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <span>Option 1</span>
+        <Radio name="headless" value="one" defaultChecked />
       </label>
-      <label className="flex items-center justify-between w-full">
-        <span className="text-sm text-[var(--ds-gray-1000)]">Option 2</span>
-        <input
-          type="radio"
-          name="headless"
-          value="option-2"
-          className="sr-only peer"
-        />
-        <span className="w-4 h-4 rounded-full border border-[var(--ds-gray-alpha-400)] peer-checked:border-[var(--ds-gray-1000)] flex items-center justify-center">
-          <span className="hidden peer-checked:block w-2 h-2 rounded-full bg-[var(--ds-gray-1000)]" />
-        </span>
+      <label style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <span>Option 2</span>
+        <Radio name="headless" value="two" />
       </label>
     </RadioGroup>
   );
@@ -438,56 +421,30 @@ function RequiredDemo() {
 }
 
 function HeadlessDemo() {
-  const [selected, setSelected] = useState("option-1");
+  const [selected, setSelected] = useState("one");
 
   return (
-    <div className="flex flex-col gap-3 w-full max-w-xs">
-      <label
-        className="flex items-center justify-between w-full cursor-pointer"
-        onClick={() => setSelected("option-1")}
-      >
-        <span className="text-sm text-[var(--ds-gray-1000)]">Option 1</span>
-        <span
-          className={`w-4 h-4 rounded-full border flex items-center justify-center ${
-            selected === "option-1"
-              ? "border-[var(--ds-gray-1000)]"
-              : "border-[var(--ds-gray-alpha-400)]"
-          }`}
-          style={{
-            transition: "border-color 0.2s ease",
-          }}
-        >
-          {selected === "option-1" && (
-            <span
-              className="block w-2 h-2 rounded-full"
-              style={{ backgroundColor: "var(--ds-gray-1000)" }}
-            />
-          )}
-        </span>
-      </label>
-      <label
-        className="flex items-center justify-between w-full cursor-pointer"
-        onClick={() => setSelected("option-2")}
-      >
-        <span className="text-sm text-[var(--ds-gray-1000)]">Option 2</span>
-        <span
-          className={`w-4 h-4 rounded-full border flex items-center justify-center ${
-            selected === "option-2"
-              ? "border-[var(--ds-gray-1000)]"
-              : "border-[var(--ds-gray-alpha-400)]"
-          }`}
-          style={{
-            transition: "border-color 0.2s ease",
-          }}
-        >
-          {selected === "option-2" && (
-            <span
-              className="block w-2 h-2 rounded-full"
-              style={{ backgroundColor: "var(--ds-gray-1000)" }}
-            />
-          )}
-        </span>
-      </label>
+    <div role="radiogroup">
+      <div className="flex flex-col items-stretch justify-start gap-6 flex-initial">
+        <label style={{ display: "flex", justifyContent: "space-between" }}>
+          <span>Option 1</span>
+          <Radio
+            name="headless-demo"
+            value="one"
+            checked={selected === "one"}
+            onChange={() => setSelected("one")}
+          />
+        </label>
+        <label style={{ display: "flex", justifyContent: "space-between" }}>
+          <span>Option 2</span>
+          <Radio
+            name="headless-demo"
+            value="two"
+            checked={selected === "two"}
+            onChange={() => setSelected("two")}
+          />
+        </label>
+      </div>
     </div>
   );
 }
