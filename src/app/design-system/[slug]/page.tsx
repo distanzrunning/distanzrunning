@@ -57,6 +57,7 @@ import MenuComponent from "../components/content/MenuComponent";
 import PaginationComponent from "../components/content/PaginationComponent";
 import PhoneComponent from "../components/content/PhoneComponent";
 import ProgressComponent from "../components/content/ProgressComponent";
+import ProjectBannerComponent from "../components/content/ProjectBannerComponent";
 import MultiSelectComponent from "../components/content/MultiSelectComponent";
 import NoteComponent from "../components/content/NoteComponent";
 import CalendarComponent from "../components/content/CalendarComponent";
@@ -851,6 +852,21 @@ export default function DesignSystemPage() {
           onNavigate={handleNavigation}
         >
           <ProgressComponent />
+        </ContentWithTOC>
+      );
+    }
+
+    if (activeSlug === "project-banner") {
+      return (
+        <ContentWithTOC
+          tocTitle="On this page"
+          pageTitle="Project Banner"
+          pageSubtitle="Used for temporary, project-wide notifications that require resolution."
+          mainSectionId="project-banner"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
+          <ProjectBannerComponent />
         </ContentWithTOC>
       );
     }

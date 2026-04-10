@@ -71,6 +71,7 @@ export const navigation: NavSection[] = [
       { id: "pagination", label: "Pagination" },
       { id: "phone", label: "Phone" },
       { id: "progress", label: "Progress" },
+      { id: "project-banner", label: "Project Banner" },
     ],
   },
 ];
