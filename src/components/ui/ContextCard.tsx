@@ -31,6 +31,7 @@ interface ContextCardTriggerProps {
 
 const CONTEXT_CARD_CSS = `
   .ds-context-card {
+    z-index: 1000000;
     border-radius: 6px;
     padding: 12px;
     font-size: 16px;
@@ -136,12 +137,11 @@ function ContextCardTrigger({
         <div
           style={{
             cursor: "pointer",
-            display: "flex",
-            overflow: "hidden",
+            display: "inline-flex",
             pointerEvents: "all",
           }}
         >
-          <span>{children}</span>
+          {children}
         </div>
       </Tooltip.Trigger>
       <Tooltip.Portal>
