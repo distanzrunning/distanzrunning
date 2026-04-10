@@ -406,7 +406,13 @@ export function Component(): JSX.Element {
         </ProjectBannerAction>
       }
     >
-      This project was rolled back by @johnphamous
+      This project was rolled back by{' '}
+      <span
+        className="underline decoration-dashed underline-offset-[5px]"
+        title="johnphamous"
+      >
+        @johnphamous
+      </span>
     </ProjectBanner>
   );
 }`;
@@ -461,7 +467,13 @@ function WarningDemo() {
         </ProjectBannerAction>
       }
     >
-      This project was rolled back by @johnphamous
+      This project was rolled back by{" "}
+      <span
+        className="underline decoration-dashed underline-offset-[5px] cursor-default"
+        title="johnphamous"
+      >
+        @johnphamous
+      </span>
     </ProjectBanner>
   );
 }
