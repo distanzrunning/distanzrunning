@@ -56,6 +56,7 @@ import MaterialComponent from "../components/content/MaterialComponent";
 import MenuComponent from "../components/content/MenuComponent";
 import PaginationComponent from "../components/content/PaginationComponent";
 import PhoneComponent from "../components/content/PhoneComponent";
+import ProgressComponent from "../components/content/ProgressComponent";
 import MultiSelectComponent from "../components/content/MultiSelectComponent";
 import NoteComponent from "../components/content/NoteComponent";
 import CalendarComponent from "../components/content/CalendarComponent";
@@ -835,6 +836,21 @@ export default function DesignSystemPage() {
           onNavigate={handleNavigation}
         >
           <PhoneComponent />
+        </ContentWithTOC>
+      );
+    }
+
+    if (activeSlug === "progress") {
+      return (
+        <ContentWithTOC
+          tocTitle="On this page"
+          pageTitle="Progress"
+          pageSubtitle="Display progress relative to a limit or related to a task."
+          mainSectionId="progress"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
+          <ProgressComponent />
         </ContentWithTOC>
       );
     }
