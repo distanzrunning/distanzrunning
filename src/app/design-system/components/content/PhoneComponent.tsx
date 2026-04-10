@@ -354,13 +354,15 @@ export default function PhoneComponent() {
         <SectionHeader id="composition" onCopyLink={showToast}>
           Composition
         </SectionHeader>
-        <CodePreview componentCode={compositionCode}>
-          <div className="w-full max-w-xs mx-auto">
-            <Phone url="distanzrunning.com">
-              <div className="absolute inset-0 bg-[#878787]" />
-            </Phone>
-          </div>
-        </CodePreview>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={compositionCode}>
+            <div className="w-full max-w-xs mx-auto">
+              <Phone url="distanzrunning.com">
+                <div className="absolute inset-0 bg-[#878787]" />
+              </Phone>
+            </div>
+          </CodePreview>
+        </div>
       </Section>
     </>
   );
