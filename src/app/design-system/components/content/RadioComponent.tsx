@@ -375,10 +375,10 @@ import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
   return (
-    <label className="inline-flex items-center gap-3 cursor-pointer">
-      <Radio defaultChecked />
-      <span className="text-sm text-[var(--ds-gray-1000)]">Option 1</span>
-    </label>
+    <li className="flex flex-row items-stretch justify-start gap-2 flex-initial list-none">
+      <span>Option 1</span>
+      <Radio defaultChecked value="one" />
+    </li>
   );
 }`;
 
@@ -451,10 +451,10 @@ function HeadlessDemo() {
 
 function StandaloneDemo() {
   return (
-    <label className="inline-flex items-center gap-3 cursor-pointer">
-      <Radio defaultChecked />
-      <span className="text-sm text-[var(--ds-gray-1000)]">Option 1</span>
-    </label>
+    <li className="flex flex-row items-stretch justify-start gap-2 flex-initial list-none">
+      <span>Option 1</span>
+      <Radio defaultChecked value="one" />
+    </li>
   );
 }
 
