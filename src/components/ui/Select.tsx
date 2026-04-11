@@ -7,7 +7,7 @@ import React, { forwardRef, useId } from "react";
 // ============================================================================
 
 export interface SelectProps
-  extends Omit<React.SelectHTMLAttributes<HTMLSelectElement>, "size"> {
+  extends Omit<React.SelectHTMLAttributes<HTMLSelectElement>, "size" | "prefix"> {
   /** Size variant */
   size?: "xsmall" | "small" | "medium" | "large";
   /** Prefix icon/element */
@@ -149,23 +149,14 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
 
         {/* Select container */}
         <div
-          className={`relative flex items-center rounded-md transition-colors ${
+          className={`relative flex items-center ${
             disabled ? "opacity-50 cursor-not-allowed" : ""
           }`}
-          style={{
-            borderWidth: "1px",
-            borderStyle: "solid",
-            borderColor: error
-              ? "var(--ds-red-700)"
-              : "var(--ds-gray-alpha-400)",
-            background: "var(--ds-background-100)",
-            transition: "border-color 150ms ease",
-          }}
         >
           {/* Prefix */}
           {hasPrefix && (
             <span
-              className="absolute left-0 flex items-center justify-center pointer-events-none"
+              className="absolute left-0 flex items-center justify-center pointer-events-none z-10"
               style={{
                 left: size === "xsmall" ? "8px" : size === "small" ? "10px" : size === "large" ? "14px" : "12px",
                 color: "var(--ds-gray-900)",
@@ -181,7 +172,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
             id={selectId}
             disabled={disabled}
             className={[
-              "appearance-none w-full bg-transparent outline-none",
+              "appearance-none w-full outline-none border-none rounded-[4px]",
               config.height,
               config.fontSize,
               hasPrefix ? config.prefixPaddingLeft : config.paddingX,
@@ -192,20 +183,32 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
               .join(" ")}
             style={{
               color: "var(--ds-gray-1000)",
+              background: "var(--ds-background-100)",
+              boxShadow: error
+                ? "0 0 0 1px var(--ds-red-700)"
+                : "0 0 0 1px rgba(0, 0, 0, 0.08)",
+              transition: "box-shadow 0.2s ease, color 0.2s ease",
+            }}
+            onMouseEnter={(e) => {
+              if (!disabled && !error) {
+                e.currentTarget.style.boxShadow = "0 0 0 1px var(--ds-gray-alpha-600)";
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (!disabled && !error && document.activeElement !== e.currentTarget) {
+                e.currentTarget.style.boxShadow = "0 0 0 1px rgba(0, 0, 0, 0.08)";
+              }
             }}
             onFocus={(e) => {
-              const container = e.currentTarget.parentElement;
-              if (container) {
-                container.style.outline = "2px solid var(--ds-focus-color)";
-                container.style.outlineOffset = "-1px";
+              if (!disabled) {
+                e.currentTarget.style.boxShadow = "0 0 0 1px var(--ds-gray-1000), 0 0 0 4px var(--ds-focus-color)";
               }
               props.onFocus?.(e);
             }}
             onBlur={(e) => {
-              const container = e.currentTarget.parentElement;
-              if (container) {
-                container.style.outline = "none";
-              }
+              e.currentTarget.style.boxShadow = error
+                ? "0 0 0 1px var(--ds-red-700)"
+                : "0 0 0 1px rgba(0, 0, 0, 0.08)";
               props.onBlur?.(e);
             }}
             {...props}
