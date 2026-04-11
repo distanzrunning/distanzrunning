@@ -61,6 +61,7 @@ import ProjectBannerComponent from "../components/content/ProjectBannerComponent
 import RadioComponent from "../components/content/RadioComponent";
 import RelativeTimeCardComponent from "../components/content/RelativeTimeCardComponent";
 import ScrollerComponent from "../components/content/ScrollerComponent";
+import SelectComponent from "../components/content/SelectComponent";
 import MultiSelectComponent from "../components/content/MultiSelectComponent";
 import NoteComponent from "../components/content/NoteComponent";
 import CalendarComponent from "../components/content/CalendarComponent";
@@ -915,6 +916,21 @@ export default function DesignSystemPage() {
           onNavigate={handleNavigation}
         >
           <ScrollerComponent />
+        </ContentWithTOC>
+      );
+    }
+
+    if (activeSlug === "select") {
+      return (
+        <ContentWithTOC
+          tocTitle="On this page"
+          pageTitle="Select"
+          pageSubtitle="Display a dropdown list of items."
+          mainSectionId="select"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
+          <SelectComponent />
         </ContentWithTOC>
       );
     }
