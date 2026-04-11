@@ -328,7 +328,7 @@ import { Scroller } from '@/components/ui/Scroller';
 
 function HorizontalExample(): JSX.Element {
   return (
-    <Scroller overflow="x" width="100%">
+    <Scroller overflow="x" width="100%" height="256px">
       <div className="flex flex-row gap-4">
         <div className="bg-[var(--ds-gray-1000)] h-64 w-64 flex-shrink-0 rounded-lg" />
         <div className="bg-[var(--ds-gray-1000)] h-64 w-64 flex-shrink-0 rounded-lg" />
@@ -420,7 +420,7 @@ function HorizontalWithButtonsExample(): JSX.Element {
 
   return (
     <div className="flex flex-col gap-4">
-      <Scroller ref={scrollerRef} overflow="x" width="100%">
+      <Scroller ref={scrollerRef} overflow="x" width="100%" height="256px">
         <div className="flex flex-row gap-4">
           <div className="bg-[var(--ds-gray-1000)] h-64 w-96 flex-shrink-0 rounded-lg" />
           <div className="bg-[var(--ds-gray-1000)] h-64 w-96 flex-shrink-0 rounded-lg" />
@@ -454,7 +454,7 @@ function VerticalDemo() {
 
 function HorizontalDemo() {
   return (
-    <Scroller overflow="x" width="100%">
+    <Scroller overflow="x" width="100%" height="256px">
       <div className="flex flex-row gap-4">
         <div className="bg-[var(--ds-gray-1000)] h-64 w-64 flex-shrink-0 rounded-lg" />
         <div className="bg-[var(--ds-gray-1000)] h-64 w-64 flex-shrink-0 rounded-lg" />
@@ -535,7 +535,7 @@ function HorizontalWithButtonsDemo() {
 
   return (
     <div className="flex flex-col gap-4">
-      <Scroller ref={scrollerRef} overflow="x" width="100%">
+      <Scroller ref={scrollerRef} overflow="x" width="100%" height="256px">
         <div className="flex flex-row gap-4">
           <div className="bg-[var(--ds-gray-1000)] h-64 w-96 flex-shrink-0 rounded-lg" />
           <div className="bg-[var(--ds-gray-1000)] h-64 w-96 flex-shrink-0 rounded-lg" />

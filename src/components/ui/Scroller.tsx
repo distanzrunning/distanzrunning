@@ -237,13 +237,17 @@ export const Scroller = forwardRef<HTMLDivElement, ScrollerProps>(
 
     return (
       <div
-        className={`relative overflow-hidden ${className}`}
-        style={{ width, height, maxWidth: "100%", minWidth: 0 }}
+        className={`relative ${className}`}
+        style={{
+          width,
+          height,
+          overflow: "hidden",
+        }}
       >
-        {/* Scrollable inner container */}
+        {/* Scrollable inner container - absolute so it doesn't expand the outer container */}
         <div
           ref={setRefs}
-          className="scroller-hide-scrollbar h-full w-full"
+          className="scroller-hide-scrollbar absolute inset-0"
           style={overflowStyle}
         >
           {children}
