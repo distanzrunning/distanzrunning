@@ -149,6 +149,7 @@ function ContextCardTrigger({
           className="ds-context-card"
           side={side}
           sideOffset={sideOffset}
+          align="center"
         >
           {content}
           <Tooltip.Arrow asChild width={14} height={7}>
