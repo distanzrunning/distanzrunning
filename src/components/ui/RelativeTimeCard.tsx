@@ -103,7 +103,7 @@ function getTimezoneLabel(): string {
 function TimezoneBadge({ label }: { label: string }) {
   return (
     <div
-      className="flex items-center justify-center h-4 px-1.5 rounded-sm"
+      className="flex items-center justify-center h-4 px-1.5 rounded-[2px]"
       style={{ background: "var(--ds-gray-200)" }}
     >
       <span
