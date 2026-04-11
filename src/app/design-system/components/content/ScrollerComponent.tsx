@@ -445,8 +445,11 @@ export function Component(): JSX.Element {
 
 function VerticalDemo() {
   return (
-    <Scroller overflow="y" height="220px" width="100%">
-      <div className="flex flex-col gap-4" style={{ width: 400 }}>
+    <Scroller height="220px" overflow="y" width="100%">
+      <div
+        className="flex flex-col items-stretch justify-start gap-4 flex-initial"
+        style={{ width: 400 }}
+      >
         <div className="bg-[var(--ds-gray-1000)] h-64 w-64" />
         <div className="bg-[var(--ds-gray-1000)] h-64 w-64" />
       </div>
@@ -456,8 +459,8 @@ function VerticalDemo() {
 
 function HorizontalDemo() {
   return (
-    <Scroller overflow="x" width="100%" height="256px">
-      <div className="flex flex-row gap-4">
+    <Scroller height="256px" overflow="x" width="100%">
+      <div className="flex flex-row items-stretch justify-start gap-4 flex-initial">
         <div className="bg-[var(--ds-gray-1000)] h-64 w-64 flex-shrink-0" />
         <div className="bg-[var(--ds-gray-1000)] h-64 w-64 flex-shrink-0" />
         <div className="bg-[var(--ds-gray-1000)] h-64 w-64 flex-shrink-0" />
