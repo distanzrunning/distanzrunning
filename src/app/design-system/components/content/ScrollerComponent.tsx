@@ -379,7 +379,7 @@ function VerticalWithButtonsExample(): JSX.Element {
   };
 
   return (
-    <div className="flex max-w-max flex-col gap-4">
+    <div className="flex flex-col gap-4">
       <ScrollerButtons
         direction="vertical"
         onScrollPrev={scrollPrev}
@@ -498,7 +498,7 @@ function VerticalWithButtonsDemo() {
   };
 
   return (
-    <div className="flex max-w-max flex-col gap-4">
+    <div className="flex flex-col gap-4">
       <ScrollerButtons
         direction="vertical"
         onScrollPrev={scrollPrev}

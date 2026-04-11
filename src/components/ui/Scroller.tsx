@@ -124,7 +124,7 @@ export function ScrollerButtons({
 
   return (
     <div
-      className={`flex ${isVertical ? "flex-col" : "flex-row"} gap-2`}
+      className="flex flex-row gap-2 justify-center"
     >
       <Button
         variant="secondary"
