@@ -489,14 +489,14 @@ function SizesDemo() {
 
 function PrefixSuffixDemo() {
   return (
-    <div className="flex flex-col md:flex-row gap-4 [&>*]:flex-1 items-start">
-      <Select size="small" prefix={<UploadIcon />} suffix={<UploadIcon />}>
+    <div className="flex flex-col md:flex-row gap-4 items-start justify-center">
+      <Select size="small" prefix={<UploadIcon />} suffix={<UploadIcon />} className="w-auto">
         <option disabled selected>Small</option>
       </Select>
-      <Select size="medium" prefix={<UploadIcon />} suffix={<UploadIcon />}>
+      <Select size="medium" prefix={<UploadIcon />} suffix={<UploadIcon />} className="w-auto">
         <option disabled selected>Default</option>
       </Select>
-      <Select size="large" prefix={<UploadIcon />} suffix={<UploadIcon />}>
+      <Select size="large" prefix={<UploadIcon />} suffix={<UploadIcon />} className="w-auto">
         <option disabled selected>Large</option>
       </Select>
     </div>
