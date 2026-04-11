@@ -21,6 +21,12 @@ interface ScrollerProps {
   width?: string;
   /** Container height */
   height?: string;
+  /** Fade overlay color — defaults to var(--ds-background-100) */
+  fadeColor?: string;
+  /** Fade overlay size in px — defaults to 40 */
+  fadeSize?: number;
+  /** Hide fade overlays entirely */
+  hideFade?: boolean;
   /** Additional CSS classes */
   className?: string;
 }
@@ -159,6 +165,9 @@ export const Scroller = forwardRef<HTMLDivElement, ScrollerProps>(
       overflow = "y",
       width,
       height,
+      fadeColor = "var(--ds-background-100)",
+      fadeSize = 40,
+      hideFade = false,
       className = "",
     },
     ref,
@@ -233,8 +242,6 @@ export const Scroller = forwardRef<HTMLDivElement, ScrollerProps>(
       overflowStyle.overflow = "auto";
     }
 
-    const fadeSize = 40;
-
     return (
       <div
         className={`relative ${className}`}
@@ -253,52 +260,52 @@ export const Scroller = forwardRef<HTMLDivElement, ScrollerProps>(
           {children}
         </div>
 
-        {/* Top fade overlay */}
-        {edges.top && (
-          <div
-            className="pointer-events-none absolute top-0 left-0 right-0"
-            style={{
-              height: fadeSize,
-              background:
-                "linear-gradient(to bottom, var(--ds-background-100), transparent)",
-            }}
-          />
-        )}
+        {!hideFade && (
+          <>
+            {/* Top fade overlay */}
+            {edges.top && (
+              <div
+                className="pointer-events-none absolute top-0 left-0 right-0"
+                style={{
+                  height: fadeSize,
+                  background: `linear-gradient(to bottom, ${fadeColor}, transparent)`,
+                }}
+              />
+            )}
 
-        {/* Bottom fade overlay */}
-        {edges.bottom && (
-          <div
-            className="pointer-events-none absolute bottom-0 left-0 right-0"
-            style={{
-              height: fadeSize,
-              background:
-                "linear-gradient(to top, var(--ds-background-100), transparent)",
-            }}
-          />
-        )}
+            {/* Bottom fade overlay */}
+            {edges.bottom && (
+              <div
+                className="pointer-events-none absolute bottom-0 left-0 right-0"
+                style={{
+                  height: fadeSize,
+                  background: `linear-gradient(to top, ${fadeColor}, transparent)`,
+                }}
+              />
+            )}
 
-        {/* Left fade overlay */}
-        {edges.left && (
-          <div
-            className="pointer-events-none absolute top-0 bottom-0 left-0"
-            style={{
-              width: fadeSize,
-              background:
-                "linear-gradient(to right, var(--ds-background-100), transparent)",
-            }}
-          />
-        )}
+            {/* Left fade overlay */}
+            {edges.left && (
+              <div
+                className="pointer-events-none absolute top-0 bottom-0 left-0"
+                style={{
+                  width: fadeSize,
+                  background: `linear-gradient(to right, ${fadeColor}, transparent)`,
+                }}
+              />
+            )}
 
-        {/* Right fade overlay */}
-        {edges.right && (
-          <div
-            className="pointer-events-none absolute top-0 bottom-0 right-0"
-            style={{
-              width: fadeSize,
-              background:
-                "linear-gradient(to left, var(--ds-background-100), transparent)",
-            }}
-          />
+            {/* Right fade overlay */}
+            {edges.right && (
+              <div
+                className="pointer-events-none absolute top-0 bottom-0 right-0"
+                style={{
+                  width: fadeSize,
+                  background: `linear-gradient(to left, ${fadeColor}, transparent)`,
+                }}
+              />
+            )}
+          </>
         )}
 
         <style jsx>{`
