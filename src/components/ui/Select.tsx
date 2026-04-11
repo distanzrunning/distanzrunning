@@ -158,7 +158,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
         {/* Select container */}
         <div
           className={`relative flex items-center ${
-            disabled ? "opacity-50 cursor-not-allowed" : ""
+            disabled ? "cursor-not-allowed" : ""
           }`}
         >
           {/* Prefix */}
@@ -191,8 +191,8 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
               .filter(Boolean)
               .join(" ")}
             style={{
-              color: "var(--ds-gray-1000)",
-              background: "var(--ds-background-100)",
+              color: disabled ? "var(--ds-gray-600)" : "var(--ds-gray-1000)",
+              background: disabled ? "var(--ds-gray-200)" : "var(--ds-background-100)",
             }}
             {...props}
           >
@@ -204,7 +204,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
             className="absolute right-0 flex items-center justify-center pointer-events-none"
             style={{
               right: size === "xsmall" ? "8px" : size === "small" ? "10px" : size === "large" ? "14px" : "12px",
-              color: "var(--ds-gray-900)",
+              color: disabled ? "var(--ds-gray-600)" : "var(--ds-gray-900)",
             }}
           >
             {suffix || <ChevronDownIcon />}
