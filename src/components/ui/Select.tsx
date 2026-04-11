@@ -148,8 +148,8 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
         {/* Label */}
         {label && (
           <div
-            className="text-sm font-medium capitalize mb-2"
-            style={{ color: "var(--ds-gray-900)" }}
+            className="text-[13px] capitalize mb-2 max-w-full"
+            style={{ color: "var(--ds-gray-700)" }}
           >
             {label}
           </div>
