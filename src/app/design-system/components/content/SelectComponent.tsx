@@ -380,14 +380,14 @@ function UploadIcon() {
 export function Component(): JSX.Element {
   return (
     <div className="flex flex-col md:flex-row gap-4">
-      <Select size="small" prefix={<UploadIcon />}>
-        <option disabled selected>With prefix</option>
+      <Select size="small" prefix={<UploadIcon />} suffix={<UploadIcon />}>
+        <option disabled selected>Small</option>
       </Select>
-      <Select size="medium" prefix={<UploadIcon />}>
-        <option disabled selected>With prefix</option>
+      <Select size="medium" prefix={<UploadIcon />} suffix={<UploadIcon />}>
+        <option disabled selected>Default</option>
       </Select>
-      <Select size="large" prefix={<UploadIcon />}>
-        <option disabled selected>With prefix</option>
+      <Select size="large" prefix={<UploadIcon />} suffix={<UploadIcon />}>
+        <option disabled selected>Large</option>
       </Select>
     </div>
   )
@@ -490,14 +490,14 @@ function SizesDemo() {
 function PrefixSuffixDemo() {
   return (
     <div className="flex flex-col md:flex-row gap-4 [&>*]:flex-1 items-start">
-      <Select size="small" prefix={<UploadIcon />}>
-        <option disabled selected>With prefix</option>
+      <Select size="small" prefix={<UploadIcon />} suffix={<UploadIcon />}>
+        <option disabled selected>Small</option>
       </Select>
-      <Select size="medium" prefix={<UploadIcon />}>
-        <option disabled selected>With prefix</option>
+      <Select size="medium" prefix={<UploadIcon />} suffix={<UploadIcon />}>
+        <option disabled selected>Default</option>
       </Select>
-      <Select size="large" prefix={<UploadIcon />}>
-        <option disabled selected>With prefix</option>
+      <Select size="large" prefix={<UploadIcon />} suffix={<UploadIcon />}>
+        <option disabled selected>Large</option>
       </Select>
     </div>
   );

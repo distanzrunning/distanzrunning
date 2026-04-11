@@ -12,6 +12,8 @@ export interface SelectProps
   size?: "xsmall" | "small" | "medium" | "large";
   /** Prefix icon/element */
   prefix?: React.ReactNode;
+  /** Custom suffix icon/element (replaces default chevron) */
+  suffix?: React.ReactNode;
   /** Error state */
   error?: boolean;
   /** Error message text */
@@ -119,6 +121,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
     {
       size = "medium",
       prefix,
+      suffix,
       error = false,
       errorMessage,
       label,
@@ -191,7 +194,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
             {children}
           </select>
 
-          {/* Chevron suffix */}
+          {/* Suffix */}
           <span
             className="absolute right-0 flex items-center justify-center pointer-events-none"
             style={{
@@ -199,7 +202,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
               color: "var(--ds-gray-900)",
             }}
           >
-            <ChevronDownIcon />
+            {suffix || <ChevronDownIcon />}
           </span>
         </div>
 
