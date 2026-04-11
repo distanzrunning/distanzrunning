@@ -172,7 +172,8 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
             id={selectId}
             disabled={disabled}
             className={[
-              "appearance-none w-full outline-none border-none rounded-[4px]",
+              `ds-select appearance-none w-full outline-none border-none rounded-[4px]`,
+              error ? "ds-select-error" : "",
               config.height,
               config.fontSize,
               hasPrefix ? config.prefixPaddingLeft : config.paddingX,
@@ -184,32 +185,6 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
             style={{
               color: "var(--ds-gray-1000)",
               background: "var(--ds-background-100)",
-              boxShadow: error
-                ? "0 0 0 1px var(--ds-red-700)"
-                : "0 0 0 1px rgba(0, 0, 0, 0.08)",
-              transition: "box-shadow 0.2s ease, color 0.2s ease",
-            }}
-            onMouseEnter={(e) => {
-              if (!disabled && !error) {
-                e.currentTarget.style.boxShadow = "0 0 0 1px var(--ds-gray-alpha-600)";
-              }
-            }}
-            onMouseLeave={(e) => {
-              if (!disabled && !error && document.activeElement !== e.currentTarget) {
-                e.currentTarget.style.boxShadow = "0 0 0 1px rgba(0, 0, 0, 0.08)";
-              }
-            }}
-            onFocus={(e) => {
-              if (!disabled) {
-                e.currentTarget.style.boxShadow = "0 0 0 1px var(--ds-gray-1000), 0 0 0 4px var(--ds-focus-color)";
-              }
-              props.onFocus?.(e);
-            }}
-            onBlur={(e) => {
-              e.currentTarget.style.boxShadow = error
-                ? "0 0 0 1px var(--ds-red-700)"
-                : "0 0 0 1px rgba(0, 0, 0, 0.08)";
-              props.onBlur?.(e);
             }}
             {...props}
           >
@@ -238,6 +213,25 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
             <span className="text-[13px] leading-[20px]">{errorMessage}</span>
           </div>
         )}
+
+        <style>{`
+          .ds-select {
+            box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
+            transition: box-shadow 0.2s ease, color 0.2s ease;
+          }
+          .ds-select:hover:not(:disabled) {
+            box-shadow: 0 0 0 1px var(--ds-gray-alpha-600);
+          }
+          .ds-select:focus-visible:not(:disabled) {
+            box-shadow: 0 0 0 2px var(--ds-background-100), 0 0 0 4px var(--ds-focus-color);
+          }
+          .ds-select-error {
+            box-shadow: 0 0 0 1px var(--ds-red-700) !important;
+          }
+          .ds-select-error:focus-visible:not(:disabled) {
+            box-shadow: 0 0 0 2px var(--ds-background-100), 0 0 0 4px var(--ds-focus-color) !important;
+          }
+        `}</style>
       </div>
     );
   },
