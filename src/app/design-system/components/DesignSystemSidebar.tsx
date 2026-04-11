@@ -74,6 +74,7 @@ export const navigation: NavSection[] = [
       { id: "project-banner", label: "Project Banner" },
       { id: "radio", label: "Radio" },
       { id: "relative-time-card", label: "Relative Time Card" },
+      { id: "scroller", label: "Scroller" },
     ],
   },
 ];

@@ -60,6 +60,7 @@ import ProgressComponent from "../components/content/ProgressComponent";
 import ProjectBannerComponent from "../components/content/ProjectBannerComponent";
 import RadioComponent from "../components/content/RadioComponent";
 import RelativeTimeCardComponent from "../components/content/RelativeTimeCardComponent";
+import ScrollerComponent from "../components/content/ScrollerComponent";
 import MultiSelectComponent from "../components/content/MultiSelectComponent";
 import NoteComponent from "../components/content/NoteComponent";
 import CalendarComponent from "../components/content/CalendarComponent";
@@ -899,6 +900,21 @@ export default function DesignSystemPage() {
           onNavigate={handleNavigation}
         >
           <RelativeTimeCardComponent />
+        </ContentWithTOC>
+      );
+    }
+
+    if (activeSlug === "scroller") {
+      return (
+        <ContentWithTOC
+          tocTitle="On this page"
+          pageTitle="Scroller"
+          pageSubtitle="Display an overflowing list of items."
+          mainSectionId="scroller"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
+          <ScrollerComponent />
         </ContentWithTOC>
       );
     }
