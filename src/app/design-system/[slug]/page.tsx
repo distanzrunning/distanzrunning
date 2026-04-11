@@ -62,6 +62,7 @@ import RadioComponent from "../components/content/RadioComponent";
 import RelativeTimeCardComponent from "../components/content/RelativeTimeCardComponent";
 import ScrollerComponent from "../components/content/ScrollerComponent";
 import SelectComponent from "../components/content/SelectComponent";
+import SheetComponent from "../components/content/SheetComponent";
 import MultiSelectComponent from "../components/content/MultiSelectComponent";
 import NoteComponent from "../components/content/NoteComponent";
 import CalendarComponent from "../components/content/CalendarComponent";
@@ -931,6 +932,21 @@ export default function DesignSystemPage() {
           onNavigate={handleNavigation}
         >
           <SelectComponent />
+        </ContentWithTOC>
+      );
+    }
+
+    if (activeSlug === "sheet") {
+      return (
+        <ContentWithTOC
+          tocTitle="On this page"
+          pageTitle="Sheet"
+          pageSubtitle="Display content in a side panel that slides in from the edge of the screen."
+          mainSectionId="sheet"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
+          <SheetComponent />
         </ContentWithTOC>
       );
     }

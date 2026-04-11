@@ -76,6 +76,7 @@ export const navigation: NavSection[] = [
       { id: "relative-time-card", label: "Relative Time Card" },
       { id: "scroller", label: "Scroller" },
       { id: "select", label: "Select" },
+      { id: "sheet", label: "Sheet" },
     ],
   },
 ];
