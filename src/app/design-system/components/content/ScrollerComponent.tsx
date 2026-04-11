@@ -316,8 +316,8 @@ function VerticalExample(): JSX.Element {
   return (
     <Scroller overflow="y" height="220px" width="100%">
       <div className="flex flex-col gap-4" style={{ width: 400 }}>
-        <div className="bg-[var(--ds-gray-1000)] h-64 w-64 rounded-lg" />
-        <div className="bg-[var(--ds-gray-1000)] h-64 w-64 rounded-lg" />
+        <div className="bg-[var(--ds-gray-1000)] h-64 w-64" />
+        <div className="bg-[var(--ds-gray-1000)] h-64 w-64" />
       </div>
     </Scroller>
   );
@@ -330,10 +330,10 @@ function HorizontalExample(): JSX.Element {
   return (
     <Scroller overflow="x" width="100%" height="256px">
       <div className="flex flex-row gap-4">
-        <div className="bg-[var(--ds-gray-1000)] h-64 w-64 flex-shrink-0 rounded-lg" />
-        <div className="bg-[var(--ds-gray-1000)] h-64 w-64 flex-shrink-0 rounded-lg" />
-        <div className="bg-[var(--ds-gray-1000)] h-64 w-64 flex-shrink-0 rounded-lg" />
-        <div className="bg-[var(--ds-gray-1000)] h-64 w-64 flex-shrink-0 rounded-lg" />
+        <div className="bg-[var(--ds-gray-1000)] h-64 w-64 flex-shrink-0" />
+        <div className="bg-[var(--ds-gray-1000)] h-64 w-64 flex-shrink-0" />
+        <div className="bg-[var(--ds-gray-1000)] h-64 w-64 flex-shrink-0" />
+        <div className="bg-[var(--ds-gray-1000)] h-64 w-64 flex-shrink-0" />
       </div>
     </Scroller>
   );
@@ -346,12 +346,12 @@ function FreeExample(): JSX.Element {
   return (
     <Scroller overflow="both" height="220px" width="100%">
       <div className="grid grid-flow-col grid-rows-2 gap-4">
-        <div className="bg-[var(--ds-gray-1000)] h-96 w-96 rounded-lg" />
-        <div className="bg-[var(--ds-gray-1000)] h-96 w-96 rounded-lg" />
-        <div className="bg-[var(--ds-gray-1000)] h-96 w-96 rounded-lg" />
-        <div className="bg-[var(--ds-gray-1000)] h-96 w-96 rounded-lg" />
-        <div className="bg-[var(--ds-gray-1000)] h-96 w-96 rounded-lg" />
-        <div className="bg-[var(--ds-gray-1000)] h-96 w-96 rounded-lg" />
+        <div className="bg-[var(--ds-gray-1000)] h-96 w-96" />
+        <div className="bg-[var(--ds-gray-1000)] h-96 w-96" />
+        <div className="bg-[var(--ds-gray-1000)] h-96 w-96" />
+        <div className="bg-[var(--ds-gray-1000)] h-96 w-96" />
+        <div className="bg-[var(--ds-gray-1000)] h-96 w-96" />
+        <div className="bg-[var(--ds-gray-1000)] h-96 w-96" />
       </div>
     </Scroller>
   );
@@ -387,10 +387,10 @@ function VerticalWithButtonsExample(): JSX.Element {
       />
       <Scroller ref={scrollerRef} overflow="y" height="220px" width="100%">
         <div className="flex flex-col gap-4">
-          <div className="bg-[var(--ds-gray-1000)] h-60 w-96 rounded-lg" />
-          <div className="bg-[var(--ds-gray-1000)] h-60 w-96 rounded-lg" />
-          <div className="bg-[var(--ds-gray-1000)] h-60 w-96 rounded-lg" />
-          <div className="bg-[var(--ds-gray-1000)] h-60 w-96 rounded-lg" />
+          <div className="bg-[var(--ds-gray-1000)] h-60 w-96" />
+          <div className="bg-[var(--ds-gray-1000)] h-60 w-96" />
+          <div className="bg-[var(--ds-gray-1000)] h-60 w-96" />
+          <div className="bg-[var(--ds-gray-1000)] h-60 w-96" />
         </div>
       </Scroller>
     </div>
@@ -422,10 +422,10 @@ function HorizontalWithButtonsExample(): JSX.Element {
     <div className="flex flex-col gap-4">
       <Scroller ref={scrollerRef} overflow="x" width="100%" height="256px">
         <div className="flex flex-row gap-4">
-          <div className="bg-[var(--ds-gray-1000)] h-64 w-96 flex-shrink-0 rounded-lg" />
-          <div className="bg-[var(--ds-gray-1000)] h-64 w-96 flex-shrink-0 rounded-lg" />
-          <div className="bg-[var(--ds-gray-1000)] h-64 w-96 flex-shrink-0 rounded-lg" />
-          <div className="bg-[var(--ds-gray-1000)] h-64 w-96 flex-shrink-0 rounded-lg" />
+          <div className="bg-[var(--ds-gray-1000)] h-64 w-96 flex-shrink-0" />
+          <div className="bg-[var(--ds-gray-1000)] h-64 w-96 flex-shrink-0" />
+          <div className="bg-[var(--ds-gray-1000)] h-64 w-96 flex-shrink-0" />
+          <div className="bg-[var(--ds-gray-1000)] h-64 w-96 flex-shrink-0" />
         </div>
       </Scroller>
       <ScrollerButtons
@@ -445,8 +445,8 @@ function VerticalDemo() {
   return (
     <Scroller overflow="y" height="220px" width="100%">
       <div className="flex flex-col gap-4" style={{ width: 400 }}>
-        <div className="bg-[var(--ds-gray-1000)] h-64 w-64 rounded-lg" />
-        <div className="bg-[var(--ds-gray-1000)] h-64 w-64 rounded-lg" />
+        <div className="bg-[var(--ds-gray-1000)] h-64 w-64" />
+        <div className="bg-[var(--ds-gray-1000)] h-64 w-64" />
       </div>
     </Scroller>
   );
@@ -456,10 +456,10 @@ function HorizontalDemo() {
   return (
     <Scroller overflow="x" width="100%" height="256px">
       <div className="flex flex-row gap-4">
-        <div className="bg-[var(--ds-gray-1000)] h-64 w-64 flex-shrink-0 rounded-lg" />
-        <div className="bg-[var(--ds-gray-1000)] h-64 w-64 flex-shrink-0 rounded-lg" />
-        <div className="bg-[var(--ds-gray-1000)] h-64 w-64 flex-shrink-0 rounded-lg" />
-        <div className="bg-[var(--ds-gray-1000)] h-64 w-64 flex-shrink-0 rounded-lg" />
+        <div className="bg-[var(--ds-gray-1000)] h-64 w-64 flex-shrink-0" />
+        <div className="bg-[var(--ds-gray-1000)] h-64 w-64 flex-shrink-0" />
+        <div className="bg-[var(--ds-gray-1000)] h-64 w-64 flex-shrink-0" />
+        <div className="bg-[var(--ds-gray-1000)] h-64 w-64 flex-shrink-0" />
       </div>
     </Scroller>
   );
@@ -469,12 +469,12 @@ function FreeDemo() {
   return (
     <Scroller overflow="both" height="220px" width="100%">
       <div className="grid grid-flow-col grid-rows-2 gap-4">
-        <div className="bg-[var(--ds-gray-1000)] h-96 w-96 rounded-lg" />
-        <div className="bg-[var(--ds-gray-1000)] h-96 w-96 rounded-lg" />
-        <div className="bg-[var(--ds-gray-1000)] h-96 w-96 rounded-lg" />
-        <div className="bg-[var(--ds-gray-1000)] h-96 w-96 rounded-lg" />
-        <div className="bg-[var(--ds-gray-1000)] h-96 w-96 rounded-lg" />
-        <div className="bg-[var(--ds-gray-1000)] h-96 w-96 rounded-lg" />
+        <div className="bg-[var(--ds-gray-1000)] h-96 w-96" />
+        <div className="bg-[var(--ds-gray-1000)] h-96 w-96" />
+        <div className="bg-[var(--ds-gray-1000)] h-96 w-96" />
+        <div className="bg-[var(--ds-gray-1000)] h-96 w-96" />
+        <div className="bg-[var(--ds-gray-1000)] h-96 w-96" />
+        <div className="bg-[var(--ds-gray-1000)] h-96 w-96" />
       </div>
     </Scroller>
   );
@@ -506,10 +506,10 @@ function VerticalWithButtonsDemo() {
       />
       <Scroller ref={scrollerRef} overflow="y" height="220px" width="100%">
         <div className="flex flex-col gap-4">
-          <div className="bg-[var(--ds-gray-1000)] h-60 w-96 rounded-lg" />
-          <div className="bg-[var(--ds-gray-1000)] h-60 w-96 rounded-lg" />
-          <div className="bg-[var(--ds-gray-1000)] h-60 w-96 rounded-lg" />
-          <div className="bg-[var(--ds-gray-1000)] h-60 w-96 rounded-lg" />
+          <div className="bg-[var(--ds-gray-1000)] h-60 w-96" />
+          <div className="bg-[var(--ds-gray-1000)] h-60 w-96" />
+          <div className="bg-[var(--ds-gray-1000)] h-60 w-96" />
+          <div className="bg-[var(--ds-gray-1000)] h-60 w-96" />
         </div>
       </Scroller>
     </div>
@@ -537,10 +537,10 @@ function HorizontalWithButtonsDemo() {
     <div className="flex flex-col gap-4">
       <Scroller ref={scrollerRef} overflow="x" width="100%" height="256px">
         <div className="flex flex-row gap-4">
-          <div className="bg-[var(--ds-gray-1000)] h-64 w-96 flex-shrink-0 rounded-lg" />
-          <div className="bg-[var(--ds-gray-1000)] h-64 w-96 flex-shrink-0 rounded-lg" />
-          <div className="bg-[var(--ds-gray-1000)] h-64 w-96 flex-shrink-0 rounded-lg" />
-          <div className="bg-[var(--ds-gray-1000)] h-64 w-96 flex-shrink-0 rounded-lg" />
+          <div className="bg-[var(--ds-gray-1000)] h-64 w-96 flex-shrink-0" />
+          <div className="bg-[var(--ds-gray-1000)] h-64 w-96 flex-shrink-0" />
+          <div className="bg-[var(--ds-gray-1000)] h-64 w-96 flex-shrink-0" />
+          <div className="bg-[var(--ds-gray-1000)] h-64 w-96 flex-shrink-0" />
         </div>
       </Scroller>
       <ScrollerButtons
