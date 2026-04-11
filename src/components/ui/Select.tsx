@@ -32,22 +32,25 @@ interface SizeConfig {
   paddingX: string;
   paddingRight: string;
   prefixPaddingLeft: string;
+  borderRadius: string;
 }
 
 const sizeConfigs: Record<NonNullable<SelectProps["size"]>, SizeConfig> = {
   xsmall: {
-    height: "h-7",
+    height: "h-6",
     fontSize: "text-xs",
-    paddingX: "px-2",
-    paddingRight: "pr-7",
+    paddingX: "px-1.5",
+    paddingRight: "pr-[22px]",
     prefixPaddingLeft: "pl-7",
+    borderRadius: "rounded-[4px]",
   },
   small: {
     height: "h-8",
     fontSize: "text-sm",
-    paddingX: "px-2.5",
-    paddingRight: "pr-8",
-    prefixPaddingLeft: "pl-8",
+    paddingX: "px-3",
+    paddingRight: "pr-9",
+    prefixPaddingLeft: "pl-9",
+    borderRadius: "rounded-[6px]",
   },
   medium: {
     height: "h-10",
@@ -55,6 +58,7 @@ const sizeConfigs: Record<NonNullable<SelectProps["size"]>, SizeConfig> = {
     paddingX: "px-3",
     paddingRight: "pr-9",
     prefixPaddingLeft: "pl-9",
+    borderRadius: "rounded-[6px]",
   },
   large: {
     height: "h-12",
@@ -62,6 +66,7 @@ const sizeConfigs: Record<NonNullable<SelectProps["size"]>, SizeConfig> = {
     paddingX: "px-3.5",
     paddingRight: "pr-10",
     prefixPaddingLeft: "pl-10",
+    borderRadius: "rounded-[6px]",
   },
 };
 
@@ -175,7 +180,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
             id={selectId}
             disabled={disabled}
             className={[
-              `ds-select appearance-none w-full outline-none border-none rounded-[4px]`,
+              `ds-select appearance-none w-full outline-none border-none ${config.borderRadius}`,
               error ? "ds-select-error" : "",
               config.height,
               config.fontSize,
