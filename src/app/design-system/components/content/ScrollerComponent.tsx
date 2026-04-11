@@ -498,7 +498,7 @@ function VerticalWithButtonsDemo() {
   };
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 items-center">
       <ScrollerButtons
         direction="vertical"
         onScrollPrev={scrollPrev}
