@@ -244,7 +244,7 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   }, [componentCode]);
 
   return (
-    <div className="border border-[var(--ds-gray-400)] rounded-lg">
+    <div className="border border-[var(--ds-gray-400)] rounded-lg overflow-hidden">
       <div
         className="p-6 rounded-t-lg overflow-hidden"
         style={{ background: "var(--ds-background-100)" }}
@@ -329,11 +329,11 @@ import { Scroller } from '@/components/ui/Scroller';
 function HorizontalExample(): JSX.Element {
   return (
     <Scroller overflow="x" width="100%">
-      <div className="flex flex-row gap-4" style={{ minWidth: '120%' }}>
-        <div className="bg-[var(--ds-gray-1000)] h-64 w-64 rounded-lg" />
-        <div className="bg-[var(--ds-gray-1000)] h-64 w-64 rounded-lg" />
-        <div className="bg-[var(--ds-gray-1000)] h-64 w-64 rounded-lg" />
-        <div className="bg-[var(--ds-gray-1000)] h-64 w-64 rounded-lg" />
+      <div className="flex flex-row gap-4">
+        <div className="bg-[var(--ds-gray-1000)] h-64 w-64 flex-shrink-0 rounded-lg" />
+        <div className="bg-[var(--ds-gray-1000)] h-64 w-64 flex-shrink-0 rounded-lg" />
+        <div className="bg-[var(--ds-gray-1000)] h-64 w-64 flex-shrink-0 rounded-lg" />
+        <div className="bg-[var(--ds-gray-1000)] h-64 w-64 flex-shrink-0 rounded-lg" />
       </div>
     </Scroller>
   );
@@ -455,11 +455,11 @@ function VerticalDemo() {
 function HorizontalDemo() {
   return (
     <Scroller overflow="x" width="100%">
-      <div className="flex flex-row gap-4" style={{ minWidth: "120%" }}>
-        <div className="bg-[var(--ds-gray-1000)] h-64 w-64 rounded-lg" />
-        <div className="bg-[var(--ds-gray-1000)] h-64 w-64 rounded-lg" />
-        <div className="bg-[var(--ds-gray-1000)] h-64 w-64 rounded-lg" />
-        <div className="bg-[var(--ds-gray-1000)] h-64 w-64 rounded-lg" />
+      <div className="flex flex-row gap-4">
+        <div className="bg-[var(--ds-gray-1000)] h-64 w-64 flex-shrink-0 rounded-lg" />
+        <div className="bg-[var(--ds-gray-1000)] h-64 w-64 flex-shrink-0 rounded-lg" />
+        <div className="bg-[var(--ds-gray-1000)] h-64 w-64 flex-shrink-0 rounded-lg" />
+        <div className="bg-[var(--ds-gray-1000)] h-64 w-64 flex-shrink-0 rounded-lg" />
       </div>
     </Scroller>
   );
