@@ -136,7 +136,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
     const hasPrefix = prefix !== undefined;
 
     return (
-      <div className={className}>
+      <div className={`w-full ${className || ""}`}>
         {/* Label */}
         {label && (
           <div

@@ -458,7 +458,7 @@ export function Component(): JSX.Element {
 
 function SizesDemo() {
   return (
-    <div className="flex flex-col md:flex-row gap-4">
+    <div className="flex flex-col md:flex-row gap-4 [&>*]:flex-1 items-start">
       <Select size="xsmall">
         <option disabled selected>XSmall</option>
         <option>Option 1</option>
@@ -489,7 +489,7 @@ function SizesDemo() {
 
 function PrefixSuffixDemo() {
   return (
-    <div className="flex flex-col md:flex-row gap-4">
+    <div className="flex flex-col md:flex-row gap-4 [&>*]:flex-1 items-start">
       <Select size="small" prefix={<UploadIcon />}>
         <option disabled selected>With prefix</option>
       </Select>
@@ -513,7 +513,7 @@ function DisabledDemo() {
 
 function ErrorDemo() {
   return (
-    <div className="flex flex-col md:flex-row gap-4">
+    <div className="flex flex-col md:flex-row gap-4 [&>*]:flex-1 items-start">
       <Select size="xsmall" error={true} errorMessage="Please select a value.">
         <option disabled selected>XSmall</option>
         <option>Option 1</option>
