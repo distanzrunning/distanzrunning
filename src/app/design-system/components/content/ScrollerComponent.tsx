@@ -309,13 +309,16 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
 // Code Examples
 // ============================================================================
 
-const verticalCode = `import type { JSX } from 'react';
-import { Scroller } from '@/components/ui/Scroller';
+const verticalCode = `import { Scroller } from '@/components/ui/Scroller';
+import type { JSX } from 'react';
 
-function VerticalExample(): JSX.Element {
+export function Component(): JSX.Element {
   return (
-    <Scroller overflow="y" height="220px" width="100%">
-      <div className="flex flex-col gap-4" style={{ width: 400 }}>
+    <Scroller height="220px" overflow="y" width="100%">
+      <div
+        className="flex flex-col items-stretch justify-start gap-4 flex-initial"
+        style={{ width: 400 }}
+      >
         <div className="bg-[var(--ds-gray-1000)] h-64 w-64" />
         <div className="bg-[var(--ds-gray-1000)] h-64 w-64" />
       </div>
@@ -323,13 +326,15 @@ function VerticalExample(): JSX.Element {
   );
 }`;
 
-const horizontalCode = `import type { JSX } from 'react';
-import { Scroller } from '@/components/ui/Scroller';
+const horizontalCode = `import { Scroller } from '@/components/ui/Scroller';
+import type { JSX } from 'react';
 
-function HorizontalExample(): JSX.Element {
+export function Component(): JSX.Element {
   return (
-    <Scroller overflow="x" width="100%" height="256px">
-      <div className="flex flex-row gap-4">
+    <Scroller height="256px" overflow="x" width="100%">
+      <div
+        className="flex flex-row items-stretch justify-start gap-4 flex-initial"
+      >
         <div className="bg-[var(--ds-gray-1000)] h-64 w-64 flex-shrink-0" />
         <div className="bg-[var(--ds-gray-1000)] h-64 w-64 flex-shrink-0" />
         <div className="bg-[var(--ds-gray-1000)] h-64 w-64 flex-shrink-0" />
@@ -339,29 +344,26 @@ function HorizontalExample(): JSX.Element {
   );
 }`;
 
-const freeCode = `import type { JSX } from 'react';
-import { Scroller } from '@/components/ui/Scroller';
+const freeCode = `import { Scroller } from '@/components/ui/Scroller';
+import type { JSX } from 'react';
 
-function FreeExample(): JSX.Element {
+export function Component(): JSX.Element {
   return (
-    <Scroller overflow="both" height="220px" width="100%">
+    <Scroller height="220px" overflow="both" width="100%">
       <div className="grid grid-flow-col grid-rows-2 gap-4">
-        <div className="bg-[var(--ds-gray-1000)] h-96 w-96" />
-        <div className="bg-[var(--ds-gray-1000)] h-96 w-96" />
-        <div className="bg-[var(--ds-gray-1000)] h-96 w-96" />
-        <div className="bg-[var(--ds-gray-1000)] h-96 w-96" />
-        <div className="bg-[var(--ds-gray-1000)] h-96 w-96" />
-        <div className="bg-[var(--ds-gray-1000)] h-96 w-96" />
+        {Array.from({ length: 6 }, (_, i) => (
+          <div className="bg-[var(--ds-gray-1000)] h-96 w-96" key={i} />
+        ))}
       </div>
     </Scroller>
   );
 }`;
 
-const verticalWithButtonsCode = `import type { JSX } from 'react';
-import { useRef } from 'react';
+const verticalWithButtonsCode = `import { useRef } from 'react';
 import { Scroller, ScrollerButtons } from '@/components/ui/Scroller';
+import type { JSX } from 'react';
 
-function VerticalWithButtonsExample(): JSX.Element {
+export function Component(): JSX.Element {
   const scrollerRef = useRef<HTMLDivElement>(null);
 
   const scrollPrev = () => {
@@ -379,13 +381,13 @@ function VerticalWithButtonsExample(): JSX.Element {
   };
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4" style={{ maxWidth: 'max-content' }}>
       <ScrollerButtons
         direction="vertical"
         onScrollPrev={scrollPrev}
         onScrollNext={scrollNext}
       />
-      <Scroller ref={scrollerRef} overflow="y" height="220px" width="100%">
+      <Scroller ref={scrollerRef} overflow="y" height="220px" width="384px">
         <div className="flex flex-col gap-4">
           <div className="bg-[var(--ds-gray-1000)] h-60 w-96" />
           <div className="bg-[var(--ds-gray-1000)] h-60 w-96" />
@@ -397,11 +399,11 @@ function VerticalWithButtonsExample(): JSX.Element {
   );
 }`;
 
-const horizontalWithButtonsCode = `import type { JSX } from 'react';
-import { useRef } from 'react';
+const horizontalWithButtonsCode = `import { useRef } from 'react';
 import { Scroller, ScrollerButtons } from '@/components/ui/Scroller';
+import type { JSX } from 'react';
 
-function HorizontalWithButtonsExample(): JSX.Element {
+export function Component(): JSX.Element {
   const scrollerRef = useRef<HTMLDivElement>(null);
 
   const scrollPrev = () => {
