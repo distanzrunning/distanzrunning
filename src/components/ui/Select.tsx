@@ -223,13 +223,13 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
             box-shadow: 0 0 0 1px var(--ds-gray-alpha-600);
           }
           .ds-select:focus-visible:not(:disabled) {
-            box-shadow: 0 0 0 2px var(--ds-background-100), 0 0 0 4px var(--ds-focus-color);
+            box-shadow: 0 0 0 1px var(--ds-gray-alpha-600), 0 0 0 4px rgba(0, 0, 0, 0.16);
           }
           .ds-select-error {
             box-shadow: 0 0 0 1px var(--ds-red-700) !important;
           }
           .ds-select-error:focus-visible:not(:disabled) {
-            box-shadow: 0 0 0 2px var(--ds-background-100), 0 0 0 4px var(--ds-focus-color) !important;
+            box-shadow: 0 0 0 1px var(--ds-red-700), 0 0 0 4px rgba(0, 0, 0, 0.16) !important;
           }
         `}</style>
       </div>
