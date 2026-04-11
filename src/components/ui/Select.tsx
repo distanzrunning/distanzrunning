@@ -144,14 +144,14 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
     const hasPrefix = prefix !== undefined;
 
     return (
-      <div className={`w-full ${className || ""}`}>
+      <label htmlFor={selectId} className={className || "w-full"} style={{ display: "block" }}>
         {/* Label */}
         {label && (
           <div
             className="text-sm font-medium capitalize mb-2"
             style={{ color: "var(--ds-gray-900)" }}
           >
-            <label htmlFor={selectId}>{label}</label>
+            {label}
           </div>
         )}
 
@@ -240,7 +240,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
             box-shadow: 0 0 0 1px var(--ds-red-700), 0 0 0 4px rgba(0, 0, 0, 0.16) !important;
           }
         `}</style>
-      </div>
+      </label>
     );
   },
 );
