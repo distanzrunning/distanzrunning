@@ -498,13 +498,13 @@ function VerticalWithButtonsDemo() {
   };
 
   return (
-    <div className="flex flex-col gap-4 items-center">
+    <div className="flex flex-col gap-4" style={{ maxWidth: "max-content" }}>
       <ScrollerButtons
         direction="vertical"
         onScrollPrev={scrollPrev}
         onScrollNext={scrollNext}
       />
-      <Scroller ref={scrollerRef} overflow="y" height="220px" width="100%">
+      <Scroller ref={scrollerRef} overflow="y" height="220px" width="384px">
         <div className="flex flex-col gap-4">
           <div className="bg-[var(--ds-gray-1000)] h-60 w-96" />
           <div className="bg-[var(--ds-gray-1000)] h-60 w-96" />
