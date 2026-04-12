@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useCallback } from "react";
+import React, { useEffect } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 
 // ============================================================================
@@ -24,63 +24,21 @@ interface SheetContentProps {
   className?: string;
 }
 
-// ============================================================================
-// Styles
-// ============================================================================
+interface SheetHeaderProps {
+  children: React.ReactNode;
+}
 
-const overlayStyles: React.CSSProperties = {
-  position: "fixed",
-  inset: 0,
-  zIndex: 9998,
-  backgroundColor: "var(--ds-overlay-backdrop-color, rgba(0, 0, 0, 0.5))",
-  opacity: "var(--ds-overlay-backdrop-opacity, 1)" as unknown as number,
-  animation: "sheet-overlay-in 200ms ease-out",
-};
+interface SheetTitleProps {
+  children: React.ReactNode;
+}
 
-const basePanelStyles: React.CSSProperties = {
-  position: "fixed",
-  zIndex: 9999,
-  background: "var(--ds-background-100)",
-  boxShadow: "var(--ds-shadow-modal, 0 16px 70px rgba(0, 0, 0, 0.2))",
-  display: "flex",
-  flexDirection: "column",
-  outline: "none",
-};
+interface SheetDescriptionProps {
+  children: React.ReactNode;
+}
 
-const sideStyles: Record<string, React.CSSProperties> = {
-  right: {
-    top: 0,
-    right: 0,
-    bottom: 0,
-    width: 400,
-    maxWidth: "100vw",
-    borderLeft: "1px solid var(--ds-gray-400)",
-    animation: "sheet-slide-in-right 250ms cubic-bezier(0.16, 1, 0.3, 1)",
-  },
-  left: {
-    top: 0,
-    left: 0,
-    bottom: 0,
-    width: 400,
-    maxWidth: "100vw",
-    borderRight: "1px solid var(--ds-gray-400)",
-    animation: "sheet-slide-in-left 250ms cubic-bezier(0.16, 1, 0.3, 1)",
-  },
-  top: {
-    top: 0,
-    left: 0,
-    right: 0,
-    borderBottom: "1px solid var(--ds-gray-400)",
-    animation: "sheet-slide-in-top 250ms cubic-bezier(0.16, 1, 0.3, 1)",
-  },
-  bottom: {
-    bottom: 0,
-    left: 0,
-    right: 0,
-    borderTop: "1px solid var(--ds-gray-400)",
-    animation: "sheet-slide-in-bottom 250ms cubic-bezier(0.16, 1, 0.3, 1)",
-  },
-};
+interface SheetFooterProps {
+  children: React.ReactNode;
+}
 
 // ============================================================================
 // Keyframes (injected once)
@@ -100,24 +58,67 @@ function ensureKeyframes() {
       to { opacity: 1; }
     }
     @keyframes sheet-slide-in-right {
-      from { transform: translateX(100%); }
-      to { transform: translateX(0); }
+      from { transform: translateX(1.25rem); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
     }
     @keyframes sheet-slide-in-left {
-      from { transform: translateX(-100%); }
-      to { transform: translateX(0); }
+      from { transform: translateX(-1.25rem); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
     }
     @keyframes sheet-slide-in-top {
-      from { transform: translateY(-100%); }
-      to { transform: translateY(0); }
+      from { transform: translateY(-1.25rem); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
     }
     @keyframes sheet-slide-in-bottom {
-      from { transform: translateY(100%); }
-      to { transform: translateY(0); }
+      from { transform: translateY(1.25rem); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
     }
   `;
   document.head.appendChild(style);
 }
+
+// ============================================================================
+// Side position configs
+// ============================================================================
+
+const sidePositionStyles: Record<string, React.CSSProperties> = {
+  right: {
+    top: 0,
+    right: 0,
+    bottom: 0,
+    margin: 12,
+    height: "calc(100% - 1.5rem)",
+    width: "calc(100% - 1.5rem)",
+    maxWidth: 512,
+    animation: "sheet-slide-in-right 200ms ease-in-out",
+  },
+  left: {
+    top: 0,
+    left: 0,
+    bottom: 0,
+    margin: 12,
+    height: "calc(100% - 1.5rem)",
+    width: "calc(100% - 1.5rem)",
+    maxWidth: 512,
+    animation: "sheet-slide-in-left 200ms ease-in-out",
+  },
+  top: {
+    top: 0,
+    left: 0,
+    right: 0,
+    margin: 12,
+    width: "calc(100% - 1.5rem)",
+    animation: "sheet-slide-in-top 200ms ease-in-out",
+  },
+  bottom: {
+    bottom: 0,
+    left: 0,
+    right: 0,
+    margin: 12,
+    width: "calc(100% - 1.5rem)",
+    animation: "sheet-slide-in-bottom 200ms ease-in-out",
+  },
+};
 
 // ============================================================================
 // Components
@@ -144,66 +145,87 @@ function SheetContent({
   side = "right",
   className,
 }: SheetContentProps) {
-  const panelStyles: React.CSSProperties = {
-    ...basePanelStyles,
-    ...sideStyles[side],
-  };
-
   return (
     <Dialog.Portal>
-      <Dialog.Overlay style={overlayStyles} />
-      <Dialog.Content style={panelStyles} className={className}>
-        <Dialog.Close asChild>
-          <button
-            type="button"
-            aria-label="Close"
-            style={{
-              position: "absolute",
-              top: 16,
-              right: 16,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              width: 32,
-              height: 32,
-              borderRadius: 6,
-              border: "none",
-              background: "transparent",
-              color: "var(--ds-gray-900)",
-              cursor: "pointer",
-              zIndex: 1,
-              transition: "background 150ms ease",
-            }}
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.background =
-                "var(--ds-gray-200)";
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.background =
-                "transparent";
-            }}
-          >
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 16 16"
-              fill="none"
-              strokeLinejoin="round"
-            >
-              <path
-                fillRule="evenodd"
-                clipRule="evenodd"
-                d="M12.4697 13.5303L13 14.0607L14.0607 13L13.5303 12.4697L9.06065 7.99999L13.5303 3.53032L14.0607 2.99999L13 1.93933L12.4697 2.46966L7.99999 6.93933L3.53032 2.46966L2.99999 1.93933L1.93933 2.99999L2.46966 3.53032L6.93933 7.99999L2.46966 12.4697L1.93933 13L2.99999 14.0607L3.53032 13.5303L7.99999 9.06065L12.4697 13.5303Z"
-                fill="currentColor"
-              />
-            </svg>
-          </button>
-        </Dialog.Close>
-        <div style={{ padding: 24, flex: 1, overflowY: "auto" }}>
-          {children}
-        </div>
+      <Dialog.Overlay
+        style={{
+          position: "fixed",
+          inset: 0,
+          zIndex: 99,
+          backgroundColor: "rgba(0, 0, 0, 0.5)",
+          animation: "sheet-overlay-in 200ms ease-out",
+        }}
+      />
+      <Dialog.Content
+        className={className}
+        style={{
+          position: "fixed",
+          zIndex: 100,
+          display: "flex",
+          flexDirection: "column",
+          gap: 16,
+          padding: 0,
+          borderRadius: 16,
+          background: "var(--ds-background-100)",
+          boxShadow:
+            "rgba(0,0,0,0) 0px 0px 0px 0px, rgba(0,0,0,0) 0px 0px 0px 0px, rgba(0,0,0,0.08) 0px 0px 0px 1px, rgba(0,0,0,0.04) 0px 2px 2px 0px, rgba(0,0,0,0.04) 0px 8px 16px -4px, var(--ds-background-200) 0px 0px 0px 1px",
+          outline: "none",
+          transition:
+            "color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter",
+          transitionDuration: "200ms",
+          transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
+          ...sidePositionStyles[side],
+        }}
+      >
+        {children}
       </Dialog.Content>
     </Dialog.Portal>
+  );
+}
+
+function SheetHeader({ children }: SheetHeaderProps) {
+  return (
+    <div className="flex flex-col sm:text-left p-6 text-left">
+      {children}
+    </div>
+  );
+}
+
+function SheetTitle({ children }: SheetTitleProps) {
+  return (
+    <Dialog.Title
+      className="text-lg font-semibold"
+      style={{ color: "var(--ds-gray-1000)" }}
+    >
+      {children}
+    </Dialog.Title>
+  );
+}
+
+function SheetDescription({ children }: SheetDescriptionProps) {
+  return (
+    <Dialog.Description
+      className="text-sm"
+      style={{ color: "var(--ds-gray-900)" }}
+    >
+      {children}
+    </Dialog.Description>
+  );
+}
+
+function SheetBody({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="text-sm px-6 py-4" style={{ color: "var(--ds-gray-1000)" }}>
+      {children}
+    </div>
+  );
+}
+
+function SheetFooter({ children }: SheetFooterProps) {
+  return (
+    <div className="flex flex-row justify-end p-6 gap-2 mt-auto">
+      {children}
+    </div>
   );
 }
 
@@ -218,6 +240,11 @@ function SheetClose({ children }: { children: React.ReactNode }) {
 export const Sheet = Object.assign(SheetRoot, {
   Trigger: SheetTrigger,
   Content: SheetContent,
+  Header: SheetHeader,
+  Title: SheetTitle,
+  Description: SheetDescription,
+  Body: SheetBody,
+  Footer: SheetFooter,
   Close: SheetClose,
 });
 

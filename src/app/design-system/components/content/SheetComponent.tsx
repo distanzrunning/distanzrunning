@@ -377,31 +377,23 @@ function DefaultDemo() {
         <Button>Open Sheet</Button>
       </Sheet.Trigger>
       <Sheet.Content side="right">
-        <h3
-          style={{
-            fontSize: 18,
-            fontWeight: 600,
-            marginBottom: 8,
-            color: "var(--ds-gray-1000)",
-          }}
-        >
-          Sheet Title
-        </h3>
-        <p
-          style={{
-            fontSize: 14,
-            color: "var(--ds-gray-900)",
-            lineHeight: 1.5,
-          }}
-        >
-          This is a sheet panel that slides in from the right side of the screen.
-          It can contain any content you need.
-        </p>
-        <div style={{ marginTop: 24 }}>
+        <Sheet.Header>
+          <Sheet.Title>Sheet Title</Sheet.Title>
+          <Sheet.Description>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+          </Sheet.Description>
+        </Sheet.Header>
+        <Sheet.Body>
+          Eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+          minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
+          ex ea commodo consequat.
+        </Sheet.Body>
+        <Sheet.Footer>
           <Sheet.Close>
             <Button variant="secondary">Close</Button>
           </Sheet.Close>
-        </div>
+          <Button>Next</Button>
+        </Sheet.Footer>
       </Sheet.Content>
     </Sheet>
   );
@@ -414,19 +406,11 @@ function WithSideDemo() {
 
   return (
     <>
-      <div style={{ display: "flex", gap: 8, justifyContent: "center" }}>
-        <Button variant="secondary" onClick={() => setSide("top")}>
-          Open top
-        </Button>
-        <Button variant="secondary" onClick={() => setSide("right")}>
-          Open right
-        </Button>
-        <Button variant="secondary" onClick={() => setSide("bottom")}>
-          Open bottom
-        </Button>
-        <Button variant="secondary" onClick={() => setSide("left")}>
-          Open left
-        </Button>
+      <div className="flex items-center justify-center gap-4">
+        <Button onClick={() => setSide("top")}>Open top</Button>
+        <Button onClick={() => setSide("right")}>Open right</Button>
+        <Button onClick={() => setSide("bottom")}>Open bottom</Button>
+        <Button onClick={() => setSide("left")}>Open left</Button>
       </div>
       <Sheet
         open={side !== null}
@@ -435,25 +419,20 @@ function WithSideDemo() {
         }}
       >
         <Sheet.Content side={side ?? "right"}>
-          <h3
-            style={{
-              fontSize: 18,
-              fontWeight: 600,
-              marginBottom: 8,
-              color: "var(--ds-gray-1000)",
-            }}
-          >
-            Sheet from {side}
-          </h3>
-          <p
-            style={{
-              fontSize: 14,
-              color: "var(--ds-gray-900)",
-              lineHeight: 1.5,
-            }}
-          >
-            This sheet slides in from the {side} edge of the screen.
-          </p>
+          <Sheet.Header>
+            <Sheet.Title>Sheet from {side}</Sheet.Title>
+            <Sheet.Description>
+              This sheet slides in from the {side} edge.
+            </Sheet.Description>
+          </Sheet.Header>
+          <Sheet.Body>
+            Content for the {side} sheet panel.
+          </Sheet.Body>
+          <Sheet.Footer>
+            <Button variant="secondary" onClick={() => setSide(null)}>
+              Close
+            </Button>
+          </Sheet.Footer>
         </Sheet.Content>
       </Sheet>
     </>
@@ -474,8 +453,8 @@ export default function SheetComponent() {
           Default
         </SectionHeader>
         <p
-          className="text-copy-16 text-textSubtle mt-3 mb-6"
-          style={{ lineHeight: 1.5 }}
+          className="mt-2 leading-6 xl:mt-4"
+          style={{ color: "var(--ds-gray-900)" }}
         >
           In combination with styles overrides most commonly used in front apps.
         </p>
@@ -491,17 +470,11 @@ export default function SheetComponent() {
           With Side
         </SectionHeader>
         <p
-          className="text-copy-16 text-textSubtle mt-3 mb-6"
-          style={{ lineHeight: 1.5 }}
+          className="mt-2 leading-6 xl:mt-4"
+          style={{ color: "var(--ds-gray-900)" }}
         >
           Use the{" "}
-          <code
-            className="text-[13px] px-1.5 py-0.5 rounded"
-            style={{
-              background: "var(--ds-gray-200)",
-              color: "var(--ds-gray-1000)",
-            }}
-          >
+          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
             side
           </code>{" "}
           prop to control which edge the sheet slides in from.
