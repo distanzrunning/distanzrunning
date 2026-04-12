@@ -65,6 +65,7 @@ import SelectComponent from "../components/content/SelectComponent";
 import SheetComponent from "../components/content/SheetComponent";
 import ShowMoreComponent from "../components/content/ShowMoreComponent";
 import SkeletonComponent from "../components/content/SkeletonComponent";
+import SliderComponent from "../components/content/SliderComponent";
 import MultiSelectComponent from "../components/content/MultiSelectComponent";
 import NoteComponent from "../components/content/NoteComponent";
 import CalendarComponent from "../components/content/CalendarComponent";
@@ -979,6 +980,21 @@ export default function DesignSystemPage() {
           onNavigate={handleNavigation}
         >
           <SkeletonComponent />
+        </ContentWithTOC>
+      );
+    }
+
+    if (activeSlug === "slider") {
+      return (
+        <ContentWithTOC
+          tocTitle="On this page"
+          pageTitle="Slider"
+          pageSubtitle="Input to select a value from a given range."
+          mainSectionId="slider"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
+          <SliderComponent />
         </ContentWithTOC>
       );
     }

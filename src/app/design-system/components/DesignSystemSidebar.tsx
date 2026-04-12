@@ -79,6 +79,7 @@ export const navigation: NavSection[] = [
       { id: "sheet", label: "Sheet" },
       { id: "show-more", label: "Show More" },
       { id: "skeleton", label: "Skeleton" },
+      { id: "slider", label: "Slider" },
     ],
   },
 ];
