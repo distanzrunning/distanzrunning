@@ -64,6 +64,7 @@ import ScrollerComponent from "../components/content/ScrollerComponent";
 import SelectComponent from "../components/content/SelectComponent";
 import SheetComponent from "../components/content/SheetComponent";
 import ShowMoreComponent from "../components/content/ShowMoreComponent";
+import SkeletonComponent from "../components/content/SkeletonComponent";
 import MultiSelectComponent from "../components/content/MultiSelectComponent";
 import NoteComponent from "../components/content/NoteComponent";
 import CalendarComponent from "../components/content/CalendarComponent";
@@ -963,6 +964,21 @@ export default function DesignSystemPage() {
           onNavigate={handleNavigation}
         >
           <ShowMoreComponent />
+        </ContentWithTOC>
+      );
+    }
+
+    if (activeSlug === "skeleton") {
+      return (
+        <ContentWithTOC
+          tocTitle="On this page"
+          pageTitle="Skeleton"
+          pageSubtitle="Display a skeleton whilst another component is loading."
+          mainSectionId="skeleton"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
+          <SkeletonComponent />
         </ContentWithTOC>
       );
     }

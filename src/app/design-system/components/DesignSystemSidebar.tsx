@@ -78,6 +78,7 @@ export const navigation: NavSection[] = [
       { id: "select", label: "Select" },
       { id: "sheet", label: "Sheet" },
       { id: "show-more", label: "Show More" },
+      { id: "skeleton", label: "Skeleton" },
     ],
   },
 ];
