@@ -58,7 +58,7 @@ const Slider = forwardRef<HTMLInputElement, SliderProps>(
       <form
         className={className}
         onSubmit={(e) => e.preventDefault()}
-        style={{ width: "100%" }}
+        style={{ width: "fit-content" }}
       >
         <input
           ref={ref}
@@ -85,7 +85,8 @@ const Slider = forwardRef<HTMLInputElement, SliderProps>(
             -webkit-appearance: none;
             -moz-appearance: none;
             appearance: none;
-            width: 100%;
+            width: 216px;
+            min-width: 216px;
             height: 8px;
             border-radius: 5px;
             outline: none;
