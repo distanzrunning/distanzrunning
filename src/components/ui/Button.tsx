@@ -234,7 +234,7 @@ const getVariantClasses = (
       // Dark: dark bg, subtle border via box-shadow, lighter bg on hover
       return `
         bg-[var(--ds-background-100)] text-[var(--ds-gray-1000)]
-        shadow-[0_0_0_1px_var(--ds-gray-200)]
+        shadow-[0_0_0_1px_var(--ds-gray-400)]
         hover:bg-[var(--ds-gray-100)]
         dark:shadow-[0_0_0_1px_var(--ds-gray-400)]
         dark:hover:bg-[var(--ds-gray-200)]
