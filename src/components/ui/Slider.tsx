@@ -86,17 +86,17 @@ const Slider = forwardRef<HTMLInputElement, SliderProps>(
             -moz-appearance: none;
             appearance: none;
             width: 100%;
-            height: 4px;
-            border-radius: 9999px;
+            height: 8px;
+            border-radius: 5px;
             outline: none;
             cursor: ${disabled ? "not-allowed" : "pointer"};
             opacity: ${disabled ? 0.5 : 1};
             background: linear-gradient(
               to right,
-              var(--ds-gray-1000) 0%,
-              var(--ds-gray-1000) var(--slider-fill),
-              var(--ds-gray-200) var(--slider-fill),
-              var(--ds-gray-200) 100%
+              var(--ds-blue-700) 0%,
+              var(--ds-blue-700) var(--slider-fill),
+              var(--ds-gray-400) var(--slider-fill),
+              var(--ds-gray-400) 100%
             );
             margin: 0;
             padding: 0;
@@ -105,43 +105,43 @@ const Slider = forwardRef<HTMLInputElement, SliderProps>(
           .slider-input::-webkit-slider-thumb {
             -webkit-appearance: none;
             appearance: none;
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            background: var(--ds-gray-1000);
-            border: 2px solid var(--ds-background-100);
-            box-shadow: 0 0 0 1px var(--ds-gray-400),
-              0 1px 3px rgba(0, 0, 0, 0.1);
+            width: 6px;
+            height: 14px;
+            border-radius: 1px;
+            background: var(--ds-background-100);
+            border: none;
+            box-shadow: rgba(0, 0, 0, 0.21) 0px 0px 0px 1px,
+              rgba(0, 0, 0, 0.04) 0px 1px 2px 0px;
             cursor: ${disabled ? "not-allowed" : "pointer"};
-            transition: box-shadow 0.15s ease;
+            transition: box-shadow 0.2s ease, background 0.2s ease, transform 0.2s ease;
           }
 
           .slider-input::-webkit-slider-thumb:hover {
-            box-shadow: 0 0 0 1px var(--ds-gray-600),
-              0 1px 4px rgba(0, 0, 0, 0.15);
+            box-shadow: rgba(0, 0, 0, 0.35) 0px 0px 0px 1px,
+              rgba(0, 0, 0, 0.1) 0px 1px 3px 0px;
           }
 
           .slider-input::-moz-range-thumb {
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            background: var(--ds-gray-1000);
-            border: 2px solid var(--ds-background-100);
-            box-shadow: 0 0 0 1px var(--ds-gray-400),
-              0 1px 3px rgba(0, 0, 0, 0.1);
+            width: 6px;
+            height: 14px;
+            border-radius: 1px;
+            background: var(--ds-background-100);
+            border: none;
+            box-shadow: rgba(0, 0, 0, 0.21) 0px 0px 0px 1px,
+              rgba(0, 0, 0, 0.04) 0px 1px 2px 0px;
             cursor: ${disabled ? "not-allowed" : "pointer"};
-            transition: box-shadow 0.15s ease;
+            transition: box-shadow 0.2s ease, background 0.2s ease, transform 0.2s ease;
           }
 
           .slider-input::-moz-range-thumb:hover {
-            box-shadow: 0 0 0 1px var(--ds-gray-600),
-              0 1px 4px rgba(0, 0, 0, 0.15);
+            box-shadow: rgba(0, 0, 0, 0.35) 0px 0px 0px 1px,
+              rgba(0, 0, 0, 0.1) 0px 1px 3px 0px;
           }
 
           .slider-input::-moz-range-track {
             background: transparent;
             border: none;
-            height: 4px;
+            height: 8px;
           }
         `}</style>
       </form>
