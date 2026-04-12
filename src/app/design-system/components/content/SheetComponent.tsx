@@ -402,41 +402,48 @@ function DefaultDemo() {
   );
 }
 
+function SideSheetContent({ side }: { side: string }) {
+  const isVertical = side === "top" || side === "bottom";
+  return (
+    <div className={`flex flex-col ${isVertical ? "text-center" : "text-center sm:text-left"}`}>
+      <h2
+        className="font-semibold"
+        style={{ fontSize: 18, lineHeight: "28px", color: "var(--ds-gray-1000)" }}
+      >
+        Sheet from {side}
+      </h2>
+      <p style={{ fontSize: 14, lineHeight: "20px", color: "var(--ds-gray-700)" }}>
+        This sheet slides in from the {side}.
+      </p>
+    </div>
+  );
+}
+
 function WithSideDemo() {
-  const [side, setSide] = useState<
-    "top" | "right" | "bottom" | "left" | null
-  >(null);
+  const [openSide, setOpenSide] = useState<string | null>(null);
 
   return (
     <>
       <div className="flex items-center justify-center gap-4">
-        <Button onClick={() => setSide("top")}>Open top</Button>
-        <Button onClick={() => setSide("right")}>Open right</Button>
-        <Button onClick={() => setSide("bottom")}>Open bottom</Button>
-        <Button onClick={() => setSide("left")}>Open left</Button>
+        <Button onClick={() => setOpenSide("top")}>Open top</Button>
+        <Button onClick={() => setOpenSide("right")}>Open right</Button>
+        <Button onClick={() => setOpenSide("bottom")}>Open bottom</Button>
+        <Button onClick={() => setOpenSide("left")}>Open left</Button>
       </div>
-      <Sheet
-        open={side !== null}
-        onOpenChange={(open) => {
-          if (!open) setSide(null);
-        }}
-      >
-        <Sheet.Content side={side ?? "right"}>
-          <div className="flex flex-col text-center sm:text-left">
-            <h2
-              className="font-semibold"
-              style={{ fontSize: 18, lineHeight: "28px", color: "var(--ds-gray-1000)" }}
-            >
-              Sheet from {side}
-            </h2>
-            <p
-              style={{ fontSize: 14, lineHeight: "20px", color: "var(--ds-gray-700)" }}
-            >
-              This sheet slides in from the {side}.
-            </p>
-          </div>
-        </Sheet.Content>
-      </Sheet>
+
+      {(["top", "right", "bottom", "left"] as const).map((side) => (
+        <Sheet
+          key={side}
+          open={openSide === side}
+          onOpenChange={(open) => {
+            if (!open) setOpenSide(null);
+          }}
+        >
+          <Sheet.Content side={side}>
+            <SideSheetContent side={side} />
+          </Sheet.Content>
+        </Sheet>
+      ))}
     </>
   );
 }

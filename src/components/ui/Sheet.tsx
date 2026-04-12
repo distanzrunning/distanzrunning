@@ -88,7 +88,6 @@ const sidePositionStyles: Record<string, React.CSSProperties> = {
     bottom: 0,
     height: "100%",
     width: "75%",
-    maxWidth: 384,
     animation: "sheet-slide-in-right 200ms ease-in-out",
   },
   left: {
@@ -97,7 +96,6 @@ const sidePositionStyles: Record<string, React.CSSProperties> = {
     bottom: 0,
     height: "100%",
     width: "75%",
-    maxWidth: 384,
     animation: "sheet-slide-in-left 200ms ease-in-out",
   },
   top: {
