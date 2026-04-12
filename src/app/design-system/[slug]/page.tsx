@@ -66,6 +66,7 @@ import SheetComponent from "../components/content/SheetComponent";
 import ShowMoreComponent from "../components/content/ShowMoreComponent";
 import SkeletonComponent from "../components/content/SkeletonComponent";
 import SliderComponent from "../components/content/SliderComponent";
+import SnippetComponent from "../components/content/SnippetComponent";
 import MultiSelectComponent from "../components/content/MultiSelectComponent";
 import NoteComponent from "../components/content/NoteComponent";
 import CalendarComponent from "../components/content/CalendarComponent";
@@ -995,6 +996,21 @@ export default function DesignSystemPage() {
           onNavigate={handleNavigation}
         >
           <SliderComponent />
+        </ContentWithTOC>
+      );
+    }
+
+    if (activeSlug === "snippet") {
+      return (
+        <ContentWithTOC
+          tocTitle="On this page"
+          pageTitle="Snippet"
+          pageSubtitle="Display a snippet of copyable code for the command line."
+          mainSectionId="snippet"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
+          <SnippetComponent />
         </ContentWithTOC>
       );
     }

@@ -80,6 +80,7 @@ export const navigation: NavSection[] = [
       { id: "show-more", label: "Show More" },
       { id: "skeleton", label: "Skeleton" },
       { id: "slider", label: "Slider" },
+      { id: "snippet", label: "Snippet" },
     ],
   },
 ];
