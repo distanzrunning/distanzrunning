@@ -316,12 +316,57 @@ export function Component(): JSX.Element {
   return <Slider defaultValue={50} />;
 }`;
 
+const rangeCode = `import { Slider } from '@/components/ui/Slider';
+import type { JSX } from 'react';
+
+export function Component(): JSX.Element {
+  return <Slider range defaultValue={[20, 80]} />;
+}`;
+
+const customColorCode = `import { Slider } from '@/components/ui/Slider';
+import type { JSX } from 'react';
+
+export function Component(): JSX.Element {
+  return (
+    <div className="flex flex-col gap-6">
+      <Slider defaultValue={60} color="var(--ds-gray-1000)" />
+      <Slider defaultValue={40} color="var(--ds-pink-700)" />
+      <Slider range defaultValue={[25, 75]} color="var(--ds-pink-700)" />
+    </div>
+  );
+}`;
+
+const customWidthCode = `import { Slider } from '@/components/ui/Slider';
+import type { JSX } from 'react';
+
+export function Component(): JSX.Element {
+  return <Slider defaultValue={50} width={400} />;
+}`;
+
 // ============================================================================
 // Demo Components
 // ============================================================================
 
 function DefaultDemo() {
   return <Slider defaultValue={50} />;
+}
+
+function RangeDemo() {
+  return <Slider range defaultValue={[20, 80]} />;
+}
+
+function CustomColorDemo() {
+  return (
+    <div className="flex flex-col gap-6">
+      <Slider defaultValue={60} color="var(--ds-gray-1000)" />
+      <Slider defaultValue={40} color="var(--ds-pink-700)" />
+      <Slider range defaultValue={[25, 75]} color="var(--ds-pink-700)" />
+    </div>
+  );
+}
+
+function CustomWidthDemo() {
+  return <Slider defaultValue={50} width={400} />;
 }
 
 // ============================================================================
@@ -340,6 +385,46 @@ export default function SliderComponent() {
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={defaultCode}>
             <DefaultDemo />
+          </CodePreview>
+        </div>
+      </Section>
+
+      <Section>
+        <SectionHeader id="range" onCopyLink={showToast}>
+          Range
+        </SectionHeader>
+        <p
+          className="mt-2 leading-6 xl:mt-4"
+          style={{ color: "var(--ds-gray-900)" }}
+        >
+          Dual-thumb slider for selecting a range. Thumbs can cross over each
+          other and values auto-swap.
+        </p>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={rangeCode}>
+            <RangeDemo />
+          </CodePreview>
+        </div>
+      </Section>
+
+      <Section>
+        <SectionHeader id="custom-colors" onCopyLink={showToast}>
+          Custom colors
+        </SectionHeader>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={customColorCode}>
+            <CustomColorDemo />
+          </CodePreview>
+        </div>
+      </Section>
+
+      <Section>
+        <SectionHeader id="custom-width" onCopyLink={showToast}>
+          Custom width
+        </SectionHeader>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={customWidthCode}>
+            <CustomWidthDemo />
           </CodePreview>
         </div>
       </Section>
