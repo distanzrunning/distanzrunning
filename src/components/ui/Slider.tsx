@@ -223,6 +223,7 @@ const RangeSlider = forwardRef<HTMLDivElement, RangeSliderProps>(
       if (isControlled) setInternalValue(controlledValue);
     }, [isControlled, controlledValue]);
 
+    // For visual track, always use sorted values
     const lowValue = Math.min(currentValue[0], currentValue[1]);
     const highValue = Math.max(currentValue[0], currentValue[1]);
 
@@ -231,20 +232,15 @@ const RangeSlider = forwardRef<HTMLDivElement, RangeSliderProps>(
     const highPercent =
       max !== min ? ((highValue - min) / (max - min)) * 100 : 0;
 
-    const handleMinChange = useCallback(
+    const handleFirstChange = useCallback(
       (e: React.ChangeEvent<HTMLInputElement>) => {
         const raw = Number(e.target.value);
         let newValues: [number, number];
 
         if (allowCrossover) {
-          // Allow crossover — thumb can pass the other
+          // True crossover — value[0] can exceed value[1]
           newValues = [raw, currentValue[1]];
-          // Auto-swap so the values array always reflects [lower, higher]
-          if (raw > currentValue[1]) {
-            newValues = [currentValue[1], raw];
-          }
         } else {
-          // Clamp to not exceed the max thumb
           const clamped = Math.min(raw, currentValue[1]);
           newValues = [clamped, currentValue[1]];
         }
@@ -255,16 +251,13 @@ const RangeSlider = forwardRef<HTMLDivElement, RangeSliderProps>(
       [isControlled, currentValue, onChange, allowCrossover],
     );
 
-    const handleMaxChange = useCallback(
+    const handleSecondChange = useCallback(
       (e: React.ChangeEvent<HTMLInputElement>) => {
         const raw = Number(e.target.value);
         let newValues: [number, number];
 
         if (allowCrossover) {
           newValues = [currentValue[0], raw];
-          if (raw < currentValue[0]) {
-            newValues = [raw, currentValue[0]];
-          }
         } else {
           const clamped = Math.max(raw, currentValue[0]);
           newValues = [currentValue[0], clamped];
@@ -292,8 +285,9 @@ const RangeSlider = forwardRef<HTMLDivElement, RangeSliderProps>(
       margin: 0,
       padding: 0,
       position: "absolute",
-      top: 0,
+      top: "50%",
       left: 0,
+      transform: "translateY(-50%)",
       background: "transparent",
       pointerEvents: "none",
     };
@@ -305,14 +299,15 @@ const RangeSlider = forwardRef<HTMLDivElement, RangeSliderProps>(
         style={{
           position: "relative",
           width,
-          height: 8,
+          height: 20,
         }}
       >
         {/* Visual track background */}
         <div
           style={{
             position: "absolute",
-            top: 0,
+            top: "50%",
+            transform: "translateY(-50%)",
             left: 0,
             right: 0,
             height: 8,
@@ -322,22 +317,22 @@ const RangeSlider = forwardRef<HTMLDivElement, RangeSliderProps>(
           }}
         />
 
-        {/* Min thumb input */}
+        {/* First thumb input (value[0]) */}
         <input
           type="range"
           name={name ? `${name}-min` : undefined}
           min={min}
           max={max}
           step={step}
-          value={lowValue}
-          onChange={handleMinChange}
+          value={currentValue[0]}
+          onChange={handleFirstChange}
           onPointerDown={() => { activeThumbRef.current = "min"; }}
           onPointerUp={() => { activeThumbRef.current = null; }}
           disabled={disabled}
-          aria-label="Minimum value"
+          aria-label="First value"
           aria-valuemin={min}
           aria-valuemax={max}
-          aria-valuenow={lowValue}
+          aria-valuenow={currentValue[0]}
           style={{
             ...inputBaseStyle,
             pointerEvents: "auto",
@@ -346,22 +341,22 @@ const RangeSlider = forwardRef<HTMLDivElement, RangeSliderProps>(
           className="ds-slider-input"
         />
 
-        {/* Max thumb input */}
+        {/* Second thumb input (value[1]) */}
         <input
           type="range"
           name={name ? `${name}-max` : undefined}
           min={min}
           max={max}
           step={step}
-          value={highValue}
-          onChange={handleMaxChange}
+          value={currentValue[1]}
+          onChange={handleSecondChange}
           onPointerDown={() => { activeThumbRef.current = "max"; }}
           onPointerUp={() => { activeThumbRef.current = null; }}
           disabled={disabled}
-          aria-label="Maximum value"
+          aria-label="Second value"
           aria-valuemin={min}
           aria-valuemax={max}
-          aria-valuenow={highValue}
+          aria-valuenow={currentValue[1]}
           style={{
             ...inputBaseStyle,
             pointerEvents: "auto",
