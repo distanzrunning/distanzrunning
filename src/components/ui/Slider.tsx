@@ -10,12 +10,10 @@ interface SliderBaseProps {
   min?: number;
   max?: number;
   step?: number;
-  /** Fill color — accepts any CSS color or design token variable */
   color?: string;
   disabled?: boolean;
   className?: string;
   name?: string;
-  /** Width of the slider in pixels */
   width?: number;
 }
 
@@ -31,77 +29,36 @@ interface RangeSliderProps extends SliderBaseProps {
   value?: [number, number];
   defaultValue?: [number, number];
   onChange?: (value: [number, number]) => void;
-  /** Allow thumbs to cross over each other */
   allowCrossover?: boolean;
 }
 
 type SliderProps = SingleSliderProps | RangeSliderProps;
 
 // ============================================================================
-// Shared CSS for thumbs (rendered inline with component)
+// Helpers
 // ============================================================================
 
-const SLIDER_CSS = `
-  .ds-slider-input {
-    -webkit-appearance: none !important;
-    -moz-appearance: none !important;
-    appearance: none !important;
-  }
-  .ds-slider-input::-webkit-slider-thumb {
-    -webkit-appearance: none !important;
-    appearance: none !important;
-    width: 6px;
-    height: 14px;
-    border-radius: 1px;
-    background: var(--ds-background-100);
-    border: none;
-    box-shadow: rgba(0, 0, 0, 0.21) 0px 0px 0px 1px,
-      rgba(0, 0, 0, 0.04) 0px 1px 2px 0px;
-    cursor: pointer;
-    transition: box-shadow 0.2s ease, background 0.2s ease, transform 0.2s ease;
-    position: relative;
-    z-index: 2;
-  }
-  .ds-slider-input::-webkit-slider-thumb:hover {
-    box-shadow: rgba(0, 0, 0, 0.35) 0px 0px 0px 1px,
-      rgba(0, 0, 0, 0.1) 0px 1px 3px 0px;
-  }
-  .ds-slider-input::-moz-range-thumb {
-    width: 6px;
-    height: 14px;
-    border-radius: 1px;
-    background: var(--ds-background-100);
-    border: none;
-    box-shadow: rgba(0, 0, 0, 0.21) 0px 0px 0px 1px,
-      rgba(0, 0, 0, 0.04) 0px 1px 2px 0px;
-    cursor: pointer;
-    transition: box-shadow 0.2s ease, background 0.2s ease, transform 0.2s ease;
-    position: relative;
-    z-index: 2;
-  }
-  .ds-slider-input::-moz-range-thumb:hover {
-    box-shadow: rgba(0, 0, 0, 0.35) 0px 0px 0px 1px,
-      rgba(0, 0, 0, 0.1) 0px 1px 3px 0px;
-  }
-  .ds-slider-input::-moz-range-track {
-    background: transparent;
-    border: none;
-    height: 8px;
-  }
-  .ds-slider-input::-webkit-slider-runnable-track {
-    height: 8px;
-  }
-`;
+function clamp(val: number, min: number, max: number) {
+  return Math.min(Math.max(val, min), max);
+}
 
-function SliderStyles() {
-  return <style dangerouslySetInnerHTML={{ __html: SLIDER_CSS }} />;
+function snapToStep(val: number, min: number, step: number) {
+  return Math.round((val - min) / step) * step + min;
+}
+
+function getPercentFromEvent(
+  e: React.PointerEvent | PointerEvent,
+  trackEl: HTMLElement,
+) {
+  const rect = trackEl.getBoundingClientRect();
+  return clamp((e.clientX - rect.left) / rect.width, 0, 1);
 }
 
 // ============================================================================
-// Single Slider (original behavior)
+// Single Slider
 // ============================================================================
 
-const SingleSlider = forwardRef<HTMLInputElement, SingleSliderProps>(
+const SingleSlider = forwardRef<HTMLDivElement, SingleSliderProps>(
   (
     {
       value: controlledValue,
@@ -121,62 +78,139 @@ const SingleSlider = forwardRef<HTMLInputElement, SingleSliderProps>(
     const isControlled = controlledValue !== undefined;
     const [internalValue, setInternalValue] = useState(defaultValue);
     const currentValue = isControlled ? controlledValue : internalValue;
-
+    const trackRef = useRef<HTMLSpanElement>(null);
+    const dragging = useRef(false);
 
     useEffect(() => {
       if (isControlled) setInternalValue(controlledValue);
     }, [isControlled, controlledValue]);
 
-    const fillPercent =
-      max !== min ? ((currentValue - min) / (max - min)) * 100 : 0;
+    const percent = max !== min ? ((currentValue - min) / (max - min)) * 100 : 0;
 
-    const handleChange = useCallback(
-      (e: React.ChangeEvent<HTMLInputElement>) => {
-        const newValue = Number(e.target.value);
-        if (!isControlled) setInternalValue(newValue);
-        onChange?.(newValue);
+    const updateValue = useCallback(
+      (newVal: number) => {
+        const snapped = snapToStep(clamp(newVal, min, max), min, step);
+        if (!isControlled) setInternalValue(snapped);
+        onChange?.(snapped);
       },
-      [isControlled, onChange],
+      [isControlled, min, max, step, onChange],
     );
 
+    const handlePointerDown = useCallback(
+      (e: React.PointerEvent) => {
+        if (disabled || !trackRef.current) return;
+        e.preventDefault();
+        dragging.current = true;
+        (e.target as HTMLElement).setPointerCapture(e.pointerId);
+        const pct = getPercentFromEvent(e, trackRef.current);
+        updateValue(min + pct * (max - min));
+      },
+      [disabled, min, max, updateValue],
+    );
+
+    const handlePointerMove = useCallback(
+      (e: React.PointerEvent) => {
+        if (!dragging.current || !trackRef.current) return;
+        const pct = getPercentFromEvent(e, trackRef.current);
+        updateValue(min + pct * (max - min));
+      },
+      [min, max, updateValue],
+    );
+
+    const handlePointerUp = useCallback(() => {
+      dragging.current = false;
+    }, []);
+
     return (
-      <form
-        className={className}
-        onSubmit={(e) => e.preventDefault()}
-        style={{ width: "fit-content" }}
-      >
-        <SliderStyles />
-        <input
-          ref={ref}
-          type="range"
-          name={name}
-          min={min}
-          max={max}
-          step={step}
-          value={currentValue}
-          onChange={handleChange}
-          disabled={disabled}
-          aria-valuemin={min}
-          aria-valuemax={max}
-          aria-valuenow={currentValue}
+      <div ref={ref} className={className} style={{ width, minWidth: width }}>
+        {/* Hidden input for form submission */}
+        <input type="hidden" name={name} value={currentValue} />
+
+        {/* Slider root */}
+        <span
+          ref={trackRef}
+          role="group"
           style={{
-            WebkitAppearance: "none",
-            MozAppearance: "none",
-            appearance: "none",
-            width,
-            minWidth: width,
+            display: "flex",
+            alignItems: "center",
+            position: "relative",
+            width: "100%",
             height: 8,
-            borderRadius: 5,
-            outline: "none",
+            touchAction: "none",
+            userSelect: "none",
             cursor: disabled ? "not-allowed" : "pointer",
-            opacity: disabled ? 0.5 : 1,
-            background: `linear-gradient(to right, ${color} 0%, ${color} ${fillPercent}%, var(--ds-gray-400) ${fillPercent}%, var(--ds-gray-400) 100%)`,
-            margin: 0,
-            padding: 0,
           }}
-          className="ds-slider-input"
-        />
-      </form>
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={handlePointerUp}
+        >
+          {/* Track */}
+          <span
+            style={{
+              display: "block",
+              flexGrow: 1,
+              height: 8,
+              borderRadius: 5,
+              background: "var(--ds-gray-400)",
+              position: "relative",
+              overflow: "hidden",
+            }}
+          >
+            {/* Range fill */}
+            <span
+              style={{
+                display: "block",
+                position: "absolute",
+                height: "100%",
+                left: 0,
+                width: `${percent}%`,
+                background: color,
+                borderRadius: "9999px 0 0 9999px",
+              }}
+            />
+          </span>
+
+          {/* Thumb */}
+          <span
+            style={{
+              position: "absolute",
+              left: `calc(${percent}% + 0px)`,
+              transform: "translateX(-50%)",
+            }}
+          >
+            <span
+              role="slider"
+              tabIndex={disabled ? -1 : 0}
+              aria-valuemin={min}
+              aria-valuemax={max}
+              aria-valuenow={currentValue}
+              aria-orientation="horizontal"
+              style={{
+                display: "block",
+                width: 6,
+                height: 14,
+                borderRadius: 1,
+                background: "var(--ds-background-100)",
+                boxShadow:
+                  "rgba(0, 0, 0, 0.21) 0px 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 1px 2px 0px",
+                cursor: disabled ? "not-allowed" : "pointer",
+                transition: "box-shadow 0.2s ease, background 0.2s ease, transform 0.2s ease",
+                position: "relative",
+              }}
+              onKeyDown={(e) => {
+                if (disabled) return;
+                if (e.key === "ArrowRight" || e.key === "ArrowUp") {
+                  e.preventDefault();
+                  updateValue(currentValue + step);
+                } else if (e.key === "ArrowLeft" || e.key === "ArrowDown") {
+                  e.preventDefault();
+                  updateValue(currentValue - step);
+                }
+              }}
+            />
+          </span>
+        </span>
+      </div>
     );
   },
 );
@@ -184,7 +218,7 @@ const SingleSlider = forwardRef<HTMLInputElement, SingleSliderProps>(
 SingleSlider.displayName = "SingleSlider";
 
 // ============================================================================
-// Range Slider (two thumbs, overlaid inputs)
+// Range Slider
 // ============================================================================
 
 const RangeSlider = forwardRef<HTMLDivElement, RangeSliderProps>(
@@ -208,154 +242,198 @@ const RangeSlider = forwardRef<HTMLDivElement, RangeSliderProps>(
     const isControlled = controlledValue !== undefined;
     const [internalValue, setInternalValue] = useState<[number, number]>(defaultValue);
     const currentValue = isControlled ? controlledValue : internalValue;
-
-    // Track which thumb is being dragged to handle crossover
-    const activeThumbRef = useRef<"min" | "max" | null>(null);
-
+    const trackRef = useRef<HTMLSpanElement>(null);
+    const activeThumb = useRef<0 | 1 | null>(null);
 
     useEffect(() => {
       if (isControlled) setInternalValue(controlledValue);
     }, [isControlled, controlledValue]);
 
-    // For visual track, always use sorted values
     const lowValue = Math.min(currentValue[0], currentValue[1]);
     const highValue = Math.max(currentValue[0], currentValue[1]);
+    const lowPercent = max !== min ? ((lowValue - min) / (max - min)) * 100 : 0;
+    const highPercent = max !== min ? ((highValue - min) / (max - min)) * 100 : 0;
 
-    const lowPercent =
-      max !== min ? ((lowValue - min) / (max - min)) * 100 : 0;
-    const highPercent =
-      max !== min ? ((highValue - min) / (max - min)) * 100 : 0;
+    const pct0 = max !== min ? ((currentValue[0] - min) / (max - min)) * 100 : 0;
+    const pct1 = max !== min ? ((currentValue[1] - min) / (max - min)) * 100 : 0;
 
-    const handleFirstChange = useCallback(
-      (e: React.ChangeEvent<HTMLInputElement>) => {
-        const raw = Number(e.target.value);
-        let newValues: [number, number];
-
-        if (allowCrossover) {
-          // True crossover — value[0] can exceed value[1]
-          newValues = [raw, currentValue[1]];
-        } else {
-          const clamped = Math.min(raw, currentValue[1]);
-          newValues = [clamped, currentValue[1]];
-        }
-
-        if (!isControlled) setInternalValue(newValues);
-        onChange?.(newValues);
+    const updateValues = useCallback(
+      (newVals: [number, number]) => {
+        const snapped: [number, number] = [
+          snapToStep(clamp(newVals[0], min, max), min, step),
+          snapToStep(clamp(newVals[1], min, max), min, step),
+        ];
+        if (!isControlled) setInternalValue(snapped);
+        onChange?.(snapped);
       },
-      [isControlled, currentValue, onChange, allowCrossover],
+      [isControlled, min, max, step, onChange],
     );
 
-    const handleSecondChange = useCallback(
-      (e: React.ChangeEvent<HTMLInputElement>) => {
-        const raw = Number(e.target.value);
-        let newValues: [number, number];
+    const handlePointerDown = useCallback(
+      (e: React.PointerEvent) => {
+        if (disabled || !trackRef.current) return;
+        e.preventDefault();
+        (e.target as HTMLElement).setPointerCapture(e.pointerId);
+        const pct = getPercentFromEvent(e, trackRef.current);
+        const rawVal = min + pct * (max - min);
 
-        if (allowCrossover) {
-          newValues = [currentValue[0], raw];
-        } else {
-          const clamped = Math.max(raw, currentValue[0]);
-          newValues = [currentValue[0], clamped];
-        }
+        // Determine which thumb is closer
+        const dist0 = Math.abs(currentValue[0] - rawVal);
+        const dist1 = Math.abs(currentValue[1] - rawVal);
+        const thumb = dist0 <= dist1 ? 0 : 1;
+        activeThumb.current = thumb;
 
-        if (!isControlled) setInternalValue(newValues);
-        onChange?.(newValues);
+        const newVals: [number, number] = [...currentValue];
+        newVals[thumb] = rawVal;
+        updateValues(newVals);
       },
-      [isControlled, currentValue, onChange, allowCrossover],
+      [disabled, min, max, currentValue, updateValues],
     );
 
-    const trackBackground = `linear-gradient(to right, var(--ds-gray-400) 0%, var(--ds-gray-400) ${lowPercent}%, ${color} ${lowPercent}%, ${color} ${highPercent}%, var(--ds-gray-400) ${highPercent}%, var(--ds-gray-400) 100%)`;
+    const handlePointerMove = useCallback(
+      (e: React.PointerEvent) => {
+        if (activeThumb.current === null || !trackRef.current) return;
+        const pct = getPercentFromEvent(e, trackRef.current);
+        const rawVal = min + pct * (max - min);
+        const newVals: [number, number] = [...currentValue];
+        newVals[activeThumb.current] = rawVal;
+        updateValues(newVals);
+      },
+      [min, max, currentValue, updateValues],
+    );
 
-    const inputBaseStyle: React.CSSProperties = {
-      WebkitAppearance: "none",
-      MozAppearance: "none",
-      appearance: "none",
-      width: "100%",
-      height: 0,
-      outline: "none",
-      cursor: disabled ? "not-allowed" : "pointer",
-      opacity: disabled ? 0.5 : 1,
-      margin: 0,
-      padding: 0,
-      position: "absolute",
-      top: "50%",
-      left: 0,
-      background: "transparent",
-      pointerEvents: "none",
-    };
+    const handlePointerUp = useCallback(() => {
+      activeThumb.current = null;
+    }, []);
+
+    const handleThumbKeyDown = useCallback(
+      (thumbIndex: 0 | 1, e: React.KeyboardEvent) => {
+        if (disabled) return;
+        const delta =
+          e.key === "ArrowRight" || e.key === "ArrowUp"
+            ? step
+            : e.key === "ArrowLeft" || e.key === "ArrowDown"
+              ? -step
+              : 0;
+        if (delta === 0) return;
+        e.preventDefault();
+        const newVals: [number, number] = [...currentValue];
+        newVals[thumbIndex] = currentValue[thumbIndex] + delta;
+        updateValues(newVals);
+      },
+      [disabled, step, currentValue, updateValues],
+    );
 
     return (
-      <div
-        ref={ref}
-        className={className}
-        style={{
-          position: "relative",
-          width,
-          height: 20,
-        }}
-      >
-        <SliderStyles />
-        {/* Visual track background */}
-        <div
+      <div ref={ref} className={className} style={{ width, minWidth: width }}>
+        <input type="hidden" name={name ? `${name}-min` : undefined} value={lowValue} />
+        <input type="hidden" name={name ? `${name}-max` : undefined} value={highValue} />
+
+        <span
+          ref={trackRef}
+          role="group"
           style={{
-            position: "absolute",
-            top: "50%",
-            transform: "translateY(-50%)",
-            left: 0,
-            right: 0,
+            display: "flex",
+            alignItems: "center",
+            position: "relative",
+            width: "100%",
             height: 8,
-            borderRadius: 5,
-            background: trackBackground,
-            pointerEvents: "none",
+            touchAction: "none",
+            userSelect: "none",
+            cursor: disabled ? "not-allowed" : "pointer",
           }}
-        />
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={handlePointerUp}
+        >
+          {/* Track */}
+          <span
+            style={{
+              display: "block",
+              flexGrow: 1,
+              height: 8,
+              borderRadius: 5,
+              background: "var(--ds-gray-400)",
+              position: "relative",
+            }}
+          >
+            {/* Range fill */}
+            <span
+              style={{
+                display: "block",
+                position: "absolute",
+                height: "100%",
+                left: `${lowPercent}%`,
+                right: `${100 - highPercent}%`,
+                background: color,
+              }}
+            />
+          </span>
 
-        {/* First thumb input (value[0]) */}
-        <input
-          type="range"
-          name={name ? `${name}-min` : undefined}
-          min={min}
-          max={max}
-          step={step}
-          value={currentValue[0]}
-          onChange={handleFirstChange}
-          onPointerDown={() => { activeThumbRef.current = "min"; }}
-          onPointerUp={() => { activeThumbRef.current = null; }}
-          disabled={disabled}
-          aria-label="First value"
-          aria-valuemin={min}
-          aria-valuemax={max}
-          aria-valuenow={currentValue[0]}
-          style={{
-            ...inputBaseStyle,
-            pointerEvents: "auto",
-            zIndex: activeThumbRef.current === "min" ? 5 : 3,
-          }}
-          className="ds-slider-input"
-        />
+          {/* Thumb 0 */}
+          <span
+            style={{
+              position: "absolute",
+              left: `calc(${pct0}%)`,
+              transform: "translateX(-50%)",
+              zIndex: activeThumb.current === 0 ? 5 : 3,
+            }}
+          >
+            <span
+              role="slider"
+              tabIndex={disabled ? -1 : 0}
+              aria-valuemin={min}
+              aria-valuemax={max}
+              aria-valuenow={currentValue[0]}
+              aria-orientation="horizontal"
+              style={{
+                display: "block",
+                width: 6,
+                height: 14,
+                borderRadius: 1,
+                background: "var(--ds-background-100)",
+                boxShadow:
+                  "rgba(0, 0, 0, 0.21) 0px 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 1px 2px 0px",
+                cursor: disabled ? "not-allowed" : "pointer",
+                transition: "box-shadow 0.2s ease, background 0.2s ease, transform 0.2s ease",
+                position: "relative",
+              }}
+              onKeyDown={(e) => handleThumbKeyDown(0, e)}
+            />
+          </span>
 
-        {/* Second thumb input (value[1]) */}
-        <input
-          type="range"
-          name={name ? `${name}-max` : undefined}
-          min={min}
-          max={max}
-          step={step}
-          value={currentValue[1]}
-          onChange={handleSecondChange}
-          onPointerDown={() => { activeThumbRef.current = "max"; }}
-          onPointerUp={() => { activeThumbRef.current = null; }}
-          disabled={disabled}
-          aria-label="Second value"
-          aria-valuemin={min}
-          aria-valuemax={max}
-          aria-valuenow={currentValue[1]}
-          style={{
-            ...inputBaseStyle,
-            pointerEvents: "auto",
-            zIndex: activeThumbRef.current === "max" ? 5 : 4,
-          }}
-          className="ds-slider-input"
-        />
+          {/* Thumb 1 */}
+          <span
+            style={{
+              position: "absolute",
+              left: `calc(${pct1}%)`,
+              transform: "translateX(-50%)",
+              zIndex: activeThumb.current === 1 ? 5 : 4,
+            }}
+          >
+            <span
+              role="slider"
+              tabIndex={disabled ? -1 : 0}
+              aria-valuemin={min}
+              aria-valuemax={max}
+              aria-valuenow={currentValue[1]}
+              aria-orientation="horizontal"
+              style={{
+                display: "block",
+                width: 6,
+                height: 14,
+                borderRadius: 1,
+                background: "var(--ds-background-100)",
+                boxShadow:
+                  "rgba(0, 0, 0, 0.21) 0px 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 1px 2px 0px",
+                cursor: disabled ? "not-allowed" : "pointer",
+                transition: "box-shadow 0.2s ease, background 0.2s ease, transform 0.2s ease",
+                position: "relative",
+              }}
+              onKeyDown={(e) => handleThumbKeyDown(1, e)}
+            />
+          </span>
+        </span>
       </div>
     );
   },
@@ -367,12 +445,12 @@ RangeSlider.displayName = "RangeSlider";
 // Unified Slider export
 // ============================================================================
 
-const Slider = forwardRef<HTMLInputElement | HTMLDivElement, SliderProps>(
+const Slider = forwardRef<HTMLDivElement, SliderProps>(
   (props, ref) => {
     if (props.range) {
-      return <RangeSlider ref={ref as React.Ref<HTMLDivElement>} {...props} />;
+      return <RangeSlider ref={ref} {...props} />;
     }
-    return <SingleSlider ref={ref as React.Ref<HTMLInputElement>} {...props} />;
+    return <SingleSlider ref={ref} {...props} />;
   },
 );
 
