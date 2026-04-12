@@ -152,7 +152,7 @@ function SheetContent({
           position: "fixed",
           inset: 0,
           zIndex: 99,
-          backgroundColor: "rgba(0, 0, 0, 0.5)",
+          backgroundColor: "rgba(250, 250, 250, 0.5)",
           animation: "sheet-overlay-in 200ms ease-out",
         }}
       />
