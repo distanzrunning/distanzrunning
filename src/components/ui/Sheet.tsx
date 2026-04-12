@@ -156,7 +156,8 @@ function SheetContent({
         style={{
           position: "fixed",
           zIndex: 100,
-          display: "block",
+          display: "flex",
+          flexDirection: "column",
           gap: 16,
           padding: 24,
           background: "var(--ds-background-100)",
