@@ -62,7 +62,7 @@ export function ShowMore({
           onClick={() => setExpanded(!expanded)}
           aria-expanded={expanded}
         >
-          <span style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+          <span style={{ display: "flex", alignItems: "center", gap: "4px", fontSize: 14, lineHeight: "20px" }}>
             {expanded ? lessLabel : moreLabel}
             <span
               style={{
