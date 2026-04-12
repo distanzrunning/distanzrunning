@@ -311,26 +311,27 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
 // ============================================================================
 
 const defaultWithSetWidthCode = `import { Skeleton } from '@/components/ui/Skeleton';
+import type { JSX } from 'react';
 
-function DefaultExample() {
-  return <Skeleton width={160} height={24} />;
+export function Component(): JSX.Element {
+  return <Skeleton width={160} />;
 }`;
 
 const defaultWithBoxHeightCode = `import { Skeleton } from '@/components/ui/Skeleton';
+import type { JSX } from 'react';
 
-function BoxHeightExample() {
-  return (
-    <Skeleton width={160} height={24} style={{ marginBottom: 18 }} />
-  );
+export function Component(): JSX.Element {
+  return <Skeleton width={160} height={24} style={{ marginBottom: 18 }} />;
 }`;
 
 const wrappingChildrenCode = `import { Skeleton } from '@/components/ui/Skeleton';
-import Button from '@/components/ui/Button';
+import { Button } from '@/components/ui/Button';
+import type { JSX } from 'react';
 
-function WrappingChildrenExample() {
+export function Component(): JSX.Element {
   return (
-    <div className="flex flex-col gap-4">
-      <Skeleton show={true}>
+    <div className="flex flex-col items-start justify-start gap-4 flex-initial">
+      <Skeleton>
         <Button>Hidden by skeleton</Button>
       </Skeleton>
       <Skeleton show={false}>
@@ -341,13 +342,16 @@ function WrappingChildrenExample() {
 }`;
 
 const wrappingChildrenFixedSizeCode = `import { Skeleton } from '@/components/ui/Skeleton';
-import Button from '@/components/ui/Button';
+import { Button } from '@/components/ui/Button';
+import type { JSX } from 'react';
 
-function WrappingChildrenFixedSizeExample() {
+export function Component(): JSX.Element {
   return (
-    <div className="flex flex-col gap-4">
-      <Skeleton width="100%" height={100} show={true} />
-      <Skeleton width="100%" height={100} show={false}>
+    <div className="flex flex-col items-start justify-start gap-4 flex-initial">
+      <Skeleton height={100} width="100%">
+        {null}
+      </Skeleton>
+      <Skeleton height={100} width="100%">
         <Button>Not hidden by Skeleton</Button>
       </Skeleton>
     </div>
@@ -355,26 +359,30 @@ function WrappingChildrenFixedSizeExample() {
 }`;
 
 const pillCode = `import { Skeleton } from '@/components/ui/Skeleton';
+import type { JSX } from 'react';
 
-function PillExample() {
+export function Component(): JSX.Element {
   return <Skeleton width={48} height={24} shape="pill" />;
 }`;
 
 const roundedCode = `import { Skeleton } from '@/components/ui/Skeleton';
+import type { JSX } from 'react';
 
-function RoundedExample() {
+export function Component(): JSX.Element {
   return <Skeleton width={48} height={48} shape="rounded" />;
 }`;
 
 const squaredCode = `import { Skeleton } from '@/components/ui/Skeleton';
+import type { JSX } from 'react';
 
-function SquaredExample() {
+export function Component(): JSX.Element {
   return <Skeleton width={48} height={48} shape="squared" />;
 }`;
 
 const noAnimationCode = `import { Skeleton } from '@/components/ui/Skeleton';
+import type { JSX } from 'react';
 
-function NoAnimationExample() {
+export function Component(): JSX.Element {
   return <Skeleton width="100%" height={100} noAnimation />;
 }`;
 
