@@ -312,6 +312,7 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
 
 const defaultCode = `import { Sheet } from '@/components/ui/Sheet';
 import { Button } from '@/components/ui/Button';
+import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
   return (
@@ -319,50 +320,61 @@ export function Component(): JSX.Element {
       <Sheet.Trigger>
         <Button>Open Sheet</Button>
       </Sheet.Trigger>
-      <Sheet.Content side="right">
-        <h3 style={{ fontSize: 18, fontWeight: 600, marginBottom: 8, color: 'var(--ds-gray-1000)' }}>
-          Sheet Title
-        </h3>
-        <p style={{ fontSize: 14, color: 'var(--ds-gray-900)', lineHeight: 1.5 }}>
-          This is a sheet panel that slides in from the right side of the screen.
-          It can contain any content you need.
-        </p>
-        <div style={{ marginTop: 24 }}>
+      <Sheet.Content
+        side="right"
+        size="512px"
+        className="m-3 h-[calc(100%-1.5rem)] rounded-[1rem] p-0 flex flex-col"
+      >
+        <Sheet.Header>
+          <Sheet.Title>Sheet Title</Sheet.Title>
+          <Sheet.Description>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+          </Sheet.Description>
+        </Sheet.Header>
+        <Sheet.Body>
+          Eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
+          ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+          aliquip ex ea commodo consequat.
+        </Sheet.Body>
+        <Sheet.Footer>
           <Sheet.Close>
             <Button variant="secondary">Close</Button>
           </Sheet.Close>
-        </div>
+          <Button>Next</Button>
+        </Sheet.Footer>
       </Sheet.Content>
     </Sheet>
   );
 }`;
 
-const withSideCode = `import { useState } from 'react';
-import { Sheet } from '@/components/ui/Sheet';
+const withSideCode = `import { Sheet } from '@/components/ui/Sheet';
 import { Button } from '@/components/ui/Button';
+import type { JSX } from 'react';
+
+const sides = ['top', 'right', 'bottom', 'left'] as const;
 
 export function Component(): JSX.Element {
-  const [side, setSide] = useState<"top" | "right" | "bottom" | "left" | null>(null);
-
   return (
-    <>
-      <div style={{ display: "flex", gap: 8, justifyContent: "center" }}>
-        <Button variant="secondary" onClick={() => setSide("top")}>Open top</Button>
-        <Button variant="secondary" onClick={() => setSide("right")}>Open right</Button>
-        <Button variant="secondary" onClick={() => setSide("bottom")}>Open bottom</Button>
-        <Button variant="secondary" onClick={() => setSide("left")}>Open left</Button>
-      </div>
-      <Sheet open={side !== null} onOpenChange={(open) => { if (!open) setSide(null); }}>
-        <Sheet.Content side={side ?? "right"}>
-          <h3 style={{ fontSize: 18, fontWeight: 600, marginBottom: 8, color: 'var(--ds-gray-1000)' }}>
-            Sheet from {side}
-          </h3>
-          <p style={{ fontSize: 14, color: 'var(--ds-gray-900)', lineHeight: 1.5 }}>
-            This sheet slides in from the {side} edge of the screen.
-          </p>
-        </Sheet.Content>
-      </Sheet>
-    </>
+    <div className="flex items-center justify-center gap-4">
+      {sides.map((side) => (
+        <Sheet key={side}>
+          <Sheet.Trigger>
+            <Button>Open {side}</Button>
+          </Sheet.Trigger>
+          <Sheet.Content
+            side={side}
+            size={side === 'left' || side === 'right' ? '75%' : undefined}
+          >
+            <Sheet.Header>
+              <Sheet.Title>Sheet from {side}</Sheet.Title>
+              <Sheet.Description>
+                This sheet slides in from the {side}.
+              </Sheet.Description>
+            </Sheet.Header>
+          </Sheet.Content>
+        </Sheet>
+      ))}
+    </div>
   );
 }`;
 
