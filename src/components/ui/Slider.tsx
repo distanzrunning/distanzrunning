@@ -9,6 +9,8 @@ interface SliderProps {
   max?: number;
   step?: number;
   onChange?: (value: number) => void;
+  /** Fill color — accepts any CSS color or design token variable */
+  color?: string;
   disabled?: boolean;
   className?: string;
   name?: string;
@@ -23,6 +25,7 @@ const Slider = forwardRef<HTMLInputElement, SliderProps>(
       max = 100,
       step = 1,
       onChange,
+      color = "var(--ds-blue-700)",
       disabled = false,
       className = "",
       name,
@@ -84,7 +87,7 @@ const Slider = forwardRef<HTMLInputElement, SliderProps>(
             outline: "none",
             cursor: disabled ? "not-allowed" : "pointer",
             opacity: disabled ? 0.5 : 1,
-            background: `linear-gradient(to right, var(--ds-blue-700) 0%, var(--ds-blue-700) ${fillPercent}%, var(--ds-gray-400) ${fillPercent}%, var(--ds-gray-400) 100%)`,
+            background: `linear-gradient(to right, ${color} 0%, ${color} ${fillPercent}%, var(--ds-gray-400) ${fillPercent}%, var(--ds-gray-400) 100%)`,
             margin: 0,
             padding: 0,
           }}
