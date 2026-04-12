@@ -140,29 +140,12 @@ const SingleSlider = forwardRef<HTMLInputElement, SingleSliderProps>(
     );
 
     return (
-      <div
+      <form
         className={className}
-        style={{
-          position: "relative",
-          width,
-          height: 20,
-        }}
+        onSubmit={(e) => e.preventDefault()}
+        style={{ width: "fit-content" }}
       >
         <SliderStyles />
-        {/* Visual track */}
-        <div
-          style={{
-            position: "absolute",
-            top: "50%",
-            transform: "translateY(-50%)",
-            left: 0,
-            right: 0,
-            height: 8,
-            borderRadius: 5,
-            background: `linear-gradient(to right, ${color} 0%, ${color} ${fillPercent}%, var(--ds-gray-400) ${fillPercent}%, var(--ds-gray-400) 100%)`,
-            pointerEvents: "none",
-          }}
-        />
         <input
           ref={ref}
           type="range"
@@ -180,21 +163,20 @@ const SingleSlider = forwardRef<HTMLInputElement, SingleSliderProps>(
             WebkitAppearance: "none",
             MozAppearance: "none",
             appearance: "none",
-            width: "100%",
-            height: 0,
+            width,
+            minWidth: width,
+            height: 8,
+            borderRadius: 5,
             outline: "none",
             cursor: disabled ? "not-allowed" : "pointer",
             opacity: disabled ? 0.5 : 1,
-            background: "transparent",
+            background: `linear-gradient(to right, ${color} 0%, ${color} ${fillPercent}%, var(--ds-gray-400) ${fillPercent}%, var(--ds-gray-400) 100%)`,
             margin: 0,
             padding: 0,
-            position: "absolute",
-            top: "50%",
-            left: 0,
           }}
           className="ds-slider-input"
         />
-      </div>
+      </form>
     );
   },
 );
