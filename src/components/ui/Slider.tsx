@@ -180,9 +180,8 @@ const SingleSlider = forwardRef<HTMLInputElement, SingleSliderProps>(
             WebkitAppearance: "none",
             MozAppearance: "none",
             appearance: "none",
-            width,
-            minWidth: width,
-            height: 8,
+            width: "100%",
+            height: 0,
             outline: "none",
             cursor: disabled ? "not-allowed" : "pointer",
             opacity: disabled ? 0.5 : 1,
@@ -192,7 +191,6 @@ const SingleSlider = forwardRef<HTMLInputElement, SingleSliderProps>(
             position: "absolute",
             top: "50%",
             left: 0,
-            transform: "translateY(-50%)",
           }}
           className="ds-slider-input"
         />
@@ -289,10 +287,8 @@ const RangeSlider = forwardRef<HTMLDivElement, RangeSliderProps>(
       WebkitAppearance: "none",
       MozAppearance: "none",
       appearance: "none",
-      width,
-      minWidth: width,
-      height: 8,
-      borderRadius: 5,
+      width: "100%",
+      height: 0,
       outline: "none",
       cursor: disabled ? "not-allowed" : "pointer",
       opacity: disabled ? 0.5 : 1,
@@ -301,7 +297,6 @@ const RangeSlider = forwardRef<HTMLDivElement, RangeSliderProps>(
       position: "absolute",
       top: "50%",
       left: 0,
-      transform: "translateY(-50%)",
       background: "transparent",
       pointerEvents: "none",
     };
