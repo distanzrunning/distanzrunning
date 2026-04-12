@@ -109,10 +109,10 @@ const sidePositionStyles: Record<string, React.CSSProperties> = {
 };
 
 const sideClassNames: Record<string, string> = {
-  right: "h-full w-3/4 sm:max-w-sm",
-  left: "h-full w-3/4 sm:max-w-sm",
-  top: "w-full",
-  bottom: "w-full",
+  right: "h-full w-3/4 sm:max-w-sm p-6",
+  left: "h-full w-3/4 sm:max-w-sm p-6",
+  top: "w-full p-6",
+  bottom: "w-full p-6",
 };
 
 // ============================================================================
@@ -159,7 +159,6 @@ function SheetContent({
           display: "flex",
           flexDirection: "column",
           gap: 16,
-          padding: 24,
           background: "var(--ds-background-100)",
           boxShadow:
             "rgba(0,0,0,0) 0px 0px 0px 0px, rgba(0,0,0,0) 0px 0px 0px 0px, rgba(0,0,0,0.08) 0px 0px 0px 1px, rgba(0,0,0,0.04) 0px 2px 2px 0px, rgba(0,0,0,0.04) 0px 8px 16px -4px, var(--ds-background-200) 0px 0px 0px 1px",
