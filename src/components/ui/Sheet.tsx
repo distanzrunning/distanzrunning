@@ -194,8 +194,12 @@ function SheetHeader({ children }: SheetHeaderProps) {
 function SheetTitle({ children }: SheetTitleProps) {
   return (
     <Dialog.Title
-      className="text-lg font-semibold leading-7"
-      style={{ color: "var(--ds-gray-1000)" }}
+      className="font-semibold"
+      style={{
+        fontSize: 18,
+        lineHeight: "28px",
+        color: "var(--ds-gray-1000)",
+      }}
     >
       {children}
     </Dialog.Title>
@@ -205,8 +209,11 @@ function SheetTitle({ children }: SheetTitleProps) {
 function SheetDescription({ children }: SheetDescriptionProps) {
   return (
     <Dialog.Description
-      className="text-sm leading-5"
-      style={{ color: "var(--ds-gray-700)" }}
+      style={{
+        fontSize: 14,
+        lineHeight: "20px",
+        color: "var(--ds-gray-700)",
+      }}
     >
       {children}
     </Dialog.Description>
@@ -215,7 +222,14 @@ function SheetDescription({ children }: SheetDescriptionProps) {
 
 function SheetBody({ children }: { children: React.ReactNode }) {
   return (
-    <div className="text-sm leading-5 px-6 py-4" style={{ color: "var(--ds-gray-1000)" }}>
+    <div
+      className="px-6 py-4"
+      style={{
+        fontSize: 14,
+        lineHeight: "20px",
+        color: "var(--ds-gray-1000)",
+      }}
+    >
       {children}
     </div>
   );
