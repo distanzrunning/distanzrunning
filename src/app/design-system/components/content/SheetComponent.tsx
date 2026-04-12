@@ -403,9 +403,8 @@ function DefaultDemo() {
 }
 
 function SideSheetContent({ side }: { side: string }) {
-  const isVertical = side === "top" || side === "bottom";
   return (
-    <div className={`flex flex-col ${isVertical ? "text-center" : "text-center sm:text-left"}`}>
+    <div className="flex flex-col text-center sm:text-left">
       <h2
         className="font-semibold"
         style={{ fontSize: 18, lineHeight: "28px", color: "var(--ds-gray-1000)" }}

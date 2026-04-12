@@ -86,16 +86,12 @@ const sidePositionStyles: Record<string, React.CSSProperties> = {
     top: 0,
     right: 0,
     bottom: 0,
-    height: "100%",
-    width: "75%",
     animation: "sheet-slide-in-right 200ms ease-in-out",
   },
   left: {
     top: 0,
     left: 0,
     bottom: 0,
-    height: "100%",
-    width: "75%",
     animation: "sheet-slide-in-left 200ms ease-in-out",
   },
   top: {
@@ -110,6 +106,13 @@ const sidePositionStyles: Record<string, React.CSSProperties> = {
     right: 0,
     animation: "sheet-slide-in-bottom 200ms ease-in-out",
   },
+};
+
+const sideClassNames: Record<string, string> = {
+  right: "h-full w-3/4 sm:max-w-sm",
+  left: "h-full w-3/4 sm:max-w-sm",
+  top: "w-full",
+  bottom: "w-full",
 };
 
 // ============================================================================
@@ -149,7 +152,7 @@ function SheetContent({
         }}
       />
       <Dialog.Content
-        className={className}
+        className={className || sideClassNames[side]}
         style={{
           position: "fixed",
           zIndex: 100,
