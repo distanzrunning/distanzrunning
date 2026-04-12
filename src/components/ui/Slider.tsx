@@ -1,6 +1,6 @@
 "use client";
 
-import React, { forwardRef, useState, useCallback, useEffect, useInsertionEffect, useRef } from "react";
+import React, { forwardRef, useState, useCallback, useEffect, useRef } from "react";
 
 // ============================================================================
 // Types
@@ -38,64 +38,63 @@ interface RangeSliderProps extends SliderBaseProps {
 type SliderProps = SingleSliderProps | RangeSliderProps;
 
 // ============================================================================
-// Shared CSS for thumbs (injected once)
+// Shared CSS for thumbs (rendered inline with component)
 // ============================================================================
 
-const SLIDER_STYLES_ID = "ds-slider-styles";
+const SLIDER_CSS = `
+  .ds-slider-input {
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+  }
+  .ds-slider-input::-webkit-slider-thumb {
+    -webkit-appearance: none !important;
+    appearance: none !important;
+    width: 6px;
+    height: 14px;
+    border-radius: 1px;
+    background: var(--ds-background-100);
+    border: none;
+    box-shadow: rgba(0, 0, 0, 0.21) 0px 0px 0px 1px,
+      rgba(0, 0, 0, 0.04) 0px 1px 2px 0px;
+    cursor: pointer;
+    transition: box-shadow 0.2s ease, background 0.2s ease, transform 0.2s ease;
+    position: relative;
+    z-index: 2;
+  }
+  .ds-slider-input::-webkit-slider-thumb:hover {
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 0px 0px 1px,
+      rgba(0, 0, 0, 0.1) 0px 1px 3px 0px;
+  }
+  .ds-slider-input::-moz-range-thumb {
+    width: 6px;
+    height: 14px;
+    border-radius: 1px;
+    background: var(--ds-background-100);
+    border: none;
+    box-shadow: rgba(0, 0, 0, 0.21) 0px 0px 0px 1px,
+      rgba(0, 0, 0, 0.04) 0px 1px 2px 0px;
+    cursor: pointer;
+    transition: box-shadow 0.2s ease, background 0.2s ease, transform 0.2s ease;
+    position: relative;
+    z-index: 2;
+  }
+  .ds-slider-input::-moz-range-thumb:hover {
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 0px 0px 1px,
+      rgba(0, 0, 0, 0.1) 0px 1px 3px 0px;
+  }
+  .ds-slider-input::-moz-range-track {
+    background: transparent;
+    border: none;
+    height: 8px;
+  }
+  .ds-slider-input::-webkit-slider-runnable-track {
+    height: 8px;
+  }
+`;
 
-function ensureSliderStyles() {
-  if (typeof document === "undefined") return;
-  if (document.getElementById(SLIDER_STYLES_ID)) return;
-
-  const style = document.createElement("style");
-  style.id = SLIDER_STYLES_ID;
-  style.textContent = `
-    .ds-slider-input::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 6px;
-      height: 14px;
-      border-radius: 1px;
-      background: var(--ds-background-100);
-      border: none;
-      box-shadow: rgba(0, 0, 0, 0.21) 0px 0px 0px 1px,
-        rgba(0, 0, 0, 0.04) 0px 1px 2px 0px;
-      cursor: pointer;
-      transition: box-shadow 0.2s ease, background 0.2s ease, transform 0.2s ease;
-      position: relative;
-      z-index: 2;
-    }
-    .ds-slider-input::-webkit-slider-thumb:hover {
-      box-shadow: rgba(0, 0, 0, 0.35) 0px 0px 0px 1px,
-        rgba(0, 0, 0, 0.1) 0px 1px 3px 0px;
-    }
-    .ds-slider-input::-moz-range-thumb {
-      width: 6px;
-      height: 14px;
-      border-radius: 1px;
-      background: var(--ds-background-100);
-      border: none;
-      box-shadow: rgba(0, 0, 0, 0.21) 0px 0px 0px 1px,
-        rgba(0, 0, 0, 0.04) 0px 1px 2px 0px;
-      cursor: pointer;
-      transition: box-shadow 0.2s ease, background 0.2s ease, transform 0.2s ease;
-      position: relative;
-      z-index: 2;
-    }
-    .ds-slider-input::-moz-range-thumb:hover {
-      box-shadow: rgba(0, 0, 0, 0.35) 0px 0px 0px 1px,
-        rgba(0, 0, 0, 0.1) 0px 1px 3px 0px;
-    }
-    .ds-slider-input::-moz-range-track {
-      background: transparent;
-      border: none;
-      height: 8px;
-    }
-    .ds-slider-input::-webkit-slider-runnable-track {
-      height: 8px;
-    }
-  `;
-  document.head.appendChild(style);
+function SliderStyles() {
+  return <style dangerouslySetInnerHTML={{ __html: SLIDER_CSS }} />;
 }
 
 // ============================================================================
@@ -123,9 +122,6 @@ const SingleSlider = forwardRef<HTMLInputElement, SingleSliderProps>(
     const [internalValue, setInternalValue] = useState(defaultValue);
     const currentValue = isControlled ? controlledValue : internalValue;
 
-    useInsertionEffect(() => {
-      ensureSliderStyles();
-    }, []);
 
     useEffect(() => {
       if (isControlled) setInternalValue(controlledValue);
@@ -147,8 +143,9 @@ const SingleSlider = forwardRef<HTMLInputElement, SingleSliderProps>(
       <form
         className={className}
         onSubmit={(e) => e.preventDefault()}
-        style={{ width: "fit-content", position: "relative", height: 20, display: "flex", alignItems: "center" }}
+        style={{ width: "fit-content" }}
       >
+        <SliderStyles />
         <input
           ref={ref}
           type="range"
@@ -215,9 +212,6 @@ const RangeSlider = forwardRef<HTMLDivElement, RangeSliderProps>(
     // Track which thumb is being dragged to handle crossover
     const activeThumbRef = useRef<"min" | "max" | null>(null);
 
-    useInsertionEffect(() => {
-      ensureSliderStyles();
-    }, []);
 
     useEffect(() => {
       if (isControlled) setInternalValue(controlledValue);
@@ -302,6 +296,7 @@ const RangeSlider = forwardRef<HTMLDivElement, RangeSliderProps>(
           height: 20,
         }}
       >
+        <SliderStyles />
         {/* Visual track background */}
         <div
           style={{
