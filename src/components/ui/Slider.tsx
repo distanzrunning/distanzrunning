@@ -73,37 +73,25 @@ const Slider = forwardRef<HTMLInputElement, SliderProps>(
           aria-valuemin={min}
           aria-valuemax={max}
           aria-valuenow={currentValue}
-          style={
-            {
-              "--slider-fill": `${fillPercent}%`,
-            } as React.CSSProperties
-          }
-          className="slider-input"
+          style={{
+            WebkitAppearance: "none",
+            MozAppearance: "none",
+            appearance: "none",
+            width: 216,
+            minWidth: 216,
+            height: 8,
+            borderRadius: 5,
+            outline: "none",
+            cursor: disabled ? "not-allowed" : "pointer",
+            opacity: disabled ? 0.5 : 1,
+            background: `linear-gradient(to right, var(--ds-blue-700) 0%, var(--ds-blue-700) ${fillPercent}%, var(--ds-gray-400) ${fillPercent}%, var(--ds-gray-400) 100%)`,
+            margin: 0,
+            padding: 0,
+          }}
+          className="ds-slider-input"
         />
-        <style jsx>{`
-          .slider-input {
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
-            width: 216px;
-            min-width: 216px;
-            height: 8px;
-            border-radius: 5px;
-            outline: none;
-            cursor: ${disabled ? "not-allowed" : "pointer"};
-            opacity: ${disabled ? 0.5 : 1};
-            background: linear-gradient(
-              to right,
-              var(--ds-blue-700) 0%,
-              var(--ds-blue-700) var(--slider-fill),
-              var(--ds-gray-400) var(--slider-fill),
-              var(--ds-gray-400) 100%
-            );
-            margin: 0;
-            padding: 0;
-          }
-
-          .slider-input::-webkit-slider-thumb {
+        <style>{`
+          .ds-slider-input::-webkit-slider-thumb {
             -webkit-appearance: none;
             appearance: none;
             width: 6px;
@@ -113,16 +101,14 @@ const Slider = forwardRef<HTMLInputElement, SliderProps>(
             border: none;
             box-shadow: rgba(0, 0, 0, 0.21) 0px 0px 0px 1px,
               rgba(0, 0, 0, 0.04) 0px 1px 2px 0px;
-            cursor: ${disabled ? "not-allowed" : "pointer"};
+            cursor: pointer;
             transition: box-shadow 0.2s ease, background 0.2s ease, transform 0.2s ease;
           }
-
-          .slider-input::-webkit-slider-thumb:hover {
+          .ds-slider-input::-webkit-slider-thumb:hover {
             box-shadow: rgba(0, 0, 0, 0.35) 0px 0px 0px 1px,
               rgba(0, 0, 0, 0.1) 0px 1px 3px 0px;
           }
-
-          .slider-input::-moz-range-thumb {
+          .ds-slider-input::-moz-range-thumb {
             width: 6px;
             height: 14px;
             border-radius: 1px;
@@ -130,16 +116,14 @@ const Slider = forwardRef<HTMLInputElement, SliderProps>(
             border: none;
             box-shadow: rgba(0, 0, 0, 0.21) 0px 0px 0px 1px,
               rgba(0, 0, 0, 0.04) 0px 1px 2px 0px;
-            cursor: ${disabled ? "not-allowed" : "pointer"};
+            cursor: pointer;
             transition: box-shadow 0.2s ease, background 0.2s ease, transform 0.2s ease;
           }
-
-          .slider-input::-moz-range-thumb:hover {
+          .ds-slider-input::-moz-range-thumb:hover {
             box-shadow: rgba(0, 0, 0, 0.35) 0px 0px 0px 1px,
               rgba(0, 0, 0, 0.1) 0px 1px 3px 0px;
           }
-
-          .slider-input::-moz-range-track {
+          .ds-slider-input::-moz-range-track {
             background: transparent;
             border: none;
             height: 8px;
