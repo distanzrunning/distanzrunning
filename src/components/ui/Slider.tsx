@@ -1,6 +1,6 @@
 "use client";
 
-import React, { forwardRef, useState, useCallback, useEffect, useRef } from "react";
+import React, { forwardRef, useState, useCallback, useEffect, useInsertionEffect, useRef } from "react";
 
 // ============================================================================
 // Types
@@ -123,7 +123,7 @@ const SingleSlider = forwardRef<HTMLInputElement, SingleSliderProps>(
     const [internalValue, setInternalValue] = useState(defaultValue);
     const currentValue = isControlled ? controlledValue : internalValue;
 
-    useEffect(() => {
+    useInsertionEffect(() => {
       ensureSliderStyles();
     }, []);
 
@@ -147,7 +147,7 @@ const SingleSlider = forwardRef<HTMLInputElement, SingleSliderProps>(
       <form
         className={className}
         onSubmit={(e) => e.preventDefault()}
-        style={{ width: "fit-content" }}
+        style={{ width: "fit-content", position: "relative", height: 20, display: "flex", alignItems: "center" }}
       >
         <input
           ref={ref}
@@ -215,7 +215,7 @@ const RangeSlider = forwardRef<HTMLDivElement, RangeSliderProps>(
     // Track which thumb is being dragged to handle crossover
     const activeThumbRef = useRef<"min" | "max" | null>(null);
 
-    useEffect(() => {
+    useInsertionEffect(() => {
       ensureSliderStyles();
     }, []);
 
