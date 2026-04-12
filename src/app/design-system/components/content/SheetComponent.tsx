@@ -404,7 +404,7 @@ function DefaultDemo() {
 
 function SideSheetContent({ side }: { side: string }) {
   return (
-    <div className="flex flex-col text-center sm:text-left">
+    <div className="flex flex-col text-center">
       <h2
         className="font-semibold"
         style={{ fontSize: 18, lineHeight: "28px", color: "var(--ds-gray-1000)" }}
