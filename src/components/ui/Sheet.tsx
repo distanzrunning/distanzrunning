@@ -21,6 +21,8 @@ interface SheetTriggerProps {
 interface SheetContentProps {
   children: React.ReactNode;
   side?: "top" | "right" | "bottom" | "left";
+  /** Custom width/height for the sheet panel (e.g., "75%", "512px", "100%") */
+  size?: string;
   className?: string;
 }
 
@@ -109,10 +111,17 @@ const sidePositionStyles: Record<string, React.CSSProperties> = {
 };
 
 const sideClassNames: Record<string, string> = {
-  right: "h-full w-3/4 sm:max-w-sm p-6",
-  left: "h-full w-3/4 sm:max-w-sm p-6",
+  right: "h-full p-6",
+  left: "h-full p-6",
   top: "w-full p-6",
   bottom: "w-full p-6",
+};
+
+const defaultSizes: Record<string, string> = {
+  right: "384px",
+  left: "384px",
+  top: "auto",
+  bottom: "auto",
 };
 
 // ============================================================================
@@ -138,8 +147,15 @@ function SheetTrigger({ children, asChild = true }: SheetTriggerProps) {
 function SheetContent({
   children,
   side = "right",
+  size,
   className,
 }: SheetContentProps) {
+  const isHorizontal = side === "left" || side === "right";
+  const resolvedSize = size || defaultSizes[side];
+  const sizeStyle: React.CSSProperties = isHorizontal
+    ? { width: resolvedSize }
+    : { height: resolvedSize };
+
   return (
     <Dialog.Portal>
       <Dialog.Overlay
@@ -168,6 +184,7 @@ function SheetContent({
           transitionDuration: "200ms",
           transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
           ...sidePositionStyles[side],
+          ...sizeStyle,
         }}
       >
         {children}

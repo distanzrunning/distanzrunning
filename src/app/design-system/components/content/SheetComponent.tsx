@@ -438,7 +438,10 @@ function WithSideDemo() {
             if (!open) setOpenSide(null);
           }}
         >
-          <Sheet.Content side={side}>
+          <Sheet.Content
+            side={side}
+            size={side === "left" || side === "right" ? "75%" : undefined}
+          >
             <SideSheetContent side={side} />
           </Sheet.Content>
         </Sheet>
