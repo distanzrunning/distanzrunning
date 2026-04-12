@@ -376,7 +376,10 @@ function DefaultDemo() {
       <Sheet.Trigger>
         <Button>Open Sheet</Button>
       </Sheet.Trigger>
-      <Sheet.Content side="right">
+      <Sheet.Content
+        side="right"
+        className="m-3 h-[calc(100%-1.5rem)] w-[calc(100%-1.5rem)] rounded-[1rem] p-0 lg:w-[512px] flex flex-col"
+      >
         <Sheet.Header>
           <Sheet.Title>Sheet Title</Sheet.Title>
           <Sheet.Description>
@@ -419,20 +422,19 @@ function WithSideDemo() {
         }}
       >
         <Sheet.Content side={side ?? "right"}>
-          <Sheet.Header>
-            <Sheet.Title>Sheet from {side}</Sheet.Title>
-            <Sheet.Description>
-              This sheet slides in from the {side} edge.
-            </Sheet.Description>
-          </Sheet.Header>
-          <Sheet.Body>
-            Content for the {side} sheet panel.
-          </Sheet.Body>
-          <Sheet.Footer>
-            <Button variant="secondary" onClick={() => setSide(null)}>
-              Close
-            </Button>
-          </Sheet.Footer>
+          <div className="flex flex-col text-center sm:text-left">
+            <h2
+              className="font-semibold"
+              style={{ fontSize: 18, lineHeight: "28px", color: "var(--ds-gray-1000)" }}
+            >
+              Sheet from {side}
+            </h2>
+            <p
+              style={{ fontSize: 14, lineHeight: "20px", color: "var(--ds-gray-700)" }}
+            >
+              This sheet slides in from the {side}.
+            </p>
+          </div>
         </Sheet.Content>
       </Sheet>
     </>
