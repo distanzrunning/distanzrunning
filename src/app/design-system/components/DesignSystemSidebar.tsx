@@ -77,6 +77,7 @@ export const navigation: NavSection[] = [
       { id: "scroller", label: "Scroller" },
       { id: "select", label: "Select" },
       { id: "sheet", label: "Sheet" },
+      { id: "show-more", label: "Show More" },
     ],
   },
 ];

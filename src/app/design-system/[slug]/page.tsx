@@ -63,6 +63,7 @@ import RelativeTimeCardComponent from "../components/content/RelativeTimeCardCom
 import ScrollerComponent from "../components/content/ScrollerComponent";
 import SelectComponent from "../components/content/SelectComponent";
 import SheetComponent from "../components/content/SheetComponent";
+import ShowMoreComponent from "../components/content/ShowMoreComponent";
 import MultiSelectComponent from "../components/content/MultiSelectComponent";
 import NoteComponent from "../components/content/NoteComponent";
 import CalendarComponent from "../components/content/CalendarComponent";
@@ -947,6 +948,21 @@ export default function DesignSystemPage() {
           onNavigate={handleNavigation}
         >
           <SheetComponent />
+        </ContentWithTOC>
+      );
+    }
+
+    if (activeSlug === "show-more") {
+      return (
+        <ContentWithTOC
+          tocTitle="On this page"
+          pageTitle="Show more"
+          pageSubtitle="Styling component to show expanded or collapsed content."
+          mainSectionId="show-more"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
+          <ShowMoreComponent />
         </ContentWithTOC>
       );
     }
