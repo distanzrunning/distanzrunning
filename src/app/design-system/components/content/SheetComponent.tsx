@@ -378,7 +378,8 @@ function DefaultDemo() {
       </Sheet.Trigger>
       <Sheet.Content
         side="right"
-        className="m-3 h-[calc(100%-1.5rem)] w-[calc(100%-1.5rem)] rounded-[1rem] p-0 lg:w-[512px] flex flex-col"
+        size="512px"
+        className="m-3 h-[calc(100%-1.5rem)] rounded-[1rem] p-0 flex flex-col"
       >
         <Sheet.Header>
           <Sheet.Title>Sheet Title</Sheet.Title>
