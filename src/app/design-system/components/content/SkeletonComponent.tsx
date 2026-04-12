@@ -392,7 +392,7 @@ function DefaultWithBoxHeightDemo() {
 
 function WrappingChildrenDemo() {
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col items-start justify-start gap-4 flex-initial">
       <Skeleton show={true}>
         <Button>Hidden by skeleton</Button>
       </Skeleton>
@@ -405,7 +405,7 @@ function WrappingChildrenDemo() {
 
 function WrappingChildrenFixedSizeDemo() {
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col items-start justify-start gap-4 flex-initial">
       <Skeleton width="100%" height={100} show={true} />
       <Skeleton width="100%" height={100} show={false}>
         <Button>Not hidden by Skeleton</Button>
