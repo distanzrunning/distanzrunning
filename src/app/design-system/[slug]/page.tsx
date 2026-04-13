@@ -71,6 +71,7 @@ import SpinnerComponent from "../components/content/SpinnerComponent";
 import SplitButtonComponent from "../components/content/SplitButtonComponent";
 import StatusDotComponent from "../components/content/StatusDotComponent";
 import SwitchComponent from "../components/content/SwitchComponent";
+import TableComponent from "../components/content/TableComponent";
 import TooltipComponent from "../components/content/TooltipComponent";
 import MultiSelectComponent from "../components/content/MultiSelectComponent";
 import NoteComponent from "../components/content/NoteComponent";
@@ -473,6 +474,20 @@ export default function DesignSystemPage() {
           onNavigate={handleNavigation}
         >
           <SwitchComponent />
+        </ContentWithTOC>
+      );
+    }
+
+    if (activeSlug === "table") {
+      return (
+        <ContentWithTOC
+          tocTitle="On this page"
+          pageTitle="Table"
+          mainSectionId="table"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
+          <TableComponent />
         </ContentWithTOC>
       );
     }
