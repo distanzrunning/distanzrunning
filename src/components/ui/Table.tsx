@@ -86,7 +86,7 @@ const TableBody = forwardRef<
       <tbody
         ref={ref}
         className={cn(
-          "[&_td:first-child]:rounded-l-sm [&_td:last-child]:rounded-r-sm",
+          "[&_td:first-child]:rounded-l [&_td:last-child]:rounded-r",
           striped &&
             "[&_tr:where(:nth-child(odd))]:bg-[var(--ds-background-200)]",
           bordered && "[&_tr:not(:last-child)]:border-b",
