@@ -36,26 +36,11 @@ interface SplitButtonProps {
 
 const sizeStyles: Record<
   "small" | "medium" | "large",
-  { height: string; fontSize: string; padding: string; iconSize: number }
+  { height: number; fontSize: number; padding: number; radius: number }
 > = {
-  small: {
-    height: "var(--ds-button-height-small)",
-    fontSize: "12px",
-    padding: "var(--ds-button-padding-small)",
-    iconSize: 16,
-  },
-  medium: {
-    height: "var(--ds-button-height-medium)",
-    fontSize: "14px",
-    padding: "var(--ds-button-padding-medium)",
-    iconSize: 16,
-  },
-  large: {
-    height: "var(--ds-button-height-large)",
-    fontSize: "16px",
-    padding: "var(--ds-button-padding-large)",
-    iconSize: 16,
-  },
+  small: { height: 32, fontSize: 14, padding: 6, radius: 6 },
+  medium: { height: 40, fontSize: 14, padding: 10, radius: 6 },
+  large: { height: 48, fontSize: 16, padding: 14, radius: 8 },
 };
 
 // ============================================================================
@@ -124,11 +109,13 @@ export function SplitButton({
     height: s.height,
     fontSize: s.fontSize,
     fontWeight: 500,
-    border: "none",
     cursor: "pointer",
-    transition:
-      "background var(--ds-transition-duration) var(--ds-transition-timing)",
+    transition: "border-color 0.15s ease, background 0.15s ease, color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease",
     outline: "none",
+    lineHeight: "20px",
+    userSelect: "none",
+    position: "relative",
+    zIndex: 1,
   };
 
   // Variant-specific colors
@@ -138,10 +125,7 @@ export function SplitButton({
   const textColor = isDefault
     ? "var(--ds-background-100)"
     : "var(--ds-gray-1000)";
-  const dividerColor = isDefault
-    ? "var(--ds-gray-alpha-900)"
-    : "var(--ds-gray-300)";
-  const borderColor = isDefault ? "transparent" : "var(--ds-gray-400)";
+  const borderOuterColor = "var(--ds-gray-400)";
 
   // Primary button styles
   const primaryStyle: React.CSSProperties = {
@@ -150,27 +134,34 @@ export function SplitButton({
     paddingRight: s.padding,
     backgroundColor: bgColor,
     color: textColor,
-    borderTopLeftRadius: "var(--ds-radius-small)",
-    borderBottomLeftRadius: "var(--ds-radius-small)",
+    borderTopLeftRadius: s.radius,
+    borderBottomLeftRadius: s.radius,
     borderTopRightRadius: 0,
     borderBottomRightRadius: 0,
-    boxShadow: isDefault ? "none" : `0 0 0 1px ${borderColor}`,
+    border: `1px solid ${borderOuterColor}`,
     borderRight: "none",
+    boxShadow: "none",
   };
 
   // Trigger button styles
   const triggerStyle: React.CSSProperties = {
     ...baseButton,
-    width: s.height,
+    paddingLeft: s.padding,
+    paddingRight: s.padding,
     backgroundColor: bgColor,
     color: textColor,
-    borderTopRightRadius: "var(--ds-radius-small)",
-    borderBottomRightRadius: "var(--ds-radius-small)",
+    borderTopRightRadius: s.radius,
+    borderBottomRightRadius: s.radius,
     borderTopLeftRadius: 0,
     borderBottomLeftRadius: 0,
-    boxShadow: isDefault ? "none" : `0 0 0 1px ${borderColor}`,
+    border: `1px solid ${borderOuterColor}`,
     borderLeft: "none",
+    boxShadow: "none",
   };
+
+  const dividerColor = isDefault
+    ? "var(--ds-gray-alpha-900)"
+    : "var(--ds-gray-300)";
 
   // Divider styles
   const dividerStyle: React.CSSProperties = {
@@ -186,10 +177,9 @@ export function SplitButton({
     ...(menuAlign === "end" ? { right: 0 } : { left: 0 }),
     minWidth: "160px",
     background: "var(--ds-background-100)",
-    border: "1px solid var(--ds-gray-400)",
-    borderRadius: "var(--ds-radius-small)",
-    boxShadow:
-      "0px 4px 8px rgba(0,0,0,0.12), 0px 0px 0px 1px var(--ds-gray-alpha-200)",
+    border: "1px solid var(--ds-gray-alpha-400)",
+    borderRadius: 6,
+    boxShadow: "var(--ds-shadow-menu)",
     padding: "4px",
     zIndex: 50,
   };
