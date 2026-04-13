@@ -480,10 +480,16 @@ import type { JSX } from 'react';
 export function Component(): JSX.Element {
   return (
     <div className="flex items-center gap-6">
-      <Tooltip content="No arrow" showArrow={false}>
+      <Tooltip
+        content="The Evil Rabbit Jumped over the Fence"
+        showArrow={false}
+      >
         <span>No tip indicator</span>
       </Tooltip>
-      <Tooltip content="Right aligned text" textAlign="right">
+      <Tooltip
+        content="The Evil Rabbit Jumped over the Fence multiple times."
+        textAlign="left"
+      >
         <span>No center text</span>
       </Tooltip>
     </div>
@@ -729,12 +735,18 @@ function OtherDemo() {
   return (
     <TooltipRow>
       <TooltipCell>
-        <Tooltip content="No arrow" showArrow={false}>
+        <Tooltip
+          content="The Evil Rabbit Jumped over the Fence"
+          showArrow={false}
+        >
           <span>No tip indicator</span>
         </Tooltip>
       </TooltipCell>
       <TooltipCell>
-        <Tooltip content="Right aligned text" textAlign="right">
+        <Tooltip
+          content="The Evil Rabbit Jumped over the Fence multiple times."
+          textAlign="left"
+        >
           <span>No center text</span>
         </Tooltip>
       </TooltipCell>
