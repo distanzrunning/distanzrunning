@@ -69,6 +69,7 @@ import SliderComponent from "../components/content/SliderComponent";
 import SnippetComponent from "../components/content/SnippetComponent";
 import SpinnerComponent from "../components/content/SpinnerComponent";
 import SplitButtonComponent from "../components/content/SplitButtonComponent";
+import StatusDotComponent from "../components/content/StatusDotComponent";
 import MultiSelectComponent from "../components/content/MultiSelectComponent";
 import NoteComponent from "../components/content/NoteComponent";
 import CalendarComponent from "../components/content/CalendarComponent";
@@ -1043,6 +1044,21 @@ export default function DesignSystemPage() {
           onNavigate={handleNavigation}
         >
           <SplitButtonComponent />
+        </ContentWithTOC>
+      );
+    }
+
+    if (activeSlug === "status-dot") {
+      return (
+        <ContentWithTOC
+          tocTitle="On this page"
+          pageTitle="Status Dot"
+          pageSubtitle="Display an indicator of deployment status."
+          mainSectionId="status-dot"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
+          <StatusDotComponent />
         </ContentWithTOC>
       );
     }

@@ -83,6 +83,7 @@ export const navigation: NavSection[] = [
       { id: "snippet", label: "Snippet" },
       { id: "spinner", label: "Spinner" },
       { id: "split-button", label: "Split Button" },
+      { id: "status-dot", label: "Status Dot" },
     ],
   },
 ];
