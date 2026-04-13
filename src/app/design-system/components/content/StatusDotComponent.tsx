@@ -310,10 +310,11 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
 // ============================================================================
 
 const defaultCode = `import { StatusDot } from '@/components/ui/StatusDot';
+import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+    <div className="flex flex-col items-stretch justify-start gap-6 flex-initial">
       <StatusDot status="queued" />
       <StatusDot status="building" />
       <StatusDot status="error" />
@@ -324,10 +325,11 @@ export function Component(): JSX.Element {
 }`;
 
 const labelCode = `import { StatusDot } from '@/components/ui/StatusDot';
+import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+    <div className="flex flex-col items-stretch justify-start gap-6 flex-initial">
       <StatusDot status="queued" label="Queued" />
       <StatusDot status="building" label="Building" />
       <StatusDot status="error" label="Error" />
