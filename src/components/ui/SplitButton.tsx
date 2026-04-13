@@ -36,11 +36,11 @@ interface SplitButtonProps {
 
 const sizeStyles: Record<
   "small" | "medium" | "large",
-  { height: number; fontSize: number; padding: number; radius: number }
+  { height: number; fontSize: number; lineHeight: string; padding: number; radius: number }
 > = {
-  small: { height: 32, fontSize: 14, padding: 6, radius: 6 },
-  medium: { height: 40, fontSize: 14, padding: 10, radius: 6 },
-  large: { height: 48, fontSize: 16, padding: 14, radius: 8 },
+  small: { height: 32, fontSize: 14, lineHeight: "20px", padding: 6, radius: 6 },
+  medium: { height: 40, fontSize: 14, lineHeight: "20px", padding: 10, radius: 6 },
+  large: { height: 48, fontSize: 16, lineHeight: "24px", padding: 14, radius: 8 },
 };
 
 // ============================================================================
@@ -112,7 +112,7 @@ export function SplitButton({
     cursor: "pointer",
     transition: "border-color 0.15s ease, background 0.15s ease, color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease",
     outline: "none",
-    lineHeight: "20px",
+    lineHeight: s.lineHeight,
     userSelect: "none",
     position: "relative",
     zIndex: 1,
