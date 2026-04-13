@@ -126,7 +126,7 @@ export function Snippet({
         height: "auto",
         borderRadius: 6,
         padding: "10px 48px 10px 12px",
-        border: dark ? "1px solid var(--ds-gray-800)" : "1px solid rgba(0, 0, 0, 0.08)",
+        border: dark ? "1px solid rgba(255, 255, 255, 0.14)" : "1px solid rgba(0, 0, 0, 0.08)",
         background: vs ? vs.bg : dark ? "var(--ds-gray-1000)" : "var(--ds-background-100)",
         color: vs ? vs.color : dark ? "var(--ds-background-100)" : "var(--ds-gray-1000)",
         position: "relative",
