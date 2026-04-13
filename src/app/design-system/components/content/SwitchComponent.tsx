@@ -446,7 +446,6 @@ import type { JSX } from 'react';
 export function Component(): JSX.Element {
   return (
     <Switch
-      size="large"
       options={[
         { value: 'source', label: 'Source', tooltip: 'View Source' },
         { value: 'output', label: 'Output', tooltip: 'View Output' },
@@ -568,7 +567,6 @@ function FullWidthDemo() {
 function TooltipDemo() {
   return (
     <Switch
-      size="large"
       options={[
         { value: "source", label: "Source", tooltip: "View Source" },
         { value: "output", label: "Output", tooltip: "View Output" },
