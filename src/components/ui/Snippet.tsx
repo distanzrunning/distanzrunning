@@ -186,15 +186,15 @@ export function Snippet({
           background: "transparent",
           color: dark ? "var(--ds-gray-400)" : "var(--ds-gray-1000)",
           cursor: "pointer",
-          transition: "opacity 0.15s ease, background 0.15s ease",
+          transition: "opacity 0.15s ease, box-shadow 0.15s ease",
         }}
         onMouseEnter={(e) => {
-          e.currentTarget.style.background = dark
-            ? "var(--ds-gray-800)"
-            : "var(--ds-gray-200)";
+          e.currentTarget.style.boxShadow = dark
+            ? "0 0 0 1px var(--ds-gray-700)"
+            : "0 0 0 1px var(--ds-gray-400)";
         }}
         onMouseLeave={(e) => {
-          e.currentTarget.style.background = "transparent";
+          e.currentTarget.style.boxShadow = "none";
         }}
       >
         <div style={{ position: "relative", height: 16, width: 16 }}>
