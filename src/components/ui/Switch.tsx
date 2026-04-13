@@ -51,6 +51,8 @@ const sizeConfig: Record<
     borderRadius: number;
     innerRadius: number;
     iconSize: number;
+    iconPaddingX: number;
+    iconPaddingY: number;
   }
 > = {
   small: {
@@ -62,6 +64,8 @@ const sizeConfig: Record<
     borderRadius: 6,
     innerRadius: 2,
     iconSize: 16,
+    iconPaddingX: 8,
+    iconPaddingY: 4,
   },
   default: {
     height: 40,
@@ -72,6 +76,8 @@ const sizeConfig: Record<
     borderRadius: 6,
     innerRadius: 2,
     iconSize: 16,
+    iconPaddingX: 12,
+    iconPaddingY: 8,
   },
   large: {
     height: 48,
@@ -82,6 +88,8 @@ const sizeConfig: Record<
     borderRadius: 8,
     innerRadius: 4,
     iconSize: 20,
+    iconPaddingX: 12,
+    iconPaddingY: 12,
   },
 };
 
@@ -180,10 +188,10 @@ export function Switch({
                 justifyContent: "center",
                 flex: "1 1 0%",
                 height: config.height - config.containerPadding * 2,
-                paddingLeft: isIconOnly ? config.paddingX : config.paddingX,
-                paddingRight: isIconOnly ? config.paddingX : config.paddingX,
-                paddingTop: isIconOnly ? 4 : 0,
-                paddingBottom: isIconOnly ? 4 : 0,
+                paddingLeft: isIconOnly ? config.iconPaddingX : config.paddingX,
+                paddingRight: isIconOnly ? config.iconPaddingX : config.paddingX,
+                paddingTop: isIconOnly ? config.iconPaddingY : 0,
+                paddingBottom: isIconOnly ? config.iconPaddingY : 0,
                 fontSize: config.fontSize,
                 lineHeight: config.lineHeight,
                 fontWeight: 500,
