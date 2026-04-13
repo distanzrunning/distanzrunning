@@ -68,7 +68,7 @@ export function Tooltip({
   className = "",
 }: TooltipProps) {
   const [isVisible, setIsVisible] = useState(false);
-  const [position, setPosition] = useState({ top: 0, left: 0 });
+  const [position, setPosition] = useState({ top: 0, left: 0, arrowOffset: 0 });
   const [mounted, setMounted] = useState(false);
   const triggerRef = useRef<HTMLSpanElement>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
@@ -145,7 +145,17 @@ export function Tooltip({
       }
     }
 
-    setPosition({ top, left });
+    // Calculate arrow offset: the trigger center relative to the tooltip
+    let arrowOffset = 0;
+    if (side === "top" || side === "bottom") {
+      const triggerCenterX = triggerRect.left + scrollX + triggerRect.width / 2;
+      arrowOffset = triggerCenterX - left;
+    } else {
+      const triggerCenterY = triggerRect.top + scrollY + triggerRect.height / 2;
+      arrowOffset = triggerCenterY - top;
+    }
+
+    setPosition({ top, left, arrowOffset });
   }, [side, align]);
 
   const show = useCallback(() => {
@@ -190,12 +200,14 @@ export function Tooltip({
       borderStyle: "solid",
     };
 
+    const offset = position.arrowOffset;
+
     switch (side) {
       case "top":
         return {
           ...base,
           bottom: -ARROW_SIZE,
-          left: "50%",
+          left: offset,
           transform: "translateX(-50%)",
           borderWidth: `${ARROW_SIZE}px ${ARROW_SIZE}px 0 ${ARROW_SIZE}px`,
           borderColor: `${styles.bg} transparent transparent transparent`,
@@ -204,7 +216,7 @@ export function Tooltip({
         return {
           ...base,
           top: -ARROW_SIZE,
-          left: "50%",
+          left: offset,
           transform: "translateX(-50%)",
           borderWidth: `0 ${ARROW_SIZE}px ${ARROW_SIZE}px ${ARROW_SIZE}px`,
           borderColor: `transparent transparent ${styles.bg} transparent`,
@@ -213,7 +225,7 @@ export function Tooltip({
         return {
           ...base,
           right: -ARROW_SIZE,
-          top: "50%",
+          top: offset,
           transform: "translateY(-50%)",
           borderWidth: `${ARROW_SIZE}px 0 ${ARROW_SIZE}px ${ARROW_SIZE}px`,
           borderColor: `transparent transparent transparent ${styles.bg}`,
@@ -222,7 +234,7 @@ export function Tooltip({
         return {
           ...base,
           left: -ARROW_SIZE,
-          top: "50%",
+          top: offset,
           transform: "translateY(-50%)",
           borderWidth: `${ARROW_SIZE}px ${ARROW_SIZE}px ${ARROW_SIZE}px 0`,
           borderColor: `transparent ${styles.bg} transparent transparent`,
