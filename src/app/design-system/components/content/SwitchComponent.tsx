@@ -517,7 +517,7 @@ function SizesDemo() {
         gap: 24,
       }}
     >
-      <div style={{ flex: "1 1 0%", display: "flex", flexDirection: "column", alignItems: "flex-start", justifyContent: "flex-start" }}>
+      <div style={{ flex: "1 1 0%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
         <Switch
           size="small"
           options={[
@@ -527,7 +527,7 @@ function SizesDemo() {
           defaultValue="source"
         />
       </div>
-      <div style={{ flex: "1 1 0%", display: "flex", flexDirection: "column", alignItems: "flex-start", justifyContent: "flex-start" }}>
+      <div style={{ flex: "1 1 0%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
         <Switch
           size="default"
           options={[
@@ -537,7 +537,7 @@ function SizesDemo() {
           defaultValue="source"
         />
       </div>
-      <div style={{ flex: "1 1 0%", display: "flex", flexDirection: "column", alignItems: "flex-start", justifyContent: "flex-start" }}>
+      <div style={{ flex: "1 1 0%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
         <Switch
           size="large"
           options={[
@@ -587,7 +587,7 @@ function IconDemo() {
         gap: 24,
       }}
     >
-      <div style={{ flex: "1 1 0%", display: "flex", flexDirection: "column", alignItems: "flex-start", justifyContent: "flex-start" }}>
+      <div style={{ flex: "1 1 0%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
         <Switch
           size="small"
           options={[
@@ -597,7 +597,7 @@ function IconDemo() {
           defaultValue="grid"
         />
       </div>
-      <div style={{ flex: "1 1 0%", display: "flex", flexDirection: "column", alignItems: "flex-start", justifyContent: "flex-start" }}>
+      <div style={{ flex: "1 1 0%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
         <Switch
           size="default"
           options={[
@@ -607,7 +607,7 @@ function IconDemo() {
           defaultValue="grid"
         />
       </div>
-      <div style={{ flex: "1 1 0%", display: "flex", flexDirection: "column", alignItems: "flex-start", justifyContent: "flex-start" }}>
+      <div style={{ flex: "1 1 0%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
         <Switch
           size="large"
           options={[
