@@ -486,80 +486,148 @@ export function Component(): JSX.Element {
 // Demo Components
 // ============================================================================
 
+function TooltipRow({ children }: { children: React.ReactNode }) {
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        flexWrap: "wrap",
+        alignItems: "stretch",
+        flex: "1 1 0%",
+        gap: 24,
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
+function TooltipCell({ children }: { children: React.ReactNode }) {
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        flex: "1 1 0%",
+        minWidth: 1,
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
 function DefaultDemo() {
   return (
-    <div className="flex items-center gap-6">
-      <Tooltip content="This is a tooltip" side="top">
-        <span>Top</span>
-      </Tooltip>
-      <Tooltip content="This is a tooltip" side="bottom">
-        <span>Bottom</span>
-      </Tooltip>
-      <Tooltip content="This is a tooltip" side="left">
-        <span>Left</span>
-      </Tooltip>
-      <Tooltip content="This is a tooltip" side="right">
-        <span>Right</span>
-      </Tooltip>
-    </div>
+    <TooltipRow>
+      <TooltipCell>
+        <Tooltip content="This is a tooltip" side="top">
+          <span>Top</span>
+        </Tooltip>
+      </TooltipCell>
+      <TooltipCell>
+        <Tooltip content="This is a tooltip" side="bottom">
+          <span>Bottom</span>
+        </Tooltip>
+      </TooltipCell>
+      <TooltipCell>
+        <Tooltip content="This is a tooltip" side="left">
+          <span>Left</span>
+        </Tooltip>
+      </TooltipCell>
+      <TooltipCell>
+        <Tooltip content="This is a tooltip" side="right">
+          <span>Right</span>
+        </Tooltip>
+      </TooltipCell>
+    </TooltipRow>
   );
 }
 
 function NoDelayDemo() {
   return (
-    <div className="flex items-center gap-6">
-      <Tooltip content="This is a tooltip" side="top" delay={0}>
-        <span>Top</span>
-      </Tooltip>
-      <Tooltip content="This is a tooltip" side="bottom" delay={0}>
-        <span>Bottom</span>
-      </Tooltip>
-      <Tooltip content="This is a tooltip" side="left" delay={0}>
-        <span>Left</span>
-      </Tooltip>
-      <Tooltip content="This is a tooltip" side="right" delay={0}>
-        <span>Right</span>
-      </Tooltip>
-    </div>
+    <TooltipRow>
+      <TooltipCell>
+        <Tooltip content="This is a tooltip" side="top" delay={0}>
+          <span>Top</span>
+        </Tooltip>
+      </TooltipCell>
+      <TooltipCell>
+        <Tooltip content="This is a tooltip" side="bottom" delay={0}>
+          <span>Bottom</span>
+        </Tooltip>
+      </TooltipCell>
+      <TooltipCell>
+        <Tooltip content="This is a tooltip" side="left" delay={0}>
+          <span>Left</span>
+        </Tooltip>
+      </TooltipCell>
+      <TooltipCell>
+        <Tooltip content="This is a tooltip" side="right" delay={0}>
+          <span>Right</span>
+        </Tooltip>
+      </TooltipCell>
+    </TooltipRow>
   );
 }
 
 function BoxAlignDemo() {
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex items-center gap-6">
-        <Tooltip content="Tooltip" side="bottom" align="start">
-          <span>Bottom/Start</span>
-        </Tooltip>
-        <Tooltip content="Tooltip" side="bottom" align="center">
-          <span>Bottom/Center</span>
-        </Tooltip>
-        <Tooltip content="Tooltip" side="bottom" align="end">
-          <span>Bottom/End</span>
-        </Tooltip>
-      </div>
-      <div className="flex items-center gap-6">
-        <Tooltip content="Tooltip" side="left" align="start">
-          <span>Left/Start</span>
-        </Tooltip>
-        <Tooltip content="Tooltip" side="left" align="center">
-          <span>Left/Center</span>
-        </Tooltip>
-        <Tooltip content="Tooltip" side="left" align="end">
-          <span>Left/End</span>
-        </Tooltip>
-      </div>
-      <div className="flex items-center gap-6">
-        <Tooltip content="Tooltip" side="right" align="start">
-          <span>Right/Start</span>
-        </Tooltip>
-        <Tooltip content="Tooltip" side="right" align="center">
-          <span>Right/Center</span>
-        </Tooltip>
-        <Tooltip content="Tooltip" side="right" align="end">
-          <span>Right/End</span>
-        </Tooltip>
-      </div>
+    <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+      <TooltipRow>
+        <TooltipCell>
+          <Tooltip content="Tooltip" side="bottom" align="start">
+            <span>Bottom/Start</span>
+          </Tooltip>
+        </TooltipCell>
+        <TooltipCell>
+          <Tooltip content="Tooltip" side="bottom" align="center">
+            <span>Bottom/Center</span>
+          </Tooltip>
+        </TooltipCell>
+        <TooltipCell>
+          <Tooltip content="Tooltip" side="bottom" align="end">
+            <span>Bottom/End</span>
+          </Tooltip>
+        </TooltipCell>
+      </TooltipRow>
+      <TooltipRow>
+        <TooltipCell>
+          <Tooltip content="Tooltip" side="left" align="start">
+            <span>Left/Start</span>
+          </Tooltip>
+        </TooltipCell>
+        <TooltipCell>
+          <Tooltip content="Tooltip" side="left" align="center">
+            <span>Left/Center</span>
+          </Tooltip>
+        </TooltipCell>
+        <TooltipCell>
+          <Tooltip content="Tooltip" side="left" align="end">
+            <span>Left/End</span>
+          </Tooltip>
+        </TooltipCell>
+      </TooltipRow>
+      <TooltipRow>
+        <TooltipCell>
+          <Tooltip content="Tooltip" side="right" align="start">
+            <span>Right/Start</span>
+          </Tooltip>
+        </TooltipCell>
+        <TooltipCell>
+          <Tooltip content="Tooltip" side="right" align="center">
+            <span>Right/Center</span>
+          </Tooltip>
+        </TooltipCell>
+        <TooltipCell>
+          <Tooltip content="Tooltip" side="right" align="end">
+            <span>Right/End</span>
+          </Tooltip>
+        </TooltipCell>
+      </TooltipRow>
     </div>
   );
 }
@@ -575,79 +643,101 @@ function CustomContentDemo() {
   );
 
   return (
-    <div className="flex items-center gap-6">
-      <Tooltip content={customContent} side="top">
-        <span>Top</span>
-      </Tooltip>
-      <Tooltip content={customContent} side="bottom">
-        <span>Bottom</span>
-      </Tooltip>
-      <Tooltip content={customContent} side="left">
-        <span>Left</span>
-      </Tooltip>
-      <Tooltip content={customContent} side="right">
-        <span>Right</span>
-      </Tooltip>
-    </div>
+    <TooltipRow>
+      <TooltipCell>
+        <Tooltip content={customContent} side="top">
+          <span>Top</span>
+        </Tooltip>
+      </TooltipCell>
+      <TooltipCell>
+        <Tooltip content={customContent} side="bottom">
+          <span>Bottom</span>
+        </Tooltip>
+      </TooltipCell>
+      <TooltipCell>
+        <Tooltip content={customContent} side="left">
+          <span>Left</span>
+        </Tooltip>
+      </TooltipCell>
+      <TooltipCell>
+        <Tooltip content={customContent} side="right">
+          <span>Right</span>
+        </Tooltip>
+      </TooltipCell>
+    </TooltipRow>
   );
 }
 
 function CustomTypeDemo() {
   return (
-    <div className="flex items-center gap-6">
-      <Tooltip content="Default" type="default" side="top">
-        <span>Default</span>
-      </Tooltip>
-      <Tooltip content="Success" type="success" side="top">
-        <span>Success</span>
-      </Tooltip>
-      <Tooltip content="Error" type="error" side="top">
-        <span>Error</span>
-      </Tooltip>
-      <Tooltip content="Warning" type="warning" side="top">
-        <span>Warning</span>
-      </Tooltip>
-    </div>
+    <TooltipRow>
+      <TooltipCell>
+        <Tooltip content="Default" type="default" side="top">
+          <span>Default</span>
+        </Tooltip>
+      </TooltipCell>
+      <TooltipCell>
+        <Tooltip content="Success" type="success" side="top">
+          <span>Success</span>
+        </Tooltip>
+      </TooltipCell>
+      <TooltipCell>
+        <Tooltip content="Error" type="error" side="top">
+          <span>Error</span>
+        </Tooltip>
+      </TooltipCell>
+      <TooltipCell>
+        <Tooltip content="Warning" type="warning" side="top">
+          <span>Warning</span>
+        </Tooltip>
+      </TooltipCell>
+    </TooltipRow>
   );
 }
 
 function ComponentsDemo() {
   return (
-    <div className="flex items-center gap-6">
-      <Tooltip content="Submit form" side="bottom">
-        <button
-          type="button"
-          className="px-3 py-1.5 rounded-md text-sm font-medium"
-          style={{
-            backgroundColor: "var(--ds-gray-1000)",
-            color: "var(--ds-background-100)",
-          }}
-        >
-          Button
-        </button>
-      </Tooltip>
-      <Tooltip content="Status indicator" side="left">
-        <span
-          className="px-2 py-0.5 rounded text-xs font-medium uppercase"
-          style={{
-            backgroundColor: "var(--ds-gray-100)",
-            color: "var(--ds-gray-900)",
-          }}
-        >
-          Badge
-        </span>
-      </Tooltip>
-    </div>
+    <TooltipRow>
+      <TooltipCell>
+        <Tooltip content="Submit form" side="bottom">
+          <button
+            type="button"
+            className="px-3 py-1.5 rounded-md text-sm font-medium"
+            style={{
+              backgroundColor: "var(--ds-gray-1000)",
+              color: "var(--ds-background-100)",
+            }}
+          >
+            Button
+          </button>
+        </Tooltip>
+      </TooltipCell>
+      <TooltipCell>
+        <Tooltip content="Status indicator" side="left">
+          <span
+            className="px-2 py-0.5 rounded text-xs font-medium uppercase"
+            style={{
+              backgroundColor: "var(--ds-gray-100)",
+              color: "var(--ds-gray-900)",
+            }}
+          >
+            Badge
+          </span>
+        </Tooltip>
+      </TooltipCell>
+    </TooltipRow>
   );
 }
 
 function OtherDemo() {
   return (
-    <div className="flex items-center gap-6">
-      <Tooltip content="No arrow" showArrow={false}>
-        <span>No tip indicator</span>
-      </Tooltip>
-    </div>
+    <TooltipRow>
+      <TooltipCell>
+        <Tooltip content="No arrow" showArrow={false}>
+          <span>No tip indicator</span>
+        </Tooltip>
+      </TooltipCell>
+    </TooltipRow>
   );
 }
 
