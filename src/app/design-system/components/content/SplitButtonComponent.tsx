@@ -387,8 +387,8 @@ function MenuAlignmentExample() {
       <SplitButton
         menuAlign="start"
         menuItems={[
-          { label: "Save as draft", onClick: () => {} },
-          { label: "Save and publish", onClick: () => {} },
+          { label: "Save", description: "Save changes", onClick: () => {} },
+          { label: "Save + Redeploy", description: "Save changes and create a new production deployment", onClick: () => {} },
         ]}
       >
         Save
@@ -396,8 +396,8 @@ function MenuAlignmentExample() {
       <SplitButton
         menuAlign="end"
         menuItems={[
-          { label: "Save as draft", onClick: () => {} },
-          { label: "Save and publish", onClick: () => {} },
+          { label: "Save", description: "Save changes", onClick: () => {} },
+          { label: "Save + Redeploy", description: "Save changes and create a new production deployment", onClick: () => {} },
         ]}
       >
         Save
@@ -428,8 +428,8 @@ function IconExample() {
 // ============================================================================
 
 const menuItems = [
-  { label: "Save as draft", onClick: () => {} },
-  { label: "Save and publish", onClick: () => {} },
+  { label: "Save", description: "Save changes", onClick: () => {} },
+  { label: "Save + Redeploy", description: "Save changes and create a new production deployment", onClick: () => {} },
 ];
 
 function DefaultDemo() {
