@@ -463,7 +463,7 @@ function DefaultDemo() {
 
 function MenuAlignmentDemo() {
   return (
-    <div className="flex flex-row gap-8">
+    <div className="flex flex-row items-start justify-start gap-8 flex-initial">
       <SplitButton menuAlign="start" menuItems={menuItems}>
         Save
       </SplitButton>
