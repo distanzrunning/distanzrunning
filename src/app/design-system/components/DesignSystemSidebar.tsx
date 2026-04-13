@@ -82,6 +82,7 @@ export const navigation: NavSection[] = [
       { id: "slider", label: "Slider" },
       { id: "snippet", label: "Snippet" },
       { id: "spinner", label: "Spinner" },
+      { id: "split-button", label: "Split Button" },
     ],
   },
 ];

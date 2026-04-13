@@ -68,6 +68,7 @@ import SkeletonComponent from "../components/content/SkeletonComponent";
 import SliderComponent from "../components/content/SliderComponent";
 import SnippetComponent from "../components/content/SnippetComponent";
 import SpinnerComponent from "../components/content/SpinnerComponent";
+import SplitButtonComponent from "../components/content/SplitButtonComponent";
 import MultiSelectComponent from "../components/content/MultiSelectComponent";
 import NoteComponent from "../components/content/NoteComponent";
 import CalendarComponent from "../components/content/CalendarComponent";
@@ -1027,6 +1028,21 @@ export default function DesignSystemPage() {
           onNavigate={handleNavigation}
         >
           <SpinnerComponent />
+        </ContentWithTOC>
+      );
+    }
+
+    if (activeSlug === "split-button") {
+      return (
+        <ContentWithTOC
+          tocTitle="On this page"
+          pageTitle="Split Button"
+          pageSubtitle="A button that offers a primary interaction coupled with a dropdown menu offering additional actions."
+          mainSectionId="split-button"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
+          <SplitButtonComponent />
         </ContentWithTOC>
       );
     }
