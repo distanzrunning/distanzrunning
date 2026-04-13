@@ -177,6 +177,7 @@ export function Switch({
               alignItems: "center",
               justifyContent: "center",
               flex: "1 1 0%",
+              height: config.height - config.containerPadding * 2,
               paddingLeft: config.paddingX,
               paddingRight: config.paddingX,
               fontSize: config.fontSize,
