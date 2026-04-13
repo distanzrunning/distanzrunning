@@ -483,6 +483,9 @@ export function Component(): JSX.Element {
       <Tooltip content="No arrow" showArrow={false}>
         <span>No tip indicator</span>
       </Tooltip>
+      <Tooltip content="Right aligned text" textAlign="right">
+        <span>No center text</span>
+      </Tooltip>
     </div>
   );
 }`;
@@ -728,6 +731,11 @@ function OtherDemo() {
       <TooltipCell>
         <Tooltip content="No arrow" showArrow={false}>
           <span>No tip indicator</span>
+        </Tooltip>
+      </TooltipCell>
+      <TooltipCell>
+        <Tooltip content="Right aligned text" textAlign="right">
+          <span>No center text</span>
         </Tooltip>
       </TooltipCell>
     </TooltipRow>

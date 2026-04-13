@@ -23,6 +23,8 @@ interface TooltipProps {
   showArrow?: boolean;
   /** Tooltip type/variant */
   type?: "default" | "success" | "error" | "warning";
+  /** Text alignment within the tooltip */
+  textAlign?: "left" | "center" | "right";
   /** The trigger element */
   children: React.ReactNode;
   /** Additional class for the wrapper */
@@ -61,6 +63,7 @@ export function Tooltip({
   delay = 200,
   showArrow = true,
   type = "default",
+  textAlign = "center",
   children,
   className = "",
 }: TooltipProps) {
@@ -252,6 +255,7 @@ export function Tooltip({
               padding: "4px 8px",
               borderRadius: 6,
               whiteSpace: "nowrap",
+              textAlign,
               boxShadow: "var(--ds-shadow-tooltip)",
             }}
           >
