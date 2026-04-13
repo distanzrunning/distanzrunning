@@ -313,16 +313,16 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
 function GridIcon({ size = 16 }: { size?: number }) {
   return (
     <svg
-      height={size}
+      height={16}
       strokeLinejoin="round"
       viewBox="0 0 16 16"
-      width={size}
-      style={{ color: "currentcolor" }}
+      width={16}
+      style={{ width: size, height: size, color: "currentcolor" }}
     >
       <path
         fillRule="evenodd"
         clipRule="evenodd"
-        d="M2 2H6.5V6.5H2V2ZM3.5 3.5V5H5V3.5H3.5ZM9.5 2H14V6.5H9.5V2ZM11 3.5V5H12.5V3.5H11ZM2 9.5H6.5V14H2V9.5ZM3.5 11V12.5H5V11H3.5ZM9.5 9.5H14V14H9.5V9.5ZM11 11V12.5H12.5V11H11Z"
+        d="M2.5 5.5V2.5H5.5V5.5H2.5ZM1 2C1 1.44772 1.44772 1 2 1H6C6.55228 1 7 1.44772 7 2V6C7 6.55228 6.55228 7 6 7H2C1.44772 7 1 6.55228 1 6V2ZM2.5 13.5V10.5H5.5V13.5H2.5ZM1 10C1 9.44772 1.44772 9 2 9H6C6.55228 9 7 9.44772 7 10V14C7 14.5523 6.55228 15 6 15H2C1.44772 15 1 14.5523 1 14V10ZM10.5 2.5V5.5H13.5V2.5H10.5ZM10 1C9.44772 1 9 1.44772 9 2V6C9 6.55228 9.44772 7 10 7H14C14.5523 7 15 6.55228 15 6V2C15 1.44772 14.5523 1 14 1H10ZM10.5 13.5V10.5H13.5V13.5H10.5ZM9 10C9 9.44772 9.44772 9 10 9H14C14.5523 9 15 9.44772 15 10V14C15 14.5523 14.5523 15 14 15H10C9.44772 15 9 14.5523 9 14V10Z"
         fill="currentColor"
       />
     </svg>
@@ -332,16 +332,16 @@ function GridIcon({ size = 16 }: { size?: number }) {
 function ListIcon({ size = 16 }: { size?: number }) {
   return (
     <svg
-      height={size}
+      height={16}
       strokeLinejoin="round"
       viewBox="0 0 16 16"
-      width={size}
-      style={{ color: "currentcolor" }}
+      width={16}
+      style={{ width: size, height: size, color: "currentcolor" }}
     >
       <path
         fillRule="evenodd"
         clipRule="evenodd"
-        d="M2 4H14V5.5H2V4ZM2 7.25H14V8.75H2V7.25ZM14 10.5H2V12H14V10.5Z"
+        d="M2.5 4C3.19036 4 3.75 3.44036 3.75 2.75C3.75 2.05964 3.19036 1.5 2.5 1.5C1.80964 1.5 1.25 2.05964 1.25 2.75C1.25 3.44036 1.80964 4 2.5 4ZM2.5 9.25C3.19036 9.25 3.75 8.69036 3.75 8C3.75 7.30964 3.19036 6.75 2.5 6.75C1.80964 6.75 1.25 7.30964 1.25 8C1.25 8.69036 1.80964 9.25 2.5 9.25ZM3.75 13.25C3.75 13.9404 3.19036 14.5 2.5 14.5C1.80964 14.5 1.25 13.9404 1.25 13.25C1.25 12.5596 1.80964 12 2.5 12C3.19036 12 3.75 12.5596 3.75 13.25ZM6.75 2H6V3.5H6.75H14.25H15V2H14.25H6.75ZM6.75 7.25H6V8.75H6.75H14.25H15V7.25H14.25H6.75ZM6.75 12.5H6V14H6.75H14.25H15V12.5H14.25H6.75Z"
         fill="currentColor"
       />
     </svg>
