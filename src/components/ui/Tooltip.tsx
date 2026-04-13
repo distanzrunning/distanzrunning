@@ -252,9 +252,8 @@ export function Tooltip({
               fontSize: 13,
               lineHeight: "20px",
               fontWeight: 400,
-              padding: "4px 8px",
+              padding: "6px 12px",
               borderRadius: 6,
-              whiteSpace: "nowrap",
               textAlign,
               boxShadow: "var(--ds-shadow-tooltip)",
             }}
