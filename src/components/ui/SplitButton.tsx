@@ -9,6 +9,7 @@ import React, { useState, useRef, useEffect } from "react";
 interface SplitButtonMenuItem {
   label: string;
   description?: string;
+  icon?: React.ReactNode;
   onClick: () => void;
 }
 
@@ -267,15 +268,20 @@ export function SplitButton({
               }}
             >
               <span className="flex flex-col gap-y-1">
-                <span
-                  style={{
-                    fontSize: 14,
-                    lineHeight: "20px",
-                    fontWeight: 500,
-                    color: "var(--ds-gray-1000)",
-                  }}
-                >
-                  {item.label}
+                <span className="flex items-center gap-x-2">
+                  {item.icon && (
+                    <span className="w-4 h-4 flex-shrink-0">{item.icon}</span>
+                  )}
+                  <span
+                    style={{
+                      fontSize: 14,
+                      lineHeight: "20px",
+                      fontWeight: 500,
+                      color: "var(--ds-gray-1000)",
+                    }}
+                  >
+                    {item.label}
+                  </span>
                 </span>
                 {item.description && (
                   <span
