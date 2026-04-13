@@ -46,15 +46,22 @@ export function Tabs({
 
   const containerStyle: React.CSSProperties = {
     display: "flex",
+    flexWrap: "nowrap",
+    alignItems: "baseline",
     overflowX: "auto",
+    columnGap: 24,
+    height: 48,
+    paddingBottom: 1,
+    scrollbarWidth: "none",
     ...(variant === "default"
-      ? { borderBottom: "1px solid var(--ds-gray-400)" }
+      ? { boxShadow: "rgb(234, 234, 234) 0px -1px 0px 0px inset" }
       : {}),
   };
 
   return (
     <div
       role="tablist"
+      aria-orientation="horizontal"
       style={containerStyle}
       className={className}
     >
@@ -65,34 +72,37 @@ export function Tabs({
         const buttonStyle: React.CSSProperties = {
           display: "flex",
           alignItems: "center",
-          gap: "6px",
-          padding: "8px 12px",
-          fontSize: "14px",
-          fontWeight: isSelected ? 500 : 400,
-          color: isSelected
-            ? "var(--ds-gray-1000)"
-            : "var(--ds-gray-900)",
-          background: "none",
+          gap: 6,
+          padding: "14px 2px",
+          fontSize: 14,
+          fontWeight: 400,
+          color: isDisabled
+            ? "var(--ds-gray-600)"
+            : isSelected
+              ? "var(--ds-gray-1000)"
+              : "var(--ds-gray-900)",
+          backgroundColor: "transparent",
           border: "none",
+          borderBottom: "2px solid transparent",
           cursor: isDisabled ? "not-allowed" : "pointer",
-          opacity: isDisabled ? 0.5 : 1,
           pointerEvents: isDisabled ? "none" : "auto",
-          transition: "color 150ms ease",
           whiteSpace: "nowrap",
-          position: "relative",
-          ...(variant === "default"
+          height: 48,
+          marginBottom: -1,
+          outline: "none",
+          ...(variant === "default" && isSelected
+            ? { borderBottomColor: "var(--ds-gray-1000)" }
+            : {}),
+          ...(variant === "secondary"
             ? {
-                marginBottom: "-1px",
-                borderBottom: isSelected
-                  ? "2px solid var(--ds-gray-1000)"
-                  : "2px solid transparent",
-              }
-            : {
-                borderRadius: "6px",
-                background: isSelected
+                borderBottom: "none",
+                borderRadius: 6,
+                backgroundColor: isSelected
                   ? "var(--ds-gray-100)"
-                  : "none",
-              }),
+                  : "transparent",
+                marginBottom: 0,
+              }
+            : {}),
         };
 
         return (
