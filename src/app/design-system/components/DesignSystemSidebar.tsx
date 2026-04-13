@@ -86,6 +86,7 @@ export const navigation: NavSection[] = [
       { id: "status-dot", label: "Status Dot" },
       { id: "switch", label: "Switch" },
       { id: "table", label: "Table" },
+      { id: "tabs", label: "Tabs" },
       { id: "tooltip", label: "Tooltip" },
     ],
   },

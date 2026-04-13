@@ -72,6 +72,7 @@ import SplitButtonComponent from "../components/content/SplitButtonComponent";
 import StatusDotComponent from "../components/content/StatusDotComponent";
 import SwitchComponent from "../components/content/SwitchComponent";
 import TableComponent from "../components/content/TableComponent";
+import TabsComponent from "../components/content/TabsComponent";
 import TooltipComponent from "../components/content/TooltipComponent";
 import MultiSelectComponent from "../components/content/MultiSelectComponent";
 import NoteComponent from "../components/content/NoteComponent";
@@ -488,6 +489,21 @@ export default function DesignSystemPage() {
           onNavigate={handleNavigation}
         >
           <TableComponent />
+        </ContentWithTOC>
+      );
+    }
+
+    if (activeSlug === "tabs") {
+      return (
+        <ContentWithTOC
+          tocTitle="On this page"
+          pageTitle="Tabs"
+          pageSubtitle="A set of layered sections of content, known as tab panels, that are displayed one at a time."
+          mainSectionId="tabs"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
+          <TabsComponent />
         </ContentWithTOC>
       );
     }
