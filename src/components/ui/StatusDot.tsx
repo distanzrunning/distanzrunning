@@ -49,7 +49,7 @@ export function StatusDot({ status, label, className }: StatusDotProps) {
         <span
           style={{
             fontSize: 14,
-            lineHeight: "20px",
+            lineHeight: "16px",
             color: "var(--ds-gray-1000)",
             marginLeft: 8,
           }}
