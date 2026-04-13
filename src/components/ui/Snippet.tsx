@@ -129,7 +129,8 @@ export function Snippet({
         border: "1px solid rgba(0, 0, 0, 0.08)",
         background: dark ? "var(--ds-gray-1000)" : "var(--ds-background-100)",
         color: dark ? "var(--ds-background-100)" : "var(--ds-gray-1000)",
-        borderLeft: hasVariantBorder ? `3px solid ${borderColor}` : undefined,
+        borderLeftWidth: hasVariantBorder ? 3 : 1,
+        borderLeftColor: hasVariantBorder ? borderColor : "rgba(0, 0, 0, 0.08)",
         position: "relative",
       }}
     >
@@ -169,6 +170,7 @@ export function Snippet({
         type="button"
         onClick={handleCopy}
         aria-label="Copy to clipboard"
+        className="ds-snippet-copy-btn"
         style={{
           position: "absolute",
           right: 4,
@@ -184,7 +186,15 @@ export function Snippet({
           background: "transparent",
           color: dark ? "var(--ds-gray-400)" : "var(--ds-gray-1000)",
           cursor: "pointer",
-          transition: "opacity 0.15s ease",
+          transition: "opacity 0.15s ease, background 0.15s ease",
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.background = dark
+            ? "var(--ds-gray-800)"
+            : "var(--ds-gray-200)";
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.background = "transparent";
         }}
       >
         <div style={{ position: "relative", height: 16, width: 16 }}>
