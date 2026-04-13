@@ -9,6 +9,7 @@ import {
   type DualThemeToken,
 } from "@/components/ui/useShikiHighlighter";
 import { Tabs } from "@/components/ui/Tabs";
+import { SiAdidas, SiNewbalance, SiNike } from "react-icons/si";
 
 // ============================================================================
 // Toast Component
@@ -359,23 +360,18 @@ export function Component(): JSX.Element {
 }`;
 
 const withIconsCode = `import { Tabs } from '@/components/ui/Tabs';
+import { SiAdidas, SiNewbalance, SiNike } from 'react-icons/si';
 import type { JSX } from 'react';
-
-const CircleIcon = (
-  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-    <circle cx="8" cy="8" r="6" stroke="currentColor" strokeWidth="1.5" />
-  </svg>
-);
 
 export function Component(): JSX.Element {
   return (
     <Tabs
       tabs={[
-        { value: 'github', label: 'GitHub', icon: CircleIcon },
-        { value: 'gitlab', label: 'GitLab', icon: CircleIcon },
-        { value: 'bitbucket', label: 'Bitbucket', icon: CircleIcon },
+        { value: 'adidas', label: 'Adidas', icon: <SiAdidas size={16} /> },
+        { value: 'new-balance', label: 'New Balance', icon: <SiNewbalance size={16} /> },
+        { value: 'nike', label: 'Nike', icon: <SiNike size={16} /> },
       ]}
-      defaultValue="github"
+      defaultValue="adidas"
     />
   );
 }`;
@@ -383,22 +379,16 @@ export function Component(): JSX.Element {
 const secondaryCode = `import { Tabs } from '@/components/ui/Tabs';
 import type { JSX } from 'react';
 
-const CircleIcon = (
-  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-    <circle cx="8" cy="8" r="6" stroke="currentColor" strokeWidth="1.5" />
-  </svg>
-);
-
 export function Component(): JSX.Element {
   return (
     <Tabs
       variant="secondary"
       tabs={[
-        { value: 'github', label: 'GitHub', icon: CircleIcon },
-        { value: 'gitlab', label: 'GitLab', icon: CircleIcon },
-        { value: 'bitbucket', label: 'Bitbucket', icon: CircleIcon, disabled: true },
+        { value: 'adidas', label: 'Adidas' },
+        { value: 'new-balance', label: 'New Balance' },
+        { value: 'nike', label: 'Nike', disabled: true },
       ]}
-      defaultValue="github"
+      defaultValue="adidas"
     />
   );
 }`;
@@ -406,12 +396,6 @@ export function Component(): JSX.Element {
 // ============================================================================
 // Demo Components
 // ============================================================================
-
-const CircleIcon = (
-  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-    <circle cx="8" cy="8" r="6" stroke="currentColor" strokeWidth="1.5" />
-  </svg>
-);
 
 function DefaultDemo() {
   return (
@@ -457,11 +441,11 @@ function WithIconsDemo() {
   return (
     <Tabs
       tabs={[
-        { value: "github", label: "GitHub", icon: CircleIcon },
-        { value: "gitlab", label: "GitLab", icon: CircleIcon },
-        { value: "bitbucket", label: "Bitbucket", icon: CircleIcon },
+        { value: "adidas", label: "Adidas", icon: <SiAdidas size={16} /> },
+        { value: "new-balance", label: "New Balance", icon: <SiNewbalance size={16} /> },
+        { value: "nike", label: "Nike", icon: <SiNike size={16} /> },
       ]}
-      defaultValue="github"
+      defaultValue="adidas"
     />
   );
 }
@@ -471,16 +455,11 @@ function SecondaryDemo() {
     <Tabs
       variant="secondary"
       tabs={[
-        { value: "github", label: "GitHub", icon: CircleIcon },
-        { value: "gitlab", label: "GitLab", icon: CircleIcon },
-        {
-          value: "bitbucket",
-          label: "Bitbucket",
-          icon: CircleIcon,
-          disabled: true,
-        },
+        { value: "adidas", label: "Adidas" },
+        { value: "new-balance", label: "New Balance" },
+        { value: "nike", label: "Nike", disabled: true },
       ]}
-      defaultValue="github"
+      defaultValue="adidas"
     />
   );
 }
