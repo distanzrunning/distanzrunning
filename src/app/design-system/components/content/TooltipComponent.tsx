@@ -719,7 +719,7 @@ function ComponentsDemo() {
       </TooltipCell>
       <TooltipCell>
         <Tooltip content="The Evil Rabbit Jumped over the Fence multiple times." side="left">
-          <Badge variant="gray" size="sm">LEFT</Badge>
+          <span style={{ display: "inline-flex" }}><Badge variant="gray" size="sm">LEFT</Badge></span>
         </Tooltip>
       </TooltipCell>
       <TooltipCell>
