@@ -36,10 +36,10 @@ const Table = forwardRef<HTMLTableElement, TableProps>(
           <table
             ref={ref}
             className={cn(
-              "w-full caption-bottom text-sm",
+              "w-full caption-bottom",
               className,
             )}
-            style={{ color: "var(--ds-gray-900)" }}
+            style={{ color: "var(--ds-gray-900)", fontSize: 14, lineHeight: "20px" }}
             {...props}
           >
             {children}
