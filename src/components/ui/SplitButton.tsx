@@ -221,7 +221,9 @@ export function SplitButton({
           e.currentTarget.style.backgroundColor = bgColor;
         }}
       >
-        {children}
+        <span style={{ display: "block", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", padding: "0 6px" }}>
+          {children}
+        </span>
       </button>
 
       {/* Divider */}
@@ -243,7 +245,9 @@ export function SplitButton({
           e.currentTarget.style.backgroundColor = bgColor;
         }}
       >
-        <ChevronDownIcon size={s.iconSize} />
+        <span style={{ display: "flex", alignItems: "center", justifyContent: "center", height: 16, padding: "0 6px" }}>
+          <ChevronDownIcon />
+        </span>
       </button>
 
       {/* Dropdown menu */}
