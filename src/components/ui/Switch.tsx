@@ -52,33 +52,33 @@ const sizeConfig: Record<
   }
 > = {
   small: {
-    height: 28,
+    height: 32,
     fontSize: 12,
     lineHeight: "16px",
     paddingX: 8,
-    containerPadding: 2,
-    borderRadius: 8,
-    innerRadius: 6,
-    iconSize: 14,
+    containerPadding: 3,
+    borderRadius: 5,
+    innerRadius: 2,
+    iconSize: 16,
   },
   default: {
-    height: 34,
-    fontSize: 13,
+    height: 40,
+    fontSize: 14,
     lineHeight: "20px",
     paddingX: 12,
-    containerPadding: 2,
-    borderRadius: 8,
-    innerRadius: 6,
+    containerPadding: 4,
+    borderRadius: 6,
+    innerRadius: 2,
     iconSize: 16,
   },
   large: {
-    height: 42,
+    height: 48,
     fontSize: 14,
     lineHeight: "20px",
     paddingX: 16,
-    containerPadding: 3,
-    borderRadius: 10,
-    innerRadius: 7,
+    containerPadding: 4,
+    borderRadius: 8,
+    innerRadius: 4,
     iconSize: 20,
   },
 };
@@ -119,12 +119,14 @@ export function Switch({
 
   const containerStyle: React.CSSProperties = {
     display: fullWidth ? "flex" : "inline-flex",
-    alignItems: "center",
+    alignItems: "stretch",
     padding: config.containerPadding,
     borderRadius: config.borderRadius,
-    backgroundColor: "var(--ds-gray-100)",
+    backgroundColor: "var(--ds-background-100)",
+    boxShadow: "rgba(0, 0, 0, 0.08) 0px 0px 0px 1px",
     position: "relative",
     width: fullWidth ? "100%" : undefined,
+    gap: 0,
   };
 
   return (
@@ -145,36 +147,9 @@ export function Switch({
             key={option.value}
             style={{
               display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              height: config.height - config.containerPadding * 2,
-              paddingLeft: config.paddingX,
-              paddingRight: config.paddingX,
-              fontSize: config.fontSize,
-              lineHeight: config.lineHeight,
-              fontWeight: 500,
-              borderRadius: config.innerRadius,
-              cursor: isDisabled ? "not-allowed" : "pointer",
-              position: "relative",
-              zIndex: isSelected ? 1 : 0,
-              flex: fullWidth ? 1 : undefined,
-              userSelect: "none",
-              transition:
-                "background-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease",
-              backgroundColor: isSelected
-                ? "var(--ds-background-100)"
-                : "transparent",
-              color: isDisabled
-                ? "var(--ds-gray-700)"
-                : isSelected
-                  ? "var(--ds-gray-1000)"
-                  : "var(--ds-gray-900)",
-              boxShadow: isSelected
-                ? "rgba(0, 0, 0, 0.06) 0px 2px 4px 0px, rgba(0, 0, 0, 0.04) 0px 0px 0px 1px"
-                : "none",
-              gap: isIconOnly ? 0 : 6,
-              minWidth: isIconOnly ? config.height - config.containerPadding * 2 : undefined,
-              opacity: isDisabled ? 0.5 : 1,
+              flex: "1 1 0%",
+              alignSelf: "stretch",
+              cursor: "default",
             }}
           >
             <input
@@ -196,6 +171,35 @@ export function Switch({
                 borderWidth: 0,
               }}
             />
+            <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              flex: "1 1 0%",
+              paddingLeft: config.paddingX,
+              paddingRight: config.paddingX,
+              fontSize: config.fontSize,
+              lineHeight: config.lineHeight,
+              fontWeight: 500,
+              borderRadius: config.innerRadius,
+              cursor: isDisabled ? "not-allowed" : "pointer",
+              position: "relative",
+              userSelect: "none",
+              transition: "color 0.15s ease",
+              backgroundColor: isSelected
+                ? "var(--ds-gray-100)"
+                : "transparent",
+              color: isDisabled
+                ? "var(--ds-gray-700)"
+                : isSelected
+                  ? "var(--ds-gray-1000)"
+                  : "var(--ds-gray-800)",
+              gap: isIconOnly ? 0 : 6,
+              minWidth: isIconOnly ? config.height - config.containerPadding * 2 : undefined,
+              opacity: isDisabled ? 0.5 : 1,
+            }}
+          >
             {hasIcon && (
               <span
                 style={{
@@ -211,6 +215,7 @@ export function Switch({
               </span>
             )}
             {hasLabel && <span>{option.label}</span>}
+            </div>
           </label>
         );
       })}
