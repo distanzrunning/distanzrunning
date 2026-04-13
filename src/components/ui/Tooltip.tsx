@@ -36,7 +36,8 @@ interface TooltipProps {
 // ============================================================================
 
 const ARROW_SIZE = 5;
-const TOOLTIP_OFFSET = 16;
+const ARROW_GAP = 4; // gap between arrow tip and trigger
+const TOOLTIP_OFFSET = ARROW_SIZE + ARROW_GAP;
 
 // ============================================================================
 // Type colors
