@@ -70,6 +70,8 @@ import SnippetComponent from "../components/content/SnippetComponent";
 import SpinnerComponent from "../components/content/SpinnerComponent";
 import SplitButtonComponent from "../components/content/SplitButtonComponent";
 import StatusDotComponent from "../components/content/StatusDotComponent";
+import SwitchComponent from "../components/content/SwitchComponent";
+import TooltipComponent from "../components/content/TooltipComponent";
 import MultiSelectComponent from "../components/content/MultiSelectComponent";
 import NoteComponent from "../components/content/NoteComponent";
 import CalendarComponent from "../components/content/CalendarComponent";
@@ -451,7 +453,7 @@ export default function DesignSystemPage() {
       );
     }
 
-    if (activeSlug === "toggle" || activeSlug === "switch") {
+    if (activeSlug === "toggle") {
       return (
         <ContentWithTOC
           tocTitle="On this page"
@@ -459,6 +461,30 @@ export default function DesignSystemPage() {
           onNavigate={handleNavigation}
         >
           <ToggleComponent />
+        </ContentWithTOC>
+      );
+    }
+
+    if (activeSlug === "switch") {
+      return (
+        <ContentWithTOC
+          tocTitle="On this page"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
+          <SwitchComponent />
+        </ContentWithTOC>
+      );
+    }
+
+    if (activeSlug === "tooltip") {
+      return (
+        <ContentWithTOC
+          tocTitle="On this page"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
+          <TooltipComponent />
         </ContentWithTOC>
       );
     }
