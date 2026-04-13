@@ -9,6 +9,7 @@ import {
   type DualThemeToken,
 } from "@/components/ui/useShikiHighlighter";
 import { Switch } from "@/components/ui/Switch";
+import { Tooltip } from "@/components/ui/Tooltip";
 
 // ============================================================================
 // Toast Component
@@ -406,31 +407,19 @@ import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
   return (
-    <div className="flex flex-col items-start gap-6">
-      <Switch
-        size="small"
-        options={[
-          { value: 'source', label: 'Source' },
-          { value: 'output', label: 'Output' },
-        ]}
-        defaultValue="source"
-      />
-      <Switch
-        size="default"
-        options={[
-          { value: 'source', label: 'Source' },
-          { value: 'output', label: 'Output' },
-        ]}
-        defaultValue="source"
-      />
-      <Switch
-        size="large"
-        options={[
-          { value: 'source', label: 'Source' },
-          { value: 'output', label: 'Output' },
-        ]}
-        defaultValue="source"
-      />
+    <div className="flex items-start gap-6">
+      <Switch size="small" options={[
+        { value: 'source', label: 'Source' },
+        { value: 'output', label: 'Output' },
+      ]} defaultValue="source" />
+      <Switch size="default" options={[
+        { value: 'source', label: 'Source' },
+        { value: 'output', label: 'Output' },
+      ]} defaultValue="source" />
+      <Switch size="large" options={[
+        { value: 'source', label: 'Source' },
+        { value: 'output', label: 'Output' },
+      ]} defaultValue="source" />
     </div>
   );
 }`;
@@ -451,19 +440,42 @@ export function Component(): JSX.Element {
   );
 }`;
 
-const iconCode = `import { Switch } from '@/components/ui/Switch';
+const tooltipCode = `import { Switch } from '@/components/ui/Switch';
+import { Tooltip } from '@/components/ui/Tooltip';
 import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
   return (
     <Switch
+      size="large"
       options={[
-        { value: 'grid', icon: <GridIcon /> },
-        { value: 'list', icon: <ListIcon /> },
-        { value: 'layout', icon: <LayoutIcon /> },
+        { value: 'source', label: 'Source' },
+        { value: 'output', label: 'Output' },
       ]}
-      defaultValue="grid"
+      defaultValue="source"
     />
+  );
+}`;
+
+const iconCode = `import { Switch } from '@/components/ui/Switch';
+import type { JSX } from 'react';
+
+export function Component(): JSX.Element {
+  return (
+    <div className="flex items-start gap-6">
+      <Switch size="small" options={[
+        { value: 'grid', icon: <GridIcon size={16} /> },
+        { value: 'list', icon: <ListIcon size={16} /> },
+      ]} defaultValue="grid" />
+      <Switch size="default" options={[
+        { value: 'grid', icon: <GridIcon size={16} /> },
+        { value: 'list', icon: <ListIcon size={16} /> },
+      ]} defaultValue="grid" />
+      <Switch size="large" options={[
+        { value: 'grid', icon: <GridIcon size={20} /> },
+        { value: 'list', icon: <ListIcon size={20} /> },
+      ]} defaultValue="grid" />
+    </div>
   );
 }`;
 
@@ -498,31 +510,45 @@ function DisabledDemo() {
 
 function SizesDemo() {
   return (
-    <div className="flex flex-col items-start gap-6">
-      <Switch
-        size="small"
-        options={[
-          { value: "source", label: "Source" },
-          { value: "output", label: "Output" },
-        ]}
-        defaultValue="source"
-      />
-      <Switch
-        size="default"
-        options={[
-          { value: "source", label: "Source" },
-          { value: "output", label: "Output" },
-        ]}
-        defaultValue="source"
-      />
-      <Switch
-        size="large"
-        options={[
-          { value: "source", label: "Source" },
-          { value: "output", label: "Output" },
-        ]}
-        defaultValue="source"
-      />
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        flexWrap: "wrap",
+        alignItems: "stretch",
+        gap: 24,
+      }}
+    >
+      <div style={{ flex: "1 1 0%", display: "flex", flexDirection: "column", alignItems: "flex-start", justifyContent: "flex-start" }}>
+        <Switch
+          size="small"
+          options={[
+            { value: "source", label: "Source" },
+            { value: "output", label: "Output" },
+          ]}
+          defaultValue="source"
+        />
+      </div>
+      <div style={{ flex: "1 1 0%", display: "flex", flexDirection: "column", alignItems: "flex-start", justifyContent: "flex-start" }}>
+        <Switch
+          size="default"
+          options={[
+            { value: "source", label: "Source" },
+            { value: "output", label: "Output" },
+          ]}
+          defaultValue="source"
+        />
+      </div>
+      <div style={{ flex: "1 1 0%", display: "flex", flexDirection: "column", alignItems: "flex-start", justifyContent: "flex-start" }}>
+        <Switch
+          size="large"
+          options={[
+            { value: "source", label: "Source" },
+            { value: "output", label: "Output" },
+          ]}
+          defaultValue="source"
+        />
+      </div>
     </div>
   );
 }
@@ -540,16 +566,61 @@ function FullWidthDemo() {
   );
 }
 
-function IconDemo() {
+function TooltipDemo() {
   return (
     <Switch
+      size="large"
       options={[
-        { value: "grid", icon: <GridIcon /> },
-        { value: "list", icon: <ListIcon /> },
-        { value: "layout", icon: <LayoutIcon /> },
+        { value: "source", label: "Source" },
+        { value: "output", label: "Output" },
       ]}
-      defaultValue="grid"
+      defaultValue="source"
     />
+  );
+}
+
+function IconDemo() {
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        flexWrap: "wrap",
+        alignItems: "stretch",
+        gap: 24,
+      }}
+    >
+      <div style={{ flex: "1 1 0%", display: "flex", flexDirection: "column", alignItems: "flex-start", justifyContent: "flex-start" }}>
+        <Switch
+          size="small"
+          options={[
+            { value: "grid", icon: <GridIcon size={16} /> },
+            { value: "list", icon: <ListIcon size={16} /> },
+          ]}
+          defaultValue="grid"
+        />
+      </div>
+      <div style={{ flex: "1 1 0%", display: "flex", flexDirection: "column", alignItems: "flex-start", justifyContent: "flex-start" }}>
+        <Switch
+          size="default"
+          options={[
+            { value: "grid", icon: <GridIcon size={16} /> },
+            { value: "list", icon: <ListIcon size={16} /> },
+          ]}
+          defaultValue="grid"
+        />
+      </div>
+      <div style={{ flex: "1 1 0%", display: "flex", flexDirection: "column", alignItems: "flex-start", justifyContent: "flex-start" }}>
+        <Switch
+          size="large"
+          options={[
+            { value: "grid", icon: <GridIcon size={20} /> },
+            { value: "list", icon: <ListIcon size={20} /> },
+          ]}
+          defaultValue="grid"
+        />
+      </div>
+    </div>
   );
 }
 
@@ -566,6 +637,9 @@ export default function SwitchComponent() {
         <SectionHeader id="default" onCopyLink={showToast}>
           Default
         </SectionHeader>
+        <p className="mt-2 leading-6 xl:mt-4" style={{ color: "var(--ds-gray-900)" }}>
+          Ensure the width of each item is wide enough to prevent jumping when active.
+        </p>
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={defaultCode}>
             <DefaultDemo />
@@ -602,6 +676,17 @@ export default function SwitchComponent() {
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={fullWidthCode}>
             <FullWidthDemo />
+          </CodePreview>
+        </div>
+      </Section>
+
+      <Section>
+        <SectionHeader id="tooltip" onCopyLink={showToast}>
+          Tooltip
+        </SectionHeader>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={tooltipCode}>
+            <TooltipDemo />
           </CodePreview>
         </div>
       </Section>

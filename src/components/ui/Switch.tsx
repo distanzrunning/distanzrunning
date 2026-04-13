@@ -79,7 +79,7 @@ const sizeConfig: Record<
     containerPadding: 3,
     borderRadius: 10,
     innerRadius: 7,
-    iconSize: 16,
+    iconSize: 20,
   },
 };
 
