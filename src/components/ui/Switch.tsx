@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useId } from "react";
+import { Tooltip } from "./Tooltip";
 
 // ============================================================================
 // Types
@@ -11,6 +12,7 @@ interface SwitchOption {
   label?: string;
   icon?: React.ReactNode;
   disabled?: boolean;
+  tooltip?: string;
 }
 
 interface SwitchProps {
@@ -142,7 +144,7 @@ export function Switch({
         const hasIcon = !!option.icon;
         const isIconOnly = hasIcon && !hasLabel;
 
-        return (
+        const labelElement = (
           <label
             key={option.value}
             style={{
@@ -172,53 +174,63 @@ export function Switch({
               }}
             />
             <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              flex: "1 1 0%",
-              height: config.height - config.containerPadding * 2,
-              paddingLeft: config.paddingX,
-              paddingRight: config.paddingX,
-              fontSize: config.fontSize,
-              lineHeight: config.lineHeight,
-              fontWeight: 500,
-              borderRadius: config.innerRadius,
-              cursor: isDisabled ? "not-allowed" : "pointer",
-              pointerEvents: isDisabled ? "none" : undefined,
-              position: "relative",
-              userSelect: "none",
-              transition: "color 0.15s ease",
-              backgroundColor: isSelected
-                ? "var(--ds-gray-100)"
-                : "transparent",
-              color: isDisabled
-                ? "var(--ds-gray-600)"
-                : isSelected
-                  ? "var(--ds-gray-1000)"
-                  : "var(--ds-gray-800)",
-              gap: isIconOnly ? 0 : 6,
-              minWidth: isIconOnly ? config.height - config.containerPadding * 2 : undefined,
-            }}
-          >
-            {hasIcon && (
-              <span
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  width: config.iconSize,
-                  height: config.iconSize,
-                  flexShrink: 0,
-                }}
-              >
-                {option.icon}
-              </span>
-            )}
-            {hasLabel && <span>{option.label}</span>}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flex: "1 1 0%",
+                height: config.height - config.containerPadding * 2,
+                paddingLeft: config.paddingX,
+                paddingRight: config.paddingX,
+                fontSize: config.fontSize,
+                lineHeight: config.lineHeight,
+                fontWeight: 500,
+                borderRadius: config.innerRadius,
+                cursor: isDisabled ? "not-allowed" : "pointer",
+                pointerEvents: isDisabled ? "none" : undefined,
+                position: "relative",
+                userSelect: "none",
+                transition: "color 0.15s ease",
+                backgroundColor: isSelected
+                  ? "var(--ds-gray-100)"
+                  : "transparent",
+                color: isDisabled
+                  ? "var(--ds-gray-600)"
+                  : isSelected
+                    ? "var(--ds-gray-1000)"
+                    : "var(--ds-gray-800)",
+                gap: isIconOnly ? 0 : 6,
+                minWidth: isIconOnly ? config.height - config.containerPadding * 2 : undefined,
+              }}
+            >
+              {hasIcon && (
+                <span
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: config.iconSize,
+                    height: config.iconSize,
+                    flexShrink: 0,
+                  }}
+                >
+                  {option.icon}
+                </span>
+              )}
+              {hasLabel && <span>{option.label}</span>}
             </div>
           </label>
         );
+
+        if (option.tooltip) {
+          return (
+            <Tooltip key={option.value} content={option.tooltip} side="top">
+              {labelElement}
+            </Tooltip>
+          );
+        }
+
+        return labelElement;
       })}
     </div>
   );

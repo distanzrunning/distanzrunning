@@ -441,7 +441,6 @@ export function Component(): JSX.Element {
 }`;
 
 const tooltipCode = `import { Switch } from '@/components/ui/Switch';
-import { Tooltip } from '@/components/ui/Tooltip';
 import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
@@ -449,8 +448,8 @@ export function Component(): JSX.Element {
     <Switch
       size="large"
       options={[
-        { value: 'source', label: 'Source' },
-        { value: 'output', label: 'Output' },
+        { value: 'source', label: 'Source', tooltip: 'View Source' },
+        { value: 'output', label: 'Output', tooltip: 'View Output' },
       ]}
       defaultValue="source"
     />
@@ -571,8 +570,8 @@ function TooltipDemo() {
     <Switch
       size="large"
       options={[
-        { value: "source", label: "Source" },
-        { value: "output", label: "Output" },
+        { value: "source", label: "Source", tooltip: "View Source" },
+        { value: "output", label: "Output", tooltip: "View Output" },
       ]}
       defaultValue="source"
     />
