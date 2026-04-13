@@ -9,6 +9,7 @@ import {
   type DualThemeToken,
 } from "@/components/ui/useShikiHighlighter";
 import { Snippet } from "@/components/ui/Snippet";
+import { ContextCard } from "@/components/ui/ContextCard";
 
 // ============================================================================
 // Toast Component
@@ -421,17 +422,41 @@ function ControlledCopiedDemo() {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = () => {
+    navigator.clipboard.writeText("npm init next-app");
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
 
+  const cardContent = (
+    <div
+      className="font-mono text-[13px] w-96 whitespace-pre-line"
+      style={{ color: "var(--ds-gray-1000)" }}
+    >
+      {`# About\nTemplate for a full-featured Next.js AI chatbot\n\n# Requirements\nThis template uses the Vercel AI Gateway to access multiple AI models through a unified interface. The default model is OpenAI GPT-4.1 Mini, with support for Anthropic, Google, and xAI models.`}
+    </div>
+  );
+
   return (
-    <Snippet
-      text="Copy install prompt"
-      prompt={false}
-      copied={copied}
-      onCopy={handleCopy}
-    />
+    <ContextCard>
+      <ContextCard.Trigger content={cardContent} side="top">
+        <div
+          role="button"
+          tabIndex={0}
+          aria-label="copy content"
+          className="cursor-pointer"
+          onClick={handleCopy}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") handleCopy();
+          }}
+        >
+          <Snippet
+            text="Copy install prompt"
+            prompt={false}
+            copied={copied}
+          />
+        </div>
+      </ContextCard.Trigger>
+    </ContextCard>
   );
 }
 
