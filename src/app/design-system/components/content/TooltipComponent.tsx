@@ -358,38 +358,38 @@ import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col">
       <div className="flex items-center gap-6">
         <Tooltip content="Tooltip" side="bottom" align="start">
-          <span>Bottom/Start</span>
+          <span>Bottom/Left</span>
         </Tooltip>
         <Tooltip content="Tooltip" side="bottom" align="center">
           <span>Bottom/Center</span>
         </Tooltip>
         <Tooltip content="Tooltip" side="bottom" align="end">
-          <span>Bottom/End</span>
+          <span>Bottom/Right</span>
         </Tooltip>
       </div>
       <div className="flex items-center gap-6">
         <Tooltip content="Tooltip" side="left" align="start">
-          <span>Left/Start</span>
+          <span>Left/Left</span>
         </Tooltip>
         <Tooltip content="Tooltip" side="left" align="center">
           <span>Left/Center</span>
         </Tooltip>
         <Tooltip content="Tooltip" side="left" align="end">
-          <span>Left/End</span>
+          <span>Left/Right</span>
         </Tooltip>
       </div>
       <div className="flex items-center gap-6">
         <Tooltip content="Tooltip" side="right" align="start">
-          <span>Right/Start</span>
+          <span>Right/Left</span>
         </Tooltip>
         <Tooltip content="Tooltip" side="right" align="center">
           <span>Right/Center</span>
         </Tooltip>
         <Tooltip content="Tooltip" side="right" align="end">
-          <span>Right/End</span>
+          <span>Right/Right</span>
         </Tooltip>
       </div>
     </div>
@@ -576,11 +576,11 @@ function NoDelayDemo() {
 
 function BoxAlignDemo() {
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+    <div style={{ display: "flex", flexDirection: "column" }}>
       <TooltipRow>
         <TooltipCell>
           <Tooltip content="Tooltip" side="bottom" align="start">
-            <span>Bottom/Start</span>
+            <span>Bottom/Left</span>
           </Tooltip>
         </TooltipCell>
         <TooltipCell>
@@ -590,14 +590,14 @@ function BoxAlignDemo() {
         </TooltipCell>
         <TooltipCell>
           <Tooltip content="Tooltip" side="bottom" align="end">
-            <span>Bottom/End</span>
+            <span>Bottom/Right</span>
           </Tooltip>
         </TooltipCell>
       </TooltipRow>
       <TooltipRow>
         <TooltipCell>
           <Tooltip content="Tooltip" side="left" align="start">
-            <span>Left/Start</span>
+            <span>Left/Left</span>
           </Tooltip>
         </TooltipCell>
         <TooltipCell>
@@ -607,14 +607,14 @@ function BoxAlignDemo() {
         </TooltipCell>
         <TooltipCell>
           <Tooltip content="Tooltip" side="left" align="end">
-            <span>Left/End</span>
+            <span>Left/Right</span>
           </Tooltip>
         </TooltipCell>
       </TooltipRow>
       <TooltipRow>
         <TooltipCell>
           <Tooltip content="Tooltip" side="right" align="start">
-            <span>Right/Start</span>
+            <span>Right/Left</span>
           </Tooltip>
         </TooltipCell>
         <TooltipCell>
@@ -624,7 +624,7 @@ function BoxAlignDemo() {
         </TooltipCell>
         <TooltipCell>
           <Tooltip content="Tooltip" side="right" align="end">
-            <span>Right/End</span>
+            <span>Right/Right</span>
           </Tooltip>
         </TooltipCell>
       </TooltipRow>
