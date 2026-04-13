@@ -119,73 +119,75 @@ export function Snippet({
 
   return (
     <div
-      className={`flex items-center font-mono text-[13px] ${className}`}
+      className={`font-mono text-[13px] leading-5 ${className}`}
       style={{
         width: resolvedWidth,
+        maxWidth: "100%",
+        height: "auto",
         borderRadius: 6,
-        padding: "12px 16px",
-        boxShadow: `0 0 0 1px var(--ds-gray-400)`,
+        padding: "10px 48px 10px 12px",
+        border: "1px solid rgba(0, 0, 0, 0.08)",
         background: dark ? "var(--ds-gray-1000)" : "var(--ds-background-100)",
         color: dark ? "var(--ds-background-100)" : "var(--ds-gray-1000)",
         borderLeft: hasVariantBorder ? `3px solid ${borderColor}` : undefined,
         position: "relative",
       }}
     >
-      <div style={{ flex: 1, minWidth: 0 }}>
-        {lines.map((line, i) => (
-          <pre
-            key={i}
-            style={{
-              margin: 0,
-              padding: 0,
-              fontFamily: "inherit",
-              fontSize: "inherit",
-              overflowX: "auto",
-              whiteSpace: "pre",
-            }}
-          >
-            {prompt && (
-              <span
-                style={{
-                  color: dark
-                    ? "var(--ds-gray-400)"
-                    : "var(--ds-gray-700)",
-                  userSelect: "none",
-                  marginRight: 8,
-                }}
-              >
-                $
-              </span>
-            )}
-            {line}
-          </pre>
-        ))}
-      </div>
-      <Button
-        variant={dark ? "secondary" : "secondary"}
-        shape="square"
-        size="small"
+      {lines.map((line, i) => (
+        <pre
+          key={i}
+          style={{
+            margin: 0,
+            padding: 0,
+            fontFamily: "inherit",
+            fontSize: "inherit",
+            lineHeight: "20px",
+            overflowY: "auto",
+            whiteSpace: "nowrap",
+            textAlign: "left",
+          }}
+        >
+          {prompt && (
+            <span
+              style={{
+                color: dark
+                  ? "var(--ds-gray-400)"
+                  : "var(--ds-gray-700)",
+                userSelect: "none",
+                marginRight: 8,
+              }}
+            >
+              $
+            </span>
+          )}
+          {line}
+        </pre>
+      ))}
+
+      {/* Copy button — absolute positioned */}
+      <button
+        type="button"
         onClick={handleCopy}
         aria-label="Copy to clipboard"
-        className="ml-3 flex-shrink-0"
-        style={
-          dark
-            ? {
-                background: "var(--ds-gray-900)",
-                borderColor: "var(--ds-gray-700)",
-                color: "var(--ds-background-100)",
-              }
-            : undefined
-        }
+        style={{
+          position: "absolute",
+          right: 4,
+          top: "50%",
+          transform: "translateY(-50%)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          width: 32,
+          height: 32,
+          borderRadius: 6,
+          border: "none",
+          background: "transparent",
+          color: dark ? "var(--ds-gray-400)" : "var(--ds-gray-1000)",
+          cursor: "pointer",
+          transition: "opacity 0.15s ease",
+        }}
       >
-        <div className="relative w-4 h-4">
-          <span
-            className={`absolute inset-0 transition-all duration-150 ease-out ${
-              isCopied ? "opacity-0 scale-75" : "opacity-100 scale-100"
-            }`}
-          >
-            <CopyIcon />
-          </span>
+        <div style={{ position: "relative", height: 16, width: 16 }}>
           <span
             className={`absolute inset-0 transition-all duration-150 ease-out ${
               isCopied ? "opacity-100 scale-100" : "opacity-0 scale-75"
@@ -193,8 +195,15 @@ export function Snippet({
           >
             <CheckIcon />
           </span>
+          <span
+            className={`absolute inset-0 transition-all duration-150 ease-out ${
+              isCopied ? "opacity-0 scale-75" : "opacity-100 scale-100"
+            }`}
+          >
+            <CopyIcon />
+          </span>
         </div>
-      </Button>
+      </button>
     </div>
   );
 }
