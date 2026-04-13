@@ -68,7 +68,8 @@ export function Tooltip({
   children,
   className = "",
 }: TooltipProps) {
-  const [isVisible, setIsVisible] = useState(false);
+  const [isActive, setIsActive] = useState(false); // trigger hovered
+  const [isPositioned, setIsPositioned] = useState(false); // measured & placed
   const [position, setPosition] = useState({ top: 0, left: 0, arrowOffset: 0 });
   const [mounted, setMounted] = useState(false);
   const triggerRef = useRef<HTMLSpanElement>(null);
@@ -80,109 +81,100 @@ export function Tooltip({
     return () => setMounted(false);
   }, []);
 
-  const calculatePosition = useCallback(() => {
-    if (!triggerRef.current || !tooltipRef.current) return;
-
-    const triggerRect = triggerRef.current.getBoundingClientRect();
-    const tooltipRect = tooltipRef.current.getBoundingClientRect();
-    const scrollX = window.scrollX;
-    const scrollY = window.scrollY;
-
-    let top = 0;
-    let left = 0;
-
-    // Position based on side
-    switch (side) {
-      case "top":
-        top =
-          triggerRect.top + scrollY - tooltipRect.height - TOOLTIP_OFFSET;
-        break;
-      case "bottom":
-        top = triggerRect.bottom + scrollY + TOOLTIP_OFFSET;
-        break;
-      case "left":
-        left =
-          triggerRect.left + scrollX - tooltipRect.width - TOOLTIP_OFFSET;
-        break;
-      case "right":
-        left = triggerRect.right + scrollX + TOOLTIP_OFFSET;
-        break;
+  // When tooltip becomes active, render it offscreen then measure & position
+  useEffect(() => {
+    if (!isActive || !mounted) {
+      setIsPositioned(false);
+      return;
     }
 
-    // Alignment
-    if (side === "top" || side === "bottom") {
-      switch (align) {
-        case "start":
-          left = triggerRect.left + scrollX;
-          break;
-        case "center":
-          left =
-            triggerRect.left +
-            scrollX +
-            triggerRect.width / 2 -
-            tooltipRect.width / 2;
-          break;
-        case "end":
-          left =
-            triggerRect.right + scrollX - tooltipRect.width;
-          break;
-      }
-    } else {
-      switch (align) {
-        case "start":
-          top = triggerRect.top + scrollY;
-          break;
-        case "center":
-          top =
-            triggerRect.top +
-            scrollY +
-            triggerRect.height / 2 -
-            tooltipRect.height / 2;
-          break;
-        case "end":
-          top =
-            triggerRect.bottom + scrollY - tooltipRect.height;
-          break;
-      }
-    }
+    // Wait for the tooltip DOM to render, then measure
+    const raf1 = requestAnimationFrame(() => {
+      const raf2 = requestAnimationFrame(() => {
+        if (!triggerRef.current || !tooltipRef.current) return;
 
-    // Calculate arrow offset: the trigger center relative to the tooltip
-    let arrowOffset = 0;
-    if (side === "top" || side === "bottom") {
-      const triggerCenterX = triggerRect.left + scrollX + triggerRect.width / 2;
-      arrowOffset = triggerCenterX - left;
-    } else {
-      const triggerCenterY = triggerRect.top + scrollY + triggerRect.height / 2;
-      arrowOffset = triggerCenterY - top;
-    }
+        const triggerRect = triggerRef.current.getBoundingClientRect();
+        const tooltipRect = tooltipRef.current.getBoundingClientRect();
+        const scrollX = window.scrollX;
+        const scrollY = window.scrollY;
 
-    setPosition({ top, left, arrowOffset });
-  }, [side, align]);
+        let top = 0;
+        let left = 0;
+
+        switch (side) {
+          case "top":
+            top = triggerRect.top + scrollY - tooltipRect.height - TOOLTIP_OFFSET;
+            break;
+          case "bottom":
+            top = triggerRect.bottom + scrollY + TOOLTIP_OFFSET;
+            break;
+          case "left":
+            left = triggerRect.left + scrollX - tooltipRect.width - TOOLTIP_OFFSET;
+            break;
+          case "right":
+            left = triggerRect.right + scrollX + TOOLTIP_OFFSET;
+            break;
+        }
+
+        if (side === "top" || side === "bottom") {
+          switch (align) {
+            case "start":
+              left = triggerRect.left + scrollX;
+              break;
+            case "center":
+              left = triggerRect.left + scrollX + triggerRect.width / 2 - tooltipRect.width / 2;
+              break;
+            case "end":
+              left = triggerRect.right + scrollX - tooltipRect.width;
+              break;
+          }
+        } else {
+          switch (align) {
+            case "start":
+              top = triggerRect.top + scrollY;
+              break;
+            case "center":
+              top = triggerRect.top + scrollY + triggerRect.height / 2 - tooltipRect.height / 2;
+              break;
+            case "end":
+              top = triggerRect.bottom + scrollY - tooltipRect.height;
+              break;
+          }
+        }
+
+        let arrowOffset = 0;
+        if (side === "top" || side === "bottom") {
+          arrowOffset = triggerRect.left + scrollX + triggerRect.width / 2 - left;
+        } else {
+          arrowOffset = triggerRect.top + scrollY + triggerRect.height / 2 - top;
+        }
+
+        setPosition({ top, left, arrowOffset });
+        setIsPositioned(true);
+      });
+
+      return () => cancelAnimationFrame(raf2);
+    });
+
+    return () => cancelAnimationFrame(raf1);
+  }, [isActive, mounted, side, align]);
 
   const show = useCallback(() => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     if (delay > 0) {
       timeoutRef.current = setTimeout(() => {
-        setIsVisible(true);
+        setIsActive(true);
       }, delay);
     } else {
-      setIsVisible(true);
+      setIsActive(true);
     }
   }, [delay]);
 
   const hide = useCallback(() => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    setIsVisible(false);
+    setIsActive(false);
+    setIsPositioned(false);
   }, []);
-
-  useEffect(() => {
-    if (isVisible) {
-      // Use rAF to ensure tooltip is rendered before measuring
-      requestAnimationFrame(() => {
-        calculatePosition();
-      });
-    }
-  }, [isVisible, calculatePosition]);
 
   useEffect(() => {
     return () => {
@@ -243,18 +235,19 @@ export function Tooltip({
     }
   };
 
-  const tooltipElement = isVisible && mounted
+  const tooltipElement = isActive && mounted
     ? createPortal(
         <div
           ref={tooltipRef}
           role="tooltip"
           style={{
             position: "absolute",
-            top: position.top,
-            left: position.left,
+            top: isPositioned ? position.top : -9999,
+            left: isPositioned ? position.left : -9999,
             zIndex: 9999,
             pointerEvents: "none",
-            animation: "tooltip-fade-in 0.15s ease-out",
+            opacity: isPositioned ? 1 : 0,
+            animation: isPositioned ? "tooltip-fade-in 0.15s ease-out" : "none",
           }}
         >
           <div
