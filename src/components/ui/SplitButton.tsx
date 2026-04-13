@@ -8,6 +8,7 @@ import React, { useState, useRef, useEffect } from "react";
 
 interface SplitButtonMenuItem {
   label: string;
+  description?: string;
   onClick: () => void;
 }
 
@@ -175,30 +176,17 @@ export function SplitButton({
     position: "absolute",
     top: "calc(100% + 4px)",
     ...(menuAlign === "end" ? { right: 0 } : { left: 0 }),
-    minWidth: "160px",
+    width: 264,
     background: "var(--ds-background-100)",
-    border: "1px solid var(--ds-gray-alpha-400)",
-    borderRadius: 6,
-    boxShadow: "var(--ds-shadow-menu)",
-    padding: "4px",
-    zIndex: 50,
-  };
-
-  // Menu item styles
-  const menuItemStyle: React.CSSProperties = {
-    display: "block",
-    width: "100%",
-    textAlign: "left",
-    padding: "8px 12px",
-    fontSize: "14px",
-    lineHeight: "20px",
-    color: "var(--ds-gray-1000)",
-    backgroundColor: "transparent",
-    border: "none",
-    borderRadius: "var(--ds-radius-xsmall)",
-    cursor: "pointer",
-    transition:
-      "background var(--ds-transition-duration) var(--ds-transition-timing)",
+    borderRadius: 12,
+    boxShadow:
+      "rgba(0,0,0,0.08) 0px 0px 0px 1px, rgba(0,0,0,0.02) 0px 1px 1px 0px, rgba(0,0,0,0.04) 0px 4px 8px -4px, rgba(0,0,0,0.06) 0px 16px 24px -8px, var(--ds-background-200) 0px 0px 0px 1px",
+    padding: 8,
+    zIndex: 2001,
+    listStyle: "none",
+    overflowY: "auto",
+    overflowX: "hidden",
+    fontSize: 14,
   };
 
   return (
@@ -252,27 +240,59 @@ export function SplitButton({
 
       {/* Dropdown menu */}
       {open && (
-        <div style={menuStyle}>
+        <ul role="menu" style={menuStyle}>
           {menuItems.map((item) => (
-            <button
+            <li
               key={item.label}
-              type="button"
-              style={menuItemStyle}
+              role="menuitem"
+              tabIndex={-1}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                padding: 8,
+                borderRadius: 6,
+                cursor: "pointer",
+                height: "fit-content",
+                listStyle: "none",
+              }}
               onClick={() => {
                 item.onClick();
                 setOpen(false);
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = "var(--ds-gray-100)";
+                e.currentTarget.style.backgroundColor = "rgba(0, 0, 0, 0.05)";
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.backgroundColor = "transparent";
               }}
             >
-              {item.label}
-            </button>
+              <span className="flex flex-col gap-y-1">
+                <span
+                  style={{
+                    fontSize: 14,
+                    lineHeight: "20px",
+                    fontWeight: 500,
+                    color: "var(--ds-gray-1000)",
+                  }}
+                >
+                  {item.label}
+                </span>
+                {item.description && (
+                  <span
+                    style={{
+                      fontSize: 14,
+                      lineHeight: "20px",
+                      fontWeight: 400,
+                      color: "var(--ds-gray-900)",
+                    }}
+                  >
+                    {item.description}
+                  </span>
+                )}
+              </span>
+            </li>
           ))}
-        </div>
+        </ul>
       )}
     </div>
   );

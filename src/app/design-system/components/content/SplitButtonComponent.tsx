@@ -318,8 +318,8 @@ function DefaultExample() {
         <SplitButton
           size="small"
           menuItems={[
-            { label: "Save as draft", onClick: () => {} },
-            { label: "Save and publish", onClick: () => {} },
+            { label: "Save", description: "Save changes", onClick: () => {} },
+            { label: "Save + Redeploy", description: "Save changes and create a new production deployment", onClick: () => {} },
           ]}
         >
           Save
@@ -327,8 +327,8 @@ function DefaultExample() {
         <SplitButton
           size="medium"
           menuItems={[
-            { label: "Save as draft", onClick: () => {} },
-            { label: "Save and publish", onClick: () => {} },
+            { label: "Save", description: "Save changes", onClick: () => {} },
+            { label: "Save + Redeploy", description: "Save changes and create a new production deployment", onClick: () => {} },
           ]}
         >
           Save
@@ -336,8 +336,8 @@ function DefaultExample() {
         <SplitButton
           size="large"
           menuItems={[
-            { label: "Save as draft", onClick: () => {} },
-            { label: "Save and publish", onClick: () => {} },
+            { label: "Save", description: "Save changes", onClick: () => {} },
+            { label: "Save + Redeploy", description: "Save changes and create a new production deployment", onClick: () => {} },
           ]}
         >
           Save
@@ -348,8 +348,8 @@ function DefaultExample() {
           variant="secondary"
           size="small"
           menuItems={[
-            { label: "Save as draft", onClick: () => {} },
-            { label: "Save and publish", onClick: () => {} },
+            { label: "Save", description: "Save changes", onClick: () => {} },
+            { label: "Save + Redeploy", description: "Save changes and create a new production deployment", onClick: () => {} },
           ]}
         >
           Save
@@ -358,8 +358,8 @@ function DefaultExample() {
           variant="secondary"
           size="medium"
           menuItems={[
-            { label: "Save as draft", onClick: () => {} },
-            { label: "Save and publish", onClick: () => {} },
+            { label: "Save", description: "Save changes", onClick: () => {} },
+            { label: "Save + Redeploy", description: "Save changes and create a new production deployment", onClick: () => {} },
           ]}
         >
           Save
@@ -368,8 +368,8 @@ function DefaultExample() {
           variant="secondary"
           size="large"
           menuItems={[
-            { label: "Save as draft", onClick: () => {} },
-            { label: "Save and publish", onClick: () => {} },
+            { label: "Save", description: "Save changes", onClick: () => {} },
+            { label: "Save + Redeploy", description: "Save changes and create a new production deployment", onClick: () => {} },
           ]}
         >
           Save
