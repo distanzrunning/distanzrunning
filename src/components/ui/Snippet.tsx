@@ -72,10 +72,10 @@ function CheckIcon() {
 // Snippet Component
 // ============================================================================
 
-const variantBorderColors: Record<string, string> = {
-  success: "var(--ds-blue-700)",
-  error: "var(--ds-red-700)",
-  warning: "var(--ds-amber-700)",
+const variantStyles: Record<string, { bg: string; color: string }> = {
+  success: { bg: "var(--ds-blue-100)", color: "var(--ds-blue-900)" },
+  error: { bg: "var(--ds-red-100)", color: "var(--ds-red-900)" },
+  warning: { bg: "var(--ds-amber-100)", color: "var(--ds-amber-900)" },
 };
 
 export function Snippet({
@@ -114,8 +114,8 @@ export function Snippet({
 
   const resolvedWidth = typeof width === "number" ? `${width}px` : width;
 
-  const hasVariantBorder = variant !== "default";
-  const borderColor = variantBorderColors[variant];
+  const hasVariant = variant !== "default";
+  const vs = hasVariant ? variantStyles[variant] : null;
 
   return (
     <div
@@ -127,10 +127,8 @@ export function Snippet({
         borderRadius: 6,
         padding: "10px 48px 10px 12px",
         border: "1px solid rgba(0, 0, 0, 0.08)",
-        background: dark ? "var(--ds-gray-1000)" : "var(--ds-background-100)",
-        color: dark ? "var(--ds-background-100)" : "var(--ds-gray-1000)",
-        borderLeftWidth: hasVariantBorder ? 3 : 1,
-        borderLeftColor: hasVariantBorder ? borderColor : "rgba(0, 0, 0, 0.08)",
+        background: vs ? vs.bg : dark ? "var(--ds-gray-1000)" : "var(--ds-background-100)",
+        color: vs ? vs.color : dark ? "var(--ds-background-100)" : "var(--ds-gray-1000)",
         position: "relative",
       }}
     >
