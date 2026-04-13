@@ -149,7 +149,7 @@ export function Switch({
               display: "flex",
               flex: "1 1 0%",
               alignSelf: "stretch",
-              cursor: "default",
+              cursor: isDisabled ? "not-allowed" : "default",
             }}
           >
             <input
@@ -185,6 +185,7 @@ export function Switch({
               fontWeight: 500,
               borderRadius: config.innerRadius,
               cursor: isDisabled ? "not-allowed" : "pointer",
+              pointerEvents: isDisabled ? "none" : undefined,
               position: "relative",
               userSelect: "none",
               transition: "color 0.15s ease",
@@ -192,13 +193,12 @@ export function Switch({
                 ? "var(--ds-gray-100)"
                 : "transparent",
               color: isDisabled
-                ? "var(--ds-gray-700)"
+                ? "var(--ds-gray-600)"
                 : isSelected
                   ? "var(--ds-gray-1000)"
                   : "var(--ds-gray-800)",
               gap: isIconOnly ? 0 : 6,
               minWidth: isIconOnly ? config.height - config.containerPadding * 2 : undefined,
-              opacity: isDisabled ? 0.5 : 1,
             }}
           >
             {hasIcon && (
