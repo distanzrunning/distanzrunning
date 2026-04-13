@@ -149,9 +149,8 @@ export function Snippet({
           {prompt && (
             <span
               style={{
-                color: dark
-                  ? "var(--ds-gray-400)"
-                  : "var(--ds-gray-700)",
+                color: "inherit",
+                opacity: 0.7,
                 userSelect: "none",
                 marginRight: 8,
               }}
@@ -182,7 +181,7 @@ export function Snippet({
           borderRadius: 6,
           border: "none",
           background: "transparent",
-          color: dark ? "var(--ds-gray-400)" : "var(--ds-gray-1000)",
+          color: "inherit",
           cursor: "pointer",
           transition: "opacity 0.15s ease, box-shadow 0.15s ease",
         }}
