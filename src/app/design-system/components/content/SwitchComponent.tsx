@@ -348,25 +348,6 @@ function ListIcon({ size = 16 }: { size?: number }) {
   );
 }
 
-function LayoutIcon({ size = 16 }: { size?: number }) {
-  return (
-    <svg
-      height={size}
-      strokeLinejoin="round"
-      viewBox="0 0 16 16"
-      width={size}
-      style={{ color: "currentcolor" }}
-    >
-      <path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        d="M1.5 2.5H14.5V5H1.5V2.5ZM0 1V6.5H16V1H0ZM1.5 9H6.5V13.5H1.5V9ZM0 7.5V15H8V7.5H0ZM9.5 9H14.5V13.5H9.5V9ZM8 7.5V15H16V7.5H8Z"
-        fill="currentColor"
-      />
-    </svg>
-  );
-}
-
 // ============================================================================
 // Code Examples
 // ============================================================================
