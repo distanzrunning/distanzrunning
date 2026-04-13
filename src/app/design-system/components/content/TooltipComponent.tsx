@@ -9,6 +9,9 @@ import {
   type DualThemeToken,
 } from "@/components/ui/useShikiHighlighter";
 import { Tooltip } from "@/components/ui/Tooltip";
+import { Button } from "@/components/ui/Button";
+import { Badge } from "@/components/ui/Badge";
+import { Spinner } from "@/components/ui/Spinner";
 
 // ============================================================================
 // Toast Component
@@ -450,20 +453,22 @@ export function Component(): JSX.Element {
 }`;
 
 const componentsCode = `import { Tooltip } from '@/components/ui/Tooltip';
+import { Button } from '@/components/ui/Button';
+import { Badge } from '@/components/ui/Badge';
+import { Spinner } from '@/components/ui/Spinner';
 import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
   return (
     <div className="flex items-center gap-6">
       <Tooltip content="Submit form" side="bottom">
-        <button className="px-3 py-1.5 bg-[var(--ds-gray-1000)] text-[var(--ds-background-100)] rounded-md text-sm font-medium">
-          Button
-        </button>
+        <Button size="small" variant="default">Bottom</Button>
       </Tooltip>
       <Tooltip content="Status indicator" side="left">
-        <span className="px-2 py-0.5 bg-[var(--ds-gray-100)] text-[var(--ds-gray-900)] rounded text-xs font-medium uppercase">
-          Badge
-        </span>
+        <Badge variant="gray" size="sm">LEFT</Badge>
+      </Tooltip>
+      <Tooltip content="Loading" side="right">
+        <Spinner />
       </Tooltip>
     </div>
   );
@@ -700,29 +705,17 @@ function ComponentsDemo() {
     <TooltipRow>
       <TooltipCell>
         <Tooltip content="Submit form" side="bottom">
-          <button
-            type="button"
-            className="px-3 py-1.5 rounded-md text-sm font-medium"
-            style={{
-              backgroundColor: "var(--ds-gray-1000)",
-              color: "var(--ds-background-100)",
-            }}
-          >
-            Button
-          </button>
+          <Button size="small" variant="default">Bottom</Button>
         </Tooltip>
       </TooltipCell>
       <TooltipCell>
         <Tooltip content="Status indicator" side="left">
-          <span
-            className="px-2 py-0.5 rounded text-xs font-medium uppercase"
-            style={{
-              backgroundColor: "var(--ds-gray-100)",
-              color: "var(--ds-gray-900)",
-            }}
-          >
-            Badge
-          </span>
+          <Badge variant="gray" size="sm">LEFT</Badge>
+        </Tooltip>
+      </TooltipCell>
+      <TooltipCell>
+        <Tooltip content="Loading" side="right">
+          <Spinner />
         </Tooltip>
       </TooltipCell>
     </TooltipRow>
