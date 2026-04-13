@@ -724,7 +724,7 @@ function ComponentsDemo() {
       </TooltipCell>
       <TooltipCell>
         <Tooltip content="The Evil Rabbit Jumped over the Fence multiple times." side="right">
-          <Spinner />
+          <span style={{ display: "inline-flex" }}><Spinner /></span>
         </Tooltip>
       </TooltipCell>
     </TooltipRow>

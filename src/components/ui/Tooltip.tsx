@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useCallback, useEffect } from "react";
+import React, { useState, useRef, useCallback, useEffect, cloneElement, isValidElement } from "react";
 import { createPortal } from "react-dom";
 
 // ============================================================================
@@ -280,20 +280,34 @@ export function Tooltip({
       )
     : null;
 
+  const triggerProps = {
+    onMouseEnter: show,
+    onMouseLeave: hide,
+    onFocus: show,
+    onBlur: hide,
+  };
+
+  const trigger = isValidElement(children) ? (
+    cloneElement(children as React.ReactElement<Record<string, unknown>>, {
+      ref: triggerRef,
+      ...triggerProps,
+      tabIndex: (children as React.ReactElement<Record<string, unknown>>).props.tabIndex ?? 0,
+    })
+  ) : (
+    <span
+      ref={triggerRef}
+      className={className}
+      tabIndex={0}
+      style={{ display: "inline-flex", cursor: "default" }}
+      {...triggerProps}
+    >
+      {children}
+    </span>
+  );
+
   return (
     <>
-      <span
-        ref={triggerRef}
-        className={className}
-        onMouseEnter={show}
-        onMouseLeave={hide}
-        onFocus={show}
-        onBlur={hide}
-        tabIndex={0}
-        style={{ display: "inline-flex", cursor: "default" }}
-      >
-        {children}
-      </span>
+      {trigger}
       {tooltipElement}
       {mounted &&
         createPortal(
