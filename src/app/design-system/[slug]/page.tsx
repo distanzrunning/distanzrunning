@@ -67,6 +67,7 @@ import ShowMoreComponent from "../components/content/ShowMoreComponent";
 import SkeletonComponent from "../components/content/SkeletonComponent";
 import SliderComponent from "../components/content/SliderComponent";
 import SnippetComponent from "../components/content/SnippetComponent";
+import SpinnerComponent from "../components/content/SpinnerComponent";
 import MultiSelectComponent from "../components/content/MultiSelectComponent";
 import NoteComponent from "../components/content/NoteComponent";
 import CalendarComponent from "../components/content/CalendarComponent";
@@ -1011,6 +1012,21 @@ export default function DesignSystemPage() {
           onNavigate={handleNavigation}
         >
           <SnippetComponent />
+        </ContentWithTOC>
+      );
+    }
+
+    if (activeSlug === "spinner") {
+      return (
+        <ContentWithTOC
+          tocTitle="On this page"
+          pageTitle="Spinner"
+          pageSubtitle="Indicate an action running in the background."
+          mainSectionId="spinner"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
+          <SpinnerComponent />
         </ContentWithTOC>
       );
     }

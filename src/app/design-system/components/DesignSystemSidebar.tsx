@@ -81,6 +81,7 @@ export const navigation: NavSection[] = [
       { id: "skeleton", label: "Skeleton" },
       { id: "slider", label: "Slider" },
       { id: "snippet", label: "Snippet" },
+      { id: "spinner", label: "Spinner" },
     ],
   },
 ];
