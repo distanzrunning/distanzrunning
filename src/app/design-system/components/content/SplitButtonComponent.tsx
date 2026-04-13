@@ -310,112 +310,60 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
 // ============================================================================
 
 const defaultCode = `import { SplitButton } from '@/components/ui/SplitButton';
+import type { JSX } from 'react';
 
-function DefaultExample() {
+const sizes = ['small', 'medium', 'large'] as const;
+const variants = ['default', 'secondary'] as const;
+
+const menuItems = [
+  { label: 'Save', description: 'Save changes', onClick: () => {} },
+  { label: 'Save + Redeploy', description: 'Save changes and create a new production deployment', onClick: () => {} },
+];
+
+export function Component(): JSX.Element {
   return (
-    <div className="flex flex-col gap-8">
-      <div className="flex flex-row gap-4">
-        <SplitButton
-          size="small"
-          menuItems={[
-            { label: "Save", description: "Save changes", onClick: () => {} },
-            { label: "Save + Redeploy", description: "Save changes and create a new production deployment", onClick: () => {} },
-          ]}
-        >
-          Save
-        </SplitButton>
-        <SplitButton
-          size="medium"
-          menuItems={[
-            { label: "Save", description: "Save changes", onClick: () => {} },
-            { label: "Save + Redeploy", description: "Save changes and create a new production deployment", onClick: () => {} },
-          ]}
-        >
-          Save
-        </SplitButton>
-        <SplitButton
-          size="large"
-          menuItems={[
-            { label: "Save", description: "Save changes", onClick: () => {} },
-            { label: "Save + Redeploy", description: "Save changes and create a new production deployment", onClick: () => {} },
-          ]}
-        >
-          Save
-        </SplitButton>
-      </div>
-      <div className="flex flex-row gap-4">
-        <SplitButton
-          variant="secondary"
-          size="small"
-          menuItems={[
-            { label: "Save", description: "Save changes", onClick: () => {} },
-            { label: "Save + Redeploy", description: "Save changes and create a new production deployment", onClick: () => {} },
-          ]}
-        >
-          Save
-        </SplitButton>
-        <SplitButton
-          variant="secondary"
-          size="medium"
-          menuItems={[
-            { label: "Save", description: "Save changes", onClick: () => {} },
-            { label: "Save + Redeploy", description: "Save changes and create a new production deployment", onClick: () => {} },
-          ]}
-        >
-          Save
-        </SplitButton>
-        <SplitButton
-          variant="secondary"
-          size="large"
-          menuItems={[
-            { label: "Save", description: "Save changes", onClick: () => {} },
-            { label: "Save + Redeploy", description: "Save changes and create a new production deployment", onClick: () => {} },
-          ]}
-        >
-          Save
-        </SplitButton>
-      </div>
+    <div className="flex flex-col items-start justify-between gap-8 flex-initial">
+      {variants.map((variant) => (
+        <div key={variant} className="flex flex-row items-stretch justify-start gap-4 flex-initial">
+          {sizes.map((size) => (
+            <SplitButton key={size} variant={variant} size={size} menuItems={menuItems}>
+              Save
+            </SplitButton>
+          ))}
+        </div>
+      ))}
     </div>
   );
 }`;
 
 const menuAlignmentCode = `import { SplitButton } from '@/components/ui/SplitButton';
+import type { JSX } from 'react';
 
-function MenuAlignmentExample() {
+const menuItems = [
+  { label: 'Save', description: 'Save changes', onClick: () => {} },
+  { label: 'Save + Redeploy', description: 'Save changes and create a new production deployment', onClick: () => {} },
+];
+
+export function Component(): JSX.Element {
   return (
-    <div className="flex flex-row gap-8">
-      <SplitButton
-        menuAlign="start"
-        menuItems={[
-          { label: "Save", description: "Save changes", onClick: () => {} },
-          { label: "Save + Redeploy", description: "Save changes and create a new production deployment", onClick: () => {} },
-        ]}
-      >
-        Save
-      </SplitButton>
-      <SplitButton
-        menuAlign="end"
-        menuItems={[
-          { label: "Save", description: "Save changes", onClick: () => {} },
-          { label: "Save + Redeploy", description: "Save changes and create a new production deployment", onClick: () => {} },
-        ]}
-      >
-        Save
-      </SplitButton>
+    <div className="flex flex-row items-start justify-start gap-8 flex-initial">
+      <SplitButton menuItems={menuItems}>Save</SplitButton>
+      <SplitButton menuAlign="end" menuItems={menuItems}>Save</SplitButton>
     </div>
   );
 }`;
 
 const iconCode = `import { SplitButton } from '@/components/ui/SplitButton';
+import type { JSX } from 'react';
 
-function IconExample() {
+export function Component(): JSX.Element {
   return (
     <SplitButton
       variant="secondary"
       size="small"
       menuItems={[
-        { label: "Copy link", onClick: () => {} },
-        { label: "Copy as markdown", onClick: () => {} },
+        { label: 'Copy link', description: 'Copy the page URL', icon: <LinkIcon />, onClick: () => {} },
+        { label: 'Copy page', description: 'Copy page content', icon: <CopyIcon />, onClick: () => {} },
       ]}
     >
       Copy page
