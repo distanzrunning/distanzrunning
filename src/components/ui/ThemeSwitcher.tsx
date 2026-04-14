@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useId } from "react";
 import { Monitor, Sun, Moon } from "lucide-react";
 
 type ThemeValue = "system" | "light" | "dark";
@@ -29,6 +29,7 @@ export function ThemeSwitcher({
   showSystem = true,
   className,
 }: ThemeSwitcherProps) {
+  const instanceId = useId();
   const [internalValue, setInternalValue] = useState<ThemeValue>(defaultValue);
   const selected = value !== undefined ? value : internalValue;
 
@@ -75,14 +76,14 @@ export function ThemeSwitcher({
       {allOptions.filter((o) => showSystem || o.value !== "system").map((option) => {
         const isSelected = selected === option.value;
         const Icon = option.icon;
-        const id = `theme-switcher-${option.value}`;
+        const id = `theme-switcher-${option.value}-${instanceId}`;
 
         return (
           <span key={option.value}>
             <input
               type="radio"
               id={id}
-              name="theme-switcher"
+              name={`theme-switcher-${instanceId}`}
               value={option.value}
               checked={isSelected}
               disabled={disabled}

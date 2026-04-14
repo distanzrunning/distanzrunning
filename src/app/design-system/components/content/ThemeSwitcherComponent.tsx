@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useCallback, useRef } from "react";
+import React, { useState, useCallback, useRef, useContext } from "react";
 import { ChevronDown } from "lucide-react";
 import { Section } from "../ContentWithTOC";
 import {
@@ -9,6 +9,7 @@ import {
   type DualThemeToken,
 } from "@/components/ui/useShikiHighlighter";
 import { ThemeSwitcher } from "@/components/ui/ThemeSwitcher";
+import { DarkModeContext } from "@/components/DarkModeProvider";
 
 // ============================================================================
 // Toast Component
@@ -358,15 +359,18 @@ export function Component(): JSX.Element {
 // ============================================================================
 
 function DefaultDemo() {
-  return <ThemeSwitcher defaultValue="light" />;
+  const { theme, setTheme } = useContext(DarkModeContext);
+  return <ThemeSwitcher value={theme} onChange={setTheme} />;
 }
 
 function LightDarkDemo() {
-  return <ThemeSwitcher showSystem={false} defaultValue="light" />;
+  const { theme, setTheme } = useContext(DarkModeContext);
+  return <ThemeSwitcher showSystem={false} value={theme === "system" ? "light" : theme} onChange={setTheme} />;
 }
 
 function DisabledDemo() {
-  return <ThemeSwitcher disabled value="light" />;
+  const { theme } = useContext(DarkModeContext);
+  return <ThemeSwitcher disabled value={theme} />;
 }
 
 // ============================================================================
