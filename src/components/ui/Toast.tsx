@@ -143,9 +143,10 @@ function ToastCard({
 }) {
   const showIcon = item.variant !== "default";
 
-  // Stack offset: each toast behind moves up and scales slightly
-  const yOffset = index * -12;
-  const scale = 1 - index * 0.05;
+  // Stack offset: each toast behind moves up and scales down
+  // Front toast: index 0, no offset. Each behind toast peeks ~10px above.
+  const yOffset = index * -10;
+  const scale = 1 - index * 0.035;
   const zIndex = 5000 - index;
 
   return (
