@@ -367,9 +367,9 @@ export function Component(): JSX.Element {
   return (
     <Tabs
       tabs={[
-        { value: 'adidas', label: 'Adidas', icon: <SiAdidas size={16} /> },
-        { value: 'new-balance', label: 'New Balance', icon: <SiNewbalance size={16} /> },
-        { value: 'nike', label: 'Nike', icon: <SiNike size={16} /> },
+        { value: 'adidas', label: 'Adidas', icon: <SiAdidas size={16} color="#000" /> },
+        { value: 'new-balance', label: 'New Balance', icon: <SiNewbalance size={14} color="#cf0a2c" /> },
+        { value: 'nike', label: 'Nike', icon: <SiNike size={18} color="#000" /> },
       ]}
       defaultValue="adidas"
     />
@@ -441,9 +441,9 @@ function WithIconsDemo() {
   return (
     <Tabs
       tabs={[
-        { value: "adidas", label: "Adidas", icon: <SiAdidas size={16} /> },
-        { value: "new-balance", label: "New Balance", icon: <SiNewbalance size={16} /> },
-        { value: "nike", label: "Nike", icon: <SiNike size={16} /> },
+        { value: "adidas", label: "Adidas", icon: <SiAdidas size={16} color="#000" /> },
+        { value: "new-balance", label: "New Balance", icon: <SiNewbalance size={14} color="#cf0a2c" /> },
+        { value: "nike", label: "Nike", icon: <SiNike size={18} color="#000" /> },
       ]}
       defaultValue="adidas"
     />
