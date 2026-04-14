@@ -74,6 +74,7 @@ import SwitchComponent from "../components/content/SwitchComponent";
 import TableComponent from "../components/content/TableComponent";
 import TabsComponent from "../components/content/TabsComponent";
 import TextareaComponent from "../components/content/TextareaComponent";
+import ToastDSComponent from "../components/content/ToastDSComponent";
 import ThemeSwitcherComponent from "../components/content/ThemeSwitcherComponent";
 import TooltipComponent from "../components/content/TooltipComponent";
 import MultiSelectComponent from "../components/content/MultiSelectComponent";
@@ -521,6 +522,21 @@ export default function DesignSystemPage() {
           onNavigate={handleNavigation}
         >
           <TextareaComponent />
+        </ContentWithTOC>
+      );
+    }
+
+    if (activeSlug === "toast") {
+      return (
+        <ContentWithTOC
+          tocTitle="On this page"
+          pageTitle="Toast"
+          pageSubtitle="A succinct message that is displayed temporarily."
+          mainSectionId="toast"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
+          <ToastDSComponent />
         </ContentWithTOC>
       );
     }

@@ -88,6 +88,7 @@ export const navigation: NavSection[] = [
       { id: "table", label: "Table" },
       { id: "tabs", label: "Tabs" },
       { id: "textarea", label: "Textarea" },
+      { id: "toast", label: "Toast" },
       { id: "theme-switcher", label: "Theme Switcher" },
       { id: "tooltip", label: "Tooltip" },
     ],
