@@ -143,10 +143,16 @@ function ToastCard({
 }) {
   const showIcon = item.variant !== "default";
 
-  // Stack offset: each toast behind moves up and scales down
-  // Front toast: index 0, no offset. Each behind toast peeks ~10px above.
-  const yOffset = index * -10;
-  const scale = 1 - index * 0.035;
+  // Geist stacking: front toast is normal, behind toasts use
+  // translate3d(0, calc(100% - Npx), -Zpx) scale(S)
+  const scale = index === 0 ? 1 : 1 - index * 0.05;
+  const yCalc =
+    index === 0
+      ? "none"
+      : index === 1
+        ? "translate3d(0px, calc(100% - 83px), -1px)"
+        : "translate3d(0px, calc(100% - 103px), -2px)";
+  const maxHeight = index === 0 ? 63 : 50;
   const zIndex = 5000 - index;
 
   return (
@@ -159,6 +165,7 @@ function ToastCard({
         right: 0,
         width: 420,
         maxWidth: 420,
+        maxHeight,
         backgroundColor: "var(--ds-background-100)",
         boxShadow:
           "rgba(0, 0, 0, 0.08) 0px 0px 0px 1px, rgba(0, 0, 0, 0.02) 0px 1px 1px 0px, rgba(0, 0, 0, 0.04) 0px 4px 8px -4px, rgba(0, 0, 0, 0.06) 0px 16px 24px -8px, rgb(250, 250, 250) 0px 0px 0px 1px",
@@ -167,8 +174,7 @@ function ToastCard({
         fontSize: 14,
         lineHeight: "21px",
         color: "var(--ds-gray-1000)",
-        transform: `translateY(${yOffset}px) scale(${scale})`,
-        transformOrigin: "bottom right",
+        transform: index === 0 ? "none" : `${yCalc} scale(${scale})`,
         transition: "all 0.35s cubic-bezier(0.25, 0.75, 0.6, 0.98)",
         zIndex,
         opacity: index > 2 ? 0 : 1,
