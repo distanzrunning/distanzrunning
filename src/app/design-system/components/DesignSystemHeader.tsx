@@ -192,7 +192,8 @@ export default function DesignSystemHeader({
                   style={{ background: "var(--ds-gray-alpha-100)" }}
                 >
                   <ThemeSwitcher
-                    value={theme}
+                    showSystem={false}
+                    value={theme === "system" ? "light" : theme}
                     onChange={setTheme}
                   />
                 </div>
