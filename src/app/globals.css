@@ -1222,6 +1222,16 @@
     -webkit-text-fill-color: var(--ds-gray-700);
   }
 
+  /* Switch & ThemeSwitcher hover states */
+  @media (hover: hover) {
+    .ds-switch-control:not([data-disabled]):not([data-selected]):hover {
+      color: var(--ds-gray-1000) !important;
+    }
+    .ds-theme-option:not([data-disabled]):not([data-selected]):hover {
+      color: var(--ds-gray-1000) !important;
+    }
+  }
+
   /* Inline code styling */
   p > code {
     background: var(--ds-gray-100);

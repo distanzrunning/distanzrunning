@@ -182,6 +182,9 @@ export function Switch({
               }}
             />
             <div
+              className="ds-switch-control"
+              data-disabled={isDisabled || undefined}
+              data-selected={isSelected || undefined}
               style={{
                 display: "flex",
                 alignItems: "center",

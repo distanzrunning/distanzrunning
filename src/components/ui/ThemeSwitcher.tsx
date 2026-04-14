@@ -105,6 +105,9 @@ export function ThemeSwitcher({
             />
             <label
               htmlFor={id}
+              className="ds-theme-option"
+              data-disabled={disabled || undefined}
+              data-selected={isSelected || undefined}
               style={{
                 display: "flex",
                 alignItems: "center",
