@@ -83,6 +83,7 @@ import CalendarComponent from "../components/content/CalendarComponent";
 import ComponentGeneratorPage from "../components/content/ComponentGeneratorPage";
 import Materials from "../components/content/Materials";
 import ContentWithTOC from "../components/ContentWithTOC";
+import { ToastContainer } from "@/components/ui/Toast";
 
 export default function DesignSystemPage() {
   const params = useParams();
@@ -1237,6 +1238,7 @@ export default function DesignSystemPage() {
           <div className="flex-1 flex flex-col">{renderContent()}</div>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 }
