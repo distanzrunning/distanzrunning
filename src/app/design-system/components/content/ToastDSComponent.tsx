@@ -319,7 +319,7 @@ export function Component(): JSX.Element {
 
   return (
     <>
-      <Button onClick={() => showToast('This is a toast message.')}>
+      <Button onClick={() => showToast('The Evil Rabbit jumped over the fence.')}>
         Show Toast
       </Button>
       <Toast toast={toast} onDismiss={dismissToast} />
@@ -557,7 +557,7 @@ function DefaultDemo() {
   const { toast, showToast, dismissToast } = useToast();
   return (
     <>
-      <Button onClick={() => showToast("This is a toast message.")}>
+      <Button onClick={() => showToast("The Evil Rabbit jumped over the fence.")}>
         Show Toast
       </Button>
       <Toast toast={toast} onDismiss={dismissToast} />

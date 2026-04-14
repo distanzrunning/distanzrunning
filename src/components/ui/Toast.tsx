@@ -165,15 +165,15 @@ export function Toast({
       style={{
         position: "fixed",
         bottom: 16,
-        right: 16,
+        left: "50%",
         zIndex: 9999,
         maxWidth: 420,
         transition: "all 300ms cubic-bezier(0.16, 1, 0.3, 1)",
         opacity: toast.isVisible && !toast.isExiting ? 1 : 0,
         transform:
           toast.isVisible && !toast.isExiting
-            ? "translateY(0)"
-            : "translateY(12px)",
+            ? "translateX(-50%) translateY(0)"
+            : "translateX(-50%) translateY(12px)",
         pointerEvents:
           toast.isVisible && !toast.isExiting ? ("auto" as const) : ("none" as const),
       }}
