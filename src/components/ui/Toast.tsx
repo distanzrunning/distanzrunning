@@ -326,14 +326,22 @@ export function Toast({
                   padding: 0,
                   cursor: "pointer",
                   borderRadius: 6,
-                  color: "var(--ds-gray-1000)",
+                  color: "var(--ds-gray-900)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
                   width: 32,
                   height: 32,
                   flexShrink: 0,
-                  transition: "border-color 0.15s, background 0.15s, color 0.15s",
+                  transition: "background 0.15s ease, color 0.15s ease",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = "var(--ds-gray-100)";
+                  e.currentTarget.style.color = "var(--ds-gray-1000)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = "transparent";
+                  e.currentTarget.style.color = "var(--ds-gray-900)";
                 }}
               >
                 <CloseIcon />
