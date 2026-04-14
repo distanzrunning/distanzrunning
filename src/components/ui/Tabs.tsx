@@ -44,18 +44,20 @@ export function Tabs({
     [value, onChange]
   );
 
+  const isSecondary = variant === "secondary";
+
   const containerStyle: React.CSSProperties = {
     display: "flex",
     flexWrap: "nowrap",
     alignItems: "baseline",
     overflowX: "auto",
-    columnGap: 24,
-    height: 48,
+    columnGap: isSecondary ? 8 : 24,
+    height: isSecondary ? 24 : 48,
     paddingBottom: 1,
     scrollbarWidth: "none",
-    ...(variant === "default"
+    ...(!isSecondary
       ? { boxShadow: "rgb(234, 234, 234) 0px -1px 0px 0px inset" }
-      : {}),
+      : { boxShadow: "none" }),
   };
 
   return (
@@ -69,41 +71,57 @@ export function Tabs({
         const isSelected = selectedValue === tab.value;
         const isDisabled = disabled || tab.disabled;
 
-        const buttonStyle: React.CSSProperties = {
-          display: "flex",
-          alignItems: "center",
-          gap: 6,
-          padding: "14px 2px",
-          fontSize: 14,
-          fontWeight: 400,
-          color: isDisabled
-            ? "var(--ds-gray-600)"
-            : isSelected
-              ? "var(--ds-gray-1000)"
-              : "var(--ds-gray-900)",
-          backgroundColor: "transparent",
-          border: "none",
-          borderBottom: "2px solid transparent",
-          cursor: isDisabled ? "not-allowed" : "pointer",
-          pointerEvents: isDisabled ? "none" : "auto",
-          whiteSpace: "nowrap",
-          height: 48,
-          marginBottom: -1,
-          outline: "none",
-          ...(variant === "default" && isSelected
-            ? { borderBottomColor: "var(--ds-gray-1000)" }
-            : {}),
-          ...(variant === "secondary"
-            ? {
-                borderBottom: "none",
-                borderRadius: 6,
-                backgroundColor: isSelected
-                  ? "var(--ds-gray-100)"
-                  : "transparent",
-                marginBottom: 0,
-              }
-            : {}),
-        };
+        const buttonStyle: React.CSSProperties = isSecondary
+          ? {
+              display: "flex",
+              alignItems: "center",
+              gap: 6,
+              padding: "0 6px",
+              fontSize: 13,
+              fontWeight: 400,
+              border: "none",
+              borderRadius: 6,
+              height: 24,
+              marginBottom: -1,
+              outline: "none",
+              whiteSpace: "nowrap",
+              cursor: isDisabled ? "not-allowed" : "pointer",
+              pointerEvents: isDisabled ? "none" : "auto",
+              color: isDisabled
+                ? "var(--ds-gray-900)"
+                : isSelected
+                  ? "var(--ds-contrast-fg)"
+                  : "var(--ds-gray-1000)",
+              backgroundColor: isDisabled
+                ? "var(--ds-gray-200)"
+                : isSelected
+                  ? "var(--ds-gray-1000)"
+                  : "rgba(0, 0, 0, 0.082)",
+            }
+          : {
+              display: "flex",
+              alignItems: "center",
+              gap: 6,
+              padding: "14px 2px",
+              fontSize: 14,
+              fontWeight: 400,
+              color: isDisabled
+                ? "var(--ds-gray-600)"
+                : isSelected
+                  ? "var(--ds-gray-1000)"
+                  : "var(--ds-gray-900)",
+              backgroundColor: "transparent",
+              border: "none",
+              borderBottom: isSelected
+                ? "2px solid var(--ds-gray-1000)"
+                : "2px solid transparent",
+              cursor: isDisabled ? "not-allowed" : "pointer",
+              pointerEvents: isDisabled ? "none" : "auto",
+              whiteSpace: "nowrap",
+              height: 48,
+              marginBottom: -1,
+              outline: "none",
+            };
 
         return (
           <button
