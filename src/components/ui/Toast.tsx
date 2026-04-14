@@ -160,88 +160,91 @@ export function Toast({
   const accentColor = getVariantAccentColor(toast.variant);
   const showIcon = toast.variant !== "default";
 
+  const isVisible = toast.isVisible && !toast.isExiting;
+
   const toastElement = (
     <div
       style={{
         position: "fixed",
-        bottom: 16,
-        right: 16,
-        zIndex: 9999,
-        maxWidth: 420,
-        transition: "all 300ms cubic-bezier(0.16, 1, 0.3, 1)",
-        opacity: toast.isVisible && !toast.isExiting ? 1 : 0,
-        transform:
-          toast.isVisible && !toast.isExiting
-            ? "translateY(0)"
-            : "translateY(12px)",
-        pointerEvents:
-          toast.isVisible && !toast.isExiting ? ("auto" as const) : ("none" as const),
+        bottom: 24,
+        right: 24,
+        zIndex: 5000,
+        width: 0,
+        height: 0,
+        transition: "transform 0.4s ease, bottom 0.4s ease",
       }}
     >
       <div
-        style={{
-          background: "var(--ds-background-100)",
-          boxShadow: "var(--ds-shadow-menu)",
-          borderRadius: 8,
-          padding: "12px 16px",
-          fontSize: 14,
-          color: "var(--ds-gray-1000)",
-          display: "flex",
-          alignItems: "flex-start",
-          gap: 12,
-          position: "relative",
-          overflow: "hidden",
-        }}
         role="status"
-        aria-live="polite"
+        aria-atomic="true"
+        style={{
+          position: "absolute",
+          bottom: 0,
+          right: 0,
+          width: 420,
+          maxWidth: 420,
+          backgroundColor: "var(--ds-background-100)",
+          boxShadow:
+            "rgba(0, 0, 0, 0.08) 0px 0px 0px 1px, rgba(0, 0, 0, 0.02) 0px 1px 1px 0px, rgba(0, 0, 0, 0.04) 0px 4px 8px -4px, rgba(0, 0, 0, 0.06) 0px 16px 24px -8px, rgb(250, 250, 250) 0px 0px 0px 1px",
+          borderRadius: 12,
+          padding: 16,
+          fontSize: 14,
+          lineHeight: "21px",
+          color: "var(--ds-gray-1000)",
+          opacity: isVisible ? 1 : 0,
+          transform: isVisible ? "none" : "translateY(12px)",
+          transition: "all 0.35s cubic-bezier(0.25, 0.75, 0.6, 0.98)",
+          pointerEvents: isVisible ? ("auto" as const) : ("none" as const),
+        }}
       >
-        {/* Variant left accent bar */}
-        {accentColor && (
-          <div
-            style={{
-              position: "absolute",
-              left: 0,
-              top: 0,
-              bottom: 0,
-              width: 3,
-              background: accentColor,
-              borderRadius: "8px 0 0 8px",
-            }}
-          />
-        )}
-
-        {/* Variant icon */}
-        {showIcon && (
-          <div style={{ paddingTop: 1, marginLeft: accentColor ? 4 : 0 }}>
-            <VariantIcon
-              variant={toast.variant as "success" | "warning" | "error"}
-            />
-          </div>
-        )}
-
-        {/* Content */}
+        {/* Toast inner */}
         <div
           style={{
-            flex: 1,
             display: "flex",
             flexDirection: "column",
-            gap: 4,
-            marginLeft: accentColor && !showIcon ? 4 : 0,
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 12,
+            maxWidth: "100%",
+            fontSize: 14,
+            lineHeight: "21px",
           }}
         >
-          {/* JSX content */}
-          {toast.jsx ? (
-            <div>{toast.jsx}</div>
-          ) : (
-            <>
-              <span
-                style={{
-                  fontWeight: toast.description ? 500 : 400,
-                  lineHeight: "20px",
-                }}
-              >
-                {toast.message}
-              </span>
+          {/* Message row */}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: 16,
+              width: "100%",
+              marginTop: -1,
+              wordBreak: "break-word",
+            }}
+          >
+            {/* Left content */}
+            <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 4 }}>
+              {/* Variant icon + message */}
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                {showIcon && (
+                  <div style={{ flexShrink: 0 }}>
+                    <VariantIcon variant={toast.variant as "success" | "warning" | "error"} />
+                  </div>
+                )}
+                {toast.jsx ? (
+                  <div>{toast.jsx}</div>
+                ) : (
+                  <span
+                    style={{
+                      display: "block",
+                      fontWeight: toast.description ? 500 : 400,
+                      lineHeight: "21px",
+                    }}
+                  >
+                    {toast.message}
+                  </span>
+                )}
+              </div>
               {toast.description && (
                 <span
                   style={{
@@ -253,120 +256,91 @@ export function Toast({
                   {toast.description}
                 </span>
               )}
-            </>
-          )}
-
-          {/* Action / Undo / Link row */}
-          {(toast.action || toast.undo || toast.link) && (
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 8,
-                marginTop: 4,
-              }}
-            >
-              {toast.action && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    toast.action?.onClick();
-                    onDismiss();
-                  }}
-                  style={{
-                    background: "none",
-                    border: "none",
-                    padding: 0,
-                    cursor: "pointer",
-                    fontSize: 13,
-                    fontWeight: 500,
-                    color: "var(--ds-gray-1000)",
-                    textDecoration: "underline",
-                    textUnderlineOffset: 2,
-                  }}
-                >
-                  {toast.action.label}
-                </button>
-              )}
-              {toast.undo && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    toast.undo?.();
-                    onDismiss();
-                  }}
-                  style={{
-                    background: "none",
-                    border: "none",
-                    padding: 0,
-                    cursor: "pointer",
-                    fontSize: 13,
-                    fontWeight: 500,
-                    color: "var(--ds-gray-1000)",
-                    textDecoration: "underline",
-                    textUnderlineOffset: 2,
-                  }}
-                >
-                  Undo
-                </button>
-              )}
-              {toast.link && (
-                <a
-                  href={toast.link.href}
-                  style={{
-                    fontSize: 13,
-                    fontWeight: 500,
-                    color: "var(--ds-blue-700)",
-                    textDecoration: "none",
-                  }}
-                  onMouseEnter={(e) => {
-                    (e.target as HTMLAnchorElement).style.textDecoration =
-                      "underline";
-                  }}
-                  onMouseLeave={(e) => {
-                    (e.target as HTMLAnchorElement).style.textDecoration =
-                      "none";
-                  }}
-                >
-                  {toast.link.label}
-                </a>
+              {/* Action / Undo / Link */}
+              {(toast.action || toast.undo || toast.link) && (
+                <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 4 }}>
+                  {toast.action && (
+                    <button
+                      type="button"
+                      onClick={() => { toast.action?.onClick(); onDismiss(); }}
+                      style={{
+                        background: "none",
+                        border: "none",
+                        padding: 0,
+                        cursor: "pointer",
+                        fontSize: 13,
+                        fontWeight: 500,
+                        color: "var(--ds-gray-1000)",
+                        textDecoration: "underline",
+                        textUnderlineOffset: 2,
+                      }}
+                    >
+                      {toast.action.label}
+                    </button>
+                  )}
+                  {toast.undo && (
+                    <button
+                      type="button"
+                      onClick={() => { toast.undo?.(); onDismiss(); }}
+                      style={{
+                        background: "none",
+                        border: "none",
+                        padding: 0,
+                        cursor: "pointer",
+                        fontSize: 13,
+                        fontWeight: 500,
+                        color: "var(--ds-gray-1000)",
+                        textDecoration: "underline",
+                        textUnderlineOffset: 2,
+                      }}
+                    >
+                      Undo
+                    </button>
+                  )}
+                  {toast.link && (
+                    <a
+                      href={toast.link.href}
+                      style={{
+                        fontSize: 13,
+                        fontWeight: 500,
+                        color: "var(--ds-blue-700)",
+                        textDecoration: "none",
+                      }}
+                    >
+                      {toast.link.label}
+                    </a>
+                  )}
+                </div>
               )}
             </div>
-          )}
-        </div>
 
-        {/* Close button */}
-        <button
-          type="button"
-          onClick={onDismiss}
-          aria-label="Dismiss toast"
-          style={{
-            background: "none",
-            border: "none",
-            padding: 4,
-            cursor: "pointer",
-            borderRadius: 4,
-            color: "var(--ds-gray-900)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            flexShrink: 0,
-            transition: "color 150ms, background 150ms",
-          }}
-          onMouseEnter={(e) => {
-            (e.currentTarget as HTMLButtonElement).style.color =
-              "var(--ds-gray-1000)";
-            (e.currentTarget as HTMLButtonElement).style.background =
-              "var(--ds-gray-100)";
-          }}
-          onMouseLeave={(e) => {
-            (e.currentTarget as HTMLButtonElement).style.color =
-              "var(--ds-gray-900)";
-            (e.currentTarget as HTMLButtonElement).style.background = "none";
-          }}
-        >
-          <CloseIcon />
-        </button>
+            {/* Dismiss button */}
+            <div style={{ display: "flex", alignItems: "center", gap: 4, flexWrap: "nowrap" }}>
+              <button
+                type="button"
+                onClick={onDismiss}
+                aria-label="Dismiss toast"
+                style={{
+                  background: "none",
+                  border: "none",
+                  padding: 0,
+                  cursor: "pointer",
+                  borderRadius: 6,
+                  color: "var(--ds-gray-1000)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: 32,
+                  height: 32,
+                  flexShrink: 0,
+                  transition: "border-color 0.15s, background 0.15s, color 0.15s",
+                }}
+              >
+                <CloseIcon />
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
