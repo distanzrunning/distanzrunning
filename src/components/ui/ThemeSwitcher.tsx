@@ -13,6 +13,7 @@ interface ThemeSwitcherProps {
   /** Hide the system option, show only light/dark */
   showSystem?: boolean;
   className?: string;
+  style?: React.CSSProperties;
 }
 
 const allOptions: { value: ThemeValue; label: string; icon: typeof Monitor }[] = [
@@ -28,6 +29,7 @@ export function ThemeSwitcher({
   disabled = false,
   showSystem = true,
   className,
+  style: styleProp,
 }: ThemeSwitcherProps) {
   const instanceId = useId();
   const [internalValue, setInternalValue] = useState<ThemeValue>(defaultValue);
@@ -56,6 +58,7 @@ export function ThemeSwitcher({
         background: "var(--ds-gray-100)",
         border: "none",
         margin: 0,
+        ...styleProp,
       }}
     >
       <legend

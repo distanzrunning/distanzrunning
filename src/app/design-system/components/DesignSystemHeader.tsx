@@ -195,6 +195,7 @@ export default function DesignSystemHeader({
                     showSystem={false}
                     value={theme === "system" ? "light" : theme}
                     onChange={setTheme}
+                    style={{ background: "var(--ds-gray-alpha-200)", borderRadius: 999 }}
                   />
                 </div>
               </DropdownMenu.Content>
