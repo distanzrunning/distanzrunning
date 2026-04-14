@@ -1191,6 +1191,34 @@
     display: none;
   }
 
+  /* Textarea component styles */
+  .ds-textarea-container {
+    box-shadow: 0 0 0 1px var(--ds-gray-alpha-400);
+  }
+  .ds-textarea-container:has(:not(textarea[disabled])):not(.ds-textarea--error):hover {
+    box-shadow: 0 0 0 1px var(--ds-gray-alpha-500);
+  }
+  .ds-textarea-container:focus-within:not(.ds-textarea--error) {
+    box-shadow: 0 0 0 1px var(--ds-gray-alpha-600), 0px 0px 0px 4px #00000029 !important;
+  }
+  .ds-textarea-container.ds-textarea--error {
+    box-shadow: 0 0 0 1px var(--ds-red-900);
+  }
+  .ds-textarea-container.ds-textarea--error:focus-within {
+    box-shadow: 0 0 0 1px var(--ds-red-900), 0 0 0 4px var(--ds-red-200) !important;
+  }
+  .ds-textarea-field::placeholder {
+    color: var(--ds-gray-700);
+  }
+  .ds-textarea-field:disabled {
+    opacity: 1;
+    -webkit-text-fill-color: var(--ds-gray-700);
+  }
+  .ds-textarea-field:disabled::placeholder {
+    color: var(--ds-gray-700);
+    -webkit-text-fill-color: var(--ds-gray-700);
+  }
+
   /* Inline code styling */
   p > code {
     background: var(--ds-gray-100);
