@@ -191,12 +191,17 @@ export default function DesignSystemHeader({
                   className="flex items-center justify-center -mx-1 -mb-1 mt-1 rounded-b-[8px] py-2"
                   style={{ background: "var(--ds-gray-alpha-100)" }}
                 >
-                  <ThemeSwitcher
-                    showSystem={false}
-                    value={theme === "system" ? "light" : theme}
-                    onChange={setTheme}
-                    style={{ background: "var(--ds-gray-alpha-200)", borderRadius: 999 }}
-                  />
+                  <div
+                    className="inline-flex rounded-full p-0.5"
+                    style={{ background: "var(--ds-gray-alpha-200)" }}
+                  >
+                    <ThemeSwitcher
+                      showSystem={false}
+                      value={theme === "system" ? "light" : theme}
+                      onChange={setTheme}
+                      style={{ background: "transparent" }}
+                    />
+                  </div>
                 </div>
               </DropdownMenu.Content>
             </DropdownMenu.Portal>
