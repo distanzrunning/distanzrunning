@@ -135,25 +135,41 @@ function CloseIcon() {
 function ToastCard({
   item,
   index,
+  total,
+  isHovered,
   onDismiss,
 }: {
   item: ToastItem;
   index: number;
+  total: number;
+  isHovered: boolean;
   onDismiss: () => void;
 }) {
   const showIcon = item.variant !== "default";
-
-  // Geist stacking: front toast is normal, behind toasts use
-  // translate3d(0, calc(100% - Npx), -Zpx) scale(S)
-  const scale = index === 0 ? 1 : 1 - index * 0.05;
-  const yCalc =
-    index === 0
-      ? "none"
-      : index === 1
-        ? "translate3d(0px, calc(100% - 83px), -1px)"
-        : "translate3d(0px, calc(100% - 103px), -2px)";
-  const maxHeight = index === 0 ? 63 : 50;
   const zIndex = 5000 - index;
+
+  let transform: string;
+  let maxHeight: number | string;
+
+  if (isHovered) {
+    // Expanded: stack vertically with gap, full size
+    const gap = 8;
+    const toastHeight = 63;
+    const offset = index * (toastHeight + gap);
+    transform = `translateY(-${offset}px)`;
+    maxHeight = "none";
+  } else if (index === 0) {
+    transform = "none";
+    maxHeight = 63;
+  } else {
+    // Geist collapsed stacking
+    const scale = 1 - index * 0.05;
+    transform =
+      index === 1
+        ? `translate3d(0px, calc(100% - 83px), 0px) scale(${scale})`
+        : `translate3d(0px, calc(100% - 103px), 0px) scale(${scale})`;
+    maxHeight = 50;
+  }
 
   return (
     <div
@@ -174,9 +190,10 @@ function ToastCard({
         fontSize: 14,
         lineHeight: "21px",
         color: "var(--ds-gray-1000)",
-        transform: index === 0 ? "none" : `${yCalc} scale(${scale})`,
+        transform,
         transition: "all 0.35s cubic-bezier(0.25, 0.75, 0.6, 0.98)",
         zIndex,
+        overflow: "hidden",
         opacity: index > 2 ? 0 : 1,
       }}
     >
@@ -244,7 +261,7 @@ function ToastCard({
             )}
           </div>
 
-          {index === 0 && (
+          {(index === 0 || isHovered) && (
             <div style={{ display: "flex", alignItems: "center", gap: 4, flexWrap: "nowrap" }}>
               <button
                 type="button"
@@ -291,6 +308,7 @@ function ToastCard({
 export function ToastContainer() {
   const [toasts, setToasts] = useState<ToastItem[]>([]);
   const [mounted, setMounted] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -309,18 +327,25 @@ export function ToastContainer() {
         bottom: 24,
         right: 24,
         zIndex: 5000,
-        width: 0,
+        width: 420,
         height: 0,
+        pointerEvents: "none",
       }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
-      {toasts.map((item, index) => (
-        <ToastCard
-          key={item.id}
-          item={item}
-          index={index}
-          onDismiss={() => removeToast(item.id)}
-        />
-      ))}
+      <div style={{ position: "relative", pointerEvents: "auto" }}>
+        {toasts.map((item, index) => (
+          <ToastCard
+            key={item.id}
+            item={item}
+            index={index}
+            total={toasts.length}
+            isHovered={isHovered && toasts.length > 1}
+            onDismiss={() => removeToast(item.id)}
+          />
+        ))}
+      </div>
     </div>,
     document.body,
   );
