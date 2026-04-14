@@ -74,6 +74,7 @@ import SwitchComponent from "../components/content/SwitchComponent";
 import TableComponent from "../components/content/TableComponent";
 import TabsComponent from "../components/content/TabsComponent";
 import TextareaComponent from "../components/content/TextareaComponent";
+import ThemeSwitcherComponent from "../components/content/ThemeSwitcherComponent";
 import TooltipComponent from "../components/content/TooltipComponent";
 import MultiSelectComponent from "../components/content/MultiSelectComponent";
 import NoteComponent from "../components/content/NoteComponent";
@@ -520,6 +521,21 @@ export default function DesignSystemPage() {
           onNavigate={handleNavigation}
         >
           <TextareaComponent />
+        </ContentWithTOC>
+      );
+    }
+
+    if (activeSlug === "theme-switcher") {
+      return (
+        <ContentWithTOC
+          tocTitle="On this page"
+          pageTitle="Theme Switcher"
+          pageSubtitle="A segmented control for switching between system, light, and dark themes."
+          mainSectionId="theme-switcher"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
+          <ThemeSwitcherComponent />
         </ContentWithTOC>
       );
     }
