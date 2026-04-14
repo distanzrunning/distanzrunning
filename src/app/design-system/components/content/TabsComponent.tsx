@@ -311,84 +311,103 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
 // ============================================================================
 
 const defaultCode = `import { Tabs } from '@/components/ui/Tabs';
-import type { JSX } from 'react';
+import { useState, type JSX } from 'react';
 
 export function Component(): JSX.Element {
+  const [selected, setSelected] = useState('apple');
+
   return (
     <Tabs
+      value={selected}
+      onChange={(t) => setSelected(t)}
       tabs={[
         { value: 'apple', label: 'Apple' },
         { value: 'orange', label: 'Orange' },
         { value: 'mango', label: 'Mango' },
       ]}
-      defaultValue="mango"
     />
   );
 }`;
 
 const disabledCode = `import { Tabs } from '@/components/ui/Tabs';
-import type { JSX } from 'react';
+import { useState, type JSX } from 'react';
 
 export function Component(): JSX.Element {
+  const [selected, setSelected] = useState('apple');
+
   return (
     <Tabs
+      disabled
+      value={selected}
+      onChange={(t) => setSelected(t)}
       tabs={[
         { value: 'apple', label: 'Apple' },
         { value: 'orange', label: 'Orange' },
         { value: 'mango', label: 'Mango' },
       ]}
-      value="apple"
-      disabled
     />
   );
 }`;
 
 const disableSpecificCode = `import { Tabs } from '@/components/ui/Tabs';
-import type { JSX } from 'react';
+import { useState, type JSX } from 'react';
 
 export function Component(): JSX.Element {
+  const [selected, setSelected] = useState('apple');
+
   return (
     <Tabs
+      value={selected}
+      onChange={(t) => setSelected(t)}
       tabs={[
         { value: 'apple', label: 'Apple' },
         { value: 'orange', label: 'Orange' },
-        { value: 'mango', label: 'Mango', disabled: true },
+        {
+          value: 'mango',
+          label: 'Mango',
+          disabled: true,
+        },
       ]}
-      defaultValue="apple"
     />
   );
 }`;
 
 const withIconsCode = `import { Tabs } from '@/components/ui/Tabs';
 import { SiAdidas, SiNewbalance, SiNike } from 'react-icons/si';
-import type { JSX } from 'react';
+import { useState, type JSX } from 'react';
 
 export function Component(): JSX.Element {
+  const [selected, setSelected] = useState('adidas');
+
   return (
     <Tabs
+      value={selected}
+      onChange={(t) => setSelected(t)}
       tabs={[
         { value: 'adidas', label: 'Adidas', icon: <SiAdidas size={16} color="#000" /> },
         { value: 'new-balance', label: 'New Balance', icon: <SiNewbalance size={14} color="#cf0a2c" /> },
         { value: 'nike', label: 'Nike', icon: <SiNike size={18} color="#000" /> },
       ]}
-      defaultValue="adidas"
     />
   );
 }`;
 
 const secondaryCode = `import { Tabs } from '@/components/ui/Tabs';
-import type { JSX } from 'react';
+import { useState, type JSX } from 'react';
 
 export function Component(): JSX.Element {
+  const [selected, setSelected] = useState('adidas');
+
   return (
     <Tabs
-      variant="secondary"
+      value={selected}
+      onChange={(t) => setSelected(t)}
       tabs={[
         { value: 'adidas', label: 'Adidas' },
         { value: 'new-balance', label: 'New Balance' },
         { value: 'nike', label: 'Nike', disabled: true },
       ]}
-      defaultValue="adidas"
+      variant="secondary"
     />
   );
 }`;
