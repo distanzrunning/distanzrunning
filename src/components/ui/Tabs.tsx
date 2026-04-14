@@ -90,7 +90,7 @@ export function Tabs({
               color: isDisabled
                 ? "var(--ds-gray-900)"
                 : isSelected
-                  ? "var(--ds-contrast-fg)"
+                  ? "#fff"
                   : "var(--ds-gray-1000)",
               backgroundColor: isDisabled
                 ? "var(--ds-gray-200)"
