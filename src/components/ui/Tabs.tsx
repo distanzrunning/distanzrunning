@@ -121,6 +121,7 @@ export function Tabs({
               height: 48,
               marginBottom: -1,
               outline: "none",
+              transition: "color 0.15s ease, border-color 0.15s ease",
             };
 
         return (
