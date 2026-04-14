@@ -5,13 +5,12 @@ import Image from "next/image";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import {
   Search,
-  Sun,
-  Moon,
   Sparkles,
   ExternalLink,
   Ellipsis,
 } from "lucide-react";
 import { DarkModeContext } from "@/components/DarkModeProvider";
+import { ThemeSwitcher } from "@/components/ui/ThemeSwitcher";
 
 interface DesignSystemHeaderProps {
   onHomeClick: () => void;
@@ -24,7 +23,7 @@ export default function DesignSystemHeader({
   onNavigate,
   activeSlug,
 }: DesignSystemHeaderProps) {
-  const { isDark, toggleDarkMode } = useContext(DarkModeContext);
+  const { theme, setTheme } = useContext(DarkModeContext);
 
   return (
     <header
@@ -192,35 +191,10 @@ export default function DesignSystemHeader({
                   className="flex items-center justify-center -mx-1 -mb-1 mt-1 rounded-b-[8px] py-2"
                   style={{ background: "var(--ds-gray-alpha-100)" }}
                 >
-                  <div
-                    className="inline-flex items-center rounded-full p-0.5"
-                    style={{ background: "var(--ds-gray-alpha-200)" }}
-                  >
-                    <button
-                      onClick={() => isDark && toggleDarkMode()}
-                      className="flex items-center justify-center w-7 h-7 rounded-full transition-colors"
-                      style={{
-                        background: !isDark ? "var(--ds-background-100)" : "transparent",
-                        color: !isDark ? "var(--ds-gray-1000)" : "var(--ds-gray-700)",
-                        boxShadow: !isDark ? "0 1px 2px rgba(0,0,0,0.1)" : "none",
-                      }}
-                      aria-label="Light mode"
-                    >
-                      <Sun className="w-3.5 h-3.5" />
-                    </button>
-                    <button
-                      onClick={() => !isDark && toggleDarkMode()}
-                      className="flex items-center justify-center w-7 h-7 rounded-full transition-colors"
-                      style={{
-                        background: isDark ? "var(--ds-background-100)" : "transparent",
-                        color: isDark ? "var(--ds-gray-1000)" : "var(--ds-gray-700)",
-                        boxShadow: isDark ? "0 1px 2px rgba(0,0,0,0.1)" : "none",
-                      }}
-                      aria-label="Dark mode"
-                    >
-                      <Moon className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
+                  <ThemeSwitcher
+                    value={theme}
+                    onChange={setTheme}
+                  />
                 </div>
               </DropdownMenu.Content>
             </DropdownMenu.Portal>

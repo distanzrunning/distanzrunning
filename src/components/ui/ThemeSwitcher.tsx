@@ -10,10 +10,12 @@ interface ThemeSwitcherProps {
   defaultValue?: ThemeValue;
   onChange?: (value: ThemeValue) => void;
   disabled?: boolean;
+  /** Hide the system option, show only light/dark */
+  showSystem?: boolean;
   className?: string;
 }
 
-const options: { value: ThemeValue; label: string; icon: typeof Monitor }[] = [
+const allOptions: { value: ThemeValue; label: string; icon: typeof Monitor }[] = [
   { value: "system", label: "System theme", icon: Monitor },
   { value: "light", label: "Light theme", icon: Sun },
   { value: "dark", label: "Dark theme", icon: Moon },
@@ -24,6 +26,7 @@ export function ThemeSwitcher({
   defaultValue = "system",
   onChange,
   disabled = false,
+  showSystem = true,
   className,
 }: ThemeSwitcherProps) {
   const [internalValue, setInternalValue] = useState<ThemeValue>(defaultValue);
@@ -69,7 +72,7 @@ export function ThemeSwitcher({
       >
         Theme
       </legend>
-      {options.map((option) => {
+      {allOptions.filter((o) => showSystem || o.value !== "system").map((option) => {
         const isSelected = selected === option.value;
         const Icon = option.icon;
         const id = `theme-switcher-${option.value}`;

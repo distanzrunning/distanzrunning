@@ -323,6 +323,21 @@ export function Component(): JSX.Element {
   );
 }`;
 
+const lightDarkCode = `import { ThemeSwitcher } from '@/components/ui/ThemeSwitcher';
+import { useState, type JSX } from 'react';
+
+export function Component(): JSX.Element {
+  const [theme, setTheme] = useState<'system' | 'light' | 'dark'>('light');
+
+  return (
+    <ThemeSwitcher
+      showSystem={false}
+      value={theme}
+      onChange={(t) => setTheme(t)}
+    />
+  );
+}`;
+
 const disabledCode = `import { ThemeSwitcher } from '@/components/ui/ThemeSwitcher';
 import { useState, type JSX } from 'react';
 
@@ -346,6 +361,10 @@ function DefaultDemo() {
   return <ThemeSwitcher defaultValue="light" />;
 }
 
+function LightDarkDemo() {
+  return <ThemeSwitcher showSystem={false} defaultValue="light" />;
+}
+
 function DisabledDemo() {
   return <ThemeSwitcher disabled value="light" />;
 }
@@ -366,6 +385,17 @@ export default function ThemeSwitcherComponent() {
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={defaultCode}>
             <DefaultDemo />
+          </CodePreview>
+        </div>
+      </Section>
+
+      <Section>
+        <SectionHeader id="light-dark" onCopyLink={showToast}>
+          Light &amp; Dark only
+        </SectionHeader>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={lightDarkCode}>
+            <LightDarkDemo />
           </CodePreview>
         </div>
       </Section>

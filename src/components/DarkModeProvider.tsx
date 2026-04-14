@@ -4,69 +4,109 @@ import { useState, useEffect, createContext, useContext } from "react";
 import { createPortal } from "react-dom";
 import { Moon, Sun } from "lucide-react";
 
+export type ThemePreference = "system" | "light" | "dark";
+
 export const DarkModeContext = createContext<{
   isDark: boolean;
+  theme: ThemePreference;
+  setTheme: (theme: ThemePreference) => void;
   toggleDarkMode: () => void;
   isInitialized: boolean;
 }>({
   isDark: false,
+  theme: "system",
+  setTheme: () => {},
   toggleDarkMode: () => {},
   isInitialized: false,
 });
 
+function applyTheme(isDark: boolean) {
+  const style = document.createElement("style");
+  style.setAttribute("data-theme-transition", "");
+  style.textContent = `*, *::before, *::after { transition: none !important; }`;
+  document.head.appendChild(style);
+
+  window.getComputedStyle(document.documentElement).getPropertyValue("color");
+
+  if (isDark) {
+    document.documentElement.classList.add("dark");
+  } else {
+    document.documentElement.classList.remove("dark");
+  }
+
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      style.remove();
+    });
+  });
+}
+
+function getSystemPrefersDark() {
+  return typeof window !== "undefined" &&
+    window.matchMedia("(prefers-color-scheme: dark)").matches;
+}
+
 export function DarkModeProvider({ children }: { children: React.ReactNode }) {
+  const [theme, setThemeState] = useState<ThemePreference>("system");
   const [isDark, setIsDark] = useState(false);
   const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem("theme");
+    const savedTheme = localStorage.getItem("theme") as ThemePreference | null;
+    const preference = savedTheme || "system";
+    setThemeState(preference);
 
-    // Only enable dark mode if explicitly saved as 'dark'
-    if (savedTheme === "dark") {
-      setIsDark(true);
+    let dark = false;
+    if (preference === "dark") {
+      dark = true;
+    } else if (preference === "system") {
+      dark = getSystemPrefersDark();
+    }
+
+    setIsDark(dark);
+    if (dark) {
       document.documentElement.classList.add("dark");
     } else {
-      // Default to light mode
       document.documentElement.classList.remove("dark");
     }
 
     setIsInitialized(true);
   }, []);
 
-  const toggleDarkMode = () => {
-    const newIsDark = !isDark;
+  // Listen for system theme changes when in "system" mode
+  useEffect(() => {
+    if (theme !== "system") return;
 
-    // Disable all CSS transitions during the theme switch to prevent
-    // color fade artifacts and flashing
-    const style = document.createElement("style");
-    style.setAttribute("data-theme-transition", "");
-    style.textContent = `*, *::before, *::after { transition: none !important; }`;
-    document.head.appendChild(style);
+    const mq = window.matchMedia("(prefers-color-scheme: dark)");
+    const handler = (e: MediaQueryListEvent) => {
+      setIsDark(e.matches);
+      applyTheme(e.matches);
+    };
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, [theme]);
 
-    // Force a reflow so the transition-disable rule takes effect before
-    // the class change
-    window.getComputedStyle(document.documentElement).getPropertyValue("color");
+  const setTheme = (newTheme: ThemePreference) => {
+    setThemeState(newTheme);
+    localStorage.setItem("theme", newTheme);
 
-    setIsDark(newIsDark);
-    if (newIsDark) {
-      document.documentElement.classList.add("dark");
-      localStorage.setItem("theme", "dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-      localStorage.setItem("theme", "light");
+    let dark = false;
+    if (newTheme === "dark") {
+      dark = true;
+    } else if (newTheme === "system") {
+      dark = getSystemPrefersDark();
     }
 
-    // Re-enable transitions on the next frame after the browser has
-    // painted with the new theme colors
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        style.remove();
-      });
-    });
+    setIsDark(dark);
+    applyTheme(dark);
+  };
+
+  const toggleDarkMode = () => {
+    setTheme(isDark ? "light" : "dark");
   };
 
   return (
-    <DarkModeContext.Provider value={{ isDark, toggleDarkMode, isInitialized }}>
+    <DarkModeContext.Provider value={{ isDark, theme, setTheme, toggleDarkMode, isInitialized }}>
       {children}
     </DarkModeContext.Provider>
   );
