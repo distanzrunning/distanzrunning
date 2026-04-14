@@ -86,7 +86,6 @@ export function Tabs({
               outline: "none",
               whiteSpace: "nowrap",
               cursor: isDisabled ? "not-allowed" : "pointer",
-              pointerEvents: isDisabled ? "none" : "auto",
               color: isDisabled
                 ? "var(--ds-gray-900)"
                 : isSelected
@@ -116,7 +115,6 @@ export function Tabs({
                 ? "2px solid var(--ds-gray-1000)"
                 : "2px solid transparent",
               cursor: isDisabled ? "not-allowed" : "pointer",
-              pointerEvents: isDisabled ? "none" : "auto",
               whiteSpace: "nowrap",
               height: 48,
               marginBottom: -1,
