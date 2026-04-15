@@ -402,7 +402,7 @@ export function ToastContainer() {
   const hasMultiple = toasts.filter((t) => !t.exiting).length > 1;
 
   // Compute cumulative stack offsets based on actual heights
-  const gap = 12;
+  const gap = 16;
   const stackOffsets: number[] = [];
   let cumulative = 0;
   for (let i = 0; i < toasts.length; i++) {

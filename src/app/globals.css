@@ -1244,6 +1244,16 @@
     .ds-toast-area:hover .ds-toast-message {
       opacity: 1 !important;
     }
+    .ds-toast-area:hover [role="status"]:after {
+      content: "";
+      background: transparent;
+      width: 100%;
+      height: 20px;
+      position: absolute;
+      top: calc(100% + 1px);
+      left: 0;
+      right: 0;
+    }
   }
 
   /* Inline code styling */
