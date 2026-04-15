@@ -373,27 +373,30 @@ export function Component(): JSX.Element {
   );
 }`;
 
-const withLinkCode = `import { useToast, Toast } from '@/components/ui/Toast';
+const withLinkCode = `import { useToast } from '@/components/ui/Toast';
 import { Button } from '@/components/ui/Button';
 import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
-  const { toast, showToast, dismissToast } = useToast();
+  const { showToast } = useToast();
 
   return (
-    <>
-      <Button
-        onClick={() =>
-          showToast({
-            message: 'Event created',
-            link: { label: 'View Event', href: '#' },
-          })
-        }
-      >
-        Show Toast
-      </Button>
-      <Toast toast={toast} onDismiss={dismissToast} />
-    </>
+    <Button
+      onClick={() =>
+        showToast({
+          message: 'link',
+          jsx: (
+            <>
+              The Evil Rabbit jumped over the fence. The Evil Rabbit jumped
+              over the <a href="/design-system" style={{ fontWeight: 500, textDecoration: 'underline' }}>fence again</a>.
+            </>
+          ),
+          preserve: true,
+        })
+      }
+    >
+      Show Toast
+    </Button>
   );
 }`;
 
@@ -594,21 +597,31 @@ function WithJsxDemo() {
 }
 
 function WithLinkDemo() {
-  const { toast, showToast, dismissToast } = useToast();
+  const { showToast } = useToast();
   return (
-    <>
-      <Button
-        onClick={() =>
-          showToast({
-            message: "Event created",
-            link: { label: "View Event", href: "#" },
-          })
-        }
-      >
-        Show Toast
-      </Button>
-      <Toast toast={toast} onDismiss={dismissToast} />
-    </>
+    <Button
+      onClick={() =>
+        showToast({
+          message: "link",
+          jsx: (
+            <>
+              The Evil Rabbit jumped over the fence. The Evil Rabbit jumped
+              over the{" "}
+              <a
+                href="/design-system"
+                style={{ fontWeight: 500, textDecoration: "underline" }}
+              >
+                fence again
+              </a>
+              .
+            </>
+          ),
+          preserve: true,
+        })
+      }
+    >
+      Show Toast
+    </Button>
   );
 }
 
