@@ -384,38 +384,35 @@ function LockIcon({ size = 16 }: { size?: number }) {
 }
 
 export function Component(): JSX.Element {
-  const [a, setA] = useState(false);
-  const [b, setB] = useState(false);
-  const [c, setC] = useState(false);
-  const [d, setD] = useState(false);
+  const [on, setOn] = useState(false);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
       <Toggle
-        checked={a}
-        onChange={setA}
+        checked={on}
+        onChange={setOn}
         uncheckedColor="#f59e0b"
         checkedColor="#f59e0b"
         thumbIcon={<LockIcon size={12} />}
       />
       <Toggle
-        checked={b}
-        onChange={setB}
+        checked={on}
+        onChange={setOn}
         uncheckedColor="#ef4444"
         checkedColor="#ef4444"
         thumbIcon={<LockIcon size={12} />}
       />
       <Toggle
-        checked={c}
-        onChange={setC}
+        checked={on}
+        onChange={setOn}
         size="large"
         uncheckedColor="#f59e0b"
         checkedColor="#f59e0b"
         thumbIcon={<LockIcon size={14} />}
       />
       <Toggle
-        checked={d}
-        onChange={setD}
+        checked={on}
+        onChange={setOn}
         size="large"
         uncheckedColor="#ef4444"
         checkedColor="#ef4444"
@@ -429,80 +426,25 @@ const withLabelCode = `import Toggle from '@/components/ui/Toggle';
 import { useState, type JSX } from 'react';
 
 export function Component(): JSX.Element {
-  const [a, setA] = useState(false);
-  const [b, setB] = useState(false);
-  const [c, setC] = useState(false);
-  const [d, setD] = useState(false);
+  const [on, setOn] = useState(false);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-      {/* Default size, label positions */}
       <div style={{ display: 'flex', flexDirection: 'row', gap: 24 }}>
-        <Toggle
-          checked={a}
-          onChange={setA}
-          label="Enable Firewall"
-          labelPosition="right"
-        />
-        <Toggle
-          checked={a}
-          onChange={setA}
-          label="Enable Firewall"
-          labelPosition="left"
-        />
+        <Toggle checked={on} onChange={setOn} label="Enable Firewall" labelPosition="right" />
+        <Toggle checked={on} onChange={setOn} label="Enable Firewall" labelPosition="left" />
       </div>
-      {/* Large size, label positions */}
       <div style={{ display: 'flex', flexDirection: 'row', gap: 24 }}>
-        <Toggle
-          checked={b}
-          onChange={setB}
-          label="Enable Firewall"
-          labelPosition="right"
-          size="large"
-        />
-        <Toggle
-          checked={b}
-          onChange={setB}
-          label="Enable Firewall"
-          labelPosition="left"
-          size="large"
-        />
+        <Toggle checked={on} onChange={setOn} label="Enable Firewall" labelPosition="right" size="large" />
+        <Toggle checked={on} onChange={setOn} label="Enable Firewall" labelPosition="left" size="large" />
       </div>
-      {/* Default with icon, label positions */}
       <div style={{ display: 'flex', flexDirection: 'row', gap: 24 }}>
-        <Toggle
-          checked={c}
-          onChange={setC}
-          label="Enable Firewall"
-          labelPosition="right"
-          thumbIcon={<LockIcon size={12} />}
-        />
-        <Toggle
-          checked={c}
-          onChange={setC}
-          label="Enable Firewall"
-          labelPosition="left"
-          thumbIcon={<LockIcon size={12} />}
-        />
+        <Toggle checked={on} onChange={setOn} label="Enable Firewall" labelPosition="right" thumbIcon={<LockIcon size={12} />} />
+        <Toggle checked={on} onChange={setOn} label="Enable Firewall" labelPosition="left" thumbIcon={<LockIcon size={12} />} />
       </div>
-      {/* Large with icon, label positions */}
       <div style={{ display: 'flex', flexDirection: 'row', gap: 24 }}>
-        <Toggle
-          checked={d}
-          onChange={setD}
-          label="Enable Firewall"
-          labelPosition="right"
-          size="large"
-          thumbIcon={<LockIcon size={14} />}
-        />
-        <Toggle
-          checked={d}
-          onChange={setD}
-          label="Enable Firewall"
-          labelPosition="left"
-          size="large"
-          thumbIcon={<LockIcon size={14} />}
-        />
+        <Toggle checked={on} onChange={setOn} label="Enable Firewall" labelPosition="right" size="large" thumbIcon={<LockIcon size={14} />} />
+        <Toggle checked={on} onChange={setOn} label="Enable Firewall" labelPosition="left" size="large" thumbIcon={<LockIcon size={14} />} />
       </div>
     </div>
   );
