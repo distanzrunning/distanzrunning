@@ -148,6 +148,7 @@ function ToastCard({
   total,
   isHovered,
   stackOffset,
+  frontHeight,
   onDismiss,
   onHeightMeasured,
 }: {
