@@ -463,6 +463,9 @@ export default function DesignSystemPage() {
       return (
         <ContentWithTOC
           tocTitle="On this page"
+          pageTitle="Toggle"
+          pageSubtitle="Displays a boolean value."
+          mainSectionId="toggle"
           activeSlug={activeSlug}
           onNavigate={handleNavigation}
         >
