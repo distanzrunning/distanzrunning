@@ -579,38 +579,35 @@ function CustomColorDemo() {
 }
 
 function WithLabelDemo() {
-  const [a, setA] = useState(false);
-  const [b, setB] = useState(false);
-  const [c, setC] = useState(false);
-  const [d, setD] = useState(false);
+  const [on, setOn] = useState(false);
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
       <div style={{ display: "flex", flexDirection: "row", gap: 24 }}>
         <Toggle
-          checked={a}
-          onChange={setA}
+          checked={on}
+          onChange={setOn}
           label="Enable Firewall"
           labelPosition="right"
         />
         <Toggle
-          checked={a}
-          onChange={setA}
+          checked={on}
+          onChange={setOn}
           label="Enable Firewall"
           labelPosition="left"
         />
       </div>
       <div style={{ display: "flex", flexDirection: "row", gap: 24 }}>
         <Toggle
-          checked={b}
-          onChange={setB}
+          checked={on}
+          onChange={setOn}
           label="Enable Firewall"
           labelPosition="right"
           size="large"
         />
         <Toggle
-          checked={b}
-          onChange={setB}
+          checked={on}
+          onChange={setOn}
           label="Enable Firewall"
           labelPosition="left"
           size="large"
@@ -618,15 +615,15 @@ function WithLabelDemo() {
       </div>
       <div style={{ display: "flex", flexDirection: "row", gap: 24 }}>
         <Toggle
-          checked={c}
-          onChange={setC}
+          checked={on}
+          onChange={setOn}
           label="Enable Firewall"
           labelPosition="right"
           thumbIcon={<LockIcon size={12} />}
         />
         <Toggle
-          checked={c}
-          onChange={setC}
+          checked={on}
+          onChange={setOn}
           label="Enable Firewall"
           labelPosition="left"
           thumbIcon={<LockIcon size={12} />}
@@ -634,16 +631,16 @@ function WithLabelDemo() {
       </div>
       <div style={{ display: "flex", flexDirection: "row", gap: 24 }}>
         <Toggle
-          checked={d}
-          onChange={setD}
+          checked={on}
+          onChange={setOn}
           label="Enable Firewall"
           labelPosition="right"
           size="large"
           thumbIcon={<LockIcon size={14} />}
         />
         <Toggle
-          checked={d}
-          onChange={setD}
+          checked={on}
+          onChange={setOn}
           label="Enable Firewall"
           labelPosition="left"
           size="large"
