@@ -8,7 +8,7 @@ import {
   getTokenStyle,
   type DualThemeToken,
 } from "@/components/ui/useShikiHighlighter";
-import { Toast, useToast } from "@/components/ui/Toast";
+import { useToast } from "@/components/ui/Toast";
 import { Button } from "@/components/ui/Button";
 
 // ============================================================================
@@ -310,24 +310,21 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
 // Code Examples
 // ============================================================================
 
-const defaultCode = `import { useToast, Toast } from '@/components/ui/Toast';
+const defaultCode = `import { useToast } from '@/components/ui/Toast';
 import { Button } from '@/components/ui/Button';
 import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
-  const { toast, showToast, dismissToast } = useToast();
+  const { showToast } = useToast();
 
   return (
-    <>
-      <Button onClick={() => showToast('The Evil Rabbit jumped over the fence.')}>
-        Show Toast
-      </Button>
-      <Toast toast={toast} onDismiss={dismissToast} />
-    </>
+    <Button onClick={() => showToast('The Evil Rabbit jumped over the fence.')}>
+      Show Toast
+    </Button>
   );
 }`;
 
-const multiLineCode = `import { useToast, Toast } from '@/components/ui/Toast';
+const multiLineCode = `import { useToast } from '@/components/ui/Toast';
 import { Button } from '@/components/ui/Button';
 import type { JSX } from 'react';
 
@@ -400,147 +397,131 @@ export function Component(): JSX.Element {
   );
 }`;
 
-const preserveCode = `import { useToast, Toast } from '@/components/ui/Toast';
+const preserveCode = `import { useToast } from '@/components/ui/Toast';
 import { Button } from '@/components/ui/Button';
 import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
-  const { toast, showToast, dismissToast } = useToast();
+  const { showToast } = useToast();
 
   return (
-    <>
-      <Button
-        onClick={() =>
-          showToast({
-            message: 'This toast will not auto-dismiss.',
-            preserve: true,
-          })
-        }
-      >
-        Show Toast
-      </Button>
-      <Toast toast={toast} onDismiss={dismissToast} />
-    </>
+    <Button
+      onClick={() =>
+        showToast({
+          message: 'This toast will not auto-dismiss.',
+          preserve: true,
+        })
+      }
+    >
+      Show Toast
+    </Button>
   );
 }`;
 
-const actionCode = `import { useToast, Toast } from '@/components/ui/Toast';
+const actionCode = `import { useToast } from '@/components/ui/Toast';
 import { Button } from '@/components/ui/Button';
 import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
-  const { toast, showToast, dismissToast } = useToast();
+  const { showToast } = useToast();
 
   return (
-    <>
-      <Button
-        onClick={() =>
-          showToast({
-            message: 'Project deployed',
-            action: { label: 'View', onClick: () => {} },
-          })
-        }
-      >
-        Show Toast
-      </Button>
-      <Toast toast={toast} onDismiss={dismissToast} />
-    </>
+    <Button
+      onClick={() =>
+        showToast({
+          message: 'The Evil Rabbit jumped over the fence. The Evil Rabbit jumped over the fence again.',
+          action: { label: 'Undo', onClick: () => {} },
+          preserve: true,
+        })
+      }
+    >
+      Show Toast
+    </Button>
   );
 }`;
 
-const undoCode = `import { useToast, Toast } from '@/components/ui/Toast';
+const undoCode = `import { useToast } from '@/components/ui/Toast';
 import { Button } from '@/components/ui/Button';
 import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
-  const { toast, showToast, dismissToast } = useToast();
+  const { showToast } = useToast();
 
   return (
-    <>
-      <Button
-        onClick={() =>
-          showToast({
-            message: 'Message deleted',
-            undo: () => {},
-          })
-        }
-      >
-        Show Toast
-      </Button>
-      <Toast toast={toast} onDismiss={dismissToast} />
-    </>
+    <Button
+      onClick={() =>
+        showToast({
+          message: 'The Evil Rabbit jumped over the fence. The Evil Rabbit jumped over the fence again.',
+          undo: () => {},
+          preserve: true,
+        })
+      }
+    >
+      Show Toast
+    </Button>
   );
 }`;
 
-const successCode = `import { useToast, Toast } from '@/components/ui/Toast';
+const successCode = `import { useToast } from '@/components/ui/Toast';
 import { Button } from '@/components/ui/Button';
 import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
-  const { toast, showToast, dismissToast } = useToast();
+  const { showToast } = useToast();
 
   return (
-    <>
-      <Button
-        onClick={() =>
-          showToast({
-            message: 'Successfully deployed!',
-            variant: 'success',
-          })
-        }
-      >
-        Show Toast
-      </Button>
-      <Toast toast={toast} onDismiss={dismissToast} />
-    </>
+    <Button
+      onClick={() =>
+        showToast({
+          message: 'Successfully deployed!',
+          variant: 'success',
+        })
+      }
+    >
+      Show Toast
+    </Button>
   );
 }`;
 
-const warningCode = `import { useToast, Toast } from '@/components/ui/Toast';
+const warningCode = `import { useToast } from '@/components/ui/Toast';
 import { Button } from '@/components/ui/Button';
 import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
-  const { toast, showToast, dismissToast } = useToast();
+  const { showToast } = useToast();
 
   return (
-    <>
-      <Button
-        onClick={() =>
-          showToast({
-            message: 'High memory usage detected',
-            variant: 'warning',
-          })
-        }
-      >
-        Show Toast
-      </Button>
-      <Toast toast={toast} onDismiss={dismissToast} />
-    </>
+    <Button
+      onClick={() =>
+        showToast({
+          message: 'High memory usage detected',
+          variant: 'warning',
+        })
+      }
+    >
+      Show Toast
+    </Button>
   );
 }`;
 
-const errorCode = `import { useToast, Toast } from '@/components/ui/Toast';
+const errorCode = `import { useToast } from '@/components/ui/Toast';
 import { Button } from '@/components/ui/Button';
 import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
-  const { toast, showToast, dismissToast } = useToast();
+  const { showToast } = useToast();
 
   return (
-    <>
-      <Button
-        onClick={() =>
-          showToast({
-            message: 'Deployment failed',
-            variant: 'error',
-          })
-        }
-      >
-        Show Toast
-      </Button>
-      <Toast toast={toast} onDismiss={dismissToast} />
-    </>
+    <Button
+      onClick={() =>
+        showToast({
+          message: 'Deployment failed',
+          variant: 'error',
+        })
+      }
+    >
+      Show Toast
+    </Button>
   );
 }`;
 
@@ -549,14 +530,11 @@ export function Component(): JSX.Element {
 // ============================================================================
 
 function DefaultDemo() {
-  const { toast, showToast, dismissToast } = useToast();
+  const { showToast } = useToast();
   return (
-    <>
-      <Button onClick={() => showToast("The Evil Rabbit jumped over the fence.")}>
-        Show Toast
-      </Button>
-      <Toast toast={toast} onDismiss={dismissToast} />
-    </>
+    <Button onClick={() => showToast("The Evil Rabbit jumped over the fence.")}>
+      Show Toast
+    </Button>
   );
 }
 
@@ -626,21 +604,18 @@ function WithLinkDemo() {
 }
 
 function PreserveDemo() {
-  const { toast, showToast, dismissToast } = useToast();
+  const { showToast } = useToast();
   return (
-    <>
-      <Button
-        onClick={() =>
-          showToast({
-            message: "This toast will not auto-dismiss.",
-            preserve: true,
-          })
-        }
-      >
-        Show Toast
-      </Button>
-      <Toast toast={toast} onDismiss={dismissToast} />
-    </>
+    <Button
+      onClick={() =>
+        showToast({
+          message: "This toast will not auto-dismiss.",
+          preserve: true,
+        })
+      }
+    >
+      Show Toast
+    </Button>
   );
 }
 
@@ -679,59 +654,50 @@ function UndoDemo() {
 }
 
 function SuccessDemo() {
-  const { toast, showToast, dismissToast } = useToast();
+  const { showToast } = useToast();
   return (
-    <>
-      <Button
-        onClick={() =>
-          showToast({
-            message: "Successfully deployed!",
-            variant: "success",
-          })
-        }
-      >
-        Show Toast
-      </Button>
-      <Toast toast={toast} onDismiss={dismissToast} />
-    </>
+    <Button
+      onClick={() =>
+        showToast({
+          message: "Successfully deployed!",
+          variant: "success",
+        })
+      }
+    >
+      Show Toast
+    </Button>
   );
 }
 
 function WarningDemo() {
-  const { toast, showToast, dismissToast } = useToast();
+  const { showToast } = useToast();
   return (
-    <>
-      <Button
-        onClick={() =>
-          showToast({
-            message: "High memory usage detected",
-            variant: "warning",
-          })
-        }
-      >
-        Show Toast
-      </Button>
-      <Toast toast={toast} onDismiss={dismissToast} />
-    </>
+    <Button
+      onClick={() =>
+        showToast({
+          message: "High memory usage detected",
+          variant: "warning",
+        })
+      }
+    >
+      Show Toast
+    </Button>
   );
 }
 
 function ErrorDemo() {
-  const { toast, showToast, dismissToast } = useToast();
+  const { showToast } = useToast();
   return (
-    <>
-      <Button
-        onClick={() =>
-          showToast({
-            message: "Deployment failed",
-            variant: "error",
-          })
-        }
-      >
-        Show Toast
-      </Button>
-      <Toast toast={toast} onDismiss={dismissToast} />
-    </>
+    <Button
+      onClick={() =>
+        showToast({
+          message: "Deployment failed",
+          variant: "error",
+        })
+      }
+    >
+      Show Toast
+    </Button>
   );
 }
 
