@@ -48,18 +48,16 @@ const Toggle = forwardRef<HTMLInputElement, ToggleProps>(
       [isControlled, onChange],
     );
 
-    // Size config
-    const trackWidth = size === "large" ? 48 : 40;
-    const trackHeight = size === "large" ? 28 : 24;
-    const thumbSize = size === "large" ? 24 : 20;
-    const borderRadius = size === "large" ? 14 : 12;
-    const thumbOffset = 2;
-    const thumbTranslate = trackWidth - thumbSize - thumbOffset;
+    // Geist sizes: default track 28x14, thumb 12x12; large track 40x20, thumb 16x16
+    const trackWidth = size === "large" ? 40 : 28;
+    const trackHeight = size === "large" ? 20 : 14;
+    const thumbSize = size === "large" ? 16 : 12;
+    const thumbTranslate = size === "large" ? 18 : 14;
 
-    // Colors
+    // Colors — Geist uses blue for checked, light gray for unchecked
     const trackBg = isChecked
-      ? checkedColor || "var(--ds-gray-1000)"
-      : uncheckedColor || "var(--ds-gray-alpha-400)";
+      ? checkedColor || "rgb(0, 112, 243)"
+      : uncheckedColor || "rgb(235, 235, 235)";
 
     // Visually hidden input styles
     const srOnlyStyle: React.CSSProperties = {
@@ -70,42 +68,57 @@ const Toggle = forwardRef<HTMLInputElement, ToggleProps>(
       margin: -1,
       overflow: "hidden",
       clip: "rect(0, 0, 0, 0)",
+      clipPath: "inset(100%)",
       whiteSpace: "nowrap",
       borderWidth: 0,
     };
 
     const trackStyle: React.CSSProperties = {
       position: "relative",
+      display: "block",
       width: trackWidth,
       height: trackHeight,
-      borderRadius,
+      borderRadius: trackHeight,
       backgroundColor: trackBg,
-      transition: "background-color 0.2s ease",
+      border: "1px solid rgba(0, 0, 0, 0.1)",
+      boxSizing: "border-box",
+      transition: "background 0.15s cubic-bezier(0, 0, 0.2, 1), border-color 0.15s cubic-bezier(0, 0, 0.2, 1)",
       cursor: disabled ? "not-allowed" : "pointer",
-      opacity: disabled ? 0.5 : 1,
       flexShrink: 0,
     };
 
     const thumbStyle: React.CSSProperties = {
       position: "absolute",
-      top: thumbOffset,
-      left: thumbOffset,
+      top: trackHeight / 2,
+      left: 0,
       width: thumbSize,
       height: thumbSize,
       borderRadius: "50%",
-      backgroundColor: "#fff",
-      transform: isChecked ? `translateX(${thumbTranslate}px)` : "translateX(0)",
-      transition: "transform 0.2s ease, background-color 0.2s ease",
+      backgroundColor: isChecked ? "#fff" : "rgb(250, 250, 250)",
+      border: "1px solid rgba(0, 0, 0, 0)",
+      boxShadow: "rgba(0, 0, 0, 0.12) 0px 0px 4px 0px, rgba(0, 0, 0, 0.1) 0px 1px 1px 0px",
+      transform: isChecked
+        ? `translateX(${thumbTranslate}px) translateY(-${thumbSize / 2}px)`
+        : `translateX(0px) translateY(-${thumbSize / 2}px)`,
+      transition: "transform 0.15s cubic-bezier(0, 0, 0.2, 1), background 0.15s cubic-bezier(0, 0, 0.2, 1)",
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
     };
 
-    const labelStyle: React.CSSProperties = {
-      display: "inline-flex",
+    const labelWrapperStyle: React.CSSProperties = {
+      display: "flex",
       alignItems: "center",
-      gap: 8,
-      cursor: disabled ? "not-allowed" : "pointer",
+      gap: 12,
+      cursor: "default",
+      position: "relative",
+      padding: "3px 0",
+      fontSize: 12,
+      fontWeight: 500,
+      color: "rgb(102, 102, 102)",
+      textTransform: "capitalize",
+      whiteSpace: "nowrap",
+      userSelect: "none",
       opacity: disabled ? 0.5 : 1,
     };
 
@@ -154,7 +167,7 @@ const Toggle = forwardRef<HTMLInputElement, ToggleProps>(
     );
 
     return (
-      <label style={label ? labelStyle : { display: "inline-flex", cursor: disabled ? "not-allowed" : "pointer" }} className={className}>
+      <label style={labelWrapperStyle} className={className} aria-label={!label ? "Enable Firewall" : undefined}>
         <input
           ref={ref}
           type="checkbox"
