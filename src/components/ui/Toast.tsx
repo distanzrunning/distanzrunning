@@ -221,7 +221,7 @@ function ToastCard({
     // Front toast top = -(frontHeight). We want behind top = -(frontHeight + 10).
     // Behind toast bottom = behind top + 50. So translateY = -(frontHeight + 10 - 50 + 50)
     // Simpler: translateY needs to move it up by (frontHeight - 50 + 10)
-    const offset = frontHeight - 50 + 10;
+    const offset = frontHeight - 50 + 16;
     containerStyle = {
       opacity: 1,
       maxHeight: 50,
@@ -229,8 +229,7 @@ function ToastCard({
       transition: "all 0.35s cubic-bezier(0.25, 0.75, 0.6, 0.98)",
     };
   } else if (index === 2) {
-    // Third toast: 10px above the second toast's peek
-    const offset = frontHeight - 50 + 20;
+    const offset = frontHeight - 50 + 28;
     containerStyle = {
       opacity: 1,
       maxHeight: 50,
@@ -238,7 +237,7 @@ function ToastCard({
       transition: "all 0.35s cubic-bezier(0.25, 0.75, 0.6, 0.98)",
     };
   } else {
-    const offset = frontHeight - 50 + 20;
+    const offset = frontHeight - 50 + 28;
     containerStyle = {
       opacity: 0,
       pointerEvents: "none",
