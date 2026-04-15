@@ -324,8 +324,42 @@ function ToastCard({
             )}
           </div>
 
-          {!(item.action || item.undo) && (index === 0 || isHovered) && (
+          {!item.action && (index === 0 || isHovered) && (
             <div style={{ display: "flex", alignItems: "center", gap: 4, flexWrap: "nowrap" }}>
+              {item.undo && (
+                <button
+                  type="button"
+                  onClick={() => { item.undo?.(); onDismiss(); }}
+                  aria-label="Undo"
+                  style={{
+                    background: "none",
+                    border: "none",
+                    padding: 0,
+                    cursor: "pointer",
+                    borderRadius: 6,
+                    color: "var(--ds-gray-900)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: 32,
+                    height: 32,
+                    flexShrink: 0,
+                    transition: "background 0.15s ease, color 0.15s ease",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = "var(--ds-gray-100)";
+                    e.currentTarget.style.color = "var(--ds-gray-1000)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = "transparent";
+                    e.currentTarget.style.color = "var(--ds-gray-900)";
+                  }}
+                >
+                  <svg height="16" strokeLinejoin="round" viewBox="0 0 16 16" width="16" style={{ color: "currentcolor" }}>
+                    <path fillRule="evenodd" clipRule="evenodd" d="M4.5 3.08579L1.29289 6.29289L0.939339 6.64645L1.29289 7L4.5 10.2071L5.56066 9.14645L3.66421 7.25H8.75C10.8211 7.25 12.5 8.92893 12.5 11C12.5 13.0711 10.8211 14.75 8.75 14.75H7V16.25H8.75C11.6495 16.25 14 13.8995 14 11C14 8.10051 11.6495 5.75 8.75 5.75H3.66421L5.56066 3.85355L4.5 2.79289V3.08579Z" fill="currentColor" />
+                  </svg>
+                </button>
+              )}
               <button
                 type="button"
                 onClick={onDismiss}
@@ -361,7 +395,7 @@ function ToastCard({
         </div>
 
         {/* Full-width action buttons row (Geist style) */}
-        {(item.action || item.undo) && (
+        {item.action && (
           <div
             style={{
               display: "flex",
@@ -400,29 +434,6 @@ function ToastCard({
             >
               Dismiss
             </button>
-            {item.undo && (
-              <button
-                type="button"
-                onClick={() => { item.undo?.(); onDismiss(); }}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  height: 32,
-                  padding: "0 6px",
-                  border: "none",
-                  borderRadius: 6,
-                  background: "var(--ds-gray-1000)",
-                  color: "#fff",
-                  fontSize: 14,
-                  fontWeight: 500,
-                  lineHeight: "20px",
-                  cursor: "pointer",
-                }}
-              >
-                Undo
-              </button>
-            )}
             {item.action && (
               <button
                 type="button"

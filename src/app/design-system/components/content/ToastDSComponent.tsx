@@ -667,7 +667,7 @@ function UndoDemo() {
     <Button
       onClick={() =>
         showToast({
-          message: "The Evil Rabbit jumped over the fence.",
+          message: "The Evil Rabbit jumped over the fence. The Evil Rabbit jumped over the fence again.",
           undo: () => {},
           preserve: true,
         })
