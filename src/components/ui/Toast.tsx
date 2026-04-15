@@ -317,14 +317,13 @@ function ToastCard({
                     width: 32,
                     height: 32,
                     flexShrink: 0,
-                    transition: "background 0.15s ease, color 0.15s ease",
-                    opacity: 0.7,
+                    transition: "background 0.15s ease",
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.opacity = "1";
+                    e.currentTarget.style.backgroundColor = item.variant === "default" ? "var(--ds-gray-100)" : "rgba(255,255,255,0.15)";
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.opacity = "0.7";
+                    e.currentTarget.style.backgroundColor = "transparent";
                   }}
                 >
                   <svg height="16" strokeLinejoin="round" viewBox="0 0 16 16" width="16" style={{ color: "currentcolor" }}>
@@ -349,14 +348,13 @@ function ToastCard({
                   width: 32,
                   height: 32,
                   flexShrink: 0,
-                  transition: "background 0.15s ease, opacity 0.15s ease",
-                  opacity: 0.7,
+                  transition: "background 0.15s ease",
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.opacity = "1";
+                  e.currentTarget.style.backgroundColor = item.variant === "default" ? "var(--ds-gray-100)" : "rgba(255,255,255,0.15)";
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.opacity = "0.7";
+                  e.currentTarget.style.backgroundColor = "transparent";
                 }}
               >
                 <CloseIcon />
