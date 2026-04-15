@@ -320,7 +320,7 @@ function ToastCard({
                     transition: "background 0.15s ease",
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = item.variant === "default" ? "var(--ds-gray-100)" : "rgba(255,255,255,0.15)";
+                    e.currentTarget.style.backgroundColor = item.variant === "default" ? "var(--ds-gray-100)" : "rgba(0,0,0,0.1)";
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.backgroundColor = "transparent";
@@ -351,7 +351,7 @@ function ToastCard({
                   transition: "background 0.15s ease",
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = item.variant === "default" ? "var(--ds-gray-100)" : "rgba(255,255,255,0.15)";
+                  e.currentTarget.style.backgroundColor = item.variant === "default" ? "var(--ds-gray-100)" : "rgba(0,0,0,0.1)";
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.backgroundColor = "transparent";
