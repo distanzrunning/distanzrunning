@@ -347,32 +347,29 @@ export function Component(): JSX.Element {
   );
 }`;
 
-const withJsxCode = `import { useToast, Toast } from '@/components/ui/Toast';
+const withJsxCode = `import { useToast } from '@/components/ui/Toast';
 import { Button } from '@/components/ui/Button';
 import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
-  const { toast, showToast, dismissToast } = useToast();
+  const { showToast } = useToast();
 
   return (
-    <>
-      <Button
-        onClick={() =>
-          showToast({
-            message: 'Custom content',
-            jsx: (
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <span style={{ fontSize: 18 }}>*</span>
-                <span>Toast with <strong>custom JSX</strong> content</span>
-              </div>
-            ),
-          })
-        }
-      >
-        Show Toast
-      </Button>
-      <Toast toast={toast} onDismiss={dismissToast} />
-    </>
+    <Button
+      onClick={() =>
+        showToast({
+          message: 'jsx',
+          jsx: (
+            <>
+              <strong>The Evil Rabbit</strong> jumped over the fence.
+            </>
+          ),
+          preserve: true,
+        })
+      }
+    >
+      Show Toast
+    </Button>
   );
 }`;
 
@@ -576,30 +573,23 @@ function MultiLineDemo() {
 }
 
 function WithJsxDemo() {
-  const { toast, showToast, dismissToast } = useToast();
+  const { showToast } = useToast();
   return (
-    <>
-      <Button
-        onClick={() =>
-          showToast({
-            message: "Custom content",
-            jsx: (
-              <div
-                style={{ display: "flex", alignItems: "center", gap: 8 }}
-              >
-                <span style={{ fontSize: 18 }}>*</span>
-                <span>
-                  Toast with <strong>custom JSX</strong> content
-                </span>
-              </div>
-            ),
-          })
-        }
-      >
-        Show Toast
-      </Button>
-      <Toast toast={toast} onDismiss={dismissToast} />
-    </>
+    <Button
+      onClick={() =>
+        showToast({
+          message: "jsx",
+          jsx: (
+            <>
+              <strong>The Evil Rabbit</strong> jumped over the fence.
+            </>
+          ),
+          preserve: true,
+        })
+      }
+    >
+      Show Toast
+    </Button>
   );
 }
 
