@@ -563,18 +563,15 @@ function DefaultDemo() {
 function MultiLineDemo() {
   const { showToast } = useToast();
   return (
-    <>
-      <Button
-        onClick={() =>
-          showToast(
-            "The Evil Rabbit jumped over the fence. The Evil Rabbit jumped over the fence. The Evil Rabbit jumped over the fence. The Evil Rabbit jumped over the fence.",
-          )
-        }
-      >
-        Show Toast
-      </Button>
-      <Toast toast={toast} onDismiss={dismissToast} />
-    </>
+    <Button
+      onClick={() =>
+        showToast(
+          "The Evil Rabbit jumped over the fence. The Evil Rabbit jumped over the fence. The Evil Rabbit jumped over the fence. The Evil Rabbit jumped over the fence.",
+        )
+      }
+    >
+      Show Toast
+    </Button>
   );
 }
 
