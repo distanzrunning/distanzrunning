@@ -213,19 +213,19 @@ function ToastCard({
       transition: "all 0.35s cubic-bezier(0.25, 0.75, 0.6, 0.98)",
     };
   } else if (index === 1) {
-    // Second toast: collapsed behind
+    // Second toast: collapsed behind, fixed offset so all look the same
     containerStyle = {
       opacity: 1,
       maxHeight: 50,
-      transform: "translate3d(0, calc(100% - 83px), -1px) scale(0.95)",
+      transform: "translate3d(0, -33px, -1px) scale(0.95)",
       transition: "all 0.35s cubic-bezier(0.25, 0.75, 0.6, 0.98)",
     };
   } else if (index === 2) {
-    // Third toast: further behind
+    // Third toast: further behind, fixed offset
     containerStyle = {
       opacity: 1,
       maxHeight: 50,
-      transform: "translate3d(0, calc(100% - 103px), -2px) scale(0.9)",
+      transform: "translate3d(0, -53px, -2px) scale(0.9)",
       transition: "all 0.35s cubic-bezier(0.25, 0.75, 0.6, 0.98)",
     };
   } else {
@@ -233,7 +233,7 @@ function ToastCard({
     containerStyle = {
       opacity: 0,
       pointerEvents: "none",
-      transform: "translate3d(0, calc(100% - 103px), -2px) scale(0.9)",
+      transform: "translate3d(0, -53px, -2px) scale(0.9)",
       transition: "all 0.35s cubic-bezier(0.25, 0.75, 0.6, 0.98)",
     };
   }
