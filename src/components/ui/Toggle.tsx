@@ -54,10 +54,25 @@ const Toggle = forwardRef<HTMLInputElement, ToggleProps>(
     const thumbSize = size === "large" ? 16 : 12;
     const thumbTranslate = size === "large" ? 18 : 14;
 
-    // Colors — Geist uses blue for checked, light gray for unchecked
-    const trackBg = isChecked
-      ? checkedColor || "rgb(0, 112, 243)"
-      : uncheckedColor || "rgb(235, 235, 235)";
+    // Colors — disabled uses muted grays, normal uses blue/gray
+    let trackBg: string;
+    let trackBorder: string;
+    let thumbBg: string;
+    let thumbShadow: string;
+
+    if (disabled) {
+      trackBg = isChecked ? "rgb(201, 201, 201)" : "rgb(235, 235, 235)";
+      trackBorder = isChecked ? "rgb(201, 201, 201)" : "rgb(235, 235, 235)";
+      thumbBg = isChecked ? "rgb(242, 242, 242)" : "rgb(250, 250, 250)";
+      thumbShadow = "none";
+    } else {
+      trackBg = isChecked
+        ? checkedColor || "rgb(0, 112, 243)"
+        : uncheckedColor || "rgb(235, 235, 235)";
+      trackBorder = "rgba(0, 0, 0, 0.1)";
+      thumbBg = isChecked ? "#fff" : "rgb(250, 250, 250)";
+      thumbShadow = "rgba(0, 0, 0, 0.12) 0px 0px 4px 0px, rgba(0, 0, 0, 0.1) 0px 1px 1px 0px";
+    }
 
     // Visually hidden input styles
     const srOnlyStyle: React.CSSProperties = {
@@ -80,7 +95,7 @@ const Toggle = forwardRef<HTMLInputElement, ToggleProps>(
       height: trackHeight,
       borderRadius: trackHeight,
       backgroundColor: trackBg,
-      border: "1px solid rgba(0, 0, 0, 0.1)",
+      border: `1px solid ${trackBorder}`,
       boxSizing: "border-box",
       transition: "background 0.15s cubic-bezier(0, 0, 0.2, 1), border-color 0.15s cubic-bezier(0, 0, 0.2, 1)",
       cursor: disabled ? "not-allowed" : "pointer",
@@ -96,9 +111,9 @@ const Toggle = forwardRef<HTMLInputElement, ToggleProps>(
       width: thumbSize,
       height: thumbSize,
       borderRadius: "50%",
-      backgroundColor: isChecked ? "#fff" : "rgb(250, 250, 250)",
+      backgroundColor: thumbBg,
       border: "1px solid rgba(0, 0, 0, 0)",
-      boxShadow: "rgba(0, 0, 0, 0.12) 0px 0px 4px 0px, rgba(0, 0, 0, 0.1) 0px 1px 1px 0px",
+      boxShadow: thumbShadow,
       transform: isChecked
         ? `translateX(${thumbTranslate}px) translateY(-${thumbTop}px)`
         : `translateX(0px) translateY(-${thumbTop}px)`,
@@ -121,7 +136,6 @@ const Toggle = forwardRef<HTMLInputElement, ToggleProps>(
       textTransform: "capitalize",
       whiteSpace: "nowrap",
       userSelect: "none",
-      opacity: disabled ? 0.5 : 1,
     };
 
     const labelTextStyle: React.CSSProperties = {
