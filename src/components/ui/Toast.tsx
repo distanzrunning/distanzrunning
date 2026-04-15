@@ -160,43 +160,50 @@ function ToastCard({
   const zIndex = 5000 - index;
 
   useEffect(() => {
-    // Trigger enter animation on next frame
-    const raf = requestAnimationFrame(() => {
-      setEntered(true);
+    const raf1 = requestAnimationFrame(() => {
+      const raf2 = requestAnimationFrame(() => {
+        setEntered(true);
+      });
+      return () => cancelAnimationFrame(raf2);
     });
-    return () => cancelAnimationFrame(raf);
+    return () => cancelAnimationFrame(raf1);
   }, []);
 
-  let transform: string;
-  let maxHeight: number | string;
-  let opacity = 1;
+  // Determine target Y position and scale
+  let y: string;
+  let scale: number;
+  let opacity: number;
 
-  if (!entered) {
-    // Entry state: below the viewport
-    transform = "translate3d(0px, 100px, 0px) scale(1)";
-    maxHeight = "none";
+  if (item.exiting) {
+    y = "20px";
+    scale = 0.95;
     opacity = 0;
-  } else if (item.exiting) {
-    // Exit: fade and collapse into itself
-    transform = "translate3d(0px, 0px, 0px) scale(0.95)";
-    maxHeight = 0;
+  } else if (!entered) {
+    y = "80px";
+    scale = 1;
     opacity = 0;
   } else if (isHovered) {
-    // Expanded: stack vertically with gap, full size
     const gap = 8;
     const toastHeight = 63;
-    const offset = index * (toastHeight + gap);
-    transform = `translate3d(0px, -${offset}px, 0px) scale(1)`;
-    maxHeight = "none";
+    y = `-${index * (toastHeight + gap)}px`;
+    scale = 1;
+    opacity = 1;
   } else if (index === 0) {
-    transform = "translate3d(0px, 0px, 0px) scale(1)";
-    maxHeight = "none";
+    y = "0px";
+    scale = 1;
+    opacity = 1;
+  } else if (index === 1) {
+    y = "-10px";
+    scale = 0.95;
+    opacity = 1;
+  } else if (index === 2) {
+    y = "-20px";
+    scale = 0.9;
+    opacity = 1;
   } else {
-    // Geist collapsed stacking
-    const scale = 1 - index * 0.05;
-    const yOffset = index === 1 ? "calc(100% - 83px)" : "calc(100% - 103px)";
-    transform = `translate3d(0px, ${yOffset}, 0px) scale(${scale})`;
-    maxHeight = 50;
+    y = "-20px";
+    scale = 0.9;
+    opacity = 0;
   }
 
   return (
@@ -209,21 +216,21 @@ function ToastCard({
         right: 0,
         width: 420,
         maxWidth: 420,
-        maxHeight,
         backgroundColor: "var(--ds-background-100)",
         boxShadow:
           "rgba(0, 0, 0, 0.08) 0px 0px 0px 1px, rgba(0, 0, 0, 0.02) 0px 1px 1px 0px, rgba(0, 0, 0, 0.04) 0px 4px 8px -4px, rgba(0, 0, 0, 0.06) 0px 16px 24px -8px, rgb(250, 250, 250) 0px 0px 0px 1px",
         borderRadius: 12,
-        padding: item.exiting ? 0 : 16,
-        margin: item.exiting ? 0 : undefined,
+        padding: 16,
         fontSize: 14,
         lineHeight: "21px",
         color: "var(--ds-gray-1000)",
-        transform,
-        transition: "all 0.35s cubic-bezier(0.25, 0.75, 0.6, 0.98)",
+        transform: `translateY(${y}) scale(${scale})`,
+        transformOrigin: "bottom center",
+        opacity,
+        transition: "transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease",
         zIndex,
         overflow: "hidden",
-        opacity: !entered ? 0 : index > 2 ? 0 : opacity,
+        pointerEvents: item.exiting ? "none" as const : "auto" as const,
       }}
     >
       <div
