@@ -256,7 +256,7 @@ function ToastCard({
         boxShadow: "var(--ds-shadow-menu)",
         borderRadius: 12,
         padding: 16,
-        lineHeight: "21px",
+        lineHeight: "20px",
         color: "var(--ds-gray-1000)",
         zIndex,
         overflow: "hidden",
@@ -277,7 +277,7 @@ function ToastCard({
           gap: 12,
           maxWidth: "100%",
           fontSize: 14,
-          lineHeight: "21px",
+          lineHeight: "20px",
         }}
       >
         <div
