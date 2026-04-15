@@ -147,13 +147,17 @@ function ToastCard({
   index,
   total,
   isHovered,
+  stackOffset,
   onDismiss,
+  onHeightMeasured,
 }: {
   item: ToastItem;
   index: number;
   total: number;
   isHovered: boolean;
+  stackOffset: number;
   onDismiss: () => void;
+  onHeightMeasured: (id: number, height: number) => void;
 }) {
   const [entered, setEntered] = useState(false);
   const [measuredHeight, setMeasuredHeight] = useState(63);
@@ -163,9 +167,10 @@ function ToastCard({
 
   useEffect(() => {
     const raf1 = requestAnimationFrame(() => {
-      // Measure actual height before entering
       if (cardRef.current) {
-        setMeasuredHeight(cardRef.current.scrollHeight);
+        const h = cardRef.current.scrollHeight;
+        setMeasuredHeight(h);
+        onHeightMeasured(item.id, h);
       }
       const raf2 = requestAnimationFrame(() => {
         setEntered(true);
@@ -173,15 +178,15 @@ function ToastCard({
       return () => cancelAnimationFrame(raf2);
     });
     return () => cancelAnimationFrame(raf1);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Geist approach: entry from below, visible = transform:none,
   // hiding = scale(.98) + opacity:0 with fast timing
   // Stacking handled by parent hover + CSS variables
 
-  // Compute stacking Y offset for hover-expanded state
-  // Use measured height + gap for accurate positioning
-  const stackY = index === 0 ? 0 : -(index * (measuredHeight + 12));
+  // Use cumulative stack offset from container for accurate positioning
+  const stackY = index === 0 ? 0 : -stackOffset;
   const stackZ = -index;
 
   let containerStyle: React.CSSProperties;
@@ -378,6 +383,7 @@ export function ToastContainer() {
   const [toasts, setToasts] = useState<ToastItem[]>([]);
   const [mounted, setMounted] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const [heights, setHeights] = useState<Record<number, number>>({});
 
   useEffect(() => {
     setMounted(true);
@@ -387,9 +393,22 @@ export function ToastContainer() {
     };
   }, []);
 
+  const handleHeightMeasured = useCallback((id: number, height: number) => {
+    setHeights((prev) => ({ ...prev, [id]: height }));
+  }, []);
+
   if (!mounted || toasts.length === 0) return null;
 
   const hasMultiple = toasts.filter((t) => !t.exiting).length > 1;
+
+  // Compute cumulative stack offsets based on actual heights
+  const gap = 12;
+  const stackOffsets: number[] = [];
+  let cumulative = 0;
+  for (let i = 0; i < toasts.length; i++) {
+    stackOffsets.push(cumulative);
+    cumulative += (heights[toasts[i].id] || 63) + gap;
+  }
 
   return createPortal(
     <div
@@ -411,7 +430,9 @@ export function ToastContainer() {
           index={index}
           total={toasts.length}
           isHovered={isHovered && hasMultiple}
+          stackOffset={stackOffsets[index]}
           onDismiss={() => removeToast(item.id)}
+          onHeightMeasured={handleHeightMeasured}
         />
       ))}
     </div>,
