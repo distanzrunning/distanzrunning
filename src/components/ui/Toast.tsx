@@ -101,34 +101,6 @@ function removeToast(id: number) {
   }, 350);
 }
 
-// ============================================================================
-// Variant Icons
-// ============================================================================
-
-function VariantIcon({ variant }: { variant: "success" | "warning" | "error" }) {
-  const colors = { success: "#17B26A", warning: "#F79009", error: "#F04438" };
-  const color = colors[variant];
-
-  if (variant === "success") {
-    return (
-      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" style={{ flexShrink: 0 }}>
-        <path d="M10 0C4.477 0 0 4.477 0 10s4.477 10 10 10 10-4.477 10-10S15.523 0 10 0zm4.707 7.707l-5.5 5.5a1 1 0 01-1.414 0l-2.5-2.5a1 1 0 111.414-1.414L8.5 11.086l4.793-4.793a1 1 0 111.414 1.414z" fill={color} />
-      </svg>
-    );
-  }
-  if (variant === "warning") {
-    return (
-      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" style={{ flexShrink: 0 }}>
-        <path d="M10 0C4.477 0 0 4.477 0 10s4.477 10 10 10 10-4.477 10-10S15.523 0 10 0zm0 5a1 1 0 011 1v4a1 1 0 11-2 0V6a1 1 0 011-1zm0 10a1.25 1.25 0 110-2.5 1.25 1.25 0 010 2.5z" fill={color} />
-      </svg>
-    );
-  }
-  return (
-    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" style={{ flexShrink: 0 }}>
-      <path d="M10 0C4.477 0 0 4.477 0 10s4.477 10 10 10 10-4.477 10-10S15.523 0 10 0zm3.536 12.536a1 1 0 11-1.414 1.414L10 11.828l-2.122 2.122a1 1 0 01-1.414-1.414L8.586 10.5 6.464 8.378a1 1 0 011.414-1.414L10 9.086l2.122-2.122a1 1 0 111.414 1.414L11.414 10.5l2.122 2.036z" fill={color} />
-    </svg>
-  );
-}
 
 function CloseIcon() {
   return (
@@ -164,7 +136,6 @@ function ToastCard({
   const [entered, setEntered] = useState(false);
   const [measuredHeight, setMeasuredHeight] = useState(63);
   const cardRef = useRef<HTMLDivElement>(null);
-  const showIcon = item.variant !== "default";
   const zIndex = 5000 - index;
 
   useEffect(() => {
@@ -260,12 +231,19 @@ function ToastCard({
         right: 0,
         width: 420,
         maxWidth: "min(420px, calc(100vw - 48px))",
-        backgroundColor: "var(--ds-background-100)",
-        boxShadow: "var(--ds-shadow-menu)",
+        backgroundColor:
+          item.variant === "success" ? "var(--ds-blue-700)"
+          : item.variant === "warning" ? "var(--ds-amber-800)"
+          : item.variant === "error" ? "var(--ds-red-800)"
+          : "var(--ds-background-100)",
+        boxShadow: item.variant === "default" ? "var(--ds-shadow-menu)" : "none",
         borderRadius: 12,
         padding: 16,
         lineHeight: "20px",
-        color: "var(--ds-gray-1000)",
+        color:
+          item.variant === "warning" ? "var(--ds-gray-1000)"
+          : item.variant !== "default" ? "#fff"
+          : "var(--ds-gray-1000)",
         zIndex,
         overflow: "hidden",
         pointerEvents: item.exiting || index >= 3 ? "none" as const : "auto" as const,
@@ -304,11 +282,6 @@ function ToastCard({
         >
           <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 4 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              {showIcon && (
-                <div style={{ flexShrink: 0 }}>
-                  <VariantIcon variant={item.variant as "success" | "warning" | "error"} />
-                </div>
-              )}
               {item.jsx ? (
                 <span style={{ display: "block", lineHeight: "20px" }}>{item.jsx}</span>
               ) : (
@@ -337,7 +310,7 @@ function ToastCard({
                     padding: 0,
                     cursor: "pointer",
                     borderRadius: 6,
-                    color: "var(--ds-gray-900)",
+                    color: "inherit",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
@@ -345,14 +318,13 @@ function ToastCard({
                     height: 32,
                     flexShrink: 0,
                     transition: "background 0.15s ease, color 0.15s ease",
+                    opacity: 0.7,
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = "var(--ds-gray-100)";
-                    e.currentTarget.style.color = "var(--ds-gray-1000)";
+                    e.currentTarget.style.opacity = "1";
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = "transparent";
-                    e.currentTarget.style.color = "var(--ds-gray-900)";
+                    e.currentTarget.style.opacity = "0.7";
                   }}
                 >
                   <svg height="16" strokeLinejoin="round" viewBox="0 0 16 16" width="16" style={{ color: "currentcolor" }}>
@@ -370,22 +342,21 @@ function ToastCard({
                   padding: 0,
                   cursor: "pointer",
                   borderRadius: 6,
-                  color: "var(--ds-gray-900)",
+                  color: "inherit",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
                   width: 32,
                   height: 32,
                   flexShrink: 0,
-                  transition: "background 0.15s ease, color 0.15s ease",
+                  transition: "background 0.15s ease, opacity 0.15s ease",
+                  opacity: 0.7,
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = "var(--ds-gray-100)";
-                  e.currentTarget.style.color = "var(--ds-gray-1000)";
+                  e.currentTarget.style.opacity = "1";
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = "transparent";
-                  e.currentTarget.style.color = "var(--ds-gray-900)";
+                  e.currentTarget.style.opacity = "0.7";
                 }}
               >
                 <CloseIcon />
