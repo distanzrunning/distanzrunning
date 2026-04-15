@@ -183,9 +183,9 @@ function ToastCard({
     scale = 1;
     opacity = 0;
   } else if (isHovered) {
-    const gap = 8;
-    const toastHeight = 63;
-    y = `-${index * (toastHeight + gap)}px`;
+    const gap = 12;
+    // Use calc() with 100% so it matches collapsed transitions smoothly
+    y = `calc(-${index * 100}% - ${index * gap}px)`;
     scale = 1;
     opacity = 1;
   } else if (index === 0) {
