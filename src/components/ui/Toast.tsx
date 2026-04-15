@@ -215,30 +215,34 @@ function ToastCard({
       transition: "all 0.35s cubic-bezier(0.25, 0.75, 0.6, 0.98)",
     };
   } else if (index === 1) {
-    // Second toast: peek 10px above the front toast
-    const peekOffset = frontHeight + 10;
+    // Second toast: show 10px peek above front toast
+    // Behind toast is at bottom:0 with maxHeight:50. We want its top edge
+    // to be 10px above the front toast's top edge.
+    // Front toast top = -(frontHeight). We want behind top = -(frontHeight + 10).
+    // Behind toast bottom = behind top + 50. So translateY = -(frontHeight + 10 - 50 + 50)
+    // Simpler: translateY needs to move it up by (frontHeight - 50 + 10)
+    const offset = frontHeight - 50 + 10;
     containerStyle = {
       opacity: 1,
       maxHeight: 50,
-      transform: `translate3d(0, -${peekOffset}px, -1px) scale(0.95)`,
+      transform: `translate3d(0, -${offset}px, -1px) scale(0.95)`,
       transition: "all 0.35s cubic-bezier(0.25, 0.75, 0.6, 0.98)",
     };
   } else if (index === 2) {
-    // Third toast: peek 20px above front toast
-    const peekOffset = frontHeight + 20;
+    // Third toast: 10px above the second toast's peek
+    const offset = frontHeight - 50 + 20;
     containerStyle = {
       opacity: 1,
       maxHeight: 50,
-      transform: `translate3d(0, -${peekOffset}px, -2px) scale(0.9)`,
+      transform: `translate3d(0, -${offset}px, -2px) scale(0.9)`,
       transition: "all 0.35s cubic-bezier(0.25, 0.75, 0.6, 0.98)",
     };
   } else {
-    // 4th+: hidden
-    const peekOffset = frontHeight + 20;
+    const offset = frontHeight - 50 + 20;
     containerStyle = {
       opacity: 0,
       pointerEvents: "none",
-      transform: `translate3d(0, -${peekOffset}px, -2px) scale(0.9)`,
+      transform: `translate3d(0, -${offset}px, -2px) scale(0.9)`,
       transition: "all 0.35s cubic-bezier(0.25, 0.75, 0.6, 0.98)",
     };
   }
