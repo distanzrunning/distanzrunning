@@ -160,7 +160,7 @@ function ToastCard({
     maxHeight = "none";
   } else if (index === 0) {
     transform = "none";
-    maxHeight = 63;
+    maxHeight = "none";
   } else {
     // Geist collapsed stacking
     const scale = 1 - index * 0.05;
