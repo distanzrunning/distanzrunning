@@ -332,23 +332,18 @@ import { Button } from '@/components/ui/Button';
 import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
-  const { toast, showToast, dismissToast } = useToast();
+  const { showToast } = useToast();
 
   return (
-    <>
-      <Button
-        onClick={() =>
-          showToast({
-            message: 'Toast title',
-            description:
-              'This is a description that provides more context.',
-          })
-        }
-      >
-        Show Toast
-      </Button>
-      <Toast toast={toast} onDismiss={dismissToast} />
-    </>
+    <Button
+      onClick={() =>
+        showToast(
+          'The Evil Rabbit jumped over the fence. The Evil Rabbit jumped over the fence. The Evil Rabbit jumped over the fence. The Evil Rabbit jumped over the fence.',
+        )
+      }
+    >
+      Show Toast
+    </Button>
   );
 }`;
 
@@ -566,16 +561,14 @@ function DefaultDemo() {
 }
 
 function MultiLineDemo() {
-  const { toast, showToast, dismissToast } = useToast();
+  const { showToast } = useToast();
   return (
     <>
       <Button
         onClick={() =>
-          showToast({
-            message: "Toast title",
-            description:
-              "This is a description that provides more context.",
-          })
+          showToast(
+            "The Evil Rabbit jumped over the fence. The Evil Rabbit jumped over the fence. The Evil Rabbit jumped over the fence. The Evil Rabbit jumped over the fence.",
+          )
         }
       >
         Show Toast
