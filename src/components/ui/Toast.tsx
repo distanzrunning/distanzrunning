@@ -410,6 +410,9 @@ export function ToastContainer() {
     cumulative += (heights[toasts[i].id] || 63) + gap;
   }
 
+  // Total height of all toasts expanded (for hover hit area)
+  const totalExpandedHeight = cumulative - gap; // remove last gap
+
   return createPortal(
     <div
       className={`ds-toast-area${hasMultiple ? " ds-toast-area--multiple" : ""}`}
@@ -418,7 +421,10 @@ export function ToastContainer() {
         bottom: 24,
         right: 24,
         zIndex: 5000,
-        transition: "transform 0.4s ease, bottom 0.4s ease",
+        width: 420,
+        height: isHovered ? totalExpandedHeight : (heights[toasts[0]?.id] || 63),
+        transition: "transform 0.4s ease, bottom 0.4s ease, height 0.35s cubic-bezier(0.25, 0.75, 0.6, 0.98)",
+        pointerEvents: "auto",
       }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
