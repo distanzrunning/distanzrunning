@@ -322,28 +322,9 @@ function ToastCard({
                 {item.description}
               </span>
             )}
-            {(item.action || item.undo || item.link) && (
-              <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 4 }}>
-                {item.action && (
-                  <button type="button" onClick={() => { item.action?.onClick(); onDismiss(); }} style={{ background: "none", border: "none", padding: 0, cursor: "pointer", fontSize: 13, fontWeight: 500, color: "var(--ds-gray-1000)", textDecoration: "underline", textUnderlineOffset: 2 }}>
-                    {item.action.label}
-                  </button>
-                )}
-                {item.undo && (
-                  <button type="button" onClick={() => { item.undo?.(); onDismiss(); }} style={{ background: "none", border: "none", padding: 0, cursor: "pointer", fontSize: 13, fontWeight: 500, color: "var(--ds-gray-1000)", textDecoration: "underline", textUnderlineOffset: 2 }}>
-                    Undo
-                  </button>
-                )}
-                {item.link && (
-                  <a href={item.link.href} style={{ fontSize: 13, fontWeight: 500, color: "var(--ds-blue-700)", textDecoration: "none" }}>
-                    {item.link.label}
-                  </a>
-                )}
-              </div>
-            )}
           </div>
 
-          {(index === 0 || isHovered) && (
+          {!(item.action || item.undo) && (index === 0 || isHovered) && (
             <div style={{ display: "flex", alignItems: "center", gap: 4, flexWrap: "nowrap" }}>
               <button
                 type="button"
@@ -378,6 +359,95 @@ function ToastCard({
             </div>
           )}
         </div>
+
+        {/* Full-width action buttons row (Geist style) */}
+        {(item.action || item.undo) && (
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "stretch",
+              justifyContent: "flex-end",
+              gap: 8,
+              width: "100%",
+            }}
+          >
+            <button
+              type="button"
+              onClick={onDismiss}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                height: 32,
+                padding: "0 6px",
+                border: "none",
+                borderRadius: 6,
+                background: "transparent",
+                color: "var(--ds-gray-1000)",
+                fontSize: 14,
+                fontWeight: 500,
+                lineHeight: "20px",
+                cursor: "pointer",
+                transition: "background 0.15s ease",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "var(--ds-gray-100)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "transparent";
+              }}
+            >
+              Dismiss
+            </button>
+            {item.undo && (
+              <button
+                type="button"
+                onClick={() => { item.undo?.(); onDismiss(); }}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  height: 32,
+                  padding: "0 6px",
+                  border: "none",
+                  borderRadius: 6,
+                  background: "var(--ds-gray-1000)",
+                  color: "#fff",
+                  fontSize: 14,
+                  fontWeight: 500,
+                  lineHeight: "20px",
+                  cursor: "pointer",
+                }}
+              >
+                Undo
+              </button>
+            )}
+            {item.action && (
+              <button
+                type="button"
+                onClick={() => { item.action?.onClick(); onDismiss(); }}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  height: 32,
+                  padding: "0 6px",
+                  border: "none",
+                  borderRadius: 6,
+                  background: "var(--ds-gray-1000)",
+                  color: "#fff",
+                  fontSize: 14,
+                  fontWeight: 500,
+                  lineHeight: "20px",
+                  cursor: "pointer",
+                }}
+              >
+                {item.action.label}
+              </button>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

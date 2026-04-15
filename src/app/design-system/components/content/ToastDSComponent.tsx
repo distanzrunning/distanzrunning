@@ -645,40 +645,36 @@ function PreserveDemo() {
 }
 
 function ActionDemo() {
-  const { toast, showToast, dismissToast } = useToast();
+  const { showToast } = useToast();
   return (
-    <>
-      <Button
-        onClick={() =>
-          showToast({
-            message: "Project deployed",
-            action: { label: "View", onClick: () => {} },
-          })
-        }
-      >
-        Show Toast
-      </Button>
-      <Toast toast={toast} onDismiss={dismissToast} />
-    </>
+    <Button
+      onClick={() =>
+        showToast({
+          message: "The Evil Rabbit jumped over the fence. The Evil Rabbit jumped over the fence again.",
+          action: { label: "Undo", onClick: () => {} },
+          preserve: true,
+        })
+      }
+    >
+      Show Toast
+    </Button>
   );
 }
 
 function UndoDemo() {
-  const { toast, showToast, dismissToast } = useToast();
+  const { showToast } = useToast();
   return (
-    <>
-      <Button
-        onClick={() =>
-          showToast({
-            message: "Message deleted",
-            undo: () => {},
-          })
-        }
-      >
-        Show Toast
-      </Button>
-      <Toast toast={toast} onDismiss={dismissToast} />
-    </>
+    <Button
+      onClick={() =>
+        showToast({
+          message: "The Evil Rabbit jumped over the fence.",
+          undo: () => {},
+          preserve: true,
+        })
+      }
+    >
+      Show Toast
+    </Button>
   );
 }
 
