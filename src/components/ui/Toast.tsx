@@ -156,6 +156,7 @@ function ToastCard({
   total: number;
   isHovered: boolean;
   stackOffset: number;
+  frontHeight: number;
   onDismiss: () => void;
   onHeightMeasured: (id: number, height: number) => void;
 }) {
@@ -213,27 +214,30 @@ function ToastCard({
       transition: "all 0.35s cubic-bezier(0.25, 0.75, 0.6, 0.98)",
     };
   } else if (index === 1) {
-    // Second toast: collapsed behind, fixed offset so all look the same
+    // Second toast: peek 10px above the front toast
+    const peekOffset = frontHeight + 10;
     containerStyle = {
       opacity: 1,
       maxHeight: 50,
-      transform: "translate3d(0, -33px, -1px) scale(0.95)",
+      transform: `translate3d(0, -${peekOffset}px, -1px) scale(0.95)`,
       transition: "all 0.35s cubic-bezier(0.25, 0.75, 0.6, 0.98)",
     };
   } else if (index === 2) {
-    // Third toast: further behind, fixed offset
+    // Third toast: peek 20px above front toast
+    const peekOffset = frontHeight + 20;
     containerStyle = {
       opacity: 1,
       maxHeight: 50,
-      transform: "translate3d(0, -53px, -2px) scale(0.9)",
+      transform: `translate3d(0, -${peekOffset}px, -2px) scale(0.9)`,
       transition: "all 0.35s cubic-bezier(0.25, 0.75, 0.6, 0.98)",
     };
   } else {
     // 4th+: hidden
+    const peekOffset = frontHeight + 20;
     containerStyle = {
       opacity: 0,
       pointerEvents: "none",
-      transform: "translate3d(0, -53px, -2px) scale(0.9)",
+      transform: `translate3d(0, -${peekOffset}px, -2px) scale(0.9)`,
       transition: "all 0.35s cubic-bezier(0.25, 0.75, 0.6, 0.98)",
     };
   }
@@ -437,6 +441,7 @@ export function ToastContainer() {
           total={toasts.length}
           isHovered={isHovered && hasMultiple}
           stackOffset={stackOffsets[index]}
+          frontHeight={heights[toasts[0]?.id] || 63}
           onDismiss={() => removeToast(item.id)}
           onHeightMeasured={handleHeightMeasured}
         />
