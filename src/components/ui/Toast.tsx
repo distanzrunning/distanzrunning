@@ -145,13 +145,28 @@ function ToastCard({
   isHovered: boolean;
   onDismiss: () => void;
 }) {
+  const [entered, setEntered] = useState(false);
   const showIcon = item.variant !== "default";
   const zIndex = 5000 - index;
 
+  useEffect(() => {
+    // Trigger enter animation on next frame
+    const raf = requestAnimationFrame(() => {
+      setEntered(true);
+    });
+    return () => cancelAnimationFrame(raf);
+  }, []);
+
   let transform: string;
   let maxHeight: number | string;
+  let opacity = 1;
 
-  if (isHovered) {
+  if (!entered) {
+    // Entry state: below the viewport
+    transform = "translateY(100px)";
+    maxHeight = "none";
+    opacity = 0;
+  } else if (isHovered) {
     // Expanded: stack vertically with gap, full size
     const gap = 8;
     const toastHeight = 63;
@@ -194,7 +209,7 @@ function ToastCard({
         transition: "all 0.35s cubic-bezier(0.25, 0.75, 0.6, 0.98)",
         zIndex,
         overflow: "hidden",
-        opacity: index > 2 ? 0 : 1,
+        opacity: !entered ? 0 : index > 2 ? 0 : opacity,
       }}
     >
       <div
