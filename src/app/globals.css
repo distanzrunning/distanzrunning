@@ -1232,6 +1232,20 @@
     }
   }
 
+  /* Toast stacking hover behavior */
+  @media (hover: hover) {
+    .ds-toast-area--multiple:hover {
+      transform: translateY(-10px);
+    }
+    .ds-toast-area:hover [role="status"] {
+      max-height: var(--max-height) !important;
+      transform: translate3d(0, var(--y), var(--z)) scale(1) !important;
+    }
+    .ds-toast-area:hover .ds-toast-message {
+      opacity: 1 !important;
+    }
+  }
+
   /* Inline code styling */
   p > code {
     background: var(--ds-gray-100);

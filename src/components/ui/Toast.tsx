@@ -169,42 +169,66 @@ function ToastCard({
     return () => cancelAnimationFrame(raf1);
   }, []);
 
-  // Determine target Y position and scale
-  let y: string;
-  let scale: number;
-  let opacity: number;
+  // Geist approach: entry from below, visible = transform:none,
+  // hiding = scale(.98) + opacity:0 with fast timing
+  // Stacking handled by parent hover + CSS variables
+
+  // Compute stacking Y offset for hover-expanded state
+  // Each toast is ~63px + 12px gap
+  const stackY = index === 0 ? 0 : -(index * 75);
+  const stackZ = -index;
+
+  let containerStyle: React.CSSProperties;
 
   if (item.exiting) {
-    y = "20px";
-    scale = 0.95;
-    opacity = 0;
+    // Exit: scale down slightly, fade out, fast
+    containerStyle = {
+      opacity: 0,
+      transform: "scale(0.98)",
+      transition: "all 0.16s cubic-bezier(0.6, 0.3, 0.98, 0.5)",
+    };
   } else if (!entered) {
-    y = "80px";
-    scale = 1;
-    opacity = 0;
-  } else if (isHovered) {
-    const gap = 12;
-    // Use calc() with 100% so it matches collapsed transitions smoothly
-    y = `calc(-${index * 100}% - ${index * gap}px)`;
-    scale = 1;
-    opacity = 1;
+    // Entry: below viewport
+    containerStyle = {
+      opacity: 0,
+      transform: "translate3d(0, 100%, 150px) scale(1)",
+      transition: "all 0.35s cubic-bezier(0.25, 0.75, 0.6, 0.98)",
+    };
   } else if (index === 0) {
-    y = "0px";
-    scale = 1;
-    opacity = 1;
+    // Front toast: visible, no transform
+    containerStyle = {
+      opacity: 1,
+      transform: "none",
+      transition: "all 0.35s cubic-bezier(0.25, 0.75, 0.6, 0.98)",
+    };
   } else if (index === 1) {
-    y = "calc(-100% - 12px)";
-    scale = 0.97;
-    opacity = 1;
+    // Second toast: collapsed behind
+    containerStyle = {
+      opacity: 1,
+      maxHeight: 50,
+      transform: "translate3d(0, calc(100% - 83px), -1px) scale(0.95)",
+      transition: "all 0.35s cubic-bezier(0.25, 0.75, 0.6, 0.98)",
+    };
   } else if (index === 2) {
-    y = "calc(-200% - 24px)";
-    scale = 0.94;
-    opacity = 1;
+    // Third toast: further behind
+    containerStyle = {
+      opacity: 1,
+      maxHeight: 50,
+      transform: "translate3d(0, calc(100% - 103px), -2px) scale(0.9)",
+      transition: "all 0.35s cubic-bezier(0.25, 0.75, 0.6, 0.98)",
+    };
   } else {
-    y = "calc(-200% - 24px)";
-    scale = 0.94;
-    opacity = 0;
+    // 4th+: hidden
+    containerStyle = {
+      opacity: 0,
+      pointerEvents: "none",
+      transform: "translate3d(0, calc(100% - 103px), -2px) scale(0.9)",
+      transition: "all 0.35s cubic-bezier(0.25, 0.75, 0.6, 0.98)",
+    };
   }
+
+  // Message opacity: non-front toasts hide message when not hovered
+  const messageOpacity = entered && !item.exiting && index > 0 && !isHovered ? 0 : 1;
 
   return (
     <div
@@ -215,23 +239,22 @@ function ToastCard({
         bottom: 0,
         right: 0,
         width: 420,
-        maxWidth: 420,
+        maxWidth: "min(420px, calc(100vw - 48px))",
         backgroundColor: "var(--ds-background-100)",
-        boxShadow:
-          "rgba(0, 0, 0, 0.08) 0px 0px 0px 1px, rgba(0, 0, 0, 0.02) 0px 1px 1px 0px, rgba(0, 0, 0, 0.04) 0px 4px 8px -4px, rgba(0, 0, 0, 0.06) 0px 16px 24px -8px, rgb(250, 250, 250) 0px 0px 0px 1px",
+        boxShadow: "var(--ds-shadow-menu)",
         borderRadius: 12,
         padding: 16,
-        fontSize: 14,
         lineHeight: "21px",
         color: "var(--ds-gray-1000)",
-        transform: `translateY(${y}) scale(${scale})`,
-        transformOrigin: "bottom center",
-        opacity,
-        transition: "transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease",
         zIndex,
         overflow: "hidden",
-        pointerEvents: item.exiting ? "none" as const : "auto" as const,
-      }}
+        pointerEvents: item.exiting || index >= 3 ? "none" as const : "auto" as const,
+        // CSS custom properties for hover expansion
+        "--y": `${stackY}px`,
+        "--z": `${stackZ}px`,
+        "--max-height": "63px",
+        ...containerStyle,
+      } as React.CSSProperties}
     >
       <div
         style={{
@@ -246,6 +269,7 @@ function ToastCard({
         }}
       >
         <div
+          className="ds-toast-message"
           style={{
             display: "flex",
             alignItems: "center",
@@ -254,6 +278,8 @@ function ToastCard({
             width: "100%",
             marginTop: -1,
             wordBreak: "break-word",
+            opacity: messageOpacity,
+            transition: "opacity 0.4s ease",
           }}
         >
           <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 4 }}>
@@ -356,32 +382,31 @@ export function ToastContainer() {
 
   if (!mounted || toasts.length === 0) return null;
 
+  const hasMultiple = toasts.filter((t) => !t.exiting).length > 1;
+
   return createPortal(
     <div
+      className={`ds-toast-area${hasMultiple ? " ds-toast-area--multiple" : ""}`}
       style={{
         position: "fixed",
         bottom: 24,
         right: 24,
         zIndex: 5000,
-        width: 420,
-        height: 0,
-        pointerEvents: "none",
+        transition: "transform 0.4s ease, bottom 0.4s ease",
       }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <div style={{ position: "relative", pointerEvents: "auto" }}>
-        {toasts.map((item, index) => (
-          <ToastCard
-            key={item.id}
-            item={item}
-            index={index}
-            total={toasts.length}
-            isHovered={isHovered && toasts.length > 1}
-            onDismiss={() => removeToast(item.id)}
-          />
-        ))}
-      </div>
+      {toasts.map((item, index) => (
+        <ToastCard
+          key={item.id}
+          item={item}
+          index={index}
+          total={toasts.length}
+          isHovered={isHovered && hasMultiple}
+          onDismiss={() => removeToast(item.id)}
+        />
+      ))}
     </div>,
     document.body,
   );
