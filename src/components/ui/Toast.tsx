@@ -302,9 +302,9 @@ function ToastCard({
                 </div>
               )}
               {item.jsx ? (
-                <div>{item.jsx}</div>
+                <span style={{ display: "block", lineHeight: "20px" }}>{item.jsx}</span>
               ) : (
-                <span style={{ display: "block", fontWeight: item.description ? 500 : 400, lineHeight: "21px" }}>
+                <span style={{ display: "block", fontWeight: item.description ? 500 : 400, lineHeight: "20px" }}>
                   {item.message}
                 </span>
               )}
