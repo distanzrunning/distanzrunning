@@ -540,38 +540,35 @@ function SizesDemo() {
 }
 
 function CustomColorDemo() {
-  const [a, setA] = useState(false);
-  const [b, setB] = useState(false);
-  const [c, setC] = useState(false);
-  const [d, setD] = useState(false);
+  const [on, setOn] = useState(false);
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
       <Toggle
-        checked={a}
-        onChange={setA}
+        checked={on}
+        onChange={setOn}
         uncheckedColor="#f59e0b"
         checkedColor="#f59e0b"
         thumbIcon={<LockIcon size={12} />}
       />
       <Toggle
-        checked={b}
-        onChange={setB}
+        checked={on}
+        onChange={setOn}
         uncheckedColor="#ef4444"
         checkedColor="#ef4444"
         thumbIcon={<LockIcon size={12} />}
       />
       <Toggle
-        checked={c}
-        onChange={setC}
+        checked={on}
+        onChange={setOn}
         size="large"
         uncheckedColor="#f59e0b"
         checkedColor="#f59e0b"
         thumbIcon={<LockIcon size={14} />}
       />
       <Toggle
-        checked={d}
-        onChange={setD}
+        checked={on}
+        onChange={setOn}
         size="large"
         uncheckedColor="#ef4444"
         checkedColor="#ef4444"
