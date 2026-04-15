@@ -163,7 +163,7 @@ function ToastCard({
 
   if (!entered) {
     // Entry state: below the viewport
-    transform = "translateY(100px)";
+    transform = "translate3d(0px, 100px, 0px) scale(1)";
     maxHeight = "none";
     opacity = 0;
   } else if (isHovered) {
@@ -171,18 +171,16 @@ function ToastCard({
     const gap = 8;
     const toastHeight = 63;
     const offset = index * (toastHeight + gap);
-    transform = `translateY(-${offset}px)`;
+    transform = `translate3d(0px, -${offset}px, 0px) scale(1)`;
     maxHeight = "none";
   } else if (index === 0) {
-    transform = "none";
+    transform = "translate3d(0px, 0px, 0px) scale(1)";
     maxHeight = "none";
   } else {
     // Geist collapsed stacking
     const scale = 1 - index * 0.05;
-    transform =
-      index === 1
-        ? `translate3d(0px, calc(100% - 83px), 0px) scale(${scale})`
-        : `translate3d(0px, calc(100% - 103px), 0px) scale(${scale})`;
+    const yOffset = index === 1 ? "calc(100% - 83px)" : "calc(100% - 103px)";
+    transform = `translate3d(0px, ${yOffset}, 0px) scale(${scale})`;
     maxHeight = 50;
   }
 
