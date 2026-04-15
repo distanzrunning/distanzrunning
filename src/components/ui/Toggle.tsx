@@ -48,11 +48,11 @@ const Toggle = forwardRef<HTMLInputElement, ToggleProps>(
       [isControlled, onChange],
     );
 
-    // Geist sizes: default track 28x14, thumb 12x12; large track 40x20, thumb 16x16
+    // Geist sizes: default track 28x14, thumb 12x12; large track 40x24, thumb 22x22
     const trackWidth = size === "large" ? 40 : 28;
-    const trackHeight = size === "large" ? 20 : 14;
-    const thumbSize = size === "large" ? 16 : 12;
-    const thumbTranslate = size === "large" ? 18 : 14;
+    const trackHeight = size === "large" ? 24 : 14;
+    const thumbSize = size === "large" ? 22 : 12;
+    const thumbTranslate = size === "large" ? 16 : 14;
 
     // Colors — disabled uses muted grays, normal uses blue/gray
     let trackBg: string;
@@ -102,8 +102,8 @@ const Toggle = forwardRef<HTMLInputElement, ToggleProps>(
       flexShrink: 0,
     };
 
-    // Geist: default top:6 translateY(-6), large top:10 translateY(-10)
-    const thumbTop = size === "large" ? 10 : 6;
+    // Geist: default top:6 translateY(-6), large top:11 translateY(-11)
+    const thumbTop = size === "large" ? 11 : 6;
     const thumbStyle: React.CSSProperties = {
       position: "absolute",
       top: thumbTop,
