@@ -83,7 +83,7 @@ function addToast(options: string | ToastOptions) {
   if (!opts.preserve) {
     setTimeout(() => {
       removeToast(item.id);
-    }, 3000);
+    }, 5000);
   }
 }
 
@@ -193,16 +193,16 @@ function ToastCard({
     scale = 1;
     opacity = 1;
   } else if (index === 1) {
-    y = "-10px";
-    scale = 0.95;
+    y = "calc(-100% - 12px)";
+    scale = 0.97;
     opacity = 1;
   } else if (index === 2) {
-    y = "-20px";
-    scale = 0.9;
+    y = "calc(-200% - 24px)";
+    scale = 0.94;
     opacity = 1;
   } else {
-    y = "-20px";
-    scale = 0.9;
+    y = "calc(-200% - 24px)";
+    scale = 0.94;
     opacity = 0;
   }
 
