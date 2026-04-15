@@ -44,6 +44,7 @@ interface ToastItem {
   preserve?: boolean;
   variant: "default" | "success" | "warning" | "error";
   jsx?: ReactNode;
+  exiting?: boolean;
 }
 
 // ============================================================================
@@ -87,8 +88,17 @@ function addToast(options: string | ToastOptions) {
 }
 
 function removeToast(id: number) {
-  globalToasts = globalToasts.filter((t) => t.id !== id);
+  // Mark as exiting for animation
+  globalToasts = globalToasts.map((t) =>
+    t.id === id ? { ...t, exiting: true } : t,
+  );
   notifyListeners();
+
+  // Remove after animation completes
+  setTimeout(() => {
+    globalToasts = globalToasts.filter((t) => t.id !== id);
+    notifyListeners();
+  }, 350);
 }
 
 // ============================================================================
@@ -166,6 +176,11 @@ function ToastCard({
     transform = "translate3d(0px, 100px, 0px) scale(1)";
     maxHeight = "none";
     opacity = 0;
+  } else if (item.exiting) {
+    // Exit: fade and collapse into itself
+    transform = "translate3d(0px, 0px, 0px) scale(0.95)";
+    maxHeight = 0;
+    opacity = 0;
   } else if (isHovered) {
     // Expanded: stack vertically with gap, full size
     const gap = 8;
@@ -199,7 +214,8 @@ function ToastCard({
         boxShadow:
           "rgba(0, 0, 0, 0.08) 0px 0px 0px 1px, rgba(0, 0, 0, 0.02) 0px 1px 1px 0px, rgba(0, 0, 0, 0.04) 0px 4px 8px -4px, rgba(0, 0, 0, 0.06) 0px 16px 24px -8px, rgb(250, 250, 250) 0px 0px 0px 1px",
         borderRadius: 12,
-        padding: 16,
+        padding: item.exiting ? 0 : 16,
+        margin: item.exiting ? 0 : undefined,
         fontSize: 14,
         lineHeight: "21px",
         color: "var(--ds-gray-1000)",
