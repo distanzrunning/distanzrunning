@@ -87,9 +87,11 @@ const Toggle = forwardRef<HTMLInputElement, ToggleProps>(
       flexShrink: 0,
     };
 
+    // Geist: default top:6 translateY(-6), large top:10 translateY(-10)
+    const thumbTop = size === "large" ? 10 : 6;
     const thumbStyle: React.CSSProperties = {
       position: "absolute",
-      top: trackHeight / 2,
+      top: thumbTop,
       left: 0,
       width: thumbSize,
       height: thumbSize,
@@ -98,8 +100,8 @@ const Toggle = forwardRef<HTMLInputElement, ToggleProps>(
       border: "1px solid rgba(0, 0, 0, 0)",
       boxShadow: "rgba(0, 0, 0, 0.12) 0px 0px 4px 0px, rgba(0, 0, 0, 0.1) 0px 1px 1px 0px",
       transform: isChecked
-        ? `translateX(${thumbTranslate}px) translateY(-${thumbSize / 2}px)`
-        : `translateX(0px) translateY(-${thumbSize / 2}px)`,
+        ? `translateX(${thumbTranslate}px) translateY(-${thumbTop}px)`
+        : `translateX(0px) translateY(-${thumbTop}px)`,
       transition: "transform 0.15s cubic-bezier(0, 0, 0.2, 1), background 0.15s cubic-bezier(0, 0, 0.2, 1)",
       display: "flex",
       alignItems: "center",
