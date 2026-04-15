@@ -156,11 +156,17 @@ function ToastCard({
   onDismiss: () => void;
 }) {
   const [entered, setEntered] = useState(false);
+  const [measuredHeight, setMeasuredHeight] = useState(63);
+  const cardRef = useRef<HTMLDivElement>(null);
   const showIcon = item.variant !== "default";
   const zIndex = 5000 - index;
 
   useEffect(() => {
     const raf1 = requestAnimationFrame(() => {
+      // Measure actual height before entering
+      if (cardRef.current) {
+        setMeasuredHeight(cardRef.current.scrollHeight);
+      }
       const raf2 = requestAnimationFrame(() => {
         setEntered(true);
       });
@@ -174,8 +180,8 @@ function ToastCard({
   // Stacking handled by parent hover + CSS variables
 
   // Compute stacking Y offset for hover-expanded state
-  // Each toast is ~63px + 12px gap
-  const stackY = index === 0 ? 0 : -(index * 75);
+  // Use measured height + gap for accurate positioning
+  const stackY = index === 0 ? 0 : -(index * (measuredHeight + 12));
   const stackZ = -index;
 
   let containerStyle: React.CSSProperties;
@@ -232,6 +238,7 @@ function ToastCard({
 
   return (
     <div
+      ref={cardRef}
       role="status"
       aria-atomic="true"
       style={{
@@ -252,7 +259,7 @@ function ToastCard({
         // CSS custom properties for hover expansion
         "--y": `${stackY}px`,
         "--z": `${stackZ}px`,
-        "--max-height": "63px",
+        "--max-height": `${measuredHeight}px`,
         ...containerStyle,
       } as React.CSSProperties}
     >
