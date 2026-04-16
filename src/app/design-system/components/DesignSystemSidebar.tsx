@@ -195,19 +195,19 @@ export default function DesignSystemSidebar({
           className="w-full flex items-center justify-between px-6 py-3"
         >
           <div className="flex items-center gap-3">
-            <Image
-              src="/images/distanz_icon_black.png"
-              alt="Distanz Running"
-              width={27}
-              height={27}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/images/stride_icon_black.svg"
+              alt="Stride"
               className="dark:hidden"
+              style={{ width: 27, height: 27 }}
             />
-            <Image
-              src="/images/distanz_icon_white.png"
-              alt="Distanz Running"
-              width={27}
-              height={27}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/images/stride_icon_white.svg"
+              alt="Stride"
               className="hidden dark:block"
+              style={{ width: 27, height: 27 }}
             />
             <span className="text-base font-medium text-textDefault">
               Stride Design System
