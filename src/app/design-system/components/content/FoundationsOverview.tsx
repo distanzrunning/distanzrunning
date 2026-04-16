@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import {
   LayoutGrid,
   ExternalLink,
@@ -56,7 +55,7 @@ function OverviewCard({
 
   return (
     <a
-      className={`group relative flex h-full flex-col gap-6 p-8 no-underline cursor-pointer ${isLeftColumn ? "md:border-r" : ""} ${isLastCard ? "border-b-0" : "border-b"} ${isSecondLastCard ? "md:border-b-0" : ""}`}
+      className={`group relative flex h-full flex-col gap-6 p-8 no-underline cursor-pointer hover:bg-[var(--ds-background-100)] ${isLeftColumn ? "md:border-r" : ""} ${isLastCard ? "border-b-0" : "border-b"} ${isSecondLastCard ? "md:border-b-0" : ""}`}
       onClick={(e) => {
         e.preventDefault();
         onNavigate(slug);
@@ -85,22 +84,29 @@ function OverviewCard({
 
 function BrandPreview() {
   return (
-    <div className="relative mx-auto w-fit flex items-center justify-center" style={{ height: 96 }}>
-      <Image
-        src="/images/distanz_icon_black.png"
+    <div className="relative mx-auto w-fit" style={{ height: 96 }}>
+      {/* Light mode logo */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/images/Distanz_Logo_1600_600_Black.svg"
         alt="Distanz Running"
-        width={120}
-        height={80}
         className="dark:hidden"
-        style={{ objectFit: "contain" }}
+        style={{ height: 96, width: "auto", objectFit: "contain" }}
       />
-      <Image
-        src="/images/distanz_icon_white.png"
+      {/* Dark mode logo */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/images/Distanz_Logo_1600_600_White.svg"
         alt="Distanz Running"
-        width={120}
-        height={80}
         className="hidden dark:block"
-        style={{ objectFit: "contain" }}
+        style={{ height: 96, width: "auto", objectFit: "contain" }}
+      />
+      {/* Feather edge fade overlay */}
+      <div
+        className="absolute inset-0"
+        style={{
+          boxShadow: "var(--ds-background-200) 0px 0px 8px 8px inset",
+        }}
       />
     </div>
   );
