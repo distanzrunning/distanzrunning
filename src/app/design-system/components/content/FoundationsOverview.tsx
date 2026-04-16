@@ -101,19 +101,6 @@ function BrandPreview() {
         className="hidden dark:block"
         style={{ height: 96, width: "auto", objectFit: "contain" }}
       />
-      {/* Feather edge fade overlay — matches card bg, transitions on hover */}
-      <div
-        className="absolute inset-0 transition-shadow duration-200"
-        style={{
-          boxShadow: "var(--ds-background-200) 0px 0px 8px 8px inset",
-        }}
-      />
-      <div
-        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-        style={{
-          boxShadow: "var(--ds-background-100) 0px 0px 8px 8px inset",
-        }}
-      />
     </div>
   );
 }
