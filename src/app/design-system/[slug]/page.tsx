@@ -142,6 +142,9 @@ export default function DesignSystemPage() {
         <ContentWithTOC
           tocTitle="On this page"
           tocItems={[]}
+          pageTitle="Stride Design System"
+          pageSubtitle="Distanz Running's design system for building consistent web experiences."
+          mainSectionId="introduction"
           activeSlug={activeSlug}
           onNavigate={handleNavigation}
         >

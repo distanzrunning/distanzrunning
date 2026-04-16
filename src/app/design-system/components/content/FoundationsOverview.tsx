@@ -324,16 +324,6 @@ export default function FoundationsOverview({ onNavigate }: FoundationsOverviewP
 
   return (
     <div>
-      {/* Title Section */}
-      <div style={{ padding: "48px 32px 32px" }}>
-        <h1 className="text-heading-24 md:text-heading-40 font-semibold mb-3" style={{ color: "var(--ds-gray-1000)" }}>
-          Stride Design System
-        </h1>
-        <p className="text-copy-16 md:text-copy-20" style={{ color: "var(--ds-gray-900)", lineHeight: 1.5 }}>
-          Distanz Running&apos;s design system for building consistent web experiences.
-        </p>
-      </div>
-
       {/* Cards Grid */}
       <div
         className="grid grid-cols-1 md:grid-cols-2"
