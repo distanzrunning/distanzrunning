@@ -137,7 +137,7 @@ function IconsPreview() {
           {row.map((Icon, iconIndex) => (
             <span
               key={iconIndex}
-              className="text-gray-900 group-hover:text-gray-1000 transition-colors"
+              className="ds-overview-icon"
               style={{
                 transitionDelay: `${rowIndex * 20}ms`,
                 transitionProperty: "color",

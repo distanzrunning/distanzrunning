@@ -4012,3 +4012,11 @@
 html.dark [data-code-block] span[style*="--shiki-dark"] {
   color: var(--shiki-dark) !important;
 }
+
+/* Design System overview — icon card hover */
+.ds-overview-icon {
+  color: var(--ds-gray-900);
+}
+.group:hover .ds-overview-icon {
+  color: var(--ds-gray-1000);
+}
