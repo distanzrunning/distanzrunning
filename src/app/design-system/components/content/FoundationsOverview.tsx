@@ -440,6 +440,7 @@ function GridPreview() {
           gridTemplateRows: `repeat(${rows}, 1fr)`,
           aspectRatio: `${cols}/${rows}`,
           position: "relative",
+          border: `1px solid ${guideColor}`,
         }}
       >
         {Array.from({ length: cols * rows }).map((_, i) => {
