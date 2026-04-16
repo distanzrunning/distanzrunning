@@ -37,6 +37,13 @@ export const navigation: NavSection[] = [
     ],
   },
   {
+    id: "brands",
+    label: "Brands",
+    items: [
+      { id: "distanz-running", label: "Distanz Running" },
+    ],
+  },
+  {
     id: "components",
     label: "Components",
     items: [

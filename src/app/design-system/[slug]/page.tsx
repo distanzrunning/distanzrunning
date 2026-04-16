@@ -82,6 +82,7 @@ import NoteComponent from "../components/content/NoteComponent";
 import CalendarComponent from "../components/content/CalendarComponent";
 import ComponentGeneratorPage from "../components/content/ComponentGeneratorPage";
 import Materials from "../components/content/Materials";
+import DistanzRunningBrand from "../components/content/DistanzRunningBrand";
 import ContentWithTOC from "../components/ContentWithTOC";
 import { ToastContainer } from "@/components/ui/Toast";
 
@@ -335,6 +336,21 @@ export default function DesignSystemPage() {
     }
     if (activeSlug === "stride") {
       return <div className="p-12"><PlaceholderContent title="Brands" subsection="Stride" /></div>;
+    }
+
+    if (activeSlug === "distanz-running") {
+      return (
+        <ContentWithTOC
+          tocTitle="On this page"
+          pageTitle="Brands"
+          pageSubtitle="We've created the following guidelines to help others use our brand and assets, including our logo, content, and trademarks."
+          mainSectionId="brands"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
+          <DistanzRunningBrand />
+        </ContentWithTOC>
+      );
     }
 
     // Components pages
