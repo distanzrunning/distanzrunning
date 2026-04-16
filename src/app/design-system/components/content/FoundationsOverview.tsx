@@ -85,20 +85,10 @@ function OverviewCard({
 function BrandPreview() {
   return (
     <div className="relative mx-auto w-fit" style={{ height: 96 }}>
-      {/* Light mode logo */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src="/images/Distanz_Logo_1600_600_Black.svg"
+        src="/images/Distanz_Logo_1600_600_Gray.svg"
         alt="Distanz Running"
-        className="dark:hidden"
-        style={{ height: 96, width: "auto", objectFit: "contain" }}
-      />
-      {/* Dark mode logo */}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src="/images/Distanz_Logo_1600_600_White.svg"
-        alt="Distanz Running"
-        className="hidden dark:block"
         style={{ height: 96, width: "auto", objectFit: "contain" }}
       />
     </div>
