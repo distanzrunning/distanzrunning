@@ -1,8 +1,9 @@
 "use client";
 
+import { useState, useCallback } from "react";
 import { Section } from "../ContentWithTOC";
 import { Button } from "@/components/ui/Button";
-import { Download } from "lucide-react";
+import { Download, Copy, Check } from "lucide-react";
 
 const LinkIcon = () => (
   <svg
@@ -19,7 +20,6 @@ const LinkIcon = () => (
     />
   </svg>
 );
-
 
 function SectionHeading({ id, title }: { id: string; title: string }) {
   return (
@@ -38,6 +38,47 @@ function SectionHeading({ id, title }: { id: string; title: string }) {
     </a>
   );
 }
+
+function CopyButton({ text, variant = "light" }: { text: string; variant?: "light" | "dark" }) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = useCallback(() => {
+    navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }, [text]);
+
+  return (
+    <button
+      type="button"
+      onClick={handleCopy}
+      aria-label="Copy code"
+      className="absolute right-4 top-4 opacity-0 focus:opacity-100 group-hover:opacity-100 transition-opacity"
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        width: 40,
+        height: 40,
+        borderRadius: 6,
+        border: "none",
+        background: variant === "light" ? "#fff" : "#000",
+        boxShadow: variant === "light"
+          ? "var(--ds-gray-400) 0px 0px 0px 1px"
+          : "rgba(255,255,255,0.2) 0px 0px 0px 1px",
+        color: variant === "light" ? "var(--ds-gray-1000)" : "#fff",
+        cursor: "pointer",
+        transition: "border-color 0.15s ease, background 0.15s ease, color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease",
+      }}
+    >
+      {copied ? <Check size={16} /> : <Copy size={16} />}
+    </button>
+  );
+}
+
+// The SVG markup that gets copied to clipboard
+const blackLogoSvg = `<img src="/images/Distanz_Logo_1600_600_Black.svg" alt="Distanz Running" height="64" />`;
+const whiteLogoSvg = `<img src="/images/Distanz_Logo_1600_600_White.svg" alt="Distanz Running" height="64" />`;
 
 export default function DistanzRunningBrand() {
   return (
@@ -74,12 +115,13 @@ export default function DistanzRunningBrand() {
           borderBottom: "1px solid var(--ds-gray-400)",
         }}
       >
+        <CopyButton text={blackLogoSvg} variant="light" />
         <div className="flex justify-center" style={{ maxWidth: "80%" }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/images/Distanz_Logo_1600_600_Black.svg"
             alt="Distanz Running Logo - Black"
-            style={{ height: 64, width: "auto" }}
+            style={{ height: 96, width: "auto" }}
           />
         </div>
       </div>
@@ -92,12 +134,13 @@ export default function DistanzRunningBrand() {
           borderBottom: "1px solid var(--ds-gray-400)",
         }}
       >
+        <CopyButton text={whiteLogoSvg} variant="dark" />
         <div className="flex justify-center" style={{ maxWidth: "80%" }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/images/Distanz_Logo_1600_600_White.svg"
             alt="Distanz Running Logo - White"
-            style={{ height: 64, width: "auto" }}
+            style={{ height: 96, width: "auto" }}
           />
         </div>
       </div>
@@ -128,7 +171,7 @@ export default function DistanzRunningBrand() {
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/images/distanz_icon_black.png"
+            src="/images/distanz_icon_black.svg"
             alt="Distanz Running Symbol - Black"
             style={{ height: 32 }}
           />
@@ -140,7 +183,7 @@ export default function DistanzRunningBrand() {
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/images/distanz_icon_white.png"
+            src="/images/distanz_icon_white.svg"
             alt="Distanz Running Symbol - White"
             style={{ height: 32 }}
           />
