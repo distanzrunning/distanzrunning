@@ -153,20 +153,18 @@ export default function DesignSystemSidebar({
                     `}
                   >
                     {item.id === "distanz-running" && (
-                      <span style={{ display: "block", width: 16, height: 16 }}>
-                        <Image
+                      <span style={{ display: "block", width: 16, height: 16, flexShrink: 0 }}>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
                           src="/images/distanz_icon_black.svg"
                           alt=""
-                          width={16}
-                          height={16}
                           className="dark:hidden"
                           style={{ display: "block", width: 16, height: 16 }}
                         />
-                        <Image
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
                           src="/images/distanz_icon_white.svg"
                           alt=""
-                          width={16}
-                          height={16}
                           className="hidden dark:block"
                           style={{ display: "block", width: 16, height: 16 }}
                         />
