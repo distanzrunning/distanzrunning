@@ -34,6 +34,10 @@ interface OverviewCardProps {
   description: string;
   children: React.ReactNode;
   onNavigate: (slug: string) => void;
+  /** Position in the grid: even index = left column, odd = right column */
+  index: number;
+  /** Total number of cards */
+  total: number;
 }
 
 function OverviewCard({
@@ -42,28 +46,24 @@ function OverviewCard({
   description,
   children,
   onNavigate,
+  index,
+  total,
 }: OverviewCardProps) {
   const slug = href.replace("/design-system/", "");
+  const isLeftColumn = index % 2 === 0;
+  const isLastCard = index === total - 1;
+  const isSecondLastCard = index === total - 2;
 
   return (
     <a
-      className="group relative flex h-full flex-col gap-6 p-8 no-underline cursor-pointer"
+      className={`group relative flex h-full flex-col gap-6 p-8 no-underline cursor-pointer ${isLeftColumn ? "md:border-r" : ""} ${isLastCard ? "border-b-0" : "border-b"} ${isSecondLastCard ? "md:border-b-0" : ""}`}
       onClick={(e) => {
         e.preventDefault();
         onNavigate(slug);
       }}
       style={{
         backgroundClip: "padding-box",
-        border: "1px solid var(--ds-gray-alpha-400)",
-        transition: "border-color 200ms",
-      }}
-      onMouseEnter={(e) => {
-        (e.currentTarget as HTMLElement).style.borderColor =
-          "var(--ds-gray-900)";
-      }}
-      onMouseLeave={(e) => {
-        (e.currentTarget as HTMLElement).style.borderColor =
-          "var(--ds-gray-alpha-400)";
+        borderColor: "var(--ds-gray-alpha-400)",
       }}
     >
       <div className="flex-1">{children}</div>
@@ -325,17 +325,14 @@ export default function FoundationsOverview({ onNavigate }: FoundationsOverviewP
   return (
     <div>
       {/* Cards Grid */}
-      <div
-        className="grid grid-cols-1 md:grid-cols-2"
-        style={{
-          borderTop: "1px solid var(--ds-gray-alpha-400)",
-        }}
-      >
+      <div className="grid grid-cols-1 md:grid-cols-2">
         <OverviewCard
           href="/design-system/colours"
           title="Brand Assets"
           description="Learn how to work with our brand assets."
           onNavigate={handleNavigate}
+          index={0}
+          total={6}
         >
           <BrandPreview />
         </OverviewCard>
@@ -345,6 +342,8 @@ export default function FoundationsOverview({ onNavigate }: FoundationsOverviewP
           title="Icons"
           description="Icon set tailored for running products."
           onNavigate={handleNavigate}
+          index={1}
+          total={6}
         >
           <IconsPreview />
         </OverviewCard>
@@ -354,6 +353,8 @@ export default function FoundationsOverview({ onNavigate }: FoundationsOverviewP
           title="Components"
           description="Building blocks for React applications."
           onNavigate={handleNavigate}
+          index={2}
+          total={6}
         >
           <ComponentsPreview />
         </OverviewCard>
@@ -363,6 +364,8 @@ export default function FoundationsOverview({ onNavigate }: FoundationsOverviewP
           title="Colours"
           description="A high contrast, accessible color system."
           onNavigate={handleNavigate}
+          index={3}
+          total={6}
         >
           <ColoursPreview />
         </OverviewCard>
@@ -372,6 +375,8 @@ export default function FoundationsOverview({ onNavigate }: FoundationsOverviewP
           title="Grid"
           description="A huge part of the new Distanz aesthetic."
           onNavigate={handleNavigate}
+          index={4}
+          total={6}
         >
           <GridPreview />
         </OverviewCard>
@@ -381,6 +386,8 @@ export default function FoundationsOverview({ onNavigate }: FoundationsOverviewP
           title="Typeface"
           description="Specifically designed for developers and designers."
           onNavigate={handleNavigate}
+          index={5}
+          total={6}
         >
           <TypefacePreview />
         </OverviewCard>
