@@ -4014,13 +4014,38 @@ html.dark [data-code-block] span[style*="--shiki-dark"] {
 }
 
 /* Design System — brand page copy buttons */
-.ds-copy-btn-light:hover {
-  background: var(--ds-gray-100) !important;
-  box-shadow: var(--ds-gray-400) 0px 0px 0px 1px, rgba(0, 0, 0, 0.06) 0px 2px 4px 0px !important;
+/* Light mode: white button on both sections */
+.ds-copy-btn-on-white,
+.ds-copy-btn-on-black {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.15s ease, box-shadow 0.15s ease;
+  background: #fff;
+  color: #000;
+  box-shadow: rgba(0, 0, 0, 0.14) 0px 0px 0px 1px;
 }
-.ds-copy-btn-dark:hover {
-  background: #1a1a1a !important;
-  box-shadow: rgba(255, 255, 255, 0.3) 0px 0px 0px 1px, rgba(255, 255, 255, 0.06) 0px 2px 4px 0px !important;
+.ds-copy-btn-on-white:hover,
+.ds-copy-btn-on-black:hover {
+  background: #f0f0f0;
+  box-shadow: rgba(0, 0, 0, 0.14) 0px 0px 0px 1px, rgba(0, 0, 0, 0.06) 0px 2px 4px 0px;
+}
+/* Dark mode: black button on both sections */
+:is(.dark, [data-theme="dark"]) .ds-copy-btn-on-white,
+:is(.dark, [data-theme="dark"]) .ds-copy-btn-on-black {
+  background: #000;
+  color: #fff;
+  box-shadow: rgba(255, 255, 255, 0.2) 0px 0px 0px 1px;
+}
+:is(.dark, [data-theme="dark"]) .ds-copy-btn-on-white:hover,
+:is(.dark, [data-theme="dark"]) .ds-copy-btn-on-black:hover {
+  background: #1a1a1a;
+  box-shadow: rgba(255, 255, 255, 0.3) 0px 0px 0px 1px, rgba(255, 255, 255, 0.06) 0px 2px 4px 0px;
 }
 
 /* Design System overview — icon card hover */
