@@ -483,15 +483,15 @@ function TypefacePreview() {
           borderRight: "1px dashed var(--ds-gray-alpha-400)",
         }}
       >
-        <p className="text-heading-24 text-center" style={{ color: "var(--ds-gray-700)" }}>
-          Geist Sans
+        <p className="text-heading-24 text-center" style={{ fontFamily: "var(--font-family-sans)", color: "var(--ds-gray-700)" }}>
+          Inter
         </p>
       </div>
       <p
         className="text-heading-24 text-center"
-        style={{ fontFamily: "var(--font-geist-mono)", color: "var(--ds-gray-700)" }}
+        style={{ fontFamily: "var(--font-family-serif)", color: "var(--ds-gray-700)" }}
       >
-        Geist Mono
+        EB Garamond
       </p>
     </div>
   );
