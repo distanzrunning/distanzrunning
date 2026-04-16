@@ -384,26 +384,86 @@ function ColoursPreview() {
   );
 }
 
-function GridPreview() {
+function GridCross({ style }: { style: React.CSSProperties }) {
+  const crossSize = 21;
+  const halfSize = 11;
+  const guideColor = "var(--ds-gray-700)";
+
   return (
     <div
-      className="w-full"
       style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(9, 1fr)",
-        gridTemplateRows: "repeat(2, 1fr)",
-        aspectRatio: "9/2",
+        position: "absolute",
+        width: 0,
+        height: 0,
+        pointerEvents: "none",
+        zIndex: 2,
+        ...style,
       }}
     >
-      {Array.from({ length: 18 }).map((_, i) => (
-        <div
-          key={i}
-          style={{
-            borderRight: i % 9 !== 8 ? "1px solid var(--ds-gray-alpha-400)" : "none",
-            borderBottom: i < 9 ? "1px solid var(--ds-gray-alpha-400)" : "none",
-          }}
-        />
-      ))}
+      {/* Vertical line */}
+      <div
+        style={{
+          position: "absolute",
+          width: halfSize,
+          height: crossSize,
+          borderRight: `1px solid ${guideColor}`,
+          top: -halfSize,
+          left: -halfSize,
+        }}
+      />
+      {/* Horizontal line */}
+      <div
+        style={{
+          position: "absolute",
+          width: crossSize,
+          height: halfSize,
+          borderBottom: `1px solid ${guideColor}`,
+          top: -halfSize,
+          left: -halfSize,
+        }}
+      />
+    </div>
+  );
+}
+
+function GridPreview() {
+  const cols = 9;
+  const rows = 2;
+  const guideColor = "var(--ds-gray-400)";
+
+  return (
+    <div className="w-full" style={{ position: "relative" }}>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: `repeat(${cols}, 1fr)`,
+          gridTemplateRows: `repeat(${rows}, 1fr)`,
+          aspectRatio: `${cols}/${rows}`,
+          position: "relative",
+        }}
+      >
+        {Array.from({ length: cols * rows }).map((_, i) => {
+          const col = i % cols;
+          const row = Math.floor(i / cols);
+          const isLastCol = col === cols - 1;
+          const isLastRow = row === rows - 1;
+
+          return (
+            <div
+              key={i}
+              style={{
+                borderRight: isLastCol ? "none" : `1px solid ${guideColor}`,
+                borderBottom: isLastRow ? "none" : `1px solid ${guideColor}`,
+              }}
+            />
+          );
+        })}
+
+        {/* Cross marker — top left */}
+        <GridCross style={{ top: 0, left: 0 }} />
+        {/* Cross marker — bottom right */}
+        <GridCross style={{ bottom: 0, right: 0 }} />
+      </div>
     </div>
   );
 }
