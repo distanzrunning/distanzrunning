@@ -83,14 +83,42 @@ function OverviewCard({
 }
 
 function BrandPreview() {
+  const guideColor = "var(--ds-gray-alpha-400)";
+  const guideStyle: React.CSSProperties = {
+    position: "absolute",
+    borderColor: guideColor,
+    borderStyle: "dashed",
+  };
+
   return (
-    <div className="relative mx-auto w-fit" style={{ height: 96 }}>
+    <div className="relative mx-auto w-full" style={{ height: 96 }}>
+      {/* Logo */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src="/images/Distanz_Logo_1600_600_Gray.svg"
         alt="Distanz Running"
-        style={{ height: 96, width: "auto", objectFit: "contain" }}
+        className="relative z-10"
+        style={{ height: 96, width: "auto", objectFit: "contain", margin: "0 auto", display: "block" }}
       />
+      {/* Horizontal guide lines */}
+      <div style={{ ...guideStyle, top: 0, left: 0, right: 0, borderTopWidth: 1 }} />
+      <div style={{ ...guideStyle, top: "26%", left: 0, right: 0, borderTopWidth: 1 }} />
+      <div style={{ ...guideStyle, top: "50%", left: 0, right: 0, borderTopWidth: 1 }} />
+      <div style={{ ...guideStyle, top: "74%", left: 0, right: 0, borderTopWidth: 1 }} />
+      <div style={{ ...guideStyle, bottom: 0, left: 0, right: 0, borderBottomWidth: 1 }} />
+      {/* Vertical guide lines */}
+      <div style={{ ...guideStyle, top: 0, bottom: 0, left: "10%", borderLeftWidth: 1 }} />
+      <div style={{ ...guideStyle, top: 0, bottom: 0, left: "30%", borderLeftWidth: 1 }} />
+      <div style={{ ...guideStyle, top: 0, bottom: 0, right: "10%", borderRightWidth: 1 }} />
+      {/* Diagonal guide lines through icon area */}
+      <svg
+        className="absolute inset-0 w-full h-full"
+        style={{ zIndex: 0 }}
+        preserveAspectRatio="none"
+      >
+        <line x1="10%" y1="0%" x2="38%" y2="100%" stroke={guideColor} strokeWidth="1" strokeDasharray="4 4" />
+        <line x1="38%" y1="0%" x2="10%" y2="100%" stroke={guideColor} strokeWidth="1" strokeDasharray="4 4" />
+      </svg>
     </div>
   );
 }
