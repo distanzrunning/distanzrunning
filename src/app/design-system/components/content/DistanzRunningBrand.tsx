@@ -53,7 +53,7 @@ function CopyButton({ text, variant = "light" }: { text: string; variant?: "ligh
       type="button"
       onClick={handleCopy}
       aria-label="Copy code"
-      className="absolute right-4 top-4 opacity-0 focus:opacity-100 group-hover:opacity-100 transition-opacity"
+      className={`absolute right-4 top-4 opacity-0 focus:opacity-100 group-hover:opacity-100 transition-opacity ${variant === "light" ? "ds-copy-btn-light" : "ds-copy-btn-dark"}`}
       style={{
         display: "flex",
         alignItems: "center",
@@ -68,7 +68,7 @@ function CopyButton({ text, variant = "light" }: { text: string; variant?: "ligh
           : "rgba(255,255,255,0.2) 0px 0px 0px 1px",
         color: variant === "light" ? "var(--ds-gray-1000)" : "#fff",
         cursor: "pointer",
-        transition: "border-color 0.15s ease, background 0.15s ease, color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease",
+        transition: "background 0.15s ease, box-shadow 0.15s ease",
       }}
     >
       {copied ? <Check size={16} /> : <Copy size={16} />}

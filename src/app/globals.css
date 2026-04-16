@@ -4013,6 +4013,16 @@ html.dark [data-code-block] span[style*="--shiki-dark"] {
   color: var(--shiki-dark) !important;
 }
 
+/* Design System — brand page copy buttons */
+.ds-copy-btn-light:hover {
+  background: var(--ds-gray-100) !important;
+  box-shadow: var(--ds-gray-400) 0px 0px 0px 1px, rgba(0, 0, 0, 0.06) 0px 2px 4px 0px !important;
+}
+.ds-copy-btn-dark:hover {
+  background: #1a1a1a !important;
+  box-shadow: rgba(255, 255, 255, 0.3) 0px 0px 0px 1px, rgba(255, 255, 255, 0.06) 0px 2px 4px 0px !important;
+}
+
 /* Design System overview — icon card hover */
 .ds-overview-icon {
   color: var(--ds-gray-900);
