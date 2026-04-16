@@ -130,7 +130,7 @@ export default function DistanzRunningBrand() {
 
       {/* Code block for logo usage */}
       <div
-        style={{ borderBottom: "1px solid var(--ds-gray-400)" }}
+        style={{ borderTop: "1px solid var(--ds-gray-400)", borderBottom: "1px solid var(--ds-gray-400)" }}
         className="[&>div]:border-0 [&>div]:rounded-none"
       >
         <CodeBlock
