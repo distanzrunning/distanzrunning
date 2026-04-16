@@ -131,13 +131,13 @@ function IconsPreview() {
   ];
 
   return (
-    <div className="flex flex-col gap-7" style={{ color: "var(--ds-gray-900)" }}>
+    <div className="flex flex-col gap-7">
       {iconRows.map((row, rowIndex) => (
         <div key={rowIndex} className="flex justify-between">
           {row.map((Icon, iconIndex) => (
             <span
               key={iconIndex}
-              className="group-hover:text-gray-1000 transition-colors"
+              className="text-gray-900 group-hover:text-gray-1000 transition-colors"
               style={{
                 transitionDelay: `${rowIndex * 20}ms`,
                 transitionProperty: "color",
