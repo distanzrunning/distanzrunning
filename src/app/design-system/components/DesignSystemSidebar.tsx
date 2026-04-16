@@ -155,7 +155,7 @@ export default function DesignSystemSidebar({
                     {item.id === "distanz-running" && (
                       <span style={{ display: "block", width: 16, height: 16 }}>
                         <Image
-                          src="/images/distanz_icon_black.png"
+                          src="/images/distanz_icon_black.svg"
                           alt=""
                           width={16}
                           height={16}
@@ -163,7 +163,7 @@ export default function DesignSystemSidebar({
                           style={{ display: "block", width: 16, height: 16 }}
                         />
                         <Image
-                          src="/images/distanz_icon_white.png"
+                          src="/images/distanz_icon_white.svg"
                           alt=""
                           width={16}
                           height={16}
