@@ -63,23 +63,32 @@ export default function DistanzRunningBrand() {
             <a
               href="#"
               role="link"
+              className="ds-download-button"
               style={{
-                boxShadow: "var(--ds-shadow-border-small)",
-                borderRadius: 999,
-                padding: "0 12px",
+                boxShadow: "rgba(0, 0, 0, 0.08) 0px 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 2px 2px 0px, var(--ds-background-200) 0px 0px 0px 1px",
+                borderRadius: 100,
+                padding: "0 10px",
                 height: 40,
                 display: "inline-flex",
                 alignItems: "center",
-                gap: 8,
+                justifyContent: "center",
                 fontSize: 14,
                 fontWeight: 500,
+                lineHeight: "20px",
                 color: "var(--ds-gray-1000)",
                 background: "var(--ds-background-100)",
                 textDecoration: "none",
+                transition: "border-color 0.15s ease, background 0.15s ease, color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease",
+                userSelect: "none",
+                touchAction: "manipulation",
               }}
             >
-              <DownloadIcon />
-              Download Distanz Assets
+              <span style={{ display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, width: 20, minWidth: 20, height: 16, marginRight: 2 }}>
+                <DownloadIcon />
+              </span>
+              <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", padding: "0 6px" }}>
+                Download Distanz Assets
+              </span>
             </a>
           </div>
         </div>
