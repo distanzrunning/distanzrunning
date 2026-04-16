@@ -324,7 +324,10 @@ export default function FoundationsOverview({ onNavigate }: FoundationsOverviewP
   return (
     <div>
       {/* Cards Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2">
+      <div
+        className="grid grid-cols-1 md:grid-cols-2"
+        style={{ borderBottom: "1px solid var(--ds-gray-400)" }}
+      >
         <OverviewCard
           href="/design-system/colours"
           title="Brand Assets"
