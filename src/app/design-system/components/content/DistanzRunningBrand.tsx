@@ -3,6 +3,7 @@
 import { useState, useCallback } from "react";
 import { Section } from "../ContentWithTOC";
 import { Button } from "@/components/ui/Button";
+import { CodeBlock } from "@/components/ui/CodeBlock";
 import { Download, Copy, Check } from "lucide-react";
 
 const LinkIcon = () => (
@@ -96,7 +97,6 @@ export default function DistanzRunningBrand() {
         className="group relative flex justify-center py-14 md:py-28"
         style={{
           background: "#fff",
-          borderBottom: "1px solid var(--ds-gray-400)",
         }}
       >
         <CopyButton text={blackLogoSvg} variant="light" />
@@ -115,7 +115,6 @@ export default function DistanzRunningBrand() {
         className="group relative flex items-center justify-center py-14 md:py-28"
         style={{
           background: "#000",
-          borderBottom: "1px solid var(--ds-gray-400)",
         }}
       >
         <CopyButton text={whiteLogoSvg} variant="dark" />
@@ -127,6 +126,15 @@ export default function DistanzRunningBrand() {
             style={{ height: 96, width: "auto" }}
           />
         </div>
+      </div>
+
+      {/* Code block for logo usage */}
+      <div style={{ borderTop: "1px solid var(--ds-gray-400)", borderBottom: "1px solid var(--ds-gray-400)" }}>
+        <CodeBlock
+          code={`<img\n  src="/images/Distanz_Logo_1600_600_Black.svg"\n  alt="Distanz Running"\n  height="64"\n/>`}
+          language="html"
+          showLineNumbers={false}
+        />
       </div>
 
       {/* Symbol heading */}
