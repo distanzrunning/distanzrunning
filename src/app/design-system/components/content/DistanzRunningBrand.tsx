@@ -1,6 +1,8 @@
 "use client";
 
 import { Section } from "../ContentWithTOC";
+import { Button } from "@/components/ui/Button";
+import { Download } from "lucide-react";
 
 const LinkIcon = () => (
   <svg
@@ -18,15 +20,6 @@ const LinkIcon = () => (
   </svg>
 );
 
-const DownloadIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-    <path
-      fillRule="evenodd"
-      clipRule="evenodd"
-      d="M8.75 1V1.75V8.68934L10.7197 6.71967L11.25 6.18934L12.3107 7.25L11.7803 7.78033L8.70711 10.8536C8.31658 11.2441 7.68342 11.2441 7.29289 10.8536L4.21967 7.78033L3.68934 7.25L4.75 6.18934L5.28033 6.71967L7.25 8.68934V1.75V1H8.75ZM13.5 9.25V13.5H2.5V9.25V8.5H1V9.25V14C1 14.5523 1.44771 15 2 15H14C14.5523 15 15 14.5523 15 14V9.25V8.5H13.5V9.25Z"
-    />
-  </svg>
-);
 
 function SectionHeading({ id, title }: { id: string; title: string }) {
   return (
@@ -60,36 +53,15 @@ export default function DistanzRunningBrand() {
             way that confuses Distanz Running with another brand.
           </p>
           <div className="mt-4 w-fit">
-            <a
-              href="#"
-              role="link"
-              className="ds-download-button"
-              style={{
-                boxShadow: "rgba(0, 0, 0, 0.08) 0px 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 2px 2px 0px, var(--ds-background-200) 0px 0px 0px 1px",
-                borderRadius: 100,
-                padding: "0 10px",
-                height: 40,
-                display: "inline-flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: 14,
-                fontWeight: 500,
-                lineHeight: "20px",
-                color: "var(--ds-gray-1000)",
-                background: "var(--ds-background-100)",
-                textDecoration: "none",
-                transition: "border-color 0.15s ease, background 0.15s ease, color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease",
-                userSelect: "none",
-                touchAction: "manipulation",
-              }}
+            <Button
+              variant="secondary"
+              shape="rounded"
+              shadow
+              prefixIcon={<Download size={16} />}
+              onClick={() => {/* TODO: link to hosted assets */}}
             >
-              <span style={{ display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, width: 20, minWidth: 20, height: 16, marginRight: 2 }}>
-                <DownloadIcon />
-              </span>
-              <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", padding: "0 6px" }}>
-                Download Distanz Assets
-              </span>
-            </a>
+              Download Distanz Assets
+            </Button>
           </div>
         </div>
       </Section>
