@@ -129,7 +129,10 @@ export default function DistanzRunningBrand() {
       </div>
 
       {/* Code block for logo usage */}
-      <div style={{ borderTop: "1px solid var(--ds-gray-400)", borderBottom: "1px solid var(--ds-gray-400)" }}>
+      <div
+        style={{ borderBottom: "1px solid var(--ds-gray-400)" }}
+        className="[&>div]:border-0 [&>div]:rounded-none"
+      >
         <CodeBlock
           code={`import { DistanzWordmark } from '@/components/logos';\n\n<DistanzWordmark height={64} />`}
           language="jsx"
