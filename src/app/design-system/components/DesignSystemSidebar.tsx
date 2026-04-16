@@ -29,6 +29,7 @@ export const navigation: NavSection[] = [
     id: "foundations",
     label: "Foundations",
     items: [
+      { id: "introduction", label: "Introduction" },
       { id: "colours", label: "Colours" },
       { id: "icons", label: "Icons" },
       { id: "typography", label: "Typography" },

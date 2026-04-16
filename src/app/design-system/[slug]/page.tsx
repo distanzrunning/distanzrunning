@@ -138,7 +138,7 @@ export default function DesignSystemPage() {
   const renderContent = () => {
     // Foundations pages
     if (activeSlug === "introduction") {
-      return <div className="p-12"><FoundationsOverview /></div>;
+      return <FoundationsOverview onNavigate={handleNavigation} />;
     }
     if (activeSlug === "design-principles") {
       return (
