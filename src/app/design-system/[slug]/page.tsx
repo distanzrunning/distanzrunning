@@ -138,7 +138,16 @@ export default function DesignSystemPage() {
   const renderContent = () => {
     // Foundations pages
     if (activeSlug === "introduction") {
-      return <FoundationsOverview onNavigate={handleNavigation} />;
+      return (
+        <ContentWithTOC
+          tocTitle="On this page"
+          tocItems={[]}
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
+          <FoundationsOverview onNavigate={handleNavigation} />
+        </ContentWithTOC>
+      );
     }
     if (activeSlug === "design-principles") {
       return (
