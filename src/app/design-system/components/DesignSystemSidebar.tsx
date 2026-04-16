@@ -152,25 +152,27 @@ export default function DesignSystemSidebar({
                       }
                     `}
                   >
+                    {item.id === "distanz-running" && (
+                      <span style={{ display: "block", width: 16, height: 16 }}>
+                        <Image
+                          src="/images/distanz_icon_black.png"
+                          alt=""
+                          width={16}
+                          height={16}
+                          className="dark:hidden"
+                          style={{ display: "block", width: 16, height: 16 }}
+                        />
+                        <Image
+                          src="/images/distanz_icon_white.png"
+                          alt=""
+                          width={16}
+                          height={16}
+                          className="hidden dark:block"
+                          style={{ display: "block", width: 16, height: 16 }}
+                        />
+                      </span>
+                    )}
                     <span className="flex flex-row items-center gap-2">
-                      {item.id === "distanz-running" && (
-                        <>
-                          <Image
-                            src="/images/distanz_icon_black.png"
-                            alt=""
-                            width={14}
-                            height={14}
-                            className="dark:hidden"
-                          />
-                          <Image
-                            src="/images/distanz_icon_white.png"
-                            alt=""
-                            width={14}
-                            height={14}
-                            className="hidden dark:block"
-                          />
-                        </>
-                      )}
                       {item.label}
                     </span>
                     {item.locked && (
