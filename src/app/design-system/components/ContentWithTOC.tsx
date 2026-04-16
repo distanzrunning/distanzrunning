@@ -484,25 +484,27 @@ export default function ContentWithTOC({
 
       {/* Table of Contents - Right Sidebar (≥1280px) */}
       <aside className="hidden xl:block w-[260px] flex-shrink-0 border-l border-borderSubtle">
-        <div className="sticky top-[65px] max-h-[calc(100vh-65px)] overflow-y-auto px-6 py-6">
-          <h4 className="text-[14px] leading-[20px] font-medium text-textDefault mb-3">
-            {tocTitle}
-          </h4>
-          <div className="flex flex-col">
-            {mainSectionId && renderTOCLink(mainSectionId, "Intro")}
-            {tocItems.map((item) => (
-              <div key={item.id}>
-                {renderTOCLink(item.id, item.title)}
-                {item.children &&
-                  item.children.map((child) => (
-                    <div key={child.id}>
-                      {renderTOCLink(child.id, child.title, true)}
-                    </div>
-                  ))}
-              </div>
-            ))}
+        {(tocItems.length > 0 || mainSectionId) && (
+          <div className="sticky top-[65px] max-h-[calc(100vh-65px)] overflow-y-auto px-6 py-6">
+            <h4 className="text-[14px] leading-[20px] font-medium text-textDefault mb-3">
+              {tocTitle}
+            </h4>
+            <div className="flex flex-col">
+              {mainSectionId && renderTOCLink(mainSectionId, "Intro")}
+              {tocItems.map((item) => (
+                <div key={item.id}>
+                  {renderTOCLink(item.id, item.title)}
+                  {item.children &&
+                    item.children.map((child) => (
+                      <div key={child.id}>
+                        {renderTOCLink(child.id, child.title, true)}
+                      </div>
+                    ))}
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
       </aside>
     </div>
   );
