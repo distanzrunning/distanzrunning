@@ -350,6 +350,48 @@ export function FeedbackInline({
           height: 48px;
           padding: 0 8px 0 20px;
         }
+        .feedback-inline-wrapper .feedback-emoji {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 32px;
+          height: 32px;
+          border-radius: 50%;
+          border: none;
+          cursor: pointer;
+          padding: 0;
+          background: transparent;
+          color: var(--ds-gray-900);
+          transition: background 0.2s ease, border-color 0.2s ease;
+        }
+        .feedback-inline-wrapper .feedback-emoji--selected {
+          background: var(--ds-gray-200);
+        }
+        @media (hover: hover) {
+          .feedback-inline-wrapper .feedback-emoji:hover {
+            background: var(--ds-pink-300);
+            color: var(--ds-pink-800);
+          }
+        }
+        .feedback-inline-wrapper .feedback-textarea-wrapper {
+          display: flex;
+          width: 100%;
+          border-radius: 6px;
+          background: var(--ds-background-100);
+          box-shadow: 0 0 0 1px var(--ds-gray-alpha-400);
+          transition: box-shadow 0.15s ease;
+        }
+        @media (hover: hover) {
+          .feedback-inline-wrapper .feedback-textarea-wrapper:hover {
+            box-shadow: 0 0 0 1px var(--ds-gray-alpha-500);
+          }
+        }
+        .feedback-inline-wrapper .feedback-textarea-wrapper:focus-within {
+          box-shadow: 0 0 0 1px var(--ds-gray-alpha-600), 0px 0px 0px 4px rgba(0, 0, 0, 0.16);
+        }
+        .feedback-inline-wrapper .feedback-textarea-wrapper textarea::placeholder {
+          color: var(--ds-gray-700);
+        }
       `}</style>
     </div>
   );
