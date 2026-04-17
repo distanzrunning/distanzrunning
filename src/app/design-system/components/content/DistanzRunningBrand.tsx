@@ -64,8 +64,8 @@ function CopyButton({ text, variant = "light" }: { text: string; variant?: "ligh
 // The SVG markup that gets copied to clipboard
 const blackLogoSvg = `<img src="/images/Distanz_Logo_1600_600_Black.svg" alt="Distanz Running" height="64" />`;
 const whiteLogoSvg = `<img src="/images/Distanz_Logo_1600_600_White.svg" alt="Distanz Running" height="64" />`;
-const blackMarkSvg = `<img src="/images/distanz_icon_black.svg" alt="Distanz Running" height="32" />`;
-const whiteMarkSvg = `<img src="/images/distanz_icon_white.svg" alt="Distanz Running" height="32" />`;
+const blackMarkSvg = `<img src="/images/distanz_icon_black_v3.svg" alt="Distanz Running" height="32" />`;
+const whiteMarkSvg = `<img src="/images/distanz_icon_white_v3.svg" alt="Distanz Running" height="32" />`;
 
 export default function DistanzRunningBrand() {
   return (
@@ -166,7 +166,7 @@ export default function DistanzRunningBrand() {
           <CopyButton text={blackMarkSvg} variant="light" />
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/images/distanz_icon_black.svg"
+            src="/images/distanz_icon_black_v3.svg"
             alt="Distanz Running Symbol - Black"
             style={{ height: 32 }}
           />
@@ -179,7 +179,7 @@ export default function DistanzRunningBrand() {
           <CopyButton text={whiteMarkSvg} variant="dark" />
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/images/distanz_icon_white.svg"
+            src="/images/distanz_icon_white_v3.svg"
             alt="Distanz Running Symbol - White"
             style={{ height: 32 }}
           />

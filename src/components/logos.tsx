@@ -48,14 +48,14 @@ export function DistanzMark({ height = 32, className = "" }: LogoProps) {
     <>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src="/images/distanz_icon_black.svg"
+        src="/images/distanz_icon_black_v3.svg"
         alt="Distanz Running"
         className={`dark:hidden ${className}`}
         style={{ height, width: "auto" }}
       />
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src="/images/distanz_icon_white.svg"
+        src="/images/distanz_icon_white_v3.svg"
         alt="Distanz Running"
         className={`hidden dark:block ${className}`}
         style={{ height, width: "auto" }}
