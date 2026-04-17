@@ -210,12 +210,8 @@ export function Login({
                 className="w-full"
                 onClick={p.onClick}
                 disabled={isLoading}
+                prefixIcon={p.icon}
               >
-                {p.icon && (
-                  <span className="inline-flex items-center justify-center mr-2">
-                    {p.icon}
-                  </span>
-                )}
                 {p.label}
               </Button>
             ))}
