@@ -1,14 +1,20 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { ArrowRight, ExternalLink } from "lucide-react";
+import React, { useState, useCallback, useEffect } from "react";
+import { ChevronDown, Search, ArrowRight, ExternalLink } from "lucide-react";
 import { Section } from "../ContentWithTOC";
+import {
+  useShikiHighlighter,
+  getTokenStyle,
+  type DualThemeToken,
+} from "@/components/ui/useShikiHighlighter";
 import { CommandMenu } from "@/components/ui/CommandMenu";
 import { Note } from "@/components/ui/Note";
 import { useToast } from "@/components/ui/Toast";
+import IconButton from "@/components/ui/IconButton";
 
 // ============================================================================
-// Section Header (anchor + copy-link pattern used across DS pages)
+// Section header + copy link (matches other DS pages)
 // ============================================================================
 
 const HEADER_HEIGHT = 112;
@@ -76,7 +82,162 @@ function SectionHeader({
 }
 
 // ============================================================================
-// Sample data for the live preview
+// Code preview (preview box + collapsible code, matches other DS pages)
+// ============================================================================
+
+function RenderShikiToken({ token }: { token: DualThemeToken }) {
+  const style = getTokenStyle(token);
+  return <span style={style}>{token.content}</span>;
+}
+
+function CopyIcon() {
+  return (
+    <svg
+      height="16"
+      strokeLinejoin="round"
+      viewBox="0 0 16 16"
+      width="16"
+      style={{ color: "currentcolor" }}
+    >
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M2.75 0.5C1.7835 0.5 1 1.2835 1 2.25V9.75C1 10.7165 1.7835 11.5 2.75 11.5H3.75H4.5V10H3.75H2.75C2.61193 10 2.5 9.88807 2.5 9.75V2.25C2.5 2.11193 2.61193 2 2.75 2H8.25C8.38807 2 8.5 2.11193 8.5 2.25V3H10V2.25C10 1.2835 9.2165 0.5 8.25 0.5H2.75ZM7.75 4.5C6.7835 4.5 6 5.2835 6 6.25V13.75C6 14.7165 6.7835 15.5 7.75 15.5H13.25C14.2165 15.5 15 14.7165 15 13.75V6.25C15 5.2835 14.2165 4.5 13.25 4.5H7.75ZM7.5 6.25C7.5 6.11193 7.61193 6 7.75 6H13.25C13.3881 6 13.5 6.11193 13.5 6.25V13.75C13.5 13.8881 13.3881 14 13.25 14H7.75C7.61193 14 7.5 13.8881 7.5 13.75V6.25Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+}
+
+function CheckIcon() {
+  return (
+    <svg
+      height="16"
+      strokeLinejoin="round"
+      viewBox="0 0 16 16"
+      width="16"
+      style={{ color: "currentcolor" }}
+    >
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M15.5607 3.99999L15.0303 4.53032L6.23744 13.3232C5.55403 14.0066 4.44599 14.0066 3.76257 13.3232L4.2929 12.7929L3.76257 13.3232L0.969676 10.5303L0.439346 9.99999L1.50001 8.93933L2.03034 9.46966L4.82323 12.2626C4.92086 12.3602 5.07915 12.3602 5.17678 12.2626L13.9697 3.46966L14.5 2.93933L15.5607 3.99999Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+}
+
+function CopyIconButton({ copied }: { copied: boolean }) {
+  return (
+    <div className="relative w-4 h-4">
+      <span
+        className={`absolute inset-0 transition-all duration-150 ease-out ${copied ? "opacity-0 scale-75" : "opacity-100 scale-100"}`}
+      >
+        <CopyIcon />
+      </span>
+      <span
+        className={`absolute inset-0 transition-all duration-150 ease-out ${copied ? "opacity-100 scale-100" : "opacity-0 scale-75"}`}
+      >
+        <CheckIcon />
+      </span>
+    </div>
+  );
+}
+
+interface CodePreviewProps {
+  children: React.ReactNode;
+  componentCode: string;
+}
+
+function CodePreview({ children, componentCode }: CodePreviewProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const tokenizedLines = useShikiHighlighter(componentCode, "tsx");
+  const lines: DualThemeToken[][] =
+    tokenizedLines ||
+    componentCode.split("\n").map(
+      (line) =>
+        [
+          {
+            content: line,
+            color: "var(--ds-gray-1000)",
+            darkColor: "var(--ds-gray-1000)",
+          },
+        ] as DualThemeToken[],
+    );
+
+  const handleCopy = useCallback(() => {
+    navigator.clipboard.writeText(componentCode);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1000);
+  }, [componentCode]);
+
+  return (
+    <div className="border border-[var(--ds-gray-400)] rounded-lg">
+      <div
+        className="p-6 rounded-t-lg flex items-center justify-center min-h-[200px]"
+        style={{ background: "var(--ds-background-100)" }}
+      >
+        {children}
+      </div>
+      <div
+        className="rounded-b-lg overflow-hidden"
+        style={{ background: "var(--ds-background-200)" }}
+      >
+        <button
+          type="button"
+          onClick={() => setIsOpen(!isOpen)}
+          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-[var(--ds-gray-400)]"
+        >
+          <ChevronDown size={16} className={isOpen ? "" : "-rotate-90"} />
+          {isOpen ? "Hide code" : "Show code"}
+        </button>
+        {isOpen && (
+          <div
+            className="border-t border-[var(--ds-gray-400)] overflow-x-auto font-mono text-[13px]"
+            style={{ background: "var(--ds-background-100)" }}
+          >
+            <div className="relative group">
+              <button
+                onClick={handleCopy}
+                className="absolute top-3 right-3 p-2 rounded border border-[var(--ds-gray-400)] opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-[var(--ds-background-200)] hover:bg-[var(--ds-gray-100)]"
+                aria-label="Copy code"
+              >
+                <CopyIconButton copied={copied} />
+              </button>
+              <pre className="overflow-x-auto py-4" data-code-block>
+                <code className="block text-[13px] leading-[20px] font-mono">
+                  {lines.map((lineTokens, index) => (
+                    <div
+                      key={index}
+                      className="flex px-4"
+                      style={{ fontFeatureSettings: '"liga" off' }}
+                    >
+                      <span className="select-none w-[32px] min-w-[32px] text-right pr-4 text-textSubtler">
+                        {index + 1}
+                      </span>
+                      <span className="flex-1 pr-4">
+                        {lineTokens.map((token, i) => (
+                          <RenderShikiToken key={i} token={token} />
+                        ))}
+                        {lineTokens.length === 0 && " "}
+                      </span>
+                    </div>
+                  ))}
+                </code>
+              </pre>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ============================================================================
+// Sample data for the live modal
 // ============================================================================
 
 const SAMPLE_GROUPS: { heading: string; items: string[] }[] = [
@@ -91,6 +252,81 @@ const SAMPLE_GROUPS: { heading: string; items: string[] }[] = [
 ];
 
 // ============================================================================
+// Code strings
+// ============================================================================
+
+const triggerCode = `import { useState } from 'react';
+import { CommandMenu } from '@/components/ui/CommandMenu';
+
+export function SearchTrigger() {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <>
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        className="flex h-8 w-[220px] items-center justify-between rounded border border-[var(--ds-gray-400)] bg-transparent pl-2 pr-1.5 text-sm text-[var(--ds-gray-700)] hover:bg-[var(--ds-background-200)]"
+      >
+        Search Stride
+        <kbd
+          className="ml-1 inline-flex min-h-5 min-w-5 items-center justify-center rounded bg-[var(--ds-background-100)] px-1 text-[12px] text-[var(--ds-gray-900)]"
+          style={{ boxShadow: '0 0 0 1px var(--ds-gray-alpha-400)' }}
+        >
+          <span>⌘</span>
+          <span>K</span>
+        </kbd>
+      </button>
+
+      <CommandMenu open={open} onClose={() => setOpen(false)} placeholder="Search...">
+        {/* CommandMenu.Group and CommandMenu.Item children */}
+      </CommandMenu>
+    </>
+  );
+}`;
+
+const iconTriggerCode = `import { useState } from 'react';
+import { Search } from 'lucide-react';
+import IconButton from '@/components/ui/IconButton';
+import { CommandMenu } from '@/components/ui/CommandMenu';
+
+export function SearchIconTrigger() {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <>
+      <IconButton
+        variant="primary"
+        aria-label="Search"
+        onClick={() => setOpen(true)}
+      >
+        <Search className="w-5 h-5" />
+      </IconButton>
+
+      <IconButton
+        variant="secondary"
+        aria-label="Search"
+        onClick={() => setOpen(true)}
+      >
+        <Search className="w-5 h-5" />
+      </IconButton>
+
+      <IconButton
+        variant="tertiary"
+        aria-label="Search"
+        onClick={() => setOpen(true)}
+      >
+        <Search className="w-5 h-5" />
+      </IconButton>
+
+      <CommandMenu open={open} onClose={() => setOpen(false)} placeholder="Search...">
+        {/* ... */}
+      </CommandMenu>
+    </>
+  );
+}`;
+
+// ============================================================================
 // Main component
 // ============================================================================
 
@@ -98,7 +334,6 @@ export default function SearchComponent() {
   const [open, setOpen] = useState(false);
   const { showToast } = useToast();
 
-  // Listen for ⌘K inside the preview so it behaves like the real header trigger
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
@@ -117,57 +352,55 @@ export default function SearchComponent() {
         <div className="py-12">
           <p className="text-[16px] leading-[1.6] text-textSubtle max-w-[720px] mb-6">
             Search is a header-level trigger paired with a modal that lets
-            users jump between pages. The trigger is a compact input-styled
-            button showing the <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">⌘K</code> shortcut; the modal is built
-            on <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">CommandMenu</code> and lists navigable destinations
-            grouped by section.
+            users jump between pages. The trigger can be a compact
+            input-styled button showing the{" "}
+            <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+              ⌘K
+            </code>{" "}
+            shortcut, or a square icon button. The modal is built on{" "}
+            <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+              CommandMenu
+            </code>{" "}
+            and lists navigable destinations grouped by section.
           </p>
 
           <Note type="default" label="Algolia">
-            <div className="flex items-start justify-between gap-4">
-              <span>
-                Search on{" "}
-                <a
-                  href="https://distanzrunning.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="underline text-textDefault hover:text-textSubtle inline-flex items-center gap-1"
-                >
-                  distanzrunning.com
-                  <ExternalLink className="w-3.5 h-3.5" />
-                </a>{" "}
-                is powered by Algolia across articles, gear, and races. The
-                design-system search here is a local, in-app navigator — no
-                external index.
-              </span>
-            </div>
+            Search on{" "}
+            <a
+              href="https://distanzrunning.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline text-textDefault hover:text-textSubtle inline-flex items-center gap-1"
+            >
+              distanzrunning.com
+              <ExternalLink className="w-3.5 h-3.5" />
+            </a>{" "}
+            is powered by Algolia across articles, gear, and races. The
+            design-system search here is a local, in-app navigator — no
+            external index.
           </Note>
         </div>
       </Section>
 
-      {/* Trigger + modal preview */}
+      {/* Default trigger with shortcut */}
       <Section>
         <div className="py-12">
-          <SectionHeader id="preview" onCopyLink={showToast}>
-            Preview
+          <SectionHeader id="trigger" onCopyLink={showToast}>
+            Trigger with shortcut
           </SectionHeader>
-
           <p className="text-[16px] leading-[1.6] text-textSubtle max-w-[720px] mt-4 mb-6">
-            Click the trigger or press <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">⌘K</code> to open the modal.
+            The primary placement in a page header. Click or press{" "}
+            <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+              ⌘K
+            </code>{" "}
+            to open the modal.
           </p>
 
-          <div
-            className="flex items-center justify-center rounded-[12px] border border-borderSubtle"
-            style={{
-              background: "var(--ds-background-200)",
-              minHeight: 240,
-              padding: 48,
-            }}
-          >
+          <CodePreview componentCode={triggerCode}>
             <button
               type="button"
               onClick={() => setOpen(true)}
-              className="flex h-8 w-[280px] cursor-pointer items-center justify-between rounded border border-[var(--ds-gray-400)] bg-[var(--ds-background-100)] pl-2 pr-1.5 font-sans text-sm text-[var(--ds-gray-700)] outline-none transition-colors hover:bg-[var(--ds-background-200)]"
+              className="flex h-8 w-[220px] cursor-pointer items-center justify-between rounded border border-[var(--ds-gray-400)] bg-transparent pl-2 pr-1.5 font-sans text-sm text-[var(--ds-gray-700)] outline-none transition-colors hover:bg-[var(--ds-background-200)]"
             >
               Search Stride
               <kbd
@@ -180,7 +413,46 @@ export default function SearchComponent() {
                 <span>K</span>
               </kbd>
             </button>
-          </div>
+          </CodePreview>
+        </div>
+      </Section>
+
+      {/* Icon triggers */}
+      <Section>
+        <div className="py-12">
+          <SectionHeader id="icon-triggers" onCopyLink={showToast}>
+            Icon triggers
+          </SectionHeader>
+          <p className="text-[16px] leading-[1.6] text-textSubtle max-w-[720px] mt-4 mb-6">
+            When space is tight — or the shortcut would be out of place — use
+            an icon button. Available in the three standard variants.
+          </p>
+
+          <CodePreview componentCode={iconTriggerCode}>
+            <div className="flex items-center gap-4">
+              <IconButton
+                variant="primary"
+                aria-label="Search"
+                onClick={() => setOpen(true)}
+              >
+                <Search className="w-5 h-5" />
+              </IconButton>
+              <IconButton
+                variant="secondary"
+                aria-label="Search"
+                onClick={() => setOpen(true)}
+              >
+                <Search className="w-5 h-5" />
+              </IconButton>
+              <IconButton
+                variant="tertiary"
+                aria-label="Search"
+                onClick={() => setOpen(true)}
+              >
+                <Search className="w-5 h-5" />
+              </IconButton>
+            </div>
+          </CodePreview>
         </div>
       </Section>
 
