@@ -77,14 +77,14 @@ export default function PagePagination({
 
   return (
     <nav aria-label="pagination">
-      <div className="flex items-start pt-8 gap-4">
+      <div className="flex items-center pt-8 gap-6">
         {/* Previous page */}
-        <div className="flex-1 min-w-0">
+        <div className="flex-1">
           {prevPage && (
             <button
               onClick={() => onNavigate(prevPage.id)}
               aria-label={`Go to previous page: ${prevPage.label}`}
-              className="block py-1 pl-7 pr-2 text-left text-[var(--ds-gray-900)] hover:text-black dark:hover:text-white transition-colors duration-200"
+              className="inline-block py-1 pl-7 pr-2 text-left text-[var(--ds-gray-900)] hover:text-black dark:hover:text-white transition-colors duration-200"
             >
               <span className="block text-[0.8125rem] leading-[1.125rem] font-normal mb-0.5">
                 Previous
@@ -101,18 +101,18 @@ export default function PagePagination({
           )}
         </div>
 
-        {/* Center: Was this helpful? */}
-        <div className="hidden md:flex flex-1 min-w-0 justify-center">
+        {/* Center: Was this helpful? — natural width, stays centred */}
+        <div className="hidden md:block flex-shrink-0">
           <FeedbackInline />
         </div>
 
         {/* Next page */}
-        <div className="flex-1 min-w-0 flex justify-end">
+        <div className="flex-1 flex justify-end">
           {nextPage && (
             <button
               onClick={() => onNavigate(nextPage.id)}
               aria-label={`Go to next page: ${nextPage.label}`}
-              className="block py-1 pl-2 pr-7 text-left text-[var(--ds-gray-900)] hover:text-black dark:hover:text-white transition-colors duration-200"
+              className="inline-block py-1 pl-2 pr-7 text-left text-[var(--ds-gray-900)] hover:text-black dark:hover:text-white transition-colors duration-200"
             >
               <span className="block text-[0.8125rem] leading-[1.125rem] font-normal mb-0.5">
                 Next
