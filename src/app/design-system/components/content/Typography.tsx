@@ -1,85 +1,11 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useCallback } from "react";
 import { CircleHelp } from "lucide-react";
 import { SiTailwindcss } from "react-icons/si";
 import { Section } from "../ContentWithTOC";
 import { CodeBlock } from "@/components/ui/CodeBlock";
-
-// Toast notification for copy confirmation (matches Color page style)
-function Toast({
-  message,
-  isVisible,
-  onDismiss,
-}: {
-  message: string;
-  isVisible: boolean;
-  onDismiss: () => void;
-}) {
-  return (
-    <div
-      className={`fixed bottom-4 right-4 z-50 transition-all duration-300 ${
-        isVisible
-          ? "opacity-100 translate-y-0"
-          : "opacity-0 translate-y-2 pointer-events-none"
-      }`}
-    >
-      <div
-        className="material-menu flex items-center gap-3 px-4 py-3"
-        role="status"
-        aria-live="polite"
-      >
-        <span className="text-sm text-textDefault">{message}</span>
-        <button
-          type="button"
-          onClick={onDismiss}
-          aria-label="Dismiss toast"
-          className="p-1 rounded hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors"
-        >
-          <svg
-            height="16"
-            strokeLinejoin="round"
-            viewBox="0 0 16 16"
-            width="16"
-          >
-            <path
-              fillRule="evenodd"
-              clipRule="evenodd"
-              d="M12.4697 13.5303L13 14.0607L14.0607 13L13.5303 12.4697L9.06065 7.99999L13.5303 3.53032L14.0607 2.99999L13 1.93933L12.4697 2.46966L7.99999 6.93933L3.53032 2.46966L2.99999 1.93933L1.93933 2.99999L2.46966 3.53032L6.93933 7.99999L2.46966 12.4697L1.93933 13L2.99999 14.0607L3.53032 13.5303L7.99999 9.06065L12.4697 13.5303Z"
-              fill="currentColor"
-            />
-          </svg>
-        </button>
-      </div>
-    </div>
-  );
-}
-
-// Global toast state management
-let toastTimeout: NodeJS.Timeout | null = null;
-
-function useToast() {
-  const [toast, setToast] = useState({ message: "", isVisible: false });
-
-  const showToast = useCallback((message: string) => {
-    if (toastTimeout) {
-      clearTimeout(toastTimeout);
-    }
-    setToast({ message, isVisible: true });
-    toastTimeout = setTimeout(() => {
-      setToast((prev) => ({ ...prev, isVisible: false }));
-    }, 2000);
-  }, []);
-
-  const dismissToast = useCallback(() => {
-    if (toastTimeout) {
-      clearTimeout(toastTimeout);
-    }
-    setToast((prev) => ({ ...prev, isVisible: false }));
-  }, []);
-
-  return { toast, showToast, dismissToast };
-}
+import { useToast } from "@/components/ui/Toast";
 
 // Typography table row with click-to-copy functionality
 function TypographyRow({
@@ -241,7 +167,7 @@ function SectionHeader({
 }
 
 export default function Typography() {
-  const { toast, showToast, dismissToast } = useToast();
+  const { showToast } = useToast();
 
   const handleCopy = useCallback(
     (className: string) => {
@@ -252,11 +178,6 @@ export default function Typography() {
 
   return (
     <>
-      <Toast
-        message={toast.message}
-        isVisible={toast.isVisible}
-        onDismiss={dismissToast}
-      />
       {/* Usage Section */}
       <Section>
         <SectionHeader id="usage" onCopyLink={showToast}>

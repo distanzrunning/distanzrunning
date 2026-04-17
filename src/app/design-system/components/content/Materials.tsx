@@ -1,96 +1,10 @@
 "use client";
 
-import React, { useState, useCallback, useRef } from "react";
+import React from "react";
 import { Section } from "../ContentWithTOC";
 import { SiTailwindcss } from "react-icons/si";
 import { HelpCircle } from "lucide-react";
-
-// Toast context for copy notifications
-const ToastContext = React.createContext<{
-  showToast: (message: string) => void;
-}>({
-  showToast: () => {},
-});
-
-function Toast({
-  message,
-  visible,
-  onDismiss,
-}: {
-  message: string;
-  visible: boolean;
-  onDismiss: () => void;
-}) {
-  return (
-    <div
-      className={`fixed bottom-4 right-4 z-50 transition-all duration-300 ${
-        visible
-          ? "opacity-100 translate-y-0"
-          : "opacity-0 translate-y-2 pointer-events-none"
-      }`}
-    >
-      <div
-        className="material-menu flex items-center gap-3 px-4 py-3"
-        role="status"
-        aria-live="polite"
-      >
-        <span className="text-sm text-textDefault">{message}</span>
-        <button
-          type="button"
-          onClick={onDismiss}
-          aria-label="Dismiss toast"
-          className="p-1 rounded hover:bg-gray-100 transition-colors"
-        >
-          <svg
-            height="16"
-            strokeLinejoin="round"
-            viewBox="0 0 16 16"
-            width="16"
-          >
-            <path
-              fillRule="evenodd"
-              clipRule="evenodd"
-              d="M12.4697 13.5303L13 14.0607L14.0607 13L13.5303 12.4697L9.06065 7.99999L13.5303 3.53032L14.0607 2.99999L13 1.93933L12.4697 2.46966L7.99999 6.93933L3.53032 2.46966L2.99999 1.93933L1.93933 2.99999L2.46966 3.53032L6.93933 7.99999L2.46966 12.4697L1.93933 13L2.99999 14.0607L3.53032 13.5303L7.99999 9.06065L12.4697 13.5303Z"
-              fill="currentColor"
-            />
-          </svg>
-        </button>
-      </div>
-    </div>
-  );
-}
-
-function ToastProvider({ children }: { children: React.ReactNode }) {
-  const [toast, setToast] = useState<{ message: string; visible: boolean }>({
-    message: "",
-    visible: false,
-  });
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
-
-  const showToast = useCallback((message: string) => {
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    setToast({ message, visible: true });
-    timeoutRef.current = setTimeout(() => {
-      setToast((prev) => ({ ...prev, visible: false }));
-    }, 2000);
-  }, []);
-
-  const dismissToast = useCallback(() => {
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    setToast((prev) => ({ ...prev, visible: false }));
-  }, []);
-
-  return (
-    <ToastContext.Provider value={{ showToast }}>
-      {children}
-      <Toast
-        message={toast.message}
-        visible={toast.visible}
-        onDismiss={dismissToast}
-      />
-    </ToastContext.Provider>
-  );
-}
+import { useToast } from "@/components/ui/Toast";
 
 // Link icon for section headers (matches Geist)
 function LinkIcon() {
@@ -124,7 +38,7 @@ function SectionHeader({
   id: string;
   children: React.ReactNode;
 }) {
-  const { showToast } = React.useContext(ToastContext);
+  const { showToast } = useToast();
 
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -235,7 +149,7 @@ const floatingMaterials: MaterialDefinition[] = [
 
 // Material table component
 function MaterialTable({ materials }: { materials: MaterialDefinition[] }) {
-  const { showToast } = React.useContext(ToastContext);
+  const { showToast } = useToast();
 
   const handleCopyClassName = (className: string) => {
     navigator.clipboard.writeText(className);
@@ -322,11 +236,9 @@ function FloatingSection() {
 
 export default function Materials() {
   return (
-    <ToastProvider>
-      <div>
-        <SurfaceSection />
-        <FloatingSection />
-      </div>
-    </ToastProvider>
+    <div>
+      <SurfaceSection />
+      <FloatingSection />
+    </div>
   );
 }
