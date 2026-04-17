@@ -3,24 +3,20 @@
 
 import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import { motion } from "framer-motion";
+import { Spinner } from "@/components/ui/Spinner";
 
 interface AuthProtectionProps {
   children: React.ReactNode;
 }
 
-function LoadingSpinner() {
+function AuthStatus({ message }: { message: string }) {
   return (
-    <motion.div
-      className="w-8 h-8 border-4 border-neutral-200 dark:border-neutral-700 border-t-pink-500 rounded-full"
-      animate={{ rotate: 360 }}
-      transition={{
-        duration: 1.5,
-        repeat: Infinity,
-        ease: "linear",
-      }}
-      style={{ willChange: "transform" }}
-    />
+    <div className="min-h-screen bg-canvas flex items-center justify-center">
+      <div className="flex flex-col items-center gap-4">
+        <Spinner size={32} />
+        <p className="text-sm text-textSubtle">{message}</p>
+      </div>
+    </div>
   );
 }
 
@@ -38,21 +34,18 @@ export default function AuthProtection({ children }: AuthProtectionProps) {
   const pathname = usePathname();
 
   useEffect(() => {
-    // Skip auth check if not on staging domain
     if (!isStagingDomain) {
       return;
     }
 
     const checkAuth = async () => {
       try {
-        // Skip auth check for login page
         if (pathname === "/login") {
           setIsAuthenticated(true);
           setIsLoading(false);
           return;
         }
 
-        // Check authentication status via API
         const response = await fetch("/api/auth", {
           method: "GET",
           credentials: "same-origin",
@@ -63,12 +56,10 @@ export default function AuthProtection({ children }: AuthProtectionProps) {
           setIsAuthenticated(data.authenticated);
 
           if (!data.authenticated) {
-            // Not authenticated, redirect to login
             router.replace("/login");
             return;
           }
         } else {
-          // API error, assume not authenticated
           setIsAuthenticated(false);
           router.replace("/login");
           return;
@@ -86,34 +77,13 @@ export default function AuthProtection({ children }: AuthProtectionProps) {
     checkAuth();
   }, [pathname, router, isStagingDomain]);
 
-  // Show loading spinner while checking authentication
   if (isLoading) {
-    return (
-      <div className="min-h-screen bg-canvas flex items-center justify-center">
-        <div className="flex flex-col items-center space-y-4">
-          <LoadingSpinner />
-          <p className="text-sm text-neutral-600 dark:text-neutral-400">
-            Checking authentication...
-          </p>
-        </div>
-      </div>
-    );
+    return <AuthStatus message="Checking authentication..." />;
   }
 
-  // Show children if authenticated
   if (isAuthenticated) {
     return <>{children}</>;
   }
 
-  // Show nothing while redirecting (this should be brief)
-  return (
-    <div className="min-h-screen bg-canvas flex items-center justify-center">
-      <div className="flex flex-col items-center space-y-4">
-        <LoadingSpinner />
-        <p className="text-sm text-neutral-600 dark:text-neutral-400">
-          Redirecting to login...
-        </p>
-      </div>
-    </div>
-  );
+  return <AuthStatus message="Redirecting to login..." />;
 }
