@@ -2,6 +2,7 @@
 
 import { useMemo } from "react";
 import { navigation, type NavItem } from "./DesignSystemSidebar";
+import { FeedbackInline } from "@/components/ui/Feedback";
 
 // Chevron left icon
 function ChevronLeftIcon() {
@@ -76,52 +77,57 @@ export default function PagePagination({
 
   return (
     <nav aria-label="pagination">
-      <div className="flex justify-between items-start pt-8">
+      <div className="flex items-start pt-8 gap-4">
         {/* Previous page */}
-        {prevPage ? (
-          <button
-            onClick={() => onNavigate(prevPage.id)}
-            aria-label={`Go to previous page: ${prevPage.label}`}
-            className="block py-1 pl-7 pr-2 text-left text-[var(--ds-gray-900)] hover:text-black dark:hover:text-white transition-colors duration-200"
-          >
-            <span className="block text-[0.8125rem] leading-[1.125rem] font-normal mb-0.5">
-              Previous
-            </span>
-            <div className="relative flex items-center">
-              <span className="text-[1rem] leading-[1.5rem] font-medium text-[var(--ds-gray-1000)]">
-                {prevPage.label}
+        <div className="flex-1 min-w-0">
+          {prevPage && (
+            <button
+              onClick={() => onNavigate(prevPage.id)}
+              aria-label={`Go to previous page: ${prevPage.label}`}
+              className="block py-1 pl-7 pr-2 text-left text-[var(--ds-gray-900)] hover:text-black dark:hover:text-white transition-colors duration-200"
+            >
+              <span className="block text-[0.8125rem] leading-[1.125rem] font-normal mb-0.5">
+                Previous
               </span>
-              <span className="absolute left-[-26px] mt-0.5">
-                <ChevronLeftIcon />
-              </span>
-            </div>
-          </button>
-        ) : (
-          <div />
-        )}
+              <div className="relative flex items-center">
+                <span className="text-[1rem] leading-[1.5rem] font-medium text-[var(--ds-gray-1000)]">
+                  {prevPage.label}
+                </span>
+                <span className="absolute left-[-26px] mt-0.5">
+                  <ChevronLeftIcon />
+                </span>
+              </div>
+            </button>
+          )}
+        </div>
+
+        {/* Center: Was this helpful? */}
+        <div className="hidden md:flex flex-1 min-w-0 justify-center">
+          <FeedbackInline />
+        </div>
 
         {/* Next page */}
-        {nextPage ? (
-          <button
-            onClick={() => onNavigate(nextPage.id)}
-            aria-label={`Go to next page: ${nextPage.label}`}
-            className="block py-1 pl-2 pr-7 text-left text-[var(--ds-gray-900)] hover:text-black dark:hover:text-white transition-colors duration-200"
-          >
-            <span className="block text-[0.8125rem] leading-[1.125rem] font-normal mb-0.5">
-              Next
-            </span>
-            <div className="relative flex items-center">
-              <span className="text-[1rem] leading-[1.5rem] font-medium text-[var(--ds-gray-1000)]">
-                {nextPage.label}
+        <div className="flex-1 min-w-0 flex justify-end">
+          {nextPage && (
+            <button
+              onClick={() => onNavigate(nextPage.id)}
+              aria-label={`Go to next page: ${nextPage.label}`}
+              className="block py-1 pl-2 pr-7 text-left text-[var(--ds-gray-900)] hover:text-black dark:hover:text-white transition-colors duration-200"
+            >
+              <span className="block text-[0.8125rem] leading-[1.125rem] font-normal mb-0.5">
+                Next
               </span>
-              <span className="absolute right-[-26px] mt-0.5">
-                <ChevronRightIcon />
-              </span>
-            </div>
-          </button>
-        ) : (
-          <div />
-        )}
+              <div className="relative flex items-center">
+                <span className="text-[1rem] leading-[1.5rem] font-medium text-[var(--ds-gray-1000)]">
+                  {nextPage.label}
+                </span>
+                <span className="absolute right-[-26px] mt-0.5">
+                  <ChevronRightIcon />
+                </span>
+              </div>
+            </button>
+          )}
+        </div>
       </div>
     </nav>
   );
