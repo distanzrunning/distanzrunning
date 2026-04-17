@@ -390,10 +390,9 @@ export function FeedbackInline({
         .feedback-inline-expanded {
           position: absolute;
           bottom: 0;
-          left: 0;
-          right: 0;
-          width: auto;
-          min-width: 100%;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 320px;
           background: var(--ds-background-100);
           border: 1px solid var(--ds-gray-200);
           border-radius: 24px;
@@ -412,11 +411,11 @@ export function FeedbackInline({
         @keyframes feedbackInlineExpandIn {
           from {
             opacity: 0;
-            transform: scale(0.92);
+            transform: translateX(-50%) scale(0.92);
           }
           to {
             opacity: 1;
-            transform: scale(1);
+            transform: translateX(-50%) scale(1);
           }
         }
         .feedback-inline-wrapper .feedback-emoji {
