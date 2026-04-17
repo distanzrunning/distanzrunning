@@ -2,6 +2,7 @@
 
 import React, { useState, useCallback } from "react";
 import { ChevronDown } from "lucide-react";
+import { SiGoogle } from "react-icons/si";
 import { Section } from "../ContentWithTOC";
 import {
   useShikiHighlighter,
@@ -344,6 +345,128 @@ function ForgotPasswordDemo() {
   );
 }
 
+function GoogleOnlyDemo() {
+  return (
+    <Login
+      title="Sign in"
+      providers={[
+        {
+          id: "google",
+          label: "Continue with Google",
+          icon: <SiGoogle size={16} />,
+          onClick: () => {},
+        },
+      ]}
+      footer={
+        <span className="text-textSubtle">
+          Don&apos;t have an account?{" "}
+          <a
+            href="#"
+            onClick={(e) => e.preventDefault()}
+            className="text-textDefault underline"
+          >
+            Sign up
+          </a>
+        </span>
+      }
+    />
+  );
+}
+
+function GoogleAndEmailDemo() {
+  return (
+    <Login
+      title="Sign in"
+      providers={[
+        {
+          id: "google",
+          label: "Continue with Google",
+          icon: <SiGoogle size={16} />,
+          onClick: () => {},
+        },
+      ]}
+      divider
+      fields={[
+        {
+          id: "email",
+          type: "email",
+          label: "Email",
+          placeholder: "Email",
+          autoComplete: "email",
+          required: true,
+        },
+        {
+          id: "password",
+          type: "password",
+          label: "Password",
+          placeholder: "Password",
+          autoComplete: "current-password",
+          required: true,
+        },
+      ]}
+      onSubmit={() => {}}
+    />
+  );
+}
+
+function SignUpDemo() {
+  return (
+    <Login
+      title="Create your account"
+      providers={[
+        {
+          id: "google",
+          label: "Continue with Google",
+          icon: <SiGoogle size={16} />,
+          onClick: () => {},
+        },
+      ]}
+      divider="Or sign up with email"
+      fields={[
+        {
+          id: "name",
+          type: "text",
+          label: "Full name",
+          placeholder: "Full name",
+          autoComplete: "name",
+          required: true,
+        },
+        {
+          id: "email",
+          type: "email",
+          label: "Email",
+          placeholder: "Email",
+          autoComplete: "email",
+          required: true,
+        },
+      ]}
+      submitLabel="Continue"
+      disclaimer={
+        <>
+          By clicking continue, you agree to our{" "}
+          <a
+            href="#"
+            onClick={(e) => e.preventDefault()}
+            className="text-textDefault underline"
+          >
+            Terms of Service
+          </a>{" "}
+          and{" "}
+          <a
+            href="#"
+            onClick={(e) => e.preventDefault()}
+            className="text-textDefault underline"
+          >
+            Privacy Policy
+          </a>
+          .
+        </>
+      }
+      onSubmit={() => {}}
+    />
+  );
+}
+
 function ErrorStateDemo() {
   return (
     <Login
@@ -437,6 +560,88 @@ export function SignInWithReset() {
   );
 }`;
 
+const googleOnlyCode = `import { SiGoogle } from 'react-icons/si';
+import { Login } from '@/components/ui/Login';
+
+export function GoogleSignIn() {
+  return (
+    <Login
+      title="Sign in"
+      providers={[
+        {
+          id: 'google',
+          label: 'Continue with Google',
+          icon: <SiGoogle size={16} />,
+          onClick: () => signInWithGoogle(),
+        },
+      ]}
+      footer={<span>Don't have an account? <a href="/signup">Sign up</a></span>}
+    />
+  );
+}`;
+
+const googleAndEmailCode = `import { SiGoogle } from 'react-icons/si';
+import { Login } from '@/components/ui/Login';
+
+export function SignIn() {
+  return (
+    <Login
+      title="Sign in"
+      providers={[
+        {
+          id: 'google',
+          label: 'Continue with Google',
+          icon: <SiGoogle size={16} />,
+          onClick: () => signInWithGoogle(),
+        },
+      ]}
+      divider
+      fields={[
+        { id: 'email', type: 'email', placeholder: 'Email', required: true },
+        { id: 'password', type: 'password', placeholder: 'Password', required: true },
+      ]}
+      onSubmit={(values) => {
+        // ...
+      }}
+    />
+  );
+}`;
+
+const signUpCode = `import { SiGoogle } from 'react-icons/si';
+import { Login } from '@/components/ui/Login';
+
+export function SignUp() {
+  return (
+    <Login
+      title="Create your account"
+      providers={[
+        {
+          id: 'google',
+          label: 'Continue with Google',
+          icon: <SiGoogle size={16} />,
+          onClick: () => signInWithGoogle(),
+        },
+      ]}
+      divider="Or sign up with email"
+      fields={[
+        { id: 'name', type: 'text', placeholder: 'Full name', required: true },
+        { id: 'email', type: 'email', placeholder: 'Email', required: true },
+      ]}
+      submitLabel="Continue"
+      disclaimer={
+        <>
+          By clicking continue, you agree to our{' '}
+          <a href="/terms">Terms of Service</a> and{' '}
+          <a href="/privacy">Privacy Policy</a>.
+        </>
+      }
+      onSubmit={(values) => {
+        // ...
+      }}
+    />
+  );
+}`;
+
 const errorStateCode = `import { useState } from 'react';
 import { Login } from '@/components/ui/Login';
 
@@ -523,6 +728,71 @@ export default function LoginComponent() {
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={emailPasswordCode}>
             <EmailPasswordDemo />
+          </CodePreview>
+        </div>
+      </Section>
+
+      {/* Social only */}
+      <Section>
+        <SectionHeader id="continue-with-google" onCopyLink={showToast}>
+          Continue with Google
+        </SectionHeader>
+        <p className="text-[16px] leading-[1.6] text-textSubtle mt-4 mb-6">
+          A social-only variant — no email form, just one or more OAuth
+          providers. Pass each provider through the{" "}
+          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+            providers
+          </code>{" "}
+          prop with a label, icon, and click handler.
+        </p>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={googleOnlyCode}>
+            <GoogleOnlyDemo />
+          </CodePreview>
+        </div>
+      </Section>
+
+      {/* Social + email */}
+      <Section>
+        <SectionHeader id="google-and-email" onCopyLink={showToast}>
+          Google and email
+        </SectionHeader>
+        <p className="text-[16px] leading-[1.6] text-textSubtle mt-4 mb-6">
+          When both a provider and email form are present, pass{" "}
+          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+            divider
+          </code>{" "}
+          to render a separator between them. Use{" "}
+          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+            true
+          </code>{" "}
+          for the default "Or continue with email" label or pass a custom
+          string.
+        </p>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={googleAndEmailCode}>
+            <GoogleAndEmailDemo />
+          </CodePreview>
+        </div>
+      </Section>
+
+      {/* Sign up */}
+      <Section>
+        <SectionHeader id="sign-up" onCopyLink={showToast}>
+          Sign up
+        </SectionHeader>
+        <p className="text-[16px] leading-[1.6] text-textSubtle mt-4 mb-6">
+          A sign-up flow combines a Google provider, a name + email form,
+          and a legal disclaimer. The{" "}
+          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+            disclaimer
+          </code>{" "}
+          slot renders small, centered text under the submit button — use
+          it to link out to Terms of Service and Privacy Policy.
+        </p>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={signUpCode}>
+            <SignUpDemo />
           </CodePreview>
         </div>
       </Section>
