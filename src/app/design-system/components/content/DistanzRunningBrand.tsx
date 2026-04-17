@@ -62,8 +62,10 @@ function CopyButton({ text, variant = "light" }: { text: string; variant?: "ligh
 }
 
 // The SVG markup that gets copied to clipboard
-const blackLogoSvg = `<img src="/images/Distanz_Logo_1600_600_Black.svg" alt="Distanz Running" height="64" />`;
-const whiteLogoSvg = `<img src="/images/Distanz_Logo_1600_600_White.svg" alt="Distanz Running" height="64" />`;
+const blackFullLogoSvg = `<img src="/images/Distanz_Logo_Full_Black_v3.svg" alt="Distanz Running" height="96" />`;
+const whiteFullLogoSvg = `<img src="/images/Distanz_Logo_Full_White_v3.svg" alt="Distanz Running" height="96" />`;
+const blackWordmarkSvg = `<img src="/images/Distanz_Logo_Black_v3.svg" alt="Distanz Running" height="64" />`;
+const whiteWordmarkSvg = `<img src="/images/Distanz_Logo_White_v3.svg" alt="Distanz Running" height="64" />`;
 const blackMarkSvg = `<img src="/images/distanz_icon_black_v3.svg" alt="Distanz Running" height="32" />`;
 const whiteMarkSvg = `<img src="/images/distanz_icon_white_v3.svg" alt="Distanz Running" height="32" />`;
 
@@ -94,43 +96,98 @@ export default function DistanzRunningBrand() {
         </div>
       </Section>
 
-      {/* Logo on white background */}
+      {/* Full logo on white background */}
       <div
         className="group relative flex justify-center py-14 md:py-28"
         style={{
           background: "#fff",
         }}
       >
-        <CopyButton text={blackLogoSvg} variant="light" />
+        <CopyButton text={blackFullLogoSvg} variant="light" />
         <div className="flex justify-center" style={{ maxWidth: "80%" }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/images/Distanz_Logo_1600_600_Black.svg"
+            src="/images/Distanz_Logo_Full_Black_v3.svg"
             alt="Distanz Running Logo - Black"
-            style={{ height: 96, width: "auto" }}
+            style={{ height: 120, width: "auto" }}
           />
         </div>
       </div>
 
-      {/* Logo on black background */}
+      {/* Full logo on black background */}
       <div
         className="group relative flex items-center justify-center py-14 md:py-28"
         style={{
           background: "#000",
         }}
       >
-        <CopyButton text={whiteLogoSvg} variant="dark" />
+        <CopyButton text={whiteFullLogoSvg} variant="dark" />
         <div className="flex justify-center" style={{ maxWidth: "80%" }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/images/Distanz_Logo_1600_600_White.svg"
+            src="/images/Distanz_Logo_Full_White_v3.svg"
             alt="Distanz Running Logo - White"
-            style={{ height: 96, width: "auto" }}
+            style={{ height: 120, width: "auto" }}
           />
         </div>
       </div>
 
-      {/* Code block for logo usage */}
+      {/* Code block for full logo usage */}
+      <div
+        style={{ borderTop: "1px solid var(--ds-gray-400)", borderBottom: "1px solid var(--ds-gray-400)" }}
+        className="[&>div]:border-0 [&>div]:rounded-none"
+      >
+        <CodeBlock
+          code={`import { DistanzLogo } from '@/components/logos';\n\n<DistanzLogo height={96} />`}
+          language="jsx"
+          showLineNumbers={false}
+        />
+      </div>
+
+      {/* Wordmark heading */}
+      <Section>
+        <div className="flex flex-col">
+          <SectionHeading id="wordmark" title="Wordmark" />
+          <p className="text-copy-16 mt-4" style={{ color: "var(--ds-gray-900)" }}>
+            The Distanz Running wordmark can be used as an alternative when the full logo
+            would be too vertical or when a more horizontal brand presence is needed.
+          </p>
+        </div>
+      </Section>
+
+      {/* Wordmark on white background */}
+      <div
+        className="group relative flex justify-center py-14 md:py-28"
+        style={{ background: "#fff" }}
+      >
+        <CopyButton text={blackWordmarkSvg} variant="light" />
+        <div className="flex justify-center" style={{ maxWidth: "80%" }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/images/Distanz_Logo_Black_v3.svg"
+            alt="Distanz Running Wordmark - Black"
+            style={{ height: 72, width: "auto" }}
+          />
+        </div>
+      </div>
+
+      {/* Wordmark on black background */}
+      <div
+        className="group relative flex items-center justify-center py-14 md:py-28"
+        style={{ background: "#000" }}
+      >
+        <CopyButton text={whiteWordmarkSvg} variant="dark" />
+        <div className="flex justify-center" style={{ maxWidth: "80%" }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/images/Distanz_Logo_White_v3.svg"
+            alt="Distanz Running Wordmark - White"
+            style={{ height: 72, width: "auto" }}
+          />
+        </div>
+      </div>
+
+      {/* Code block for wordmark usage */}
       <div
         style={{ borderTop: "1px solid var(--ds-gray-400)", borderBottom: "1px solid var(--ds-gray-400)" }}
         className="[&>div]:border-0 [&>div]:rounded-none"
@@ -218,7 +275,7 @@ export default function DistanzRunningBrand() {
 
             {/* Main wordmark logo — center */}
             <image
-              href="/images/Distanz_Logo_1600_600_Black.svg"
+              href="/images/Distanz_Logo_Black_v3.svg"
               x="185"
               y="145"
               width="350"
@@ -227,7 +284,7 @@ export default function DistanzRunningBrand() {
               className="dark:hidden"
             />
             <image
-              href="/images/Distanz_Logo_1600_600_White.svg"
+              href="/images/Distanz_Logo_White_v3.svg"
               x="185"
               y="145"
               width="350"
@@ -237,12 +294,12 @@ export default function DistanzRunningBrand() {
             />
 
             {/* Ghost logos — faded copies showing safety zone */}
-            <image href="/images/Distanz_Logo_1600_600_Black.svg" x="185" y="75" width="350" height="70" preserveAspectRatio="xMidYMid meet" opacity="0.12" className="dark:hidden" />
-            <image href="/images/Distanz_Logo_1600_600_White.svg" x="185" y="75" width="350" height="70" preserveAspectRatio="xMidYMid meet" opacity="0.12" className="hidden dark:block" />
-            <image href="/images/Distanz_Logo_1600_600_Black.svg" x="185" y="215" width="350" height="70" preserveAspectRatio="xMidYMid meet" opacity="0.12" className="dark:hidden" />
-            <image href="/images/Distanz_Logo_1600_600_White.svg" x="185" y="215" width="350" height="70" preserveAspectRatio="xMidYMid meet" opacity="0.12" className="hidden dark:block" />
-            <image href="/images/Distanz_Logo_1600_600_Black.svg" x="60" y="145" width="350" height="70" preserveAspectRatio="xMidYMid meet" opacity="0.12" className="dark:hidden" />
-            <image href="/images/Distanz_Logo_1600_600_White.svg" x="60" y="145" width="350" height="70" preserveAspectRatio="xMidYMid meet" opacity="0.12" className="hidden dark:block" />
+            <image href="/images/Distanz_Logo_Black_v3.svg" x="185" y="75" width="350" height="70" preserveAspectRatio="xMidYMid meet" opacity="0.12" className="dark:hidden" />
+            <image href="/images/Distanz_Logo_White_v3.svg" x="185" y="75" width="350" height="70" preserveAspectRatio="xMidYMid meet" opacity="0.12" className="hidden dark:block" />
+            <image href="/images/Distanz_Logo_Black_v3.svg" x="185" y="215" width="350" height="70" preserveAspectRatio="xMidYMid meet" opacity="0.12" className="dark:hidden" />
+            <image href="/images/Distanz_Logo_White_v3.svg" x="185" y="215" width="350" height="70" preserveAspectRatio="xMidYMid meet" opacity="0.12" className="hidden dark:block" />
+            <image href="/images/Distanz_Logo_Black_v3.svg" x="60" y="145" width="350" height="70" preserveAspectRatio="xMidYMid meet" opacity="0.12" className="dark:hidden" />
+            <image href="/images/Distanz_Logo_White_v3.svg" x="60" y="145" width="350" height="70" preserveAspectRatio="xMidYMid meet" opacity="0.12" className="hidden dark:block" />
 
             {/* Dashed guide lines */}
             <g stroke="#a8a8a8" strokeDasharray="4 8" strokeWidth="0.5">
@@ -266,14 +323,14 @@ export default function DistanzRunningBrand() {
             <rect x="0.5" y="0.87" width="719" height="359" fill="var(--ds-background-100)" />
 
             {/* Distanz wordmark — left */}
-            <image href="/images/Distanz_Logo_1600_600_Black.svg" x="60" y="150" width="250" height="60" preserveAspectRatio="xMidYMid meet" className="dark:hidden" />
-            <image href="/images/Distanz_Logo_1600_600_White.svg" x="60" y="150" width="250" height="60" preserveAspectRatio="xMidYMid meet" className="hidden dark:block" />
+            <image href="/images/Distanz_Logo_Black_v3.svg" x="60" y="150" width="250" height="60" preserveAspectRatio="xMidYMid meet" className="dark:hidden" />
+            <image href="/images/Distanz_Logo_White_v3.svg" x="60" y="150" width="250" height="60" preserveAspectRatio="xMidYMid meet" className="hidden dark:block" />
 
             {/* Ghost logos — spacing */}
-            <image href="/images/Distanz_Logo_1600_600_Black.svg" x="60" y="90" width="250" height="60" preserveAspectRatio="xMidYMid meet" opacity="0.12" className="dark:hidden" />
-            <image href="/images/Distanz_Logo_1600_600_White.svg" x="60" y="90" width="250" height="60" preserveAspectRatio="xMidYMid meet" opacity="0.12" className="hidden dark:block" />
-            <image href="/images/Distanz_Logo_1600_600_Black.svg" x="60" y="210" width="250" height="60" preserveAspectRatio="xMidYMid meet" opacity="0.12" className="dark:hidden" />
-            <image href="/images/Distanz_Logo_1600_600_White.svg" x="60" y="210" width="250" height="60" preserveAspectRatio="xMidYMid meet" opacity="0.12" className="hidden dark:block" />
+            <image href="/images/Distanz_Logo_Black_v3.svg" x="60" y="90" width="250" height="60" preserveAspectRatio="xMidYMid meet" opacity="0.12" className="dark:hidden" />
+            <image href="/images/Distanz_Logo_White_v3.svg" x="60" y="90" width="250" height="60" preserveAspectRatio="xMidYMid meet" opacity="0.12" className="hidden dark:block" />
+            <image href="/images/Distanz_Logo_Black_v3.svg" x="60" y="210" width="250" height="60" preserveAspectRatio="xMidYMid meet" opacity="0.12" className="dark:hidden" />
+            <image href="/images/Distanz_Logo_White_v3.svg" x="60" y="210" width="250" height="60" preserveAspectRatio="xMidYMid meet" opacity="0.12" className="hidden dark:block" />
 
             {/* Plus symbol */}
             <g stroke="#a8a8a8" strokeWidth="0.96">
