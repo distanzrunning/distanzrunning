@@ -288,71 +288,101 @@ export default function DistanzRunningBrand() {
           className="relative flex justify-center"
           style={{ background: "var(--ds-background-100)", minHeight: 361, padding: 0 }}
         >
-          <svg
-            fill="none"
-            viewBox="0 0 720 361"
-            xmlns="http://www.w3.org/2000/svg"
-            style={{ marginTop: -1, width: "100%", color: "var(--ds-gray-1000)" }}
-          >
-            <title>Distanz Icon Spacing Consideration</title>
-            <rect x="0.5" y="0.87" width="719" height="359" fill="var(--ds-background-100)" />
+          {(() => {
+            /**
+             * Grid layout: each icon cell is 60×60. Plus column is 30 wide.
+             * Columns (L→R): grey_left | BLACK | grey_right | + | grey_partner | ADIDAS
+             * x positions: 225 | 285 | 345 | 405 | 435 | 495 (each 60 wide except +)
+             * Rows: above | main | below, at y = 90 | 150 | 210 (each 60 tall)
+             */
+            const CELL = 60;
+            const PLUS_W = 30;
+            const xGreyLeft = 225;
+            const xBlack = xGreyLeft + CELL; // 285
+            const xGreyRight = xBlack + CELL; // 345
+            const xPlus = xGreyRight + CELL; // 405
+            const xGreyPartner = xPlus + PLUS_W; // 435
+            const xAdidas = xGreyPartner + CELL; // 495
+            const xEnd = xAdidas + CELL; // 555
+            const yAbove = 90;
+            const yMain = 150;
+            const yBelow = 210;
+            const yEnd = yBelow + CELL; // 270
 
-            {/* Ghost icons — safety zone around center */}
-            {/* Left ghost */}
-            <g opacity="0.25" transform="translate(190, 155)">
-              <DistanzIconPaths size={50} />
-            </g>
-            {/* Top ghost */}
-            <g opacity="0.25" transform="translate(275, 70)">
-              <DistanzIconPaths size={50} />
-            </g>
-            {/* Bottom ghost */}
-            <g opacity="0.25" transform="translate(275, 240)">
-              <DistanzIconPaths size={50} />
-            </g>
-            {/* Right ghost (before the icon itself) */}
-            <g opacity="0.25" transform="translate(360, 155)">
-              <DistanzIconPaths size={50} />
-            </g>
+            return (
+              <svg
+                fill="none"
+                viewBox="0 0 720 361"
+                xmlns="http://www.w3.org/2000/svg"
+                style={{ marginTop: -1, width: "100%", color: "var(--ds-gray-1000)" }}
+              >
+                <title>Distanz Icon Spacing Consideration</title>
+                <rect x="0.5" y="0.87" width="719" height="359" fill="var(--ds-background-100)" />
 
-            {/* Main icon — centre */}
-            <g transform="translate(275, 155)">
-              <DistanzIconPaths size={50} />
-            </g>
+                {/* Dashed grid lines */}
+                <g stroke="#a8a8a8" strokeDasharray="4 8" strokeWidth="0.5">
+                  {/* Horizontal — only span the icon columns (not through plus column) */}
+                  <line x1={xGreyLeft} y1={yAbove} x2={xPlus} y2={yAbove} />
+                  <line x1={xGreyLeft} y1={yMain} x2={xPlus} y2={yMain} />
+                  <line x1={xGreyLeft} y1={yBelow} x2={xPlus} y2={yBelow} />
+                  <line x1={xGreyLeft} y1={yEnd} x2={xPlus} y2={yEnd} />
+                  <line x1={xGreyPartner} y1={yAbove} x2={xEnd} y2={yAbove} />
+                  <line x1={xGreyPartner} y1={yMain} x2={xEnd} y2={yMain} />
+                  <line x1={xGreyPartner} y1={yBelow} x2={xEnd} y2={yBelow} />
+                  <line x1={xGreyPartner} y1={yEnd} x2={xEnd} y2={yEnd} />
+                  {/* Vertical — icon columns */}
+                  <line x1={xGreyLeft} y1={yAbove} x2={xGreyLeft} y2={yEnd} />
+                  <line x1={xBlack} y1={yAbove} x2={xBlack} y2={yEnd} />
+                  <line x1={xGreyRight} y1={yAbove} x2={xGreyRight} y2={yEnd} />
+                  <line x1={xPlus} y1={yAbove} x2={xPlus} y2={yEnd} />
+                  <line x1={xGreyPartner} y1={yAbove} x2={xGreyPartner} y2={yEnd} />
+                  <line x1={xAdidas} y1={yAbove} x2={xAdidas} y2={yEnd} />
+                  <line x1={xEnd} y1={yAbove} x2={xEnd} y2={yEnd} />
+                </g>
 
-            {/* Plus symbol */}
-            <g stroke="#a8a8a8" strokeWidth="0.96">
-              <line x1="452" y1="180" x2="470" y2="180" />
-              <line x1="461" y1="171" x2="461" y2="189" />
-            </g>
+                {/* Ghost icons — safety zone around main */}
+                {/* Left */}
+                <g opacity="0.25" transform={`translate(${xGreyLeft}, ${yMain})`}>
+                  <DistanzIconPaths size={CELL} />
+                </g>
+                {/* Top */}
+                <g opacity="0.25" transform={`translate(${xBlack}, ${yAbove})`}>
+                  <DistanzIconPaths size={CELL} />
+                </g>
+                {/* Bottom */}
+                <g opacity="0.25" transform={`translate(${xBlack}, ${yBelow})`}>
+                  <DistanzIconPaths size={CELL} />
+                </g>
+                {/* Right */}
+                <g opacity="0.25" transform={`translate(${xGreyRight}, ${yMain})`}>
+                  <DistanzIconPaths size={CELL} />
+                </g>
 
-            {/* Adidas icon — partner comparison */}
-            <g transform="translate(500, 155)" style={{ color: "var(--ds-gray-1000)" }}>
-              <foreignObject x="0" y="0" width="50" height="50">
-                <div style={{ width: 50, height: 50, display: "flex", alignItems: "center", justifyContent: "center", color: "var(--ds-gray-1000)" }}>
-                  <SiAdidas size={50} />
-                </div>
-              </foreignObject>
-            </g>
+                {/* Main icon — centre */}
+                <g transform={`translate(${xBlack}, ${yMain})`}>
+                  <DistanzIconPaths size={CELL} />
+                </g>
 
-            {/* Dashed guide lines */}
-            <g stroke="#a8a8a8" strokeDasharray="4 8" strokeWidth="0.5">
-              {/* Horizontal */}
-              <line x1="100" y1="100" x2="620" y2="100" />
-              <line x1="100" y1="155" x2="620" y2="155" />
-              <line x1="100" y1="205" x2="620" y2="205" />
-              <line x1="100" y1="260" x2="620" y2="260" />
-              {/* Vertical */}
-              <line x1="190" y1="55" x2="190" y2="300" />
-              <line x1="240" y1="55" x2="240" y2="300" />
-              <line x1="275" y1="55" x2="275" y2="300" />
-              <line x1="325" y1="55" x2="325" y2="300" />
-              <line x1="360" y1="55" x2="360" y2="300" />
-              <line x1="410" y1="55" x2="410" y2="300" />
-              <line x1="500" y1="55" x2="500" y2="300" />
-              <line x1="550" y1="55" x2="550" y2="300" />
-            </g>
-          </svg>
+                {/* Ghost icon — left of partner */}
+                <g opacity="0.25" transform={`translate(${xGreyPartner}, ${yMain})`}>
+                  <DistanzIconPaths size={CELL} />
+                </g>
+
+                {/* Plus symbol — centred in plus column */}
+                <g stroke="#a8a8a8" strokeWidth="0.96">
+                  <line x1={xPlus + PLUS_W / 2 - 6} y1={yMain + CELL / 2} x2={xPlus + PLUS_W / 2 + 6} y2={yMain + CELL / 2} />
+                  <line x1={xPlus + PLUS_W / 2} y1={yMain + CELL / 2 - 6} x2={xPlus + PLUS_W / 2} y2={yMain + CELL / 2 + 6} />
+                </g>
+
+                {/* Adidas icon — partner (same 60×60 square) */}
+                <foreignObject x={xAdidas} y={yMain} width={CELL} height={CELL}>
+                  <div style={{ width: CELL, height: CELL, display: "flex", alignItems: "center", justifyContent: "center", color: "var(--ds-gray-1000)" }}>
+                    <SiAdidas size={CELL} />
+                  </div>
+                </foreignObject>
+              </svg>
+            );
+          })()}
         </div>
       </div>
 
