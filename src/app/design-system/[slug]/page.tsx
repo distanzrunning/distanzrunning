@@ -80,7 +80,6 @@ import TooltipComponent from "../components/content/TooltipComponent";
 import MultiSelectComponent from "../components/content/MultiSelectComponent";
 import NoteComponent from "../components/content/NoteComponent";
 import CalendarComponent from "../components/content/CalendarComponent";
-import ComponentGeneratorPage from "../components/content/ComponentGeneratorPage";
 import Materials from "../components/content/Materials";
 import DistanzRunningBrand from "../components/content/DistanzRunningBrand";
 import ContentWithTOC from "../components/ContentWithTOC";
@@ -1212,10 +1211,6 @@ export default function DesignSystemPage() {
           <CalendarComponent />
         </ContentWithTOC>
       );
-    }
-
-    if (activeSlug === "component-generator") {
-      return <ComponentGeneratorPage />;
     }
 
     // Default placeholder for unimplemented pages
