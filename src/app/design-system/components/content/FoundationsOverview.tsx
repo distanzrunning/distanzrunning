@@ -95,7 +95,7 @@ function BrandPreview() {
       {/* Logo */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src="/images/Distanz_Logo_1600_600_Gray.svg"
+        src="/images/Distanz_Logo_Gray_v3.svg"
         alt="Distanz Running"
         className="relative z-10"
         style={{ height: 96, width: "auto", objectFit: "contain", margin: "0 auto", display: "block" }}
