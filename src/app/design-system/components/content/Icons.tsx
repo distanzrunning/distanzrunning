@@ -9,7 +9,7 @@ import { CodeBlock } from "@/components/ui/CodeBlock";
 import { useToast } from "@/components/ui/Toast";
 
 // Import icons from other libraries via react-icons
-import { TbApi, TbApiOff, TbCsv, TbGif } from "react-icons/tb";
+import { TbApi, TbApiOff, TbBrandGoogle, TbCsv, TbGif } from "react-icons/tb";
 import { MdOutlineGifBox } from "react-icons/md";
 import { LuPersonStanding } from "react-icons/lu";
 import {
@@ -173,6 +173,11 @@ const buildIconRegistry = (): IconDefinition[] => {
   }> = [
     { name: "TbApi", displayName: "Api", component: TbApi },
     { name: "TbApiOff", displayName: "ApiOff", component: TbApiOff },
+    {
+      name: "TbBrandGoogle",
+      displayName: "Brand Google",
+      component: TbBrandGoogle,
+    },
     { name: "TbCsv", displayName: "Csv", component: TbCsv },
     { name: "TbGif", displayName: "Gif", component: TbGif },
   ];
