@@ -83,15 +83,20 @@ export default function DistanzRunningBrand() {
             way that confuses Distanz Running with another brand.
           </p>
           <div className="mt-4 w-fit">
-            <Button
-              variant="secondary"
-              shape="rounded"
-              shadow
-              prefixIcon={<Download size={16} />}
-              onClick={() => {/* TODO: link to hosted assets */}}
+            <a
+              href="/downloads/distanz-brand-assets.zip"
+              download="distanz-brand-assets.zip"
+              style={{ textDecoration: "none" }}
             >
-              Download Distanz Assets
-            </Button>
+              <Button
+                variant="secondary"
+                shape="rounded"
+                shadow
+                prefixIcon={<Download size={16} />}
+              >
+                Download Distanz Assets
+              </Button>
+            </a>
           </div>
         </div>
       </Section>
