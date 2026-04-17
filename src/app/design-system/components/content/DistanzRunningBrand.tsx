@@ -5,7 +5,6 @@ import { Section } from "../ContentWithTOC";
 import { Button } from "@/components/ui/Button";
 import { CodeBlock } from "@/components/ui/CodeBlock";
 import { Download, Copy, Check } from "lucide-react";
-import { SiAdidas } from "react-icons/si";
 
 const LinkIcon = () => (
   <svg
@@ -22,21 +21,6 @@ const LinkIcon = () => (
     />
   </svg>
 );
-
-/**
- * Inline Distanz icon paths — used in spacing diagrams where we need the icon
- * to inherit fill colour from context and be positioned inside another SVG.
- * Size is the final rendered box; viewBox scales automatically.
- */
-function DistanzIconPaths({ size = 50 }: { size?: number }) {
-  return (
-    <g transform={`scale(${size / 1000})`}>
-      <path d="M865.86,333.86c34.04-97.61-25.3-213.89-124.87-243.87-48.18-15.81-96.19-11.82-146.12-12.43-38.2.61-88.06.07-109.84,36.42-16.6,29.75-.78,65.48,29.79,78.2,19.57,8.73,43.8,9.91,65.71,10.47,26.62.51,53.37-.55,78.13.84,34.22,1.23,65.95,10.59,79.73,42.69,12.51,28.42,1.65,60.79-22.85,80.61-23.35,19.87-53.47,32.04-81.34,44.72-50.64,22.67-108.55,48.17-155.48,69.75-33.93,15.71-67.88,31.46-103.93,46.85-103.31,44.48-200.83,72.49-233.86,161.7-21.78,49.7-22.75,109.34,2.02,158.24,26.43,55.64,81.14,97.31,141.28,108.65,36.26,7.64,72.07,5.21,110.2,5.78,43.71-.45,106.62,3.51,124.31-45.92,4.55-13.97,3.18-29.92-4.65-42.48-38.15-56.61-143.95-27.27-201.5-41.24-33-7.21-59.53-37.39-55.81-72.1,6.68-56.06,82.48-78.95,126.83-100.28,47.26-21.14,95.63-42.44,141.58-63.63l.16-.07c64.95-31.07,137.35-60.67,203.38-88.51,61.76-25.92,114.62-69.66,137.12-134.4Z" fill="currentColor" />
-      <path d="M810,620c-104.93,0-190,85.07-190,190s85.07,190,190,190,190-85.07,190-190-85.07-190-190-190ZM810,870c-33.14,0-60-26.86-60-60s26.86-60,60-60,60,26.86,60,60-26.86,60-60,60Z" fill="currentColor" />
-      <path d="M380,190C380,85.07,294.93,0,190,0S0,85.07,0,190s85.07,190,190,190,190-85.07,190-190ZM130,190c0-33.14,26.86-60,60-60s60,26.86,60,60-26.86,60-60,60-60-26.86-60-60Z" fill="currentColor" />
-    </g>
-  );
-}
 
 function SectionHeading({ id, title }: { id: string; title: string }) {
   return (
@@ -271,200 +255,85 @@ export default function DistanzRunningBrand() {
         />
       </div>
 
-      {/* Spacing considerations */}
+      {/* General Information */}
       <Section>
         <div className="flex flex-col">
-          <SectionHeading id="spacing-considerations" title="Spacing considerations" />
+          <SectionHeading id="general-information" title="General Information" />
           <p className="text-copy-16 mt-4" style={{ color: "var(--ds-gray-900)" }}>
-            The safety area surrounding the Primary Logo is defined by the height of our
-            symbol.
+            By using the Distanz Running trademarks you agree to the guidelines as well
+            as our{" "}
+            <a className="text-inherit" href="/legal/terms">
+              Terms of Service
+            </a>{" "}
+            and all our rules and policies. Distanz Running reserves the right to cancel,
+            modify, or change the permission in these guidelines at any time at its sole
+            discretion. For further information about use of the Distanz Running name and
+            trademarks, please contact{" "}
+            <a className="text-inherit" href="mailto:brand@distanzrunning.com">
+              brand@distanzrunning.com
+            </a>
+            .
           </p>
         </div>
       </Section>
 
-      {/* Icon spacing diagram — icon with safety zone + Adidas comparison */}
-      <div style={{ borderBottom: "1px solid var(--ds-gray-400)" }}>
-        <div
-          className="relative flex justify-center"
-          style={{ background: "var(--ds-background-100)", minHeight: 361, padding: 0 }}
-        >
-          {(() => {
-            /**
-             * Grid layout: each icon cell is 60×60. Plus column is 30 wide.
-             * Columns (L→R): grey_left | BLACK | grey_right | + | grey_partner | ADIDAS
-             * x positions: 225 | 285 | 345 | 405 | 435 | 495 (each 60 wide except +)
-             * Rows: above | main | below, at y = 90 | 150 | 210 (each 60 tall)
-             */
-            const CELL = 60;
-            const PLUS_W = 30;
-            const xGreyLeft = 225;
-            const xBlack = xGreyLeft + CELL; // 285
-            const xGreyRight = xBlack + CELL; // 345
-            const xPlus = xGreyRight + CELL; // 405
-            const xGreyPartner = xPlus + PLUS_W; // 435
-            const xAdidas = xGreyPartner + CELL; // 495
-            const xEnd = xAdidas + CELL; // 555
-            const yAbove = 90;
-            const yMain = 150;
-            const yBelow = 210;
-            const yEnd = yBelow + CELL; // 270
-
-            return (
-              <svg
-                fill="none"
-                viewBox="0 0 720 361"
-                xmlns="http://www.w3.org/2000/svg"
-                style={{ marginTop: -1, width: "100%", color: "var(--ds-gray-1000)" }}
-              >
-                <title>Distanz Icon Spacing Consideration</title>
-                <rect x="0.5" y="0.87" width="719" height="359" fill="var(--ds-background-100)" />
-
-                {/* Dashed grid lines */}
-                <g stroke="#a8a8a8" strokeDasharray="4 8" strokeWidth="0.5">
-                  {/* Horizontal — only span the icon columns (not through plus column) */}
-                  <line x1={xGreyLeft} y1={yAbove} x2={xPlus} y2={yAbove} />
-                  <line x1={xGreyLeft} y1={yMain} x2={xPlus} y2={yMain} />
-                  <line x1={xGreyLeft} y1={yBelow} x2={xPlus} y2={yBelow} />
-                  <line x1={xGreyLeft} y1={yEnd} x2={xPlus} y2={yEnd} />
-                  <line x1={xGreyPartner} y1={yAbove} x2={xEnd} y2={yAbove} />
-                  <line x1={xGreyPartner} y1={yMain} x2={xEnd} y2={yMain} />
-                  <line x1={xGreyPartner} y1={yBelow} x2={xEnd} y2={yBelow} />
-                  <line x1={xGreyPartner} y1={yEnd} x2={xEnd} y2={yEnd} />
-                  {/* Vertical — icon columns */}
-                  <line x1={xGreyLeft} y1={yAbove} x2={xGreyLeft} y2={yEnd} />
-                  <line x1={xBlack} y1={yAbove} x2={xBlack} y2={yEnd} />
-                  <line x1={xGreyRight} y1={yAbove} x2={xGreyRight} y2={yEnd} />
-                  <line x1={xPlus} y1={yAbove} x2={xPlus} y2={yEnd} />
-                  <line x1={xGreyPartner} y1={yAbove} x2={xGreyPartner} y2={yEnd} />
-                  <line x1={xAdidas} y1={yAbove} x2={xAdidas} y2={yEnd} />
-                  <line x1={xEnd} y1={yAbove} x2={xEnd} y2={yEnd} />
-                </g>
-
-                {/* Ghost icons — safety zone around main */}
-                {/* Left */}
-                <g opacity="0.25" transform={`translate(${xGreyLeft}, ${yMain})`}>
-                  <DistanzIconPaths size={CELL} />
-                </g>
-                {/* Top */}
-                <g opacity="0.25" transform={`translate(${xBlack}, ${yAbove})`}>
-                  <DistanzIconPaths size={CELL} />
-                </g>
-                {/* Bottom */}
-                <g opacity="0.25" transform={`translate(${xBlack}, ${yBelow})`}>
-                  <DistanzIconPaths size={CELL} />
-                </g>
-                {/* Right */}
-                <g opacity="0.25" transform={`translate(${xGreyRight}, ${yMain})`}>
-                  <DistanzIconPaths size={CELL} />
-                </g>
-
-                {/* Main icon — centre */}
-                <g transform={`translate(${xBlack}, ${yMain})`}>
-                  <DistanzIconPaths size={CELL} />
-                </g>
-
-                {/* Ghost icon — left of partner */}
-                <g opacity="0.25" transform={`translate(${xGreyPartner}, ${yMain})`}>
-                  <DistanzIconPaths size={CELL} />
-                </g>
-
-                {/* Plus symbol — centred in plus column */}
-                <g stroke="#a8a8a8" strokeWidth="0.96">
-                  <line x1={xPlus + PLUS_W / 2 - 6} y1={yMain + CELL / 2} x2={xPlus + PLUS_W / 2 + 6} y2={yMain + CELL / 2} />
-                  <line x1={xPlus + PLUS_W / 2} y1={yMain + CELL / 2 - 6} x2={xPlus + PLUS_W / 2} y2={yMain + CELL / 2 + 6} />
-                </g>
-
-                {/* Adidas icon — partner (same 60×60 square) */}
-                <foreignObject x={xAdidas} y={yMain} width={CELL} height={CELL}>
-                  <div style={{ width: CELL, height: CELL, display: "flex", alignItems: "center", justifyContent: "center", color: "var(--ds-gray-1000)" }}>
-                    <SiAdidas size={CELL} />
-                  </div>
-                </foreignObject>
-              </svg>
-            );
-          })()}
+      {/* Usage */}
+      <Section>
+        <div className="flex flex-col">
+          <SectionHeading id="usage" title="Usage" />
+          <p className="text-copy-16 mt-4" style={{ color: "var(--ds-gray-900)" }}>
+            You may use the Distanz Running marks to truthfully describe the products,
+            services, and experiences that we offer. You may also use Distanz Running
+            marks to truthfully state that you are a runner or partner using a Distanz
+            Running product. For example, &ldquo;Our training plan is powered by Distanz
+            Running.&rdquo;
+            <br />
+            <br />
+            All other uses of Distanz Running marks, including in connection with our
+            vendors, events, or applications that utilize our content, require prior
+            written permission from us. A copyright license for content does not provide
+            a license to use a trademark related to the project. For inquiries, please
+            contact brand@distanzrunning.com.
+            <br />
+            <br />
+            Any advertisements, documentation, websites, or other references that include
+            permitted uses of the Distanz Running marks must also include the following
+            attribution statement which can be displayed at the end of the material, in
+            the footer of the document, or some other clear and conspicuous location that
+            can be quickly identified: Distanz Running, the Distanz Running design, and
+            related marks, designs and logos are trademarks or registered trademarks of
+            Distanz Running Ltd. or its affiliates.
+          </p>
         </div>
-      </div>
+      </Section>
 
-      {/* Full logo partner spacing diagram */}
-      <div style={{ borderBottom: "1px solid var(--ds-gray-400)" }}>
-        <div
-          className="relative flex justify-center"
-          style={{ background: "var(--ds-background-100)", minHeight: 361, padding: 0 }}
-        >
-          <svg
-            fill="none"
-            viewBox="0 0 720 361"
-            xmlns="http://www.w3.org/2000/svg"
-            style={{ marginTop: -1, width: "100%" }}
-          >
-            <title>Distanz Full Logo Partner Spacing</title>
-            <rect x="0.5" y="0.87" width="719" height="359" fill="var(--ds-background-100)" />
-
-            {/* Distanz full logo — left */}
-            <image
-              href="/images/Distanz_Logo_Full_Black_v3.svg"
-              x="60"
-              y="120"
-              width="240"
-              height="120"
-              preserveAspectRatio="xMidYMid meet"
-              className="dark:hidden"
-            />
-            <image
-              href="/images/Distanz_Logo_Full_White_v3.svg"
-              x="60"
-              y="120"
-              width="240"
-              height="120"
-              preserveAspectRatio="xMidYMid meet"
-              className="hidden dark:block"
-            />
-
-            {/* Plus symbol */}
-            <g stroke="#a8a8a8" strokeWidth="0.96">
-              <line x1="345" y1="180" x2="363" y2="180" />
-              <line x1="354" y1="171" x2="354" y2="189" />
-            </g>
-
-            {/* Chicago Marathon — partner */}
-            <image
-              href="/images/bac_chimar_black.png"
-              x="400"
-              y="120"
-              width="260"
-              height="120"
-              preserveAspectRatio="xMidYMid meet"
-              className="dark:hidden"
-            />
-            <image
-              href="/images/bac_chimar_white.png"
-              x="400"
-              y="120"
-              width="260"
-              height="120"
-              preserveAspectRatio="xMidYMid meet"
-              className="hidden dark:block"
-            />
-
-            {/* Dashed guide lines */}
-            <g stroke="#a8a8a8" strokeDasharray="4 8" strokeWidth="0.5">
-              {/* Horizontal */}
-              <line x1="40" y1="100" x2="680" y2="100" />
-              <line x1="40" y1="120" x2="680" y2="120" />
-              <line x1="40" y1="240" x2="680" y2="240" />
-              <line x1="40" y1="260" x2="680" y2="260" />
-              {/* Vertical */}
-              <line x1="60" y1="80" x2="60" y2="280" />
-              <line x1="300" y1="80" x2="300" y2="280" />
-              <line x1="320" y1="80" x2="320" y2="280" />
-              <line x1="380" y1="80" x2="380" y2="280" />
-              <line x1="400" y1="80" x2="400" y2="280" />
-              <line x1="660" y1="80" x2="660" y2="280" />
-            </g>
-          </svg>
+      {/* Misuse */}
+      <Section>
+        <div className="flex flex-col">
+          <SectionHeading id="misuse" title="Misuse" />
+          <p className="text-copy-16 mt-4" style={{ color: "var(--ds-gray-900)" }}>
+            Here are some examples of ways that you should not use the Distanz Running
+            marks:
+          </p>
+          <ul className="mt-4 space-y-4" style={{ color: "var(--ds-gray-900)" }}>
+            {[
+              "Do not use Distanz Running marks in the name of your business, product, service, application, domain name, publication, or other offering.",
+              "Do not use marks, logos, company names, slogans, domain names, or designs that are confusingly similar to any Distanz Running marks.",
+              "Do not use the Distanz Running marks in any manner likely to create confusion as to the sponsorship or relationship, affiliation, or endorsement of your company, product or service by Distanz Running.",
+              "Do not use the Distanz Running marks in a false or misleading manner.",
+              "Do not display the Distanz Running marks more prominently than your trademarks, product, service, or company name.",
+              "Do not use Distanz Running marks for commercial purposes. e.g. do not include Distanz Running marks on merchandise or marketing collateral for your commercial products or services.",
+              "Do not modify the Distanz Running marks.",
+              "Do not use the Distanz Running marks on or in connection with any defamatory, scandalous, pornographic, obscene or other objectionable materials.",
+            ].map((item, i) => (
+              <li key={i} className="flex gap-2 leading-[24px] text-copy-16">
+                <span>-</span>
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
         </div>
-      </div>
+      </Section>
     </div>
   );
 }
