@@ -350,64 +350,61 @@ export default function SearchComponent() {
     <div>
       {/* Intro */}
       <Section>
-        <div className="py-12">
-          <SectionHeader id="intro" onCopyLink={showToast}>
-            Intro
-          </SectionHeader>
-          <p className="text-[16px] leading-[1.6] text-textSubtle mt-4 mb-6">
-            Search is a header-level trigger paired with a modal that lets
-            users jump between pages. The trigger can be a compact
-            input-styled button showing the{" "}
-            <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
-              ⌘K
-            </code>{" "}
-            shortcut, or a square icon button. The modal is built on{" "}
-            <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
-              CommandMenu
-            </code>{" "}
-            and lists navigable destinations grouped by section.
-          </p>
+        <SectionHeader id="intro" onCopyLink={showToast}>
+          Intro
+        </SectionHeader>
+        <p className="text-[16px] leading-[1.6] text-textSubtle mt-4 xl:mt-7 mb-6">
+          Search is a header-level trigger paired with a modal that lets
+          users jump between pages. The trigger can be a compact
+          input-styled button showing the{" "}
+          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+            ⌘K
+          </code>{" "}
+          shortcut, or a square icon button. The modal is built on{" "}
+          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+            CommandMenu
+          </code>{" "}
+          and lists navigable destinations grouped by section.
+        </p>
 
-          <Note type="default" label={false}>
-            <span className="flex items-center gap-3">
-              <SiAlgolia
-                size={20}
-                style={{ color: "#003DFF", flexShrink: 0 }}
-              />
-              <span>
-                Search on{" "}
-                <a
-                  href="https://distanzrunning.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="underline text-textDefault hover:text-textSubtle inline-flex items-center gap-1"
-                >
-                  distanzrunning.com
-                  <ExternalLink className="w-3.5 h-3.5" />
-                </a>{" "}
-                is powered by Algolia across articles, gear, and races. The
-                design-system search here is a local, in-app navigator — no
-                external index.
-              </span>
+        <Note type="default" label={false}>
+          <span className="flex items-center gap-3">
+            <SiAlgolia
+              size={20}
+              style={{ color: "#003DFF", flexShrink: 0 }}
+            />
+            <span>
+              Search on{" "}
+              <a
+                href="https://distanzrunning.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline text-textDefault hover:text-textSubtle inline-flex items-center gap-1"
+              >
+                distanzrunning.com
+                <ExternalLink className="w-3.5 h-3.5" />
+              </a>{" "}
+              is powered by Algolia across articles, gear, and races. The
+              design-system search here is a local, in-app navigator — no
+              external index.
             </span>
-          </Note>
-        </div>
+          </span>
+        </Note>
       </Section>
 
       {/* Default trigger with shortcut */}
       <Section>
-        <div className="py-12">
-          <SectionHeader id="trigger" onCopyLink={showToast}>
-            Trigger with shortcut
-          </SectionHeader>
-          <p className="text-[16px] leading-[1.6] text-textSubtle mt-4 mb-6">
-            The primary placement in a page header. Click or press{" "}
-            <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
-              ⌘K
-            </code>{" "}
-            to open the modal.
-          </p>
-
+        <SectionHeader id="trigger" onCopyLink={showToast}>
+          Trigger with shortcut
+        </SectionHeader>
+        <p className="text-[16px] leading-[1.6] text-textSubtle mt-4 mb-6">
+          The primary placement in a page header. Click or press{" "}
+          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+            ⌘K
+          </code>{" "}
+          to open the modal.
+        </p>
+        <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={triggerCode}>
             <button
               type="button"
@@ -431,15 +428,14 @@ export default function SearchComponent() {
 
       {/* Icon triggers */}
       <Section>
-        <div className="py-12">
-          <SectionHeader id="icon-triggers" onCopyLink={showToast}>
-            Icon triggers
-          </SectionHeader>
-          <p className="text-[16px] leading-[1.6] text-textSubtle mt-4 mb-6">
-            When space is tight — or the shortcut would be out of place — use
-            an icon button. Available in the three standard variants.
-          </p>
-
+        <SectionHeader id="icon-triggers" onCopyLink={showToast}>
+          Icon triggers
+        </SectionHeader>
+        <p className="text-[16px] leading-[1.6] text-textSubtle mt-4 mb-6">
+          When space is tight — or the shortcut would be out of place — use
+          an icon button. Available in the three standard variants.
+        </p>
+        <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={iconTriggerCode}>
             <div className="flex items-center gap-4">
               <IconButton
