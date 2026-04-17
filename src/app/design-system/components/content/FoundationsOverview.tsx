@@ -512,7 +512,7 @@ export default function FoundationsOverview({ onNavigate }: FoundationsOverviewP
         style={{ borderBottom: "1px solid var(--ds-gray-400)" }}
       >
         <OverviewCard
-          href="/design-system/colours"
+          href="/design-system/distanz-running"
           title="Brand Assets"
           description="Learn how to work with our brand assets."
           onNavigate={handleNavigate}
