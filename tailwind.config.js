@@ -418,7 +418,7 @@ module.exports = {
         // Distanz Typography System
         // Body/UI: Geist Sans (via `geist/font/sans`, self-hosted, variable)
         // Mono/data: Geist Mono (via `geist/font/mono`, self-hosted, variable)
-        // Editorial headings: EB Garamond (Adobe Fonts: "eb-garamond")
+        // Editorial headings: EB Garamond (Google Fonts via next/font/google)
 
         // Sans-serif (Geist) - Body, UI, navigation
         sans: [
@@ -432,19 +432,19 @@ module.exports = {
         geist: ["var(--font-geist-sans)", "sans-serif"],
 
         // Serif (EB Garamond) - Headings, display
-        serif: ["eb-garamond", "Georgia", "serif"],
-        garamond: ["eb-garamond", "Georgia", "serif"],
+        serif: ["var(--font-eb-garamond)", "Georgia", "serif"],
+        garamond: ["var(--font-eb-garamond)", "Georgia", "serif"],
 
         // Legacy aliases for backwards compatibility
-        display: ["eb-garamond", "serif"],
-        headline: ["eb-garamond", "serif"],
+        display: ["var(--font-eb-garamond)", "serif"],
+        headline: ["var(--font-eb-garamond)", "serif"],
         body: ["var(--font-geist-sans)", "sans-serif"],
         ui: ["var(--font-geist-sans)", "sans-serif"],
         // Old font aliases (kept so existing class names don't break)
         inter: ["var(--font-geist-sans)", "sans-serif"],
-        eczar: ["eb-garamond", "Georgia", "serif"],
+        eczar: ["var(--font-eb-garamond)", "Georgia", "serif"],
         franklin: ["var(--font-geist-sans)", "sans-serif"],
-        playfair: ["eb-garamond", "serif"],
+        playfair: ["var(--font-eb-garamond)", "serif"],
         manrope: ["var(--font-geist-sans)", "sans-serif"],
         archivo: ["var(--font-geist-sans)", "sans-serif"],
         bricolage: ["var(--font-geist-sans)", "sans-serif"],

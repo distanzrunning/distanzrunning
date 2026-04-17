@@ -6,12 +6,12 @@
  *
  * Body/UI: Geist Sans (`geist/font/sans`, self-hosted variable font)
  * Mono/data: Geist Mono (`geist/font/mono`, self-hosted variable font)
- * Editorial headings: EB Garamond (Adobe Fonts project bua7sld)
+ * Editorial headings: EB Garamond (Google Fonts via `next/font/google`)
  */
 
 export const fonts = {
   sans: 'var(--font-geist-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
-  serif: '"eb-garamond", Georgia, "Times New Roman", serif',
+  serif: 'var(--font-eb-garamond), Georgia, "Times New Roman", serif',
   mono: 'var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, "Courier New", monospace',
 } as const;
 

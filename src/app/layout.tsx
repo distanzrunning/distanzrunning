@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
+import { EB_Garamond } from "next/font/google";
 import AuthProtection from "@/components/AuthProtection";
 import LayoutContent from "@/components/LayoutContent";
 import NavbarAltWrapper from "@/components/NavbarAltWrapper";
@@ -12,10 +13,17 @@ import ReCaptchaProvider from "@/components/ReCaptchaProvider";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
-// Distanz Typography System
-// Body/UI: Geist Sans (via `geist/font/sans` — self-hosted, variable)
-// Mono/Data: Geist Mono (via `geist/font/mono` — self-hosted, variable)
-// Editorial headings: EB Garamond (via Adobe Fonts project bua7sld)
+// Distanz Typography System — all fonts self-hosted
+// Body/UI: Geist Sans (`geist/font/sans`)
+// Mono/Data: Geist Mono (`geist/font/mono`)
+// Editorial headings: EB Garamond (Google Fonts via `next/font/google`)
+const ebGaramond = EB_Garamond({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+  style: ["normal", "italic"],
+  variable: "--font-eb-garamond",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "Distanz Running",
@@ -45,12 +53,9 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`bg-canvas ${GeistSans.variable} ${GeistMono.variable}`}
+      className={`bg-canvas ${GeistSans.variable} ${GeistMono.variable} ${ebGaramond.variable}`}
     >
       <head>
-        {/* Adobe Fonts — EB Garamond for editorial headings */}
-        <link rel="stylesheet" href="https://use.typekit.net/bua7sld.css" />
-
         {/* Prevent flash of dark mode - ensure light mode by default */}
         <script
           dangerouslySetInnerHTML={{

@@ -513,16 +513,23 @@ export default function Typefaces() {
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 font-mono">--font-family-serif</td>
                 <td className="py-3 px-4 font-mono text-xs">
-                  &quot;EB Garamond&quot;, Georgia, serif
+                  var(--font-eb-garamond), Georgia, serif
                 </td>
                 <td className="py-3 px-4 font-mono">font-serif</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 font-mono">--font-family-sans</td>
                 <td className="py-3 px-4 font-mono text-xs">
-                  &quot;Inter Variable&quot;, sans-serif
+                  var(--font-geist-sans), sans-serif
                 </td>
                 <td className="py-3 px-4 font-mono">font-sans</td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 font-mono">--font-family-mono</td>
+                <td className="py-3 px-4 font-mono text-xs">
+                  var(--font-geist-mono), ui-monospace, monospace
+                </td>
+                <td className="py-3 px-4 font-mono">font-mono</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 font-mono">--font-weight-thin</td>

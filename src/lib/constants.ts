@@ -37,15 +37,15 @@ export const BRAND = {
       // Distanz Typography System - Geist Sans + EB Garamond
       // Geist is self-hosted via `geist/font/sans` and exposes a CSS variable.
       sans: "var(--font-geist-sans), -apple-system, BlinkMacSystemFont, sans-serif", // News, UI, headlines
-      serif: "eb-garamond, Georgia, Times New Roman, serif", // Features, long-form
+      serif: "var(--font-eb-garamond), Georgia, Times New Roman, serif", // Features, long-form
       mono: "var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, monospace",
 
       // Aliases
-      display: "eb-garamond, serif", // Headlines
-      headline: "eb-garamond, serif", // Headlines
+      display: "var(--font-eb-garamond), serif", // Headlines
+      headline: "var(--font-eb-garamond), serif", // Headlines
       body: "var(--font-geist-sans), sans-serif", // Body (news)
       ui: "var(--font-geist-sans), sans-serif", // UI elements
-      feature: "eb-garamond, Georgia, serif", // Feature content
+      feature: "var(--font-eb-garamond), Georgia, serif", // Feature content
     },
     weights: {
       // Inter weights
