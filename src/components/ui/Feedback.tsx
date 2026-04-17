@@ -248,16 +248,16 @@ export function FeedbackInline({
             </span>
           </div>
 
-          {/* Expanded form */}
+          {/* Expanded form — floats above the trigger so surrounding layout doesn't shift */}
           {isExpanded && (
-            <div>
+            <div className="feedback-inline-expanded">
               <form onSubmit={handleSubmit}>
                 <div
                   style={{
                     display: "flex",
                     flexDirection: "column",
                     gap: 8,
-                    padding: "0 8px 8px",
+                    padding: 8,
                   }}
                 >
                   <label>
@@ -317,7 +317,7 @@ export function FeedbackInline({
                     padding: 12,
                     background: "var(--ds-background-200)",
                     borderTop: "1px solid var(--ds-gray-200)",
-                    borderRadius: "0 0 30px 30px",
+                    borderRadius: "0 0 12px 12px",
                   }}
                 >
                   <Button type="submit" size="small">
@@ -337,8 +337,7 @@ export function FeedbackInline({
           border-radius: 30px;
           border: 1px solid var(--ds-gray-200);
           background: var(--ds-background-100);
-          overflow: hidden;
-          transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+          position: relative;
         }
         :is(.dark, [data-theme="dark"]) .feedback-inline-wrapper {
           border-color: var(--ds-gray-400);
@@ -349,6 +348,36 @@ export function FeedbackInline({
           gap: 12px;
           height: 48px;
           padding: 0 8px 0 20px;
+        }
+        .feedback-inline-expanded {
+          position: absolute;
+          bottom: calc(100% + 8px);
+          left: 50%;
+          transform: translateX(-50%);
+          width: 320px;
+          background: var(--ds-background-100);
+          border: 1px solid var(--ds-gray-200);
+          border-radius: 12px;
+          box-shadow:
+            0 0 0 1px rgba(0, 0, 0, 0.02),
+            0 4px 12px rgba(0, 0, 0, 0.08),
+            0 16px 32px rgba(0, 0, 0, 0.08);
+          z-index: 50;
+          overflow: hidden;
+          animation: feedbackInlineExpandIn 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        :is(.dark, [data-theme="dark"]) .feedback-inline-expanded {
+          border-color: var(--ds-gray-400);
+        }
+        @keyframes feedbackInlineExpandIn {
+          from {
+            opacity: 0;
+            transform: translateX(-50%) translateY(4px) scale(0.98);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0) scale(1);
+          }
         }
         .feedback-inline-wrapper .feedback-emoji {
           display: flex;
