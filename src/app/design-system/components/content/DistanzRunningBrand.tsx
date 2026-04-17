@@ -64,6 +64,8 @@ function CopyButton({ text, variant = "light" }: { text: string; variant?: "ligh
 // The SVG markup that gets copied to clipboard
 const blackLogoSvg = `<img src="/images/Distanz_Logo_1600_600_Black.svg" alt="Distanz Running" height="64" />`;
 const whiteLogoSvg = `<img src="/images/Distanz_Logo_1600_600_White.svg" alt="Distanz Running" height="64" />`;
+const blackMarkSvg = `<img src="/images/distanz_icon_black.svg" alt="Distanz Running" height="32" />`;
+const whiteMarkSvg = `<img src="/images/distanz_icon_white.svg" alt="Distanz Running" height="32" />`;
 
 export default function DistanzRunningBrand() {
   return (
@@ -155,15 +157,13 @@ export default function DistanzRunningBrand() {
       {/* Symbol display — 2 column grid */}
       <div
         className="grid grid-cols-1 md:grid-cols-2"
-        style={{
-          borderBottom: "1px solid var(--ds-gray-400)",
-        }}
       >
         {/* White bg */}
         <div
           className="group relative flex h-[164px] items-center justify-center md:h-[200px]"
           style={{ background: "#fff" }}
         >
+          <CopyButton text={blackMarkSvg} variant="light" />
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/images/distanz_icon_black.svg"
@@ -176,6 +176,7 @@ export default function DistanzRunningBrand() {
           className="group relative flex h-[164px] items-center justify-center md:h-[200px]"
           style={{ background: "#000" }}
         >
+          <CopyButton text={whiteMarkSvg} variant="dark" />
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/images/distanz_icon_white.svg"
@@ -183,6 +184,18 @@ export default function DistanzRunningBrand() {
             style={{ height: 32 }}
           />
         </div>
+      </div>
+
+      {/* Code block for symbol usage */}
+      <div
+        style={{ borderTop: "1px solid var(--ds-gray-400)", borderBottom: "1px solid var(--ds-gray-400)" }}
+        className="[&>div]:border-0 [&>div]:rounded-none"
+      >
+        <CodeBlock
+          code={`import { DistanzMark } from '@/components/logos';\n\n<DistanzMark size={32} />`}
+          language="jsx"
+          showLineNumbers={false}
+        />
       </div>
 
       {/* Spacing considerations */}
