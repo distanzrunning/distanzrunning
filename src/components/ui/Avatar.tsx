@@ -37,6 +37,8 @@ export interface AvatarGroupMember {
   alt?: string;
   /** Force placeholder state */
   placeholder?: boolean;
+  /** Custom icon rendered at 50% of avatar size (for brand marks/logos) */
+  placeholderIcon?: React.ReactNode;
   /** Background color for the avatar */
   bgColor?: string;
   /** Border color for the avatar wrapper (overrides default) */
@@ -218,6 +220,7 @@ export function AvatarGroup({ members, limit, size = 32 }: AvatarGroupProps) {
             alt={member.alt || `Avatar ${index + 1}`}
             size={innerSize}
             placeholder={member.placeholder}
+            placeholderIcon={member.placeholderIcon}
             bgColor={member.bgColor}
           />
         </div>
