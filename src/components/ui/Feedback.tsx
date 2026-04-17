@@ -253,34 +253,34 @@ export function FeedbackInline({
         <div
           className={`feedback-inline-expanded${closing ? " feedback-inline-expanded--closing" : ""}`}
         >
-          {submitted ? (
-            <div className="feedback-inline-success">
-              <div className="feedback-inline-success-icon">
-                <svg
-                  width="32"
-                  height="32"
-                  viewBox="0 0 16 16"
-                  fill="none"
-                  aria-hidden="true"
-                >
-                  <path
-                    fillRule="evenodd"
-                    clipRule="evenodd"
-                    d="M8 0C3.58172 0 0 3.58172 0 8C0 12.4183 3.58172 16 8 16C12.4183 16 16 12.4183 16 8C16 3.58172 12.4183 0 8 0ZM11.5303 6.53033L12.0607 6L11 4.93934L10.4697 5.46967L7 8.93934L5.53033 7.46967L5 6.93934L3.93934 8L4.46967 8.53033L6.46967 10.5303C6.76256 10.8232 7.23744 10.8232 7.53033 10.5303L11.5303 6.53033Z"
-                    fill="currentColor"
-                  />
-                </svg>
+          {triggerRow}
+          <div className="feedback-inline-body">
+            {submitted ? (
+              <div className="feedback-inline-success">
+                <div className="feedback-inline-success-icon">
+                  <svg
+                    width="32"
+                    height="32"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    aria-hidden="true"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      clipRule="evenodd"
+                      d="M8 0C3.58172 0 0 3.58172 0 8C0 12.4183 3.58172 16 8 16C12.4183 16 16 12.4183 16 8C16 3.58172 12.4183 0 8 0ZM11.5303 6.53033L12.0607 6L11 4.93934L10.4697 5.46967L7 8.93934L5.53033 7.46967L5 6.93934L3.93934 8L4.46967 8.53033L6.46967 10.5303C6.76256 10.8232 7.23744 10.8232 7.53033 10.5303L11.5303 6.53033Z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                </div>
+                <p className="feedback-inline-success-title">
+                  Your feedback has been received!
+                </p>
+                <p className="feedback-inline-success-subtitle">
+                  Thank you for your help.
+                </p>
               </div>
-              <p className="feedback-inline-success-title">
-                Your feedback has been received!
-              </p>
-              <p className="feedback-inline-success-subtitle">
-                Thank you for your help.
-              </p>
-            </div>
-          ) : (
-            <>
-              {triggerRow}
+            ) : (
               <form onSubmit={handleSubmit}>
                 <div
                   style={{
@@ -356,8 +356,8 @@ export function FeedbackInline({
                   </Button>
                 </div>
               </form>
-            </>
-          )}
+            )}
+          </div>
         </div>
       )}
 
@@ -424,14 +424,31 @@ export function FeedbackInline({
             transform: translateX(-50%) scale(0.92);
           }
         }
+        .feedback-inline-body {
+          position: relative;
+          height: 196px;
+          overflow: hidden;
+        }
         .feedback-inline-success {
+          height: 100%;
           display: flex;
           flex-direction: column;
           align-items: center;
           justify-content: center;
           gap: 8px;
-          padding: 32px 24px;
+          padding: 24px;
           text-align: center;
+          animation: feedbackInlineSuccessIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes feedbackInlineSuccessIn {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
         }
         .feedback-inline-success-icon {
           color: var(--ds-green-700);
