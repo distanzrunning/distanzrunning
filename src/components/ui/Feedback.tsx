@@ -171,6 +171,7 @@ export function FeedbackInline({
   const [selectedEmotion, setSelectedEmotion] = useState<string | null>(null);
   const [feedbackText, setFeedbackText] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const handleSubmit = useCallback(
     (e: React.FormEvent) => {
@@ -189,6 +190,13 @@ export function FeedbackInline({
   );
 
   const isExpanded = selectedEmotion !== null && !submitted;
+
+  useEffect(() => {
+    if (isExpanded) {
+      // Wait for the expand animation frame so the textarea is in the DOM
+      requestAnimationFrame(() => textareaRef.current?.focus());
+    }
+  }, [isExpanded]);
 
   return (
     <div className={`feedback-inline-wrapper ${isExpanded ? "feedback-inline-wrapper--expanded" : ""} ${className || ""}`}>
@@ -301,6 +309,7 @@ export function FeedbackInline({
                   <label>
                     <div className="feedback-textarea-wrapper">
                       <textarea
+                        ref={textareaRef}
                         id="feedback-textarea"
                         placeholder="Your feedback..."
                         value={feedbackText}
@@ -392,7 +401,7 @@ export function FeedbackInline({
           bottom: 0;
           left: 50%;
           transform: translateX(-50%);
-          width: 320px;
+          width: 400px;
           background: var(--ds-background-100);
           border: 1px solid var(--ds-gray-200);
           border-radius: 24px;
