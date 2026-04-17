@@ -4,14 +4,15 @@
  * Single source of truth for all design decisions.
  * These tokens are used to generate CSS variables and Tailwind config.
  *
- * Adobe Fonts Project ID: bua7sld
+ * Body/UI: Geist Sans (`geist/font/sans`, self-hosted variable font)
+ * Mono/data: Geist Mono (`geist/font/mono`, self-hosted variable font)
+ * Editorial headings: EB Garamond (Adobe Fonts project bua7sld)
  */
 
 export const fonts = {
-  // Adobe Fonts uses lowercase hyphenated names: "inter-variable", "eb-garamond"
-  sans: '"inter-variable", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+  sans: 'var(--font-geist-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
   serif: '"eb-garamond", Georgia, "Times New Roman", serif',
-  mono: 'ui-monospace, SFMono-Regular, Menlo, Monaco, "Courier New", monospace',
+  mono: 'var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, "Courier New", monospace',
 } as const;
 
 export const fontWeights = {

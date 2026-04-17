@@ -1,6 +1,8 @@
 // src/app/layout.tsx
 import type { Metadata } from "next";
 import "./globals.css";
+import { GeistSans } from "geist/font/sans";
+import { GeistMono } from "geist/font/mono";
 import AuthProtection from "@/components/AuthProtection";
 import LayoutContent from "@/components/LayoutContent";
 import NavbarAltWrapper from "@/components/NavbarAltWrapper";
@@ -10,10 +12,10 @@ import ReCaptchaProvider from "@/components/ReCaptchaProvider";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
-// Distanz Typography System - Adobe Fonts
-// Body/UI: Inter Variable (complete weight spectrum)
-// Headings: EB Garamond (serif)
-// Adobe Fonts Project ID: bua7sld
+// Distanz Typography System
+// Body/UI: Geist Sans (via `geist/font/sans` — self-hosted, variable)
+// Mono/Data: Geist Mono (via `geist/font/mono` — self-hosted, variable)
+// Editorial headings: EB Garamond (via Adobe Fonts project bua7sld)
 
 export const metadata: Metadata = {
   title: "Distanz Running",
@@ -41,9 +43,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="bg-canvas">
+    <html
+      lang="en"
+      className={`bg-canvas ${GeistSans.variable} ${GeistMono.variable}`}
+    >
       <head>
-        {/* Adobe Fonts - Inter + EB Garamond */}
+        {/* Adobe Fonts — EB Garamond for editorial headings */}
         <link rel="stylesheet" href="https://use.typekit.net/bua7sld.css" />
 
         {/* Prevent flash of dark mode - ensure light mode by default */}
@@ -65,11 +70,6 @@ export default function RootLayout({
         <link
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
-        />
-        {/* JetBrains Mono for code blocks */}
-        <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap"
         />
         <script
           dangerouslySetInnerHTML={{

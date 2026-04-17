@@ -242,7 +242,7 @@ export default function Typography() {
           <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
             font-sans
           </code>{" "}
-          (Inter) for UI contexts like section titles, card headings, and
+          (Geist Sans) for UI contexts like section titles, card headings, and
           navigation.
         </p>
 
@@ -309,7 +309,7 @@ export default function Typography() {
                 usage="Article subheadings, blockquotes"
                 onCopy={handleCopy}
               />
-              {/* UI headings - Inter */}
+              {/* UI headings - Geist Sans */}
               <TypographyRow
                 example={<p className="text-heading-32">Heading</p>}
                 className="text-heading-32"

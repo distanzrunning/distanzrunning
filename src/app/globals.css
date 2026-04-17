@@ -105,9 +105,13 @@
 
     /* Primary Typefaces */
     --font-family-sans:
-      "inter-variable", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+      var(--font-geist-sans), -apple-system, BlinkMacSystemFont, "Segoe UI",
       sans-serif;
     --font-family-serif: "eb-garamond", Georgia, "Times New Roman", serif;
+    --font-family-mono:
+      var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Monaco,
+      "Courier New", monospace;
+    --font-mono: var(--font-family-mono);
 
     /* Legacy font variables for backwards compatibility */
     --display-font: var(--font-family-serif);
@@ -2496,18 +2500,11 @@
     @apply col-span-full;
   }
 
-  /* Distanz font features - enable OpenType features for better readability */
+  /* Distanz font features — use Geist's default OpenType metrics. */
   .distanz-font-features {
     font-feature-settings: normal;
-    font-variant-ligatures: common-ligatures;
-    font-variant-numeric: oldstyle-nums proportional-nums;
-  }
-
-  /* Legacy Distanz classes removed - see distanz-article-container above */
-
-  /* Legacy Distanz font features (Inter-specific, kept for backwards compatibility) */
-  .distanz-font-features {
-    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    font-variant-ligatures: normal;
+    font-variant-numeric: normal;
   }
 
   /* Updated capsize with tighter calculations */

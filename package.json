@@ -54,6 +54,7 @@
     "critters": "^0.0.23",
     "date-fns": "^4.1.0",
     "framer-motion": "^12.7.4",
+    "geist": "^1.7.0",
     "html2canvas": "^1.4.1",
     "lucide-react": "^0.503.0",
     "mapbox-gl": "^3.17.0",

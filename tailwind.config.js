@@ -416,21 +416,20 @@ module.exports = {
       },
       fontFamily: {
         // Distanz Typography System
-        // Body/UI: Inter Variable (complete weight spectrum)
-        // Headings: EB Garamond (serif)
-        // Adobe Fonts uses lowercase hyphenated names: "inter-variable", "eb-garamond"
+        // Body/UI: Geist Sans (via `geist/font/sans`, self-hosted, variable)
+        // Mono/data: Geist Mono (via `geist/font/mono`, self-hosted, variable)
+        // Editorial headings: EB Garamond (Adobe Fonts: "eb-garamond")
 
-        // Sans-serif (Inter) - Body, UI, navigation
+        // Sans-serif (Geist) - Body, UI, navigation
         sans: [
-          "inter-variable",
-          "Inter",
+          "var(--font-geist-sans)",
           "-apple-system",
           "BlinkMacSystemFont",
           "Segoe UI",
           "Roboto",
           "sans-serif",
         ],
-        inter: ["inter-variable", "Inter", "sans-serif"],
+        geist: ["var(--font-geist-sans)", "sans-serif"],
 
         // Serif (EB Garamond) - Headings, display
         serif: ["eb-garamond", "Georgia", "serif"],
@@ -439,19 +438,20 @@ module.exports = {
         // Legacy aliases for backwards compatibility
         display: ["eb-garamond", "serif"],
         headline: ["eb-garamond", "serif"],
-        body: ["inter-variable", "Inter", "sans-serif"],
-        ui: ["inter-variable", "Inter", "sans-serif"],
-        // Old font aliases
+        body: ["var(--font-geist-sans)", "sans-serif"],
+        ui: ["var(--font-geist-sans)", "sans-serif"],
+        // Old font aliases (kept so existing class names don't break)
+        inter: ["var(--font-geist-sans)", "sans-serif"],
         eczar: ["eb-garamond", "Georgia", "serif"],
-        franklin: ["inter-variable", "Inter", "sans-serif"],
+        franklin: ["var(--font-geist-sans)", "sans-serif"],
         playfair: ["eb-garamond", "serif"],
-        manrope: ["inter-variable", "Inter", "sans-serif"],
-        archivo: ["inter-variable", "Inter", "sans-serif"],
-        bricolage: ["inter-variable", "Inter", "sans-serif"],
-        garvis: ["inter-variable", "Inter", "sans-serif"],
-        quasimoda: ["inter-variable", "Inter", "sans-serif"],
+        manrope: ["var(--font-geist-sans)", "sans-serif"],
+        archivo: ["var(--font-geist-sans)", "sans-serif"],
+        bricolage: ["var(--font-geist-sans)", "sans-serif"],
+        garvis: ["var(--font-geist-sans)", "sans-serif"],
+        quasimoda: ["var(--font-geist-sans)", "sans-serif"],
         mono: [
-          "JetBrains Mono",
+          "var(--font-geist-mono)",
           "ui-monospace",
           "SFMono-Regular",
           "Menlo",
@@ -1005,7 +1005,7 @@ module.exports = {
           letterSpacing: "0",
           fontWeight: "400",
           fontFamily:
-            '"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, monospace',
+            'var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, monospace',
         },
         ".text-label-13": {
           fontSize: "13px",
@@ -1021,7 +1021,7 @@ module.exports = {
           letterSpacing: "0",
           fontWeight: "400",
           fontFamily:
-            '"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, monospace',
+            'var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, monospace',
         },
         ".text-label-12": {
           fontSize: "12px",
@@ -1036,7 +1036,7 @@ module.exports = {
           letterSpacing: "0",
           fontWeight: "400",
           fontFamily:
-            '"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, monospace',
+            'var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, monospace',
         },
 
         // ─────────────────────────────────────────────────────────────────
@@ -1089,7 +1089,7 @@ module.exports = {
           letterSpacing: "0",
           fontWeight: "400",
           fontFamily:
-            '"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, monospace',
+            'var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, monospace',
         },
 
         // ─────────────────────────────────────────────────────────────────

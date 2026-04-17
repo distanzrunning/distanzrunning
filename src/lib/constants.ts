@@ -34,16 +34,17 @@ export const BRAND = {
   },
   typography: {
     fontFamilies: {
-      // Distanz Typography System - Inter + EB Garamond
-      // Adobe Fonts uses lowercase hyphenated names: "inter-variable", "eb-garamond"
-      sans: "inter-variable, Inter, -apple-system, BlinkMacSystemFont, sans-serif", // News, UI, headlines
+      // Distanz Typography System - Geist Sans + EB Garamond
+      // Geist is self-hosted via `geist/font/sans` and exposes a CSS variable.
+      sans: "var(--font-geist-sans), -apple-system, BlinkMacSystemFont, sans-serif", // News, UI, headlines
       serif: "eb-garamond, Georgia, Times New Roman, serif", // Features, long-form
+      mono: "var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, monospace",
 
       // Aliases
       display: "eb-garamond, serif", // Headlines
       headline: "eb-garamond, serif", // Headlines
-      body: "inter-variable, Inter, sans-serif", // Body (news)
-      ui: "inter-variable, Inter, sans-serif", // UI elements
+      body: "var(--font-geist-sans), sans-serif", // Body (news)
+      ui: "var(--font-geist-sans), sans-serif", // UI elements
       feature: "eb-garamond, Georgia, serif", // Feature content
     },
     weights: {
