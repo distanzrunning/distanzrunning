@@ -134,7 +134,45 @@ export default function DesignSystemHeader({
               .map((item) => (
                 <CommandMenu.Item
                   key={item.id}
-                  icon={<ArrowRight className="w-4 h-4" />}
+                  icon={
+                    section.id === "brands" ? (
+                      <span
+                        style={{
+                          position: "relative",
+                          display: "block",
+                          width: 16,
+                          height: 16,
+                        }}
+                      >
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src="/brand/icon-black.svg"
+                          alt=""
+                          className="dark:!hidden"
+                          style={{
+                            position: "absolute",
+                            inset: 0,
+                            width: 16,
+                            height: 16,
+                          }}
+                        />
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src="/brand/icon-white.svg"
+                          alt=""
+                          className="!hidden dark:!block"
+                          style={{
+                            position: "absolute",
+                            inset: 0,
+                            width: 16,
+                            height: 16,
+                          }}
+                        />
+                      </span>
+                    ) : (
+                      <ArrowRight className="w-4 h-4" />
+                    )
+                  }
                   onSelect={() => handleSelect(item.id)}
                 >
                   {item.label}

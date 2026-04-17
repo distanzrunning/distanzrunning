@@ -80,6 +80,7 @@ import TooltipComponent from "../components/content/TooltipComponent";
 import MultiSelectComponent from "../components/content/MultiSelectComponent";
 import NoteComponent from "../components/content/NoteComponent";
 import CalendarComponent from "../components/content/CalendarComponent";
+import SearchComponent from "../components/content/SearchComponent";
 import Materials from "../components/content/Materials";
 import DistanzRunningBrand from "../components/content/DistanzRunningBrand";
 import ContentWithTOC from "../components/ContentWithTOC";
@@ -1209,6 +1210,21 @@ export default function DesignSystemPage() {
           onNavigate={handleNavigation}
         >
           <CalendarComponent />
+        </ContentWithTOC>
+      );
+    }
+
+    if (activeSlug === "search") {
+      return (
+        <ContentWithTOC
+          tocTitle="On this page"
+          pageTitle="Search"
+          pageSubtitle="A header trigger paired with a modal for navigating between pages."
+          mainSectionId="search"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
+          <SearchComponent />
         </ContentWithTOC>
       );
     }

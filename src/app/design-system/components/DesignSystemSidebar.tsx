@@ -83,6 +83,7 @@ export const navigation: NavSection[] = [
       { id: "radio", label: "Radio" },
       { id: "relative-time-card", label: "Relative Time Card" },
       { id: "scroller", label: "Scroller" },
+      { id: "search", label: "Search" },
       { id: "select", label: "Select" },
       { id: "sheet", label: "Sheet" },
       { id: "show-more", label: "Show More" },
