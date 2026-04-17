@@ -154,7 +154,7 @@ export function Grid({
       style={{
         display: "grid",
         gridTemplateRows: squareCells ? `repeat(${rows}, 1fr)` : `repeat(${rows}, auto)`,
-        gridTemplateColumns: `repeat(${columns}, 1fr)`,
+        gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`,
         position: "relative",
         width: "100%",
         border: `1px solid ${debug ? DEBUG_COLOR : GUIDE_COLOR}`,

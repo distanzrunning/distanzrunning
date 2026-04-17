@@ -29,6 +29,7 @@ import {
   SiNike,
   SiAdidas,
   SiNewbalance,
+  SiAlgolia,
 } from "react-icons/si";
 import { VscJson } from "react-icons/vsc";
 import { FiFile } from "react-icons/fi";
@@ -238,6 +239,7 @@ const buildIconRegistry = (): IconDefinition[] => {
     component: React.ComponentType<{ size?: number; className?: string }>;
   }> = [
     { name: "SiAdidas", displayName: "Adidas", component: SiAdidas },
+    { name: "SiAlgolia", displayName: "Algolia", component: SiAlgolia },
     { name: "SiBitbucket", displayName: "Bitbucket", component: SiBitbucket },
     { name: "SiBrave", displayName: "Brave", component: SiBrave },
     { name: "SiGithub", displayName: "GitHub", component: SiGithub },
