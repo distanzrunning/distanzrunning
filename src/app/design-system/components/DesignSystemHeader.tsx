@@ -1,9 +1,11 @@
 "use client";
 
-import { useContext } from "react";
-import { Search, ExternalLink } from "lucide-react";
+import { useContext, useEffect, useState } from "react";
+import { Search, ExternalLink, ArrowRight } from "lucide-react";
 import { DarkModeContext } from "@/components/DarkModeProvider";
 import { ThemeSwitcher } from "@/components/ui/ThemeSwitcher";
+import { CommandMenu } from "@/components/ui/CommandMenu";
+import { navigation } from "./DesignSystemSidebar";
 
 interface DesignSystemHeaderProps {
   onHomeClick: () => void;
@@ -13,8 +15,26 @@ interface DesignSystemHeaderProps {
 
 export default function DesignSystemHeader({
   onHomeClick,
+  onNavigate,
 }: DesignSystemHeaderProps) {
   const { theme, setTheme } = useContext(DarkModeContext);
+  const [searchOpen, setSearchOpen] = useState(false);
+
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        setSearchOpen((v) => !v);
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, []);
+
+  const handleSelect = (slug: string) => {
+    onNavigate?.(slug);
+    setSearchOpen(false);
+  };
 
   return (
     <header
@@ -58,13 +78,14 @@ export default function DesignSystemHeader({
             {/* Search button - desktop only */}
             <button
               type="button"
-              className="hidden xl:flex h-8 w-[220px] cursor-pointer items-center justify-between rounded border border-borderDefault bg-transparent pl-2 pr-1.5 font-sans text-sm text-textSubtle outline-none hover:bg-surfaceSubtle"
+              onClick={() => setSearchOpen(true)}
+              className="hidden xl:flex h-8 w-[220px] cursor-pointer items-center justify-between rounded border border-[var(--ds-gray-400)] bg-transparent pl-2 pr-1.5 font-sans text-sm text-[var(--ds-gray-700)] outline-none transition-colors hover:bg-[var(--ds-background-200)]"
             >
-              <span className="flex items-center gap-2">
-                <Search className="w-4 h-4" />
-                <span>Search Stride</span>
-              </span>
-              <kbd className="inline-flex h-5 items-center gap-0 rounded border border-borderSubtle bg-canvas px-1 font-mono text-[11px] font-medium text-textDefault">
+              Search Stride
+              <kbd
+                className="ml-1 inline-flex min-h-5 min-w-5 items-center justify-center rounded bg-[var(--ds-background-100)] px-1 font-sans text-[12px] leading-5 text-[var(--ds-gray-900)]"
+                style={{ boxShadow: "0 0 0 1px var(--ds-gray-alpha-400)" }}
+              >
                 <span style={{ minWidth: "1em", display: "inline-block" }}>
                   ⌘
                 </span>
@@ -75,6 +96,7 @@ export default function DesignSystemHeader({
             {/* Mobile search icon */}
             <button
               type="button"
+              onClick={() => setSearchOpen(true)}
               className="xl:hidden p-2 rounded-full bg-transparent hover:bg-surfaceSubtle transition-colors"
               aria-label="Search"
             >
@@ -99,6 +121,28 @@ export default function DesignSystemHeader({
           </div>
         </div>
       </div>
+
+      <CommandMenu
+        open={searchOpen}
+        onClose={() => setSearchOpen(false)}
+        placeholder="Search..."
+      >
+        {navigation.map((section) => (
+          <CommandMenu.Group key={section.id} heading={section.label}>
+            {section.items
+              .filter((item) => !item.locked)
+              .map((item) => (
+                <CommandMenu.Item
+                  key={item.id}
+                  icon={<ArrowRight className="w-4 h-4" />}
+                  onSelect={() => handleSelect(item.id)}
+                >
+                  {item.label}
+                </CommandMenu.Item>
+              ))}
+          </CommandMenu.Group>
+        ))}
+      </CommandMenu>
     </header>
   );
 }
