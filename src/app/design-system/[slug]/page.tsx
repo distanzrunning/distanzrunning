@@ -81,6 +81,7 @@ import MultiSelectComponent from "../components/content/MultiSelectComponent";
 import NoteComponent from "../components/content/NoteComponent";
 import CalendarComponent from "../components/content/CalendarComponent";
 import SearchComponent from "../components/content/SearchComponent";
+import LoginComponent from "../components/content/LoginComponent";
 import Materials from "../components/content/Materials";
 import DistanzRunningBrand from "../components/content/DistanzRunningBrand";
 import ContentWithTOC from "../components/ContentWithTOC";
@@ -1225,6 +1226,21 @@ export default function DesignSystemPage() {
           onNavigate={handleNavigation}
         >
           <SearchComponent />
+        </ContentWithTOC>
+      );
+    }
+
+    if (activeSlug === "login") {
+      return (
+        <ContentWithTOC
+          tocTitle="On this page"
+          pageTitle="Login"
+          pageSubtitle="A composable card for authentication flows — logo, title, fields, submit, and footer slots."
+          mainSectionId="login"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
+          <LoginComponent />
         </ContentWithTOC>
       );
     }

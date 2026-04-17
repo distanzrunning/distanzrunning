@@ -71,6 +71,7 @@ export const navigation: NavSection[] = [
       { id: "input", label: "Input" },
       { id: "keyboard-input", label: "Keyboard Input" },
       { id: "loading-dots", label: "Loading Dots" },
+      { id: "login", label: "Login" },
       { id: "material", label: "Material" },
       { id: "menu", label: "Menu" },
       { id: "modal", label: "Modal" },
