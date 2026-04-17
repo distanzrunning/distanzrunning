@@ -170,133 +170,117 @@ export function FeedbackInline({
 }: FeedbackInlineProps) {
   const [selectedEmotion, setSelectedEmotion] = useState<string | null>(null);
   const [feedbackText, setFeedbackText] = useState("");
+  const [isSending, setIsSending] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [closing, setClosing] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const handleSubmit = useCallback(
     (e: React.FormEvent) => {
       e.preventDefault();
-      if (selectedEmotion) {
-        onSubmit?.({ emotion: selectedEmotion, feedback: feedbackText });
+      if (!selectedEmotion || isSending) return;
+      setIsSending(true);
+      onSubmit?.({ emotion: selectedEmotion, feedback: feedbackText });
+      // Short sending delay → success state → close animation → reset
+      setTimeout(() => {
+        setIsSending(false);
         setSubmitted(true);
         setTimeout(() => {
-          setSubmitted(false);
-          setSelectedEmotion(null);
-          setFeedbackText("");
-        }, 2000);
-      }
+          setClosing(true);
+          setTimeout(() => {
+            setSelectedEmotion(null);
+            setFeedbackText("");
+            setSubmitted(false);
+            setClosing(false);
+          }, 220);
+        }, 2200);
+      }, 650);
     },
-    [selectedEmotion, feedbackText, onSubmit],
+    [selectedEmotion, feedbackText, onSubmit, isSending],
   );
 
-  const isExpanded = selectedEmotion !== null && !submitted;
+  const isExpanded = selectedEmotion !== null;
 
   useEffect(() => {
-    if (isExpanded) {
-      // Wait for the expand animation frame so the textarea is in the DOM
+    if (isExpanded && !submitted && !closing) {
       requestAnimationFrame(() => textareaRef.current?.focus());
     }
-  }, [isExpanded]);
+  }, [isExpanded, submitted, closing]);
+
+  const triggerRow = (
+    <div className="feedback-inline-trigger">
+      <p
+        style={{
+          color: "var(--ds-gray-900)",
+          fontSize: 14,
+          lineHeight: "20px",
+          fontWeight: 400,
+          margin: 0,
+        }}
+      >
+        {label}
+      </p>
+      <span style={{ display: "flex", alignItems: "center", gap: 1 }}>
+        {emojiOptions.map((emoji) => (
+          <button
+            key={emoji.id}
+            type="button"
+            role="radio"
+            className={`feedback-emoji${selectedEmotion === emoji.id ? " feedback-emoji--selected" : ""}`}
+            aria-checked={selectedEmotion === emoji.id}
+            aria-label={`Select ${emoji.label} emoji`}
+            disabled={isSending || submitted}
+            onClick={() =>
+              setSelectedEmotion(
+                selectedEmotion === emoji.id ? null : emoji.id,
+              )
+            }
+          >
+            {emoji.icon}
+          </button>
+        ))}
+      </span>
+    </div>
+  );
 
   return (
     <div className={`feedback-inline-wrapper ${isExpanded ? "feedback-inline-wrapper--expanded" : ""} ${className || ""}`}>
-      {submitted ? (
-        <div className="feedback-inline-trigger">
-          <p
-            style={{
-              color: "var(--ds-gray-900)",
-              fontSize: 14,
-              lineHeight: "20px",
-              fontWeight: 400,
-              margin: 0,
-            }}
-          >
-            Thank you for your feedback!
-          </p>
-        </div>
-      ) : (
-        <>
-          {/* Trigger row: label + emojis */}
-          <div className="feedback-inline-trigger">
-            <p
-              style={{
-                color: "var(--ds-gray-900)",
-                fontSize: 14,
-                lineHeight: "20px",
-                fontWeight: 400,
-                margin: 0,
-              }}
-            >
-              {label}
-            </p>
-            <span
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 1,
-              }}
-            >
-              {emojiOptions.map((emoji) => (
-                <button
-                  key={emoji.id}
-                  type="button"
-                  role="radio"
-                  className={`feedback-emoji${selectedEmotion === emoji.id ? " feedback-emoji--selected" : ""}`}
-                  aria-checked={selectedEmotion === emoji.id}
-                  aria-label={`Select ${emoji.label} emoji`}
-                  onClick={() =>
-                    setSelectedEmotion(
-                      selectedEmotion === emoji.id ? null : emoji.id,
-                    )
-                  }
-                >
-                  {emoji.icon}
-                </button>
-              ))}
-            </span>
-          </div>
+      {/* Always-visible pill trigger row — covered by the panel when expanded */}
+      {triggerRow}
 
-          {/* Expanded form — floats over the pill, bottom aligned with pill's bottom */}
-          {isExpanded && (
-            <div className="feedback-inline-expanded">
-              <div className="feedback-inline-trigger">
-                <p
-                  style={{
-                    color: "var(--ds-gray-900)",
-                    fontSize: 14,
-                    lineHeight: "20px",
-                    fontWeight: 400,
-                    margin: 0,
-                  }}
+      {/* Expanded panel — floats over the pill, bottom aligned with pill's bottom */}
+      {isExpanded && (
+        <div
+          className={`feedback-inline-expanded${closing ? " feedback-inline-expanded--closing" : ""}`}
+        >
+          {submitted ? (
+            <div className="feedback-inline-success">
+              <div className="feedback-inline-success-icon">
+                <svg
+                  width="32"
+                  height="32"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  aria-hidden="true"
                 >
-                  {label}
-                </p>
-                <span
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 1,
-                  }}
-                >
-                  {emojiOptions.map((emoji) => (
-                    <button
-                      key={emoji.id}
-                      type="button"
-                      role="radio"
-                      className={`feedback-emoji${selectedEmotion === emoji.id ? " feedback-emoji--selected" : ""}`}
-                      aria-checked={selectedEmotion === emoji.id}
-                      aria-label={`Select ${emoji.label} emoji`}
-                      onClick={() =>
-                        setSelectedEmotion(
-                          selectedEmotion === emoji.id ? null : emoji.id,
-                        )
-                      }
-                    >
-                      {emoji.icon}
-                    </button>
-                  ))}
-                </span>
+                  <path
+                    fillRule="evenodd"
+                    clipRule="evenodd"
+                    d="M8 0C3.58172 0 0 3.58172 0 8C0 12.4183 3.58172 16 8 16C12.4183 16 16 12.4183 16 8C16 3.58172 12.4183 0 8 0ZM11.5303 6.53033L12.0607 6L11 4.93934L10.4697 5.46967L7 8.93934L5.53033 7.46967L5 6.93934L3.93934 8L4.46967 8.53033L6.46967 10.5303C6.76256 10.8232 7.23744 10.8232 7.53033 10.5303L11.5303 6.53033Z"
+                    fill="currentColor"
+                  />
+                </svg>
               </div>
+              <p className="feedback-inline-success-title">
+                Your feedback has been received!
+              </p>
+              <p className="feedback-inline-success-subtitle">
+                Thank you for your help.
+              </p>
+            </div>
+          ) : (
+            <>
+              {triggerRow}
               <form onSubmit={handleSubmit}>
                 <div
                   style={{
@@ -314,6 +298,7 @@ export function FeedbackInline({
                         placeholder="Your feedback..."
                         value={feedbackText}
                         onChange={(e) => setFeedbackText(e.target.value)}
+                        disabled={isSending}
                         autoCapitalize="off"
                         autoComplete="off"
                         autoCorrect="off"
@@ -366,14 +351,14 @@ export function FeedbackInline({
                     borderTop: "1px solid var(--ds-gray-200)",
                   }}
                 >
-                  <Button type="submit" size="small">
-                    Send
+                  <Button type="submit" size="small" loading={isSending}>
+                    {isSending ? "Sending" : "Send"}
                   </Button>
                 </div>
               </form>
-            </div>
+            </>
           )}
-        </>
+        </div>
       )}
 
       <style>{`
@@ -416,6 +401,9 @@ export function FeedbackInline({
         :is(.dark, [data-theme="dark"]) .feedback-inline-expanded {
           border-color: var(--ds-gray-400);
         }
+        .feedback-inline-expanded--closing {
+          animation: feedbackInlineExpandOut 0.22s cubic-bezier(0.4, 0, 1, 1) forwards;
+        }
         @keyframes feedbackInlineExpandIn {
           from {
             opacity: 0;
@@ -425,6 +413,46 @@ export function FeedbackInline({
             opacity: 1;
             transform: translateX(-50%) scale(1);
           }
+        }
+        @keyframes feedbackInlineExpandOut {
+          from {
+            opacity: 1;
+            transform: translateX(-50%) scale(1);
+          }
+          to {
+            opacity: 0;
+            transform: translateX(-50%) scale(0.92);
+          }
+        }
+        .feedback-inline-success {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          padding: 32px 24px;
+          text-align: center;
+        }
+        .feedback-inline-success-icon {
+          color: var(--ds-green-700);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-bottom: 4px;
+        }
+        .feedback-inline-success-title {
+          color: var(--ds-gray-1000);
+          font-size: 14px;
+          line-height: 20px;
+          font-weight: 600;
+          margin: 0;
+        }
+        .feedback-inline-success-subtitle {
+          color: var(--ds-gray-700);
+          font-size: 13px;
+          line-height: 18px;
+          font-weight: 400;
+          margin: 0;
         }
         .feedback-inline-wrapper .feedback-emoji {
           display: flex;
@@ -438,10 +466,14 @@ export function FeedbackInline({
           padding: 0;
           background: transparent;
           color: var(--ds-gray-900);
-          transition: background 0.2s ease, border-color 0.2s ease;
+          transition: background 0.2s ease, color 0.2s ease;
+        }
+        .feedback-inline-wrapper .feedback-emoji:disabled {
+          cursor: default;
         }
         .feedback-inline-wrapper .feedback-emoji--selected {
-          background: var(--ds-gray-200);
+          background: var(--ds-pink-300);
+          color: var(--ds-pink-800);
         }
         @media (hover: hover) {
           .feedback-inline-wrapper .feedback-emoji:hover {
