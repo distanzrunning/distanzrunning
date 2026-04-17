@@ -248,9 +248,47 @@ export function FeedbackInline({
             </span>
           </div>
 
-          {/* Expanded form — floats above the trigger so surrounding layout doesn't shift */}
+          {/* Expanded form — floats over the pill, bottom aligned with pill's bottom */}
           {isExpanded && (
             <div className="feedback-inline-expanded">
+              <div className="feedback-inline-trigger">
+                <p
+                  style={{
+                    color: "var(--ds-gray-900)",
+                    fontSize: 14,
+                    lineHeight: "20px",
+                    fontWeight: 400,
+                    margin: 0,
+                  }}
+                >
+                  {label}
+                </p>
+                <span
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 1,
+                  }}
+                >
+                  {emojiOptions.map((emoji) => (
+                    <button
+                      key={emoji.id}
+                      type="button"
+                      role="radio"
+                      className={`feedback-emoji${selectedEmotion === emoji.id ? " feedback-emoji--selected" : ""}`}
+                      aria-checked={selectedEmotion === emoji.id}
+                      aria-label={`Select ${emoji.label} emoji`}
+                      onClick={() =>
+                        setSelectedEmotion(
+                          selectedEmotion === emoji.id ? null : emoji.id,
+                        )
+                      }
+                    >
+                      {emoji.icon}
+                    </button>
+                  ))}
+                </span>
+              </div>
               <form onSubmit={handleSubmit}>
                 <div
                   style={{
@@ -351,20 +389,22 @@ export function FeedbackInline({
         }
         .feedback-inline-expanded {
           position: absolute;
-          bottom: calc(100% + 8px);
-          left: 50%;
-          transform: translateX(-50%);
-          width: 320px;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          width: auto;
+          min-width: 100%;
           background: var(--ds-background-100);
           border: 1px solid var(--ds-gray-200);
-          border-radius: 12px;
+          border-radius: 24px;
           box-shadow:
             0 0 0 1px rgba(0, 0, 0, 0.02),
             0 4px 12px rgba(0, 0, 0, 0.08),
             0 16px 32px rgba(0, 0, 0, 0.08);
           z-index: 50;
           overflow: hidden;
-          animation: feedbackInlineExpandIn 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+          transform-origin: bottom center;
+          animation: feedbackInlineExpandIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
         :is(.dark, [data-theme="dark"]) .feedback-inline-expanded {
           border-color: var(--ds-gray-400);
@@ -372,11 +412,11 @@ export function FeedbackInline({
         @keyframes feedbackInlineExpandIn {
           from {
             opacity: 0;
-            transform: translateX(-50%) translateY(4px) scale(0.98);
+            transform: scale(0.92);
           }
           to {
             opacity: 1;
-            transform: translateX(-50%) translateY(0) scale(1);
+            transform: scale(1);
           }
         }
         .feedback-inline-wrapper .feedback-emoji {
