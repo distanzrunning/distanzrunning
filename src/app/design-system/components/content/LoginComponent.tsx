@@ -2,7 +2,7 @@
 
 import React, { useState, useCallback } from "react";
 import { ChevronDown } from "lucide-react";
-import { TbBrandGoogle } from "react-icons/tb";
+import { TbBrandGoogleFilled } from "react-icons/tb";
 import { Section } from "../ContentWithTOC";
 import {
   useShikiHighlighter,
@@ -353,7 +353,7 @@ function GoogleOnlyDemo() {
         {
           id: "google",
           label: "Continue with Google",
-          icon: <TbBrandGoogle size={18} />,
+          icon: <TbBrandGoogleFilled size={18} />,
           onClick: () => {},
         },
       ]}
@@ -381,7 +381,7 @@ function GoogleAndEmailDemo() {
         {
           id: "google",
           label: "Continue with Google",
-          icon: <TbBrandGoogle size={18} />,
+          icon: <TbBrandGoogleFilled size={18} />,
           onClick: () => {},
         },
       ]}
@@ -417,7 +417,7 @@ function SignUpDemo() {
         {
           id: "google",
           label: "Continue with Google",
-          icon: <TbBrandGoogle size={18} />,
+          icon: <TbBrandGoogleFilled size={18} />,
           onClick: () => {},
         },
       ]}
@@ -560,7 +560,7 @@ export function SignInWithReset() {
   );
 }`;
 
-const googleOnlyCode = `import { TbBrandGoogle } from 'react-icons/tb';
+const googleOnlyCode = `import { TbBrandGoogleFilled } from 'react-icons/tb';
 import { Login } from '@/components/ui/Login';
 
 export function GoogleSignIn() {
@@ -571,7 +571,7 @@ export function GoogleSignIn() {
         {
           id: 'google',
           label: 'Continue with Google',
-          icon: <TbBrandGoogle size={18} />,
+          icon: <TbBrandGoogleFilled size={18} />,
           onClick: () => signInWithGoogle(),
         },
       ]}
@@ -580,7 +580,7 @@ export function GoogleSignIn() {
   );
 }`;
 
-const googleAndEmailCode = `import { TbBrandGoogle } from 'react-icons/tb';
+const googleAndEmailCode = `import { TbBrandGoogleFilled } from 'react-icons/tb';
 import { Login } from '@/components/ui/Login';
 
 export function SignIn() {
@@ -591,7 +591,7 @@ export function SignIn() {
         {
           id: 'google',
           label: 'Continue with Google',
-          icon: <TbBrandGoogle size={18} />,
+          icon: <TbBrandGoogleFilled size={18} />,
           onClick: () => signInWithGoogle(),
         },
       ]}
@@ -607,7 +607,7 @@ export function SignIn() {
   );
 }`;
 
-const signUpCode = `import { TbBrandGoogle } from 'react-icons/tb';
+const signUpCode = `import { TbBrandGoogleFilled } from 'react-icons/tb';
 import { Login } from '@/components/ui/Login';
 
 export function SignUp() {
@@ -618,7 +618,7 @@ export function SignUp() {
         {
           id: 'google',
           label: 'Continue with Google',
-          icon: <TbBrandGoogle size={18} />,
+          icon: <TbBrandGoogleFilled size={18} />,
           onClick: () => signInWithGoogle(),
         },
       ]}
