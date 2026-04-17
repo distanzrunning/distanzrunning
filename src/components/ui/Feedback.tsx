@@ -364,7 +364,6 @@ export function FeedbackInline({
                     padding: 12,
                     background: "var(--ds-background-200)",
                     borderTop: "1px solid var(--ds-gray-200)",
-                    borderRadius: "0 0 12px 12px",
                   }}
                 >
                   <Button type="submit" size="small">
@@ -401,14 +400,14 @@ export function FeedbackInline({
           bottom: 0;
           left: 50%;
           transform: translateX(-50%);
-          width: 400px;
+          width: 336px;
           background: var(--ds-background-100);
-          border: 1px solid var(--ds-gray-200);
-          border-radius: 24px;
+          border: none;
+          border-radius: 12px;
           box-shadow:
-            0 0 0 1px rgba(0, 0, 0, 0.02),
-            0 4px 12px rgba(0, 0, 0, 0.08),
-            0 16px 32px rgba(0, 0, 0, 0.08);
+            rgba(0, 0, 0, 0.08) 0px 0px 0px 1px,
+            rgba(0, 0, 0, 0.04) 0px 2px 2px 0px,
+            rgb(250, 250, 250) 0px 0px 0px 1px;
           z-index: 50;
           overflow: hidden;
           transform-origin: bottom center;
