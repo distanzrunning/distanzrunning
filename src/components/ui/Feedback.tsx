@@ -192,7 +192,7 @@ export function FeedbackInline({
             setFeedbackText("");
             setSubmitted(false);
             setClosing(false);
-          }, 220);
+          }, 300);
         }, 2200);
       }, 650);
     },
@@ -245,8 +245,17 @@ export function FeedbackInline({
 
   return (
     <div className={`feedback-inline-wrapper ${isExpanded ? "feedback-inline-wrapper--expanded" : ""} ${className || ""}`}>
-      {/* Always-visible pill trigger row — covered by the panel when expanded */}
-      {triggerRow}
+      {/* Pill trigger row — hidden while panel is open so the selected
+          emoji doesn't flash pink → gray when the panel closes. */}
+      <div
+        className="feedback-inline-pill"
+        style={{
+          opacity: isExpanded ? 0 : 1,
+          pointerEvents: isExpanded ? "none" : "auto",
+        }}
+      >
+        {triggerRow}
+      </div>
 
       {/* Expanded panel — floats over the pill, bottom aligned with pill's bottom */}
       {isExpanded && (
@@ -380,6 +389,9 @@ export function FeedbackInline({
           height: 48px;
           padding: 0 8px 0 20px;
         }
+        .feedback-inline-pill {
+          transition: opacity 0.15s ease;
+        }
         .feedback-inline-expanded {
           position: absolute;
           bottom: 0;
@@ -396,13 +408,14 @@ export function FeedbackInline({
           z-index: 50;
           overflow: hidden;
           transform-origin: bottom center;
+          will-change: transform, opacity;
           animation: feedbackInlineExpandIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
         :is(.dark, [data-theme="dark"]) .feedback-inline-expanded {
           border-color: var(--ds-gray-400);
         }
         .feedback-inline-expanded--closing {
-          animation: feedbackInlineExpandOut 0.22s cubic-bezier(0.4, 0, 1, 1) forwards;
+          animation: feedbackInlineExpandOut 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
         @keyframes feedbackInlineExpandIn {
           from {
@@ -438,7 +451,7 @@ export function FeedbackInline({
           gap: 8px;
           padding: 24px;
           text-align: center;
-          animation: feedbackInlineSuccessIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+          animation: feedbackInlineSuccessIn 0.5s cubic-bezier(0.16, 1, 0.3, 1);
         }
         @keyframes feedbackInlineSuccessIn {
           from {
