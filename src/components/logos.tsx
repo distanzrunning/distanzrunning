@@ -33,14 +33,14 @@ export function DistanzLogo({ height = 96, className = "" }: LogoProps) {
     <>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src="/images/Distanz_Logo_Full_Black_v3.svg"
+        src="/brand/logo-full-black.svg"
         alt="Distanz Running"
         className={`dark:hidden ${className}`}
         style={{ height, width: "auto" }}
       />
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src="/images/Distanz_Logo_Full_White_v3.svg"
+        src="/brand/logo-full-white.svg"
         alt="Distanz Running"
         className={`hidden dark:block ${className}`}
         style={{ height, width: "auto" }}
@@ -59,14 +59,14 @@ export function DistanzWordmark({ height = 64, className = "" }: LogoProps) {
     <>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src="/images/Distanz_Logo_Black_v3.svg"
+        src="/brand/wordmark-black.svg"
         alt="Distanz Running"
         className={`dark:hidden ${className}`}
         style={{ height, width: "auto" }}
       />
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src="/images/Distanz_Logo_White_v3.svg"
+        src="/brand/wordmark-white.svg"
         alt="Distanz Running"
         className={`hidden dark:block ${className}`}
         style={{ height, width: "auto" }}
@@ -84,14 +84,14 @@ export function DistanzMark({ size = 32, className = "" }: MarkProps) {
     <>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src="/images/distanz_icon_black_v3.svg"
+        src="/brand/icon-black.svg"
         alt="Distanz Running"
         className={`dark:hidden ${className}`}
         style={{ height: size, width: size }}
       />
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src="/images/distanz_icon_white_v3.svg"
+        src="/brand/icon-white.svg"
         alt="Distanz Running"
         className={`hidden dark:block ${className}`}
         style={{ height: size, width: size }}

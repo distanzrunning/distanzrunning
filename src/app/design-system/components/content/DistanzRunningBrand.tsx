@@ -62,12 +62,12 @@ function CopyButton({ text, variant = "light" }: { text: string; variant?: "ligh
 }
 
 // The SVG markup that gets copied to clipboard
-const blackFullLogoSvg = `<img src="/images/Distanz_Logo_Full_Black_v3.svg" alt="Distanz Running" height="96" />`;
-const whiteFullLogoSvg = `<img src="/images/Distanz_Logo_Full_White_v3.svg" alt="Distanz Running" height="96" />`;
-const blackWordmarkSvg = `<img src="/images/Distanz_Logo_Black_v3.svg" alt="Distanz Running" height="64" />`;
-const whiteWordmarkSvg = `<img src="/images/Distanz_Logo_White_v3.svg" alt="Distanz Running" height="64" />`;
-const blackMarkSvg = `<img src="/images/distanz_icon_black_v3.svg" alt="Distanz Running" height="32" />`;
-const whiteMarkSvg = `<img src="/images/distanz_icon_white_v3.svg" alt="Distanz Running" height="32" />`;
+const blackFullLogoSvg = `<img src="/brand/logo-full-black.svg" alt="Distanz Running" height="96" />`;
+const whiteFullLogoSvg = `<img src="/brand/logo-full-white.svg" alt="Distanz Running" height="96" />`;
+const blackWordmarkSvg = `<img src="/brand/wordmark-black.svg" alt="Distanz Running" height="64" />`;
+const whiteWordmarkSvg = `<img src="/brand/wordmark-white.svg" alt="Distanz Running" height="64" />`;
+const blackMarkSvg = `<img src="/brand/icon-black.svg" alt="Distanz Running" height="32" />`;
+const whiteMarkSvg = `<img src="/brand/icon-white.svg" alt="Distanz Running" height="32" />`;
 
 export default function DistanzRunningBrand() {
   return (
@@ -112,7 +112,7 @@ export default function DistanzRunningBrand() {
         <div className="flex justify-center" style={{ maxWidth: "80%" }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/images/Distanz_Logo_Full_Black_v3.svg"
+            src="/brand/logo-full-black.svg"
             alt="Distanz Running Logo - Black"
             style={{ height: 120, width: "auto" }}
           />
@@ -130,7 +130,7 @@ export default function DistanzRunningBrand() {
         <div className="flex justify-center" style={{ maxWidth: "80%" }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/images/Distanz_Logo_Full_White_v3.svg"
+            src="/brand/logo-full-white.svg"
             alt="Distanz Running Logo - White"
             style={{ height: 120, width: "auto" }}
           />
@@ -169,7 +169,7 @@ export default function DistanzRunningBrand() {
         <div className="flex justify-center" style={{ maxWidth: "80%" }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/images/Distanz_Logo_Black_v3.svg"
+            src="/brand/wordmark-black.svg"
             alt="Distanz Running Wordmark - Black"
             style={{ height: 72, width: "auto" }}
           />
@@ -185,7 +185,7 @@ export default function DistanzRunningBrand() {
         <div className="flex justify-center" style={{ maxWidth: "80%" }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/images/Distanz_Logo_White_v3.svg"
+            src="/brand/wordmark-white.svg"
             alt="Distanz Running Wordmark - White"
             style={{ height: 72, width: "auto" }}
           />
@@ -228,7 +228,7 @@ export default function DistanzRunningBrand() {
           <CopyButton text={blackMarkSvg} variant="light" />
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/images/distanz_icon_black_v3.svg"
+            src="/brand/icon-black.svg"
             alt="Distanz Running Symbol - Black"
             style={{ height: 32 }}
           />
@@ -241,7 +241,7 @@ export default function DistanzRunningBrand() {
           <CopyButton text={whiteMarkSvg} variant="dark" />
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/images/distanz_icon_white_v3.svg"
+            src="/brand/icon-white.svg"
             alt="Distanz Running Symbol - White"
             style={{ height: 32 }}
           />

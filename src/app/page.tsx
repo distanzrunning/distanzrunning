@@ -82,7 +82,7 @@ function PreviewPage() {
       <link
         rel="preload"
         as="image"
-        href="/images/Distanz_Logo_1600_600_Black.svg"
+        href="/brand/wordmark-black.svg"
         fetchPriority="high"
       />
       <link
@@ -106,7 +106,7 @@ function PreviewPage() {
             {/* Logo - smaller, switches between light and dark */}
             <div className="flex justify-center mb-3 svg-container">
               <img
-                src="/images/Distanz_Logo_1600_600_Black.svg"
+                src="/brand/wordmark-black.svg"
                 alt="Distanz Running Logo"
                 width="400"
                 height="200"

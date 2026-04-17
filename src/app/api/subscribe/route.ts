@@ -316,7 +316,7 @@ export async function POST(request: NextRequest) {
                         <td style="padding-bottom:12px">
                           <a href="https://distanzrunning.com" style="text-decoration:none">
                             <img
-                              src="https://distanzrunning.vercel.app/images/Distanz_Logo_1600_600_black_white.png"
+                              src="https://distanzrunning.vercel.app/brand/logo-email.png"
                               alt="Distanz Running"
                               width="120"
                               height="45"

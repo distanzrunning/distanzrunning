@@ -471,7 +471,7 @@ export default function AvatarComponent() {
                   placeholderIcon: (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
-                      src="/images/distanz_icon_white_v3.svg"
+                      src="/brand/icon-white.svg"
                       alt=""
                       style={{ width: "100%", height: "100%", objectFit: "contain" }}
                     />
