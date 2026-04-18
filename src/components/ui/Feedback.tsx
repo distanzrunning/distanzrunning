@@ -193,7 +193,7 @@ export function FeedbackInline({
             setFeedbackText("");
             setSubmitted(false);
             setClosing(false);
-          }, 350);
+          }, 300);
         }, 2200);
       }, 650);
     },
@@ -222,7 +222,7 @@ export function FeedbackInline({
           setSelectedEmotion(null);
           setFeedbackText("");
           setClosing(false);
-        }, 350);
+        }, 300);
       }
     };
 
@@ -435,7 +435,7 @@ export function FeedbackInline({
           animation: feedbackInlineExpandIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .feedback-inline-expanded--closing {
-          animation: feedbackInlineExpandOut 0.35s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+          animation: feedbackInlineExpandOut 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
         @keyframes feedbackInlineExpandIn {
           from {
@@ -448,23 +448,15 @@ export function FeedbackInline({
           }
         }
         @keyframes feedbackInlineExpandOut {
-          0% {
+          from {
             opacity: 1;
-            max-height: 300px;
+            transform: translateX(-50%) scale(1);
             border-radius: 12px;
-            transform: translateX(-50%);
           }
-          70% {
-            opacity: 1;
-            max-height: 48px;
-            border-radius: 30px;
-            transform: translateX(-50%);
-          }
-          100% {
+          to {
             opacity: 0;
-            max-height: 48px;
-            border-radius: 30px;
-            transform: translateX(-50%);
+            transform: translateX(-50%) scale(0.94);
+            border-radius: 24px;
           }
         }
         .feedback-inline-body {
