@@ -401,18 +401,12 @@ export function FeedbackInline({
           background: var(--ds-background-100);
           border: none;
           border-radius: 12px;
-          box-shadow:
-            rgba(0, 0, 0, 0.08) 0px 0px 0px 1px,
-            rgba(0, 0, 0, 0.04) 0px 2px 2px 0px,
-            rgb(250, 250, 250) 0px 0px 0px 1px;
+          box-shadow: var(--ds-shadow-menu);
           z-index: 50;
           overflow: hidden;
           transform-origin: bottom center;
           will-change: transform, opacity;
           animation: feedbackInlineExpandIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        :is(.dark, [data-theme="dark"]) .feedback-inline-expanded {
-          border-color: var(--ds-gray-400);
         }
         .feedback-inline-expanded--closing {
           animation: feedbackInlineExpandOut 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
