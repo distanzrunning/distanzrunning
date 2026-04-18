@@ -133,13 +133,13 @@ function clearCookie() {
 
 function readStored(): ConsentPreferences | null {
   if (typeof window === "undefined") return null;
-  // Cookie is the source of truth (survives server-side + matches user
-  // expectations when they "clear cookies"). Fall back to localStorage for
-  // visitors who decided before we added the cookie — we re-sync on write.
-  const cookie = readCookie();
-  const parsed =
-    cookie ?? parseStored(window.localStorage.getItem(STORAGE_KEY));
-  if (!parsed) return null;
+  const parsed = readCookie();
+  if (!parsed) {
+    // Clean up any legacy localStorage record so it can't resurrect the
+    // decision if the user later clears cookies.
+    window.localStorage.removeItem(STORAGE_KEY);
+    return null;
+  }
   return {
     essential: true,
     marketing: !!parsed.marketing,
@@ -156,7 +156,6 @@ function writeStored(prefs: ConsentPreferences) {
     version: CONSENT_VERSION,
   };
   writeCookie(payload);
-  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
   // Broadcast so other tabs / scripts can react
   window.dispatchEvent(
     new CustomEvent<ConsentPreferences>("distanz-consent-change", {
