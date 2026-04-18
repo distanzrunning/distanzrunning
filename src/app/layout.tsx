@@ -44,6 +44,11 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://distanzrunning.com",
   },
+  verification: {
+    other: {
+      "google-adsense-account": "ca-pub-8457173435004026",
+    },
+  },
 };
 
 export default function RootLayout({

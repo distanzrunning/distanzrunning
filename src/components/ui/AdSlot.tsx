@@ -55,17 +55,38 @@ export interface AdSlotProps {
 // ============================================================================
 
 function DefaultFallback({ width, height }: Dimensions) {
-  // Very short slots (leaderboard, mobile-banner) — one line
-  const isNarrow = height < 100;
+  const frameStyle: React.CSSProperties = {
+    borderColor: "var(--ds-gray-400)",
+    background: "var(--ds-background-200)",
+  };
+  const ctaStyle: React.CSSProperties = {
+    background: "var(--ds-gray-1000)",
+    color: "var(--ds-background-100)",
+  };
 
-  if (isNarrow) {
+  // Very small mobile banner (≤ 60px tall) — just an inline link
+  if (height <= 60) {
     return (
       <div
-        className="flex h-full w-full items-center justify-center gap-3 rounded-lg border text-center"
-        style={{
-          borderColor: "var(--ds-gray-400)",
-          background: "var(--ds-background-200)",
-        }}
+        className="flex h-full w-full items-center justify-center rounded-lg border px-4"
+        style={frameStyle}
+      >
+        <Link
+          href="/write"
+          className="text-[12px] font-semibold text-textDefault no-underline hover:underline"
+        >
+          Advertise with us →
+        </Link>
+      </div>
+    );
+  }
+
+  // Short + wide (leaderboard 728×90) — single horizontal row
+  if (height < 100) {
+    return (
+      <div
+        className="flex h-full w-full items-center justify-center gap-3 rounded-lg border px-6 text-center"
+        style={frameStyle}
       >
         <span className="text-[13px] font-medium text-textDefault">
           Advertise with Distanz Running
@@ -81,34 +102,41 @@ function DefaultFallback({ width, height }: Dimensions) {
     );
   }
 
-  // Very small mobile banner (< 60px tall)
-  if (height < 60) {
+  // Tall + narrow (skyscraper 160×600) — compact stacked layout
+  if (width < 240 && height > 400) {
     return (
       <div
-        className="flex h-full w-full items-center justify-center rounded-lg border"
-        style={{
-          borderColor: "var(--ds-gray-400)",
-          background: "var(--ds-background-200)",
-        }}
+        className="flex h-full w-full flex-col items-center justify-between rounded-lg border p-4 text-center"
+        style={frameStyle}
       >
+        <div className="flex flex-1 flex-col items-center justify-center gap-3">
+          <div className="text-[10px] font-semibold uppercase tracking-[0.08em] text-textSubtle">
+            Distanz Running
+          </div>
+          <h4 className="text-[15px] font-semibold leading-tight text-textDefault">
+            Advertise here
+          </h4>
+          <p className="text-[12px] leading-snug text-textSubtle">
+            Reach runners where they plan, train, and race.
+          </p>
+        </div>
         <Link
           href="/write"
-          className="text-[12px] font-semibold text-textDefault no-underline hover:underline"
+          className="inline-flex w-full items-center justify-center gap-1 h-9 rounded-md font-sans text-[12px] font-semibold no-underline"
+          style={ctaStyle}
         >
-          Advertise with us →
+          Get in touch
+          <ChevronRight className="h-3.5 w-3.5" />
         </Link>
       </div>
     );
   }
 
-  // Square / MPU / Billboard / Skyscraper — full card
+  // Default — square / MPU / billboard
   return (
     <div
       className="flex h-full w-full flex-col items-center justify-center gap-3 rounded-lg border p-6 text-center"
-      style={{
-        borderColor: "var(--ds-gray-400)",
-        background: "var(--ds-background-200)",
-      }}
+      style={frameStyle}
     >
       <h4 className="text-[16px] font-semibold leading-tight text-textDefault">
         Want to reach runners?
@@ -119,10 +147,7 @@ function DefaultFallback({ width, height }: Dimensions) {
       <Link
         href="/write"
         className="inline-flex items-center gap-1.5 px-3.5 h-9 rounded-md font-sans text-[13px] font-semibold no-underline transition-colors"
-        style={{
-          background: "var(--ds-gray-1000)",
-          color: "var(--ds-background-100)",
-        }}
+        style={ctaStyle}
       >
         Get in touch
         <ChevronRight className="h-3.5 w-3.5" />
