@@ -545,7 +545,9 @@ export function FeedbackInline({
           }
         }
         .feedback-inline-wrapper .feedback-textarea-wrapper:focus-within {
-          box-shadow: 0 0 0 1px var(--ds-gray-alpha-600), 0px 0px 0px 4px rgba(0, 0, 0, 0.16);
+          box-shadow:
+            0 0 0 1px var(--ds-gray-alpha-600),
+            0 0 0 4px var(--ds-focus-ring);
         }
         .feedback-inline-wrapper .feedback-textarea-wrapper textarea::placeholder {
           color: var(--ds-gray-700);
