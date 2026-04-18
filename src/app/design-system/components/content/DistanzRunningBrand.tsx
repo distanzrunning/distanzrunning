@@ -149,6 +149,51 @@ export default function DistanzRunningBrand() {
         />
       </div>
 
+      {/* Email logo heading */}
+      <Section>
+        <div className="flex flex-col">
+          <SectionHeading id="email-logo" title="Email logo" />
+          <p className="text-copy-16 mt-4" style={{ color: "var(--ds-gray-900)" }}>
+            A variant of the full logo for emails. The black shapes carry a
+            thin white outline rendered with{" "}
+            <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+              paint-order: stroke fill
+            </code>
+            , so the stroke sits outside each path. On a light email body the
+            outline is invisible against the white background; on a dark
+            email body it separates the black logo from the surface so it
+            stays legible. One asset works in both light- and dark-mode
+            email clients.
+          </p>
+        </div>
+      </Section>
+
+      {/* Email logo display — light + dark previews */}
+      <div className="grid grid-cols-1 md:grid-cols-2">
+        <div
+          className="flex h-[164px] items-center justify-center md:h-[200px]"
+          style={{ background: "#FFFFFF" }}
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/brand/logo-full-email.svg"
+            alt="Distanz Running Email Logo — on white"
+            style={{ height: 72, width: "auto" }}
+          />
+        </div>
+        <div
+          className="flex h-[164px] items-center justify-center md:h-[200px]"
+          style={{ background: "#1A1A1A" }}
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/brand/logo-full-email.svg"
+            alt="Distanz Running Email Logo — on dark"
+            style={{ height: 72, width: "auto" }}
+          />
+        </div>
+      </div>
+
       {/* Wordmark heading */}
       <Section>
         <div className="flex flex-col">
