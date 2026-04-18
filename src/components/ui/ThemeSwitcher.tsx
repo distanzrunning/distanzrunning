@@ -82,7 +82,7 @@ export function ThemeSwitcher({
         const id = `theme-switcher-${option.value}-${instanceId}`;
 
         return (
-          <span key={option.value}>
+          <span key={option.value} style={{ position: "relative" }}>
             <input
               type="radio"
               id={id}
@@ -93,14 +93,14 @@ export function ThemeSwitcher({
               onChange={() => handleChange(option.value)}
               style={{
                 position: "absolute",
+                top: 0,
+                left: 0,
                 width: 1,
                 height: 1,
                 padding: 0,
-                margin: -1,
-                overflow: "hidden",
-                clip: "rect(0, 0, 0, 0)",
-                whiteSpace: "nowrap",
-                borderWidth: 0,
+                margin: 0,
+                opacity: 0,
+                pointerEvents: "none",
               }}
             />
             <label
