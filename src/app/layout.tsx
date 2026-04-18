@@ -1,6 +1,5 @@
 // src/app/layout.tsx
 import type { Metadata } from "next";
-import Script from "next/script";
 import "./globals.css";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
@@ -138,12 +137,13 @@ export default function RootLayout({
         </ReCaptchaProvider>
 
         {/* Google AdSense — loads once for the whole app. Individual ad units
-            live in <AdSlot /> and push themselves to `adsbygoogle` once visible. */}
-        <Script
+            live in <AdSlot /> and push themselves to `adsbygoogle` once visible.
+            Rendered as a raw <script> (rather than next/script) so AdSense
+            doesn't log a warning about the data-nscript attribute. */}
+        <script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8457173435004026"
           crossOrigin="anonymous"
-          strategy="afterInteractive"
         />
       </body>
     </html>

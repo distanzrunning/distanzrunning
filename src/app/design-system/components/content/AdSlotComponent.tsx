@@ -331,7 +331,7 @@ export default function AdSlotComponent() {
         </p>
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={mpuCode} minHeight={340}>
-            <AdSlot slot="preview-mpu" size="mpu" lazy={false} />
+            <AdSlot slot="preview-mpu" size="mpu" preview />
           </CodePreview>
         </div>
       </Section>
@@ -347,7 +347,7 @@ export default function AdSlotComponent() {
         </p>
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={leaderboardCode} minHeight={200}>
-            <AdSlot slot="preview-leaderboard" size="leaderboard" lazy={false} />
+            <AdSlot slot="preview-leaderboard" size="leaderboard" preview />
           </CodePreview>
         </div>
       </Section>
@@ -363,7 +363,7 @@ export default function AdSlotComponent() {
         </p>
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={billboardCode} minHeight={340}>
-            <AdSlot slot="preview-billboard" size="billboard" lazy={false} />
+            <AdSlot slot="preview-billboard" size="billboard" preview />
           </CodePreview>
         </div>
       </Section>
@@ -379,7 +379,7 @@ export default function AdSlotComponent() {
         </p>
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={skyscraperCode} minHeight={680}>
-            <AdSlot slot="preview-skyscraper" size="skyscraper" lazy={false} />
+            <AdSlot slot="preview-skyscraper" size="skyscraper" preview />
           </CodePreview>
         </div>
       </Section>
@@ -395,7 +395,7 @@ export default function AdSlotComponent() {
         </p>
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={mobileBannerCode} minHeight={140}>
-            <AdSlot slot="preview-mobile" size="mobile-banner" lazy={false} />
+            <AdSlot slot="preview-mobile" size="mobile-banner" preview />
           </CodePreview>
         </div>
       </Section>
@@ -421,7 +421,7 @@ export default function AdSlotComponent() {
             <AdSlot
               slot="preview-custom"
               size="mpu"
-              lazy={false}
+              preview
               fallback={
                 <div
                   className="flex h-full w-full flex-col items-center justify-center gap-3 rounded-lg border p-6 text-center"

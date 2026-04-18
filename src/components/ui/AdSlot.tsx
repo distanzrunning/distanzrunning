@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useRef, useState, type ReactNode } from "react";
-import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 
 // ============================================================================
@@ -45,6 +44,12 @@ export interface AdSlotProps {
   fallback?: ReactNode;
   /** Lazy-load the ad script until the slot scrolls into view (default true). */
   lazy?: boolean;
+  /**
+   * Skip the AdSense call entirely and render the fallback immediately.
+   * Useful for design-system previews, placeholder pages, and Storybook
+   * where the slot ID isn't a real AdSense ad unit.
+   */
+  preview?: boolean;
   /** Additional classes on the outer wrapper. */
   className?: string;
 }
@@ -71,12 +76,12 @@ function DefaultFallback({ width, height }: Dimensions) {
         className="flex h-full w-full items-center justify-center rounded-lg border px-4"
         style={frameStyle}
       >
-        <Link
-          href="/write"
+        <a
+          href="mailto:brand@distanzrunning.com?subject=Advertising%20on%20Distanz%20Running"
           className="text-[12px] font-semibold text-textDefault no-underline hover:underline"
         >
           Advertise with us →
-        </Link>
+        </a>
       </div>
     );
   }
@@ -91,13 +96,13 @@ function DefaultFallback({ width, height }: Dimensions) {
         <span className="text-[13px] font-medium text-textDefault">
           Advertise with Distanz Running
         </span>
-        <Link
-          href="/write"
+        <a
+          href="mailto:brand@distanzrunning.com?subject=Advertising%20on%20Distanz%20Running"
           className="inline-flex items-center gap-1 text-[13px] font-semibold text-textDefault no-underline hover:underline"
         >
           Get in touch
           <ChevronRight className="h-3.5 w-3.5" />
-        </Link>
+        </a>
       </div>
     );
   }
@@ -120,14 +125,14 @@ function DefaultFallback({ width, height }: Dimensions) {
             Reach runners where they plan, train, and race.
           </p>
         </div>
-        <Link
-          href="/write"
+        <a
+          href="mailto:brand@distanzrunning.com?subject=Advertising%20on%20Distanz%20Running"
           className="inline-flex w-full items-center justify-center gap-1 h-9 rounded-md font-sans text-[12px] font-semibold no-underline"
           style={ctaStyle}
         >
           Get in touch
           <ChevronRight className="h-3.5 w-3.5" />
-        </Link>
+        </a>
       </div>
     );
   }
@@ -144,14 +149,14 @@ function DefaultFallback({ width, height }: Dimensions) {
       <p className="text-[13px] leading-snug text-textSubtle max-w-[80%]">
         Feature your brand, product, or story here.
       </p>
-      <Link
-        href="/write"
+      <a
+        href="mailto:brand@distanzrunning.com?subject=Advertising%20on%20Distanz%20Running"
         className="inline-flex items-center gap-1.5 px-3.5 h-9 rounded-md font-sans text-[13px] font-semibold no-underline transition-colors"
         style={ctaStyle}
       >
         Get in touch
         <ChevronRight className="h-3.5 w-3.5" />
-      </Link>
+      </a>
     </div>
   );
 }
@@ -175,6 +180,7 @@ export function AdSlot({
   label = true,
   fallback,
   lazy = true,
+  preview = false,
   className = "",
 }: AdSlotProps) {
   const dimensions: Dimensions =
@@ -187,10 +193,13 @@ export function AdSlot({
   const [inView, setInView] = useState(!lazy);
   // `filled` flips true when we detect AdSense rendered content.
   // null = undecided, true = filled (show label), false = empty (show fallback).
-  const [filled, setFilled] = useState<boolean | null>(null);
+  // In preview mode we force this to false on mount so the fallback renders
+  // immediately without contacting AdSense.
+  const [filled, setFilled] = useState<boolean | null>(preview ? false : null);
 
   // 1. IntersectionObserver for lazy loading.
   useEffect(() => {
+    if (preview) return;
     if (!lazy || inView) return;
     const node = containerRef.current;
     if (!node) return;
@@ -210,10 +219,11 @@ export function AdSlot({
 
     observer.observe(node);
     return () => observer.disconnect();
-  }, [lazy, inView]);
+  }, [lazy, inView, preview]);
 
   // 2. Push the slot to adsbygoogle once in view.
   useEffect(() => {
+    if (preview) return;
     if (!inView) return;
     if (typeof window === "undefined") return;
     try {
@@ -221,10 +231,11 @@ export function AdSlot({
     } catch {
       // Blocker, offline, or script not yet loaded — fallback check handles it.
     }
-  }, [inView]);
+  }, [inView, preview]);
 
   // 3. After a short delay, inspect the ins element for fill state.
   useEffect(() => {
+    if (preview) return;
     if (!inView) return;
 
     const timer = setTimeout(() => {
