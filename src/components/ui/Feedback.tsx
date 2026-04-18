@@ -388,7 +388,7 @@ export function FeedbackInline({
         .feedback-inline-placeholder {
           position: relative;
           display: inline-block;
-          width: 316px;
+          width: 274px;
           height: 48px;
         }
         .feedback-inline-wrapper {
@@ -400,6 +400,7 @@ export function FeedbackInline({
           display: flex;
           flex-direction: column;
           width: max-content;
+          min-width: 274px;
           height: 48px;
           border-radius: 30px;
           background: var(--ds-background-100);
@@ -418,7 +419,7 @@ export function FeedbackInline({
         }
         .feedback-inline-wrapper--expanded {
           width: 336px;
-          height: 244px;
+          height: 243px;
           border-radius: 12px;
           border-color: transparent;
           box-shadow: var(--ds-shadow-menu);
