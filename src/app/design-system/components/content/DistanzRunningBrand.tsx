@@ -68,6 +68,8 @@ const blackWordmarkSvg = `<img src="/brand/wordmark-black.svg" alt="Distanz Runn
 const whiteWordmarkSvg = `<img src="/brand/wordmark-white.svg" alt="Distanz Running" height="64" />`;
 const blackMarkSvg = `<img src="/brand/icon-black.svg" alt="Distanz Running" height="32" />`;
 const whiteMarkSvg = `<img src="/brand/icon-white.svg" alt="Distanz Running" height="32" />`;
+const lightBadgeSvg = `<img src="/brand/icon-badge.svg" alt="Distanz Running" height="120" />`;
+const darkBadgeSvg = `<img src="/brand/icon-badge-alt.svg" alt="Distanz Running" height="120" />`;
 
 export default function DistanzRunningBrand() {
   return (
@@ -258,6 +260,50 @@ export default function DistanzRunningBrand() {
           language="jsx"
           showLineNumbers={false}
         />
+      </div>
+
+      {/* Badge heading */}
+      <Section>
+        <div className="flex flex-col">
+          <SectionHeading id="badge" title="Badge" />
+          <p className="text-copy-16 mt-4" style={{ color: "var(--ds-gray-900)" }}>
+            A self-contained badge version of the symbol for contexts where
+            the background is unknown or can switch between light and dark —
+            email signatures, user avatars, partner decks. The outlined mark
+            and built-in surface mean the badge reads clearly without a
+            theme swap.
+          </p>
+        </div>
+      </Section>
+
+      {/* Badge display — 2 column grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2">
+        {/* Light badge — shown on a mid-tone surface so its edges read */}
+        <div
+          className="group relative flex h-[220px] items-center justify-center md:h-[280px]"
+          style={{ background: "var(--ds-gray-200)" }}
+        >
+          <CopyButton text={lightBadgeSvg} variant="light" />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/brand/icon-badge.svg"
+            alt="Distanz Running Badge — Light"
+            style={{ height: 140, width: 140 }}
+          />
+        </div>
+        {/* Dark badge — shown on the same mid-tone surface */}
+        <div
+          className="group relative flex h-[220px] items-center justify-center md:h-[280px]"
+          style={{ background: "var(--ds-gray-200)" }}
+        >
+          <CopyButton text={darkBadgeSvg} variant="light" />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/brand/icon-badge-alt.svg"
+            alt="Distanz Running Badge — Dark"
+            style={{ height: 140, width: 140 }}
+          />
+        </div>
       </div>
 
       {/* General Information */}
