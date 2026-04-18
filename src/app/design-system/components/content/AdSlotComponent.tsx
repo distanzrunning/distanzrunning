@@ -295,10 +295,10 @@ export default function AdSlotComponent() {
         </p>
 
         <Note type="default" label={false}>
-          <span className="flex items-start gap-3">
+          <span className="flex items-center gap-3">
             <SiGoogleadsense
               size={20}
-              style={{ color: "#4285F4", flexShrink: 0, marginTop: 2 }}
+              style={{ color: "#4285F4", flexShrink: 0 }}
             />
             <span>
               Distanz Running is set up under AdSense publisher{" "}
