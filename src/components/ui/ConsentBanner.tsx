@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { X, ChevronDown } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import Button from "@/components/ui/Button";
 import { Modal } from "@/components/ui/Modal";
 import Toggle from "@/components/ui/Toggle";
@@ -233,23 +233,14 @@ function BottomBanner() {
         }}
       >
         <div
-          className="relative flex flex-col gap-4 rounded-xl p-5"
+          className="flex flex-col gap-4 rounded-xl p-5"
           style={{
             background: "var(--ds-background-100)",
             border: "1px solid var(--ds-gray-400)",
             boxShadow: "var(--ds-shadow-menu)",
           }}
         >
-          <button
-            type="button"
-            onClick={rejectAll}
-            aria-label="Close banner and deny consent"
-            className="absolute right-3 top-3 p-1 rounded hover:bg-surfaceSubtle transition-colors"
-          >
-            <X className="w-4 h-4 text-textSubtle" />
-          </button>
-
-          <div className="pr-6">
+          <div>
             <h2
               id="consent-banner-title"
               className="text-[16px] font-semibold text-textDefault leading-tight"
@@ -292,7 +283,12 @@ function BottomBanner() {
             >
               Accept all
             </Button>
-            <Button shape="rounded" size="small" onClick={openSettings}>
+            <Button
+              shape="rounded"
+              size="small"
+              onClick={openSettings}
+              className="ml-auto"
+            >
               Customise
             </Button>
           </div>
