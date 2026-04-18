@@ -70,8 +70,6 @@ const blackMarkSvg = `<img src="/brand/icon-black.svg" alt="Distanz Running" hei
 const whiteMarkSvg = `<img src="/brand/icon-white.svg" alt="Distanz Running" height="32" />`;
 const lightBadgeSvg = `<img src="/brand/icon-badge.svg" alt="Distanz Running" height="120" />`;
 const darkBadgeSvg = `<img src="/brand/icon-badge-alt.svg" alt="Distanz Running" height="120" />`;
-const lightSolidBadgeSvg = `<img src="/brand/icon-badge-solid.svg" alt="Distanz Running" height="120" />`;
-const darkSolidBadgeSvg = `<img src="/brand/icon-badge-solid-alt.svg" alt="Distanz Running" height="120" />`;
 
 export default function DistanzRunningBrand() {
   return (
@@ -278,9 +276,8 @@ export default function DistanzRunningBrand() {
         </div>
       </Section>
 
-      {/* Badge display — 2 column grid, two rows: outlined + solid */}
+      {/* Badge display — 2 column grid */}
       <div className="grid grid-cols-1 md:grid-cols-2">
-        {/* Row 1: outlined variants */}
         <div
           className="group relative flex h-[220px] items-center justify-center md:h-[280px]"
           style={{ background: "var(--ds-gray-200)" }}
@@ -289,7 +286,7 @@ export default function DistanzRunningBrand() {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/brand/icon-badge.svg"
-            alt="Distanz Running Badge — Light outline"
+            alt="Distanz Running Badge — Light"
             style={{ height: 140, width: 140 }}
           />
         </div>
@@ -301,32 +298,7 @@ export default function DistanzRunningBrand() {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/brand/icon-badge-alt.svg"
-            alt="Distanz Running Badge — Dark outline"
-            style={{ height: 140, width: 140 }}
-          />
-        </div>
-        {/* Row 2: solid variants */}
-        <div
-          className="group relative flex h-[220px] items-center justify-center md:h-[280px]"
-          style={{ background: "var(--ds-gray-200)" }}
-        >
-          <CopyButton text={lightSolidBadgeSvg} variant="light" />
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/brand/icon-badge-solid.svg"
-            alt="Distanz Running Badge — Light solid"
-            style={{ height: 140, width: 140 }}
-          />
-        </div>
-        <div
-          className="group relative flex h-[220px] items-center justify-center md:h-[280px]"
-          style={{ background: "var(--ds-gray-200)" }}
-        >
-          <CopyButton text={darkSolidBadgeSvg} variant="light" />
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/brand/icon-badge-solid-alt.svg"
-            alt="Distanz Running Badge — Dark solid"
+            alt="Distanz Running Badge — Dark"
             style={{ height: 140, width: 140 }}
           />
         </div>
