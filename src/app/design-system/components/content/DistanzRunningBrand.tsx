@@ -71,6 +71,7 @@ const whiteMarkSvg = `<img src="/brand/icon-white.svg" alt="Distanz Running" hei
 const lightBadgeSvg = `<img src="/brand/icon-badge.svg" alt="Distanz Running" height="120" />`;
 const darkBadgeSvg = `<img src="/brand/icon-badge-alt.svg" alt="Distanz Running" height="120" />`;
 const appIconSvg = `<img src="/brand/icon-app.svg" alt="Distanz Running" height="180" />`;
+const appIconAltSvg = `<img src="/brand/icon-app-alt.svg" alt="Distanz Running" height="180" />`;
 
 export default function DistanzRunningBrand() {
   return (
@@ -428,6 +429,106 @@ export default function DistanzRunningBrand() {
               // 1px theme-aware ring + soft drop shadow. The ring keeps the
               // icon's edge readable in dark mode when its gradient top
               // matches the panel colour.
+              boxShadow:
+                "0 0 0 1px var(--ds-gray-400), 0 8px 24px rgba(0, 0, 0, 0.28)",
+            }}
+          />
+        </div>
+
+        {/* Inverted keyline preview */}
+        <div
+          className="group relative flex h-[260px] items-center justify-center md:h-[320px]"
+          style={{ background: "var(--ds-gray-200)" }}
+        >
+          <CopyButton text={appIconAltSvg} variant="light" />
+          <div style={{ position: "relative", width: 200, height: 200 }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/brand/icon-app-alt.svg"
+              alt="Distanz Running App Icon — inverted master with guidelines"
+              style={{ width: "100%", height: "100%", display: "block" }}
+            />
+            <svg
+              viewBox="0 0 1024 1024"
+              style={{
+                position: "absolute",
+                inset: 0,
+                width: "100%",
+                height: "100%",
+                pointerEvents: "none",
+              }}
+              aria-hidden="true"
+            >
+              <rect
+                x="1"
+                y="1"
+                width="1022"
+                height="1022"
+                fill="none"
+                stroke="#EB377D"
+                strokeWidth="3"
+                strokeDasharray="14 10"
+                opacity="0.7"
+              />
+              <rect
+                x="1"
+                y="1"
+                width="1022"
+                height="1022"
+                rx="229"
+                ry="229"
+                fill="none"
+                stroke="#EB377D"
+                strokeWidth="4"
+              />
+              <circle
+                cx="512"
+                cy="512"
+                r="410"
+                fill="none"
+                stroke="#EB377D"
+                strokeWidth="2"
+                strokeDasharray="10 8"
+                opacity="0.7"
+              />
+              <line
+                x1="0"
+                y1="512"
+                x2="1024"
+                y2="512"
+                stroke="#EB377D"
+                strokeWidth="2"
+                strokeDasharray="6 6"
+                opacity="0.6"
+              />
+              <line
+                x1="512"
+                y1="0"
+                x2="512"
+                y2="1024"
+                stroke="#EB377D"
+                strokeWidth="2"
+                strokeDasharray="6 6"
+                opacity="0.6"
+              />
+              <circle cx="512" cy="512" r="8" fill="#EB377D" />
+            </svg>
+          </div>
+        </div>
+        {/* Inverted iOS-masked preview */}
+        <div
+          className="group relative flex h-[260px] items-center justify-center md:h-[320px]"
+          style={{ background: "var(--ds-gray-200)" }}
+        >
+          <CopyButton text={appIconAltSvg} variant="light" />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/brand/icon-app-alt.svg"
+            alt="Distanz Running App Icon — inverted iOS-masked preview"
+            style={{
+              height: 180,
+              width: 180,
+              borderRadius: "22.37%",
               boxShadow:
                 "0 0 0 1px var(--ds-gray-400), 0 8px 24px rgba(0, 0, 0, 0.28)",
             }}
