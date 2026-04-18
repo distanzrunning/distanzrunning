@@ -424,6 +424,7 @@ export function FeedbackInline({
           box-shadow: var(--ds-shadow-menu);
         }
         .feedback-inline-body {
+          position: relative;
           flex: 1 1 0;
           min-height: 0;
           overflow: hidden;
@@ -436,11 +437,8 @@ export function FeedbackInline({
           gap: 12px;
           height: 48px;
           padding: 0 20px;
-        }
-        .feedback-inline-body {
-          position: relative;
-          height: 196px;
-          overflow: hidden;
+          transform: translateZ(0);
+          backface-visibility: hidden;
         }
         .feedback-inline-success {
           height: 100%;
