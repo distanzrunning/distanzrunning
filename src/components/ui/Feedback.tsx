@@ -170,11 +170,33 @@ export function FeedbackInline({
 }: FeedbackInlineProps) {
   const [selectedEmotion, setSelectedEmotion] = useState<string | null>(null);
   const [feedbackText, setFeedbackText] = useState("");
+  const [isExpanded, setIsExpanded] = useState(false);
   const [isSending, setIsSending] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const [closing, setClosing] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
+
+  const close = useCallback(() => {
+    setIsExpanded(false);
+    setTimeout(() => {
+      setSelectedEmotion(null);
+      setFeedbackText("");
+      setSubmitted(false);
+    }, 250);
+  }, []);
+
+  const handleFaceClick = useCallback(
+    (id: string) => {
+      if (isSending || submitted) return;
+      if (selectedEmotion === id) {
+        close();
+        return;
+      }
+      setSelectedEmotion(id);
+      setIsExpanded(true);
+    },
+    [selectedEmotion, isSending, submitted, close],
+  );
 
   const handleSubmit = useCallback(
     (e: React.FormEvent) => {
@@ -182,280 +204,222 @@ export function FeedbackInline({
       if (!selectedEmotion || isSending) return;
       setIsSending(true);
       onSubmit?.({ emotion: selectedEmotion, feedback: feedbackText });
-      // Short sending delay → success state → close animation → reset
       setTimeout(() => {
         setIsSending(false);
         setSubmitted(true);
-        setTimeout(() => {
-          setClosing(true);
-          setTimeout(() => {
-            setSelectedEmotion(null);
-            setFeedbackText("");
-            setSubmitted(false);
-            setClosing(false);
-          }, 250);
-        }, 2200);
+        setTimeout(close, 2200);
       }, 650);
     },
-    [selectedEmotion, feedbackText, onSubmit, isSending],
+    [selectedEmotion, feedbackText, onSubmit, isSending, close],
   );
 
-  const isExpanded = selectedEmotion !== null;
-
   useEffect(() => {
-    if (isExpanded && !submitted && !closing) {
+    if (isExpanded && !submitted) {
       requestAnimationFrame(() => textareaRef.current?.focus());
     }
-  }, [isExpanded, submitted, closing]);
+  }, [isExpanded, submitted]);
 
   // Close on outside click while the panel is open and idle
   useEffect(() => {
-    if (!isExpanded || isSending || submitted || closing) return;
+    if (!isExpanded || isSending || submitted) return;
 
     const handleClickOutside = (e: MouseEvent) => {
       if (
         wrapperRef.current &&
         !wrapperRef.current.contains(e.target as Node)
       ) {
-        setClosing(true);
-        setTimeout(() => {
-          setSelectedEmotion(null);
-          setFeedbackText("");
-          setClosing(false);
-        }, 250);
+        close();
       }
     };
 
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [isExpanded, isSending, submitted, closing]);
-
-  const triggerRow = (
-    <div className="feedback-inline-trigger">
-      <p
-        style={{
-          color: "var(--ds-gray-900)",
-          fontSize: 14,
-          lineHeight: "20px",
-          fontWeight: 400,
-          margin: 0,
-        }}
-      >
-        {label}
-      </p>
-      <span style={{ display: "flex", alignItems: "center", gap: 1 }}>
-        {emojiOptions.map((emoji) => (
-          <button
-            key={emoji.id}
-            type="button"
-            role="radio"
-            className={`feedback-emoji${selectedEmotion === emoji.id ? " feedback-emoji--selected" : ""}`}
-            aria-checked={selectedEmotion === emoji.id}
-            aria-label={`Select ${emoji.label} emoji`}
-            disabled={isSending || submitted}
-            onClick={() =>
-              setSelectedEmotion(
-                selectedEmotion === emoji.id ? null : emoji.id,
-              )
-            }
-          >
-            {emoji.icon}
-          </button>
-        ))}
-      </span>
-    </div>
-  );
+  }, [isExpanded, isSending, submitted, close]);
 
   return (
     <div
       ref={wrapperRef}
-      className={`feedback-inline-wrapper ${isExpanded ? "feedback-inline-wrapper--expanded" : ""} ${className || ""}`}
+      className={`feedback-inline-wrapper${isExpanded ? " feedback-inline-wrapper--expanded" : ""} ${className || ""}`.trim()}
     >
-      {/* Pill trigger row — hidden while panel is open so the selected
-          emoji doesn't flash pink → gray when the panel closes. */}
-      <div
-        className="feedback-inline-pill"
-        style={{
-          opacity: isExpanded ? 0 : 1,
-          pointerEvents: isExpanded ? "none" : "auto",
-        }}
-      >
-        {triggerRow}
-      </div>
-
-      {/* Expanded panel — floats over the pill, bottom aligned with pill's bottom */}
-      {isExpanded && (
-        <div
-          className={`feedback-inline-expanded${closing ? " feedback-inline-expanded--closing" : ""}`}
-        >
-          {triggerRow}
-          <div className="feedback-inline-body">
-            {submitted ? (
-              <div className="feedback-inline-success">
-                <div className="feedback-inline-success-icon">
-                  <svg
-                    width="32"
-                    height="32"
-                    viewBox="0 0 16 16"
-                    fill="none"
-                    aria-hidden="true"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      clipRule="evenodd"
-                      d="M8 0C3.58172 0 0 3.58172 0 8C0 12.4183 3.58172 16 8 16C12.4183 16 16 12.4183 16 8C16 3.58172 12.4183 0 8 0ZM11.5303 6.53033L12.0607 6L11 4.93934L10.4697 5.46967L7 8.93934L5.53033 7.46967L5 6.93934L3.93934 8L4.46967 8.53033L6.46967 10.5303C6.76256 10.8232 7.23744 10.8232 7.53033 10.5303L11.5303 6.53033Z"
-                      fill="currentColor"
-                    />
-                  </svg>
-                </div>
-                <p className="feedback-inline-success-title">
-                  Your feedback has been received!
-                </p>
-                <p className="feedback-inline-success-subtitle">
-                  Thank you for your help.
-                </p>
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit}>
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: 8,
-                    padding: 8,
-                  }}
-                >
-                  <label>
-                    <div className="feedback-textarea-wrapper">
-                      <textarea
-                        ref={textareaRef}
-                        id="feedback-textarea"
-                        placeholder="Your feedback..."
-                        value={feedbackText}
-                        onChange={(e) => setFeedbackText(e.target.value)}
-                        disabled={isSending}
-                        autoCapitalize="off"
-                        autoComplete="off"
-                        autoCorrect="off"
-                        spellCheck={false}
-                        style={{
-                          display: "flex",
-                          width: "100%",
-                          height: 100,
-                          borderRadius: 6,
-                          border: "none",
-                          padding: "10px 12px",
-                          fontSize: 14,
-                          lineHeight: "normal",
-                          color: "var(--ds-gray-1000)",
-                          background: "var(--ds-background-100)",
-                          resize: "none",
-                          outline: "none",
-                          fontFamily: "inherit",
-                          boxSizing: "border-box",
-                          appearance: "none",
-                        }}
-                      />
-                    </div>
-                  </label>
-
-                  <div
+      {/* Body (form or success) — grows when expanded, clips to 0 when closed. */}
+      <div className="feedback-inline-body">
+        {submitted ? (
+          <div className="feedback-inline-success">
+            <div className="feedback-inline-success-icon">
+              <svg
+                width="32"
+                height="32"
+                viewBox="0 0 16 16"
+                fill="none"
+                aria-hidden="true"
+              >
+                <path
+                  fillRule="evenodd"
+                  clipRule="evenodd"
+                  d="M8 0C3.58172 0 0 3.58172 0 8C0 12.4183 3.58172 16 8 16C12.4183 16 16 12.4183 16 8C16 3.58172 12.4183 0 8 0ZM11.5303 6.53033L12.0607 6L11 4.93934L10.4697 5.46967L7 8.93934L5.53033 7.46967L5 6.93934L3.93934 8L4.46967 8.53033L6.46967 10.5303C6.76256 10.8232 7.23744 10.8232 7.53033 10.5303L11.5303 6.53033Z"
+                  fill="currentColor"
+                />
+              </svg>
+            </div>
+            <p className="feedback-inline-success-title">
+              Your feedback has been received!
+            </p>
+            <p className="feedback-inline-success-subtitle">
+              Thank you for your help.
+            </p>
+          </div>
+        ) : selectedEmotion ? (
+          <form onSubmit={handleSubmit}>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: 8,
+                padding: 8,
+              }}
+            >
+              <label>
+                <div className="feedback-textarea-wrapper">
+                  <textarea
+                    ref={textareaRef}
+                    id="feedback-textarea"
+                    placeholder="Your feedback..."
+                    value={feedbackText}
+                    onChange={(e) => setFeedbackText(e.target.value)}
+                    disabled={isSending}
+                    autoCapitalize="off"
+                    autoComplete="off"
+                    autoCorrect="off"
+                    spellCheck={false}
                     style={{
                       display: "flex",
-                      alignItems: "center",
-                      justifyContent: "flex-end",
-                      gap: 4,
-                      fontSize: 12,
-                      lineHeight: "16px",
-                      fontWeight: 400,
-                      color: "var(--ds-gray-900)",
+                      width: "100%",
+                      height: 100,
+                      borderRadius: 6,
+                      border: "none",
+                      padding: "10px 12px",
+                      fontSize: 14,
+                      lineHeight: "normal",
+                      color: "var(--ds-gray-1000)",
+                      background: "var(--ds-background-100)",
+                      resize: "none",
+                      outline: "none",
+                      fontFamily: "inherit",
+                      boxSizing: "border-box",
+                      appearance: "none",
                     }}
-                  >
-                    <MarkdownIcon />
-                    <span>supported.</span>
-                  </div>
+                  />
                 </div>
+              </label>
 
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "flex-end",
-                    padding: 12,
-                    background: "var(--ds-background-200)",
-                    borderTop: "1px solid var(--ds-gray-200)",
-                  }}
-                >
-                  <Button type="submit" size="small" loading={isSending}>
-                    {isSending ? "Sending" : "Send"}
-                  </Button>
-                </div>
-              </form>
-            )}
-          </div>
-        </div>
-      )}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "flex-end",
+                  gap: 4,
+                  fontSize: 12,
+                  lineHeight: "16px",
+                  fontWeight: 400,
+                  color: "var(--ds-gray-900)",
+                }}
+              >
+                <MarkdownIcon />
+                <span>supported.</span>
+              </div>
+            </div>
+
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "flex-end",
+                padding: 12,
+                background: "var(--ds-background-200)",
+                borderTop: "1px solid var(--ds-gray-200)",
+              }}
+            >
+              <Button type="submit" size="small" loading={isSending}>
+                {isSending ? "Sending" : "Send"}
+              </Button>
+            </div>
+          </form>
+        ) : null}
+      </div>
+
+      {/* Trigger row — always visible at the bottom. The faces live here,
+          and the wrapper resizes around them. */}
+      <div className="feedback-inline-trigger">
+        <p
+          style={{
+            color: "var(--ds-gray-900)",
+            fontSize: 14,
+            lineHeight: "20px",
+            fontWeight: 400,
+            margin: 0,
+            whiteSpace: "nowrap",
+          }}
+        >
+          {label}
+        </p>
+        <span style={{ display: "flex", alignItems: "center", gap: 1 }}>
+          {emojiOptions.map((emoji) => (
+            <button
+              key={emoji.id}
+              type="button"
+              role="radio"
+              className={`feedback-emoji${selectedEmotion === emoji.id ? " feedback-emoji--selected" : ""}`}
+              aria-checked={selectedEmotion === emoji.id}
+              aria-label={`Select ${emoji.label} emoji`}
+              disabled={isSending || submitted}
+              onClick={() => handleFaceClick(emoji.id)}
+            >
+              {emoji.icon}
+            </button>
+          ))}
+        </span>
+      </div>
 
       <style>{`
         .feedback-inline-wrapper {
           display: inline-flex;
           flex-direction: column;
-          border-radius: 30px;
-          border: 1px solid var(--ds-gray-200);
-          background: var(--ds-background-100);
-          position: relative;
-        }
-        :is(.dark, [data-theme="dark"]) .feedback-inline-wrapper {
-          border-color: var(--ds-gray-400);
-        }
-        .feedback-inline-trigger {
-          display: flex;
-          align-items: center;
-          gap: 12px;
+          width: 316px;
           height: 48px;
-          padding: 0 8px 0 20px;
-        }
-        .feedback-inline-pill {
-          transition: opacity 0.15s ease;
-        }
-        .feedback-inline-expanded {
-          position: absolute;
-          bottom: 0;
-          left: 50%;
-          transform: translateX(-50%);
-          width: 336px;
-          height: 244px;
+          border-radius: 30px;
           background: var(--ds-background-100);
-          border: none;
-          border-radius: 12px;
-          box-shadow: var(--ds-shadow-menu);
-          z-index: 50;
+          border: 1px solid var(--ds-gray-200);
           overflow: hidden;
-          opacity: 1;
-          transform-origin: bottom center;
-          will-change: width, height, border-radius, opacity;
-          animation: feedbackInlineExpandIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+          will-change: width, height, border-radius, box-shadow;
           transition:
             width 0.25s cubic-bezier(0.4, 0, 0.2, 1),
             height 0.25s cubic-bezier(0.4, 0, 0.2, 1),
             border-radius 0.25s cubic-bezier(0.4, 0, 0.2, 1),
-            opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            border-color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+            box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .feedback-inline-expanded--closing {
-          width: 274px;
+        :is(.dark, [data-theme="dark"]) .feedback-inline-wrapper {
+          border-color: var(--ds-gray-400);
+        }
+        .feedback-inline-wrapper--expanded {
+          width: 336px;
+          height: 244px;
+          border-radius: 12px;
+          border-color: transparent;
+          box-shadow: var(--ds-shadow-menu);
+        }
+        .feedback-inline-body {
+          flex: 1 1 0;
+          min-height: 0;
+          overflow: hidden;
+        }
+        .feedback-inline-trigger {
+          flex: 0 0 48px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
           height: 48px;
-          border-radius: 30px;
-          opacity: 0;
-        }
-        @keyframes feedbackInlineExpandIn {
-          from {
-            opacity: 0;
-            transform: translateX(-50%) scale(0.92);
-          }
-          to {
-            opacity: 1;
-            transform: translateX(-50%) scale(1);
-          }
+          padding: 0 8px 0 20px;
         }
         .feedback-inline-body {
           position: relative;
