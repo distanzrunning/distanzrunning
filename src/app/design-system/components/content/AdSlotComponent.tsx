@@ -2,6 +2,7 @@
 
 import React, { useState, useCallback } from "react";
 import { ChevronDown } from "lucide-react";
+import { SiGoogleadsense } from "react-icons/si";
 import { Section } from "../ContentWithTOC";
 import {
   useShikiHighlighter,
@@ -293,21 +294,29 @@ export default function AdSlotComponent() {
           the ad doesn&apos;t fill.
         </p>
 
-        <Note type="default" label="AdSense">
-          Distanz Running is set up under AdSense publisher{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
-            ca-pub-8457173435004026
-          </code>
-          . The AdSense script is injected once in{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
-            layout.tsx
-          </code>
-          ; every{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
-            AdSlot
-          </code>{" "}
-          just passes the ad-unit slot ID it received from the AdSense
-          dashboard. No script duplication, no CLS.
+        <Note type="default" label={false}>
+          <span className="flex items-start gap-3">
+            <SiGoogleadsense
+              size={20}
+              style={{ color: "#4285F4", flexShrink: 0, marginTop: 2 }}
+            />
+            <span>
+              Distanz Running is set up under AdSense publisher{" "}
+              <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+                ca-pub-8457173435004026
+              </code>
+              . The AdSense script is injected once in{" "}
+              <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+                layout.tsx
+              </code>
+              ; every{" "}
+              <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+                AdSlot
+              </code>{" "}
+              just passes the ad-unit slot ID it received from the AdSense
+              dashboard. No script duplication, no CLS.
+            </span>
+          </span>
         </Note>
       </Section>
 
