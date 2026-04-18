@@ -247,9 +247,10 @@ function ConsentSettingsModal() {
 // ============================================================================
 
 function BottomBanner() {
-  const { isDecided, acceptAll, rejectAll, openSettings } = useConsent();
+  const { isDecided, settingsOpen, acceptAll, rejectAll, openSettings } =
+    useConsent();
 
-  if (isDecided) return null;
+  if (isDecided || settingsOpen) return null;
 
   return (
     <>
