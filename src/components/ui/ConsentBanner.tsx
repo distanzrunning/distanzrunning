@@ -57,58 +57,72 @@ const COOKIE_POLICY_HREF = "/legal/cookie-policy";
 const PRIVACY_HREF = "/legal/privacy-policy";
 
 // ============================================================================
-// Category row — toggle + collapsible description
+// Category row — name + description with a toggle on the right
 // ============================================================================
 
 function CategoryRow({
   category,
   value,
   onChange,
+  isLast,
 }: {
   category: CategoryDef;
   value: boolean;
   onChange: (next: boolean) => void;
+  isLast: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const contentId = `consent-cat-${category.key}`;
 
   return (
-    <div className="py-3">
-      <div className="flex items-center justify-between gap-4">
+    <div>
+      <div
+        className="flex items-center justify-between"
+        style={{
+          borderBottom: isLast ? "none" : "1px solid var(--ds-gray-400)",
+        }}
+      >
         <button
           type="button"
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}
           aria-controls={contentId}
-          className="flex flex-1 items-center gap-2 text-left outline-none"
+          className="flex flex-1 items-center justify-between gap-3 outline-none"
+          style={{
+            padding: "12px 16px",
+            textAlign: "left",
+            background: "transparent",
+            border: "none",
+            cursor: "pointer",
+          }}
         >
-          <ChevronDown
-            className={`w-4 h-4 text-textSubtle transition-transform ${open ? "rotate-0" : "-rotate-90"}`}
-          />
-          <span className="text-[14px] font-medium text-textDefault">
-            {category.label}
-          </span>
-          {category.required && (
-            <span
-              className="text-[11px] uppercase tracking-wider"
-              style={{ color: "var(--ds-gray-700)" }}
-            >
-              Always on
+          <span className="flex items-center gap-2">
+            <ChevronDown
+              className={`w-3.5 h-3.5 text-textSubtle transition-transform ${open ? "rotate-0" : "-rotate-90"}`}
+            />
+            <span className="text-[14px] font-medium text-textDefault">
+              {category.label}
             </span>
-          )}
+          </span>
         </button>
-        <Toggle
-          checked={value}
-          disabled={category.required}
-          onChange={onChange}
-          label={category.required ? "Always on" : value ? "On" : "Off"}
-          labelPosition="left"
-        />
+        <div className="pr-4">
+          <Toggle
+            checked={value}
+            disabled={category.required}
+            onChange={onChange}
+            label={value ? "On" : "Off"}
+            labelPosition="left"
+          />
+        </div>
       </div>
       <div
         id={contentId}
         hidden={!open}
-        className="mt-2 pl-6 text-[13px] leading-[1.55] text-textSubtle"
+        className="text-[13px] leading-[1.55] text-textSubtle"
+        style={{
+          padding: "12px 16px 16px",
+          borderBottom: isLast ? "none" : "1px solid var(--ds-gray-400)",
+        }}
       >
         {category.description}
       </div>
@@ -161,19 +175,36 @@ function ConsentSettingsModal() {
       subtitle={DESCRIPTION}
       footer={
         <div className="flex flex-col gap-3">
-          <div className="flex flex-wrap items-center justify-end gap-2">
-            <Button variant="secondary" onClick={handleSave}>
-              Save
-            </Button>
-            <Button variant="secondary" onClick={rejectAll}>
+          <div className="flex flex-wrap items-center gap-2">
+            <Button
+              variant="secondary"
+              shape="rounded"
+              size="small"
+              onClick={rejectAll}
+            >
               Deny
             </Button>
-            <Button onClick={acceptAll}>Accept all</Button>
+            <Button
+              variant="secondary"
+              shape="rounded"
+              size="small"
+              onClick={acceptAll}
+            >
+              Accept all
+            </Button>
+            <Button
+              shape="rounded"
+              size="small"
+              onClick={handleSave}
+              className="ml-auto"
+            >
+              Save
+            </Button>
           </div>
-          <div className="text-right text-[12px]">
+          <div>
             <a
               href={PRIVACY_HREF}
-              className="text-textSubtle hover:text-textDefault no-underline hover:underline"
+              className="text-[12px] text-textSubtle hover:text-textDefault underline hover:opacity-80"
             >
               Privacy Policy
             </a>
@@ -181,8 +212,15 @@ function ConsentSettingsModal() {
         </div>
       }
     >
-      <div className="divide-y divide-borderSubtle">
-        {CATEGORIES.map((cat) => (
+      <div
+        className="overflow-hidden"
+        style={{
+          border: "1px solid var(--ds-gray-400)",
+          borderRadius: 6,
+          background: "var(--ds-background-100)",
+        }}
+      >
+        {CATEGORIES.map((cat, i) => (
           <CategoryRow
             key={cat.key}
             category={cat}
@@ -191,6 +229,7 @@ function ConsentSettingsModal() {
               if (cat.required) return;
               setDraft((d) => ({ ...d, [cat.key]: next }));
             }}
+            isLast={i === CATEGORIES.length - 1}
           />
         ))}
       </div>
