@@ -82,57 +82,45 @@ export function ThemeSwitcher({
         const id = `theme-switcher-${option.value}-${instanceId}`;
 
         return (
-          <span key={option.value} style={{ position: "relative" }}>
-            <input
-              type="radio"
-              id={id}
-              name={`theme-switcher-${instanceId}`}
-              value={option.value}
-              checked={isSelected}
-              disabled={disabled}
-              onChange={() => handleChange(option.value)}
-              style={{
-                position: "absolute",
-                top: 0,
-                left: 0,
-                width: 1,
-                height: 1,
-                padding: 0,
-                margin: 0,
-                opacity: 0,
-                pointerEvents: "none",
-              }}
-            />
-            <label
-              htmlFor={id}
-              className="ds-theme-option"
-              data-disabled={disabled || undefined}
-              data-selected={isSelected || undefined}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                width: 32,
-                height: 32,
-                borderRadius: 6,
-                cursor: disabled ? "not-allowed" : "pointer",
-                background: isSelected
-                  ? "var(--ds-background-100)"
-                  : "transparent",
-                boxShadow: isSelected
-                  ? "rgba(0,0,0,0.06) 0px 2px 4px, rgba(0,0,0,0.04) 0px 0px 0px 1px"
-                  : "none",
-                color: disabled
-                  ? "var(--ds-gray-600)"
-                  : isSelected
-                    ? "var(--ds-gray-1000)"
-                    : "var(--ds-gray-800)",
-                transition: "background 0.15s ease, box-shadow 0.15s ease, color 0.15s ease",
-              }}
-            >
-              <Icon size={16} />
-            </label>
-          </span>
+          <button
+            key={option.value}
+            type="button"
+            role="radio"
+            id={id}
+            aria-checked={isSelected}
+            aria-label={option.label}
+            disabled={disabled}
+            onClick={() => handleChange(option.value)}
+            className="ds-theme-option"
+            data-disabled={disabled || undefined}
+            data-selected={isSelected || undefined}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              width: 32,
+              height: 32,
+              padding: 0,
+              border: "none",
+              borderRadius: 6,
+              cursor: disabled ? "not-allowed" : "pointer",
+              background: isSelected
+                ? "var(--ds-background-100)"
+                : "transparent",
+              boxShadow: isSelected
+                ? "rgba(0,0,0,0.06) 0px 2px 4px, rgba(0,0,0,0.04) 0px 0px 0px 1px"
+                : "none",
+              color: disabled
+                ? "var(--ds-gray-600)"
+                : isSelected
+                  ? "var(--ds-gray-1000)"
+                  : "var(--ds-gray-800)",
+              transition:
+                "background 0.15s ease, box-shadow 0.15s ease, color 0.15s ease",
+            }}
+          >
+            <Icon size={16} />
+          </button>
         );
       })}
     </fieldset>
