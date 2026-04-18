@@ -321,22 +321,97 @@ export default function DistanzRunningBrand() {
         </div>
       </Section>
 
-      {/* App icon display — raw master + iOS-masked preview */}
+      {/* App icon display — keyline master + iOS-masked preview */}
       <div className="grid grid-cols-1 md:grid-cols-2">
-        {/* Raw master — square corners */}
+        {/* Keyline preview — master with HIG-style guide overlay */}
         <div
           className="group relative flex h-[260px] items-center justify-center md:h-[320px]"
           style={{ background: "var(--ds-gray-200)" }}
         >
           <CopyButton text={appIconSvg} variant="light" />
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/brand/icon-app.svg"
-            alt="Distanz Running App Icon — master"
-            style={{ height: 180, width: 180 }}
-          />
+          <div style={{ position: "relative", width: 200, height: 200 }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/brand/icon-app.svg"
+              alt="Distanz Running App Icon — master with guidelines"
+              style={{ width: "100%", height: "100%", display: "block" }}
+            />
+            {/* Guideline overlay */}
+            <svg
+              viewBox="0 0 1024 1024"
+              style={{
+                position: "absolute",
+                inset: 0,
+                width: "100%",
+                height: "100%",
+                pointerEvents: "none",
+              }}
+              aria-hidden="true"
+            >
+              {/* Outer square (full canvas edge) */}
+              <rect
+                x="1"
+                y="1"
+                width="1022"
+                height="1022"
+                fill="none"
+                stroke="#EB377D"
+                strokeWidth="3"
+                strokeDasharray="14 10"
+                opacity="0.7"
+              />
+              {/* iOS squircle mask at 22.37% */}
+              <rect
+                x="1"
+                y="1"
+                width="1022"
+                height="1022"
+                rx="229"
+                ry="229"
+                fill="none"
+                stroke="#EB377D"
+                strokeWidth="4"
+              />
+              {/* Safe-area circle — HIG suggests keeping key content inside
+                  the largest inscribed circle (~80% dia) so it survives the
+                  mask on every platform */}
+              <circle
+                cx="512"
+                cy="512"
+                r="410"
+                fill="none"
+                stroke="#EB377D"
+                strokeWidth="2"
+                strokeDasharray="10 8"
+                opacity="0.7"
+              />
+              {/* Center crosshair */}
+              <line
+                x1="0"
+                y1="512"
+                x2="1024"
+                y2="512"
+                stroke="#EB377D"
+                strokeWidth="2"
+                strokeDasharray="6 6"
+                opacity="0.6"
+              />
+              <line
+                x1="512"
+                y1="0"
+                x2="512"
+                y2="1024"
+                stroke="#EB377D"
+                strokeWidth="2"
+                strokeDasharray="6 6"
+                opacity="0.6"
+              />
+              {/* Centre dot */}
+              <circle cx="512" cy="512" r="8" fill="#EB377D" />
+            </svg>
+          </div>
         </div>
-        {/* iOS-masked preview */}
+        {/* iOS-masked preview — final on-device look */}
         <div
           className="group relative flex h-[260px] items-center justify-center md:h-[320px]"
           style={{ background: "var(--ds-gray-200)" }}
