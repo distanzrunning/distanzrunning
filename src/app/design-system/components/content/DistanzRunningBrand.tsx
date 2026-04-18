@@ -40,7 +40,15 @@ function SectionHeading({ id, title }: { id: string; title: string }) {
   );
 }
 
-function CopyButton({ text, variant = "light" }: { text: string; variant?: "light" | "dark" }) {
+function CopyButton({
+  text,
+  variant = "light",
+  alwaysVisible = false,
+}: {
+  text: string;
+  variant?: "light" | "dark";
+  alwaysVisible?: boolean;
+}) {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = useCallback(() => {
@@ -49,12 +57,16 @@ function CopyButton({ text, variant = "light" }: { text: string; variant?: "ligh
     setTimeout(() => setCopied(false), 2000);
   }, [text]);
 
+  const visibilityClasses = alwaysVisible
+    ? ""
+    : "opacity-0 focus:opacity-100 group-hover:opacity-100 transition-opacity";
+
   return (
     <button
       type="button"
       onClick={handleCopy}
       aria-label="Copy code"
-      className={`absolute right-4 top-4 opacity-0 focus:opacity-100 group-hover:opacity-100 transition-opacity ${variant === "light" ? "ds-copy-btn-on-white" : "ds-copy-btn-on-black"}`}
+      className={`absolute right-4 top-4 ${visibilityClasses} ${variant === "light" ? "ds-copy-btn-on-white" : "ds-copy-btn-on-black"}`}
     >
       {copied ? <Check size={16} /> : <Copy size={16} />}
     </button>
@@ -284,7 +296,7 @@ export default function DistanzRunningBrand() {
           className="group relative flex h-[220px] items-center justify-center md:h-[280px]"
           style={{ background: "var(--ds-gray-200)" }}
         >
-          <CopyButton text={lightBadgeSvg} variant="light" />
+          <CopyButton text={lightBadgeSvg} variant="light" alwaysVisible />
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/brand/icon-badge.svg"
@@ -296,7 +308,7 @@ export default function DistanzRunningBrand() {
           className="group relative flex h-[220px] items-center justify-center md:h-[280px]"
           style={{ background: "var(--ds-gray-200)" }}
         >
-          <CopyButton text={darkBadgeSvg} variant="light" />
+          <CopyButton text={darkBadgeSvg} variant="light" alwaysVisible />
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/brand/icon-badge-alt.svg"
@@ -329,7 +341,7 @@ export default function DistanzRunningBrand() {
           className="group relative flex h-[260px] items-center justify-center md:h-[320px]"
           style={{ background: "var(--ds-gray-200)" }}
         >
-          <CopyButton text={appIconSvg} variant="light" />
+          <CopyButton text={appIconSvg} variant="light" alwaysVisible />
           <div style={{ position: "relative", width: 200, height: 200 }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -417,7 +429,7 @@ export default function DistanzRunningBrand() {
           className="group relative flex h-[260px] items-center justify-center md:h-[320px]"
           style={{ background: "var(--ds-gray-200)" }}
         >
-          <CopyButton text={appIconSvg} variant="light" />
+          <CopyButton text={appIconSvg} variant="light" alwaysVisible />
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/brand/icon-app.svg"
@@ -440,7 +452,7 @@ export default function DistanzRunningBrand() {
           className="group relative flex h-[260px] items-center justify-center md:h-[320px]"
           style={{ background: "var(--ds-gray-200)" }}
         >
-          <CopyButton text={appIconAltSvg} variant="light" />
+          <CopyButton text={appIconAltSvg} variant="light" alwaysVisible />
           <div style={{ position: "relative", width: 200, height: 200 }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -520,7 +532,7 @@ export default function DistanzRunningBrand() {
           className="group relative flex h-[260px] items-center justify-center md:h-[320px]"
           style={{ background: "var(--ds-gray-200)" }}
         >
-          <CopyButton text={appIconAltSvg} variant="light" />
+          <CopyButton text={appIconAltSvg} variant="light" alwaysVisible />
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/brand/icon-app-alt.svg"
