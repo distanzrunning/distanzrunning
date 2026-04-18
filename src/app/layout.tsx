@@ -1,5 +1,6 @@
 // src/app/layout.tsx
 import type { Metadata } from "next";
+import Script from "next/script";
 import "./globals.css";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
@@ -130,6 +131,15 @@ export default function RootLayout({
             <SpeedInsights />
           </DarkModeProvider>
         </ReCaptchaProvider>
+
+        {/* Google AdSense — loads once for the whole app. Individual ad units
+            live in <AdSlot /> and push themselves to `adsbygoogle` once visible. */}
+        <Script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8457173435004026"
+          crossOrigin="anonymous"
+          strategy="afterInteractive"
+        />
       </body>
     </html>
   );

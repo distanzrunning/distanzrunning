@@ -10,7 +10,7 @@ import { NewsletterButton } from "@/components/NewsletterModal";
 import { DarkModeProvider } from "@/components/DarkModeProvider";
 import SocialLinks from "@/components/SocialLinks";
 import FeatureShowcase from "@/components/FeatureShowcase";
-import WriteForUs from "@/components/WriteForUs";
+import { AdSlot } from "@/components/ui/AdSlot";
 import ScrollIndicator from "@/components/ScrollIndicator";
 import ExpandableTags from "@/components/ExpandableTags";
 import { Metadata } from "next";
@@ -171,8 +171,10 @@ function PreviewPage() {
           <FeatureShowcase />
         </section>
 
-        {/* Write For Us Section */}
-        <WriteForUs />
+        {/* Ad slot — homepage mid */}
+        <section className="py-8 md:py-12 flex justify-center">
+          <AdSlot slot="homepage-mid" size="billboard" />
+        </section>
 
         {/* Social links moved to bottom */}
         <div className="px-3 sm:px-6 py-8">
@@ -499,8 +501,10 @@ async function DevelopmentHomePage() {
           </section>
         )}
 
-        {/* Write For Us Section */}
-        <WriteForUs />
+        {/* Ad slot — between news and gear */}
+        <section className="py-8 md:py-12 flex justify-center">
+          <AdSlot slot="homepage-between-sections" size="billboard" />
+        </section>
 
         {/* Gear Section */}
         {(featuredGearPost || secondFeaturedGear || recentGear.length > 0) && (

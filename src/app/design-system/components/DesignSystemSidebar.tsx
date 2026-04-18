@@ -47,6 +47,7 @@ export const navigation: NavSection[] = [
     id: "components",
     label: "Components",
     items: [
+      { id: "ad-slot", label: "Ad Slot" },
       { id: "avatar", label: "Avatar" },
       { id: "badge", label: "Badge" },
       { id: "browser", label: "Browser" },

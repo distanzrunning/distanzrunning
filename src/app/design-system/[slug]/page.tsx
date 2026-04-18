@@ -81,6 +81,7 @@ import MultiSelectComponent from "../components/content/MultiSelectComponent";
 import NoteComponent from "../components/content/NoteComponent";
 import CalendarComponent from "../components/content/CalendarComponent";
 import SearchComponent from "../components/content/SearchComponent";
+import AdSlotComponent from "../components/content/AdSlotComponent";
 import LoginComponent from "../components/content/LoginComponent";
 import Materials from "../components/content/Materials";
 import DistanzRunningBrand from "../components/content/DistanzRunningBrand";
@@ -1226,6 +1227,21 @@ export default function DesignSystemPage() {
           onNavigate={handleNavigation}
         >
           <SearchComponent />
+        </ContentWithTOC>
+      );
+    }
+
+    if (activeSlug === "ad-slot") {
+      return (
+        <ContentWithTOC
+          tocTitle="On this page"
+          pageTitle="Ad Slot"
+          pageSubtitle="A labelled, space-reserved AdSense unit with a Distanz-branded fallback."
+          mainSectionId="ad-slot"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
+          <AdSlotComponent />
         </ContentWithTOC>
       );
     }
