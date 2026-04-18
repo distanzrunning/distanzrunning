@@ -193,7 +193,7 @@ export function FeedbackInline({
             setFeedbackText("");
             setSubmitted(false);
             setClosing(false);
-          }, 300);
+          }, 250);
         }, 2200);
       }, 650);
     },
@@ -222,7 +222,7 @@ export function FeedbackInline({
           setSelectedEmotion(null);
           setFeedbackText("");
           setClosing(false);
-        }, 300);
+        }, 250);
       }
     };
 
@@ -424,18 +424,28 @@ export function FeedbackInline({
           left: 50%;
           transform: translateX(-50%);
           width: 336px;
+          height: 244px;
           background: var(--ds-background-100);
           border: none;
           border-radius: 12px;
           box-shadow: var(--ds-shadow-menu);
           z-index: 50;
           overflow: hidden;
+          opacity: 1;
           transform-origin: bottom center;
-          will-change: transform, opacity;
+          will-change: width, height, border-radius, opacity;
           animation: feedbackInlineExpandIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+          transition:
+            width 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+            height 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+            border-radius 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+            opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .feedback-inline-expanded--closing {
-          animation: feedbackInlineExpandOut 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+          width: 274px;
+          height: 48px;
+          border-radius: 30px;
+          opacity: 0;
         }
         @keyframes feedbackInlineExpandIn {
           from {
@@ -445,18 +455,6 @@ export function FeedbackInline({
           to {
             opacity: 1;
             transform: translateX(-50%) scale(1);
-          }
-        }
-        @keyframes feedbackInlineExpandOut {
-          from {
-            opacity: 1;
-            transform: translateX(-50%) scale(1);
-            border-radius: 12px;
-          }
-          to {
-            opacity: 0;
-            transform: translateX(-50%) scale(0.94);
-            border-radius: 24px;
           }
         }
         .feedback-inline-body {
