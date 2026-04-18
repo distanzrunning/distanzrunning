@@ -70,6 +70,7 @@ const blackMarkSvg = `<img src="/brand/icon-black.svg" alt="Distanz Running" hei
 const whiteMarkSvg = `<img src="/brand/icon-white.svg" alt="Distanz Running" height="32" />`;
 const lightBadgeSvg = `<img src="/brand/icon-badge.svg" alt="Distanz Running" height="120" />`;
 const darkBadgeSvg = `<img src="/brand/icon-badge-alt.svg" alt="Distanz Running" height="120" />`;
+const appIconSvg = `<img src="/brand/icon-app.svg" alt="Distanz Running" height="180" />`;
 
 export default function DistanzRunningBrand() {
   return (
@@ -300,6 +301,57 @@ export default function DistanzRunningBrand() {
             src="/brand/icon-badge-alt.svg"
             alt="Distanz Running Badge — Dark"
             style={{ height: 140, width: 140 }}
+          />
+        </div>
+      </div>
+
+      {/* App icon heading */}
+      <Section>
+        <div className="flex flex-col">
+          <SectionHeading id="app-icon" title="App icon" />
+          <p className="text-copy-16 mt-4" style={{ color: "var(--ds-gray-900)" }}>
+            The app-icon master follows Apple&apos;s Human Interface Guidelines:
+            a 1024×1024 square canvas with the Distanz mark centered on a
+            subtly graduated black surface. The artwork ships with square
+            corners — iOS and iPadOS apply a squircle mask automatically
+            so the on-device shape stays consistent with every other app
+            icon. For macOS, wrap the master with the platform&apos;s
+            rounded-corner radius before export.
+          </p>
+        </div>
+      </Section>
+
+      {/* App icon display — raw master + iOS-masked preview */}
+      <div className="grid grid-cols-1 md:grid-cols-2">
+        {/* Raw master — square corners */}
+        <div
+          className="group relative flex h-[260px] items-center justify-center md:h-[320px]"
+          style={{ background: "var(--ds-gray-200)" }}
+        >
+          <CopyButton text={appIconSvg} variant="light" />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/brand/icon-app.svg"
+            alt="Distanz Running App Icon — master"
+            style={{ height: 180, width: 180 }}
+          />
+        </div>
+        {/* iOS-masked preview */}
+        <div
+          className="group relative flex h-[260px] items-center justify-center md:h-[320px]"
+          style={{ background: "var(--ds-gray-200)" }}
+        >
+          <CopyButton text={appIconSvg} variant="light" />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/brand/icon-app.svg"
+            alt="Distanz Running App Icon — iOS-masked preview"
+            style={{
+              height: 180,
+              width: 180,
+              borderRadius: "22.37%",
+              boxShadow: "0 6px 18px rgba(0, 0, 0, 0.18)",
+            }}
           />
         </div>
       </div>
