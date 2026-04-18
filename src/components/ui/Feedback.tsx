@@ -237,12 +237,13 @@ export function FeedbackInline({
   }, [isExpanded, isSending, submitted, close]);
 
   return (
-    <div
-      ref={wrapperRef}
-      className={`feedback-inline-wrapper${isExpanded ? " feedback-inline-wrapper--expanded" : ""} ${className || ""}`.trim()}
-    >
-      {/* Body (form or success) — grows when expanded, clips to 0 when closed. */}
-      <div className="feedback-inline-body">
+    <div className={`feedback-inline-placeholder ${className || ""}`.trim()}>
+      <div
+        ref={wrapperRef}
+        className={`feedback-inline-wrapper${isExpanded ? " feedback-inline-wrapper--expanded" : ""}`}
+      >
+        {/* Body (form or success) — grows when expanded, clips to 0 when closed. */}
+        <div className="feedback-inline-body">
         {submitted ? (
           <div className="feedback-inline-success">
             <div className="feedback-inline-success-icon">
@@ -379,10 +380,22 @@ export function FeedbackInline({
           ))}
         </span>
       </div>
+      </div>
 
       <style>{`
+        .feedback-inline-placeholder {
+          position: relative;
+          display: inline-block;
+          width: 316px;
+          height: 48px;
+        }
         .feedback-inline-wrapper {
-          display: inline-flex;
+          position: absolute;
+          bottom: 0;
+          left: 50%;
+          transform: translateX(-50%);
+          z-index: 50;
+          display: flex;
           flex-direction: column;
           width: 316px;
           height: 48px;
