@@ -425,7 +425,11 @@ export default function DistanzRunningBrand() {
               height: 180,
               width: 180,
               borderRadius: "22.37%",
-              boxShadow: "0 6px 18px rgba(0, 0, 0, 0.18)",
+              // 1px theme-aware ring + soft drop shadow. The ring keeps the
+              // icon's edge readable in dark mode when its gradient top
+              // matches the panel colour.
+              boxShadow:
+                "0 0 0 1px var(--ds-gray-400), 0 8px 24px rgba(0, 0, 0, 0.28)",
             }}
           />
         </div>
