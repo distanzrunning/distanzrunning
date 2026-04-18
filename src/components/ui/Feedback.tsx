@@ -399,7 +399,7 @@ export function FeedbackInline({
           z-index: 50;
           display: flex;
           flex-direction: column;
-          width: 316px;
+          width: max-content;
           height: 48px;
           border-radius: 30px;
           background: var(--ds-background-100);
@@ -423,11 +423,6 @@ export function FeedbackInline({
           border-color: transparent;
           box-shadow: var(--ds-shadow-menu);
         }
-        .feedback-inline-wrapper--expanded .feedback-inline-trigger {
-          justify-content: center;
-          gap: 12px;
-          padding: 0;
-        }
         .feedback-inline-body {
           flex: 1 1 0;
           min-height: 0;
@@ -437,9 +432,10 @@ export function FeedbackInline({
           flex: 0 0 48px;
           display: flex;
           align-items: center;
-          justify-content: space-between;
+          justify-content: center;
+          gap: 12px;
           height: 48px;
-          padding: 0 8px 0 20px;
+          padding: 0 20px;
         }
         .feedback-inline-body {
           position: relative;
