@@ -50,9 +50,10 @@ const CATEGORIES: CategoryDef[] = [
   },
 ];
 
-const TITLE = "Your Privacy";
+const TITLE = "We use cookies";
 const DESCRIPTION =
-  "This site uses tracking technologies. You may opt in or opt out of the use of these technologies.";
+  "We use cookies to improve your experience, show you personalised content, and analyse our traffic. For more information, see our";
+const COOKIE_POLICY_HREF = "/legal/cookie-policy";
 const PRIVACY_HREF = "/legal/privacy-policy";
 
 // ============================================================================
@@ -207,22 +208,48 @@ function BottomBanner() {
   if (isDecided) return null;
 
   return (
-    <div
-      role="alertdialog"
-      aria-labelledby="consent-banner-title"
-      aria-modal="false"
-      className="fixed inset-x-0 bottom-0 z-[60] px-4 pb-4 sm:px-6 sm:pb-6"
-    >
+    <>
+      <style>{`
+        @keyframes distanz-consent-in {
+          from {
+            opacity: 0;
+            transform: translateY(calc(100% + 24px));
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+      `}</style>
       <div
-        className="mx-auto flex max-w-3xl flex-col gap-4 rounded-xl p-5 sm:p-6"
+        role="alertdialog"
+        aria-labelledby="consent-banner-title"
+        aria-modal="false"
+        className="fixed bottom-4 left-4 right-4 z-[60] sm:right-auto sm:max-w-[400px]"
         style={{
-          background: "var(--ds-background-100)",
-          border: "1px solid var(--ds-gray-400)",
-          boxShadow: "var(--ds-shadow-menu)",
+          animation:
+            "distanz-consent-in 0.35s cubic-bezier(0.16, 1, 0.3, 1) both",
+          willChange: "transform, opacity",
         }}
       >
-        <div className="flex items-start justify-between gap-4">
-          <div className="flex-1">
+        <div
+          className="relative flex flex-col gap-4 rounded-xl p-5"
+          style={{
+            background: "var(--ds-background-100)",
+            border: "1px solid var(--ds-gray-400)",
+            boxShadow: "var(--ds-shadow-menu)",
+          }}
+        >
+          <button
+            type="button"
+            onClick={rejectAll}
+            aria-label="Close banner and deny consent"
+            className="absolute right-3 top-3 p-1 rounded hover:bg-surfaceSubtle transition-colors"
+          >
+            <X className="w-4 h-4 text-textSubtle" />
+          </button>
+
+          <div className="pr-6">
             <h2
               id="consent-banner-title"
               className="text-[16px] font-semibold text-textDefault leading-tight"
@@ -230,50 +257,48 @@ function BottomBanner() {
               {TITLE}
             </h2>
             <p className="mt-2 text-[13px] leading-[1.55] text-textSubtle">
-              {DESCRIPTION}
+              {DESCRIPTION}{" "}
+              <a
+                href={COOKIE_POLICY_HREF}
+                className="text-textDefault underline hover:opacity-80"
+              >
+                Cookie Policy
+              </a>{" "}
+              and{" "}
+              <a
+                href={PRIVACY_HREF}
+                className="text-textDefault underline hover:opacity-80"
+              >
+                Privacy Policy
+              </a>
+              .
             </p>
           </div>
-          <button
-            type="button"
-            onClick={rejectAll}
-            aria-label="Close banner and deny consent"
-            className="p-1 rounded hover:bg-surfaceSubtle transition-colors"
-          >
-            <X className="w-4 h-4 text-textSubtle" />
-          </button>
-        </div>
 
-        <div className="flex flex-col-reverse items-stretch gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center justify-between gap-4 sm:justify-start">
-            <button
-              type="button"
-              onClick={openSettings}
-              className="text-[13px] font-medium text-textDefault no-underline hover:underline"
-            >
-              Consent Settings
-            </button>
-            <a
-              href={PRIVACY_HREF}
-              className="text-[13px] text-textSubtle hover:text-textDefault no-underline hover:underline"
-            >
-              Privacy Policy
-            </a>
-          </div>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <Button
               variant="secondary"
+              shape="rounded"
+              size="small"
               onClick={rejectAll}
-              className="flex-1 sm:flex-none"
             >
               Deny
             </Button>
-            <Button onClick={acceptAll} className="flex-1 sm:flex-none">
+            <Button
+              variant="secondary"
+              shape="rounded"
+              size="small"
+              onClick={acceptAll}
+            >
               Accept all
+            </Button>
+            <Button shape="rounded" size="small" onClick={openSettings}>
+              Customise
             </Button>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 
