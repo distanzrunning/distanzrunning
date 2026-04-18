@@ -82,6 +82,7 @@ import NoteComponent from "../components/content/NoteComponent";
 import CalendarComponent from "../components/content/CalendarComponent";
 import SearchComponent from "../components/content/SearchComponent";
 import AdSlotComponent from "../components/content/AdSlotComponent";
+import ConsentBannerComponent from "../components/content/ConsentBannerComponent";
 import LoginComponent from "../components/content/LoginComponent";
 import Materials from "../components/content/Materials";
 import DistanzRunningBrand from "../components/content/DistanzRunningBrand";
@@ -1242,6 +1243,21 @@ export default function DesignSystemPage() {
           onNavigate={handleNavigation}
         >
           <AdSlotComponent />
+        </ContentWithTOC>
+      );
+    }
+
+    if (activeSlug === "consent-banner") {
+      return (
+        <ContentWithTOC
+          tocTitle="On this page"
+          pageTitle="Consent Banner"
+          pageSubtitle="GDPR-style cookie consent — bottom banner plus a settings modal for per-category preferences."
+          mainSectionId="consent-banner"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
+          <ConsentBannerComponent />
         </ContentWithTOC>
       );
     }

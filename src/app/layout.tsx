@@ -10,6 +10,8 @@ import NavbarAltWrapper from "@/components/NavbarAltWrapper";
 import Footer from "@/components/Footer";
 import { DarkModeProvider } from "@/components/DarkModeProvider";
 import ReCaptchaProvider from "@/components/ReCaptchaProvider";
+import { ConsentProvider } from "@/contexts/ConsentContext";
+import { ConsentBanner } from "@/components/ui/ConsentBanner";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
@@ -125,14 +127,17 @@ export default function RootLayout({
       <body className="font-sans antialiased bg-canvas text-textDefault min-h-screen flex flex-col distanz-font-features">
         <ReCaptchaProvider>
           <DarkModeProvider>
-            <AuthProtection>
-              <LayoutContent navbar={<NavbarAltWrapper />} footer={<Footer />}>
-                {children}
-              </LayoutContent>
-            </AuthProtection>
+            <ConsentProvider>
+              <AuthProtection>
+                <LayoutContent navbar={<NavbarAltWrapper />} footer={<Footer />}>
+                  {children}
+                </LayoutContent>
+              </AuthProtection>
+              <ConsentBanner />
 
-            <Analytics />
-            <SpeedInsights />
+              <Analytics />
+              <SpeedInsights />
+            </ConsentProvider>
           </DarkModeProvider>
         </ReCaptchaProvider>
 
