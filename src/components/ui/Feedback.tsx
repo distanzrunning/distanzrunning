@@ -423,6 +423,11 @@ export function FeedbackInline({
           border-color: transparent;
           box-shadow: var(--ds-shadow-menu);
         }
+        .feedback-inline-wrapper--expanded .feedback-inline-trigger {
+          justify-content: center;
+          gap: 12px;
+          padding: 0;
+        }
         .feedback-inline-body {
           flex: 1 1 0;
           min-height: 0;
