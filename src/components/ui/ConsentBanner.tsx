@@ -50,9 +50,12 @@ const CATEGORIES: CategoryDef[] = [
   },
 ];
 
-const TITLE = "We use cookies";
-const DESCRIPTION =
+const BANNER_TITLE = "We use cookies";
+const BANNER_DESCRIPTION =
   "We use cookies to improve your experience, show you personalised content, and analyse our traffic. For more information, see our";
+const MODAL_TITLE = "Privacy Settings";
+const MODAL_DESCRIPTION =
+  "We use cookies to personalise content and ads, to provide essential features and to analyse our traffic. You may opt in or opt out of the use of these technologies.";
 const COOKIE_POLICY_HREF = "/legal/cookie-policy";
 const PRIVACY_HREF = "/legal/privacy-policy";
 
@@ -172,33 +175,18 @@ function ConsentSettingsModal() {
     <Modal
       open={settingsOpen}
       onClose={closeSettings}
-      title={TITLE}
-      subtitle={DESCRIPTION}
+      title={MODAL_TITLE}
+      subtitle={MODAL_DESCRIPTION}
       footer={
         <div style={{ padding: 24, display: "flex", flexDirection: "column", gap: 16 }}>
           <div className="flex flex-wrap items-center gap-3">
-            <Button
-              variant="secondary"
-              shape="rounded"
-              size="small"
-              onClick={rejectAll}
-            >
+            <Button variant="secondary" size="small" onClick={rejectAll}>
               Deny
             </Button>
-            <Button
-              variant="secondary"
-              shape="rounded"
-              size="small"
-              onClick={acceptAll}
-            >
+            <Button variant="secondary" size="small" onClick={acceptAll}>
               Accept all
             </Button>
-            <Button
-              shape="rounded"
-              size="small"
-              onClick={handleSave}
-              className="ml-auto"
-            >
+            <Button size="small" onClick={handleSave} className="ml-auto">
               Save
             </Button>
           </div>
@@ -283,10 +271,10 @@ function BottomBanner() {
               id="consent-banner-title"
               className="text-[16px] font-semibold text-textDefault leading-tight"
             >
-              {TITLE}
+              {BANNER_TITLE}
             </h2>
             <p className="mt-2 text-[13px] leading-[1.55] text-textSubtle">
-              {DESCRIPTION}{" "}
+              {BANNER_DESCRIPTION}{" "}
               <a
                 href={COOKIE_POLICY_HREF}
                 className="text-textDefault underline hover:opacity-80"
