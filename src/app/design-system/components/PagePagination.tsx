@@ -101,9 +101,11 @@ export default function PagePagination({
           )}
         </div>
 
-        {/* Center: Was this helpful? — natural width, stays centred */}
+        {/* Center: Was this helpful? — natural width, stays centred.
+            Key on activeSlug so the widget resets (closes + clears state)
+            whenever the user navigates to a different DS page. */}
         <div className="hidden md:block flex-shrink-0">
-          <FeedbackInline />
+          <FeedbackInline key={activeSlug} />
         </div>
 
         {/* Next page */}

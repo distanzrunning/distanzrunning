@@ -174,6 +174,7 @@ export function FeedbackInline({
   const [submitted, setSubmitted] = useState(false);
   const [closing, setClosing] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
 
   const handleSubmit = useCallback(
     (e: React.FormEvent) => {
@@ -206,6 +207,28 @@ export function FeedbackInline({
       requestAnimationFrame(() => textareaRef.current?.focus());
     }
   }, [isExpanded, submitted, closing]);
+
+  // Close on outside click while the panel is open and idle
+  useEffect(() => {
+    if (!isExpanded || isSending || submitted || closing) return;
+
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        wrapperRef.current &&
+        !wrapperRef.current.contains(e.target as Node)
+      ) {
+        setClosing(true);
+        setTimeout(() => {
+          setSelectedEmotion(null);
+          setFeedbackText("");
+          setClosing(false);
+        }, 300);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isExpanded, isSending, submitted, closing]);
 
   const triggerRow = (
     <div className="feedback-inline-trigger">
@@ -244,7 +267,10 @@ export function FeedbackInline({
   );
 
   return (
-    <div className={`feedback-inline-wrapper ${isExpanded ? "feedback-inline-wrapper--expanded" : ""} ${className || ""}`}>
+    <div
+      ref={wrapperRef}
+      className={`feedback-inline-wrapper ${isExpanded ? "feedback-inline-wrapper--expanded" : ""} ${className || ""}`}
+    >
       {/* Pill trigger row — hidden while panel is open so the selected
           emoji doesn't flash pink → gray when the panel closes. */}
       <div
