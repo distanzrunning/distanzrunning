@@ -209,7 +209,13 @@ export function Modal({
                         background: "var(--ds-modal-section-bg)",
                         borderBottom: "1px solid var(--ds-gray-alpha-400)",
                       }
-                    : { marginBottom: 24, zIndex: 10 }
+                    : {
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 12,
+                        marginBottom: 24,
+                        zIndex: 10,
+                      }
                 }
               >
                 {title && (

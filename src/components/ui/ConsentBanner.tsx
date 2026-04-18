@@ -190,12 +190,26 @@ function ConsentSettingsModal() {
               Save
             </Button>
           </div>
-          <a
-            href={PRIVACY_HREF}
-            className="text-[12px] text-textSubtle hover:text-textDefault underline hover:opacity-80"
+          <p
+            className="text-[12px] leading-[1.6]"
+            style={{ color: "var(--ds-gray-700)", margin: 0 }}
           >
-            Privacy Policy
-          </a>
+            For more information, see our{" "}
+            <a
+              href={COOKIE_POLICY_HREF}
+              className="text-textDefault underline hover:opacity-80"
+            >
+              Cookie Policy
+            </a>{" "}
+            and{" "}
+            <a
+              href={PRIVACY_HREF}
+              className="text-textDefault underline hover:opacity-80"
+            >
+              Privacy Policy
+            </a>
+            .
+          </p>
         </div>
       }
     >
