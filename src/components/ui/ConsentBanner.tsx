@@ -107,6 +107,7 @@ function CategoryRow({
         </button>
         <div className="pr-4">
           <Toggle
+            size="large"
             checked={value}
             disabled={category.required}
             onChange={onChange}
@@ -174,8 +175,8 @@ function ConsentSettingsModal() {
       title={TITLE}
       subtitle={DESCRIPTION}
       footer={
-        <div className="flex flex-col gap-3">
-          <div className="flex flex-wrap items-center gap-2">
+        <div style={{ padding: 24, display: "flex", flexDirection: "column", gap: 16 }}>
+          <div className="flex flex-wrap items-center gap-3">
             <Button
               variant="secondary"
               shape="rounded"
@@ -201,14 +202,12 @@ function ConsentSettingsModal() {
               Save
             </Button>
           </div>
-          <div>
-            <a
-              href={PRIVACY_HREF}
-              className="text-[12px] text-textSubtle hover:text-textDefault underline hover:opacity-80"
-            >
-              Privacy Policy
-            </a>
-          </div>
+          <a
+            href={PRIVACY_HREF}
+            className="text-[12px] text-textSubtle hover:text-textDefault underline hover:opacity-80"
+          >
+            Privacy Policy
+          </a>
         </div>
       }
     >
