@@ -64,6 +64,8 @@ const STORAGE_KEY = "distanz-consent";
 const ANON_ID_KEY = "distanz-consent-anon-id";
 const CONSENT_VERSION = 1;
 const CONSENT_API = "/api/consent";
+// 180 days — standard for GDPR CMPs. After this we re-prompt.
+const COOKIE_MAX_AGE_SECONDS = 60 * 60 * 24 * 180;
 
 const DEFAULT_PREFERENCES: ConsentPreferences = {
   essential: true,
@@ -89,22 +91,61 @@ const ConsentContext = createContext<ConsentContextValue | null>(null);
 // Helpers
 // ============================================================================
 
-function readStored(): ConsentPreferences | null {
-  if (typeof window === "undefined") return null;
+function parseStored(raw: string | null): StoredConsent | null {
+  if (!raw) return null;
   try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
-    if (!raw) return null;
     const parsed = JSON.parse(raw) as StoredConsent;
     if (parsed?.version !== CONSENT_VERSION) return null;
-    return {
-      essential: true,
-      marketing: !!parsed.marketing,
-      analytics: !!parsed.analytics,
-      functional: !!parsed.functional,
-    };
+    return parsed;
   } catch {
     return null;
   }
+}
+
+function readCookie(): StoredConsent | null {
+  if (typeof document === "undefined") return null;
+  const match = document.cookie.match(
+    new RegExp(`(?:^|; )${STORAGE_KEY}=([^;]*)`),
+  );
+  if (!match) return null;
+  try {
+    return parseStored(decodeURIComponent(match[1]));
+  } catch {
+    return null;
+  }
+}
+
+function writeCookie(payload: StoredConsent) {
+  if (typeof document === "undefined") return;
+  const secure =
+    typeof location !== "undefined" && location.protocol === "https:"
+      ? "; Secure"
+      : "";
+  document.cookie = `${STORAGE_KEY}=${encodeURIComponent(
+    JSON.stringify(payload),
+  )}; Path=/; Max-Age=${COOKIE_MAX_AGE_SECONDS}; SameSite=Lax${secure}`;
+}
+
+function clearCookie() {
+  if (typeof document === "undefined") return;
+  document.cookie = `${STORAGE_KEY}=; Path=/; Max-Age=0; SameSite=Lax`;
+}
+
+function readStored(): ConsentPreferences | null {
+  if (typeof window === "undefined") return null;
+  // Cookie is the source of truth (survives server-side + matches user
+  // expectations when they "clear cookies"). Fall back to localStorage for
+  // visitors who decided before we added the cookie — we re-sync on write.
+  const cookie = readCookie();
+  const parsed =
+    cookie ?? parseStored(window.localStorage.getItem(STORAGE_KEY));
+  if (!parsed) return null;
+  return {
+    essential: true,
+    marketing: !!parsed.marketing,
+    analytics: !!parsed.analytics,
+    functional: !!parsed.functional,
+  };
 }
 
 function writeStored(prefs: ConsentPreferences) {
@@ -114,6 +155,7 @@ function writeStored(prefs: ConsentPreferences) {
     decidedAt: new Date().toISOString(),
     version: CONSENT_VERSION,
   };
+  writeCookie(payload);
   window.localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
   // Broadcast so other tabs / scripts can react
   window.dispatchEvent(
@@ -125,6 +167,7 @@ function writeStored(prefs: ConsentPreferences) {
 
 function clearStored() {
   if (typeof window === "undefined") return;
+  clearCookie();
   window.localStorage.removeItem(STORAGE_KEY);
   window.dispatchEvent(new CustomEvent("distanz-consent-change"));
 }
