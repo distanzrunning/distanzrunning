@@ -82,7 +82,11 @@ function CategoryRow({
       <div
         className="flex items-center justify-between"
         style={{
-          borderBottom: isLast ? "none" : "1px solid var(--ds-gray-400)",
+          // Divider sits below the trigger row whenever another element
+          // follows it — either the next row's title, or this row's own
+          // description when it's open.
+          borderBottom:
+            !isLast || open ? "1px solid var(--ds-gray-400)" : "none",
         }}
       >
         <button
