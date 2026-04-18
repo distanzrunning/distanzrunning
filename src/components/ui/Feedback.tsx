@@ -242,7 +242,42 @@ export function FeedbackInline({
         ref={wrapperRef}
         className={`feedback-inline-wrapper${isExpanded ? " feedback-inline-wrapper--expanded" : ""}`}
       >
-        {/* Body (form or success) — grows when expanded, clips to 0 when closed. */}
+        {/* Trigger row — sits at the top. The wrapper is bottom-anchored,
+            so when it grows upward the faces ride up with it, revealing
+            the body below them. */}
+        <div className="feedback-inline-trigger">
+          <p
+            style={{
+              color: "var(--ds-gray-900)",
+              fontSize: 14,
+              lineHeight: "20px",
+              fontWeight: 400,
+              margin: 0,
+              whiteSpace: "nowrap",
+            }}
+          >
+            {label}
+          </p>
+          <span style={{ display: "flex", alignItems: "center", gap: 1 }}>
+            {emojiOptions.map((emoji) => (
+              <button
+                key={emoji.id}
+                type="button"
+                role="radio"
+                className={`feedback-emoji${selectedEmotion === emoji.id ? " feedback-emoji--selected" : ""}`}
+                aria-checked={selectedEmotion === emoji.id}
+                aria-label={`Select ${emoji.label} emoji`}
+                disabled={isSending || submitted}
+                onClick={() => handleFaceClick(emoji.id)}
+              >
+                {emoji.icon}
+              </button>
+            ))}
+          </span>
+        </div>
+
+        {/* Body (form or success) — reveals below the trigger as the
+            wrapper expands; clips to 0 when closed. */}
         <div className="feedback-inline-body">
         {submitted ? (
           <div className="feedback-inline-success">
@@ -346,40 +381,7 @@ export function FeedbackInline({
             </div>
           </form>
         ) : null}
-      </div>
-
-      {/* Trigger row — always visible at the bottom. The faces live here,
-          and the wrapper resizes around them. */}
-      <div className="feedback-inline-trigger">
-        <p
-          style={{
-            color: "var(--ds-gray-900)",
-            fontSize: 14,
-            lineHeight: "20px",
-            fontWeight: 400,
-            margin: 0,
-            whiteSpace: "nowrap",
-          }}
-        >
-          {label}
-        </p>
-        <span style={{ display: "flex", alignItems: "center", gap: 1 }}>
-          {emojiOptions.map((emoji) => (
-            <button
-              key={emoji.id}
-              type="button"
-              role="radio"
-              className={`feedback-emoji${selectedEmotion === emoji.id ? " feedback-emoji--selected" : ""}`}
-              aria-checked={selectedEmotion === emoji.id}
-              aria-label={`Select ${emoji.label} emoji`}
-              disabled={isSending || submitted}
-              onClick={() => handleFaceClick(emoji.id)}
-            >
-              {emoji.icon}
-            </button>
-          ))}
-        </span>
-      </div>
+        </div>
       </div>
 
       <style>{`
