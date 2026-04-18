@@ -2,7 +2,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1000" viewBox="0 0 1000 1000">
   <title>Distanz Running</title>
   <!-- White base -->
-  <rect width="1000" height="1000" rx="180" ry="180" fill="#FFFFFF"/>
+  <rect width="1000" height="1000" rx="140" ry="140" fill="#FFFFFF"/>
   <!-- Mark: white fill (same as bg) with thick black stroke so the shapes read as bold outlines -->
   <g
     transform="translate(200 200) scale(0.6)"
