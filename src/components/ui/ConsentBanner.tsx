@@ -180,13 +180,13 @@ function ConsentSettingsModal() {
       footer={
         <div style={{ padding: 24, display: "flex", flexDirection: "column", gap: 16 }}>
           <div className="flex flex-wrap items-center gap-3">
-            <Button variant="secondary" size="small" onClick={rejectAll}>
+            <Button variant="secondary" onClick={rejectAll}>
               Deny
             </Button>
-            <Button variant="secondary" size="small" onClick={acceptAll}>
+            <Button variant="secondary" onClick={acceptAll}>
               Accept all
             </Button>
-            <Button size="small" onClick={handleSave} className="ml-auto">
+            <Button onClick={handleSave} className="ml-auto">
               Save
             </Button>
           </div>
