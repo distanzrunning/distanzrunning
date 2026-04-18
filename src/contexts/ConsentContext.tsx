@@ -61,7 +61,9 @@ export interface ConsentContextValue {
 // ============================================================================
 
 const STORAGE_KEY = "distanz-consent";
+const ANON_ID_KEY = "distanz-consent-anon-id";
 const CONSENT_VERSION = 1;
+const CONSENT_API = "/api/consent";
 
 const DEFAULT_PREFERENCES: ConsentPreferences = {
   essential: true,
@@ -127,6 +129,50 @@ function clearStored() {
   window.dispatchEvent(new CustomEvent("distanz-consent-change"));
 }
 
+function getOrCreateAnonId(): string {
+  if (typeof window === "undefined") return "";
+  let id = window.localStorage.getItem(ANON_ID_KEY);
+  if (!id) {
+    id =
+      typeof crypto !== "undefined" && "randomUUID" in crypto
+        ? crypto.randomUUID()
+        : `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
+    window.localStorage.setItem(ANON_ID_KEY, id);
+  }
+  return id;
+}
+
+type Decision = "accept_all" | "reject_all" | "custom";
+
+function classifyDecision(prefs: ConsentPreferences): Decision {
+  const { marketing, analytics, functional } = prefs;
+  if (marketing && analytics && functional) return "accept_all";
+  if (!marketing && !analytics && !functional) return "reject_all";
+  return "custom";
+}
+
+async function reportDecision(prefs: ConsentPreferences, decision: Decision) {
+  if (typeof window === "undefined") return;
+  const anonId = getOrCreateAnonId();
+  try {
+    await fetch(CONSENT_API, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        anonId,
+        marketing: prefs.marketing,
+        analytics: prefs.analytics,
+        functional: prefs.functional,
+        decision,
+        version: CONSENT_VERSION,
+      }),
+      keepalive: true,
+    });
+  } catch {
+    // Silent — localStorage is still the source of truth for the UI.
+  }
+}
+
 // ============================================================================
 // Provider
 // ============================================================================
@@ -146,30 +192,35 @@ export function ConsentProvider({ children }: { children: ReactNode }) {
     setHydrated(true);
   }, []);
 
-  const persist = useCallback((prefs: ConsentPreferences) => {
-    writeStored(prefs);
-    setPreferences(prefs);
-  }, []);
+  const persist = useCallback(
+    (prefs: ConsentPreferences, decision: Decision) => {
+      writeStored(prefs);
+      setPreferences(prefs);
+      void reportDecision(prefs, decision);
+    },
+    [],
+  );
 
   const acceptAll = useCallback(() => {
-    persist(ALL_ON);
+    persist(ALL_ON, "accept_all");
     setSettingsOpen(false);
   }, [persist]);
 
   const rejectAll = useCallback(() => {
-    persist(DEFAULT_PREFERENCES);
+    persist(DEFAULT_PREFERENCES, "reject_all");
     setSettingsOpen(false);
   }, [persist]);
 
   const save = useCallback(
     (next: Partial<Omit<ConsentPreferences, "essential">>) => {
       const base = preferences ?? DEFAULT_PREFERENCES;
-      persist({
+      const merged: ConsentPreferences = {
         essential: true,
         marketing: next.marketing ?? base.marketing,
         analytics: next.analytics ?? base.analytics,
         functional: next.functional ?? base.functional,
-      });
+      };
+      persist(merged, classifyDecision(merged));
       setSettingsOpen(false);
     },
     [preferences, persist],
