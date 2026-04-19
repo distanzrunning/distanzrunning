@@ -426,7 +426,7 @@ function BottomBanner() {
         role="alertdialog"
         aria-labelledby="consent-banner-title"
         aria-modal="false"
-        className="fixed bottom-4 left-4 right-4 z-[60] sm:right-auto sm:max-w-[400px]"
+        className="fixed bottom-4 left-4 right-4 z-[10000] sm:right-auto sm:max-w-[400px]"
         style={{
           animation:
             "distanz-consent-in 0.35s cubic-bezier(0.16, 1, 0.3, 1) both",
