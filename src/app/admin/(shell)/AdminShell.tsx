@@ -2,7 +2,6 @@
 
 import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
 import {
   CommandMenuDialog,
   CommandMenuTrigger,
@@ -13,16 +12,26 @@ import AdminSidebar from "./AdminSidebar";
 const SIDEBAR_WIDTH = 260;
 
 export default function AdminShell({ children }: { children: ReactNode }) {
-  const pathname = usePathname() ?? "";
   const [cmdOpen, setCmdOpen] = useState(false);
 
-  // Global ⌘K / Ctrl+K shortcut to toggle the command menu
+  // Global "F" shortcut to toggle the command menu
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
-        e.preventDefault();
-        setCmdOpen((v) => !v);
+      if (e.key.toLowerCase() !== "f") return;
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      const target = e.target as HTMLElement | null;
+      if (!target) return;
+      const tag = target.tagName;
+      if (
+        tag === "INPUT" ||
+        tag === "TEXTAREA" ||
+        tag === "SELECT" ||
+        target.isContentEditable
+      ) {
+        return;
       }
+      e.preventDefault();
+      setCmdOpen((v) => !v);
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
@@ -70,7 +79,6 @@ export default function AdminShell({ children }: { children: ReactNode }) {
       <CommandMenuDialog
         open={cmdOpen}
         onClose={() => setCmdOpen(false)}
-        pathname={pathname}
       />
     </div>
   );

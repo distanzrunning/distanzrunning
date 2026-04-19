@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { Command, useCommandState } from "cmdk";
 import {
-  Layers,
+  ArrowRight,
   LogOut,
   PanelsTopLeft,
   Search as SearchIcon,
@@ -12,7 +12,35 @@ import {
 import { CommandMenu } from "@/components/ui/CommandMenu";
 import { logout } from "../login/actions";
 import { navigation as dsNavigation } from "./design-system/components/DesignSystemSidebar";
-import { isDesignSystemRoute } from "./AdminSidebar";
+
+function BrandItemIcon() {
+  return (
+    <span
+      style={{
+        position: "relative",
+        display: "block",
+        width: 16,
+        height: 16,
+        flexShrink: 0,
+      }}
+    >
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/brand/icon-black.svg"
+        alt=""
+        className="dark:hidden"
+        style={{ position: "absolute", inset: 0, width: 16, height: 16 }}
+      />
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/brand/icon-white.svg"
+        alt=""
+        className="hidden dark:block"
+        style={{ position: "absolute", inset: 0, width: 16, height: 16 }}
+      />
+    </span>
+  );
+}
 
 // ============================================================================
 // Trigger (rendered at the top of the sidebar, Vercel-style search pill)
@@ -91,7 +119,7 @@ export function CommandMenuTrigger({ onOpen }: { onOpen: () => void }) {
             fontFamily: "inherit",
           }}
         >
-          ⌘K
+          F
         </kbd>
       </span>
     </button>
@@ -147,24 +175,17 @@ function ConsentLookupItem({ onSelect }: { onSelect: () => void }) {
 export function CommandMenuDialog({
   open,
   onClose,
-  pathname,
 }: {
   open: boolean;
   onClose: () => void;
-  pathname: string;
 }) {
   const router = useRouter();
-  const inDs = isDesignSystemRoute(pathname);
 
   return (
     <CommandMenu
       open={open}
       onClose={onClose}
-      placeholder={
-        inDs
-          ? "Find design system pages or consent IDs…"
-          : "Find admin pages or paste a consent ID…"
-      }
+      placeholder="Search..."
     >
       <CommandMenu.Group heading="Go to">
         <CommandMenu.Item
@@ -201,7 +222,13 @@ export function CommandMenuDialog({
             .map((item) => (
               <CommandMenu.Item
                 key={item.id}
-                icon={<Layers className="w-4 h-4" />}
+                icon={
+                  section.id === "brands" ? (
+                    <BrandItemIcon />
+                  ) : (
+                    <ArrowRight className="w-4 h-4" />
+                  )
+                }
                 onSelect={() => {
                   router.push(`/admin/design-system/${item.id}`);
                   onClose();
