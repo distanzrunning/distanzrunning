@@ -159,25 +159,6 @@ function ConsentLookupItem({ onSelect }: { onSelect: () => void }) {
 // Dialog — rendered at the shell level, controlled open state
 // ============================================================================
 
-// Marker keyword for items that should always appear in the unfiltered list.
-// Items without this keyword are only surfaced when the user is actively
-// typing (see the filter function below).
-const TOP_LEVEL = "__admin_toplevel__";
-
-function adminFilter(value: string, search: string, keywords?: string[]) {
-  const kw = keywords ?? [];
-  const trimmed = search.trim();
-  if (!trimmed) {
-    return kw.includes(TOP_LEVEL) ? 1 : 0;
-  }
-  const needle = trimmed.toLowerCase();
-  if (value.toLowerCase().includes(needle)) return 1;
-  for (const k of kw) {
-    if (k.toLowerCase().includes(needle)) return 1;
-  }
-  return 0;
-}
-
 export function CommandMenuDialog({
   open,
   onClose,
@@ -188,18 +169,14 @@ export function CommandMenuDialog({
   const router = useRouter();
 
   return (
-    <CommandMenu
-      open={open}
-      onClose={onClose}
-      placeholder="Search..."
-      filter={adminFilter}
-    >
+    <CommandMenu open={open} onClose={onClose} placeholder="Search...">
       <ConsentLookupItem onSelect={onClose} />
 
       <CommandMenu.Item
         icon={<SquareCheckBig className="w-4 h-4" />}
         subtitle="Admin"
-        keywords={[TOP_LEVEL]}
+        value="Consent"
+        keywords={["Admin"]}
         onSelect={() => {
           router.push("/admin/consent");
           onClose();
@@ -210,7 +187,8 @@ export function CommandMenuDialog({
       <CommandMenu.Item
         icon={<PanelsTopLeft className="w-4 h-4" />}
         subtitle="Admin"
-        keywords={[TOP_LEVEL]}
+        value="Design system"
+        keywords={["Admin"]}
         onSelect={() => {
           router.push("/admin/design-system");
           onClose();
@@ -233,7 +211,8 @@ export function CommandMenuDialog({
                 )
               }
               subtitle={`Design System · ${section.label}`}
-              keywords={[section.label]}
+              value={item.label}
+              keywords={["Design System", section.label]}
               onSelect={() => {
                 router.push(`/admin/design-system/${item.id}`);
                 onClose();
@@ -247,7 +226,7 @@ export function CommandMenuDialog({
       <CommandMenu.Group heading="Actions">
         <CommandMenu.Item
           icon={<LogOut className="w-4 h-4" />}
-          keywords={[TOP_LEVEL]}
+          value="Sign out"
           onSelect={() => {
             void logout();
             onClose();
