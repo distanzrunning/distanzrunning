@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { DarkModeContext } from "@/components/DarkModeProvider";
 import { ThemeSwitcher } from "@/components/ui/ThemeSwitcher";
 import { logout } from "../login/actions";
+import AdminCommandMenu from "./AdminCommandMenu";
 import AdminSidebar, { isDesignSystemRoute } from "./AdminSidebar";
 
 export default function AdminShell({ children }: { children: ReactNode }) {
@@ -62,6 +63,7 @@ export default function AdminShell({ children }: { children: ReactNode }) {
           </span>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <AdminCommandMenu pathname={pathname} />
           <ThemeSwitcher
             showSystem={false}
             value={theme === "system" ? "light" : theme}
