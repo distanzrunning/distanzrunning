@@ -11,12 +11,12 @@ import {
   CommandMenuDialog,
   CommandMenuTrigger,
 } from "./AdminCommandMenu";
-import AdminSidebar, { isDesignSystemRoute } from "./AdminSidebar";
+import AdminSidebar from "./AdminSidebar";
+
+const SIDEBAR_WIDTH = 260;
 
 export default function AdminShell({ children }: { children: ReactNode }) {
   const pathname = usePathname() ?? "";
-  const inDs = isDesignSystemRoute(pathname);
-  const title = inDs ? "Stride Design System" : "Stride Admin";
   const { theme, setTheme } = useContext(DarkModeContext);
   const [cmdOpen, setCmdOpen] = useState(false);
 
@@ -40,80 +40,58 @@ export default function AdminShell({ children }: { children: ReactNode }) {
         color: "var(--ds-gray-1000)",
       }}
     >
-      <header
+      <aside
         style={{
-          position: "sticky",
+          position: "fixed",
+          left: 0,
           top: 0,
+          width: SIDEBAR_WIDTH,
+          height: "100vh",
           zIndex: 40,
-          height: 64,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          padding: "0 24px",
+          borderRight: "1px solid var(--ds-gray-400)",
           background: "var(--ds-background-100)",
-          borderBottom: "1px solid var(--ds-gray-400)",
+          display: "flex",
+          flexDirection: "column",
+          overflow: "hidden",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/images/stride_icon_black.svg"
-            alt="Stride"
-            className="dark:hidden"
-            style={{ width: 24, height: 24 }}
-          />
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/images/stride_icon_white.svg"
-            alt="Stride"
-            className="hidden dark:block"
-            style={{ width: 24, height: 24 }}
-          />
-          <span
-            style={{
-              fontSize: 16,
-              fontWeight: 500,
-              letterSpacing: "-0.32px",
-            }}
-          >
-            {title}
-          </span>
-        </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <ThemeSwitcher
-            showSystem={false}
-            value={theme === "system" ? "light" : theme}
-            onChange={setTheme}
-          />
-          <form action={logout}>
-            <Button type="submit" variant="secondary" size="small">
-              Sign out
-            </Button>
-          </form>
-        </div>
-      </header>
-
-      <div style={{ display: "flex", alignItems: "stretch" }}>
-        <aside
-          style={{
-            width: 260,
-            minWidth: 260,
-            height: "calc(100vh - 64px)",
-            position: "sticky",
-            top: 64,
-            borderRight: "1px solid var(--ds-gray-400)",
-            background: "var(--ds-background-100)",
-            overflowY: "auto",
-          }}
-        >
-          <AdminSidebar
-            searchTrigger={
-              <CommandMenuTrigger onOpen={() => setCmdOpen(true)} />
-            }
-          />
-        </aside>
-        <main style={{ flex: 1, minWidth: 0 }}>{children}</main>
-      </div>
+        <AdminSidebar
+          searchTrigger={
+            <CommandMenuTrigger onOpen={() => setCmdOpen(true)} />
+          }
+          footer={
+            <div
+              style={{
+                padding: 12,
+                borderTop: "1px solid var(--ds-gray-400)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                gap: 8,
+              }}
+            >
+              <ThemeSwitcher
+                showSystem={false}
+                value={theme === "system" ? "light" : theme}
+                onChange={setTheme}
+              />
+              <form action={logout}>
+                <Button type="submit" variant="secondary" size="small">
+                  Sign out
+                </Button>
+              </form>
+            </div>
+          }
+        />
+      </aside>
+      <main
+        style={{
+          marginLeft: SIDEBAR_WIDTH,
+          minHeight: "100vh",
+        }}
+      >
+        {children}
+      </main>
 
       <CommandMenuDialog
         open={cmdOpen}
