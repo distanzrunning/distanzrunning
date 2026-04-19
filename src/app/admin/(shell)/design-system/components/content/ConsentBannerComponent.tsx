@@ -471,34 +471,25 @@ export default function ConsentBannerComponent() {
           Intro
         </SectionHeader>
         <p className="text-[16px] leading-[1.6] text-textSubtle mt-4 xl:mt-7 mb-6">
-          The consent banner is how Distanz Running asks visitors for
-          permission before loading tracking scripts, advertising, and other
-          third-party tech. It appears once on first visit, captures four
-          consent categories (Essential, Marketing, Analytics, Functional),
-          persists to{" "}
+          The consent banner asks visitors for permission before loading
+          tracking, advertising, and other third-party tech. It captures four
+          categories (Essential, Marketing, Analytics, Functional) and exposes
+          the state via the{" "}
           <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
-            localStorage
-          </code>
-          , and exposes the state via a React context so any component can
-          gate itself on the user&apos;s preferences.
+            useConsent()
+          </code>{" "}
+          hook so any component can gate itself on the user&apos;s preferences.
         </p>
-
         <Note type="default">
-          <strong>Storage:</strong> preferences live under the
-          localStorage key{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
-            distanz-consent
-          </code>{" "}
-          with a version field so we can prompt for re-consent if the
-          category list changes. A{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
-            distanz-consent-change
-          </code>{" "}
-          window event fires on every update, so scripts in{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
-            layout.tsx
-          </code>{" "}
-          and elsewhere can react without going through React.
+          This page documents the component. For how the CMP itself works
+          (storage, events, integrations, roadmap) see the{" "}
+          <a
+            href="/admin/consent"
+            className="text-textDefault underline hover:opacity-80"
+          >
+            Consent section in Admin
+          </a>
+          .
         </Note>
       </Section>
 
