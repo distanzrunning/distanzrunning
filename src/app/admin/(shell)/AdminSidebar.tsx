@@ -20,10 +20,55 @@ function dsSlugFrom(pathname: string): string | null {
 }
 
 // ============================================================================
-// Title header — icon/chevron + centered label, sits at the top of the sidebar
+// Sidebar headers — brand logo (root) and back-button (subsection)
 // ============================================================================
 
-function TitleHeader({
+function StrideIcon() {
+  return (
+    <>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/images/stride_icon_black.svg"
+        alt=""
+        className="dark:hidden"
+        style={{ width: 20, height: 20 }}
+      />
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/images/stride_icon_white.svg"
+        alt=""
+        className="hidden dark:block"
+        style={{ width: 20, height: 20 }}
+      />
+    </>
+  );
+}
+
+function BrandHeader() {
+  return (
+    <div style={{ padding: "12px 8px 4px" }}>
+      <Link
+        href="/admin"
+        aria-label="Stride Admin"
+        className="flex items-center justify-center w-full h-9 gap-2 outline-none no-underline text-[var(--ds-gray-1000)]"
+      >
+        <StrideIcon />
+        <span
+          style={{
+            fontSize: 14,
+            lineHeight: "20px",
+            fontWeight: 500,
+            letterSpacing: "-0.28px",
+          }}
+        >
+          Stride Admin
+        </span>
+      </Link>
+    </div>
+  );
+}
+
+function BackHeader({
   leftSlot,
   label,
   href,
@@ -56,27 +101,6 @@ function TitleHeader({
         <span style={{ width: 36, height: 36, flexShrink: 0 }} />
       </Link>
     </div>
-  );
-}
-
-function StrideIcon() {
-  return (
-    <>
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src="/images/stride_icon_black.svg"
-        alt=""
-        className="dark:hidden"
-        style={{ width: 20, height: 20 }}
-      />
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src="/images/stride_icon_white.svg"
-        alt=""
-        className="hidden dark:block"
-        style={{ width: 20, height: 20 }}
-      />
-    </>
   );
 }
 
@@ -225,14 +249,16 @@ export default function AdminSidebar({
 
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
-      <TitleHeader
-        leftSlot={
-          inDs ? <ChevronLeft className="w-4 h-4" /> : <StrideIcon />
-        }
-        label={inDs ? "Design System" : "Stride Admin"}
-        href="/admin"
-        ariaLabel={inDs ? "Back to admin" : "Stride Admin"}
-      />
+      {inDs ? (
+        <BackHeader
+          leftSlot={<ChevronLeft className="w-4 h-4" />}
+          label="Design System"
+          href="/admin"
+          ariaLabel="Back to admin"
+        />
+      ) : (
+        <BrandHeader />
+      )}
       {searchTrigger && (
         <div style={{ padding: "0 16px 8px" }}>{searchTrigger}</div>
       )}
