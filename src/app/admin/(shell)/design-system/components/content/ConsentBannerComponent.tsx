@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback } from "react";
+import { createPortal } from "react-dom";
 import { ChevronDown } from "lucide-react";
 import { Section } from "../ContentWithTOC";
 import {
@@ -192,7 +193,15 @@ function DemoFloatingBanner({
   onAccept: () => void;
   onCustomise: () => void;
 }) {
-  return (
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
+
+  return createPortal(
     <>
       <style>{`
         @keyframes ds-consent-demo-in {
@@ -280,7 +289,8 @@ function DemoFloatingBanner({
           </div>
         </div>
       </div>
-    </>
+    </>,
+    document.body,
   );
 }
 

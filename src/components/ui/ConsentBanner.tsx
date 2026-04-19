@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { Check, ChevronDown, Copy } from "lucide-react";
 import Button from "@/components/ui/Button";
 import { Modal } from "@/components/ui/Modal";
@@ -405,10 +406,15 @@ function ConsentSettingsModal() {
 function BottomBanner() {
   const { isDecided, settingsOpen, acceptAll, rejectAll, openSettings } =
     useConsent();
+  const [mounted, setMounted] = useState(false);
 
-  if (isDecided || settingsOpen) return null;
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
-  return (
+  if (isDecided || settingsOpen || !mounted) return null;
+
+  return createPortal(
     <>
       <style>{`
         @keyframes distanz-consent-in {
@@ -495,7 +501,8 @@ function BottomBanner() {
           </div>
         </div>
       </div>
-    </>
+    </>,
+    document.body,
   );
 }
 
