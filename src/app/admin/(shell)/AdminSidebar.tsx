@@ -3,7 +3,7 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ArrowLeft, FileText, Layers } from "lucide-react";
+import { ChevronLeft, FileText, Layers } from "lucide-react";
 import { navigation as dsNavigation } from "./design-system/components/DesignSystemSidebar";
 
 // ============================================================================
@@ -119,21 +119,28 @@ function DesignSystemNav({
       )}
       <div
         style={{
-          padding: "12px 16px",
+          padding: "8px 8px 4px",
           borderBottom: "1px solid var(--ds-gray-400)",
         }}
       >
         <Link
           href="/admin"
-          className="flex items-center gap-2 outline-none"
-          style={{
-            fontSize: 13,
-            color: "var(--ds-gray-700)",
-            fontWeight: 500,
-          }}
+          aria-label="Back to admin"
+          className="flex items-center justify-between w-full h-9 rounded-md outline-none transition-colors gap-1 text-[var(--ds-gray-900)] hover:text-[var(--ds-gray-1000)] hover:bg-[var(--ds-gray-100)] active:bg-[var(--ds-gray-200)] focus-visible:text-[var(--ds-gray-1000)] focus-visible:bg-[var(--ds-gray-100)]"
         >
-          <ArrowLeft className="w-4 h-4" />
-          Back to Admin
+          <span
+            className="grid place-content-center"
+            style={{ width: 36, height: 36, flexShrink: 0 }}
+          >
+            <ChevronLeft className="w-4 h-4" />
+          </span>
+          <span
+            className="flex-1 font-medium text-center"
+            style={{ fontSize: 14, lineHeight: "20px" }}
+          >
+            Design System
+          </span>
+          <span style={{ width: 36, height: 36, flexShrink: 0 }} />
         </Link>
       </div>
 
