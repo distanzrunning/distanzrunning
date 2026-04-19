@@ -156,48 +156,27 @@ function ConsentLookupItem({ onSelect }: { onSelect: () => void }) {
 }
 
 // ============================================================================
-// DS sub-pages — only rendered once the user starts typing, so the default
-// view stays focused on top-level admin entries. Keeps the unfiltered list
-// short as the admin grows.
-// ============================================================================
-
-function DesignSystemFilteredItems({ onClose }: { onClose: () => void }) {
-  const router = useRouter();
-  const search = useCommandState((state) => state.search);
-  if (!search.trim()) return null;
-
-  return (
-    <>
-      {dsNavigation.flatMap((section) =>
-        section.items
-          .filter((item) => !item.locked)
-          .map((item) => (
-            <CommandMenu.Item
-              key={`${section.id}-${item.id}`}
-              icon={
-                section.id === "brands" ? (
-                  <BrandItemIcon />
-                ) : (
-                  <ArrowRight className="w-4 h-4" />
-                )
-              }
-              subtitle={`Design System · ${section.label}`}
-              onSelect={() => {
-                router.push(`/admin/design-system/${item.id}`);
-                onClose();
-              }}
-            >
-              {item.label}
-            </CommandMenu.Item>
-          )),
-      )}
-    </>
-  );
-}
-
-// ============================================================================
 // Dialog — rendered at the shell level, controlled open state
 // ============================================================================
+
+// Marker keyword for items that should always appear in the unfiltered list.
+// Items without this keyword are only surfaced when the user is actively
+// typing (see the filter function below).
+const TOP_LEVEL = "__admin_toplevel__";
+
+function adminFilter(value: string, search: string, keywords?: string[]) {
+  const kw = keywords ?? [];
+  const trimmed = search.trim();
+  if (!trimmed) {
+    return kw.includes(TOP_LEVEL) ? 1 : 0;
+  }
+  const needle = trimmed.toLowerCase();
+  if (value.toLowerCase().includes(needle)) return 1;
+  for (const k of kw) {
+    if (k.toLowerCase().includes(needle)) return 1;
+  }
+  return 0;
+}
 
 export function CommandMenuDialog({
   open,
@@ -213,12 +192,14 @@ export function CommandMenuDialog({
       open={open}
       onClose={onClose}
       placeholder="Search..."
+      filter={adminFilter}
     >
       <ConsentLookupItem onSelect={onClose} />
 
       <CommandMenu.Item
         icon={<SquareCheckBig className="w-4 h-4" />}
         subtitle="Admin"
+        keywords={[TOP_LEVEL]}
         onSelect={() => {
           router.push("/admin/consent");
           onClose();
@@ -229,6 +210,7 @@ export function CommandMenuDialog({
       <CommandMenu.Item
         icon={<PanelsTopLeft className="w-4 h-4" />}
         subtitle="Admin"
+        keywords={[TOP_LEVEL]}
         onSelect={() => {
           router.push("/admin/design-system");
           onClose();
@@ -237,11 +219,35 @@ export function CommandMenuDialog({
         Design system
       </CommandMenu.Item>
 
-      <DesignSystemFilteredItems onClose={onClose} />
+      {dsNavigation.flatMap((section) =>
+        section.items
+          .filter((item) => !item.locked)
+          .map((item) => (
+            <CommandMenu.Item
+              key={`${section.id}-${item.id}`}
+              icon={
+                section.id === "brands" ? (
+                  <BrandItemIcon />
+                ) : (
+                  <ArrowRight className="w-4 h-4" />
+                )
+              }
+              subtitle={`Design System · ${section.label}`}
+              keywords={[section.label]}
+              onSelect={() => {
+                router.push(`/admin/design-system/${item.id}`);
+                onClose();
+              }}
+            >
+              {item.label}
+            </CommandMenu.Item>
+          )),
+      )}
 
       <CommandMenu.Group heading="Actions">
         <CommandMenu.Item
           icon={<LogOut className="w-4 h-4" />}
+          keywords={[TOP_LEVEL]}
           onSelect={() => {
             void logout();
             onClose();

@@ -18,6 +18,8 @@ export interface CommandMenuProps {
   placeholder?: string;
   /** Additional CSS classes for the wrapper */
   className?: string;
+  /** Custom item filter — return 0 to hide, >0 to show (higher ranks first) */
+  filter?: (value: string, search: string, keywords?: string[]) => number;
 }
 
 interface CommandMenuGroupProps {
@@ -42,6 +44,8 @@ interface CommandMenuItemProps {
   subtitle?: ReactNode;
   /** Explicit cmdk value used for filter matching */
   value?: string;
+  /** Extra terms that should match this item (see cmdk filter) */
+  keywords?: string[];
 }
 
 // ============================================================================
@@ -190,12 +194,14 @@ function CommandMenuItem({
   shortcut,
   subtitle,
   value,
+  keywords,
 }: CommandMenuItemProps) {
   return (
     <Command.Item
       onSelect={() => onSelect?.()}
       disabled={disabled}
       value={value}
+      keywords={keywords}
       className={subtitle ? "ds-cmdk-item-tall" : undefined}
     >
       {icon && (
@@ -279,6 +285,7 @@ export function CommandMenu({
   children,
   placeholder = "Search for actions...",
   className = "",
+  filter,
 }: CommandMenuProps) {
   return (
     <>
@@ -291,6 +298,7 @@ export function CommandMenu({
         label="Command Menu"
         overlayClassName="ds-cmdk-overlay"
         contentClassName={`ds-cmdk-content ${className}`.trim()}
+        filter={filter}
         loop
       >
         {/* Top section — Geist: topSection */}
