@@ -3,7 +3,7 @@
 import { useContext, useTransition } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { MoreHorizontal } from "lucide-react";
+import { LogOut, MoreHorizontal } from "lucide-react";
 import { DarkModeContext } from "@/components/DarkModeProvider";
 import { Menu, MenuButton, MenuItem, MenuSeparator } from "@/components/ui/Menu";
 import { ThemeSwitcher } from "@/components/ui/ThemeSwitcher";
@@ -159,7 +159,10 @@ export default function AdminPageHeader() {
 
         <MenuSeparator />
 
-        <MenuItem onClick={() => startTransition(() => logout())}>
+        <MenuItem
+          onClick={() => startTransition(() => logout())}
+          suffix={<LogOut className="w-4 h-4" />}
+        >
           Sign out
         </MenuItem>
       </Menu>
