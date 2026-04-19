@@ -190,63 +190,123 @@ function AdminNav({ pathname }: { pathname: string }) {
 // Design-system nav (replaces admin nav while inside /admin/design-system)
 // ============================================================================
 
+function DistanzBrandIcon() {
+  return (
+    <span
+      style={{
+        position: "relative",
+        display: "block",
+        width: 16,
+        height: 16,
+        flexShrink: 0,
+      }}
+    >
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/brand/icon-black.svg"
+        alt=""
+        className="dark:hidden"
+        style={{ position: "absolute", inset: 0, width: 16, height: 16 }}
+      />
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/brand/icon-white.svg"
+        alt=""
+        className="hidden dark:block"
+        style={{ position: "absolute", inset: 0, width: 16, height: 16 }}
+      />
+    </span>
+  );
+}
+
 function DesignSystemNav({ pathname }: { pathname: string }) {
   const activeSlug = dsSlugFrom(pathname);
 
   return (
-    <div style={{ padding: "8px 24px 16px" }}>
-      <div className="space-y-4">
+    <nav style={{ padding: 16, paddingTop: 8 }}>
+      <ul
+        style={{
+          listStyle: "none",
+          margin: 0,
+          padding: 0,
+          display: "flex",
+          flexDirection: "column",
+          gap: 16,
+        }}
+      >
         {dsNavigation.map((section) => (
-          <div key={section.id}>
-            <p className="text-[14px] leading-[20px] font-medium mb-0.5 flex h-10 items-center gap-2 py-1.5 pl-1 text-[var(--ds-gray-1000)]">
+          <li key={section.id}>
+            <p
+              className="flex items-center font-medium text-[var(--ds-gray-1000)]"
+              style={{
+                margin: 0,
+                height: 36,
+                paddingLeft: 12,
+                fontSize: 14,
+                lineHeight: "20px",
+              }}
+            >
               {section.label}
             </p>
             <ul
-              className="relative space-y-0.5"
-              style={{ width: "calc(100% + 8px)" }}
+              style={{
+                listStyle: "none",
+                margin: 0,
+                padding: 0,
+                display: "flex",
+                flexDirection: "column",
+                gap: 2,
+              }}
             >
               {section.items.map((item) => {
                 const isActive = activeSlug === item.id;
+                const showBrandIcon = section.id === "brands";
+                const baseClasses =
+                  "group flex items-center rounded-md outline-none transition-colors";
+                const stateClasses = isActive
+                  ? "bg-[var(--ds-gray-200)] text-[var(--ds-gray-1000)] font-medium hover:bg-[var(--ds-gray-200)]"
+                  : "text-[var(--ds-gray-900)] hover:bg-[var(--ds-gray-100)] hover:text-[var(--ds-gray-1000)] focus-visible:bg-[var(--ds-gray-100)] focus-visible:text-[var(--ds-gray-1000)]";
+                const rowStyle = {
+                  height: 36,
+                  paddingLeft: 12,
+                  paddingRight: 12,
+                  fontSize: 14,
+                } as const;
+                const labelContent = (
+                  <span className="flex-1 flex items-center gap-2.5 min-w-0">
+                    {showBrandIcon && <DistanzBrandIcon />}
+                    <span className="truncate">{item.label}</span>
+                  </span>
+                );
                 return (
-                  <li
-                    key={item.id}
-                    className={section.id === "components" ? "py-[2px]" : ""}
-                  >
+                  <li key={item.id}>
                     {item.locked ? (
                       <button
                         type="button"
                         disabled
-                        className="group relative -ml-2 flex h-9 w-full items-center gap-2.5 rounded-md px-3 py-1.5 text-[14px] leading-[20px] outline-none transition-colors text-[var(--ds-gray-700)] cursor-not-allowed"
+                        className={`${baseClasses} w-full text-[var(--ds-gray-700)] cursor-not-allowed`}
+                        style={rowStyle}
                       >
-                        <span className="flex flex-row items-center gap-2">
-                          {item.label}
-                        </span>
+                        {labelContent}
                       </button>
                     ) : (
                       <Link
                         href={`/admin/design-system/${item.id}`}
-                        className={`
-                            group relative -ml-2 flex h-9 w-full items-center gap-2.5 rounded-md px-3 py-1.5 text-[14px] leading-[20px] outline-none transition-colors
-                            ${
-                              isActive
-                                ? "bg-[var(--ds-gray-200)] text-[var(--ds-gray-1000)] font-medium"
-                                : "text-[var(--ds-gray-900)] hover:bg-[var(--ds-gray-100)] hover:text-[var(--ds-gray-1000)] focus-visible:bg-[var(--ds-gray-100)] focus-visible:text-[var(--ds-gray-1000)]"
-                            }
-                          `}
+                        aria-current={isActive ? "page" : undefined}
+                        className={`${baseClasses} ${stateClasses}`}
+                        style={rowStyle}
                       >
-                        <span className="flex flex-row items-center gap-2">
-                          {item.label}
-                        </span>
+                        {labelContent}
                       </Link>
                     )}
                   </li>
                 );
               })}
             </ul>
-          </div>
+          </li>
         ))}
-      </div>
-    </div>
+      </ul>
+    </nav>
   );
 }
 
