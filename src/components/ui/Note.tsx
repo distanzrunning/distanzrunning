@@ -298,7 +298,7 @@ export const Note = forwardRef<HTMLDivElement, NoteProps>(
             <div
             style={{
               display: "flex",
-              alignItems: "flex-start",
+              alignItems: "center",
               gap: contentGap,
               margin: 0,
             }}
