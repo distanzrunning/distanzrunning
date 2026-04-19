@@ -40,6 +40,8 @@ export interface ConsentContextValue {
   preferences: ConsentPreferences | null;
   /** Shortcut: has the user ever made a decision? */
   isDecided: boolean;
+  /** Stable per-browser anonymous ID, used to link consent decisions. */
+  anonId: string | null;
   /** Accept every optional category. */
   acceptAll: () => void;
   /** Decline every optional category. */
@@ -223,6 +225,7 @@ export function ConsentProvider({ children }: { children: ReactNode }) {
   const [preferences, setPreferences] = useState<ConsentPreferences | null>(
     null,
   );
+  const [anonId, setAnonId] = useState<string | null>(null);
   const [hydrated, setHydrated] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
 
@@ -231,6 +234,7 @@ export function ConsentProvider({ children }: { children: ReactNode }) {
   // until hydration resolves, no flash).
   useEffect(() => {
     setPreferences(readStored());
+    setAnonId(getOrCreateAnonId());
     setHydrated(true);
   }, []);
 
@@ -281,6 +285,7 @@ export function ConsentProvider({ children }: { children: ReactNode }) {
     () => ({
       preferences: hydrated ? preferences : null,
       isDecided: hydrated && preferences !== null,
+      anonId: hydrated ? anonId : null,
       acceptAll,
       rejectAll,
       save,
@@ -292,6 +297,7 @@ export function ConsentProvider({ children }: { children: ReactNode }) {
     [
       hydrated,
       preferences,
+      anonId,
       acceptAll,
       rejectAll,
       save,

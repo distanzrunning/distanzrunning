@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { ChevronDown } from "lucide-react";
+import { Check, ChevronDown, Copy } from "lucide-react";
 import Button from "@/components/ui/Button";
 import { Modal } from "@/components/ui/Modal";
 import Toggle from "@/components/ui/Toggle";
@@ -58,6 +58,7 @@ const MODAL_DESCRIPTION =
   "We use cookies to personalise content and ads, to provide essential features and to analyse our traffic. You may opt in or opt out of the use of these technologies.";
 const COOKIE_POLICY_HREF = "/legal/cookie-policy";
 const PRIVACY_HREF = "/legal/privacy-policy";
+const DATA_REQUEST_EMAIL = "info@distanzrunning.com";
 
 // ============================================================================
 // Category row — name + description with a toggle on the right
@@ -139,12 +140,156 @@ function CategoryRow({
 }
 
 // ============================================================================
+// Anonymous ID section — lets users copy their ID for data requests
+// ============================================================================
+
+function AnonIdSection({ anonId }: { anonId: string | null }) {
+  const [open, setOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async () => {
+    if (!anonId) return;
+    try {
+      await navigator.clipboard.writeText(anonId);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    } catch {
+      // Clipboard may be blocked (e.g. insecure context); ignore.
+    }
+  };
+
+  const mailtoHref = anonId
+    ? `mailto:${DATA_REQUEST_EMAIL}?subject=${encodeURIComponent(
+        "Consent data request",
+      )}&body=${encodeURIComponent(
+        `Hi,\n\nPlease action a data request for my consent ID:\n\n${anonId}\n\n`,
+      )}`
+    : `mailto:${DATA_REQUEST_EMAIL}`;
+
+  return (
+    <div
+      className="overflow-hidden"
+      style={{
+        marginTop: 16,
+        border: "1px solid var(--ds-gray-400)",
+        borderRadius: 6,
+        background: "var(--ds-background-100)",
+      }}
+    >
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        aria-controls="consent-anon-id-body"
+        className="flex w-full items-center justify-between outline-none"
+        style={{
+          padding: "12px 16px",
+          background: "transparent",
+          border: "none",
+          cursor: "pointer",
+          textAlign: "left",
+        }}
+      >
+        <span className="text-[14px] font-medium text-textDefault">
+          ID to request consent data
+        </span>
+        <ChevronDown
+          className={`w-3.5 h-3.5 text-textSubtle transition-transform ${open ? "rotate-0" : "-rotate-90"}`}
+        />
+      </button>
+      <div
+        id="consent-anon-id-body"
+        hidden={!open}
+        style={{
+          padding: "0 16px 16px",
+          borderTop: "1px solid var(--ds-gray-400)",
+          display: "flex",
+          flexDirection: "column",
+          gap: 12,
+        }}
+      >
+        <div
+          style={{
+            marginTop: 12,
+            display: "flex",
+            alignItems: "center",
+            gap: 8,
+            padding: "10px 12px",
+            borderRadius: 6,
+            background: "var(--ds-background-200)",
+            border: "1px solid var(--ds-gray-400)",
+          }}
+        >
+          <span
+            className="text-[13px] text-textDefault"
+            style={{
+              flex: 1,
+              minWidth: 0,
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+              fontFamily: "var(--font-mono)",
+            }}
+          >
+            {anonId ?? "—"}
+          </span>
+          <button
+            type="button"
+            onClick={handleCopy}
+            disabled={!anonId}
+            aria-label={copied ? "Copied" : "Copy ID"}
+            className="flex items-center justify-center outline-none"
+            style={{
+              width: 28,
+              height: 28,
+              borderRadius: 6,
+              border: "1px solid var(--ds-gray-400)",
+              background: "var(--ds-background-100)",
+              color: "var(--ds-gray-900)",
+              cursor: anonId ? "pointer" : "not-allowed",
+              opacity: anonId ? 1 : 0.5,
+              flexShrink: 0,
+            }}
+          >
+            {copied ? (
+              <Check className="w-3.5 h-3.5" />
+            ) : (
+              <Copy className="w-3.5 h-3.5" />
+            )}
+          </button>
+        </div>
+        <p
+          className="text-[12px] leading-[1.55]"
+          style={{ color: "var(--ds-gray-700)", margin: 0 }}
+        >
+          Email{" "}
+          <a
+            href={mailtoHref}
+            className="text-textDefault underline hover:opacity-80"
+          >
+            {DATA_REQUEST_EMAIL}
+          </a>{" "}
+          with this ID to request access to or deletion of your consent data.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+// ============================================================================
 // Consent Settings Modal
 // ============================================================================
 
 function ConsentSettingsModal() {
-  const { preferences, settingsOpen, closeSettings, save, acceptAll, rejectAll } =
-    useConsent();
+  const {
+    preferences,
+    anonId,
+    settingsOpen,
+    closeSettings,
+    save,
+    acceptAll,
+    rejectAll,
+  } = useConsent();
 
   // Local draft of the toggles while the modal is open.
   const [draft, setDraft] = useState<ConsentPreferences>({
@@ -238,6 +383,7 @@ function ConsentSettingsModal() {
           />
         ))}
       </div>
+      <AnonIdSection anonId={anonId} />
     </Modal>
   );
 }

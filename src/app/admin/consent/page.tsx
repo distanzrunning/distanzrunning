@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
 import { getSupabaseAdmin } from "@/lib/supabase/server";
 import { logout } from "../login/actions";
+import DeleteIdButton from "./DeleteIdButton";
 import TrendChart, { type TrendPoint } from "./TrendChart";
 
 export const metadata = {
@@ -207,16 +208,296 @@ function decisionBadge(d: Decision): { label: string; color: string } {
   }
 }
 
-export default async function ConsentDashboardPage() {
+function SearchForm({ defaultValue = "" }: { defaultValue?: string }) {
+  return (
+    <form
+      method="GET"
+      action="/admin/consent"
+      style={{
+        display: "flex",
+        gap: 8,
+        marginBottom: 16,
+      }}
+    >
+      <input
+        name="q"
+        type="text"
+        defaultValue={defaultValue}
+        placeholder="Look up by anonymous ID…"
+        spellCheck={false}
+        autoComplete="off"
+        style={{
+          flex: 1,
+          height: 40,
+          padding: "0 12px",
+          fontSize: 14,
+          fontFamily: "var(--font-mono)",
+          borderRadius: 6,
+          border: "1px solid var(--ds-gray-400)",
+          background: "var(--ds-background-100)",
+          color: "var(--ds-gray-1000)",
+          outline: "none",
+        }}
+      />
+      <button
+        type="submit"
+        style={{
+          padding: "0 16px",
+          height: 40,
+          fontSize: 13,
+          fontWeight: 500,
+          borderRadius: 6,
+          border: "1px solid var(--ds-gray-1000)",
+          background: "var(--ds-gray-1000)",
+          color: "var(--ds-background-100)",
+          cursor: "pointer",
+        }}
+      >
+        Search
+      </button>
+    </form>
+  );
+}
+
+function LookupView({
+  query,
+  rows,
+  total,
+}: {
+  query: string;
+  rows: ConsentRow[];
+  total: number;
+}) {
+  return (
+    <main
+      style={{
+        minHeight: "100vh",
+        background: "var(--ds-background-200)",
+        padding: "32px 24px",
+      }}
+    >
+      <div style={{ maxWidth: 1120, margin: "0 auto" }}>
+        <header
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "flex-start",
+            marginBottom: 24,
+          }}
+        >
+          <div>
+            <h1
+              style={{
+                fontSize: 24,
+                fontWeight: 600,
+                lineHeight: "32px",
+                margin: 0,
+                color: "var(--ds-gray-1000)",
+              }}
+            >
+              Consent dashboard
+            </h1>
+            <p
+              style={{
+                marginTop: 6,
+                marginBottom: 0,
+                fontSize: 13,
+                color: "var(--ds-gray-700)",
+              }}
+            >
+              Lookup for a single anonymous ID · {total.toLocaleString()} total
+              decisions across all IDs
+            </p>
+          </div>
+          <form action={logout}>
+            <button
+              type="submit"
+              style={{
+                padding: "8px 12px",
+                fontSize: 13,
+                border: "1px solid var(--ds-gray-400)",
+                borderRadius: 6,
+                background: "var(--ds-background-100)",
+                color: "var(--ds-gray-1000)",
+                cursor: "pointer",
+              }}
+            >
+              Sign out
+            </button>
+          </form>
+        </header>
+
+        <SearchForm defaultValue={query} />
+
+        <Panel
+          title={`ID: ${query}`}
+          action={
+            <a
+              href="/admin/consent"
+              style={{
+                fontSize: 13,
+                color: "var(--ds-gray-700)",
+                textDecoration: "underline",
+              }}
+            >
+              Clear search
+            </a>
+          }
+        >
+          {rows.length === 0 ? (
+            <p
+              style={{
+                margin: 0,
+                fontSize: 13,
+                color: "var(--ds-gray-700)",
+              }}
+            >
+              No records found for this ID.
+            </p>
+          ) : (
+            <>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  gap: 12,
+                  flexWrap: "wrap",
+                }}
+              >
+                <div style={{ fontSize: 13, color: "var(--ds-gray-700)" }}>
+                  {rows.length} decision{rows.length === 1 ? "" : "s"} · latest{" "}
+                  {new Date(rows[0].created_at).toLocaleString()}
+                </div>
+                <DeleteIdButton anonId={query} count={rows.length} />
+              </div>
+
+              <div style={{ overflowX: "auto" }}>
+                <table
+                  style={{ width: "100%", borderCollapse: "collapse" }}
+                >
+                  <thead>
+                    <tr style={{ textAlign: "left" }}>
+                      {[
+                        "When",
+                        "Decision",
+                        "Marketing",
+                        "Analytics",
+                        "Functional",
+                        "Country",
+                      ].map((h) => (
+                        <th
+                          key={h}
+                          style={{
+                            padding: "10px 12px",
+                            fontSize: 12,
+                            fontWeight: 500,
+                            color: "var(--ds-gray-700)",
+                            borderBottom: "1px solid var(--ds-gray-400)",
+                            textTransform: "uppercase",
+                            letterSpacing: 0.3,
+                          }}
+                        >
+                          {h}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {rows.map((row) => {
+                      const b = decisionBadge(row.decision);
+                      return (
+                        <tr key={row.id}>
+                          <td style={tdStyle}>
+                            {new Date(row.created_at).toLocaleString()}
+                          </td>
+                          <td style={tdStyle}>
+                            <span
+                              style={{
+                                display: "inline-block",
+                                padding: "2px 8px",
+                                fontSize: 11,
+                                fontWeight: 500,
+                                borderRadius: 999,
+                                color: b.color,
+                                border: `1px solid ${b.color}`,
+                              }}
+                            >
+                              {b.label}
+                            </span>
+                          </td>
+                          <td style={tdStyle}>
+                            {row.marketing ? "✓" : "—"}
+                          </td>
+                          <td style={tdStyle}>
+                            {row.analytics ? "✓" : "—"}
+                          </td>
+                          <td style={tdStyle}>
+                            {row.functional ? "✓" : "—"}
+                          </td>
+                          <td style={tdStyle}>{row.country ?? "—"}</td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </>
+          )}
+        </Panel>
+      </div>
+    </main>
+  );
+}
+
+export default async function ConsentDashboardPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ q?: string }>;
+}) {
   if (!(await isAdminAuthenticated())) {
     redirect("/admin/login");
   }
+
+  const params = await searchParams;
+  const query = params.q?.trim() ?? "";
 
   const supabase = getSupabaseAdmin();
 
   const { count: totalCount } = await supabase
     .from("consent_records")
     .select("*", { count: "exact", head: true });
+
+  if (query) {
+    const { data: lookupData, error: lookupError } = await supabase
+      .from("consent_records")
+      .select(
+        "id, anon_id, marketing, analytics, functional, decision, country, created_at",
+      )
+      .eq("anon_id", query)
+      .order("created_at", { ascending: false });
+
+    if (lookupError) {
+      return (
+        <main style={{ padding: 40, fontFamily: "var(--font-sans)" }}>
+          <h1>Consent dashboard</h1>
+          <p style={{ color: "var(--ds-red-900)" }}>
+            Lookup failed: {lookupError.message}
+          </p>
+        </main>
+      );
+    }
+
+    const lookupRows = (lookupData ?? []) as ConsentRow[];
+
+    return (
+      <LookupView
+        query={query}
+        rows={lookupRows}
+        total={totalCount ?? 0}
+      />
+    );
+  }
 
   const { data, error } = await supabase
     .from("consent_records")
@@ -310,6 +591,8 @@ export default async function ConsentDashboardPage() {
             </button>
           </form>
         </header>
+
+        <SearchForm />
 
         <div
           style={{
@@ -454,10 +737,17 @@ export default async function ConsentDashboardPage() {
                           ...tdStyle,
                           fontFamily: "var(--font-mono)",
                           fontSize: 12,
-                          color: "var(--ds-gray-700)",
                         }}
                       >
-                        {row.anon_id.slice(0, 8)}…
+                        <a
+                          href={`/admin/consent?q=${encodeURIComponent(row.anon_id)}`}
+                          style={{
+                            color: "var(--ds-gray-700)",
+                            textDecoration: "underline",
+                          }}
+                        >
+                          {row.anon_id.slice(0, 8)}…
+                        </a>
                       </td>
                     </tr>
                   );
