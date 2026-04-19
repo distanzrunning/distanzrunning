@@ -22,7 +22,7 @@ interface CategoryDef {
   required?: boolean;
 }
 
-const CATEGORIES: CategoryDef[] = [
+export const CONSENT_CATEGORIES: CategoryDef[] = [
   {
     key: "essential",
     label: "Essential",
@@ -50,21 +50,31 @@ const CATEGORIES: CategoryDef[] = [
   },
 ];
 
-const BANNER_TITLE = "We use cookies";
-const BANNER_DESCRIPTION =
-  "We use cookies to improve your experience, show you personalised content, and analyse our traffic. For more information, see our";
-const MODAL_TITLE = "Privacy Settings";
-const MODAL_DESCRIPTION =
-  "We use cookies to personalise content and ads, to provide essential features and to analyse our traffic. You may opt in or opt out of the use of these technologies.";
-const COOKIE_POLICY_HREF = "/legal/cookie-policy";
-const PRIVACY_HREF = "/legal/privacy-policy";
-const DATA_REQUEST_EMAIL = "info@distanzrunning.com";
+export const CONSENT_COPY = {
+  bannerTitle: "We use cookies",
+  bannerDescription:
+    "We use cookies to improve your experience, show you personalised content, and analyse our traffic. For more information, see our",
+  modalTitle: "Privacy Settings",
+  modalDescription:
+    "We use cookies to personalise content and ads, to provide essential features and to analyse our traffic. You may opt in or opt out of the use of these technologies.",
+  cookiePolicyHref: "/legal/cookie-policy",
+  privacyHref: "/legal/privacy-policy",
+  dataRequestEmail: "info@distanzrunning.com",
+} as const;
+
+const BANNER_TITLE = CONSENT_COPY.bannerTitle;
+const BANNER_DESCRIPTION = CONSENT_COPY.bannerDescription;
+const MODAL_TITLE = CONSENT_COPY.modalTitle;
+const MODAL_DESCRIPTION = CONSENT_COPY.modalDescription;
+const COOKIE_POLICY_HREF = CONSENT_COPY.cookiePolicyHref;
+const PRIVACY_HREF = CONSENT_COPY.privacyHref;
+const DATA_REQUEST_EMAIL = CONSENT_COPY.dataRequestEmail;
 
 // ============================================================================
 // Category row — name + description with a toggle on the right
 // ============================================================================
 
-function CategoryRow({
+export function ConsentCategoryRow({
   category,
   value,
   onChange,
@@ -143,7 +153,7 @@ function CategoryRow({
 // Anonymous ID section — lets users copy their ID for data requests
 // ============================================================================
 
-function AnonIdSection({ anonId }: { anonId: string | null }) {
+export function ConsentAnonIdSection({ anonId }: { anonId: string | null }) {
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
 
@@ -370,8 +380,8 @@ function ConsentSettingsModal() {
           background: "var(--ds-background-100)",
         }}
       >
-        {CATEGORIES.map((cat, i) => (
-          <CategoryRow
+        {CONSENT_CATEGORIES.map((cat, i) => (
+          <ConsentCategoryRow
             key={cat.key}
             category={cat}
             value={draft[cat.key]}
@@ -379,11 +389,11 @@ function ConsentSettingsModal() {
               if (cat.required) return;
               setDraft((d) => ({ ...d, [cat.key]: next }));
             }}
-            isLast={i === CATEGORIES.length - 1}
+            isLast={i === CONSENT_CATEGORIES.length - 1}
           />
         ))}
       </div>
-      <AnonIdSection anonId={anonId} />
+      <ConsentAnonIdSection anonId={anonId} />
     </Modal>
   );
 }

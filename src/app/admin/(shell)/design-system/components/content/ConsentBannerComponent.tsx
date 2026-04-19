@@ -11,7 +11,14 @@ import {
 import { useToast } from "@/components/ui/Toast";
 import { Note } from "@/components/ui/Note";
 import Button from "@/components/ui/Button";
-import { useConsent } from "@/contexts/ConsentContext";
+import { Modal } from "@/components/ui/Modal";
+import {
+  CONSENT_CATEGORIES,
+  CONSENT_COPY,
+  ConsentAnonIdSection,
+  ConsentCategoryRow,
+} from "@/components/ui/ConsentBanner";
+import type { ConsentPreferences } from "@/contexts/ConsentContext";
 
 // ============================================================================
 // Section header + copy link
@@ -171,37 +178,164 @@ function CodePreview({ children, componentCode, minHeight = 220 }: { children: R
 }
 
 // ============================================================================
-// Consent controls — live widget calling the real context
+// Decoupled demo — visual preview only, doesn't touch the real consent state
 // ============================================================================
 
-function ConsentControls() {
-  const { preferences, isDecided, reset, openSettings } = useConsent();
-
+function DemoBanner({ onCustomise }: { onCustomise: () => void }) {
   return (
     <div
-      className="flex w-full max-w-[480px] flex-col gap-3 rounded-lg border p-5"
+      className="flex w-full max-w-[400px] flex-col gap-4 rounded-xl p-5"
       style={{
-        borderColor: "var(--ds-gray-400)",
-        background: "var(--ds-background-200)",
+        background: "var(--ds-background-100)",
+        border: "1px solid var(--ds-gray-400)",
+        boxShadow: "var(--ds-shadow-menu)",
       }}
     >
-      <div className="text-[13px] font-medium text-textDefault">
-        Current consent state
+      <div>
+        <h2 className="text-[16px] font-semibold text-textDefault leading-tight">
+          {CONSENT_COPY.bannerTitle}
+        </h2>
+        <p className="mt-2 text-[13px] leading-[1.55] text-textSubtle">
+          {CONSENT_COPY.bannerDescription}{" "}
+          <a
+            href={CONSENT_COPY.cookiePolicyHref}
+            className="text-textDefault underline hover:opacity-80"
+            onClick={(e) => e.preventDefault()}
+          >
+            Cookie Policy
+          </a>{" "}
+          and{" "}
+          <a
+            href={CONSENT_COPY.privacyHref}
+            className="text-textDefault underline hover:opacity-80"
+            onClick={(e) => e.preventDefault()}
+          >
+            Privacy Policy
+          </a>
+          .
+        </p>
       </div>
-      <div className="font-mono text-[12px] leading-[1.6] text-textSubtle whitespace-pre-wrap">
-        {isDecided
-          ? JSON.stringify(preferences, null, 2)
-          : "Not yet decided — banner will appear at the bottom of the page."}
-      </div>
-      <div className="flex flex-wrap gap-2">
-        <Button size="small" variant="secondary" onClick={openSettings}>
-          Open settings
+      <div className="flex flex-wrap items-center gap-2">
+        <Button variant="secondary" shape="rounded" size="small">
+          Deny
         </Button>
-        <Button size="small" variant="secondary" onClick={reset}>
-          Reset decision
+        <Button variant="secondary" shape="rounded" size="small">
+          Accept all
+        </Button>
+        <Button
+          shape="rounded"
+          size="small"
+          onClick={onCustomise}
+          className="ml-auto"
+        >
+          Customise
         </Button>
       </div>
     </div>
+  );
+}
+
+function DemoSettingsModal({
+  open,
+  onClose,
+}: {
+  open: boolean;
+  onClose: () => void;
+}) {
+  const [draft, setDraft] = useState<ConsentPreferences>({
+    essential: true,
+    marketing: false,
+    analytics: false,
+    functional: false,
+  });
+
+  return (
+    <Modal
+      open={open}
+      onClose={onClose}
+      title={CONSENT_COPY.modalTitle}
+      subtitle={CONSENT_COPY.modalDescription}
+      footer={
+        <div
+          style={{
+            padding: 24,
+            display: "flex",
+            flexDirection: "column",
+            gap: 16,
+          }}
+        >
+          <div className="flex flex-wrap items-center gap-3">
+            <Button variant="secondary" onClick={onClose}>
+              Deny
+            </Button>
+            <Button variant="secondary" onClick={onClose}>
+              Accept all
+            </Button>
+            <Button onClick={onClose} className="ml-auto">
+              Save
+            </Button>
+          </div>
+          <p
+            className="text-[12px] leading-[1.6]"
+            style={{ color: "var(--ds-gray-700)", margin: 0 }}
+          >
+            For more information, see our{" "}
+            <a
+              href={CONSENT_COPY.cookiePolicyHref}
+              className="text-textDefault underline hover:opacity-80"
+              onClick={(e) => e.preventDefault()}
+            >
+              Cookie Policy
+            </a>{" "}
+            and{" "}
+            <a
+              href={CONSENT_COPY.privacyHref}
+              className="text-textDefault underline hover:opacity-80"
+              onClick={(e) => e.preventDefault()}
+            >
+              Privacy Policy
+            </a>
+            .
+          </p>
+        </div>
+      }
+    >
+      <div
+        className="overflow-hidden"
+        style={{
+          border: "1px solid var(--ds-gray-400)",
+          borderRadius: 6,
+          background: "var(--ds-background-100)",
+        }}
+      >
+        {CONSENT_CATEGORIES.map((cat, i) => (
+          <ConsentCategoryRow
+            key={cat.key}
+            category={cat}
+            value={draft[cat.key]}
+            onChange={(next) => {
+              if (cat.required) return;
+              setDraft((d) => ({ ...d, [cat.key]: next }));
+            }}
+            isLast={i === CONSENT_CATEGORIES.length - 1}
+          />
+        ))}
+      </div>
+      <ConsentAnonIdSection anonId="demo-0000-0000-0000-000000000000" />
+    </Modal>
+  );
+}
+
+function ConsentBannerDemo() {
+  const [modalOpen, setModalOpen] = useState(false);
+  return (
+    <>
+      <DemoBanner onCustomise={() => setModalOpen(true)} />
+      <DemoSettingsModal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+      />
+    </>
   );
 }
 
@@ -287,22 +421,27 @@ export default function ConsentBannerComponent() {
         </Note>
       </Section>
 
-      {/* Controls */}
+      {/* Preview */}
       <Section>
-        <SectionHeader id="live-controls" onCopyLink={showToast}>
-          Live controls
+        <SectionHeader id="preview" onCopyLink={showToast}>
+          Preview
         </SectionHeader>
         <p className="text-[16px] leading-[1.6] text-textSubtle mt-4 mb-6">
-          The banner below (and the consent modal) are the real thing from{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
-            layout.tsx
-          </code>
-          , not a copy. Reset your decision to make the bottom banner
-          reappear, or open the settings modal to inspect the toggles and
-          collapsible descriptions.
+          A visual preview of the banner and settings modal. These are
+          decoupled from the real consent system — nothing you click here
+          changes your actual preferences. Hit <strong>Customise</strong> to
+          open the modal.
         </p>
         <div className="mt-4 xl:mt-7 flex justify-center">
-          <ConsentControls />
+          <div
+            className="w-full rounded-lg border p-8 flex items-center justify-center"
+            style={{
+              borderColor: "var(--ds-gray-400)",
+              background: "var(--ds-background-100)",
+            }}
+          >
+            <ConsentBannerDemo />
+          </div>
         </div>
       </Section>
 
