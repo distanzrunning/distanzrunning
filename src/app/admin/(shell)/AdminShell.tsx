@@ -45,7 +45,7 @@ export default function AdminShell({ children }: { children: ReactNode }) {
           height: "100vh",
           zIndex: 40,
           borderRight: "1px solid var(--ds-gray-400)",
-          background: "var(--ds-background-100)",
+          background: "var(--ds-background-200)",
           display: "flex",
           flexDirection: "column",
           overflow: "hidden",

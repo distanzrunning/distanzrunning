@@ -83,7 +83,7 @@ export default function AdminPageHeader() {
         top: 0,
         zIndex: 30,
         height: HEADER_HEIGHT,
-        background: "var(--ds-background-100)",
+        background: "var(--ds-background-200)",
         borderBottom: "1px solid var(--ds-gray-400)",
         display: "flex",
         alignItems: "center",
