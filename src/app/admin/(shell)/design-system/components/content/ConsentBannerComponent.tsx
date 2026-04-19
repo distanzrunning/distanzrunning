@@ -178,60 +178,109 @@ function CodePreview({ children, componentCode, minHeight = 220 }: { children: R
 }
 
 // ============================================================================
-// Decoupled demo — visual preview only, doesn't touch the real consent state
+// Decoupled demo — renders the real floating banner and modal at their
+// natural fixed positions over the page, driven by local state. Nothing
+// here touches the real consent context.
 // ============================================================================
 
-function DemoBanner({ onCustomise }: { onCustomise: () => void }) {
+function DemoFloatingBanner({
+  onDeny,
+  onAccept,
+  onCustomise,
+}: {
+  onDeny: () => void;
+  onAccept: () => void;
+  onCustomise: () => void;
+}) {
   return (
-    <div
-      className="flex w-full max-w-[400px] flex-col gap-4 rounded-xl p-5"
-      style={{
-        background: "var(--ds-background-100)",
-        border: "1px solid var(--ds-gray-400)",
-        boxShadow: "var(--ds-shadow-menu)",
-      }}
-    >
-      <div>
-        <h2 className="text-[16px] font-semibold text-textDefault leading-tight">
-          {CONSENT_COPY.bannerTitle}
-        </h2>
-        <p className="mt-2 text-[13px] leading-[1.55] text-textSubtle">
-          {CONSENT_COPY.bannerDescription}{" "}
-          <a
-            href={CONSENT_COPY.cookiePolicyHref}
-            className="text-textDefault underline hover:opacity-80"
-            onClick={(e) => e.preventDefault()}
-          >
-            Cookie Policy
-          </a>{" "}
-          and{" "}
-          <a
-            href={CONSENT_COPY.privacyHref}
-            className="text-textDefault underline hover:opacity-80"
-            onClick={(e) => e.preventDefault()}
-          >
-            Privacy Policy
-          </a>
-          .
-        </p>
-      </div>
-      <div className="flex flex-wrap items-center gap-2">
-        <Button variant="secondary" shape="rounded" size="small">
-          Deny
-        </Button>
-        <Button variant="secondary" shape="rounded" size="small">
-          Accept all
-        </Button>
-        <Button
-          shape="rounded"
-          size="small"
-          onClick={onCustomise}
-          className="ml-auto"
+    <>
+      <style>{`
+        @keyframes ds-consent-demo-in {
+          from {
+            opacity: 0;
+            transform: translateY(calc(100% + 24px));
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+      `}</style>
+      <div
+        role="alertdialog"
+        aria-labelledby="consent-demo-title"
+        aria-modal="false"
+        className="fixed bottom-4 left-4 right-4 z-[60] sm:right-auto sm:max-w-[400px]"
+        style={{
+          animation:
+            "ds-consent-demo-in 0.35s cubic-bezier(0.16, 1, 0.3, 1) both",
+          willChange: "transform, opacity",
+        }}
+      >
+        <div
+          className="flex flex-col gap-4 rounded-xl p-5"
+          style={{
+            background: "var(--ds-background-100)",
+            border: "1px solid var(--ds-gray-400)",
+            boxShadow: "var(--ds-shadow-menu)",
+          }}
         >
-          Customise
-        </Button>
+          <div>
+            <h2
+              id="consent-demo-title"
+              className="text-[16px] font-semibold text-textDefault leading-tight"
+            >
+              {CONSENT_COPY.bannerTitle}
+            </h2>
+            <p className="mt-2 text-[13px] leading-[1.55] text-textSubtle">
+              {CONSENT_COPY.bannerDescription}{" "}
+              <a
+                href={CONSENT_COPY.cookiePolicyHref}
+                className="text-textDefault underline hover:opacity-80"
+                onClick={(e) => e.preventDefault()}
+              >
+                Cookie Policy
+              </a>{" "}
+              and{" "}
+              <a
+                href={CONSENT_COPY.privacyHref}
+                className="text-textDefault underline hover:opacity-80"
+                onClick={(e) => e.preventDefault()}
+              >
+                Privacy Policy
+              </a>
+              .
+            </p>
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            <Button
+              variant="secondary"
+              shape="rounded"
+              size="small"
+              onClick={onDeny}
+            >
+              Deny
+            </Button>
+            <Button
+              variant="secondary"
+              shape="rounded"
+              size="small"
+              onClick={onAccept}
+            >
+              Accept all
+            </Button>
+            <Button
+              shape="rounded"
+              size="small"
+              onClick={onCustomise}
+              className="ml-auto"
+            >
+              Customise
+            </Button>
+          </div>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 
@@ -327,13 +376,27 @@ function DemoSettingsModal({
 }
 
 function ConsentBannerDemo() {
+  const [bannerOpen, setBannerOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
+
   return (
     <>
-      <DemoBanner onCustomise={() => setModalOpen(true)} />
+      <Button size="small" onClick={() => setBannerOpen(true)}>
+        Show banner
+      </Button>
+      {bannerOpen && !modalOpen && (
+        <DemoFloatingBanner
+          onDeny={() => setBannerOpen(false)}
+          onAccept={() => setBannerOpen(false)}
+          onCustomise={() => setModalOpen(true)}
+        />
+      )}
       <DemoSettingsModal
         open={modalOpen}
-        onClose={() => setModalOpen(false)}
+        onClose={() => {
+          setModalOpen(false);
+          setBannerOpen(false);
+        }}
       />
     </>
   );
@@ -342,6 +405,14 @@ function ConsentBannerDemo() {
 // ============================================================================
 // Code snippets
 // ============================================================================
+
+const previewCode = `import { ConsentBanner } from "@/components/ui/ConsentBanner";
+
+// Mount once at the app root. The banner auto-hides after the user
+// makes a decision and reopens via the settings modal.
+export default function Demo() {
+  return <ConsentBanner />;
+}`;
 
 const providerSetupCode = `// src/app/layout.tsx
 import { ConsentProvider } from "@/contexts/ConsentContext";
@@ -427,21 +498,15 @@ export default function ConsentBannerComponent() {
           Preview
         </SectionHeader>
         <p className="text-[16px] leading-[1.6] text-textSubtle mt-4 mb-6">
-          A visual preview of the banner and settings modal. These are
-          decoupled from the real consent system — nothing you click here
-          changes your actual preferences. Hit <strong>Customise</strong> to
-          open the modal.
+          Click <strong>Show banner</strong> to pop the real floating banner
+          at its fixed bottom-left position. Deny and Accept dismiss it;
+          Customise opens the settings modal. The demo runs on local state —
+          nothing here changes your actual consent preferences.
         </p>
-        <div className="mt-4 xl:mt-7 flex justify-center">
-          <div
-            className="w-full rounded-lg border p-8 flex items-center justify-center"
-            style={{
-              borderColor: "var(--ds-gray-400)",
-              background: "var(--ds-background-100)",
-            }}
-          >
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={previewCode}>
             <ConsentBannerDemo />
-          </div>
+          </CodePreview>
         </div>
       </Section>
 
