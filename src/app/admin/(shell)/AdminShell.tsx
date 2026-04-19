@@ -1,7 +1,10 @@
 "use client";
 
 import type { ReactNode } from "react";
+import { useContext } from "react";
 import { usePathname } from "next/navigation";
+import { DarkModeContext } from "@/components/DarkModeProvider";
+import { ThemeSwitcher } from "@/components/ui/ThemeSwitcher";
 import { logout } from "../login/actions";
 import AdminSidebar, { isDesignSystemRoute } from "./AdminSidebar";
 
@@ -9,6 +12,7 @@ export default function AdminShell({ children }: { children: ReactNode }) {
   const pathname = usePathname() ?? "";
   const inDs = isDesignSystemRoute(pathname);
   const title = inDs ? "Stride Design System" : "Stride Admin";
+  const { theme, setTheme } = useContext(DarkModeContext);
 
   return (
     <div
@@ -57,22 +61,29 @@ export default function AdminShell({ children }: { children: ReactNode }) {
             {title}
           </span>
         </div>
-        <form action={logout}>
-          <button
-            type="submit"
-            style={{
-              padding: "8px 12px",
-              fontSize: 13,
-              border: "1px solid var(--ds-gray-400)",
-              borderRadius: 6,
-              background: "var(--ds-background-100)",
-              color: "var(--ds-gray-1000)",
-              cursor: "pointer",
-            }}
-          >
-            Sign out
-          </button>
-        </form>
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <ThemeSwitcher
+            showSystem={false}
+            value={theme === "system" ? "light" : theme}
+            onChange={setTheme}
+          />
+          <form action={logout}>
+            <button
+              type="submit"
+              style={{
+                padding: "8px 12px",
+                fontSize: 13,
+                border: "1px solid var(--ds-gray-400)",
+                borderRadius: 6,
+                background: "var(--ds-background-100)",
+                color: "var(--ds-gray-1000)",
+                cursor: "pointer",
+              }}
+            >
+              Sign out
+            </button>
+          </form>
+        </div>
       </header>
 
       <div style={{ display: "flex", alignItems: "stretch" }}>
