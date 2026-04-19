@@ -156,6 +156,46 @@ function ConsentLookupItem({ onSelect }: { onSelect: () => void }) {
 }
 
 // ============================================================================
+// DS sub-pages — only rendered once the user starts typing, so the default
+// view stays focused on top-level admin entries. Keeps the unfiltered list
+// short as the admin grows.
+// ============================================================================
+
+function DesignSystemFilteredItems({ onClose }: { onClose: () => void }) {
+  const router = useRouter();
+  const search = useCommandState((state) => state.search);
+  if (!search.trim()) return null;
+
+  return (
+    <>
+      {dsNavigation.flatMap((section) =>
+        section.items
+          .filter((item) => !item.locked)
+          .map((item) => (
+            <CommandMenu.Item
+              key={`${section.id}-${item.id}`}
+              icon={
+                section.id === "brands" ? (
+                  <BrandItemIcon />
+                ) : (
+                  <ArrowRight className="w-4 h-4" />
+                )
+              }
+              subtitle={`Design System · ${section.label}`}
+              onSelect={() => {
+                router.push(`/admin/design-system/${item.id}`);
+                onClose();
+              }}
+            >
+              {item.label}
+            </CommandMenu.Item>
+          )),
+      )}
+    </>
+  );
+}
+
+// ============================================================================
 // Dialog — rendered at the shell level, controlled open state
 // ============================================================================
 
@@ -184,7 +224,7 @@ export function CommandMenuDialog({
           onClose();
         }}
       >
-        Consent dashboard
+        Consent
       </CommandMenu.Item>
       <CommandMenu.Item
         icon={<PanelsTopLeft className="w-4 h-4" />}
@@ -197,29 +237,7 @@ export function CommandMenuDialog({
         Design system
       </CommandMenu.Item>
 
-      {dsNavigation.flatMap((section) =>
-        section.items
-          .filter((item) => !item.locked)
-          .map((item) => (
-            <CommandMenu.Item
-              key={`${section.id}-${item.id}`}
-              icon={
-                section.id === "brands" ? (
-                  <BrandItemIcon />
-                ) : (
-                  <ArrowRight className="w-4 h-4" />
-                )
-              }
-              subtitle={`Design System · ${section.label}`}
-              onSelect={() => {
-                router.push(`/admin/design-system/${item.id}`);
-                onClose();
-              }}
-            >
-              {item.label}
-            </CommandMenu.Item>
-          )),
-      )}
+      <DesignSystemFilteredItems onClose={onClose} />
 
       <CommandMenu.Group heading="Actions">
         <CommandMenu.Item
