@@ -150,7 +150,7 @@ function AdminNav({ pathname }: { pathname: string }) {
             "group flex items-center rounded-md outline-none transition-colors";
           const stateClasses = active
             ? "bg-[var(--ds-gray-200)] text-[var(--ds-gray-1000)] font-medium hover:bg-[var(--ds-gray-200)]"
-            : "text-[var(--ds-gray-700)] hover:bg-[var(--ds-gray-100)] hover:text-[var(--ds-gray-1000)] focus-visible:bg-[var(--ds-gray-100)] focus-visible:text-[var(--ds-gray-1000)]";
+            : "text-[var(--ds-gray-900)] hover:bg-[var(--ds-gray-100)] hover:text-[var(--ds-gray-1000)] focus-visible:bg-[var(--ds-gray-100)] focus-visible:text-[var(--ds-gray-1000)]";
           return (
             <li key={item.id}>
               <Link
@@ -198,7 +198,7 @@ function DesignSystemNav({ pathname }: { pathname: string }) {
       <div className="space-y-4">
         {dsNavigation.map((section) => (
           <div key={section.id}>
-            <p className="text-[14px] leading-[20px] font-medium mb-0.5 flex h-10 items-center gap-2 py-1.5 pl-1 text-black dark:text-white">
+            <p className="text-[14px] leading-[20px] font-medium mb-0.5 flex h-10 items-center gap-2 py-1.5 pl-1 text-[var(--ds-gray-1000)]">
               {section.label}
             </p>
             <ul
@@ -216,7 +216,7 @@ function DesignSystemNav({ pathname }: { pathname: string }) {
                       <button
                         type="button"
                         disabled
-                        className="group relative -ml-2 flex h-9 w-full items-center gap-2.5 rounded-md px-3 py-1.5 text-[14px] leading-[20px] outline-none transition-colors text-textSubtle cursor-not-allowed"
+                        className="group relative -ml-2 flex h-9 w-full items-center gap-2.5 rounded-md px-3 py-1.5 text-[14px] leading-[20px] outline-none transition-colors text-[var(--ds-gray-700)] cursor-not-allowed"
                       >
                         <span className="flex flex-row items-center gap-2">
                           {item.label}
@@ -229,8 +229,8 @@ function DesignSystemNav({ pathname }: { pathname: string }) {
                             group relative -ml-2 flex h-9 w-full items-center gap-2.5 rounded-md px-3 py-1.5 text-[14px] leading-[20px] outline-none transition-colors
                             ${
                               isActive
-                                ? "bg-black/[0.05] dark:bg-white/[0.1] text-black dark:text-white"
-                                : "text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                                ? "bg-[var(--ds-gray-200)] text-[var(--ds-gray-1000)] font-medium"
+                                : "text-[var(--ds-gray-900)] hover:bg-[var(--ds-gray-100)] hover:text-[var(--ds-gray-1000)] focus-visible:bg-[var(--ds-gray-100)] focus-visible:text-[var(--ds-gray-1000)]"
                             }
                           `}
                       >
