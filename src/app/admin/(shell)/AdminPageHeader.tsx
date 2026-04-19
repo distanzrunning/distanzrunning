@@ -20,7 +20,7 @@ type TitleParts = {
 
 function getTitleParts(pathname: string): TitleParts {
   if (pathname === "/admin" || pathname === "/admin/") {
-    return { section: null, page: "Admin" };
+    return { section: null, page: "Overview" };
   }
   if (pathname === "/admin/consent" || pathname === "/admin/consent/") {
     return { section: null, page: "Consent" };
