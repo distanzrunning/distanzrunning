@@ -3,10 +3,11 @@
 import { useRouter } from "next/navigation";
 import { Command, useCommandState } from "cmdk";
 import {
-  FileText,
   Layers,
   LogOut,
+  PanelsTopLeft,
   Search as SearchIcon,
+  SquareCheckBig,
 } from "lucide-react";
 import { CommandMenu } from "@/components/ui/CommandMenu";
 import { logout } from "../login/actions";
@@ -167,7 +168,7 @@ export function CommandMenuDialog({
     >
       <CommandMenu.Group heading="Go to">
         <CommandMenu.Item
-          icon={<FileText className="w-4 h-4" />}
+          icon={<SquareCheckBig className="w-4 h-4" />}
           onSelect={() => {
             router.push("/admin/consent");
             onClose();
@@ -176,7 +177,7 @@ export function CommandMenuDialog({
           Consent dashboard
         </CommandMenu.Item>
         <CommandMenu.Item
-          icon={<Layers className="w-4 h-4" />}
+          icon={<PanelsTopLeft className="w-4 h-4" />}
           onSelect={() => {
             router.push("/admin/design-system");
             onClose();

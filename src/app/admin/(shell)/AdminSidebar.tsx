@@ -3,7 +3,12 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ChevronLeft, ChevronRight, FileText, Layers } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  PanelsTopLeft,
+  SquareCheckBig,
+} from "lucide-react";
 import { navigation as dsNavigation } from "./design-system/components/DesignSystemSidebar";
 
 // ============================================================================
@@ -119,13 +124,13 @@ const ADMIN_NAV: {
     id: "consent",
     label: "Consent",
     href: "/admin/consent",
-    icon: <FileText className="w-4 h-4" />,
+    icon: <SquareCheckBig className="w-4 h-4" />,
   },
   {
     id: "design-system",
     label: "Design System",
     href: "/admin/design-system",
-    icon: <Layers className="w-4 h-4" />,
+    icon: <PanelsTopLeft className="w-4 h-4" />,
     hasSubmenu: true,
   },
 ];
