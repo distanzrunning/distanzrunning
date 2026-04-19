@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Command, useCommandState } from "cmdk";
+import { useCommandState } from "cmdk";
 import {
   ArrowRight,
   LogOut,
@@ -136,35 +136,22 @@ function ConsentLookupItem({ onSelect }: { onSelect: () => void }) {
   const router = useRouter();
   if (!search) return null;
   return (
-    <Command.Item
+    <CommandMenu.Item
       value={`lookup-consent-id-${search}`}
+      icon={<SearchIcon className="w-4 h-4" />}
+      subtitle="Consent"
       onSelect={() => {
         router.push(`/admin/consent?q=${encodeURIComponent(search)}`);
         onSelect();
       }}
     >
+      Look up consent ID:{" "}
       <span
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          width: 20,
-          height: 20,
-          flexShrink: 0,
-          color: "var(--ds-gray-900)",
-        }}
+        style={{ fontFamily: "var(--font-mono)", color: "var(--ds-gray-700)" }}
       >
-        <SearchIcon className="w-4 h-4" />
+        {search}
       </span>
-      <span style={{ flex: 1 }}>
-        Look up consent ID:{" "}
-        <span
-          style={{ fontFamily: "var(--font-mono)", color: "var(--ds-gray-700)" }}
-        >
-          {search}
-        </span>
-      </span>
-    </Command.Item>
+    </CommandMenu.Item>
   );
 }
 
@@ -187,58 +174,52 @@ export function CommandMenuDialog({
       onClose={onClose}
       placeholder="Search..."
     >
-      <CommandMenu.Group heading="Go to">
-        <CommandMenu.Item
-          icon={<SquareCheckBig className="w-4 h-4" />}
-          onSelect={() => {
-            router.push("/admin/consent");
-            onClose();
-          }}
-        >
-          Consent dashboard
-        </CommandMenu.Item>
-        <CommandMenu.Item
-          icon={<PanelsTopLeft className="w-4 h-4" />}
-          onSelect={() => {
-            router.push("/admin/design-system");
-            onClose();
-          }}
-        >
-          Design system
-        </CommandMenu.Item>
-      </CommandMenu.Group>
+      <ConsentLookupItem onSelect={onClose} />
 
-      <CommandMenu.Group heading="Consent">
-        <ConsentLookupItem onSelect={onClose} />
-      </CommandMenu.Group>
+      <CommandMenu.Item
+        icon={<SquareCheckBig className="w-4 h-4" />}
+        subtitle="Admin"
+        onSelect={() => {
+          router.push("/admin/consent");
+          onClose();
+        }}
+      >
+        Consent dashboard
+      </CommandMenu.Item>
+      <CommandMenu.Item
+        icon={<PanelsTopLeft className="w-4 h-4" />}
+        subtitle="Admin"
+        onSelect={() => {
+          router.push("/admin/design-system");
+          onClose();
+        }}
+      >
+        Design system
+      </CommandMenu.Item>
 
-      {dsNavigation.map((section) => (
-        <CommandMenu.Group
-          key={section.id}
-          heading={`Design system · ${section.label}`}
-        >
-          {section.items
-            .filter((item) => !item.locked)
-            .map((item) => (
-              <CommandMenu.Item
-                key={item.id}
-                icon={
-                  section.id === "brands" ? (
-                    <BrandItemIcon />
-                  ) : (
-                    <ArrowRight className="w-4 h-4" />
-                  )
-                }
-                onSelect={() => {
-                  router.push(`/admin/design-system/${item.id}`);
-                  onClose();
-                }}
-              >
-                {item.label}
-              </CommandMenu.Item>
-            ))}
-        </CommandMenu.Group>
-      ))}
+      {dsNavigation.flatMap((section) =>
+        section.items
+          .filter((item) => !item.locked)
+          .map((item) => (
+            <CommandMenu.Item
+              key={`${section.id}-${item.id}`}
+              icon={
+                section.id === "brands" ? (
+                  <BrandItemIcon />
+                ) : (
+                  <ArrowRight className="w-4 h-4" />
+                )
+              }
+              subtitle={`Design System · ${section.label}`}
+              onSelect={() => {
+                router.push(`/admin/design-system/${item.id}`);
+                onClose();
+              }}
+            >
+              {item.label}
+            </CommandMenu.Item>
+          )),
+      )}
 
       <CommandMenu.Group heading="Actions">
         <CommandMenu.Item

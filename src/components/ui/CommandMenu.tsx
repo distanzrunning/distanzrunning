@@ -38,6 +38,10 @@ interface CommandMenuItemProps {
   icon?: ReactNode;
   /** Optional keyboard shortcut label (e.g. "⌘K") */
   shortcut?: string;
+  /** Optional secondary line (e.g. category / breadcrumb) */
+  subtitle?: ReactNode;
+  /** Explicit cmdk value used for filter matching */
+  value?: string;
 }
 
 // ============================================================================
@@ -140,6 +144,11 @@ const CMDK_CSS = `
     cursor: default;
   }
 
+  .ds-cmdk-content [cmdk-item].ds-cmdk-item-tall {
+    height: 48px;
+    min-height: 48px;
+  }
+
   .ds-cmdk-content [cmdk-empty] {
     display: flex;
     align-items: center;
@@ -179,9 +188,16 @@ function CommandMenuItem({
   disabled = false,
   icon,
   shortcut,
+  subtitle,
+  value,
 }: CommandMenuItemProps) {
   return (
-    <Command.Item onSelect={() => onSelect?.()} disabled={disabled}>
+    <Command.Item
+      onSelect={() => onSelect?.()}
+      disabled={disabled}
+      value={value}
+      className={subtitle ? "ds-cmdk-item-tall" : undefined}
+    >
       {icon && (
         <span
           style={{
@@ -197,7 +213,46 @@ function CommandMenuItem({
           {icon}
         </span>
       )}
-      <span style={{ flex: 1 }}>{children}</span>
+      {subtitle ? (
+        <span
+          style={{
+            flex: 1,
+            minWidth: 0,
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            gap: 2,
+          }}
+        >
+          <span
+            style={{
+              fontSize: 14,
+              lineHeight: "18px",
+              fontWeight: 500,
+              color: "var(--ds-gray-1000)",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {children}
+          </span>
+          <span
+            style={{
+              fontSize: 12,
+              lineHeight: "16px",
+              color: "var(--ds-gray-900)",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {subtitle}
+          </span>
+        </span>
+      ) : (
+        <span style={{ flex: 1 }}>{children}</span>
+      )}
       {shortcut && (
         <kbd
           style={{
