@@ -12,6 +12,8 @@ import { DarkModeProvider } from "@/components/DarkModeProvider";
 import ReCaptchaProvider from "@/components/ReCaptchaProvider";
 import { ConsentProvider } from "@/contexts/ConsentContext";
 import { ConsentBanner } from "@/components/ui/ConsentBanner";
+import ConsentSync from "@/components/ConsentSync";
+import { gcmDefaultsScript } from "@/lib/consent-gcm";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
@@ -79,6 +81,14 @@ export default function RootLayout({
             `,
           }}
         />
+        {/* Google Consent Mode v2 — must run before any tracking script so
+            every Google product (Analytics, Ads, AdSense, GTM) and any
+            custom GTM tags pick up the denied baseline. ConsentSync (in
+            <body>) calls gtag('consent','update',…) once the user decides. */}
+        <script
+          id="gcm-defaults"
+          dangerouslySetInnerHTML={{ __html: gcmDefaultsScript() }}
+        />
         <link
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
@@ -91,22 +101,22 @@ export default function RootLayout({
               // List of blocked IPs (your personal IPs to exclude from tracking)
               var blockedIPs = ['91.180.214.205'];
 
-              // Check if we should opt out (localhost or development)
-              var shouldOptOut = window.location.host.includes('127.0.0.1') ||
-                                window.location.host.includes('localhost');
-
+              // PostHog defaults to OPT-OUT for every visitor; ConsentSync
+              // flips this to opt-in once the user accepts the Analytics
+              // category. Localhost stays opted out unconditionally.
               posthog.init('${process.env.NEXT_PUBLIC_POSTHOG_KEY}', {
                 api_host:'${process.env.NEXT_PUBLIC_POSTHOG_HOST}',
                 defaults:'2025-05-24',
-                opt_out_capturing_by_default: shouldOptOut,
+                opt_out_capturing_by_default: true,
                 loaded: function(posthog) {
-                  // Automatically opt out on localhost/development
-                  if (shouldOptOut) {
+                  // Localhost / dev — keep opted out regardless of consent.
+                  if (window.location.host.includes('127.0.0.1') ||
+                      window.location.host.includes('localhost')) {
                     posthog.opt_out_capturing();
                     return;
                   }
 
-                  // Check user's IP and opt out if blocked
+                  // Check user's IP and force opt-out if blocked
                   fetch('https://api.ipify.org?format=json')
                     .then(function(response) { return response.json(); })
                     .then(function(data) {
@@ -128,6 +138,7 @@ export default function RootLayout({
         <ReCaptchaProvider>
           <DarkModeProvider>
             <ConsentProvider>
+              <ConsentSync />
               <AuthProtection>
                 <LayoutContent navbar={<NavbarAltWrapper />} footer={<Footer />}>
                   {children}

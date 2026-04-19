@@ -123,11 +123,31 @@ export default function HowItWorksPage() {
           </DocSection>
 
           <DocSection title="Integrations">
-            Today the site only loads <strong>PostHog</strong> — gated on
-            the Analytics category. Preparational work is planned: Google
-            Consent Mode v2 defaults, <DocCode>window.dataLayer</DocCode>{" "}
-            pushes for future Google Tag Manager (client or server-side),
-            and category → GCM signal mappings.
+            <strong>PostHog</strong> defaults to opt-out for every visitor;
+            it&apos;s opted in only after the user accepts the Analytics
+            category.{" "}
+            <strong>Vercel Analytics</strong> and{" "}
+            <strong>Speed Insights</strong> run cookieless and are not
+            gated. <strong>Google AdSense</strong> reads Consent Mode v2
+            and serves non-personalised ads until consent is granted.
+          </DocSection>
+
+          <DocSection title="Google Consent Mode v2">
+            A defaults script in <DocCode>&lt;head&gt;</DocCode> primes the
+            seven GCM signals to <DocCode>denied</DocCode> (security_storage
+            stays granted) before any tracker loads. On every consent
+            change <DocCode>ConsentSync</DocCode> calls{" "}
+            <DocCode>gtag(&apos;consent&apos;,&apos;update&apos;,…)</DocCode>{" "}
+            with the user&apos;s preferences, mapped via{" "}
+            <DocCode>consentToGcm()</DocCode> in{" "}
+            <DocCode>src/lib/consent-gcm.ts</DocCode>.
+          </DocSection>
+
+          <DocSection title="GTM data layer">
+            Every consent change also pushes{" "}
+            <DocCode>{"{ event: 'consent_update', consent_decided, …7 GCM signals }"}</DocCode>
+            to <DocCode>window.dataLayer</DocCode>, ready for any GTM
+            container (client or server-side) to fire custom triggers on.
           </DocSection>
 
           <DocSection title="Updating preferences">
@@ -137,12 +157,26 @@ export default function HowItWorksPage() {
             <DocCode>useConsent()</DocCode> hook.
           </DocSection>
 
+          <DocSection title="Category → GCM signal map">
+            <strong>Marketing</strong> →{" "}
+            <DocCode>ad_storage</DocCode>,{" "}
+            <DocCode>ad_user_data</DocCode>,{" "}
+            <DocCode>ad_personalization</DocCode>.{" "}
+            <strong>Analytics</strong> →{" "}
+            <DocCode>analytics_storage</DocCode>.{" "}
+            <strong>Functional</strong> →{" "}
+            <DocCode>functionality_storage</DocCode>,{" "}
+            <DocCode>personalization_storage</DocCode>.{" "}
+            <strong>Essential</strong> always grants{" "}
+            <DocCode>security_storage</DocCode>.
+          </DocSection>
+
           <DocSection title="Future direction">
             If Distanz ever runs heavy advertising or needs IAB TCF 2.2
             compliance, we can swap in a headless third-party CMP (Didomi,
             Usercentrics headless, CookieScript) behind the existing{" "}
-            <DocCode>useConsent()</DocCode> API — our banner and modal
-            components stay the same.
+            <DocCode>useConsent()</DocCode> API — our banner, modal and
+            sync layer stay the same.
           </DocSection>
         </div>
       </div>
