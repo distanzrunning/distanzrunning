@@ -3,7 +3,7 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ChevronLeft, FileText, Layers } from "lucide-react";
+import { ChevronLeft, ChevronRight, FileText, Layers } from "lucide-react";
 import { navigation as dsNavigation } from "./design-system/components/DesignSystemSidebar";
 
 // ============================================================================
@@ -113,6 +113,7 @@ const ADMIN_NAV: {
   label: string;
   href: string;
   icon: ReactNode;
+  hasSubmenu?: boolean;
 }[] = [
   {
     id: "consent",
@@ -125,6 +126,7 @@ const ADMIN_NAV: {
     label: "Design System",
     href: "/admin/design-system",
     icon: <Layers className="w-4 h-4" />,
+    hasSubmenu: true,
   },
 ];
 
@@ -144,24 +146,37 @@ function AdminNav({ pathname }: { pathname: string }) {
         {ADMIN_NAV.map((item) => {
           const active =
             pathname === item.href || pathname.startsWith(`${item.href}/`);
+          const baseClasses =
+            "group flex items-center rounded-md outline-none transition-colors";
+          const stateClasses = active
+            ? "bg-[var(--ds-gray-200)] text-[var(--ds-gray-1000)] font-medium hover:bg-[var(--ds-gray-200)]"
+            : "text-[var(--ds-gray-700)] hover:bg-[var(--ds-gray-100)] hover:text-[var(--ds-gray-1000)] focus-visible:bg-[var(--ds-gray-100)] focus-visible:text-[var(--ds-gray-1000)]";
           return (
             <li key={item.id}>
               <Link
                 href={item.href}
-                className="group flex items-center gap-2.5 rounded-md outline-none transition-colors"
+                aria-current={active ? "page" : undefined}
+                className={`${baseClasses} ${stateClasses}`}
                 style={{
                   height: 40,
-                  padding: "0 12px",
+                  paddingLeft: 12,
+                  paddingRight: item.hasSubmenu ? 8 : 12,
                   fontSize: 14,
-                  color: active
-                    ? "var(--ds-gray-1000)"
-                    : "var(--ds-gray-700)",
-                  background: active ? "var(--ds-gray-200)" : "transparent",
-                  fontWeight: active ? 500 : 400,
                 }}
               >
-                {item.icon}
-                {item.label}
+                <span className="flex-1 flex items-center gap-2.5 min-w-0">
+                  {item.icon}
+                  <span className="truncate">{item.label}</span>
+                </span>
+                {item.hasSubmenu && (
+                  <span
+                    className="flex-none grid place-content-center rounded-sm transition-colors group-hover:bg-[var(--ds-gray-alpha-100)] group-active:bg-[var(--ds-gray-alpha-300)]"
+                    style={{ width: 24, height: 24 }}
+                    aria-hidden="true"
+                  >
+                    <ChevronRight style={{ width: 12, height: 12 }} />
+                  </span>
+                )}
               </Link>
             </li>
           );
