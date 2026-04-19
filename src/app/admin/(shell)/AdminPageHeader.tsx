@@ -8,6 +8,7 @@ import { DarkModeContext } from "@/components/DarkModeProvider";
 import { Menu, MenuButton, MenuItem, MenuSeparator } from "@/components/ui/Menu";
 import { ThemeSwitcher } from "@/components/ui/ThemeSwitcher";
 import { logout } from "../login/actions";
+import { CONSENT_NAV } from "./AdminSidebar";
 import { navigation as dsNavigation } from "./design-system/components/DesignSystemSidebar";
 
 const HEADER_HEIGHT = 56;
@@ -21,8 +22,19 @@ function getTitleParts(pathname: string): TitleParts {
   if (pathname === "/admin" || pathname === "/admin/") {
     return { section: null, page: "Admin" };
   }
-  if (pathname.startsWith("/admin/consent")) {
+  if (pathname === "/admin/consent" || pathname === "/admin/consent/") {
     return { section: null, page: "Consent" };
+  }
+  const consentMatch = pathname.match(/^\/admin\/consent\/([^/?#]+)/);
+  if (consentMatch) {
+    const slug = consentMatch[1];
+    const item = CONSENT_NAV.find((i) => i.id === slug);
+    if (item) {
+      return {
+        section: { label: "Consent", href: "/admin/consent" },
+        page: item.label,
+      };
+    }
   }
   if (
     pathname === "/admin/design-system" ||
