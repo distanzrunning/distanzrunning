@@ -108,21 +108,9 @@ function DesignSystemNav({
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
       {searchTrigger && (
-        <div
-          style={{
-            padding: 16,
-            borderBottom: "1px solid var(--ds-gray-400)",
-          }}
-        >
-          {searchTrigger}
-        </div>
+        <div style={{ padding: 16 }}>{searchTrigger}</div>
       )}
-      <div
-        style={{
-          padding: "8px 8px 4px",
-          borderBottom: "1px solid var(--ds-gray-400)",
-        }}
-      >
+      <div style={{ padding: "8px 8px 4px" }}>
         <Link
           href="/admin"
           aria-label="Back to admin"
