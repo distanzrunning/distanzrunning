@@ -1,6 +1,7 @@
 "use client";
 
 import { useContext, useTransition } from "react";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { MoreHorizontal } from "lucide-react";
 import { DarkModeContext } from "@/components/DarkModeProvider";
@@ -11,24 +12,67 @@ import { navigation as dsNavigation } from "./design-system/components/DesignSys
 
 const HEADER_HEIGHT = 56;
 
-function getPageTitle(pathname: string): string {
-  if (pathname === "/admin" || pathname === "/admin/") return "Admin";
-  if (pathname.startsWith("/admin/consent")) return "Consent";
-  if (pathname === "/admin/design-system") return "Design System";
+type TitleParts = {
+  section: { label: string; href: string } | null;
+  page: string;
+};
+
+function getTitleParts(pathname: string): TitleParts {
+  if (pathname === "/admin" || pathname === "/admin/") {
+    return { section: null, page: "Admin" };
+  }
+  if (pathname.startsWith("/admin/consent")) {
+    return { section: null, page: "Consent" };
+  }
+  if (
+    pathname === "/admin/design-system" ||
+    pathname === "/admin/design-system/"
+  ) {
+    return { section: null, page: "Design System" };
+  }
   const dsMatch = pathname.match(/^\/admin\/design-system\/([^/?#]+)/);
   if (dsMatch) {
     const slug = dsMatch[1];
     for (const section of dsNavigation) {
       const item = section.items.find((i) => i.id === slug);
-      if (item) return item.label;
+      if (item) {
+        return {
+          section: { label: "Design System", href: "/admin/design-system" },
+          page: item.label,
+        };
+      }
     }
   }
-  return "Admin";
+  return { section: null, page: "Admin" };
+}
+
+function SlashIcon() {
+  return (
+    <svg
+      height="16"
+      width="16"
+      viewBox="0 0 16 16"
+      fill="none"
+      strokeLinejoin="round"
+      style={{
+        color: "var(--ds-gray-alpha-400)",
+        flexShrink: 0,
+      }}
+      aria-hidden="true"
+    >
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M4.01526 15.3939L4.3107 14.7046L10.3107 0.704556L10.6061 0.0151978L11.9849 0.606077L11.6894 1.29544L5.68942 15.2954L5.39398 15.9848L4.01526 15.3939Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
 }
 
 export default function AdminPageHeader() {
   const pathname = usePathname() ?? "";
-  const title = getPageTitle(pathname);
+  const { section, page } = getTitleParts(pathname);
   const { theme, setTheme } = useContext(DarkModeContext);
   const [, startTransition] = useTransition();
 
@@ -48,6 +92,24 @@ export default function AdminPageHeader() {
       }}
     >
       <div className="absolute left-1/2 -translate-x-1/2 flex items-center justify-center max-w-[50%]">
+        {section && (
+          <div className="hidden md:flex items-center gap-2 pr-2.5 min-w-0">
+            <Link
+              href={section.href}
+              className="no-underline truncate min-w-0 hover:underline"
+              style={{
+                fontSize: 14,
+                lineHeight: "20px",
+                letterSpacing: "-0.28px",
+                fontWeight: 500,
+                color: "var(--ds-gray-800)",
+              }}
+            >
+              {section.label}
+            </Link>
+            <SlashIcon />
+          </div>
+        )}
         <span
           className="flex items-center gap-0.5 truncate font-medium"
           style={{
@@ -57,7 +119,7 @@ export default function AdminPageHeader() {
             color: "var(--ds-gray-1000)",
           }}
         >
-          <span className="min-w-0 truncate">{title}</span>
+          <span className="min-w-0 truncate">{page}</span>
         </span>
       </div>
 
