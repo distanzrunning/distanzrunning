@@ -385,7 +385,7 @@ export function Component(): JSX.Element {
           jsx: (
             <>
               The Evil Rabbit jumped over the fence. The Evil Rabbit jumped
-              over the <a href="/design-system" style={{ fontWeight: 500, textDecoration: 'underline' }}>fence again</a>.
+              over the <a href="/admin/design-system" style={{ fontWeight: 500, textDecoration: 'underline' }}>fence again</a>.
             </>
           ),
           preserve: true,
@@ -586,7 +586,7 @@ function WithLinkDemo() {
               The Evil Rabbit jumped over the fence. The Evil Rabbit jumped
               over the{" "}
               <a
-                href="/design-system"
+                href="/admin/design-system"
                 style={{ fontWeight: 500, textDecoration: "underline" }}
               >
                 fence again

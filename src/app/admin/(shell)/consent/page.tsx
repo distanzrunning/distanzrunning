@@ -1,16 +1,11 @@
-import { redirect } from "next/navigation";
-import { isAdminAuthenticated } from "@/lib/admin-auth";
 import { getSupabaseAdmin } from "@/lib/supabase/server";
-import { logout } from "../login/actions";
 import DeleteIdButton from "./DeleteIdButton";
 import TrendChart, { type TrendPoint } from "./TrendChart";
 
 export const metadata = {
-  title: "Consent Dashboard — Distanz",
+  title: "Consent — Stride Admin",
   robots: { index: false, follow: false },
 };
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
 
 type Decision = "accept_all" | "reject_all" | "custom";
 
@@ -269,62 +264,31 @@ function LookupView({
   total: number;
 }) {
   return (
-    <main
-      style={{
-        minHeight: "100vh",
-        background: "var(--ds-background-200)",
-        padding: "32px 24px",
-      }}
-    >
+    <div style={{ padding: "32px 24px" }}>
       <div style={{ maxWidth: 1120, margin: "0 auto" }}>
-        <header
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "flex-start",
-            marginBottom: 24,
-          }}
-        >
-          <div>
-            <h1
-              style={{
-                fontSize: 24,
-                fontWeight: 600,
-                lineHeight: "32px",
-                margin: 0,
-                color: "var(--ds-gray-1000)",
-              }}
-            >
-              Consent dashboard
-            </h1>
-            <p
-              style={{
-                marginTop: 6,
-                marginBottom: 0,
-                fontSize: 13,
-                color: "var(--ds-gray-700)",
-              }}
-            >
-              Lookup for a single anonymous ID · {total.toLocaleString()} total
-              decisions across all IDs
-            </p>
-          </div>
-          <form action={logout}>
-            <button
-              type="submit"
-              style={{
-                padding: "8px 12px",
-                fontSize: 13,
-                border: "1px solid var(--ds-gray-400)",
-                borderRadius: 6,
-                background: "var(--ds-background-100)",
-                color: "var(--ds-gray-1000)",
-                cursor: "pointer",
-              }}
-            >
-              Sign out
-            </button>
-          </form>
+        <header style={{ marginBottom: 24 }}>
+          <h1
+            style={{
+              fontSize: 24,
+              fontWeight: 600,
+              lineHeight: "32px",
+              margin: 0,
+              color: "var(--ds-gray-1000)",
+            }}
+          >
+            Consent dashboard
+          </h1>
+          <p
+            style={{
+              marginTop: 6,
+              marginBottom: 0,
+              fontSize: 13,
+              color: "var(--ds-gray-700)",
+            }}
+          >
+            Lookup for a single anonymous ID · {total.toLocaleString()} total
+            decisions across all IDs
+          </p>
         </header>
 
         <SearchForm defaultValue={query} />
@@ -446,7 +410,7 @@ function LookupView({
           )}
         </Panel>
       </div>
-    </main>
+    </div>
   );
 }
 
@@ -455,9 +419,6 @@ export default async function ConsentDashboardPage({
 }: {
   searchParams: Promise<{ q?: string }>;
 }) {
-  if (!(await isAdminAuthenticated())) {
-    redirect("/admin/login");
-  }
 
   const params = await searchParams;
   const query = params.q?.trim() ?? "";
@@ -479,12 +440,12 @@ export default async function ConsentDashboardPage({
 
     if (lookupError) {
       return (
-        <main style={{ padding: 40, fontFamily: "var(--font-sans)" }}>
+        <div style={{ padding: 40 }}>
           <h1>Consent dashboard</h1>
           <p style={{ color: "var(--ds-red-900)" }}>
             Lookup failed: {lookupError.message}
           </p>
-        </main>
+        </div>
       );
     }
 
@@ -509,12 +470,12 @@ export default async function ConsentDashboardPage({
 
   if (error) {
     return (
-      <main style={{ padding: 40, fontFamily: "var(--font-sans)" }}>
+      <div style={{ padding: 40 }}>
         <h1>Consent dashboard</h1>
         <p style={{ color: "var(--ds-red-900)" }}>
           Could not load data: {error.message}
         </p>
-      </main>
+      </div>
     );
   }
 
@@ -532,64 +493,33 @@ export default async function ConsentDashboardPage({
   const recent = rows.slice(0, 20);
 
   return (
-    <main
-      style={{
-        minHeight: "100vh",
-        background: "var(--ds-background-200)",
-        padding: "32px 24px",
-      }}
-    >
+    <div style={{ padding: "32px 24px" }}>
       <div style={{ maxWidth: 1120, margin: "0 auto" }}>
-        <header
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "flex-start",
-            marginBottom: 24,
-          }}
-        >
-          <div>
-            <h1
-              style={{
-                fontSize: 24,
-                fontWeight: 600,
-                lineHeight: "32px",
-                margin: 0,
-                color: "var(--ds-gray-1000)",
-              }}
-            >
-              Consent dashboard
-            </h1>
-            <p
-              style={{
-                marginTop: 6,
-                marginBottom: 0,
-                fontSize: 13,
-                color: "var(--ds-gray-700)",
-              }}
-            >
-              {total.toLocaleString()} total decisions
-              {rows.length < total
-                ? ` · showing latest ${rows.length.toLocaleString()}`
-                : ""}
-            </p>
-          </div>
-          <form action={logout}>
-            <button
-              type="submit"
-              style={{
-                padding: "8px 12px",
-                fontSize: 13,
-                border: "1px solid var(--ds-gray-400)",
-                borderRadius: 6,
-                background: "var(--ds-background-100)",
-                color: "var(--ds-gray-1000)",
-                cursor: "pointer",
-              }}
-            >
-              Sign out
-            </button>
-          </form>
+        <header style={{ marginBottom: 24 }}>
+          <h1
+            style={{
+              fontSize: 24,
+              fontWeight: 600,
+              lineHeight: "32px",
+              margin: 0,
+              color: "var(--ds-gray-1000)",
+            }}
+          >
+            Consent dashboard
+          </h1>
+          <p
+            style={{
+              marginTop: 6,
+              marginBottom: 0,
+              fontSize: 13,
+              color: "var(--ds-gray-700)",
+            }}
+          >
+            {total.toLocaleString()} total decisions
+            {rows.length < total
+              ? ` · showing latest ${rows.length.toLocaleString()}`
+              : ""}
+          </p>
         </header>
 
         <SearchForm />
@@ -757,7 +687,7 @@ export default async function ConsentDashboardPage({
           </div>
         </Panel>
       </div>
-    </main>
+    </div>
   );
 }
 

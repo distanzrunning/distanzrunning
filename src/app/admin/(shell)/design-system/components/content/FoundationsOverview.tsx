@@ -48,7 +48,7 @@ function OverviewCard({
   index,
   total,
 }: OverviewCardProps) {
-  const slug = href.replace("/design-system/", "");
+  const slug = href.replace("/admin/design-system/", "");
   const isLeftColumn = index % 2 === 0;
   const isLastCard = index === total - 1;
   const isSecondLastCard = index === total - 2;
@@ -512,7 +512,7 @@ export default function FoundationsOverview({ onNavigate }: FoundationsOverviewP
         style={{ borderBottom: "1px solid var(--ds-gray-400)" }}
       >
         <OverviewCard
-          href="/design-system/distanz-running"
+          href="/admin/design-system/distanz-running"
           title="Brand Assets"
           description="Learn how to work with our brand assets."
           onNavigate={handleNavigate}
@@ -523,7 +523,7 @@ export default function FoundationsOverview({ onNavigate }: FoundationsOverviewP
         </OverviewCard>
 
         <OverviewCard
-          href="/design-system/icons"
+          href="/admin/design-system/icons"
           title="Icons"
           description="Icon set tailored for running products."
           onNavigate={handleNavigate}
@@ -534,7 +534,7 @@ export default function FoundationsOverview({ onNavigate }: FoundationsOverviewP
         </OverviewCard>
 
         <OverviewCard
-          href="/design-system/avatar"
+          href="/admin/design-system/avatar"
           title="Components"
           description="Building blocks for React applications."
           onNavigate={handleNavigate}
@@ -545,7 +545,7 @@ export default function FoundationsOverview({ onNavigate }: FoundationsOverviewP
         </OverviewCard>
 
         <OverviewCard
-          href="/design-system/colours"
+          href="/admin/design-system/colours"
           title="Colours"
           description="A high contrast, accessible color system."
           onNavigate={handleNavigate}
@@ -556,7 +556,7 @@ export default function FoundationsOverview({ onNavigate }: FoundationsOverviewP
         </OverviewCard>
 
         <OverviewCard
-          href="/design-system/grid"
+          href="/admin/design-system/grid"
           title="Grid"
           description="A huge part of the new Distanz aesthetic."
           onNavigate={handleNavigate}
@@ -567,7 +567,7 @@ export default function FoundationsOverview({ onNavigate }: FoundationsOverviewP
         </OverviewCard>
 
         <OverviewCard
-          href="/design-system/typography"
+          href="/admin/design-system/typography"
           title="Typeface"
           description="Specifically designed for developers and designers."
           onNavigate={handleNavigate}

@@ -383,7 +383,7 @@ export function Component(): JSX.Element {
   return (
     <Menu>
       <MenuButton>Links</MenuButton>
-      <MenuItem href="/design-system/menu#custom-trigger">One</MenuItem>
+      <MenuItem href="/admin/design-system/menu#custom-trigger">One</MenuItem>
       <MenuItem href="#">Two</MenuItem>
       <MenuItem href="#">Three</MenuItem>
     </Menu>
@@ -557,7 +557,7 @@ function LinkItemsDemo() {
   return (
     <Menu>
       <MenuButton>Links</MenuButton>
-      <MenuItem href="/design-system/menu#custom-trigger">One</MenuItem>
+      <MenuItem href="/admin/design-system/menu#custom-trigger">One</MenuItem>
       <MenuItem href="#">Two</MenuItem>
       <MenuItem href="#">Three</MenuItem>
     </Menu>
@@ -639,7 +639,7 @@ export default function MenuComponent() {
         <p className="text-copy-16 text-textSubtle mt-3 mb-6" style={{ lineHeight: 1.5 }}>
           Menu extends the{" "}
           <a
-            href="/design-system/button"
+            href="/admin/design-system/button"
             className="text-textSubtle underline hover:text-textDefault transition-colors"
           >
             Button

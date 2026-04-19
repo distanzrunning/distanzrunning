@@ -21,24 +21,14 @@ export default function LayoutContent({
   // Hide navbar and footer on login page
   const isLoginPage = pathname === "/login";
 
-  // Design system is a standalone SPA — no site navbar or footer
-  const isDesignSystem = pathname?.startsWith("/design-system");
+  // Admin (dashboard + design system) is a standalone SPA — no site navbar or footer
+  const isAdmin = pathname?.startsWith("/admin");
 
   // Hide footer on calendar page (fullscreen app-like view)
   const isCalendarPage = pathname === "/races/calendar";
 
-  if (isPreviewMode || isLoginPage) {
+  if (isPreviewMode || isLoginPage || isAdmin) {
     return <main className="min-h-screen">{children}</main>;
-  }
-
-  if (isDesignSystem) {
-    return (
-      <div className="main-wrapper">
-        <div className="main-bordered min-h-screen flex flex-col">
-          {children}
-        </div>
-      </div>
-    );
   }
 
   return (

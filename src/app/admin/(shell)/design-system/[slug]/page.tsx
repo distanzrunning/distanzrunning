@@ -2,8 +2,6 @@
 
 import { useParams, useRouter } from "next/navigation";
 import { useState, useEffect, useCallback } from "react";
-import DesignSystemHeader from "../components/DesignSystemHeader";
-import DesignSystemSidebar from "../components/DesignSystemSidebar";
 import PlaceholderContent from "../components/PlaceholderContent";
 import FoundationsOverview from "../components/content/FoundationsOverview";
 import ComponentsOverview from "../components/content/ComponentsOverview";
@@ -102,7 +100,7 @@ export default function DesignSystemPage() {
   useEffect(() => {
     const handlePopState = () => {
       const path = window.location.pathname;
-      const match = path.match(/\/design-system\/(.+)/);
+      const match = path.match(/\/admin\/design-system\/(.+)/);
       if (match) {
         setActiveSlug(match[1]);
       }
@@ -130,13 +128,13 @@ export default function DesignSystemPage() {
     // Update state immediately for instant navigation
     setActiveSlug(newSlug);
     // Update URL without triggering navigation
-    window.history.pushState({}, "", `/design-system/${newSlug}`);
+    window.history.pushState({}, "", `/admin/design-system/${newSlug}`);
     // Scroll window to top
     window.scrollTo({ top: 0, behavior: "instant" });
   }, []);
 
   const handleHomeClick = () => {
-    router.push("/design-system");
+    router.push("/admin/design-system");
   };
 
   const renderContent = () => {
@@ -1290,43 +1288,11 @@ export default function DesignSystemPage() {
 
   return (
     <div
-      className="min-h-screen"
-      style={{ background: "var(--ds-background-200)" }}
+      id="main-content"
+      className="flex flex-col"
+      style={{ background: "var(--ds-background-200)", minHeight: "calc(100vh - 64px)" }}
     >
-      {/* Geist-style Header */}
-      <DesignSystemHeader
-        onHomeClick={handleHomeClick}
-        onNavigate={handleNavigation}
-        activeSlug={activeSlug}
-      />
-
-      {/* Mobile/Tablet Section Header - visible below xl */}
-      <div className="xl:hidden sticky top-[65px] z-30">
-        <DesignSystemSidebar
-          activeSlug={activeSlug}
-          onNavigate={handleNavigation}
-          onHomeClick={handleHomeClick}
-        />
-      </div>
-
-      <div className="flex">
-        {/* Desktop Sidebar */}
-        <div className="hidden xl:block flex-shrink-0">
-          <DesignSystemSidebar
-            activeSlug={activeSlug}
-            onNavigate={handleNavigation}
-            onHomeClick={handleHomeClick}
-          />
-        </div>
-
-        {/* Main Content Area */}
-        <div
-          id="main-content"
-          className="flex-1 min-w-0 flex flex-col min-h-[calc(100vh-65px)]"
-        >
-          <div className="flex-1 flex flex-col">{renderContent()}</div>
-        </div>
-      </div>
+      <div className="flex-1 flex flex-col">{renderContent()}</div>
       <ToastContainer />
     </div>
   );

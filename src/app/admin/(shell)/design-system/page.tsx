@@ -7,7 +7,7 @@ export default function DesignSystemPage() {
   const router = useRouter();
 
   useEffect(() => {
-    router.replace("/design-system/introduction");
+    router.replace("/admin/design-system/introduction");
   }, [router]);
 
   return null;
