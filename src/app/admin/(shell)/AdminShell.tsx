@@ -1,13 +1,16 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { DarkModeContext } from "@/components/DarkModeProvider";
 import Button from "@/components/ui/Button";
 import { ThemeSwitcher } from "@/components/ui/ThemeSwitcher";
 import { logout } from "../login/actions";
-import AdminCommandMenu from "./AdminCommandMenu";
+import {
+  CommandMenuDialog,
+  CommandMenuTrigger,
+} from "./AdminCommandMenu";
 import AdminSidebar, { isDesignSystemRoute } from "./AdminSidebar";
 
 export default function AdminShell({ children }: { children: ReactNode }) {
@@ -15,6 +18,19 @@ export default function AdminShell({ children }: { children: ReactNode }) {
   const inDs = isDesignSystemRoute(pathname);
   const title = inDs ? "Stride Design System" : "Stride Admin";
   const { theme, setTheme } = useContext(DarkModeContext);
+  const [cmdOpen, setCmdOpen] = useState(false);
+
+  // Global ⌘K / Ctrl+K shortcut to toggle the command menu
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        setCmdOpen((v) => !v);
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, []);
 
   return (
     <div
@@ -64,7 +80,6 @@ export default function AdminShell({ children }: { children: ReactNode }) {
           </span>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <AdminCommandMenu pathname={pathname} />
           <ThemeSwitcher
             showSystem={false}
             value={theme === "system" ? "light" : theme}
@@ -91,10 +106,20 @@ export default function AdminShell({ children }: { children: ReactNode }) {
             overflowY: "auto",
           }}
         >
-          <AdminSidebar />
+          <AdminSidebar
+            searchTrigger={
+              <CommandMenuTrigger onOpen={() => setCmdOpen(true)} />
+            }
+          />
         </aside>
         <main style={{ flex: 1, minWidth: 0 }}>{children}</main>
       </div>
+
+      <CommandMenuDialog
+        open={cmdOpen}
+        onClose={() => setCmdOpen(false)}
+        pathname={pathname}
+      />
     </div>
   );
 }

@@ -1,5 +1,6 @@
 "use client";
 
+import type { ReactNode } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ArrowLeft, FileText, Layers } from "lucide-react";
@@ -37,35 +38,57 @@ const ADMIN_NAV: { id: string; label: string; href: string; icon: React.ReactNod
   },
 ];
 
-function AdminNav({ pathname }: { pathname: string }) {
+function AdminNav({
+  pathname,
+  searchTrigger,
+}: {
+  pathname: string;
+  searchTrigger?: ReactNode;
+}) {
   return (
-    <nav style={{ padding: 16 }}>
-      <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", flexDirection: "column", gap: 2 }}>
-        {ADMIN_NAV.map((item) => {
-          const active =
-            pathname === item.href || pathname.startsWith(`${item.href}/`);
-          return (
-            <li key={item.id}>
-              <Link
-                href={item.href}
-                className="group flex items-center gap-2.5 rounded-md outline-none transition-colors"
-                style={{
-                  height: 40,
-                  padding: "0 12px",
-                  fontSize: 14,
-                  color: active ? "var(--ds-gray-1000)" : "var(--ds-gray-700)",
-                  background: active ? "var(--ds-gray-200)" : "transparent",
-                  fontWeight: active ? 500 : 400,
-                }}
-              >
-                {item.icon}
-                {item.label}
-              </Link>
-            </li>
-          );
-        })}
-      </ul>
-    </nav>
+    <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
+      {searchTrigger && (
+        <div style={{ padding: 16, paddingBottom: 0 }}>{searchTrigger}</div>
+      )}
+      <nav style={{ padding: 16 }}>
+        <ul
+          style={{
+            listStyle: "none",
+            margin: 0,
+            padding: 0,
+            display: "flex",
+            flexDirection: "column",
+            gap: 2,
+          }}
+        >
+          {ADMIN_NAV.map((item) => {
+            const active =
+              pathname === item.href || pathname.startsWith(`${item.href}/`);
+            return (
+              <li key={item.id}>
+                <Link
+                  href={item.href}
+                  className="group flex items-center gap-2.5 rounded-md outline-none transition-colors"
+                  style={{
+                    height: 40,
+                    padding: "0 12px",
+                    fontSize: 14,
+                    color: active
+                      ? "var(--ds-gray-1000)"
+                      : "var(--ds-gray-700)",
+                    background: active ? "var(--ds-gray-200)" : "transparent",
+                    fontWeight: active ? 500 : 400,
+                  }}
+                >
+                  {item.icon}
+                  {item.label}
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      </nav>
+    </div>
   );
 }
 
@@ -73,11 +96,27 @@ function AdminNav({ pathname }: { pathname: string }) {
 // Design-system nav (replaces admin nav while inside /admin/design-system)
 // ============================================================================
 
-function DesignSystemNav({ pathname }: { pathname: string }) {
+function DesignSystemNav({
+  pathname,
+  searchTrigger,
+}: {
+  pathname: string;
+  searchTrigger?: ReactNode;
+}) {
   const activeSlug = dsSlugFrom(pathname);
 
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
+      {searchTrigger && (
+        <div
+          style={{
+            padding: 16,
+            borderBottom: "1px solid var(--ds-gray-400)",
+          }}
+        >
+          {searchTrigger}
+        </div>
+      )}
       <div
         style={{
           padding: "12px 16px",
@@ -161,10 +200,16 @@ function DesignSystemNav({ pathname }: { pathname: string }) {
 // Public component
 // ============================================================================
 
-export default function AdminSidebar() {
+export default function AdminSidebar({
+  searchTrigger,
+}: {
+  searchTrigger?: ReactNode;
+}) {
   const pathname = usePathname() ?? "";
   if (isDesignSystemRoute(pathname)) {
-    return <DesignSystemNav pathname={pathname} />;
+    return (
+      <DesignSystemNav pathname={pathname} searchTrigger={searchTrigger} />
+    );
   }
-  return <AdminNav pathname={pathname} />;
+  return <AdminNav pathname={pathname} searchTrigger={searchTrigger} />;
 }
