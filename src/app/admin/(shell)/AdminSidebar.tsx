@@ -217,10 +217,8 @@ function DesignSystemNav({ pathname }: { pathname: string }) {
 
 export default function AdminSidebar({
   searchTrigger,
-  footer,
 }: {
   searchTrigger?: ReactNode;
-  footer?: ReactNode;
 }) {
   const pathname = usePathname() ?? "";
   const inDs = isDesignSystemRoute(pathname);
@@ -245,7 +243,6 @@ export default function AdminSidebar({
           <AdminNav pathname={pathname} />
         )}
       </div>
-      {footer}
     </div>
   );
 }
