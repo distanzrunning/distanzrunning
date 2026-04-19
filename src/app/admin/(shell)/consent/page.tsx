@@ -1,3 +1,15 @@
+import { Search } from "lucide-react";
+import Button from "@/components/ui/Button";
+import { Badge, type BadgeVariant } from "@/components/ui/Badge";
+import { Input } from "@/components/ui/Input";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/Table";
 import { getSupabaseAdmin } from "@/lib/supabase/server";
 import DeleteIdButton from "./DeleteIdButton";
 import TrendChart, { type TrendPoint } from "./TrendChart";
@@ -192,14 +204,14 @@ function Panel({
   );
 }
 
-function decisionBadge(d: Decision): { label: string; color: string } {
+function decisionBadge(d: Decision): { label: string; variant: BadgeVariant } {
   switch (d) {
     case "accept_all":
-      return { label: "Accept all", color: "var(--ds-green-900)" };
+      return { label: "Accept all", variant: "green-subtle" };
     case "reject_all":
-      return { label: "Reject all", color: "var(--ds-red-900)" };
+      return { label: "Reject all", variant: "red-subtle" };
     default:
-      return { label: "Custom", color: "var(--ds-amber-900)" };
+      return { label: "Custom", variant: "amber-subtle" };
   }
 }
 
@@ -214,42 +226,18 @@ function SearchForm({ defaultValue = "" }: { defaultValue?: string }) {
         marginBottom: 16,
       }}
     >
-      <input
-        name="q"
-        type="text"
-        defaultValue={defaultValue}
-        placeholder="Look up by anonymous ID…"
-        spellCheck={false}
-        autoComplete="off"
-        style={{
-          flex: 1,
-          height: 40,
-          padding: "0 12px",
-          fontSize: 14,
-          fontFamily: "var(--font-mono)",
-          borderRadius: 6,
-          border: "1px solid var(--ds-gray-400)",
-          background: "var(--ds-background-100)",
-          color: "var(--ds-gray-1000)",
-          outline: "none",
-        }}
-      />
-      <button
-        type="submit"
-        style={{
-          padding: "0 16px",
-          height: 40,
-          fontSize: 13,
-          fontWeight: 500,
-          borderRadius: 6,
-          border: "1px solid var(--ds-gray-1000)",
-          background: "var(--ds-gray-1000)",
-          color: "var(--ds-background-100)",
-          cursor: "pointer",
-        }}
-      >
-        Search
-      </button>
+      <div style={{ flex: 1 }}>
+        <Input
+          name="q"
+          type="text"
+          defaultValue={defaultValue}
+          placeholder="Look up by anonymous ID…"
+          spellCheck={false}
+          autoComplete="off"
+          prefix={<Search className="w-4 h-4" />}
+        />
+      </div>
+      <Button type="submit">Search</Button>
     </form>
   );
 }
@@ -336,76 +324,39 @@ function LookupView({
                 <DeleteIdButton anonId={query} count={rows.length} />
               </div>
 
-              <div style={{ overflowX: "auto" }}>
-                <table
-                  style={{ width: "100%", borderCollapse: "collapse" }}
-                >
-                  <thead>
-                    <tr style={{ textAlign: "left" }}>
-                      {[
-                        "When",
-                        "Decision",
-                        "Marketing",
-                        "Analytics",
-                        "Functional",
-                        "Country",
-                      ].map((h) => (
-                        <th
-                          key={h}
-                          style={{
-                            padding: "10px 12px",
-                            fontSize: 12,
-                            fontWeight: 500,
-                            color: "var(--ds-gray-700)",
-                            borderBottom: "1px solid var(--ds-gray-400)",
-                            textTransform: "uppercase",
-                            letterSpacing: 0.3,
-                          }}
-                        >
-                          {h}
-                        </th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {rows.map((row) => {
-                      const b = decisionBadge(row.decision);
-                      return (
-                        <tr key={row.id}>
-                          <td style={tdStyle}>
-                            {new Date(row.created_at).toLocaleString()}
-                          </td>
-                          <td style={tdStyle}>
-                            <span
-                              style={{
-                                display: "inline-block",
-                                padding: "2px 8px",
-                                fontSize: 11,
-                                fontWeight: 500,
-                                borderRadius: 999,
-                                color: b.color,
-                                border: `1px solid ${b.color}`,
-                              }}
-                            >
-                              {b.label}
-                            </span>
-                          </td>
-                          <td style={tdStyle}>
-                            {row.marketing ? "✓" : "—"}
-                          </td>
-                          <td style={tdStyle}>
-                            {row.analytics ? "✓" : "—"}
-                          </td>
-                          <td style={tdStyle}>
-                            {row.functional ? "✓" : "—"}
-                          </td>
-                          <td style={tdStyle}>{row.country ?? "—"}</td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>When</TableHead>
+                    <TableHead>Decision</TableHead>
+                    <TableHead>Marketing</TableHead>
+                    <TableHead>Analytics</TableHead>
+                    <TableHead>Functional</TableHead>
+                    <TableHead>Country</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {rows.map((row) => {
+                    const b = decisionBadge(row.decision);
+                    return (
+                      <TableRow key={row.id}>
+                        <TableCell>
+                          {new Date(row.created_at).toLocaleString()}
+                        </TableCell>
+                        <TableCell>
+                          <Badge variant={b.variant} size="sm">
+                            {b.label}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>{row.marketing ? "✓" : "—"}</TableCell>
+                        <TableCell>{row.analytics ? "✓" : "—"}</TableCell>
+                        <TableCell>{row.functional ? "✓" : "—"}</TableCell>
+                        <TableCell>{row.country ?? "—"}</TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
             </>
           )}
         </Panel>
@@ -590,110 +541,70 @@ export default async function ConsentDashboardPage({
         </div>
 
         <Panel title="Recent decisions">
-          <div style={{ overflowX: "auto" }}>
-            <table style={{ width: "100%", borderCollapse: "collapse" }}>
-              <thead>
-                <tr style={{ textAlign: "left" }}>
-                  {[
-                    "When",
-                    "Decision",
-                    "Marketing",
-                    "Analytics",
-                    "Functional",
-                    "Country",
-                    "Anon ID",
-                  ].map((h) => (
-                    <th
-                      key={h}
-                      style={{
-                        padding: "10px 12px",
-                        fontSize: 12,
-                        fontWeight: 500,
-                        color: "var(--ds-gray-700)",
-                        borderBottom: "1px solid var(--ds-gray-400)",
-                        textTransform: "uppercase",
-                        letterSpacing: 0.3,
-                      }}
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>When</TableHead>
+                <TableHead>Decision</TableHead>
+                <TableHead>Marketing</TableHead>
+                <TableHead>Analytics</TableHead>
+                <TableHead>Functional</TableHead>
+                <TableHead>Country</TableHead>
+                <TableHead>Anon ID</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {recent.length === 0 && (
+                <TableRow>
+                  <TableCell
+                    colSpan={7}
+                    style={{
+                      padding: 24,
+                      textAlign: "center",
+                      color: "var(--ds-gray-700)",
+                    }}
+                  >
+                    No decisions yet.
+                  </TableCell>
+                </TableRow>
+              )}
+              {recent.map((row) => {
+                const b = decisionBadge(row.decision);
+                return (
+                  <TableRow key={row.id}>
+                    <TableCell>
+                      {new Date(row.created_at).toLocaleString()}
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant={b.variant} size="sm">
+                        {b.label}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>{row.marketing ? "✓" : "—"}</TableCell>
+                    <TableCell>{row.analytics ? "✓" : "—"}</TableCell>
+                    <TableCell>{row.functional ? "✓" : "—"}</TableCell>
+                    <TableCell>{row.country ?? "—"}</TableCell>
+                    <TableCell
+                      style={{ fontFamily: "var(--font-mono)", fontSize: 12 }}
                     >
-                      {h}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {recent.length === 0 && (
-                  <tr>
-                    <td
-                      colSpan={7}
-                      style={{
-                        padding: 24,
-                        textAlign: "center",
-                        fontSize: 13,
-                        color: "var(--ds-gray-700)",
-                      }}
-                    >
-                      No decisions yet.
-                    </td>
-                  </tr>
-                )}
-                {recent.map((row) => {
-                  const b = decisionBadge(row.decision);
-                  return (
-                    <tr key={row.id}>
-                      <td style={tdStyle}>
-                        {new Date(row.created_at).toLocaleString()}
-                      </td>
-                      <td style={tdStyle}>
-                        <span
-                          style={{
-                            display: "inline-block",
-                            padding: "2px 8px",
-                            fontSize: 11,
-                            fontWeight: 500,
-                            borderRadius: 999,
-                            color: b.color,
-                            border: `1px solid ${b.color}`,
-                          }}
-                        >
-                          {b.label}
-                        </span>
-                      </td>
-                      <td style={tdStyle}>{row.marketing ? "✓" : "—"}</td>
-                      <td style={tdStyle}>{row.analytics ? "✓" : "—"}</td>
-                      <td style={tdStyle}>{row.functional ? "✓" : "—"}</td>
-                      <td style={tdStyle}>{row.country ?? "—"}</td>
-                      <td
+                      <a
+                        href={`/admin/consent?q=${encodeURIComponent(row.anon_id)}`}
                         style={{
-                          ...tdStyle,
-                          fontFamily: "var(--font-mono)",
-                          fontSize: 12,
+                          color: "var(--ds-gray-700)",
+                          textDecoration: "underline",
                         }}
                       >
-                        <a
-                          href={`/admin/consent?q=${encodeURIComponent(row.anon_id)}`}
-                          style={{
-                            color: "var(--ds-gray-700)",
-                            textDecoration: "underline",
-                          }}
-                        >
-                          {row.anon_id.slice(0, 8)}…
-                        </a>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+                        {row.anon_id.slice(0, 8)}…
+                      </a>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
         </Panel>
       </div>
     </div>
   );
 }
 
-const tdStyle: React.CSSProperties = {
-  padding: "10px 12px",
-  fontSize: 13,
-  color: "var(--ds-gray-1000)",
-  borderBottom: "1px solid var(--ds-gray-300)",
-};

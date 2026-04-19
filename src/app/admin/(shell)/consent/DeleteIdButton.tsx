@@ -1,6 +1,8 @@
 "use client";
 
 import { useTransition } from "react";
+import { Trash2 } from "lucide-react";
+import Button from "@/components/ui/Button";
 import { deleteConsentRecordsByAnonId } from "./actions";
 
 export default function DeleteIdButton({
@@ -25,23 +27,16 @@ export default function DeleteIdButton({
   };
 
   return (
-    <button
-      type="button"
+    <Button
+      variant="error"
+      size="small"
       onClick={handleClick}
-      disabled={pending}
-      style={{
-        padding: "8px 12px",
-        fontSize: 13,
-        fontWeight: 500,
-        borderRadius: 6,
-        border: "1px solid var(--ds-red-900)",
-        background: "var(--ds-red-900)",
-        color: "#fff",
-        cursor: pending ? "not-allowed" : "pointer",
-        opacity: pending ? 0.7 : 1,
-      }}
+      loading={pending}
+      prefixIcon={<Trash2 className="w-4 h-4" />}
     >
-      {pending ? "Deleting…" : `Delete ${count} record${count === 1 ? "" : "s"}`}
-    </button>
+      {pending
+        ? "Deleting…"
+        : `Delete ${count} record${count === 1 ? "" : "s"}`}
+    </Button>
   );
 }

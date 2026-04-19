@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { useContext } from "react";
 import { usePathname } from "next/navigation";
 import { DarkModeContext } from "@/components/DarkModeProvider";
+import Button from "@/components/ui/Button";
 import { ThemeSwitcher } from "@/components/ui/ThemeSwitcher";
 import { logout } from "../login/actions";
 import AdminCommandMenu from "./AdminCommandMenu";
@@ -70,20 +71,9 @@ export default function AdminShell({ children }: { children: ReactNode }) {
             onChange={setTheme}
           />
           <form action={logout}>
-            <button
-              type="submit"
-              style={{
-                padding: "8px 12px",
-                fontSize: 13,
-                border: "1px solid var(--ds-gray-400)",
-                borderRadius: 6,
-                background: "var(--ds-background-100)",
-                color: "var(--ds-gray-1000)",
-                cursor: "pointer",
-              }}
-            >
+            <Button type="submit" variant="secondary" size="small">
               Sign out
-            </button>
+            </Button>
           </form>
         </div>
       </header>
