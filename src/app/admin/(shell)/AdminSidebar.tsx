@@ -158,7 +158,7 @@ function AdminNav({ pathname }: { pathname: string }) {
                 aria-current={active ? "page" : undefined}
                 className={`${baseClasses} ${stateClasses}`}
                 style={{
-                  height: 40,
+                  height: 36,
                   paddingLeft: 12,
                   paddingRight: item.hasSubmenu ? 8 : 12,
                   fontSize: 14,
@@ -216,7 +216,7 @@ function DesignSystemNav({ pathname }: { pathname: string }) {
                       <button
                         type="button"
                         disabled
-                        className="group relative -ml-2 flex h-[40px] w-full items-center gap-2.5 rounded-md px-3 py-1.5 text-[14px] leading-[20px] outline-none transition-colors text-textSubtle cursor-not-allowed"
+                        className="group relative -ml-2 flex h-9 w-full items-center gap-2.5 rounded-md px-3 py-1.5 text-[14px] leading-[20px] outline-none transition-colors text-textSubtle cursor-not-allowed"
                       >
                         <span className="flex flex-row items-center gap-2">
                           {item.label}
@@ -226,7 +226,7 @@ function DesignSystemNav({ pathname }: { pathname: string }) {
                       <Link
                         href={`/admin/design-system/${item.id}`}
                         className={`
-                            group relative -ml-2 flex h-[40px] w-full items-center gap-2.5 rounded-md px-3 py-1.5 text-[14px] leading-[20px] outline-none transition-colors
+                            group relative -ml-2 flex h-9 w-full items-center gap-2.5 rounded-md px-3 py-1.5 text-[14px] leading-[20px] outline-none transition-colors
                             ${
                               isActive
                                 ? "bg-black/[0.05] dark:bg-white/[0.1] text-black dark:text-white"
