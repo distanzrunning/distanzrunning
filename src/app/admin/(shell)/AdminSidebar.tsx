@@ -249,18 +249,17 @@ export default function AdminSidebar({
 
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
-      {inDs ? (
+      <BrandHeader />
+      {searchTrigger && (
+        <div style={{ padding: "0 16px 8px" }}>{searchTrigger}</div>
+      )}
+      {inDs && (
         <BackHeader
           leftSlot={<ChevronLeft className="w-4 h-4" />}
           label="Design System"
           href="/admin"
           ariaLabel="Back to admin"
         />
-      ) : (
-        <BrandHeader />
-      )}
-      {searchTrigger && (
-        <div style={{ padding: "0 16px 8px" }}>{searchTrigger}</div>
       )}
       <div style={{ flex: 1, overflowY: "auto", minHeight: 0 }}>
         {inDs ? (
