@@ -1,12 +1,59 @@
 "use client";
 
 import React, { useState, useRef, useEffect, useCallback } from "react";
+import { createPortal } from "react-dom";
 import { Button } from "@/components/ui/Button";
 import {
   submitFeedback,
   type FeedbackEmotion,
   type FeedbackPayload,
 } from "@/lib/feedback";
+
+// ============================================================================
+// Anchored coords — keeps a portal'd panel positioned next to its trigger
+// ============================================================================
+
+interface AnchorRect {
+  top: number;
+  left: number;
+  bottom: number;
+  right: number;
+  width: number;
+  height: number;
+}
+
+function useAnchorRect(
+  active: boolean,
+  ref: React.RefObject<HTMLElement | null>,
+): AnchorRect | null {
+  const [rect, setRect] = useState<AnchorRect | null>(null);
+
+  useEffect(() => {
+    if (!active || !ref.current) return;
+    const update = () => {
+      const el = ref.current;
+      if (!el) return;
+      const r = el.getBoundingClientRect();
+      setRect({
+        top: r.top,
+        left: r.left,
+        bottom: r.bottom,
+        right: r.right,
+        width: r.width,
+        height: r.height,
+      });
+    };
+    update();
+    window.addEventListener("scroll", update, true);
+    window.addEventListener("resize", update);
+    return () => {
+      window.removeEventListener("scroll", update, true);
+      window.removeEventListener("resize", update);
+    };
+  }, [active, ref]);
+
+  return rect;
+}
 
 // ============================================================================
 // Types
@@ -563,7 +610,7 @@ export function FeedbackInline({
           bottom: 0;
           left: 50%;
           transform: translateX(-50%);
-          z-index: 50;
+          z-index: 10000;
           display: flex;
           flex-direction: column;
           width: max-content;
@@ -875,6 +922,12 @@ export function FeedbackWithSelect({
     return () => document.removeEventListener("keydown", handleEscape);
   }, [isOpen]);
 
+  const anchor = useAnchorRect(isOpen, triggerRef);
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   return (
     <div className={className} style={{ position: "relative", display: "inline-block" }}>
       <Button
@@ -889,24 +942,31 @@ export function FeedbackWithSelect({
         {buttonLabel}
       </Button>
 
-      {isOpen && (
+      {isOpen && mounted && anchor &&
+        createPortal(
         <div
           ref={popoverRef}
           role="dialog"
           style={{
-            position: "absolute",
+            position: "fixed",
             ...(direction === "below"
-              ? { top: "calc(100% + 8px)" }
-              : { bottom: "calc(100% + 8px)" }),
-            left: "50%",
-            transform: "translateX(-50%)",
+              ? {
+                  top: anchor.bottom + 8,
+                  left: anchor.left + anchor.width / 2,
+                  transform: "translateX(-50%)",
+                }
+              : {
+                  top: anchor.top - 8,
+                  left: anchor.left + anchor.width / 2,
+                  transform: "translate(-50%, -100%)",
+                }),
             width: 340,
             borderRadius: 12,
             background: "var(--ds-background-100)",
             boxShadow:
               "rgba(0, 0, 0, 0.08) 0px 0px 0px 1px, rgba(0, 0, 0, 0.02) 0px 1px 1px 0px, rgba(0, 0, 0, 0.04) 0px 4px 8px -4px, rgba(0, 0, 0, 0.06) 0px 16px 24px -8px, var(--ds-gray-100) 0px 0px 0px 1px",
             overflow: "hidden",
-            zIndex: 101,
+            zIndex: 10000,
             animation: "feedbackFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
           }}
         >
@@ -1115,7 +1175,8 @@ export function FeedbackWithSelect({
               </div>
             </form>
           )}
-        </div>
+        </div>,
+        document.body,
       )}
 
       <style>{`
@@ -1265,6 +1326,13 @@ export function Feedback({
     }
   }, [step, isOpen, submitted]);
 
+  // Track trigger position so the portal'd popover stays glued to it.
+  const anchor = useAnchorRect(isOpen, triggerRef);
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   // Close on click outside
   useEffect(() => {
     if (!isOpen) return;
@@ -1307,28 +1375,32 @@ export function Feedback({
         {buttonLabel}
       </Button>
 
-      {/* Popover */}
-      {isOpen && (
-        <div
-          ref={popoverRef}
-          role="dialog"
-          style={{
-            position: "absolute",
-            ...(direction === "below"
-              ? { top: "calc(100% + 8px)" }
-              : { bottom: "calc(100% + 8px)" }),
-            left: "50%",
-            transform: "translateX(-50%)",
-            width: 340,
-            borderRadius: 12,
-            background: "var(--ds-background-100)",
-            boxShadow:
-              "rgba(0, 0, 0, 0.08) 0px 0px 0px 1px, rgba(0, 0, 0, 0.02) 0px 1px 1px 0px, rgba(0, 0, 0, 0.04) 0px 4px 8px -4px, rgba(0, 0, 0, 0.06) 0px 16px 24px -8px, var(--ds-gray-100) 0px 0px 0px 1px",
-            overflow: "hidden",
-            zIndex: 101,
-            animation: "feedbackFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
-          }}
-        >
+      {/* Popover — portalled to <body> so ancestor stacking contexts and
+          overflow:hidden can't trap it. */}
+      {isOpen && mounted && anchor &&
+        createPortal(
+          <div
+            ref={popoverRef}
+            role="dialog"
+            style={{
+              position: "fixed",
+              ...(direction === "below"
+                ? { top: anchor.bottom + 8 }
+                : { top: anchor.top - 8, transform: "translate(-50%, -100%)" }),
+              left: anchor.left + anchor.width / 2,
+              ...(direction === "below"
+                ? { transform: "translateX(-50%)" }
+                : {}),
+              width: 340,
+              borderRadius: 12,
+              background: "var(--ds-background-100)",
+              boxShadow:
+                "rgba(0, 0, 0, 0.08) 0px 0px 0px 1px, rgba(0, 0, 0, 0.02) 0px 1px 1px 0px, rgba(0, 0, 0, 0.04) 0px 4px 8px -4px, rgba(0, 0, 0, 0.06) 0px 16px 24px -8px, var(--ds-gray-100) 0px 0px 0px 1px",
+              overflow: "hidden",
+              zIndex: 10000,
+              animation: "feedbackFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
+            }}
+          >
           {submitted ? (
             <div
               style={{
@@ -1513,8 +1585,9 @@ export function Feedback({
                 </div>
             </form>
           )}
-        </div>
-      )}
+          </div>,
+          document.body,
+        )}
 
       {/* Styles */}
       <style>{`
