@@ -4,7 +4,6 @@ import "./globals.css";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import { EB_Garamond } from "next/font/google";
-import AuthProtection from "@/components/AuthProtection";
 import LayoutContent from "@/components/LayoutContent";
 import NavbarAltWrapper from "@/components/NavbarAltWrapper";
 import Footer from "@/components/Footer";
@@ -139,11 +138,9 @@ export default function RootLayout({
           <DarkModeProvider>
             <ConsentProvider>
               <ConsentSync />
-              <AuthProtection>
-                <LayoutContent navbar={<NavbarAltWrapper />} footer={<Footer />}>
-                  {children}
-                </LayoutContent>
-              </AuthProtection>
+              <LayoutContent navbar={<NavbarAltWrapper />} footer={<Footer />}>
+                {children}
+              </LayoutContent>
               <ConsentBanner />
 
               <Analytics />

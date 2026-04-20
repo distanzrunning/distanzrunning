@@ -22,7 +22,9 @@ export async function login(
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",
     path: "/admin",
-    maxAge: 60 * 60 * 24 * 7,
+    // 8 hours — expires during/after a working day, forcing a fresh login
+    // rather than carrying access across multiple days.
+    maxAge: 60 * 60 * 8,
   });
   redirect("/admin/consent");
 }

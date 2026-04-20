@@ -1,4 +1,9 @@
 import { NextResponse, type NextRequest } from "next/server";
+import {
+  STAGING_COOKIE,
+  STAGING_HOST,
+  verifyStagingCookie,
+} from "@/lib/staging-auth";
 
 // Countries where consent-on-entry is strictly required (GDPR + UK GDPR +
 // Switzerland's FADP). In other regions the banner is skipped and consent
@@ -30,7 +35,45 @@ function classifyRegion(country: string): Region {
   return REGULATED_COUNTRIES.has(code) ? "regulated" : "other";
 }
 
-export function middleware(request: NextRequest) {
+async function handleStagingAuth(
+  request: NextRequest,
+): Promise<NextResponse | null> {
+  // Staging gate applies only on the preview host.
+  const host = request.headers.get("host") ?? "";
+  if (host !== STAGING_HOST) return null;
+
+  const { pathname } = request.nextUrl;
+  // Always let the login UI, auth API, and framework internals through.
+  if (
+    pathname === "/login" ||
+    pathname.startsWith("/api/") ||
+    pathname.startsWith("/_next/")
+  ) {
+    return null;
+  }
+
+  const secret = process.env.AUTH_SECRET;
+  // If the secret isn't configured we fail closed — redirect to /login so
+  // the failure is visible rather than silently granting access.
+  if (!secret) {
+    return NextResponse.redirect(new URL("/login", request.url));
+  }
+
+  const cookie = request.cookies.get(STAGING_COOKIE)?.value;
+  const valid = await verifyStagingCookie(cookie, secret);
+  if (valid) return null;
+
+  return NextResponse.redirect(new URL("/login", request.url));
+}
+
+export async function middleware(request: NextRequest) {
+  // 1. Staging auth — redirect unauthenticated visitors to /login on the
+  //    preview host. Runs before anything else so no downstream logic
+  //    leaks data to unauthenticated requests.
+  const authRedirect = await handleStagingAuth(request);
+  if (authRedirect) return authRedirect;
+
+  // 2. Regional gating — write / refresh the distanz-region cookie.
   const country = request.headers.get("x-vercel-ip-country") ?? "";
   const region = classifyRegion(country);
 

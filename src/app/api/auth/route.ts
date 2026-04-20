@@ -1,97 +1,69 @@
 // src/app/api/auth/route.ts
-import { NextRequest, NextResponse } from 'next/server'
-import crypto from 'crypto'
+import { NextRequest, NextResponse } from "next/server";
+import {
+  STAGING_COOKIE,
+  STAGING_COOKIE_MAX_AGE,
+  signStagingCookie,
+  verifyStagingCookie,
+} from "@/lib/staging-auth";
 
-const STAGING_PASSWORD = process.env.STAGING_PASSWORD || 'distanz2025'
-const SECRET_KEY = process.env.AUTH_SECRET || 'fallback-secret-key-change-in-production'
-
-// Function to create signed cookie value
-function createSignedCookie(value: string): string {
-  const signature = crypto
-    .createHmac('sha256', SECRET_KEY)
-    .update(value)
-    .digest('hex')
-  return `${value}.${signature}`
-}
-
-// Function to verify signed cookie
-function verifySignedCookie(signedValue: string): boolean {
-  try {
-    const parts = signedValue.split('.')
-    if (parts.length !== 2) return false
-    
-    const [value, signature] = parts
-    if (!value || !signature || value !== 'authenticated') return false
-    
-    // Validate signature format (should be 64 hex characters)
-    if (!/^[a-f0-9]{64}$/i.test(signature)) return false
-    
-    const expectedSignature = crypto
-      .createHmac('sha256', SECRET_KEY)
-      .update(value)
-      .digest('hex')
-    
-    // Use crypto.timingSafeEqual to prevent timing attacks
-    const signatureBuffer = Buffer.from(signature, 'hex')
-    const expectedBuffer = Buffer.from(expectedSignature, 'hex')
-    
-    if (signatureBuffer.length !== expectedBuffer.length) return false
-    
-    return crypto.timingSafeEqual(signatureBuffer, expectedBuffer)
-  } catch (error) {
-    console.log('Cookie verification error:', error)
-    return false
-  }
+function requireAuthEnv():
+  | { ok: true; password: string; secret: string }
+  | { ok: false } {
+  const password = process.env.STAGING_PASSWORD;
+  const secret = process.env.AUTH_SECRET;
+  if (!password || !secret) return { ok: false };
+  return { ok: true, password, secret };
 }
 
 export async function POST(request: NextRequest) {
-  try {
-    console.log('Auth API called')
-    const { password } = await request.json()
-    console.log('Password received:', password ? 'Yes' : 'No')
-
-    if (password === STAGING_PASSWORD) {
-      console.log('Password matches, creating signed cookie')
-      
-      // Create signed cookie value
-      const signedValue = createSignedCookie('authenticated')
-      
-      const response = NextResponse.json({ success: true })
-      
-      // Set signed authentication cookie
-      response.cookies.set('staging-auth', signedValue, {
-        httpOnly: false,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
-        path: '/',
-        maxAge: 24 * 60 * 60, // 24 hours
-      })
-
-      console.log('Signed cookie set successfully')
-      return response
-    } else {
-      console.log('Password mismatch')
-      return NextResponse.json({ 
-        success: false, 
-        message: 'Invalid password'
-      }, { status: 401 })
-    }
-  } catch (error) {
-    console.error('Auth API error:', error)
-    return NextResponse.json({ success: false, message: 'Server error' }, { status: 500 })
+  const env = requireAuthEnv();
+  if (!env.ok) {
+    return NextResponse.json(
+      { success: false, message: "Auth not configured" },
+      { status: 500 },
+    );
   }
+
+  let password: string | undefined;
+  try {
+    const body = (await request.json()) as { password?: unknown };
+    if (typeof body?.password === "string") password = body.password;
+  } catch {
+    return NextResponse.json(
+      { success: false, message: "Invalid request" },
+      { status: 400 },
+    );
+  }
+
+  if (password !== env.password) {
+    return NextResponse.json(
+      { success: false, message: "Invalid password" },
+      { status: 401 },
+    );
+  }
+
+  const signed = await signStagingCookie(env.secret);
+  const response = NextResponse.json({ success: true });
+  response.cookies.set(STAGING_COOKIE, signed, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    path: "/",
+    maxAge: STAGING_COOKIE_MAX_AGE,
+  });
+  return response;
 }
 
-// Helper function to check authentication (can be used in middleware)
-export function isAuthenticated(cookieValue: string | undefined): boolean {
-  if (!cookieValue) return false
-  return verifySignedCookie(cookieValue)
-}
-
-// Optional: Add a GET endpoint to check auth status
+// Kept for callers that still want to poll auth status (middleware is now
+// the primary gate). Returns false if env is missing so nothing silently
+// authenticates.
 export async function GET(request: NextRequest) {
-  const cookieValue = request.cookies.get('staging-auth')?.value
-  const authenticated = isAuthenticated(cookieValue)
-  
-  return NextResponse.json({ authenticated })
+  const env = requireAuthEnv();
+  if (!env.ok) {
+    return NextResponse.json({ authenticated: false });
+  }
+  const cookie = request.cookies.get(STAGING_COOKIE)?.value;
+  const authenticated = await verifyStagingCookie(cookie, env.secret);
+  return NextResponse.json({ authenticated });
 }
