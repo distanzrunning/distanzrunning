@@ -589,6 +589,7 @@ export function FeedbackInline({
                   <textarea
                     ref={textareaRef}
                     id="feedback-textarea"
+                    className="feedback-inline-textarea"
                     placeholder="Your feedback..."
                     value={feedbackText}
                     onChange={(e) => setFeedbackText(e.target.value)}
@@ -600,7 +601,6 @@ export function FeedbackInline({
                     style={{
                       display: "flex",
                       width: "100%",
-                      height: 100,
                       borderRadius: 6,
                       border: "none",
                       padding: "10px 12px",
@@ -724,6 +724,36 @@ export function FeedbackInline({
           padding: 0 20px;
           transform: translateZ(0);
           backface-visibility: hidden;
+        }
+        /* Textarea grows in alongside the wrapper expansion (matched
+           timing/easing) so it doesn't pop in at full size. */
+        .feedback-inline-textarea {
+          height: 100px;
+        }
+        .feedback-inline-wrapper--expanded .feedback-inline-textarea {
+          animation: feedbackInlineTextareaGrow 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        @keyframes feedbackInlineTextareaGrow {
+          from {
+            height: 0;
+            opacity: 0;
+          }
+          to {
+            height: 100px;
+            opacity: 1;
+          }
+        }
+        /* Markdown hint + action bar fade in too so the body doesn't pop. */
+        .feedback-inline-wrapper--expanded .feedback-inline-body form > div {
+          animation: feedbackInlineBodyIn 0.25s cubic-bezier(0.4, 0, 0.2, 1) both;
+        }
+        @keyframes feedbackInlineBodyIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
         }
         .feedback-inline-wrapper .feedback-emoji {
           display: flex;
