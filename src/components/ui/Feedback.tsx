@@ -16,11 +16,49 @@ export interface FeedbackProps {
   /** Text shown on the trigger button (default: "Feedback") */
   buttonLabel?: string;
   /** Callback when feedback is submitted */
-  onSubmit?: (data: { emotion: string; feedback: string; metadata?: Record<string, string> }) => void;
+  onSubmit?: (data: {
+    emotion: string;
+    feedback: string;
+    email?: string;
+    metadata?: Record<string, string>;
+  }) => void;
   /** Optional metadata to include with the submission */
   metadata?: Record<string, string>;
+  /** Add a second step that collects an optional follow-up email */
+  collectEmail?: boolean;
   className?: string;
 }
+
+// ============================================================================
+// Email helpers (shared across every variant)
+// ============================================================================
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+/** Returns empty string when valid (or empty); otherwise an error message. */
+function validateOptionalEmail(value: string): string {
+  const trimmed = value.trim();
+  if (!trimmed) return "";
+  return EMAIL_RE.test(trimmed) ? "" : "Please enter a valid email";
+}
+
+/** Visual tweaks that match the shared textarea-wrapper style. */
+const emailInputStyle: React.CSSProperties = {
+  display: "flex",
+  width: "100%",
+  height: 40,
+  borderRadius: 6,
+  border: "none",
+  padding: "0 12px",
+  fontSize: 14,
+  lineHeight: "20px",
+  color: "var(--ds-gray-1000)",
+  background: "var(--ds-background-100)",
+  outline: "none",
+  fontFamily: "inherit",
+  boxSizing: "border-box",
+  appearance: "none",
+};
 
 // ============================================================================
 // Emoji Icons (Geist exact SVG paths)
@@ -160,7 +198,13 @@ export interface FeedbackInlineProps {
   /** Text shown as the label (default: "Was this helpful?") */
   label?: string;
   /** Callback when feedback is submitted */
-  onSubmit?: (data: { emotion: string; feedback: string }) => void;
+  onSubmit?: (data: {
+    emotion: string;
+    feedback: string;
+    email?: string;
+  }) => void;
+  /** Add a second step that collects an optional follow-up email */
+  collectEmail?: boolean;
   className?: string;
 }
 
@@ -171,6 +215,7 @@ export interface FeedbackInlineProps {
 export function FeedbackInline({
   label = "Was this helpful?",
   onSubmit,
+  collectEmail = false,
   className,
 }: FeedbackInlineProps) {
   const [selectedEmotion, setSelectedEmotion] = useState<string | null>(null);
@@ -178,7 +223,11 @@ export function FeedbackInline({
   const [isExpanded, setIsExpanded] = useState(false);
   const [isSending, setIsSending] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [step, setStep] = useState<"form" | "email">("form");
+  const [email, setEmail] = useState("");
+  const [emailError, setEmailError] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const emailRef = useRef<HTMLInputElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
   const close = useCallback(() => {
@@ -187,6 +236,9 @@ export function FeedbackInline({
       setSelectedEmotion(null);
       setFeedbackText("");
       setSubmitted(false);
+      setStep("form");
+      setEmail("");
+      setEmailError("");
     }, 250);
   }, []);
 
@@ -203,17 +255,21 @@ export function FeedbackInline({
     [selectedEmotion, isSending, submitted, close],
   );
 
-  const handleSubmit = useCallback(
-    async (e: React.FormEvent) => {
-      e.preventDefault();
-      if (!selectedEmotion || isSending) return;
+  const send = useCallback(
+    async (emailValue: string) => {
       setIsSending(true);
+      const trimmedEmail = emailValue.trim() || undefined;
       const payload: FeedbackPayload = {
         emotion: selectedEmotion as FeedbackEmotion,
         feedback: feedbackText,
+        email: trimmedEmail,
       };
       if (onSubmit) {
-        onSubmit({ emotion: payload.emotion!, feedback: payload.feedback });
+        onSubmit({
+          emotion: payload.emotion!,
+          feedback: payload.feedback,
+          email: trimmedEmail,
+        });
       } else {
         await submitFeedback(payload);
       }
@@ -223,14 +279,44 @@ export function FeedbackInline({
         setTimeout(close, 2200);
       }, 650);
     },
-    [selectedEmotion, feedbackText, onSubmit, isSending, close],
+    [selectedEmotion, feedbackText, onSubmit, close],
+  );
+
+  const handleStep1Submit = useCallback(
+    (e: React.FormEvent) => {
+      e.preventDefault();
+      if (!selectedEmotion || isSending) return;
+      if (collectEmail) {
+        setStep("email");
+      } else {
+        void send("");
+      }
+    },
+    [selectedEmotion, isSending, collectEmail, send],
+  );
+
+  const handleStep2Submit = useCallback(
+    (e: React.FormEvent) => {
+      e.preventDefault();
+      if (isSending) return;
+      const err = validateOptionalEmail(email);
+      if (err) {
+        setEmailError(err);
+        return;
+      }
+      void send(email);
+    },
+    [email, isSending, send],
   );
 
   useEffect(() => {
-    if (isExpanded && !submitted) {
+    if (!isExpanded || submitted) return;
+    if (step === "form") {
       requestAnimationFrame(() => textareaRef.current?.focus());
+    } else {
+      requestAnimationFrame(() => emailRef.current?.focus());
     }
-  }, [isExpanded, submitted]);
+  }, [isExpanded, submitted, step]);
 
   // Close on outside click while the panel is open and idle
   useEffect(() => {
@@ -317,8 +403,72 @@ export function FeedbackInline({
               Thank you for your help.
             </p>
           </div>
+        ) : step === "email" ? (
+          <form onSubmit={handleStep2Submit}>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: 8,
+                padding: 8,
+              }}
+            >
+              <label>
+                <div className="feedback-textarea-wrapper">
+                  <input
+                    ref={emailRef}
+                    type="email"
+                    placeholder="you@example.com"
+                    value={email}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                      if (emailError) {
+                        setEmailError(validateOptionalEmail(e.target.value));
+                      }
+                    }}
+                    onBlur={() =>
+                      setEmailError(validateOptionalEmail(email))
+                    }
+                    disabled={isSending}
+                    autoCapitalize="off"
+                    autoComplete="email"
+                    autoCorrect="off"
+                    spellCheck={false}
+                    style={emailInputStyle}
+                  />
+                </div>
+              </label>
+              <div
+                style={{
+                  fontSize: 12,
+                  lineHeight: "16px",
+                  color: emailError
+                    ? "var(--ds-red-900)"
+                    : "var(--ds-gray-700)",
+                }}
+              >
+                {emailError ||
+                  "Optional — we'll only use this to follow up."}
+              </div>
+            </div>
+
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "flex-end",
+                padding: 12,
+                background: "var(--ds-background-200)",
+                borderTop: "1px solid var(--ds-gray-200)",
+              }}
+            >
+              <Button type="submit" size="small" loading={isSending}>
+                {isSending ? "Sending" : "Send"}
+              </Button>
+            </div>
+          </form>
         ) : selectedEmotion ? (
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleStep1Submit}>
             <div
               style={{
                 display: "flex",
@@ -389,7 +539,11 @@ export function FeedbackInline({
               }}
             >
               <Button type="submit" size="small" loading={isSending}>
-                {isSending ? "Sending" : "Send"}
+                {collectEmail
+                  ? "Next"
+                  : isSending
+                    ? "Sending"
+                    : "Send"}
               </Button>
             </div>
           </form>
@@ -585,7 +739,14 @@ export interface FeedbackWithSelectProps {
   /** Label for the select (for accessibility) */
   selectLabel?: string;
   /** Callback when feedback is submitted */
-  onSubmit?: (data: { emotion: string; feedback: string; topic: string }) => void;
+  onSubmit?: (data: {
+    emotion: string;
+    feedback: string;
+    topic: string;
+    email?: string;
+  }) => void;
+  /** Add a second step that collects an optional follow-up email */
+  collectEmail?: boolean;
   className?: string;
 }
 
@@ -599,6 +760,7 @@ export function FeedbackWithSelect({
   options,
   selectLabel = "Product topic selection",
   onSubmit,
+  collectEmail = false,
   className,
 }: FeedbackWithSelectProps) {
   const [isOpen, setIsOpen] = useState(false);
@@ -606,32 +768,41 @@ export function FeedbackWithSelect({
   const [feedbackText, setFeedbackText] = useState("");
   const [selectedTopic, setSelectedTopic] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [step, setStep] = useState<"form" | "email">("form");
+  const [email, setEmail] = useState("");
+  const [emailError, setEmailError] = useState("");
   const popoverRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const selectRef = useRef<HTMLSelectElement>(null);
+  const emailRef = useRef<HTMLInputElement>(null);
   const direction = usePopoverDirection(isOpen, triggerRef);
 
-  // Focus the select when popover opens
+  // Focus the select (step 1) or email input (step 2) when popover opens
+  // or transitions between steps.
   useEffect(() => {
-    if (isOpen && !submitted && selectRef.current) {
-      selectRef.current.focus();
+    if (!isOpen || submitted) return;
+    if (step === "form") {
+      selectRef.current?.focus();
+    } else {
+      emailRef.current?.focus();
     }
-  }, [isOpen, submitted]);
+  }, [isOpen, submitted, step]);
 
-  const handleSubmit = useCallback(
-    async (e: React.FormEvent) => {
-      e.preventDefault();
-      if (!selectedEmotion) return;
+  const finalise = useCallback(
+    async (emailValue: string) => {
+      const trimmedEmail = emailValue.trim() || undefined;
       const payload: FeedbackPayload = {
         emotion: selectedEmotion as FeedbackEmotion,
         feedback: feedbackText,
         topic: selectedTopic || undefined,
+        email: trimmedEmail,
       };
       if (onSubmit) {
         onSubmit({
           emotion: payload.emotion!,
           feedback: payload.feedback,
           topic: payload.topic ?? "",
+          email: trimmedEmail,
         });
       } else {
         await submitFeedback(payload);
@@ -644,10 +815,39 @@ export function FeedbackWithSelect({
           setSelectedEmotion(null);
           setFeedbackText("");
           setSelectedTopic("");
+          setStep("form");
+          setEmail("");
+          setEmailError("");
         }, 200);
       }, 1500);
     },
     [selectedEmotion, feedbackText, selectedTopic, onSubmit],
+  );
+
+  const handleStep1Submit = useCallback(
+    (e: React.FormEvent) => {
+      e.preventDefault();
+      if (!selectedEmotion) return;
+      if (collectEmail) {
+        setStep("email");
+      } else {
+        void finalise("");
+      }
+    },
+    [selectedEmotion, collectEmail, finalise],
+  );
+
+  const handleStep2Submit = useCallback(
+    (e: React.FormEvent) => {
+      e.preventDefault();
+      const err = validateOptionalEmail(email);
+      if (err) {
+        setEmailError(err);
+        return;
+      }
+      void finalise(email);
+    },
+    [email, finalise],
   );
 
   useEffect(() => {
@@ -724,8 +924,71 @@ export function FeedbackWithSelect({
             >
               Thank you for your feedback!
             </div>
+          ) : step === "email" ? (
+            <form onSubmit={handleStep2Submit}>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 8,
+                  padding: 8,
+                }}
+              >
+                <label>
+                  <div className="feedback-textarea-wrapper">
+                    <input
+                      ref={emailRef}
+                      type="email"
+                      placeholder="you@example.com"
+                      value={email}
+                      onChange={(e) => {
+                        setEmail(e.target.value);
+                        if (emailError) {
+                          setEmailError(validateOptionalEmail(e.target.value));
+                        }
+                      }}
+                      onBlur={() =>
+                        setEmailError(validateOptionalEmail(email))
+                      }
+                      autoCapitalize="off"
+                      autoComplete="email"
+                      autoCorrect="off"
+                      spellCheck={false}
+                      style={emailInputStyle}
+                    />
+                  </div>
+                </label>
+                <div
+                  style={{
+                    fontSize: 12,
+                    lineHeight: "16px",
+                    color: emailError
+                      ? "var(--ds-red-900)"
+                      : "var(--ds-gray-700)",
+                  }}
+                >
+                  {emailError ||
+                    "Optional — we'll only use this to follow up."}
+                </div>
+              </div>
+
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "flex-end",
+                  padding: 12,
+                  background: "var(--ds-background-200)",
+                  borderTop: "1px solid var(--ds-gray-200)",
+                }}
+              >
+                <Button type="submit" size="small">
+                  Send
+                </Button>
+              </div>
+            </form>
           ) : (
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleStep1Submit}>
               <div
                 style={{
                   display: "flex",
@@ -847,7 +1110,7 @@ export function FeedbackWithSelect({
                 </span>
 
                 <Button type="submit" size="small">
-                  Send
+                  {collectEmail ? "Next" : "Send"}
                 </Button>
               </div>
             </form>
@@ -919,28 +1182,34 @@ export function Feedback({
   buttonLabel = "Feedback",
   onSubmit,
   metadata,
+  collectEmail = false,
   className,
 }: FeedbackProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedEmotion, setSelectedEmotion] = useState<string | null>(null);
   const [feedbackText, setFeedbackText] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [step, setStep] = useState<"form" | "email">("form");
+  const [email, setEmail] = useState("");
+  const [emailError, setEmailError] = useState("");
   const popoverRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const emailRef = useRef<HTMLInputElement>(null);
   const direction = usePopoverDirection(isOpen, triggerRef);
 
-  const handleSubmit = useCallback(
-    async (e: React.FormEvent) => {
-      e.preventDefault();
-      if (!selectedEmotion) return;
+  const finalise = useCallback(
+    async (emailValue: string) => {
+      const trimmedEmail = emailValue.trim() || undefined;
       const payload: FeedbackPayload = {
         emotion: selectedEmotion as FeedbackEmotion,
         feedback: feedbackText,
+        email: trimmedEmail,
       };
       if (onSubmit) {
         onSubmit({
           emotion: payload.emotion!,
           feedback: payload.feedback,
+          email: trimmedEmail,
           metadata,
         });
       } else {
@@ -954,11 +1223,47 @@ export function Feedback({
           setSubmitted(false);
           setSelectedEmotion(null);
           setFeedbackText("");
+          setStep("form");
+          setEmail("");
+          setEmailError("");
         }, 200);
       }, 1500);
     },
     [selectedEmotion, feedbackText, onSubmit, metadata],
   );
+
+  const handleStep1Submit = useCallback(
+    (e: React.FormEvent) => {
+      e.preventDefault();
+      if (!selectedEmotion) return;
+      if (collectEmail) {
+        setStep("email");
+      } else {
+        void finalise("");
+      }
+    },
+    [selectedEmotion, collectEmail, finalise],
+  );
+
+  const handleStep2Submit = useCallback(
+    (e: React.FormEvent) => {
+      e.preventDefault();
+      const err = validateOptionalEmail(email);
+      if (err) {
+        setEmailError(err);
+        return;
+      }
+      void finalise(email);
+    },
+    [email, finalise],
+  );
+
+  // Focus email input when step 2 opens
+  useEffect(() => {
+    if (step === "email" && isOpen && !submitted) {
+      requestAnimationFrame(() => emailRef.current?.focus());
+    }
+  }, [step, isOpen, submitted]);
 
   // Close on click outside
   useEffect(() => {
@@ -1038,8 +1343,71 @@ export function Feedback({
             >
               Thank you for your feedback!
             </div>
+          ) : step === "email" ? (
+            <form onSubmit={handleStep2Submit}>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 8,
+                  padding: 8,
+                }}
+              >
+                <label>
+                  <div className="feedback-textarea-wrapper">
+                    <input
+                      ref={emailRef}
+                      type="email"
+                      placeholder="you@example.com"
+                      value={email}
+                      onChange={(e) => {
+                        setEmail(e.target.value);
+                        if (emailError) {
+                          setEmailError(validateOptionalEmail(e.target.value));
+                        }
+                      }}
+                      onBlur={() =>
+                        setEmailError(validateOptionalEmail(email))
+                      }
+                      autoCapitalize="off"
+                      autoComplete="email"
+                      autoCorrect="off"
+                      spellCheck={false}
+                      style={emailInputStyle}
+                    />
+                  </div>
+                </label>
+                <div
+                  style={{
+                    fontSize: 12,
+                    lineHeight: "16px",
+                    color: emailError
+                      ? "var(--ds-red-900)"
+                      : "var(--ds-gray-700)",
+                  }}
+                >
+                  {emailError ||
+                    "Optional — we'll only use this to follow up."}
+                </div>
+              </div>
+
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "flex-end",
+                  padding: 12,
+                  background: "var(--ds-background-200)",
+                  borderTop: "1px solid var(--ds-gray-200)",
+                }}
+              >
+                <Button type="submit" size="small">
+                  Send
+                </Button>
+              </div>
+            </form>
           ) : (
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleStep1Submit}>
               {/* Form content area */}
               <div
                 style={{
@@ -1140,7 +1508,7 @@ export function Feedback({
 
                   {/* Send button */}
                   <Button type="submit" size="small">
-                    Send
+                    {collectEmail ? "Next" : "Send"}
                   </Button>
                 </div>
             </form>
