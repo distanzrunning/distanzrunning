@@ -26,7 +26,7 @@ export async function login(
     // rather than carrying access across multiple days.
     maxAge: 60 * 60 * 8,
   });
-  redirect("/admin/consent");
+  redirect("/admin");
 }
 
 export async function logout() {
