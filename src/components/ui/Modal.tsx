@@ -1,7 +1,17 @@
 "use client";
 
-import { useEffect, useState, useRef, type ReactNode, type RefObject } from "react";
+import {
+  useEffect,
+  useState,
+  useRef,
+  useId,
+  type ReactNode,
+  type RefObject,
+} from "react";
 import { createPortal } from "react-dom";
+
+const FOCUSABLE_SELECTOR =
+  'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
 // ============================================================================
 // Types
@@ -67,6 +77,11 @@ export function Modal({
   const [mounted, setMounted] = useState(false);
   const [visible, setVisible] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const openerRef = useRef<HTMLElement | null>(null);
+
+  const titleId = useId();
+  const subtitleId = useId();
 
   useEffect(() => {
     if (open) {
@@ -106,18 +121,72 @@ export function Modal({
     };
   }, [mounted]);
 
-  // Initial focus
+  // Capture the element that was focused when the modal opened so we can
+  // return focus to it on close (WCAG 2.4.3).
   useEffect(() => {
-    if (visible && initialFocusRef?.current) {
-      initialFocusRef.current.focus();
+    if (open) {
+      openerRef.current =
+        typeof document !== "undefined"
+          ? (document.activeElement as HTMLElement | null)
+          : null;
+      return;
     }
+    const opener = openerRef.current;
+    openerRef.current = null;
+    // Only restore focus if it's still in the body (e.g. user didn't navigate
+    // away) and the element is actually focusable.
+    if (opener && typeof opener.focus === "function") {
+      opener.focus();
+    }
+  }, [open]);
+
+  // Initial focus — prefer explicit ref, otherwise first focusable in panel.
+  useEffect(() => {
+    if (!visible) return;
+    if (initialFocusRef?.current) {
+      initialFocusRef.current.focus();
+      return;
+    }
+    const first = panelRef.current?.querySelector<HTMLElement>(
+      FOCUSABLE_SELECTOR,
+    );
+    first?.focus();
   }, [visible, initialFocusRef]);
 
-  // Escape key
+  // Escape key + focus trap
   useEffect(() => {
     if (!open) return;
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") {
+        onClose();
+        return;
+      }
+      if (e.key !== "Tab") return;
+
+      const panel = panelRef.current;
+      if (!panel) return;
+      const focusables = Array.from(
+        panel.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR),
+      ).filter(
+        (el) =>
+          !el.hasAttribute("aria-hidden") &&
+          el.offsetParent !== null, // skip hidden
+      );
+      if (focusables.length === 0) {
+        e.preventDefault();
+        panel.focus();
+        return;
+      }
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      const active = document.activeElement as HTMLElement | null;
+      if (e.shiftKey && (active === first || !panel.contains(active))) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && (active === last || !panel.contains(active))) {
+        e.preventDefault();
+        first.focus();
+      }
     };
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
@@ -163,8 +232,12 @@ export function Modal({
       >
         {/* Modal wrapper */}
         <div
+          ref={panelRef}
           role="dialog"
           aria-modal="true"
+          aria-labelledby={title ? titleId : undefined}
+          aria-describedby={subtitle ? subtitleId : undefined}
+          tabIndex={-1}
           className={`relative w-full mx-4 ${className}`}
           style={{
             display: "flex",
@@ -220,6 +293,7 @@ export function Modal({
               >
                 {title && (
                   <h3
+                    id={titleId}
                     style={{
                       color: "var(--ds-gray-1000)",
                       fontSize: stickyHeader ? 20 : 24,
@@ -236,6 +310,7 @@ export function Modal({
                 )}
                 {subtitle && (
                   <div
+                    id={subtitleId}
                     style={{
                       color: "var(--ds-gray-1000)",
                       fontSize: 16,
