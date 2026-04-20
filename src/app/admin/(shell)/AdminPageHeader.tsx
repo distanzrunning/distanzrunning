@@ -1,13 +1,14 @@
 "use client";
 
-import { useContext, useTransition } from "react";
+import { useContext, useState, useTransition } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LogOut, MoreHorizontal } from "lucide-react";
+import { LogOut, MoreHorizontal, SmilePlus } from "lucide-react";
 import { DarkModeContext } from "@/components/DarkModeProvider";
 import { Menu, MenuButton, MenuItem, MenuSeparator } from "@/components/ui/Menu";
 import { ThemeSwitcher } from "@/components/ui/ThemeSwitcher";
 import { logout } from "../login/actions";
+import AdminFeedbackModal from "./AdminFeedbackModal";
 import { CONSENT_NAV, FEEDBACK_NAV } from "./AdminSidebar";
 import { navigation as dsNavigation } from "./design-system/components/DesignSystemSidebar";
 
@@ -101,6 +102,7 @@ export default function AdminPageHeader() {
   const { section, page } = getTitleParts(pathname);
   const { theme, setTheme } = useContext(DarkModeContext);
   const [, startTransition] = useTransition();
+  const [feedbackOpen, setFeedbackOpen] = useState(false);
 
   return (
     <header
@@ -186,12 +188,24 @@ export default function AdminPageHeader() {
         <MenuSeparator />
 
         <MenuItem
+          onClick={() => setFeedbackOpen(true)}
+          suffix={<SmilePlus className="w-4 h-4" />}
+        >
+          Give Feedback
+        </MenuItem>
+
+        <MenuItem
           onClick={() => startTransition(() => logout())}
           suffix={<LogOut className="w-4 h-4" />}
         >
           Sign out
         </MenuItem>
       </Menu>
+
+      <AdminFeedbackModal
+        open={feedbackOpen}
+        onClose={() => setFeedbackOpen(false)}
+      />
     </header>
   );
 }
