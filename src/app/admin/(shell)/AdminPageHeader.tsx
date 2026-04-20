@@ -5,12 +5,31 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { LogOut, MoreHorizontal, SmilePlus } from "lucide-react";
 import { DarkModeContext } from "@/components/DarkModeProvider";
+import { FeedbackWithSelect } from "@/components/ui/Feedback";
 import { Menu, MenuButton, MenuItem, MenuSeparator } from "@/components/ui/Menu";
 import { ThemeSwitcher } from "@/components/ui/ThemeSwitcher";
 import { logout } from "../login/actions";
-import AdminFeedbackModal from "./AdminFeedbackModal";
 import { CONSENT_NAV, FEEDBACK_NAV } from "./AdminSidebar";
 import { navigation as dsNavigation } from "./design-system/components/DesignSystemSidebar";
+
+// Mirrors the admin section list — used as topic options in the feedback
+// modal. Keep label === value so the topic stored in Supabase reads as
+// the section name.
+const ADMIN_FEEDBACK_TOPICS = [
+  { label: "Overview", value: "Overview" },
+  { label: "Consent", value: "Consent" },
+  { label: "Feedback", value: "Feedback" },
+  { label: "Design System", value: "Design System" },
+  { label: "Other", value: "Other" },
+];
+
+function defaultAdminTopic(pathname: string): string {
+  if (pathname.startsWith("/admin/consent")) return "Consent";
+  if (pathname.startsWith("/admin/feedback")) return "Feedback";
+  if (pathname.startsWith("/admin/design-system")) return "Design System";
+  if (pathname === "/admin" || pathname === "/admin/") return "Overview";
+  return "Other";
+}
 
 const HEADER_HEIGHT = 56;
 
@@ -202,9 +221,15 @@ export default function AdminPageHeader() {
         </MenuItem>
       </Menu>
 
-      <AdminFeedbackModal
+      <FeedbackWithSelect
+        asModal
         open={feedbackOpen}
         onClose={() => setFeedbackOpen(false)}
+        options={ADMIN_FEEDBACK_TOPICS}
+        defaultTopic={defaultAdminTopic(pathname)}
+        collectEmail
+        modalTitle="Give Feedback"
+        modalSubtitle="Help us improve Stride Admin. Pick a section, leave a note, and tell us how you feel."
       />
     </header>
   );

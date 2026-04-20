@@ -1,8 +1,15 @@
 "use client";
 
-import React, { useState, useRef, useEffect, useCallback } from "react";
+import React, {
+  useId,
+  useState,
+  useRef,
+  useEffect,
+  useCallback,
+} from "react";
 import { createPortal } from "react-dom";
 import { Button } from "@/components/ui/Button";
+import { Modal } from "@/components/ui/Modal";
 import {
   submitFeedback,
   type FeedbackEmotion,
@@ -789,7 +796,7 @@ export interface SelectOption {
 }
 
 export interface FeedbackWithSelectProps {
-  /** Text shown on the trigger button (default: "Feedback") */
+  /** Text shown on the trigger button (default: "Feedback"). Ignored when asModal. */
   buttonLabel?: string;
   /** Placeholder for the select (default: "Select a topic...") */
   selectPlaceholder?: string;
@@ -806,6 +813,18 @@ export interface FeedbackWithSelectProps {
   }) => void;
   /** Add a second step that collects an optional follow-up email */
   collectEmail?: boolean;
+  /** Render inside a centred Modal instead of an anchored popover. */
+  asModal?: boolean;
+  /** Controlled open state — required when asModal is true. */
+  open?: boolean;
+  /** Called when the modal should close — required when asModal is true. */
+  onClose?: () => void;
+  /** Pre-select a topic option (e.g. derived from current page). */
+  defaultTopic?: string;
+  /** Title shown in the modal header. Ignored in popover mode. */
+  modalTitle?: string;
+  /** Subtitle shown in the modal header. Ignored in popover mode. */
+  modalSubtitle?: string;
   className?: string;
 }
 
@@ -820,12 +839,28 @@ export function FeedbackWithSelect({
   selectLabel = "Product topic selection",
   onSubmit,
   collectEmail = false,
+  asModal = false,
+  open: openProp,
+  onClose,
+  defaultTopic,
+  modalTitle = "Give feedback",
+  modalSubtitle,
   className,
 }: FeedbackWithSelectProps) {
-  const [isOpen, setIsOpen] = useState(false);
+  const [internalOpen, setInternalOpen] = useState(false);
+  // In modal mode the parent owns open state; otherwise we manage it.
+  const isOpen = asModal ? !!openProp : internalOpen;
+  const closeSelf = useCallback(() => {
+    if (asModal) {
+      onClose?.();
+    } else {
+      setInternalOpen(false);
+    }
+  }, [asModal, onClose]);
+
   const [selectedEmotion, setSelectedEmotion] = useState<string | null>(null);
   const [feedbackText, setFeedbackText] = useState("");
-  const [selectedTopic, setSelectedTopic] = useState("");
+  const [selectedTopic, setSelectedTopic] = useState(defaultTopic ?? "");
   const [submitted, setSubmitted] = useState(false);
   const [step, setStep] = useState<"form" | "email">("form");
   const [email, setEmail] = useState("");
@@ -835,8 +870,24 @@ export function FeedbackWithSelect({
   const selectRef = useRef<HTMLSelectElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
   const direction = usePopoverDirection(isOpen, triggerRef);
+  const formIdBase = useId();
+  const step1FormId = `${formIdBase}-step1`;
+  const step2FormId = `${formIdBase}-step2`;
 
-  // Focus the select (step 1) or email input (step 2) when popover opens
+  // Reset transient form state every time the surface (re)opens, and apply
+  // any defaultTopic the caller passed.
+  useEffect(() => {
+    if (!isOpen) return;
+    setSelectedEmotion(null);
+    setFeedbackText("");
+    setSelectedTopic(defaultTopic ?? "");
+    setStep("form");
+    setEmail("");
+    setEmailError("");
+    setSubmitted(false);
+  }, [isOpen, defaultTopic]);
+
+  // Focus the select (step 1) or email input (step 2) when surface opens
   // or transitions between steps.
   useEffect(() => {
     if (!isOpen || submitted) return;
@@ -868,19 +919,10 @@ export function FeedbackWithSelect({
       }
       setSubmitted(true);
       setTimeout(() => {
-        setIsOpen(false);
-        setTimeout(() => {
-          setSubmitted(false);
-          setSelectedEmotion(null);
-          setFeedbackText("");
-          setSelectedTopic("");
-          setStep("form");
-          setEmail("");
-          setEmailError("");
-        }, 200);
+        closeSelf();
       }, 1500);
     },
-    [selectedEmotion, feedbackText, selectedTopic, onSubmit],
+    [selectedEmotion, feedbackText, selectedTopic, onSubmit, closeSelf],
   );
 
   const handleStep1Submit = useCallback(
@@ -909,8 +951,10 @@ export function FeedbackWithSelect({
     [email, finalise],
   );
 
+  // Popover-only — close on outside click / Escape. Modal owns its own
+  // dismissal via onClose.
   useEffect(() => {
-    if (!isOpen) return;
+    if (asModal || !isOpen) return;
     function handleClickOutside(e: MouseEvent) {
       if (
         popoverRef.current &&
@@ -918,27 +962,237 @@ export function FeedbackWithSelect({
         triggerRef.current &&
         !triggerRef.current.contains(e.target as Node)
       ) {
-        setIsOpen(false);
+        setInternalOpen(false);
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [isOpen]);
+  }, [asModal, isOpen]);
 
   useEffect(() => {
-    if (!isOpen) return;
+    if (asModal || !isOpen) return;
     function handleEscape(e: KeyboardEvent) {
-      if (e.key === "Escape") setIsOpen(false);
+      if (e.key === "Escape") setInternalOpen(false);
     }
     document.addEventListener("keydown", handleEscape);
     return () => document.removeEventListener("keydown", handleEscape);
-  }, [isOpen]);
+  }, [asModal, isOpen]);
 
-  const anchor = useAnchorRect(isOpen, triggerRef);
+  const anchor = useAnchorRect(!asModal && isOpen, triggerRef);
   const [mounted, setMounted] = useState(false);
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  // ----- Shared body / footer fragments -----
+  const step1Body = (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: 8,
+        padding: asModal ? 0 : 8,
+      }}
+    >
+      <label htmlFor={`${formIdBase}-select`}>
+        <div className="feedback-select-wrapper">
+          <select
+            ref={selectRef}
+            id={`${formIdBase}-select`}
+            className="feedback-select"
+            aria-labelledby={selectLabel}
+            value={selectedTopic}
+            onChange={(e) => setSelectedTopic(e.target.value)}
+          >
+            <option disabled value="">
+              {selectPlaceholder}
+            </option>
+            {options.map((opt) => (
+              <option key={opt.value} label={opt.label} value={opt.value}>
+                {opt.label}
+              </option>
+            ))}
+          </select>
+          <span className="feedback-select-suffix">
+            <ChevronDownIcon />
+          </span>
+        </div>
+      </label>
+
+      <label>
+        <div className="feedback-textarea-wrapper">
+          <textarea
+            id={`${formIdBase}-textarea`}
+            placeholder="Your feedback..."
+            value={feedbackText}
+            onChange={(e) => setFeedbackText(e.target.value)}
+            autoCapitalize="off"
+            autoComplete="off"
+            autoCorrect="off"
+            spellCheck={false}
+            style={{
+              display: "flex",
+              width: "100%",
+              height: 100,
+              borderRadius: 6,
+              border: "none",
+              padding: "10px 12px",
+              fontSize: 14,
+              lineHeight: "normal",
+              color: "var(--ds-gray-1000)",
+              background: "var(--ds-background-100)",
+              resize: "none",
+              outline: "none",
+              fontFamily: "inherit",
+              boxSizing: "border-box",
+              appearance: "none",
+            }}
+          />
+        </div>
+      </label>
+
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "flex-end",
+          gap: 4,
+          fontSize: 12,
+          lineHeight: "16px",
+          fontWeight: 400,
+          color: "var(--ds-gray-900)",
+        }}
+      >
+        <MarkdownIcon />
+        <span>supported.</span>
+      </div>
+    </div>
+  );
+
+  const step1Footer = (
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        padding: 12,
+        background: "var(--ds-background-200)",
+        borderTop: "1px solid var(--ds-gray-200)",
+      }}
+    >
+      <span style={{ display: "flex", alignItems: "center", gap: 1 }}>
+        {emojiOptions.map((emoji) => (
+          <button
+            key={emoji.id}
+            type="button"
+            role="radio"
+            className={`feedback-emoji${selectedEmotion === emoji.id ? " feedback-emoji--selected" : ""}`}
+            aria-checked={selectedEmotion === emoji.id}
+            aria-label={`Select ${emoji.label} emoji`}
+            onClick={() =>
+              setSelectedEmotion(
+                selectedEmotion === emoji.id ? null : emoji.id,
+              )
+            }
+          >
+            {emoji.icon}
+          </button>
+        ))}
+      </span>
+      <Button type="submit" size="small" form={asModal ? step1FormId : undefined}>
+        {collectEmail ? "Next" : "Send"}
+      </Button>
+    </div>
+  );
+
+  const step2Body = (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: 8,
+        padding: asModal ? 0 : 8,
+      }}
+    >
+      <label>
+        <div className="feedback-textarea-wrapper">
+          <input
+            ref={emailRef}
+            type="email"
+            placeholder="you@example.com"
+            value={email}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              if (emailError) {
+                setEmailError(validateOptionalEmail(e.target.value));
+              }
+            }}
+            onBlur={() => setEmailError(validateOptionalEmail(email))}
+            autoCapitalize="off"
+            autoComplete="email"
+            autoCorrect="off"
+            spellCheck={false}
+            style={emailInputStyle}
+          />
+        </div>
+      </label>
+      <div
+        style={{
+          fontSize: 12,
+          lineHeight: "16px",
+          color: emailError ? "var(--ds-red-900)" : "var(--ds-gray-700)",
+        }}
+      >
+        {emailError || "Optional — we'll only use this to follow up."}
+      </div>
+    </div>
+  );
+
+  const step2Footer = (
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "flex-end",
+        padding: 12,
+        background: "var(--ds-background-200)",
+        borderTop: "1px solid var(--ds-gray-200)",
+      }}
+    >
+      <Button type="submit" size="small" form={asModal ? step2FormId : undefined}>
+        Send
+      </Button>
+    </div>
+  );
+
+  // ----- Modal mode -----
+  if (asModal) {
+    const body = submitted ? (
+      <FeedbackSuccess />
+    ) : step === "email" ? (
+      <form id={step2FormId} onSubmit={handleStep2Submit}>
+        {step2Body}
+      </form>
+    ) : (
+      <form id={step1FormId} onSubmit={handleStep1Submit}>
+        {step1Body}
+      </form>
+    );
+
+    return (
+      <Modal
+        open={isOpen}
+        onClose={() => closeSelf()}
+        title={modalTitle}
+        subtitle={modalSubtitle}
+        footer={
+          submitted ? null : step === "email" ? step2Footer : step1Footer
+        }
+      >
+        {body}
+      </Modal>
+    );
+  }
 
   return (
     <div className={className} style={{ position: "relative", display: "inline-block" }}>
@@ -947,7 +1201,7 @@ export function FeedbackWithSelect({
         type="button"
         size="small"
         variant="secondary"
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => setInternalOpen((v) => !v)}
         aria-haspopup="dialog"
         aria-expanded={isOpen}
       >
@@ -986,193 +1240,13 @@ export function FeedbackWithSelect({
             <FeedbackSuccess />
           ) : step === "email" ? (
             <form onSubmit={handleStep2Submit}>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: 8,
-                  padding: 8,
-                }}
-              >
-                <label>
-                  <div className="feedback-textarea-wrapper">
-                    <input
-                      ref={emailRef}
-                      type="email"
-                      placeholder="you@example.com"
-                      value={email}
-                      onChange={(e) => {
-                        setEmail(e.target.value);
-                        if (emailError) {
-                          setEmailError(validateOptionalEmail(e.target.value));
-                        }
-                      }}
-                      onBlur={() =>
-                        setEmailError(validateOptionalEmail(email))
-                      }
-                      autoCapitalize="off"
-                      autoComplete="email"
-                      autoCorrect="off"
-                      spellCheck={false}
-                      style={emailInputStyle}
-                    />
-                  </div>
-                </label>
-                <div
-                  style={{
-                    fontSize: 12,
-                    lineHeight: "16px",
-                    color: emailError
-                      ? "var(--ds-red-900)"
-                      : "var(--ds-gray-700)",
-                  }}
-                >
-                  {emailError ||
-                    "Optional — we'll only use this to follow up."}
-                </div>
-              </div>
-
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "flex-end",
-                  padding: 12,
-                  background: "var(--ds-background-200)",
-                  borderTop: "1px solid var(--ds-gray-200)",
-                }}
-              >
-                <Button type="submit" size="small">
-                  Send
-                </Button>
-              </div>
+              {step2Body}
+              {step2Footer}
             </form>
           ) : (
             <form onSubmit={handleStep1Submit}>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: 8,
-                  padding: 8,
-                }}
-              >
-                {/* Select dropdown */}
-                <label htmlFor="feedback-select">
-                  <div className="feedback-select-wrapper">
-                    <select
-                      ref={selectRef}
-                      id="feedback-select"
-                      className="feedback-select"
-                      aria-labelledby={selectLabel}
-                      value={selectedTopic}
-                      onChange={(e) => setSelectedTopic(e.target.value)}
-                    >
-                      <option disabled value="">{selectPlaceholder}</option>
-                      {options.map((opt) => (
-                        <option key={opt.value} label={opt.label} value={opt.value}>
-                          {opt.label}
-                        </option>
-                      ))}
-                    </select>
-                    <span className="feedback-select-suffix">
-                      <ChevronDownIcon />
-                    </span>
-                  </div>
-                </label>
-
-                {/* Textarea */}
-                <label>
-                  <div className="feedback-textarea-wrapper">
-                    <textarea
-                      id="feedback-textarea"
-                      placeholder="Your feedback..."
-                      value={feedbackText}
-                      onChange={(e) => setFeedbackText(e.target.value)}
-                      autoCapitalize="off"
-                      autoComplete="off"
-                      autoCorrect="off"
-                      spellCheck={false}
-                      style={{
-                        display: "flex",
-                        width: "100%",
-                        height: 100,
-                        borderRadius: 6,
-                        border: "none",
-                        padding: "10px 12px",
-                        fontSize: 14,
-                        lineHeight: "normal",
-                        color: "var(--ds-gray-1000)",
-                        background: "var(--ds-background-100)",
-                        resize: "none",
-                        outline: "none",
-                        fontFamily: "inherit",
-                        boxSizing: "border-box",
-                        appearance: "none",
-                      }}
-                    />
-                  </div>
-                </label>
-
-                {/* Markdown tip */}
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "flex-end",
-                    gap: 4,
-                    fontSize: 12,
-                    lineHeight: "16px",
-                    fontWeight: 400,
-                    color: "var(--ds-gray-900)",
-                  }}
-                >
-                  <MarkdownIcon />
-                  <span>supported.</span>
-                </div>
-              </div>
-
-              {/* Actions bar */}
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  padding: 12,
-                  background: "var(--ds-background-200)",
-                  borderTop: "1px solid var(--ds-gray-200)",
-                }}
-              >
-                <span
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 1,
-                  }}
-                >
-                  {emojiOptions.map((emoji) => (
-                    <button
-                      key={emoji.id}
-                      type="button"
-                      role="radio"
-                      className={`feedback-emoji${selectedEmotion === emoji.id ? " feedback-emoji--selected" : ""}`}
-                      aria-checked={selectedEmotion === emoji.id}
-                      aria-label={`Select ${emoji.label} emoji`}
-                      onClick={() =>
-                        setSelectedEmotion(
-                          selectedEmotion === emoji.id ? null : emoji.id,
-                        )
-                      }
-                    >
-                      {emoji.icon}
-                    </button>
-                  ))}
-                </span>
-
-                <Button type="submit" size="small">
-                  {collectEmail ? "Next" : "Send"}
-                </Button>
-              </div>
+              {step1Body}
+              {step1Footer}
             </form>
           )}
         </div>,

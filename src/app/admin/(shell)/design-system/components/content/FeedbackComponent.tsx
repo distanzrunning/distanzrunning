@@ -344,6 +344,33 @@ function FeedbackWithMetadataExample() {
   );
 }`;
 
+const asModalCode = `import { useState } from 'react';
+import { FeedbackWithSelect } from '@/components/ui/Feedback';
+
+const topics = [
+  { label: 'Race Reports', value: 'Race Reports' },
+  { label: 'Training Plans', value: 'Training Plans' },
+];
+
+function FeedbackModalExample() {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <button onClick={() => setOpen(true)}>Open feedback modal</button>
+      <FeedbackWithSelect
+        asModal
+        open={open}
+        onClose={() => setOpen(false)}
+        options={topics}
+        defaultTopic="Race Reports"
+        collectEmail
+        modalTitle="Give feedback"
+        modalSubtitle="Pick a topic and leave a note."
+      />
+    </>
+  );
+}`;
+
 const collectEmailCode = `import { Feedback } from '@/components/ui/Feedback';
 
 function FeedbackWithEmailExample() {
@@ -409,6 +436,32 @@ const withSelectTopics = [
   { label: "Nutrition", value: "Nutrition" },
   { label: "Injury Prevention", value: "Injury Prevention" },
 ];
+
+function AsModalDemo() {
+  const [open, setOpen] = useState(false);
+  return (
+    <div style={{ display: "flex", justifyContent: "center" }}>
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        className="h-8 px-3 rounded-md border border-[var(--ds-gray-400)] bg-[var(--ds-background-100)] text-[14px] text-[var(--ds-gray-1000)] hover:bg-[var(--ds-gray-100)]"
+      >
+        Open feedback modal
+      </button>
+      <FeedbackWithSelect
+        asModal
+        open={open}
+        onClose={() => setOpen(false)}
+        options={withSelectTopics}
+        defaultTopic="Race Reports"
+        collectEmail
+        modalTitle="Give feedback"
+        modalSubtitle="Pick a topic, leave a note, and tell us how you feel."
+        onSubmit={(data) => console.log(data)}
+      />
+    </div>
+  );
+}
 
 function CollectEmailDemo() {
   return (
@@ -490,6 +543,22 @@ export default function FeedbackComponent() {
         </p>
         <CodePreview componentCode={withSelectCode}>
           <WithSelectDemo />
+        </CodePreview>
+      </Section>
+
+      <Section>
+        <SectionHeader id="feedback-as-modal" onCopyLink={showToast}>
+          As a modal
+        </SectionHeader>
+        <p className="text-copy-16 text-textSubtle mt-3 mb-6" style={{ lineHeight: 1.5 }}>
+          Pass <code>asModal</code> to render the same form inside a centred
+          modal instead of an anchored popover. Open state becomes
+          controlled — you supply <code>open</code> and{" "}
+          <code>onClose</code>. <code>defaultTopic</code> pre-selects an
+          option (e.g. derived from the current page).
+        </p>
+        <CodePreview componentCode={asModalCode}>
+          <AsModalDemo />
         </CodePreview>
       </Section>
 
