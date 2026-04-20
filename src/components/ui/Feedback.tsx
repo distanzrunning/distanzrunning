@@ -859,6 +859,7 @@ export function FeedbackWithSelect({
   const [feedbackText, setFeedbackText] = useState("");
   const [selectedTopic, setSelectedTopic] = useState(defaultTopic ?? "");
   const [submitted, setSubmitted] = useState(false);
+  const [sending, setSending] = useState(false);
   const [step, setStep] = useState<"form" | "email">("form");
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState("");
@@ -880,6 +881,7 @@ export function FeedbackWithSelect({
     setEmail("");
     setEmailError("");
     setSubmitted(false);
+    setSending(false);
   }, [isOpen, defaultTopic]);
 
   // Focus the select (step 1) or email input (step 2) when surface opens
@@ -895,6 +897,9 @@ export function FeedbackWithSelect({
 
   const finalise = useCallback(
     async (emailValue: string) => {
+      // Guard against double-submit (rapid double click, Enter + click).
+      if (sending || submitted) return;
+      setSending(true);
       const trimmedEmail = emailValue.trim() || undefined;
       const payload: FeedbackPayload = {
         emotion: selectedEmotion as FeedbackEmotion,
@@ -912,6 +917,7 @@ export function FeedbackWithSelect({
       } else {
         await submitFeedback(payload);
       }
+      setSending(false);
       setSubmitted(true);
       setTimeout(() => {
         closeSelf();
@@ -927,25 +933,35 @@ export function FeedbackWithSelect({
         }, 200);
       }, 1500);
     },
-    [selectedEmotion, feedbackText, selectedTopic, onSubmit, closeSelf, defaultTopic],
+    [
+      sending,
+      submitted,
+      selectedEmotion,
+      feedbackText,
+      selectedTopic,
+      onSubmit,
+      closeSelf,
+      defaultTopic,
+    ],
   );
 
   const handleStep1Submit = useCallback(
     (e: React.FormEvent) => {
       e.preventDefault();
-      if (!selectedEmotion) return;
+      if (!selectedEmotion || sending) return;
       if (collectEmail) {
         setStep("email");
       } else {
         void finalise("");
       }
     },
-    [selectedEmotion, collectEmail, finalise],
+    [selectedEmotion, sending, collectEmail, finalise],
   );
 
   const handleStep2Submit = useCallback(
     (e: React.FormEvent) => {
       e.preventDefault();
+      if (sending) return;
       const err = validateOptionalEmail(email);
       if (err) {
         setEmailError(err);
@@ -953,7 +969,7 @@ export function FeedbackWithSelect({
       }
       void finalise(email);
     },
-    [email, finalise],
+    [email, sending, finalise],
   );
 
   // Popover mode only — clicking outside the panel (but not the trigger)
@@ -1106,8 +1122,8 @@ export function FeedbackWithSelect({
           </button>
         ))}
       </span>
-      <Button type="submit" size="small">
-        {collectEmail ? "Next" : "Send"}
+      <Button type="submit" size="small" disabled={sending}>
+        {collectEmail ? "Next" : sending ? "Sending" : "Send"}
       </Button>
     </div>
   );
@@ -1166,8 +1182,8 @@ export function FeedbackWithSelect({
         borderTop: "1px solid var(--ds-gray-200)",
       }}
     >
-      <Button type="submit" size="small">
-        Send
+      <Button type="submit" size="small" disabled={sending}>
+        {sending ? "Sending" : "Send"}
       </Button>
     </div>
   );
@@ -1419,6 +1435,7 @@ export function Feedback({
   const [selectedEmotion, setSelectedEmotion] = useState<string | null>(null);
   const [feedbackText, setFeedbackText] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [sending, setSending] = useState(false);
   const [step, setStep] = useState<"form" | "email">("form");
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState("");
@@ -1429,6 +1446,8 @@ export function Feedback({
 
   const finalise = useCallback(
     async (emailValue: string) => {
+      if (sending || submitted) return;
+      setSending(true);
       const trimmedEmail = emailValue.trim() || undefined;
       const payload: FeedbackPayload = {
         emotion: selectedEmotion as FeedbackEmotion,
@@ -1445,6 +1464,7 @@ export function Feedback({
       } else {
         await submitFeedback(payload);
       }
+      setSending(false);
       setSubmitted(true);
       setTimeout(() => {
         setIsOpen(false);
@@ -1459,25 +1479,26 @@ export function Feedback({
         }, 200);
       }, 1500);
     },
-    [selectedEmotion, feedbackText, onSubmit, metadata],
+    [sending, submitted, selectedEmotion, feedbackText, onSubmit, metadata],
   );
 
   const handleStep1Submit = useCallback(
     (e: React.FormEvent) => {
       e.preventDefault();
-      if (!selectedEmotion) return;
+      if (!selectedEmotion || sending) return;
       if (collectEmail) {
         setStep("email");
       } else {
         void finalise("");
       }
     },
-    [selectedEmotion, collectEmail, finalise],
+    [selectedEmotion, sending, collectEmail, finalise],
   );
 
   const handleStep2Submit = useCallback(
     (e: React.FormEvent) => {
       e.preventDefault();
+      if (sending) return;
       const err = validateOptionalEmail(email);
       if (err) {
         setEmailError(err);
@@ -1485,7 +1506,7 @@ export function Feedback({
       }
       void finalise(email);
     },
-    [email, finalise],
+    [email, sending, finalise],
   );
 
   // Focus email input when step 2 opens
@@ -1630,8 +1651,8 @@ export function Feedback({
                   borderTop: "1px solid var(--ds-gray-200)",
                 }}
               >
-                <Button type="submit" size="small">
-                  Send
+                <Button type="submit" size="small" disabled={sending}>
+                  {sending ? "Sending" : "Send"}
                 </Button>
               </div>
             </form>
@@ -1736,8 +1757,8 @@ export function Feedback({
                   </span>
 
                   {/* Send button */}
-                  <Button type="submit" size="small">
-                    {collectEmail ? "Next" : "Send"}
+                  <Button type="submit" size="small" disabled={sending}>
+                    {collectEmail ? "Next" : sending ? "Sending" : "Send"}
                   </Button>
                 </div>
             </form>
