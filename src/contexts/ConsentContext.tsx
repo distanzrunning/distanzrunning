@@ -195,7 +195,17 @@ function classifyDecision(prefs: ConsentPreferences): Decision {
   return "custom";
 }
 
-async function reportDecision(prefs: ConsentPreferences, decision: Decision) {
+function detectGpc(): boolean {
+  if (typeof navigator === "undefined") return false;
+  const nav = navigator as Navigator & { globalPrivacyControl?: boolean };
+  return nav.globalPrivacyControl === true;
+}
+
+async function reportDecision(
+  prefs: ConsentPreferences,
+  decision: Decision,
+  opts: { gpc?: boolean } = {},
+) {
   if (typeof window === "undefined") return;
   const anonId = getOrCreateAnonId();
   try {
@@ -209,11 +219,12 @@ async function reportDecision(prefs: ConsentPreferences, decision: Decision) {
         functional: prefs.functional,
         decision,
         version: CONSENT_VERSION,
+        gpc: opts.gpc ?? detectGpc(),
       }),
       keepalive: true,
     });
   } catch {
-    // Silent — localStorage is still the source of truth for the UI.
+    // Silent — cookie is still the source of truth for the UI.
   }
 }
 
@@ -229,12 +240,32 @@ export function ConsentProvider({ children }: { children: ReactNode }) {
   const [hydrated, setHydrated] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
 
-  // Hydrate from localStorage on mount. Keep preferences null on server
-  // render so SSR and the first client paint match (the banner stays hidden
-  // until hydration resolves, no flash).
+  // Hydrate from cookie on mount. Keep preferences null on server render so
+  // SSR and the first client paint match (the banner stays hidden until
+  // hydration resolves, no flash).
+  //
+  // If the visitor sends Global Privacy Control and has no stored decision,
+  // treat it as a "reject all" and record it — GPC is legally treated as an
+  // opt-out signal in California and is best-practice to honour elsewhere.
   useEffect(() => {
-    setPreferences(readStored());
+    const stored = readStored();
     setAnonId(getOrCreateAnonId());
+
+    if (stored) {
+      setPreferences(stored);
+      setHydrated(true);
+      return;
+    }
+
+    if (detectGpc()) {
+      const prefs = DEFAULT_PREFERENCES;
+      writeStored(prefs);
+      setPreferences(prefs);
+      void reportDecision(prefs, "reject_all", { gpc: true });
+      setHydrated(true);
+      return;
+    }
+
     setHydrated(true);
   }, []);
 

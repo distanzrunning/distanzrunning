@@ -12,8 +12,12 @@ create table if not exists public.consent_records (
   user_agent   text,
   ip_hash      text,
   country      text,
+  gpc          boolean,
   created_at   timestamptz not null default now()
 );
+
+-- Safe to re-run on existing deployments.
+alter table public.consent_records add column if not exists gpc boolean;
 
 create index if not exists consent_records_created_at_idx
   on public.consent_records (created_at desc);

@@ -14,6 +14,7 @@ interface Payload {
   functional: boolean;
   decision: Decision;
   version: number;
+  gpc?: boolean;
 }
 
 function isValidPayload(v: unknown): v is Payload {
@@ -30,7 +31,8 @@ function isValidPayload(v: unknown): v is Payload {
       p.decision === "reject_all" ||
       p.decision === "custom") &&
     typeof p.version === "number" &&
-    Number.isInteger(p.version)
+    Number.isInteger(p.version) &&
+    (p.gpc === undefined || typeof p.gpc === "boolean")
   );
 }
 
@@ -71,6 +73,7 @@ export async function POST(request: Request) {
       user_agent: userAgent,
       ip_hash: hashIp(ip),
       country,
+      gpc: body.gpc ?? null,
     });
     if (error) {
       console.error("[consent] insert failed", error);
