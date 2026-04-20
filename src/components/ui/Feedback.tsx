@@ -664,6 +664,16 @@ export function FeedbackInline({
           display: inline-block;
           width: 274px;
           height: 48px;
+          transition:
+            width 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+            height 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        /* When the wrapper expands, grow the placeholder to match so the
+           parent layout reflows around the larger panel instead of being
+           overlapped. */
+        .feedback-inline-placeholder:has(.feedback-inline-wrapper--expanded) {
+          width: 336px;
+          height: 243px;
         }
         .feedback-inline-wrapper {
           position: absolute;

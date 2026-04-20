@@ -419,15 +419,14 @@ function DefaultDemo() {
 
 function InlineDemo() {
   return (
-    // Min-height + bottom alignment leaves room for the inline pill to
-    // expand upward (the wrapper is bottom-anchored at ~243px tall when
-    // expanded) without overflowing the CodePreview frame.
+    // The placeholder grows/shrinks with the inline pill (handled inside
+    // FeedbackInline via :has on the wrapper), so the container just
+    // centers it both axes and reflows naturally.
     <div
       style={{
         display: "flex",
         justifyContent: "center",
-        alignItems: "flex-end",
-        minHeight: 280,
+        alignItems: "center",
       }}
     >
       <FeedbackInline onSubmit={(data) => console.log(data)} />
