@@ -344,7 +344,7 @@ function FeedbackWithMetadataExample() {
   );
 }`;
 
-const asModalCode = `import { useState } from 'react';
+const centeredCode = `import { useState } from 'react';
 import { FeedbackWithSelect } from '@/components/ui/Feedback';
 
 const topics = [
@@ -352,20 +352,18 @@ const topics = [
   { label: 'Training Plans', value: 'Training Plans' },
 ];
 
-function FeedbackModalExample() {
+function FeedbackCenteredExample() {
   const [open, setOpen] = useState(false);
   return (
     <>
-      <button onClick={() => setOpen(true)}>Open feedback modal</button>
+      <button onClick={() => setOpen(true)}>Open centered feedback</button>
       <FeedbackWithSelect
-        asModal
+        centered
         open={open}
         onClose={() => setOpen(false)}
         options={topics}
         defaultTopic="Race Reports"
         collectEmail
-        modalTitle="Give feedback"
-        modalSubtitle="Pick a topic and leave a note."
       />
     </>
   );
@@ -437,7 +435,7 @@ const withSelectTopics = [
   { label: "Injury Prevention", value: "Injury Prevention" },
 ];
 
-function AsModalDemo() {
+function CenteredDemo() {
   const [open, setOpen] = useState(false);
   return (
     <div style={{ display: "flex", justifyContent: "center" }}>
@@ -446,17 +444,15 @@ function AsModalDemo() {
         onClick={() => setOpen(true)}
         className="h-8 px-3 rounded-md border border-[var(--ds-gray-400)] bg-[var(--ds-background-100)] text-[14px] text-[var(--ds-gray-1000)] hover:bg-[var(--ds-gray-100)]"
       >
-        Open feedback modal
+        Open centered feedback
       </button>
       <FeedbackWithSelect
-        asModal
+        centered
         open={open}
         onClose={() => setOpen(false)}
         options={withSelectTopics}
         defaultTopic="Race Reports"
         collectEmail
-        modalTitle="Give feedback"
-        modalSubtitle="Pick a topic, leave a note, and tell us how you feel."
         onSubmit={(data) => console.log(data)}
       />
     </div>
@@ -547,18 +543,19 @@ export default function FeedbackComponent() {
       </Section>
 
       <Section>
-        <SectionHeader id="feedback-as-modal" onCopyLink={showToast}>
-          As a modal
+        <SectionHeader id="feedback-centered" onCopyLink={showToast}>
+          Centered (no anchor)
         </SectionHeader>
         <p className="text-copy-16 text-textSubtle mt-3 mb-6" style={{ lineHeight: 1.5 }}>
-          Pass <code>asModal</code> to render the same form inside a centred
-          modal instead of an anchored popover. Open state becomes
-          controlled — you supply <code>open</code> and{" "}
-          <code>onClose</code>. <code>defaultTopic</code> pre-selects an
-          option (e.g. derived from the current page).
+          Pass <code>centered</code> to render the same popover panel in
+          the middle of the page with a click-out backdrop, instead of
+          anchored to a trigger. Open state becomes controlled — supply{" "}
+          <code>open</code> and <code>onClose</code>.{" "}
+          <code>defaultTopic</code> pre-selects an option (e.g. derived
+          from the current page).
         </p>
-        <CodePreview componentCode={asModalCode}>
-          <AsModalDemo />
+        <CodePreview componentCode={centeredCode}>
+          <CenteredDemo />
         </CodePreview>
       </Section>
 

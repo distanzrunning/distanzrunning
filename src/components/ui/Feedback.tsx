@@ -9,7 +9,6 @@ import React, {
 } from "react";
 import { createPortal } from "react-dom";
 import { Button } from "@/components/ui/Button";
-import { Modal } from "@/components/ui/Modal";
 import {
   submitFeedback,
   type FeedbackEmotion,
@@ -813,18 +812,18 @@ export interface FeedbackWithSelectProps {
   }) => void;
   /** Add a second step that collects an optional follow-up email */
   collectEmail?: boolean;
-  /** Render inside a centred Modal instead of an anchored popover. */
-  asModal?: boolean;
-  /** Controlled open state — required when asModal is true. */
+  /**
+   * Render the same popover panel centred on the page (with a backdrop)
+   * instead of anchored to a trigger button. Open state becomes
+   * controlled — pass `open` and `onClose`.
+   */
+  centered?: boolean;
+  /** Controlled open state — required when centered is true. */
   open?: boolean;
-  /** Called when the modal should close — required when asModal is true. */
+  /** Called when the panel should close — required when centered is true. */
   onClose?: () => void;
-  /** Pre-select a topic option (e.g. derived from current page). */
+  /** Pre-select a topic option (e.g. derived from the current page). */
   defaultTopic?: string;
-  /** Title shown in the modal header. Ignored in popover mode. */
-  modalTitle?: string;
-  /** Subtitle shown in the modal header. Ignored in popover mode. */
-  modalSubtitle?: string;
   className?: string;
 }
 
@@ -839,24 +838,22 @@ export function FeedbackWithSelect({
   selectLabel = "Product topic selection",
   onSubmit,
   collectEmail = false,
-  asModal = false,
+  centered = false,
   open: openProp,
   onClose,
   defaultTopic,
-  modalTitle = "Give feedback",
-  modalSubtitle,
   className,
 }: FeedbackWithSelectProps) {
   const [internalOpen, setInternalOpen] = useState(false);
-  // In modal mode the parent owns open state; otherwise we manage it.
-  const isOpen = asModal ? !!openProp : internalOpen;
+  // Controlled in centered mode, uncontrolled (with trigger) otherwise.
+  const isOpen = centered ? !!openProp : internalOpen;
   const closeSelf = useCallback(() => {
-    if (asModal) {
+    if (centered) {
       onClose?.();
     } else {
       setInternalOpen(false);
     }
-  }, [asModal, onClose]);
+  }, [centered, onClose]);
 
   const [selectedEmotion, setSelectedEmotion] = useState<string | null>(null);
   const [feedbackText, setFeedbackText] = useState("");
@@ -871,8 +868,6 @@ export function FeedbackWithSelect({
   const emailRef = useRef<HTMLInputElement>(null);
   const direction = usePopoverDirection(isOpen, triggerRef);
   const formIdBase = useId();
-  const step1FormId = `${formIdBase}-step1`;
-  const step2FormId = `${formIdBase}-step2`;
 
   // Reset transient form state every time the surface (re)opens, and apply
   // any defaultTopic the caller passed.
@@ -920,9 +915,19 @@ export function FeedbackWithSelect({
       setSubmitted(true);
       setTimeout(() => {
         closeSelf();
+        // Reset transient state after the close animation.
+        setTimeout(() => {
+          setSubmitted(false);
+          setSelectedEmotion(null);
+          setFeedbackText("");
+          setSelectedTopic(defaultTopic ?? "");
+          setStep("form");
+          setEmail("");
+          setEmailError("");
+        }, 200);
       }, 1500);
     },
-    [selectedEmotion, feedbackText, selectedTopic, onSubmit, closeSelf],
+    [selectedEmotion, feedbackText, selectedTopic, onSubmit, closeSelf, defaultTopic],
   );
 
   const handleStep1Submit = useCallback(
@@ -951,10 +956,11 @@ export function FeedbackWithSelect({
     [email, finalise],
   );
 
-  // Popover-only — close on outside click / Escape. Modal owns its own
-  // dismissal via onClose.
+  // Popover mode only — clicking outside the panel (but not the trigger)
+  // closes. Centered mode handles outside dismissal via the backdrop click
+  // handler in the JSX below.
   useEffect(() => {
-    if (asModal || !isOpen) return;
+    if (centered || !isOpen) return;
     function handleClickOutside(e: MouseEvent) {
       if (
         popoverRef.current &&
@@ -967,18 +973,19 @@ export function FeedbackWithSelect({
     }
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [asModal, isOpen]);
+  }, [centered, isOpen]);
 
+  // Escape closes in either mode.
   useEffect(() => {
-    if (asModal || !isOpen) return;
+    if (!isOpen) return;
     function handleEscape(e: KeyboardEvent) {
-      if (e.key === "Escape") setInternalOpen(false);
+      if (e.key === "Escape") closeSelf();
     }
     document.addEventListener("keydown", handleEscape);
     return () => document.removeEventListener("keydown", handleEscape);
-  }, [asModal, isOpen]);
+  }, [isOpen, closeSelf]);
 
-  const anchor = useAnchorRect(!asModal && isOpen, triggerRef);
+  const anchor = useAnchorRect(!centered && isOpen, triggerRef);
   const [mounted, setMounted] = useState(false);
   useEffect(() => {
     setMounted(true);
@@ -991,7 +998,7 @@ export function FeedbackWithSelect({
         display: "flex",
         flexDirection: "column",
         gap: 8,
-        padding: asModal ? 0 : 8,
+        padding: 8,
       }}
     >
       <label htmlFor={`${formIdBase}-select`}>
@@ -1099,7 +1106,7 @@ export function FeedbackWithSelect({
           </button>
         ))}
       </span>
-      <Button type="submit" size="small" form={asModal ? step1FormId : undefined}>
+      <Button type="submit" size="small">
         {collectEmail ? "Next" : "Send"}
       </Button>
     </div>
@@ -1111,7 +1118,7 @@ export function FeedbackWithSelect({
         display: "flex",
         flexDirection: "column",
         gap: 8,
-        padding: asModal ? 0 : 8,
+        padding: 8,
       }}
     >
       <label>
@@ -1159,38 +1166,104 @@ export function FeedbackWithSelect({
         borderTop: "1px solid var(--ds-gray-200)",
       }}
     >
-      <Button type="submit" size="small" form={asModal ? step2FormId : undefined}>
+      <Button type="submit" size="small">
         Send
       </Button>
     </div>
   );
 
-  // ----- Modal mode -----
-  if (asModal) {
-    const body = submitted ? (
-      <FeedbackSuccess />
-    ) : step === "email" ? (
-      <form id={step2FormId} onSubmit={handleStep2Submit}>
-        {step2Body}
-      </form>
-    ) : (
-      <form id={step1FormId} onSubmit={handleStep1Submit}>
-        {step1Body}
-      </form>
-    );
+  // Same panel JSX in both modes — only positioning differs.
+  const panelPositionStyle: React.CSSProperties = centered
+    ? {
+        position: "fixed",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+      }
+    : {
+        position: "fixed",
+        ...(direction === "below"
+          ? {
+              top: (anchor?.bottom ?? 0) + 8,
+              left: (anchor?.left ?? 0) + (anchor?.width ?? 0) / 2,
+              transform: "translateX(-50%)",
+            }
+          : {
+              top: (anchor?.top ?? 0) - 8,
+              left: (anchor?.left ?? 0) + (anchor?.width ?? 0) / 2,
+              transform: "translate(-50%, -100%)",
+            }),
+      };
 
+  const panel = (
+    <div
+      ref={popoverRef}
+      role="dialog"
+      aria-modal={centered ? "true" : undefined}
+      style={{
+        ...panelPositionStyle,
+        width: 340,
+        borderRadius: 12,
+        background: "var(--ds-background-100)",
+        boxShadow:
+          "rgba(0, 0, 0, 0.08) 0px 0px 0px 1px, rgba(0, 0, 0, 0.02) 0px 1px 1px 0px, rgba(0, 0, 0, 0.04) 0px 4px 8px -4px, rgba(0, 0, 0, 0.06) 0px 16px 24px -8px, var(--ds-gray-100) 0px 0px 0px 1px",
+        overflow: "hidden",
+        zIndex: 10000,
+        animation: centered
+          ? "feedbackCenteredIn 0.2s cubic-bezier(0.16, 1, 0.3, 1)"
+          : "feedbackFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
+      }}
+    >
+      {submitted ? (
+        <FeedbackSuccess />
+      ) : step === "email" ? (
+        <form onSubmit={handleStep2Submit}>
+          {step2Body}
+          {step2Footer}
+        </form>
+      ) : (
+        <form onSubmit={handleStep1Submit}>
+          {step1Body}
+          {step1Footer}
+        </form>
+      )}
+    </div>
+  );
+
+  // ----- Centered (modal-style) mode -----
+  if (centered) {
     return (
-      <Modal
-        open={isOpen}
-        onClose={() => closeSelf()}
-        title={modalTitle}
-        subtitle={modalSubtitle}
-        footer={
-          submitted ? null : step === "email" ? step2Footer : step1Footer
-        }
-      >
-        {body}
-      </Modal>
+      <>
+        {isOpen && mounted &&
+          createPortal(
+            <>
+              <div
+                onClick={() => closeSelf()}
+                aria-hidden="true"
+                style={{
+                  position: "fixed",
+                  inset: 0,
+                  background: "var(--ds-overlay-backdrop-color)",
+                  opacity: "var(--ds-overlay-backdrop-opacity)" as never,
+                  zIndex: 9999,
+                  animation: "feedbackBackdropIn 0.15s ease-out",
+                }}
+              />
+              {panel}
+            </>,
+            document.body,
+          )}
+        <style>{`
+          @keyframes feedbackBackdropIn {
+            from { opacity: 0; }
+          }
+          @keyframes feedbackCenteredIn {
+            from { opacity: 0; transform: translate(-50%, -50%) scale(0.96); }
+            to   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+          }
+        `}</style>
+        <FeedbackWithSelectFormStyles />
+      </>
     );
   }
 
@@ -1209,103 +1282,69 @@ export function FeedbackWithSelect({
       </Button>
 
       {isOpen && mounted && anchor &&
-        createPortal(
-        <div
-          ref={popoverRef}
-          role="dialog"
-          style={{
-            position: "fixed",
-            ...(direction === "below"
-              ? {
-                  top: anchor.bottom + 8,
-                  left: anchor.left + anchor.width / 2,
-                  transform: "translateX(-50%)",
-                }
-              : {
-                  top: anchor.top - 8,
-                  left: anchor.left + anchor.width / 2,
-                  transform: "translate(-50%, -100%)",
-                }),
-            width: 340,
-            borderRadius: 12,
-            background: "var(--ds-background-100)",
-            boxShadow:
-              "rgba(0, 0, 0, 0.08) 0px 0px 0px 1px, rgba(0, 0, 0, 0.02) 0px 1px 1px 0px, rgba(0, 0, 0, 0.04) 0px 4px 8px -4px, rgba(0, 0, 0, 0.06) 0px 16px 24px -8px, var(--ds-gray-100) 0px 0px 0px 1px",
-            overflow: "hidden",
-            zIndex: 10000,
-            animation: "feedbackFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
-          }}
-        >
-          {submitted ? (
-            <FeedbackSuccess />
-          ) : step === "email" ? (
-            <form onSubmit={handleStep2Submit}>
-              {step2Body}
-              {step2Footer}
-            </form>
-          ) : (
-            <form onSubmit={handleStep1Submit}>
-              {step1Body}
-              {step1Footer}
-            </form>
-          )}
-        </div>,
-        document.body,
-      )}
+        createPortal(panel, document.body)}
 
-      <style>{`
-        .feedback-select-wrapper {
-          position: relative;
-          border-radius: 6px;
-          box-shadow: 0 0 0 1px var(--ds-gray-alpha-400);
-          overflow: hidden;
-          transition: box-shadow 0.15s ease;
-        }
-        @media (hover: hover) {
-          .feedback-select-wrapper:hover {
-            box-shadow: 0 0 0 1px var(--ds-gray-alpha-500);
-          }
-        }
-        .feedback-select-wrapper:focus-within {
-          box-shadow: 0 0 0 1px var(--ds-gray-alpha-600), 0px 0px 0px 4px rgba(0, 0, 0, 0.16);
-        }
-        .feedback-select {
-          display: flex;
-          width: 100%;
-          height: 40px;
-          border-radius: 6px;
-          border: none;
-          padding: 0 36px 0 12px;
-          font-size: 14px;
-          line-height: 20px;
-          color: var(--ds-gray-1000);
-          background: var(--ds-background-100);
-          outline: none;
-          font-family: inherit;
-          box-sizing: border-box;
-          appearance: none;
-          -webkit-appearance: none;
-          cursor: pointer;
-        }
-        .feedback-select:invalid,
-        .feedback-select option[value=""][disabled] {
-          color: var(--ds-gray-700);
-        }
-        .feedback-select option {
-          color: var(--ds-gray-1000);
-        }
-        .feedback-select-suffix {
-          position: absolute;
-          right: 10px;
-          top: 50%;
-          transform: translateY(-50%);
-          pointer-events: none;
-          display: flex;
-          align-items: center;
-          color: var(--ds-gray-900);
-        }
-      `}</style>
+      <FeedbackWithSelectFormStyles />
     </div>
+  );
+}
+
+// Inline styles for the topic select used by both popover and centered
+// modes. Extracted so we don't duplicate the <style> block.
+function FeedbackWithSelectFormStyles() {
+  return (
+    <style>{`
+      .feedback-select-wrapper {
+        position: relative;
+        border-radius: 6px;
+        box-shadow: 0 0 0 1px var(--ds-gray-alpha-400);
+        overflow: hidden;
+        transition: box-shadow 0.15s ease;
+      }
+      @media (hover: hover) {
+        .feedback-select-wrapper:hover {
+          box-shadow: 0 0 0 1px var(--ds-gray-alpha-500);
+        }
+      }
+      .feedback-select-wrapper:focus-within {
+        box-shadow: 0 0 0 1px var(--ds-gray-alpha-600), 0px 0px 0px 4px rgba(0, 0, 0, 0.16);
+      }
+      .feedback-select {
+        display: flex;
+        width: 100%;
+        height: 40px;
+        border-radius: 6px;
+        border: none;
+        padding: 0 36px 0 12px;
+        font-size: 14px;
+        line-height: 20px;
+        color: var(--ds-gray-1000);
+        background: var(--ds-background-100);
+        outline: none;
+        font-family: inherit;
+        box-sizing: border-box;
+        appearance: none;
+        -webkit-appearance: none;
+        cursor: pointer;
+      }
+      .feedback-select:invalid,
+      .feedback-select option[value=""][disabled] {
+        color: var(--ds-gray-700);
+      }
+      .feedback-select option {
+        color: var(--ds-gray-1000);
+      }
+      .feedback-select-suffix {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none;
+        display: flex;
+        align-items: center;
+        color: var(--ds-gray-900);
+      }
+    `}</style>
   );
 }
 

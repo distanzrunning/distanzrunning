@@ -222,14 +222,12 @@ export default function AdminPageHeader() {
       </Menu>
 
       <FeedbackWithSelect
-        asModal
+        centered
         open={feedbackOpen}
         onClose={() => setFeedbackOpen(false)}
         options={ADMIN_FEEDBACK_TOPICS}
         defaultTopic={defaultAdminTopic(pathname)}
         collectEmail
-        modalTitle="Give Feedback"
-        modalSubtitle="Help us improve Stride Admin. Pick a section, leave a note, and tell us how you feel."
       />
     </header>
   );
