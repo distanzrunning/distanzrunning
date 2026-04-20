@@ -1122,7 +1122,7 @@ export function FeedbackWithSelect({
           </button>
         ))}
       </span>
-      <Button type="submit" size="small" disabled={sending}>
+      <Button type="submit" size="small" loading={sending}>
         {collectEmail ? "Next" : sending ? "Sending" : "Send"}
       </Button>
     </div>
@@ -1182,7 +1182,7 @@ export function FeedbackWithSelect({
         borderTop: "1px solid var(--ds-gray-200)",
       }}
     >
-      <Button type="submit" size="small" disabled={sending}>
+      <Button type="submit" size="small" loading={sending}>
         {sending ? "Sending" : "Send"}
       </Button>
     </div>
@@ -1651,7 +1651,7 @@ export function Feedback({
                   borderTop: "1px solid var(--ds-gray-200)",
                 }}
               >
-                <Button type="submit" size="small" disabled={sending}>
+                <Button type="submit" size="small" loading={sending}>
                   {sending ? "Sending" : "Send"}
                 </Button>
               </div>
@@ -1757,7 +1757,7 @@ export function Feedback({
                   </span>
 
                   {/* Send button */}
-                  <Button type="submit" size="small" disabled={sending}>
+                  <Button type="submit" size="small" loading={sending}>
                     {collectEmail ? "Next" : sending ? "Sending" : "Send"}
                   </Button>
                 </div>
