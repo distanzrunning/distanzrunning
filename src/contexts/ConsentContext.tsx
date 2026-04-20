@@ -64,6 +64,7 @@ export interface ConsentContextValue {
 
 const STORAGE_KEY = "distanz-consent";
 const ANON_ID_KEY = "distanz-consent-anon-id";
+const REGION_COOKIE = "distanz-region";
 const CONSENT_VERSION = 1;
 const CONSENT_API = "/api/consent";
 // 180 days — standard for GDPR CMPs. After this we re-prompt.
@@ -201,6 +202,20 @@ function detectGpc(): boolean {
   return nav.globalPrivacyControl === true;
 }
 
+/**
+ * Read the region cookie set by the Next.js middleware. Defaults to
+ * "regulated" so we fail safe (show the banner) when the cookie is
+ * missing.
+ */
+function readRegion(): "regulated" | "other" {
+  if (typeof document === "undefined") return "regulated";
+  const match = document.cookie.match(
+    new RegExp(`(?:^|; )${REGION_COOKIE}=([^;]*)`),
+  );
+  if (!match) return "regulated";
+  return match[1] === "other" ? "other" : "regulated";
+}
+
 async function reportDecision(
   prefs: ConsentPreferences,
   decision: Decision,
@@ -244,9 +259,13 @@ export function ConsentProvider({ children }: { children: ReactNode }) {
   // SSR and the first client paint match (the banner stays hidden until
   // hydration resolves, no flash).
   //
-  // If the visitor sends Global Privacy Control and has no stored decision,
-  // treat it as a "reject all" and record it — GPC is legally treated as an
-  // opt-out signal in California and is best-practice to honour elsewhere.
+  // Priority order for first-visit behaviour:
+  //   1. A stored decision wins unconditionally.
+  //   2. Global Privacy Control → auto-reject + record (honoured everywhere;
+  //      satisfies California's CCPA opt-out requirement).
+  //   3. Non-regulated region (outside EEA/EFTA/UK) → auto-accept in memory,
+  //      no server record, no banner.
+  //   4. Otherwise → show the banner.
   useEffect(() => {
     const stored = readStored();
     setAnonId(getOrCreateAnonId());
@@ -262,6 +281,16 @@ export function ConsentProvider({ children }: { children: ReactNode }) {
       writeStored(prefs);
       setPreferences(prefs);
       void reportDecision(prefs, "reject_all", { gpc: true });
+      setHydrated(true);
+      return;
+    }
+
+    if (readRegion() === "other") {
+      // Outside the strict consent-on-entry regions. Treat as accept-all in
+      // memory so scripts can run, but don't persist a cookie or write an
+      // audit record — the user never saw a prompt. If they later open the
+      // settings modal and save, normal persistence kicks in.
+      setPreferences(ALL_ON);
       setHydrated(true);
       return;
     }
