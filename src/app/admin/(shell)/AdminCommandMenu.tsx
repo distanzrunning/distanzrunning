@@ -5,6 +5,7 @@ import { useCommandState } from "cmdk";
 import {
   ArrowRight,
   LogOut,
+  MessageSquare,
   PanelsTopLeft,
   Search as SearchIcon,
   SquareCheckBig,
@@ -183,6 +184,18 @@ export function CommandMenuDialog({
         }}
       >
         Consent
+      </CommandMenu.Item>
+      <CommandMenu.Item
+        icon={<MessageSquare className="w-4 h-4" />}
+        subtitle="Admin"
+        value="Feedback"
+        keywords={["Admin"]}
+        onSelect={() => {
+          router.push("/admin/feedback");
+          onClose();
+        }}
+      >
+        Feedback
       </CommandMenu.Item>
       <CommandMenu.Item
         icon={<PanelsTopLeft className="w-4 h-4" />}

@@ -2,6 +2,11 @@
 
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/Button";
+import {
+  submitFeedback,
+  type FeedbackEmotion,
+  type FeedbackPayload,
+} from "@/lib/feedback";
 
 // ============================================================================
 // Types
@@ -199,11 +204,19 @@ export function FeedbackInline({
   );
 
   const handleSubmit = useCallback(
-    (e: React.FormEvent) => {
+    async (e: React.FormEvent) => {
       e.preventDefault();
       if (!selectedEmotion || isSending) return;
       setIsSending(true);
-      onSubmit?.({ emotion: selectedEmotion, feedback: feedbackText });
+      const payload: FeedbackPayload = {
+        emotion: selectedEmotion as FeedbackEmotion,
+        feedback: feedbackText,
+      };
+      if (onSubmit) {
+        onSubmit({ emotion: payload.emotion!, feedback: payload.feedback });
+      } else {
+        await submitFeedback(payload);
+      }
       setTimeout(() => {
         setIsSending(false);
         setSubmitted(true);
@@ -606,21 +619,33 @@ export function FeedbackWithSelect({
   }, [isOpen, submitted]);
 
   const handleSubmit = useCallback(
-    (e: React.FormEvent) => {
+    async (e: React.FormEvent) => {
       e.preventDefault();
-      if (selectedEmotion) {
-        onSubmit?.({ emotion: selectedEmotion, feedback: feedbackText, topic: selectedTopic });
-        setSubmitted(true);
-        setTimeout(() => {
-          setIsOpen(false);
-          setTimeout(() => {
-            setSubmitted(false);
-            setSelectedEmotion(null);
-            setFeedbackText("");
-            setSelectedTopic("");
-          }, 200);
-        }, 1500);
+      if (!selectedEmotion) return;
+      const payload: FeedbackPayload = {
+        emotion: selectedEmotion as FeedbackEmotion,
+        feedback: feedbackText,
+        topic: selectedTopic || undefined,
+      };
+      if (onSubmit) {
+        onSubmit({
+          emotion: payload.emotion!,
+          feedback: payload.feedback,
+          topic: payload.topic ?? "",
+        });
+      } else {
+        await submitFeedback(payload);
       }
+      setSubmitted(true);
+      setTimeout(() => {
+        setIsOpen(false);
+        setTimeout(() => {
+          setSubmitted(false);
+          setSelectedEmotion(null);
+          setFeedbackText("");
+          setSelectedTopic("");
+        }, 200);
+      }, 1500);
     },
     [selectedEmotion, feedbackText, selectedTopic, onSubmit],
   );
@@ -905,23 +930,34 @@ export function Feedback({
   const direction = usePopoverDirection(isOpen, triggerRef);
 
   const handleSubmit = useCallback(
-    (e: React.FormEvent) => {
+    async (e: React.FormEvent) => {
       e.preventDefault();
-      if (selectedEmotion) {
-        onSubmit?.({ emotion: selectedEmotion, feedback: feedbackText, metadata });
-        setSubmitted(true);
-        setTimeout(() => {
-          setIsOpen(false);
-          // Reset after close animation
-          setTimeout(() => {
-            setSubmitted(false);
-            setSelectedEmotion(null);
-            setFeedbackText("");
-          }, 200);
-        }, 1500);
+      if (!selectedEmotion) return;
+      const payload: FeedbackPayload = {
+        emotion: selectedEmotion as FeedbackEmotion,
+        feedback: feedbackText,
+      };
+      if (onSubmit) {
+        onSubmit({
+          emotion: payload.emotion!,
+          feedback: payload.feedback,
+          metadata,
+        });
+      } else {
+        await submitFeedback(payload);
       }
+      setSubmitted(true);
+      setTimeout(() => {
+        setIsOpen(false);
+        // Reset after close animation
+        setTimeout(() => {
+          setSubmitted(false);
+          setSelectedEmotion(null);
+          setFeedbackText("");
+        }, 200);
+      }, 1500);
     },
-    [selectedEmotion, feedbackText, onSubmit],
+    [selectedEmotion, feedbackText, onSubmit, metadata],
   );
 
   // Close on click outside

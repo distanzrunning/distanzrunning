@@ -31,3 +31,31 @@ alter table public.consent_records enable row level security;
 
 revoke all on public.consent_records from anon;
 revoke all on public.consent_records from authenticated;
+
+-- ============================================================================
+-- Feedback records
+-- ============================================================================
+-- Site feedback collected by the <Feedback*> UI components. Anonymous by
+-- default; users may optionally provide an email address for follow-up.
+-- Written server-side by POST /api/feedback.
+
+create table if not exists public.feedback_records (
+  id           bigint generated always as identity primary key,
+  anon_id      text,
+  emotion      text        check (emotion in ('hate', 'not-great', 'okay', 'love')),
+  feedback     text        not null,
+  topic        text,
+  email        text,
+  page_path    text,
+  user_agent   text,
+  ip_hash      text,
+  country      text,
+  created_at   timestamptz not null default now()
+);
+
+create index if not exists feedback_records_created_at_idx
+  on public.feedback_records (created_at desc);
+
+alter table public.feedback_records enable row level security;
+revoke all on public.feedback_records from anon;
+revoke all on public.feedback_records from authenticated;

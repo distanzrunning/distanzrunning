@@ -1,6 +1,7 @@
 import Link from "next/link";
 import {
   ArrowUpRight,
+  MessageSquare,
   PanelsTopLeft,
   SquareCheckBig,
 } from "lucide-react";
@@ -24,6 +25,14 @@ const SECTIONS: {
       "Consent management dashboard and CMP documentation — track visitor decisions and manage integrations.",
     href: "/admin/consent",
     icon: <SquareCheckBig className="w-5 h-5" />,
+  },
+  {
+    id: "feedback",
+    label: "Feedback",
+    description:
+      "Submissions from the site feedback widgets — emoji, message, optional follow-up email, and page context.",
+    href: "/admin/feedback",
+    icon: <MessageSquare className="w-5 h-5" />,
   },
   {
     id: "design-system",

@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import {
   ChevronLeft,
   ChevronRight,
+  MessageSquare,
   PanelsTopLeft,
   SquareCheckBig,
 } from "lucide-react";
@@ -23,6 +24,12 @@ export function isConsentRoute(pathname: string): boolean {
   return pathname === "/admin/consent" || pathname.startsWith("/admin/consent/");
 }
 
+export function isFeedbackRoute(pathname: string): boolean {
+  return (
+    pathname === "/admin/feedback" || pathname.startsWith("/admin/feedback/")
+  );
+}
+
 function dsSlugFrom(pathname: string): string | null {
   const match = pathname.match(/^\/admin\/design-system\/([^/?#]+)/);
   return match ? match[1] : null;
@@ -34,6 +41,15 @@ export const CONSENT_NAV: { id: string; label: string; href: string }[] = [
     id: "how-it-works",
     label: "How it works",
     href: "/admin/consent/how-it-works",
+  },
+];
+
+export const FEEDBACK_NAV: { id: string; label: string; href: string }[] = [
+  { id: "dashboard", label: "Dashboard", href: "/admin/feedback" },
+  {
+    id: "how-it-works",
+    label: "How it works",
+    href: "/admin/feedback/how-it-works",
   },
 ];
 
@@ -138,6 +154,13 @@ const ADMIN_NAV: {
     label: "Consent",
     href: "/admin/consent",
     icon: <SquareCheckBig className="w-4 h-4" />,
+    hasSubmenu: true,
+  },
+  {
+    id: "feedback",
+    label: "Feedback",
+    href: "/admin/feedback",
+    icon: <MessageSquare className="w-4 h-4" />,
     hasSubmenu: true,
   },
   {
@@ -382,6 +405,58 @@ function ConsentNav({ pathname }: { pathname: string }) {
 }
 
 // ============================================================================
+// Feedback nav (replaces admin nav while inside /admin/feedback)
+// ============================================================================
+
+function FeedbackNav({ pathname }: { pathname: string }) {
+  return (
+    <nav style={{ padding: 16, paddingTop: 8 }}>
+      <ul
+        style={{
+          listStyle: "none",
+          margin: 0,
+          padding: 0,
+          display: "flex",
+          flexDirection: "column",
+          gap: 2,
+        }}
+      >
+        {FEEDBACK_NAV.map((item) => {
+          const active =
+            pathname === item.href ||
+            (item.href !== "/admin/feedback" &&
+              pathname.startsWith(`${item.href}/`));
+          const baseClasses =
+            "group flex items-center rounded-md outline-none transition-colors";
+          const stateClasses = active
+            ? "bg-[var(--ds-gray-200)] text-[var(--ds-gray-1000)] font-medium hover:bg-[var(--ds-gray-200)]"
+            : "text-[var(--ds-gray-900)] hover:bg-[var(--ds-gray-100)] hover:text-[var(--ds-gray-1000)] focus-visible:bg-[var(--ds-gray-100)] focus-visible:text-[var(--ds-gray-1000)]";
+          return (
+            <li key={item.id}>
+              <Link
+                href={item.href}
+                aria-current={active ? "page" : undefined}
+                className={`${baseClasses} ${stateClasses}`}
+                style={{
+                  height: 36,
+                  paddingLeft: 12,
+                  paddingRight: 12,
+                  fontSize: 14,
+                }}
+              >
+                <span className="flex-1 flex items-center min-w-0">
+                  <span className="truncate">{item.label}</span>
+                </span>
+              </Link>
+            </li>
+          );
+        })}
+      </ul>
+    </nav>
+  );
+}
+
+// ============================================================================
 // Public component — owns the full-height layout
 // ============================================================================
 
@@ -393,6 +468,7 @@ export default function AdminSidebar({
   const pathname = usePathname() ?? "";
   const inDs = isDesignSystemRoute(pathname);
   const inConsent = isConsentRoute(pathname);
+  const inFeedback = isFeedbackRoute(pathname);
 
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
@@ -416,11 +492,21 @@ export default function AdminSidebar({
           ariaLabel="Back to admin"
         />
       )}
+      {inFeedback && (
+        <BackHeader
+          leftSlot={<ChevronLeft className="w-4 h-4" />}
+          label="Feedback"
+          href="/admin"
+          ariaLabel="Back to admin"
+        />
+      )}
       <div style={{ flex: 1, overflowY: "auto", minHeight: 0 }}>
         {inDs ? (
           <DesignSystemNav pathname={pathname} />
         ) : inConsent ? (
           <ConsentNav pathname={pathname} />
+        ) : inFeedback ? (
+          <FeedbackNav pathname={pathname} />
         ) : (
           <AdminNav pathname={pathname} />
         )}
