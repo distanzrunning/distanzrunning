@@ -1344,6 +1344,62 @@ function FeedbackWithSelectFormStyles() {
         align-items: center;
         color: var(--ds-gray-900);
       }
+
+      /* Shared with the <Feedback /> popover. Defined here too so that
+         <FeedbackWithSelect /> renders correctly even when no <Feedback />
+         is mounted on the same page (e.g. the admin centered modal). */
+      .feedback-textarea-wrapper {
+        border-radius: 6px;
+        box-shadow: 0 0 0 1px var(--ds-gray-alpha-400);
+        overflow: hidden;
+        transition: box-shadow 0.15s ease;
+      }
+      @media (hover: hover) {
+        .feedback-textarea-wrapper:hover {
+          box-shadow: 0 0 0 1px var(--ds-gray-alpha-500);
+        }
+      }
+      .feedback-textarea-wrapper:focus-within {
+        box-shadow: 0 0 0 1px var(--ds-gray-alpha-600), 0px 0px 0px 4px rgba(0, 0, 0, 0.16);
+      }
+      .feedback-textarea-wrapper textarea::placeholder,
+      .feedback-textarea-wrapper input::placeholder {
+        color: var(--ds-gray-700);
+      }
+      .feedback-emoji {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        background: transparent;
+        color: var(--ds-gray-900);
+        flex-shrink: 0;
+        transition: background 0.2s ease, border-color 0.2s ease;
+      }
+      .feedback-emoji--selected {
+        background: var(--ds-gray-200);
+      }
+      @media (hover: hover) {
+        .feedback-emoji:hover {
+          background: var(--ds-pink-300);
+          color: var(--ds-pink-800);
+        }
+      }
+      @keyframes feedbackFadeIn {
+        from {
+          opacity: 0;
+          transform: translateX(-50%) scale(0.95);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(-50%) scale(1);
+        }
+      }
     `}</style>
   );
 }
