@@ -8,6 +8,7 @@ import {
   TableRow,
 } from "@/components/ui/Table";
 import { getSupabaseAdmin } from "@/lib/supabase/server";
+import DeleteFeedbackButton from "./DeleteFeedbackButton";
 
 export const metadata = {
   title: "Feedback — Stride Admin",
@@ -252,13 +253,14 @@ export default async function FeedbackDashboardPage() {
                 <TableHead>Email</TableHead>
                 <TableHead>Page</TableHead>
                 <TableHead>Country</TableHead>
+                <TableHead style={{ width: 48 }} aria-label="Actions" />
               </TableRow>
             </TableHeader>
             <TableBody>
               {recent.length === 0 && (
                 <TableRow>
                   <TableCell
-                    colSpan={7}
+                    colSpan={8}
                     style={{
                       padding: 24,
                       textAlign: "center",
@@ -329,6 +331,9 @@ export default async function FeedbackDashboardPage() {
                     </TableCell>
                     <TableCell style={{ fontSize: 12 }}>
                       {row.country ?? "—"}
+                    </TableCell>
+                    <TableCell style={{ width: 48, textAlign: "right" }}>
+                      <DeleteFeedbackButton id={row.id} snippet={snippet} />
                     </TableCell>
                   </TableRow>
                 );
