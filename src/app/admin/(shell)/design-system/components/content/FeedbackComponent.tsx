@@ -344,6 +344,20 @@ function FeedbackWithMetadataExample() {
   );
 }`;
 
+const collectEmailCode = `import { Feedback } from '@/components/ui/Feedback';
+
+function FeedbackWithEmailExample() {
+  return (
+    <Feedback
+      collectEmail
+      onSubmit={(data) => console.log(data)}
+    />
+  );
+}
+
+// Also works on <FeedbackInline collectEmail /> and
+// <FeedbackWithSelect collectEmail options={...} />.`;
+
 const withSelectCode = `import { FeedbackWithSelect } from '@/components/ui/Feedback';
 
 const topics = [
@@ -395,6 +409,17 @@ const withSelectTopics = [
   { label: "Nutrition", value: "Nutrition" },
   { label: "Injury Prevention", value: "Injury Prevention" },
 ];
+
+function CollectEmailDemo() {
+  return (
+    <div style={{ display: "flex", justifyContent: "center" }}>
+      <Feedback
+        collectEmail
+        onSubmit={(data) => console.log(data)}
+      />
+    </div>
+  );
+}
 
 function WithMetadataDemo() {
   return (
@@ -465,6 +490,23 @@ export default function FeedbackComponent() {
         </p>
         <CodePreview componentCode={withSelectCode}>
           <WithSelectDemo />
+        </CodePreview>
+      </Section>
+
+      <Section>
+        <SectionHeader id="feedback-collect-email" onCopyLink={showToast}>
+          Collect follow-up email
+        </SectionHeader>
+        <p className="text-copy-16 text-textSubtle mt-3 mb-6" style={{ lineHeight: 1.5 }}>
+          Pass <code>collectEmail</code> to add a second step after the
+          message. The primary action becomes <strong>Next</strong>;
+          clicking it swaps the textarea for an email input with{" "}
+          <strong>Send</strong> at the bottom. Email is optional — empty
+          submits, any non-empty value is validated against a standard
+          email pattern. Works on all three variants.
+        </p>
+        <CodePreview componentCode={collectEmailCode}>
+          <CollectEmailDemo />
         </CodePreview>
       </Section>
 
