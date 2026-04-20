@@ -725,23 +725,24 @@ export function FeedbackInline({
           transform: translateZ(0);
           backface-visibility: hidden;
         }
-        /* Textarea height stays put; the visible "input grows in" effect
-           comes from scaling its wrapper. */
         .feedback-inline-textarea {
           height: 100px;
         }
-        /* Box visibly widens AND grows taller as the wrapper expands. */
+        /* Input box visibly widens (and grows taller) as the panel
+           expands. animation-fill-mode: both keeps the FROM state on
+           mount so we don't see a flash of full size before the
+           keyframe starts. */
         .feedback-inline-wrapper--expanded .feedback-textarea-wrapper {
           transform-origin: center center;
-          animation: feedbackInlineInputGrow 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+          animation: feedbackInlineInputGrow 0.25s cubic-bezier(0.4, 0, 0.2, 1) both;
         }
         @keyframes feedbackInlineInputGrow {
           from {
-            transform: scale(0.55);
+            transform: scale(0.35, 0.6);
             opacity: 0;
           }
           to {
-            transform: scale(1);
+            transform: scale(1, 1);
             opacity: 1;
           }
         }
