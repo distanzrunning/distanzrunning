@@ -419,10 +419,18 @@ function DefaultDemo() {
 
 function InlineDemo() {
   return (
-    <div style={{ display: "flex", justifyContent: "center" }}>
-      <FeedbackInline
-        onSubmit={(data) => console.log(data)}
-      />
+    // Min-height + bottom alignment leaves room for the inline pill to
+    // expand upward (the wrapper is bottom-anchored at ~243px tall when
+    // expanded) without overflowing the CodePreview frame.
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "flex-end",
+        minHeight: 280,
+      }}
+    >
+      <FeedbackInline onSubmit={(data) => console.log(data)} />
     </div>
   );
 }
