@@ -725,25 +725,28 @@ export function FeedbackInline({
           transform: translateZ(0);
           backface-visibility: hidden;
         }
-        /* Textarea grows in alongside the wrapper expansion (matched
-           timing/easing) so it doesn't pop in at full size. */
+        /* Textarea height stays put; the visible "input grows in" effect
+           comes from scaling its wrapper. */
         .feedback-inline-textarea {
           height: 100px;
         }
-        .feedback-inline-wrapper--expanded .feedback-inline-textarea {
-          animation: feedbackInlineTextareaGrow 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        /* Box visibly widens AND grows taller as the wrapper expands. */
+        .feedback-inline-wrapper--expanded .feedback-textarea-wrapper {
+          transform-origin: center center;
+          animation: feedbackInlineInputGrow 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        @keyframes feedbackInlineTextareaGrow {
+        @keyframes feedbackInlineInputGrow {
           from {
-            height: 0;
+            transform: scale(0.55);
             opacity: 0;
           }
           to {
-            height: 100px;
+            transform: scale(1);
             opacity: 1;
           }
         }
-        /* Markdown hint + action bar fade in too so the body doesn't pop. */
+        /* Markdown hint + action bar fade in so the body chrome doesn't
+           pop into place. */
         .feedback-inline-wrapper--expanded .feedback-inline-body form > div {
           animation: feedbackInlineBodyIn 0.25s cubic-bezier(0.4, 0, 0.2, 1) both;
         }
