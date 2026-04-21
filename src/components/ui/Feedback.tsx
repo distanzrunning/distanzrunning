@@ -1442,7 +1442,8 @@ function FeedbackWithSelectFormStyles() {
         transition: background 0.2s ease, border-color 0.2s ease;
       }
       .feedback-emoji--selected {
-        background: var(--ds-gray-200);
+        background: var(--ds-pink-300);
+        color: var(--ds-pink-800);
       }
       @media (hover: hover) {
         .feedback-emoji:hover {
@@ -1845,7 +1846,8 @@ export function Feedback({
           transition: background 0.2s ease, border-color 0.2s ease;
         }
         .feedback-emoji--selected {
-          background: var(--ds-gray-200);
+          background: var(--ds-pink-300);
+          color: var(--ds-pink-800);
         }
         @media (hover: hover) {
           .feedback-emoji:hover {
