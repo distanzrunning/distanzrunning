@@ -335,6 +335,14 @@ export interface FeedbackInlineProps {
   }) => void;
   /** Add a second step that collects an optional follow-up email */
   collectEmail?: boolean;
+  /**
+   * When true the placeholder grows with the expanded panel so the
+   * surrounding layout reflows around it (useful inside a constrained
+   * demo frame). Default is false: the panel overlays the page
+   * content instead, which is the right behaviour for most mounts
+   * (e.g. a page-footer feedback widget).
+   */
+  reflow?: boolean;
   className?: string;
 }
 
@@ -346,6 +354,7 @@ export function FeedbackInline({
   label = "Was this helpful?",
   onSubmit,
   collectEmail = false,
+  reflow = false,
   className,
 }: FeedbackInlineProps) {
   const [selectedEmotion, setSelectedEmotion] = useState<string | null>(null);
@@ -466,7 +475,15 @@ export function FeedbackInline({
   }, [isExpanded, isSending, submitted, close]);
 
   return (
-    <div className={`feedback-inline-placeholder ${className || ""}`.trim()}>
+    <div
+      className={[
+        "feedback-inline-placeholder",
+        reflow ? "feedback-inline-placeholder--reflow" : "",
+        className ?? "",
+      ]
+        .filter(Boolean)
+        .join(" ")}
+    >
       <div
         ref={wrapperRef}
         className={`feedback-inline-wrapper${isExpanded ? " feedback-inline-wrapper--expanded" : ""}`}
@@ -664,14 +681,17 @@ export function FeedbackInline({
           display: inline-block;
           width: 274px;
           height: 48px;
+        }
+        /* Reflow mode (opt-in via the 'reflow' prop): placeholder grows
+           with the expanded wrapper, pushing siblings around. Used in
+           the DS demo frame. Everywhere else the wrapper overlays the
+           page content at the placeholder bottom. */
+        .feedback-inline-placeholder--reflow {
           transition:
             width 0.25s cubic-bezier(0.4, 0, 0.2, 1),
             height 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        /* When the wrapper expands, grow the placeholder to match so the
-           parent layout reflows around the larger panel instead of being
-           overlapped. */
-        .feedback-inline-placeholder:has(.feedback-inline-wrapper--expanded) {
+        .feedback-inline-placeholder--reflow:has(.feedback-inline-wrapper--expanded) {
           width: 336px;
           height: 243px;
         }

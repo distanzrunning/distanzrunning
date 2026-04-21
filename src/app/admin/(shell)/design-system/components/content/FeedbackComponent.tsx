@@ -419,9 +419,10 @@ function DefaultDemo() {
 
 function InlineDemo() {
   return (
-    // The placeholder grows/shrinks with the inline pill (handled inside
-    // FeedbackInline via :has on the wrapper), so the container just
-    // centers it both axes and reflows naturally.
+    // reflow makes the placeholder resize with the pill so the preview
+    // frame grows/shrinks with it, staying centred on both axes. Other
+    // mount points (like the pagination footer) leave it off and let the
+    // panel overlay the page.
     <div
       style={{
         display: "flex",
@@ -429,7 +430,7 @@ function InlineDemo() {
         alignItems: "center",
       }}
     >
-      <FeedbackInline onSubmit={(data) => console.log(data)} />
+      <FeedbackInline reflow onSubmit={(data) => console.log(data)} />
     </div>
   );
 }
