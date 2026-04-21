@@ -7,12 +7,6 @@ import Button from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Modal } from "@/components/ui/Modal";
 
-// Tiny LQIP — a dark 10×6 placeholder so the hero tile paints instantly
-// and the full image fades in on top once it's ready. Keeps the modal
-// from looking empty on first open.
-const HERO_BLUR =
-  "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMCA2Ij48cmVjdCB3aWR0aD0iMTAiIGhlaWdodD0iNiIgZmlsbD0iIzE3MTcxNyIvPjwvc3ZnPg==";
-
 // ============================================================================
 // Types
 // ============================================================================
@@ -116,18 +110,15 @@ export function NewsletterModal({
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const [heroLoaded, setHeroLoaded] = useState(false);
 
   // Reset state every time the modal opens so re-opens don't leak
-  // previous input. Hero fade flag also resets so the fade replays
-  // if the user re-opens before the image warms the cache.
+  // previous input.
   useEffect(() => {
     if (!isOpen) return;
     setEmail("");
     setError("");
     setSubmitting(false);
     setSubmitted(false);
-    setHeroLoaded(false);
   }, [isOpen]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -203,20 +194,12 @@ export function NewsletterModal({
           src="/images/berlin_cover.jpg"
           alt=""
           fill
-          priority
           quality={75}
           sizes={`(max-width: ${PANEL_MAX_WIDTH}px) 100vw, ${PANEL_MAX_WIDTH}px`}
-          placeholder="blur"
-          blurDataURL={HERO_BLUR}
-          onLoadingComplete={() => setHeroLoaded(true)}
-          style={{
-            objectFit: "cover",
-            opacity: heroLoaded ? 1 : 0,
-            transition: "opacity 0.35s ease",
-          }}
+          style={{ objectFit: "cover" }}
         />
-        {/* Dark wash — sits above the image so the logo stays legible
-            once the photo fades in. */}
+        {/* Dark wash — sits above the image so the wordmark stays
+            legible. */}
         <div
           style={{
             position: "absolute",
@@ -224,8 +207,6 @@ export function NewsletterModal({
             background: "rgba(0, 0, 0, 0.3)",
           }}
         />
-        {/* Wordmark stays visible from frame one (SVG, instant paint)
-            so the modal never looks empty while the hero image warms. */}
         <div
           style={{
             position: "absolute",
@@ -241,7 +222,6 @@ export function NewsletterModal({
             alt="Distanz Running"
             width={180}
             height={60}
-            priority
             style={{ height: 56, width: "auto", maxWidth: "100%" }}
           />
         </div>
