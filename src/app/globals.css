@@ -1009,9 +1009,13 @@
     --ds-overlay-backdrop-color: rgb(0, 0, 0);
     --ds-overlay-backdrop-opacity: 0.8;
 
-    /* Modal backgrounds */
-    --ds-modal-panel-bg: var(--ds-background-200);
-    --ds-modal-section-bg: var(--ds-background-100);
+    /* Modal backgrounds — mirror light-mode semantics: the elevated
+       panel sits slightly brighter than the page canvas and any
+       sections inside it (header/footer/Inset) are a touch darker.
+       Previously both were swapped, leaving the panel identical to the
+       page canvas (pure black) with zero contrast. */
+    --ds-modal-panel-bg: var(--ds-background-100);
+    --ds-modal-section-bg: var(--ds-background-200);
 
     /* Focus ring outer glow */
     --ds-focus-ring: #ffffff3d;

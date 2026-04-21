@@ -358,12 +358,15 @@ export interface NewsletterButtonProps {
   label?: string;
   /** Passed to the PostHog "newsletter_modal_opened" + signup events. */
   source?: string;
+  /** Trigger button size. Defaults to "large" for homepage / navbar use. */
+  size?: "tiny" | "small" | "medium" | "large";
   className?: string;
 }
 
 export function NewsletterButton({
   label = "Newsletter",
   source = "newsletter_button",
+  size = "large",
   className,
 }: NewsletterButtonProps) {
   const [isOpen, setIsOpen] = useState(false);
@@ -379,7 +382,7 @@ export function NewsletterButton({
     <>
       <Button
         onClick={handleOpen}
-        size="large"
+        size={size}
         data-attr="newsletter-modal-open"
         className={className}
       >

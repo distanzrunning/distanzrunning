@@ -286,7 +286,9 @@ function NewsletterExample() {
   const [open, setOpen] = useState(false);
   return (
     <>
-      <Button onClick={() => setOpen(true)}>Subscribe</Button>
+      <Button size="small" onClick={() => setOpen(true)}>
+        Subscribe
+      </Button>
       <NewsletterModal
         isOpen={open}
         onClose={() => setOpen(false)}
@@ -299,6 +301,8 @@ function NewsletterExample() {
 const buttonCode = `import { NewsletterButton } from '@/components/ui/NewsletterModal';
 
 function Example() {
+  // Defaults to size="large" for homepage / navbar use; pass size
+  // explicitly when you need a smaller trigger.
   return <NewsletterButton source="homepage" />;
 }`;
 
@@ -306,7 +310,7 @@ function ControlledDemo() {
   const [open, setOpen] = useState(false);
   return (
     <div style={{ display: "flex", justifyContent: "center" }}>
-      <Button onClick={() => setOpen(true)} size="large">
+      <Button onClick={() => setOpen(true)} size="small">
         Open newsletter modal
       </Button>
       <NewsletterModal
@@ -321,7 +325,7 @@ function ControlledDemo() {
 function ButtonDemo() {
   return (
     <div style={{ display: "flex", justifyContent: "center" }}>
-      <NewsletterButton source="design_system_demo" />
+      <NewsletterButton size="small" source="design_system_demo" />
     </div>
   );
 }
