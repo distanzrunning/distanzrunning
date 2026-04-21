@@ -76,6 +76,7 @@ import ToastDSComponent from "../components/content/ToastDSComponent";
 import ThemeSwitcherComponent from "../components/content/ThemeSwitcherComponent";
 import TooltipComponent from "../components/content/TooltipComponent";
 import MultiSelectComponent from "../components/content/MultiSelectComponent";
+import NewsletterModalComponent from "../components/content/NewsletterModalComponent";
 import NoteComponent from "../components/content/NoteComponent";
 import CalendarComponent from "../components/content/CalendarComponent";
 import SearchComponent from "../components/content/SearchComponent";
@@ -941,6 +942,21 @@ export default function DesignSystemPage() {
           onNavigate={handleNavigation}
         >
           <MultiSelectComponent />
+        </ContentWithTOC>
+      );
+    }
+
+    if (activeSlug === "newsletter-modal") {
+      return (
+        <ContentWithTOC
+          tocTitle="On this page"
+          pageTitle="Newsletter Modal"
+          pageSubtitle="Focused email sign-up dialog wired to Mailgun via /api/subscribe."
+          mainSectionId="overview"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
+          <NewsletterModalComponent />
         </ContentWithTOC>
       );
     }

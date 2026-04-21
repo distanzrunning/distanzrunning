@@ -32,7 +32,7 @@ import { DarkModeContext } from "./DarkModeProvider";
 import { urlFor } from "@/sanity/lib/image";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 import Search from "./Search";
-import { NewsletterModal } from "./NewsletterModal";
+import { NewsletterModal } from "@/components/ui/NewsletterModal";
 import posthog from "posthog-js";
 
 const GARAGE_DOOR_DURATION_MS = 220;

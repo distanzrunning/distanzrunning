@@ -34,6 +34,8 @@ export interface ModalProps {
   stickyHeader?: boolean;
   /** Ref to an element that should receive focus when the modal opens */
   initialFocusRef?: RefObject<HTMLElement | null>;
+  /** Max width of the modal panel (default 540px). */
+  maxWidth?: number | string;
   /** Additional CSS classes for the content card */
   className?: string;
 }
@@ -71,6 +73,7 @@ export function Modal({
   footer,
   stickyHeader = false,
   initialFocusRef,
+  maxWidth = 540,
   className = "",
 }: ModalProps) {
   // Animation state: mounted keeps DOM alive during exit, visible drives CSS
@@ -242,7 +245,7 @@ export function Modal({
           style={{
             display: "flex",
             flexDirection: "column",
-            maxWidth: 540,
+            maxWidth,
             maxHeight: "min(800px, 80vh)",
             borderRadius: 12,
             background: "var(--ds-modal-panel-bg)",

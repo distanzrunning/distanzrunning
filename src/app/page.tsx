@@ -6,7 +6,7 @@ import { format } from "date-fns";
 import ResponsiveMarathonShowcase from "@/components/ResponsiveMarathonShowcase";
 import { TypewriterText } from "@/components/TypewriterText";
 import { ExploreButton } from "@/components/ExploreButton";
-import { NewsletterButton } from "@/components/NewsletterModal";
+import { NewsletterButton } from "@/components/ui/NewsletterModal";
 import { DarkModeProvider } from "@/components/DarkModeProvider";
 import SocialLinks from "@/components/SocialLinks";
 import FeatureShowcase from "@/components/FeatureShowcase";
