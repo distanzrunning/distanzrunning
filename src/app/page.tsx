@@ -143,7 +143,7 @@ function PreviewPage() {
 
             {/* Buttons */}
             <div className="flex gap-4 items-center justify-center flex-wrap">
-              <NewsletterButton />
+              <NewsletterButton size="large" source="homepage" />
               <ExploreButton variant="pink" />
             </div>
           </div>

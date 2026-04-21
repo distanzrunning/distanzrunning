@@ -358,7 +358,11 @@ export interface NewsletterButtonProps {
   label?: string;
   /** Passed to the PostHog "newsletter_modal_opened" + signup events. */
   source?: string;
-  /** Trigger button size. Defaults to "large" for homepage / navbar use. */
+  /**
+   * Trigger button size. Inherits Button's default (medium) when not
+   * provided. Pass "large" for prominent CTA placements like the
+   * homepage hero or navbar.
+   */
   size?: "tiny" | "small" | "medium" | "large";
   className?: string;
 }
@@ -366,7 +370,7 @@ export interface NewsletterButtonProps {
 export function NewsletterButton({
   label = "Newsletter",
   source = "newsletter_button",
-  size = "large",
+  size,
   className,
 }: NewsletterButtonProps) {
   const [isOpen, setIsOpen] = useState(false);

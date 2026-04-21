@@ -301,9 +301,9 @@ function NewsletterExample() {
 const buttonCode = `import { NewsletterButton } from '@/components/ui/NewsletterModal';
 
 function Example() {
-  // Defaults to size="large" for homepage / navbar use; pass size
-  // explicitly when you need a smaller trigger.
-  return <NewsletterButton source="homepage" />;
+  // Inherits Button's default size (medium). Pass size="large"
+  // for prominent CTA placements like the homepage hero.
+  return <NewsletterButton size="large" source="homepage" />;
 }`;
 
 function ControlledDemo() {
