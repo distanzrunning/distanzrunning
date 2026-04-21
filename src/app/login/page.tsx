@@ -3,12 +3,14 @@
 
 import { useState } from "react";
 import { DarkModeProvider } from "@/components/DarkModeProvider";
-import { Login } from "@/components/ui/Login";
+import Button from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
 import { Spinner } from "@/components/ui/Spinner";
 
 function AuthenticatingScreen() {
   return (
-    <div className="min-h-screen bg-canvas flex items-center justify-center p-4">
+    <div className="min-h-screen flex items-center justify-center p-4"
+         style={{ background: "var(--ds-background-200)" }}>
       <div className="flex flex-col items-center gap-6">
         <Spinner size={32} />
         <p
@@ -29,11 +31,14 @@ function AuthenticatingScreen() {
 }
 
 export default function LoginPage() {
+  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [authenticating, setAuthenticating] = useState(false);
 
-  const handleSubmit = async (values: Record<string, string>) => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (isLoading) return;
     setIsLoading(true);
     setError("");
 
@@ -41,11 +46,11 @@ export default function LoginPage() {
       const response = await fetch("/api/auth", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ password: values.password }),
+        body: JSON.stringify({ password }),
         credentials: "same-origin",
       });
 
-      const data = await response.json();
+      const data = await response.json().catch(() => ({ success: false }));
 
       if (data.success) {
         setAuthenticating(true);
@@ -74,42 +79,73 @@ export default function LoginPage() {
 
   return (
     <DarkModeProvider>
-      <div className="min-h-screen bg-canvas transition-colors duration-300 flex items-center justify-center p-4">
-        <Login
-          header={
-            <>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/brand/wordmark-black.svg"
-                alt="Distanz Running"
-                className="block dark:hidden"
-                style={{ height: 60, width: "auto" }}
-              />
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/brand/wordmark-white.svg"
-                alt="Distanz Running"
-                className="hidden dark:block"
-                style={{ height: 60, width: "auto" }}
-              />
-            </>
-          }
-          title="Staging Access"
-          fields={[
-            {
-              id: "password",
-              type: "password",
-              label: "Password",
-              placeholder: "Password",
-              autoComplete: "current-password",
-              required: true,
-            },
-          ]}
-          isLoading={isLoading}
-          error={error}
+      <main
+        style={{
+          minHeight: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          background: "var(--ds-background-200)",
+          padding: 24,
+        }}
+      >
+        <form
           onSubmit={handleSubmit}
-        />
-      </div>
+          style={{
+            width: "100%",
+            maxWidth: 360,
+            display: "flex",
+            flexDirection: "column",
+            gap: 16,
+            padding: 24,
+            background: "var(--ds-background-100)",
+            border: "1px solid var(--ds-gray-400)",
+            borderRadius: 12,
+            boxShadow: "var(--ds-shadow-menu)",
+          }}
+        >
+          <div>
+            <h1
+              style={{
+                fontSize: 20,
+                fontWeight: 600,
+                lineHeight: "24px",
+                margin: 0,
+                color: "var(--ds-gray-1000)",
+              }}
+            >
+              Staging Access
+            </h1>
+            <p
+              style={{
+                marginTop: 6,
+                marginBottom: 0,
+                fontSize: 13,
+                lineHeight: 1.55,
+                color: "var(--ds-gray-700)",
+              }}
+            >
+              Enter the staging password to continue.
+            </p>
+          </div>
+          <Input
+            name="password"
+            type="password"
+            label="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            autoFocus
+            autoComplete="current-password"
+            error={!!error}
+            errorMessage={error || undefined}
+            disabled={isLoading}
+            required
+          />
+          <Button type="submit" loading={isLoading} disabled={isLoading}>
+            {isLoading ? "Signing in…" : "Sign in"}
+          </Button>
+        </form>
+      </main>
     </DarkModeProvider>
   );
 }
