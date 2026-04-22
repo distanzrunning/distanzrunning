@@ -12,6 +12,7 @@ import Button from "@/components/ui/Button";
 import {
   NewsletterModal,
   NewsletterButton,
+  preloadNewsletterHero,
 } from "@/components/ui/NewsletterModal";
 
 // ============================================================================
@@ -279,14 +280,24 @@ function CodePreview({
 // ============================================================================
 
 const controlledCode = `import { useState } from 'react';
-import { NewsletterModal } from '@/components/ui/NewsletterModal';
+import {
+  NewsletterModal,
+  preloadNewsletterHero,
+} from '@/components/ui/NewsletterModal';
 import { Button } from '@/components/ui/Button';
 
 function NewsletterExample() {
   const [open, setOpen] = useState(false);
   return (
     <>
-      <Button size="small" onClick={() => setOpen(true)}>
+      <Button
+        size="small"
+        onClick={() => setOpen(true)}
+        // Warm the hero image cache on hover/focus so the modal opens
+        // with no loading flash. No-op if already prewarmed.
+        onMouseEnter={preloadNewsletterHero}
+        onFocus={preloadNewsletterHero}
+      >
         Subscribe
       </Button>
       <NewsletterModal
@@ -310,7 +321,12 @@ function ControlledDemo() {
   const [open, setOpen] = useState(false);
   return (
     <div style={{ display: "flex", justifyContent: "center" }}>
-      <Button onClick={() => setOpen(true)} size="small">
+      <Button
+        onClick={() => setOpen(true)}
+        onMouseEnter={preloadNewsletterHero}
+        onFocus={preloadNewsletterHero}
+        size="small"
+      >
         Open newsletter modal
       </Button>
       <NewsletterModal

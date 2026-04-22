@@ -26,6 +26,33 @@ export interface NewsletterModalProps {
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const PANEL_MAX_WIDTH = 448;
+const HERO_SRC = "/images/berlin_cover.jpg";
+
+// ============================================================================
+// Pre-warm the hero image
+// ============================================================================
+
+let heroPrewarmed = false;
+
+/**
+ * Request the hero image variant the modal will use, so that by the
+ * time the user actually opens the modal the bytes are already in the
+ * browser cache. Safe to call multiple times — the actual fetch only
+ * fires once per page load.
+ *
+ * Wire on `onMouseEnter` / `onFocus` of whatever trigger opens the
+ * modal. NewsletterButton does this automatically; controlled
+ * consumers can import and call this from their own trigger.
+ */
+export function preloadNewsletterHero() {
+  if (typeof window === "undefined" || heroPrewarmed) return;
+  heroPrewarmed = true;
+  const url = `/_next/image?url=${encodeURIComponent(HERO_SRC)}&w=896&q=75`;
+  const img = new window.Image();
+  // No-op on errors; we'd rather skip the warm-up than surface anything.
+  img.onerror = () => {};
+  img.src = url;
+}
 
 // ============================================================================
 // Success state
@@ -212,7 +239,7 @@ export function NewsletterModal({
         }}
       >
         <Image
-          src="/images/berlin_cover.jpg"
+          src={HERO_SRC}
           alt=""
           fill
           quality={75}
@@ -407,6 +434,8 @@ export function NewsletterButton({
     <>
       <Button
         onClick={handleOpen}
+        onMouseEnter={preloadNewsletterHero}
+        onFocus={preloadNewsletterHero}
         size={size}
         data-attr="newsletter-modal-open"
         className={className}

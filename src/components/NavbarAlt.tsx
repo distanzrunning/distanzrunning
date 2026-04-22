@@ -32,7 +32,10 @@ import { DarkModeContext } from "./DarkModeProvider";
 import { urlFor } from "@/sanity/lib/image";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 import Search from "./Search";
-import { NewsletterModal } from "@/components/ui/NewsletterModal";
+import {
+  NewsletterModal,
+  preloadNewsletterHero,
+} from "@/components/ui/NewsletterModal";
 import posthog from "posthog-js";
 
 const GARAGE_DOOR_DURATION_MS = 220;
@@ -228,6 +231,8 @@ export default function NavbarAlt({
                   });
                   setNewsletterModalOpen(true);
                 }}
+                onMouseEnter={preloadNewsletterHero}
+                onFocus={preloadNewsletterHero}
                 className="hidden md:inline-flex whitespace-nowrap"
                 size="slim"
                 data-attr="newsletter-modal-open-desktop"
@@ -802,6 +807,8 @@ export default function NavbarAlt({
                         setNewsletterModalOpen(true);
                         setMobileMenuOpen(false);
                       }}
+                      onTouchStart={preloadNewsletterHero}
+                      onFocus={preloadNewsletterHero}
                       className="w-full"
                       data-attr="newsletter-modal-open-mobile"
                     >
