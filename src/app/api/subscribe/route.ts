@@ -96,7 +96,8 @@ export async function POST(request: NextRequest) {
     }
 
     // Step 2: Send confirmation email
-    const confirmationUrl = `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/confirm?token=${confirmationToken}&email=${encodeURIComponent(email)}`
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://distanzrunning.vercel.app'
+    const confirmationUrl = `${baseUrl}/api/confirm?token=${confirmationToken}&email=${encodeURIComponent(email)}`
     
     const confirmationHtml = `
     <!DOCTYPE html>
@@ -266,7 +267,7 @@ export async function POST(request: NextRequest) {
                         <td style="vertical-align:middle">
                           <a href="https://distanzrunning.com" style="text-decoration:none">
                             <img
-                              src="https://distanzrunning.vercel.app/images/distanz_icon_black_round.png"
+                              src="${baseUrl}/brand/icon-badge.svg"
                               alt="Distanz Running"
                               width="48"
                               height="48"
@@ -316,10 +317,10 @@ export async function POST(request: NextRequest) {
                         <td style="padding-bottom:12px">
                           <a href="https://distanzrunning.com" style="text-decoration:none">
                             <img
-                              src="https://distanzrunning.vercel.app/brand/logo-email.png"
+                              src="${baseUrl}/brand/logo-full-email.svg"
                               alt="Distanz Running"
                               width="120"
-                              height="45"
+                              height="37"
                               style="display:block;height:auto;border:0" />
                           </a>
                         </td>

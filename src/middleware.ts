@@ -43,11 +43,17 @@ async function handleStagingAuth(
   if (host !== STAGING_HOST) return null;
 
   const { pathname } = request.nextUrl;
-  // Always let the login UI, auth API, and framework internals through.
+  // Always let the login UI, auth API, framework internals, and public
+  // brand assets through. The /brand/ and /images/ allowlist is what
+  // lets confirmation-email images render in inboxes — mail clients
+  // fetch those URLs cookieless and would otherwise be redirected to
+  // /login. These directories only contain public marketing assets.
   if (
     pathname === "/login" ||
     pathname.startsWith("/api/") ||
-    pathname.startsWith("/_next/")
+    pathname.startsWith("/_next/") ||
+    pathname.startsWith("/brand/") ||
+    pathname.startsWith("/images/")
   ) {
     return null;
   }
