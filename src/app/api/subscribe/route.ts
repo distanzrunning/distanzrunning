@@ -11,7 +11,6 @@ import path from 'path'
 // because Outlook's Word-based renderer doesn't reliably handle SVG.
 // Read once at module load — the files are static.
 const BRAND_DIR = path.join(process.cwd(), 'public/brand')
-const ICON_BUFFER = fs.readFileSync(path.join(BRAND_DIR, 'icon-badge.png'))
 const LOGO_BUFFER = fs.readFileSync(path.join(BRAND_DIR, 'logo-full-email.png'))
 
 export async function POST(request: NextRequest) {
@@ -144,31 +143,30 @@ export async function POST(request: NextRequest) {
           @media only screen and (max-width: 600px) {
             .heading { font-size:28px !important; }
             .main-section { padding:40px 24px !important; }
-            .footer-section { padding:24px !important; }
           }
         </style>
       </head>
-      <body style="margin:0;padding:0;background-color:#FFFFFF;color:#171717;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
-        <table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0" style="background-color:#FFFFFF;">
+      <body style="margin:0;padding:0;background-color:#FAFAFA;color:#171717;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+        <table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0" style="background-color:#FAFAFA;">
           <tr>
             <td align="center" style="padding:32px 16px;">
-              <table role="presentation" class="container" width="560" border="0" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;background-color:#FFFFFF;border:1px solid #EBEBEB;border-radius:12px;">
 
-                <!-- Main section -->
+              <!-- Card -->
+              <table role="presentation" class="container" width="560" border="0" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;background-color:#FFFFFF;border:1px solid #EBEBEB;border-radius:12px;">
                 <tr>
-                  <td class="main-section" style="padding:48px 32px;">
+                  <td class="main-section" style="padding:48px 40px;">
                     <table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0">
 
-                      <!-- Brand mark -->
+                      <!-- Wordmark -->
                       <tr>
                         <td style="padding:0 0 32px 0;">
                           <a href="https://distanzrunning.com" style="text-decoration:none;display:inline-block;">
                             <img
-                              src="cid:icon-badge.png"
+                              src="cid:logo-full-email.png"
                               alt="Distanz Running"
-                              width="36"
-                              height="36"
-                              style="display:block;width:36px;height:36px;border:0;" />
+                              width="120"
+                              height="37"
+                              style="display:block;width:120px;height:37px;border:0;" />
                           </a>
                         </td>
                       </tr>
@@ -191,13 +189,15 @@ export async function POST(request: NextRequest) {
                         </td>
                       </tr>
 
-                      <!-- CTA -->
+                      <!-- CTA: auto-width, left-aligned to match the
+                           single-action editorial pattern from the
+                           reference emails. -->
                       <tr>
                         <td>
-                          <table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0">
+                          <table role="presentation" border="0" cellpadding="0" cellspacing="0">
                             <tr>
-                              <td align="center" bgcolor="#171717" style="border-radius:6px;background-color:#171717;">
-                                <a href="${confirmationUrl}" target="_blank" style="display:block;padding:14px 24px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:16px;line-height:1.2;font-weight:600;color:#FFFFFF;text-decoration:none;border-radius:6px;">
+                              <td bgcolor="#171717" style="border-radius:6px;background-color:#171717;">
+                                <a href="${confirmationUrl}" target="_blank" style="display:inline-block;padding:14px 24px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:16px;line-height:1.2;font-weight:600;color:#FFFFFF;text-decoration:none;border-radius:6px;">
                                   Confirm your email
                                 </a>
                               </td>
@@ -209,43 +209,22 @@ export async function POST(request: NextRequest) {
                     </table>
                   </td>
                 </tr>
+              </table>
 
-                <!-- Footer section: gray background, border-top divider
-                     spans the full card width, content centered. -->
+              <!-- Footer (sits on the canvas, outside the card) -->
+              <table role="presentation" width="560" border="0" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;">
                 <tr>
-                  <td class="footer-section" align="center" bgcolor="#FAFAFA" style="background-color:#FAFAFA;border-top:1px solid #EBEBEB;border-radius:0 0 12px 12px;padding:32px;text-align:center;">
-                    <table role="presentation" border="0" cellpadding="0" cellspacing="0" align="center">
-                      <tr>
-                        <td align="center" style="padding:0 0 12px 0;">
-                          <a href="https://distanzrunning.com" style="text-decoration:none;display:inline-block;">
-                            <img
-                              src="cid:logo-full-email.png"
-                              alt="Distanz Running"
-                              width="120"
-                              height="37"
-                              style="display:block;width:120px;height:37px;border:0;" />
-                          </a>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td align="center" style="padding:0 0 8px 0;text-align:center;">
-                          <p style="margin:0;font-size:13px;line-height:1.4;color:#171717;font-weight:500;">
-                            Running stories, gear, races.
-                          </p>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td align="center" style="text-align:center;">
-                          <p style="margin:0;font-size:13px;line-height:1.4;color:#8F8F8F;">
-                            © ${currentYear} Distanz Running. All rights reserved.
-                          </p>
-                        </td>
-                      </tr>
-                    </table>
+                  <td align="center" style="padding:24px 16px 0 16px;text-align:center;">
+                    <p style="margin:0 0 6px 0;font-size:13px;line-height:1.4;color:#171717;font-weight:500;">
+                      Running stories, gear, races.
+                    </p>
+                    <p style="margin:0;font-size:13px;line-height:1.4;color:#8F8F8F;">
+                      © ${currentYear} Distanz Running. All rights reserved.
+                    </p>
                   </td>
                 </tr>
-
               </table>
+
             </td>
           </tr>
         </table>
@@ -263,11 +242,6 @@ export async function POST(request: NextRequest) {
     emailForm.append('o:tag', 'confirmation-email')
     emailForm.append('o:tracking', 'yes')
     emailForm.append('o:tracking-clicks', 'no')
-    emailForm.append(
-      'inline',
-      new Blob([new Uint8Array(ICON_BUFFER)], { type: 'image/png' }),
-      'icon-badge.png',
-    )
     emailForm.append(
       'inline',
       new Blob([new Uint8Array(LOGO_BUFFER)], { type: 'image/png' }),
