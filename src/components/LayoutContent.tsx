@@ -28,8 +28,26 @@ export default function LayoutContent({
   // Hide footer on calendar page (fullscreen app-like view)
   const isCalendarPage = pathname === "/races/calendar";
 
+  // TEMPORARY: homepage is being rebuilt against the new PageFrame +
+  // grid system. Render just the framed canvas while we sort the
+  // shell, then re-enable navbar / footer / content in stages.
+  const isHome = pathname === "/";
+
   if (isPreviewMode || isLoginPage || isAdmin) {
     return <main className="min-h-screen">{children}</main>;
+  }
+
+  if (isHome) {
+    return (
+      <div
+        className="flex min-h-screen flex-col"
+        style={{ background: "var(--ds-background-200)" }}
+      >
+        <PageFrame className="flex flex-1 flex-col">
+          <main className="flex-1">{children}</main>
+        </PageFrame>
+      </div>
+    );
   }
 
   return (
