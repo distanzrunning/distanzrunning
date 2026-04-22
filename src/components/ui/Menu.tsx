@@ -375,6 +375,18 @@ interface MenuItemProps {
   children: ReactNode;
   prefix?: ReactNode;
   suffix?: ReactNode;
+  /**
+   * Fires when the pointer enters the item. Useful for warming caches
+   * (image preloads, prefetch hints) before the user actually clicks.
+   * The internal hover-background handler still runs.
+   */
+  onMouseEnter?: (e: React.MouseEvent<HTMLElement>) => void;
+  /**
+   * Fires when keyboard focus reaches the item. Pair with
+   * `onMouseEnter` to also cover keyboard-only users who arrow into
+   * the item before activating it.
+   */
+  onFocus?: (e: React.FocusEvent<HTMLElement>) => void;
 }
 
 export function MenuItem({
@@ -386,6 +398,8 @@ export function MenuItem({
   children,
   prefix,
   suffix,
+  onMouseEnter,
+  onFocus,
 }: MenuItemProps) {
   const { setIsOpen } = useMenuContext();
   const isDisabled = disabled || locked;
@@ -473,6 +487,7 @@ export function MenuItem({
     : {
         onMouseEnter: (e: React.MouseEvent<HTMLElement>) => {
           e.currentTarget.style.background = hoverBg;
+          onMouseEnter?.(e);
         },
         onMouseLeave: (e: React.MouseEvent<HTMLElement>) => {
           e.currentTarget.style.background = "transparent";
@@ -483,6 +498,7 @@ export function MenuItem({
         onMouseUp: (e: React.MouseEvent<HTMLElement>) => {
           e.currentTarget.style.background = hoverBg;
         },
+        onFocus,
       };
 
   if (href && !isDisabled) {

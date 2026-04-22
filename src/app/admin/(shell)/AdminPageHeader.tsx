@@ -7,7 +7,10 @@ import { LogOut, Mail, MoreHorizontal, SmilePlus } from "lucide-react";
 import { DarkModeContext } from "@/components/DarkModeProvider";
 import { FeedbackWithSelect } from "@/components/ui/Feedback";
 import { Menu, MenuButton, MenuItem, MenuSeparator } from "@/components/ui/Menu";
-import { NewsletterModal } from "@/components/ui/NewsletterModal";
+import {
+  NewsletterModal,
+  preloadNewsletterHero,
+} from "@/components/ui/NewsletterModal";
 import { ThemeSwitcher } from "@/components/ui/ThemeSwitcher";
 import { logout } from "../login/actions";
 import { CONSENT_NAV, FEEDBACK_NAV } from "./AdminSidebar";
@@ -217,6 +220,8 @@ export default function AdminPageHeader() {
 
         <MenuItem
           onClick={() => setNewsletterOpen(true)}
+          onMouseEnter={preloadNewsletterHero}
+          onFocus={preloadNewsletterHero}
           suffix={<Mail className="w-4 h-4" />}
         >
           Newsletter Signup
