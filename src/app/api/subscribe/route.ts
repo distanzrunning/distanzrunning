@@ -152,7 +152,7 @@ export async function POST(request: NextRequest) {
             <td align="center" style="padding:32px 16px;">
 
               <!-- Card -->
-              <table role="presentation" class="container" width="560" border="0" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;background-color:#FFFFFF;border:1px solid #EBEBEB;border-radius:12px;">
+              <table role="presentation" class="container" width="560" border="0" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;background-color:#FFFFFF;border-radius:12px;">
                 <tr>
                   <td class="main-section" style="padding:48px 40px;">
                     <table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0">
