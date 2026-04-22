@@ -113,16 +113,14 @@ export default function NewsletterSignup({
 
   // .light / .dark on the wrapper re-resolves all --ds-* tokens (and
   // any semantic Tailwind tokens that map onto them) for this subtree.
-  // - White: solid white. Inverted band for dark-mode pages.
-  // - Black: dark gradient. Inverted band for light-mode pages.
-  // - Grey: solid mid-grey. Quieter band for light-mode pages.
+  // White and black both use --ds-background-100 — the wrapper class
+  // decides which surface that resolves to. Grey is the lone outlier
+  // pinned to a specific gray-scale step.
   const themeClass = theme === "black" ? "dark" : "light";
   const cardBackground =
-    theme === "white"
-      ? "var(--ds-background-100)"
-      : theme === "grey"
-        ? "var(--ds-gray-200)"
-        : "linear-gradient(to bottom, var(--ds-gray-100), var(--ds-background-100))";
+    theme === "grey"
+      ? "var(--ds-gray-200)"
+      : "var(--ds-background-100)";
 
   return (
     <div className={themeClass}>

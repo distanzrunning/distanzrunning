@@ -352,10 +352,11 @@ export default function NewsletterSignupComponent() {
           className="text-copy-16 text-textSubtle mt-3 mb-6"
           style={{ lineHeight: 1.5 }}
         >
-          <code>theme=&quot;black&quot;</code> — near-black surface
-          with a subtle top-down gradient. Light text, dark form
-          input, and an inverted CTA (white bg, dark text). Designed
-          as the inverted band for light-mode pages.
+          <code>theme=&quot;black&quot;</code> — solid near-black
+          surface (<code>--ds-background-100</code> resolved against
+          dark tokens). Light text, dark form input, and an inverted
+          CTA (white bg, dark text). Designed as the inverted band
+          for light-mode pages.
         </p>
         <CodePreview componentCode={blackCode}>
           <NewsletterSignup theme="black" source="design_system_demo_black" />
