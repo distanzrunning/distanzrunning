@@ -127,7 +127,7 @@ export default function NewsletterSignup({
   return (
     <div className={themeClass}>
       <div
-        className="mx-auto w-full max-w-7xl overflow-hidden rounded-lg border border-borderSubtle"
+        className="mx-auto w-full max-w-7xl overflow-hidden rounded-xl border border-borderSubtle"
         style={{ background: cardBackground }}
       >
         <div className="flex flex-col justify-between gap-8 p-6 sm:p-12 md:flex-row md:items-center md:gap-20 md:p-16">
