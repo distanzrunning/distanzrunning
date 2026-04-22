@@ -12,6 +12,7 @@ import path from 'path'
 // Read once at module load — the files are static.
 const BRAND_DIR = path.join(process.cwd(), 'public/brand')
 const ICON_BUFFER = fs.readFileSync(path.join(BRAND_DIR, 'icon-badge.png'))
+const WORDMARK_GRAY_BUFFER = fs.readFileSync(path.join(BRAND_DIR, 'wordmark-gray.png'))
 
 export async function POST(request: NextRequest) {
   try {
@@ -214,7 +215,17 @@ export async function POST(request: NextRequest) {
               <!-- Footer (sits on the canvas, outside the card) -->
               <table role="presentation" width="560" border="0" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;">
                 <tr>
-                  <td align="center" style="padding:24px 16px 0 16px;text-align:center;">
+                  <td align="center" style="padding:32px 16px 12px 16px;text-align:center;">
+                    <img
+                      src="cid:wordmark-gray.png"
+                      alt="Distanz Running"
+                      width="100"
+                      height="31"
+                      style="display:block;margin:0 auto;width:100px;height:31px;border:0;" />
+                  </td>
+                </tr>
+                <tr>
+                  <td align="center" style="padding:0 16px;text-align:center;">
                     <p style="margin:0 0 6px 0;font-size:13px;line-height:1.4;color:#171717;font-weight:500;">
                       Running stories, gear, races.
                     </p>
@@ -246,6 +257,11 @@ export async function POST(request: NextRequest) {
       'inline',
       new Blob([new Uint8Array(ICON_BUFFER)], { type: 'image/png' }),
       'icon-badge.png',
+    )
+    emailForm.append(
+      'inline',
+      new Blob([new Uint8Array(WORDMARK_GRAY_BUFFER)], { type: 'image/png' }),
+      'wordmark-gray.png',
     )
 
     const emailResponse = await fetch(
