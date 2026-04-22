@@ -66,7 +66,12 @@ export function Menu({ children, position = "bottom-start", width }: MenuProps) 
     return itemCountRef.current++;
   }, []);
 
-  // Click outside to close
+  // Click outside / Escape / window scroll or resize → close. The
+  // dropdown is portaled to document.body with position: absolute
+  // anchored to coords computed once on open, so any subsequent
+  // viewport shift would visually orphan it from the trigger
+  // (especially when the trigger lives inside a sticky header).
+  // Closing matches Geist/Material/Radix popover behaviour.
   useEffect(() => {
     if (!isOpen) return;
 
@@ -85,11 +90,19 @@ export function Menu({ children, position = "bottom-start", width }: MenuProps) 
       }
     }
 
+    function handleViewportShift() {
+      setIsOpen(false);
+    }
+
     document.addEventListener("mousedown", handleClickOutside);
     document.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("scroll", handleViewportShift, { passive: true });
+    window.addEventListener("resize", handleViewportShift);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
       document.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("scroll", handleViewportShift);
+      window.removeEventListener("resize", handleViewportShift);
     };
   }, [isOpen]);
 
