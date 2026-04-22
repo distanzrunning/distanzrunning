@@ -41,7 +41,7 @@ export default function LayoutContent({
     return (
       <div
         className="flex min-h-screen flex-col"
-        style={{ background: "var(--ds-background-200)" }}
+        style={{ background: "var(--ds-background-100)" }}
       >
         <PageFrame className="flex flex-1 flex-col">
           <main className="flex-1">{children}</main>
@@ -53,7 +53,7 @@ export default function LayoutContent({
   return (
     <div
       className="flex min-h-screen flex-col"
-      style={{ background: "var(--ds-background-200)" }}
+      style={{ background: "var(--ds-background-100)" }}
     >
       {navbar}
       <PageFrame className="flex flex-1 flex-col">

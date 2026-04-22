@@ -10,7 +10,9 @@ import type { CSSProperties, ReactNode } from "react";
 // an inset card look — inspired by v0.app's page-layout container.
 //
 // Anatomy:
-//   - --ds-background-100 surface (auto-adapts to theme)
+//   - --ds-background-200 inside the frame; --ds-background-100 sits
+//     outside (set on the layout wrapper). Frame reads as a slightly
+//     recessed body against the brighter chrome.
 //   - 1px --ds-gray-400 border on all four sides
 //   - 6px radius (radius-small)
 //   - Subtle two-layer shadow for depth without dominating
@@ -46,7 +48,7 @@ export default function PageFrame({
       className={`relative ${className}`.trim()}
       style={{
         margin: "0 8px 8px",
-        background: "var(--ds-background-100)",
+        background: "var(--ds-background-200)",
         border: "1px solid var(--ds-gray-400)",
         borderRadius: 6,
         boxShadow:

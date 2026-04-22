@@ -212,7 +212,7 @@ function CodePreview({
     <div className="border border-[var(--ds-gray-400)] rounded-lg">
       <div
         className="p-6 rounded-t-lg"
-        style={{ background: "var(--ds-background-200)" }}
+        style={{ background: "var(--ds-background-100)" }}
       >
         {children}
       </div>
