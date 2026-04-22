@@ -159,7 +159,7 @@ export async function POST(request: NextRequest) {
 
                       <!-- Wordmark -->
                       <tr>
-                        <td style="padding:0 0 32px 0;">
+                        <td align="center" style="padding:0 0 32px 0;text-align:center;">
                           <a href="https://distanzrunning.com" style="text-decoration:none;display:inline-block;">
                             <img
                               src="cid:logo-full-email.png"
