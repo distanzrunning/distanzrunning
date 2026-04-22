@@ -895,6 +895,61 @@ export default function ModalComponent() {
         </div>
       </Section>
 
+      {/* Built on this primitive */}
+      <Section>
+        <SectionHeader id="compositions" onCopyLink={showToast}>
+          Built on this primitive
+        </SectionHeader>
+        <p
+          className="text-copy-16 text-textSubtle mt-3 mb-6"
+          style={{ lineHeight: 1.5 }}
+        >
+          Product-level modals compose <code>Modal</code> with their own
+          layout, form, and integrations. The primitive stays focused on
+          mechanics (focus trap, portal, scroll lock, animation); the
+          composition adds the domain concerns.
+        </p>
+        <ul
+          style={{
+            listStyle: "none",
+            margin: 0,
+            padding: 0,
+            display: "flex",
+            flexDirection: "column",
+            gap: 8,
+          }}
+        >
+          <li>
+            <a
+              href="/admin/design-system/newsletter-modal"
+              className="block rounded-lg border border-[var(--ds-gray-400)] p-4 hover:bg-[var(--ds-background-200)] transition-colors no-underline"
+            >
+              <div
+                style={{
+                  fontSize: 14,
+                  fontWeight: 600,
+                  color: "var(--ds-gray-1000)",
+                }}
+              >
+                Newsletter Modal →
+              </div>
+              <div
+                style={{
+                  marginTop: 4,
+                  fontSize: 13,
+                  color: "var(--ds-gray-700)",
+                }}
+              >
+                Email sign-up dialog with a branded hero. Wired to Mailgun
+                via <code>/api/subscribe</code>, reCAPTCHA-protected, and
+                fires a PostHog <code>newsletter_signup</code> event on
+                success.
+              </div>
+            </a>
+          </li>
+        </ul>
+      </Section>
+
       {/* Props */}
       <Section>
         <SectionHeader id="props" onCopyLink={showToast}>

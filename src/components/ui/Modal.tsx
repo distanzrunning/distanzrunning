@@ -79,12 +79,26 @@ export function Modal({
   // Animation state: mounted keeps DOM alive during exit, visible drives CSS
   const [mounted, setMounted] = useState(false);
   const [visible, setVisible] = useState(false);
+  const [reducedMotion, setReducedMotion] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const openerRef = useRef<HTMLElement | null>(null);
 
   const titleId = useId();
   const subtitleId = useId();
+
+  // Respect the user's OS-level "reduce motion" preference. When true we
+  // drop the opacity/scale transitions (enter/exit are instantaneous).
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setReducedMotion(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setReducedMotion(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
+
+  const effectiveDuration = reducedMotion ? 0 : DURATION;
 
   useEffect(() => {
     if (open) {
@@ -100,7 +114,7 @@ export function Modal({
       setVisible(false);
       timeoutRef.current = setTimeout(() => {
         setMounted(false);
-      }, DURATION);
+      }, effectiveDuration);
     }
     return () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
@@ -211,7 +225,7 @@ export function Modal({
           opacity: visible ? "var(--ds-overlay-backdrop-opacity)" : (0 as never),
           zIndex: 50,
           pointerEvents: visible ? "all" : "none",
-          transition: `opacity ${DURATION}ms ${TIMING}`,
+          transition: `opacity ${effectiveDuration}ms ${TIMING}`,
         }}
         onClick={onClose}
       />
@@ -255,7 +269,7 @@ export function Modal({
             pointerEvents: "all",
             opacity: visible ? 1 : 0,
             transform: visible ? "scale(1)" : "scale(0.98)",
-            transition: `opacity ${DURATION}ms ${TIMING}, transform ${DURATION}ms ${TIMING}`,
+            transition: `opacity ${effectiveDuration}ms ${TIMING}, transform ${effectiveDuration}ms ${TIMING}`,
           }}
         >
           {/* Modal body */}

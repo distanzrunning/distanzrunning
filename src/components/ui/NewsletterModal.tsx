@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import posthog from "posthog-js";
+import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import Button from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Modal } from "@/components/ui/Modal";
@@ -106,6 +107,7 @@ export function NewsletterModal({
   onClose,
   source = "newsletter_modal",
 }: NewsletterModalProps) {
+  const { executeRecaptcha } = useGoogleReCaptcha();
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -136,10 +138,27 @@ export function NewsletterModal({
     setSubmitting(true);
     setError("");
     try {
+      // Pull a reCAPTCHA v3 token if the provider is mounted (i.e.
+      // NEXT_PUBLIC_RECAPTCHA_SITE_KEY is configured). Gracefully falls
+      // back to a no-token submit in dev or if the script fails to
+      // load — the API still verifies server-side when a token is
+      // present and no-ops otherwise.
+      let recaptchaToken: string | undefined;
+      if (executeRecaptcha) {
+        try {
+          recaptchaToken = await executeRecaptcha("newsletter_modal");
+        } catch {
+          // non-fatal; submit goes through without verification
+        }
+      }
+
       const res = await fetch("/api/subscribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: trimmed }),
+        body: JSON.stringify({
+          email: trimmed,
+          ...(recaptchaToken ? { recaptchaToken } : {}),
+        }),
       });
       const data = (await res.json().catch(() => ({}))) as {
         error?: unknown;
@@ -169,7 +188,9 @@ export function NewsletterModal({
         // PostHog may not be loaded yet — don't block the success flow.
       }
       setSubmitted(true);
-      setTimeout(onClose, 2400);
+      // Give the success message enough dwell time to be read
+      // comfortably before auto-closing.
+      setTimeout(onClose, 3500);
     } catch {
       setError("Network error. Please check your connection and try again.");
     } finally {
@@ -290,7 +311,7 @@ export function NewsletterModal({
                 size="large"
                 loading={submitting}
                 data-attr="newsletter-modal-submit"
-                style={{ width: "100%" }}
+                className="w-full"
               >
                 {submitting ? "Subscribing…" : "Subscribe"}
               </Button>
