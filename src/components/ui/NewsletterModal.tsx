@@ -27,6 +27,7 @@ export interface NewsletterModalProps {
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const PANEL_MAX_WIDTH = 448;
 const HERO_SRC = "/images/berlin_cover.jpg";
+const LOGO_SRC = "/brand/logo-full-white.svg";
 
 // ============================================================================
 // Pre-warm the hero image
@@ -47,18 +48,27 @@ let heroPrewarmed = false;
 export function preloadNewsletterHero() {
   if (typeof window === "undefined" || heroPrewarmed) return;
   heroPrewarmed = true;
-  // Mirror the srcset the <Image> below generates so the browser picks
+
+  // Hero — mirror the srcset <Image> generates so the browser picks
   // the same variant under its viewport+DPR. Widths must be in
   // next.config.ts `deviceSizes`; 640 (1x desktop), 1080 (2x desktop),
   // 1200 (mobile/3x) cover the common cases.
   const variant = (w: number) =>
     `/_next/image?url=${encodeURIComponent(HERO_SRC)}&w=${w}&q=75 ${w}w`;
-  const link = document.createElement("link");
-  link.rel = "preload";
-  link.as = "image";
-  link.imageSrcset = [variant(640), variant(1080), variant(1200)].join(", ");
-  link.imageSizes = `(max-width: ${PANEL_MAX_WIDTH}px) 100vw, ${PANEL_MAX_WIDTH}px`;
-  document.head.appendChild(link);
+  const heroLink = document.createElement("link");
+  heroLink.rel = "preload";
+  heroLink.as = "image";
+  heroLink.imageSrcset = [variant(640), variant(1080), variant(1200)].join(", ");
+  heroLink.imageSizes = `(max-width: ${PANEL_MAX_WIDTH}px) 100vw, ${PANEL_MAX_WIDTH}px`;
+  document.head.appendChild(heroLink);
+
+  // Logo — Next serves SVGs straight from the source path (no
+  // optimization pipeline), so a single href preload is enough.
+  const logoLink = document.createElement("link");
+  logoLink.rel = "preload";
+  logoLink.as = "image";
+  logoLink.href = LOGO_SRC;
+  document.head.appendChild(logoLink);
 }
 
 // ============================================================================
