@@ -334,9 +334,10 @@ export default function NewsletterSignupComponent() {
           className="text-copy-16 text-textSubtle mt-3 mb-6"
           style={{ lineHeight: 1.5 }}
         >
-          Default surface — white card with a subtle top-down gradient
-          from <code>--ds-gray-100</code> to{" "}
-          <code>--ds-background-100</code>. Dark text + dark CTA button.
+          Default surface — solid pure white
+          (<code>--ds-background-100</code>). Designed as the inverted
+          band for dark-mode pages: the card stays bright while the
+          surrounding page is dark.
         </p>
         <CodePreview componentCode={whiteCode}>
           <NewsletterSignup source="design_system_demo_white" />
@@ -352,9 +353,9 @@ export default function NewsletterSignupComponent() {
           style={{ lineHeight: 1.5 }}
         >
           <code>theme=&quot;black&quot;</code> — near-black surface
-          with the inverse gradient. Light text, dark form input, and
-          an inverted CTA (white bg, dark text). Stays dark even on a
-          light page.
+          with a subtle top-down gradient. Light text, dark form
+          input, and an inverted CTA (white bg, dark text). Designed
+          as the inverted band for light-mode pages.
         </p>
         <CodePreview componentCode={blackCode}>
           <NewsletterSignup theme="black" source="design_system_demo_black" />
@@ -371,8 +372,8 @@ export default function NewsletterSignupComponent() {
         >
           <code>theme=&quot;grey&quot;</code> — solid mid-grey
           (<code>--ds-gray-200</code>) with no gradient. A quieter
-          surface that sits well between fully white sections without
-          competing for attention.
+          option for light-mode pages — sits well between fully white
+          sections without competing for attention.
         </p>
         <CodePreview componentCode={greyCode}>
           <NewsletterSignup theme="grey" source="design_system_demo_grey" />
