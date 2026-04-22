@@ -182,14 +182,9 @@ function CopyIconButton({ copied }: { copied: boolean }) {
 function CodePreview({
   children,
   componentCode,
-  previewPadding = 0,
 }: {
   children: React.ReactNode;
   componentCode: string;
-  /** Override the default 24px padding around the preview area. The
-      Signup band already carries its own background, so we usually want
-      0 here so it bleeds to the preview frame's edges. */
-  previewPadding?: number;
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -214,12 +209,10 @@ function CodePreview({
     setTimeout(() => setCopied(false), 1000);
   }, [componentCode]);
   return (
-    <div className="border border-[var(--ds-gray-400)] rounded-lg overflow-hidden">
+    <div className="border border-[var(--ds-gray-400)] rounded-lg">
       <div
-        style={{
-          background: "var(--ds-background-100)",
-          padding: previewPadding,
-        }}
+        className="p-6 rounded-t-lg"
+        style={{ background: "var(--ds-background-100)" }}
       >
         {children}
       </div>
