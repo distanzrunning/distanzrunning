@@ -1,7 +1,7 @@
 import { client as sanity } from "@/sanity/lib/client";
 import { notFound } from "next/navigation";
 import TagFilterGrid from "@/components/TagFilterGrid";
-import NewsletterSignup from "@/components/NewsletterSignup";
+import NewsletterSignup from "@/components/ui/NewsletterSignup";
 
 export default async function GearCategoryPage({
   params,

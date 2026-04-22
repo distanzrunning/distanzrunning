@@ -7,7 +7,7 @@ import { useContext } from "react";
 import { DarkModeContext } from "./DarkModeProvider";
 import { ChevronRight } from "lucide-react";
 import { SiInstagram, SiX, SiStrava, SiLinkedin } from "react-icons/si";
-import NewsletterSignup from "./NewsletterSignup";
+import NewsletterSignup from "./ui/NewsletterSignup";
 
 export default function Footer() {
   const { isDark } = useContext(DarkModeContext);

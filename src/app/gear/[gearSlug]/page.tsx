@@ -6,7 +6,7 @@ import { PortableText } from '@portabletext/react'
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
 import { format } from 'date-fns'
-import NewsletterSignup from '@/components/NewsletterSignup'
+import NewsletterSignup from '@/components/ui/NewsletterSignup'
 
 export const revalidate = 60
 

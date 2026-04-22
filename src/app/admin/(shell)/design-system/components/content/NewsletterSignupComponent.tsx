@@ -8,7 +8,7 @@ import {
   getTokenStyle,
   type DualThemeToken,
 } from "@/components/ui/useShikiHighlighter";
-import NewsletterSignup from "@/components/NewsletterSignup";
+import NewsletterSignup from "@/components/ui/NewsletterSignup";
 
 // ============================================================================
 // Toast (local copy of the shared pattern used on other DS pages)
@@ -274,14 +274,14 @@ function CodePreview({
 // Code samples
 // ============================================================================
 
-const whiteCode = `import NewsletterSignup from '@/components/NewsletterSignup';
+const whiteCode = `import NewsletterSignup from '@/components/ui/NewsletterSignup';
 
 function Footer() {
   // Default — white card with a subtle top-down gradient.
   return <NewsletterSignup source="newsletter_footer" />;
 }`;
 
-const blackCode = `import NewsletterSignup from '@/components/NewsletterSignup';
+const blackCode = `import NewsletterSignup from '@/components/ui/NewsletterSignup';
 
 function ArticleCTA() {
   // Near-black card with the inverse gradient. Reads as an inverted
@@ -289,7 +289,7 @@ function ArticleCTA() {
   return <NewsletterSignup theme="black" source="article_cta" />;
 }`;
 
-const greyCode = `import NewsletterSignup from '@/components/NewsletterSignup';
+const greyCode = `import NewsletterSignup from '@/components/ui/NewsletterSignup';
 
 function HomepageBand() {
   // Solid mid-grey card (no gradient). A quieter band that sits well

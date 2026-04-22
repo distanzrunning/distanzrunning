@@ -259,7 +259,7 @@ const mobileBannerCode = `import { AdSlot } from '@/components/ui/AdSlot';
 <AdSlot slot="1234567890" size="mobile-banner" />`;
 
 const customFallbackCode = `import { AdSlot } from '@/components/ui/AdSlot';
-import { NewsletterSignup } from '@/components/NewsletterSignup';
+import { NewsletterSignup } from '@/components/ui/NewsletterSignup';
 
 <AdSlot
   slot="1234567890"

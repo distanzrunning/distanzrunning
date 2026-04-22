@@ -14,7 +14,7 @@ import {
 import { ClientSideRowModelModule } from '@ag-grid-community/client-side-row-model'
 import Papa from 'papaparse'
 import { BRAND } from '@/lib/constants'
-import NewsletterSignup from '@/components/NewsletterSignup'
+import NewsletterSignup from '@/components/ui/NewsletterSignup'
 
 // Import AG Grid styles
 import '@ag-grid-community/styles/ag-grid.css'

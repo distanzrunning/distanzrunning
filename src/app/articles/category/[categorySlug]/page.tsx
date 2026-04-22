@@ -2,7 +2,7 @@ import { sanityFetch } from "@/sanity/lib/live";
 import { categoryArticlesQuery } from "@/sanity/queries/categoryArticlesQuery";
 import { notFound } from "next/navigation";
 import TagFilterGrid from "@/components/TagFilterGrid";
-import NewsletterSignup from "@/components/NewsletterSignup";
+import NewsletterSignup from "@/components/ui/NewsletterSignup";
 
 export default async function CategoryPage({
   params,
