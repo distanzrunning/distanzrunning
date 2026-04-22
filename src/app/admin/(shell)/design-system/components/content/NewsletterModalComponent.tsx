@@ -8,12 +8,7 @@ import {
   getTokenStyle,
   type DualThemeToken,
 } from "@/components/ui/useShikiHighlighter";
-import Button from "@/components/ui/Button";
-import {
-  NewsletterModal,
-  NewsletterButton,
-  preloadNewsletterHero,
-} from "@/components/ui/NewsletterModal";
+import { NewsletterButton } from "@/components/ui/NewsletterModal";
 
 // ============================================================================
 // Toast (local copy of the shared pattern used on other DS pages)
@@ -279,36 +274,6 @@ function CodePreview({
 // Code samples + demos
 // ============================================================================
 
-const controlledCode = `import { useState } from 'react';
-import {
-  NewsletterModal,
-  preloadNewsletterHero,
-} from '@/components/ui/NewsletterModal';
-import { Button } from '@/components/ui/Button';
-
-function NewsletterExample() {
-  const [open, setOpen] = useState(false);
-  return (
-    <>
-      <Button
-        size="small"
-        onClick={() => setOpen(true)}
-        // Warm the hero image cache on hover/focus so the modal opens
-        // with no loading flash. No-op if already prewarmed.
-        onMouseEnter={preloadNewsletterHero}
-        onFocus={preloadNewsletterHero}
-      >
-        Subscribe
-      </Button>
-      <NewsletterModal
-        isOpen={open}
-        onClose={() => setOpen(false)}
-        source="homepage"
-      />
-    </>
-  );
-}`;
-
 const buttonCode = `import { NewsletterButton } from '@/components/ui/NewsletterModal';
 
 function Example() {
@@ -316,27 +281,6 @@ function Example() {
   // for prominent CTA placements like the homepage hero.
   return <NewsletterButton size="large" source="homepage" />;
 }`;
-
-function ControlledDemo() {
-  const [open, setOpen] = useState(false);
-  return (
-    <div style={{ display: "flex", justifyContent: "center" }}>
-      <Button
-        onClick={() => setOpen(true)}
-        onMouseEnter={preloadNewsletterHero}
-        onFocus={preloadNewsletterHero}
-        size="small"
-      >
-        Open newsletter modal
-      </Button>
-      <NewsletterModal
-        isOpen={open}
-        onClose={() => setOpen(false)}
-        source="design_system_demo"
-      />
-    </div>
-  );
-}
 
 function ButtonDemo() {
   return (
@@ -375,33 +319,18 @@ export default function NewsletterModalComponent() {
       </Section>
 
       <Section>
-        <SectionHeader id="controlled" onCopyLink={showToast}>
-          Controlled
+        <SectionHeader id="usage" onCopyLink={showToast}>
+          Usage
         </SectionHeader>
         <p
           className="text-copy-16 text-textSubtle mt-3 mb-6"
           style={{ lineHeight: 1.5 }}
         >
-          Parent owns <code>isOpen</code> / <code>onClose</code>. Use this
-          when you want the trigger to live somewhere custom (e.g. a
-          navbar item or an inline CTA).
-        </p>
-        <CodePreview componentCode={controlledCode}>
-          <ControlledDemo />
-        </CodePreview>
-      </Section>
-
-      <Section>
-        <SectionHeader id="button" onCopyLink={showToast}>
-          With built-in trigger
-        </SectionHeader>
-        <p
-          className="text-copy-16 text-textSubtle mt-3 mb-6"
-          style={{ lineHeight: 1.5 }}
-        >
-          <code>NewsletterButton</code> wraps the modal and a matching
-          large-primary trigger. Drop it in where you want the full
-          widget out of the box.
+          <code>NewsletterButton</code> wraps the modal with a matching
+          trigger and the hero pre-warm hook. Drop it in wherever you
+          want the full widget. For custom triggers (e.g. a navbar link),
+          import <code>NewsletterModal</code> directly and own
+          <code> isOpen</code> / <code>onClose</code> yourself.
         </p>
         <CodePreview componentCode={buttonCode}>
           <ButtonDemo />
