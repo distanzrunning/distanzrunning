@@ -8,14 +8,19 @@ import { Input } from "@/components/ui/Input";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-export type NewsletterSignupTheme = "auto" | "dark" | "light";
+export type NewsletterSignupTheme = "white" | "black" | "grey";
 
 export interface NewsletterSignupProps {
   /**
-   * Force a theme on the section.
-   * - "auto" (default): inherits the page theme
-   * - "dark": always dark surfaces (e.g. an inverted band on a light page)
-   * - "light": always light surfaces (e.g. an inverted band on a dark page)
+   * Surface variant. Each forces its own colour treatment regardless
+   * of the page theme.
+   * - "white" (default): white card with a subtle top-down gradient.
+   *   Uses light DS tokens for text + form controls.
+   * - "black": near-black card with the inverse gradient. Uses dark
+   *   DS tokens (white text, inverted button colours).
+   * - "grey": solid mid-grey card with no gradient. Uses light DS
+   *   tokens; useful as a quieter band that sits between fully
+   *   white sections.
    */
   theme?: NewsletterSignupTheme;
   /**
@@ -26,7 +31,7 @@ export interface NewsletterSignupProps {
 }
 
 export default function NewsletterSignup({
-  theme = "auto",
+  theme = "white",
   source = "newsletter_footer",
 }: NewsletterSignupProps = {}) {
   const { executeRecaptcha } = useGoogleReCaptcha();
@@ -107,18 +112,20 @@ export default function NewsletterSignup({
   };
 
   // .light / .dark on the wrapper re-resolves all --ds-* tokens (and
-  // any semantic Tailwind tokens that map onto them) for this subtree,
-  // overriding the page-level theme. "auto" leaves it inherited.
-  const themeClass = theme === "auto" ? "" : theme;
+  // any semantic Tailwind tokens that map onto them) for this subtree.
+  // Black uses dark tokens; white and grey use light tokens with a
+  // different background treatment.
+  const themeClass = theme === "black" ? "dark" : "light";
+  const cardBackground =
+    theme === "grey"
+      ? "var(--ds-gray-200)"
+      : "linear-gradient(to bottom, var(--ds-gray-100), var(--ds-background-100))";
 
   return (
     <div className={themeClass}>
       <div
-        className="mx-auto w-full max-w-7xl overflow-hidden rounded-lg"
-        style={{
-          background:
-            "linear-gradient(to bottom, var(--ds-gray-100), var(--ds-background-100))",
-        }}
+        className="mx-auto w-full max-w-7xl overflow-hidden rounded-lg border border-borderSubtle"
+        style={{ background: cardBackground }}
       >
         <div className="flex flex-col justify-between gap-8 p-6 sm:p-12 md:flex-row md:items-center md:gap-20 md:p-16">
           {/* Left: heading + description */}
@@ -215,7 +222,7 @@ export default function NewsletterSignup({
                     type="submit"
                     size="large"
                     loading={submitting}
-                    disabled={!email || submitting}
+                    disabled={submitting}
                     data-attr="newsletter-footer-submit"
                   >
                     {submitting ? "Subscribing…" : "Subscribe"}

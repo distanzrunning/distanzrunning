@@ -274,27 +274,27 @@ function CodePreview({
 // Code samples
 // ============================================================================
 
-const autoCode = `import NewsletterSignup from '@/components/NewsletterSignup';
+const whiteCode = `import NewsletterSignup from '@/components/NewsletterSignup';
 
 function Footer() {
-  // Inherits the page theme. This is what every consumer gets today.
+  // Default — white card with a subtle top-down gradient.
   return <NewsletterSignup source="newsletter_footer" />;
 }`;
 
-const darkCode = `import NewsletterSignup from '@/components/NewsletterSignup';
+const blackCode = `import NewsletterSignup from '@/components/NewsletterSignup';
 
 function ArticleCTA() {
-  // Forces dark surfaces — useful as an inverted accent band on a
-  // light-mode page (e.g. between two white article sections).
-  return <NewsletterSignup theme="dark" source="article_cta" />;
+  // Near-black card with the inverse gradient. Reads as an inverted
+  // editorial band; the button auto-inverts to white-on-dark.
+  return <NewsletterSignup theme="black" source="article_cta" />;
 }`;
 
-const lightCode = `import NewsletterSignup from '@/components/NewsletterSignup';
+const greyCode = `import NewsletterSignup from '@/components/NewsletterSignup';
 
 function HomepageBand() {
-  // Forces light surfaces — useful when the rest of the page is dark
-  // and you want this section to read as a quieter, inverted block.
-  return <NewsletterSignup theme="light" source="homepage_band" />;
+  // Solid mid-grey card (no gradient). A quieter band that sits well
+  // between fully white sections.
+  return <NewsletterSignup theme="grey" source="homepage_band" />;
 }`;
 
 // ============================================================================
@@ -314,67 +314,68 @@ export default function NewsletterSignupComponent() {
           className="text-copy-16 text-textSubtle mt-3 mb-6"
           style={{ lineHeight: 1.5 }}
         >
-          A full-width subscribe band: serif heading + description on the
-          left, DS <code>Input</code> + <code>Button</code> on the right,
-          collapsing to a stacked layout on small screens. Submits to{" "}
+          A wide editorial subscribe card: EB Garamond heading +
+          description on the left, DS <code>Input</code> +{" "}
+          <code>Button</code> on the right, collapsing to a stacked
+          layout on small screens. Submits to{" "}
           <code>/api/subscribe</code> (Mailgun) and fires a PostHog{" "}
-          <code>newsletter_signup</code> event on success — gated by the
-          Analytics consent category via ConsentSync. The{" "}
-          <code>theme</code> prop forces dark or light surfaces
-          regardless of the page-level theme, so the same component can
-          act as an inverted band on any background.
+          <code>newsletter_signup</code> event on success — gated by
+          the Analytics consent category via ConsentSync. Three
+          surface variants (white / black / grey) cover the common
+          placements without needing extra props.
         </p>
       </Section>
 
       <Section>
-        <SectionHeader id="default" onCopyLink={showToast}>
-          Default (auto)
+        <SectionHeader id="white" onCopyLink={showToast}>
+          White
         </SectionHeader>
         <p
           className="text-copy-16 text-textSubtle mt-3 mb-6"
           style={{ lineHeight: 1.5 }}
         >
-          With no <code>theme</code> prop, the band inherits the page
-          theme. This matches the current behavior of every consumer
-          (footer, article pages, gear pages, races database).
+          Default surface — white card with a subtle top-down gradient
+          from <code>--ds-gray-100</code> to{" "}
+          <code>--ds-background-100</code>. Dark text + dark CTA button.
         </p>
-        <CodePreview componentCode={autoCode}>
-          <NewsletterSignup source="design_system_demo_auto" />
+        <CodePreview componentCode={whiteCode}>
+          <NewsletterSignup source="design_system_demo_white" />
         </CodePreview>
       </Section>
 
       <Section>
-        <SectionHeader id="dark" onCopyLink={showToast}>
-          Dark
+        <SectionHeader id="black" onCopyLink={showToast}>
+          Black
         </SectionHeader>
         <p
           className="text-copy-16 text-textSubtle mt-3 mb-6"
           style={{ lineHeight: 1.5 }}
         >
-          <code>theme=&quot;dark&quot;</code> forces dark surfaces.
-          Switch the page to light mode in the header to see this band
-          stay dark — that&apos;s the inverted-band use case.
+          <code>theme=&quot;black&quot;</code> — near-black surface
+          with the inverse gradient. Light text, dark form input, and
+          an inverted CTA (white bg, dark text). Stays dark even on a
+          light page.
         </p>
-        <CodePreview componentCode={darkCode}>
-          <NewsletterSignup theme="dark" source="design_system_demo_dark" />
+        <CodePreview componentCode={blackCode}>
+          <NewsletterSignup theme="black" source="design_system_demo_black" />
         </CodePreview>
       </Section>
 
       <Section>
-        <SectionHeader id="light" onCopyLink={showToast}>
-          Light
+        <SectionHeader id="grey" onCopyLink={showToast}>
+          Grey
         </SectionHeader>
         <p
           className="text-copy-16 text-textSubtle mt-3 mb-6"
           style={{ lineHeight: 1.5 }}
         >
-          <code>theme=&quot;light&quot;</code> forces light surfaces.
-          Mirror of the dark variant — useful when the rest of the page
-          is dark and you want this section to read as a quieter
-          inverted block.
+          <code>theme=&quot;grey&quot;</code> — solid mid-grey
+          (<code>--ds-gray-200</code>) with no gradient. A quieter
+          surface that sits well between fully white sections without
+          competing for attention.
         </p>
-        <CodePreview componentCode={lightCode}>
-          <NewsletterSignup theme="light" source="design_system_demo_light" />
+        <CodePreview componentCode={greyCode}>
+          <NewsletterSignup theme="grey" source="design_system_demo_grey" />
         </CodePreview>
       </Section>
 
@@ -404,14 +405,14 @@ export default function NewsletterSignupComponent() {
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 font-mono">theme</td>
                 <td className="py-3 px-4 font-mono">
-                  &quot;auto&quot; | &quot;dark&quot; | &quot;light&quot;
+                  &quot;white&quot; | &quot;black&quot; | &quot;grey&quot;
                 </td>
-                <td className="py-3 px-4 font-mono">&quot;auto&quot;</td>
+                <td className="py-3 px-4 font-mono">&quot;white&quot;</td>
                 <td className="py-3 px-4">
-                  Forces a theme on the section.{" "}
-                  <code>auto</code> inherits the page theme;{" "}
-                  <code>dark</code> / <code>light</code> override it for
-                  this subtree only.
+                  Surface variant. <code>white</code> and{" "}
+                  <code>black</code> use a subtle top-down gradient;{" "}
+                  <code>grey</code> is a flat mid-grey. Each forces its
+                  own colour treatment regardless of page theme.
                 </td>
               </tr>
               <tr>
