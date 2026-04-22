@@ -11,7 +11,7 @@ import path from 'path'
 // because Outlook's Word-based renderer doesn't reliably handle SVG.
 // Read once at module load — the files are static.
 const BRAND_DIR = path.join(process.cwd(), 'public/brand')
-const LOGO_BUFFER = fs.readFileSync(path.join(BRAND_DIR, 'logo-full-email.png'))
+const ICON_BUFFER = fs.readFileSync(path.join(BRAND_DIR, 'icon-badge.png'))
 
 export async function POST(request: NextRequest) {
   try {
@@ -157,16 +157,16 @@ export async function POST(request: NextRequest) {
                   <td class="main-section" style="padding:48px 40px;">
                     <table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0">
 
-                      <!-- Wordmark -->
+                      <!-- Brand mark -->
                       <tr>
-                        <td align="center" style="padding:0 0 32px 0;text-align:center;">
+                        <td style="padding:0 0 32px 0;">
                           <a href="https://distanzrunning.com" style="text-decoration:none;display:inline-block;">
                             <img
-                              src="cid:logo-full-email.png"
+                              src="cid:icon-badge.png"
                               alt="Distanz Running"
-                              width="120"
-                              height="37"
-                              style="display:block;width:120px;height:37px;border:0;" />
+                              width="36"
+                              height="36"
+                              style="display:block;width:36px;height:36px;border:0;" />
                           </a>
                         </td>
                       </tr>
@@ -244,8 +244,8 @@ export async function POST(request: NextRequest) {
     emailForm.append('o:tracking-clicks', 'no')
     emailForm.append(
       'inline',
-      new Blob([new Uint8Array(LOGO_BUFFER)], { type: 'image/png' }),
-      'logo-full-email.png',
+      new Blob([new Uint8Array(ICON_BUFFER)], { type: 'image/png' }),
+      'icon-badge.png',
     )
 
     const emailResponse = await fetch(
