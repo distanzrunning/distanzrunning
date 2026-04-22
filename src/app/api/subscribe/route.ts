@@ -1,6 +1,18 @@
 // app/api/subscribe/route.ts
 import { NextRequest, NextResponse } from 'next/server'
 import crypto from 'crypto'
+import fs from 'fs'
+import path from 'path'
+
+// Brand assets ride inside each confirmation email as inline (cid:)
+// attachments rather than externally hosted images, so they render
+// with the body text in every email client — including Outlook desktop,
+// where remote images often paint late or get blocked. PNGs (not SVGs)
+// because Outlook's Word-based renderer doesn't reliably handle SVG.
+// Read once at module load — the files are static.
+const BRAND_DIR = path.join(process.cwd(), 'public/brand')
+const ICON_BUFFER = fs.readFileSync(path.join(BRAND_DIR, 'icon-badge.png'))
+const LOGO_BUFFER = fs.readFileSync(path.join(BRAND_DIR, 'logo-full-email.png'))
 
 export async function POST(request: NextRequest) {
   try {
@@ -267,10 +279,10 @@ export async function POST(request: NextRequest) {
                         <td style="vertical-align:middle">
                           <a href="https://distanzrunning.com" style="text-decoration:none">
                             <img
-                              src="${baseUrl}/brand/icon-badge.svg"
+                              src="cid:icon-badge.png"
                               alt="Distanz Running"
-                              width="48"
-                              height="48"
+                              width="36"
+                              height="36"
                               style="display:block;height:auto;border:0" />
                           </a>
                         </td>
@@ -317,7 +329,7 @@ export async function POST(request: NextRequest) {
                         <td style="padding-bottom:12px">
                           <a href="https://distanzrunning.com" style="text-decoration:none">
                             <img
-                              src="${baseUrl}/brand/logo-full-email.svg"
+                              src="cid:logo-full-email.png"
                               alt="Distanz Running"
                               width="120"
                               height="37"
@@ -349,23 +361,37 @@ export async function POST(request: NextRequest) {
     </html>
     `
 
+    // Multipart form so we can attach the inline brand assets. Each
+    // `inline` part becomes a cid: reference matching the filename.
+    const emailForm = new FormData()
+    emailForm.append('from', `Distanz Running <newsletter@${process.env.MAILGUN_DOMAIN}>`)
+    emailForm.append('to', email)
+    emailForm.append('subject', 'Please confirm your subscription to Distanz Running')
+    emailForm.append('html', confirmationHtml)
+    emailForm.append('o:tag', 'confirmation-email')
+    emailForm.append('o:tracking', 'yes')
+    emailForm.append('o:tracking-clicks', 'no')
+    emailForm.append(
+      'inline',
+      new Blob([new Uint8Array(ICON_BUFFER)], { type: 'image/png' }),
+      'icon-badge.png',
+    )
+    emailForm.append(
+      'inline',
+      new Blob([new Uint8Array(LOGO_BUFFER)], { type: 'image/png' }),
+      'logo-full-email.png',
+    )
+
     const emailResponse = await fetch(
       `${process.env.MAILGUN_API_BASE_URL}/${process.env.MAILGUN_DOMAIN}/messages`,
       {
         method: 'POST',
         headers: {
+          // No Content-Type — fetch sets multipart/form-data with the
+          // correct boundary automatically when the body is a FormData.
           'Authorization': `Basic ${Buffer.from(`api:${process.env.MAILGUN_API_KEY}`).toString('base64')}`,
-          'Content-Type': 'application/x-www-form-urlencoded',
         },
-        body: new URLSearchParams({
-          from: `Distanz Running <newsletter@${process.env.MAILGUN_DOMAIN}>`,
-          to: email,
-          subject: 'Please confirm your subscription to Distanz Running',
-          html: confirmationHtml,
-          'o:tag': 'confirmation-email',
-          'o:tracking': 'yes',
-          'o:tracking-clicks': 'no'  // This disables click tracking!
-        })
+        body: emailForm,
       }
     )
 
