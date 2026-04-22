@@ -114,32 +114,52 @@ export default function NewsletterSignup({
   return (
     <div className={themeClass}>
       <div
-        className="mx-auto max-w-2xl rounded-xl border border-borderSubtle px-4 py-8 sm:px-5"
-        style={{ background: "var(--ds-background-100)" }}
+        className="mx-auto w-full max-w-7xl overflow-hidden rounded-lg"
+        style={{
+          background:
+            "linear-gradient(to bottom, var(--ds-gray-100), var(--ds-background-100))",
+        }}
       >
-        <div className="flex w-full flex-col gap-6 sm:flex-row sm:items-center sm:justify-between sm:gap-10">
-          {/* Left: heading and description */}
-          <div className="flex flex-col gap-2">
+        <div className="flex flex-col justify-between gap-8 p-6 sm:p-12 md:flex-row md:items-center md:gap-20 md:p-16">
+          {/* Left: heading + description */}
+          <div className="flex max-w-md flex-col gap-2">
             <h2
-              className="text-xl md:text-2xl font-headline font-bold text-textDefault"
-              style={{ margin: 0 }}
+              className="font-headline text-balance"
+              style={{
+                margin: 0,
+                fontSize: 38,
+                lineHeight: 1.1,
+                fontWeight: 400,
+                letterSpacing: "-0.04em",
+                color: "var(--ds-gray-1000)",
+              }}
             >
               Subscribe to the{" "}
-              <i className="italic text-textDefault">Shakeout</i>
+              <i style={{ fontStyle: "italic" }}>Shakeout</i>
             </h2>
-            <p className="text-base text-textSubtle max-w-[400px]" style={{ margin: 0 }}>
+            <p
+              className="text-balance"
+              style={{
+                margin: 0,
+                fontSize: 15,
+                lineHeight: 1.4,
+                fontWeight: 500,
+                color: "var(--ds-gray-1000)",
+                maxWidth: 448,
+              }}
+            >
               A curated set of running stories, gear reviews, and race
               guides every other week.
             </p>
           </div>
 
           {/* Right: form (or success) */}
-          <div className="flex w-full sm:max-w-md min-h-[160px] items-start">
+          <div className="w-full md:max-w-md">
             {submitted ? (
               <div
                 role="status"
                 aria-live="polite"
-                className="w-full flex items-center gap-3 px-4 py-3 rounded-lg"
+                className="flex w-full items-center gap-3 rounded-lg px-4 py-3"
                 style={{
                   background: "var(--ds-green-100)",
                   border: "1px solid var(--ds-green-400)",
@@ -167,7 +187,7 @@ export default function NewsletterSignup({
             ) : (
               <form
                 onSubmit={handleSubmit}
-                className="flex w-full flex-col gap-3"
+                className="flex w-full flex-col gap-4"
               >
                 <div className="flex w-full flex-col gap-3 sm:flex-row sm:items-start">
                   <div className="flex-1">
@@ -202,7 +222,7 @@ export default function NewsletterSignup({
                   </Button>
                 </div>
                 <p
-                  className="text-xs"
+                  className="text-xs text-balance"
                   style={{
                     margin: 0,
                     lineHeight: 1.5,
