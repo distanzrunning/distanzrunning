@@ -4,6 +4,7 @@
 import { usePathname } from "next/navigation";
 import { ReactNode } from "react";
 import PageFrame from "./ui/PageFrame";
+import SiteHeader from "./ui/SiteHeader";
 
 interface LayoutContentProps {
   children: ReactNode;
@@ -43,6 +44,7 @@ export default function LayoutContent({
         className="flex min-h-screen flex-col"
         style={{ background: "var(--ds-background-100)" }}
       >
+        <SiteHeader newsletterSource="homepage" />
         <PageFrame className="flex flex-1 flex-col">
           <main className="flex-1">{children}</main>
         </PageFrame>
