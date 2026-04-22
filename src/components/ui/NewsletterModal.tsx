@@ -47,11 +47,18 @@ let heroPrewarmed = false;
 export function preloadNewsletterHero() {
   if (typeof window === "undefined" || heroPrewarmed) return;
   heroPrewarmed = true;
-  const url = `/_next/image?url=${encodeURIComponent(HERO_SRC)}&w=896&q=75`;
-  const img = new window.Image();
-  // No-op on errors; we'd rather skip the warm-up than surface anything.
-  img.onerror = () => {};
-  img.src = url;
+  // Mirror the srcset the <Image> below generates so the browser picks
+  // the same variant under its viewport+DPR. Widths must be in
+  // next.config.ts `deviceSizes`; 640 (1x desktop), 1080 (2x desktop),
+  // 1200 (mobile/3x) cover the common cases.
+  const variant = (w: number) =>
+    `/_next/image?url=${encodeURIComponent(HERO_SRC)}&w=${w}&q=75 ${w}w`;
+  const link = document.createElement("link");
+  link.rel = "preload";
+  link.as = "image";
+  link.imageSrcset = [variant(640), variant(1080), variant(1200)].join(", ");
+  link.imageSizes = `(max-width: ${PANEL_MAX_WIDTH}px) 100vw, ${PANEL_MAX_WIDTH}px`;
+  document.head.appendChild(link);
 }
 
 // ============================================================================
