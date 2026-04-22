@@ -77,6 +77,7 @@ import ThemeSwitcherComponent from "../components/content/ThemeSwitcherComponent
 import TooltipComponent from "../components/content/TooltipComponent";
 import MultiSelectComponent from "../components/content/MultiSelectComponent";
 import NewsletterModalComponent from "../components/content/NewsletterModalComponent";
+import NewsletterSignupComponent from "../components/content/NewsletterSignupComponent";
 import NoteComponent from "../components/content/NoteComponent";
 import CalendarComponent from "../components/content/CalendarComponent";
 import SearchComponent from "../components/content/SearchComponent";
@@ -957,6 +958,21 @@ export default function DesignSystemPage() {
           onNavigate={handleNavigation}
         >
           <NewsletterModalComponent />
+        </ContentWithTOC>
+      );
+    }
+
+    if (activeSlug === "newsletter-signup") {
+      return (
+        <ContentWithTOC
+          tocTitle="On this page"
+          pageTitle="Newsletter Signup"
+          pageSubtitle="Inline subscribe band wired to Mailgun via /api/subscribe. Forces dark or light theme on demand for inverted page sections."
+          mainSectionId="overview"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
+          <NewsletterSignupComponent />
         </ContentWithTOC>
       );
     }
