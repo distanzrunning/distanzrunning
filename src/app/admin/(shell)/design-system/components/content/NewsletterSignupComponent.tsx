@@ -298,21 +298,6 @@ function HomepageBand() {
 }`;
 
 // ============================================================================
-// Preview frame — clips the band to a rounded card so it sits as a
-// contained example inside the preview cell. Production usage of
-// NewsletterSignup is full-width and edge-to-edge; this wrapper is
-// DS-page-only.
-// ============================================================================
-
-function PreviewFrame({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="overflow-hidden rounded-lg border border-[var(--ds-gray-400)]">
-      {children}
-    </div>
-  );
-}
-
-// ============================================================================
 // Main
 // ============================================================================
 
@@ -354,9 +339,7 @@ export default function NewsletterSignupComponent() {
           (footer, article pages, gear pages, races database).
         </p>
         <CodePreview componentCode={autoCode}>
-          <PreviewFrame>
-            <NewsletterSignup source="design_system_demo_auto" />
-          </PreviewFrame>
+          <NewsletterSignup source="design_system_demo_auto" />
         </CodePreview>
       </Section>
 
@@ -373,9 +356,7 @@ export default function NewsletterSignupComponent() {
           stay dark — that&apos;s the inverted-band use case.
         </p>
         <CodePreview componentCode={darkCode}>
-          <PreviewFrame>
-            <NewsletterSignup theme="dark" source="design_system_demo_dark" />
-          </PreviewFrame>
+          <NewsletterSignup theme="dark" source="design_system_demo_dark" />
         </CodePreview>
       </Section>
 
@@ -393,9 +374,7 @@ export default function NewsletterSignupComponent() {
           inverted block.
         </p>
         <CodePreview componentCode={lightCode}>
-          <PreviewFrame>
-            <NewsletterSignup theme="light" source="design_system_demo_light" />
-          </PreviewFrame>
+          <NewsletterSignup theme="light" source="design_system_demo_light" />
         </CodePreview>
       </Section>
 

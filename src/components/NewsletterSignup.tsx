@@ -114,10 +114,10 @@ export default function NewsletterSignup({
   return (
     <div className={themeClass}>
       <div
-        className="flex border-y border-borderSubtle py-12"
-        style={{ background: "var(--ds-background-200)" }}
+        className="rounded-xl border border-borderSubtle px-6 py-8 sm:px-8"
+        style={{ background: "var(--ds-background-100)" }}
       >
-        <div className="mx-auto flex w-full max-w-7xl flex-col justify-center gap-7 px-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex w-full flex-col gap-6 sm:flex-row sm:items-center sm:justify-between sm:gap-10">
           {/* Left: heading and description */}
           <div className="flex flex-col gap-2">
             <h2
