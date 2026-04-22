@@ -3,6 +3,7 @@
 
 import { usePathname } from "next/navigation";
 import { ReactNode } from "react";
+import PageFrame from "./ui/PageFrame";
 
 interface LayoutContentProps {
   children: ReactNode;
@@ -32,15 +33,15 @@ export default function LayoutContent({
   }
 
   return (
-    <div className="main-wrapper">
-      <div className="main-bordered min-h-screen flex flex-col">
-        {navbar}
-        {/* Navbar is sticky - no padding needed, scrolls naturally */}
-        <main className="flex-1 bg-canvas">
-          {children}
-        </main>
-        {!isCalendarPage && footer}
-      </div>
+    <div
+      className="flex min-h-screen flex-col"
+      style={{ background: "var(--ds-background-200)" }}
+    >
+      {navbar}
+      <PageFrame className="flex flex-1 flex-col">
+        <main className="flex-1">{children}</main>
+      </PageFrame>
+      {!isCalendarPage && footer}
     </div>
   );
 }

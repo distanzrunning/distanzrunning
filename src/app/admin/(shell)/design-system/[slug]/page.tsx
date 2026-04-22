@@ -78,6 +78,7 @@ import TooltipComponent from "../components/content/TooltipComponent";
 import MultiSelectComponent from "../components/content/MultiSelectComponent";
 import NewsletterModalComponent from "../components/content/NewsletterModalComponent";
 import NewsletterSignupComponent from "../components/content/NewsletterSignupComponent";
+import PageFrameComponent from "../components/content/PageFrameComponent";
 import NoteComponent from "../components/content/NoteComponent";
 import CalendarComponent from "../components/content/CalendarComponent";
 import SearchComponent from "../components/content/SearchComponent";
@@ -973,6 +974,21 @@ export default function DesignSystemPage() {
           onNavigate={handleNavigation}
         >
           <NewsletterSignupComponent />
+        </ContentWithTOC>
+      );
+    }
+
+    if (activeSlug === "page-frame") {
+      return (
+        <ContentWithTOC
+          tocTitle="On this page"
+          pageTitle="Page Frame"
+          pageSubtitle="The inset framed surface that wraps the body of every public page. Sits between the navbar and the footer."
+          mainSectionId="overview"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
+          <PageFrameComponent />
         </ContentWithTOC>
       );
     }

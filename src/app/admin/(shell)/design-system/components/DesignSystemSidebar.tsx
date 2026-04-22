@@ -80,6 +80,7 @@ export const navigation: NavSection[] = [
       { id: "multi-select", label: "Multi Select" },
       { id: "newsletter-modal", label: "Newsletter Modal" },
       { id: "newsletter-signup", label: "Newsletter Signup" },
+      { id: "page-frame", label: "Page Frame" },
       { id: "note", label: "Note" },
       { id: "pagination", label: "Pagination" },
       { id: "phone", label: "Phone" },
