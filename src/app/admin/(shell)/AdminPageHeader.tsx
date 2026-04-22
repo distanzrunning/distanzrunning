@@ -3,10 +3,11 @@
 import { useContext, useState, useTransition } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LogOut, MoreHorizontal, SmilePlus } from "lucide-react";
+import { LogOut, Mail, MoreHorizontal, SmilePlus } from "lucide-react";
 import { DarkModeContext } from "@/components/DarkModeProvider";
 import { FeedbackWithSelect } from "@/components/ui/Feedback";
 import { Menu, MenuButton, MenuItem, MenuSeparator } from "@/components/ui/Menu";
+import { NewsletterModal } from "@/components/ui/NewsletterModal";
 import { ThemeSwitcher } from "@/components/ui/ThemeSwitcher";
 import { logout } from "../login/actions";
 import { CONSENT_NAV, FEEDBACK_NAV } from "./AdminSidebar";
@@ -122,6 +123,7 @@ export default function AdminPageHeader() {
   const { theme, setTheme } = useContext(DarkModeContext);
   const [, startTransition] = useTransition();
   const [feedbackOpen, setFeedbackOpen] = useState(false);
+  const [newsletterOpen, setNewsletterOpen] = useState(false);
 
   return (
     <header
@@ -214,6 +216,13 @@ export default function AdminPageHeader() {
         </MenuItem>
 
         <MenuItem
+          onClick={() => setNewsletterOpen(true)}
+          suffix={<Mail className="w-4 h-4" />}
+        >
+          Newsletter Signup
+        </MenuItem>
+
+        <MenuItem
           onClick={() => startTransition(() => logout())}
           suffix={<LogOut className="w-4 h-4" />}
         >
@@ -228,6 +237,12 @@ export default function AdminPageHeader() {
         options={ADMIN_FEEDBACK_TOPICS}
         defaultTopic={defaultAdminTopic(pathname)}
         collectEmail
+      />
+
+      <NewsletterModal
+        isOpen={newsletterOpen}
+        onClose={() => setNewsletterOpen(false)}
+        source="admin_header"
       />
     </header>
   );
