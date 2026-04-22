@@ -148,8 +148,8 @@ export async function POST(request: NextRequest) {
           }
         </style>
       </head>
-      <body style="margin:0;padding:0;background-color:#FAFAFA;color:#171717;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
-        <table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0" style="background-color:#FAFAFA;">
+      <body style="margin:0;padding:0;background-color:#FFFFFF;color:#171717;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+        <table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0" style="background-color:#FFFFFF;">
           <tr>
             <td align="center" style="padding:32px 16px;">
               <table role="presentation" class="container" width="560" border="0" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;background-color:#FFFFFF;border:1px solid #EBEBEB;border-radius:12px;">
