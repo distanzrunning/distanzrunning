@@ -143,7 +143,8 @@ export async function POST(request: NextRequest) {
           body { margin:0 !important; padding:0 !important; width:100% !important; }
           @media only screen and (max-width: 600px) {
             .heading { font-size:28px !important; }
-            .container { padding:32px 20px !important; }
+            .main-section { padding:40px 24px !important; }
+            .footer-section { padding:24px !important; }
           }
         </style>
       </head>
@@ -151,91 +152,96 @@ export async function POST(request: NextRequest) {
         <table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0" style="background-color:#FAFAFA;">
           <tr>
             <td align="center" style="padding:32px 16px;">
-              <table role="presentation" class="container" width="560" border="0" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;background-color:#FFFFFF;border:1px solid #EBEBEB;border-radius:12px;padding:48px 24px;">
+              <table role="presentation" class="container" width="560" border="0" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;background-color:#FFFFFF;border:1px solid #EBEBEB;border-radius:12px;">
 
-                <!-- Brand mark -->
+                <!-- Main section -->
                 <tr>
-                  <td style="padding:0 0 32px 0;">
-                    <a href="https://distanzrunning.com" style="text-decoration:none;display:inline-block;">
-                      <img
-                        src="cid:icon-badge.png"
-                        alt="Distanz Running"
-                        width="36"
-                        height="36"
-                        style="display:block;width:36px;height:36px;border:0;" />
-                    </a>
-                  </td>
-                </tr>
-
-                <!-- Heading -->
-                <tr>
-                  <td style="padding:0 0 16px 0;">
-                    <h1 class="heading" style="margin:0;font-family:Georgia,'Times New Roman',serif;font-size:32px;line-height:1.2;font-weight:500;color:#171717;">
-                      Welcome to the <i style="font-style:italic;">Shakeout</i>
-                    </h1>
-                  </td>
-                </tr>
-
-                <!-- Body -->
-                <tr>
-                  <td style="padding:0 0 32px 0;">
-                    <p style="margin:0;font-size:16px;line-height:1.55;color:#171717;">
-                      One last step — confirm your email to start receiving the Shakeout.
-                    </p>
-                  </td>
-                </tr>
-
-                <!-- CTA -->
-                <tr>
-                  <td style="padding:0 0 48px 0;">
+                  <td class="main-section" style="padding:48px 32px;">
                     <table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0">
+
+                      <!-- Brand mark -->
                       <tr>
-                        <td align="center" bgcolor="#171717" style="border-radius:6px;background-color:#171717;">
-                          <a href="${confirmationUrl}" target="_blank" style="display:block;padding:14px 24px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:16px;line-height:1.2;font-weight:600;color:#FFFFFF;text-decoration:none;border-radius:6px;">
-                            Confirm your email
+                        <td style="padding:0 0 32px 0;">
+                          <a href="https://distanzrunning.com" style="text-decoration:none;display:inline-block;">
+                            <img
+                              src="cid:icon-badge.png"
+                              alt="Distanz Running"
+                              width="36"
+                              height="36"
+                              style="display:block;width:36px;height:36px;border:0;" />
                           </a>
                         </td>
                       </tr>
+
+                      <!-- Heading -->
+                      <tr>
+                        <td style="padding:0 0 16px 0;">
+                          <h1 class="heading" style="margin:0;font-family:Georgia,'Times New Roman',serif;font-size:32px;line-height:1.2;font-weight:500;color:#171717;">
+                            Welcome to the <i style="font-style:italic;">Shakeout</i>
+                          </h1>
+                        </td>
+                      </tr>
+
+                      <!-- Body -->
+                      <tr>
+                        <td style="padding:0 0 32px 0;">
+                          <p style="margin:0;font-size:16px;line-height:1.55;color:#171717;">
+                            One last step — confirm your email to start receiving the Shakeout.
+                          </p>
+                        </td>
+                      </tr>
+
+                      <!-- CTA -->
+                      <tr>
+                        <td>
+                          <table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0">
+                            <tr>
+                              <td align="center" bgcolor="#171717" style="border-radius:6px;background-color:#171717;">
+                                <a href="${confirmationUrl}" target="_blank" style="display:block;padding:14px 24px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:16px;line-height:1.2;font-weight:600;color:#FFFFFF;text-decoration:none;border-radius:6px;">
+                                  Confirm your email
+                                </a>
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+
                     </table>
                   </td>
                 </tr>
 
-                <!-- Divider -->
+                <!-- Footer section: gray background, border-top divider
+                     spans the full card width, content centered. -->
                 <tr>
-                  <td style="padding:0;">
-                    <table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0">
+                  <td class="footer-section" align="center" bgcolor="#FAFAFA" style="background-color:#FAFAFA;border-top:1px solid #EBEBEB;border-radius:0 0 12px 12px;padding:32px;text-align:center;">
+                    <table role="presentation" border="0" cellpadding="0" cellspacing="0" align="center">
                       <tr>
-                        <td height="1" style="background-color:#EBEBEB;line-height:1px;font-size:0;">&nbsp;</td>
+                        <td align="center" style="padding:0 0 12px 0;">
+                          <a href="https://distanzrunning.com" style="text-decoration:none;display:inline-block;">
+                            <img
+                              src="cid:logo-full-email.png"
+                              alt="Distanz Running"
+                              width="120"
+                              height="37"
+                              style="display:block;width:120px;height:37px;border:0;" />
+                          </a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td align="center" style="padding:0 0 8px 0;text-align:center;">
+                          <p style="margin:0;font-size:13px;line-height:1.4;color:#171717;font-weight:500;">
+                            Running stories, gear, races.
+                          </p>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td align="center" style="text-align:center;">
+                          <p style="margin:0;font-size:13px;line-height:1.4;color:#8F8F8F;">
+                            © ${currentYear} Distanz Running. All rights reserved.
+                          </p>
+                        </td>
                       </tr>
                     </table>
-                  </td>
-                </tr>
-
-                <!-- Footer -->
-                <tr>
-                  <td style="padding:32px 0 12px 0;">
-                    <a href="https://distanzrunning.com" style="text-decoration:none;display:inline-block;">
-                      <img
-                        src="cid:logo-full-email.png"
-                        alt="Distanz Running"
-                        width="120"
-                        height="37"
-                        style="display:block;width:120px;height:37px;border:0;" />
-                    </a>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="padding:0 0 8px 0;">
-                    <p style="margin:0;font-size:13px;line-height:1.4;color:#171717;font-weight:500;">
-                      Running stories, gear, races.
-                    </p>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <p style="margin:0;font-size:13px;line-height:1.4;color:#8F8F8F;">
-                      © ${currentYear} Distanz Running. All rights reserved.
-                    </p>
                   </td>
                 </tr>
 
