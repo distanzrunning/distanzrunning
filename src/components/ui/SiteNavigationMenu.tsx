@@ -191,11 +191,12 @@ function IconRow({ item }: { item: CategoryItem }) {
 }
 
 // ============================================================================
-// Featured card (right column, 2/3 width) — editorial/magazine pattern:
+// Featured card — editorial/magazine pattern, no card chrome:
 //   - 16:9 image at the top (hero)
-//   - Eyebrow label beneath ("FEATURED ARTICLE" / "FEATURED RACE")
+//   - Eyebrow label below the image
 //   - Article/race title as the prominent headline, arrow inline
-//   - Subtle image zoom on hover
+//   - Subtle image zoom on hover + arrow slide; no bg change (the
+//     column's bg-200 is doing the recessed-surface work now)
 // ============================================================================
 
 function FeaturedCard({
@@ -212,13 +213,12 @@ function FeaturedCard({
   return (
     <NavigationMenuLink
       asChild
-      className="group/card relative flex flex-col overflow-hidden rounded-sm border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-200)] p-3 transition-all hover:bg-[color:var(--ds-gray-100)] hover:shadow-sm"
+      className="group/card block hover:bg-transparent focus:bg-transparent"
     >
       <Link href={href}>
-        {/* Image (16:9) — sits on top of a gray-200 surface so a
-            missing/slow image doesn't show the card bg through it.
-            overflow-hidden on the wrapper so the subtle hover zoom on
-            the inner Image doesn't spill. */}
+        {/* Image (16:9) — sits on a gray-200 placeholder surface so
+            missing/slow images don't blank out. overflow-hidden on
+            the wrapper so the hover zoom doesn't spill. */}
         <div
           className="relative aspect-[16/9] w-full overflow-hidden rounded-xs border border-[color:var(--ds-gray-400)]"
           style={{ background: "var(--ds-gray-200)" }}
@@ -316,8 +316,10 @@ export default function SiteNavigationMenu({
 }
 
 // ============================================================================
-// Shared dropdown body: link list 1/3 left (with section heading),
-// featured card 2/3 right.
+// Shared dropdown body — two full-bleed columns separated by a 1px
+// divider. Links column sits on the elevated bg-100 (primary); the
+// featured column sits on the recessed bg-200 (showcase surface).
+// The viewport's outer border + radius wrap the whole thing.
 // ============================================================================
 
 function DropdownPanel({
@@ -330,8 +332,12 @@ function DropdownPanel({
   items: ReadonlyArray<CategoryItem>;
 }) {
   return (
-    <div className="grid w-[800px] grid-cols-3 gap-3 p-2">
-      <div className="col-span-1 flex flex-col gap-0.5">
+    <div className="grid w-[800px] grid-cols-3">
+      {/* Links column — bg-100, right-bordered divider */}
+      <div
+        className="col-span-1 flex flex-col gap-0.5 border-r border-[color:var(--ds-gray-400)] p-2"
+        style={{ background: "var(--ds-background-100)" }}
+      >
         <h4 className="px-3 pt-2.5 pb-1 text-[14px] leading-5 font-normal text-[color:var(--ds-gray-900)]">
           {heading}
         </h4>
@@ -339,7 +345,14 @@ function DropdownPanel({
           <IconRow key={item.href} item={item} />
         ))}
       </div>
-      <div className="col-span-2">{featured}</div>
+
+      {/* Featured column — bg-200, recessed showcase */}
+      <div
+        className="col-span-2 p-3"
+        style={{ background: "var(--ds-background-200)" }}
+      >
+        {featured}
+      </div>
     </div>
   );
 }
