@@ -74,11 +74,15 @@ function NavigationMenuItem({
 const navigationMenuTriggerStyle = cva(
   [
     // v0-anatomy: 28px tall, rounded-md, 14px medium / line-height 20.
-    // text-nav = 14px / line-height 1, so we add leading-5 (20px) to
-    // match v0 exactly. Default text is gray-900 (medium grey); hover,
-    // focus, and open state lift to gray-1000 (full contrast) so the
-    // active item reads as the loudest, matching v0's behaviour.
-    "group inline-flex h-7 w-max items-center justify-center rounded-md px-2 py-1 text-nav leading-5 font-medium",
+    // Using arbitrary `text-[14px] leading-[20px]` rather than the
+    // project's text-nav token because text-nav is custom and
+    // tailwind-merge can't reconcile it against shadcn's baked-in
+    // text-sm on NavigationMenuLink — arbitrary values are
+    // unambiguously recognised as font-size utilities and win the
+    // merge. Default text is gray-900 (medium grey); hover/focus/open
+    // lift to gray-1000 (full contrast) so the active item reads
+    // loudest, matching v0.
+    "group inline-flex h-7 w-max items-center justify-center rounded-md px-2 py-1 text-[14px] leading-[20px] font-medium",
     "text-[color:var(--ds-gray-900)]",
     "bg-transparent",
     "transition-all duration-150 outline-none",
