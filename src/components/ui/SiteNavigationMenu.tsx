@@ -2,13 +2,21 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { NavigationMenu } from "@base-ui-components/react/navigation-menu";
-import { ChevronDown } from "lucide-react";
 import { urlFor } from "@/sanity/lib/image";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+  navigationMenuTriggerStyle,
+} from "@/components/ui/NavigationMenu";
+import { cn } from "@/lib/utils";
 
 // ============================================================================
-// Types
+// Types (mirrors the queries in /sanity/queries)
 // ============================================================================
 
 type SanitySlug = { current: string };
@@ -34,10 +42,10 @@ export interface SiteNavigationMenuProps {
 }
 
 // ============================================================================
-// Nav item definitions (mirrors the previous NavbarAlt taxonomy)
+// Taxonomy (extracted verbatim from the old NavbarAlt)
 // ============================================================================
 
-const articleLinks: ReadonlyArray<{ label: string; href: string }> = [
+const topLevelLinks: ReadonlyArray<{ label: string; href: string }> = [
   { label: "Road", href: "/articles/category/road" },
   { label: "Track", href: "/articles/category/track" },
   { label: "Trail", href: "/articles/category/trail" },
@@ -60,47 +68,41 @@ const raceLinks: ReadonlyArray<{ label: string; href: string }> = [
 ];
 
 // ============================================================================
-// Shared style tokens for menu surfaces
+// Top-level standalone link — matches trigger style minus the chevron
 // ============================================================================
 
-const triggerClass =
-  "group inline-flex h-8 items-center gap-1 rounded-md px-3 text-sm font-medium text-[color:var(--ds-gray-900)] transition-colors hover:bg-[color:var(--ds-gray-100)] hover:text-[color:var(--ds-gray-1000)] data-[popup-open]:bg-[color:var(--ds-gray-100)] data-[popup-open]:text-[color:var(--ds-gray-1000)] focus-visible:outline-2 focus-visible:outline-[color:var(--ds-gray-alpha-600)] focus-visible:outline-offset-2";
-
-const linkRowClass =
-  "flex items-center rounded-md px-3 py-2 text-sm text-[color:var(--ds-gray-900)] transition-colors hover:bg-[color:var(--ds-gray-100)] hover:text-[color:var(--ds-gray-1000)]";
-
-// ============================================================================
-// Column-style link list used inside a dropdown
-// ============================================================================
-
-function LinkList({
-  title,
-  items,
-}: {
-  title: string;
-  items: ReadonlyArray<{ label: string; href: string }>;
-}) {
+function TopLevelLink({ href, label }: { href: string; label: string }) {
   return (
-    <div className="flex min-w-[200px] flex-col gap-0.5">
-      <div className="px-3 pb-2 text-[11px] font-semibold uppercase tracking-wide text-[color:var(--ds-gray-700)]">
-        {title}
-      </div>
-      {items.map((item) => (
-        <NavigationMenu.Link
-          key={item.href}
-          render={
-            <Link href={item.href} className={linkRowClass}>
-              {item.label}
-            </Link>
-          }
-        />
-      ))}
-    </div>
+    <NavigationMenuItem>
+      <NavigationMenuLink
+        asChild
+        className={cn(navigationMenuTriggerStyle(), "flex-row")}
+      >
+        <Link href={href}>{label}</Link>
+      </NavigationMenuLink>
+    </NavigationMenuItem>
   );
 }
 
 // ============================================================================
-// Featured item card (used in Gear + Races dropdowns)
+// Simple category row (icon-less, text-only)
+// ============================================================================
+
+function CategoryRow({ href, label }: { href: string; label: string }) {
+  return (
+    <NavigationMenuLink asChild>
+      <Link
+        href={href}
+        className="flex items-center rounded-sm px-3 py-2 text-sm font-medium text-[color:var(--ds-gray-900)] transition-colors hover:bg-[color:var(--ds-gray-100)] hover:text-[color:var(--ds-gray-1000)]"
+      >
+        {label}
+      </Link>
+    </NavigationMenuLink>
+  );
+}
+
+// ============================================================================
+// Featured card (used in Gear + Races dropdowns)
 // ============================================================================
 
 function FeaturedCard({
@@ -117,42 +119,38 @@ function FeaturedCard({
   meta?: string;
 }) {
   return (
-    <NavigationMenu.Link
-      render={
-        <Link
-          href={href}
-          className="group flex w-[260px] flex-col overflow-hidden rounded-lg border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-100)] transition-colors hover:bg-[color:var(--ds-gray-100)]"
+    <NavigationMenuLink asChild>
+      <Link
+        href={href}
+        className="group/card relative flex flex-col overflow-hidden rounded-md border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-100)] p-3 transition-all hover:bg-[color:var(--ds-gray-100)] hover:shadow-sm"
+      >
+        <div
+          className="relative mb-3 aspect-[4/3] w-full overflow-hidden rounded-sm"
+          style={{ background: "var(--ds-gray-200)" }}
         >
-          <div
-            className="relative aspect-[4/3] w-full"
-            style={{ background: "var(--ds-gray-200)" }}
-          >
-            {image && (
-              <Image
-                src={urlFor(image).width(520).height(390).url()}
-                alt=""
-                fill
-                sizes="260px"
-                style={{ objectFit: "cover" }}
-              />
-            )}
-          </div>
-          <div className="flex flex-col gap-1 p-3">
-            <span className="text-[11px] font-semibold uppercase tracking-wide text-[color:var(--ds-gray-700)]">
-              {eyebrow}
-            </span>
-            <span className="text-sm font-medium leading-tight text-[color:var(--ds-gray-1000)]">
-              {title}
-            </span>
-            {meta && (
-              <span className="text-xs text-[color:var(--ds-gray-700)]">
-                {meta}
-              </span>
-            )}
-          </div>
-        </Link>
-      }
-    />
+          {image && (
+            <Image
+              src={urlFor(image).width(520).height(390).url()}
+              alt=""
+              fill
+              sizes="220px"
+              style={{ objectFit: "cover" }}
+            />
+          )}
+        </div>
+        <span className="text-[11px] font-semibold uppercase tracking-wide text-[color:var(--ds-gray-700)]">
+          {eyebrow}
+        </span>
+        <span className="mt-0.5 text-sm font-semibold leading-tight text-[color:var(--ds-gray-1000)]">
+          {title}
+        </span>
+        {meta && (
+          <span className="mt-0.5 text-xs text-[color:var(--ds-gray-700)]">
+            {meta}
+          </span>
+        )}
+      </Link>
+    </NavigationMenuLink>
   );
 }
 
@@ -165,84 +163,69 @@ export default function SiteNavigationMenu({
   featuredRace,
 }: SiteNavigationMenuProps) {
   return (
-    <NavigationMenu.Root className="relative flex items-center">
-      <NavigationMenu.List className="flex items-center gap-1 m-0 p-0 list-none">
-        {/* Articles */}
-        <NavigationMenu.Item>
-          <NavigationMenu.Trigger className={triggerClass}>
-            Articles
-            <ChevronDown
-              className="size-3 transition-transform duration-150 group-data-[popup-open]:rotate-180"
-              aria-hidden
-            />
-          </NavigationMenu.Trigger>
-          <NavigationMenu.Content className="p-4">
-            <LinkList title="Surfaces" items={articleLinks} />
-          </NavigationMenu.Content>
-        </NavigationMenu.Item>
+    <NavigationMenu viewport={false} className="max-w-none">
+      <NavigationMenuList>
+        {/* Top-level standalone links */}
+        {topLevelLinks.map((item) => (
+          <TopLevelLink key={item.href} href={item.href} label={item.label} />
+        ))}
 
         {/* Gear */}
-        <NavigationMenu.Item>
-          <NavigationMenu.Trigger className={triggerClass}>
-            Gear
-            <ChevronDown
-              className="size-3 transition-transform duration-150 group-data-[popup-open]:rotate-180"
-              aria-hidden
-            />
-          </NavigationMenu.Trigger>
-          <NavigationMenu.Content className="flex gap-6 p-4">
-            <LinkList title="Categories" items={gearLinks} />
-            {featuredGear && (
-              <FeaturedCard
-                href={`/gear/${featuredGear.slug.current}`}
-                image={featuredGear.mainImage}
-                eyebrow="Featured gear"
-                title={featuredGear.title}
-                meta={featuredGear.excerpt}
-              />
-            )}
-          </NavigationMenu.Content>
-        </NavigationMenu.Item>
+        <NavigationMenuItem>
+          <NavigationMenuTrigger>Gear</NavigationMenuTrigger>
+          <NavigationMenuContent>
+            <div className="grid w-[440px] grid-cols-1 gap-3 p-1 md:grid-cols-[1fr_180px]">
+              <div className="flex flex-col gap-0.5">
+                {gearLinks.map((item) => (
+                  <CategoryRow
+                    key={item.href}
+                    href={item.href}
+                    label={item.label}
+                  />
+                ))}
+              </div>
+              {featuredGear && (
+                <FeaturedCard
+                  href={`/gear/${featuredGear.slug.current}`}
+                  image={featuredGear.mainImage}
+                  eyebrow="Featured"
+                  title={featuredGear.title}
+                  meta={featuredGear.excerpt}
+                />
+              )}
+            </div>
+          </NavigationMenuContent>
+        </NavigationMenuItem>
 
         {/* Races */}
-        <NavigationMenu.Item>
-          <NavigationMenu.Trigger className={triggerClass}>
-            Races
-            <ChevronDown
-              className="size-3 transition-transform duration-150 group-data-[popup-open]:rotate-180"
-              aria-hidden
-            />
-          </NavigationMenu.Trigger>
-          <NavigationMenu.Content className="flex gap-6 p-4">
-            <LinkList title="Browse" items={raceLinks} />
-            {featuredRace && (
-              <FeaturedCard
-                href={`/races/${featuredRace.slug.current}`}
-                image={featuredRace.mainImage}
-                eyebrow="Featured race"
-                title={featuredRace.title}
-                meta={[featuredRace.location, featuredRace.eventDate]
-                  .filter(Boolean)
-                  .join(" · ")}
-              />
-            )}
-          </NavigationMenu.Content>
-        </NavigationMenu.Item>
-      </NavigationMenu.List>
-
-      <NavigationMenu.Portal>
-        <NavigationMenu.Positioner
-          className="z-50 box-border"
-          sideOffset={8}
-          collisionPadding={16}
-        >
-          <NavigationMenu.Popup
-            className="overflow-hidden rounded-lg border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-100)] shadow-[var(--ds-shadow-menu)]"
-          >
-            <NavigationMenu.Viewport className="relative" />
-          </NavigationMenu.Popup>
-        </NavigationMenu.Positioner>
-      </NavigationMenu.Portal>
-    </NavigationMenu.Root>
+        <NavigationMenuItem>
+          <NavigationMenuTrigger>Races</NavigationMenuTrigger>
+          <NavigationMenuContent>
+            <div className="grid w-[440px] grid-cols-1 gap-3 p-1 md:grid-cols-[1fr_180px]">
+              <div className="flex flex-col gap-0.5">
+                {raceLinks.map((item) => (
+                  <CategoryRow
+                    key={item.href}
+                    href={item.href}
+                    label={item.label}
+                  />
+                ))}
+              </div>
+              {featuredRace && (
+                <FeaturedCard
+                  href={`/races/${featuredRace.slug.current}`}
+                  image={featuredRace.mainImage}
+                  eyebrow="Featured"
+                  title={featuredRace.title}
+                  meta={[featuredRace.location, featuredRace.eventDate]
+                    .filter(Boolean)
+                    .join(" · ")}
+                />
+              )}
+            </div>
+          </NavigationMenuContent>
+        </NavigationMenuItem>
+      </NavigationMenuList>
+    </NavigationMenu>
   );
 }
