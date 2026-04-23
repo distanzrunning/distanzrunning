@@ -5,22 +5,26 @@ import Link from "next/link";
 import { DarkModeContext } from "@/components/DarkModeProvider";
 import { NewsletterButton } from "@/components/ui/NewsletterModal";
 import { ThemeSwitcher } from "@/components/ui/ThemeSwitcher";
+import SiteNavigationMenu, {
+  type FeaturedGear,
+  type FeaturedRace,
+} from "@/components/ui/SiteNavigationMenu";
 
 // ============================================================================
 // SiteHeader
 // ============================================================================
 //
 // Public-site header that sits above the PageFrame. Anatomy modelled on
-// v0.app's chat-header: 50px tall, padded chrome, wordmark left, action
-// row right. Sits in the document flow (relative, not sticky), so it
-// scrolls naturally with the page; the frame handles its own
-// container queries below.
+// v0.app's chat-header: 50px tall, padded chrome, wordmark left, nav
+// centre, action row right. Sits in the document flow (relative, not
+// sticky) so it scrolls naturally with the page.
 //
-// The action row is currently NewsletterButton + ThemeSwitcher. A
-// centred navigation menu using base-ui will slot between them in a
-// later pass once nav items are defined.
+// Desktop-only for now — the mobile drawer (burger button, full-screen
+// menu) lands in a follow-up.
 
 export interface SiteHeaderProps {
+  featuredGear: FeaturedGear;
+  featuredRace: FeaturedRace;
   /**
    * Where the newsletter trigger reports from in PostHog.
    * Defaults to "site_header".
@@ -29,8 +33,10 @@ export interface SiteHeaderProps {
 }
 
 export default function SiteHeader({
+  featuredGear,
+  featuredRace,
   newsletterSource = "site_header",
-}: SiteHeaderProps = {}) {
+}: SiteHeaderProps) {
   const { theme, setTheme } = useContext(DarkModeContext);
 
   return (
@@ -58,6 +64,14 @@ export default function SiteHeader({
             className="hidden h-5 w-auto dark:block"
           />
         </Link>
+      </div>
+
+      {/* Centre: primary nav (desktop) */}
+      <div className="hidden md:flex items-center">
+        <SiteNavigationMenu
+          featuredGear={featuredGear}
+          featuredRace={featuredRace}
+        />
       </div>
 
       {/* Right: actions */}

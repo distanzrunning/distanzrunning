@@ -6,6 +6,7 @@ import { GeistMono } from "geist/font/mono";
 import { EB_Garamond } from "next/font/google";
 import LayoutContent from "@/components/LayoutContent";
 import NavbarAltWrapper from "@/components/NavbarAltWrapper";
+import SiteHeaderWrapper from "@/components/SiteHeaderWrapper";
 import Footer from "@/components/Footer";
 import { DarkModeProvider } from "@/components/DarkModeProvider";
 import ReCaptchaProvider from "@/components/ReCaptchaProvider";
@@ -138,7 +139,11 @@ export default function RootLayout({
           <DarkModeProvider>
             <ConsentProvider>
               <ConsentSync />
-              <LayoutContent navbar={<NavbarAltWrapper />} footer={<Footer />}>
+              <LayoutContent
+                navbar={<NavbarAltWrapper />}
+                header={<SiteHeaderWrapper newsletterSource="homepage" />}
+                footer={<Footer />}
+              >
                 {children}
               </LayoutContent>
               <ConsentBanner />

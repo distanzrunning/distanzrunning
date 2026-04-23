@@ -4,17 +4,19 @@
 import { usePathname } from "next/navigation";
 import { ReactNode } from "react";
 import PageFrame from "./ui/PageFrame";
-import SiteHeader from "./ui/SiteHeader";
 
 interface LayoutContentProps {
   children: ReactNode;
   navbar: ReactNode;
+  /** New v0-style SiteHeader rendered on the homepage (temporary — other pages still use `navbar` while the rest of the site is being rebuilt). */
+  header: ReactNode;
   footer: ReactNode;
 }
 
 export default function LayoutContent({
   children,
   navbar,
+  header,
   footer,
 }: LayoutContentProps) {
   const pathname = usePathname();
@@ -50,7 +52,7 @@ export default function LayoutContent({
   if (isHome) {
     return (
       <div className={chromeClass}>
-        <SiteHeader newsletterSource="homepage" />
+        {header}
         <PageFrame className="flex flex-1 flex-col">
           <main className="flex-1">{children}</main>
         </PageFrame>
