@@ -66,12 +66,18 @@ export default function SiteHeader({
         </Link>
       </div>
 
-      {/* Centre: primary nav (desktop) */}
-      <div className="hidden md:flex items-center">
-        <SiteNavigationMenu
-          featuredGear={featuredGear}
-          featuredRace={featuredRace}
-        />
+      {/* Centre: primary nav (desktop). Absolutely positioned so the
+          row is geometrically centred on the page, independent of the
+          wordmark + action-row widths. pointer-events-none on the
+          wrapper (with auto on the inner) lets clicks fall through
+          the empty horizontal strip to whatever sits behind. */}
+      <div className="pointer-events-none absolute inset-x-0 hidden justify-center md:flex">
+        <div className="pointer-events-auto">
+          <SiteNavigationMenu
+            featuredGear={featuredGear}
+            featuredRace={featuredRace}
+          />
+        </div>
       </div>
 
       {/* Right: actions */}
