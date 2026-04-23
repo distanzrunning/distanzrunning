@@ -73,12 +73,13 @@ function NavigationMenuItem({
 
 const navigationMenuTriggerStyle = cva(
   [
-    // v0-anatomy: 28px tall, rounded-md, 14px medium, full-contrast
-    // text always (not muted → full on hover like shadcn's default).
-    // text-nav = 14px / line-height 1 in this project's scale (text-sm
-    // is overridden to 12px so we can't use it for nav).
-    "group inline-flex h-7 w-max items-center justify-center rounded-md px-2 py-1 text-nav font-medium",
-    "text-[color:var(--ds-gray-1000)]",
+    // v0-anatomy: 28px tall, rounded-md, 14px medium / line-height 20.
+    // text-nav = 14px / line-height 1, so we add leading-5 (20px) to
+    // match v0 exactly. Default text is gray-900 (medium grey); hover,
+    // focus, and open state lift to gray-1000 (full contrast) so the
+    // active item reads as the loudest, matching v0's behaviour.
+    "group inline-flex h-7 w-max items-center justify-center rounded-md px-2 py-1 text-nav leading-5 font-medium",
+    "text-[color:var(--ds-gray-900)]",
     "bg-transparent",
     "transition-all duration-150 outline-none",
     "hover:bg-[color:var(--ds-gray-100)] hover:text-[color:var(--ds-gray-1000)]",
