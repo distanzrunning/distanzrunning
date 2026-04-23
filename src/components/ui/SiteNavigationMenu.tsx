@@ -272,7 +272,7 @@ export default function SiteNavigationMenu({
         {/* Gear */}
         <NavigationMenuItem>
           <NavigationMenuTrigger>Gear</NavigationMenuTrigger>
-          <NavigationMenuContent>
+          <NavigationMenuContent className="p-0">
             <DropdownPanel
               heading="Gear"
               featured={
@@ -293,7 +293,7 @@ export default function SiteNavigationMenu({
         {/* Races */}
         <NavigationMenuItem>
           <NavigationMenuTrigger>Races</NavigationMenuTrigger>
-          <NavigationMenuContent>
+          <NavigationMenuContent className="p-0">
             <DropdownPanel
               heading="Races"
               featured={
