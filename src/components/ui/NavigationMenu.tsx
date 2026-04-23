@@ -172,7 +172,9 @@ function NavigationMenuViewport({
         data-slot="navigation-menu-viewport"
         className={cn(
           "origin-top-center relative mt-1.5 h-[var(--radix-navigation-menu-viewport-height)] w-full overflow-hidden",
-          "rounded-md border border-[color:var(--ds-gray-400)]",
+          // rounded-lg = 12px in this project's scale (matches v0's
+          // rounded-xl which lands on 12px with Tailwind defaults).
+          "rounded-lg border border-[color:var(--ds-gray-400)]",
           "bg-[color:var(--ds-background-100)] text-[color:var(--ds-gray-1000)]",
           "shadow-[var(--ds-shadow-menu)]",
           "data-[state=closed]:animate-out data-[state=closed]:zoom-out-95",
