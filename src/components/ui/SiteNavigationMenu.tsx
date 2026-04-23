@@ -165,7 +165,10 @@ function IconRow({ item }: { item: CategoryItem }) {
       // flex-col (shadcn default) vs flex-row (ours). The group/row
       // lets the icon square + description react to hover on the row
       // while the row itself keeps a transparent background.
-      className="group/row flex flex-row items-center gap-3 rounded-sm p-3 text-left"
+      // hover:bg-transparent + focus:bg-transparent override shadcn's
+      // default hover:bg-accent / focus:bg-accent so no grey pill
+      // shows behind the row on hover or focus.
+      className="group/row flex flex-row items-center gap-3 rounded-sm p-3 text-left hover:bg-transparent focus:bg-transparent"
     >
       <Link href={href}>
         <span
