@@ -38,12 +38,18 @@ export default function LayoutContent({
     return <main className="min-h-screen">{children}</main>;
   }
 
+  // Chrome background (area outside the frame):
+  //   light → bg-100 (#FFFFFF primary canvas)
+  //   dark  → bg-200 (#000000 primary canvas)
+  // Frame background (inside, see PageFrame) flips the other way so
+  // each mode keeps the "canvas outside, elevated surface inside"
+  // relationship rather than inverting it.
+  const chromeClass =
+    "flex min-h-screen flex-col bg-[var(--ds-background-100)] dark:bg-[var(--ds-background-200)]";
+
   if (isHome) {
     return (
-      <div
-        className="flex min-h-screen flex-col"
-        style={{ background: "var(--ds-background-100)" }}
-      >
+      <div className={chromeClass}>
         <SiteHeader newsletterSource="homepage" />
         <PageFrame className="flex flex-1 flex-col">
           <main className="flex-1">{children}</main>
@@ -53,10 +59,7 @@ export default function LayoutContent({
   }
 
   return (
-    <div
-      className="flex min-h-screen flex-col"
-      style={{ background: "var(--ds-background-100)" }}
-    >
+    <div className={chromeClass}>
       {navbar}
       <PageFrame className="flex flex-1 flex-col">
         <main className="flex-1">{children}</main>
