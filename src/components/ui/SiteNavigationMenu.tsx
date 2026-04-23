@@ -162,16 +162,15 @@ function IconRow({ item }: { item: CategoryItem }) {
       asChild
       // className goes on NavigationMenuLink (not the inner Link) so
       // shadcn's internal cn() runs tailwind-merge and resolves
-      // flex-col (shadcn default) vs flex-row (ours). Putting it on
-      // the inner Link instead leaves Slot to string-concat both,
-      // which lets shadcn's flex-col win via CSS source order and
-      // stacks the icon above the text.
-      className="flex flex-row items-center gap-3 rounded-sm p-3 text-left transition-colors hover:bg-[color:var(--ds-gray-100)]"
+      // flex-col (shadcn default) vs flex-row (ours). The group/row
+      // lets the icon square + description react to hover on the row
+      // while the row itself keeps a transparent background.
+      className="group/row flex flex-row items-center gap-3 rounded-sm p-3 text-left"
     >
       <Link href={href}>
         <span
           aria-hidden
-          className="grid size-8 shrink-0 place-items-center rounded-xs border border-[color:var(--ds-gray-400)] text-[color:var(--ds-gray-900)]"
+          className="grid size-8 shrink-0 place-items-center rounded-xs border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-100)] text-[color:var(--ds-gray-900)] transition-colors group-hover/row:border-[color:var(--ds-gray-1000)] group-hover/row:bg-[color:var(--ds-gray-1000)] group-hover/row:text-[color:var(--ds-background-100)]"
         >
           <Icon className="size-4" />
         </span>
@@ -179,7 +178,7 @@ function IconRow({ item }: { item: CategoryItem }) {
           <span className="text-[14px] leading-5 font-medium text-[color:var(--ds-gray-1000)]">
             {label}
           </span>
-          <span className="text-[12px] leading-4 text-[color:var(--ds-gray-700)]">
+          <span className="text-[12px] leading-4 text-[color:var(--ds-gray-900)] transition-colors group-hover/row:text-[color:var(--ds-gray-1000)]">
             {description}
           </span>
         </span>
