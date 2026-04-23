@@ -161,7 +161,7 @@ function IconRow({ item }: { item: CategoryItem }) {
     <NavigationMenuLink asChild>
       <Link
         href={href}
-        className="flex items-center gap-3 rounded-sm px-3 py-2 transition-colors hover:bg-[color:var(--ds-gray-100)]"
+        className="flex items-center gap-3 rounded-sm p-3 text-left transition-colors hover:bg-[color:var(--ds-gray-100)]"
       >
         <span
           aria-hidden
@@ -257,7 +257,7 @@ export default function SiteNavigationMenu({
   featuredRace,
 }: SiteNavigationMenuProps) {
   return (
-    <NavigationMenu className="max-w-none">
+    <NavigationMenu>
       <NavigationMenuList>
         {/* Standalone top-level links */}
         {topLevelLinks.map((item) => (
@@ -324,7 +324,7 @@ function DropdownPanel({
   items: ReadonlyArray<CategoryItem>;
 }) {
   return (
-    <div className="grid w-[560px] grid-cols-3 gap-3 p-2">
+    <div className="grid w-[720px] grid-cols-3 gap-3 p-2">
       <div className="col-span-2">{featured}</div>
       <div className="col-span-1 flex flex-col gap-0.5">
         {items.map((item) => (

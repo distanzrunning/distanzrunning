@@ -164,8 +164,12 @@ function NavigationMenuViewport({
 }: React.ComponentProps<typeof NavigationMenuPrimitive.Viewport>) {
   return (
     <div
+      // left-1/2 + -translate-x-1/2 centres the viewport on the
+      // NavigationMenu root (which sizes to its trigger row), so the
+      // dropdown sits geometrically centred under all nav labels
+      // regardless of which trigger opened it.
       className={cn(
-        "absolute top-full left-0 isolate z-50 flex justify-center",
+        "absolute top-full left-1/2 -translate-x-1/2 isolate z-50 flex justify-center",
       )}
     >
       <NavigationMenuPrimitive.Viewport
