@@ -338,12 +338,9 @@ function DropdownPanel({
 }) {
   return (
     <div className="grid w-[800px] grid-cols-3">
-      {/* Links column.
-          Light: bg-100 (primary white) — links feel elevated.
-          Dark:  bg-200 (pure black canvas) — links sit on the deeper
-          surface; the featured column takes the elevated bg-100. */}
+      {/* Links column — bg-200 recessed surface in both modes. */}
       <div
-        className="col-span-1 flex flex-col gap-0.5 border-r border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-100)] p-2 dark:bg-[color:var(--ds-background-200)]"
+        className="col-span-1 flex flex-col gap-0.5 border-r border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-200)] p-2"
       >
         <h4 className="px-3 pt-2.5 pb-1 text-[14px] leading-5 font-normal text-[color:var(--ds-gray-900)]">
           {heading}
@@ -353,10 +350,8 @@ function DropdownPanel({
         ))}
       </div>
 
-      {/* Featured column — inverse of the links column per mode. */}
-      <div
-        className="col-span-2 bg-[color:var(--ds-background-200)] p-3 dark:bg-[color:var(--ds-background-100)]"
-      >
+      {/* Featured column — bg-100 showcase surface in both modes. */}
+      <div className="col-span-2 bg-[color:var(--ds-background-100)] p-3">
         {featured}
       </div>
     </div>
