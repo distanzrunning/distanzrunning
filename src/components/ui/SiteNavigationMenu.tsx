@@ -93,7 +93,7 @@ function CategoryRow({ href, label }: { href: string; label: string }) {
     <NavigationMenuLink asChild>
       <Link
         href={href}
-        className="flex items-center rounded-sm px-3 py-2 text-sm font-medium text-[color:var(--ds-gray-900)] transition-colors hover:bg-[color:var(--ds-gray-100)] hover:text-[color:var(--ds-gray-1000)]"
+        className="flex items-center rounded-sm px-3 py-2 text-base font-medium text-[color:var(--ds-gray-900)] transition-colors hover:bg-[color:var(--ds-gray-100)] hover:text-[color:var(--ds-gray-1000)]"
       >
         {label}
       </Link>
@@ -141,11 +141,11 @@ function FeaturedCard({
         <span className="text-[11px] font-semibold uppercase tracking-wide text-[color:var(--ds-gray-700)]">
           {eyebrow}
         </span>
-        <span className="mt-0.5 text-sm font-semibold leading-tight text-[color:var(--ds-gray-1000)]">
+        <span className="mt-0.5 text-base font-semibold leading-tight text-[color:var(--ds-gray-1000)]">
           {title}
         </span>
         {meta && (
-          <span className="mt-0.5 text-xs text-[color:var(--ds-gray-700)]">
+          <span className="mt-0.5 text-sm text-[color:var(--ds-gray-700)]">
             {meta}
           </span>
         )}
