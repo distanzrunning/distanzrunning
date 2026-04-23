@@ -191,11 +191,11 @@ function IconRow({ item }: { item: CategoryItem }) {
 }
 
 // ============================================================================
-// Featured card (right column, 2/3 width) — v0 pattern:
-//   - Static "Featured Article / Race" label (h3, 14/20 semibold)
-//   - Dynamic item title below (p, 12/16, gray-900)
-//   - Arrow icon in a small circle that slides right on hover
-//   - Image fills the bottom
+// Featured card (right column, 2/3 width) — editorial/magazine pattern:
+//   - 16:9 image at the top (hero)
+//   - Eyebrow label beneath ("FEATURED ARTICLE" / "FEATURED RACE")
+//   - Article/race title as the prominent headline, arrow inline
+//   - Subtle image zoom on hover
 // ============================================================================
 
 function FeaturedCard({
@@ -215,38 +215,38 @@ function FeaturedCard({
       className="group/card relative flex flex-col overflow-hidden rounded-sm border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-200)] p-3 transition-all hover:bg-[color:var(--ds-gray-100)] hover:shadow-sm"
     >
       <Link href={href}>
-        {/* Top: label + dynamic title + arrow */}
-        <div className="mb-3 flex items-start justify-between gap-2">
-          <div className="flex min-w-0 flex-col gap-0.5">
-            <h3 className="text-[14px] leading-5 font-semibold text-[color:var(--ds-gray-1000)]">
-              {label}
-            </h3>
-            <p className="text-[12px] leading-4 text-[color:var(--ds-gray-900)]">
-              {title}
-            </p>
-          </div>
-          <span
-            aria-hidden
-            className="grid size-6 shrink-0 place-items-center rounded-full bg-[color:var(--ds-gray-200)] text-[color:var(--ds-gray-900)] transition-all group-hover/card:translate-x-0.5 group-hover/card:bg-[color:var(--ds-gray-300)]"
-          >
-            <ArrowRight className="size-3.5" />
-          </span>
-        </div>
-
-        {/* Image */}
+        {/* Image (16:9) — sits on top of a gray-200 surface so a
+            missing/slow image doesn't show the card bg through it.
+            overflow-hidden on the wrapper so the subtle hover zoom on
+            the inner Image doesn't spill. */}
         <div
-          className="relative h-[180px] w-full overflow-hidden rounded-xs border border-[color:var(--ds-gray-400)]"
+          className="relative aspect-[16/9] w-full overflow-hidden rounded-xs border border-[color:var(--ds-gray-400)]"
           style={{ background: "var(--ds-gray-200)" }}
         >
           {image && (
             <Image
-              src={urlFor(image).width(1040).height(520).url()}
+              src={urlFor(image).width(1000).height(563).url()}
               alt=""
               fill
               sizes="520px"
+              className="transition-transform duration-300 ease-out group-hover/card:scale-[1.03]"
               style={{ objectFit: "cover" }}
             />
           )}
+        </div>
+
+        {/* Caption: eyebrow + title with inline arrow */}
+        <div className="mt-3 flex flex-col gap-1">
+          <span className="text-[11px] font-semibold uppercase tracking-wide text-[color:var(--ds-gray-700)]">
+            {label}
+          </span>
+          <h3 className="flex items-center gap-1.5 text-[16px] leading-[22px] font-semibold text-[color:var(--ds-gray-1000)]">
+            <span className="min-w-0 flex-1 truncate">{title}</span>
+            <ArrowRight
+              aria-hidden
+              className="size-4 shrink-0 text-[color:var(--ds-gray-900)] transition-transform duration-150 ease-out group-hover/card:translate-x-0.5"
+            />
+          </h3>
         </div>
       </Link>
     </NavigationMenuLink>
