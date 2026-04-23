@@ -73,10 +73,12 @@ function NavigationMenuItem({
 
 const navigationMenuTriggerStyle = cva(
   [
-    "group inline-flex h-8 w-max items-center justify-center rounded-md px-2 py-1 text-sm font-medium",
-    "text-[color:var(--ds-gray-900)]",
+    // v0-anatomy: 28px tall, rounded-md, text-sm/medium, full-contrast
+    // text always (not muted → full on hover like shadcn's default).
+    "group inline-flex h-7 w-max items-center justify-center rounded-md px-2 py-1 text-sm font-medium",
+    "text-[color:var(--ds-gray-1000)]",
     "bg-transparent",
-    "transition-[color,box-shadow] outline-none",
+    "transition-all duration-150 outline-none",
     "hover:bg-[color:var(--ds-gray-100)] hover:text-[color:var(--ds-gray-1000)]",
     "focus:bg-[color:var(--ds-gray-100)] focus:text-[color:var(--ds-gray-1000)]",
     "focus-visible:ring-[3px] focus-visible:ring-[color:var(--ds-focus-ring)] focus-visible:outline-1",
