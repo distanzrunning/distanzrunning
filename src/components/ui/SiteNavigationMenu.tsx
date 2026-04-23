@@ -333,10 +333,10 @@ function DropdownPanel({
 }) {
   return (
     <div className="grid w-[800px] grid-cols-3">
-      {/* Links column — bg-100, right-bordered divider */}
+      {/* Links column — bg-200, right-bordered divider */}
       <div
         className="col-span-1 flex flex-col gap-0.5 border-r border-[color:var(--ds-gray-400)] p-2"
-        style={{ background: "var(--ds-background-100)" }}
+        style={{ background: "var(--ds-background-200)" }}
       >
         <h4 className="px-3 pt-2.5 pb-1 text-[14px] leading-5 font-normal text-[color:var(--ds-gray-900)]">
           {heading}
@@ -346,10 +346,10 @@ function DropdownPanel({
         ))}
       </div>
 
-      {/* Featured column — bg-200, recessed showcase */}
+      {/* Featured column — bg-100 showcase */}
       <div
         className="col-span-2 p-3"
-        style={{ background: "var(--ds-background-200)" }}
+        style={{ background: "var(--ds-background-100)" }}
       >
         {featured}
       </div>
