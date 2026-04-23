@@ -237,10 +237,13 @@ function FeaturedCard({
 
         {/* Caption: eyebrow + title with inline arrow */}
         <div className="mt-3 flex flex-col gap-1">
-          <span className="font-headline text-[14px] leading-5 italic font-normal text-[color:var(--ds-gray-700)]">
+          <span className="text-[11px] font-semibold uppercase tracking-wide text-[color:var(--ds-gray-700)]">
             {label}
           </span>
-          <h3 className="flex items-center gap-1.5 text-[16px] leading-[22px] font-semibold text-[color:var(--ds-gray-1000)]">
+          <h3
+            className="flex items-center gap-2 font-headline text-[20px] leading-[24px] font-medium text-[color:var(--ds-gray-1000)]"
+            style={{ letterSpacing: "-0.01em" }}
+          >
             <span className="min-w-0 flex-1 truncate">{title}</span>
             <ArrowRight
               aria-hidden
