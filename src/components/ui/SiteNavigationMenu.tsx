@@ -158,14 +158,17 @@ function TopLevelLink({ href, label }: { href: string; label: string }) {
 function IconRow({ item }: { item: CategoryItem }) {
   const { label, href, description, Icon } = item;
   return (
-    <NavigationMenuLink asChild>
-      <Link
-        href={href}
-        // flex-row is explicit because NavigationMenuLink's shadcn
-        // default baked in flex-col and tailwind-merge keeps it
-        // otherwise, stacking the icon above the text.
-        className="flex flex-row items-center gap-3 rounded-sm p-3 text-left transition-colors hover:bg-[color:var(--ds-gray-100)]"
-      >
+    <NavigationMenuLink
+      asChild
+      // className goes on NavigationMenuLink (not the inner Link) so
+      // shadcn's internal cn() runs tailwind-merge and resolves
+      // flex-col (shadcn default) vs flex-row (ours). Putting it on
+      // the inner Link instead leaves Slot to string-concat both,
+      // which lets shadcn's flex-col win via CSS source order and
+      // stacks the icon above the text.
+      className="flex flex-row items-center gap-3 rounded-sm p-3 text-left transition-colors hover:bg-[color:var(--ds-gray-100)]"
+    >
+      <Link href={href}>
         <span
           aria-hidden
           className="grid size-8 shrink-0 place-items-center rounded-xs border border-[color:var(--ds-gray-400)] text-[color:var(--ds-gray-900)]"
