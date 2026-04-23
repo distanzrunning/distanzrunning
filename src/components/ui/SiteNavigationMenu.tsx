@@ -191,42 +191,39 @@ function IconRow({ item }: { item: CategoryItem }) {
 }
 
 // ============================================================================
-// Featured card (2/3 width, left column) — v0-inspired editorial card
+// Featured card (right column, 2/3 width) — v0 pattern:
+//   - Static "Featured Article / Race" label (h3, 14/20 semibold)
+//   - Dynamic item title below (p, 12/16, gray-900)
+//   - Arrow icon in a small circle that slides right on hover
+//   - Image fills the bottom
 // ============================================================================
 
 function FeaturedCard({
   href,
   image,
-  eyebrow,
+  label,
   title,
-  meta,
 }: {
   href: string;
   image: SanityImageSource | null | undefined;
-  eyebrow: string;
+  label: string;
   title: string;
-  meta?: string;
 }) {
   return (
-    <NavigationMenuLink asChild>
-      <Link
-        href={href}
-        className="group/card relative flex flex-col overflow-hidden rounded-sm border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-200)] p-3 transition-all hover:bg-[color:var(--ds-gray-100)] hover:shadow-sm"
-      >
-        {/* Top: heading + arrow */}
+    <NavigationMenuLink
+      asChild
+      className="group/card relative flex flex-col overflow-hidden rounded-sm border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-200)] p-3 transition-all hover:bg-[color:var(--ds-gray-100)] hover:shadow-sm"
+    >
+      <Link href={href}>
+        {/* Top: label + dynamic title + arrow */}
         <div className="mb-3 flex items-start justify-between gap-2">
           <div className="flex min-w-0 flex-col gap-0.5">
-            <span className="text-[11px] font-semibold uppercase tracking-wide text-[color:var(--ds-gray-700)]">
-              {eyebrow}
-            </span>
             <h3 className="text-[14px] leading-5 font-semibold text-[color:var(--ds-gray-1000)]">
-              {title}
+              {label}
             </h3>
-            {meta && (
-              <p className="text-xs leading-4 text-[color:var(--ds-gray-700)]">
-                {meta}
-              </p>
-            )}
+            <p className="text-[12px] leading-4 text-[color:var(--ds-gray-900)]">
+              {title}
+            </p>
           </div>
           <span
             aria-hidden
@@ -238,15 +235,15 @@ function FeaturedCard({
 
         {/* Image */}
         <div
-          className="relative h-[140px] w-full overflow-hidden rounded-xs border border-[color:var(--ds-gray-400)]"
+          className="relative h-[180px] w-full overflow-hidden rounded-xs border border-[color:var(--ds-gray-400)]"
           style={{ background: "var(--ds-gray-200)" }}
         >
           {image && (
             <Image
-              src={urlFor(image).width(720).height(420).url()}
+              src={urlFor(image).width(1040).height(520).url()}
               alt=""
               fill
-              sizes="360px"
+              sizes="520px"
               style={{ objectFit: "cover" }}
             />
           )}
@@ -277,14 +274,14 @@ export default function SiteNavigationMenu({
           <NavigationMenuTrigger>Gear</NavigationMenuTrigger>
           <NavigationMenuContent>
             <DropdownPanel
+              heading="Gear"
               featured={
                 featuredGear && (
                   <FeaturedCard
                     href={`/gear/${featuredGear.slug.current}`}
                     image={featuredGear.mainImage}
-                    eyebrow="Featured gear"
+                    label="Featured Article"
                     title={featuredGear.title}
-                    meta={featuredGear.excerpt}
                   />
                 )
               }
@@ -298,16 +295,14 @@ export default function SiteNavigationMenu({
           <NavigationMenuTrigger>Races</NavigationMenuTrigger>
           <NavigationMenuContent>
             <DropdownPanel
+              heading="Races"
               featured={
                 featuredRace && (
                   <FeaturedCard
                     href={`/races/${featuredRace.slug.current}`}
                     image={featuredRace.mainImage}
-                    eyebrow="Featured race"
+                    label="Featured Race"
                     title={featuredRace.title}
-                    meta={[featuredRace.location, featuredRace.eventDate]
-                      .filter(Boolean)
-                      .join(" · ")}
                   />
                 )
               }
@@ -321,24 +316,30 @@ export default function SiteNavigationMenu({
 }
 
 // ============================================================================
-// Shared dropdown body: featured 2/3 left, link list 1/3 right
+// Shared dropdown body: link list 1/3 left (with section heading),
+// featured card 2/3 right.
 // ============================================================================
 
 function DropdownPanel({
+  heading,
   featured,
   items,
 }: {
+  heading: string;
   featured: React.ReactNode;
   items: ReadonlyArray<CategoryItem>;
 }) {
   return (
     <div className="grid w-[800px] grid-cols-3 gap-3 p-2">
-      <div className="col-span-2">{featured}</div>
       <div className="col-span-1 flex flex-col gap-0.5">
+        <h4 className="px-3 pt-2.5 pb-1 text-[14px] leading-5 font-normal text-[color:var(--ds-gray-900)]">
+          {heading}
+        </h4>
         {items.map((item) => (
           <IconRow key={item.href} item={item} />
         ))}
       </div>
+      <div className="col-span-2">{featured}</div>
     </div>
   );
 }
