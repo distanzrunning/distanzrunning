@@ -161,7 +161,10 @@ function IconRow({ item }: { item: CategoryItem }) {
     <NavigationMenuLink asChild>
       <Link
         href={href}
-        className="flex items-center gap-3 rounded-sm p-3 text-left transition-colors hover:bg-[color:var(--ds-gray-100)]"
+        // flex-row is explicit because NavigationMenuLink's shadcn
+        // default baked in flex-col and tailwind-merge keeps it
+        // otherwise, stacking the icon above the text.
+        className="flex flex-row items-center gap-3 rounded-sm p-3 text-left transition-colors hover:bg-[color:var(--ds-gray-100)]"
       >
         <span
           aria-hidden
@@ -173,7 +176,7 @@ function IconRow({ item }: { item: CategoryItem }) {
           <span className="text-[14px] leading-5 font-medium text-[color:var(--ds-gray-1000)]">
             {label}
           </span>
-          <span className="text-xs leading-4 text-[color:var(--ds-gray-700)]">
+          <span className="text-[12px] leading-4 text-[color:var(--ds-gray-700)]">
             {description}
           </span>
         </span>
@@ -324,7 +327,7 @@ function DropdownPanel({
   items: ReadonlyArray<CategoryItem>;
 }) {
   return (
-    <div className="grid w-[720px] grid-cols-3 gap-3 p-2">
+    <div className="grid w-[800px] grid-cols-3 gap-3 p-2">
       <div className="col-span-2">{featured}</div>
       <div className="col-span-1 flex flex-col gap-0.5">
         {items.map((item) => (
