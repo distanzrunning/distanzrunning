@@ -8,6 +8,11 @@
 //
 // Images here are CSS-gradient placeholders matching the mock.
 // Real Sanity content can swap in later.
+//
+// Client component because the newsletter form has an onSubmit
+// handler — server components can't serialize event handlers.
+
+"use client";
 
 import { ArrowRight } from "lucide-react";
 
