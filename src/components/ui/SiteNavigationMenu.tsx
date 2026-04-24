@@ -456,7 +456,7 @@ function DropdownPanel({
       {/* Featured column — bg-100 showcase surface. Padding gives
           the image a small breathing room from the column edges; the
           card itself owns the rounded corners + overflow-hidden. */}
-      <div className="col-span-2 bg-[color:var(--ds-background-100)] p-3">
+      <div className="col-span-2 bg-[color:var(--ds-background-100)] p-4">
         {featured}
       </div>
     </div>
