@@ -1,25 +1,25 @@
-// src/app/gear/category/[gearCategorySlug]/page.tsx
+// src/app/nutrition/category/[categorySlug]/page.tsx
 
 import { client as sanity } from "@/sanity/lib/client";
 import { notFound } from "next/navigation";
 import ProductCategoryLayout from "@/components/ProductCategoryLayout";
 
-const SECTION = "gear" as const;
-const SECTION_PATH = "/gear" as const;
+const SECTION = "nutrition" as const;
+const SECTION_PATH = "/nutrition" as const;
 
-export default async function GearCategoryPage({
+export default async function NutritionCategoryPage({
   params,
 }: {
-  params: Promise<{ gearCategorySlug: string }>;
+  params: Promise<{ categorySlug: string }>;
 }) {
-  const { gearCategorySlug } = await params;
+  const { categorySlug } = await params;
 
   const [category, articles] = await Promise.all([
     sanity.fetch<{ title: string; description?: string | null } | null>(
       `*[_type == "productCategory"
          && slug.current == $slug
          && section == $section][0]{ title, description }`,
-      { slug: gearCategorySlug, section: SECTION },
+      { slug: categorySlug, section: SECTION },
     ),
     sanity.fetch<
       Array<{
@@ -42,7 +42,7 @@ export default async function GearCategoryPage({
         mainImage,
         publishedAt
       }`,
-      { slug: gearCategorySlug, section: SECTION },
+      { slug: categorySlug, section: SECTION },
     ),
   ]);
 

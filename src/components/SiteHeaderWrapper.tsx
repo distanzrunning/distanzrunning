@@ -1,12 +1,17 @@
 // src/components/SiteHeaderWrapper.tsx
 //
-// Server component that fetches the featured gear + race items from
-// Sanity and forwards them to SiteHeader (client). Mirrors the
-// pattern used by NavbarAltWrapper so layout.tsx can drop the server
-// boundary in as a prop without client-side data fetching.
+// Server component that fetches the three section featured items
+// (shoes / gear / nutrition) + featured race from Sanity and forwards
+// them to SiteHeader (client). Mirrors the pattern used by
+// NavbarAltWrapper so layout.tsx can drop the server boundary in as a
+// prop without client-side data fetching.
 
 import { sanityFetch } from "@/sanity/lib/live";
-import { featuredGearQuery } from "@/sanity/queries/featuredGearQuery";
+import {
+  featuredShoeProductQuery,
+  featuredGearProductQuery,
+  featuredNutritionProductQuery,
+} from "@/sanity/queries/featuredProductQueries";
 import { featuredRaceQuery } from "@/sanity/queries/featuredRaceQuery";
 import SiteHeader from "./ui/SiteHeader";
 
@@ -15,14 +20,19 @@ export default async function SiteHeaderWrapper({
 }: {
   newsletterSource?: string;
 }) {
-  const [featuredGear, featuredRace] = await Promise.all([
-    sanityFetch({ query: featuredGearQuery }),
-    sanityFetch({ query: featuredRaceQuery }),
-  ]);
+  const [featuredShoe, featuredGear, featuredNutrition, featuredRace] =
+    await Promise.all([
+      sanityFetch({ query: featuredShoeProductQuery }),
+      sanityFetch({ query: featuredGearProductQuery }),
+      sanityFetch({ query: featuredNutritionProductQuery }),
+      sanityFetch({ query: featuredRaceQuery }),
+    ]);
 
   return (
     <SiteHeader
+      featuredShoe={featuredShoe.data}
       featuredGear={featuredGear.data}
+      featuredNutrition={featuredNutrition.data}
       featuredRace={featuredRace.data}
       newsletterSource={newsletterSource}
     />

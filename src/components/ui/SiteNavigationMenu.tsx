@@ -7,7 +7,10 @@ import {
   Footprints,
   Mountain,
   Watch,
+  Headphones,
+  Shirt,
   Zap,
+  Droplet,
   Calendar,
   Database,
   Compass,
@@ -31,7 +34,7 @@ import { cn } from "@/lib/utils";
 
 type SanitySlug = { current: string };
 
-export type FeaturedGear = {
+export type FeaturedProduct = {
   title: string;
   slug: SanitySlug;
   mainImage?: SanityImageSource | null;
@@ -47,7 +50,9 @@ export type FeaturedRace = {
 } | null;
 
 export interface SiteNavigationMenuProps {
-  featuredGear: FeaturedGear;
+  featuredShoe: FeaturedProduct;
+  featuredGear: FeaturedProduct;
+  featuredNutrition: FeaturedProduct;
   featuredRace: FeaturedRace;
 }
 
@@ -68,48 +73,72 @@ const topLevelLinks: ReadonlyArray<{ label: string; href: string }> = [
   { label: "Trail", href: "/articles/category/trail" },
 ];
 
-const gearLinks: ReadonlyArray<CategoryItem> = [
+const shoeLinks: ReadonlyArray<CategoryItem> = [
   {
     label: "Race-Day Shoes",
-    href: "/gear/category/race-day-shoes",
+    href: "/shoes/category/race-day-shoes",
     description: "Built for PR days",
     Icon: Footprints,
   },
   {
     label: "Daily Trainers",
-    href: "/gear/category/daily-trainers",
+    href: "/shoes/category/daily-trainers",
     description: "Your go-to runners",
     Icon: Footprints,
   },
   {
     label: "Max Cushion",
-    href: "/gear/category/max-cushion-shoes",
+    href: "/shoes/category/max-cushion",
     description: "Plush for long miles",
     Icon: Footprints,
   },
   {
     label: "Tempo Shoes",
-    href: "/gear/category/tempo-shoes",
+    href: "/shoes/category/tempo-shoes",
     description: "Responsive and fast",
     Icon: Footprints,
   },
   {
     label: "Trail Shoes",
-    href: "/gear/category/trail-shoes",
+    href: "/shoes/category/trail-shoes",
     description: "Off-road traction",
     Icon: Mountain,
   },
+];
+
+const gearLinks: ReadonlyArray<CategoryItem> = [
   {
-    label: "GPS Watches",
-    href: "/gear/category/gps-watches",
+    label: "Watches",
+    href: "/gear/category/watches",
     description: "Track every run",
     Icon: Watch,
   },
   {
-    label: "Nutrition",
-    href: "/gear/category/nutrition",
-    description: "Fuel for the miles",
+    label: "Headphones",
+    href: "/gear/category/headphones",
+    description: "Music on the move",
+    Icon: Headphones,
+  },
+  {
+    label: "Apparel",
+    href: "/gear/category/apparel",
+    description: "Kit for every season",
+    Icon: Shirt,
+  },
+];
+
+const nutritionLinks: ReadonlyArray<CategoryItem> = [
+  {
+    label: "Gels",
+    href: "/nutrition/category/gels",
+    description: "Fast-acting fuel",
     Icon: Zap,
+  },
+  {
+    label: "Hydration",
+    href: "/nutrition/category/hydration",
+    description: "Electrolytes and drinks",
+    Icon: Droplet,
   },
 ];
 
@@ -263,7 +292,9 @@ function FeaturedCard({
 // ============================================================================
 
 export default function SiteNavigationMenu({
+  featuredShoe,
   featuredGear,
+  featuredNutrition,
   featuredRace,
 }: SiteNavigationMenuProps) {
   return (
@@ -273,6 +304,27 @@ export default function SiteNavigationMenu({
         {topLevelLinks.map((item) => (
           <TopLevelLink key={item.href} href={item.href} label={item.label} />
         ))}
+
+        {/* Shoes */}
+        <NavigationMenuItem>
+          <NavigationMenuTrigger>Shoes</NavigationMenuTrigger>
+          <NavigationMenuContent className="p-0">
+            <DropdownPanel
+              heading="Shoes"
+              featured={
+                featuredShoe && (
+                  <FeaturedCard
+                    href={`/shoes/${featuredShoe.slug.current}`}
+                    image={featuredShoe.mainImage}
+                    label="Featured Article"
+                    title={featuredShoe.title}
+                  />
+                )
+              }
+              items={shoeLinks}
+            />
+          </NavigationMenuContent>
+        </NavigationMenuItem>
 
         {/* Gear */}
         <NavigationMenuItem>
@@ -291,6 +343,27 @@ export default function SiteNavigationMenu({
                 )
               }
               items={gearLinks}
+            />
+          </NavigationMenuContent>
+        </NavigationMenuItem>
+
+        {/* Nutrition */}
+        <NavigationMenuItem>
+          <NavigationMenuTrigger>Nutrition</NavigationMenuTrigger>
+          <NavigationMenuContent className="p-0">
+            <DropdownPanel
+              heading="Nutrition"
+              featured={
+                featuredNutrition && (
+                  <FeaturedCard
+                    href={`/nutrition/${featuredNutrition.slug.current}`}
+                    image={featuredNutrition.mainImage}
+                    label="Featured Article"
+                    title={featuredNutrition.title}
+                  />
+                )
+              }
+              items={nutritionLinks}
             />
           </NavigationMenuContent>
         </NavigationMenuItem>

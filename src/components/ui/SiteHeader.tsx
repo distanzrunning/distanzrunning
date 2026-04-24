@@ -6,7 +6,7 @@ import { DarkModeContext } from "@/components/DarkModeProvider";
 import { NewsletterButton } from "@/components/ui/NewsletterModal";
 import { ThemeSwitcher } from "@/components/ui/ThemeSwitcher";
 import SiteNavigationMenu, {
-  type FeaturedGear,
+  type FeaturedProduct,
   type FeaturedRace,
 } from "@/components/ui/SiteNavigationMenu";
 
@@ -23,7 +23,9 @@ import SiteNavigationMenu, {
 // menu) lands in a follow-up.
 
 export interface SiteHeaderProps {
-  featuredGear: FeaturedGear;
+  featuredShoe: FeaturedProduct;
+  featuredGear: FeaturedProduct;
+  featuredNutrition: FeaturedProduct;
   featuredRace: FeaturedRace;
   /**
    * Where the newsletter trigger reports from in PostHog.
@@ -33,7 +35,9 @@ export interface SiteHeaderProps {
 }
 
 export default function SiteHeader({
+  featuredShoe,
   featuredGear,
+  featuredNutrition,
   featuredRace,
   newsletterSource = "site_header",
 }: SiteHeaderProps) {
@@ -74,7 +78,9 @@ export default function SiteHeader({
       <div className="pointer-events-none absolute inset-x-0 hidden justify-center md:flex">
         <div className="pointer-events-auto">
           <SiteNavigationMenu
+            featuredShoe={featuredShoe}
             featuredGear={featuredGear}
+            featuredNutrition={featuredNutrition}
             featuredRace={featuredRace}
           />
         </div>

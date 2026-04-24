@@ -1,4 +1,4 @@
-// src/app/gear/[gearSlug]/page.tsx
+// src/app/shoes/[slug]/page.tsx
 
 import { client as sanity } from "@/sanity/lib/client";
 import { notFound } from "next/navigation";
@@ -8,24 +8,24 @@ import ProductPostLayout, {
 
 export const revalidate = 60;
 
-const SECTION = "gear" as const;
-const SECTION_PATH = "/gear" as const;
+const SECTION = "shoes" as const;
+const SECTION_PATH = "/shoes" as const;
 
 export async function generateStaticParams() {
   const posts = await sanity.fetch<Array<{ slug: { current: string } }>>(
     `*[_type == "productPost" && productCategory->section == $section]{ slug }`,
     { section: SECTION },
   );
-  return posts.map((post) => ({ gearSlug: post.slug.current }));
+  return posts.map((post) => ({ slug: post.slug.current }));
 }
 
-export default async function GearPost({
+export default async function ShoePost({
   params,
 }: {
-  params: Promise<{ gearSlug: string }>;
+  params: Promise<{ slug: string }>;
 }) {
-  const { gearSlug } = await params;
-  if (!gearSlug) return notFound();
+  const { slug } = await params;
+  if (!slug) return notFound();
 
   const post = await sanity.fetch<ProductPostForLayout | null>(
     `*[_type == "productPost"
@@ -40,7 +40,7 @@ export default async function GearPost({
       author->{ name, image },
       "productCategory": productCategory->{ title, slug }
     }`,
-    { slug: gearSlug, section: SECTION },
+    { slug, section: SECTION },
   );
 
   if (!post) return notFound();
