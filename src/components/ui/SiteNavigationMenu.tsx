@@ -204,7 +204,7 @@ function IconRow({ item }: { item: CategoryItem }) {
       <Link href={href}>
         <span
           aria-hidden
-          className="grid size-8 shrink-0 place-items-center rounded-xs border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-100)] text-[color:var(--ds-gray-900)] transition-colors group-hover/row:border-[color:var(--ds-gray-700)] group-hover/row:text-[color:var(--ds-gray-1000)]"
+          className="grid size-8 shrink-0 place-items-center rounded-xs border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-100)] text-[color:var(--ds-gray-900)] transition-colors group-hover/row:border-[color:var(--ds-gray-1000)] group-hover/row:bg-[color:var(--ds-gray-1000)] group-hover/row:text-[color:var(--ds-background-100)]"
         >
           <Icon className="size-5 stroke-[1.5]" />
         </span>
@@ -222,12 +222,13 @@ function IconRow({ item }: { item: CategoryItem }) {
 }
 
 // ============================================================================
-// Featured card — editorial/magazine pattern, no card chrome:
-//   - 16:9 image at the top (hero)
-//   - Eyebrow label below the image
-//   - Article/race title as the prominent headline, arrow inline
-//   - Subtle image zoom on hover + arrow slide; no bg change (the
-//     column's bg-200 is doing the recessed-surface work now)
+// Featured card — full-bleed editorial pattern:
+//   - Image fills the entire column (height inherited from the links
+//     column via grid stretching)
+//   - Bottom-anchored gradient scrim so overlay text holds contrast
+//     regardless of the image
+//   - Eyebrow + title + glassy circled arrow overlay the image
+//   - Subtle image zoom + arrow slide on hover
 // ============================================================================
 
 function FeaturedCard({
@@ -244,45 +245,55 @@ function FeaturedCard({
   return (
     <NavigationMenuLink
       asChild
-      className="group/card block hover:bg-transparent focus:bg-transparent"
+      className="group/card block h-full hover:bg-transparent focus:bg-transparent"
     >
-      <Link href={href}>
-        {/* Image (16:9) — sits on a gray-200 placeholder surface so
-            missing/slow images don't blank out. overflow-hidden on
-            the wrapper so the hover zoom doesn't spill. */}
-        <div
-          className="relative aspect-[16/9] w-full overflow-hidden rounded-xs border border-[color:var(--ds-gray-400)]"
-          style={{ background: "var(--ds-gray-200)" }}
-        >
-          {image && (
-            <Image
-              src={urlFor(image).width(1000).height(563).url()}
-              alt=""
-              fill
-              sizes="520px"
-              className="transition-transform duration-300 ease-out group-hover/card:scale-[1.03]"
-              style={{ objectFit: "cover" }}
-            />
-          )}
-        </div>
+      <Link
+        href={href}
+        className="relative block h-full w-full overflow-hidden"
+        style={{ background: "var(--ds-gray-200)" }}
+      >
+        {image && (
+          <Image
+            src={urlFor(image).width(1200).height(800).url()}
+            alt=""
+            fill
+            sizes="535px"
+            className="transition-transform duration-500 ease-out group-hover/card:scale-[1.04]"
+            style={{ objectFit: "cover" }}
+          />
+        )}
 
-        {/* Caption: eyebrow + title with inline arrow */}
-        <div className="mt-3 flex flex-col gap-1">
-          <span className="text-[11px] font-semibold uppercase tracking-wide text-[color:var(--ds-gray-700)]">
-            {label}
-          </span>
-          <h3
-            className="flex items-center gap-2 font-headline text-[20px] leading-[24px] font-medium text-[color:var(--ds-gray-1000)]"
-            style={{ letterSpacing: "-0.01em" }}
-          >
-            <span className="min-w-0 flex-1 truncate">{title}</span>
-            <span
-              aria-hidden
-              className="grid size-6 shrink-0 place-items-center rounded-full bg-[color:var(--ds-gray-100)] text-[color:var(--ds-gray-900)] transition-all duration-150 ease-out group-hover/card:translate-x-0.5 group-hover/card:bg-[color:var(--ds-gray-200)]"
-            >
-              <ArrowRight className="size-3.5" />
+        {/* Bottom-up scrim so the overlay text always reads cleanly
+            even on bright/busy imagery. Top half stays clear so the
+            photo can breathe. */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(180deg, rgba(0,0,0,0) 35%, rgba(0,0,0,0.35) 70%, rgba(0,0,0,0.75) 100%)",
+          }}
+        />
+
+        {/* Overlay caption */}
+        <div className="absolute inset-x-0 bottom-0 flex items-end gap-3 p-5">
+          <div className="min-w-0 flex-1">
+            <span className="text-[11px] font-semibold uppercase tracking-wide text-white/85">
+              {label}
             </span>
-          </h3>
+            <h3
+              className="mt-1 font-headline text-[20px] leading-[24px] font-medium text-white"
+              style={{ letterSpacing: "-0.01em" }}
+            >
+              <span className="line-clamp-2">{title}</span>
+            </h3>
+          </div>
+          <span
+            aria-hidden
+            className="grid size-9 shrink-0 place-items-center rounded-full border border-white/30 bg-white/15 text-white backdrop-blur-md transition-all duration-150 ease-out group-hover/card:translate-x-0.5 group-hover/card:bg-white/25"
+          >
+            <ArrowRight className="size-4" />
+          </span>
         </div>
       </Link>
     </NavigationMenuLink>
@@ -442,8 +453,11 @@ function DropdownPanel({
         ))}
       </div>
 
-      {/* Featured column — bg-100 showcase surface in both modes. */}
-      <div className="col-span-2 bg-[color:var(--ds-background-100)] p-3">
+      {/* Featured column — bg-100 showcase surface; full-bleed (no
+          padding) so the FeaturedCard image fills the column edge to
+          edge. The viewport's outer rounded-lg + overflow-hidden
+          wraps the right corners cleanly. */}
+      <div className="col-span-2 bg-[color:var(--ds-background-100)]">
         {featured}
       </div>
     </div>
