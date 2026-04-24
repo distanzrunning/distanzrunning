@@ -206,7 +206,7 @@ function IconRow({ item }: { item: CategoryItem }) {
           aria-hidden
           className="grid size-8 shrink-0 place-items-center rounded-xs border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-100)] text-[color:var(--ds-gray-900)] transition-colors group-hover/row:border-[color:var(--ds-gray-700)] group-hover/row:text-[color:var(--ds-gray-1000)]"
         >
-          <Icon className="size-5 stroke-[1.75]" />
+          <Icon className="size-5 stroke-[1.5]" />
         </span>
         <span className="flex min-w-0 flex-col">
           <span className="text-[14px] leading-5 font-medium text-[color:var(--ds-gray-1000)]">
