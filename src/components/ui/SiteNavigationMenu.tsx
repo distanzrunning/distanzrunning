@@ -2,21 +2,24 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { ArrowRight } from "lucide-react";
 import {
-  ArrowRight,
-  Footprints,
-  Mountain,
-  Watch,
-  Headphones,
-  Shirt,
-  Zap,
-  Droplet,
-  Calendar,
-  Database,
-  Compass,
-  Milestone,
-  Gauge,
-} from "lucide-react";
+  TbRoad,
+  TbArrowCapsule,
+  TbMountain,
+  TbFlag2,
+  TbCalendar,
+  TbCloud,
+  TbStopwatch,
+  TbDeviceWatch,
+  TbHeadphones,
+  TbShirt,
+  TbBatteryCharging,
+  TbBottle,
+  TbFlag,
+  TbCalendarEvent,
+  TbDatabase,
+} from "react-icons/tb";
 import { urlFor } from "@/sanity/lib/image";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 import {
@@ -73,19 +76,19 @@ const newsLinks: ReadonlyArray<CategoryItem> = [
     label: "Road",
     href: "/articles/category/road",
     description: "Marathon and road racing",
-    Icon: Milestone,
+    Icon: TbRoad,
   },
   {
     label: "Track",
     href: "/articles/category/track",
     description: "From 100m to 10,000m",
-    Icon: Gauge,
+    Icon: TbArrowCapsule,
   },
   {
     label: "Trail",
     href: "/articles/category/trail",
     description: "Mountain and ultra racing",
-    Icon: Mountain,
+    Icon: TbMountain,
   },
 ];
 
@@ -94,31 +97,31 @@ const shoeLinks: ReadonlyArray<CategoryItem> = [
     label: "Race-Day Shoes",
     href: "/shoes/category/race-day-shoes",
     description: "Built for PR days",
-    Icon: Footprints,
+    Icon: TbFlag2,
   },
   {
     label: "Daily Trainers",
     href: "/shoes/category/daily-trainers",
     description: "Your go-to runners",
-    Icon: Footprints,
+    Icon: TbCalendar,
   },
   {
     label: "Max Cushion",
     href: "/shoes/category/max-cushion",
     description: "Plush for long miles",
-    Icon: Footprints,
+    Icon: TbCloud,
   },
   {
     label: "Tempo Shoes",
     href: "/shoes/category/tempo-shoes",
     description: "Responsive and fast",
-    Icon: Footprints,
+    Icon: TbStopwatch,
   },
   {
     label: "Trail Shoes",
     href: "/shoes/category/trail-shoes",
     description: "Off-road traction",
-    Icon: Mountain,
+    Icon: TbMountain,
   },
 ];
 
@@ -127,19 +130,19 @@ const gearLinks: ReadonlyArray<CategoryItem> = [
     label: "Watches",
     href: "/gear/category/watches",
     description: "Track every run",
-    Icon: Watch,
+    Icon: TbDeviceWatch,
   },
   {
     label: "Headphones",
     href: "/gear/category/headphones",
     description: "Music on the move",
-    Icon: Headphones,
+    Icon: TbHeadphones,
   },
   {
     label: "Apparel",
     href: "/gear/category/apparel",
     description: "Kit for every season",
-    Icon: Shirt,
+    Icon: TbShirt,
   },
 ];
 
@@ -148,34 +151,34 @@ const nutritionLinks: ReadonlyArray<CategoryItem> = [
     label: "Gels",
     href: "/nutrition/category/gels",
     description: "Fast-acting fuel",
-    Icon: Zap,
+    Icon: TbBatteryCharging,
   },
   {
     label: "Hydration",
     href: "/nutrition/category/hydration",
     description: "Electrolytes and drinks",
-    Icon: Droplet,
+    Icon: TbBottle,
   },
 ];
 
 const raceLinks: ReadonlyArray<CategoryItem> = [
   {
-    label: "Overview",
+    label: "Races",
     href: "/races",
     description: "Browse race guides",
-    Icon: Compass,
+    Icon: TbFlag,
   },
   {
     label: "Calendar",
     href: "/races/calendar",
     description: "Upcoming races",
-    Icon: Calendar,
+    Icon: TbCalendarEvent,
   },
   {
     label: "Database",
     href: "/races/database",
     description: "Search every race",
-    Icon: Database,
+    Icon: TbDatabase,
   },
 ];
 
