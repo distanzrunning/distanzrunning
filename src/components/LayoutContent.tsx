@@ -36,19 +36,7 @@ export default function LayoutContent({
   // shell, then re-enable navbar / footer / content in stages.
   const isHome = pathname === "/";
 
-  // Design exploration routes — /designs is a compare page for
-  // parallel homepage mocks. /designs/b is a self-contained Claude
-  // Design port that owns its own navbar + footer, so it bypasses
-  // LayoutContent chrome entirely. /designs and /designs/a use the
-  // normal SiteHeader + PageFrame so they match the in-progress
-  // homepage direction.
-  const isDesignVariantBare = pathname === "/designs/b";
-  const useSiteHeaderChrome =
-    isHome ||
-    pathname === "/designs" ||
-    pathname === "/designs/a";
-
-  if (isPreviewMode || isLoginPage || isAdmin || isDesignVariantBare) {
+  if (isPreviewMode || isLoginPage || isAdmin) {
     return <main className="min-h-screen">{children}</main>;
   }
 
@@ -61,7 +49,7 @@ export default function LayoutContent({
   const chromeClass =
     "flex min-h-screen flex-col bg-[var(--ds-background-100)] dark:bg-[var(--ds-background-200)]";
 
-  if (useSiteHeaderChrome) {
+  if (isHome) {
     return (
       <div className={chromeClass}>
         {header}
