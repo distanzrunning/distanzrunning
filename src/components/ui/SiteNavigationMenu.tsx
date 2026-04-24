@@ -439,8 +439,13 @@ function DropdownPanel({
   featured: React.ReactNode;
   items: ReadonlyArray<CategoryItem>;
 }) {
+  // min-h matches the natural height of the tallest section (Shoes
+  // with 5 link rows). Forcing the grid to that height keeps every
+  // dropdown — and therefore every featured image — the same size,
+  // regardless of how many links the section has. Shorter sections
+  // get a small bg-200 spacer below their links.
   return (
-    <div className="grid w-[800px] grid-cols-3">
+    <div className="grid min-h-[360px] w-[800px] grid-cols-3">
       {/* Links column — bg-200 recessed surface in both modes. */}
       <div
         className="col-span-1 flex flex-col gap-0.5 border-r border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-200)] p-2"
