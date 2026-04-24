@@ -249,7 +249,7 @@ function FeaturedCard({
     >
       <Link
         href={href}
-        className="relative block h-full w-full overflow-hidden"
+        className="relative block h-full w-full overflow-hidden rounded-md"
         style={{ background: "var(--ds-gray-200)" }}
       >
         {image && (
@@ -453,11 +453,10 @@ function DropdownPanel({
         ))}
       </div>
 
-      {/* Featured column — bg-100 showcase surface; full-bleed (no
-          padding) so the FeaturedCard image fills the column edge to
-          edge. The viewport's outer rounded-lg + overflow-hidden
-          wraps the right corners cleanly. */}
-      <div className="col-span-2 bg-[color:var(--ds-background-100)]">
+      {/* Featured column — bg-100 showcase surface. Padding gives
+          the image a small breathing room from the column edges; the
+          card itself owns the rounded corners + overflow-hidden. */}
+      <div className="col-span-2 bg-[color:var(--ds-background-100)] p-3">
         {featured}
       </div>
     </div>
