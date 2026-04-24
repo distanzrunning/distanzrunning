@@ -13,6 +13,7 @@ import {
   featuredNutritionProductQuery,
 } from "@/sanity/queries/featuredProductQueries";
 import { featuredRaceQuery } from "@/sanity/queries/featuredRaceQuery";
+import { featuredNewsQuery } from "@/sanity/queries/featuredNewsQuery";
 import SiteHeader from "./ui/SiteHeader";
 
 export default async function SiteHeaderWrapper({
@@ -20,16 +21,23 @@ export default async function SiteHeaderWrapper({
 }: {
   newsletterSource?: string;
 }) {
-  const [featuredShoe, featuredGear, featuredNutrition, featuredRace] =
-    await Promise.all([
-      sanityFetch({ query: featuredShoeProductQuery }),
-      sanityFetch({ query: featuredGearProductQuery }),
-      sanityFetch({ query: featuredNutritionProductQuery }),
-      sanityFetch({ query: featuredRaceQuery }),
-    ]);
+  const [
+    featuredNews,
+    featuredShoe,
+    featuredGear,
+    featuredNutrition,
+    featuredRace,
+  ] = await Promise.all([
+    sanityFetch({ query: featuredNewsQuery }),
+    sanityFetch({ query: featuredShoeProductQuery }),
+    sanityFetch({ query: featuredGearProductQuery }),
+    sanityFetch({ query: featuredNutritionProductQuery }),
+    sanityFetch({ query: featuredRaceQuery }),
+  ]);
 
   return (
     <SiteHeader
+      featuredNews={featuredNews.data}
       featuredShoe={featuredShoe.data}
       featuredGear={featuredGear.data}
       featuredNutrition={featuredNutrition.data}

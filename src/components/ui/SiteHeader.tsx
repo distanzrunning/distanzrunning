@@ -23,6 +23,7 @@ import SiteNavigationMenu, {
 // menu) lands in a follow-up.
 
 export interface SiteHeaderProps {
+  featuredNews: FeaturedProduct;
   featuredShoe: FeaturedProduct;
   featuredGear: FeaturedProduct;
   featuredNutrition: FeaturedProduct;
@@ -35,6 +36,7 @@ export interface SiteHeaderProps {
 }
 
 export default function SiteHeader({
+  featuredNews,
   featuredShoe,
   featuredGear,
   featuredNutrition,
@@ -78,6 +80,7 @@ export default function SiteHeader({
       <div className="pointer-events-none absolute inset-x-0 hidden justify-center md:flex">
         <div className="pointer-events-auto">
           <SiteNavigationMenu
+            featuredNews={featuredNews}
             featuredShoe={featuredShoe}
             featuredGear={featuredGear}
             featuredNutrition={featuredNutrition}

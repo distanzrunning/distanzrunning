@@ -14,6 +14,8 @@ import {
   Calendar,
   Database,
   Compass,
+  Milestone,
+  Gauge,
 } from "lucide-react";
 import { urlFor } from "@/sanity/lib/image";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
@@ -24,9 +26,7 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
-  navigationMenuTriggerStyle,
 } from "@/components/ui/NavigationMenu";
-import { cn } from "@/lib/utils";
 
 // ============================================================================
 // Types (mirrors the queries in /sanity/queries)
@@ -50,6 +50,7 @@ export type FeaturedRace = {
 } | null;
 
 export interface SiteNavigationMenuProps {
+  featuredNews: FeaturedProduct;
   featuredShoe: FeaturedProduct;
   featuredGear: FeaturedProduct;
   featuredNutrition: FeaturedProduct;
@@ -67,10 +68,25 @@ type CategoryItem = {
   Icon: React.ComponentType<{ className?: string }>;
 };
 
-const topLevelLinks: ReadonlyArray<{ label: string; href: string }> = [
-  { label: "Road", href: "/articles/category/road" },
-  { label: "Track", href: "/articles/category/track" },
-  { label: "Trail", href: "/articles/category/trail" },
+const newsLinks: ReadonlyArray<CategoryItem> = [
+  {
+    label: "Road",
+    href: "/articles/category/road",
+    description: "Marathon and road racing",
+    Icon: Milestone,
+  },
+  {
+    label: "Track",
+    href: "/articles/category/track",
+    description: "From 100m to 10,000m",
+    Icon: Gauge,
+  },
+  {
+    label: "Trail",
+    href: "/articles/category/trail",
+    description: "Mountain and ultra racing",
+    Icon: Mountain,
+  },
 ];
 
 const shoeLinks: ReadonlyArray<CategoryItem> = [
@@ -162,23 +178,6 @@ const raceLinks: ReadonlyArray<CategoryItem> = [
     Icon: Database,
   },
 ];
-
-// ============================================================================
-// Top-level standalone link (no chevron) — shares trigger style
-// ============================================================================
-
-function TopLevelLink({ href, label }: { href: string; label: string }) {
-  return (
-    <NavigationMenuItem>
-      <NavigationMenuLink
-        asChild
-        className={cn(navigationMenuTriggerStyle(), "flex-row")}
-      >
-        <Link href={href}>{label}</Link>
-      </NavigationMenuLink>
-    </NavigationMenuItem>
-  );
-}
 
 // ============================================================================
 // Link row with icon — Vercel-style (icon square + heading + subtitle)
@@ -292,6 +291,7 @@ function FeaturedCard({
 // ============================================================================
 
 export default function SiteNavigationMenu({
+  featuredNews,
   featuredShoe,
   featuredGear,
   featuredNutrition,
@@ -300,10 +300,26 @@ export default function SiteNavigationMenu({
   return (
     <NavigationMenu>
       <NavigationMenuList>
-        {/* Standalone top-level links */}
-        {topLevelLinks.map((item) => (
-          <TopLevelLink key={item.href} href={item.href} label={item.label} />
-        ))}
+        {/* News */}
+        <NavigationMenuItem>
+          <NavigationMenuTrigger>News</NavigationMenuTrigger>
+          <NavigationMenuContent className="p-0">
+            <DropdownPanel
+              heading="News"
+              featured={
+                featuredNews && (
+                  <FeaturedCard
+                    href={`/articles/post/${featuredNews.slug.current}`}
+                    image={featuredNews.mainImage}
+                    label="Featured Article"
+                    title={featuredNews.title}
+                  />
+                )
+              }
+              items={newsLinks}
+            />
+          </NavigationMenuContent>
+        </NavigationMenuItem>
 
         {/* Shoes */}
         <NavigationMenuItem>
