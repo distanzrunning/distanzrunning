@@ -325,7 +325,7 @@ export default function SiteNavigationMenu({
                   <FeaturedCard
                     href={`/articles/post/${featuredNews.slug.current}`}
                     image={featuredNews.mainImage}
-                    label="Featured Article"
+                    label="Featured"
                     title={featuredNews.title}
                   />
                 )
@@ -346,7 +346,7 @@ export default function SiteNavigationMenu({
                   <FeaturedCard
                     href={`/shoes/${featuredShoe.slug.current}`}
                     image={featuredShoe.mainImage}
-                    label="Featured Article"
+                    label="Featured"
                     title={featuredShoe.title}
                   />
                 )
@@ -367,7 +367,7 @@ export default function SiteNavigationMenu({
                   <FeaturedCard
                     href={`/gear/${featuredGear.slug.current}`}
                     image={featuredGear.mainImage}
-                    label="Featured Article"
+                    label="Featured"
                     title={featuredGear.title}
                   />
                 )
@@ -388,7 +388,7 @@ export default function SiteNavigationMenu({
                   <FeaturedCard
                     href={`/nutrition/${featuredNutrition.slug.current}`}
                     image={featuredNutrition.mainImage}
-                    label="Featured Article"
+                    label="Featured"
                     title={featuredNutrition.title}
                   />
                 )
@@ -409,7 +409,7 @@ export default function SiteNavigationMenu({
                   <FeaturedCard
                     href={`/races/${featuredRace.slug.current}`}
                     image={featuredRace.mainImage}
-                    label="Featured Race"
+                    label="Featured"
                     title={featuredRace.title}
                   />
                 )
