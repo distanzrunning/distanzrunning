@@ -62,6 +62,7 @@ import ScrollerComponent from "../components/content/ScrollerComponent";
 import SelectComponent from "../components/content/SelectComponent";
 import SheetComponent from "../components/content/SheetComponent";
 import ShowMoreComponent from "../components/content/ShowMoreComponent";
+import SiteHeaderComponent from "../components/content/SiteHeaderComponent";
 import SkeletonComponent from "../components/content/SkeletonComponent";
 import SliderComponent from "../components/content/SliderComponent";
 import SnippetComponent from "../components/content/SnippetComponent";
@@ -1154,6 +1155,21 @@ export default function DesignSystemPage() {
           onNavigate={handleNavigation}
         >
           <ShowMoreComponent />
+        </ContentWithTOC>
+      );
+    }
+
+    if (activeSlug === "site-header") {
+      return (
+        <ContentWithTOC
+          tocTitle="On this page"
+          pageTitle="Site Header"
+          pageSubtitle="The 50 px sticky bar above PageFrame: wordmark on the left, primary navigation centred, newsletter + theme actions on the right. Includes the Radix-backed dropdown menu used to surface News, Shoes, Gear, Nutrition, and Races."
+          mainSectionId="overview"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
+          <SiteHeaderComponent />
         </ContentWithTOC>
       );
     }

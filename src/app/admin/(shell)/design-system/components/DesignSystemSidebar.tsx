@@ -93,6 +93,7 @@ export const navigation: NavSection[] = [
       { id: "select", label: "Select" },
       { id: "sheet", label: "Sheet" },
       { id: "show-more", label: "Show More" },
+      { id: "site-header", label: "Site Header" },
       { id: "skeleton", label: "Skeleton" },
       { id: "slider", label: "Slider" },
       { id: "snippet", label: "Snippet" },
