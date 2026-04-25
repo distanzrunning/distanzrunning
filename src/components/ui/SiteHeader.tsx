@@ -9,6 +9,7 @@ import SiteNavigationMenu, {
   type FeaturedProduct,
   type FeaturedRace,
 } from "@/components/ui/SiteNavigationMenu";
+import Wordmark from "@/components/ui/Wordmark";
 
 // ============================================================================
 // SiteHeader
@@ -54,21 +55,13 @@ export default function SiteHeader({
         <Link
           href="/"
           aria-label="Distanz Running — home"
-          className="inline-flex h-10 items-center px-1"
+          className="inline-flex h-10 items-center px-1 text-[color:var(--ds-gray-1000)]"
         >
-          {/* Tailwind dark-mode swap — both SVGs are in public/brand. */}
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/brand/wordmark-black.svg"
-            alt=""
-            className="block h-5 w-auto dark:hidden"
-          />
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/brand/wordmark-white.svg"
-            alt=""
-            className="hidden h-5 w-auto dark:block"
-          />
+          {/* Inline SVG via <Wordmark /> — single render, no network
+              request, no light/dark download swap. Colour follows
+              currentColor (text-gray-1000), which flips automatically
+              between near-black and near-white in dark mode. */}
+          <Wordmark className="h-5 w-auto" />
         </Link>
       </div>
 
