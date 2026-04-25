@@ -7,7 +7,6 @@ import {
   TbRoad,
   TbArrowCapsule,
   TbMountain,
-  TbFlag2,
   TbCalendar,
   TbCloud,
   TbStopwatch,
@@ -94,10 +93,10 @@ const newsLinks: ReadonlyArray<CategoryItem> = [
 
 const shoeLinks: ReadonlyArray<CategoryItem> = [
   {
-    label: "Race-Day Shoes",
+    label: "Race-Day",
     href: "/shoes/category/race-day-shoes",
     description: "Built for PR days",
-    Icon: TbFlag2,
+    Icon: TbFlag,
   },
   {
     label: "Daily Trainers",
@@ -112,13 +111,13 @@ const shoeLinks: ReadonlyArray<CategoryItem> = [
     Icon: TbCloud,
   },
   {
-    label: "Tempo Shoes",
+    label: "Tempo",
     href: "/shoes/category/tempo-shoes",
     description: "Responsive and fast",
     Icon: TbStopwatch,
   },
   {
-    label: "Trail Shoes",
+    label: "Trail",
     href: "/shoes/category/trail-shoes",
     description: "Off-road traction",
     Icon: TbMountain,

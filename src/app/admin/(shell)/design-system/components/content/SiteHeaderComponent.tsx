@@ -6,7 +6,7 @@ import {
   TbRoad,
   TbArrowCapsule,
   TbMountain,
-  TbFlag2,
+  TbFlag,
   TbCalendar,
   TbCloud,
   TbStopwatch,
@@ -387,9 +387,9 @@ function Zone({ label, wide }: { label: string; wide?: boolean }) {
 
 const demoLinks = [
   {
-    label: "Race-Day Shoes",
+    label: "Race-Day",
     description: "Built for PR days",
-    Icon: TbFlag2,
+    Icon: TbFlag,
   },
   {
     label: "Daily Trainers",
@@ -402,12 +402,12 @@ const demoLinks = [
     Icon: TbCloud,
   },
   {
-    label: "Tempo Shoes",
+    label: "Tempo",
     description: "Responsive and fast",
     Icon: TbStopwatch,
   },
   {
-    label: "Trail Shoes",
+    label: "Trail",
     description: "Off-road traction",
     Icon: TbMountain,
   },
