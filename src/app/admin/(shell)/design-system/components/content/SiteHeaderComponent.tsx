@@ -600,7 +600,20 @@ export default function SiteHeaderComponent() {
         </CodePreview>
       </Section>
 
-      <Section>
+      {/* Note: this section deliberately bypasses <Section /> because
+          Section wraps children in a GridCell with position:relative
+          + z-index:2, which creates a stacking context that traps the
+          live dropdown viewport at z=2 in the page root — sibling
+          Sections (also z=2) painted later in DOM then cover it. By
+          rendering bare, the inner z-index 100 wrapper around the
+          SiteHeader sits at z=100 in the page root and the dropdown
+          paints above everything below. */}
+      <div
+        style={{
+          padding: 48,
+          borderBottom: "1px solid var(--ds-gray-400)",
+        }}
+      >
         <SectionHeader id="header-in-page" onCopyLink={showToast}>
           Header in the page
         </SectionHeader>
@@ -615,7 +628,7 @@ export default function SiteHeaderComponent() {
         <CodePreview componentCode={usageCode}>
           <HeaderInPagePreview />
         </CodePreview>
-      </Section>
+      </div>
 
       <Section>
         <SectionHeader id="dropdown-anatomy" onCopyLink={showToast}>
