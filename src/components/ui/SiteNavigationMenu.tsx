@@ -282,8 +282,8 @@ function FeaturedCard({
               {label}
             </span>
             <h3
-              className="mt-1 font-headline text-[20px] leading-[24px] font-medium text-white"
-              style={{ letterSpacing: "-0.01em" }}
+              className="mt-1 text-[20px] leading-[24px] font-[550] text-white"
+              style={{ letterSpacing: "-0.005em" }}
             >
               <span className="line-clamp-2">{title}</span>
             </h3>
