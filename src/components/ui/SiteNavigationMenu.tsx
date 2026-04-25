@@ -249,7 +249,7 @@ function FeaturedCard({
     >
       <Link
         href={href}
-        className="relative block h-full w-full overflow-hidden rounded-md"
+        className="relative block h-full w-full overflow-hidden rounded-lg"
         style={{ background: "var(--ds-gray-200)" }}
       >
         {image && (
@@ -263,22 +263,22 @@ function FeaturedCard({
           />
         )}
 
-        {/* Bottom-up scrim so the overlay text always reads cleanly
-            even on bright/busy imagery. Top half stays clear so the
-            photo can breathe. */}
+        {/* Top-down scrim so the overlay text always reads cleanly
+            even on bright/busy imagery. Bottom half stays clear so
+            the photo can breathe. */}
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0"
           style={{
             background:
-              "linear-gradient(180deg, rgba(0,0,0,0) 35%, rgba(0,0,0,0.35) 70%, rgba(0,0,0,0.75) 100%)",
+              "linear-gradient(180deg, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.35) 30%, rgba(0,0,0,0) 65%)",
           }}
         />
 
-        {/* Overlay caption */}
-        <div className="absolute inset-x-0 bottom-0 flex items-end gap-3 p-5">
+        {/* Overlay caption — anchored to the top of the image */}
+        <div className="absolute inset-x-0 top-0 flex items-start gap-3 p-5">
           <div className="min-w-0 flex-1">
-            <span className="text-[11px] font-semibold uppercase tracking-wide text-white/85">
+            <span className="text-[14px] leading-5 font-medium text-white/90">
               {label}
             </span>
             <h3
