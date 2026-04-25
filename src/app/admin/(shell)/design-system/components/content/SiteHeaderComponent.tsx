@@ -309,27 +309,30 @@ const mockRace = {
 
 function HeaderInPagePreview() {
   return (
-    // overflow-visible on the wrapper so the dropdown viewport (which
-    // pops down absolutely from the trigger) isn't clipped by the
-    // CodePreview cell.
-    <div
-      className="w-full"
-      style={{
-        background: "var(--ds-background-100)",
-        border: "1px solid var(--ds-gray-400)",
-        borderRadius: 6,
-        minHeight: 60,
-        overflow: "visible",
-      }}
-    >
-      <SiteHeader
-        featuredNews={mockFeatured}
-        featuredShoe={mockFeatured}
-        featuredGear={mockFeatured}
-        featuredNutrition={mockFeatured}
-        featuredRace={mockRace}
-        newsletterSource="design-system"
-      />
+    // Outer wrapper sets a high stacking context so when the dropdown
+    // viewport opens (z-50 relative to its own stacking context), it
+    // sits above any DS page content below — Section dividers, the
+    // CodePreview's "Show code" toggle, the next Section, etc.
+    <div className="w-full" style={{ position: "relative", zIndex: 100 }}>
+      <div
+        className="w-full"
+        style={{
+          background: "var(--ds-background-100)",
+          border: "1px solid var(--ds-gray-400)",
+          borderRadius: 6,
+          minHeight: 60,
+          overflow: "visible",
+        }}
+      >
+        <SiteHeader
+          featuredNews={mockFeatured}
+          featuredShoe={mockFeatured}
+          featuredGear={mockFeatured}
+          featuredNutrition={mockFeatured}
+          featuredRace={mockRace}
+          newsletterSource="design-system"
+        />
+      </div>
     </div>
   );
 }
