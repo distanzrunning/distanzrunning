@@ -244,9 +244,10 @@ export default function MobileNavDrawer({
             </div>
           </div>
 
-          {/* Footer — theme switcher + full-width newsletter button */}
+          {/* Footer — theme switcher (label sits immediately to the
+              left of the control) + full-width newsletter button. */}
           <div className="flex flex-col gap-3 border-t border-[color:var(--ds-gray-400)] px-5 py-4">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-end gap-2">
               <span className="text-[13px] leading-5 text-[color:var(--ds-gray-700)]">
                 Theme
               </span>

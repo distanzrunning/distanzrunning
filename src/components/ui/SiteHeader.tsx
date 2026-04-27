@@ -95,16 +95,17 @@ export default function SiteHeader({
           />
         </div>
 
-        {/* Right (mobile only): hamburger button. Same anatomy as v0's
-            mobile trigger — 28 px square with rounded-md, sits on
-            bg-200 (recessed) so it reads as an action chip rather
-            than a flat nav item. */}
+        {/* Right (mobile only): hamburger button. 28 px square with
+            rounded-md and a hairline border. Interior background is
+            the alternate of the header surface — bg-200 (recessed
+            off-white) in light mode, bg-100 (elevated #0A0A0A) in
+            dark mode — so the chip reads against either chrome. */}
         <button
           type="button"
           aria-label="Open menu"
           aria-expanded={mobileOpen}
           onClick={() => setMobileOpen(true)}
-          className="grid size-7 place-items-center rounded-md bg-[color:var(--ds-background-200)] text-[color:var(--ds-gray-1000)] transition-colors hover:bg-[color:var(--ds-gray-100)] md:hidden"
+          className="grid size-7 place-items-center rounded-md border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-200)] text-[color:var(--ds-gray-1000)] transition-colors hover:bg-[color:var(--ds-gray-100)] md:hidden dark:bg-[color:var(--ds-background-100)]"
         >
           <svg
             width="16"
