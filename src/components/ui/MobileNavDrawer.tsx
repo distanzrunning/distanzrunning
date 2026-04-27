@@ -315,24 +315,22 @@ function SectionDetail({
 }) {
   return (
     <div className="flex min-h-full flex-col">
-      {/* Detail header — back button + section title */}
-      <div className="flex items-center gap-2 border-b border-[color:var(--ds-gray-400)] px-3 py-3">
+      {/* Back row + sub-items share the same max-w-md column +
+          padding, so the back button and section title sit on the
+          same horizontal grid as the list items below. The whole
+          back row is tappable. */}
+      <div className="mx-auto flex w-full max-w-md flex-col p-4">
         <button
           type="button"
           onClick={onBack}
           aria-label="Back to all sections"
-          className="grid size-9 place-items-center rounded-md text-[color:var(--ds-gray-900)] transition-colors hover:bg-[color:var(--ds-gray-100)] hover:text-[color:var(--ds-gray-1000)]"
+          className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-base text-[color:var(--ds-gray-900)] transition-colors hover:bg-[color:var(--ds-gray-100)] hover:text-[color:var(--ds-gray-1000)]"
         >
-          <ArrowLeft className="size-5" />
+          <ArrowLeft className="size-4" aria-hidden />
+          <span className="font-medium text-[color:var(--ds-gray-1000)]">
+            {section.label}
+          </span>
         </button>
-        <h2 className="text-[18px] leading-6 font-medium text-[color:var(--ds-gray-1000)]">
-          {section.label}
-        </h2>
-      </div>
-
-      {/* Sub-item list — wrapped in the same max-w-md column as the
-          top pane so the two views feel like one. */}
-      <div className="mx-auto flex w-full max-w-md flex-col p-4">
         {section.items.map((item) => (
           <MobileSubItem
             key={item.href}
