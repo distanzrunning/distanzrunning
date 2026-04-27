@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import {
   ChevronLeft,
   ChevronRight,
+  Database,
   MessageSquare,
   PanelsTopLeft,
   SquareCheckBig,
@@ -169,6 +170,12 @@ const ADMIN_NAV: {
     href: "/admin/design-system",
     icon: <PanelsTopLeft className="w-4 h-4" />,
     hasSubmenu: true,
+  },
+  {
+    id: "studio",
+    label: "Sanity Studio",
+    href: "/admin/studio",
+    icon: <Database className="w-4 h-4" />,
   },
 ];
 
