@@ -82,7 +82,7 @@ export default function Footer() {
   return (
     <footer
       aria-label="Site footer"
-      className="relative z-50 w-full bg-[color:var(--ds-background-100)] text-[color:var(--ds-gray-900)]"
+      className="relative z-50 w-full text-[color:var(--ds-gray-900)]"
     >
       {/* Outer wrapper sized to v0: 1400 px max width, 40 px L/R
           padding, 48 px vertical margin, asymmetric pt-6 pb-10. */}
