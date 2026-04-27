@@ -105,7 +105,12 @@ export default function SiteHeader({
           type="button"
           aria-label={mobileOpen ? "Close menu" : "Open menu"}
           aria-expanded={mobileOpen}
-          onClick={() => setMobileOpen((prev) => !prev)}
+          // Closure-based toggle (not function form) — Radix's
+          // onPointerDownOutside also calls onOpenChange(false) when
+          // we tap a button outside the dialog, and a function-form
+          // setter would read that queued false and flip it back to
+          // true, re-opening the drawer.
+          onClick={() => setMobileOpen(!mobileOpen)}
           className="pointer-events-auto relative z-[101] grid size-7 place-items-center rounded-md border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-200)] text-[color:var(--ds-gray-1000)] transition-colors hover:bg-[color:var(--ds-gray-100)] md:hidden dark:bg-[color:var(--ds-background-100)] dark:hover:bg-[color:var(--ds-gray-100)]"
         >
           {mobileOpen ? (
