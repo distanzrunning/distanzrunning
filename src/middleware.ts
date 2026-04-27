@@ -83,7 +83,16 @@ export async function middleware(request: NextRequest) {
   const country = request.headers.get("x-vercel-ip-country") ?? "";
   const region = classifyRegion(country);
 
-  const response = NextResponse.next();
+  // 3. Forward the request pathname as a custom header so server
+  //    components / layouts can branch chrome without falling back
+  //    to a client-only usePathname() (which returns null during
+  //    static rendering and causes a flash of the wrong navbar).
+  const forwardedHeaders = new Headers(request.headers);
+  forwardedHeaders.set("x-pathname", request.nextUrl.pathname);
+
+  const response = NextResponse.next({
+    request: { headers: forwardedHeaders },
+  });
   const existing = request.cookies.get(REGION_COOKIE)?.value;
   if (existing !== region) {
     response.cookies.set({
