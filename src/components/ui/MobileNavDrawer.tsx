@@ -177,14 +177,16 @@ export default function MobileNavDrawer({
   ];
 
   // activeSection: which section is currently shown (right pane).
-  // No animation lag is needed — the pane swap is instant, so the
-  // section detail mounts only while it's the active one.
   const [activeSection, setActiveSection] = useState<SectionId | null>(null);
 
-  // Reset to top view whenever the drawer closes/opens fresh.
+  // Reset to top view AFTER the drawer slide-out finishes (300 ms,
+  // matching the slide-out keyframe). If we reset immediately the
+  // section pane would snap back to the top pane mid-animation,
+  // making the close look like only the submenu closed.
   useEffect(() => {
     if (!open) {
-      setActiveSection(null);
+      const t = setTimeout(() => setActiveSection(null), 300);
+      return () => clearTimeout(t);
     }
   }, [open]);
 
