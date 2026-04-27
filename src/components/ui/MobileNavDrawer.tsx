@@ -187,10 +187,12 @@ export default function MobileNavDrawer({
               <Wordmark className="h-6 w-auto" />
             </Link>
             <Dialog.Close asChild>
+              {/* Same anatomy as the hamburger in SiteHeader so the
+                  open / close pair feel like one control. */}
               <button
                 type="button"
                 aria-label="Close menu"
-                className="grid size-7 place-items-center rounded-md bg-[color:var(--ds-background-200)] text-[color:var(--ds-gray-1000)] transition-colors hover:bg-[color:var(--ds-gray-100)]"
+                className="grid size-7 place-items-center rounded-md border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-200)] text-[color:var(--ds-gray-1000)] transition-colors hover:bg-[color:var(--ds-gray-100)] dark:bg-[color:var(--ds-background-100)]"
               >
                 <X className="size-4" />
               </button>
