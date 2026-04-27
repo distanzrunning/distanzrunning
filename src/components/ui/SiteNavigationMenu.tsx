@@ -63,14 +63,14 @@ export interface SiteNavigationMenuProps {
 // Taxonomy
 // ============================================================================
 
-type CategoryItem = {
+export type CategoryItem = {
   label: string;
   href: string;
   description: string;
   Icon: React.ComponentType<{ className?: string }>;
 };
 
-const newsLinks: ReadonlyArray<CategoryItem> = [
+export const newsLinks: ReadonlyArray<CategoryItem> = [
   {
     label: "Road",
     href: "/articles/category/road",
@@ -91,7 +91,7 @@ const newsLinks: ReadonlyArray<CategoryItem> = [
   },
 ];
 
-const shoeLinks: ReadonlyArray<CategoryItem> = [
+export const shoeLinks: ReadonlyArray<CategoryItem> = [
   {
     label: "Race-Day",
     href: "/shoes/category/race-day-shoes",
@@ -124,7 +124,7 @@ const shoeLinks: ReadonlyArray<CategoryItem> = [
   },
 ];
 
-const gearLinks: ReadonlyArray<CategoryItem> = [
+export const gearLinks: ReadonlyArray<CategoryItem> = [
   {
     label: "Watches",
     href: "/gear/category/watches",
@@ -145,7 +145,7 @@ const gearLinks: ReadonlyArray<CategoryItem> = [
   },
 ];
 
-const nutritionLinks: ReadonlyArray<CategoryItem> = [
+export const nutritionLinks: ReadonlyArray<CategoryItem> = [
   {
     label: "Gels",
     href: "/nutrition/category/gels",
@@ -160,7 +160,7 @@ const nutritionLinks: ReadonlyArray<CategoryItem> = [
   },
 ];
 
-const raceLinks: ReadonlyArray<CategoryItem> = [
+export const raceLinks: ReadonlyArray<CategoryItem> = [
   {
     label: "Races",
     href: "/races",
