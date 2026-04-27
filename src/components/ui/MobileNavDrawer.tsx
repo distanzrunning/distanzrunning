@@ -177,21 +177,9 @@ export default function MobileNavDrawer({
   ];
 
   // activeSection: which section is currently shown (right pane).
-  // displayedSection: lags activeSection during slide-back so the
-  // outgoing pane stays mounted while the slide animates.
+  // No animation lag is needed — the pane swap is instant, so the
+  // section detail mounts only while it's the active one.
   const [activeSection, setActiveSection] = useState<SectionId | null>(null);
-  const [displayedSection, setDisplayedSection] = useState<SectionId | null>(
-    null,
-  );
-
-  useEffect(() => {
-    if (activeSection) {
-      setDisplayedSection(activeSection);
-      return;
-    }
-    const t = setTimeout(() => setDisplayedSection(null), 300);
-    return () => clearTimeout(t);
-  }, [activeSection]);
 
   // Reset to top view whenever the drawer closes/opens fresh.
   useEffect(() => {
@@ -204,9 +192,7 @@ export default function MobileNavDrawer({
     onOpenChange(false);
   };
 
-  const sectionOnDisplay = sections.find(
-    (s) => s.id === displayedSection,
-  );
+  const sectionOnDisplay = sections.find((s) => s.id === activeSection);
 
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
@@ -238,10 +224,11 @@ export default function MobileNavDrawer({
               Closing the drawer happens via the hamburger, ESC, or
               clicking the overlay. */}
 
-          {/* Body — two-pane slide */}
+          {/* Body — two panes (top + section). Instant swap, no
+              transform animation between them. */}
           <div className="relative flex-1 overflow-hidden">
             <div
-              className="flex h-full transition-transform duration-300 ease-out"
+              className="flex h-full"
               style={{
                 width: "200%",
                 transform: activeSection
