@@ -83,10 +83,16 @@ export default function Footer() {
   return (
     <footer
       aria-label="Site footer"
-      className="relative w-full bg-[color:var(--ds-background-100)] text-[color:var(--ds-gray-900)]"
+      className="relative z-50 w-full bg-[color:var(--ds-background-100)] text-[color:var(--ds-gray-900)]"
     >
-      <div className="mx-auto w-full max-w-7xl px-8 py-12">
-        <div className="flex flex-col gap-y-12 md:flex-row md:items-start md:justify-between md:gap-x-12">
+      {/* Outer wrapper sized to v0: 1400 px max width, 40 px L/R
+          padding, 48 px vertical margin, asymmetric pt-6 pb-10. */}
+      <div className="mx-auto my-12 w-full max-w-[1400px] px-10 pt-6 pb-10">
+        {/* Content row: stacked on mobile inside a 672 px (max-w-2xl)
+            column with a generous 64 px gap between logo and link
+            grid. On md+ it expands to the xl breakpoint and goes
+            side-by-side. */}
+        <div className="flex w-full max-w-2xl flex-col justify-between gap-x-12 gap-y-16 md:mx-auto md:max-w-7xl md:flex-row md:items-start">
           {/* Full Distanz Running lockup (icon + Distanz + Running).
               Same inline-SVG approach as the header wordmark so the
               colour follows currentColor / text-gray-1000 in both
@@ -99,8 +105,10 @@ export default function Footer() {
             <Logo className="h-12 w-auto" />
           </Link>
 
-          {/* Three columns. 2 across on mobile, 3 across on md+. */}
-          <div className="grid grid-cols-2 gap-x-8 gap-y-10 md:grid-cols-3 md:gap-x-12 lg:gap-x-20">
+          {/* Link grid. Mobile: 2-col, no x-gap, 16 px y-gap (tight
+              packing inside the 672 px column). md: 3 cols / 64 px
+              gap. lg: 108 px gap. */}
+          <div className="grid grid-cols-2 gap-x-0 gap-y-4 md:grid-cols-3 md:gap-16 lg:gap-[108px]">
             <FooterColumn heading="Category" items={categoryLinks} />
             <FooterColumn heading="Company" items={companyLinks} />
             <SocialColumn />
@@ -163,9 +171,11 @@ function SocialColumn() {
               href={href}
               rel="noopener"
               target="_blank"
-              className={`${linkClasses} gap-x-2`}
+              className={linkClasses}
             >
-              <Icon size={14} className="shrink-0" />
+              {/* mr-1 (not gap-x-) matches v0's social spacing —
+                  4 px between icon and label. */}
+              <Icon size={14} className="mr-1 shrink-0" />
               {label}
             </a>
           </li>
@@ -175,5 +185,8 @@ function SocialColumn() {
   );
 }
 
+// gap-x-0.5 (2 px) matches v0's link-internal spacing — used by
+// links that have a trailing arrow icon. With text-only links the
+// gap is invisible.
 const linkClasses =
-  "inline-flex items-center gap-x-1 rounded-sm text-[14px] leading-5 text-[color:var(--ds-gray-900)] transition-colors hover:text-[color:var(--ds-gray-1000)] focus-visible:text-[color:var(--ds-gray-1000)] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[color:var(--ds-focus-ring)]";
+  "inline-flex items-center gap-x-0.5 rounded-sm text-[14px] leading-5 text-[color:var(--ds-gray-900)] transition-colors hover:text-[color:var(--ds-gray-1000)] focus-visible:text-[color:var(--ds-gray-1000)] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[color:var(--ds-focus-ring)]";
