@@ -340,27 +340,16 @@ function MobileSubItem({
   item: CategoryItem;
   onClick: () => void;
 }) {
-  const { label, href, description, Icon } = item;
+  // Mobile sub-items drop the icon box + description and render
+  // just the label, matching v0's flat list pattern. Same row
+  // anatomy as the top-pane section rows for visual continuity.
   return (
     <Link
-      href={href}
+      href={item.href}
       onClick={onClick}
-      className="flex items-center gap-3 rounded-md px-3 py-3 transition-colors hover:bg-[color:var(--ds-gray-100)]"
+      className="flex items-center rounded-lg px-3 py-2 text-base text-[color:var(--ds-gray-900)] transition-colors hover:bg-[color:var(--ds-gray-100)] hover:text-[color:var(--ds-gray-1000)]"
     >
-      <span
-        aria-hidden
-        className="grid size-9 shrink-0 place-items-center rounded-xs border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-100)] text-[color:var(--ds-gray-900)]"
-      >
-        <Icon className="size-5 stroke-[1.5]" />
-      </span>
-      <span className="flex min-w-0 flex-col">
-        <span className="text-[16px] leading-6 font-medium text-[color:var(--ds-gray-1000)]">
-          {label}
-        </span>
-        <span className="text-[13px] leading-5 text-[color:var(--ds-gray-700)]">
-          {description}
-        </span>
-      </span>
+      <span>{item.label}</span>
     </Link>
   );
 }
