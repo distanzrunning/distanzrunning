@@ -17,6 +17,7 @@ import {apiVersion, dataset, projectId} from './src/sanity/env'
 import {schema} from './src/sanity/schemaTypes'
 import {structure} from './src/sanity/structure'
 import {studioTheme} from './src/sanity/theme'
+import StudioLogo from './src/sanity/components/StudioLogo'
 
 export default defineConfig({
   basePath: '/admin/studio',
@@ -26,6 +27,14 @@ export default defineConfig({
   schema,
   // Distanz brand theme — see src/sanity/theme.ts for token mappings.
   theme: studioTheme,
+  // Replace Sanity's default S mark with the Distanz wordmark in
+  // the Studio's top-left logo slot. Navbar / search / workspace
+  // switcher stay as Sanity defaults — those carry functional UX.
+  studio: {
+    components: {
+      logo: StudioLogo,
+    },
+  },
   plugins: [
     structureTool({structure}),
     // Vision is for querying with GROQ from inside the Studio
