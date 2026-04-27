@@ -16,6 +16,7 @@ import {structureTool} from 'sanity/structure'
 import {apiVersion, dataset, projectId} from './src/sanity/env'
 import {schema} from './src/sanity/schemaTypes'
 import {structure} from './src/sanity/structure'
+import {studioTheme} from './src/sanity/theme'
 
 export default defineConfig({
   basePath: '/admin/studio',
@@ -23,6 +24,8 @@ export default defineConfig({
   dataset,
   // Add and edit the content schema in the './sanity/schemaTypes' folder
   schema,
+  // Distanz brand theme — see src/sanity/theme.ts for token mappings.
+  theme: studioTheme,
   plugins: [
     structureTool({structure}),
     // Vision is for querying with GROQ from inside the Studio
