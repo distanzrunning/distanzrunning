@@ -46,6 +46,7 @@ export type HomepageHeroSlide = {
   publishedAt?: string;
   mainImage?: SanityImageSource | null;
   kicker?: string;
+  kickerHref?: string | null;
   href: string;
 };
 
@@ -146,28 +147,17 @@ export default function HomepageHeroCarousel({
       className="relative z-0 flex w-full justify-center px-4 py-12 md:py-20 lg:py-28"
     >
       <div className="w-full max-w-[1280px]">
-        {/* Slide region */}
-        <div
+        {/* Slide region — entire article is a single group so hovering
+            anywhere (text or image) triggers the image-zoom effect.
+            Image starts at scale 1.04 and relaxes to 1.0 on hover —
+            same inverse-zoom pattern Quartr uses. */}
+        <article
           aria-live="polite"
           aria-atomic="true"
-          className="grid items-center gap-8 lg:grid-cols-3 lg:gap-20"
+          className="group/slide grid items-center gap-8 lg:grid-cols-3 lg:gap-20"
         >
-          {/* Left: text block (1/3) */}
+          {/* Left: text block (1/3) — Headline → Excerpt → Meta */}
           <div className="z-[1] flex flex-col justify-center gap-4 lg:col-span-1">
-            {slide.kicker && (
-              <div className="flex items-center gap-2 text-[12px] font-medium tracking-wide text-[color:var(--ds-gray-700)]">
-                <span className="uppercase">{slide.kicker}</span>
-                {dateLabel && (
-                  <>
-                    <span
-                      aria-hidden
-                      className="size-1 rounded-full bg-[color:var(--ds-gray-700)] opacity-60"
-                    />
-                    <span className="font-mono">{dateLabel}</span>
-                  </>
-                )}
-              </div>
-            )}
             <h2
               className="text-balance font-headline font-semibold text-[color:var(--ds-gray-1000)]"
               style={{
@@ -188,12 +178,37 @@ export default function HomepageHeroCarousel({
                 {slide.excerpt}
               </p>
             )}
+            {/* Meta — Category (clickable) · Date */}
+            {(slide.kicker || dateLabel) && (
+              <div className="mt-1 flex items-center gap-2 text-[13px] text-[color:var(--ds-gray-700)]">
+                {slide.kicker && slide.kickerHref ? (
+                  <Link
+                    href={slide.kickerHref}
+                    className="rounded-sm transition-colors hover:text-[color:var(--ds-gray-1000)] focus-visible:text-[color:var(--ds-gray-1000)] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[color:var(--ds-focus-ring)]"
+                  >
+                    {slide.kicker}
+                  </Link>
+                ) : slide.kicker ? (
+                  <span>{slide.kicker}</span>
+                ) : null}
+                {slide.kicker && dateLabel && (
+                  <span
+                    aria-hidden
+                    className="size-1 rounded-full bg-[color:var(--ds-gray-700)] opacity-60"
+                  />
+                )}
+                {dateLabel && <span className="font-mono">{dateLabel}</span>}
+              </div>
+            )}
           </div>
 
-          {/* Right: image card (2/3) */}
+          {/* Right: image card (2/3). The image sits at scale 1.04 by
+              default (slightly zoomed inside the rounded-lg crop) and
+              eases back to 1.0 when ANY part of the article is
+              hovered — that's the "expand inside its bounds" effect. */}
           <Link
             href={slide.href}
-            className="group relative block overflow-hidden rounded-lg border border-[color:var(--ds-gray-400)] lg:col-span-2"
+            className="relative block overflow-hidden rounded-lg border border-[color:var(--ds-gray-400)] lg:col-span-2"
             style={{ background: "var(--ds-gray-200)" }}
             aria-label={slide.title}
           >
@@ -206,13 +221,13 @@ export default function HomepageHeroCarousel({
                   fill
                   sizes="(min-width: 1024px) 853px, 100vw"
                   priority={active === 0}
-                  className="transition-transform duration-500 ease-out group-hover:scale-[1.02]"
+                  className="scale-[1.04] transition-transform duration-300 ease-out will-change-transform group-hover/slide:scale-100"
                   style={{ objectFit: "cover" }}
                 />
               )}
             </div>
           </Link>
-        </div>
+        </article>
 
         {/* Controls: dots + prev/next + pause/play */}
         {slideCount > 1 && (

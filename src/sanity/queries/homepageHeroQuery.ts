@@ -27,12 +27,19 @@ export const homepageHeroQuery = groq`
     mainImage,
     // Kicker label depends on type
     "kicker": select(
-      _type == "post" => upper(category->title),
-      _type == "productPost" => upper(productCategory->section),
-      _type == "raceGuide" => "RACE GUIDE",
+      _type == "post" => category->title,
+      _type == "productPost" => productCategory->title,
+      _type == "raceGuide" => "Race Guide",
       ""
     ),
-    // Canonical href per type
+    // Category landing href — what the kicker label links to
+    "kickerHref": select(
+      _type == "post" => "/articles/category/" + category->slug.current,
+      _type == "productPost" => "/" + productCategory->section + "/category/" + productCategory->slug.current,
+      _type == "raceGuide" => "/races",
+      null
+    ),
+    // Canonical href per type — main article link
     "href": select(
       _type == "post" => "/articles/post/" + slug.current,
       _type == "productPost" => "/" + productCategory->section + "/" + slug.current,
