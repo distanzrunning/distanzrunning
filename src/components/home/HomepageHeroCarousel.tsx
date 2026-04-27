@@ -5,23 +5,30 @@
 // ============================================================================
 //
 // Single-hero slideshow for the top of the homepage. Auto-advances
-// every 7s, pauses on hover / focus / explicit pause click, and
-// rotates through the editorial slides flagged `featuredOnHomepage`
+// every 7s through the editorial slides flagged `featuredOnHomepage`
 // (post / productPost / raceGuide — fetched server-side and passed
 // in as `slides`).
 //
 // Layout follows the Quartr reference:
-//   - 33 / 66 column split on md+
-//   - Left: kicker + serif headline + dek + meta dot + date
-//   - Right: rounded image card with a subtle hover zoom
+//   - 33 / 66 column split on lg+
+//   - Left: serif headline, excerpt, kicker (clickable category) · date
+//   - Right: rounded image card with subtle inverse-zoom on hover
 // On mobile the columns stack, image first.
+//
+// Controls:
+//   - Glass-effect prev / next chips overlay the image (left + right
+//     edges, vertically centered)
+//   - Below: a segmented progress bar — one segment per slide. The
+//     current segment fills over the interval and onAnimationEnd
+//     advances to the next slide (single source of truth for
+//     timing). Hover / focus / reduced-motion pauses the animation.
 //
 // A11y:
 //   - aria-roledescription="carousel"
 //   - aria-live="polite" on the slide region (announce new slide)
-//   - prev/next + pause/play buttons labelled
-//   - reduced-motion users get auto-advance disabled by default
-//     (still navigable manually)
+//   - prev / next labelled
+//   - reduced-motion users get auto-advance disabled (still
+//     navigable manually via the chips or arrow keys)
 
 import {
   useCallback,
@@ -33,7 +40,7 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 import { format } from "date-fns";
-import { ArrowLeft, ArrowRight, Pause, Play } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import { urlFor } from "@/sanity/lib/image";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 
@@ -58,17 +65,40 @@ interface HomepageHeroCarouselProps {
 
 const DEFAULT_INTERVAL = 7000;
 
+// ============================================================================
+// Keyframes — injected once. Drives the segmented progress bar.
+// ============================================================================
+
+const KEYFRAMES_ID = "homepage-hero-progress-keyframes";
+
+function ensureKeyframes() {
+  if (typeof document === "undefined") return;
+  if (document.getElementById(KEYFRAMES_ID)) return;
+  const style = document.createElement("style");
+  style.id = KEYFRAMES_ID;
+  style.textContent = `
+    @keyframes homepage-hero-progress {
+      from { transform: scaleX(0); }
+      to { transform: scaleX(1); }
+    }
+  `;
+  document.head.appendChild(style);
+}
+
 export default function HomepageHeroCarousel({
   slides,
   intervalMs = DEFAULT_INTERVAL,
 }: HomepageHeroCarouselProps) {
   const [active, setActive] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
   const [hovered, setHovered] = useState(false);
   const [focused, setFocused] = useState(false);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
-  // Reduced-motion preference. If the user has it on, pause by default.
+  useEffect(() => {
+    ensureKeyframes();
+  }, []);
+
+  // Reduced-motion preference. If the user has it on, no auto-advance.
   useEffect(() => {
     if (typeof window === "undefined") return;
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -80,19 +110,10 @@ export default function HomepageHeroCarousel({
 
   const slideCount = slides.length;
   const shouldAutoplay = useMemo(
-    () =>
-      slideCount > 1 && !isPaused && !hovered && !focused && !prefersReducedMotion,
-    [slideCount, isPaused, hovered, focused, prefersReducedMotion],
+    () => slideCount > 1 && !prefersReducedMotion,
+    [slideCount, prefersReducedMotion],
   );
-
-  // Auto-advance timer.
-  useEffect(() => {
-    if (!shouldAutoplay) return;
-    const id = window.setInterval(() => {
-      setActive((prev) => (prev + 1) % slideCount);
-    }, intervalMs);
-    return () => window.clearInterval(id);
-  }, [shouldAutoplay, slideCount, intervalMs]);
+  const isPaused = hovered || focused;
 
   const goTo = useCallback(
     (idx: number) => {
@@ -139,7 +160,6 @@ export default function HomepageHeroCarousel({
       onMouseLeave={() => setHovered(false)}
       onFocus={() => setFocused(true)}
       onBlur={(e) => {
-        // Only blur out if focus is leaving the carousel entirely
         if (!e.currentTarget.contains(e.relatedTarget as Node)) {
           setFocused(false);
         }
@@ -147,10 +167,6 @@ export default function HomepageHeroCarousel({
       className="relative z-0 flex w-full justify-center px-4 py-12 md:py-20 lg:py-28"
     >
       <div className="w-full max-w-[1280px]">
-        {/* Slide region — entire article is a single group so hovering
-            anywhere (text or image) triggers the image-zoom effect.
-            Image starts at scale 1.04 and relaxes to 1.0 on hover —
-            same inverse-zoom pattern Quartr uses. */}
         <article
           aria-live="polite"
           aria-atomic="true"
@@ -202,82 +218,88 @@ export default function HomepageHeroCarousel({
             )}
           </div>
 
-          {/* Right: image card (2/3). The image sits at scale 1.04 by
-              default (slightly zoomed inside the rounded-lg crop) and
-              eases back to 1.0 when ANY part of the article is
-              hovered — that's the "expand inside its bounds" effect. */}
-          <Link
-            href={slide.href}
-            className="relative block overflow-hidden rounded-lg border border-[color:var(--ds-gray-400)] lg:col-span-2"
-            style={{ background: "var(--ds-gray-200)" }}
-            aria-label={slide.title}
-          >
-            <div className="relative aspect-[16/9] w-full">
-              {slide.mainImage && (
-                <Image
-                  key={slide._id /* force fade on slide change */}
-                  src={urlFor(slide.mainImage).width(1600).height(900).url()}
-                  alt=""
-                  fill
-                  sizes="(min-width: 1024px) 853px, 100vw"
-                  priority={active === 0}
-                  className="scale-[1.04] transition-transform duration-300 ease-out will-change-transform group-hover/slide:scale-100"
-                  style={{ objectFit: "cover" }}
-                />
-              )}
-            </div>
-          </Link>
+          {/* Right: image card (2/3) with prev/next overlay buttons.
+              The card link + buttons are siblings under one relative
+              wrapper so taps don't bubble between them. */}
+          <div className="relative lg:col-span-2">
+            <Link
+              href={slide.href}
+              className="relative block overflow-hidden rounded-lg border border-[color:var(--ds-gray-400)]"
+              style={{ background: "var(--ds-gray-200)" }}
+              aria-label={slide.title}
+            >
+              <div className="relative aspect-[16/9] w-full">
+                {slide.mainImage && (
+                  <Image
+                    key={slide._id}
+                    src={urlFor(slide.mainImage).width(1600).height(900).url()}
+                    alt=""
+                    fill
+                    sizes="(min-width: 1024px) 853px, 100vw"
+                    priority={active === 0}
+                    className="scale-[1.04] transition-transform duration-300 ease-out will-change-transform group-hover/slide:scale-100"
+                    style={{ objectFit: "cover" }}
+                  />
+                )}
+              </div>
+            </Link>
+
+            {slideCount > 1 && (
+              <>
+                <OverlayButton
+                  aria-label="Previous slide"
+                  onClick={prev}
+                  className="left-3 md:left-4"
+                >
+                  <ArrowLeft className="size-4" />
+                </OverlayButton>
+                <OverlayButton
+                  aria-label="Next slide"
+                  onClick={next}
+                  className="right-3 md:right-4"
+                >
+                  <ArrowRight className="size-4" />
+                </OverlayButton>
+              </>
+            )}
+          </div>
         </article>
 
-        {/* Controls: dots + prev/next + pause/play */}
+        {/* Segmented progress bar — one segment per slide. The current
+            segment fills over the interval and its onAnimationEnd
+            advances. Past segments are statically full, future
+            segments static empty. */}
         {slideCount > 1 && (
-          <div className="mt-8 flex items-center justify-between gap-4 lg:mt-10">
-            {/* Dots */}
-            <div
-              role="tablist"
-              aria-label="Choose a slide"
-              className="flex items-center gap-2"
-            >
-              {slides.map((s, i) => (
+          <div
+            className="mt-8 flex items-center gap-2 lg:mt-10"
+            aria-hidden
+          >
+            {slides.map((s, i) => {
+              const isPast = i < active;
+              const isCurrent = i === active;
+              return (
                 <button
                   key={s._id}
-                  role="tab"
                   type="button"
-                  aria-selected={i === active}
-                  aria-label={`Slide ${i + 1}: ${s.title}`}
+                  aria-label={`Go to slide ${i + 1}`}
                   onClick={() => goTo(i)}
-                  className={`h-1.5 rounded-full transition-all ${
-                    i === active
-                      ? "w-6 bg-[color:var(--ds-gray-1000)]"
-                      : "w-1.5 bg-[color:var(--ds-gray-400)] hover:bg-[color:var(--ds-gray-700)]"
-                  }`}
-                />
-              ))}
-            </div>
-
-            {/* Buttons */}
-            <div className="flex items-center gap-2">
-              <CarouselButton
-                aria-label="Previous slide"
-                onClick={prev}
-              >
-                <ArrowLeft className="size-4" />
-              </CarouselButton>
-              <CarouselButton
-                aria-label={isPaused ? "Resume autoplay" : "Pause autoplay"}
-                aria-pressed={isPaused}
-                onClick={() => setIsPaused((p) => !p)}
-              >
-                {isPaused ? (
-                  <Play className="size-4" />
-                ) : (
-                  <Pause className="size-4" />
-                )}
-              </CarouselButton>
-              <CarouselButton aria-label="Next slide" onClick={next}>
-                <ArrowRight className="size-4" />
-              </CarouselButton>
-            </div>
+                  className="h-[3px] flex-1 overflow-hidden rounded-full bg-[color:var(--ds-gray-200)]"
+                >
+                  <div
+                    className="h-full origin-left bg-[color:var(--ds-gray-1000)]"
+                    style={{
+                      transform: isPast ? "scaleX(1)" : "scaleX(0)",
+                      animation:
+                        isCurrent && shouldAutoplay
+                          ? `homepage-hero-progress ${intervalMs}ms linear forwards`
+                          : undefined,
+                      animationPlayState: isPaused ? "paused" : "running",
+                    }}
+                    onAnimationEnd={isCurrent ? next : undefined}
+                  />
+                </button>
+              );
+            })}
           </div>
         )}
       </div>
@@ -286,19 +308,21 @@ export default function HomepageHeroCarousel({
 }
 
 // ============================================================================
-// Button — same anatomy as the SiteHeader hamburger so the carousel
-// controls feel like part of the same DS family.
+// OverlayButton — glass-effect circular chip that floats over the
+// image card. White border + backdrop-blur + translucent fill so the
+// button reads against any image (light or dark photography).
 // ============================================================================
 
-function CarouselButton({
+function OverlayButton({
   children,
+  className,
   ...props
 }: React.ButtonHTMLAttributes<HTMLButtonElement>) {
   return (
     <button
       type="button"
       {...props}
-      className="grid size-8 place-items-center rounded-md border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-200)] text-[color:var(--ds-gray-1000)] transition-colors hover:bg-[color:var(--ds-gray-100)] dark:bg-[color:var(--ds-background-100)] dark:hover:bg-[color:var(--ds-gray-100)]"
+      className={`absolute top-1/2 z-[2] grid size-10 -translate-y-1/2 place-items-center rounded-full border border-white/30 bg-white/15 text-white backdrop-blur-md transition hover:bg-white/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 ${className ?? ""}`}
     >
       {children}
     </button>
