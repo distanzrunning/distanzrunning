@@ -146,7 +146,7 @@ export default function HomepageHeroCarousel({
       }}
       className="relative z-0 flex w-full justify-center px-4 py-12 md:py-20 lg:py-28"
     >
-      <div className="w-full max-w-[1280px]">
+      <div className="w-full max-w-[1440px]">
         {/* Slide region — entire article is a single group so hovering
             anywhere (text or image) triggers the image-zoom effect.
             Image starts at scale 1.04 and relaxes to 1.0 on hover —
@@ -154,9 +154,9 @@ export default function HomepageHeroCarousel({
         <article
           aria-live="polite"
           aria-atomic="true"
-          className="group/slide grid items-center gap-8 lg:grid-cols-4 lg:gap-20"
+          className="group/slide grid items-center gap-8 lg:grid-cols-3 lg:gap-20"
         >
-          {/* Left: text block (1/4) — Headline → Excerpt → Meta */}
+          {/* Left: text block (1/3) — Headline → Excerpt → Meta */}
           <div className="z-[1] flex flex-col justify-center gap-4 lg:col-span-1">
             <h2
               className="text-balance font-headline font-semibold text-[color:var(--ds-gray-1000)]"
@@ -202,13 +202,13 @@ export default function HomepageHeroCarousel({
             )}
           </div>
 
-          {/* Right: image card (3/4). The image sits at scale 1.04 by
+          {/* Right: image card (2/3). The image sits at scale 1.04 by
               default (slightly zoomed inside the rounded-lg crop) and
               eases back to 1.0 when ANY part of the article is
               hovered — that's the "expand inside its bounds" effect. */}
           <Link
             href={slide.href}
-            className="relative block overflow-hidden rounded-lg border border-[color:var(--ds-gray-400)] lg:col-span-3"
+            className="relative block overflow-hidden rounded-lg border border-[color:var(--ds-gray-400)] lg:col-span-2"
             style={{ background: "var(--ds-gray-200)" }}
             aria-label={slide.title}
           >
