@@ -225,7 +225,12 @@ export default function MobileNavDrawer({
               e.preventDefault();
             }
           }}
-          className="fixed bottom-0 right-0 top-[50px] z-[100] flex w-full flex-col bg-[color:var(--ds-background-100)] shadow-[var(--ds-shadow-modal)] outline-none"
+          // Width caps at 384 px (max-w-sm) so the drawer keeps the
+          // same proportions on phones and small tablets — narrow
+          // enough to feel like a side panel that slides in from
+          // the right rather than the whole screen swapping. Below
+          // 384 px viewports the drawer naturally fills the width.
+          className="fixed bottom-0 right-0 top-[50px] z-[100] flex w-full max-w-sm flex-col bg-[color:var(--ds-background-100)] shadow-[var(--ds-shadow-modal)] outline-none"
         >
           {/* a11y: required by Radix Dialog */}
           <Dialog.Title className="sr-only">Site navigation</Dialog.Title>
