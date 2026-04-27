@@ -4,10 +4,9 @@ import type { CSSProperties, ReactNode } from "react";
 // PageFrame
 // ============================================================================
 //
-// Inset framed surface that wraps the body of every public page. Sits
-// flush below the navbar (margin-top: 0) and floats above the footer
-// with 8px margins on the other three sides, giving the page chrome
-// an inset card look — inspired by v0.app's page-layout container.
+// Inset framed surface that wraps the body of every public page.
+// Floats inside the chrome with a uniform 8 px margin on all four
+// sides — inspired by v0.app's page-layout container.
 //
 // Anatomy:
 //   - Background flips with the theme so each mode keeps the
@@ -16,9 +15,10 @@ import type { CSSProperties, ReactNode } from "react";
 //       dark  → bg-100 (elevated surface)
 //     The outer layout wrapper holds the canvas (bg-100 light,
 //     bg-200 dark).
-//   - 1px --ds-gray-400 border on all four sides
-//   - 6px radius (radius-small)
-//   - Subtle two-layer shadow for depth without dominating
+//   - 1 px --ds-gray-400 border on all four sides
+//   - 6 px radius (radius-small)
+//   - No shadow — the border is the only edge treatment so the
+//     frame reads consistently from every side
 //   - container-type: inline-size so descendants can use @container
 //     queries against the frame's width, independent of viewport
 //
@@ -50,11 +50,9 @@ export default function PageFrame({
     <div
       className={`relative bg-[var(--ds-background-200)] dark:bg-[var(--ds-background-100)] ${className}`.trim()}
       style={{
-        margin: "0 8px 8px",
+        margin: 8,
         border: "1px solid var(--ds-gray-400)",
         borderRadius: 6,
-        boxShadow:
-          "0 2px 2px 0 rgba(0, 0, 0, 0.04), 0 8px 8px -8px rgba(0, 0, 0, 0.04)",
         ...containerStyle,
       }}
     >
