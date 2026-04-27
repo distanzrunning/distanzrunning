@@ -76,6 +76,13 @@ export const postType = defineType({
       description: 'Mark this post as a featured article to display it on the homepage.',
     }),
     defineField({
+      name: 'featuredOnHomepage',
+      title: 'Featured on Homepage Hero',
+      type: 'boolean',
+      initialValue: false,
+      description: 'Show this article in the homepage hero carousel.',
+    }),
+    defineField({
       name: 'publishedAt',
       type: 'datetime',
     }),
