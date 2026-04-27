@@ -62,6 +62,53 @@ interface MobileNavDrawerProps {
 }
 
 // ============================================================================
+// Keyframes — injected once. We bypass tailwindcss-animate here
+// because its `slide-in-from-right` was rendering as a centred
+// fade / scale in this project, likely a variant-ordering issue.
+// Doing this inline lets us own the easing + duration directly.
+// ============================================================================
+
+const KEYFRAMES_ID = "mobile-nav-drawer-keyframes";
+
+function ensureKeyframes() {
+  if (typeof document === "undefined") return;
+  if (document.getElementById(KEYFRAMES_ID)) return;
+  const style = document.createElement("style");
+  style.id = KEYFRAMES_ID;
+  style.textContent = `
+    @keyframes mobile-drawer-slide-in {
+      from { transform: translateX(100%); }
+      to { transform: translateX(0); }
+    }
+    @keyframes mobile-drawer-slide-out {
+      from { transform: translateX(0); }
+      to { transform: translateX(100%); }
+    }
+    @keyframes mobile-drawer-overlay-fade-in {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes mobile-drawer-overlay-fade-out {
+      from { opacity: 1; }
+      to { opacity: 0; }
+    }
+    [data-mobile-drawer-overlay][data-state="open"] {
+      animation: mobile-drawer-overlay-fade-in 500ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    [data-mobile-drawer-overlay][data-state="closed"] {
+      animation: mobile-drawer-overlay-fade-out 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    [data-mobile-drawer-content][data-state="open"] {
+      animation: mobile-drawer-slide-in 500ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    [data-mobile-drawer-content][data-state="closed"] {
+      animation: mobile-drawer-slide-out 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+  `;
+  document.head.appendChild(style);
+}
+
+// ============================================================================
 // Drawer
 // ============================================================================
 
@@ -76,6 +123,10 @@ export default function MobileNavDrawer({
   newsletterSource = "site_header_mobile",
 }: MobileNavDrawerProps) {
   const { theme, setTheme } = useContext(DarkModeContext);
+
+  useEffect(() => {
+    ensureKeyframes();
+  }, []);
 
   const sections: ReadonlyArray<SectionDef> = [
     {
@@ -162,15 +213,18 @@ export default function MobileNavDrawer({
       <Dialog.Portal>
         {/* Overlay + drawer both start 50 px from the top so the
             sticky header stays visible while the drawer is open —
-            matches v0's behaviour. Asymmetric durations (500 ms in,
-            300 ms out) also mirror v0. */}
+            matches v0's behaviour. Animations are wired through the
+            data-mobile-drawer-* selectors defined in ensureKeyframes
+            (500 ms slide in, 300 ms slide out, both cubic-bezier
+            (0.4, 0, 0.2, 1)). */}
         <Dialog.Overlay
-          className="fixed inset-x-0 bottom-0 top-[50px] z-[99] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0 data-[state=open]:duration-500 data-[state=closed]:duration-300"
+          data-mobile-drawer-overlay
+          className="fixed inset-x-0 bottom-0 top-[50px] z-[99]"
           style={{ backgroundColor: "rgba(0, 0, 0, 0.4)" }}
         />
         <Dialog.Content
-          className="fixed bottom-0 right-0 top-[50px] z-[100] flex w-full flex-col bg-[color:var(--ds-background-100)] shadow-[var(--ds-shadow-modal)] outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:slide-in-from-right data-[state=closed]:slide-out-to-right data-[state=open]:duration-500 data-[state=closed]:duration-300"
-          style={{ transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)" }}
+          data-mobile-drawer-content
+          className="fixed bottom-0 right-0 top-[50px] z-[100] flex w-full flex-col bg-[color:var(--ds-background-100)] shadow-[var(--ds-shadow-modal)] outline-none"
         >
           {/* a11y: required by Radix Dialog */}
           <Dialog.Title className="sr-only">Site navigation</Dialog.Title>
