@@ -32,7 +32,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { format } from "date-fns";
-import { Pause, Play } from "lucide-react";
 import Autoplay from "embla-carousel-autoplay";
 import { urlFor } from "@/sanity/lib/image";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
@@ -73,7 +72,6 @@ export default function HomepageHeroCarousel({
   const slideCount = slides.length;
   const [api, setApi] = useState<CarouselApi>();
   const [active, setActive] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
   // Reduced-motion preference. If the user has it on, autoplay is off.
@@ -111,19 +109,6 @@ export default function HomepageHeroCarousel({
       api.off("reInit", onSelect);
     };
   }, [api]);
-
-  // Manual pause/play toggle drives the plugin directly.
-  const togglePause = useCallback(() => {
-    const plugin = autoplay.current;
-    if (!plugin) return;
-    if (isPaused) {
-      plugin.play();
-      setIsPaused(false);
-    } else {
-      plugin.stop();
-      setIsPaused(true);
-    }
-  }, [isPaused]);
 
   const scrollTo = useCallback(
     (index: number) => api?.scrollTo(index),
@@ -241,46 +226,29 @@ export default function HomepageHeroCarousel({
           )}
         </Carousel>
 
-        {/* Dots indicator + pause / play */}
+        {/* Dots indicator — centred. Pause/play removed; the carousel
+            already pauses on hover via Embla's stopOnMouseEnter. */}
         {slideCount > 1 && (
-          <div className="mt-8 flex items-center justify-between gap-4 lg:mt-10">
-            <div
-              role="tablist"
-              aria-label="Choose a slide"
-              className="flex items-center gap-2"
-            >
-              {slides.map((s, i) => (
-                <button
-                  key={s._id}
-                  role="tab"
-                  type="button"
-                  aria-selected={i === active}
-                  aria-label={`Slide ${i + 1}: ${s.title}`}
-                  onClick={() => scrollTo(i)}
-                  className={`h-1.5 rounded-full transition-all ${
-                    i === active
-                      ? "w-6 bg-[color:var(--ds-gray-1000)]"
-                      : "w-1.5 bg-[color:var(--ds-gray-400)] hover:bg-[color:var(--ds-gray-700)]"
-                  }`}
-                />
-              ))}
-            </div>
-
-            {shouldAutoplay && (
+          <div
+            role="tablist"
+            aria-label="Choose a slide"
+            className="mt-8 flex items-center justify-center gap-2 lg:mt-10"
+          >
+            {slides.map((s, i) => (
               <button
+                key={s._id}
+                role="tab"
                 type="button"
-                aria-label={isPaused ? "Resume autoplay" : "Pause autoplay"}
-                aria-pressed={isPaused}
-                onClick={togglePause}
-                className="grid size-8 place-items-center rounded-md border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-200)] text-[color:var(--ds-gray-1000)] transition-colors hover:bg-[color:var(--ds-gray-100)] dark:bg-[color:var(--ds-background-100)] dark:hover:bg-[color:var(--ds-gray-100)]"
-              >
-                {isPaused ? (
-                  <Play className="size-4" />
-                ) : (
-                  <Pause className="size-4" />
-                )}
-              </button>
-            )}
+                aria-selected={i === active}
+                aria-label={`Slide ${i + 1}: ${s.title}`}
+                onClick={() => scrollTo(i)}
+                className={`h-1.5 rounded-full transition-all ${
+                  i === active
+                    ? "w-6 bg-[color:var(--ds-gray-1000)]"
+                    : "w-1.5 bg-[color:var(--ds-gray-400)] hover:bg-[color:var(--ds-gray-700)]"
+                }`}
+              />
+            ))}
           </div>
         )}
       </div>
