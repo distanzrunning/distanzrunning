@@ -87,7 +87,7 @@ export default function ProductPostLayout({ post, sectionPath }: ProductPostLayo
                   <>
                     <li className="break-words py-1">
                       <a
-                        href={`${sectionPath}/category/${post.productCategory.slug.current}`}
+                        href={`${sectionPath}/${post.productCategory.slug.current}`}
                       >
                         <div className="font-sans text-textSubtle font-normal text-lg capsize leading-snug">
                           <span className="block max-w-full overflow-hidden text-ellipsis whitespace-nowrap">

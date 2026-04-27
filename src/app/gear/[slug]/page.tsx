@@ -1,10 +1,8 @@
-// src/app/shoes/[slug]/page.tsx
+// src/app/gear/[slug]/page.tsx
 //
-// Unified handler for the /shoes section. The slug can be either a
-// productCategory or a productPost — we run a single GROQ query that
-// fetches both candidates in one round trip and pick the one that
-// resolved. Category wins if both match (slug collision protection;
-// editors should keep them disjoint regardless).
+// Unified handler for the /gear section — slug resolves to either a
+// productCategory or a productPost. See /shoes/[slug] for the shared
+// rationale.
 
 import { client as sanity } from "@/sanity/lib/client";
 import { notFound } from "next/navigation";
@@ -15,8 +13,8 @@ import ProductCategoryLayout from "@/components/ProductCategoryLayout";
 
 export const revalidate = 60;
 
-const SECTION = "shoes" as const;
-const SECTION_PATH = "/shoes" as const;
+const SECTION = "gear" as const;
+const SECTION_PATH = "/gear" as const;
 
 type CategoryArticle = {
   slug: { current: string };
@@ -63,7 +61,6 @@ const resolveQuery = `{
 }`;
 
 export async function generateStaticParams() {
-  // Pre-render both category landing pages and product detail pages.
   const [posts, categories] = await Promise.all([
     sanity.fetch<Array<{ slug: { current: string } }>>(
       `*[_type == "productPost" && productCategory->section == $section]{ slug }`,
@@ -80,7 +77,7 @@ export async function generateStaticParams() {
   return Array.from(slugs).map((slug) => ({ slug }));
 }
 
-export default async function ShoesPage({
+export default async function GearPage({
   params,
 }: {
   params: Promise<{ slug: string }>;

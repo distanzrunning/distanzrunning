@@ -34,14 +34,14 @@ export const homepageHeroQuery = groq`
     ),
     // Category landing href — what the kicker label links to
     "kickerHref": select(
-      _type == "post" => "/articles/category/" + category->slug.current,
-      _type == "productPost" => "/" + productCategory->section + "/category/" + productCategory->slug.current,
+      _type == "post" => "/articles/" + category->slug.current,
+      _type == "productPost" => "/" + productCategory->section + "/" + productCategory->slug.current,
       _type == "raceGuide" => "/races",
       null
     ),
     // Canonical href per type — main article link
     "href": select(
-      _type == "post" => "/articles/post/" + slug.current,
+      _type == "post" => "/articles/" + slug.current,
       _type == "productPost" => "/" + productCategory->section + "/" + slug.current,
       _type == "raceGuide" => "/races/" + slug.current,
       "#"

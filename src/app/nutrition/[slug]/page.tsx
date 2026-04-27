@@ -1,25 +1,83 @@
 // src/app/nutrition/[slug]/page.tsx
+//
+// Unified handler for the /nutrition section — slug resolves to
+// either a productCategory or a productPost. See /shoes/[slug] for
+// the shared rationale.
 
 import { client as sanity } from "@/sanity/lib/client";
 import { notFound } from "next/navigation";
 import ProductPostLayout, {
   type ProductPostForLayout,
 } from "@/components/ProductPostLayout";
+import ProductCategoryLayout from "@/components/ProductCategoryLayout";
 
 export const revalidate = 60;
 
 const SECTION = "nutrition" as const;
 const SECTION_PATH = "/nutrition" as const;
 
-export async function generateStaticParams() {
-  const posts = await sanity.fetch<Array<{ slug: { current: string } }>>(
-    `*[_type == "productPost" && productCategory->section == $section]{ slug }`,
-    { section: SECTION },
-  );
-  return posts.map((post) => ({ slug: post.slug.current }));
+type CategoryArticle = {
+  slug: { current: string };
+  title: string;
+  publishedAt: string;
+  mainImage?: unknown;
+  excerpt?: string;
+  tags?: string[];
+};
+
+interface SectionResolution {
+  category: { title: string; description?: string | null } | null;
+  categoryArticles: ReadonlyArray<CategoryArticle>;
+  post: ProductPostForLayout | null;
 }
 
-export default async function NutritionPost({
+const resolveQuery = `{
+  "category": *[_type == "productCategory"
+    && slug.current == $slug
+    && section == $section][0]{ title, description },
+  "categoryArticles": *[_type == "productPost"
+    && productCategory->slug.current == $slug
+    && productCategory->section == $section
+  ] | order(publishedAt desc){
+    title,
+    slug,
+    excerpt,
+    tags,
+    mainImage,
+    publishedAt
+  },
+  "post": *[_type == "productPost"
+    && slug.current == $slug
+    && productCategory->section == $section][0]{
+    title,
+    slug,
+    introduction,
+    body,
+    mainImage,
+    publishedAt,
+    author->{ name, image },
+    "productCategory": productCategory->{ title, slug }
+  }
+}`;
+
+export async function generateStaticParams() {
+  const [posts, categories] = await Promise.all([
+    sanity.fetch<Array<{ slug: { current: string } }>>(
+      `*[_type == "productPost" && productCategory->section == $section]{ slug }`,
+      { section: SECTION },
+    ),
+    sanity.fetch<Array<{ slug: { current: string } }>>(
+      `*[_type == "productCategory" && section == $section]{ slug }`,
+      { section: SECTION },
+    ),
+  ]);
+  const slugs = new Set<string>();
+  for (const p of posts) slugs.add(p.slug.current);
+  for (const c of categories) slugs.add(c.slug.current);
+  return Array.from(slugs).map((slug) => ({ slug }));
+}
+
+export default async function NutritionPage({
   params,
 }: {
   params: Promise<{ slug: string }>;
@@ -27,23 +85,24 @@ export default async function NutritionPost({
   const { slug } = await params;
   if (!slug) return notFound();
 
-  const post = await sanity.fetch<ProductPostForLayout | null>(
-    `*[_type == "productPost"
-       && slug.current == $slug
-       && productCategory->section == $section][0]{
-      title,
-      slug,
-      introduction,
-      body,
-      mainImage,
-      publishedAt,
-      author->{ name, image },
-      "productCategory": productCategory->{ title, slug }
-    }`,
-    { slug, section: SECTION },
-  );
+  const result = await sanity.fetch<SectionResolution>(resolveQuery, {
+    slug,
+    section: SECTION,
+  });
 
-  if (!post) return notFound();
+  if (result.category) {
+    return (
+      <ProductCategoryLayout
+        category={result.category}
+        articles={result.categoryArticles}
+        sectionPath={SECTION_PATH}
+      />
+    );
+  }
 
-  return <ProductPostLayout post={post} sectionPath={SECTION_PATH} />;
+  if (result.post) {
+    return <ProductPostLayout post={result.post} sectionPath={SECTION_PATH} />;
+  }
+
+  notFound();
 }

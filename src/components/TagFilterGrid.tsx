@@ -16,13 +16,13 @@ type Article = {
 };
 
 type Props = {
-  articles: Article[];
+  articles: ReadonlyArray<Article>;
   basePath?: string;
 };
 
 const ARTICLES_PER_BATCH = 16;
 
-export default function TagFilterGrid({ articles, basePath = "/articles/post/" }: Props) {
+export default function TagFilterGrid({ articles, basePath = "/articles/" }: Props) {
   const [activeTag, setActiveTag] = useState<string>("All");
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [visibleCount, setVisibleCount] = useState<number>(ARTICLES_PER_BATCH);

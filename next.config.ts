@@ -39,6 +39,41 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+
+  // Permanent redirects for the URL flattening — old paths
+  // (/articles/category/X, /articles/post/X, /shoes/category/X,
+  // /gear/category/X, /nutrition/category/X) now resolve at the
+  // section root via a single dynamic handler that disambiguates
+  // category vs post against Sanity.
+  async redirects() {
+    return [
+      {
+        source: "/articles/category/:slug",
+        destination: "/articles/:slug",
+        permanent: true,
+      },
+      {
+        source: "/articles/post/:slug",
+        destination: "/articles/:slug",
+        permanent: true,
+      },
+      {
+        source: "/shoes/category/:slug",
+        destination: "/shoes/:slug",
+        permanent: true,
+      },
+      {
+        source: "/gear/category/:slug",
+        destination: "/gear/:slug",
+        permanent: true,
+      },
+      {
+        source: "/nutrition/category/:slug",
+        destination: "/nutrition/:slug",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

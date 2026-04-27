@@ -73,19 +73,19 @@ export type CategoryItem = {
 export const newsLinks: ReadonlyArray<CategoryItem> = [
   {
     label: "Road",
-    href: "/articles/category/road",
+    href: "/articles/road",
     description: "Marathon and road racing",
     Icon: TbRoad,
   },
   {
     label: "Track",
-    href: "/articles/category/track",
+    href: "/articles/track",
     description: "From 100m to 10,000m",
     Icon: TbArrowCapsule,
   },
   {
     label: "Trail",
-    href: "/articles/category/trail",
+    href: "/articles/trail",
     description: "Mountain and ultra racing",
     Icon: TbMountain,
   },
@@ -94,31 +94,31 @@ export const newsLinks: ReadonlyArray<CategoryItem> = [
 export const shoeLinks: ReadonlyArray<CategoryItem> = [
   {
     label: "Race-Day",
-    href: "/shoes/category/race-day-shoes",
+    href: "/shoes/race-day-shoes",
     description: "Built for PR days",
     Icon: TbFlag,
   },
   {
     label: "Daily Trainers",
-    href: "/shoes/category/daily-trainers",
+    href: "/shoes/daily-trainers",
     description: "Your go-to runners",
     Icon: TbCalendar,
   },
   {
     label: "Max Cushion",
-    href: "/shoes/category/max-cushion",
+    href: "/shoes/max-cushion",
     description: "Plush for long miles",
     Icon: TbCloud,
   },
   {
     label: "Tempo",
-    href: "/shoes/category/tempo-shoes",
+    href: "/shoes/tempo-shoes",
     description: "Responsive and fast",
     Icon: TbStopwatch,
   },
   {
     label: "Trail",
-    href: "/shoes/category/trail-shoes",
+    href: "/shoes/trail-shoes",
     description: "Off-road traction",
     Icon: TbMountain,
   },
@@ -127,19 +127,19 @@ export const shoeLinks: ReadonlyArray<CategoryItem> = [
 export const gearLinks: ReadonlyArray<CategoryItem> = [
   {
     label: "Watches",
-    href: "/gear/category/watches",
+    href: "/gear/watches",
     description: "Track every run",
     Icon: TbDeviceWatch,
   },
   {
     label: "Headphones",
-    href: "/gear/category/headphones",
+    href: "/gear/headphones",
     description: "Music on the move",
     Icon: TbHeadphones,
   },
   {
     label: "Apparel",
-    href: "/gear/category/apparel",
+    href: "/gear/apparel",
     description: "Kit for every season",
     Icon: TbShirt,
   },
@@ -148,13 +148,13 @@ export const gearLinks: ReadonlyArray<CategoryItem> = [
 export const nutritionLinks: ReadonlyArray<CategoryItem> = [
   {
     label: "Gels",
-    href: "/nutrition/category/gels",
+    href: "/nutrition/gels",
     description: "Fast-acting fuel",
     Icon: TbBatteryCharging,
   },
   {
     label: "Hydration",
-    href: "/nutrition/category/hydration",
+    href: "/nutrition/hydration",
     description: "Electrolytes and drinks",
     Icon: TbBottle,
   },
@@ -322,7 +322,7 @@ export default function SiteNavigationMenu({
               featured={
                 featuredNews && (
                   <FeaturedCard
-                    href={`/articles/post/${featuredNews.slug.current}`}
+                    href={`/articles/${featuredNews.slug.current}`}
                     image={featuredNews.mainImage}
                     label="Featured"
                     title={featuredNews.title}

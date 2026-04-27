@@ -19,7 +19,7 @@ type Article = {
 
 interface ProductCategoryLayoutProps {
   category: { title: string; description?: string | null };
-  articles: Article[];
+  articles: ReadonlyArray<Article>;
   sectionPath: "/shoes" | "/gear" | "/nutrition";
 }
 
