@@ -161,12 +161,16 @@ export default function MobileNavDrawer({
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
+        {/* Overlay + drawer both start 50 px from the top so the
+            sticky header stays visible while the drawer is open —
+            matches v0's behaviour. Asymmetric durations (500 ms in,
+            300 ms out) also mirror v0. */}
         <Dialog.Overlay
-          className="fixed inset-0 z-[99] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0"
+          className="fixed inset-x-0 bottom-0 top-[50px] z-[99] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0 data-[state=open]:duration-500 data-[state=closed]:duration-300"
           style={{ backgroundColor: "rgba(0, 0, 0, 0.4)" }}
         />
         <Dialog.Content
-          className="fixed inset-y-0 right-0 z-[100] flex w-full flex-col bg-[color:var(--ds-background-100)] shadow-[var(--ds-shadow-modal)] outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:slide-in-from-right data-[state=closed]:slide-out-to-right"
+          className="fixed bottom-0 right-0 top-[50px] z-[100] flex w-full flex-col bg-[color:var(--ds-background-100)] shadow-[var(--ds-shadow-modal)] outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:slide-in-from-right data-[state=closed]:slide-out-to-right data-[state=open]:duration-500 data-[state=closed]:duration-300"
           style={{ transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)" }}
         >
           {/* a11y: required by Radix Dialog */}
