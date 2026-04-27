@@ -170,7 +170,7 @@ export default function HomepageHeroCarousel({
         <article
           aria-live="polite"
           aria-atomic="true"
-          className="group/slide grid items-center gap-8 lg:grid-cols-3 lg:gap-20"
+          className="group/slide relative grid items-center gap-8 lg:grid-cols-3 lg:gap-20"
         >
           {/* Left: text block (1/3) — Headline → Excerpt → Meta */}
           <div className="z-[1] flex flex-col justify-center gap-4 lg:col-span-1">
@@ -218,86 +218,99 @@ export default function HomepageHeroCarousel({
             )}
           </div>
 
-          {/* Right: image card (2/3) with prev/next overlay buttons.
-              The card link + buttons are siblings under one relative
-              wrapper so taps don't bubble between them. */}
-          <div className="relative lg:col-span-2">
-            <Link
-              href={slide.href}
-              className="relative block overflow-hidden rounded-lg border border-[color:var(--ds-gray-400)]"
-              style={{ background: "var(--ds-gray-200)" }}
-              aria-label={slide.title}
-            >
-              <div className="relative aspect-[16/9] w-full">
-                {slide.mainImage && (
-                  <Image
-                    key={slide._id}
-                    src={urlFor(slide.mainImage).width(1600).height(900).url()}
-                    alt=""
-                    fill
-                    sizes="(min-width: 1024px) 853px, 100vw"
-                    priority={active === 0}
-                    className="scale-[1.04] transition-transform duration-300 ease-out will-change-transform group-hover/slide:scale-100"
-                    style={{ objectFit: "cover" }}
-                  />
-                )}
-              </div>
-            </Link>
+          {/* Right: image card (2/3). Inverse-zoom on slide hover. */}
+          <Link
+            href={slide.href}
+            className="relative block overflow-hidden rounded-lg border border-[color:var(--ds-gray-400)] lg:col-span-2"
+            style={{ background: "var(--ds-gray-200)" }}
+            aria-label={slide.title}
+          >
+            <div className="relative aspect-[16/9] w-full">
+              {slide.mainImage && (
+                <Image
+                  key={slide._id}
+                  src={urlFor(slide.mainImage).width(1600).height(900).url()}
+                  alt=""
+                  fill
+                  sizes="(min-width: 1024px) 853px, 100vw"
+                  priority={active === 0}
+                  className="scale-[1.04] transition-transform duration-300 ease-out will-change-transform group-hover/slide:scale-100"
+                  style={{ objectFit: "cover" }}
+                />
+              )}
+            </div>
+          </Link>
 
-            {slideCount > 1 && (
-              <>
-                <OverlayButton
-                  aria-label="Previous slide"
-                  onClick={prev}
-                  className="left-3 md:left-4"
-                >
-                  <ArrowLeft className="size-4" />
-                </OverlayButton>
-                <OverlayButton
-                  aria-label="Next slide"
-                  onClick={next}
-                  className="right-3 md:right-4"
-                >
-                  <ArrowRight className="size-4" />
-                </OverlayButton>
-              </>
-            )}
-          </div>
+          {/* Prev / next chips at the article's left + right edges so
+              they frame the entire section rather than overlay the
+              image. Hidden below lg — on mobile the progress bar's
+              segment buttons handle navigation. */}
+          {slideCount > 1 && (
+            <>
+              <NavChip
+                aria-label="Previous slide"
+                onClick={prev}
+                className="left-0 hidden lg:grid"
+              >
+                <ArrowLeft className="size-4" />
+              </NavChip>
+              <NavChip
+                aria-label="Next slide"
+                onClick={next}
+                className="right-0 hidden lg:grid"
+              >
+                <ArrowRight className="size-4" />
+              </NavChip>
+            </>
+          )}
         </article>
 
-        {/* Segmented progress bar — one segment per slide. The current
-            segment fills over the interval and its onAnimationEnd
-            advances. Past segments are statically full, future
-            segments static empty. */}
+        {/* Progress indicator — only the active slide gets a wide
+            fillable bar. Past slides are filled dots, future slides
+            are empty dots. The active bar's onAnimationEnd drives
+            the auto-advance; hover / focus pauses via animation
+            play-state. */}
         {slideCount > 1 && (
-          <div
-            className="mt-8 flex items-center gap-2 lg:mt-10"
-            aria-hidden
-          >
+          <div className="mt-8 flex items-center gap-2 lg:mt-10">
             {slides.map((s, i) => {
               const isPast = i < active;
               const isCurrent = i === active;
+              if (isCurrent) {
+                return (
+                  <button
+                    key={s._id}
+                    type="button"
+                    aria-label={`Slide ${i + 1} of ${slideCount}`}
+                    aria-current="true"
+                    onClick={() => goTo(i)}
+                    className="h-[3px] flex-1 overflow-hidden rounded-full bg-[color:var(--ds-gray-200)]"
+                  >
+                    <div
+                      className="h-full origin-left bg-[color:var(--ds-gray-1000)]"
+                      style={{
+                        transform: shouldAutoplay ? "scaleX(0)" : "scaleX(1)",
+                        animation: shouldAutoplay
+                          ? `homepage-hero-progress ${intervalMs}ms linear forwards`
+                          : undefined,
+                        animationPlayState: isPaused ? "paused" : "running",
+                      }}
+                      onAnimationEnd={next}
+                    />
+                  </button>
+                );
+              }
               return (
                 <button
                   key={s._id}
                   type="button"
                   aria-label={`Go to slide ${i + 1}`}
                   onClick={() => goTo(i)}
-                  className="h-[3px] flex-1 overflow-hidden rounded-full bg-[color:var(--ds-gray-200)]"
-                >
-                  <div
-                    className="h-full origin-left bg-[color:var(--ds-gray-1000)]"
-                    style={{
-                      transform: isPast ? "scaleX(1)" : "scaleX(0)",
-                      animation:
-                        isCurrent && shouldAutoplay
-                          ? `homepage-hero-progress ${intervalMs}ms linear forwards`
-                          : undefined,
-                      animationPlayState: isPaused ? "paused" : "running",
-                    }}
-                    onAnimationEnd={isCurrent ? next : undefined}
-                  />
-                </button>
+                  className={`size-[6px] rounded-full transition-colors ${
+                    isPast
+                      ? "bg-[color:var(--ds-gray-1000)]"
+                      : "bg-[color:var(--ds-gray-400)] hover:bg-[color:var(--ds-gray-700)]"
+                  }`}
+                />
               );
             })}
           </div>
@@ -308,12 +321,12 @@ export default function HomepageHeroCarousel({
 }
 
 // ============================================================================
-// OverlayButton — glass-effect circular chip that floats over the
-// image card. White border + backdrop-blur + translucent fill so the
-// button reads against any image (light or dark photography).
+// NavChip — circular chip used as prev/next at the section edges.
+// Same anatomy as the SiteHeader hamburger family (bordered + alt
+// surface inside) so the controls feel part of the same DS.
 // ============================================================================
 
-function OverlayButton({
+function NavChip({
   children,
   className,
   ...props
@@ -322,7 +335,7 @@ function OverlayButton({
     <button
       type="button"
       {...props}
-      className={`absolute top-1/2 z-[2] grid size-10 -translate-y-1/2 place-items-center rounded-full border border-white/30 bg-white/15 text-white backdrop-blur-md transition hover:bg-white/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 ${className ?? ""}`}
+      className={`absolute top-1/2 z-[2] grid size-10 -translate-y-1/2 place-items-center rounded-full border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-200)] text-[color:var(--ds-gray-1000)] transition-colors hover:bg-[color:var(--ds-gray-100)] dark:bg-[color:var(--ds-background-100)] dark:hover:bg-[color:var(--ds-gray-100)] ${className ?? ""}`}
     >
       {children}
     </button>
