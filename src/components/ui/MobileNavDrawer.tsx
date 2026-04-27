@@ -213,10 +213,14 @@ export default function MobileNavDrawer({
               {/* Top pane — newsletter CTA + section list */}
               <div className="h-full w-1/2 shrink-0 overflow-y-auto">
                 <div className="px-3 pt-4 pb-2">
+                  {/* size=\"small\" gives the right height + padding,
+                      but its built-in text-button-12 is too small for
+                      the drawer context. Override with 14 / 20 via
+                      !important so it wins over the variant class. */}
                   <NewsletterButton
                     size="small"
                     source={newsletterSource}
-                    className="w-full"
+                    className="w-full !text-[14px] !leading-5"
                   />
                 </div>
                 <ul className="flex flex-col px-3 py-2">
