@@ -45,6 +45,7 @@ import EmptyStateComponent from "../components/content/EmptyStateComponent";
 import EntityComponent from "../components/content/EntityComponent";
 import ErrorComponent from "../components/content/ErrorComponent";
 import FeedbackComponent from "../components/content/FeedbackComponent";
+import FooterComponent from "../components/content/FooterComponent";
 import GaugeComponent from "../components/content/GaugeComponent";
 import GridComponent from "../components/content/GridComponent";
 import InputComponent from "../components/content/InputComponent";
@@ -795,6 +796,21 @@ export default function DesignSystemPage() {
           onNavigate={handleNavigation}
         >
           <FeedbackComponent />
+        </ContentWithTOC>
+      );
+    }
+
+    if (activeSlug === "footer") {
+      return (
+        <ContentWithTOC
+          tocTitle="On this page"
+          pageTitle="Footer"
+          pageSubtitle="The site footer that sits below <main> on every public page: full Distanz Running lockup on the left, three-column link grid on the right (Category, Company, Social). Anatomy modelled on v0.app, theme-aware via DS tokens."
+          mainSectionId="overview"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
+          <FooterComponent />
         </ContentWithTOC>
       );
     }

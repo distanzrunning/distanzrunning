@@ -68,6 +68,7 @@ export const navigation: NavSection[] = [
       { id: "entity", label: "Entity" },
       { id: "error", label: "Error" },
       { id: "feedback", label: "Feedback" },
+      { id: "footer", label: "Footer" },
       { id: "gauge", label: "Gauge" },
       { id: "grid", label: "Grid" },
       { id: "input", label: "Input" },
