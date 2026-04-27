@@ -146,7 +146,7 @@ export default function HomepageHeroCarousel({
       }}
       className="relative z-0 flex w-full justify-center px-4 py-12 md:py-20 lg:py-28"
     >
-      <div className="w-full max-w-[1440px]">
+      <div className="w-full max-w-[1280px]">
         {/* Slide region — entire article is a single group so hovering
             anywhere (text or image) triggers the image-zoom effect.
             Image starts at scale 1.04 and relaxes to 1.0 on hover —
