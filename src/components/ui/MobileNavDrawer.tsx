@@ -210,15 +210,22 @@ export default function MobileNavDrawer({
                   : "translateX(0)",
               }}
             >
-              {/* Top pane — section list */}
+              {/* Top pane — newsletter CTA + section list */}
               <div className="h-full w-1/2 shrink-0 overflow-y-auto">
-                <ul className="flex flex-col">
+                <div className="px-3 pt-4 pb-2">
+                  <NewsletterButton
+                    size="small"
+                    source={newsletterSource}
+                    className="w-full"
+                  />
+                </div>
+                <ul className="flex flex-col px-3 py-2">
                   {sections.map((s) => (
                     <li key={s.id}>
                       <button
                         type="button"
                         onClick={() => setActiveSection(s.id)}
-                        className="flex w-full items-center justify-between border-b border-[color:var(--ds-gray-400)] px-5 py-5 text-left transition-colors hover:bg-[color:var(--ds-gray-100)]"
+                        className="flex w-full items-center justify-between rounded-md px-3 py-3 text-left transition-colors hover:bg-[color:var(--ds-gray-100)]"
                       >
                         <span className="text-[18px] leading-6 font-medium text-[color:var(--ds-gray-1000)]">
                           {s.label}
@@ -246,23 +253,16 @@ export default function MobileNavDrawer({
             </div>
           </div>
 
-          {/* Footer — theme switcher (label sits immediately to the
-              left of the control) + full-width newsletter button. */}
-          <div className="flex flex-col gap-3 border-t border-[color:var(--ds-gray-400)] px-5 py-4">
-            <div className="flex items-center justify-end gap-2">
-              <span className="text-[13px] leading-5 text-[color:var(--ds-gray-700)]">
-                Theme
-              </span>
-              <ThemeSwitcher
-                showSystem={false}
-                value={theme === "system" ? "light" : theme}
-                onChange={setTheme}
-              />
-            </div>
-            <NewsletterButton
-              size="large"
-              source={newsletterSource}
-              className="w-full"
+          {/* Footer — just the theme switcher row now that the
+              newsletter CTA has moved up to the top pane. */}
+          <div className="flex items-center justify-end gap-2 border-t border-[color:var(--ds-gray-400)] px-5 py-4">
+            <span className="text-[13px] leading-5 text-[color:var(--ds-gray-700)]">
+              Theme
+            </span>
+            <ThemeSwitcher
+              showSystem={false}
+              value={theme === "system" ? "light" : theme}
+              onChange={setTheme}
             />
           </div>
         </Dialog.Content>
@@ -302,7 +302,7 @@ function SectionDetail({
       </div>
 
       {/* Sub-item list */}
-      <ul className="flex flex-col">
+      <ul className="flex flex-col px-3 py-2">
         {section.items.map((item) => (
           <li key={item.href}>
             <MobileSubItem item={item} onClick={onLinkClick} />
@@ -337,7 +337,7 @@ function MobileSubItem({
     <Link
       href={href}
       onClick={onClick}
-      className="flex items-center gap-3 border-b border-[color:var(--ds-gray-400)] px-5 py-4 transition-colors hover:bg-[color:var(--ds-gray-100)]"
+      className="flex items-center gap-3 rounded-md px-3 py-3 transition-colors hover:bg-[color:var(--ds-gray-100)]"
     >
       <span
         aria-hidden
