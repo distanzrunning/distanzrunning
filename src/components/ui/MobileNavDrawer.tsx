@@ -330,22 +330,25 @@ function SectionDetail({
 }) {
   return (
     <div className="flex min-h-full flex-col">
-      {/* Back row + sub-items share the same max-w-md column +
-          padding, so the back button and section title sit on the
-          same horizontal grid as the list items below. The whole
-          back row is tappable. */}
+      {/* Back chip + section title sit at the top of the same
+          max-w-md column as the list items below. The chip mirrors
+          the hamburger / X anatomy (28 px square, bordered, alt
+          surface inside) so the open / back / close controls read
+          as one family. The title is the landmark, not a tap target. */}
       <div className="mx-auto flex w-full max-w-md flex-col p-4">
-        <button
-          type="button"
-          onClick={onBack}
-          aria-label="Back to all sections"
-          className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-base text-[color:var(--ds-gray-900)] transition-colors hover:bg-[color:var(--ds-gray-100)] hover:text-[color:var(--ds-gray-1000)]"
-        >
-          <ArrowLeft className="size-4" aria-hidden />
-          <span className="font-medium text-[color:var(--ds-gray-1000)]">
+        <div className="mb-3 flex items-center gap-3">
+          <button
+            type="button"
+            onClick={onBack}
+            aria-label="Back to all sections"
+            className="grid size-7 place-items-center rounded-md border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-200)] text-[color:var(--ds-gray-1000)] transition-colors hover:bg-[color:var(--ds-gray-100)] dark:bg-[color:var(--ds-background-100)] dark:hover:bg-[color:var(--ds-gray-100)]"
+          >
+            <ArrowLeft className="size-4" aria-hidden />
+          </button>
+          <h2 className="text-[18px] leading-6 font-medium text-[color:var(--ds-gray-1000)]">
             {section.label}
-          </span>
-        </button>
+          </h2>
+        </div>
         {section.items.map((item) => (
           <MobileSubItem
             key={item.href}
