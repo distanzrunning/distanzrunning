@@ -212,6 +212,19 @@ export default function MobileNavDrawer({
         />
         <Dialog.Content
           data-mobile-drawer-content
+          // The hamburger button in SiteHeader sits outside this
+          // Dialog.Content. Without this filter, tapping it would
+          // trigger Radix's outside-pointer-down handler which calls
+          // onOpenChange(false) — and the same tap would also fire
+          // our toggle, flipping the drawer back open. Filtering by
+          // data-mobile-nav-toggle lets the toggle button own the
+          // open/close transition cleanly.
+          onInteractOutside={(e) => {
+            const target = e.target as HTMLElement | null;
+            if (target?.closest("[data-mobile-nav-toggle]")) {
+              e.preventDefault();
+            }
+          }}
           className="fixed bottom-0 right-0 top-[50px] z-[100] flex w-full flex-col bg-[color:var(--ds-background-100)] shadow-[var(--ds-shadow-modal)] outline-none"
         >
           {/* a11y: required by Radix Dialog */}
