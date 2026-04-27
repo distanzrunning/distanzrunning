@@ -95,31 +95,48 @@ export default function SiteHeader({
           />
         </div>
 
-        {/* Right (mobile only): hamburger button. 28 px square with
-            rounded-md and a hairline border. Interior background is
-            the alternate of the header surface — bg-200 (recessed
-            off-white) in light mode, bg-100 (elevated #0A0A0A) in
-            dark mode — so the chip reads against either chrome. */}
+        {/* Right (mobile only): hamburger ↔ close toggle. 28 px
+            square with rounded-md + hairline border. Interior is
+            the alternate of the header surface (bg-200 light, bg-100
+            dark) so the chip reads against either chrome. The icon
+            swaps to an X glyph while the drawer is open so the
+            close affordance is obvious. */}
         <button
           type="button"
-          aria-label="Open menu"
+          aria-label={mobileOpen ? "Close menu" : "Open menu"}
           aria-expanded={mobileOpen}
-          onClick={() => setMobileOpen(true)}
+          onClick={() => setMobileOpen((prev) => !prev)}
           className="grid size-7 place-items-center rounded-md border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-200)] text-[color:var(--ds-gray-1000)] transition-colors hover:bg-[color:var(--ds-gray-100)] md:hidden dark:bg-[color:var(--ds-background-100)]"
         >
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 16 16"
-            aria-hidden="true"
-            fill="currentColor"
-          >
-            <path
-              fillRule="evenodd"
-              clipRule="evenodd"
-              d="M1.75 4H1V5.5H1.75H14.25H15V4H14.25H1.75ZM1.75 10.5H1V12H1.75H14.25H15V10.5H14.25H1.75Z"
-            />
-          </svg>
+          {mobileOpen ? (
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              aria-hidden="true"
+              fill="currentColor"
+            >
+              <path
+                fillRule="evenodd"
+                clipRule="evenodd"
+                d="M12.4697 13.5303L13 14.0607L14.0607 13L13.5303 12.4697L9.06065 7.99999L13.5303 3.53032L14.0607 2.99999L13 1.93933L12.4697 2.46966L7.99999 6.93933L3.53032 2.46966L2.99999 1.93933L1.93933 2.99999L2.46966 3.53032L6.93933 7.99999L2.46966 12.4697L1.93933 13L2.99999 14.0607L3.53032 13.5303L7.99999 9.06065L12.4697 13.5303Z"
+              />
+            </svg>
+          ) : (
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              aria-hidden="true"
+              fill="currentColor"
+            >
+              <path
+                fillRule="evenodd"
+                clipRule="evenodd"
+                d="M1.75 4H1V5.5H1.75H14.25H15V4H14.25H1.75ZM1.75 10.5H1V12H1.75H14.25H15V10.5H14.25H1.75Z"
+              />
+            </svg>
+          )}
         </button>
       </header>
 

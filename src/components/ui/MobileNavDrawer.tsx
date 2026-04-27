@@ -22,14 +22,13 @@ import {
 } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ChevronRight, ArrowLeft, ArrowRight, X } from "lucide-react";
+import { ChevronRight, ArrowLeft, ArrowRight } from "lucide-react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { urlFor } from "@/sanity/lib/image";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 import { DarkModeContext } from "@/components/DarkModeProvider";
 import { ThemeSwitcher } from "@/components/ui/ThemeSwitcher";
 import { NewsletterButton } from "@/components/ui/NewsletterModal";
-import Wordmark from "@/components/ui/Wordmark";
 import {
   type CategoryItem,
   newsLinks,
@@ -180,28 +179,10 @@ export default function MobileNavDrawer({
             Nutrition, and Races.
           </Dialog.Description>
 
-          {/* Drawer header — wordmark left, close button right */}
-          <div className="flex h-[50px] items-center justify-between border-b border-[color:var(--ds-gray-400)] px-3">
-            <Link
-              href="/"
-              aria-label="Distanz Running — home"
-              className="inline-flex h-10 items-center px-1 text-[color:var(--ds-gray-1000)]"
-              onClick={closeAndReset}
-            >
-              <Wordmark className="h-6 w-auto" />
-            </Link>
-            <Dialog.Close asChild>
-              {/* Same anatomy as the hamburger in SiteHeader so the
-                  open / close pair feel like one control. */}
-              <button
-                type="button"
-                aria-label="Close menu"
-                className="grid size-7 place-items-center rounded-md border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-200)] text-[color:var(--ds-gray-1000)] transition-colors hover:bg-[color:var(--ds-gray-100)] dark:bg-[color:var(--ds-background-100)]"
-              >
-                <X className="size-4" />
-              </button>
-            </Dialog.Close>
-          </div>
+          {/* No internal drawer header — the sticky site header above
+              owns the wordmark + the (now toggling) hamburger button.
+              Closing the drawer happens via the hamburger, ESC, or
+              clicking the overlay. */}
 
           {/* Body — two-pane slide */}
           <div className="relative flex-1 overflow-hidden">
