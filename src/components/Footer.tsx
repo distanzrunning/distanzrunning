@@ -74,7 +74,6 @@ export default function Footer() {
 
   const companyLinks: ReadonlyArray<FooterItem> = [
     { kind: "link", label: "About", href: "/about" },
-    { kind: "link", label: "Contact", href: "/contact" },
     { kind: "link", label: "Work with us", href: "/careers" },
     { kind: "link", label: "Privacy", href: "/privacy" },
     { kind: "action", label: "Cookies", onClick: openSettings },
