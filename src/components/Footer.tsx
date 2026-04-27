@@ -16,7 +16,7 @@ import type { ComponentType } from "react";
 import Link from "next/link";
 import { SiInstagram, SiX, SiStrava, SiLinkedin } from "react-icons/si";
 import { useConsent } from "@/contexts/ConsentContext";
-import Wordmark from "@/components/ui/Wordmark";
+import Logo from "@/components/ui/Logo";
 
 // ============================================================================
 // Link / action union — Cookies needs to fire openSettings on the
@@ -87,14 +87,16 @@ export default function Footer() {
     >
       <div className="mx-auto w-full max-w-7xl px-8 py-12">
         <div className="flex flex-col gap-y-12 md:flex-row md:items-start md:justify-between md:gap-x-12">
-          {/* Wordmark — same inline SVG as the header so colour
-              follows the surrounding text-gray-1000 in both modes. */}
+          {/* Full Distanz Running lockup (icon + Distanz + Running).
+              Same inline-SVG approach as the header wordmark so the
+              colour follows currentColor / text-gray-1000 in both
+              modes. */}
           <Link
             href="/"
             aria-label="Distanz Running — home"
             className="inline-flex h-fit shrink-0 text-[color:var(--ds-gray-1000)]"
           >
-            <Wordmark className="h-6 w-auto" />
+            <Logo className="h-12 w-auto" />
           </Link>
 
           {/* Three columns. 2 across on mobile, 3 across on md+. */}
