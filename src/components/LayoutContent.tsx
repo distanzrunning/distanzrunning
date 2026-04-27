@@ -56,6 +56,7 @@ export default function LayoutContent({
         <PageFrame className="flex flex-1 flex-col">
           <main className="flex-1">{children}</main>
         </PageFrame>
+        {footer}
       </div>
     );
   }
