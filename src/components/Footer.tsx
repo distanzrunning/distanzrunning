@@ -49,7 +49,7 @@ const socialLinks: ReadonlyArray<SocialLink> = [
     Icon: SiInstagram,
   },
   {
-    label: "X",
+    label: "Twitter",
     href: "https://x.com/distanzrunning",
     Icon: SiX,
   },
