@@ -5,30 +5,23 @@
 // ============================================================================
 //
 // Single-hero slideshow for the top of the homepage. Auto-advances
-// every 7s through the editorial slides flagged `featuredOnHomepage`
+// every 7s, pauses on hover / focus / explicit pause click, and
+// rotates through the editorial slides flagged `featuredOnHomepage`
 // (post / productPost / raceGuide — fetched server-side and passed
 // in as `slides`).
 //
 // Layout follows the Quartr reference:
-//   - 33 / 66 column split on lg+
-//   - Left: serif headline, excerpt, kicker (clickable category) · date
-//   - Right: rounded image card with subtle inverse-zoom on hover
+//   - 33 / 66 column split on md+
+//   - Left: kicker + serif headline + dek + meta dot + date
+//   - Right: rounded image card with a subtle hover zoom
 // On mobile the columns stack, image first.
-//
-// Controls:
-//   - Glass-effect prev / next chips overlay the image (left + right
-//     edges, vertically centered)
-//   - Below: a segmented progress bar — one segment per slide. The
-//     current segment fills over the interval and onAnimationEnd
-//     advances to the next slide (single source of truth for
-//     timing). Hover / focus / reduced-motion pauses the animation.
 //
 // A11y:
 //   - aria-roledescription="carousel"
 //   - aria-live="polite" on the slide region (announce new slide)
-//   - prev / next labelled
-//   - reduced-motion users get auto-advance disabled (still
-//     navigable manually via the chips or arrow keys)
+//   - prev/next + pause/play buttons labelled
+//   - reduced-motion users get auto-advance disabled by default
+//     (still navigable manually)
 
 import {
   useCallback,
@@ -40,7 +33,7 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 import { format } from "date-fns";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowRight, Pause, Play } from "lucide-react";
 import { urlFor } from "@/sanity/lib/image";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 
@@ -65,40 +58,17 @@ interface HomepageHeroCarouselProps {
 
 const DEFAULT_INTERVAL = 7000;
 
-// ============================================================================
-// Keyframes — injected once. Drives the segmented progress bar.
-// ============================================================================
-
-const KEYFRAMES_ID = "homepage-hero-progress-keyframes";
-
-function ensureKeyframes() {
-  if (typeof document === "undefined") return;
-  if (document.getElementById(KEYFRAMES_ID)) return;
-  const style = document.createElement("style");
-  style.id = KEYFRAMES_ID;
-  style.textContent = `
-    @keyframes homepage-hero-progress {
-      from { transform: scaleX(0); }
-      to { transform: scaleX(1); }
-    }
-  `;
-  document.head.appendChild(style);
-}
-
 export default function HomepageHeroCarousel({
   slides,
   intervalMs = DEFAULT_INTERVAL,
 }: HomepageHeroCarouselProps) {
   const [active, setActive] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
   const [hovered, setHovered] = useState(false);
   const [focused, setFocused] = useState(false);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
-  useEffect(() => {
-    ensureKeyframes();
-  }, []);
-
-  // Reduced-motion preference. If the user has it on, no auto-advance.
+  // Reduced-motion preference. If the user has it on, pause by default.
   useEffect(() => {
     if (typeof window === "undefined") return;
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -110,10 +80,19 @@ export default function HomepageHeroCarousel({
 
   const slideCount = slides.length;
   const shouldAutoplay = useMemo(
-    () => slideCount > 1 && !prefersReducedMotion,
-    [slideCount, prefersReducedMotion],
+    () =>
+      slideCount > 1 && !isPaused && !hovered && !focused && !prefersReducedMotion,
+    [slideCount, isPaused, hovered, focused, prefersReducedMotion],
   );
-  const isPaused = hovered || focused;
+
+  // Auto-advance timer.
+  useEffect(() => {
+    if (!shouldAutoplay) return;
+    const id = window.setInterval(() => {
+      setActive((prev) => (prev + 1) % slideCount);
+    }, intervalMs);
+    return () => window.clearInterval(id);
+  }, [shouldAutoplay, slideCount, intervalMs]);
 
   const goTo = useCallback(
     (idx: number) => {
@@ -160,6 +139,7 @@ export default function HomepageHeroCarousel({
       onMouseLeave={() => setHovered(false)}
       onFocus={() => setFocused(true)}
       onBlur={(e) => {
+        // Only blur out if focus is leaving the carousel entirely
         if (!e.currentTarget.contains(e.relatedTarget as Node)) {
           setFocused(false);
         }
@@ -167,10 +147,14 @@ export default function HomepageHeroCarousel({
       className="relative z-0 flex w-full justify-center px-4 py-12 md:py-20 lg:py-28"
     >
       <div className="w-full max-w-[1280px]">
+        {/* Slide region — entire article is a single group so hovering
+            anywhere (text or image) triggers the image-zoom effect.
+            Image starts at scale 1.04 and relaxes to 1.0 on hover —
+            same inverse-zoom pattern Quartr uses. */}
         <article
           aria-live="polite"
           aria-atomic="true"
-          className="group/slide relative grid items-center gap-8 lg:grid-cols-3 lg:gap-20"
+          className="group/slide grid items-center gap-8 lg:grid-cols-3 lg:gap-20"
         >
           {/* Left: text block (1/3) — Headline → Excerpt → Meta */}
           <div className="z-[1] flex flex-col justify-center gap-4 lg:col-span-1">
@@ -218,7 +202,10 @@ export default function HomepageHeroCarousel({
             )}
           </div>
 
-          {/* Right: image card (2/3). Inverse-zoom on slide hover. */}
+          {/* Right: image card (2/3). The image sits at scale 1.04 by
+              default (slightly zoomed inside the rounded-lg crop) and
+              eases back to 1.0 when ANY part of the article is
+              hovered — that's the "expand inside its bounds" effect. */}
           <Link
             href={slide.href}
             className="relative block overflow-hidden rounded-lg border border-[color:var(--ds-gray-400)] lg:col-span-2"
@@ -228,7 +215,7 @@ export default function HomepageHeroCarousel({
             <div className="relative aspect-[16/9] w-full">
               {slide.mainImage && (
                 <Image
-                  key={slide._id}
+                  key={slide._id /* force fade on slide change */}
                   src={urlFor(slide.mainImage).width(1600).height(900).url()}
                   alt=""
                   fill
@@ -240,79 +227,57 @@ export default function HomepageHeroCarousel({
               )}
             </div>
           </Link>
-
-          {/* Prev / next chips at the article's left + right edges so
-              they frame the entire section rather than overlay the
-              image. Hidden below lg — on mobile the progress bar's
-              segment buttons handle navigation. */}
-          {slideCount > 1 && (
-            <>
-              <NavChip
-                aria-label="Previous slide"
-                onClick={prev}
-                className="left-0 hidden lg:grid"
-              >
-                <ArrowLeft className="size-4" />
-              </NavChip>
-              <NavChip
-                aria-label="Next slide"
-                onClick={next}
-                className="right-0 hidden lg:grid"
-              >
-                <ArrowRight className="size-4" />
-              </NavChip>
-            </>
-          )}
         </article>
 
-        {/* Progress indicator — only the active slide gets a wide
-            fillable bar. Past slides are filled dots, future slides
-            are empty dots. The active bar's onAnimationEnd drives
-            the auto-advance; hover / focus pauses via animation
-            play-state. */}
+        {/* Controls: dots + prev/next + pause/play */}
         {slideCount > 1 && (
-          <div className="mt-8 flex items-center gap-2 lg:mt-10">
-            {slides.map((s, i) => {
-              const isPast = i < active;
-              const isCurrent = i === active;
-              if (isCurrent) {
-                return (
-                  <button
-                    key={s._id}
-                    type="button"
-                    aria-label={`Slide ${i + 1} of ${slideCount}`}
-                    aria-current="true"
-                    onClick={() => goTo(i)}
-                    className="h-[3px] flex-1 overflow-hidden rounded-full bg-[color:var(--ds-gray-200)]"
-                  >
-                    <div
-                      className="h-full origin-left bg-[color:var(--ds-gray-1000)]"
-                      style={{
-                        transform: shouldAutoplay ? "scaleX(0)" : "scaleX(1)",
-                        animation: shouldAutoplay
-                          ? `homepage-hero-progress ${intervalMs}ms linear forwards`
-                          : undefined,
-                        animationPlayState: isPaused ? "paused" : "running",
-                      }}
-                      onAnimationEnd={next}
-                    />
-                  </button>
-                );
-              }
-              return (
+          <div className="mt-8 flex items-center justify-between gap-4 lg:mt-10">
+            {/* Dots */}
+            <div
+              role="tablist"
+              aria-label="Choose a slide"
+              className="flex items-center gap-2"
+            >
+              {slides.map((s, i) => (
                 <button
                   key={s._id}
+                  role="tab"
                   type="button"
-                  aria-label={`Go to slide ${i + 1}`}
+                  aria-selected={i === active}
+                  aria-label={`Slide ${i + 1}: ${s.title}`}
                   onClick={() => goTo(i)}
-                  className={`size-[6px] rounded-full transition-colors ${
-                    isPast
-                      ? "bg-[color:var(--ds-gray-1000)]"
-                      : "bg-[color:var(--ds-gray-400)] hover:bg-[color:var(--ds-gray-700)]"
+                  className={`h-1.5 rounded-full transition-all ${
+                    i === active
+                      ? "w-6 bg-[color:var(--ds-gray-1000)]"
+                      : "w-1.5 bg-[color:var(--ds-gray-400)] hover:bg-[color:var(--ds-gray-700)]"
                   }`}
                 />
-              );
-            })}
+              ))}
+            </div>
+
+            {/* Buttons */}
+            <div className="flex items-center gap-2">
+              <CarouselButton
+                aria-label="Previous slide"
+                onClick={prev}
+              >
+                <ArrowLeft className="size-4" />
+              </CarouselButton>
+              <CarouselButton
+                aria-label={isPaused ? "Resume autoplay" : "Pause autoplay"}
+                aria-pressed={isPaused}
+                onClick={() => setIsPaused((p) => !p)}
+              >
+                {isPaused ? (
+                  <Play className="size-4" />
+                ) : (
+                  <Pause className="size-4" />
+                )}
+              </CarouselButton>
+              <CarouselButton aria-label="Next slide" onClick={next}>
+                <ArrowRight className="size-4" />
+              </CarouselButton>
+            </div>
           </div>
         )}
       </div>
@@ -321,21 +286,19 @@ export default function HomepageHeroCarousel({
 }
 
 // ============================================================================
-// NavChip — circular chip used as prev/next at the section edges.
-// Same anatomy as the SiteHeader hamburger family (bordered + alt
-// surface inside) so the controls feel part of the same DS.
+// Button — same anatomy as the SiteHeader hamburger so the carousel
+// controls feel like part of the same DS family.
 // ============================================================================
 
-function NavChip({
+function CarouselButton({
   children,
-  className,
   ...props
 }: React.ButtonHTMLAttributes<HTMLButtonElement>) {
   return (
     <button
       type="button"
       {...props}
-      className={`absolute top-1/2 z-[2] grid size-10 -translate-y-1/2 place-items-center rounded-full border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-200)] text-[color:var(--ds-gray-1000)] transition-colors hover:bg-[color:var(--ds-gray-100)] dark:bg-[color:var(--ds-background-100)] dark:hover:bg-[color:var(--ds-gray-100)] ${className ?? ""}`}
+      className="grid size-8 place-items-center rounded-md border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-200)] text-[color:var(--ds-gray-1000)] transition-colors hover:bg-[color:var(--ds-gray-100)] dark:bg-[color:var(--ds-background-100)] dark:hover:bg-[color:var(--ds-gray-100)]"
     >
       {children}
     </button>
