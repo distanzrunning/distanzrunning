@@ -4,38 +4,46 @@
 // HomepageHeroCarousel
 // ============================================================================
 //
-// Single-hero slideshow for the top of the homepage. Auto-advances
-// every 7s, pauses on hover / focus / explicit pause click, and
-// rotates through the editorial slides flagged `featuredOnHomepage`
-// (post / productPost / raceGuide — fetched server-side and passed
-// in as `slides`).
+// Single-hero slideshow for the top of the homepage. Built on the
+// shadcn-pattern <Carousel /> primitive (Embla under the hood) with
+// the Autoplay plugin for the 7 s timer. Slides rotate through the
+// editorial entries flagged `featuredOnHomepage` (post / productPost
+// / raceGuide — fetched server-side and passed in as `slides`).
 //
 // Layout follows the Quartr reference:
-//   - 33 / 66 column split on md+
-//   - Left: kicker + serif headline + dek + meta dot + date
-//   - Right: rounded image card with a subtle hover zoom
+//   - 33 / 66 column split on lg+
+//   - Left: serif headline + excerpt + kicker (clickable) · date
+//   - Right: rounded image card with subtle inverse-zoom on slide hover
 // On mobile the columns stack, image first.
 //
-// A11y:
-//   - aria-roledescription="carousel"
-//   - aria-live="polite" on the slide region (announce new slide)
-//   - prev/next + pause/play buttons labelled
-//   - reduced-motion users get auto-advance disabled by default
-//     (still navigable manually)
+// Controls:
+//   - <CarouselPrevious /> + <CarouselNext /> sit at the section
+//     edges (default shadcn placement: left + right of the content
+//     row, vertically centered)
+//   - Pause / play toggle below the slide
+//   - Dots indicator (segmented; current slide gets a wider pill)
+//
+// A11y: shadcn's <Carousel /> handles aria-roledescription="carousel"
+// + arrow-key nav. We add aria-live announcements for the active
+// slide and labelled controls. Reduced-motion users get autoplay
+// off by default.
 
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { format } from "date-fns";
-import { ArrowLeft, ArrowRight, Pause, Play } from "lucide-react";
+import { Pause, Play } from "lucide-react";
+import Autoplay from "embla-carousel-autoplay";
 import { urlFor } from "@/sanity/lib/image";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+  type CarouselApi,
+} from "@/components/ui/Carousel";
 
 export type HomepageHeroSlide = {
   _id: string;
@@ -62,13 +70,13 @@ export default function HomepageHeroCarousel({
   slides,
   intervalMs = DEFAULT_INTERVAL,
 }: HomepageHeroCarouselProps) {
+  const slideCount = slides.length;
+  const [api, setApi] = useState<CarouselApi>();
   const [active, setActive] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
-  const [hovered, setHovered] = useState(false);
-  const [focused, setFocused] = useState(false);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
-  // Reduced-motion preference. If the user has it on, pause by default.
+  // Reduced-motion preference. If the user has it on, autoplay is off.
   useEffect(() => {
     if (typeof window === "undefined") return;
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -78,161 +86,164 @@ export default function HomepageHeroCarousel({
     return () => mq.removeEventListener("change", update);
   }, []);
 
-  const slideCount = slides.length;
-  const shouldAutoplay = useMemo(
-    () =>
-      slideCount > 1 && !isPaused && !hovered && !focused && !prefersReducedMotion,
-    [slideCount, isPaused, hovered, focused, prefersReducedMotion],
+  // Memoised Autoplay plugin instance. stopOnInteraction=false so a
+  // manual prev/next click doesn't disable autoplay for the rest of
+  // the page life — Embla just resets the interval.
+  // stopOnMouseEnter=true gives us the hover-to-pause behaviour for
+  // free without us tracking it.
+  const autoplay = useRef(
+    Autoplay({
+      delay: intervalMs,
+      stopOnInteraction: false,
+      stopOnMouseEnter: true,
+    }),
   );
 
-  // Auto-advance timer.
+  // Sync the active index for the dots indicator.
   useEffect(() => {
-    if (!shouldAutoplay) return;
-    const id = window.setInterval(() => {
-      setActive((prev) => (prev + 1) % slideCount);
-    }, intervalMs);
-    return () => window.clearInterval(id);
-  }, [shouldAutoplay, slideCount, intervalMs]);
-
-  const goTo = useCallback(
-    (idx: number) => {
-      if (slideCount === 0) return;
-      setActive(((idx % slideCount) + slideCount) % slideCount);
-    },
-    [slideCount],
-  );
-  const next = useCallback(() => goTo(active + 1), [active, goTo]);
-  const prev = useCallback(() => goTo(active - 1), [active, goTo]);
-
-  // Keyboard nav while focused inside the carousel.
-  const containerRef = useRef<HTMLElement>(null);
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (!focused) return;
-      if (e.key === "ArrowRight") {
-        e.preventDefault();
-        next();
-      } else if (e.key === "ArrowLeft") {
-        e.preventDefault();
-        prev();
-      }
+    if (!api) return;
+    const onSelect = () => setActive(api.selectedScrollSnap());
+    onSelect();
+    api.on("select", onSelect);
+    api.on("reInit", onSelect);
+    return () => {
+      api.off("select", onSelect);
+      api.off("reInit", onSelect);
     };
-    el.addEventListener("keydown", onKey);
-    return () => el.removeEventListener("keydown", onKey);
-  }, [focused, next, prev]);
+  }, [api]);
+
+  // Manual pause/play toggle drives the plugin directly.
+  const togglePause = useCallback(() => {
+    const plugin = autoplay.current;
+    if (!plugin) return;
+    if (isPaused) {
+      plugin.play();
+      setIsPaused(false);
+    } else {
+      plugin.stop();
+      setIsPaused(true);
+    }
+  }, [isPaused]);
+
+  const scrollTo = useCallback(
+    (index: number) => api?.scrollTo(index),
+    [api],
+  );
 
   if (slideCount === 0) return null;
 
-  const slide = slides[active];
-  const dateLabel = slide.publishedAt
-    ? format(new Date(slide.publishedAt), "d MMM yyyy")
-    : null;
+  const shouldAutoplay = slideCount > 1 && !prefersReducedMotion;
 
   return (
     <section
-      ref={containerRef}
-      aria-roledescription="carousel"
       aria-label="Featured stories"
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      onFocus={() => setFocused(true)}
-      onBlur={(e) => {
-        // Only blur out if focus is leaving the carousel entirely
-        if (!e.currentTarget.contains(e.relatedTarget as Node)) {
-          setFocused(false);
-        }
-      }}
       className="relative z-0 flex w-full justify-center px-4 py-12 md:py-20 lg:py-28"
     >
       <div className="w-full max-w-[1280px]">
-        {/* Slide region — entire article is a single group so hovering
-            anywhere (text or image) triggers the image-zoom effect.
-            Image starts at scale 1.04 and relaxes to 1.0 on hover —
-            same inverse-zoom pattern Quartr uses. */}
-        <article
-          aria-live="polite"
-          aria-atomic="true"
-          className="group/slide grid items-center gap-8 lg:grid-cols-3 lg:gap-20"
+        <Carousel
+          opts={{ loop: true, align: "start" }}
+          plugins={shouldAutoplay ? [autoplay.current] : []}
+          className="px-12 lg:px-14"
         >
-          {/* Left: text block (1/3) — Headline → Excerpt → Meta */}
-          <div className="z-[1] flex flex-col justify-center gap-4 lg:col-span-1">
-            <h2
-              className="text-balance font-headline font-semibold text-[color:var(--ds-gray-1000)]"
-              style={{
-                fontSize: "clamp(36px, 5vw, 58px)",
-                lineHeight: 1.05,
-                letterSpacing: "-0.02em",
-              }}
-            >
-              <Link
-                href={slide.href}
-                className="outline-none transition-colors hover:text-[color:var(--ds-gray-900)] focus-visible:text-[color:var(--ds-gray-900)]"
-              >
-                {slide.title}
-              </Link>
-            </h2>
-            {slide.excerpt && (
-              <p className="max-w-prose text-[18px] leading-[1.4] text-[color:var(--ds-gray-900)] md:text-[21px] md:leading-[1.4]">
-                {slide.excerpt}
-              </p>
-            )}
-            {/* Meta — Category (clickable) · Date */}
-            {(slide.kicker || dateLabel) && (
-              <div className="mt-1 flex items-center gap-2 text-[13px] text-[color:var(--ds-gray-700)]">
-                {slide.kicker && slide.kickerHref ? (
-                  <Link
-                    href={slide.kickerHref}
-                    className="rounded-sm transition-colors hover:text-[color:var(--ds-gray-1000)] focus-visible:text-[color:var(--ds-gray-1000)] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[color:var(--ds-focus-ring)]"
-                  >
-                    {slide.kicker}
-                  </Link>
-                ) : slide.kicker ? (
-                  <span>{slide.kicker}</span>
-                ) : null}
-                {slide.kicker && dateLabel && (
-                  <span
-                    aria-hidden
-                    className="size-1 rounded-full bg-[color:var(--ds-gray-700)] opacity-60"
-                  />
-                )}
-                {dateLabel && <span className="font-mono">{dateLabel}</span>}
-              </div>
-            )}
-          </div>
+          <CarouselContent>
+            {slides.map((slide, i) => {
+              const dateLabel = slide.publishedAt
+                ? format(new Date(slide.publishedAt), "d MMM yyyy")
+                : null;
+              return (
+                <CarouselItem key={slide._id}>
+                  <article className="group/slide grid items-center gap-8 lg:grid-cols-3 lg:gap-20">
+                    {/* Left: text — Headline → Excerpt → Meta */}
+                    <div className="flex flex-col justify-center gap-4 lg:col-span-1">
+                      <h2
+                        className="text-balance font-headline font-semibold text-[color:var(--ds-gray-1000)]"
+                        style={{
+                          fontSize: "clamp(36px, 5vw, 58px)",
+                          lineHeight: 1.05,
+                          letterSpacing: "-0.02em",
+                        }}
+                      >
+                        <Link
+                          href={slide.href}
+                          className="outline-none transition-colors hover:text-[color:var(--ds-gray-900)] focus-visible:text-[color:var(--ds-gray-900)]"
+                        >
+                          {slide.title}
+                        </Link>
+                      </h2>
+                      {slide.excerpt && (
+                        <p className="max-w-prose text-[18px] leading-[1.4] text-[color:var(--ds-gray-900)] md:text-[21px] md:leading-[1.4]">
+                          {slide.excerpt}
+                        </p>
+                      )}
+                      {(slide.kicker || dateLabel) && (
+                        <div className="mt-1 flex items-center gap-2 text-[13px] text-[color:var(--ds-gray-700)]">
+                          {slide.kicker && slide.kickerHref ? (
+                            <Link
+                              href={slide.kickerHref}
+                              className="rounded-sm transition-colors hover:text-[color:var(--ds-gray-1000)] focus-visible:text-[color:var(--ds-gray-1000)] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[color:var(--ds-focus-ring)]"
+                            >
+                              {slide.kicker}
+                            </Link>
+                          ) : slide.kicker ? (
+                            <span>{slide.kicker}</span>
+                          ) : null}
+                          {slide.kicker && dateLabel && (
+                            <span
+                              aria-hidden
+                              className="size-1 rounded-full bg-[color:var(--ds-gray-700)] opacity-60"
+                            />
+                          )}
+                          {dateLabel && (
+                            <span className="font-mono">{dateLabel}</span>
+                          )}
+                        </div>
+                      )}
+                    </div>
 
-          {/* Right: image card (2/3). The image sits at scale 1.04 by
-              default (slightly zoomed inside the rounded-lg crop) and
-              eases back to 1.0 when ANY part of the article is
-              hovered — that's the "expand inside its bounds" effect. */}
-          <Link
-            href={slide.href}
-            className="relative block overflow-hidden rounded-lg border border-[color:var(--ds-gray-400)] lg:col-span-2"
-            style={{ background: "var(--ds-gray-200)" }}
-            aria-label={slide.title}
-          >
-            <div className="relative aspect-[16/9] w-full">
-              {slide.mainImage && (
-                <Image
-                  key={slide._id /* force fade on slide change */}
-                  src={urlFor(slide.mainImage).width(1600).height(900).url()}
-                  alt=""
-                  fill
-                  sizes="(min-width: 1024px) 853px, 100vw"
-                  priority={active === 0}
-                  className="scale-[1.04] transition-transform duration-300 ease-out will-change-transform group-hover/slide:scale-100"
-                  style={{ objectFit: "cover" }}
-                />
-              )}
-            </div>
-          </Link>
-        </article>
+                    {/* Right: image card. Inverse-zoom on slide hover. */}
+                    <Link
+                      href={slide.href}
+                      className="relative block overflow-hidden rounded-lg border border-[color:var(--ds-gray-400)] lg:col-span-2"
+                      style={{ background: "var(--ds-gray-200)" }}
+                      aria-label={slide.title}
+                    >
+                      <div className="relative aspect-[16/9] w-full">
+                        {slide.mainImage && (
+                          <Image
+                            src={urlFor(slide.mainImage)
+                              .width(1600)
+                              .height(900)
+                              .url()}
+                            alt=""
+                            fill
+                            sizes="(min-width: 1024px) 853px, 100vw"
+                            priority={i === 0}
+                            className="scale-[1.04] transition-transform duration-300 ease-out will-change-transform group-hover/slide:scale-100"
+                            style={{ objectFit: "cover" }}
+                          />
+                        )}
+                      </div>
+                    </Link>
+                  </article>
+                </CarouselItem>
+              );
+            })}
+          </CarouselContent>
 
-        {/* Controls: dots + prev/next + pause/play */}
+          {/* Prev / next at the section edges (shadcn defaults to
+              -left-12 / -right-12 — the px-12 wrapper above gives
+              them room to sit just outside the slide content). */}
+          {slideCount > 1 && (
+            <>
+              <CarouselPrevious />
+              <CarouselNext />
+            </>
+          )}
+        </Carousel>
+
+        {/* Dots indicator + pause / play */}
         {slideCount > 1 && (
           <div className="mt-8 flex items-center justify-between gap-4 lg:mt-10">
-            {/* Dots */}
             <div
               role="tablist"
               aria-label="Choose a slide"
@@ -245,7 +256,7 @@ export default function HomepageHeroCarousel({
                   type="button"
                   aria-selected={i === active}
                   aria-label={`Slide ${i + 1}: ${s.title}`}
-                  onClick={() => goTo(i)}
+                  onClick={() => scrollTo(i)}
                   className={`h-1.5 rounded-full transition-all ${
                     i === active
                       ? "w-6 bg-[color:var(--ds-gray-1000)]"
@@ -255,29 +266,21 @@ export default function HomepageHeroCarousel({
               ))}
             </div>
 
-            {/* Buttons */}
-            <div className="flex items-center gap-2">
-              <CarouselButton
-                aria-label="Previous slide"
-                onClick={prev}
-              >
-                <ArrowLeft className="size-4" />
-              </CarouselButton>
-              <CarouselButton
+            {shouldAutoplay && (
+              <button
+                type="button"
                 aria-label={isPaused ? "Resume autoplay" : "Pause autoplay"}
                 aria-pressed={isPaused}
-                onClick={() => setIsPaused((p) => !p)}
+                onClick={togglePause}
+                className="grid size-8 place-items-center rounded-md border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-200)] text-[color:var(--ds-gray-1000)] transition-colors hover:bg-[color:var(--ds-gray-100)] dark:bg-[color:var(--ds-background-100)] dark:hover:bg-[color:var(--ds-gray-100)]"
               >
                 {isPaused ? (
                   <Play className="size-4" />
                 ) : (
                   <Pause className="size-4" />
                 )}
-              </CarouselButton>
-              <CarouselButton aria-label="Next slide" onClick={next}>
-                <ArrowRight className="size-4" />
-              </CarouselButton>
-            </div>
+              </button>
+            )}
           </div>
         )}
       </div>
@@ -285,22 +288,3 @@ export default function HomepageHeroCarousel({
   );
 }
 
-// ============================================================================
-// Button — same anatomy as the SiteHeader hamburger so the carousel
-// controls feel like part of the same DS family.
-// ============================================================================
-
-function CarouselButton({
-  children,
-  ...props
-}: React.ButtonHTMLAttributes<HTMLButtonElement>) {
-  return (
-    <button
-      type="button"
-      {...props}
-      className="grid size-8 place-items-center rounded-md border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-200)] text-[color:var(--ds-gray-1000)] transition-colors hover:bg-[color:var(--ds-gray-100)] dark:bg-[color:var(--ds-background-100)] dark:hover:bg-[color:var(--ds-gray-100)]"
-    >
-      {children}
-    </button>
-  );
-}
