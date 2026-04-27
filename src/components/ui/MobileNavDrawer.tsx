@@ -210,38 +210,37 @@ export default function MobileNavDrawer({
                   : "translateX(0)",
               }}
             >
-              {/* Top pane — newsletter CTA + section list */}
-              <div className="h-full w-1/2 shrink-0 overflow-y-auto">
-                <div className="px-3 pt-4 pb-2">
-                  {/* Matches v0's primary filled button pixel-for-pixel:
-                      32 px tall, 4 px radius, 14 / 20 medium text.
-                      Overrides the small-variant tokens via !important
-                      so the local spec wins over the Button defaults. */}
-                  <NewsletterButton
-                    size="small"
-                    source={newsletterSource}
-                    className="w-full !h-8 !rounded-[4px] !text-[14px] !leading-5"
-                  />
-                </div>
-                <ul className="flex flex-col px-3 py-2">
+              {/* Top pane — newsletter CTA + section list. Outer p-4
+                  matches v0's drawer body padding, then a centred
+                  max-w-md column constrains the content on wider
+                  drawer widths (e.g. landscape phones). */}
+              <div className="h-full w-1/2 shrink-0 overflow-y-auto p-4">
+                <div className="mx-auto flex w-full max-w-md flex-col">
+                  {/* Newsletter button + 16 px bottom gap before the list */}
+                  <div className="flex flex-col gap-2 pb-4">
+                    <NewsletterButton
+                      size="small"
+                      source={newsletterSource}
+                      className="w-full !h-8 !rounded-[4px] !text-[14px] !leading-5"
+                    />
+                  </div>
+                  {/* Section rows — match v0's mobile menu items:
+                      text-base / 24 in gray-900, rounded-lg, px-3 py-2 */}
                   {sections.map((s) => (
-                    <li key={s.id}>
-                      <button
-                        type="button"
-                        onClick={() => setActiveSection(s.id)}
-                        className="flex w-full items-center justify-between rounded-md px-3 py-3 text-left transition-colors hover:bg-[color:var(--ds-gray-100)]"
-                      >
-                        <span className="text-[18px] leading-6 font-medium text-[color:var(--ds-gray-1000)]">
-                          {s.label}
-                        </span>
-                        <ChevronRight
-                          className="size-5 text-[color:var(--ds-gray-700)]"
-                          aria-hidden
-                        />
-                      </button>
-                    </li>
+                    <button
+                      key={s.id}
+                      type="button"
+                      onClick={() => setActiveSection(s.id)}
+                      className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-base text-[color:var(--ds-gray-900)] transition-colors hover:bg-[color:var(--ds-gray-100)] hover:text-[color:var(--ds-gray-1000)]"
+                    >
+                      <span>{s.label}</span>
+                      <ChevronRight
+                        className="size-4 text-[color:var(--ds-gray-700)]"
+                        aria-hidden
+                      />
+                    </button>
                   ))}
-                </ul>
+                </div>
               </div>
 
               {/* Section pane — sub-items + featured card */}
@@ -305,24 +304,29 @@ function SectionDetail({
         </h2>
       </div>
 
-      {/* Sub-item list */}
-      <ul className="flex flex-col px-3 py-2">
+      {/* Sub-item list — wrapped in the same max-w-md column as the
+          top pane so the two views feel like one. */}
+      <div className="mx-auto flex w-full max-w-md flex-col p-4">
         {section.items.map((item) => (
-          <li key={item.href}>
-            <MobileSubItem item={item} onClick={onLinkClick} />
-          </li>
+          <MobileSubItem
+            key={item.href}
+            item={item}
+            onClick={onLinkClick}
+          />
         ))}
-      </ul>
+      </div>
 
       {/* Featured card — pinned to the bottom of the pane */}
       {section.featured && section.featuredHref && (
         <div className="mt-auto border-t border-[color:var(--ds-gray-400)] p-4">
-          <MobileFeaturedCard
-            href={section.featuredHref}
-            image={section.featured.mainImage}
-            title={section.featured.title}
-            onClick={onLinkClick}
-          />
+          <div className="mx-auto w-full max-w-md">
+            <MobileFeaturedCard
+              href={section.featuredHref}
+              image={section.featured.mainImage}
+              title={section.featured.title}
+              onClick={onLinkClick}
+            />
+          </div>
         </div>
       )}
     </div>
