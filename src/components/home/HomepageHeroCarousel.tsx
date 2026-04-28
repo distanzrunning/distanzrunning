@@ -58,9 +58,9 @@ export default function HomepageHeroCarousel({
   return (
     <section
       aria-label="Featured stories"
-      className="group/carousel relative z-0 flex w-full justify-center px-4 py-12 md:py-20 lg:py-28"
+      className="group/carousel relative z-0 flex w-full justify-center px-4 py-12 md:py-24 lg:py-32"
     >
-      <div className="w-full max-w-[1280px]">
+      <div className="w-full max-w-[1400px]">
         <Carousel
           opts={{ loop: true, align: "start" }}
           className="px-12 lg:px-14"
@@ -72,13 +72,13 @@ export default function HomepageHeroCarousel({
                 : null;
               return (
                 <CarouselItem key={slide._id}>
-                  <article className="group/slide grid items-center gap-8 lg:grid-cols-3 lg:gap-20">
+                  <article className="group/slide grid items-center gap-8 lg:grid-cols-3 lg:gap-24">
                     {/* Left: text — Headline → Excerpt → Meta */}
                     <div className="flex flex-col justify-center gap-4 lg:col-span-1">
                       <h2
                         className="text-balance font-headline font-semibold text-[color:var(--ds-gray-1000)]"
                         style={{
-                          fontSize: "clamp(36px, 5vw, 58px)",
+                          fontSize: "clamp(36px, 5.2vw, 64px)",
                           lineHeight: 1.05,
                           letterSpacing: "-0.02em",
                         }}
