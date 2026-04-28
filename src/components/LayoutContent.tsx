@@ -50,8 +50,12 @@ export default async function LayoutContent({
   // Chrome background (area outside the frame):
   //   light → bg-100 (#FFFFFF primary canvas)
   //   dark  → bg-200 (#000000 primary canvas)
+  // pt-2 mirrors the PageFrame's 8 px top margin so the header
+  // sits inset from the viewport top by the same amount as the
+  // frame is inset below it — keeps the gap above and below the
+  // header symmetrical.
   const chromeClass =
-    "flex min-h-screen flex-col bg-[var(--ds-background-100)] dark:bg-[var(--ds-background-200)]";
+    "flex min-h-screen flex-col bg-[var(--ds-background-100)] pt-2 dark:bg-[var(--ds-background-200)]";
 
   if (isHome) {
     return (
