@@ -5,34 +5,23 @@
 // ============================================================================
 //
 // Single-hero slideshow for the top of the homepage. Built on the
-// shadcn-pattern <Carousel /> primitive (Embla under the hood) with
-// the Autoplay plugin for the 7 s timer. Slides rotate through the
-// editorial entries flagged `featuredOnHomepage` (post / productPost
-// / raceGuide — fetched server-side and passed in as `slides`).
+// shadcn-pattern <Carousel /> primitive (Embla Carousel under the
+// hood). No autoplay — manual navigation only via the prev / next
+// chevrons (visible on section hover) or drag / swipe on touch.
+//
+// Slides are the editorial entries flagged `featuredOnHomepage`
+// (post / productPost / raceGuide — fetched server-side and passed
+// in as `slides`).
 //
 // Layout follows the Quartr reference:
 //   - 33 / 66 column split on lg+
 //   - Left: serif headline + excerpt + kicker (clickable) · date
 //   - Right: rounded image card with subtle inverse-zoom on slide hover
 // On mobile the columns stack, image first.
-//
-// Controls:
-//   - <CarouselPrevious /> + <CarouselNext /> sit at the section
-//     edges (default shadcn placement: left + right of the content
-//     row, vertically centered)
-//   - Pause / play toggle below the slide
-//   - Dots indicator (segmented; current slide gets a wider pill)
-//
-// A11y: shadcn's <Carousel /> handles aria-roledescription="carousel"
-// + arrow-key nav. We add aria-live announcements for the active
-// slide and labelled controls. Reduced-motion users get autoplay
-// off by default.
 
-import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { format } from "date-fns";
-import Autoplay from "embla-carousel-autoplay";
 import { urlFor } from "@/sanity/lib/image";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 import {
@@ -41,7 +30,6 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-  type CarouselApi,
 } from "@/components/ui/Carousel";
 
 export type HomepageHeroSlide = {
@@ -59,104 +47,22 @@ export type HomepageHeroSlide = {
 
 interface HomepageHeroCarouselProps {
   slides: ReadonlyArray<HomepageHeroSlide>;
-  /** Auto-advance interval in ms. Defaults to 7000. */
-  intervalMs?: number;
 }
-
-const DEFAULT_INTERVAL = 7000;
 
 export default function HomepageHeroCarousel({
   slides,
-  intervalMs = DEFAULT_INTERVAL,
 }: HomepageHeroCarouselProps) {
   const slideCount = slides.length;
-  const [api, setApi] = useState<CarouselApi>();
-  const [active, setActive] = useState(0);
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
-  // Mirrors Embla's Autoplay running state so the progress-bar
-  // animation pauses/resumes in lockstep with the timer (Embla
-  // pauses on mouse-enter via stopOnMouseEnter — we don't track
-  // hover ourselves).
-  const [autoplayRunning, setAutoplayRunning] = useState(true);
-
-  // Reduced-motion preference. If the user has it on, autoplay is off.
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const update = () => setPrefersReducedMotion(mq.matches);
-    update();
-    mq.addEventListener("change", update);
-    return () => mq.removeEventListener("change", update);
-  }, []);
-
-  // Inject the progress-bar keyframe once.
-  useEffect(() => {
-    if (typeof document === "undefined") return;
-    const id = "homepage-hero-progress-keyframes";
-    if (document.getElementById(id)) return;
-    const style = document.createElement("style");
-    style.id = id;
-    style.textContent = `
-      @keyframes homepage-hero-progress {
-        from { transform: scaleX(0); }
-        to { transform: scaleX(1); }
-      }
-    `;
-    document.head.appendChild(style);
-  }, []);
-
-  // Memoised Autoplay plugin instance. stopOnInteraction=false so a
-  // manual prev/next click doesn't disable autoplay for the rest of
-  // the page life — Embla just resets the interval.
-  // stopOnMouseEnter=true gives us the hover-to-pause behaviour for
-  // free without us tracking it.
-  const autoplay = useRef(
-    Autoplay({
-      delay: intervalMs,
-      stopOnInteraction: false,
-      stopOnMouseEnter: true,
-    }),
-  );
-
-  // Sync the active index for the dots + reset the progress bar.
-  useEffect(() => {
-    if (!api) return;
-    const onSelect = () => setActive(api.selectedScrollSnap());
-    const onTimerSet = () => setAutoplayRunning(true);
-    const onTimerStopped = () => setAutoplayRunning(false);
-    onSelect();
-    api.on("select", onSelect);
-    api.on("reInit", onSelect);
-    // Cast to never — Embla's typed event listener doesn't include
-    // the autoplay plugin's custom event names.
-    api.on("autoplay:timerset" as never, onTimerSet);
-    api.on("autoplay:timerstopped" as never, onTimerStopped);
-    return () => {
-      api.off("select", onSelect);
-      api.off("reInit", onSelect);
-      api.off("autoplay:timerset" as never, onTimerSet);
-      api.off("autoplay:timerstopped" as never, onTimerStopped);
-    };
-  }, [api]);
-
-  const scrollTo = useCallback(
-    (index: number) => api?.scrollTo(index),
-    [api],
-  );
-
   if (slideCount === 0) return null;
-
-  const shouldAutoplay = slideCount > 1 && !prefersReducedMotion;
 
   return (
     <section
       aria-label="Featured stories"
-      className="relative z-0 flex w-full justify-center px-4 py-12 md:py-20 lg:py-28"
+      className="group/carousel relative z-0 flex w-full justify-center px-4 py-12 md:py-20 lg:py-28"
     >
       <div className="w-full max-w-[1280px]">
         <Carousel
           opts={{ loop: true, align: "start" }}
-          plugins={shouldAutoplay ? [autoplay.current] : []}
           className="px-12 lg:px-14"
         >
           <CarouselContent>
@@ -244,64 +150,17 @@ export default function HomepageHeroCarousel({
             })}
           </CarouselContent>
 
-          {/* Prev / next at the section edges (shadcn defaults to
-              -left-12 / -right-12 — the px-12 wrapper above gives
-              them room to sit just outside the slide content). */}
+          {/* Prev / next chevrons fade in on section hover (desktop
+              affordance). Mobile users navigate via swipe (Embla's
+              built-in drag handler). */}
           {slideCount > 1 && (
             <>
-              <CarouselPrevious />
-              <CarouselNext />
+              <CarouselPrevious className="opacity-0 transition-opacity duration-200 group-hover/carousel:opacity-100 focus-visible:opacity-100" />
+              <CarouselNext className="opacity-0 transition-opacity duration-200 group-hover/carousel:opacity-100 focus-visible:opacity-100" />
             </>
           )}
         </Carousel>
-
-        {/* Splide-style indicators: a thin progress bar showing
-            time-until-next-slide (resets on slide change, pauses on
-            hover via Embla's stopOnMouseEnter), with a centred dots
-            row below for slide position + manual navigation. */}
-        {slideCount > 1 && (
-          <div className="mt-8 flex flex-col items-center gap-3 lg:mt-10">
-            <div
-              className="h-[2px] w-full overflow-hidden rounded-full bg-[color:var(--ds-gray-200)]"
-              aria-hidden
-            >
-              <div
-                key={active}
-                className="h-full origin-left bg-[color:var(--ds-gray-1000)]"
-                style={{
-                  transform: shouldAutoplay ? "scaleX(0)" : "scaleX(1)",
-                  animation: shouldAutoplay
-                    ? `homepage-hero-progress ${intervalMs}ms linear forwards`
-                    : undefined,
-                  animationPlayState: autoplayRunning ? "running" : "paused",
-                }}
-              />
-            </div>
-            <div
-              role="tablist"
-              aria-label="Choose a slide"
-              className="flex items-center gap-2"
-            >
-              {slides.map((s, i) => (
-                <button
-                  key={s._id}
-                  role="tab"
-                  type="button"
-                  aria-selected={i === active}
-                  aria-label={`Slide ${i + 1}: ${s.title}`}
-                  onClick={() => scrollTo(i)}
-                  className={`size-[6px] rounded-full transition-colors ${
-                    i === active
-                      ? "bg-[color:var(--ds-gray-1000)]"
-                      : "bg-[color:var(--ds-gray-400)] hover:bg-[color:var(--ds-gray-700)]"
-                  }`}
-                />
-              ))}
-            </div>
-          </div>
-        )}
       </div>
     </section>
   );
 }
-
