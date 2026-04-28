@@ -73,6 +73,11 @@ export default function HomepageHeroCarousel({
   const [api, setApi] = useState<CarouselApi>();
   const [active, setActive] = useState(0);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  // Mirrors Embla's Autoplay running state so the progress-bar
+  // animation pauses/resumes in lockstep with the timer (Embla
+  // pauses on mouse-enter via stopOnMouseEnter — we don't track
+  // hover ourselves).
+  const [autoplayRunning, setAutoplayRunning] = useState(true);
 
   // Reduced-motion preference. If the user has it on, autoplay is off.
   useEffect(() => {
@@ -82,6 +87,22 @@ export default function HomepageHeroCarousel({
     update();
     mq.addEventListener("change", update);
     return () => mq.removeEventListener("change", update);
+  }, []);
+
+  // Inject the progress-bar keyframe once.
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    const id = "homepage-hero-progress-keyframes";
+    if (document.getElementById(id)) return;
+    const style = document.createElement("style");
+    style.id = id;
+    style.textContent = `
+      @keyframes homepage-hero-progress {
+        from { transform: scaleX(0); }
+        to { transform: scaleX(1); }
+      }
+    `;
+    document.head.appendChild(style);
   }, []);
 
   // Memoised Autoplay plugin instance. stopOnInteraction=false so a
@@ -97,16 +118,24 @@ export default function HomepageHeroCarousel({
     }),
   );
 
-  // Sync the active index for the dots indicator.
+  // Sync the active index for the dots + reset the progress bar.
   useEffect(() => {
     if (!api) return;
     const onSelect = () => setActive(api.selectedScrollSnap());
+    const onTimerSet = () => setAutoplayRunning(true);
+    const onTimerStopped = () => setAutoplayRunning(false);
     onSelect();
     api.on("select", onSelect);
     api.on("reInit", onSelect);
+    // Cast to never — Embla's typed event listener doesn't include
+    // the autoplay plugin's custom event names.
+    api.on("autoplay:timerset" as never, onTimerSet);
+    api.on("autoplay:timerstopped" as never, onTimerStopped);
     return () => {
       api.off("select", onSelect);
       api.off("reInit", onSelect);
+      api.off("autoplay:timerset" as never, onTimerSet);
+      api.off("autoplay:timerstopped" as never, onTimerStopped);
     };
   }, [api]);
 
@@ -226,29 +255,49 @@ export default function HomepageHeroCarousel({
           )}
         </Carousel>
 
-        {/* Dots indicator — centred. Pause/play removed; the carousel
-            already pauses on hover via Embla's stopOnMouseEnter. */}
+        {/* Splide-style indicators: a thin progress bar showing
+            time-until-next-slide (resets on slide change, pauses on
+            hover via Embla's stopOnMouseEnter), with a centred dots
+            row below for slide position + manual navigation. */}
         {slideCount > 1 && (
-          <div
-            role="tablist"
-            aria-label="Choose a slide"
-            className="mt-8 flex items-center justify-center gap-2 lg:mt-10"
-          >
-            {slides.map((s, i) => (
-              <button
-                key={s._id}
-                role="tab"
-                type="button"
-                aria-selected={i === active}
-                aria-label={`Slide ${i + 1}: ${s.title}`}
-                onClick={() => scrollTo(i)}
-                className={`h-1.5 rounded-full transition-all ${
-                  i === active
-                    ? "w-6 bg-[color:var(--ds-gray-1000)]"
-                    : "w-1.5 bg-[color:var(--ds-gray-400)] hover:bg-[color:var(--ds-gray-700)]"
-                }`}
+          <div className="mt-8 flex flex-col items-center gap-3 lg:mt-10">
+            <div
+              className="h-[2px] w-full overflow-hidden rounded-full bg-[color:var(--ds-gray-200)]"
+              aria-hidden
+            >
+              <div
+                key={active}
+                className="h-full origin-left bg-[color:var(--ds-gray-1000)]"
+                style={{
+                  transform: shouldAutoplay ? "scaleX(0)" : "scaleX(1)",
+                  animation: shouldAutoplay
+                    ? `homepage-hero-progress ${intervalMs}ms linear forwards`
+                    : undefined,
+                  animationPlayState: autoplayRunning ? "running" : "paused",
+                }}
               />
-            ))}
+            </div>
+            <div
+              role="tablist"
+              aria-label="Choose a slide"
+              className="flex items-center gap-2"
+            >
+              {slides.map((s, i) => (
+                <button
+                  key={s._id}
+                  role="tab"
+                  type="button"
+                  aria-selected={i === active}
+                  aria-label={`Slide ${i + 1}: ${s.title}`}
+                  onClick={() => scrollTo(i)}
+                  className={`size-[6px] rounded-full transition-colors ${
+                    i === active
+                      ? "bg-[color:var(--ds-gray-1000)]"
+                      : "bg-[color:var(--ds-gray-400)] hover:bg-[color:var(--ds-gray-700)]"
+                  }`}
+                />
+              ))}
+            </div>
           </div>
         )}
       </div>
