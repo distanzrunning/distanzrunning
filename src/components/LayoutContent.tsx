@@ -57,8 +57,8 @@ export default async function LayoutContent({
     return (
       <div className={chromeClass}>
         {header}
-        <PageFrame className="flex flex-1 flex-col">
-          <main className="flex-1">{children}</main>
+        <PageFrame as="main" className="flex flex-1 flex-col">
+          {children}
         </PageFrame>
         {footer}
       </div>
@@ -68,8 +68,8 @@ export default async function LayoutContent({
   return (
     <div className={chromeClass}>
       {navbar}
-      <PageFrame className="flex flex-1 flex-col">
-        <main className="flex-1">{children}</main>
+      <PageFrame as="main" className="flex flex-1 flex-col">
+        {children}
       </PageFrame>
       {!isCalendarPage && footer}
     </div>

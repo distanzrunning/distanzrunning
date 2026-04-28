@@ -1,4 +1,4 @@
-import type { CSSProperties, ReactNode } from "react";
+import type { CSSProperties, ElementType, ReactNode } from "react";
 
 // ============================================================================
 // PageFrame
@@ -24,9 +24,10 @@ import type { CSSProperties, ReactNode } from "react";
 //   - container-type: inline-size so descendants can use @container
 //     queries against the frame's width, independent of viewport
 //
-// Usage: wrap whatever content should live inside the framed area
-// (typically <main>{children}</main>). Header and footer go *outside*
-// the frame.
+// Usage: in the public layout this renders as the page's <main>
+// element (pass `as="main"`) so the DOM reads header → main → footer
+// at the top level. In design-system demos it stays a <div> to avoid
+// nesting a <main> inside the demo's own <main>.
 
 export interface PageFrameProps {
   children: ReactNode;
@@ -34,12 +35,15 @@ export interface PageFrameProps {
   className?: string;
   /** Override the default container-name (defaults to "page-frame") if you need a different name for @container queries. */
   containerName?: string;
+  /** Element to render. Defaults to "div"; pass "main" when the frame is the page's primary landmark. */
+  as?: ElementType;
 }
 
 export default function PageFrame({
   children,
   className = "",
   containerName = "page-frame",
+  as: Component = "div",
 }: PageFrameProps) {
   // container-type / container-name aren't in React's CSSProperties yet
   // (as of @types/react 19), so cast through unknown.
@@ -49,7 +53,7 @@ export default function PageFrame({
   } as unknown as CSSProperties;
 
   return (
-    <div
+    <Component
       className={`relative bg-[var(--ds-background-200)] dark:bg-[var(--ds-background-100)] ${className}`.trim()}
       style={{
         margin: "0 8px 8px",
@@ -59,6 +63,6 @@ export default function PageFrame({
       }}
     >
       {children}
-    </div>
+    </Component>
   );
 }
