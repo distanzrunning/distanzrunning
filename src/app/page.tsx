@@ -16,7 +16,8 @@ export const revalidate = 60;
 
 export default async function Home() {
   const { data } = await sanityFetch({ query: homepageHeroQuery });
-  const slides = (data ?? []) as HomepageHeroSlide[];
+  const settings = data as { slides?: HomepageHeroSlide[] } | null;
+  const slides = settings?.slides ?? [];
 
   return (
     <>
