@@ -33,6 +33,20 @@ export const homepageSettingsType = defineType({
       ],
       validation: (Rule) => Rule.unique().max(8),
     }),
+    defineField({
+      name: 'breakingNewsItems',
+      title: 'Breaking News',
+      type: 'array',
+      description:
+        'Articles shown in the homepage Breaking News row. Drag to reorder. Three are visible on desktop.',
+      of: [
+        {
+          type: 'reference',
+          to: [{ type: 'post' }],
+        },
+      ],
+      validation: (Rule) => Rule.unique().max(6),
+    }),
   ],
   preview: {
     prepare() {
