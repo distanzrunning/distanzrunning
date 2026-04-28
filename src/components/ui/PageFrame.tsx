@@ -5,8 +5,11 @@ import type { CSSProperties, ReactNode } from "react";
 // ============================================================================
 //
 // Inset framed surface that wraps the body of every public page.
-// Floats inside the chrome with a uniform 8 px margin on all four
-// sides — inspired by v0.app's page-layout container.
+// Sits flush below the header (margin-top: 0) and floats above the
+// footer with 8 px margins on the other three sides — same anatomy
+// as v0.app's main element (m-2 mt-0). The flush top removes the
+// gap below the header so the header content reads centred in its
+// own row.
 //
 // Anatomy:
 //   - Background flips with the theme so each mode keeps the
@@ -17,8 +20,7 @@ import type { CSSProperties, ReactNode } from "react";
 //     bg-200 dark).
 //   - 1 px --ds-gray-400 border on all four sides
 //   - 6 px radius (radius-small)
-//   - No shadow — the border is the only edge treatment so the
-//     frame reads consistently from every side
+//   - No shadow — the border is the only edge treatment
 //   - container-type: inline-size so descendants can use @container
 //     queries against the frame's width, independent of viewport
 //
@@ -50,7 +52,7 @@ export default function PageFrame({
     <div
       className={`relative bg-[var(--ds-background-200)] dark:bg-[var(--ds-background-100)] ${className}`.trim()}
       style={{
-        margin: 8,
+        margin: "0 8px 8px",
         border: "1px solid var(--ds-gray-400)",
         borderRadius: 6,
         ...containerStyle,
