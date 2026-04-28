@@ -560,13 +560,6 @@ export const raceGuideType = defineType({
       description: 'Show this race guide in the homepage breaking news section',
     }),
     defineField({
-      name: 'featuredOnHomepage',
-      title: 'Featured on Homepage Hero',
-      type: 'boolean',
-      initialValue: false,
-      description: 'Show this race guide in the homepage hero carousel.',
-    }),
-    defineField({
       name: 'body',
       type: 'blockContent',
     }),

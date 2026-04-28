@@ -14,6 +14,7 @@ import { raceGuideType } from './raceGuideType'
 import { authorType } from './authorType'
 import { tableType } from './tableType'
 import { customCodeBlockType } from './customCodeBlockType'
+import { homepageSettingsType } from './homepageSettingsType'
 
 export const schema: { types: SchemaTypeDefinition[] } = {
   types: [
@@ -29,5 +30,6 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     authorType,
     tableType,
     customCodeBlockType,
+    homepageSettingsType,
   ],
 }

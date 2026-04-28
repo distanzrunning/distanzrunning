@@ -1,10 +1,10 @@
 // src/app/page.tsx
 //
 // Homepage. Composed in sections — the first section is the
-// HomepageHeroCarousel which auto-rotates through editorial slides
-// flagged `featuredOnHomepage` across post / productPost / raceGuide.
-// Server component fetches the slides and hands them to the client
-// carousel.
+// HomepageHeroCarousel. Slides come from the singleton
+// `homepageSettings` doc in Sanity (featuredSlides array — drag to
+// reorder in Studio). Server component fetches and hands to the
+// client carousel.
 
 import { sanityFetch } from "@/sanity/lib/live";
 import { homepageHeroQuery } from "@/sanity/queries/homepageHeroQuery";

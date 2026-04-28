@@ -106,13 +106,6 @@ export const productPostType = defineType({
       description: 'Show this post in the homepage breaking news section',
     }),
     defineField({
-      name: 'featuredOnHomepage',
-      title: 'Featured on Homepage Hero',
-      type: 'boolean',
-      initialValue: false,
-      description: 'Show this product in the homepage hero carousel.',
-    }),
-    defineField({
       name: 'publishedAt',
       type: 'datetime',
     }),

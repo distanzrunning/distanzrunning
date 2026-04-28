@@ -6,6 +6,19 @@ export const structure: StructureResolver = (S) =>
   S.list()
     .title('Content')
     .items([
+      // --- Site Settings (singletons) ---
+      S.listItem()
+        .title('Homepage')
+        .id('homepageSettings')
+        .child(
+          S.editor()
+            .id('homepageSettings')
+            .schemaType('homepageSettings')
+            .documentId('homepageSettings'),
+        ),
+
+      S.divider(),
+
       // --- Articles Section ---
       S.listItem()
         .title('Articles')
@@ -64,6 +77,9 @@ export const structure: StructureResolver = (S) =>
             'gearCategory',
             'raceCategory',
             'author',
+            // Singleton — surfaced explicitly above, hide from the
+            // catch-all so it doesn't appear twice.
+            'homepageSettings',
           ].includes(item.getId() || '')
       ),
     ])

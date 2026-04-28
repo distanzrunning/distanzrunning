@@ -1,50 +1,44 @@
 // src/sanity/queries/homepageHeroQuery.ts
 //
-// Aggregates the homepage hero carousel slides across the three
-// editorial doc types — `post`, `productPost`, and `raceGuide` —
-// each filtered by their respective `featuredOnHomepage` boolean.
-// Results are unioned into a single ordered list with a normalised
-// shape so the carousel doesn't have to special-case each type.
+// Reads the homepage hero carousel slides from the singleton
+// `homepageSettings` document — `featuredSlides` is an ordered
+// array of references to post / productPost / raceGuide. Editors
+// drag-and-drop within that array to reorder the carousel.
 //
-// Each slide carries: title, kicker (section / category / "Race
-// Guide"), excerpt, dek date, mainImage, and a section-aware href
-// pointing at the canonical URL for that doc type.
+// Each slide carries: title, kicker (category / "Race Guide"),
+// excerpt, dek date, mainImage, plus a section-aware href and
+// kickerHref for the category landing page.
 
 import { groq } from "next-sanity";
 
 export const homepageHeroQuery = groq`
-  *[
-    (_type == "post" && featuredOnHomepage == true) ||
-    (_type == "productPost" && featuredOnHomepage == true) ||
-    (_type == "raceGuide" && featuredOnHomepage == true)
-  ] | order(coalesce(publishedAt, _createdAt) desc) {
-    _id,
-    _type,
-    title,
-    "slug": slug.current,
-    excerpt,
-    "publishedAt": coalesce(publishedAt, _createdAt),
-    mainImage,
-    // Kicker label depends on type
-    "kicker": select(
-      _type == "post" => category->title,
-      _type == "productPost" => productCategory->title,
-      _type == "raceGuide" => "Race Guide",
-      ""
-    ),
-    // Category landing href — what the kicker label links to
-    "kickerHref": select(
-      _type == "post" => "/articles/" + category->slug.current,
-      _type == "productPost" => "/" + productCategory->section + "/" + productCategory->slug.current,
-      _type == "raceGuide" => "/races",
-      null
-    ),
-    // Canonical href per type — main article link
-    "href": select(
-      _type == "post" => "/articles/" + slug.current,
-      _type == "productPost" => "/" + productCategory->section + "/" + slug.current,
-      _type == "raceGuide" => "/races/" + slug.current,
-      "#"
-    )
-  }
+  *[_id == "homepageSettings"][0]{
+    "slides": featuredSlides[]->{
+      _id,
+      _type,
+      title,
+      "slug": slug.current,
+      excerpt,
+      "publishedAt": coalesce(publishedAt, _createdAt),
+      mainImage,
+      "kicker": select(
+        _type == "post" => category->title,
+        _type == "productPost" => productCategory->title,
+        _type == "raceGuide" => "Race Guide",
+        ""
+      ),
+      "kickerHref": select(
+        _type == "post" => "/articles/" + category->slug.current,
+        _type == "productPost" => "/" + productCategory->section + "/" + productCategory->slug.current,
+        _type == "raceGuide" => "/races",
+        null
+      ),
+      "href": select(
+        _type == "post" => "/articles/" + slug.current,
+        _type == "productPost" => "/" + productCategory->section + "/" + slug.current,
+        _type == "raceGuide" => "/races/" + slug.current,
+        "#"
+      )
+    }
+  }.slides
 `;
