@@ -19,6 +19,7 @@
 //   - Right: rounded image card with subtle inverse-zoom on slide hover
 // On mobile the columns stack, image first.
 
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { format } from "date-fns";
@@ -30,6 +31,7 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
+  type CarouselApi,
 } from "@/components/ui/Carousel";
 
 export type HomepageHeroSlide = {
@@ -53,6 +55,26 @@ export default function HomepageHeroCarousel({
   slides,
 }: HomepageHeroCarouselProps) {
   const slideCount = slides.length;
+  const [api, setApi] = useState<CarouselApi>();
+  const [active, setActive] = useState(0);
+
+  useEffect(() => {
+    if (!api) return;
+    const onSelect = () => setActive(api.selectedScrollSnap());
+    onSelect();
+    api.on("select", onSelect);
+    api.on("reInit", onSelect);
+    return () => {
+      api.off("select", onSelect);
+      api.off("reInit", onSelect);
+    };
+  }, [api]);
+
+  const scrollTo = useCallback(
+    (index: number) => api?.scrollTo(index),
+    [api],
+  );
+
   if (slideCount === 0) return null;
 
   return (
@@ -63,6 +85,7 @@ export default function HomepageHeroCarousel({
       <div className="w-full max-w-[1400px]">
         <Carousel
           opts={{ loop: true, align: "start" }}
+          setApi={setApi}
           className="px-12 lg:px-14"
         >
           <CarouselContent>
@@ -160,6 +183,33 @@ export default function HomepageHeroCarousel({
             </>
           )}
         </Carousel>
+
+        {/* Subtle dots — wayfinding only. Active widens slightly to
+            mark position; inactive sit quietly at gray-400 so they
+            read as "more here" without dominating. */}
+        {slideCount > 1 && (
+          <div
+            role="tablist"
+            aria-label="Slide navigation"
+            className="mt-8 flex items-center justify-center gap-1.5 lg:mt-10"
+          >
+            {slides.map((s, i) => (
+              <button
+                key={s._id}
+                role="tab"
+                type="button"
+                aria-selected={i === active}
+                aria-label={`Slide ${i + 1}: ${s.title}`}
+                onClick={() => scrollTo(i)}
+                className={`h-[5px] rounded-full transition-all ${
+                  i === active
+                    ? "w-4 bg-[color:var(--ds-gray-1000)]"
+                    : "w-[5px] bg-[color:var(--ds-gray-400)] hover:bg-[color:var(--ds-gray-700)]"
+                }`}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );
