@@ -1,6 +1,6 @@
 "use client";
 
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Link from "next/link";
 import { DarkModeContext } from "@/components/DarkModeProvider";
 import { NewsletterButton } from "@/components/ui/NewsletterModal";
@@ -18,8 +18,13 @@ import Wordmark from "@/components/ui/Wordmark";
 //
 // Public-site header that sits above the PageFrame. Anatomy modelled on
 // v0.app's chat-header: 50 px tall, wordmark left, nav centre, action
-// row right. Sits in the document flow (relative, not sticky) so it
-// scrolls naturally with the page.
+// row right.
+//
+// Sticky to the viewport top with z-40 so page content scrolls under
+// it. A 1 px bottom border baselines as transparent and fades to
+// --ds-gray-400 on scroll (matching v0's pattern) — gives a clear
+// affordance that the header is fixed and separates it from the
+// content scrolling below without painting a hairline at rest.
 //
 // Responsive split at the md breakpoint (768 px):
 //   below md → wordmark + hamburger; tap hamburger to open the
@@ -51,10 +56,27 @@ export default function SiteHeader({
 }: SiteHeaderProps) {
   const { theme, setTheme } = useContext(DarkModeContext);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  // Track scroll position so the sticky header's bottom border can
+  // fade in once content has been scrolled under it. Threshold of 0
+  // matches v0 — the border appears as soon as you start scrolling.
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 0);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
     <>
-      <header className="relative z-20 flex h-[50px] w-full shrink-0 items-center justify-between px-3 sm:px-2">
+      <header
+        className={`sticky top-0 z-40 flex h-[50px] w-full shrink-0 items-center justify-between border-b bg-[color:var(--ds-background-100)] px-3 transition-colors duration-150 sm:px-2 dark:bg-[color:var(--ds-background-200)] ${
+          scrolled
+            ? "border-[color:var(--ds-gray-400)]"
+            : "border-transparent"
+        }`}
+      >
         {/* Left: wordmark */}
         <div className="flex min-w-0 items-center">
           <Link
