@@ -94,7 +94,7 @@ export default function Footer() {
             column with a generous 64 px gap between logo and link
             grid. On md+ it expands to the xl breakpoint and goes
             side-by-side. */}
-        <div className="flex w-full max-w-2xl flex-col justify-between gap-x-12 gap-y-16 md:mx-auto md:max-w-7xl md:flex-row md:items-start">
+        <div className="flex w-full max-w-2xl flex-col justify-between gap-x-12 gap-y-16 md:mx-auto md:max-w-7xl md:flex-row md:flex-wrap md:items-start">
           {/* Full Distanz Running lockup (icon + Distanz + Running).
               Same inline-SVG approach as the header wordmark so the
               colour follows currentColor / text-gray-1000 in both
@@ -115,13 +115,15 @@ export default function Footer() {
             <FooterColumn heading="Company" items={companyLinks} />
             <SocialColumn />
           </div>
-        </div>
 
-        {/* Bottom strip — theme switcher anchors the foot of the
-            container. No label; the segmented sun/moon/system
-            glyphs do the labelling work themselves. */}
-        <div className="mt-16 md:mx-auto md:max-w-7xl">
-          <ThemeSwitcher value={theme} onChange={setTheme} />
+          {/* Theme switcher sits at the bottom of the flex container.
+              On mobile (flex-col) it stacks below the link grid;
+              on md+ md:basis-full pushes it to its own row beneath
+              the wordmark + grid. No label — the segmented
+              sun/moon/system glyphs are self-labelling. */}
+          <div className="md:basis-full">
+            <ThemeSwitcher value={theme} onChange={setTheme} />
+          </div>
         </div>
       </div>
     </footer>
