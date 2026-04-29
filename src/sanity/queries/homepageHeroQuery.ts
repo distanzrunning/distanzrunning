@@ -3,14 +3,17 @@
 // Reads the homepage settings singleton in a single roundtrip:
 //   - slides → featuredSlides for the HomepageHeroCarousel
 //   - breakingNews → breakingNewsItems for the HomepageBreakingNews row
+//   - races → featuredRaceItems for the HomepageRaces row
 //
-// Each item carries: title, kicker (category / "Race Guide"),
-// excerpt, dek date, mainImage, plus a section-aware href and
-// kickerHref for the category landing page.
+// Article-shaped items carry: title, kicker (category / "Race
+// Guide"), excerpt, dek date, mainImage, plus a section-aware
+// href and kickerHref for the category landing page.
+// Race-shaped items carry: title, mainImage, eventDate, location
+// (city / region / country), category and href.
 
 import { groq } from "next-sanity";
 
-const itemProjection = `
+const articleProjection = `
   _id,
   _type,
   title,
@@ -38,9 +41,23 @@ const itemProjection = `
   )
 `;
 
+const raceProjection = `
+  _id,
+  title,
+  "slug": slug.current,
+  "href": "/races/" + slug.current,
+  mainImage,
+  eventDate,
+  city,
+  stateRegion,
+  country,
+  "category": raceCategory->title
+`;
+
 export const homepageHeroQuery = groq`
   *[_id == "homepageSettings"][0]{
-    "slides": featuredSlides[]->{ ${itemProjection} },
-    "breakingNews": breakingNewsItems[]->{ ${itemProjection} }
+    "slides": featuredSlides[]->{ ${articleProjection} },
+    "breakingNews": breakingNewsItems[]->{ ${articleProjection} },
+    "races": featuredRaceItems[]->{ ${raceProjection} }
   }
 `;

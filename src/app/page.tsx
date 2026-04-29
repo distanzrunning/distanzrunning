@@ -4,7 +4,8 @@
 // `homepageSettings` singleton in Sanity:
 //   - Hero carousel  → featuredSlides
 //   - Breaking news  → breakingNewsItems
-// Single fetch hands both arrays to their client components.
+//   - Races          → featuredRaceItems
+// Single fetch hands all arrays to their client components.
 
 import { sanityFetch } from "@/sanity/lib/live";
 import { homepageHeroQuery } from "@/sanity/queries/homepageHeroQuery";
@@ -14,12 +15,16 @@ import HomepageHeroCarousel, {
 import HomepageBreakingNews, {
   type BreakingNewsItem,
 } from "@/components/home/HomepageBreakingNews";
+import HomepageRaces, {
+  type HomepageRaceItem,
+} from "@/components/home/HomepageRaces";
 
 export const revalidate = 60;
 
 type HomepageData = {
   slides?: HomepageHeroSlide[];
   breakingNews?: BreakingNewsItem[];
+  races?: HomepageRaceItem[];
 } | null;
 
 export default async function Home() {
@@ -27,11 +32,13 @@ export default async function Home() {
   const settings = data as HomepageData;
   const slides = settings?.slides ?? [];
   const breakingNews = settings?.breakingNews ?? [];
+  const races = settings?.races ?? [];
 
   return (
     <>
       <HomepageHeroCarousel slides={slides} />
       <HomepageBreakingNews items={breakingNews} />
+      <HomepageRaces items={races} />
     </>
   );
 }

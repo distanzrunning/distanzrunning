@@ -47,6 +47,20 @@ export const homepageSettingsType = defineType({
       ],
       validation: (Rule) => Rule.unique().max(6),
     }),
+    defineField({
+      name: 'featuredRaceItems',
+      title: 'Featured Races',
+      type: 'array',
+      description:
+        'Race guides shown in the homepage Races row. Drag to reorder. Three are visible on desktop; more become a horizontal scroll.',
+      of: [
+        {
+          type: 'reference',
+          to: [{ type: 'raceGuide' }],
+        },
+      ],
+      validation: (Rule) => Rule.unique().max(8),
+    }),
   ],
   preview: {
     prepare() {
