@@ -66,7 +66,12 @@ export default function HomepageBreakingNews({
       >
         <header className="flex items-center justify-between gap-8 md:items-end">
           <div className="flex flex-col gap-3">
-            <div className="flex items-center gap-2 text-[12px] font-semibold uppercase tracking-[0.08em] text-[color:var(--ds-red-800)]">
+            <div
+              className="inline-flex items-center gap-2 self-start rounded-full px-2.5 py-1 text-[12px] font-semibold uppercase tracking-[0.08em] text-[color:var(--ds-red-800)]"
+              style={{
+                backgroundColor: "rgba(var(--ds-red-800-rgb), 0.10)",
+              }}
+            >
               <span
                 aria-hidden
                 className="relative inline-flex size-2 items-center justify-center"
@@ -84,7 +89,7 @@ export default function HomepageBreakingNews({
 
           <ButtonLink
             href={SEE_ALL_HREF}
-            variant="secondary"
+            variant="default"
             size="small"
             suffixIcon={<ChevronRight />}
             className="hidden md:inline-flex"
@@ -110,7 +115,7 @@ export default function HomepageBreakingNews({
         <div className="md:hidden">
           <ButtonLink
             href={SEE_ALL_HREF}
-            variant="secondary"
+            variant="default"
             size="small"
             suffixIcon={<ChevronRight />}
             className="w-full"
