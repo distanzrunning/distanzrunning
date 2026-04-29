@@ -16,9 +16,10 @@ import { urlFor } from "@/sanity/lib/image";
 // HomepageRaces
 // ============================================================================
 //
-// Editorial "Upcoming Races" row. Items come from the
-// `featuredRaceItems` array on the homepageSettings singleton —
-// drag-and-drop ordering in Studio.
+// "Upcoming Races" row. Items are auto-selected by the homepage
+// query — the next 10 raceGuides with eventDate ≥ now, ordered
+// ascending. No editorial curation: the homepage stays current as
+// races pass.
 //
 // Layout follows the same pattern as HomepageBreakingNews:
 //   ≤ 3 items → static 3-col grid (stacked on mobile)
@@ -45,7 +46,7 @@ export type HomepageRaceItem = {
 
 interface HomepageRacesProps {
   items: ReadonlyArray<HomepageRaceItem>;
-  /** Hard cap on items rendered. Defaults to 8 — matches the schema's max. */
+  /** Hard cap on items rendered. Defaults to 10 — matches the query cap. */
   limit?: number;
 }
 
@@ -73,7 +74,7 @@ function resolveCardImages(item: HomepageRaceItem) {
 
 export default function HomepageRaces({
   items,
-  limit = 8,
+  limit = 10,
 }: HomepageRacesProps) {
   const visible = items.slice(0, limit);
   if (visible.length === 0) return null;

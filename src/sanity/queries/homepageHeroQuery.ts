@@ -1,9 +1,10 @@
 // src/sanity/queries/homepageHeroQuery.ts
 //
-// Reads the homepage settings singleton in a single roundtrip:
-//   - slides → featuredSlides for the HomepageHeroCarousel
-//   - breakingNews → breakingNewsItems for the HomepageBreakingNews row
-//   - races → featuredRaceItems for the HomepageRaces row
+// Reads the homepage settings singleton plus a freshly-filtered
+// race list in a single roundtrip:
+//   - slides → featuredSlides (curated)
+//   - breakingNews → breakingNewsItems (curated)
+//   - races → next 10 raceGuides with eventDate ≥ now (auto)
 //
 // Article-shaped items carry: title, kicker (category / "Race
 // Guide"), excerpt, dek date, mainImage, plus a section-aware
@@ -58,6 +59,10 @@ export const homepageHeroQuery = groq`
   *[_id == "homepageSettings"][0]{
     "slides": featuredSlides[]->{ ${articleProjection} },
     "breakingNews": breakingNewsItems[]->{ ${articleProjection} },
-    "races": featuredRaceItems[]->{ ${raceProjection} }
+    "races": *[
+      _type == "raceGuide"
+      && defined(eventDate)
+      && eventDate >= now()
+    ] | order(eventDate asc)[0...10]{ ${raceProjection} }
   }
 `;
