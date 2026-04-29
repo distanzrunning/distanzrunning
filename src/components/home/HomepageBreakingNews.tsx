@@ -78,27 +78,9 @@ export default function HomepageBreakingNews({
 
   const isScrollable = visible.length > 3;
 
-  // Faint 60 px column grid, the kind an editor sees on a
-  // paste-up board. Pattern lives in globals.css under
-  // --newsprint-grid (rgba on --ds-gray-1000-rgb at 4 % so it
-  // flips with the theme automatically).
-  //
-  // background-position: 30 30 — half-tile offset so no grid line
-  // sits at x=0 or y=0 of the panel. Without this the leftmost
-  // and topmost lines render exactly inside the panel's 1 px
-  // border, reading as a doubled outline on the outer edges.
-  const newsprintBg: React.CSSProperties = {
-    backgroundImage: "var(--newsprint-grid)",
-    backgroundSize: "60px 60px",
-    backgroundPosition: "30px 30px",
-  };
-
   return (
     <section className="flex w-full justify-center px-4 py-12 md:py-16 lg:py-20">
-      <div
-        className="flex w-full max-w-[1400px] flex-col gap-8 rounded-xl border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-100)] p-6 md:gap-11 md:p-10 lg:p-12"
-        style={newsprintBg}
-      >
+      <div className="flex w-full max-w-[1400px] flex-col gap-8 rounded-xl border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-100)] p-6 md:gap-11 md:p-10 lg:p-12">
         <header className="flex items-center justify-between gap-8 md:items-end">
           <div className="flex flex-col gap-3">
             <div className="inline-flex items-center gap-2 self-start rounded-full bg-[color:var(--ds-red-100)] px-2.5 py-1 text-[12px] font-semibold uppercase tracking-[0.08em] text-[color:var(--ds-red-800)] dark:text-[color:var(--ds-red-900)]">

@@ -682,16 +682,6 @@
     --grid-gutter: 1.5rem; /* 24px - column spacing (small/medium, 2× gap) */
     --grid-outside-gutter: 1.5rem; /* 24px - outside padding (small/medium) */
 
-    /* ─────────────────────────────────────────────────────────────────────────
-       NEWSPRINT — Editor's column grid
-       Faint 60 px square grid. Lines drawn through
-       rgba(--ds-gray-1000-rgb, 0.04) so they're a 4 % wash against
-       whichever colour gray-1000 carries in the active theme —
-       reads as a subliminal hint of grid in both light and dark.
-       ───────────────────────────────────────────────────────────────────────── */
-    --newsprint-grid:
-      linear-gradient(to right, rgba(var(--ds-gray-1000-rgb), 0.04) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(var(--ds-gray-1000-rgb), 0.04) 1px, transparent 1px);
   }
 
   /* Large screen spacing (960px+) */
@@ -1141,9 +1131,6 @@
     --color-info-bg-subtle: var(--ds-purple-100-rgb);
     --color-info-border: var(--ds-purple-500-rgb);
 
-    /* Newsprint grid — single rgba() declaration handles both
-       themes via --ds-gray-1000-rgb, so no dark-mode override is
-       needed here. */
   }
 
   /* Distanz reset (Distanz design system) */

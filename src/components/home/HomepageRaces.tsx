@@ -111,20 +111,9 @@ export default function HomepageRaces({
 
   if (visible.length === 0) return null;
 
-  // Same paste-up panel as Breaking News — border + 60 px newsprint
-  // grid texture so the homepage's main sections share an identity.
-  const newsprintBg: React.CSSProperties = {
-    backgroundImage: "var(--newsprint-grid)",
-    backgroundSize: "60px 60px",
-    backgroundPosition: "30px 30px",
-  };
-
   return (
     <section className="flex w-full justify-center px-4 py-12 md:py-16 lg:py-20">
-      <div
-        className="flex w-full max-w-[1400px] flex-col gap-8 rounded-xl border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-100)] p-6 md:gap-11 md:p-10 lg:p-12"
-        style={newsprintBg}
-      >
+      <div className="flex w-full max-w-[1400px] flex-col gap-8 rounded-xl border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-100)] p-6 md:gap-11 md:p-10 lg:p-12">
         <header className="flex items-end justify-between gap-8">
           <div className="flex flex-col gap-2">
             <h2
