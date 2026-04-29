@@ -9,6 +9,13 @@ import {
   type DualThemeToken,
 } from "@/components/ui/useShikiHighlighter";
 import ArticleCard from "@/components/ArticleCard";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/Carousel";
 
 // ============================================================================
 // Toast (local copy of the shared pattern used on other DS pages)
@@ -308,6 +315,26 @@ const demoCards = [
       "The 2028 Los Angeles Olympics will open with the men's and women's marathons on day one — a first for the modern Games.",
     imageUrl: `${SANITY_CDN}/cb830b49db7551af30919d34a0147e82254b2681-1200x675.png`,
   },
+  {
+    href: "/articles/chepngetich-banned",
+    title: "Women's marathon record holder Chepngetich banned for three years",
+    publishedAt: "2025-11-13T21:41:00.000Z",
+    kicker: "Road",
+    kickerHref: "/articles/road",
+    excerpt:
+      "Women's marathon world record holder Ruth Chepngetich has been banned for three years after admitting to anti-doping rule violations.",
+    imageUrl: `${SANITY_CDN}/710da4b02149e4fcb3d44da6ce4c4102a31e77be-1200x675.png`,
+  },
+  {
+    href: "/articles/tokyo-marathon-preview",
+    title: "Tokyo Marathon course preview — and the four runners to watch",
+    publishedAt: "2026-02-26T08:00:00.000Z",
+    kicker: "Road",
+    kickerHref: "/articles/road",
+    excerpt:
+      "A flat, fast course in late winter weather has produced six course records in the past decade. Here's the line-up that could break it again.",
+    imageUrl: `${SANITY_CDN}/cb830b49db7551af30919d34a0147e82254b2681-1200x675.png`,
+  },
 ];
 
 // ============================================================================
@@ -351,7 +378,41 @@ const rowCode = `<div className="grid grid-cols-1 gap-x-4 gap-y-8 md:grid-cols-3
   {items.map(item => (
     <ArticleCard key={item._id} {...item} />
   ))}
+</div>
+
+// 4-up row: just bump the column count
+<div className="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-y-12">
+  {items.map(item => (
+    <ArticleCard key={item._id} {...item} />
+  ))}
 </div>`;
+
+const scrollRowCode = `import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/Carousel";
+
+// "group/row" surfaces the chevrons on hover anywhere over the row.
+<Carousel
+  opts={{ align: "start" }}
+  className="group/row relative w-full"
+>
+  <CarouselContent>
+    {items.map(item => (
+      <CarouselItem
+        key={item._id}
+        className="basis-[85%] sm:basis-1/2 lg:basis-1/3"
+      >
+        <ArticleCard {...item} />
+      </CarouselItem>
+    ))}
+  </CarouselContent>
+  <CarouselPrevious className="opacity-0 transition-opacity group-hover/row:opacity-100" />
+  <CarouselNext className="opacity-0 transition-opacity group-hover/row:opacity-100" />
+</Carousel>`;
 
 // ============================================================================
 // Anatomy preview — labelled breakdown of the parts inside one card
@@ -467,13 +528,16 @@ export default function ArticleCardComponent() {
           className="text-copy-16 text-textSubtle mt-3 mb-6"
           style={{ lineHeight: 1.5 }}
         >
-          Three cards in a CSS grid — the canonical homepage row layout.
-          Cards top-align in their cells; total heights vary with title
-          length.
+          Drop the card into a CSS grid. The canonical homepage layout
+          is three cards on <code>md+</code>, but the column count is
+          just a Tailwind class — bump it to{" "}
+          <code>md:grid-cols-2</code>, <code>lg:grid-cols-4</code>, etc.
+          to suit the section. Cards top-align in their cells, so total
+          heights vary with title length.
         </p>
         <CodePreview componentCode={rowCode}>
           <div className="grid grid-cols-1 gap-x-4 gap-y-8 md:grid-cols-3 md:gap-y-12">
-            {demoCards.map((card) => (
+            {demoCards.slice(0, 3).map((card) => (
               <ArticleCard
                 key={card.href}
                 href={card.href}
@@ -486,6 +550,54 @@ export default function ArticleCardComponent() {
               />
             ))}
           </div>
+        </CodePreview>
+      </Section>
+
+      <Section>
+        <SectionHeader id="scrollable-row" onCopyLink={showToast}>
+          Scrollable row
+        </SectionHeader>
+        <p
+          className="text-copy-16 text-textSubtle mt-3 mb-6"
+          style={{ lineHeight: 1.5 }}
+        >
+          When the row carries more items than the viewport can show,
+          drop the cards into the shared{" "}
+          <code>&lt;Carousel /&gt;</code> primitive (Embla under the
+          hood) instead of a grid. Each card becomes a{" "}
+          <code>CarouselItem</code> with a responsive{" "}
+          <code>basis-*</code>: ~1 card on mobile (with a peek of the
+          next), 2 on small tablets, 3 on desktop. Hover-only chevron
+          chips appear on hover; mobile users get native swipe / drag.
+          This is the same pattern the homepage Breaking News row falls
+          back to when more than three articles are curated.
+        </p>
+        <CodePreview componentCode={scrollRowCode}>
+          <Carousel
+            opts={{ align: "start" }}
+            className="group/row relative w-full"
+          >
+            <CarouselContent>
+              {demoCards.map((card) => (
+                <CarouselItem
+                  key={card.href}
+                  className="basis-[85%] sm:basis-1/2 lg:basis-1/3"
+                >
+                  <ArticleCard
+                    href={card.href}
+                    title={card.title}
+                    publishedAt={card.publishedAt}
+                    kicker={card.kicker}
+                    kickerHref={card.kickerHref}
+                    excerpt={card.excerpt}
+                    imageUrl={card.imageUrl}
+                  />
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious className="opacity-0 transition-opacity group-hover/row:opacity-100 disabled:opacity-0" />
+            <CarouselNext className="opacity-0 transition-opacity group-hover/row:opacity-100 disabled:opacity-0" />
+          </Carousel>
         </CodePreview>
       </Section>
 
