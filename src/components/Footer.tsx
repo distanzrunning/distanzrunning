@@ -94,7 +94,7 @@ export default function Footer() {
             column with a generous 64 px gap between logo and link
             grid. On md+ it expands to the xl breakpoint and goes
             side-by-side. */}
-        <div className="flex w-full max-w-2xl flex-col justify-between gap-x-12 gap-y-16 md:mx-auto md:max-w-7xl md:flex-row md:flex-wrap md:items-start">
+        <div className="relative flex w-full max-w-2xl flex-col justify-between gap-x-12 gap-y-16 md:mx-auto md:max-w-7xl md:flex-row md:items-start">
           {/* Full Distanz Running lockup (icon + Distanz + Running).
               Same inline-SVG approach as the header wordmark so the
               colour follows currentColor / text-gray-1000 in both
@@ -116,12 +116,16 @@ export default function Footer() {
             <SocialColumn />
           </div>
 
-          {/* Theme switcher sits at the bottom of the flex container.
-              On mobile (flex-col) it stacks below the link grid;
-              on md+ md:basis-full pushes it to its own row beneath
-              the wordmark + grid. No label — the segmented
+          {/* Theme switcher.
+              Mobile (parent flex-col): renders in flow as the last
+              item, stacking below the link grid.
+              Desktop (parent flex-row + relative): absolutely
+              positioned at the bottom-left of the flex container so
+              it sits flush with the bottom of the link grid (the
+              tallest column drives row height) and aligned with the
+              wordmark's left edge. No label — the segmented
               sun/moon/system glyphs are self-labelling. */}
-          <div className="md:basis-full">
+          <div className="md:absolute md:bottom-0 md:left-0">
             <ThemeSwitcher value={theme} onChange={setTheme} />
           </div>
         </div>
