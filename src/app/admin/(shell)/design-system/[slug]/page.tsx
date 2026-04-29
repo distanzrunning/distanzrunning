@@ -85,6 +85,7 @@ import NoteComponent from "../components/content/NoteComponent";
 import CalendarComponent from "../components/content/CalendarComponent";
 import SearchComponent from "../components/content/SearchComponent";
 import AdSlotComponent from "../components/content/AdSlotComponent";
+import ArticleCardComponent from "../components/content/ArticleCardComponent";
 import ConsentBannerComponent from "../components/content/ConsentBannerComponent";
 import LoginComponent from "../components/content/LoginComponent";
 import Materials from "../components/content/Materials";
@@ -1321,6 +1322,21 @@ export default function DesignSystemPage() {
           onNavigate={handleNavigation}
         >
           <AdSlotComponent />
+        </ContentWithTOC>
+      );
+    }
+
+    if (activeSlug === "article-card") {
+      return (
+        <ContentWithTOC
+          tocTitle="On this page"
+          pageTitle="Article Card"
+          pageSubtitle="The editorial card used in homepage rows and section listings — cinematic image, kicker · date meta, clamped title and excerpt."
+          mainSectionId="overview"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
+          <ArticleCardComponent />
         </ContentWithTOC>
       );
     }

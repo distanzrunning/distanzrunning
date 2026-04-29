@@ -1,9 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { format } from "date-fns";
-import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
-
-import { urlFor } from "@/sanity/lib/image";
 
 // ============================================================================
 // ArticleCard
@@ -27,8 +24,9 @@ import { urlFor } from "@/sanity/lib/image";
 //   - The kicker's anchor sits with relative z-10 so it punches
 //     through the overlay and gets its own click + hover state.
 //
-// Colours all flow through DS tokens so the card flips cleanly
-// with the theme.
+// The component takes the resolved image URL directly; resolving
+// from a Sanity image source (or any other source) is the caller's
+// responsibility. Keeps the card framework-agnostic.
 
 export interface ArticleCardProps {
   href: string;
@@ -39,7 +37,10 @@ export interface ArticleCardProps {
   /** Optional URL for the kicker. When set, the kicker becomes a clickable link punching through the card-wide click overlay. */
   kickerHref?: string;
   excerpt?: string;
-  image?: SanityImageSource;
+  /** Pre-resolved image URL (e.g. from urlFor(...).width(1200).auto("format").url()). */
+  imageUrl?: string;
+  /** Optional low-res blur placeholder URL (e.g. urlFor(...).width(16).height(9).blur(20).auto("format").url()). */
+  blurDataURL?: string;
   /** Defaults to the title — override if the image conveys something different. */
   imageAlt?: string;
   className?: string;
@@ -57,31 +58,28 @@ export default function ArticleCard({
   kicker,
   kickerHref,
   excerpt,
-  image,
+  imageUrl,
+  blurDataURL,
   imageAlt,
   className = "",
 }: ArticleCardProps) {
   const dateLabel = formatDate(publishedAt);
-  const imgSrc = image ? urlFor(image).width(1200).auto("format").url() : null;
-  const blurSrc = image
-    ? urlFor(image).width(16).height(9).blur(20).auto("format").url()
-    : undefined;
 
   return (
     <article
       className={`group relative flex w-full flex-col items-start gap-4 ${className}`.trim()}
     >
       <div className="relative w-full overflow-hidden rounded-md bg-[color:var(--ds-gray-100)] aspect-[16/8.75]">
-        {imgSrc && (
+        {imageUrl && (
           <div className="h-full w-full scale-[1.04] transition-transform duration-300 ease-out will-change-transform group-hover:scale-100">
             <Image
-              src={imgSrc}
+              src={imageUrl}
               alt={imageAlt ?? title}
               fill
               sizes="(max-width: 768px) 100vw, (max-width: 1280px) 33vw, 25vw"
               className="object-cover"
-              placeholder={blurSrc ? "blur" : undefined}
-              blurDataURL={blurSrc}
+              placeholder={blurDataURL ? "blur" : undefined}
+              blurDataURL={blurDataURL}
             />
           </div>
         )}

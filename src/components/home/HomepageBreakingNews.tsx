@@ -3,6 +3,7 @@ import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 
 import ArticleCard from "@/components/ArticleCard";
 import { ButtonLink } from "@/components/ui/Button";
+import { urlFor } from "@/sanity/lib/image";
 
 // ============================================================================
 // HomepageBreakingNews
@@ -95,18 +96,32 @@ export default function HomepageBreakingNews({
         </header>
 
         <div className="grid grid-cols-1 gap-x-4 gap-y-8 md:grid-cols-3 md:gap-y-12">
-          {visible.map((item) => (
-            <ArticleCard
-              key={item._id}
-              href={item.href}
-              title={item.title}
-              publishedAt={item.publishedAt ?? ""}
-              kicker={item.kicker}
-              kickerHref={item.kickerHref ?? undefined}
-              excerpt={item.excerpt}
-              image={item.mainImage ?? undefined}
-            />
-          ))}
+          {visible.map((item) => {
+            const imageUrl = item.mainImage
+              ? urlFor(item.mainImage).width(1200).auto("format").url()
+              : undefined;
+            const blurDataURL = item.mainImage
+              ? urlFor(item.mainImage)
+                  .width(16)
+                  .height(9)
+                  .blur(20)
+                  .auto("format")
+                  .url()
+              : undefined;
+            return (
+              <ArticleCard
+                key={item._id}
+                href={item.href}
+                title={item.title}
+                publishedAt={item.publishedAt ?? ""}
+                kicker={item.kicker}
+                kickerHref={item.kickerHref ?? undefined}
+                excerpt={item.excerpt}
+                imageUrl={imageUrl}
+                blurDataURL={blurDataURL}
+              />
+            );
+          })}
         </div>
 
         <div className="md:hidden">
