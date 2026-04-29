@@ -3,13 +3,6 @@ import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 
 import RaceCard from "@/components/RaceCard";
 import { ButtonLink } from "@/components/ui/Button";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/Carousel";
 import { urlFor } from "@/sanity/lib/image";
 
 // ============================================================================
@@ -21,15 +14,15 @@ import { urlFor } from "@/sanity/lib/image";
 // ascending. No editorial curation: the homepage stays current as
 // races pass.
 //
-// Layout follows the same pattern as HomepageBreakingNews:
-//   ≤ 3 items → static 3-col grid (stacked on mobile)
-//   > 3 items → horizontal scroll carousel (Embla, with Mac
-//     trackpad + touch swipe + hover chevrons)
+// Unlike Breaking News, this section sits directly on the
+// PageFrame surface — no inner panel. The row uses the v0-pattern
+// native scroll-snap carousel: overflow-x-auto + snap-x +
+// snap-mandatory, hidden scrollbar, edge-fade gradients matching
+// the PageFrame background, and tight calc()-based item widths
+// (2-up at sm, 3-up at lg) so the cards fit without spillover.
 //
-// Panel anatomy mirrors Breaking News (border + canvas-coloured
-// bg) but with no newsprint texture — the texture belongs to the
-// "breaking" identity. A small grey eyebrow pill labels the row
-// "Races" so the homepage reads as News → Reviews → Races.
+// Trackpad horizontal swipes work natively (no Embla plugin
+// needed); mobile users get standard touch scrolling.
 
 export type HomepageRaceItem = {
   _id: string;
@@ -79,11 +72,9 @@ export default function HomepageRaces({
   const visible = items.slice(0, limit);
   if (visible.length === 0) return null;
 
-  const isScrollable = visible.length > 3;
-
   return (
     <section className="flex w-full justify-center px-4 py-12 md:py-16 lg:py-20">
-      <div className="flex w-full max-w-[1400px] flex-col gap-8 rounded-xl border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-100)] p-6 md:gap-11 md:p-10 lg:p-12 dark:bg-[color:var(--ds-background-200)]">
+      <div className="flex w-full max-w-[1400px] flex-col gap-8 md:gap-11">
         <header className="flex items-center justify-between gap-8 md:items-end">
           <div className="flex flex-col gap-3">
             <h2 className="m-0 inline-flex items-center gap-2 self-start rounded-full bg-[color:var(--ds-gray-200)] px-2.5 py-1 text-[12px] font-semibold uppercase tracking-[0.08em] text-[color:var(--ds-gray-1000)]">
@@ -106,18 +97,24 @@ export default function HomepageRaces({
           </ButtonLink>
         </header>
 
-        {isScrollable ? (
-          <Carousel
-            opts={{ align: "start" }}
-            className="group/row relative w-full"
-          >
-            <CarouselContent>
+        <div className="relative">
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-[color:var(--ds-background-200)] to-transparent dark:from-[color:var(--ds-background-100)]"
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-[color:var(--ds-background-200)] to-transparent dark:from-[color:var(--ds-background-100)]"
+          />
+
+          <div className="snap-x snap-mandatory scroll-smooth overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            <ul className="flex list-none gap-x-6 p-0">
               {visible.map((item) => {
                 const { imageUrl, blurDataURL } = resolveCardImages(item);
                 return (
-                  <CarouselItem
+                  <li
                     key={item._id}
-                    className="basis-[85%] sm:basis-1/2 lg:basis-1/3"
+                    className="w-[85%] shrink-0 snap-start sm:w-[calc(1/2*(100%-1.5rem))] lg:w-[calc(1/3*(100%-1.5rem*2))]"
                   >
                     <RaceCard
                       href={item.href}
@@ -128,32 +125,12 @@ export default function HomepageRaces({
                       imageUrl={imageUrl}
                       blurDataURL={blurDataURL}
                     />
-                  </CarouselItem>
+                  </li>
                 );
               })}
-            </CarouselContent>
-            <CarouselPrevious className="opacity-0 transition-opacity group-hover/row:opacity-100 disabled:opacity-0" />
-            <CarouselNext className="opacity-0 transition-opacity group-hover/row:opacity-100 disabled:opacity-0" />
-          </Carousel>
-        ) : (
-          <div className="grid grid-cols-1 gap-x-4 gap-y-8 md:grid-cols-3 md:gap-y-12">
-            {visible.map((item) => {
-              const { imageUrl, blurDataURL } = resolveCardImages(item);
-              return (
-                <RaceCard
-                  key={item._id}
-                  href={item.href}
-                  title={item.title}
-                  eventDate={item.eventDate}
-                  location={formatLocation(item)}
-                  category={item.category}
-                  imageUrl={imageUrl}
-                  blurDataURL={blurDataURL}
-                />
-              );
-            })}
+            </ul>
           </div>
-        )}
+        </div>
 
         <div className="md:hidden">
           <ButtonLink
