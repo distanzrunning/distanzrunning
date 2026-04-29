@@ -682,6 +682,16 @@
     --grid-gutter: 1.5rem; /* 24px - column spacing (small/medium, 2× gap) */
     --grid-outside-gutter: 1.5rem; /* 24px - outside padding (small/medium) */
 
+    /* ─────────────────────────────────────────────────────────────────────────
+       NEWSPRINT — Editor's column grid
+       Faint 60 px square grid for editorial panels (News, Races).
+       Lines drawn through rgba(--ds-gray-1000-rgb, 0.025) so
+       they're a 2.5 % wash that flips with the theme via the rgb
+       tuple — sits just above subliminal in either mode.
+       ───────────────────────────────────────────────────────────────────────── */
+    --newsprint-grid:
+      linear-gradient(to right, rgba(var(--ds-gray-1000-rgb), 0.025) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(var(--ds-gray-1000-rgb), 0.025) 1px, transparent 1px);
   }
 
   /* Large screen spacing (960px+) */

@@ -78,9 +78,22 @@ export default function HomepageBreakingNews({
 
   const isScrollable = visible.length > 3;
 
+  // Faint 60 px column grid via globals.css --newsprint-grid token
+  // (rgba on --ds-gray-1000-rgb at 2.5 %, theme-aware). Half-tile
+  // offset prevents the leftmost / topmost line from doubling the
+  // panel border on the outer edges.
+  const newsprintBg: React.CSSProperties = {
+    backgroundImage: "var(--newsprint-grid)",
+    backgroundSize: "60px 60px",
+    backgroundPosition: "30px 30px",
+  };
+
   return (
     <section className="flex w-full justify-center px-4 py-12 md:py-16 lg:py-20">
-      <div className="flex w-full max-w-[1400px] flex-col gap-8 rounded-xl border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-100)] p-6 md:gap-11 md:p-10 lg:p-12">
+      <div
+        className="flex w-full max-w-[1400px] flex-col gap-8 rounded-xl border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-100)] p-6 md:gap-11 md:p-10 lg:p-12"
+        style={newsprintBg}
+      >
         <header className="flex items-center justify-between gap-8 md:items-end">
           <div className="flex flex-col gap-3">
             <div className="inline-flex items-center gap-2 self-start rounded-full bg-[color:var(--ds-red-100)] px-2.5 py-1 text-[12px] font-semibold uppercase tracking-[0.08em] text-[color:var(--ds-red-800)] dark:text-[color:var(--ds-red-900)]">
