@@ -130,7 +130,7 @@ export default function SiteHeader({
             lands on it last. */}
         <div className="hidden items-center gap-2 md:flex">
           <IconButton
-            variant="secondary"
+            variant="tertiary"
             size="small"
             aria-label="Open search"
             title="Search (⌘K)"
