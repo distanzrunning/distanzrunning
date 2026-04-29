@@ -137,7 +137,7 @@ export default function HomepageRaces({
             >
               Upcoming races
             </h2>
-            <p className="text-[14px] leading-[1.4] text-[color:var(--ds-gray-900)]">
+            <p className="text-[16px] leading-[1.5] text-[color:var(--ds-gray-900)] md:text-[18px]">
               Find your next race with detailed race guides, course
               analysis, and insider tips on thousands of the world&apos;s
               greatest races.

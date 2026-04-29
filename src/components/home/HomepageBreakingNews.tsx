@@ -123,7 +123,7 @@ export default function HomepageBreakingNews({
               News
             </h2>
 
-            <p className="text-[14px] leading-[1.4] text-[color:var(--ds-gray-900)]">
+            <p className="text-[16px] leading-[1.5] text-[color:var(--ds-gray-900)] md:text-[18px]">
               Stories moving the sport this week.
             </p>
           </div>
