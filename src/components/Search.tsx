@@ -219,7 +219,7 @@ function SearchInput({
         spellCheck={false}
         className="h-9 w-full bg-transparent text-base text-[color:var(--ds-gray-1000)] outline-none placeholder:text-[color:var(--ds-gray-700)]"
       />
-      <Tooltip content="Close search" side="bottom">
+      <Tooltip content="Close search" side="bottom" showArrow={false}>
         <IconButton
           onClick={reset}
           variant="tertiary"
