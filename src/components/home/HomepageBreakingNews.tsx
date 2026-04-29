@@ -66,16 +66,16 @@ export default function HomepageBreakingNews({
       >
         <header className="flex items-center justify-between gap-8 md:items-end">
           <div className="flex flex-col gap-3">
-            <div className="inline-flex items-center gap-2 self-start rounded-full bg-[color:var(--ds-red-100)] px-2.5 py-1 text-[12px] font-semibold uppercase tracking-[0.08em] text-[color:var(--ds-red-800)]">
+            <h2 className="m-0 inline-flex items-center gap-2 self-start rounded-full bg-[color:var(--ds-red-100)] px-2.5 py-1 text-[12px] font-semibold uppercase tracking-[0.08em] text-[color:var(--ds-red-800)] dark:text-[color:var(--ds-red-900)]">
               <span
                 aria-hidden
                 className="relative inline-flex size-2 items-center justify-center"
               >
-                <span className="absolute inline-flex size-2 animate-ping rounded-full bg-[color:var(--ds-red-800)] opacity-60" />
-                <span className="relative inline-flex size-2 rounded-full bg-[color:var(--ds-red-800)]" />
+                <span className="absolute inline-flex size-2 animate-ping rounded-full bg-[color:var(--ds-red-800)] opacity-60 dark:bg-[color:var(--ds-red-900)]" />
+                <span className="relative inline-flex size-2 rounded-full bg-[color:var(--ds-red-800)] dark:bg-[color:var(--ds-red-900)]" />
               </span>
               Breaking
-            </div>
+            </h2>
 
             <p className="text-balance text-[15px] font-medium leading-[1.4] text-[color:var(--ds-gray-900)] md:text-[19px]">
               Stories moving the sport this week.
