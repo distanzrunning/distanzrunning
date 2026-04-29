@@ -94,7 +94,7 @@ export default function ArticleCard({
               (kickerHref ? (
                 <Link
                   href={kickerHref}
-                  className="relative z-10 underline-offset-2 transition-colors hover:text-[color:var(--ds-gray-1000)] hover:underline"
+                  className="relative z-10 transition-colors hover:text-[color:var(--ds-gray-1000)]"
                 >
                   {kicker}
                 </Link>
