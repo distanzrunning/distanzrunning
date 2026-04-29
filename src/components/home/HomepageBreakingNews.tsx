@@ -78,13 +78,19 @@ export default function HomepageBreakingNews({
 
   const isScrollable = visible.length > 3;
 
-  // Faint 120 px column grid, the kind an editor sees on a
+  // Faint 60 px column grid, the kind an editor sees on a
   // paste-up board. Pattern lives in globals.css under
   // --newsprint-grid; the line colour flips with the theme via
   // --newsprint-grid-line.
+  //
+  // background-position: 30 30 — half-tile offset so no grid line
+  // sits at x=0 or y=0 of the panel. Without this the leftmost
+  // and topmost lines render exactly inside the panel's 1 px
+  // border, reading as a doubled border on the outer edges.
   const newsprintBg: React.CSSProperties = {
     backgroundImage: "var(--newsprint-grid)",
-    backgroundSize: "120px 120px",
+    backgroundSize: "60px 60px",
+    backgroundPosition: "30px 30px",
   };
 
   return (
