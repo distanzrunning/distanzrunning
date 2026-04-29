@@ -1,18 +1,39 @@
 // src/components/Search.tsx
+//
+// Public-site search modal — Algolia-backed via react-instantsearch.
+// Visual layer is built from DS tokens / primitives only:
+//   - Panel uses material-modal (12 px radius + DS shadow) on top of
+//     --ds-background-100 with a --ds-gray-400 hairline.
+//   - All text colour flows through the gray scale tokens (gray-1000
+//     primary, gray-900 subtle, gray-700 muted) so light/dark flip
+//     automatically.
+//   - Hover state on rows uses --ds-gray-100.
+//
+// Empty state lists the five top-level destinations that mirror the
+// site nav (Articles · Shoes · Gear · Nutrition · Races).
+//
+// When the user types, hits are grouped by section header so a
+// query that spans content types reads as a structured list rather
+// than a flat soup. Each hit routes to its flat public URL:
+//   - post        → /articles/{slug}
+//   - productPost → /{section}/{slug} — section is indexed by
+//                   the algolia-sync route from productCategory
+//   - raceGuide   → /races/{slug}
+
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
-  InstantSearch,
-  useSearchBox,
-  useHits,
   Configure,
+  InstantSearch,
+  useHits,
+  useSearchBox,
 } from "react-instantsearch";
 import type { Hit as AlgoliaHit } from "instantsearch.js";
 import { liteClient as algoliasearch } from "algoliasearch/lite";
 import Link from "next/link";
 import { ArrowRight, Loader2, X } from "lucide-react";
-import * as Tooltip from "@radix-ui/react-tooltip";
+
 import IconButton from "@/components/ui/IconButton";
 
 const searchClient = algoliasearch(
@@ -23,473 +44,291 @@ const searchClient = algoliasearch(
 const indexName =
   process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME || "distanz_content";
 
-// Define categories to display
-const categories = [
-  {
-    name: "Road",
-    path: "/articles/category/road",
-    type: "post",
-    category: "Road",
-  },
-  {
-    name: "Track & Field",
-    path: "/articles/category/track",
-    type: "post",
-    category: "Track",
-  },
-  {
-    name: "Trail",
-    path: "/articles/category/trail",
-    type: "post",
-    category: "Trail",
-  },
-  { name: "Gear", type: "gearPost", hasSubcategories: true },
-  { name: "Races", path: "/races", type: "raceGuide" },
+// ============================================================================
+// Section metadata — drives both the empty state and the hit grouping
+// ============================================================================
+
+type SectionId = "articles" | "shoes" | "gear" | "nutrition" | "races";
+
+const SECTIONS: ReadonlyArray<{
+  id: SectionId;
+  label: string;
+  href: string;
+}> = [
+  { id: "articles", label: "Articles", href: "/articles" },
+  { id: "shoes", label: "Shoes", href: "/shoes" },
+  { id: "gear", label: "Gear", href: "/gear" },
+  { id: "nutrition", label: "Nutrition", href: "/nutrition" },
+  { id: "races", label: "Races", href: "/races" },
 ];
 
-// Define gear subcategories
-const gearSubcategories = [
-  {
-    name: "Race Day Shoes",
-    path: "/gear/category/race-day-shoes",
-    gearCategory: "Race Day Shoes",
-  },
-  {
-    name: "Daily Trainers",
-    path: "/gear/category/daily-trainers",
-    gearCategory: "Daily Trainers",
-  },
-  {
-    name: "Max Cushion Shoes",
-    path: "/gear/category/max-cushion-shoes",
-    gearCategory: "Max Cushion Shoes",
-  },
-  {
-    name: "Tempo Shoes",
-    path: "/gear/category/tempo-shoes",
-    gearCategory: "Tempo Shoes",
-  },
-  {
-    name: "Trail Shoes",
-    path: "/gear/category/trail-shoes",
-    gearCategory: "Trail Shoes",
-  },
-  {
-    name: "GPS Watches",
-    path: "/gear/category/gps-watches",
-    gearCategory: "GPS Watches",
-  },
-  {
-    name: "Nutrition",
-    path: "/gear/category/nutrition",
-    gearCategory: "Nutrition",
-  },
-];
+// ============================================================================
+// Hit helpers
+// ============================================================================
 
-type HitType = AlgoliaHit<{
+type HitFields = {
   objectID: string;
   title: string;
   slug: string;
-  _type: string;
+  _type: "post" | "productPost" | "gearPost" | "raceGuide";
   excerpt?: string;
-  category?: string;
-  tags?: string[];
-  gearCategory?: string;
-  raceCategory?: string;
-  location?: string;
-}>;
+  /** productPost section, indexed from productCategory->section. */
+  section?: "shoes" | "gear" | "nutrition";
+};
 
-function SearchResults({
-  query,
-  onClearQuery,
-  isExpanded,
-  isSearching,
+type HitType = AlgoliaHit<HitFields>;
+
+function sectionForHit(hit: HitType): SectionId {
+  if (hit._type === "post") return "articles";
+  if (hit._type === "raceGuide") return "races";
+  // productPost / legacy gearPost — fall back to "gear" if section
+  // isn't indexed yet (older records pre algolia-sync update).
+  if (hit.section === "shoes") return "shoes";
+  if (hit.section === "nutrition") return "nutrition";
+  return "gear";
+}
+
+function hrefForHit(hit: HitType): string {
+  const section = sectionForHit(hit);
+  if (section === "articles") return `/articles/${hit.slug}`;
+  if (section === "races") return `/races/${hit.slug}`;
+  return `/${section}/${hit.slug}`;
+}
+
+// ============================================================================
+// Reusable row — used by both the empty-state list and the hits list
+// ============================================================================
+
+function Row({
+  href,
+  primary,
+  secondary,
+  onSelect,
 }: {
-  query: string;
-  onClearQuery: () => void;
-  isExpanded: boolean;
-  isSearching: boolean;
+  href: string;
+  primary: string;
+  secondary?: string;
+  onSelect?: () => void;
 }) {
-  const { hits } = useHits<HitType>();
-  const [categoryCounts, setCategoryCounts] = useState<Record<string, number>>(
-    {},
-  );
-  const [gearSubcategoryCounts, setGearSubcategoryCounts] = useState<
-    Record<string, number>
-  >({});
-  const [countsLoading, setCountsLoading] = useState(true);
-  const [showGearSubcategories, setShowGearSubcategories] = useState(false);
-
-  const handleResultClick = () => {
-    onClearQuery();
-  };
-
-  // Fetch category counts when component mounts
-  useEffect(() => {
-    async function fetchCategoryCounts() {
-      try {
-        // First check if there's ANY data in the index
-        const totalResult = await searchClient.search({
-          requests: [
-            {
-              indexName,
-              query: "",
-              hitsPerPage: 5,
-              attributesToRetrieve: ["_type", "category", "title"],
-            },
-          ],
-        });
-        console.log("Total items in index:", totalResult.results[0]);
-        console.log("Sample records:", totalResult.results[0].hits);
-
-        const counts: Record<string, number> = {};
-
-        // First, let's get total counts by type
-        for (const cat of categories) {
-          let filters = `_type:"${cat.type}"`;
-          if (cat.category) {
-            filters += ` AND category:"${cat.category}"`;
-          }
-
-          console.log("Fetching count for", cat.name, "with filters:", filters);
-
-          const result = await searchClient.search({
-            requests: [
-              {
-                indexName,
-                query: "",
-                filters,
-                hitsPerPage: 0,
-                attributesToRetrieve: [],
-              },
-            ],
-          });
-
-          const searchResult = result.results[0];
-          console.log("Result for", cat.name, ":", searchResult);
-
-          if ("nbHits" in searchResult) {
-            counts[cat.name] = searchResult.nbHits || 0;
-          }
-        }
-
-        console.log("Final counts:", counts);
-        setCategoryCounts(counts);
-
-        // Also fetch gear subcategory counts
-        const gearCounts: Record<string, number> = {};
-        for (const subcat of gearSubcategories) {
-          const filters = `_type:"gearPost" AND gearCategory:"${subcat.gearCategory}"`;
-          console.log(
-            "Fetching gear subcat count for",
-            subcat.name,
-            "with filters:",
-            filters,
-          );
-
-          const result = await searchClient.search({
-            requests: [
-              {
-                indexName,
-                query: "",
-                filters,
-                hitsPerPage: 0,
-                attributesToRetrieve: [],
-              },
-            ],
-          });
-
-          const searchResult = result.results[0];
-          if ("nbHits" in searchResult) {
-            gearCounts[subcat.name] = searchResult.nbHits || 0;
-          }
-        }
-        console.log("Gear subcategory counts:", gearCounts);
-        setGearSubcategoryCounts(gearCounts);
-
-        setCountsLoading(false);
-      } catch (error) {
-        console.error("Error fetching category counts:", error);
-        setCountsLoading(false);
-      }
-    }
-
-    fetchCategoryCounts();
-  }, []);
-
-  // Show category listing when no query
-  if (!isExpanded || query.length === 0) {
-    return (
-      <div className="h-full overflow-x-hidden relative">
-        {countsLoading ? (
-          <div className="absolute inset-0 flex items-center justify-center">
-            <Loader2 className="w-6 h-6 text-neutral-900 dark:text-white animate-spin" />
-          </div>
-        ) : (
-          <div className="py-2 px-2">
-            {showGearSubcategories ? (
-              <>
-                {/* Back button */}
-                <button
-                  onClick={() => setShowGearSubcategories(false)}
-                  className="group flex cursor-pointer items-center gap-2 rounded-lg px-3 py-4 text-neutral-600 dark:text-neutral-400 text-sm hover:bg-neutral-200 dark:hover:bg-neutral-700 hover:text-neutral-900 dark:hover:text-white transition-all w-full"
-                >
-                  <ArrowRight className="size-4 rotate-180" />
-                  <span className="font-semibold">Back</span>
-                </button>
-                {/* Gear subcategories */}
-                {gearSubcategories.map((subcat) => (
-                  <Link
-                    key={subcat.name}
-                    href={subcat.path}
-                    className="group flex cursor-pointer items-center justify-between gap-2 rounded-lg px-3 py-4 text-neutral-600 dark:text-neutral-400 text-sm hover:bg-neutral-200 dark:hover:bg-neutral-700 hover:text-neutral-900 dark:hover:text-white transition-all"
-                    onClick={onClearQuery}
-                  >
-                    <div className="flex basis-2/3 overflow-hidden">
-                      <span className="font-semibold truncate">
-                        {subcat.name}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm text-neutral-500 dark:text-neutral-500">
-                        {gearSubcategoryCounts[subcat.name] || 0}
-                      </span>
-                    </div>
-                  </Link>
-                ))}
-              </>
-            ) : (
-              categories.map((cat) => {
-                const isGear = cat.hasSubcategories;
-
-                if (isGear) {
-                  return (
-                    <button
-                      key={cat.name}
-                      onClick={() => setShowGearSubcategories(true)}
-                      className="group flex cursor-pointer items-center justify-between gap-2 rounded-lg px-3 py-4 text-neutral-600 dark:text-neutral-400 text-sm hover:bg-neutral-200 dark:hover:bg-neutral-700 hover:text-neutral-900 dark:hover:text-white transition-all w-full"
-                    >
-                      <div className="flex basis-2/3 overflow-hidden">
-                        <span className="font-semibold truncate">
-                          {cat.name}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm text-neutral-500 dark:text-neutral-500">
-                          {categoryCounts[cat.name] || 0}
-                        </span>
-                      </div>
-                    </button>
-                  );
-                }
-
-                return (
-                  <Link
-                    key={cat.name}
-                    href={cat.path!}
-                    className="group flex cursor-pointer items-center justify-between gap-2 rounded-lg px-3 py-4 text-neutral-600 dark:text-neutral-400 text-sm hover:bg-neutral-200 dark:hover:bg-neutral-700 hover:text-neutral-900 dark:hover:text-white transition-all"
-                    onClick={onClearQuery}
-                  >
-                    <div className="flex basis-2/3 overflow-hidden">
-                      <span className="font-semibold truncate">{cat.name}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm text-neutral-500 dark:text-neutral-500">
-                        {categoryCounts[cat.name] || 0}
-                      </span>
-                    </div>
-                  </Link>
-                );
-              })
-            )}
-          </div>
-        )}
-      </div>
-    );
-  }
-
-  // Show loading spinner while searching
-  if (isSearching) {
-    return (
-      <div className="h-full overflow-x-hidden relative">
-        <div className="absolute inset-0 flex items-center justify-center">
-          <Loader2 className="w-6 h-6 text-neutral-900 dark:text-white animate-spin" />
-        </div>
-      </div>
-    );
-  }
-
-  // Show results
   return (
-    <div className="h-full overflow-x-hidden">
-      <div className="py-2 px-2">
-        {hits.length === 0 ? (
-          <div className="flex items-center justify-center py-8 text-neutral-500 dark:text-neutral-400 text-sm">
-            No results found
-          </div>
-        ) : (
-          hits.slice(0, 8).map((hit) => {
-            // Determine URL
-            let href = "/";
-            if (hit._type === "post") {
-              href = `/articles/post/${hit.slug}`;
-            } else if (hit._type === "gearPost") {
-              href = `/gear/${hit.slug}`;
-            } else if (hit._type === "raceGuide") {
-              href = `/races/${hit.slug}`;
-            }
-
-            return (
-              <Link
-                key={hit.objectID}
-                href={href}
-                className="group flex cursor-pointer items-center justify-between gap-2 rounded-lg px-3 py-4 text-neutral-600 dark:text-neutral-400 text-sm hover:bg-neutral-200 dark:hover:bg-neutral-700 hover:text-neutral-900 dark:hover:text-white transition-all"
-                onClick={handleResultClick}
-              >
-                <div className="flex basis-2/3 overflow-hidden">
-                  <span className="font-semibold truncate">{hit.title}</span>
-                </div>
-                <div>
-                  <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
-                </div>
-              </Link>
-            );
-          })
+    <Link
+      href={href}
+      onClick={onSelect}
+      className="group flex w-full cursor-pointer items-center justify-between gap-3 rounded-md px-3 py-3 text-sm text-[color:var(--ds-gray-900)] transition-colors hover:bg-[color:var(--ds-gray-100)] hover:text-[color:var(--ds-gray-1000)]"
+    >
+      <span className="flex min-w-0 flex-col">
+        <span className="truncate font-medium text-[color:var(--ds-gray-1000)]">
+          {primary}
+        </span>
+        {secondary && (
+          <span className="truncate text-xs text-[color:var(--ds-gray-700)]">
+            {secondary}
+          </span>
         )}
-      </div>
+      </span>
+      <ArrowRight
+        className="size-4 shrink-0 text-[color:var(--ds-gray-700)] transition-transform group-hover:translate-x-0.5 group-hover:text-[color:var(--ds-gray-1000)]"
+        aria-hidden
+      />
+    </Link>
+  );
+}
+
+function GroupHeader({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="px-3 pb-1 pt-3 text-[11px] font-medium uppercase tracking-[0.08em] text-[color:var(--ds-gray-700)]">
+      {children}
     </div>
   );
 }
 
+// ============================================================================
+// Body — empty state, results, loading, no-results
+// ============================================================================
+
+function SearchBody({
+  query,
+  isSearching,
+  onSelect,
+}: {
+  query: string;
+  isSearching: boolean;
+  onSelect: () => void;
+}) {
+  const { hits } = useHits<HitFields>();
+
+  // Empty state — list the five sections
+  if (query.length === 0) {
+    return (
+      <div className="px-2 py-2">
+        <GroupHeader>Sections</GroupHeader>
+        {SECTIONS.map((section) => (
+          <Row
+            key={section.id}
+            href={section.href}
+            primary={section.label}
+            onSelect={onSelect}
+          />
+        ))}
+      </div>
+    );
+  }
+
+  if (isSearching) {
+    return (
+      <div className="flex h-full items-center justify-center">
+        <Loader2
+          className="size-5 animate-spin text-[color:var(--ds-gray-700)]"
+          aria-hidden
+        />
+      </div>
+    );
+  }
+
+  if (hits.length === 0) {
+    return (
+      <div className="flex h-full items-center justify-center px-6 text-sm text-[color:var(--ds-gray-700)]">
+        No results for &ldquo;{query}&rdquo;.
+      </div>
+    );
+  }
+
+  // Group hits by section, preserving Algolia's relevance order within
+  // each group, and only rendering groups that have hits.
+  const grouped = SECTIONS.map((section) => ({
+    section,
+    hits: hits.filter((h) => sectionForHit(h) === section.id).slice(0, 5),
+  })).filter((g) => g.hits.length > 0);
+
+  return (
+    <div className="px-2 py-2">
+      {grouped.map(({ section, hits: sectionHits }) => (
+        <div key={section.id}>
+          <GroupHeader>{section.label}</GroupHeader>
+          {sectionHits.map((hit) => (
+            <Row
+              key={hit.objectID}
+              href={hrefForHit(hit)}
+              primary={hit.title}
+              secondary={hit.excerpt}
+              onSelect={onSelect}
+            />
+          ))}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// ============================================================================
+// Input row — text field + close button
+// ============================================================================
+
 function SearchInput({
-  onQueryChange,
   isExpanded,
-  onExpandChange,
+  onClose,
+  onQueryChange,
   onSearchingChange,
 }: {
-  onQueryChange: (query: string) => void;
   isExpanded: boolean;
-  onExpandChange: (expanded: boolean) => void;
-  onSearchingChange: (searching: boolean) => void;
+  onClose: () => void;
+  onQueryChange: (q: string) => void;
+  onSearchingChange: (b: boolean) => void;
 }) {
   const { query, refine } = useSearchBox();
   const [localQuery, setLocalQuery] = useState(query);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Debounce search with loading state
+  // Debounced refine + searching state
   useEffect(() => {
-    if (localQuery.length > 0) {
-      onSearchingChange(true);
-    }
-
-    const timeoutId = setTimeout(() => {
+    if (localQuery.length > 0) onSearchingChange(true);
+    const id = setTimeout(() => {
       refine(localQuery);
       onQueryChange(localQuery);
       onSearchingChange(false);
-    }, 300);
-
-    return () => clearTimeout(timeoutId);
+    }, 200);
+    return () => clearTimeout(id);
   }, [localQuery, refine, onQueryChange, onSearchingChange]);
 
-  // Handle Escape key
+  // Auto-focus when the modal opens
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        setLocalQuery("");
-        onExpandChange(false);
-      }
-    };
-
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [onExpandChange]);
-
-  // Auto-focus on mount
-  useEffect(() => {
-    if (isExpanded && inputRef.current) {
-      inputRef.current.focus();
-    }
+    if (isExpanded) inputRef.current?.focus();
   }, [isExpanded]);
 
-  const handleClear = () => {
+  const reset = () => {
     setLocalQuery("");
-    onExpandChange(false);
+    onClose();
   };
 
   return (
-    <div className="flex items-center gap-2 border-b border-neutral-200 dark:border-neutral-700 py-2 pl-5 pr-4">
+    <div className="flex items-center gap-2 border-b border-[color:var(--ds-gray-400)] px-4 py-2">
       <input
         ref={inputRef}
         type="text"
         value={localQuery}
         onChange={(e) => setLocalQuery(e.target.value)}
-        placeholder="Search"
+        placeholder="Search articles, gear and races"
         autoComplete="off"
         autoCorrect="off"
-        spellCheck="false"
-        className="placeholder:text-neutral-400 h-9 w-full bg-transparent outline-none text-[1rem] md:text-base text-neutral-900 dark:text-white"
+        spellCheck={false}
+        className="h-9 w-full bg-transparent text-base text-[color:var(--ds-gray-1000)] outline-none placeholder:text-[color:var(--ds-gray-700)]"
       />
-      <Tooltip.Provider delayDuration={300}>
-        <Tooltip.Root>
-          <Tooltip.Trigger asChild>
-            <IconButton
-              onClick={handleClear}
-              variant="tertiary"
-              size="small"
-              aria-label="Close search"
-            >
-              <X className="w-4 h-4" />
-            </IconButton>
-          </Tooltip.Trigger>
-          <Tooltip.Portal>
-            <Tooltip.Content
-              className="bg-neutral-900 text-white text-sm px-3 py-2.5 rounded-lg shadow-lg z-[100]"
-              side="bottom"
-              sideOffset={5}
-            >
-              Close search
-            </Tooltip.Content>
-          </Tooltip.Portal>
-        </Tooltip.Root>
-      </Tooltip.Provider>
+      <IconButton
+        onClick={reset}
+        variant="tertiary"
+        size="small"
+        aria-label="Close search"
+      >
+        <X className="size-4" />
+      </IconButton>
     </div>
   );
 }
 
-function SearchContent({
+// ============================================================================
+// Panel — wraps the input + body in a material-modal surface
+// ============================================================================
+
+function SearchPanel({
   isExpanded,
   onExpandChange,
 }: {
   isExpanded: boolean;
-  onExpandChange: (expanded: boolean) => void;
+  onExpandChange: (b: boolean) => void;
 }) {
-  const [currentQuery, setCurrentQuery] = useState("");
+  const [query, setQuery] = useState("");
   const [isSearching, setIsSearching] = useState(false);
 
-  const handleClearQuery = () => {
-    setCurrentQuery("");
-    onExpandChange(false);
-  };
+  const handleClose = useMemo(
+    () => () => {
+      setQuery("");
+      onExpandChange(false);
+    },
+    [onExpandChange],
+  );
 
   return (
-    <div className="flex w-full max-w-xl flex-col overflow-hidden rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white/95 dark:bg-neutral-800/95 shadow-2xl backdrop-blur-sm backdrop-saturate-150 transition-colors duration-300">
+    <div className="material-modal flex w-full max-w-xl flex-col overflow-hidden bg-[color:var(--ds-background-100)]">
       <SearchInput
-        onQueryChange={setCurrentQuery}
         isExpanded={isExpanded}
-        onExpandChange={onExpandChange}
+        onClose={handleClose}
+        onQueryChange={setQuery}
         onSearchingChange={setIsSearching}
       />
-      <div className="relative h-[432px]">
-        <SearchResults
-          query={currentQuery}
-          onClearQuery={handleClearQuery}
-          isExpanded={isExpanded}
+      <div className="relative h-[432px] overflow-y-auto">
+        <SearchBody
+          query={query}
           isSearching={isSearching}
+          onSelect={handleClose}
         />
       </div>
     </div>
   );
 }
+
+// ============================================================================
+// Public component
+// ============================================================================
 
 export default function Search({
   isExpanded,
@@ -499,14 +338,9 @@ export default function Search({
   onExpandChange: (expanded: boolean) => void;
 }) {
   return (
-    <InstantSearch
-      searchClient={searchClient}
-      indexName={
-        process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME || "distanz_content"
-      }
-    >
+    <InstantSearch searchClient={searchClient} indexName={indexName}>
       <Configure hitsPerPage={50} />
-      <SearchContent isExpanded={isExpanded} onExpandChange={onExpandChange} />
+      <SearchPanel isExpanded={isExpanded} onExpandChange={onExpandChange} />
     </InstantSearch>
   );
 }
