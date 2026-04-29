@@ -78,18 +78,19 @@ export default function HomepageBreakingNews({
 
   const isScrollable = visible.length > 3;
 
-  // Faint registration-cross grid, the kind an editor sees on a
+  // Faint 120 px column grid, the kind an editor sees on a
   // paste-up board. Pattern lives in globals.css under
-  // --newsprint-cross so the stroke colour flips between black
-  // (light) and white (dark) automatically.
+  // --newsprint-grid; the line colour flips with the theme via
+  // --newsprint-grid-line.
   const newsprintBg: React.CSSProperties = {
-    backgroundImage: "var(--newsprint-cross)",
+    backgroundImage: "var(--newsprint-grid)",
+    backgroundSize: "120px 120px",
   };
 
   return (
     <section className="flex w-full justify-center px-4 py-12 md:py-16 lg:py-20">
       <div
-        className="flex w-full max-w-[1400px] flex-col gap-8 rounded-xl border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-100)] p-6 md:gap-11 md:p-10 lg:p-12 dark:bg-[color:var(--ds-background-200)]"
+        className="flex w-full max-w-[1400px] flex-col gap-8 rounded-xl border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-200)] p-6 md:gap-11 md:p-10 lg:p-12 dark:bg-[color:var(--ds-background-100)]"
         style={newsprintBg}
       >
         <header className="flex items-center justify-between gap-8 md:items-end">

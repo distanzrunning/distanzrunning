@@ -683,14 +683,20 @@
     --grid-outside-gutter: 1.5rem; /* 24px - outside padding (small/medium) */
 
     /* ─────────────────────────────────────────────────────────────────────────
-       NEWSPRINT — Editor's registration-cross grid
-       Tiny "+" tile used as a faint background-image on editorial
-       panels (e.g. HomepageBreakingNews). Reads as the layout-grid
-       marks an editor sees on a paste-up board, not a decorative
-       motif. The pattern variable flips with the theme so the
-       crosses stay equally subtle in light and dark.
+       NEWSPRINT — Editor's column grid
+       Faint 120 px grid of square boxes drawn from two crossed
+       linear-gradients. Reads as the layout-grid an editor sees on
+       a paste-up board. The line colour flips with the theme via
+       --newsprint-grid-line so the gradient string itself only
+       needs to be defined once.
+       Light: white-on-bg-200 (lines lighter than the panel surface).
+       Dark:  gray-200-on-bg-100 (lines slightly lighter than the
+       panel surface).
        ───────────────────────────────────────────────────────────────────────── */
-    --newsprint-cross: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'%3E%3Cpath d='M14 12v4M12 14h4' stroke='%23000' stroke-opacity='0.10' stroke-width='1' fill='none'/%3E%3C/svg%3E");
+    --newsprint-grid-line: var(--ds-background-100);
+    --newsprint-grid:
+      linear-gradient(to right, var(--newsprint-grid-line) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--newsprint-grid-line) 1px, transparent 1px);
   }
 
   /* Large screen spacing (960px+) */
@@ -1140,10 +1146,10 @@
     --color-info-bg-subtle: var(--ds-purple-100-rgb);
     --color-info-border: var(--ds-purple-500-rgb);
 
-    /* Newsprint cross — white strokes on dark surfaces, slightly
-       higher opacity so the contrast against the darker panel stays
-       even with the light-mode rendering. */
-    --newsprint-cross: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'%3E%3Cpath d='M14 12v4M12 14h4' stroke='%23fff' stroke-opacity='0.14' stroke-width='1' fill='none'/%3E%3C/svg%3E");
+    /* Newsprint grid line — slightly lighter than the panel bg so
+       the column grid reads as a faint outline rather than disappearing
+       into the dark surface. */
+    --newsprint-grid-line: var(--ds-gray-200);
   }
 
   /* Distanz reset (Distanz design system) */
