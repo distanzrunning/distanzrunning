@@ -2,6 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { format } from "date-fns";
 
+import { Badge } from "@/components/ui/Badge";
+
 // ============================================================================
 // RaceCard
 // ============================================================================
@@ -77,9 +79,11 @@ export default function RaceCard({
         )}
 
         {category && (
-          <span className="absolute right-3 top-3 z-10 rounded-full bg-[color:var(--ds-background-100)]/95 px-3 py-1.5 text-[12px] font-medium text-[color:var(--ds-gray-1000)] backdrop-blur-sm dark:bg-[color:var(--ds-background-200)]/95">
-            {category}
-          </span>
+          <div className="absolute right-3 top-3 z-10">
+            <Badge variant="inverted" size="md">
+              {category}
+            </Badge>
+          </div>
         )}
       </div>
 
