@@ -681,6 +681,16 @@
     --grid-gap: 0.75rem; /* 12px - element spacing (small/medium) */
     --grid-gutter: 1.5rem; /* 24px - column spacing (small/medium, 2× gap) */
     --grid-outside-gutter: 1.5rem; /* 24px - outside padding (small/medium) */
+
+    /* ─────────────────────────────────────────────────────────────────────────
+       NEWSPRINT — Editor's registration-cross grid
+       Tiny "+" tile used as a faint background-image on editorial
+       panels (e.g. HomepageBreakingNews). Reads as the layout-grid
+       marks an editor sees on a paste-up board, not a decorative
+       motif. The pattern variable flips with the theme so the
+       crosses stay equally subtle in light and dark.
+       ───────────────────────────────────────────────────────────────────────── */
+    --newsprint-cross: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'%3E%3Cpath d='M14 12v4M12 14h4' stroke='%23000' stroke-opacity='0.10' stroke-width='1' fill='none'/%3E%3C/svg%3E");
   }
 
   /* Large screen spacing (960px+) */
@@ -1129,6 +1139,11 @@
     --color-info-bg: var(--ds-purple-200-rgb);
     --color-info-bg-subtle: var(--ds-purple-100-rgb);
     --color-info-border: var(--ds-purple-500-rgb);
+
+    /* Newsprint cross — white strokes on dark surfaces, slightly
+       higher opacity so the contrast against the darker panel stays
+       even with the light-mode rendering. */
+    --newsprint-cross: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'%3E%3Cpath d='M14 12v4M12 14h4' stroke='%23fff' stroke-opacity='0.14' stroke-width='1' fill='none'/%3E%3C/svg%3E");
   }
 
   /* Distanz reset (Distanz design system) */

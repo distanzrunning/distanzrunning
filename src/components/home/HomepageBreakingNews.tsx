@@ -50,13 +50,12 @@ export default function HomepageBreakingNews({
   const visible = items.slice(0, limit);
   if (visible.length === 0) return null;
 
-  // Faint diagonal-line texture, newsprint-style. Drawn with a
-  // repeating-linear-gradient so the stripe colour can flow through
-  // a DS rgb-tuple token (--ds-gray-1000-rgb is near-black in light
-  // and near-white in dark — flips automatically) at 6% opacity.
+  // Faint registration-cross grid, the kind an editor sees on a
+  // paste-up board. Pattern lives in globals.css under
+  // --newsprint-cross so the stroke colour flips between black
+  // (light) and white (dark) automatically.
   const newsprintBg: React.CSSProperties = {
-    backgroundImage:
-      "repeating-linear-gradient(-45deg, rgba(var(--ds-gray-1000-rgb), 0.06) 0, rgba(var(--ds-gray-1000-rgb), 0.06) 1px, transparent 1px, transparent 8px)",
+    backgroundImage: "var(--newsprint-cross)",
   };
 
   return (
