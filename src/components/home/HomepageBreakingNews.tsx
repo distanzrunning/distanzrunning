@@ -96,16 +96,14 @@ export default function HomepageBreakingNews({
       >
         <header className="flex items-center justify-between gap-8 md:items-end">
           <div className="flex flex-col gap-3">
-            <div className="inline-flex items-center gap-2 self-start rounded-full bg-[color:var(--ds-red-100)] px-2.5 py-1 text-[12px] font-semibold uppercase tracking-[0.08em] text-[color:var(--ds-red-800)] dark:text-[color:var(--ds-red-900)]">
-              <span
-                aria-hidden
-                className="relative inline-flex size-2 items-center justify-center"
-              >
-                <span className="absolute inline-flex size-2 animate-ping rounded-full bg-[color:var(--ds-red-800)] opacity-60 dark:bg-[color:var(--ds-red-900)]" />
-                <span className="relative inline-flex size-2 rounded-full bg-[color:var(--ds-red-800)] dark:bg-[color:var(--ds-red-900)]" />
-              </span>
-              Breaking
-            </div>
+            <span
+              aria-hidden
+              className="relative inline-flex size-2 self-start"
+              role="presentation"
+            >
+              <span className="absolute inline-flex size-2 animate-ping rounded-full bg-[color:var(--ds-red-800)] opacity-60 dark:bg-[color:var(--ds-red-900)]" />
+              <span className="relative inline-flex size-2 rounded-full bg-[color:var(--ds-red-800)] dark:bg-[color:var(--ds-red-900)]" />
+            </span>
 
             <h2
               className="m-0 text-balance font-headline font-semibold text-[color:var(--ds-gray-1000)]"
@@ -115,7 +113,7 @@ export default function HomepageBreakingNews({
                 letterSpacing: "-0.04em",
               }}
             >
-              News
+              Latest news
             </h2>
 
             <p className="text-[16px] leading-[1.5] text-[color:var(--ds-gray-900)] md:text-[18px]">
