@@ -125,8 +125,10 @@ export default function SiteHeader({
           </div>
         </div>
 
-        {/* Right (desktop only): search + newsletter + theme actions */}
+        {/* Right (desktop only): newsletter primary CTA, then the
+            search + theme utility cluster. */}
         <div className="hidden items-center gap-2 md:flex">
+          <NewsletterButton size="small" source={newsletterSource} />
           <IconButton
             variant="secondary"
             size="small"
@@ -136,7 +138,6 @@ export default function SiteHeader({
           >
             <SearchIcon className="size-4" />
           </IconButton>
-          <NewsletterButton size="small" source={newsletterSource} />
           <ThemeSwitcher
             showSystem={false}
             value={theme === "system" ? "light" : theme}
