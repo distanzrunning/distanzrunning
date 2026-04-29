@@ -1,13 +1,11 @@
 "use client";
 
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Search as SearchIcon } from "lucide-react";
-import { DarkModeContext } from "@/components/DarkModeProvider";
 import IconButton from "@/components/ui/IconButton";
 import { NewsletterButton } from "@/components/ui/NewsletterModal";
-import { ThemeSwitcher } from "@/components/ui/ThemeSwitcher";
 import SiteNavigationMenu, {
   type FeaturedProduct,
   type FeaturedRace,
@@ -58,7 +56,6 @@ export default function SiteHeader({
   featuredRace,
   newsletterSource = "site_header",
 }: SiteHeaderProps) {
-  const { theme, setTheme } = useContext(DarkModeContext);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -125,9 +122,9 @@ export default function SiteHeader({
           </div>
         </div>
 
-        {/* Right (desktop only): utility cluster (search + theme) leads,
-            newsletter primary CTA closes as the endcap so the eye
-            lands on it last. */}
+        {/* Right (desktop only): search utility + newsletter primary
+            CTA. Theme switcher lives in the footer (set-once
+            preference doesn't deserve top-of-page real estate). */}
         <div className="hidden items-center gap-2 md:flex">
           <IconButton
             variant="tertiary"
@@ -138,11 +135,6 @@ export default function SiteHeader({
           >
             <SearchIcon className="size-4" />
           </IconButton>
-          <ThemeSwitcher
-            showSystem={false}
-            value={theme === "system" ? "light" : theme}
-            onChange={setTheme}
-          />
           <NewsletterButton size="small" source={newsletterSource} />
         </div>
 

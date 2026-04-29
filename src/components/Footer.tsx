@@ -12,11 +12,13 @@
 
 "use client";
 
-import type { ComponentType } from "react";
+import { useContext, type ComponentType } from "react";
 import Link from "next/link";
 import { SiInstagram, SiX, SiStrava, SiLinkedin } from "react-icons/si";
+import { DarkModeContext } from "@/components/DarkModeProvider";
 import { useConsent } from "@/contexts/ConsentContext";
 import Logo from "@/components/ui/Logo";
+import { ThemeSwitcher } from "@/components/ui/ThemeSwitcher";
 
 // ============================================================================
 // Link / action union — Cookies needs to fire openSettings on the
@@ -71,6 +73,7 @@ const socialLinks: ReadonlyArray<SocialLink> = [
 
 export default function Footer() {
   const { openSettings } = useConsent();
+  const { theme, setTheme } = useContext(DarkModeContext);
 
   const companyLinks: ReadonlyArray<FooterItem> = [
     { kind: "link", label: "About", href: "/about" },
@@ -92,17 +95,28 @@ export default function Footer() {
             grid. On md+ it expands to the xl breakpoint and goes
             side-by-side. */}
         <div className="flex w-full max-w-2xl flex-col justify-between gap-x-12 gap-y-16 md:mx-auto md:max-w-7xl md:flex-row md:items-start">
-          {/* Full Distanz Running lockup (icon + Distanz + Running).
-              Same inline-SVG approach as the header wordmark so the
-              colour follows currentColor / text-gray-1000 in both
-              modes. */}
-          <Link
-            href="/"
-            aria-label="Distanz Running — home"
-            className="inline-flex h-fit shrink-0 text-[color:var(--ds-gray-1000)]"
-          >
-            <Logo className="h-12 w-auto" />
-          </Link>
+          {/* Brand column: full Distanz Running lockup with the
+              theme switcher tucked underneath. Theme is a
+              set-once preference, so the footer is the right
+              home for it — keeps the header focused on search +
+              newsletter. ThemeSwitcher uses its default 3-state
+              control (System / Light / Dark) since users have
+              time to make a deliberate pick down here. */}
+          <div className="flex shrink-0 flex-col gap-6">
+            <Link
+              href="/"
+              aria-label="Distanz Running — home"
+              className="inline-flex h-fit text-[color:var(--ds-gray-1000)]"
+            >
+              <Logo className="h-12 w-auto" />
+            </Link>
+            <div className="flex w-fit items-center gap-3">
+              <span className="text-[14px] leading-5 text-[color:var(--ds-gray-900)]">
+                Theme
+              </span>
+              <ThemeSwitcher value={theme} onChange={setTheme} />
+            </div>
+          </div>
 
           {/* Link grid. Mobile: 2-col, no x-gap, 16 px y-gap (tight
               packing inside the 672 px column). md: 3 cols / 64 px
