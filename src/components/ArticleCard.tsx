@@ -17,9 +17,18 @@ import { urlFor } from "@/sanity/lib/image";
 //   - 2-line title clamp on mobile, 3-line on md+
 //   - 2-line excerpt clamp
 //
-// Colours all flow through DS tokens so the card flips cleanly with
-// the theme. The whole card is a single <Link> so the entire surface
-// is the click target.
+// Markup uses the "card-with-overlay-link" pattern so the whole
+// card is clickable while still letting the kicker carry its own
+// link to the category landing page:
+//   - <article> is the card surface (group + relative)
+//   - The <h3>'s anchor has after:absolute after:inset-0, which
+//     stretches an invisible click overlay across the entire card
+//     — the title is the primary link.
+//   - The kicker's anchor sits with relative z-10 so it punches
+//     through the overlay and gets its own click + hover state.
+//
+// Colours all flow through DS tokens so the card flips cleanly
+// with the theme.
 
 export interface ArticleCardProps {
   href: string;
@@ -27,6 +36,8 @@ export interface ArticleCardProps {
   publishedAt: string;
   /** Short label above the title — category, "Race Guide", etc. */
   kicker?: string;
+  /** Optional URL for the kicker. When set, the kicker becomes a clickable link punching through the card-wide click overlay. */
+  kickerHref?: string;
   excerpt?: string;
   image?: SanityImageSource;
   /** Defaults to the title — override if the image conveys something different. */
@@ -44,6 +55,7 @@ export default function ArticleCard({
   title,
   publishedAt,
   kicker,
+  kickerHref,
   excerpt,
   image,
   imageAlt,
@@ -56,9 +68,8 @@ export default function ArticleCard({
     : undefined;
 
   return (
-    <Link
-      href={href}
-      className={`group flex w-full flex-col items-start gap-4 ${className}`.trim()}
+    <article
+      className={`group relative flex w-full flex-col items-start gap-4 ${className}`.trim()}
     >
       <div className="relative w-full overflow-hidden rounded-md bg-[color:var(--ds-gray-100)] aspect-[16/8.75]">
         {imgSrc && (
@@ -79,7 +90,17 @@ export default function ArticleCard({
       <div className="flex flex-col gap-2 px-1">
         {(kicker || dateLabel) && (
           <div className="flex items-center gap-1.5 text-[11px] font-medium tracking-[0.0275em] text-[color:var(--ds-gray-900)]">
-            {kicker && <span>{kicker}</span>}
+            {kicker &&
+              (kickerHref ? (
+                <Link
+                  href={kickerHref}
+                  className="relative z-10 underline-offset-2 transition-colors hover:text-[color:var(--ds-gray-1000)] hover:underline"
+                >
+                  {kicker}
+                </Link>
+              ) : (
+                <span>{kicker}</span>
+              ))}
             {kicker && dateLabel && (
               <span aria-hidden className="text-[color:var(--ds-gray-700)]">
                 ·
@@ -94,7 +115,12 @@ export default function ArticleCard({
         )}
 
         <h3 className="line-clamp-2 text-[19px] font-semibold leading-[1.4] tracking-[-0.01em] text-[color:var(--ds-gray-1000)] md:line-clamp-3">
-          {title}
+          <Link
+            href={href}
+            className="outline-none after:absolute after:inset-0 after:content-[''] focus-visible:after:rounded-md focus-visible:after:outline focus-visible:after:outline-2 focus-visible:after:outline-[color:var(--ds-focus-ring)]"
+          >
+            {title}
+          </Link>
         </h3>
 
         {excerpt && (
@@ -103,6 +129,6 @@ export default function ArticleCard({
           </p>
         )}
       </div>
-    </Link>
+    </article>
   );
 }

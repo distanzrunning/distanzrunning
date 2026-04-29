@@ -32,6 +32,7 @@ export type BreakingNewsItem = {
   publishedAt?: string;
   mainImage?: SanityImageSource | null;
   kicker?: string;
+  kickerHref?: string | null;
   href: string;
 };
 
@@ -101,6 +102,7 @@ export default function HomepageBreakingNews({
               title={item.title}
               publishedAt={item.publishedAt ?? ""}
               kicker={item.kicker}
+              kickerHref={item.kickerHref ?? undefined}
               excerpt={item.excerpt}
               image={item.mainImage ?? undefined}
             />
