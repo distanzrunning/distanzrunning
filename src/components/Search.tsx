@@ -35,6 +35,7 @@ import Link from "next/link";
 import { ArrowRight, Loader2, Search as SearchIcon, X } from "lucide-react";
 
 import IconButton from "@/components/ui/IconButton";
+import { Tooltip } from "@/components/ui/Tooltip";
 
 const searchClient = algoliasearch(
   process.env.NEXT_PUBLIC_ALGOLIA_APP_ID!,
@@ -218,14 +219,16 @@ function SearchInput({
         spellCheck={false}
         className="h-9 w-full bg-transparent text-base text-[color:var(--ds-gray-1000)] outline-none placeholder:text-[color:var(--ds-gray-700)]"
       />
-      <IconButton
-        onClick={reset}
-        variant="tertiary"
-        size="small"
-        aria-label="Close search"
-      >
-        <X className="size-4" />
-      </IconButton>
+      <Tooltip content="Close search" side="bottom">
+        <IconButton
+          onClick={reset}
+          variant="tertiary"
+          size="small"
+          aria-label="Close search"
+        >
+          <X className="size-4" />
+        </IconButton>
+      </Tooltip>
     </div>
   );
 }
