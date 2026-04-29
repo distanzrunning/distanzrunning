@@ -84,12 +84,12 @@ export default function HomepageBreakingNews({
 
           <ButtonLink
             href={SEE_ALL_HREF}
-            variant="tertiary"
+            variant="secondary"
             size="small"
             suffixIcon={<ChevronRight />}
             className="hidden md:inline-flex"
           >
-            See all articles
+            All articles
           </ButtonLink>
         </header>
 
@@ -110,11 +110,12 @@ export default function HomepageBreakingNews({
         <div className="md:hidden">
           <ButtonLink
             href={SEE_ALL_HREF}
-            variant="tertiary"
+            variant="secondary"
             size="small"
             suffixIcon={<ChevronRight />}
+            className="w-full"
           >
-            See all articles
+            All articles
           </ButtonLink>
         </div>
       </div>
