@@ -93,7 +93,7 @@ export default function ArticleCard({
           </div>
         )}
 
-        <h3 className="line-clamp-2 text-[19px] font-semibold leading-[1.4] tracking-[-0.01em] text-[color:var(--ds-gray-1000)] decoration-1 underline-offset-4 group-hover:underline md:line-clamp-3">
+        <h3 className="line-clamp-2 text-[19px] font-semibold leading-[1.4] tracking-[-0.01em] text-[color:var(--ds-gray-1000)] md:line-clamp-3">
           {title}
         </h3>
 

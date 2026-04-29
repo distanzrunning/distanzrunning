@@ -1,8 +1,8 @@
-import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 
 import ArticleCard from "@/components/ArticleCard";
+import { ButtonLink } from "@/components/ui/Button";
 
 // ============================================================================
 // HomepageBreakingNews
@@ -13,11 +13,15 @@ import ArticleCard from "@/components/ArticleCard";
 // `breakingNewsItems` array on the homepageSettings singleton —
 // drag-and-drop ordering in Studio.
 //
-// Section anatomy is modelled on Quartr's "Recent articles":
-//   - Header: title + subtitle on the left, "See all articles ›"
-//     ghost button on the right (md+)
-//   - Grid: 1 col mobile, 3 cols md+
-//   - Mobile shows the "See all articles" button below the grid
+// The whole row lives inside a bordered panel so it reads as a
+// distinct "Breaking" surface rather than a plain content row.
+// Backgrounds use the canvas tokens — bg-100 (light) / bg-200
+// (dark) — so the panel reasserts the canvas colour against the
+// PageFrame surface that wraps it (which is the inverse pair).
+//
+// Section anatomy follows Quartr's "Recent articles" header (title
+// + subtitle on the left, ghost button on the right), with a small
+// red live-dot eyebrow above the title to signal urgency.
 
 export type BreakingNewsItem = {
   _id: string;
@@ -33,7 +37,7 @@ export type BreakingNewsItem = {
 
 interface HomepageBreakingNewsProps {
   items: ReadonlyArray<BreakingNewsItem>;
-  /** Visible items count on desktop. Anything beyond is ignored on the homepage. */
+  /** Visible items on desktop. Anything beyond is ignored on the homepage. */
   limit?: number;
 }
 
@@ -48,9 +52,20 @@ export default function HomepageBreakingNews({
 
   return (
     <section className="flex w-full justify-center px-4 py-12 md:py-16 lg:py-20">
-      <div className="flex w-full max-w-[1400px] flex-col gap-8 md:gap-11">
+      <div className="flex w-full max-w-[1400px] flex-col gap-8 rounded-xl border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-100)] p-6 md:gap-11 md:p-10 lg:p-12 dark:bg-[color:var(--ds-background-200)]">
         <header className="flex items-center justify-between gap-8 md:items-end">
           <div className="flex flex-col gap-3">
+            <div className="flex items-center gap-2 text-[12px] font-semibold uppercase tracking-[0.08em] text-[color:var(--ds-red-800)]">
+              <span
+                aria-hidden
+                className="relative inline-flex size-2 items-center justify-center"
+              >
+                <span className="absolute inline-flex size-2 animate-ping rounded-full bg-[color:var(--ds-red-800)] opacity-60" />
+                <span className="relative inline-flex size-2 rounded-full bg-[color:var(--ds-red-800)]" />
+              </span>
+              Breaking
+            </div>
+
             <h2
               className="text-balance font-headline font-semibold text-[color:var(--ds-gray-1000)]"
               style={{
@@ -59,14 +74,22 @@ export default function HomepageBreakingNews({
                 letterSpacing: "-0.04em",
               }}
             >
-              Breaking news
+              The latest in running
             </h2>
             <p className="text-balance text-[15px] font-medium leading-[1.4] text-[color:var(--ds-gray-900)] md:text-[19px]">
-              The latest stories from across running.
+              Stories moving the sport this week.
             </p>
           </div>
 
-          <SeeAllLink className="hidden md:inline-flex" />
+          <ButtonLink
+            href={SEE_ALL_HREF}
+            variant="tertiary"
+            size="small"
+            suffixIcon={<ChevronRight />}
+            className="hidden md:inline-flex"
+          >
+            See all articles
+          </ButtonLink>
         </header>
 
         <div className="grid grid-cols-1 gap-x-4 gap-y-8 md:grid-cols-3 md:gap-y-12">
@@ -83,25 +106,17 @@ export default function HomepageBreakingNews({
           ))}
         </div>
 
-        <div className="flex md:hidden">
-          <SeeAllLink className="inline-flex" />
+        <div className="md:hidden">
+          <ButtonLink
+            href={SEE_ALL_HREF}
+            variant="tertiary"
+            size="small"
+            suffixIcon={<ChevronRight />}
+          >
+            See all articles
+          </ButtonLink>
         </div>
       </div>
     </section>
-  );
-}
-
-function SeeAllLink({ className = "" }: { className?: string }) {
-  return (
-    <Link
-      href={SEE_ALL_HREF}
-      className={`group items-center gap-1 rounded-md border border-transparent px-2.5 py-2 text-[13px] font-medium text-[color:var(--ds-gray-1000)] transition-colors hover:bg-[color:var(--ds-gray-100)] ${className}`.trim()}
-    >
-      <span className="px-1">See all articles</span>
-      <ChevronRight
-        className="size-4 transition-transform group-hover:translate-x-0.5"
-        aria-hidden
-      />
-    </Link>
   );
 }
