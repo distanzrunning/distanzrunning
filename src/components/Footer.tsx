@@ -95,28 +95,17 @@ export default function Footer() {
             grid. On md+ it expands to the xl breakpoint and goes
             side-by-side. */}
         <div className="flex w-full max-w-2xl flex-col justify-between gap-x-12 gap-y-16 md:mx-auto md:max-w-7xl md:flex-row md:items-start">
-          {/* Brand column: full Distanz Running lockup with the
-              theme switcher tucked underneath. Theme is a
-              set-once preference, so the footer is the right
-              home for it — keeps the header focused on search +
-              newsletter. ThemeSwitcher uses its default 3-state
-              control (System / Light / Dark) since users have
-              time to make a deliberate pick down here. */}
-          <div className="flex shrink-0 flex-col gap-6">
-            <Link
-              href="/"
-              aria-label="Distanz Running — home"
-              className="inline-flex h-fit text-[color:var(--ds-gray-1000)]"
-            >
-              <Logo className="h-12 w-auto" />
-            </Link>
-            <div className="flex w-fit items-center gap-3">
-              <span className="text-[14px] leading-5 text-[color:var(--ds-gray-900)]">
-                Theme
-              </span>
-              <ThemeSwitcher value={theme} onChange={setTheme} />
-            </div>
-          </div>
+          {/* Full Distanz Running lockup (icon + Distanz + Running).
+              Same inline-SVG approach as the header wordmark so the
+              colour follows currentColor / text-gray-1000 in both
+              modes. */}
+          <Link
+            href="/"
+            aria-label="Distanz Running — home"
+            className="inline-flex h-fit shrink-0 text-[color:var(--ds-gray-1000)]"
+          >
+            <Logo className="h-12 w-auto" />
+          </Link>
 
           {/* Link grid. Mobile: 2-col, no x-gap, 16 px y-gap (tight
               packing inside the 672 px column). md: 3 cols / 64 px
@@ -126,6 +115,13 @@ export default function Footer() {
             <FooterColumn heading="Company" items={companyLinks} />
             <SocialColumn />
           </div>
+        </div>
+
+        {/* Bottom strip — theme switcher anchors the foot of the
+            container. No label; the segmented sun/moon/system
+            glyphs do the labelling work themselves. */}
+        <div className="mt-16 md:mx-auto md:max-w-7xl">
+          <ThemeSwitcher value={theme} onChange={setTheme} />
         </div>
       </div>
     </footer>
