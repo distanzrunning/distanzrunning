@@ -689,11 +689,11 @@
        a paste-up board. The line colour flips with the theme via
        --newsprint-grid-line so the gradient string itself only
        needs to be defined once.
-       Light: white-on-bg-200 (lines lighter than the panel surface).
-       Dark:  gray-200-on-bg-100 (lines slightly lighter than the
-       panel surface).
+       Light: gray-200 lines on bg-100 (white panel, soft grey grid).
+       Dark:  gray-200 lines on bg-100 (elevated dark panel, faint
+       lighter grid).
        ───────────────────────────────────────────────────────────────────────── */
-    --newsprint-grid-line: var(--ds-background-100);
+    --newsprint-grid-line: var(--ds-gray-200);
     --newsprint-grid:
       linear-gradient(to right, var(--newsprint-grid-line) 1px, transparent 1px),
       linear-gradient(to bottom, var(--newsprint-grid-line) 1px, transparent 1px);
