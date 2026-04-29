@@ -128,7 +128,7 @@ export default function SiteHeader({
         {/* Right (desktop only): search + newsletter + theme actions */}
         <div className="hidden items-center gap-2 md:flex">
           <IconButton
-            variant="tertiary"
+            variant="secondary"
             size="small"
             aria-label="Open search"
             title="Search (⌘K)"
