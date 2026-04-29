@@ -32,7 +32,7 @@ import {
 import type { Hit as AlgoliaHit } from "instantsearch.js";
 import { liteClient as algoliasearch } from "algoliasearch/lite";
 import Link from "next/link";
-import { ArrowRight, Loader2, X } from "lucide-react";
+import { ArrowRight, Loader2, Search as SearchIcon, X } from "lucide-react";
 
 import IconButton from "@/components/ui/IconButton";
 
@@ -45,25 +45,7 @@ const indexName =
   process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME || "distanz_content";
 
 // ============================================================================
-// Section metadata — drives both the empty state and the hit grouping
-// ============================================================================
-
-type SectionId = "articles" | "shoes" | "gear" | "nutrition" | "races";
-
-const SECTIONS: ReadonlyArray<{
-  id: SectionId;
-  label: string;
-  href: string;
-}> = [
-  { id: "articles", label: "Articles", href: "/articles" },
-  { id: "shoes", label: "Shoes", href: "/shoes" },
-  { id: "gear", label: "Gear", href: "/gear" },
-  { id: "nutrition", label: "Nutrition", href: "/nutrition" },
-  { id: "races", label: "Races", href: "/races" },
-];
-
-// ============================================================================
-// Hit helpers
+// Hit helpers — used to route a hit to its flat public URL
 // ============================================================================
 
 type HitFields = {
@@ -71,44 +53,37 @@ type HitFields = {
   title: string;
   slug: string;
   _type: "post" | "productPost" | "gearPost" | "raceGuide";
-  excerpt?: string;
   /** productPost section, indexed from productCategory->section. */
   section?: "shoes" | "gear" | "nutrition";
 };
 
 type HitType = AlgoliaHit<HitFields>;
 
-function sectionForHit(hit: HitType): SectionId {
-  if (hit._type === "post") return "articles";
-  if (hit._type === "raceGuide") return "races";
-  // productPost / legacy gearPost — fall back to "gear" if section
-  // isn't indexed yet (older records pre algolia-sync update).
-  if (hit.section === "shoes") return "shoes";
-  if (hit.section === "nutrition") return "nutrition";
-  return "gear";
-}
-
 function hrefForHit(hit: HitType): string {
-  const section = sectionForHit(hit);
-  if (section === "articles") return `/articles/${hit.slug}`;
-  if (section === "races") return `/races/${hit.slug}`;
+  if (hit._type === "post") return `/articles/${hit.slug}`;
+  if (hit._type === "raceGuide") return `/races/${hit.slug}`;
+  // productPost / legacy gearPost — section comes from Algolia
+  // (indexed from productCategory->section). Fall back to /gear
+  // for any pre-resync records that don't carry it.
+  const section =
+    hit.section === "shoes" || hit.section === "nutrition"
+      ? hit.section
+      : "gear";
   return `/${section}/${hit.slug}`;
 }
 
 // ============================================================================
-// Reusable row — used by both the empty-state list and the hits list
+// Hit row — title + arrow affordance
 // ============================================================================
 
-function Row({
+function HitRow({
   href,
-  primary,
-  secondary,
+  title,
   onSelect,
 }: {
   href: string;
-  primary: string;
-  secondary?: string;
-  onSelect?: () => void;
+  title: string;
+  onSelect: () => void;
 }) {
   return (
     <Link
@@ -116,15 +91,8 @@ function Row({
       onClick={onSelect}
       className="group flex w-full cursor-pointer items-center justify-between gap-3 rounded-md px-3 py-3 text-sm text-[color:var(--ds-gray-900)] transition-colors hover:bg-[color:var(--ds-gray-100)] hover:text-[color:var(--ds-gray-1000)]"
     >
-      <span className="flex min-w-0 flex-col">
-        <span className="truncate font-medium text-[color:var(--ds-gray-1000)]">
-          {primary}
-        </span>
-        {secondary && (
-          <span className="truncate text-xs text-[color:var(--ds-gray-700)]">
-            {secondary}
-          </span>
-        )}
+      <span className="truncate font-medium text-[color:var(--ds-gray-1000)]">
+        {title}
       </span>
       <ArrowRight
         className="size-4 shrink-0 text-[color:var(--ds-gray-700)] transition-transform group-hover:translate-x-0.5 group-hover:text-[color:var(--ds-gray-1000)]"
@@ -134,16 +102,8 @@ function Row({
   );
 }
 
-function GroupHeader({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="px-3 pb-1 pt-3 text-[11px] font-medium uppercase tracking-[0.08em] text-[color:var(--ds-gray-700)]">
-      {children}
-    </div>
-  );
-}
-
 // ============================================================================
-// Body — empty state, results, loading, no-results
+// Body — empty state, loading, no-results, results
 // ============================================================================
 
 function SearchBody({
@@ -157,19 +117,16 @@ function SearchBody({
 }) {
   const { hits } = useHits<HitFields>();
 
-  // Empty state — list the five sections
+  // Empty state — a subtle centred search glyph. No section list,
+  // no copy. The placeholder + ⌘K shortcut do the labelling work.
   if (query.length === 0) {
     return (
-      <div className="px-2 py-2">
-        <GroupHeader>Sections</GroupHeader>
-        {SECTIONS.map((section) => (
-          <Row
-            key={section.id}
-            href={section.href}
-            primary={section.label}
-            onSelect={onSelect}
-          />
-        ))}
+      <div className="flex h-full items-center justify-center">
+        <SearchIcon
+          className="size-12 text-[color:var(--ds-gray-500)]"
+          strokeWidth={1.5}
+          aria-hidden
+        />
       </div>
     );
   }
@@ -193,28 +150,16 @@ function SearchBody({
     );
   }
 
-  // Group hits by section, preserving Algolia's relevance order within
-  // each group, and only rendering groups that have hits.
-  const grouped = SECTIONS.map((section) => ({
-    section,
-    hits: hits.filter((h) => sectionForHit(h) === section.id).slice(0, 5),
-  })).filter((g) => g.hits.length > 0);
-
+  // Flat list — Algolia's relevance ordering, top 8 results.
   return (
     <div className="px-2 py-2">
-      {grouped.map(({ section, hits: sectionHits }) => (
-        <div key={section.id}>
-          <GroupHeader>{section.label}</GroupHeader>
-          {sectionHits.map((hit) => (
-            <Row
-              key={hit.objectID}
-              href={hrefForHit(hit)}
-              primary={hit.title}
-              secondary={hit.excerpt}
-              onSelect={onSelect}
-            />
-          ))}
-        </div>
+      {hits.slice(0, 8).map((hit) => (
+        <HitRow
+          key={hit.objectID}
+          href={hrefForHit(hit)}
+          title={hit.title}
+          onSelect={onSelect}
+        />
       ))}
     </div>
   );
@@ -267,7 +212,7 @@ function SearchInput({
         type="text"
         value={localQuery}
         onChange={(e) => setLocalQuery(e.target.value)}
-        placeholder="Search articles, gear and races"
+        placeholder="Search"
         autoComplete="off"
         autoCorrect="off"
         spellCheck={false}
