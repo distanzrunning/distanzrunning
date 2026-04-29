@@ -66,12 +66,7 @@ export default function HomepageBreakingNews({
       >
         <header className="flex items-center justify-between gap-8 md:items-end">
           <div className="flex flex-col gap-3">
-            <div
-              className="inline-flex items-center gap-2 self-start rounded-full px-2.5 py-1 text-[12px] font-semibold uppercase tracking-[0.08em] text-[color:var(--ds-red-800)]"
-              style={{
-                backgroundColor: "rgba(var(--ds-red-800-rgb), 0.10)",
-              }}
-            >
+            <div className="inline-flex items-center gap-2 self-start rounded-full bg-[color:var(--ds-red-100)] px-2.5 py-1 text-[12px] font-semibold uppercase tracking-[0.08em] text-[color:var(--ds-red-800)]">
               <span
                 aria-hidden
                 className="relative inline-flex size-2 items-center justify-center"
