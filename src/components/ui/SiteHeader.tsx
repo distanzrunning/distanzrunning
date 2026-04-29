@@ -125,10 +125,10 @@ export default function SiteHeader({
           </div>
         </div>
 
-        {/* Right (desktop only): newsletter primary CTA, then the
-            search + theme utility cluster. */}
+        {/* Right (desktop only): utility cluster (search + theme) leads,
+            newsletter primary CTA closes as the endcap so the eye
+            lands on it last. */}
         <div className="hidden items-center gap-2 md:flex">
-          <NewsletterButton size="small" source={newsletterSource} />
           <IconButton
             variant="secondary"
             size="small"
@@ -143,6 +143,7 @@ export default function SiteHeader({
             value={theme === "system" ? "light" : theme}
             onChange={setTheme}
           />
+          <NewsletterButton size="small" source={newsletterSource} />
         </div>
 
         {/* Right (mobile only): hamburger ↔ close toggle. 28 px
