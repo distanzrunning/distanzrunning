@@ -2,7 +2,10 @@
 
 import { useContext, useEffect, useState } from "react";
 import Link from "next/link";
+import * as Dialog from "@radix-ui/react-dialog";
+import { Search as SearchIcon } from "lucide-react";
 import { DarkModeContext } from "@/components/DarkModeProvider";
+import IconButton from "@/components/ui/IconButton";
 import { NewsletterButton } from "@/components/ui/NewsletterModal";
 import { ThemeSwitcher } from "@/components/ui/ThemeSwitcher";
 import SiteNavigationMenu, {
@@ -11,6 +14,7 @@ import SiteNavigationMenu, {
 } from "@/components/ui/SiteNavigationMenu";
 import MobileNavDrawer from "@/components/ui/MobileNavDrawer";
 import Wordmark from "@/components/ui/Wordmark";
+import Search from "@/components/Search";
 
 // ============================================================================
 // SiteHeader
@@ -57,6 +61,7 @@ export default function SiteHeader({
   const { theme, setTheme } = useContext(DarkModeContext);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
 
   // Track scroll position so the sticky header's bottom border can
   // fade in once content has been scrolled under it. Threshold of 0
@@ -66,6 +71,19 @@ export default function SiteHeader({
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // ⌘K / Ctrl+K opens the search modal — matches the DS Search page
+  // and the rest of the editorial web (Vercel, Linear, GitHub).
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        setSearchOpen((open) => !open);
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
   }, []);
 
   return (
@@ -107,8 +125,17 @@ export default function SiteHeader({
           </div>
         </div>
 
-        {/* Right (desktop only): newsletter + theme actions */}
+        {/* Right (desktop only): search + newsletter + theme actions */}
         <div className="hidden items-center gap-2 md:flex">
+          <IconButton
+            variant="tertiary"
+            size="small"
+            aria-label="Open search"
+            title="Search (⌘K)"
+            onClick={() => setSearchOpen(true)}
+          >
+            <SearchIcon className="size-4" />
+          </IconButton>
           <NewsletterButton size="small" source={newsletterSource} />
           <ThemeSwitcher
             showSystem={false}
@@ -173,6 +200,19 @@ export default function SiteHeader({
         featuredRace={featuredRace}
         newsletterSource={`${newsletterSource}_mobile`}
       />
+
+      <Dialog.Root open={searchOpen} onOpenChange={setSearchOpen}>
+        <Dialog.Portal>
+          <Dialog.Overlay className="fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm" />
+          <Dialog.Content className="fixed left-1/2 top-24 z-[70] w-[calc(100%-1rem)] -translate-x-1/2 p-0 focus:outline-none md:w-full md:max-w-xl">
+            <Dialog.Title className="sr-only">Search</Dialog.Title>
+            <Dialog.Description className="sr-only">
+              Search articles, gear and races
+            </Dialog.Description>
+            <Search isExpanded={searchOpen} onExpandChange={setSearchOpen} />
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
     </>
   );
 }
