@@ -50,9 +50,21 @@ export default function HomepageBreakingNews({
   const visible = items.slice(0, limit);
   if (visible.length === 0) return null;
 
+  // Faint diagonal-line texture, newsprint-style. Drawn with a
+  // repeating-linear-gradient so the stripe colour can flow through
+  // a DS rgb-tuple token (--ds-gray-1000-rgb is near-black in light
+  // and near-white in dark — flips automatically) at 6% opacity.
+  const newsprintBg: React.CSSProperties = {
+    backgroundImage:
+      "repeating-linear-gradient(-45deg, rgba(var(--ds-gray-1000-rgb), 0.06) 0, rgba(var(--ds-gray-1000-rgb), 0.06) 1px, transparent 1px, transparent 8px)",
+  };
+
   return (
     <section className="flex w-full justify-center px-4 py-12 md:py-16 lg:py-20">
-      <div className="flex w-full max-w-[1400px] flex-col gap-8 rounded-xl border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-100)] p-6 md:gap-11 md:p-10 lg:p-12 dark:bg-[color:var(--ds-background-200)]">
+      <div
+        className="flex w-full max-w-[1400px] flex-col gap-8 rounded-xl border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-100)] p-6 md:gap-11 md:p-10 lg:p-12 dark:bg-[color:var(--ds-background-200)]"
+        style={newsprintBg}
+      >
         <header className="flex items-center justify-between gap-8 md:items-end">
           <div className="flex flex-col gap-3">
             <div className="flex items-center gap-2 text-[12px] font-semibold uppercase tracking-[0.08em] text-[color:var(--ds-red-800)]">
