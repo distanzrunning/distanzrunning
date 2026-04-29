@@ -66,16 +66,6 @@ export default function HomepageBreakingNews({
               Breaking
             </div>
 
-            <h2
-              className="text-balance font-headline font-semibold text-[color:var(--ds-gray-1000)]"
-              style={{
-                fontSize: "clamp(28px, 3.4vw, 38px)",
-                lineHeight: 1.1,
-                letterSpacing: "-0.04em",
-              }}
-            >
-              The latest in running
-            </h2>
             <p className="text-balance text-[15px] font-medium leading-[1.4] text-[color:var(--ds-gray-900)] md:text-[19px]">
               Stories moving the sport this week.
             </p>
