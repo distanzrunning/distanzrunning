@@ -83,9 +83,9 @@ export default function RaceCard({
         )}
       </div>
 
-      <div className="flex items-center justify-between gap-3 rounded-b-md bg-[color:var(--ds-gray-100)] px-5 py-5">
+      <div className="flex items-center justify-between gap-3 rounded-b-md bg-[color:var(--ds-gray-100)] p-6">
         <div className="flex min-w-0 flex-1 flex-col gap-1">
-          <h3 className="line-clamp-2 text-[19px] font-semibold leading-tight tracking-[-0.01em] text-[color:var(--ds-gray-1000)]">
+          <h3 className="line-clamp-2 text-heading-20 text-[color:var(--ds-gray-1000)]">
             <Link
               href={href}
               className="outline-none after:absolute after:inset-0 after:content-[''] focus-visible:after:rounded-md focus-visible:after:outline focus-visible:after:outline-2 focus-visible:after:outline-[color:var(--ds-focus-ring)]"
@@ -94,7 +94,7 @@ export default function RaceCard({
             </Link>
           </h3>
           {location && (
-            <p className="truncate text-[14px] font-normal text-[color:var(--ds-gray-900)]">
+            <p className="truncate text-sm font-normal text-[color:var(--ds-gray-900)]">
               {location}
             </p>
           )}
@@ -108,7 +108,7 @@ export default function RaceCard({
             <span className="text-[11px] font-medium uppercase tracking-[0.04em] text-[color:var(--ds-gray-1000)]">
               {month}
             </span>
-            <span className="text-[22px] font-semibold leading-tight text-[color:var(--ds-gray-1000)]">
+            <span className="text-heading-24 text-[color:var(--ds-gray-1000)]">
               {day}
             </span>
           </div>
