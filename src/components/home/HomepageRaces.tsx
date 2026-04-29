@@ -113,11 +113,25 @@ export default function HomepageRaces({
 
   return (
     <section className="flex w-full justify-center px-4 py-12 md:py-16 lg:py-20">
-      <div className="flex w-full max-w-[1400px] flex-col gap-4">
-        <header className="flex items-center justify-between gap-8">
-          <h2 className="m-0 text-[14px] font-medium text-[color:var(--ds-gray-1000)]">
-            Upcoming races
-          </h2>
+      <div className="flex w-full max-w-[1400px] flex-col gap-8">
+        <header className="flex items-end justify-between gap-8">
+          <div className="flex flex-col gap-2">
+            <h2
+              className="m-0 text-balance font-headline font-semibold text-[color:var(--ds-gray-1000)]"
+              style={{
+                fontSize: "clamp(28px, 3.4vw, 40px)",
+                lineHeight: 1.1,
+                letterSpacing: "-0.04em",
+              }}
+            >
+              Upcoming races
+            </h2>
+            <p className="text-[14px] leading-[1.4] text-[color:var(--ds-gray-900)]">
+              Find your next race with detailed race guides, course
+              analysis, and insider tips on thousands of the world&apos;s
+              greatest races.
+            </p>
+          </div>
 
           <ButtonLink
             href={SEE_ALL_HREF}
