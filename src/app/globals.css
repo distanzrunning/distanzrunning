@@ -683,14 +683,15 @@
     --grid-outside-gutter: 1.5rem; /* 24px - outside padding (small/medium) */
 
     /* ─────────────────────────────────────────────────────────────────────────
-       NEWSPRINT — Editor's registration ticks
-       Tiny "+" tick at each 60 px grid intersection, the kind a
-       paste-up editor draws to mark column corners. Continuous
-       lines compete with body text running over the panel, so the
-       grid is implied via corner ticks only.
-       Light: black strokes at 15 % alpha, faint on the white panel.
+       NEWSPRINT — Editor's column grid
+       Faint 60 px square grid. Lines drawn through
+       rgba(--ds-gray-1000-rgb, 0.04) so they're a 4 % wash against
+       whichever colour gray-1000 carries in the active theme —
+       reads as a subliminal hint of grid in both light and dark.
        ───────────────────────────────────────────────────────────────────────── */
-    --newsprint-cross: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cpath d='M30 27v6M27 30h6' stroke='%23000' stroke-opacity='0.15' stroke-width='1' fill='none'/%3E%3C/svg%3E");
+    --newsprint-grid:
+      linear-gradient(to right, rgba(var(--ds-gray-1000-rgb), 0.04) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(var(--ds-gray-1000-rgb), 0.04) 1px, transparent 1px);
   }
 
   /* Large screen spacing (960px+) */
@@ -1140,10 +1141,9 @@
     --color-info-bg-subtle: var(--ds-purple-100-rgb);
     --color-info-border: var(--ds-purple-500-rgb);
 
-    /* Newsprint registration ticks — white strokes at slightly
-       higher alpha than the light variant so the marks don't get
-       lost against the dark panel surface. */
-    --newsprint-cross: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cpath d='M30 27v6M27 30h6' stroke='%23fff' stroke-opacity='0.20' stroke-width='1' fill='none'/%3E%3C/svg%3E");
+    /* Newsprint grid — single rgba() declaration handles both
+       themes via --ds-gray-1000-rgb, so no dark-mode override is
+       needed here. */
   }
 
   /* Distanz reset (Distanz design system) */

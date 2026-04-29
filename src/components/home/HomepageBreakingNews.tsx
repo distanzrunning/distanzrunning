@@ -78,14 +78,19 @@ export default function HomepageBreakingNews({
 
   const isScrollable = visible.length > 3;
 
-  // Faint registration-tick grid, the kind an editor draws to
-  // mark paste-up column corners. Pattern lives in globals.css
-  // under --newsprint-cross — black strokes in light, white in
-  // dark, so the ticks stay equally subtle in either mode. SVG
-  // tile is 60 × 60 with the "+" centred so no mark lands on
-  // the panel border.
+  // Faint 60 px column grid, the kind an editor sees on a
+  // paste-up board. Pattern lives in globals.css under
+  // --newsprint-grid (rgba on --ds-gray-1000-rgb at 4 % so it
+  // flips with the theme automatically).
+  //
+  // background-position: 30 30 — half-tile offset so no grid line
+  // sits at x=0 or y=0 of the panel. Without this the leftmost
+  // and topmost lines render exactly inside the panel's 1 px
+  // border, reading as a doubled outline on the outer edges.
   const newsprintBg: React.CSSProperties = {
-    backgroundImage: "var(--newsprint-cross)",
+    backgroundImage: "var(--newsprint-grid)",
+    backgroundSize: "60px 60px",
+    backgroundPosition: "30px 30px",
   };
 
   return (
