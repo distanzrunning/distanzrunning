@@ -1,4 +1,7 @@
-import { ChevronRight } from "lucide-react";
+"use client";
+
+import { useCallback, useEffect, useRef, useState } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 
 import RaceCard from "@/components/RaceCard";
@@ -14,15 +17,16 @@ import { urlFor } from "@/sanity/lib/image";
 // ascending. No editorial curation: the homepage stays current as
 // races pass.
 //
-// Unlike Breaking News, this section sits directly on the
-// PageFrame surface — no inner panel. The row uses the v0-pattern
-// native scroll-snap carousel: overflow-x-auto + snap-x +
-// snap-mandatory, hidden scrollbar, edge-fade gradients matching
-// the PageFrame background, and tight calc()-based item widths
-// (2-up at sm, 3-up at lg) so the cards fit without spillover.
+// Sits directly on the PageFrame surface (no inner panel). Row
+// uses native CSS scroll-snap: overflow-x-auto + snap-x +
+// snap-mandatory, hidden scrollbar, tight calc()-based item
+// widths (2-up at sm, 3-up at lg) so cards fit precisely with
+// the 1.5 rem gap.
 //
-// Trackpad horizontal swipes work natively (no Embla plugin
-// needed); mobile users get standard touch scrolling.
+// Chevron chips (modelled on v0's row pattern) sit on the row's
+// edges — fade out when there's nothing to scroll in that
+// direction. Trackpad horizontal swipes scroll natively in
+// addition; mobile users get standard touch scrolling.
 
 export type HomepageRaceItem = {
   _id: string;
@@ -44,6 +48,7 @@ interface HomepageRacesProps {
 }
 
 const SEE_ALL_HREF = "/races";
+const SCROLL_GAP_PX = 24; // gap-x-6
 
 function formatLocation(item: HomepageRaceItem): string | undefined {
   const parts = [item.city, item.stateRegion, item.country].filter(
@@ -70,6 +75,40 @@ export default function HomepageRaces({
   limit = 10,
 }: HomepageRacesProps) {
   const visible = items.slice(0, limit);
+
+  const scrollRef = useRef<HTMLDivElement | null>(null);
+  const [canScrollPrev, setCanScrollPrev] = useState(false);
+  const [canScrollNext, setCanScrollNext] = useState(false);
+
+  const updateScrollState = useCallback(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    setCanScrollPrev(el.scrollLeft > 0);
+    setCanScrollNext(el.scrollLeft < el.scrollWidth - el.clientWidth - 1);
+  }, []);
+
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    updateScrollState();
+    el.addEventListener("scroll", updateScrollState, { passive: true });
+    const observer = new ResizeObserver(updateScrollState);
+    observer.observe(el);
+    return () => {
+      el.removeEventListener("scroll", updateScrollState);
+      observer.disconnect();
+    };
+  }, [updateScrollState, visible.length]);
+
+  const scrollByCard = useCallback((direction: 1 | -1) => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const firstItem = el.querySelector<HTMLElement>("[data-scroll-item]");
+    const cardStep = (firstItem?.offsetWidth ?? el.clientWidth * 0.85) +
+      SCROLL_GAP_PX;
+    el.scrollBy({ left: cardStep * direction, behavior: "smooth" });
+  }, []);
+
   if (visible.length === 0) return null;
 
   return (
@@ -98,22 +137,37 @@ export default function HomepageRaces({
         </header>
 
         <div className="relative">
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-[color:var(--ds-background-200)] to-transparent dark:from-[color:var(--ds-background-100)]"
-          />
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-[color:var(--ds-background-200)] to-transparent dark:from-[color:var(--ds-background-100)]"
-          />
+          <button
+            type="button"
+            aria-label="Scroll races left"
+            onClick={() => scrollByCard(-1)}
+            disabled={!canScrollPrev}
+            className="absolute left-0 top-1/2 z-20 hidden size-8 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-100)] text-[color:var(--ds-gray-1000)] shadow-sm transition-opacity hover:bg-[color:var(--ds-gray-100)] disabled:pointer-events-none disabled:opacity-0 sm:flex dark:bg-[color:var(--ds-background-200)]"
+          >
+            <ChevronLeft className="size-4" aria-hidden />
+          </button>
 
-          <div className="snap-x snap-mandatory scroll-smooth overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <button
+            type="button"
+            aria-label="Scroll races right"
+            onClick={() => scrollByCard(1)}
+            disabled={!canScrollNext}
+            className="absolute right-0 top-1/2 z-20 hidden size-8 translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-100)] text-[color:var(--ds-gray-1000)] shadow-sm transition-opacity hover:bg-[color:var(--ds-gray-100)] disabled:pointer-events-none disabled:opacity-0 sm:flex dark:bg-[color:var(--ds-background-200)]"
+          >
+            <ChevronRight className="size-4" aria-hidden />
+          </button>
+
+          <div
+            ref={scrollRef}
+            className="snap-x snap-mandatory scroll-smooth overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          >
             <ul className="flex list-none gap-x-6 p-0">
               {visible.map((item) => {
                 const { imageUrl, blurDataURL } = resolveCardImages(item);
                 return (
                   <li
                     key={item._id}
+                    data-scroll-item
                     className="w-[85%] shrink-0 snap-start sm:w-[calc(1/2*(100%-1.5rem))] lg:w-[calc(1/3*(100%-1.5rem*2))]"
                   >
                     <RaceCard
