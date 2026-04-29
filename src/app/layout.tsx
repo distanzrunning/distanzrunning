@@ -65,17 +65,35 @@ export default function RootLayout({
       className={`bg-canvas ${GeistSans.variable} ${GeistMono.variable} ${ebGaramond.variable}`}
     >
       <head>
-        {/* Prevent flash of dark mode - ensure light mode by default */}
+        {/* Theme bootstrap — runs synchronously before first paint so
+            users on system/dark don't see a flash of light. Reads
+            localStorage for an explicit preference; if none (the
+            default for new visitors) or set to "system", honours the
+            OS via prefers-color-scheme. */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
-                var theme = localStorage.getItem('theme');
-                // Only apply dark mode if explicitly saved, otherwise ensure light mode
-                if (theme === 'dark') {
-                  document.documentElement.classList.add('dark');
-                } else {
-                  document.documentElement.classList.remove('dark');
+                try {
+                  var stored = localStorage.getItem('theme');
+                  var prefersDark = window.matchMedia
+                    && window.matchMedia('(prefers-color-scheme: dark)').matches;
+                  var isDark = stored === 'dark'
+                    || ((!stored || stored === 'system') && prefersDark);
+                  var root = document.documentElement;
+                  if (isDark) {
+                    root.classList.add('dark');
+                    root.style.colorScheme = 'dark';
+                  } else {
+                    root.classList.remove('dark');
+                    root.style.colorScheme = 'light';
+                  }
+                } catch (e) {
+                  if (window.matchMedia
+                      && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    document.documentElement.classList.add('dark');
+                    document.documentElement.style.colorScheme = 'dark';
+                  }
                 }
               })();
             `,
