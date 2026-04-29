@@ -15,6 +15,7 @@ import * as React from "react";
 import useEmblaCarousel, {
   type UseEmblaCarouselType,
 } from "embla-carousel-react";
+import { WheelGesturesPlugin } from "embla-carousel-wheel-gestures";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -59,12 +60,21 @@ function Carousel({
   children,
   ...props
 }: React.ComponentProps<"div"> & CarouselProps) {
+  // WheelGesturesPlugin translates Mac trackpad two-finger horizontal
+  // swipes (and similar deltaX wheel events) into Embla's scroll API.
+  // Only attached on horizontal carousels — on vertical ones the
+  // plugin would watch deltaY and risk hijacking page scroll.
+  const wheelPlugins = React.useMemo(
+    () => (orientation === "horizontal" ? [WheelGesturesPlugin()] : []),
+    [orientation],
+  );
+
   const [carouselRef, api] = useEmblaCarousel(
     {
       ...opts,
       axis: orientation === "horizontal" ? "x" : "y",
     },
-    plugins,
+    [...wheelPlugins, ...(plugins ?? [])],
   );
   const [canScrollPrev, setCanScrollPrev] = React.useState(false);
   const [canScrollNext, setCanScrollNext] = React.useState(false);
