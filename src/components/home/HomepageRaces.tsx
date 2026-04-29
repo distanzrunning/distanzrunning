@@ -127,14 +127,7 @@ export default function HomepageRaces({
       >
         <header className="flex items-end justify-between gap-8">
           <div className="flex flex-col gap-2">
-            <h2
-              className="m-0 text-balance font-headline font-semibold text-[color:var(--ds-gray-1000)]"
-              style={{
-                fontSize: "clamp(28px, 3.4vw, 40px)",
-                lineHeight: 1.1,
-                letterSpacing: "-0.04em",
-              }}
-            >
+            <h2 className="m-0 text-heading-32 text-balance text-[color:var(--ds-gray-1000)]">
               Upcoming races
             </h2>
             <p className="text-[16px] leading-[1.5] text-[color:var(--ds-gray-900)] md:text-[18px]">

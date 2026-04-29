@@ -105,14 +105,7 @@ export default function HomepageBreakingNews({
               <span className="relative inline-flex size-2 rounded-full bg-[color:var(--ds-red-800)] dark:bg-[color:var(--ds-red-900)]" />
             </span>
 
-            <h2
-              className="m-0 text-balance font-headline font-semibold text-[color:var(--ds-gray-1000)]"
-              style={{
-                fontSize: "clamp(28px, 3.4vw, 40px)",
-                lineHeight: 1.1,
-                letterSpacing: "-0.04em",
-              }}
-            >
+            <h2 className="m-0 text-heading-32 text-balance text-[color:var(--ds-gray-1000)]">
               Latest news
             </h2>
 
