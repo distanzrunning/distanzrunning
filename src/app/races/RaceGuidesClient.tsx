@@ -1291,15 +1291,6 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
     <div className="py-12 bg-canvas min-h-screen transition-colors duration-300">
       <div className="w-[95%] mx-auto px-2 sm:px-3">
         <div className="mb-12">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-headline font-bold mb-4 text-neutral-900 dark:text-white">
-            Race Guides
-          </h1>
-          <p className="text-base md:text-lg text-neutral-600 dark:text-neutral-400 max-w-3xl mb-6">
-            Find your next race. Explore thousands of the world&apos;s greatest
-            races with detailed race guides, course analysis, insider tips and
-            recommendations
-          </p>
-
           {/* Search and Filters Row */}
           <div className="flex items-center gap-3 py-2">
             {/* Search Bar */}
