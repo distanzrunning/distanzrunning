@@ -190,7 +190,7 @@ const SingleSlider = forwardRef<HTMLDivElement, SingleSliderProps>(
                 width: 6,
                 height: 14,
                 borderRadius: 1,
-                background: "var(--ds-background-100)",
+                background: "#FFFFFF",
                 boxShadow:
                   "rgba(0, 0, 0, 0.21) 0px 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 1px 2px 0px",
                 cursor: disabled ? "not-allowed" : "pointer",
@@ -391,7 +391,7 @@ const RangeSlider = forwardRef<HTMLDivElement, RangeSliderProps>(
                 width: 6,
                 height: 14,
                 borderRadius: 1,
-                background: "var(--ds-background-100)",
+                background: "#FFFFFF",
                 boxShadow:
                   "rgba(0, 0, 0, 0.21) 0px 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 1px 2px 0px",
                 cursor: disabled ? "not-allowed" : "pointer",
@@ -423,7 +423,7 @@ const RangeSlider = forwardRef<HTMLDivElement, RangeSliderProps>(
                 width: 6,
                 height: 14,
                 borderRadius: 1,
-                background: "var(--ds-background-100)",
+                background: "#FFFFFF",
                 boxShadow:
                   "rgba(0, 0, 0, 0.21) 0px 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 1px 2px 0px",
                 cursor: disabled ? "not-allowed" : "pointer",
