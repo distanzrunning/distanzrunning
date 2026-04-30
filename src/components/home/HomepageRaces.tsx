@@ -122,12 +122,12 @@ export default function HomepageRaces({
             <h2 className="m-0 flex items-center gap-3 text-heading-32 text-balance text-[color:var(--ds-gray-1000)]">
               <Calendar
                 className="size-7 shrink-0"
-                strokeWidth={1.5}
+                strokeWidth={2}
                 aria-hidden
               />
               <span
                 aria-hidden
-                className="h-6 w-1 shrink-0 rounded-full bg-[color:var(--ds-gray-1000)]"
+                className="h-6 w-0.5 shrink-0 rounded-full bg-[color:var(--ds-gray-1000)]"
               />
               Races
             </h2>
