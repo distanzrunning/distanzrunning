@@ -980,18 +980,18 @@ module.exports = {
         ".text-label-20": {
           fontSize: "20px",
           lineHeight: "32px",
-          letterSpacing: "-0.01em",
-          fontWeight: "500",
+          letterSpacing: "0",
+          fontWeight: "400",
         },
         ".text-label-18": {
           fontSize: "18px",
-          lineHeight: "28px",
-          letterSpacing: "-0.01em",
-          fontWeight: "500",
+          lineHeight: "20px",
+          letterSpacing: "0",
+          fontWeight: "400",
         },
         ".text-label-16": {
           fontSize: "16px",
-          lineHeight: "24px",
+          lineHeight: "20px",
           letterSpacing: "0",
           fontWeight: "400",
           "& strong": { fontWeight: "500" },
@@ -1013,7 +1013,7 @@ module.exports = {
         },
         ".text-label-13": {
           fontSize: "13px",
-          lineHeight: "20px",
+          lineHeight: "16px",
           letterSpacing: "0",
           fontWeight: "400",
           fontVariantNumeric: "tabular-nums",
@@ -1042,6 +1042,12 @@ module.exports = {
           fontFamily:
             'var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, monospace',
         },
+        ".text-label-11": {
+          fontSize: "11px",
+          lineHeight: "16px",
+          letterSpacing: "0",
+          fontWeight: "400",
+        },
 
         // ─────────────────────────────────────────────────────────────────
         // COPY - Multi-line text with higher line height than Label
@@ -1055,7 +1061,7 @@ module.exports = {
         },
         ".text-copy-20": {
           fontSize: "20px",
-          lineHeight: "32px",
+          lineHeight: "36px",
           letterSpacing: "0",
           fontWeight: "400",
           "& strong": { fontWeight: "600" },
@@ -1076,14 +1082,14 @@ module.exports = {
         },
         ".text-copy-14": {
           fontSize: "14px",
-          lineHeight: "22px",
+          lineHeight: "20px",
           letterSpacing: "0",
           fontWeight: "400",
           "& strong": { fontWeight: "600" },
         },
         ".text-copy-13": {
           fontSize: "13px",
-          lineHeight: "20px",
+          lineHeight: "18px",
           letterSpacing: "0",
           fontWeight: "400",
         },
