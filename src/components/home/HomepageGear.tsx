@@ -46,7 +46,9 @@ interface HomepageGearProps {
   items: ReadonlyArray<HomepageGearItem>;
 }
 
-const SEE_ALL_HREF = "/gear";
+// Combined index of every productPost (shoes + gear + nutrition).
+// Route doesn't exist yet — needs to be created at /reviews/page.tsx.
+const SEE_ALL_HREF = "/reviews";
 
 const formatDate = (iso?: string) => {
   if (!iso) return "";
@@ -169,12 +171,12 @@ export default function HomepageGear({ items }: HomepageGearProps) {
 
           <ButtonLink
             href={SEE_ALL_HREF}
-            variant="default"
+            variant="tertiary"
             size="small"
             suffixIcon={<ChevronRight />}
             className="hidden md:inline-flex"
           >
-            All gear
+            See all articles
           </ButtonLink>
         </header>
 
@@ -213,12 +215,12 @@ export default function HomepageGear({ items }: HomepageGearProps) {
         <div className="md:hidden">
           <ButtonLink
             href={SEE_ALL_HREF}
-            variant="default"
+            variant="tertiary"
             size="small"
             suffixIcon={<ChevronRight />}
             className="w-full"
           >
-            All gear
+            See all articles
           </ButtonLink>
         </div>
       </div>

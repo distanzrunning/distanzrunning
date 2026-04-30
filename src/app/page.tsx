@@ -52,17 +52,35 @@ export default async function Home() {
       <HomepageBreakingNews items={breakingNews} />
       <HomepageGear items={gear} />
 
-      {/* Mid-page editorial pause. preview=true until real AdSense
-          slot IDs are wired up — renders the Distanz "Advertise
-          with us" fallback so the slot still earns its space. */}
+      {/* Mid-page editorial pause. Two AdSlot instances gate
+          visibility per breakpoint so each viewport gets an
+          appropriately sized unit:
+            < md  → mpu (300×250) — fits any phone
+            md+   → billboard (970×250) — uses the full row width
+          Same height (250 px) keeps the section's vertical rhythm
+          consistent across breakpoints. preview=true until real
+          AdSense slot IDs are wired up — renders the Distanz
+          "Advertise with us" fallback so the slot still earns
+          its space. Wire real slot IDs to AdSense's `homepage-mid`
+          and `homepage-mid-mobile` units when ready. */}
       <section className="w-full px-4 py-12 md:py-16 lg:py-20">
         <div className="mx-auto max-w-[1400px]">
-          <AdSlot
-            slot="homepage-mid"
-            size="billboard"
-            preview
-            className="mx-auto"
-          />
+          <div className="md:hidden">
+            <AdSlot
+              slot="homepage-mid-mobile"
+              size="mpu"
+              preview
+              className="mx-auto"
+            />
+          </div>
+          <div className="hidden md:block">
+            <AdSlot
+              slot="homepage-mid"
+              size="billboard"
+              preview
+              className="mx-auto"
+            />
+          </div>
         </div>
       </section>
 
