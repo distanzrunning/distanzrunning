@@ -198,8 +198,16 @@ export default function HomepageHeroCarousel({
                                 .auto("format")
                                 .url()}
                               alt=""
-                              loading={i === 0 ? "eager" : "lazy"}
-                              fetchPriority={i === 0 ? "high" : "auto"}
+                              // All slides load eagerly — Embla
+                              // translates non-active slides off-screen,
+                              // so loading="lazy" never triggers (the
+                              // intersection observer doesn't see them
+                              // as in-viewport) and the skeleton would
+                              // sit gray forever. Eager + fetchPriority
+                              // gives the LCP-first slide a boost while
+                              // the others fetch at low priority.
+                              loading="eager"
+                              fetchPriority={i === 0 ? "high" : "low"}
                               decoding="async"
                               onLoad={() =>
                                 setLoaded((m) => ({ ...m, [slide._id]: true }))
