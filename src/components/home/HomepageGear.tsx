@@ -163,7 +163,7 @@ export default function HomepageGear({ items }: HomepageGearProps) {
 
           <ButtonLink
             href={SEE_ALL_HREF}
-            variant="tertiary"
+            variant="secondary"
             size="small"
             suffixIcon={<ChevronRight />}
             className="hidden md:inline-flex"
@@ -202,7 +202,7 @@ export default function HomepageGear({ items }: HomepageGearProps) {
         <div className="md:hidden">
           <ButtonLink
             href={SEE_ALL_HREF}
-            variant="tertiary"
+            variant="secondary"
             size="small"
             suffixIcon={<ChevronRight />}
             className="w-full"
