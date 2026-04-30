@@ -192,7 +192,7 @@ export default function HomepageHeroCarousel({
                       >
                         <Link
                           href={slide.href}
-                          className="outline-none transition-colors hover:text-[color:var(--ds-gray-900)] focus-visible:text-[color:var(--ds-gray-900)] group-hover/cover:text-[color:var(--ds-gray-900)]"
+                          className="outline-none transition-colors hover:text-[color:var(--ds-gray-900)] focus-visible:text-[color:var(--ds-gray-900)] group-has-[[data-hero-cover]:hover]/slide:text-[color:var(--ds-gray-900)]"
                         >
                           {slide.title}
                         </Link>
@@ -239,7 +239,8 @@ export default function HomepageHeroCarousel({
                         respects the editor's hotspot if set. */}
                     <Link
                       href={slide.href}
-                      className="group/cover relative order-1 block overflow-hidden rounded-lg border border-[color:var(--ds-gray-400)] lg:order-2 lg:col-span-2"
+                      data-hero-cover
+                      className="relative order-1 block overflow-hidden rounded-lg border border-[color:var(--ds-gray-400)] lg:order-2 lg:col-span-2"
                       style={{ background: "var(--ds-gray-200)" }}
                       aria-label={slide.title}
                     >
