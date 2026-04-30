@@ -2,6 +2,7 @@
 
 import React, { useState, useCallback, useRef } from "react";
 import * as Popover from "@radix-ui/react-popover";
+import Switch from "./Switch";
 
 // ============================================================================
 // Icons
@@ -1268,22 +1269,17 @@ export function Calendar({
                       )}
                       <div>
                         {showMonthTab && (
-                          <div className="calendar-tab-switcher">
-                            <button
-                              type="button"
-                              className={`calendar-tab-button ${calendarTab === "dates" ? "calendar-tab-button-active" : ""}`}
-                              onClick={() => setCalendarTab("dates")}
-                            >
-                              Dates
-                            </button>
-                            <button
-                              type="button"
-                              className={`calendar-tab-button ${calendarTab === "months" ? "calendar-tab-button-active" : ""}`}
-                              onClick={() => setCalendarTab("months")}
-                            >
-                              Months
-                            </button>
-                          </div>
+                          <Switch
+                            size="small"
+                            options={[
+                              { value: "dates", label: "Dates" },
+                              { value: "months", label: "Months" },
+                            ]}
+                            value={calendarTab}
+                            onChange={(v) =>
+                              setCalendarTab(v as "dates" | "months")
+                            }
+                          />
                         )}
                         {(!showMonthTab || calendarTab === "dates") && (
                           <CalendarContent
@@ -1715,22 +1711,17 @@ export function Calendar({
                         {/* Calendar grid - always positioned closer to the trigger */}
                         <div>
                           {showMonthTab && (
-                            <div className="calendar-tab-switcher">
-                              <button
-                                type="button"
-                                className={`calendar-tab-button ${calendarTab === "dates" ? "calendar-tab-button-active" : ""}`}
-                                onClick={() => setCalendarTab("dates")}
-                              >
-                                Dates
-                              </button>
-                              <button
-                                type="button"
-                                className={`calendar-tab-button ${calendarTab === "months" ? "calendar-tab-button-active" : ""}`}
-                                onClick={() => setCalendarTab("months")}
-                              >
-                                Months
-                              </button>
-                            </div>
+                            <Switch
+                              size="small"
+                              options={[
+                                { value: "dates", label: "Dates" },
+                                { value: "months", label: "Months" },
+                              ]}
+                              value={calendarTab}
+                              onChange={(v) =>
+                                setCalendarTab(v as "dates" | "months")
+                              }
+                            />
                           )}
                           {(!showMonthTab || calendarTab === "dates") && (
                             <CalendarContent
