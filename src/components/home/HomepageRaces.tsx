@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Calendar, ChevronLeft, ChevronRight } from "lucide-react";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 
 import RaceCard from "@/components/RaceCard";
@@ -118,7 +118,15 @@ export default function HomepageRaces({
         style={newsprintBg}
       >
         <header className="flex items-end justify-between gap-8">
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-3">
+            {/* Calendar tick — section identity, mirroring the red
+                live-dot above "Latest news". 20 px lucide icon,
+                stroke 1.5 per the DS Iconography rules. */}
+            <Calendar
+              className="size-5 shrink-0 self-start text-[color:var(--ds-gray-1000)]"
+              strokeWidth={1.5}
+              aria-hidden
+            />
             <h2 className="m-0 text-heading-32 text-balance text-[color:var(--ds-gray-1000)]">
               Upcoming races
             </h2>

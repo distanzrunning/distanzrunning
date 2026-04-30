@@ -103,6 +103,12 @@
   :root,
   .light {
     color-scheme: light;
+    /* Light-mode scrollbar — gray-400 thumb on a transparent
+       track. color-scheme alone covers most browsers, but explicit
+       scrollbar-color guarantees the look in Chromium 121+ and
+       Firefox where color-scheme defaults are sometimes
+       overridden by user prefs. */
+    scrollbar-color: var(--ds-gray-400) transparent;
 
     /* Distanz Typography System
        Body/UI: Inter Variable (complete weight spectrum)
@@ -709,6 +715,10 @@
      ═══════════════════════════════════════════════════════════════════════ */
   .dark {
     color-scheme: dark;
+    /* Dark-mode scrollbar — gray-500 thumb on a transparent track.
+       Sits a notch lighter than the panel surface so the scrollbar
+       reads against the dark canvas. */
+    scrollbar-color: var(--ds-gray-500) transparent;
 
     /* ─────────────────────────────────────────────────────────────────────────
        DARK MODE COLOR SCALES - Geist exact values
