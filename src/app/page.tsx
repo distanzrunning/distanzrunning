@@ -68,11 +68,21 @@ export default async function Home() {
 
       <HomepageRaces items={races} />
 
-      {/* Closing CTA. theme="black" gives the panel the inverse of
-          whatever theme the page is in — strong visual punctuation
-          right before the footer. */}
+      {/* Closing CTA — the panel is the inverse of the page theme:
+          dark panel in light mode, light panel in dark mode. We
+          render both NewsletterSignups and let CSS pick which is
+          visible (the FOUC bootstrap script sets `.dark` on
+          <html> synchronously before paint, so there's no flash).
+          NewsletterSignup forces `.dark` / `.light` on its own
+          subtree from the theme prop, so just gating visibility
+          on the page theme gives the inverse. */}
       <section className="w-full px-4 py-12 md:py-16 lg:py-20">
-        <NewsletterSignup theme="black" source="homepage_footer" />
+        <div className="dark:hidden">
+          <NewsletterSignup theme="black" source="homepage_footer" />
+        </div>
+        <div className="hidden dark:block">
+          <NewsletterSignup theme="white" source="homepage_footer" />
+        </div>
       </section>
     </>
   );

@@ -62,7 +62,10 @@ export interface AdSlotProps {
 function DefaultFallback({ width, height }: Dimensions) {
   const frameStyle: React.CSSProperties = {
     borderColor: "var(--ds-gray-400)",
-    background: "var(--ds-background-200)",
+    // bg-100 (white in light, elevated dark in dark) so the
+    // fallback reads as a card raised above the PageFrame
+    // surface — bg-200 blended with the surface in light mode.
+    background: "var(--ds-background-100)",
   };
   const ctaStyle: React.CSSProperties = {
     background: "var(--ds-gray-1000)",
