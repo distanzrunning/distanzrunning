@@ -198,7 +198,7 @@ export default function HomepageHeroCarousel({
                         </Link>
                       </h2>
                       {slide.excerpt && (
-                        <p className="max-w-prose text-[18px] leading-[1.4] text-[color:var(--ds-gray-900)] md:text-[21px] md:leading-[1.4]">
+                        <p className="max-w-prose text-[18px] font-medium leading-[1.4] text-[color:var(--ds-gray-900)] md:text-[21px] md:leading-[1.4]">
                           {slide.excerpt}
                         </p>
                       )}
