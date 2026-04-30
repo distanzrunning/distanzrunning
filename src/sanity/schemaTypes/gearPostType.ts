@@ -86,6 +86,13 @@ export const gearPostType = defineType({
         }),
     }),
     defineField({
+      name: 'isBreaking',
+      title: 'Show in Breaking News Section',
+      type: 'boolean',
+      initialValue: false,
+      description: 'Show this gear post in the homepage breaking news section',
+    }),
+    defineField({
       name: 'publishedAt',
       type: 'datetime',
     }),

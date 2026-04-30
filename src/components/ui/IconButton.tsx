@@ -1,0 +1,166 @@
+import { forwardRef, ButtonHTMLAttributes, ReactNode } from "react";
+
+export interface IconButtonProps
+  extends ButtonHTMLAttributes<HTMLButtonElement> {
+  /** Icon element (typically an SVG or Lucide icon) */
+  children: ReactNode;
+  /** Visual style variant */
+  variant?: "primary" | "secondary" | "tertiary";
+  /** Use inverse colors for dark backgrounds */
+  inverse?: boolean;
+  /** Size variant - default (40px) or small (32px) */
+  size?: "default" | "small";
+  /** Skip automatic dark mode switching (used by design system docs) */
+  ignoreDarkMode?: boolean;
+  /** Accessible label for the button (required for icon-only buttons) */
+  "aria-label": string;
+  /** Additional CSS classes */
+  className?: string;
+}
+
+/**
+ * Icon-only button component with consistent design system styles.
+ *
+ * Icon buttons are square buttons that contain only an icon, typically used
+ * for common actions like search, menu toggles, or closing dialogs.
+ *
+ * @example
+ * // Primary icon button (default)
+ * <IconButton aria-label="Search">
+ *   <SearchIcon className="w-5 h-5" />
+ * </IconButton>
+ *
+ * // Secondary icon button
+ * <IconButton variant="secondary" aria-label="Close">
+ *   <XIcon className="w-5 h-5" />
+ * </IconButton>
+ *
+ * // Inverse for dark backgrounds
+ * <IconButton inverse aria-label="Menu">
+ *   <MenuIcon className="w-5 h-5" />
+ * </IconButton>
+ */
+const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
+  (
+    {
+      children,
+      variant = "primary",
+      inverse = false,
+      size = "default",
+      ignoreDarkMode = false,
+      className = "",
+      disabled,
+      type = "button",
+      ...props
+    },
+    ref,
+  ) => {
+    // Size classes - square buttons
+    const sizeClasses = {
+      default: "w-10 h-10", // 40px
+      small: "w-8 h-8", // 32px
+    };
+
+    // Base classes (shared across all variants)
+    const baseClasses = `
+      inline-flex items-center justify-center
+      ${sizeClasses[size]}
+      rounded-md
+      transition-colors
+      focus:outline-none focus:ring-2 focus:ring-borderNeutral
+      active:scale-[0.98] active:duration-100
+    `;
+
+    // Variant + inverse color combinations
+    // When ignoreDarkMode is true, no dark: modifiers are used (for design system docs)
+    // When ignoreDarkMode is false, dark: modifiers enable automatic theme switching
+    const getVariantClasses = () => {
+      if (disabled) {
+        // Disabled state: subtle, recessive styling for premium feel
+        // Inverse disabled should match the opposite theme's primary disabled
+        if (variant === "primary") {
+          if (inverse) {
+            // Inverse disabled: dark grey for dark backgrounds (no dark mode switch)
+            return "bg-asphalt-20 text-asphalt-50 cursor-not-allowed";
+          }
+          // Primary disabled: light grey in light mode, dark grey in dark mode
+          return "bg-asphalt-90 dark:bg-asphalt-20 text-asphalt-60 dark:text-asphalt-50 cursor-not-allowed";
+        }
+        if (variant === "secondary") {
+          if (inverse) {
+            // Inverse secondary disabled: for dark backgrounds (no dark mode switch)
+            return "bg-transparent border border-asphalt-30 text-asphalt-50 cursor-not-allowed";
+          }
+          // Secondary disabled
+          return "bg-transparent border border-asphalt-80 dark:border-asphalt-30 text-asphalt-60 dark:text-asphalt-50 cursor-not-allowed";
+        }
+        if (variant === "tertiary") {
+          if (inverse) {
+            // Inverse tertiary disabled: for dark backgrounds
+            return "bg-transparent text-asphalt-50 cursor-not-allowed";
+          }
+          // Tertiary disabled
+          return "bg-transparent text-asphalt-70 dark:text-asphalt-50 cursor-not-allowed";
+        }
+      }
+
+      if (variant === "primary") {
+        if (inverse) {
+          // Inverse primary: for dark backgrounds - contrasts (light button on dark bg)
+          return "bg-asphalt-95 text-asphalt-10 hover:bg-asphalt-90";
+        }
+        // Primary: blends with theme (light in light mode, dark in dark mode)
+        if (ignoreDarkMode) {
+          return "bg-asphalt-95 text-asphalt-10 hover:bg-asphalt-90";
+        }
+        return "bg-asphalt-95 dark:bg-asphalt-10 text-asphalt-10 dark:text-white hover:bg-asphalt-90 dark:hover:bg-asphalt-20";
+      }
+
+      if (variant === "secondary") {
+        if (inverse) {
+          // Inverse secondary: for dark backgrounds
+          return "bg-transparent border border-white text-white hover:bg-white/10";
+        }
+        // Secondary: blends with theme
+        if (ignoreDarkMode) {
+          return "bg-transparent border border-asphalt-70 text-asphalt-10 hover:border-asphalt-40 hover:bg-asphalt-95/50";
+        }
+        return "bg-transparent border border-asphalt-70 dark:border-asphalt-40 text-asphalt-10 dark:text-asphalt-95 hover:border-asphalt-40 dark:hover:border-asphalt-60 hover:bg-asphalt-95/50 dark:hover:bg-asphalt-20/30";
+      }
+
+      if (variant === "tertiary") {
+        if (inverse) {
+          // Inverse tertiary: muted icon for dark backgrounds, intensifies on hover
+          return "bg-transparent text-asphalt-80 hover:text-asphalt-95 hover:bg-asphalt-20/30";
+        }
+        // Tertiary: muted icon that intensifies on hover
+        if (ignoreDarkMode) {
+          return "bg-transparent text-asphalt-40 hover:text-asphalt-10 hover:bg-asphalt-95/50";
+        }
+        return "bg-transparent text-asphalt-40 dark:text-asphalt-60 hover:text-asphalt-10 dark:hover:text-asphalt-95 hover:bg-asphalt-95/50 dark:hover:bg-asphalt-20/30";
+      }
+
+      return "";
+    };
+
+    const combinedClasses = `${baseClasses} ${getVariantClasses()} ${className}`
+      .replace(/\s+/g, " ")
+      .trim();
+
+    return (
+      <button
+        ref={ref}
+        type={type}
+        disabled={disabled}
+        className={combinedClasses}
+        {...props}
+      >
+        {children}
+      </button>
+    );
+  },
+);
+
+IconButton.displayName = "IconButton";
+
+export default IconButton;

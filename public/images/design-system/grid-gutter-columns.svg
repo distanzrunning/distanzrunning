@@ -1,0 +1,43 @@
+<svg width="600" height="200" viewBox="0 0 600 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="600" height="200" fill="#F0F5F5"/>
+
+  <!-- Title -->
+  <text x="300" y="24" text-anchor="middle" fill="#5C8F8F" font-family="system-ui, sans-serif" font-size="11" font-weight="500">GRID GUTTER (32px) - SPACE BETWEEN COLUMNS</text>
+
+  <!-- Left gutter -->
+  <rect x="0" y="44" width="32" height="120" fill="#E8F0F0"/>
+
+  <!-- Column 1 -->
+  <rect x="32" y="44" width="164" height="120" fill="#E0EBEB"/>
+  <text x="114" y="108" text-anchor="middle" fill="#5C8F8F" font-family="system-ui, sans-serif" font-size="12" font-weight="500">Column</text>
+
+  <!-- Gutter between columns -->
+  <rect x="196" y="44" width="32" height="120" fill="#F0F5F5"/>
+
+  <!-- Column 2 -->
+  <rect x="228" y="44" width="164" height="120" fill="#E0EBEB"/>
+  <text x="310" y="108" text-anchor="middle" fill="#5C8F8F" font-family="system-ui, sans-serif" font-size="12" font-weight="500">Column</text>
+
+  <!-- Gutter between columns -->
+  <rect x="392" y="44" width="32" height="120" fill="#F0F5F5"/>
+
+  <!-- Column 3 -->
+  <rect x="424" y="44" width="144" height="120" fill="#E0EBEB"/>
+  <text x="496" y="108" text-anchor="middle" fill="#5C8F8F" font-family="system-ui, sans-serif" font-size="12" font-weight="500">Column</text>
+
+  <!-- Right gutter -->
+  <rect x="568" y="44" width="32" height="120" fill="#E8F0F0"/>
+
+  <!-- Gutter dimension -->
+  <line x1="196" y1="172" x2="196" y2="184" stroke="#0A1757" stroke-width="1"/>
+  <line x1="228" y1="172" x2="228" y2="184" stroke="#0A1757" stroke-width="1"/>
+  <line x1="196" y1="178" x2="228" y2="178" stroke="#0A1757" stroke-width="1"/>
+  <text x="212" y="196" text-anchor="middle" fill="#0A1757" font-family="system-ui, sans-serif" font-size="10" font-weight="500">32px</text>
+
+  <!-- Outside gutter dimension -->
+  <line x1="0" y1="172" x2="0" y2="184" stroke="#0A1757" stroke-width="1"/>
+  <line x1="32" y1="172" x2="32" y2="184" stroke="#0A1757" stroke-width="1"/>
+  <line x1="0" y1="178" x2="32" y2="178" stroke="#0A1757" stroke-width="1"/>
+  <text x="16" y="196" text-anchor="middle" fill="#0A1757" font-family="system-ui, sans-serif" font-size="10" font-weight="500">32px</text>
+</svg>

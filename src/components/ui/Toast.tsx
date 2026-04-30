@@ -1,0 +1,543 @@
+"use client";
+
+import React, {
+  useState,
+  useCallback,
+  useRef,
+  useEffect,
+  type ReactNode,
+} from "react";
+import { createPortal } from "react-dom";
+
+// ============================================================================
+// Types
+// ============================================================================
+
+export interface ToastAction {
+  label: string;
+  onClick: () => void;
+}
+
+export interface ToastLink {
+  label: string;
+  href: string;
+}
+
+export interface ToastOptions {
+  message: string;
+  description?: string;
+  action?: ToastAction;
+  undo?: () => void;
+  link?: ToastLink;
+  preserve?: boolean;
+  variant?: "default" | "success" | "warning" | "error";
+  jsx?: ReactNode;
+}
+
+interface ToastItem {
+  id: number;
+  message: string;
+  description?: string;
+  action?: ToastAction;
+  undo?: () => void;
+  link?: ToastLink;
+  preserve?: boolean;
+  variant: "default" | "success" | "warning" | "error";
+  jsx?: ReactNode;
+  exiting?: boolean;
+}
+
+// ============================================================================
+// Global Toast Manager
+// ============================================================================
+
+type ToastListener = (toasts: ToastItem[]) => void;
+
+let toastIdCounter = 0;
+let globalToasts: ToastItem[] = [];
+const listeners = new Set<ToastListener>();
+
+function notifyListeners() {
+  listeners.forEach((fn) => fn([...globalToasts]));
+}
+
+function addToast(options: string | ToastOptions) {
+  const opts: ToastOptions =
+    typeof options === "string" ? { message: options } : options;
+
+  const item: ToastItem = {
+    id: ++toastIdCounter,
+    message: opts.message,
+    description: opts.description,
+    action: opts.action,
+    undo: opts.undo,
+    link: opts.link,
+    preserve: opts.preserve,
+    variant: opts.variant || "default",
+    jsx: opts.jsx,
+  };
+
+  globalToasts = [item, ...globalToasts].slice(0, 3);
+  notifyListeners();
+
+  if (!opts.preserve) {
+    setTimeout(() => {
+      removeToast(item.id);
+    }, 5000);
+  }
+}
+
+function removeToast(id: number) {
+  // Mark as exiting for animation
+  globalToasts = globalToasts.map((t) =>
+    t.id === id ? { ...t, exiting: true } : t,
+  );
+  notifyListeners();
+
+  // Remove after animation completes
+  setTimeout(() => {
+    globalToasts = globalToasts.filter((t) => t.id !== id);
+    notifyListeners();
+  }, 350);
+}
+
+
+function CloseIcon() {
+  return (
+    <svg height="16" strokeLinejoin="round" viewBox="0 0 16 16" width="16" style={{ color: "currentcolor" }}>
+      <path fillRule="evenodd" clipRule="evenodd" d="M12.4697 13.5303L13 14.0607L14.0607 13L13.5303 12.4697L9.06065 7.99999L13.5303 3.53032L14.0607 2.99999L13 1.93933L12.4697 2.46966L7.99999 6.93933L3.53032 2.46966L2.99999 1.93933L1.93933 2.99999L2.46966 3.53032L6.93933 7.99999L2.46966 12.4697L1.93933 13L2.99999 14.0607L3.53032 13.5303L7.99999 9.06065L12.4697 13.5303Z" fill="currentColor" />
+    </svg>
+  );
+}
+
+// ============================================================================
+// Single Toast Card
+// ============================================================================
+
+function ToastCard({
+  item,
+  index,
+  total,
+  isHovered,
+  stackOffset,
+  frontHeight,
+  onDismiss,
+  onHeightMeasured,
+}: {
+  item: ToastItem;
+  index: number;
+  total: number;
+  isHovered: boolean;
+  stackOffset: number;
+  frontHeight: number;
+  onDismiss: () => void;
+  onHeightMeasured: (id: number, height: number) => void;
+}) {
+  const [entered, setEntered] = useState(false);
+  const [measuredHeight, setMeasuredHeight] = useState(63);
+  const cardRef = useRef<HTMLDivElement>(null);
+  const zIndex = 5000 - index;
+
+  useEffect(() => {
+    const raf1 = requestAnimationFrame(() => {
+      if (cardRef.current) {
+        const h = cardRef.current.scrollHeight;
+        setMeasuredHeight(h);
+        onHeightMeasured(item.id, h);
+      }
+      const raf2 = requestAnimationFrame(() => {
+        setEntered(true);
+      });
+      return () => cancelAnimationFrame(raf2);
+    });
+    return () => cancelAnimationFrame(raf1);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Geist approach: entry from below, visible = transform:none,
+  // hiding = scale(.98) + opacity:0 with fast timing
+  // Stacking handled by parent hover + CSS variables
+
+  // Use cumulative stack offset from container for accurate positioning
+  const stackY = index === 0 ? 0 : -stackOffset;
+  const stackZ = -index;
+
+  let containerStyle: React.CSSProperties;
+
+  if (item.exiting) {
+    // Exit: scale down slightly, fade out, fast
+    containerStyle = {
+      opacity: 0,
+      transform: "scale(0.98)",
+      transition: "all 0.16s cubic-bezier(0.6, 0.3, 0.98, 0.5)",
+    };
+  } else if (!entered) {
+    // Entry: below viewport
+    containerStyle = {
+      opacity: 0,
+      transform: "translate3d(0, 100%, 150px) scale(1)",
+      transition: "all 0.35s cubic-bezier(0.25, 0.75, 0.6, 0.98)",
+    };
+  } else if (index === 0) {
+    // Front toast: visible, no transform
+    containerStyle = {
+      opacity: 1,
+      transform: "none",
+      transition: "all 0.35s cubic-bezier(0.25, 0.75, 0.6, 0.98)",
+    };
+  } else if (index === 1) {
+    // Second toast: show 10px peek above front toast
+    // Behind toast is at bottom:0 with maxHeight:50. We want its top edge
+    // to be 10px above the front toast's top edge.
+    // Front toast top = -(frontHeight). We want behind top = -(frontHeight + 10).
+    // Behind toast bottom = behind top + 50. So translateY = -(frontHeight + 10 - 50 + 50)
+    // Simpler: translateY needs to move it up by (frontHeight - 50 + 10)
+    const offset = frontHeight - 50 + 16;
+    containerStyle = {
+      opacity: 1,
+      maxHeight: 50,
+      transform: `translate3d(0, -${offset}px, -1px) scale(0.95)`,
+      transition: "all 0.35s cubic-bezier(0.25, 0.75, 0.6, 0.98)",
+    };
+  } else if (index === 2) {
+    const offset = frontHeight - 50 + 28;
+    containerStyle = {
+      opacity: 1,
+      maxHeight: 50,
+      transform: `translate3d(0, -${offset}px, -2px) scale(0.9)`,
+      transition: "all 0.35s cubic-bezier(0.25, 0.75, 0.6, 0.98)",
+    };
+  } else {
+    const offset = frontHeight - 50 + 28;
+    containerStyle = {
+      opacity: 0,
+      pointerEvents: "none",
+      transform: `translate3d(0, -${offset}px, -2px) scale(0.9)`,
+      transition: "all 0.35s cubic-bezier(0.25, 0.75, 0.6, 0.98)",
+    };
+  }
+
+  // Message opacity: non-front toasts hide message when not hovered
+  const messageOpacity = entered && !item.exiting && index > 0 && !isHovered ? 0 : 1;
+
+  return (
+    <div
+      ref={cardRef}
+      role="status"
+      aria-atomic="true"
+      style={{
+        position: "absolute",
+        bottom: 0,
+        right: 0,
+        width: 420,
+        maxWidth: "min(420px, calc(100vw - 48px))",
+        backgroundColor:
+          item.variant === "success" ? "var(--ds-blue-700)"
+          : item.variant === "warning" ? "var(--ds-amber-800)"
+          : item.variant === "error" ? "var(--ds-red-800)"
+          : "var(--ds-background-100)",
+        boxShadow: item.variant === "default" ? "var(--ds-shadow-menu)" : "none",
+        borderRadius: 12,
+        padding: 16,
+        lineHeight: "20px",
+        color:
+          item.variant === "warning" ? "var(--ds-gray-1000)"
+          : item.variant !== "default" ? "#fff"
+          : "var(--ds-gray-1000)",
+        zIndex,
+        overflow: "hidden",
+        pointerEvents: item.exiting || index >= 3 ? "none" as const : "auto" as const,
+        // CSS custom properties for hover expansion
+        "--y": `${stackY}px`,
+        "--z": `${stackZ}px`,
+        "--max-height": `${measuredHeight}px`,
+        ...containerStyle,
+      } as React.CSSProperties}
+    >
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: 12,
+          maxWidth: "100%",
+          fontSize: 14,
+          lineHeight: "20px",
+        }}
+      >
+        <div
+          className="ds-toast-message"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 16,
+            width: "100%",
+            marginTop: -1,
+            wordBreak: "break-word",
+            opacity: messageOpacity,
+            transition: "opacity 0.4s ease",
+          }}
+        >
+          <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 4 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              {item.jsx ? (
+                <span style={{ display: "block", lineHeight: "20px" }}>{item.jsx}</span>
+              ) : (
+                <span style={{ display: "block", fontWeight: item.description ? 500 : 400, lineHeight: "20px" }}>
+                  {item.message}
+                </span>
+              )}
+            </div>
+            {item.description && (
+              <span style={{ color: "var(--ds-gray-900)", fontSize: 13, lineHeight: "18px" }}>
+                {item.description}
+              </span>
+            )}
+          </div>
+
+          {!item.action && (index === 0 || isHovered) && (
+            <div style={{ display: "flex", alignItems: "center", gap: 4, flexWrap: "nowrap" }}>
+              {item.undo && (
+                <button
+                  type="button"
+                  onClick={() => { item.undo?.(); onDismiss(); }}
+                  aria-label="Undo"
+                  style={{
+                    background: "none",
+                    border: "none",
+                    padding: 0,
+                    cursor: "pointer",
+                    borderRadius: 6,
+                    color: "inherit",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: 32,
+                    height: 32,
+                    flexShrink: 0,
+                    transition: "background 0.15s ease",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = item.variant === "default" ? "var(--ds-gray-100)" : "rgba(0,0,0,0.1)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = "transparent";
+                  }}
+                >
+                  <svg height="16" strokeLinejoin="round" viewBox="0 0 16 16" width="16" style={{ color: "currentcolor" }}>
+                    <path fillRule="evenodd" clipRule="evenodd" d="M13.5 8C13.5 4.96643 11.0257 2.5 7.96452 2.5C5.42843 2.5 3.29365 4.19393 2.63724 6.5H5.25H6V8H5.25H0.75C0.335787 8 0 7.66421 0 7.25V2.75V2H1.5V2.75V5.23347C2.57851 2.74164 5.06835 1 7.96452 1C11.8461 1 15 4.13001 15 8C15 11.87 11.8461 15 7.96452 15C5.62368 15 3.54872 13.8617 2.27046 12.1122L1.828 11.5066L3.03915 10.6217L3.48161 11.2273C4.48831 12.6051 6.12055 13.5 7.96452 13.5C11.0257 13.5 13.5 11.0336 13.5 8Z" fill="currentColor" />
+                  </svg>
+                </button>
+              )}
+              <button
+                type="button"
+                onClick={onDismiss}
+                aria-label="Dismiss toast"
+                style={{
+                  background: "none",
+                  border: "none",
+                  padding: 0,
+                  cursor: "pointer",
+                  borderRadius: 6,
+                  color: "inherit",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: 32,
+                  height: 32,
+                  flexShrink: 0,
+                  transition: "background 0.15s ease",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = item.variant === "default" ? "var(--ds-gray-100)" : "rgba(0,0,0,0.1)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = "transparent";
+                }}
+              >
+                <CloseIcon />
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* Full-width action buttons row (Geist style) */}
+        {item.action && (
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "stretch",
+              justifyContent: "flex-end",
+              gap: 8,
+              width: "100%",
+            }}
+          >
+            <button
+              type="button"
+              onClick={onDismiss}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                height: 32,
+                padding: "0 6px",
+                border: "none",
+                borderRadius: 6,
+                background: "transparent",
+                color: "var(--ds-gray-1000)",
+                fontSize: 14,
+                fontWeight: 500,
+                lineHeight: "20px",
+                cursor: "pointer",
+                transition: "background 0.15s ease",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "var(--ds-gray-100)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "transparent";
+              }}
+            >
+              Dismiss
+            </button>
+            {item.action && (
+              <button
+                type="button"
+                onClick={() => { item.action?.onClick(); onDismiss(); }}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  height: 32,
+                  padding: "0 6px",
+                  border: "none",
+                  borderRadius: 6,
+                  background: "var(--ds-gray-1000)",
+                  color: "#fff",
+                  fontSize: 14,
+                  fontWeight: 500,
+                  lineHeight: "20px",
+                  cursor: "pointer",
+                }}
+              >
+                {item.action.label}
+              </button>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ============================================================================
+// Toast Container (renders all stacked toasts)
+// ============================================================================
+
+export function ToastContainer() {
+  const [toasts, setToasts] = useState<ToastItem[]>([]);
+  const [mounted, setMounted] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+  const [heights, setHeights] = useState<Record<number, number>>({});
+
+  useEffect(() => {
+    setMounted(true);
+    listeners.add(setToasts);
+    return () => {
+      listeners.delete(setToasts);
+    };
+  }, []);
+
+  const handleHeightMeasured = useCallback((id: number, height: number) => {
+    setHeights((prev) => ({ ...prev, [id]: height }));
+  }, []);
+
+  if (!mounted || toasts.length === 0) return null;
+
+  const hasMultiple = toasts.filter((t) => !t.exiting).length > 1;
+
+  // Compute cumulative stack offsets based on actual heights
+  const gap = 16;
+  const stackOffsets: number[] = [];
+  let cumulative = 0;
+  for (let i = 0; i < toasts.length; i++) {
+    stackOffsets.push(cumulative);
+    cumulative += (heights[toasts[i].id] || 63) + gap;
+  }
+
+  // Total height of all toasts expanded (for hover hit area)
+  const totalExpandedHeight = cumulative - gap; // remove last gap
+
+  return createPortal(
+    <div
+      className={`ds-toast-area${hasMultiple ? " ds-toast-area--multiple" : ""}`}
+      style={{
+        position: "fixed",
+        bottom: 24,
+        right: 24,
+        zIndex: 5000,
+        width: 420,
+        height: isHovered ? totalExpandedHeight : (heights[toasts[0]?.id] || 63),
+        transition: "transform 0.4s ease, bottom 0.4s ease, height 0.35s cubic-bezier(0.25, 0.75, 0.6, 0.98)",
+        pointerEvents: "auto",
+      }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      {toasts.map((item, index) => (
+        <ToastCard
+          key={item.id}
+          item={item}
+          index={index}
+          total={toasts.length}
+          isHovered={isHovered && hasMultiple}
+          stackOffset={stackOffsets[index]}
+          frontHeight={heights[toasts[0]?.id] || 63}
+          onDismiss={() => removeToast(item.id)}
+          onHeightMeasured={handleHeightMeasured}
+        />
+      ))}
+    </div>,
+    document.body,
+  );
+}
+
+// ============================================================================
+// Legacy Toast component (backwards-compatible wrapper)
+// ============================================================================
+
+export function Toast({
+  toast,
+  onDismiss,
+}: {
+  toast: { message: string; isVisible: boolean; isExiting?: boolean; variant?: string; [key: string]: unknown };
+  onDismiss: () => void;
+}) {
+  // This is a no-op — the ToastContainer handles rendering now
+  return null;
+}
+
+// ============================================================================
+// useToast Hook
+// ============================================================================
+
+export function useToast() {
+  const showToast = useCallback((options: string | ToastOptions) => {
+    addToast(options);
+  }, []);
+
+  const dismissToast = useCallback(() => {
+    // Dismiss the most recent toast
+    if (globalToasts.length > 0) {
+      removeToast(globalToasts[0].id);
+    }
+  }, []);
+
+  // Return a dummy toast object for backwards compatibility
+  const toast = { message: "", isVisible: false, isExiting: false, variant: "default" as const };
+
+  return { toast, showToast, dismissToast };
+}

@@ -1,0 +1,244 @@
+"use client";
+
+import React, { forwardRef, useId } from "react";
+
+// ============================================================================
+// Types
+// ============================================================================
+
+export type InputSize = "xSmall" | "small" | "default" | "large";
+
+export interface InputProps
+  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size" | "prefix"> {
+  /** Size variant */
+  size?: InputSize;
+  /** Content to render before the input */
+  prefix?: React.ReactNode;
+  /** Content to render after the input */
+  suffix?: React.ReactNode;
+  /** Whether to add a bordered section for the prefix (default true) */
+  prefixStyling?: boolean;
+  /** Whether to add a bordered section for the suffix (default true) */
+  suffixStyling?: boolean;
+  /** Whether the input is in an error state */
+  error?: boolean;
+  /** Error message to display below the input */
+  errorMessage?: string;
+  /** Label text above the input */
+  label?: string;
+}
+
+// ============================================================================
+// Size configs
+// ============================================================================
+
+interface SizeConfig {
+  height: number;
+  fontSize: number;
+  iconSize: number;
+  paddingX: number;
+  borderRadius: number;
+}
+
+const sizeConfigs: Record<InputSize, SizeConfig> = {
+  xSmall: { height: 24, fontSize: 12, iconSize: 12, paddingX: 8, borderRadius: 6 },
+  small: { height: 32, fontSize: 14, iconSize: 16, paddingX: 12, borderRadius: 6 },
+  default: { height: 40, fontSize: 14, iconSize: 20, paddingX: 12, borderRadius: 6 },
+  large: { height: 48, fontSize: 16, iconSize: 24, paddingX: 12, borderRadius: 8 },
+};
+
+// ============================================================================
+// Error Icon
+// ============================================================================
+
+function ErrorIcon() {
+  return (
+    <svg
+      height="16"
+      strokeLinejoin="round"
+      viewBox="0 0 16 16"
+      width="16"
+      style={{ color: "var(--ds-red-900)", flexShrink: 0 }}
+    >
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M5.30761 1.5L1.5 5.30761V10.6924L5.30761 14.5H10.6924L14.5 10.6924V5.30761L10.6924 1.5H5.30761ZM4.60051 0L0 4.60051V11.3995L4.60051 16H11.3995L16 11.3995V4.60051L11.3995 0H4.60051ZM8.75 3.75V4.5V8V8.75H7.25V8V4.5V3.75H8.75ZM8 12C8.55228 12 9 11.5523 9 11C9 10.4477 8.55228 10 8 10C7.44772 10 7 10.4477 7 11C7 11.5523 7.44772 12 8 12Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+}
+
+// ============================================================================
+// Input Component
+// ============================================================================
+
+export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
+  {
+    size = "default",
+    prefix,
+    suffix,
+    prefixStyling = true,
+    suffixStyling = true,
+    error = false,
+    errorMessage,
+    label,
+    disabled,
+    className,
+    id: idProp,
+    ...props
+  },
+  ref,
+) {
+  const generatedId = useId();
+  const inputId = idProp || generatedId;
+  const config = sizeConfigs[size];
+  const hasPrefix = prefix !== undefined;
+  const hasSuffix = suffix !== undefined;
+
+  return (
+    <div className="ds-input-wrapper">
+      {label && (
+        <label
+          htmlFor={inputId}
+          className="ds-input-label"
+          style={{
+            display: "block",
+            fontSize: 13,
+            maxWidth: "100%",
+            color: "var(--ds-gray-800)",
+            textTransform: "capitalize",
+            marginBottom: 8,
+            cursor: "text",
+          }}
+        >
+          {label}
+        </label>
+      )}
+      <div
+        className={`ds-input-container${error ? " ds-input--error" : ""}${disabled ? " ds-input--disabled" : ""}${className ? ` ${className}` : ""}`}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          height: config.height,
+          maxWidth: "100%",
+          borderRadius: config.borderRadius,
+          background: "var(--ds-background-100)",
+          transition: "box-shadow 0.15s ease",
+          overflow: "hidden",
+          fontSize: config.fontSize,
+          ...(disabled ? { cursor: "not-allowed" } : {}),
+        }}
+      >
+        {/* Prefix */}
+        {hasPrefix && (
+          <span
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: `0 ${config.paddingX}px`,
+              height: "100%",
+              color: "var(--ds-gray-600)",
+              fontSize: config.fontSize,
+              lineHeight: "20px",
+              whiteSpace: "nowrap",
+              flexShrink: 0,
+              order: 0,
+              position: "relative",
+              cursor: "default",
+              transition: "color 0.15s ease",
+              ...(prefixStyling
+                ? { background: "var(--ds-background-200)" }
+                : { marginRight: -config.paddingX, ...(disabled ? { background: "var(--ds-gray-100)" } : {}) }),
+              ...(disabled ? { cursor: "not-allowed", color: "var(--ds-gray-700)" } : {}),
+            }}
+          >
+            {prefix}
+          </span>
+        )}
+
+        {/* Input */}
+        <input
+          ref={ref}
+          id={inputId}
+          disabled={disabled}
+          className="ds-input-field"
+          style={{
+            flex: 1,
+            width: "100%",
+            height: "100%",
+            border: "none",
+            outline: "none",
+            background: disabled ? "var(--ds-gray-100)" : "var(--ds-background-100)",
+            fontSize: config.fontSize,
+            lineHeight: "20px",
+            color: disabled ? "var(--ds-gray-700)" : "var(--ds-gray-1000)",
+            fontFamily: "inherit",
+            paddingLeft: config.paddingX,
+            paddingRight: config.paddingX,
+            minWidth: 0,
+            order: 1,
+            borderRadius: 0,
+            ...(hasPrefix && prefixStyling
+              ? { borderLeft: "1px solid var(--ds-gray-alpha-400)" }
+              : {}),
+            ...(hasSuffix && suffixStyling
+              ? { borderRight: "1px solid var(--ds-gray-alpha-400)" }
+              : {}),
+          }}
+          {...props}
+        />
+
+        {/* Suffix */}
+        {hasSuffix && (
+          <span
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: `0 ${config.paddingX}px`,
+              height: "100%",
+              color: "var(--ds-gray-600)",
+              fontSize: config.fontSize,
+              lineHeight: "20px",
+              whiteSpace: "nowrap",
+              flexShrink: 0,
+              order: 2,
+              position: "relative",
+              cursor: "default",
+              transition: "color 0.15s ease",
+              ...(suffixStyling
+                ? { background: "var(--ds-background-200)" }
+                : { marginLeft: -config.paddingX, ...(disabled ? { background: "var(--ds-gray-100)" } : {}) }),
+              ...(disabled ? { cursor: "not-allowed", color: "var(--ds-gray-700)" } : {}),
+            }}
+          >
+            {suffix}
+          </span>
+        )}
+      </div>
+
+      {/* Error message */}
+      {error && errorMessage && (
+        <div
+          className="ds-input-error"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 6,
+            marginTop: 8,
+            fontSize: 13,
+            lineHeight: "20px",
+            color: "var(--ds-red-900)",
+          }}
+        >
+          <ErrorIcon />
+          <span>{errorMessage}</span>
+        </div>
+      )}
+
+    </div>
+  );
+});

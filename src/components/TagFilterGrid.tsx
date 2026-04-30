@@ -16,13 +16,13 @@ type Article = {
 };
 
 type Props = {
-  articles: Article[];
+  articles: ReadonlyArray<Article>;
   basePath?: string;
 };
 
 const ARTICLES_PER_BATCH = 16;
 
-export default function TagFilterGrid({ articles, basePath = "/articles/post/" }: Props) {
+export default function TagFilterGrid({ articles, basePath = "/articles/" }: Props) {
   const [activeTag, setActiveTag] = useState<string>("All");
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [visibleCount, setVisibleCount] = useState<number>(ARTICLES_PER_BATCH);
@@ -109,7 +109,7 @@ export default function TagFilterGrid({ articles, basePath = "/articles/post/" }
       </div>
 
       {/* Grid */}
-      <div className="w-full max-w-[1800px] mx-auto grid grid-cols-1 lg:grid-cols-4 gap-x-3 gap-y-8">
+      <div className="w-[95%] mx-auto grid grid-cols-1 lg:grid-cols-4 gap-x-3 gap-y-8">
         {visibleArticles.map((article) => (
           <Link
             key={article.slug.current}

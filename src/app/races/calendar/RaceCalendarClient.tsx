@@ -1,0 +1,743 @@
+"use client";
+
+import { useState, useMemo, useRef, useEffect } from "react";
+import FullCalendar from "@fullcalendar/react";
+import dayGridPlugin from "@fullcalendar/daygrid";
+import interactionPlugin from "@fullcalendar/interaction";
+import type { EventClickArg, DayCellContentArg } from "@fullcalendar/core";
+import { ChevronLeft, ChevronRight, Star, Info } from "lucide-react";
+import type { RaceGuide } from "../page";
+import { RaceEventPopup } from "./RaceEventPopup";
+
+interface CalendarEvent {
+  id: string;
+  title: string;
+  start: string;
+  slug: string;
+  city?: string;
+  country?: string;
+  raceCategoryName?: string;
+}
+
+interface WindowState {
+  race: RaceGuide;
+  isMinimized: boolean;
+  showMapMarkers: boolean;
+  mapUseMetric: boolean;
+}
+
+export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [showLegend, setShowLegend] = useState(false);
+  const [windows, setWindows] = useState<WindowState[]>([]);
+  const [showMinimizedList, setShowMinimizedList] = useState(false);
+  const [isMonthDropdownOpen, setIsMonthDropdownOpen] = useState(false);
+  const [isYearDropdownOpen, setIsYearDropdownOpen] = useState(false);
+  const monthDropdownRef = useRef<HTMLDivElement>(null);
+  const yearDropdownRef = useRef<HTMLDivElement>(null);
+
+  // Convert races to FullCalendar events (only current and future races)
+  const events = useMemo<CalendarEvent[]>(() => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Set to start of day for accurate comparison
+
+    return races
+      .filter((race) => {
+        const raceDate = new Date(race.eventDate);
+        return raceDate >= today; // Only include current and future races
+      })
+      .map((race) => ({
+        id: race._id,
+        title: race.title,
+        start: race.eventDate,
+        slug: race.slug.current,
+        city: race.city,
+        country: race.country,
+        raceCategoryName: race.raceCategoryName,
+      }))
+      .sort(
+        (a, b) => new Date(a.start).getTime() - new Date(b.start).getTime(),
+      );
+  }, [races]);
+
+  // Handle event click - show popup window
+  const handleEventClick = (info: EventClickArg) => {
+    const race = races.find((r) => r._id === info.event.id);
+    if (race) {
+      // Check if window already exists
+      const existingWindow = windows.find((w) => w.race._id === race._id);
+      if (existingWindow) {
+        // If minimized, restore it
+        if (existingWindow.isMinimized) {
+          setWindows(
+            windows.map((w) =>
+              w.race._id === race._id ? { ...w, isMinimized: false } : w,
+            ),
+          );
+        }
+      } else {
+        // Add new window with default marker settings
+        setWindows([
+          ...windows,
+          {
+            race,
+            isMinimized: false,
+            showMapMarkers: false,
+            mapUseMetric: false,
+          },
+        ]);
+      }
+    }
+  };
+
+  const handleMinimize = (raceId: string) => {
+    setWindows(
+      windows.map((w) =>
+        w.race._id === raceId ? { ...w, isMinimized: true } : w,
+      ),
+    );
+  };
+
+  const handleRestore = (raceId: string) => {
+    setWindows(
+      windows.map((w) =>
+        w.race._id === raceId ? { ...w, isMinimized: false } : w,
+      ),
+    );
+    setShowMinimizedList(false);
+  };
+
+  const handleClose = (raceId: string) => {
+    setWindows(windows.filter((w) => w.race._id !== raceId));
+  };
+
+  const handleMapMarkersChange = (raceId: string, showMarkers: boolean) => {
+    setWindows(
+      windows.map((w) =>
+        w.race._id === raceId ? { ...w, showMapMarkers: showMarkers } : w,
+      ),
+    );
+  };
+
+  const handleMapUseMetricChange = (raceId: string, useMetric: boolean) => {
+    setWindows(
+      windows.map((w) =>
+        w.race._id === raceId ? { ...w, mapUseMetric: useMetric } : w,
+      ),
+    );
+  };
+
+  const minimizedWindows = windows.filter((w) => w.isMinimized);
+  const activeWindows = windows.filter((w) => !w.isMinimized);
+
+  // Add World Athletics Label background colors
+  const handleEventDidMount = (info: any) => {
+    const race = races.find((r) => r._id === info.event.id);
+    if (!race) return;
+
+    // Determine World Athletics Label background color
+    let backgroundColor = "";
+    if (race.tags?.includes("World Athletics Platinum Label")) {
+      backgroundColor = "rgba(204, 204, 204, 0.3)"; // Muted platinum
+    } else if (race.tags?.includes("World Athletics Gold Label")) {
+      backgroundColor = "rgba(255, 217, 0, 0.25)"; // Muted gold
+    } else if (race.tags?.includes("World Athletics Elite Label")) {
+      backgroundColor = "rgba(158, 140, 196, 0.25)"; // Muted purple
+    } else if (race.tags?.includes("World Athletics Label")) {
+      backgroundColor = "rgba(166, 251, 101, 0.25)"; // Muted green
+    }
+
+    if (backgroundColor) {
+      info.el.style.backgroundColor = backgroundColor;
+    }
+  };
+
+  // Custom event rendering with time and star for World Marathon Majors
+  const renderEventContent = (eventInfo: any) => {
+    const race = races.find((r) => r._id === eventInfo.event.id);
+    if (!race) return null;
+
+    const eventDate = new Date(race.eventDate);
+    const timeStr = eventDate.toLocaleTimeString("en-US", {
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    });
+
+    // Check if this is an Abbott World Marathon Major
+    const isWorldMajor = race.tags?.includes("Abbott World Marathon Major");
+
+    return (
+      <div className="px-1 py-0.5 flex items-start justify-between gap-1">
+        <div className="flex-1 min-w-0">
+          <div className="font-medium text-neutral-900 dark:text-white text-xs truncate">
+            {eventInfo.event.title}
+          </div>
+          <div className="text-[10px] text-neutral-500 dark:text-neutral-400">
+            {timeStr}
+          </div>
+        </div>
+        {isWorldMajor && (
+          <Star className="w-3 h-3 text-yellow-500 fill-yellow-500 flex-shrink-0 mt-0.5" />
+        )}
+      </div>
+    );
+  };
+
+  // Custom day cell rendering - add today indicator
+  const dayCellContent = (arg: DayCellContentArg) => {
+    const today = new Date();
+    const isToday = arg.date.toDateString() === today.toDateString();
+
+    if (isToday) {
+      return (
+        <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 font-medium">
+          {arg.dayNumberText}
+        </span>
+      );
+    }
+
+    return <span className="font-medium">{arg.dayNumberText}</span>;
+  };
+
+  // Navigation handlers
+  const handlePrevMonth = () => {
+    const newDate = new Date(currentDate);
+    newDate.setMonth(newDate.getMonth() - 1);
+    setCurrentDate(newDate);
+  };
+
+  const handleNextMonth = () => {
+    const newDate = new Date(currentDate);
+    newDate.setMonth(newDate.getMonth() + 1);
+    setCurrentDate(newDate);
+  };
+
+  const handleToday = () => {
+    setCurrentDate(new Date());
+  };
+
+  const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+
+  const currentMonth = currentDate.getMonth();
+  const currentYear = currentDate.getFullYear();
+
+  // Get today's date for filtering
+  const today = new Date();
+  const todayYear = today.getFullYear();
+  const todayMonth = today.getMonth();
+
+  // Generate years array: current year + next 10 years
+  const years = Array.from({ length: 11 }, (_, i) => todayYear + i);
+
+  // Filter months: if viewing current year, only show current month onwards
+  const availableMonths = months.map((month, index) => ({
+    name: month,
+    index,
+    isAvailable:
+      currentYear > todayYear ||
+      (currentYear === todayYear && index >= todayMonth),
+  }));
+
+  const handleMonthClick = (monthIndex: number) => {
+    const newDate = new Date(currentDate);
+    newDate.setMonth(monthIndex);
+    setCurrentDate(newDate);
+    setIsMonthDropdownOpen(false);
+  };
+
+  const handleYearClick = (year: number) => {
+    const newDate = new Date(currentDate);
+    newDate.setFullYear(year);
+    setCurrentDate(newDate);
+    setIsYearDropdownOpen(false);
+  };
+
+  // Close dropdowns when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        monthDropdownRef.current &&
+        !monthDropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsMonthDropdownOpen(false);
+      }
+      if (
+        yearDropdownRef.current &&
+        !yearDropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsYearDropdownOpen(false);
+      }
+    }
+
+    if (isMonthDropdownOpen || isYearDropdownOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isMonthDropdownOpen, isYearDropdownOpen]);
+
+  return (
+    <>
+      <div className="fixed inset-0 bg-canvas transition-colors duration-300 pt-12 pb-8">
+        {/* Content fills viewport below navbar (48px) and above footer (32px) */}
+        <div className="h-full flex flex-col">
+          {/* Calendar - Takes full remaining space - This container constrains popup windows */}
+          <div
+            className="flex-1 flex flex-col relative"
+            style={{ overflow: "hidden", position: "relative" }}
+          >
+            {/* Active Race Event Popups - Constrained to this container */}
+            {activeWindows.map((window) => (
+              <RaceEventPopup
+                key={window.race._id}
+                race={window.race}
+                onClose={() => handleClose(window.race._id)}
+                onMinimize={() => handleMinimize(window.race._id)}
+                showMapMarkers={window.showMapMarkers}
+                mapUseMetric={window.mapUseMetric}
+                onMapMarkersChange={(show) =>
+                  handleMapMarkersChange(window.race._id, show)
+                }
+                onMapUseMetricChange={(metric) =>
+                  handleMapUseMetricChange(window.race._id, metric)
+                }
+              />
+            ))}
+            <div className="bg-white dark:bg-neutral-900 flex-1 flex flex-col calendar-wrapper overflow-auto">
+              {/* Custom Toolbar */}
+              <div className="px-6 py-4 border-b border-neutral-200 dark:border-neutral-800 flex-shrink-0">
+                <div className="flex items-center justify-between">
+                  {/* Left: Title */}
+                  <h1 className="text-2xl font-semibold text-neutral-900 dark:text-white font-playfair">
+                    Race Calendar
+                  </h1>
+
+                  {/* Center: Month Navigation with chevrons */}
+                  <div className="flex items-center gap-2 absolute left-1/2 transform -translate-x-1/2">
+                    <button
+                      onClick={handlePrevMonth}
+                      className="p-2 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors text-neutral-700 dark:text-neutral-300"
+                      aria-label="Previous month"
+                    >
+                      <ChevronLeft className="h-5 w-5" />
+                    </button>
+
+                    <span className="text-lg font-semibold text-neutral-900 dark:text-white min-w-[140px] text-center">
+                      {months[currentMonth]}
+                    </span>
+
+                    <button
+                      onClick={handleNextMonth}
+                      className="p-2 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors text-neutral-700 dark:text-neutral-300"
+                      aria-label="Next month"
+                    >
+                      <ChevronRight className="h-5 w-5" />
+                    </button>
+                  </div>
+
+                  {/* Right: Minimized Windows + Month/Year/Today controls */}
+                  <div className="flex items-center gap-2">
+                    {/* Minimized Windows Button */}
+                    {minimizedWindows.length > 0 && (
+                      <div className="relative">
+                        <button
+                          onClick={() =>
+                            setShowMinimizedList(!showMinimizedList)
+                          }
+                          className="px-3 py-2 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white text-sm font-medium cursor-pointer hover:border-neutral-400 dark:hover:border-neutral-600 transition-colors flex items-center gap-2"
+                          aria-label={`${minimizedWindows.length} minimized window${minimizedWindows.length > 1 ? "s" : ""}`}
+                        >
+                          <span className="font-mono">
+                            {minimizedWindows.length}
+                          </span>
+                        </button>
+                        {/* Minimized Windows Dropdown */}
+                        {showMinimizedList && (
+                          <div className="absolute right-0 top-full mt-2 w-64 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg shadow-lg z-50 max-h-80 overflow-y-auto">
+                            {minimizedWindows.map((window) => (
+                              <button
+                                key={window.race._id}
+                                onClick={() => handleRestore(window.race._id)}
+                                className="w-full px-4 py-3 text-left hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors border-b border-neutral-200 dark:border-neutral-700 last:border-b-0"
+                              >
+                                <div className="font-medium text-sm text-neutral-900 dark:text-white truncate">
+                                  {window.race.title}
+                                </div>
+                                {window.race.city && (
+                                  <div className="text-xs text-neutral-600 dark:text-neutral-400 mt-1">
+                                    {window.race.city}, {window.race.country}
+                                  </div>
+                                )}
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    {/* Month Dropdown */}
+                    <div className="relative" ref={monthDropdownRef}>
+                      <button
+                        onClick={() =>
+                          setIsMonthDropdownOpen(!isMonthDropdownOpen)
+                        }
+                        className="flex items-center gap-2 px-4 py-2 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white hover:border-neutral-400 dark:hover:border-neutral-600 transition-colors text-sm font-medium w-[140px] justify-between"
+                      >
+                        <span className="truncate">{months[currentMonth]}</span>
+                        <svg
+                          className="h-4 w-4 flex-shrink-0"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M19 9l-7 7-7-7"
+                          />
+                        </svg>
+                      </button>
+
+                      {isMonthDropdownOpen && (
+                        <div className="absolute top-full mt-2 right-0 z-40 bg-white dark:bg-neutral-900 rounded-lg shadow-xl border border-neutral-200 dark:border-neutral-800 p-2 w-[160px] max-h-[300px] overflow-y-auto">
+                          {availableMonths.map((month) => (
+                            <button
+                              key={month.name}
+                              onClick={() => handleMonthClick(month.index)}
+                              disabled={!month.isAvailable}
+                              className={`w-full text-left px-3 py-2 rounded-md text-sm transition-colors ${
+                                currentMonth === month.index
+                                  ? "bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 font-medium"
+                                  : month.isAvailable
+                                    ? "text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                                    : "text-neutral-400 dark:text-neutral-600 cursor-not-allowed opacity-50"
+                              }`}
+                            >
+                              {month.name}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Year Dropdown */}
+                    <div className="relative" ref={yearDropdownRef}>
+                      <button
+                        onClick={() =>
+                          setIsYearDropdownOpen(!isYearDropdownOpen)
+                        }
+                        className="flex items-center gap-2 px-4 py-2 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white hover:border-neutral-400 dark:hover:border-neutral-600 transition-colors text-sm font-medium whitespace-nowrap"
+                      >
+                        {currentYear}
+                        <svg
+                          className="h-4 w-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M19 9l-7 7-7-7"
+                          />
+                        </svg>
+                      </button>
+
+                      {isYearDropdownOpen && (
+                        <div className="absolute top-full mt-2 right-0 z-40 bg-white dark:bg-neutral-900 rounded-lg shadow-xl border border-neutral-200 dark:border-neutral-800 p-2 min-w-[120px] max-h-[300px] overflow-y-auto">
+                          {years.map((year) => (
+                            <button
+                              key={year}
+                              onClick={() => handleYearClick(year)}
+                              className={`w-full text-left px-3 py-2 rounded-md text-sm transition-colors ${
+                                currentYear === year
+                                  ? "bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 font-medium"
+                                  : "text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                              }`}
+                            >
+                              {year}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+
+                    <button
+                      onClick={handleToday}
+                      className="px-4 py-2 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white text-sm font-medium hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
+                    >
+                      Today
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Calendar Grid */}
+              <div className="flex-1 overflow-auto">
+                <FullCalendar
+                  key={currentDate.toISOString()}
+                  plugins={[dayGridPlugin, interactionPlugin]}
+                  initialView="dayGridMonth"
+                  initialDate={currentDate}
+                  events={events}
+                  eventClick={handleEventClick}
+                  eventContent={renderEventContent}
+                  eventDidMount={handleEventDidMount}
+                  dayCellContent={dayCellContent}
+                  headerToolbar={false}
+                  height="100%"
+                  dayMaxEvents={false}
+                  eventClassNames="cursor-pointer"
+                />
+              </div>
+            </div>
+
+            {/* Legend Button - Bottom right corner */}
+            <div className="absolute bottom-1 right-4 z-50 group">
+              <button
+                onClick={() => setShowLegend(!showLegend)}
+                onMouseEnter={() => setShowLegend(true)}
+                onMouseLeave={() => setShowLegend(false)}
+                className="p-2 rounded-lg bg-white/95 dark:bg-neutral-800/95 backdrop-blur-sm border border-neutral-200 dark:border-neutral-700 shadow-lg hover:shadow-xl transition-all text-neutral-700 dark:text-neutral-300"
+                aria-label="Show legend"
+              >
+                <Info className="h-5 w-5" />
+              </button>
+
+              {/* Legend Popover */}
+              {showLegend && (
+                <div
+                  className="absolute bottom-full right-0 mb-2 w-64 bg-white/95 dark:bg-neutral-800/95 backdrop-blur-sm border border-neutral-200 dark:border-neutral-700 rounded-lg shadow-xl p-4"
+                  onMouseEnter={() => setShowLegend(true)}
+                  onMouseLeave={() => setShowLegend(false)}
+                >
+                  <h3 className="text-sm font-semibold text-neutral-900 dark:text-white mb-3">
+                    Legend
+                  </h3>
+
+                  {/* Star Icon Explanation */}
+                  <div className="mb-3">
+                    <div className="flex items-center gap-2">
+                      <Star className="w-3.5 h-3.5 text-yellow-500 fill-yellow-500 flex-shrink-0" />
+                      <span className="text-xs text-neutral-900 dark:text-white">
+                        Abbott World Marathon Major
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Color Legend */}
+                  <div>
+                    <h4 className="text-xs font-medium text-neutral-900 dark:text-white mb-2">
+                      World Athletics Labels
+                    </h4>
+                    <div className="space-y-1.5">
+                      <div className="flex items-center gap-2">
+                        <div
+                          className="w-3.5 h-3.5 rounded flex-shrink-0"
+                          style={{
+                            backgroundColor: "rgba(204, 204, 204, 0.3)",
+                          }}
+                        ></div>
+                        <span className="text-xs text-neutral-700 dark:text-neutral-300">
+                          Platinum Label
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div
+                          className="w-3.5 h-3.5 rounded flex-shrink-0"
+                          style={{ backgroundColor: "rgba(255, 217, 0, 0.25)" }}
+                        ></div>
+                        <span className="text-xs text-neutral-700 dark:text-neutral-300">
+                          Gold Label
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div
+                          className="w-3.5 h-3.5 rounded flex-shrink-0"
+                          style={{
+                            backgroundColor: "rgba(158, 140, 196, 0.25)",
+                          }}
+                        ></div>
+                        <span className="text-xs text-neutral-700 dark:text-neutral-300">
+                          Elite Label
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div
+                          className="w-3.5 h-3.5 rounded flex-shrink-0"
+                          style={{
+                            backgroundColor: "rgba(166, 251, 101, 0.25)",
+                          }}
+                        ></div>
+                        <span className="text-xs text-neutral-700 dark:text-neutral-300">
+                          Label
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Minimal Footer */}
+        <div className="fixed bottom-0 left-0 right-0 bg-neutral-100 dark:bg-neutral-800 border-t border-neutral-200 dark:border-neutral-700 py-2 px-4 z-30">
+          <div className="flex items-center justify-center text-xs text-neutral-600 dark:text-neutral-400">
+            <span>© {new Date().getFullYear()} Distanz Running</span>
+          </div>
+        </div>
+
+        {/* Custom Calendar Styles */}
+        <style jsx global>{`
+          /* Calendar container styling */
+          .calendar-wrapper .fc {
+            font-family: var(--font-body), sans-serif;
+          }
+
+          /* Hide default header */
+          .calendar-wrapper .fc-header-toolbar {
+            display: none;
+          }
+
+          /* Header styling */
+          .calendar-wrapper .fc-col-header-cell {
+            padding: 12px 8px;
+            font-weight: 600;
+            font-size: 14px;
+            color: rgb(23, 23, 23);
+            border-bottom: 1px solid rgb(229, 229, 229);
+            border-right: 1px solid rgb(229, 229, 229);
+            background-color: white;
+          }
+
+          .dark .calendar-wrapper .fc-col-header-cell {
+            color: rgb(245, 245, 245);
+            border-bottom-color: rgb(38, 38, 38);
+            border-right-color: rgb(38, 38, 38);
+            background-color: rgb(23, 23, 23);
+          }
+
+          /* Month view - remove outer border */
+          .calendar-wrapper .fc-scrollgrid {
+            border: none !important;
+          }
+
+          .calendar-wrapper .fc-scrollgrid-section > * {
+            border: none !important;
+          }
+
+          /* Force equal row heights */
+          .calendar-wrapper .fc-scrollgrid-sync-table {
+            height: 100% !important;
+            table-layout: fixed !important;
+          }
+
+          .calendar-wrapper .fc-daygrid-body {
+            height: 100% !important;
+            display: table !important;
+            width: 100% !important;
+          }
+
+          .calendar-wrapper .fc-daygrid-body tr {
+            display: table-row !important;
+            height: 1px !important;
+          }
+
+          /* Day cells */
+          .calendar-wrapper .fc-daygrid-day {
+            border-color: rgb(229, 229, 229);
+            background-color: white;
+            display: table-cell !important;
+            vertical-align: top !important;
+            position: relative !important;
+            height: 0 !important;
+          }
+
+          .dark .calendar-wrapper .fc-daygrid-day {
+            border-color: rgb(38, 38, 38);
+            background-color: rgb(23, 23, 23);
+          }
+
+          /* Other month dates - darker background */
+          .calendar-wrapper .fc-day-other {
+            background-color: rgb(250, 250, 250) !important;
+          }
+
+          .dark .calendar-wrapper .fc-day-other {
+            background-color: rgb(15, 15, 15) !important;
+          }
+
+          /* Remove yellow highlight from today */
+          .calendar-wrapper .fc-day-today {
+            background-color: white !important;
+          }
+
+          .dark .calendar-wrapper .fc-day-today {
+            background-color: rgb(23, 23, 23) !important;
+          }
+
+          /* Day cell content */
+          .calendar-wrapper .fc-daygrid-day-frame {
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            overflow: hidden !important;
+            display: flex !important;
+            flex-direction: column !important;
+          }
+
+          .calendar-wrapper .fc-daygrid-day-events {
+            flex: 1 1 auto !important;
+            overflow-y: auto !important;
+            overflow-x: hidden !important;
+            margin-top: 4px !important;
+          }
+
+          /* Event styling */
+          .calendar-wrapper .fc-event {
+            margin-bottom: 2px !important;
+            border: none !important;
+            border-radius: 4px !important;
+            padding: 2px 4px !important;
+          }
+
+          .calendar-wrapper .fc-event:hover {
+            opacity: 0.8 !important;
+          }
+
+          /* Day number */
+          .calendar-wrapper .fc-daygrid-day-top {
+            padding: 4px 8px !important;
+            display: flex !important;
+            justify-content: flex-end !important;
+          }
+
+          .calendar-wrapper .fc-daygrid-day-number {
+            padding: 2px !important;
+          }
+        `}</style>
+      </div>
+    </>
+  );
+}

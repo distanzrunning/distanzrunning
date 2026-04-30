@@ -1,0 +1,65 @@
+{
+    "version": 8,
+    "name": "Light 2D Dawn",
+    "metadata": {
+        "mapbox:autocomposite": true,
+        "mapbox:thumb": "data:image/webp;base64,UklGRl4KAABXRUJQVlA4WAoAAAAgAAAAOwAAOwAASUNDUMgBAAAAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADZWUDhMbwgAAC87wA4Ah2GQbaT05g/1ek9AkG2Tfv5QNyPItkk/f6ibzX/evwIVgG0qFXiDBQFg47aRZmbvM07TaRLbIikeuAHm/7+zkUdE9J+B20aKmFc7u4XcFyxMzFUj9mZXMHKVEHQ7OSRwq6KouLmSnBJmo9Z7OeokNldXd9dw5whdoSaupKeJiaIZ5QsjqYqycqulzqOKo5pGhKhbDhRByNNIzHgZKQtJKBpbOKmSRAi0xXEevCVQI8yNTDQ4RJzQJFR9fRvGWIiYldVAPP8PuqnzfZrwCldWN+LwhaJGHuJsiuy5nAS7kbi45mGItDrV4s4qtEjdxX07wBrsXxo7j07y7/MKGF0tpJnttRqeZ6sK9TacJ7nL2ZYjznvt3b/CQ2KLkDO7iymbuq0hOQWfZ60d7F7vBQeF4ex19qP/OG8NdnCwLru10q4rNHS5ufNidyXupTRYcpZyZ6dwcyn1RJDJrLkCy3Bb7CZLRAahuDvxEhm1nsLjLMf1mILmvkqttbLrQnGYC00VOVxwThMkWiqyuNdS6lBVIv0SBVJ0maXUWmBr1xBANFecKijQ7gexe6VUqazPRmGqBLA3zi1bwFOjZXgwe8AcCMhzMjmllsmYqJZbLcID1OGs9v7HJ2KY84LbrfRjsjKxTMTJaiwCLGK5bLh4ud6nMlRzCXdpTUSYWalee6mdN/kiNs3/FxFRGDjoJHY1Rs35G3zbAyuuIcrp2mPUOiVmJybcIizGpMG4Gk5G5Z57Ne9HmXd0UzVaiq4cOMYCHGt0xPQRCxsyoqnr6As0b15cbc4OdHY3tTncwFXnicAkvnpfZ2cnBATVb97MjUUa1YIIdQ3OQPGN0z/L9QBbCAyTz9LKcUw0RWJEzRMXXWRbHYRV3akSp0sVabezTDECQoWJAAw4SBgRhVJ3sqDCwrOsEF4sWMcjlNLgSDIGETAArzUGrdn7WLaNCVsps53ngmPWXo5OII3VYYqBarCeE1zmGHOtOfqosAbw5NTyx3/+//bvf19grr4QANDDVBQZuJNFLJlKCK0DMsCAPnq5nZ3YbAHDgoUM+BRD/osQ4ZpMHKpbg63V9F+RemLrCxYc9ZoHh/e21oSxgCdgZmT+dPYr6GBaxDj4WstRaukkCDjbRED8fHl5efnx8vJe58TJU0GIZC4s188KQid/M6J8Hsfxq9SCptDX+9vffv/Hf14LM4tp//Pt5cc7r+PorfZR3i+/3t9eb8uIkLiu8vHx8X7UWliarHnt94//DxIoZ21XWqtfX341nSTc396aKt1f2vh1u066Zdzcj/wR1DoMCkh7DUJTCyNYNASPl/eTvb9eOokQv3yuj/sNbv2ttHae55hnaX0d1w/k259MmNolYWLg6f3n5fXt5edAoK52eZ/9bOjHRc1dlqm068B1ft7ff/2si9JxSihhDkvcat5NiHeWy0c2zpjXyzs6kaCI3u5iKYGPj2HIsBYauyoEszBRhxAL0nyRNRvOSx99ZZ4p//zbP/75r3/9T34dO7ADDNPgLWB+P24f5c+p3TaQXO7s877YXo+C5sHKMCeYquD79f7Zzsx0Y5niEpH1UBY6j9t9vBSNXS3kCgLkNklp4lphohcMz8jAIGag2Kxi27G0yY3auvyJ9X5LlwSaMUJ2Jy2i4PXqvjkMg100yOyZFln6PBh0m36+kJmUwoJ5jyxokmSggD+v4fbU87N4Hyjx7NAMYc+8SjJh2waXK5udhQXO661MIgqXTKT7G4bbcgoz/oYhQ1Uo4WG7K7Du41JEccndSPMKzmMOCaHbpaZdmc13dmToKsiuWYr7a3MljX29/Kzn8fOCYbza9e3154/L69vrj77AKKxwuIM7n9e5gjG+tpipROLUnj9fLq+/Brf3t8vbr4/bNFrnsK2yg89K2wxWa6118C30tS0ibCee7MCB//r59uPt6CVTpz+SLP9WNU8cANSC5xKNrWbm5G4RFuGsQDzpPMcPIa613t9bcDIaO3l2ETwALVUulouLuAlZ2JZsJUHUYKrV0c9aPsoEz8OQIKfvnfvAn/ydqj5J8MF6iVKxfZtrX3OixjktKOuKWRJx2EzUtjzk+Jzo2/nsyKpXU92iSv3k872NRllmYZxYud32Dh0YyhHsMCxkYf/tr7OU9j6IHnyXdTuBTJBzG91DCT3iS2x/Pcd6Rk3i1da8DTEP9wjjiHAJC6YH4qbFlAwPRNm0d27QxRIhc4OgqSKcK/cakX8YQZG5YY6hYuJz5RiSFMtKj9GeQ6ZyHcPC+GxPUn18kXSc+Cf+RMXkRDYxNSR3/vK8PEqn5UIPWWXOmHD0GrJ9hznxMzWTtYVTXgmqzxb+xtlLPPUo3wYLlaFqzH5ON8nPjo4mZbKkTp5ezsJOsbK6uG0JWkyq4Uhlnuk+Eg/Lf9HKpvUYaJn5yu7Xf/77HxcmBP7Lj3qerRwoyf/GUzzL1ti/HmGRZ3SeGt6mSOJVr2xfxClbY+e0Qzue2s/ksYTf0P00x3PFPFrvpSzPwb9cqHV0Z3M2ovTK+fFZR95Gfnwa6qnkBFqe6hmadNyqqHJsK0cDfUBUqpihuZqUv/69PO31LaBUCNTzKSRjCTn33yr2ZY1CaWo4LNNwWR0lsb+coh7bYrMbdtRkNFaY7GaRkDrOQk91pfrqXC4+Wj89fbpFLHk/H7F8JE+b4Ur3PhI2n32CWuuuGGLQIREiiMfJmd8JTWwSnhE5S60rDIC/yzTawdYzDk5PQs0xkim5To/HeyrdaT4xMEm+1qa2n/CaVON79wcHpm7EgL1hBuZoO6S2zJagb4YxfMB+8nGfJgptrFa7yeP4U8QJl3tiMHLnaN2D77jMr72dkVFuPsWDH82XidlY+d7aM+DSPKTbtjvyefvvpzAzAA==",
+        "mapbox:uiParadigm": "layers",
+        "mapbox:sdk-support": {
+            "js": "3.14.0",
+            "android": "11.14.0",
+            "ios": "11.14.0"
+        },
+        "mapbox:groups": {},
+        "mapbox:trackposition": false,
+        "mapbox:print": {
+            "width": 1280,
+            "height": 720,
+            "units": "px",
+            "format": "png",
+            "resolution": 300
+        }
+    },
+    "center": [-0.09018, 51.49785],
+    "zoom": 11.8,
+    "bearing": 0,
+    "pitch": 0,
+    "terrain": null,
+    "imports": [
+        {
+            "id": "basemap",
+            "url": "mapbox://styles/mapbox/standard",
+            "config": {
+                "colorTrunks": "hsl(235, 20%, 80%)",
+                "backgroundPointOfInterestLabels": "none",
+                "colorRoadLabels": "hsl(0, 0%, 40%)",
+                "colorPlaceLabels": "hsl(0, 0%, 20%)",
+                "show3dObjects": false,
+                "densityPointOfInterestLabels": 1,
+                "theme": "monochrome",
+                "colorModePointOfInterestLabels": "single",
+                "colorPointOfInterestLabels": "#848e94",
+                "colorRoads": "hsl(224, 25%, 82%)",
+                "showPointOfInterestLabels": true,
+                "colorWater": "hsl(200, 100%, 84%)",
+                "lightPreset": "dawn",
+                "showTransitLabels": false,
+                "colorMotorways": "hsl(214, 23%, 80%)",
+                "showPedestrianRoads": true,
+                "showRoadLabels": false
+            }
+        }
+    ],
+    "sources": {},
+    "sprite": "mapbox://sprites/distanzrunning/cmj3gvp8s009z01se13nf3jod/b8fjw435hx85pp7j172f016pl",
+    "glyphs": "mapbox://fonts/mapbox/{fontstack}/{range}.pbf",
+    "projection": {"name": "equirectangular"},
+    "layers": [],
+    "created": "2025-12-12T22:57:05.932Z",
+    "modified": "2025-12-12T23:09:56.288Z",
+    "id": "cmj3gvp8s009z01se13nf3jod",
+    "owner": "distanzrunning",
+    "visibility": "private",
+    "protected": false,
+    "draft": false
+}

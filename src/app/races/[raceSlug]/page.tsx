@@ -20,7 +20,9 @@ export default async function RacePage({ params }: { params: { raceSlug: string 
   const race = await sanity.fetch(
     `*[_type == "raceGuide" && slug.current == $slug][0]{
       title,
-      location,
+      city,
+      stateRegion,
+      country,
       eventDate,
       mainImage
     }`,
@@ -30,6 +32,7 @@ export default async function RacePage({ params }: { params: { raceSlug: string 
   if (!race) return notFound()
 
   const formattedDate = race.eventDate ? format(new Date(race.eventDate), 'MMMM d, yyyy') : 'Unknown Date'
+  const location = [race.city, race.stateRegion, race.country].filter(Boolean).join(', ')
 
   return (
     <div className="py-12">
@@ -45,9 +48,9 @@ export default async function RacePage({ params }: { params: { raceSlug: string 
 
           <h1 className="text-4xl font-bold mb-4">{race.title}</h1>
 
-          {race.location && (
+          {location && (
             <div className="text-lg text-muted mb-2">
-              📍 {race.location}
+              📍 {location}
             </div>
           )}
 

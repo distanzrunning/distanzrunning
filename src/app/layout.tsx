@@ -1,54 +1,56 @@
 // src/app/layout.tsx
 import type { Metadata } from "next";
-import { Playfair_Display, Source_Serif_4, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import { GeistSans } from "geist/font/sans";
+import { GeistMono } from "geist/font/mono";
+import { EB_Garamond } from "next/font/google";
+import LayoutContent from "@/components/LayoutContent";
 import NavbarAltWrapper from "@/components/NavbarAltWrapper";
+import SiteHeaderWrapper from "@/components/SiteHeaderWrapper";
 import Footer from "@/components/Footer";
-import AuthProtection from "@/components/AuthProtection";
 import { DarkModeProvider } from "@/components/DarkModeProvider";
-import { Analytics } from '@vercel/analytics/react';
-import { SpeedInsights } from '@vercel/speed-insights/next';
+import ReCaptchaProvider from "@/components/ReCaptchaProvider";
+import { ConsentProvider } from "@/contexts/ConsentContext";
+import { ConsentBanner } from "@/components/ui/ConsentBanner";
+import ConsentSync from "@/components/ConsentSync";
+import { gcmDefaultsScript } from "@/lib/consent-gcm";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
-// Distanz headline font (serif) - used for article headlines and display text
-const playfair = Playfair_Display({
+// Distanz Typography System — all fonts self-hosted
+// Body/UI: Geist Sans (`geist/font/sans`)
+// Mono/Data: Geist Mono (`geist/font/mono`)
+// Editorial headings: EB Garamond (Google Fonts via `next/font/google`)
+const ebGaramond = EB_Garamond({
   subsets: ["latin"],
-  variable: "--font-playfair",
-  weight: ["400", "500", "600", "700", "800", "900"],
-  display: 'swap',
-  adjustFontFallback: false,
-});
-
-// Distanz body font (serif) - used for long-form articles and feature content
-const sourceSerif = Source_Serif_4({
-  subsets: ["latin"],
-  variable: "--font-body",
-  weight: ["400", "600", "700"],
-  display: 'swap',
-});
-
-// Distanz monospace font - used for race times, statistics, and data
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ["latin"],
-  variable: "--font-mono",
-  weight: ["400", "500", "700"],
-  display: 'swap',
+  weight: ["400", "500", "600", "700", "800"],
+  style: ["normal", "italic"],
+  variable: "--font-eb-garamond",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
   title: "Distanz Running",
-  description: "The latest running news, gear reviews, and interactive race guides.",
+  description:
+    "The latest running news, gear reviews, and interactive race guides.",
   icons: {
     icon: [
       { url: "/favicon.ico", sizes: "any" },
-      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
-      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/icon0.svg", type: "image/svg+xml" },
+      { url: "/icon1.png", sizes: "96x96", type: "image/png" },
     ],
-    apple: "/apple-touch-icon.png",
+    apple: "/apple-icon.png",
     shortcut: "/favicon.ico",
   },
-  metadataBase: new URL('https://distanzrunning.com'),
+  manifest: "/site.webmanifest",
+  metadataBase: new URL("https://distanzrunning.com"),
   alternates: {
-    canonical: 'https://distanzrunning.com',
+    canonical: "https://distanzrunning.com",
+  },
+  verification: {
+    other: {
+      "google-adsense-account": "ca-pub-8457173435004026",
+    },
   },
 };
 
@@ -57,26 +59,53 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const isPreviewMode = process.env.PREVIEW_MODE === 'true';
-
   return (
-    <html lang="en" className={`${playfair.variable} ${sourceSerif.variable} ${jetbrainsMono.variable}`}>
+    <html
+      lang="en"
+      className={`bg-canvas ${GeistSans.variable} ${GeistMono.variable} ${ebGaramond.variable}`}
+    >
       <head>
-        {/* Prevent flash of dark mode - ensure light mode by default */}
+        {/* Theme bootstrap — runs synchronously before first paint so
+            users on system/dark don't see a flash of light. Reads
+            localStorage for an explicit preference; if none (the
+            default for new visitors) or set to "system", honours the
+            OS via prefers-color-scheme. */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
-                var theme = localStorage.getItem('theme');
-                // Only apply dark mode if explicitly saved, otherwise ensure light mode
-                if (theme === 'dark') {
-                  document.documentElement.classList.add('dark');
-                } else {
-                  document.documentElement.classList.remove('dark');
+                try {
+                  var stored = localStorage.getItem('theme');
+                  var prefersDark = window.matchMedia
+                    && window.matchMedia('(prefers-color-scheme: dark)').matches;
+                  var isDark = stored === 'dark'
+                    || ((!stored || stored === 'system') && prefersDark);
+                  var root = document.documentElement;
+                  if (isDark) {
+                    root.classList.add('dark');
+                    root.style.colorScheme = 'dark';
+                  } else {
+                    root.classList.remove('dark');
+                    root.style.colorScheme = 'light';
+                  }
+                } catch (e) {
+                  if (window.matchMedia
+                      && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    document.documentElement.classList.add('dark');
+                    document.documentElement.style.colorScheme = 'dark';
+                  }
                 }
               })();
             `,
           }}
+        />
+        {/* Google Consent Mode v2 — must run before any tracking script so
+            every Google product (Analytics, Ads, AdSense, GTM) and any
+            custom GTM tags pick up the denied baseline. ConsentSync (in
+            <body>) calls gtag('consent','update',…) once the user decides. */}
+        <script
+          id="gcm-defaults"
+          dangerouslySetInnerHTML={{ __html: gcmDefaultsScript() }}
         />
         <link
           rel="stylesheet"
@@ -90,22 +119,22 @@ export default function RootLayout({
               // List of blocked IPs (your personal IPs to exclude from tracking)
               var blockedIPs = ['91.180.214.205'];
 
-              // Check if we should opt out (localhost or development)
-              var shouldOptOut = window.location.host.includes('127.0.0.1') ||
-                                window.location.host.includes('localhost');
-
+              // PostHog defaults to OPT-OUT for every visitor; ConsentSync
+              // flips this to opt-in once the user accepts the Analytics
+              // category. Localhost stays opted out unconditionally.
               posthog.init('${process.env.NEXT_PUBLIC_POSTHOG_KEY}', {
                 api_host:'${process.env.NEXT_PUBLIC_POSTHOG_HOST}',
                 defaults:'2025-05-24',
-                opt_out_capturing_by_default: shouldOptOut,
+                opt_out_capturing_by_default: true,
                 loaded: function(posthog) {
-                  // Automatically opt out on localhost/development
-                  if (shouldOptOut) {
+                  // Localhost / dev — keep opted out regardless of consent.
+                  if (window.location.host.includes('127.0.0.1') ||
+                      window.location.host.includes('localhost')) {
                     posthog.opt_out_capturing();
                     return;
                   }
 
-                  // Check user's IP and opt out if blocked
+                  // Check user's IP and force opt-out if blocked
                   fetch('https://api.ipify.org?format=json')
                     .then(function(response) { return response.json(); })
                     .then(function(data) {
@@ -123,23 +152,35 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="font-sans antialiased bg-white text-textDefault min-h-screen flex flex-col distanz-font-features">
-        <DarkModeProvider>
-          <AuthProtection>
-            {isPreviewMode ? (
-              <main className="min-h-screen">{children}</main>
-            ) : (
-              <>
-                <NavbarAltWrapper />
-                <main className="flex-grow">{children}</main>
-                <Footer />
-              </>
-            )}
-          </AuthProtection>
+      <body className="font-sans antialiased bg-canvas text-textDefault min-h-screen flex flex-col distanz-font-features">
+        <ReCaptchaProvider>
+          <DarkModeProvider>
+            <ConsentProvider>
+              <ConsentSync />
+              <LayoutContent
+                navbar={<NavbarAltWrapper />}
+                header={<SiteHeaderWrapper newsletterSource="homepage" />}
+                footer={<Footer />}
+              >
+                {children}
+              </LayoutContent>
+              <ConsentBanner />
 
-          <Analytics />
-          <SpeedInsights />
-        </DarkModeProvider>
+              <Analytics />
+              <SpeedInsights />
+            </ConsentProvider>
+          </DarkModeProvider>
+        </ReCaptchaProvider>
+
+        {/* Google AdSense — loads once for the whole app. Individual ad units
+            live in <AdSlot /> and push themselves to `adsbygoogle` once visible.
+            Rendered as a raw <script> (rather than next/script) so AdSense
+            doesn't log a warning about the data-nscript attribute. */}
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8457173435004026"
+          crossOrigin="anonymous"
+        />
       </body>
     </html>
   );

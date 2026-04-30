@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="336" height="312">
+  <g fill="none" fill-rule="evenodd">
+    <!-- Background -->
+    <rect fill="#F0F5F5" width="336" height="312" rx="2"/>
+
+    <!-- 4 columns (54px each, 24px gutters, 24px outside gutters) -->
+    <!-- Total: 24 + 54 + 24 + 54 + 24 + 54 + 24 + 54 + 24 = 336 -->
+    <!-- Column 1: x=24, width=54 -->
+    <path fill="#E0EBEB" d="M24 0h54v312H24z"/>
+    <!-- Column 2: x=24+54+24=102, width=54 -->
+    <path fill="#E0EBEB" d="M102 0h54v312h-54z"/>
+    <!-- Column 3: x=102+54+24=180, width=54 -->
+    <path fill="#E0EBEB" d="M180 0h54v312h-54z"/>
+    <!-- Column 4: x=180+54+24=258, width=54 -->
+    <path fill="#E0EBEB" d="M258 0h54v312h-54z"/>
+
+    <!-- Left outside gutter indicator (24px) -->
+    <path d="M24 160h-1v-3H1v3H0v-8h1v4h22v-4h1v8z" fill="#0A1757"/>
+    <text x="12" y="179" fill="#121212" font-family="system-ui, sans-serif" font-size="12" text-anchor="middle">24</text>
+
+    <!-- Gutter indicator (24px) - between columns 1 and 2 -->
+    <path d="M102 160h-1v-3H79v3h-1v-8h1v4h22v-4h1v8z" fill="#0A1757"/>
+    <text x="90" y="179" fill="#121212" font-family="system-ui, sans-serif" font-size="12" text-anchor="middle">24</text>
+
+    <!-- Right outside gutter indicator (24px) -->
+    <path d="M336 160h-1v-3h-22v3h-1v-8h1v4h22v-4h1v8z" fill="#0A1757"/>
+    <text x="324" y="179" fill="#121212" font-family="system-ui, sans-serif" font-size="12" text-anchor="middle">24</text>
+  </g>
+</svg>

@@ -98,7 +98,7 @@ const SimilarArticles: React.FC<SimilarArticlesProps> = ({
         </div>
         
         {/* Grid - 4 column layout for related articles */}
-        <div className="w-full max-w-[1800px] mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-3 gap-y-8">
+        <div className="w-[95%] mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-3 gap-y-8">
           {filteredArticles.map((article) => (
             <SimilarArticleCard key={article._id} post={article} />
           ))}

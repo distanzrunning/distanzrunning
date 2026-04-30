@@ -1,0 +1,161 @@
+"use client";
+
+import { forwardRef, useEffect, useRef, InputHTMLAttributes } from "react";
+
+export interface CheckboxProps
+  extends Omit<InputHTMLAttributes<HTMLInputElement>, "type" | "color"> {
+  /** Whether the checkbox is in an indeterminate state */
+  indeterminate?: boolean;
+  /** Label text displayed next to the checkbox */
+  label?: string;
+  /** Custom color for checked state (default: --ds-gray-1000) */
+  color?: string;
+}
+
+const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
+  (
+    {
+      checked = false,
+      indeterminate = false,
+      onChange,
+      disabled,
+      label,
+      color,
+      className = "",
+      id,
+      ...props
+    },
+    forwardedRef,
+  ) => {
+    const innerRef = useRef<HTMLInputElement>(null);
+
+    // Sync indeterminate property (not available as HTML attribute)
+    useEffect(() => {
+      const input = innerRef.current;
+      if (input) {
+        input.indeterminate = indeterminate;
+      }
+    }, [indeterminate]);
+
+    // Merge forwarded ref with inner ref
+    useEffect(() => {
+      if (!forwardedRef) return;
+      if (typeof forwardedRef === "function") {
+        forwardedRef(innerRef.current);
+      } else {
+        forwardedRef.current = innerRef.current;
+      }
+    }, [forwardedRef]);
+
+    const checkboxId =
+      id || `checkbox-${Math.random().toString(36).substr(2, 9)}`;
+
+    // Only checked gets the dark active background
+    const isActive = checked && !indeterminate;
+    // Disabled indeterminate: light box with muted dash
+    const isDisabledIndeterminate = disabled && indeterminate && !checked;
+
+    // Box background/border
+    const getBoxStyles = (): React.CSSProperties | undefined => {
+      if (color && isActive) {
+        return { backgroundColor: color, borderColor: color };
+      }
+      return undefined;
+    };
+
+    const getBoxClasses = () => {
+      if (disabled && checked) {
+        return "bg-[var(--ds-gray-600)] border-[var(--ds-gray-600)]";
+      }
+      if (disabled) {
+        return "bg-[var(--ds-gray-100)] border-[var(--ds-gray-500)]";
+      }
+      if (isActive && !color) {
+        return "bg-[var(--ds-gray-1000)] border-[var(--ds-gray-1000)]";
+      }
+      if (isActive && color) {
+        return "";
+      }
+      return "bg-[var(--ds-background-100)] border-[var(--ds-gray-700)]";
+    };
+
+    return (
+      <label
+        htmlFor={checkboxId}
+        className={`
+          group/checkbox
+          inline-flex items-center gap-3
+          ${disabled ? "cursor-not-allowed" : "cursor-pointer"}
+          ${className}
+        `}
+      >
+        <span className="relative inline-flex items-center justify-center">
+          <input
+            ref={innerRef}
+            type="checkbox"
+            id={checkboxId}
+            checked={checked}
+            onChange={onChange}
+            disabled={disabled}
+            className="sr-only peer"
+            {...props}
+          />
+          <span
+            aria-hidden="true"
+            className={`
+              checkbox-icon
+              relative flex items-center justify-center
+              w-4 h-4 rounded-[4px] border border-solid
+              ${getBoxClasses()}
+              ${!disabled && !isActive ? "group-hover/checkbox:bg-[var(--ds-gray-200)]" : ""}
+              ${disabled ? "" : "peer-focus-visible:shadow-[0_0_0_2px_var(--ds-background-100),0_0_0_4px_var(--ds-focus-color)]"}
+            `}
+            style={{
+              transition: "border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease",
+              ...getBoxStyles(),
+            }}
+          >
+            <svg
+              fill="none"
+              viewBox="0 0 16 16"
+              className="absolute inset-0 w-full h-full"
+            >
+              {/* Checkmark - visible when checked and not indeterminate */}
+              {checked && !indeterminate && (
+                <path
+                  d="M11.5 5.5L6.875 10.5L4.5 8"
+                  stroke="var(--ds-background-100)"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                />
+              )}
+              {/* Indeterminate dash - visible only when indeterminate */}
+              {indeterminate && (
+                <line
+                  x1="4"
+                  x2="12"
+                  y1="8"
+                  y2="8"
+                  stroke={isDisabledIndeterminate ? "var(--ds-gray-500)" : "var(--ds-gray-700)"}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                />
+              )}
+            </svg>
+          </span>
+        </span>
+        {label && (
+          <span className={`text-sm select-none ${disabled ? "text-[var(--ds-gray-500)]" : "text-[var(--ds-gray-1000)]"}`}>
+            {label}
+          </span>
+        )}
+      </label>
+    );
+  },
+);
+
+Checkbox.displayName = "Checkbox";
+
+export default Checkbox;

@@ -1,10 +1,22 @@
 // app/api/subscribe/route.ts
 import { NextRequest, NextResponse } from 'next/server'
 import crypto from 'crypto'
+import fs from 'fs'
+import path from 'path'
+
+// Brand assets ride inside each confirmation email as inline (cid:)
+// attachments rather than externally hosted images, so they render
+// with the body text in every email client — including Outlook desktop,
+// where remote images often paint late or get blocked. PNGs (not SVGs)
+// because Outlook's Word-based renderer doesn't reliably handle SVG.
+// Read once at module load — the files are static.
+const BRAND_DIR = path.join(process.cwd(), 'public/brand')
+const ICON_BUFFER = fs.readFileSync(path.join(BRAND_DIR, 'icon-badge.png'))
+const WORDMARK_GRAY_BUFFER = fs.readFileSync(path.join(BRAND_DIR, 'wordmark-gray.png'))
 
 export async function POST(request: NextRequest) {
   try {
-    const { email } = await request.json()
+    const { email, recaptchaToken } = await request.json()
 
     if (!email) {
       return NextResponse.json(
@@ -20,6 +32,36 @@ export async function POST(request: NextRequest) {
         { error: 'Please enter a valid email address' },
         { status: 400 }
       )
+    }
+
+    // Verify reCAPTCHA token
+    if (recaptchaToken) {
+      const recaptchaSecretKey = process.env.RECAPTCHA_SECRET_KEY
+
+      if (recaptchaSecretKey) {
+        const recaptchaResponse = await fetch(
+          `https://www.google.com/recaptcha/api/siteverify`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams({
+              secret: recaptchaSecretKey,
+              response: recaptchaToken,
+            }),
+          }
+        )
+
+        const recaptchaData = await recaptchaResponse.json()
+
+        if (!recaptchaData.success || recaptchaData.score < 0.5) {
+          return NextResponse.json(
+            { error: 'reCAPTCHA verification failed. Please try again.' },
+            { status: 400 }
+          )
+        }
+      }
     }
 
     // Generate confirmation token
@@ -66,18 +108,24 @@ export async function POST(request: NextRequest) {
     }
 
     // Step 2: Send confirmation email
-    const confirmationUrl = `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/confirm?token=${confirmationToken}&email=${encodeURIComponent(email)}`
-    
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://distanzrunning.vercel.app'
+    const confirmationUrl = `${baseUrl}/api/confirm?token=${confirmationToken}&email=${encodeURIComponent(email)}`
+    const currentYear = new Date().getFullYear()
+
+    // Tokens are resolved to hex because email clients don't support
+    // CSS variables. Fonts use the system stack — Geist + EB Garamond
+    // don't load reliably across clients (Outlook desktop strips
+    // @import entirely), so we lean on the design-system fallbacks
+    // (Georgia for serif headings, system sans for body) which are
+    // present on every device.
     const confirmationHtml = `
     <!DOCTYPE html>
-    <html>
+    <html lang="en">
       <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Confirm Your Subscription - Distanz Running</title>
-        <meta name="color-scheme" content="light">
-        <meta name="supported-color-schemes" content="light">
+        <title>Confirm your subscription · Distanz Running</title>
         <!--[if mso]>
         <noscript>
           <xml>
@@ -89,342 +137,105 @@ export async function POST(request: NextRequest) {
         </noscript>
         <![endif]-->
         <style>
-          /* Import Inter font */
-          @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
-          
-          /* Force light mode */
-          :root {
-            color-scheme: light !important;
-          }
-          
-          /* Reset and base styles */
-          * { 
-            margin: 0; 
-            padding: 0; 
-            box-sizing: border-box; 
-          }
-          
-          body { 
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
-            line-height: 1.6;
-            color: #1a1a1a !important;
-            background-color: #fafafa !important;
-            margin: 0;
-            padding: 0;
-            width: 100% !important;
-            min-width: 100%;
-            -webkit-text-size-adjust: 100%;
-            -ms-text-size-adjust: 100%;
-          }
-          
-          /* Gmail and client-specific fixes */
-          u + #body .email-wrapper { background-color: #fafafa !important; }
-          u + #body .content-container { background-color: #ffffff !important; }
-          
-          /* Full width structure */
-          .email-wrapper {
-            width: 100% !important;
-            background-color: #fafafa !important;
-            margin: 0;
-            padding: 48px 16px;
-          }
-          
-          .email-container {
-            width: 100%;
-            max-width: 600px;
-            margin: 0 auto;
-            background-color: #fafafa !important;
-          }
-          
-          .content-container {
-            background-color: #ffffff !important;
-            border-radius: 12px;
-            margin: 0 auto;
-            overflow: hidden;
-            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
-            border: 1px solid #f0f0f0;
-          }
-          
-          /* Header section */
-          .header-section {
-            background-color: #ffffff !important;
-            padding: 48px 40px 32px 40px;
-            text-align: center;
-            border-bottom: 1px solid #f5f5f5;
-          }
-          
-          /* Logo styling */
-          .logo {
-            height: 64px;
-            width: auto;
-            display: block;
-            margin: 0 auto;
-            max-width: 100%;
-          }
-          
-          /* Content section */
-          .content-section {
-            background-color: #ffffff !important;
-            padding: 40px;
-          }
-          
-          /* Typography */
-          .greeting {
-            font-family: 'Inter', sans-serif !important;
-            color: #1a1a1a !important;
-            font-size: 24px;
-            font-weight: 600;
-            line-height: 1.3;
-            margin-bottom: 16px;
-            text-align: left;
-          }
-          
-          .intro-text {
-            font-family: 'Inter', sans-serif !important;
-            color: #4a4a4a !important;
-            font-size: 16px;
-            font-weight: 400;
-            line-height: 1.5;
-            margin-bottom: 16px;
-            text-align: left;
-          }
-          
-          .instruction-text {
-            font-family: 'Inter', sans-serif !important;
-            color: #1a1a1a !important;
-            font-size: 16px;
-            font-weight: 500;
-            line-height: 1.5;
-            margin-bottom: 32px;
-            text-align: left;
-          }
-          
-          /* Button styling - no hover states */
-          .button-container {
-            text-align: left;
-            margin: 32px 0 24px 0;
-          }
-          
-          .button {
-            display: inline-block !important;
-            padding: 16px 32px !important;
-            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%) !important;
-            color: #ffffff !important;
-            text-decoration: none !important;
-            border-radius: 8px;
-            font-weight: 500;
-            font-family: 'Inter', sans-serif !important;
-            font-size: 16px;
-            line-height: 1;
-            border: none;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
-            text-align: center;
-          }
-          
-          /* Footer */
-          .footer-section {
-            background-color: #fafafa !important;
-            padding: 32px 20px 20px 20px;
-            text-align: center;
-          }
-          
-          /* Social links - simple styling */
-          .social-links {
-            margin-bottom: 24px;
-            background-color: #fafafa !important;
-          }
-          
-          .social-links table {
-            margin: 0 auto;
-            background-color: #fafafa !important;
-          }
-          
-          .social-links td {
-            padding: 0 8px;
-            background-color: #fafafa !important;
-          }
-          
-          .social-links a {
-            display: inline-block;
-            padding: 8px;
-            border-radius: 50%;
-            background-color: rgba(0, 0, 0, 0.05) !important;
-            text-decoration: none;
-            width: 36px;
-            height: 36px;
-            text-align: center;
-          }
-          
-          /* Company info */
-          .company-info {
-            font-size: 14px;
-            color: #666666 !important;
-            font-family: 'Inter', sans-serif !important;
-            margin-bottom: 16px;
-            line-height: 1.4;
-          }
-          
-          .company-info p {
-            margin-bottom: 4px;
-            text-align: center;
-            color: #666666 !important;
-          }
-          
-          .company-name {
-            font-weight: 600;
-            color: #1a1a1a !important;
-          }
-          
-          /* Mobile responsive */
+          body, table, td, a { -webkit-text-size-adjust:100%; -ms-text-size-adjust:100%; }
+          table, td { mso-table-lspace:0pt; mso-table-rspace:0pt; }
+          img { -ms-interpolation-mode:bicubic; border:0; line-height:100%; outline:none; text-decoration:none; }
+          body { margin:0 !important; padding:0 !important; width:100% !important; }
           @media only screen and (max-width: 600px) {
-            .email-wrapper {
-              padding: 24px 12px !important;
-            }
-            .header-section {
-              padding: 32px 24px 24px 24px !important;
-            }
-            .content-section {
-              padding: 32px 24px !important;
-            }
-            .greeting {
-              font-size: 22px !important;
-            }
-            .button {
-              padding: 16px 28px !important;
-              font-size: 15px !important;
-              width: 100%;
-              text-align: center;
-            }
-            .button-container {
-              text-align: center;
-            }
+            .heading { font-size:28px !important; }
+            .main-section { padding:40px 24px !important; }
           }
         </style>
       </head>
-      <body id="body">
-        <table class="email-wrapper" cellpadding="0" cellspacing="0" border="0" style="background-color: #fafafa !important;">
+      <body style="margin:0;padding:0;background-color:#FAFAFA;color:#171717;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+        <table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0" style="background-color:#FAFAFA;">
           <tr>
-            <td align="center" style="background-color: #fafafa !important;">
-              <div class="email-container">
-                <div class="content-container" style="background-color: #ffffff !important;">
-                  
-                  <!-- Header with logo -->
-                  <div class="header-section" style="background-color: #ffffff !important;">
-                    <img 
-                      src="https://res.cloudinary.com/dbzirtpem/image/upload/v1757880131/Logo_400_x_128_px_9.png" 
-                      alt="Distanz Running" 
-                      class="logo"
-                      width="200"
-                      height="64"
-                      style="height: 64px; width: auto; display: block; margin: 0 auto;"
-                    />
-                  </div>
-                  
-                  <!-- Content -->
-                  <div class="content-section" style="background-color: #ffffff !important;">
-                    <h1 class="greeting">Welcome to Distanz Running!</h1>
-                    
-                    <p class="intro-text">
-                      Thank you for subscribing to our newsletter. We will keep you updated on our progress to bring you comprehensive running content, gear reviews, and interactive race guides.
-                    </p>
-                    
-                    <p class="instruction-text">
-                      To complete your subscription, please confirm your email address:
-                    </p>
-                    
-                    <div class="button-container">
-                      <!--[if mso]>
-                      <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${confirmationUrl}" style="height:48px;v-text-anchor:middle;width:200px;" arcsize="17%" stroke="f" fillcolor="#000000">
-                        <w:anchorlock/>
-                        <center style="color:#ffffff;font-family:'Inter',sans-serif;font-size:16px;font-weight:500;">Confirm Your Email</center>
-                      </v:roundrect>
-                      <![endif]-->
-                      <!--[if !mso]><!-->
-                      <a href="${confirmationUrl}" class="button" style="background: #000000 !important; color: #ffffff !important; text-decoration: none !important; display: inline-block; padding: 16px 32px; border-radius: 8px; font-weight: 500; font-family: 'Inter', sans-serif; font-size: 16px; border: 2px solid #000000 !important;">Confirm Your Email</a>
-                      <!--<![endif]-->
-                    </div>
-                  </div>
-                </div>
-                
-                <!-- Footer -->
-                <div class="footer-section" style="background-color: #fafafa !important;">
-                  <!-- Social links using the exact same code as your original working version -->
-                  <div class="social-links" style="background-color: #fafafa !important;">
-                    <table cellpadding="0" cellspacing="0" border="0" style="background-color: #fafafa !important;">
+            <td align="center" style="padding:32px 16px;">
+
+              <!-- Card -->
+              <table role="presentation" class="container" width="560" border="0" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;background-color:#FFFFFF;border-radius:12px;">
+                <tr>
+                  <td class="main-section" style="padding:48px 40px;">
+                    <table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0">
+
+                      <!-- Brand mark -->
                       <tr>
-                        <td style="background-color: #fafafa !important;">
-                          <a href="https://x.com/DistanzRunning"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            aria-label="X / Twitter"
-                            style="display: inline-block; padding: 8px; border-radius: 50%; background-color: rgba(0, 0, 0, 0.05) !important; text-decoration: none; width: 36px; height: 36px; text-align: center;">
+                        <td style="padding:0 0 32px 0;">
+                          <a href="https://distanzrunning.com" style="text-decoration:none;display:inline-block;">
                             <img
-                              src="https://res.cloudinary.com/dbzirtpem/image/upload/v1757799203/x_40_40.png"
-                              alt="X / Twitter"
-                              width="20"
-                              height="20"
-                              style="display: block; border: 0; outline: none; text-decoration: none; margin: auto;" />
-                          </a>
-                        </td>
-
-                        <td style="background-color: #fafafa !important;">
-                          <a href="https://www.linkedin.com/company/distanz-running"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            aria-label="LinkedIn"
-                            style="display: inline-block; padding: 8px; border-radius: 50%; background-color: rgba(0, 0, 0, 0.05) !important; text-decoration: none; width: 36px; height: 36px; text-align: center;">
-                            <img
-                              src="https://res.cloudinary.com/dbzirtpem/image/upload/v1757799149/linkedin_40_40.png"
-                              alt="LinkedIn"
-                              width="20"
-                              height="20"
-                              style="display: block; border: 0; outline: none; text-decoration: none; margin: auto;" />
-                          </a>
-                        </td>
-
-                        <td style="background-color: #fafafa !important;">
-                          <a href="https://www.instagram.com/distanzrunning/"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            aria-label="Instagram"
-                            style="display: inline-block; padding: 8px; border-radius: 50%; background-color: rgba(0, 0, 0, 0.05) !important; text-decoration: none; width: 36px; height: 36px; text-align: center;">
-                            <img
-                              src="https://res.cloudinary.com/dbzirtpem/image/upload/v1757799237/instagram_40_40.png"
-                              alt="Instagram"
-                              width="20"
-                              height="20"
-                              style="display: block; border: 0; outline: none; text-decoration: none; margin: auto;" />
-                          </a>
-                        </td>
-
-                        <td style="background-color: #fafafa !important;">
-                          <a href="https://www.strava.com/clubs/distanzrunning"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            aria-label="Strava"
-                            style="display: inline-block; padding: 8px; border-radius: 50%; background-color: rgba(0, 0, 0, 0.05) !important; text-decoration: none; width: 36px; height: 36px; text-align: center;">
-                            <img
-                              src="https://res.cloudinary.com/dbzirtpem/image/upload/v1757799275/strava_40_40.png"
-                              alt="Strava"
-                              width="20"
-                              height="20"
-                              style="display: block; border: 0; outline: none; text-decoration: none; margin: auto;" />
+                              src="cid:icon-badge.png"
+                              alt="Distanz Running"
+                              width="36"
+                              height="36"
+                              style="display:block;width:36px;height:36px;border:0;" />
                           </a>
                         </td>
                       </tr>
+
+                      <!-- Heading -->
+                      <tr>
+                        <td style="padding:0 0 16px 0;">
+                          <h1 class="heading" style="margin:0;font-family:Georgia,'Times New Roman',serif;font-size:32px;line-height:1.2;font-weight:500;color:#171717;">
+                            Welcome to the <i style="font-style:italic;">Shakeout</i>
+                          </h1>
+                        </td>
+                      </tr>
+
+                      <!-- Body -->
+                      <tr>
+                        <td style="padding:0 0 32px 0;">
+                          <p style="margin:0;font-size:16px;line-height:1.55;color:#171717;">
+                            One last step — confirm your email to start receiving the Shakeout.
+                          </p>
+                        </td>
+                      </tr>
+
+                      <!-- CTA: auto-width, left-aligned to match the
+                           single-action editorial pattern from the
+                           reference emails. -->
+                      <tr>
+                        <td>
+                          <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+                            <tr>
+                              <td bgcolor="#171717" style="border-radius:6px;background-color:#171717;">
+                                <a href="${confirmationUrl}" target="_blank" style="display:inline-block;padding:14px 24px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:16px;line-height:1.2;font-weight:600;color:#FFFFFF;text-decoration:none;border-radius:6px;">
+                                  Confirm your email
+                                </a>
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+
                     </table>
-                  </div>
-                  
-                  <!-- Company info -->
-                  <div class="company-info" style="color: #666666 !important;">
-                    <p class="company-name" style="color: #1a1a1a !important;"><strong>Distanz Running Ltd</strong></p>
-                    <p style="color: #666666 !important;">10 Northumberland Place, Richmond TW10 6TS</p>
-                    <p style="margin-top: 12px; color: #888888;">
-                      © 2025 Distanz Running. All rights reserved.
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Footer (sits on the canvas, outside the card) -->
+              <table role="presentation" width="560" border="0" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;">
+                <tr>
+                  <td align="center" style="padding:32px 16px 12px 16px;text-align:center;">
+                    <img
+                      src="cid:wordmark-gray.png"
+                      alt="Distanz Running"
+                      width="100"
+                      height="31"
+                      style="display:block;margin:0 auto;width:100px;height:31px;border:0;" />
+                  </td>
+                </tr>
+                <tr>
+                  <td align="center" style="padding:0 16px;text-align:center;">
+                    <p style="margin:0 0 6px 0;font-size:13px;line-height:1.4;color:#171717;font-weight:500;">
+                      Running stories, gear, races.
                     </p>
-                  </div>
-                </div>
-              </div>
+                    <p style="margin:0;font-size:13px;line-height:1.4;color:#8F8F8F;">
+                      © ${currentYear} Distanz Running. All rights reserved.
+                    </p>
+                  </td>
+                </tr>
+              </table>
+
             </td>
           </tr>
         </table>
@@ -432,23 +243,37 @@ export async function POST(request: NextRequest) {
     </html>
     `
 
+    // Multipart form so we can attach the inline brand assets. Each
+    // `inline` part becomes a cid: reference matching the filename.
+    const emailForm = new FormData()
+    emailForm.append('from', `Distanz Running <newsletter@${process.env.MAILGUN_DOMAIN}>`)
+    emailForm.append('to', email)
+    emailForm.append('subject', 'Please confirm your subscription to Distanz Running')
+    emailForm.append('html', confirmationHtml)
+    emailForm.append('o:tag', 'confirmation-email')
+    emailForm.append('o:tracking', 'yes')
+    emailForm.append('o:tracking-clicks', 'no')
+    emailForm.append(
+      'inline',
+      new Blob([new Uint8Array(ICON_BUFFER)], { type: 'image/png' }),
+      'icon-badge.png',
+    )
+    emailForm.append(
+      'inline',
+      new Blob([new Uint8Array(WORDMARK_GRAY_BUFFER)], { type: 'image/png' }),
+      'wordmark-gray.png',
+    )
+
     const emailResponse = await fetch(
       `${process.env.MAILGUN_API_BASE_URL}/${process.env.MAILGUN_DOMAIN}/messages`,
       {
         method: 'POST',
         headers: {
+          // No Content-Type — fetch sets multipart/form-data with the
+          // correct boundary automatically when the body is a FormData.
           'Authorization': `Basic ${Buffer.from(`api:${process.env.MAILGUN_API_KEY}`).toString('base64')}`,
-          'Content-Type': 'application/x-www-form-urlencoded',
         },
-        body: new URLSearchParams({
-          from: `Distanz Running <newsletter@${process.env.MAILGUN_DOMAIN}>`,
-          to: email,
-          subject: 'Please confirm your subscription to Distanz Running',
-          html: confirmationHtml,
-          'o:tag': 'confirmation-email',
-          'o:tracking': 'yes',
-          'o:tracking-clicks': 'no'  // This disables click tracking!
-        })
+        body: emailForm,
       }
     )
 

@@ -1,0 +1,1891 @@
+"use client";
+
+import React, {
+  useId,
+  useState,
+  useRef,
+  useEffect,
+  useCallback,
+} from "react";
+import { createPortal } from "react-dom";
+import { Button } from "@/components/ui/Button";
+import {
+  submitFeedback,
+  type FeedbackEmotion,
+  type FeedbackPayload,
+} from "@/lib/feedback";
+
+// ============================================================================
+// Anchored coords — keeps a portal'd panel positioned next to its trigger
+// ============================================================================
+
+interface AnchorRect {
+  top: number;
+  left: number;
+  bottom: number;
+  right: number;
+  width: number;
+  height: number;
+}
+
+function useAnchorRect(
+  active: boolean,
+  ref: React.RefObject<HTMLElement | null>,
+): AnchorRect | null {
+  const [rect, setRect] = useState<AnchorRect | null>(null);
+
+  useEffect(() => {
+    if (!active || !ref.current) return;
+    const update = () => {
+      const el = ref.current;
+      if (!el) return;
+      const r = el.getBoundingClientRect();
+      setRect({
+        top: r.top,
+        left: r.left,
+        bottom: r.bottom,
+        right: r.right,
+        width: r.width,
+        height: r.height,
+      });
+    };
+    update();
+    window.addEventListener("scroll", update, true);
+    window.addEventListener("resize", update);
+    return () => {
+      window.removeEventListener("scroll", update, true);
+      window.removeEventListener("resize", update);
+    };
+  }, [active, ref]);
+
+  return rect;
+}
+
+// ============================================================================
+// Types
+// ============================================================================
+
+export interface FeedbackProps {
+  /** Text shown on the trigger button (default: "Feedback") */
+  buttonLabel?: string;
+  /** Callback when feedback is submitted */
+  onSubmit?: (data: {
+    emotion: string;
+    feedback: string;
+    email?: string;
+    metadata?: Record<string, string>;
+  }) => void;
+  /** Optional metadata to include with the submission */
+  metadata?: Record<string, string>;
+  /** Add a second step that collects an optional follow-up email */
+  collectEmail?: boolean;
+  className?: string;
+}
+
+// ============================================================================
+// Email helpers (shared across every variant)
+// ============================================================================
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+/** Returns empty string when valid (or empty); otherwise an error message. */
+function validateOptionalEmail(value: string): string {
+  const trimmed = value.trim();
+  if (!trimmed) return "";
+  return EMAIL_RE.test(trimmed) ? "" : "Please enter a valid email";
+}
+
+// ============================================================================
+// Shared success state — single visual treatment across every variant
+// ============================================================================
+
+function FeedbackSuccess() {
+  return (
+    <>
+      <style>{`
+        @keyframes ds-feedback-success-in {
+          from { opacity: 0; transform: translateY(8px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
+      <div
+        role="status"
+        aria-live="polite"
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 6,
+          padding: "32px 24px",
+          textAlign: "center",
+          animation: "ds-feedback-success-in 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
+        }}
+      >
+        <div
+          style={{
+            color: "var(--ds-green-700)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            marginBottom: 4,
+          }}
+        >
+          <svg
+            width="32"
+            height="32"
+            viewBox="0 0 16 16"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              fillRule="evenodd"
+              clipRule="evenodd"
+              d="M8 0C3.58172 0 0 3.58172 0 8C0 12.4183 3.58172 16 8 16C12.4183 16 16 12.4183 16 8C16 3.58172 12.4183 0 8 0ZM11.5303 6.53033L12.0607 6L11 4.93934L10.4697 5.46967L7 8.93934L5.53033 7.46967L5 6.93934L3.93934 8L4.46967 8.53033L6.46967 10.5303C6.76256 10.8232 7.23744 10.8232 7.53033 10.5303L11.5303 6.53033Z"
+              fill="currentColor"
+            />
+          </svg>
+        </div>
+        <p
+          style={{
+            color: "var(--ds-gray-1000)",
+            fontSize: 14,
+            lineHeight: "20px",
+            fontWeight: 600,
+            margin: 0,
+          }}
+        >
+          Your feedback has been received!
+        </p>
+        <p
+          style={{
+            color: "var(--ds-gray-700)",
+            fontSize: 13,
+            lineHeight: "18px",
+            margin: 0,
+          }}
+        >
+          Thank you for your help.
+        </p>
+      </div>
+    </>
+  );
+}
+
+/** Visual tweaks that match the shared textarea-wrapper style. */
+const emailInputStyle: React.CSSProperties = {
+  display: "flex",
+  width: "100%",
+  height: 40,
+  borderRadius: 6,
+  border: "none",
+  padding: "0 12px",
+  fontSize: 14,
+  lineHeight: "20px",
+  color: "var(--ds-gray-1000)",
+  background: "var(--ds-background-100)",
+  outline: "none",
+  fontFamily: "inherit",
+  boxSizing: "border-box",
+  appearance: "none",
+};
+
+// ============================================================================
+// Emoji Icons (Geist exact SVG paths)
+// ============================================================================
+
+function HateItIcon() {
+  return (
+    <svg width="16" height="16" strokeLinejoin="round" viewBox="0 0 16 16" style={{ color: "currentcolor" }}>
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M4 9V16H5.5V9H4ZM12 9V16H10.5V9H12Z"
+        fill="var(--ds-blue-700)"
+      />
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M1.5 8C1.5 4.41015 4.41015 1.5 8 1.5C11.5899 1.5 14.5 4.41015 14.5 8C14.5 9.57941 13.9367 11.0273 13 12.1536V14.2454C14.8289 12.7793 16 10.5264 16 8C16 3.58172 12.4183 0 8 0C3.58172 0 0 3.58172 0 8C0 10.5264 1.17107 12.7793 3 14.2454V12.1536C2.06332 11.0273 1.5 9.57941 1.5 8ZM8 14.5C8.51627 14.5 9.01848 14.4398 9.5 14.3261V15.8596C9.01412 15.9518 8.51269 16 8 16C7.48731 16 6.98588 15.9518 6.5 15.8596V14.3261C6.98152 14.4398 7.48373 14.5 8 14.5ZM3.78568 8.36533C4.15863 7.98474 4.67623 7.75 5.25 7.75C5.82377 7.75 6.34137 7.98474 6.71432 8.36533L7.78568 7.31548C7.14222 6.65884 6.24318 6.25 5.25 6.25C4.25682 6.25 3.35778 6.65884 2.71432 7.31548L3.78568 8.36533ZM10.75 7.75C10.1762 7.75 9.65863 7.98474 9.28568 8.36533L8.21432 7.31548C8.85778 6.65884 9.75682 6.25 10.75 6.25C11.7432 6.25 12.6422 6.65884 13.2857 7.31548L12.2143 8.36533C11.8414 7.98474 11.3238 7.75 10.75 7.75ZM6.25 12H9.75C9.75 11.0335 8.9665 10.25 8 10.25C7.0335 10.25 6.25 11.0335 6.25 12Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+}
+
+function NotGreatIcon() {
+  return (
+    <svg width="16" height="16" strokeLinejoin="round" viewBox="0 0 16 16" style={{ color: "currentcolor" }}>
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M14.5 8C14.5 11.5899 11.5899 14.5 8 14.5C4.41015 14.5 1.5 11.5899 1.5 8C1.5 4.41015 4.41015 1.5 8 1.5C11.5899 1.5 14.5 4.41015 14.5 8ZM16 8C16 12.4183 12.4183 16 8 16C3.58172 16 0 12.4183 0 8C0 3.58172 3.58172 0 8 0C12.4183 0 16 3.58172 16 8ZM5.75 7.75C6.30228 7.75 6.75 7.30228 6.75 6.75C6.75 6.19772 6.30228 5.75 5.75 5.75C5.19772 5.75 4.75 6.19772 4.75 6.75C4.75 7.30228 5.19772 7.75 5.75 7.75ZM11.25 6.75C11.25 7.30228 10.8023 7.75 10.25 7.75C9.69771 7.75 9.25 7.30228 9.25 6.75C9.25 6.19772 9.69771 5.75 10.25 5.75C10.8023 5.75 11.25 6.19772 11.25 6.75ZM11.5249 11.2622L11.8727 11.7814L10.8342 12.4771L10.4863 11.9578C9.94904 11.1557 9.0363 10.6298 8.00098 10.6298C6.96759 10.6298 6.05634 11.1537 5.51863 11.9533L5.16986 12.4719L4.13259 11.7744L4.48137 11.2558C5.2414 10.1256 6.53398 9.37982 8.00098 9.37982C9.47073 9.37982 10.7654 10.1284 11.5249 11.2622Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+}
+
+function ItsOkayIcon() {
+  return (
+    <svg width="16" height="16" strokeLinejoin="round" viewBox="0 0 16 16" style={{ color: "currentcolor" }}>
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M14.5 8C14.5 11.5899 11.5899 14.5 8 14.5C4.41015 14.5 1.5 11.5899 1.5 8C1.5 4.41015 4.41015 1.5 8 1.5C11.5899 1.5 14.5 4.41015 14.5 8ZM16 8C16 12.4183 12.4183 16 8 16C3.58172 16 0 12.4183 0 8C0 3.58172 3.58172 0 8 0C12.4183 0 16 3.58172 16 8ZM11.5249 10.8478L11.8727 10.3286L10.8342 9.6329L10.4863 10.1522C9.94904 10.9543 9.0363 11.4802 8.00098 11.4802C6.96759 11.4802 6.05634 10.9563 5.51863 10.1567L5.16986 9.63804L4.13259 10.3356L4.48137 10.8542C5.2414 11.9844 6.53398 12.7302 8.00098 12.7302C9.47073 12.7302 10.7654 11.9816 11.5249 10.8478ZM6.75 6.75C6.75 7.30228 6.30228 7.75 5.75 7.75C5.19772 7.75 4.75 7.30228 4.75 6.75C4.75 6.19772 5.19772 5.75 5.75 5.75C6.30228 5.75 6.75 6.19772 6.75 6.75ZM10.25 7.75C10.8023 7.75 11.25 7.30228 11.25 6.75C11.25 6.19772 10.8023 5.75 10.25 5.75C9.69771 5.75 9.25 6.19772 9.25 6.75C9.25 7.30228 9.69771 7.75 10.25 7.75Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+}
+
+function LoveItIcon() {
+  return (
+    <svg width="16" height="16" strokeLinejoin="round" viewBox="0 0 16 16" style={{ color: "currentcolor" }}>
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M14.5 8C14.5 11.5899 11.5899 14.5 8 14.5C4.41015 14.5 1.5 11.5899 1.5 8C1.5 4.41015 4.41015 1.5 8 1.5C11.5899 1.5 14.5 4.41015 14.5 8ZM16 8C16 12.4183 12.4183 16 8 16C3.58172 16 0 12.4183 0 8C0 3.58172 3.58172 0 8 0C12.4183 0 16 3.58172 16 8ZM4.5 8.97498H3.875V9.59998C3.875 11.4747 5.81046 12.8637 7.99817 12.8637C10.1879 12.8637 12.125 11.4832 12.125 9.59998V8.97498H11.5H4.5ZM7.99817 11.6137C6.59406 11.6137 5.63842 10.9482 5.28118 10.225H10.7202C10.3641 10.9504 9.40797 11.6137 7.99817 11.6137Z"
+        fill="currentColor"
+      />
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M6.15295 4.92093L5.375 3.5L4.59705 4.92093L3 5.21885L4.11625 6.39495L3.90717 8L5.375 7.30593L6.84283 8L6.63375 6.39495L7.75 5.21885L6.15295 4.92093ZM11.403 4.92093L10.625 3.5L9.84705 4.92093L8.25 5.21885L9.36625 6.39495L9.15717 8L10.625 7.30593L12.0928 8L11.8837 6.39495L13 5.21885L11.403 4.92093Z"
+        fill="var(--ds-amber-800)"
+      />
+    </svg>
+  );
+}
+
+function MarkdownIcon() {
+  return (
+    <svg fill="none" height="14" viewBox="0 0 22 14" width="22">
+      <path
+        clipRule="evenodd"
+        d="M19.5 1.25H2.5C1.80964 1.25 1.25 1.80964 1.25 2.5V11.5C1.25 12.1904 1.80964 12.75 2.5 12.75H19.5C20.1904 12.75 20.75 12.1904 20.75 11.5V2.5C20.75 1.80964 20.1904 1.25 19.5 1.25ZM2.5 0C1.11929 0 0 1.11929 0 2.5V11.5C0 12.8807 1.11929 14 2.5 14H19.5C20.8807 14 22 12.8807 22 11.5V2.5C22 1.11929 20.8807 0 19.5 0H2.5ZM3 3.5H4H4.25H4.6899L4.98715 3.82428L7 6.02011L9.01285 3.82428L9.3101 3.5H9.75H10H11V4.5V10.5H9V6.79807L7.73715 8.17572L7 8.97989L6.26285 8.17572L5 6.79807V10.5H3V4.5V3.5ZM15 7V3.5H17V7H19.5L17 9.5L16 10.5L15 9.5L12.5 7H15Z"
+        fill="var(--ds-gray-700)"
+        fillRule="evenodd"
+      />
+    </svg>
+  );
+}
+
+// ============================================================================
+// Emoji options
+// ============================================================================
+
+interface EmojiOption {
+  id: string;
+  label: string;
+  icon: React.ReactNode;
+}
+
+const emojiOptions: EmojiOption[] = [
+  { id: "hate", label: "Hate it", icon: <HateItIcon /> },
+  { id: "not-great", label: "Not great", icon: <NotGreatIcon /> },
+  { id: "okay", label: "It's okay", icon: <ItsOkayIcon /> },
+  { id: "love", label: "Love it!", icon: <LoveItIcon /> },
+];
+
+// ============================================================================
+// Feedback Component
+// ============================================================================
+
+// ============================================================================
+// Popover direction helper
+// ============================================================================
+
+const POPOVER_HEIGHT_ESTIMATE = 320; // rough height of the popover content
+const POPOVER_GAP = 8;
+
+function usePopoverDirection(
+  isOpen: boolean,
+  triggerRef: React.RefObject<HTMLButtonElement | null>,
+) {
+  const [direction, setDirection] = useState<"below" | "above">("below");
+
+  useEffect(() => {
+    if (!isOpen || !triggerRef.current) return;
+    const rect = triggerRef.current.getBoundingClientRect();
+    const spaceBelow = window.innerHeight - rect.bottom - POPOVER_GAP;
+    const spaceAbove = rect.top - POPOVER_GAP;
+    setDirection(
+      spaceBelow >= POPOVER_HEIGHT_ESTIMATE || spaceBelow >= spaceAbove
+        ? "below"
+        : "above",
+    );
+  }, [isOpen, triggerRef]);
+
+  return direction;
+}
+
+// ============================================================================
+// Inline Feedback Types
+// ============================================================================
+
+export interface FeedbackInlineProps {
+  /** Text shown as the label (default: "Was this helpful?") */
+  label?: string;
+  /** Callback when feedback is submitted */
+  onSubmit?: (data: {
+    emotion: string;
+    feedback: string;
+    email?: string;
+  }) => void;
+  /** Add a second step that collects an optional follow-up email */
+  collectEmail?: boolean;
+  /**
+   * When true the placeholder grows with the expanded panel so the
+   * surrounding layout reflows around it (useful inside a constrained
+   * demo frame). Default is false: the panel overlays the page
+   * content instead, which is the right behaviour for most mounts
+   * (e.g. a page-footer feedback widget).
+   */
+  reflow?: boolean;
+  className?: string;
+}
+
+// ============================================================================
+// Inline Feedback Component
+// ============================================================================
+
+export function FeedbackInline({
+  label = "Was this helpful?",
+  onSubmit,
+  collectEmail = false,
+  reflow = false,
+  className,
+}: FeedbackInlineProps) {
+  const [selectedEmotion, setSelectedEmotion] = useState<string | null>(null);
+  const [feedbackText, setFeedbackText] = useState("");
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [isSending, setIsSending] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [step, setStep] = useState<"form" | "email">("form");
+  const [email, setEmail] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const emailRef = useRef<HTMLInputElement>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+
+  const close = useCallback(() => {
+    setIsExpanded(false);
+    setTimeout(() => {
+      setSelectedEmotion(null);
+      setFeedbackText("");
+      setSubmitted(false);
+      setStep("form");
+      setEmail("");
+      setEmailError("");
+    }, 250);
+  }, []);
+
+  const handleFaceClick = useCallback(
+    (id: string) => {
+      if (isSending || submitted) return;
+      if (selectedEmotion === id) {
+        close();
+        return;
+      }
+      setSelectedEmotion(id);
+      setIsExpanded(true);
+    },
+    [selectedEmotion, isSending, submitted, close],
+  );
+
+  const send = useCallback(
+    async (emailValue: string) => {
+      setIsSending(true);
+      const trimmedEmail = emailValue.trim() || undefined;
+      const payload: FeedbackPayload = {
+        emotion: selectedEmotion as FeedbackEmotion,
+        feedback: feedbackText,
+        email: trimmedEmail,
+      };
+      if (onSubmit) {
+        onSubmit({
+          emotion: payload.emotion!,
+          feedback: payload.feedback,
+          email: trimmedEmail,
+        });
+      } else {
+        await submitFeedback(payload);
+      }
+      setTimeout(() => {
+        setIsSending(false);
+        setSubmitted(true);
+        setTimeout(close, 2200);
+      }, 650);
+    },
+    [selectedEmotion, feedbackText, onSubmit, close],
+  );
+
+  const handleStep1Submit = useCallback(
+    (e: React.FormEvent) => {
+      e.preventDefault();
+      if (!selectedEmotion || isSending) return;
+      if (collectEmail) {
+        setStep("email");
+      } else {
+        void send("");
+      }
+    },
+    [selectedEmotion, isSending, collectEmail, send],
+  );
+
+  const handleStep2Submit = useCallback(
+    (e: React.FormEvent) => {
+      e.preventDefault();
+      if (isSending) return;
+      const err = validateOptionalEmail(email);
+      if (err) {
+        setEmailError(err);
+        return;
+      }
+      void send(email);
+    },
+    [email, isSending, send],
+  );
+
+  useEffect(() => {
+    if (!isExpanded || submitted) return;
+    if (step === "form") {
+      requestAnimationFrame(() => textareaRef.current?.focus());
+    } else {
+      requestAnimationFrame(() => emailRef.current?.focus());
+    }
+  }, [isExpanded, submitted, step]);
+
+  // Close on outside click while the panel is open and idle
+  useEffect(() => {
+    if (!isExpanded || isSending || submitted) return;
+
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        wrapperRef.current &&
+        !wrapperRef.current.contains(e.target as Node)
+      ) {
+        close();
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isExpanded, isSending, submitted, close]);
+
+  return (
+    <div
+      className={[
+        "feedback-inline-placeholder",
+        reflow ? "feedback-inline-placeholder--reflow" : "",
+        className ?? "",
+      ]
+        .filter(Boolean)
+        .join(" ")}
+    >
+      <div
+        ref={wrapperRef}
+        className={`feedback-inline-wrapper${isExpanded ? " feedback-inline-wrapper--expanded" : ""}`}
+      >
+        {/* Trigger row — sits at the top. The wrapper is bottom-anchored,
+            so when it grows upward the faces ride up with it, revealing
+            the body below them. */}
+        <div className="feedback-inline-trigger">
+          <p
+            style={{
+              color: "var(--ds-gray-900)",
+              fontSize: 14,
+              lineHeight: "20px",
+              fontWeight: 400,
+              margin: 0,
+              whiteSpace: "nowrap",
+            }}
+          >
+            {label}
+          </p>
+          <span style={{ display: "flex", alignItems: "center", gap: 1 }}>
+            {emojiOptions.map((emoji) => (
+              <button
+                key={emoji.id}
+                type="button"
+                role="radio"
+                className={`feedback-emoji${selectedEmotion === emoji.id ? " feedback-emoji--selected" : ""}`}
+                aria-checked={selectedEmotion === emoji.id}
+                aria-label={`Select ${emoji.label} emoji`}
+                disabled={isSending || submitted}
+                onClick={() => handleFaceClick(emoji.id)}
+              >
+                {emoji.icon}
+              </button>
+            ))}
+          </span>
+        </div>
+
+        {/* Body (form or success) — reveals below the trigger as the
+            wrapper expands; clips to 0 when closed. */}
+        <div className="feedback-inline-body">
+        {submitted ? (
+          <FeedbackSuccess />
+        ) : step === "email" ? (
+          <form onSubmit={handleStep2Submit}>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: 8,
+                padding: 8,
+              }}
+            >
+              <label>
+                <div className="feedback-textarea-wrapper">
+                  <input
+                    ref={emailRef}
+                    type="email"
+                    placeholder="you@example.com"
+                    value={email}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                      if (emailError) {
+                        setEmailError(validateOptionalEmail(e.target.value));
+                      }
+                    }}
+                    onBlur={() =>
+                      setEmailError(validateOptionalEmail(email))
+                    }
+                    disabled={isSending}
+                    autoCapitalize="off"
+                    autoComplete="email"
+                    autoCorrect="off"
+                    spellCheck={false}
+                    style={emailInputStyle}
+                  />
+                </div>
+              </label>
+              <div
+                style={{
+                  fontSize: 12,
+                  lineHeight: "16px",
+                  color: emailError
+                    ? "var(--ds-red-900)"
+                    : "var(--ds-gray-700)",
+                }}
+              >
+                {emailError ||
+                  "Optional — we'll only use this to follow up."}
+              </div>
+            </div>
+
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "flex-end",
+                padding: 12,
+                background: "var(--ds-background-200)",
+                borderTop: "1px solid var(--ds-gray-200)",
+              }}
+            >
+              <Button type="submit" size="small" loading={isSending}>
+                {isSending ? "Sending" : "Send"}
+              </Button>
+            </div>
+          </form>
+        ) : selectedEmotion ? (
+          <form onSubmit={handleStep1Submit}>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: 8,
+                padding: 8,
+              }}
+            >
+              <label>
+                <div className="feedback-textarea-wrapper">
+                  <textarea
+                    ref={textareaRef}
+                    id="feedback-textarea"
+                    className="feedback-inline-textarea"
+                    placeholder="Your feedback..."
+                    value={feedbackText}
+                    onChange={(e) => setFeedbackText(e.target.value)}
+                    disabled={isSending}
+                    autoCapitalize="off"
+                    autoComplete="off"
+                    autoCorrect="off"
+                    spellCheck={false}
+                    style={{
+                      display: "flex",
+                      width: "100%",
+                      borderRadius: 6,
+                      border: "none",
+                      padding: "10px 12px",
+                      fontSize: 14,
+                      lineHeight: "normal",
+                      color: "var(--ds-gray-1000)",
+                      background: "var(--ds-background-100)",
+                      resize: "none",
+                      outline: "none",
+                      fontFamily: "inherit",
+                      boxSizing: "border-box",
+                      appearance: "none",
+                    }}
+                  />
+                </div>
+              </label>
+
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "flex-end",
+                  gap: 4,
+                  fontSize: 12,
+                  lineHeight: "16px",
+                  fontWeight: 400,
+                  color: "var(--ds-gray-900)",
+                }}
+              >
+                <MarkdownIcon />
+                <span>supported.</span>
+              </div>
+            </div>
+
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "flex-end",
+                padding: 12,
+                background: "var(--ds-background-200)",
+                borderTop: "1px solid var(--ds-gray-200)",
+              }}
+            >
+              <Button type="submit" size="small" loading={isSending}>
+                {collectEmail
+                  ? "Next"
+                  : isSending
+                    ? "Sending"
+                    : "Send"}
+              </Button>
+            </div>
+          </form>
+        ) : null}
+        </div>
+      </div>
+
+      <style>{`
+        .feedback-inline-placeholder {
+          position: relative;
+          display: inline-block;
+          width: 274px;
+          height: 48px;
+        }
+        /* Reflow mode (opt-in via the 'reflow' prop): placeholder grows
+           with the expanded wrapper, pushing siblings around. Used in
+           the DS demo frame. Everywhere else the wrapper overlays the
+           page content at the placeholder bottom. */
+        .feedback-inline-placeholder--reflow {
+          transition:
+            width 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+            height 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .feedback-inline-placeholder--reflow:has(.feedback-inline-wrapper--expanded) {
+          width: 336px;
+          height: 243px;
+        }
+        .feedback-inline-wrapper {
+          position: absolute;
+          bottom: 0;
+          left: 50%;
+          transform: translateX(-50%);
+          z-index: 10000;
+          display: flex;
+          flex-direction: column;
+          width: max-content;
+          min-width: 274px;
+          height: 48px;
+          border-radius: 30px;
+          background: var(--ds-background-100);
+          border: 1px solid var(--ds-gray-200);
+          overflow: hidden;
+          will-change: width, height, border-radius, box-shadow;
+          transition:
+            width 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+            height 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+            border-radius 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+            border-color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+            box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        :is(.dark, [data-theme="dark"]) .feedback-inline-wrapper {
+          border-color: var(--ds-gray-400);
+        }
+        .feedback-inline-wrapper--expanded {
+          width: 336px;
+          height: 243px;
+          border-radius: 12px;
+          border-color: transparent;
+          box-shadow: var(--ds-shadow-menu);
+        }
+        .feedback-inline-body {
+          position: relative;
+          flex: 1 1 0;
+          min-height: 0;
+          overflow: hidden;
+        }
+        .feedback-inline-trigger {
+          flex: 0 0 48px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 12px;
+          height: 48px;
+          padding: 0 20px;
+          transform: translateZ(0);
+          backface-visibility: hidden;
+        }
+        .feedback-inline-textarea {
+          height: 100px;
+        }
+        /* Input box visibly widens (and grows taller) as the panel
+           expands. animation-fill-mode: both keeps the FROM state on
+           mount so we don't see a flash of full size before the
+           keyframe starts. */
+        .feedback-inline-wrapper--expanded .feedback-textarea-wrapper {
+          transform-origin: center center;
+          animation: feedbackInlineInputGrow 0.25s cubic-bezier(0.4, 0, 0.2, 1) both;
+        }
+        @keyframes feedbackInlineInputGrow {
+          from {
+            transform: scale(0.35, 0.6);
+            opacity: 0;
+          }
+          to {
+            transform: scale(1, 1);
+            opacity: 1;
+          }
+        }
+        /* Markdown hint + action bar fade in so the body chrome doesn't
+           pop into place. */
+        .feedback-inline-wrapper--expanded .feedback-inline-body form > div {
+          animation: feedbackInlineBodyIn 0.25s cubic-bezier(0.4, 0, 0.2, 1) both;
+        }
+        @keyframes feedbackInlineBodyIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+        .feedback-inline-wrapper .feedback-emoji {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 32px;
+          height: 32px;
+          border-radius: 50%;
+          border: none;
+          cursor: pointer;
+          padding: 0;
+          background: transparent;
+          color: var(--ds-gray-900);
+          transition: background 0.2s ease, color 0.2s ease;
+        }
+        .feedback-inline-wrapper .feedback-emoji:disabled {
+          cursor: default;
+        }
+        .feedback-inline-wrapper .feedback-emoji--selected {
+          background: var(--ds-pink-300);
+          color: var(--ds-pink-800);
+        }
+        @media (hover: hover) {
+          .feedback-inline-wrapper .feedback-emoji:hover {
+            background: var(--ds-pink-300);
+            color: var(--ds-pink-800);
+          }
+        }
+        .feedback-inline-wrapper .feedback-textarea-wrapper {
+          display: flex;
+          width: 100%;
+          border-radius: 6px;
+          background: var(--ds-background-100);
+          box-shadow: 0 0 0 1px var(--ds-gray-alpha-400);
+          transition: box-shadow 0.15s ease;
+        }
+        @media (hover: hover) {
+          .feedback-inline-wrapper .feedback-textarea-wrapper:hover {
+            box-shadow: 0 0 0 1px var(--ds-gray-alpha-500);
+          }
+        }
+        .feedback-inline-wrapper .feedback-textarea-wrapper:focus-within {
+          box-shadow:
+            0 0 0 1px var(--ds-gray-alpha-600),
+            0 0 0 4px var(--ds-focus-ring);
+        }
+        .feedback-inline-wrapper .feedback-textarea-wrapper textarea::placeholder {
+          color: var(--ds-gray-700);
+        }
+      `}</style>
+    </div>
+  );
+}
+
+// ============================================================================
+// Chevron Down Icon (for select)
+// ============================================================================
+
+function ChevronDownIcon() {
+  return (
+    <svg height="16" strokeLinejoin="round" viewBox="0 0 16 16" width="16" style={{ color: "currentcolor" }}>
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M14.0607 5.49999L13.5303 6.03032L8.7071 10.8535C8.31658 11.2441 7.68341 11.2441 7.29289 10.8535L2.46966 6.03032L1.93933 5.49999L2.99999 4.43933L3.53032 4.96966L7.99999 9.43933L12.4697 4.96966L13 4.43933L14.0607 5.49999Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+}
+
+// ============================================================================
+// Feedback with Select Types
+// ============================================================================
+
+export interface SelectOption {
+  label: string;
+  value: string;
+}
+
+export interface FeedbackWithSelectProps {
+  /** Text shown on the trigger button (default: "Feedback"). Ignored when asModal. */
+  buttonLabel?: string;
+  /** Placeholder for the select (default: "Select a topic...") */
+  selectPlaceholder?: string;
+  /** Options for the select dropdown */
+  options: SelectOption[];
+  /** Label for the select (for accessibility) */
+  selectLabel?: string;
+  /** Callback when feedback is submitted */
+  onSubmit?: (data: {
+    emotion: string;
+    feedback: string;
+    topic: string;
+    email?: string;
+  }) => void;
+  /** Add a second step that collects an optional follow-up email */
+  collectEmail?: boolean;
+  /**
+   * Render the same popover panel centred on the page (with a backdrop)
+   * instead of anchored to a trigger button. Open state becomes
+   * controlled — pass `open` and `onClose`.
+   */
+  centered?: boolean;
+  /** Controlled open state — required when centered is true. */
+  open?: boolean;
+  /** Called when the panel should close — required when centered is true. */
+  onClose?: () => void;
+  /** Pre-select a topic option (e.g. derived from the current page). */
+  defaultTopic?: string;
+  className?: string;
+}
+
+// ============================================================================
+// Feedback with Select Component
+// ============================================================================
+
+export function FeedbackWithSelect({
+  buttonLabel = "Feedback",
+  selectPlaceholder = "Select a topic...",
+  options,
+  selectLabel = "Product topic selection",
+  onSubmit,
+  collectEmail = false,
+  centered = false,
+  open: openProp,
+  onClose,
+  defaultTopic,
+  className,
+}: FeedbackWithSelectProps) {
+  const [internalOpen, setInternalOpen] = useState(false);
+  // Controlled in centered mode, uncontrolled (with trigger) otherwise.
+  const isOpen = centered ? !!openProp : internalOpen;
+  const closeSelf = useCallback(() => {
+    if (centered) {
+      onClose?.();
+    } else {
+      setInternalOpen(false);
+    }
+  }, [centered, onClose]);
+
+  const [selectedEmotion, setSelectedEmotion] = useState<string | null>(null);
+  const [feedbackText, setFeedbackText] = useState("");
+  const [selectedTopic, setSelectedTopic] = useState(defaultTopic ?? "");
+  const [submitted, setSubmitted] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [step, setStep] = useState<"form" | "email">("form");
+  const [email, setEmail] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const popoverRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const selectRef = useRef<HTMLSelectElement>(null);
+  const emailRef = useRef<HTMLInputElement>(null);
+  const direction = usePopoverDirection(isOpen, triggerRef);
+  const formIdBase = useId();
+
+  // Reset transient form state every time the surface (re)opens, and apply
+  // any defaultTopic the caller passed.
+  useEffect(() => {
+    if (!isOpen) return;
+    setSelectedEmotion(null);
+    setFeedbackText("");
+    setSelectedTopic(defaultTopic ?? "");
+    setStep("form");
+    setEmail("");
+    setEmailError("");
+    setSubmitted(false);
+    setSending(false);
+  }, [isOpen, defaultTopic]);
+
+  // Focus the select (step 1) or email input (step 2) when surface opens
+  // or transitions between steps.
+  useEffect(() => {
+    if (!isOpen || submitted) return;
+    if (step === "form") {
+      selectRef.current?.focus();
+    } else {
+      emailRef.current?.focus();
+    }
+  }, [isOpen, submitted, step]);
+
+  const finalise = useCallback(
+    async (emailValue: string) => {
+      // Guard against double-submit (rapid double click, Enter + click).
+      if (sending || submitted) return;
+      setSending(true);
+      const trimmedEmail = emailValue.trim() || undefined;
+      const payload: FeedbackPayload = {
+        emotion: selectedEmotion as FeedbackEmotion,
+        feedback: feedbackText,
+        topic: selectedTopic || undefined,
+        email: trimmedEmail,
+      };
+      if (onSubmit) {
+        onSubmit({
+          emotion: payload.emotion!,
+          feedback: payload.feedback,
+          topic: payload.topic ?? "",
+          email: trimmedEmail,
+        });
+      } else {
+        await submitFeedback(payload);
+      }
+      setSending(false);
+      setSubmitted(true);
+      setTimeout(() => {
+        closeSelf();
+        // Reset transient state after the close animation.
+        setTimeout(() => {
+          setSubmitted(false);
+          setSelectedEmotion(null);
+          setFeedbackText("");
+          setSelectedTopic(defaultTopic ?? "");
+          setStep("form");
+          setEmail("");
+          setEmailError("");
+        }, 200);
+      }, 1500);
+    },
+    [
+      sending,
+      submitted,
+      selectedEmotion,
+      feedbackText,
+      selectedTopic,
+      onSubmit,
+      closeSelf,
+      defaultTopic,
+    ],
+  );
+
+  const handleStep1Submit = useCallback(
+    (e: React.FormEvent) => {
+      e.preventDefault();
+      if (!selectedEmotion || sending) return;
+      if (collectEmail) {
+        setStep("email");
+      } else {
+        void finalise("");
+      }
+    },
+    [selectedEmotion, sending, collectEmail, finalise],
+  );
+
+  const handleStep2Submit = useCallback(
+    (e: React.FormEvent) => {
+      e.preventDefault();
+      if (sending) return;
+      const err = validateOptionalEmail(email);
+      if (err) {
+        setEmailError(err);
+        return;
+      }
+      void finalise(email);
+    },
+    [email, sending, finalise],
+  );
+
+  // Popover mode only — clicking outside the panel (but not the trigger)
+  // closes. Centered mode handles outside dismissal via the backdrop click
+  // handler in the JSX below.
+  useEffect(() => {
+    if (centered || !isOpen) return;
+    function handleClickOutside(e: MouseEvent) {
+      if (
+        popoverRef.current &&
+        !popoverRef.current.contains(e.target as Node) &&
+        triggerRef.current &&
+        !triggerRef.current.contains(e.target as Node)
+      ) {
+        setInternalOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [centered, isOpen]);
+
+  // Escape closes in either mode.
+  useEffect(() => {
+    if (!isOpen) return;
+    function handleEscape(e: KeyboardEvent) {
+      if (e.key === "Escape") closeSelf();
+    }
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
+  }, [isOpen, closeSelf]);
+
+  const anchor = useAnchorRect(!centered && isOpen, triggerRef);
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // ----- Shared body / footer fragments -----
+  const step1Body = (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: 8,
+        padding: 8,
+      }}
+    >
+      <label htmlFor={`${formIdBase}-select`}>
+        <div className="feedback-select-wrapper">
+          <select
+            ref={selectRef}
+            id={`${formIdBase}-select`}
+            className="feedback-select"
+            aria-labelledby={selectLabel}
+            value={selectedTopic}
+            onChange={(e) => setSelectedTopic(e.target.value)}
+          >
+            <option disabled value="">
+              {selectPlaceholder}
+            </option>
+            {options.map((opt) => (
+              <option key={opt.value} label={opt.label} value={opt.value}>
+                {opt.label}
+              </option>
+            ))}
+          </select>
+          <span className="feedback-select-suffix">
+            <ChevronDownIcon />
+          </span>
+        </div>
+      </label>
+
+      <label>
+        <div className="feedback-textarea-wrapper">
+          <textarea
+            id={`${formIdBase}-textarea`}
+            placeholder="Your feedback..."
+            value={feedbackText}
+            onChange={(e) => setFeedbackText(e.target.value)}
+            autoCapitalize="off"
+            autoComplete="off"
+            autoCorrect="off"
+            spellCheck={false}
+            style={{
+              display: "flex",
+              width: "100%",
+              height: 100,
+              borderRadius: 6,
+              border: "none",
+              padding: "10px 12px",
+              fontSize: 14,
+              lineHeight: "normal",
+              color: "var(--ds-gray-1000)",
+              background: "var(--ds-background-100)",
+              resize: "none",
+              outline: "none",
+              fontFamily: "inherit",
+              boxSizing: "border-box",
+              appearance: "none",
+            }}
+          />
+        </div>
+      </label>
+
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "flex-end",
+          gap: 4,
+          fontSize: 12,
+          lineHeight: "16px",
+          fontWeight: 400,
+          color: "var(--ds-gray-900)",
+        }}
+      >
+        <MarkdownIcon />
+        <span>supported.</span>
+      </div>
+    </div>
+  );
+
+  const step1Footer = (
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        padding: 12,
+        background: "var(--ds-background-200)",
+        borderTop: "1px solid var(--ds-gray-200)",
+      }}
+    >
+      <span style={{ display: "flex", alignItems: "center", gap: 1 }}>
+        {emojiOptions.map((emoji) => (
+          <button
+            key={emoji.id}
+            type="button"
+            role="radio"
+            className={`feedback-emoji${selectedEmotion === emoji.id ? " feedback-emoji--selected" : ""}`}
+            aria-checked={selectedEmotion === emoji.id}
+            aria-label={`Select ${emoji.label} emoji`}
+            onClick={() =>
+              setSelectedEmotion(
+                selectedEmotion === emoji.id ? null : emoji.id,
+              )
+            }
+          >
+            {emoji.icon}
+          </button>
+        ))}
+      </span>
+      <Button type="submit" size="small" loading={sending}>
+        {collectEmail ? "Next" : sending ? "Sending" : "Send"}
+      </Button>
+    </div>
+  );
+
+  const step2Body = (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: 8,
+        padding: 8,
+      }}
+    >
+      <label>
+        <div className="feedback-textarea-wrapper">
+          <input
+            ref={emailRef}
+            type="email"
+            placeholder="you@example.com"
+            value={email}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              if (emailError) {
+                setEmailError(validateOptionalEmail(e.target.value));
+              }
+            }}
+            onBlur={() => setEmailError(validateOptionalEmail(email))}
+            autoCapitalize="off"
+            autoComplete="email"
+            autoCorrect="off"
+            spellCheck={false}
+            style={emailInputStyle}
+          />
+        </div>
+      </label>
+      <div
+        style={{
+          fontSize: 12,
+          lineHeight: "16px",
+          color: emailError ? "var(--ds-red-900)" : "var(--ds-gray-700)",
+        }}
+      >
+        {emailError || "Optional — we'll only use this to follow up."}
+      </div>
+    </div>
+  );
+
+  const step2Footer = (
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "flex-end",
+        padding: 12,
+        background: "var(--ds-background-200)",
+        borderTop: "1px solid var(--ds-gray-200)",
+      }}
+    >
+      <Button type="submit" size="small" loading={sending}>
+        {sending ? "Sending" : "Send"}
+      </Button>
+    </div>
+  );
+
+  // Same panel JSX in both modes — only positioning differs.
+  const panelPositionStyle: React.CSSProperties = centered
+    ? {
+        position: "fixed",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+      }
+    : {
+        position: "fixed",
+        ...(direction === "below"
+          ? {
+              top: (anchor?.bottom ?? 0) + 8,
+              left: (anchor?.left ?? 0) + (anchor?.width ?? 0) / 2,
+              transform: "translateX(-50%)",
+            }
+          : {
+              top: (anchor?.top ?? 0) - 8,
+              left: (anchor?.left ?? 0) + (anchor?.width ?? 0) / 2,
+              transform: "translate(-50%, -100%)",
+            }),
+      };
+
+  const panel = (
+    <div
+      ref={popoverRef}
+      role="dialog"
+      aria-modal={centered ? "true" : undefined}
+      style={{
+        ...panelPositionStyle,
+        width: 340,
+        borderRadius: 12,
+        background: "var(--ds-background-100)",
+        boxShadow:
+          "rgba(0, 0, 0, 0.08) 0px 0px 0px 1px, rgba(0, 0, 0, 0.02) 0px 1px 1px 0px, rgba(0, 0, 0, 0.04) 0px 4px 8px -4px, rgba(0, 0, 0, 0.06) 0px 16px 24px -8px, var(--ds-gray-100) 0px 0px 0px 1px",
+        overflow: "hidden",
+        zIndex: 10000,
+        animation: centered
+          ? "feedbackCenteredIn 0.2s cubic-bezier(0.16, 1, 0.3, 1)"
+          : "feedbackFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
+      }}
+    >
+      {submitted ? (
+        <FeedbackSuccess />
+      ) : step === "email" ? (
+        <form onSubmit={handleStep2Submit}>
+          {step2Body}
+          {step2Footer}
+        </form>
+      ) : (
+        <form onSubmit={handleStep1Submit}>
+          {step1Body}
+          {step1Footer}
+        </form>
+      )}
+    </div>
+  );
+
+  // ----- Centered (modal-style) mode -----
+  if (centered) {
+    return (
+      <>
+        {isOpen && mounted &&
+          createPortal(
+            <>
+              <div
+                onClick={() => closeSelf()}
+                aria-hidden="true"
+                style={{
+                  position: "fixed",
+                  inset: 0,
+                  background: "var(--ds-overlay-backdrop-color)",
+                  opacity: "var(--ds-overlay-backdrop-opacity)" as never,
+                  zIndex: 9999,
+                  animation: "feedbackBackdropIn 0.15s ease-out",
+                }}
+              />
+              {panel}
+            </>,
+            document.body,
+          )}
+        <style>{`
+          @keyframes feedbackBackdropIn {
+            from { opacity: 0; }
+          }
+          @keyframes feedbackCenteredIn {
+            from { opacity: 0; transform: translate(-50%, -50%) scale(0.96); }
+            to   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+          }
+        `}</style>
+        <FeedbackWithSelectFormStyles />
+      </>
+    );
+  }
+
+  return (
+    <div className={className} style={{ position: "relative", display: "inline-block" }}>
+      <Button
+        ref={triggerRef}
+        type="button"
+        size="small"
+        variant="secondary"
+        onClick={() => setInternalOpen((v) => !v)}
+        aria-haspopup="dialog"
+        aria-expanded={isOpen}
+      >
+        {buttonLabel}
+      </Button>
+
+      {isOpen && mounted && anchor &&
+        createPortal(panel, document.body)}
+
+      <FeedbackWithSelectFormStyles />
+    </div>
+  );
+}
+
+// Inline styles for the topic select used by both popover and centered
+// modes. Extracted so we don't duplicate the <style> block.
+function FeedbackWithSelectFormStyles() {
+  return (
+    <style>{`
+      .feedback-select-wrapper {
+        position: relative;
+        border-radius: 6px;
+        box-shadow: 0 0 0 1px var(--ds-gray-alpha-400);
+        overflow: hidden;
+        transition: box-shadow 0.15s ease;
+      }
+      @media (hover: hover) {
+        .feedback-select-wrapper:hover {
+          box-shadow: 0 0 0 1px var(--ds-gray-alpha-500);
+        }
+      }
+      .feedback-select-wrapper:focus-within {
+        box-shadow: 0 0 0 1px var(--ds-gray-alpha-600), 0px 0px 0px 4px rgba(0, 0, 0, 0.16);
+      }
+      .feedback-select {
+        display: flex;
+        width: 100%;
+        height: 40px;
+        border-radius: 6px;
+        border: none;
+        padding: 0 36px 0 12px;
+        font-size: 14px;
+        line-height: 20px;
+        color: var(--ds-gray-1000);
+        background: var(--ds-background-100);
+        outline: none;
+        font-family: inherit;
+        box-sizing: border-box;
+        appearance: none;
+        -webkit-appearance: none;
+        cursor: pointer;
+      }
+      .feedback-select:invalid,
+      .feedback-select option[value=""][disabled] {
+        color: var(--ds-gray-700);
+      }
+      .feedback-select option {
+        color: var(--ds-gray-1000);
+      }
+      .feedback-select-suffix {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none;
+        display: flex;
+        align-items: center;
+        color: var(--ds-gray-900);
+      }
+
+      /* Shared with the <Feedback /> popover. Defined here too so that
+         <FeedbackWithSelect /> renders correctly even when no <Feedback />
+         is mounted on the same page (e.g. the admin centered modal). */
+      .feedback-textarea-wrapper {
+        border-radius: 6px;
+        box-shadow: 0 0 0 1px var(--ds-gray-alpha-400);
+        overflow: hidden;
+        transition: box-shadow 0.15s ease;
+      }
+      @media (hover: hover) {
+        .feedback-textarea-wrapper:hover {
+          box-shadow: 0 0 0 1px var(--ds-gray-alpha-500);
+        }
+      }
+      .feedback-textarea-wrapper:focus-within {
+        box-shadow: 0 0 0 1px var(--ds-gray-alpha-600), 0px 0px 0px 4px rgba(0, 0, 0, 0.16);
+      }
+      .feedback-textarea-wrapper textarea::placeholder,
+      .feedback-textarea-wrapper input::placeholder {
+        color: var(--ds-gray-700);
+      }
+      .feedback-emoji {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        background: transparent;
+        color: var(--ds-gray-900);
+        flex-shrink: 0;
+        transition: background 0.2s ease, border-color 0.2s ease;
+      }
+      .feedback-emoji--selected {
+        background: var(--ds-pink-300);
+        color: var(--ds-pink-800);
+      }
+      @media (hover: hover) {
+        .feedback-emoji:hover {
+          background: var(--ds-pink-300);
+          color: var(--ds-pink-800);
+        }
+      }
+      @keyframes feedbackFadeIn {
+        from {
+          opacity: 0;
+          transform: translateX(-50%) scale(0.95);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(-50%) scale(1);
+        }
+      }
+    `}</style>
+  );
+}
+
+// ============================================================================
+// Feedback (Popover) Component
+// ============================================================================
+
+export function Feedback({
+  buttonLabel = "Feedback",
+  onSubmit,
+  metadata,
+  collectEmail = false,
+  className,
+}: FeedbackProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedEmotion, setSelectedEmotion] = useState<string | null>(null);
+  const [feedbackText, setFeedbackText] = useState("");
+  const [submitted, setSubmitted] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [step, setStep] = useState<"form" | "email">("form");
+  const [email, setEmail] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const popoverRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const emailRef = useRef<HTMLInputElement>(null);
+  const direction = usePopoverDirection(isOpen, triggerRef);
+
+  const finalise = useCallback(
+    async (emailValue: string) => {
+      if (sending || submitted) return;
+      setSending(true);
+      const trimmedEmail = emailValue.trim() || undefined;
+      const payload: FeedbackPayload = {
+        emotion: selectedEmotion as FeedbackEmotion,
+        feedback: feedbackText,
+        email: trimmedEmail,
+      };
+      if (onSubmit) {
+        onSubmit({
+          emotion: payload.emotion!,
+          feedback: payload.feedback,
+          email: trimmedEmail,
+          metadata,
+        });
+      } else {
+        await submitFeedback(payload);
+      }
+      setSending(false);
+      setSubmitted(true);
+      setTimeout(() => {
+        setIsOpen(false);
+        // Reset after close animation
+        setTimeout(() => {
+          setSubmitted(false);
+          setSelectedEmotion(null);
+          setFeedbackText("");
+          setStep("form");
+          setEmail("");
+          setEmailError("");
+        }, 200);
+      }, 1500);
+    },
+    [sending, submitted, selectedEmotion, feedbackText, onSubmit, metadata],
+  );
+
+  const handleStep1Submit = useCallback(
+    (e: React.FormEvent) => {
+      e.preventDefault();
+      if (!selectedEmotion || sending) return;
+      if (collectEmail) {
+        setStep("email");
+      } else {
+        void finalise("");
+      }
+    },
+    [selectedEmotion, sending, collectEmail, finalise],
+  );
+
+  const handleStep2Submit = useCallback(
+    (e: React.FormEvent) => {
+      e.preventDefault();
+      if (sending) return;
+      const err = validateOptionalEmail(email);
+      if (err) {
+        setEmailError(err);
+        return;
+      }
+      void finalise(email);
+    },
+    [email, sending, finalise],
+  );
+
+  // Focus email input when step 2 opens
+  useEffect(() => {
+    if (step === "email" && isOpen && !submitted) {
+      requestAnimationFrame(() => emailRef.current?.focus());
+    }
+  }, [step, isOpen, submitted]);
+
+  // Track trigger position so the portal'd popover stays glued to it.
+  const anchor = useAnchorRect(isOpen, triggerRef);
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Close on click outside
+  useEffect(() => {
+    if (!isOpen) return;
+    function handleClickOutside(e: MouseEvent) {
+      if (
+        popoverRef.current &&
+        !popoverRef.current.contains(e.target as Node) &&
+        triggerRef.current &&
+        !triggerRef.current.contains(e.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isOpen]);
+
+  // Close on Escape
+  useEffect(() => {
+    if (!isOpen) return;
+    function handleEscape(e: KeyboardEvent) {
+      if (e.key === "Escape") setIsOpen(false);
+    }
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
+  }, [isOpen]);
+
+  return (
+    <div className={className} style={{ position: "relative", display: "inline-block" }}>
+      {/* Trigger button */}
+      <Button
+        ref={triggerRef}
+        type="button"
+        size="small"
+        variant="secondary"
+        onClick={() => setIsOpen(!isOpen)}
+        aria-haspopup="dialog"
+        aria-expanded={isOpen}
+      >
+        {buttonLabel}
+      </Button>
+
+      {/* Popover — portalled to <body> so ancestor stacking contexts and
+          overflow:hidden can't trap it. */}
+      {isOpen && mounted && anchor &&
+        createPortal(
+          <div
+            ref={popoverRef}
+            role="dialog"
+            style={{
+              position: "fixed",
+              ...(direction === "below"
+                ? { top: anchor.bottom + 8 }
+                : { top: anchor.top - 8, transform: "translate(-50%, -100%)" }),
+              left: anchor.left + anchor.width / 2,
+              ...(direction === "below"
+                ? { transform: "translateX(-50%)" }
+                : {}),
+              width: 340,
+              borderRadius: 12,
+              background: "var(--ds-background-100)",
+              boxShadow:
+                "rgba(0, 0, 0, 0.08) 0px 0px 0px 1px, rgba(0, 0, 0, 0.02) 0px 1px 1px 0px, rgba(0, 0, 0, 0.04) 0px 4px 8px -4px, rgba(0, 0, 0, 0.06) 0px 16px 24px -8px, var(--ds-gray-100) 0px 0px 0px 1px",
+              overflow: "hidden",
+              zIndex: 10000,
+              animation: "feedbackFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
+            }}
+          >
+          {submitted ? (
+            <FeedbackSuccess />
+          ) : step === "email" ? (
+            <form onSubmit={handleStep2Submit}>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 8,
+                  padding: 8,
+                }}
+              >
+                <label>
+                  <div className="feedback-textarea-wrapper">
+                    <input
+                      ref={emailRef}
+                      type="email"
+                      placeholder="you@example.com"
+                      value={email}
+                      onChange={(e) => {
+                        setEmail(e.target.value);
+                        if (emailError) {
+                          setEmailError(validateOptionalEmail(e.target.value));
+                        }
+                      }}
+                      onBlur={() =>
+                        setEmailError(validateOptionalEmail(email))
+                      }
+                      autoCapitalize="off"
+                      autoComplete="email"
+                      autoCorrect="off"
+                      spellCheck={false}
+                      style={emailInputStyle}
+                    />
+                  </div>
+                </label>
+                <div
+                  style={{
+                    fontSize: 12,
+                    lineHeight: "16px",
+                    color: emailError
+                      ? "var(--ds-red-900)"
+                      : "var(--ds-gray-700)",
+                  }}
+                >
+                  {emailError ||
+                    "Optional — we'll only use this to follow up."}
+                </div>
+              </div>
+
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "flex-end",
+                  padding: 12,
+                  background: "var(--ds-background-200)",
+                  borderTop: "1px solid var(--ds-gray-200)",
+                }}
+              >
+                <Button type="submit" size="small" loading={sending}>
+                  {sending ? "Sending" : "Send"}
+                </Button>
+              </div>
+            </form>
+          ) : (
+            <form onSubmit={handleStep1Submit}>
+              {/* Form content area */}
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 8,
+                  padding: 8,
+                }}
+              >
+                {/* Textarea */}
+                <label>
+                  <div className="feedback-textarea-wrapper">
+                    <textarea
+                      autoFocus
+                      placeholder="Your feedback..."
+                      value={feedbackText}
+                      onChange={(e) => setFeedbackText(e.target.value)}
+                      autoCapitalize="off"
+                      autoComplete="off"
+                      autoCorrect="off"
+                      spellCheck={false}
+                      style={{
+                        display: "flex",
+                        width: "100%",
+                        height: 100,
+                        borderRadius: 6,
+                        border: "none",
+                        padding: "10px 12px",
+                        fontSize: 14,
+                        lineHeight: "normal",
+                        color: "var(--ds-gray-1000)",
+                        background: "var(--ds-background-100)",
+                        resize: "none",
+                        outline: "none",
+                        fontFamily: "inherit",
+                        boxSizing: "border-box",
+                        appearance: "none",
+                      }}
+                    />
+                  </div>
+                </label>
+
+                {/* Markdown tip */}
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "flex-end",
+                    gap: 4,
+                    fontSize: 12,
+                    lineHeight: "16px",
+                    fontWeight: 400,
+                    color: "var(--ds-gray-900)",
+                  }}
+                >
+                  <MarkdownIcon />
+                  <span>supported.</span>
+                </div>
+              </div>
+
+              {/* Actions bar */}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  padding: 12,
+                  background: "var(--ds-background-200)",
+                  borderTop: "1px solid var(--ds-gray-200)",
+                }}
+              >
+                  {/* Emoji buttons */}
+                  <span
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 1,
+                    }}
+                  >
+                    {emojiOptions.map((emoji) => (
+                      <button
+                        key={emoji.id}
+                        type="button"
+                        role="radio"
+                        className={`feedback-emoji${selectedEmotion === emoji.id ? " feedback-emoji--selected" : ""}`}
+                        aria-checked={selectedEmotion === emoji.id}
+                        aria-label={`Select ${emoji.label} emoji`}
+                        onClick={() =>
+                          setSelectedEmotion(
+                            selectedEmotion === emoji.id ? null : emoji.id,
+                          )
+                        }
+                      >
+                        {emoji.icon}
+                      </button>
+                    ))}
+                  </span>
+
+                  {/* Send button */}
+                  <Button type="submit" size="small" loading={sending}>
+                    {collectEmail ? "Next" : sending ? "Sending" : "Send"}
+                  </Button>
+                </div>
+            </form>
+          )}
+          </div>,
+          document.body,
+        )}
+
+      {/* Styles */}
+      <style>{`
+        .feedback-textarea-wrapper {
+          border-radius: 6px;
+          box-shadow: 0 0 0 1px var(--ds-gray-alpha-400);
+          overflow: hidden;
+          transition: box-shadow 0.15s ease;
+        }
+        @media (hover: hover) {
+          .feedback-textarea-wrapper:hover {
+            box-shadow: 0 0 0 1px var(--ds-gray-alpha-500);
+          }
+        }
+        .feedback-textarea-wrapper:focus-within {
+          box-shadow: 0 0 0 1px var(--ds-gray-alpha-600), 0px 0px 0px 4px rgba(0, 0, 0, 0.16);
+        }
+        .feedback-textarea-wrapper textarea::placeholder {
+          color: var(--ds-gray-700);
+        }
+        .feedback-emoji {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 32px;
+          height: 32px;
+          border-radius: 50%;
+          border: none;
+          cursor: pointer;
+          padding: 0;
+          background: transparent;
+          color: var(--ds-gray-900);
+          transition: background 0.2s ease, border-color 0.2s ease;
+        }
+        .feedback-emoji--selected {
+          background: var(--ds-pink-300);
+          color: var(--ds-pink-800);
+        }
+        @media (hover: hover) {
+          .feedback-emoji:hover {
+            background: var(--ds-pink-300);
+            color: var(--ds-pink-800);
+          }
+        }
+        @keyframes feedbackFadeIn {
+          from {
+            opacity: 0;
+            transform: translateX(-50%) scale(0.95);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(-50%) scale(1);
+          }
+        }
+      `}</style>
+    </div>
+  );
+}

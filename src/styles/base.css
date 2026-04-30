@@ -1,0 +1,43 @@
+/**
+ * Base Styles & Reset
+ * Foundational styles applied globally
+ */
+
+@layer base {
+  /* Distanz Reset */
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-font-smoothing: subpixel-antialiased;
+    -moz-osx-font-smoothing: auto;
+    text-rendering: optimizeLegibility;
+    border: 0 solid #e5e7eb;
+  }
+
+  html {
+    font-family: var(--body-font);
+    font-feature-settings: normal;
+    font-variation-settings: normal;
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+    line-height: 1.5;
+    tab-size: 4;
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  body {
+    font-family: var(--body-font);
+    font-synthesis: none;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    margin: 0;
+    line-height: inherit;
+    scroll-behavior: smooth;
+    color: rgb(var(--color-textDefault));
+    overscroll-behavior: none;
+    position: relative;
+  }
+}

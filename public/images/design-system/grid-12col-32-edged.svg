@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="312">
+  <g fill="none" fill-rule="evenodd">
+    <!-- Background -->
+    <rect fill="#F0F5F5" width="960" height="312" rx="2"/>
+
+    <!-- 12 columns (48px each, 32px gutters, 32px outside gutters) -->
+    <!-- Total: 32 + (48*12) + (32*11) + 32 = 32 + 576 + 352 + 32 = 992... need to recalculate -->
+    <!-- Let's use: 32 outside + 12 cols + 11 gaps + 32 outside = 960 -->
+    <!-- 960 - 64 (outside) = 896 for columns + gaps -->
+    <!-- 896 = 12*col + 11*32 = 12*col + 352 -->
+    <!-- col = (896-352)/12 = 544/12 = 45.33... -->
+    <!-- Let's try: col=44px, gap=32px: 32 + (44*12) + (32*11) + 32 = 32 + 528 + 352 + 32 = 944 (too small) -->
+    <!-- Let's try: col=46px, gap=30px: 32 + (46*12) + (30*11) + 32 = 32 + 552 + 330 + 32 = 946 -->
+    <!-- For clean math at 960px with 32px gutters: -->
+    <!-- 960 = 32 + 12*col + 11*32 + 32 = 64 + 12*col + 352 = 416 + 12*col -->
+    <!-- 12*col = 544, col = 45.33 -->
+    <!-- Use 45px columns: 32 + (45*12) + (32*11) + 32 = 32 + 540 + 352 + 32 = 956 (close enough, add 2px each side) -->
+
+    <!-- Column 1: x=32 -->
+    <path fill="#E0EBEB" d="M32 0h45v312H32z"/>
+    <!-- Column 2: x=32+45+32=109 -->
+    <path fill="#E0EBEB" d="M109 0h45v312h-45z"/>
+    <!-- Column 3: x=109+45+32=186 -->
+    <path fill="#E0EBEB" d="M186 0h45v312h-45z"/>
+    <!-- Column 4: x=186+45+32=263 -->
+    <path fill="#E0EBEB" d="M263 0h45v312h-45z"/>
+    <!-- Column 5: x=263+45+32=340 -->
+    <path fill="#E0EBEB" d="M340 0h45v312h-45z"/>
+    <!-- Column 6: x=340+45+32=417 -->
+    <path fill="#E0EBEB" d="M417 0h45v312h-45z"/>
+    <!-- Column 7: x=417+45+32=494 -->
+    <path fill="#E0EBEB" d="M494 0h45v312h-45z"/>
+    <!-- Column 8: x=494+45+32=571 -->
+    <path fill="#E0EBEB" d="M571 0h45v312h-45z"/>
+    <!-- Column 9: x=571+45+32=648 -->
+    <path fill="#E0EBEB" d="M648 0h45v312h-45z"/>
+    <!-- Column 10: x=648+45+32=725 -->
+    <path fill="#E0EBEB" d="M725 0h45v312h-45z"/>
+    <!-- Column 11: x=725+45+32=802 -->
+    <path fill="#E0EBEB" d="M802 0h45v312h-45z"/>
+    <!-- Column 12: x=802+45+32=879, ends at 879+45=924, then 32px outside = 956 -->
+    <path fill="#E0EBEB" d="M879 0h45v312h-45z"/>
+
+    <!-- Left outside gutter indicator (32px) -->
+    <path d="M32 160h-1v-3H1v3H0v-8h1v4h30v-4h1v8z" fill="#0A1757"/>
+    <text x="16" y="179" fill="#121212" font-family="system-ui, sans-serif" font-size="12" text-anchor="middle">32</text>
+
+    <!-- Gutter indicator (32px) - between columns 1 and 2 -->
+    <path d="M109 160h-1v-3H78v3h-1v-8h1v4h30v-4h1v8z" fill="#0A1757"/>
+    <text x="93" y="179" fill="#121212" font-family="system-ui, sans-serif" font-size="12" text-anchor="middle">32</text>
+
+    <!-- Right outside gutter indicator (32px) -->
+    <path d="M956 160h-1v-3h-30v3h-1v-8h1v4h30v-4h1v8z" fill="#0A1757"/>
+    <text x="940" y="179" fill="#121212" font-family="system-ui, sans-serif" font-size="12" text-anchor="middle">32</text>
+  </g>
+</svg>

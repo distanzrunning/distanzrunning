@@ -1,135 +1,207 @@
 // src/components/Footer.tsx
-import Link from 'next/link'
-import {
-  Twitter,
-  Linkedin,
-  Instagram,
-} from 'lucide-react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {
-  faXTwitter,
-  faStrava,
-} from '@fortawesome/free-brands-svg-icons'
+//
+// Site footer — v0-style three-column layout: wordmark on the left,
+// Category / Company / Social columns on the right. Theme-aware
+// (uses --ds-* tokens), so it adapts to light and dark mode.
+//
+// Anatomy modelled on v0.app's footer: outer relative footer, max-w
+// container, flex row that stacks on mobile and goes side-by-side on
+// md+. Three columns inside the right cluster (2-col grid on mobile,
+// 3-col on md+). Wordmark uses the same inline <Wordmark /> as the
+// header so colour follows currentColor / text-gray-1000.
+
+"use client";
+
+import { useContext, type ComponentType } from "react";
+import Link from "next/link";
+import { SiInstagram, SiX, SiStrava, SiLinkedin } from "react-icons/si";
+import { DarkModeContext } from "@/components/DarkModeProvider";
+import { useConsent } from "@/contexts/ConsentContext";
+import Logo from "@/components/ui/Logo";
+import { ThemeSwitcher } from "@/components/ui/ThemeSwitcher";
+
+// ============================================================================
+// Link / action union — Cookies needs to fire openSettings on the
+// consent context, so a column can mix internal Next links with
+// button actions. External social links live in their own column.
+// ============================================================================
+
+type FooterItem =
+  | { kind: "link"; label: string; href: string }
+  | { kind: "action"; label: string; onClick: () => void };
+
+const categoryLinks: ReadonlyArray<FooterItem> = [
+  { kind: "link", label: "News", href: "/articles" },
+  { kind: "link", label: "Shoes", href: "/shoes" },
+  { kind: "link", label: "Gear", href: "/gear" },
+  { kind: "link", label: "Nutrition", href: "/nutrition" },
+  { kind: "link", label: "Races", href: "/races" },
+];
+
+type SocialLink = {
+  label: string;
+  href: string;
+  Icon: ComponentType<{ size?: number | string; className?: string }>;
+};
+
+const socialLinks: ReadonlyArray<SocialLink> = [
+  {
+    label: "Instagram",
+    href: "https://instagram.com/distanzrunning",
+    Icon: SiInstagram,
+  },
+  {
+    label: "Twitter",
+    href: "https://x.com/distanzrunning",
+    Icon: SiX,
+  },
+  {
+    label: "Strava",
+    href: "https://strava.com/clubs/distanzrunning",
+    Icon: SiStrava,
+  },
+  {
+    label: "LinkedIn",
+    href: "https://linkedin.com/company/distanzrunning",
+    Icon: SiLinkedin,
+  },
+];
+
+// ============================================================================
+// Main
+// ============================================================================
 
 export default function Footer() {
+  const { openSettings } = useConsent();
+  const { theme, setTheme } = useContext(DarkModeContext);
+
+  const companyLinks: ReadonlyArray<FooterItem> = [
+    { kind: "link", label: "About", href: "/about" },
+    { kind: "link", label: "Work with us", href: "/careers" },
+    { kind: "link", label: "Privacy", href: "/privacy" },
+    { kind: "action", label: "Cookies", onClick: openSettings },
+  ];
+
   return (
-    <footer className="bg-white border-t border-gray-200 text-dark">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-10">
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-10">
-          {/* Top Section */}
-          <div className="md:col-span-1">
-            <Link href="/" className="inline-block mb-4">
-              <img
-                src="/images/logo.svg"
-                alt="Distanz Running Logo"
-                className="h-8 md:h-10 w-auto"
-              />
-              <span className="sr-only">Distanz Running</span>
-            </Link>
-            <p className="text-sm text-gray-500 max-w-xs">
-              The latest running news, marathon guides and gear reviews for passionate runners.
-            </p>
+    <footer
+      aria-label="Site footer"
+      className="relative z-50 w-full text-[color:var(--ds-gray-900)]"
+    >
+      {/* Outer wrapper sized to v0: 1400 px max width, 40 px L/R
+          padding, 48 px vertical margin, asymmetric pt-6 pb-10. */}
+      <div className="mx-auto my-12 w-full max-w-[1400px] px-10 pt-6 pb-10">
+        {/* Content row: stacked on mobile inside a 672 px (max-w-2xl)
+            column with a generous 64 px gap between logo and link
+            grid. On md+ it expands to the xl breakpoint and goes
+            side-by-side. */}
+        <div className="relative flex w-full max-w-2xl flex-col justify-between gap-x-12 gap-y-16 md:mx-auto md:max-w-7xl md:flex-row md:items-start">
+          {/* Full Distanz Running lockup (icon + Distanz + Running).
+              Same inline-SVG approach as the header wordmark so the
+              colour follows currentColor / text-gray-1000 in both
+              modes. */}
+          <Link
+            href="/"
+            aria-label="Distanz Running — home"
+            className="inline-flex h-fit shrink-0 text-[color:var(--ds-gray-1000)]"
+          >
+            <Logo className="h-12 w-auto" />
+          </Link>
+
+          {/* Link grid. Mobile: 2-col, no x-gap, 16 px y-gap (tight
+              packing inside the 672 px column). md: 3 cols / 64 px
+              gap. lg: 108 px gap. */}
+          <div className="grid grid-cols-2 gap-x-0 gap-y-4 md:grid-cols-3 md:gap-16 lg:gap-[108px]">
+            <FooterColumn heading="Category" items={categoryLinks} />
+            <FooterColumn heading="Company" items={companyLinks} />
+            <SocialColumn />
           </div>
 
-
-          {/* Mobile Layout: Group columns into 2s */}
-          <div className="grid grid-cols-2 md:hidden gap-10 mt-10">
-            <div>
-              <h4 className="text-base font-semibold tracking-wide mb-4 border-t-2 border-black pt-4">Stories</h4>
-              <ul className="space-y-2">
-                <li><Link href="/articles/category/road" className="hover:text-primary text-sm">Road</Link></li>
-                <li><Link href="/articles/category/track" className="hover:text-primary text-sm">Track</Link></li>
-                <li><Link href="/articles/category/trail" className="hover:text-primary text-sm">Trail</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-base font-semibold tracking-wide mb-4 border-t-2 border-black pt-4">Gear</h4>
-              <ul className="space-y-2">
-                <li><Link href="/gear/category/race-day-shoes" className="hover:text-primary text-sm">Race Day Shoes</Link></li>
-                <li><Link href="/gear/category/max-cushion-shoes" className="hover:text-primary text-sm">Max Cushion Shoes</Link></li>
-                <li><Link href="/gear/category/daily-trainers" className="hover:text-primary text-sm">Daily Trainers</Link></li>
-                <li><Link href="/gear/category/tempo-shoes" className="hover:text-primary text-sm">Tempo Shoes</Link></li>
-                <li><Link href="/gear/category/gps-watches" className="hover:text-primary text-sm">GPS Watches</Link></li>
-                <li><Link href="/gear/category/nutrition" className="hover:text-primary text-sm">Nutrition</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-base font-semibold tracking-wide mb-4 border-t-2 border-black pt-4">Races</h4>
-              <ul className="space-y-2">
-                <li><Link href="/races" className="hover:text-primary text-sm">Race Profiles</Link></li>
-                <li><Link href="/races/database" className="hover:text-primary text-sm">Race Database</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-base font-semibold tracking-wide mb-4 border-t-2 border-black pt-4">Company</h4>
-              <ul className="space-y-2">
-                <li><Link href="/about" className="hover:text-primary text-sm">About</Link></li>
-                <li><Link href="/contact" className="hover:text-primary text-sm">Contact</Link></li>
-              </ul>
-            </div>
+          {/* Theme switcher.
+              Mobile (parent flex-col): renders in flow as the last
+              item, stacking below the link grid.
+              Desktop (parent flex-row + relative): absolutely
+              positioned at the bottom-left of the flex container so
+              it sits flush with the bottom of the link grid (the
+              tallest column drives row height) and aligned with the
+              wordmark's left edge. No label — the segmented
+              sun/moon/system glyphs are self-labelling. */}
+          <div className="md:absolute md:bottom-0 md:left-0">
+            <ThemeSwitcher value={theme} onChange={setTheme} />
           </div>
-
-          {/* Desktop Layout Only */}
-          <div className="hidden md:block">
-            <h4 className="text-base font-semibold tracking-wide mb-4 border-t-2 border-black pt-4">Stories</h4>
-            <ul className="space-y-2">
-              <li><Link href="/articles/category/road" className="hover:text-primary text-sm">Road</Link></li>
-              <li><Link href="/articles/category/track" className="hover:text-primary text-sm">Track</Link></li>
-              <li><Link href="/articles/category/trail" className="hover:text-primary text-sm">Trail</Link></li>
-            </ul>
-          </div>
-          <div className="hidden md:block">
-            <h4 className="text-base font-semibold tracking-wide mb-4 border-t-2 border-black pt-4">Gear</h4>
-            <ul className="space-y-2">
-              <li><Link href="/gear/category/race-day-shoes" className="hover:text-primary text-sm">Race Day Shoes</Link></li>
-              <li><Link href="/gear/category/max-cushion-shoes" className="hover:text-primary text-sm">Max Cushion Shoes</Link></li>
-              <li><Link href="/gear/category/daily-trainers" className="hover:text-primary text-sm">Daily Trainers</Link></li>
-              <li><Link href="/gear/category/tempo-shoes" className="hover:text-primary text-sm">Tempo Shoes</Link></li>
-              <li><Link href="/gear/category/gps-watches" className="hover:text-primary text-sm">GPS Watches</Link></li>
-              <li><Link href="/gear/category/nutrition" className="hover:text-primary text-sm">Nutrition</Link></li>
-            </ul>
-          </div>
-          <div className="hidden md:block">
-            <h4 className="text-base font-semibold tracking-wide mb-4 border-t-2 border-black pt-4">Races</h4>
-            <ul className="space-y-2">
-              <li><Link href="/races" className="hover:text-primary text-sm">Race Profiles</Link></li>
-              <li><Link href="/races/database" className="hover:text-primary text-sm">Race Database</Link></li>
-            </ul>
-          </div>
-          <div className="hidden md:block">
-            <h4 className="text-base font-semibold tracking-wide mb-4 border-t-2 border-black pt-4">Company</h4>
-            <ul className="space-y-2">
-              <li><Link href="/about" className="hover:text-primary text-sm">About</Link></li>
-              <li><Link href="/contact" className="hover:text-primary text-sm">Contact</Link></li>
-            </ul>
-          </div>
-        </div>
-
-        {/* Bottom Bar */}
-        <div className="mt-12 pt-8 border-t border-gray-200 flex flex-col md:flex-row items-center justify-between text-sm">
-          <div className="flex items-center space-x-4 mb-4 md:mb-0">
-            <Link href="/terms" className="hover:text-primary">Terms of Service</Link>
-            <Link href="/privacy" className="hover:text-primary">Privacy Policy</Link>
-          </div>
-
-          <div className="flex items-center space-x-4 mb-4 md:mb-0">
-            <Link href="https://x.com" target="_blank" aria-label="X / Twitter" className="hover:text-primary">
-              <FontAwesomeIcon icon={faXTwitter} className="w-5 h-5" />
-            </Link>
-            <Link href="https://linkedin.com" target="_blank" aria-label="LinkedIn" className="hover:text-primary">
-              <Linkedin className="w-5 h-5" />
-            </Link>
-            <Link href="https://www.instagram.com/distanzrunning/" target="_blank" aria-label="Instagram" className="hover:text-primary">
-              <Instagram className="w-5 h-5" />
-            </Link>
-            <Link href="https://strava.com" target="_blank" aria-label="Strava" className="hover:text-primary">
-              <FontAwesomeIcon icon={faStrava} className="w-5 h-5" />
-            </Link>
-          </div>
-
-          <p className="text-sm text-gray-500 mt-4 md:mt-0">© {new Date().getFullYear()} Distanz Running. All rights reserved.</p>
         </div>
       </div>
     </footer>
-  )
+  );
 }
+
+// ============================================================================
+// Column primitives
+// ============================================================================
+
+function FooterColumn({
+  heading,
+  items,
+}: {
+  heading: string;
+  items: ReadonlyArray<FooterItem>;
+}) {
+  return (
+    <div className="space-y-4">
+      <h2 className="text-[14px] leading-5 font-medium text-[color:var(--ds-gray-1000)]">
+        {heading}
+      </h2>
+      <ul className="flex flex-col gap-y-2.5">
+        {items.map((item) => (
+          <li key={item.label} className="w-fit">
+            {item.kind === "link" ? (
+              <Link href={item.href} className={linkClasses}>
+                {item.label}
+              </Link>
+            ) : (
+              <button
+                type="button"
+                onClick={item.onClick}
+                className={linkClasses}
+              >
+                {item.label}
+              </button>
+            )}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function SocialColumn() {
+  return (
+    <div className="space-y-4">
+      <h2 className="text-[14px] leading-5 font-medium text-[color:var(--ds-gray-1000)]">
+        Social
+      </h2>
+      <ul className="flex flex-col gap-y-2.5">
+        {socialLinks.map(({ label, href, Icon }) => (
+          <li key={href} className="w-fit">
+            <a
+              href={href}
+              rel="noopener"
+              target="_blank"
+              className={linkClasses}
+            >
+              {/* mr-1 (not gap-x-) matches v0's social spacing —
+                  4 px between icon and label. */}
+              <Icon size={14} className="mr-1 shrink-0" />
+              {label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+// gap-x-0.5 (2 px) matches v0's link-internal spacing — used by
+// links that have a trailing arrow icon. With text-only links the
+// gap is invisible.
+const linkClasses =
+  "inline-flex items-center gap-x-0.5 rounded-sm text-[14px] leading-5 text-[color:var(--ds-gray-900)] transition-colors hover:text-[color:var(--ds-gray-1000)] focus-visible:text-[color:var(--ds-gray-1000)] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[color:var(--ds-focus-ring)]";

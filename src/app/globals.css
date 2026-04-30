@@ -1,12 +1,26 @@
 /* src/app/globals.css */
+@import "@progress/kendo-theme-default/dist/all.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* Text selection styles */
+::selection {
+  background: #000;
+  color: #fff;
+}
+
+.dark ::selection {
+  background: #fff;
+  color: #000;
+}
+
+
 @property --border-angle {
-    inherits: false;
-    initial-value: 0deg;
-    syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+  syntax: "<angle>";
 }
 
 @keyframes rotate-border {
@@ -20,11 +34,44 @@
 }
 
 @keyframes blink {
-  0%, 49% {
+  0%,
+  49% {
     opacity: 1;
   }
-  50%, 100% {
+  50%,
+  100% {
     opacity: 0;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideFromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideFromRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
   }
 }
 
@@ -32,34 +79,62 @@
   animation: blink 1s step-end infinite;
 }
 
-@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0');
-
-/* Load InterVariable font exactly like Quartr */
-@font-face {
-  font-display: swap;
-  font-family: 'InterVariable';
-  font-style: normal;
-  font-weight: 100 900;
-  src: url('https://rsms.me/inter/font-files/InterVariable.woff2?v=4.0') format('woff2');
-  font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
 }
 
-@font-face {
-  font-display: swap;
-  font-family: 'InterVariable';
-  font-style: italic;
-  font-weight: 100 900;
-  src: url('https://rsms.me/inter/font-files/InterVariable-Italic.woff2?v=4.0') format('woff2');
-  font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+.animate-shimmer {
+  animation: shimmer 5s ease-in-out infinite;
 }
+
+@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0");
 
 @layer base {
-  :root {
-    /* Distanz font system - Modern Editorial Stack */
-    --base-font: "InterVariable", "Inter", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif;
-    --brand-font: var(--font-playfair), "Playfair Display", Georgia, serif;
-    --body-font: var(--font-body), "Source Serif 4", Georgia, serif;
-    --mono-font: var(--font-mono), "JetBrains Mono", "Courier New", monospace;
+  /* The .light selector mirrors :root so any subtree wrapped in
+     <div class="light"> re-resolves to the light token values, even
+     when an ancestor carries .dark. Pairs with the existing .dark
+     selector below to support force-themed sections (e.g. an
+     inverted-color newsletter band on a dark page). */
+  :root,
+  .light {
+    color-scheme: light;
+    /* Light-mode scrollbar — gray-400 thumb on a transparent
+       track. color-scheme alone covers most browsers, but explicit
+       scrollbar-color guarantees the look in Chromium 121+ and
+       Firefox where color-scheme defaults are sometimes
+       overridden by user prefs. */
+    scrollbar-color: var(--ds-gray-400) transparent;
+
+    /* Distanz Typography System
+       Body/UI: Inter Variable (complete weight spectrum)
+       Headings: EB Garamond (serif)
+       All fonts self-hosted via next/font: --font-geist-sans,
+       --font-geist-mono, --font-eb-garamond. */
+
+    /* Primary Typefaces */
+    --font-family-sans:
+      var(--font-geist-sans), -apple-system, BlinkMacSystemFont, "Segoe UI",
+      sans-serif;
+    --font-family-serif:
+      var(--font-eb-garamond), Georgia, "Times New Roman", serif;
+    --font-family-mono:
+      var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Monaco,
+      "Courier New", monospace;
+    --font-mono: var(--font-family-mono);
+
+    /* Legacy font variables for backwards compatibility */
+    --display-font: var(--font-family-serif);
+    --headline-font: var(--font-family-serif);
+    --body-font: var(--font-family-sans);
+    --ui-font: var(--font-family-sans);
+    --base-font: var(--font-family-sans);
+    --brand-font: var(--font-family-serif);
+    --subheading-font: var(--font-family-serif);
 
     /* Tighter font metrics for more squared typography */
     --ascent-scale: 0.9688;
@@ -71,12 +146,12 @@
     --default-font-weight: var(--font-weight-regular);
     --default-line-height: 1;
     --default-letter-spacing: 0em;
-    
+
     /* Reduced leading trim for less vertical space */
     --default-leading-trim-start: 0.26em; /* Reduced from 0.42em */
-    --default-leading-trim-end: 0.22em;   /* Reduced from 0.36em */
-    
-    /* Font weights (Quartr-inspired) */
+    --default-leading-trim-end: 0.22em; /* Reduced from 0.36em */
+
+    /* Font weights (Distanz design system) */
     --font-weight-light: 300;
     --font-weight-regular: 400;
     --font-weight-medium: 500;
@@ -84,95 +159,1004 @@
     --font-weight-bold: 600;
 
     /* Distanz text sizing system with tight line heights */
-    --quik_text-size-h1: 4.25rem;
-    --quik_text-spacing-h1: -0.005em;
-    --quik_text-line-height-h1: 1.05; /* Reduced from 1.1 */
+    --distanz_text-size-h1: 4.25rem;
+    --distanz_text-spacing-h1: -0.005em;
+    --distanz_text-line-height-h1: 1.05; /* Reduced from 1.1 */
 
-    --quik_text-size-h2: 3.625rem;
-    --quik_text-spacing-h2: -0.03em;
-    --quik_text-line-height-h2: 1.05; /* Reduced from 1.1 */
+    --distanz_text-size-h2: 3.625rem;
+    --distanz_text-spacing-h2: -0.03em;
+    --distanz_text-line-height-h2: 1.05; /* Reduced from 1.1 */
 
-    --quik_text-size-h3: 2.75rem;
-    --quik_text-spacing-h3: -0.02em;
-    --quik_text-line-height-h3: 1.1; /* Reduced from 1.16 */
+    --distanz_text-size-h3: 2.75rem;
+    --distanz_text-spacing-h3: -0.02em;
+    --distanz_text-line-height-h3: 1.1; /* Reduced from 1.16 */
 
-    --quik_text-size-h4: 2.375rem;
-    --quik_text-spacing-h4: -0.01em;
-    --quik_text-line-height-h4: 1.1; /* Reduced from 1.16 */
+    --distanz_text-size-h4: 2.375rem;
+    --distanz_text-spacing-h4: -0.01em;
+    --distanz_text-line-height-h4: 1.1; /* Reduced from 1.16 */
 
-    --quik_text-size-h5: 1.75rem;
-    --quik_text-spacing-h5: -0.005em;
-    --quik_text-line-height-h5: 1.15; /* Reduced from 1.2 */
+    --distanz_text-size-h5: 1.75rem;
+    --distanz_text-spacing-h5: -0.005em;
+    --distanz_text-line-height-h5: 1.15; /* Reduced from 1.2 */
 
-    --quik_text-size-h6: 1.5rem;
-    --quik_text-spacing-h6: 0;
-    --quik_text-line-height-h6: 1.3; /* Reduced from 1.4 */
+    --distanz_text-size-h6: 1.5rem;
+    --distanz_text-spacing-h6: 0;
+    --distanz_text-line-height-h6: 1.3; /* Reduced from 1.4 */
 
-    --quik_text-size-2xl: 1.3125rem;
-    --quik_text-spacing-2xl: 0;
-    --quik_text-line-height-2xl: 1.3; /* Reduced from 1.4 */
+    --distanz_text-size-2xl: 1.3125rem;
+    --distanz_text-spacing-2xl: 0;
+    --distanz_text-line-height-2xl: 1.3; /* Reduced from 1.4 */
 
-    --quik_text-size-xl: 1.1875rem;
-    --quik_text-spacing-xl: 0;
-    --quik_text-line-height-xl: 1.3; /* Reduced from 1.4 */
+    --distanz_text-size-xl: 1.1875rem;
+    --distanz_text-spacing-xl: 0;
+    --distanz_text-line-height-xl: 1.3; /* Reduced from 1.4 */
 
-    --quik_text-size-lg: 1.0625rem;
-    --quik_text-spacing-lg: 0.0025em;
-    --quik_text-line-height-lg: 1.25; /* Reduced from 1.4 */
+    --distanz_text-size-lg: 1.0625rem;
+    --distanz_text-spacing-lg: 0.0025em;
+    --distanz_text-line-height-lg: 1.25; /* Reduced from 1.4 */
 
-    --quik_text-size-md: 0.9375rem;
-    --quik_text-spacing-md: 0.0025em;
-    --quik_text-line-height-md: 1.3; /* Reduced from 1.4 */
+    --distanz_text-size-md: 0.9375rem;
+    --distanz_text-spacing-md: 0.0025em;
+    --distanz_text-line-height-md: 1.3; /* Reduced from 1.4 */
 
-    --quik_text-size-sm: 0.8125rem;
-    --quik_text-spacing-sm: 0.0025em;
-    --quik_text-line-height-sm: 1.25; /* Reduced from 1.4 */
+    --distanz_text-size-sm: 0.8125rem;
+    --distanz_text-spacing-sm: 0.0025em;
+    --distanz_text-line-height-sm: 1.25; /* Reduced from 1.4 */
 
-    --quik_text-size-xs: 0.6875rem;
-    --quik_text-spacing-xs: 0.0025em;
-    --quik_text-line-height-xs: 1.25; /* Reduced from 1.4 */
+    --distanz_text-size-xs: 0.6875rem;
+    --distanz_text-spacing-xs: 0.0025em;
+    --distanz_text-line-height-xs: 1.25; /* Reduced from 1.4 */
 
-    /* Distanz Color System (Quartr-inspired semantic colors) */
-    --color-textDefault: 17, 24, 39;
-    --color-textSubtle: 107, 114, 128;
-    --color-textSubtler: 172, 176, 184;
-    --color-textForceTint: 249, 250, 250;
-    --color-textForceShade: 17, 24, 39;
-    --color-textInverted: 249, 250, 250;
-    --color-textDisabled: 172, 176, 184;
-    --color-textAccent: 228, 60, 129; /* Electric pink */
-    --color-textAccentSubtle: 238, 182, 205; /* Light pink */
+    /* ═══════════════════════════════════════════════════════════════════════
+       DISTANZ COLOR SYSTEM - Geist Design System Colors
+       Direct copy of Vercel's Geist Design System
 
-    /* Distanz border colors */
-    --color-borderNeutral: 229, 229, 229;
-    --color-borderNeutralHover: 204, 204, 204;
-    --color-borderNeutralSubtle: 231, 231, 231;
-    --color-surface: 255, 255, 255;
-    --color-canvas: 247, 247, 247;
+       Scale Semantics:
+       100-300: Component backgrounds (subtle fills, hover states)
+       400-600: Borders (subtle to prominent)
+       700-800: High contrast backgrounds (solid fills)
+       900-1000: Text and icons
+       ═══════════════════════════════════════════════════════════════════════ */
+
+    /* ─────────────────────────────────────────────────────────────────────────
+       BACKGROUND SCALE - Canvas and surface colors (Geist)
+       ───────────────────────────────────────────────────────────────────────── */
+    --ds-background-100: hsl(0, 0%, 100%); /* #FFFFFF - Primary canvas */
+    --ds-background-200: hsl(0, 0%, 98%); /* #FAFAFA - Secondary surface */
+
+    /* RGB fallbacks for Tailwind opacity support */
+    --ds-background-100-rgb: 255, 255, 255;
+    --ds-background-200-rgb: 250, 250, 250;
+
+    /* ─────────────────────────────────────────────────────────────────────────
+       GRAY SCALE - Pure neutral scale (100-1000) - Geist colors
+       ───────────────────────────────────────────────────────────────────────── */
+    --ds-gray-100: hsl(0, 0%, 95%); /* #F2F2F2 - Lightest */
+    --ds-gray-200: hsl(0, 0%, 92%); /* #EBEBEB - Light backgrounds */
+    --ds-gray-300: hsl(0, 0%, 90%); /* #E6E6E6 - Hover states */
+    --ds-gray-400: hsl(0, 0%, 92%); /* #EBEBEB - Subtle borders */
+    --ds-gray-500: hsl(0, 0%, 79%); /* #C9C9C9 - Default borders */
+    --ds-gray-600: hsl(0, 0%, 66%); /* #A8A8A8 - Prominent borders */
+    --ds-gray-700: hsl(0, 0%, 56%); /* #8F8F8F - High contrast bg */
+    --ds-gray-800: hsl(0, 0%, 49%); /* #7D7D7D - Solid fills */
+    --ds-gray-900: hsl(0, 0%, 40%); /* #666666 - Secondary text */
+    --ds-gray-1000: hsl(0, 0%, 9%); /* #171717 - Primary text */
+
+    /* RGB fallbacks for Tailwind opacity support */
+    --ds-gray-100-rgb: 242, 242, 242;
+    --ds-gray-200-rgb: 235, 235, 235;
+    --ds-gray-300-rgb: 230, 230, 230;
+    --ds-gray-400-rgb: 235, 235, 235;
+    --ds-gray-500-rgb: 201, 201, 201;
+    --ds-gray-600-rgb: 168, 168, 168;
+    --ds-gray-700-rgb: 143, 143, 143;
+    --ds-gray-800-rgb: 125, 125, 125;
+    --ds-gray-900-rgb: 102, 102, 102;
+    --ds-gray-1000-rgb: 23, 23, 23;
+
+    /* ─────────────────────────────────────────────────────────────────────────
+       GRAY ALPHA SCALE - Transparent variants for overlays (Geist)
+       ───────────────────────────────────────────────────────────────────────── */
+    --ds-gray-alpha-100: rgba(0, 0, 0, 0.05);
+    --ds-gray-alpha-200: rgba(0, 0, 0, 0.08);
+    --ds-gray-alpha-300: rgba(0, 0, 0, 0.1);
+    --ds-gray-alpha-400: rgba(0, 0, 0, 0.08);
+    --ds-gray-alpha-500: rgba(0, 0, 0, 0.21);
+    --ds-gray-alpha-600: rgba(0, 0, 0, 0.34);
+    --ds-gray-alpha-700: rgba(0, 0, 0, 0.44);
+    --ds-gray-alpha-800: rgba(0, 0, 0, 0.51);
+    --ds-gray-alpha-900: rgba(0, 0, 0, 0.61);
+    --ds-gray-alpha-1000: rgba(0, 0, 0, 0.91);
+
+    /* ─────────────────────────────────────────────────────────────────────────
+       BLUE SCALE - Geist Blue (Primary accent)
+       ───────────────────────────────────────────────────────────────────────── */
+    --ds-blue-100: oklch(97.32% 0.0141 251.56);
+    --ds-blue-200: oklch(96.29% 0.0195 250.59);
+    --ds-blue-300: oklch(94.58% 0.0293 249.849);
+    --ds-blue-400: oklch(91.58% 0.0473 245.116);
+    --ds-blue-500: oklch(82.75% 0.0979 248.48);
+    --ds-blue-600: oklch(73.08% 0.1583 248.133);
+    --ds-blue-700: oklch(57.61% 0.2508 258.23);
+    --ds-blue-800: oklch(51.51% 0.2399 257.85);
+    --ds-blue-900: oklch(53.18% 0.2399 256.99);
+    --ds-blue-1000: oklch(26.67% 0.1099 254.34);
+
+    /* RGB fallbacks */
+    --ds-blue-100-rgb: 239, 247, 255;
+    --ds-blue-200-rgb: 232, 244, 255;
+    --ds-blue-300-rgb: 219, 238, 255;
+    --ds-blue-400-rgb: 198, 228, 255;
+    --ds-blue-500-rgb: 153, 204, 255;
+    --ds-blue-600-rgb: 82, 169, 255;
+    --ds-blue-700-rgb: 0, 112, 243;
+    --ds-blue-800-rgb: 0, 98, 212;
+    --ds-blue-900-rgb: 0, 106, 220;
+    --ds-blue-1000-rgb: 0, 36, 77;
+
+    /* ─────────────────────────────────────────────────────────────────────────
+       RED SCALE - Geist Red (Error)
+       ───────────────────────────────────────────────────────────────────────── */
+    --ds-red-100: oklch(96.5% 0.0223 13.09);
+    --ds-red-200: oklch(95.41% 0.0299 14.2526);
+    --ds-red-300: oklch(94.33% 0.0369 15.0115);
+    --ds-red-400: oklch(91.51% 0.0471 19.8);
+    --ds-red-500: oklch(84.47% 0.1018 17.71);
+    --ds-red-600: oklch(71.12% 0.1881 21.22);
+    --ds-red-700: oklch(62.56% 0.2524 23.03);
+    --ds-red-800: oklch(58.19% 0.2482 25.15);
+    --ds-red-900: oklch(54.99% 0.232 25.29);
+    --ds-red-1000: oklch(24.8% 0.1041 18.86);
+
+    /* RGB fallbacks */
+    --ds-red-100-rgb: 255, 240, 240;
+    --ds-red-200-rgb: 255, 232, 232;
+    --ds-red-300-rgb: 255, 224, 224;
+    --ds-red-400-rgb: 255, 210, 210;
+    --ds-red-500-rgb: 255, 175, 175;
+    --ds-red-600-rgb: 255, 108, 108;
+    --ds-red-700-rgb: 238, 0, 0;
+    --ds-red-800-rgb: 213, 0, 0;
+    --ds-red-900-rgb: 197, 0, 0;
+    --ds-red-1000-rgb: 60, 20, 20;
+
+    /* ─────────────────────────────────────────────────────────────────────────
+       AMBER SCALE - Geist Amber (Warning)
+       ───────────────────────────────────────────────────────────────────────── */
+    --ds-amber-100: oklch(97.48% 0.0331 85.79);
+    --ds-amber-200: oklch(96.81% 0.0495 90.2423);
+    --ds-amber-300: oklch(95.93% 0.0636 90.52);
+    --ds-amber-400: oklch(91.02% 0.1322 88.25);
+    --ds-amber-500: oklch(86.55% 0.1583 79.63);
+    --ds-amber-600: oklch(80.25% 0.1953 73.59);
+    --ds-amber-700: oklch(81.87% 0.1969 76.46);
+    --ds-amber-800: oklch(77.21% 0.1991 64.28);
+    --ds-amber-900: oklch(52.79% 0.1496 54.65);
+    --ds-amber-1000: oklch(30.83% 0.099 45.48);
+
+    /* RGB fallbacks */
+    --ds-amber-100-rgb: 255, 248, 230;
+    --ds-amber-200-rgb: 255, 244, 214;
+    --ds-amber-300-rgb: 255, 239, 199;
+    --ds-amber-400-rgb: 255, 220, 140;
+    --ds-amber-500-rgb: 255, 200, 80;
+    --ds-amber-600-rgb: 255, 168, 0;
+    --ds-amber-700-rgb: 245, 164, 0;
+    --ds-amber-800-rgb: 230, 140, 0;
+    --ds-amber-900-rgb: 153, 82, 0;
+    --ds-amber-1000-rgb: 71, 41, 18;
+
+    /* ─────────────────────────────────────────────────────────────────────────
+       GREEN SCALE - Geist Green (Success)
+       ───────────────────────────────────────────────────────────────────────── */
+    --ds-green-100: oklch(97.59% 0.0289 145.42);
+    --ds-green-200: oklch(96.92% 0.037 147.15);
+    --ds-green-300: oklch(94.6% 0.0674 144.23);
+    --ds-green-400: oklch(91.49% 0.0976 146.24);
+    --ds-green-500: oklch(85.45% 0.1627 146.3);
+    --ds-green-600: oklch(80.25% 0.214 145.18);
+    --ds-green-700: oklch(64.58% 0.1746 147.27);
+    --ds-green-800: oklch(57.81% 0.1507 147.5);
+    --ds-green-900: oklch(51.75% 0.1453 147.65);
+    --ds-green-1000: oklch(29.15% 0.1197 147.38);
+
+    /* RGB fallbacks */
+    --ds-green-100-rgb: 236, 253, 240;
+    --ds-green-200-rgb: 228, 251, 235;
+    --ds-green-300-rgb: 212, 247, 220;
+    --ds-green-400-rgb: 191, 241, 202;
+    --ds-green-500-rgb: 153, 230, 170;
+    --ds-green-600-rgb: 102, 217, 130;
+    --ds-green-700-rgb: 47, 163, 76;
+    --ds-green-800-rgb: 36, 139, 61;
+    --ds-green-900-rgb: 26, 120, 50;
+    --ds-green-1000-rgb: 15, 55, 27;
+
+    /* ─────────────────────────────────────────────────────────────────────────
+       TEAL SCALE - Geist Teal
+       ───────────────────────────────────────────────────────────────────────── */
+    --ds-teal-100: oklch(97.72% 0.0359 186.7);
+    --ds-teal-200: oklch(97.06% 0.0347 180.66);
+    --ds-teal-300: oklch(94.92% 0.0478 182.07);
+    --ds-teal-400: oklch(92.76% 0.0718 183.78);
+    --ds-teal-500: oklch(86.88% 0.1344 182.42);
+    --ds-teal-600: oklch(81.5% 0.161 178.96);
+    --ds-teal-700: oklch(64.92% 0.1572 181.95);
+    --ds-teal-800: oklch(57.53% 0.1392 181.66);
+    --ds-teal-900: oklch(52.08% 0.1251 182.93);
+    --ds-teal-1000: oklch(32.11% 0.0788 179.82);
+
+    /* RGB fallbacks */
+    --ds-teal-100-rgb: 235, 254, 253;
+    --ds-teal-200-rgb: 230, 253, 250;
+    --ds-teal-300-rgb: 214, 249, 244;
+    --ds-teal-400-rgb: 195, 244, 236;
+    --ds-teal-500-rgb: 153, 232, 218;
+    --ds-teal-600-rgb: 102, 217, 195;
+    --ds-teal-700-rgb: 26, 163, 144;
+    --ds-teal-800-rgb: 17, 139, 122;
+    --ds-teal-900-rgb: 12, 120, 106;
+    --ds-teal-1000-rgb: 18, 61, 53;
+
+    /* ─────────────────────────────────────────────────────────────────────────
+       PURPLE SCALE - Geist Purple
+       ───────────────────────────────────────────────────────────────────────── */
+    --ds-purple-100: oklch(96.65% 0.0244 312.189);
+    --ds-purple-200: oklch(96.73% 0.0228 309.8);
+    --ds-purple-300: oklch(94.85% 0.0364 310.15);
+    --ds-purple-400: oklch(91.77% 0.0614 312.82);
+    --ds-purple-500: oklch(81.26% 0.1409 310.8);
+    --ds-purple-600: oklch(72.07% 0.2083 308.19);
+    --ds-purple-700: oklch(55.5% 0.3008 306.12);
+    --ds-purple-800: oklch(48.58% 0.2638 305.73);
+    --ds-purple-900: oklch(47.18% 0.2579 304);
+    --ds-purple-1000: oklch(23.96% 0.13 305.66);
+
+    /* RGB fallbacks */
+    --ds-purple-100-rgb: 250, 240, 255;
+    --ds-purple-200-rgb: 250, 240, 255;
+    --ds-purple-300-rgb: 242, 230, 253;
+    --ds-purple-400-rgb: 230, 215, 250;
+    --ds-purple-500-rgb: 200, 170, 245;
+    --ds-purple-600-rgb: 165, 115, 235;
+    --ds-purple-700-rgb: 121, 40, 202;
+    --ds-purple-800-rgb: 100, 30, 170;
+    --ds-purple-900-rgb: 93, 30, 168;
+    --ds-purple-1000-rgb: 40, 15, 72;
+
+    /* ─────────────────────────────────────────────────────────────────────────
+       PINK SCALE - Geist Pink
+       ───────────────────────────────────────────────────────────────────────── */
+    --ds-pink-100: oklch(95.69% 0.0359 344.622);
+    --ds-pink-200: oklch(95.71% 0.0321 353.14);
+    --ds-pink-300: oklch(93.83% 0.0451 356.29);
+    --ds-pink-400: oklch(91.12% 0.0573 358.82);
+    --ds-pink-500: oklch(84.28% 0.0915 356.99);
+    --ds-pink-600: oklch(74.33% 0.1547 0.24);
+    --ds-pink-700: oklch(63.52% 0.238 1.01);
+    --ds-pink-800: oklch(59.51% 0.2339 4.21);
+    --ds-pink-900: oklch(53.5% 0.2058 2.84);
+    --ds-pink-1000: oklch(26% 0.0977 359);
+
+    /* RGB fallbacks */
+    --ds-pink-100-rgb: 255, 237, 245;
+    --ds-pink-200-rgb: 255, 237, 243;
+    --ds-pink-300-rgb: 253, 225, 236;
+    --ds-pink-400-rgb: 250, 215, 230;
+    --ds-pink-500-rgb: 242, 185, 210;
+    --ds-pink-600-rgb: 235, 130, 175;
+    --ds-pink-700-rgb: 235, 55, 125;
+    --ds-pink-800-rgb: 218, 45, 115;
+    --ds-pink-900-rgb: 185, 45, 100;
+    --ds-pink-1000-rgb: 60, 20, 38;
+
+    /* ─────────────────────────────────────────────────────────────────────────
+       SPACING - Base spacing scale (matches Geist)
+       ───────────────────────────────────────────────────────────────────────── */
+    --ds-space: 4px;
+    --ds-space-2x: 8px;
+    --ds-space-3x: 12px;
+    --ds-space-4x: 16px;
+    --ds-space-6x: 24px;
+    --ds-space-8x: 32px;
+    --ds-space-10x: 40px;
+    --ds-space-12x: 48px;
+    --ds-space-16x: 64px;
+
+    /* Component size tokens */
+    --ds-space-small: 32px; /* Small buttons, inputs */
+    --ds-space-medium: 40px; /* Default buttons, inputs */
+    --ds-space-large: 48px; /* Large buttons, inputs */
+
+    /* Gap tokens */
+    --ds-space-gap: 24px;
+    --ds-space-gap-half: 12px;
+    --ds-space-gap-quarter: 6px;
+
+    /* ─────────────────────────────────────────────────────────────────────────
+       BUTTON - Button-specific tokens
+       ───────────────────────────────────────────────────────────────────────── */
+    --ds-button-height-tiny: 24px;
+    --ds-button-height-small: var(--ds-space-small);
+    --ds-button-height-medium: var(--ds-space-medium);
+    --ds-button-height-large: var(--ds-space-large);
+
+    --ds-button-padding-tiny: 6px;
+    --ds-button-padding-small: 6px;
+    --ds-button-padding-medium: 10px;
+    --ds-button-padding-large: 14px;
+
+    --ds-button-content-padding: 6px; /* Inner content span padding */
+
+    --ds-button-gap-tiny: 4px;
+    --ds-button-gap-small: 6px;
+    --ds-button-gap-medium: 8px;
+    --ds-button-gap-large: 8px;
+
+    --ds-button-icon-size-tiny: 12px;
+    --ds-button-icon-size-small: 14px;
+    --ds-button-icon-size-medium: 16px;
+    --ds-button-icon-size-large: 20px;
+
+    /* ─────────────────────────────────────────────────────────────────────────
+       MOTION - Transition and animation tokens
+       ───────────────────────────────────────────────────────────────────────── */
+    --ds-transition-duration: 150ms;
+    --ds-transition-timing: ease;
+
+    /* ─────────────────────────────────────────────────────────────────────────
+       RADIUS - Border radius scale (matches Materials page)
+       ───────────────────────────────────────────────────────────────────────── */
+    --ds-radius-small: 6px; /* Buttons, inputs, tooltips, base surfaces */
+    --ds-radius-large: 12px; /* Menus, modals, medium/large surfaces */
+    --ds-radius-xlarge: 16px; /* Fullscreen overlays */
+    --ds-radius-full: 9999px; /* Pills, circular elements */
+
+    /* ─────────────────────────────────────────────────────────────────────────
+       HOVER - Interactive overlay values for hover states
+       ───────────────────────────────────────────────────────────────────────── */
+    --ds-hover-overlay: rgba(
+      0,
+      0,
+      0,
+      0.08
+    ); /* Tertiary button, ghost elements */
+    --ds-hover-mix: 15%; /* For color-mix with black on filled buttons */
+
+    /* ─────────────────────────────────────────────────────────────────────────
+       SHADOWS - Geist shadow system for materials
+       ───────────────────────────────────────────────────────────────────────── */
+    --ds-shadow-border-base: 0 0 0 1px rgba(0, 0, 0, 0.08);
+    --ds-shadow-small: 0px 2px 2px rgba(0, 0, 0, 0.04);
+    --ds-shadow-medium:
+      0px 2px 2px rgba(0, 0, 0, 0.04), 0px 8px 8px -8px rgba(0, 0, 0, 0.04);
+    --ds-shadow-large:
+      0px 2px 2px rgba(0, 0, 0, 0.04), 0px 8px 16px -4px rgba(0, 0, 0, 0.04);
+    --ds-shadow-tooltip:
+      0 0 0 1px rgba(0, 0, 0, 0.08), 0px 1px 1px rgba(0, 0, 0, 0.02),
+      0px 4px 8px rgba(0, 0, 0, 0.04);
+    --ds-shadow-menu:
+      0 0 0 1px rgba(0, 0, 0, 0.08), 0px 1px 1px rgba(0, 0, 0, 0.02),
+      0px 4px 8px -4px rgba(0, 0, 0, 0.04),
+      0px 16px 24px -8px rgba(0, 0, 0, 0.06);
+    --ds-shadow-modal:
+      0 0 0 1px rgba(0, 0, 0, 0.08), 0px 1px 1px rgba(0, 0, 0, 0.02),
+      0px 8px 16px -4px rgba(0, 0, 0, 0.04),
+      0px 24px 32px -8px rgba(0, 0, 0, 0.06);
+    --ds-shadow-fullscreen:
+      0 0 0 1px rgba(0, 0, 0, 0.08), 0px 1px 1px rgba(0, 0, 0, 0.02),
+      0px 8px 16px -4px rgba(0, 0, 0, 0.04),
+      0px 24px 32px -8px rgba(0, 0, 0, 0.06);
+
+    /* Overlay / Backdrop */
+    --ds-overlay-backdrop-color: rgb(250, 250, 250);
+    --ds-overlay-backdrop-opacity: 0.8;
+
+    /* Modal backgrounds */
+    --ds-modal-panel-bg: var(--ds-background-100);
+    --ds-modal-section-bg: var(--ds-background-200);
+
+    /* Focus ring outer glow */
+    --ds-focus-ring: #00000029;
+
+    /* Rounded shadow button - marketing style */
+    --ds-shadow-button-rounded:
+      0 0 0 1px rgba(0, 0, 0, 0.08), 0 2px 2px 0 rgba(0, 0, 0, 0.04),
+      0 0 0 1px var(--ds-gray-100);
+    --ds-shadow-button-rounded-hover: 0 0 0 1px #ebebeb;
+    --ds-button-rounded-hover-bg: #f2f2f2;
+    --ds-button-rounded-bg: var(--ds-background-100);
+    --ds-button-rounded-text: var(--ds-gray-1000);
+
+    /* Calendar button - uses box-shadow for border effect (Geist tokens) */
+    --calendar-button-shadow: var(--ds-gray-400) 0px 0px 0px 1px;
+    --calendar-button-shadow-hover: var(--ds-gray-500) 0px 0px 0px 1px;
+    --calendar-button-bg: var(--ds-background-100);
+    --calendar-button-bg-hover: var(--ds-gray-100);
+    --calendar-button-focus-ring: 0 0 0 1px #00000057, 0 0 0 4px #00000029;
+
+    /* Calendar popover - Geist design tokens */
+    --calendar-popover-bg: rgb(255, 255, 255);
+    --calendar-popover-radius: 12px;
+    --calendar-popover-shadow:
+      rgba(0, 0, 0, 0.08) 0px 0px 0px 1px, rgba(0, 0, 0, 0.02) 0px 1px 1px 0px,
+      rgba(0, 0, 0, 0.04) 0px 4px 8px -4px,
+      rgba(0, 0, 0, 0.06) 0px 16px 24px -8px,
+      rgb(250, 250, 250) 0px 0px 0px 1px inset;
+    --calendar-day-radius: 4px;
+    --calendar-day-color: rgb(23, 23, 23);
+    --calendar-day-outside-color: rgb(143, 143, 143);
+    --calendar-header-color: rgb(102, 102, 102);
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       SEMANTIC TOKENS - Light Mode
+       Map design system scales to semantic usage
+       ═══════════════════════════════════════════════════════════════════════ */
+
+    /* Text colors - Geist mapping */
+    --color-textDefault: var(--ds-gray-1000-rgb); /* Primary text (gray-1000) */
+    --color-textSubtle: var(--ds-gray-900-rgb); /* Secondary text (gray-900) */
+    --color-textSubtler: var(
+      --ds-gray-600-rgb
+    ); /* Muted text, placeholders (gray-600) */
+    --color-textInverted: var(--ds-gray-200-rgb); /* Inverted text */
+    --color-textDisabled: var(--ds-gray-500-rgb); /* Disabled text */
+
+    /* Border colors - Geist mapping (Colors 4-6) */
+    --color-borderDefault: var(
+      --ds-gray-400-rgb
+    ); /* Default border (gray-400) */
+    --color-borderDefaultHover: var(
+      --ds-gray-500-rgb
+    ); /* Hover border (gray-500) */
+    --color-borderSubtle: var(
+      --ds-gray-300-rgb
+    ); /* Subtle borders (gray-300) */
+    --color-borderSubtleHover: var(
+      --ds-gray-400-rgb
+    ); /* Subtle hover (gray-400) */
+    --color-borderExtraSubtle: var(
+      --ds-gray-200-rgb
+    ); /* Barely visible (gray-200) */
+
+    /* Legacy aliases */
+    --color-borderNeutral: var(--color-borderDefault);
+    --color-borderNeutralHover: var(--color-borderDefaultHover);
+    --color-borderNeutralSubtle: var(--color-borderSubtle);
+
+    /* Background/Surface colors */
+    --color-surface: 255, 255, 255; /* Primary surface - white */
+    --color-surfaceSubtle: var(--ds-background-100-rgb); /* Subtle surface */
+    --color-surfaceWarm: var(--ds-gray-200-rgb); /* Warm-tinted surface */
+    --color-canvas: var(--ds-background-200-rgb); /* Page background */
+
+    /* Elevated Surfaces */
+    --color-surfaceElevated1: 255, 255, 255;
+    --color-surfaceElevated2: 255, 255, 255;
+    --color-surfaceElevated3: 255, 255, 255;
+
+    /* Elevated surface shadows */
+    --shadow-elevated1:
+      0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06);
+    --shadow-elevated2:
+      0 4px 12px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06);
+    --shadow-elevated3:
+      0 12px 32px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.08);
+
+    /* Legacy aliases */
+    --color-neutralBgSubtle: var(--color-surfaceSubtle);
     --color-greyCold400: 140, 145, 156;
 
-    /* Background colors */
-    --color-neutralBgSubtle: 247, 247, 247;
+    /* Status colors - Success (Green) */
+    --color-success-text: var(--ds-green-600-rgb);
+    --color-success-text-subtle: var(--ds-green-700-rgb);
+    --color-success-bg: var(--ds-green-200-rgb);
+    --color-success-bg-subtle: var(--ds-green-300-rgb);
+    --color-success-border: var(--ds-green-600-rgb);
+
+    /* Status colors - Warning (Amber) */
+    --color-warning-text: var(--ds-amber-700-rgb);
+    --color-warning-text-subtle: var(--ds-amber-800-rgb);
+    --color-warning-bg: var(--ds-amber-200-rgb);
+    --color-warning-bg-subtle: var(--ds-amber-300-rgb);
+    --color-warning-border: var(--ds-amber-600-rgb);
+
+    /* Status colors - Error (Red) */
+    --color-error-text: var(--ds-red-600-rgb);
+    --color-error-text-subtle: var(--ds-red-700-rgb);
+    --color-error-bg: var(--ds-red-200-rgb);
+    --color-error-bg-subtle: var(--ds-red-300-rgb);
+    --color-error-border: var(--ds-red-600-rgb);
+
+    /* Status colors - Info (Purple) */
+    --color-info-text: var(--ds-purple-600-rgb);
+    --color-info-text-subtle: var(--ds-purple-700-rgb);
+    --color-info-bg: var(--ds-purple-200-rgb);
+    --color-info-bg-subtle: var(--ds-purple-300-rgb);
+    --color-info-border: var(--ds-purple-600-rgb);
+
+    /* Rule (horizontal dividers) - Complete border patterns */
+    --rule-default: 1px solid rgb(var(--color-borderSubtle)); /* Light separation - Asphalt 90 */
+    --rule-emphasised: 1px solid rgb(var(--color-textDefault)); /* Strong separation - Asphalt 20 */
+    --rule-heavy: 4px solid rgb(var(--color-textDefault)); /* Major section divider - Asphalt 20 */
+    --rule-accent: 4px solid #e43c81; /* Brand accent divider - Electric Pink */
+
+    /* Grid Spacing - Responsive spacing values
+       Small/Medium (<960px): Gap 12px, Gutter 24px, Outside 24px
+       Large (≥960px): Gap 16px, Gutter 32px, Outside 32px */
+    --grid-gap: 0.75rem; /* 12px - element spacing (small/medium) */
+    --grid-gutter: 1.5rem; /* 24px - column spacing (small/medium, 2× gap) */
+    --grid-outside-gutter: 1.5rem; /* 24px - outside padding (small/medium) */
+
+    /* ─────────────────────────────────────────────────────────────────────────
+       NEWSPRINT — Editor's column grid
+       Faint 60 px square grid for editorial panels (News, Races).
+       Lines drawn through rgba(--ds-gray-1000-rgb, 0.025) so
+       they're a 2.5 % wash that flips with the theme via the rgb
+       tuple — sits just above subliminal in either mode.
+       ───────────────────────────────────────────────────────────────────────── */
+    --newsprint-grid:
+      linear-gradient(to right, rgba(var(--ds-gray-1000-rgb), 0.025) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(var(--ds-gray-1000-rgb), 0.025) 1px, transparent 1px);
   }
 
-  /* Dark mode color overrides */
+  /* Large screen spacing (960px+) */
+  @media (min-width: 960px) {
+    :root {
+      --grid-gap: 1rem; /* 16px - element spacing (large) */
+      --grid-gutter: 2rem; /* 32px - column spacing (large, 2× gap) */
+      --grid-outside-gutter: 2rem; /* 32px - outside padding (large) */
+    }
+  }
+
+  /* ═══════════════════════════════════════════════════════════════════════
+     SEMANTIC TOKENS - Dark Mode
+     Geist dark mode uses completely different color values, not just inverted
+     ═══════════════════════════════════════════════════════════════════════ */
   .dark {
-    --color-textDefault: 249, 250, 250;
-    --color-textSubtle: 172, 176, 184;
-    --color-textSubtler: 107, 114, 128;
-    --color-textInverted: 17, 24, 39;
+    color-scheme: dark;
+    /* Dark-mode scrollbar — gray-500 thumb on a transparent track.
+       Sits a notch lighter than the panel surface so the scrollbar
+       reads against the dark canvas. */
+    scrollbar-color: var(--ds-gray-500) transparent;
 
-    --color-borderNeutral: 38, 38, 38;
-    --color-borderNeutralHover: 64, 64, 64;
-    --color-borderNeutralSubtle: 38, 38, 38;
-    --color-surface: 17, 17, 17;
-    --color-canvas: 12, 12, 13;
+    /* ─────────────────────────────────────────────────────────────────────────
+       DARK MODE COLOR SCALES - Geist exact values
+       In dark mode, the entire scale shifts to work on dark backgrounds
+       ───────────────────────────────────────────────────────────────────────── */
 
-    --color-neutralBgSubtle: 23, 23, 23;
+    /* Background Scale - Dark mode */
+    --ds-background-100: hsl(0, 0%, 4%); /* #0A0A0A - Elevated surface */
+    --ds-background-200: hsl(0, 0%, 0%); /* #000000 - Primary canvas (black) */
+
+    /* RGB fallbacks */
+    --ds-background-100-rgb: 10, 10, 10;
+    --ds-background-200-rgb: 0, 0, 0;
+
+    /* Gray Scale - Dark mode (Geist exact values) */
+    --ds-gray-100: hsl(0, 0%, 10%); /* #1A1A1A */
+    --ds-gray-200: hsl(0, 0%, 12%); /* #1F1F1F */
+    --ds-gray-300: hsl(0, 0%, 16%); /* #292929 */
+    --ds-gray-400: hsl(0, 0%, 18%); /* #2E2E2E */
+    --ds-gray-500: hsl(0, 0%, 27%); /* #454545 */
+    --ds-gray-600: hsl(0, 0%, 53%); /* #878787 */
+    --ds-gray-700: hsl(0, 0%, 56%); /* #8F8F8F */
+    --ds-gray-800: hsl(0, 0%, 49%); /* #7D7D7D */
+    --ds-gray-900: hsl(0, 0%, 63%); /* #A1A1A1 */
+    --ds-gray-1000: hsl(0, 0%, 93%); /* #EDEDED */
+
+    /* RGB fallbacks */
+    --ds-gray-100-rgb: 26, 26, 26;
+    --ds-gray-200-rgb: 31, 31, 31;
+    --ds-gray-300-rgb: 41, 41, 41;
+    --ds-gray-400-rgb: 46, 46, 46;
+    --ds-gray-500-rgb: 69, 69, 69;
+    --ds-gray-600-rgb: 135, 135, 135;
+    --ds-gray-700-rgb: 143, 143, 143;
+    --ds-gray-800-rgb: 125, 125, 125;
+    --ds-gray-900-rgb: 161, 161, 161;
+    --ds-gray-1000-rgb: 237, 237, 237;
+
+    /* Gray Alpha Scale - Dark mode (white-based transparency) */
+    --ds-gray-alpha-100: rgba(255, 255, 255, 0.06);
+    --ds-gray-alpha-200: rgba(255, 255, 255, 0.09);
+    --ds-gray-alpha-300: rgba(255, 255, 255, 0.13);
+    --ds-gray-alpha-400: rgba(255, 255, 255, 0.14);
+    --ds-gray-alpha-500: rgba(255, 255, 255, 0.24);
+    --ds-gray-alpha-600: rgba(255, 255, 255, 0.51);
+    --ds-gray-alpha-700: rgba(255, 255, 255, 0.54);
+    --ds-gray-alpha-800: rgba(255, 255, 255, 0.47);
+    --ds-gray-alpha-900: rgba(255, 255, 255, 0.61);
+    --ds-gray-alpha-1000: rgba(255, 255, 255, 0.92);
+
+    /* Blue Scale - Dark mode (Geist exact OKLCH values) */
+    --ds-blue-100: oklch(22.17% 0.069 259.89);
+    --ds-blue-200: oklch(25.45% 0.0811 255.8);
+    --ds-blue-300: oklch(30.86% 0.1022 255.21);
+    --ds-blue-400: oklch(34.1% 0.121 254.74);
+    --ds-blue-500: oklch(38.5% 0.1403 254.4);
+    --ds-blue-600: oklch(64.94% 0.1982 251.813);
+    --ds-blue-700: oklch(57.61% 0.2321 258.23);
+    --ds-blue-800: oklch(51.51% 0.2307 257.85);
+    --ds-blue-900: oklch(71.7% 0.1648 250.794);
+    --ds-blue-1000: oklch(96.75% 0.0179 242.423);
+
+    /* RGB fallbacks */
+    --ds-blue-100-rgb: 16, 28, 48;
+    --ds-blue-200-rgb: 17, 35, 61;
+    --ds-blue-300-rgb: 20, 48, 82;
+    --ds-blue-400-rgb: 22, 57, 97;
+    --ds-blue-500-rgb: 25, 69, 116;
+    --ds-blue-600-rgb: 0, 153, 255;
+    --ds-blue-700-rgb: 0, 112, 243;
+    --ds-blue-800-rgb: 0, 98, 212;
+    --ds-blue-900-rgb: 82, 169, 255;
+    --ds-blue-1000-rgb: 235, 248, 255;
+
+    /* Red Scale - Dark mode (Geist exact OKLCH values) */
+    --ds-red-100: oklch(22.1% 0.0657 15.11);
+    --ds-red-200: oklch(25.93% 0.0834 19.02);
+    --ds-red-300: oklch(31.47% 0.1105 20.96);
+    --ds-red-400: oklch(35.27% 0.1273 21.23);
+    --ds-red-500: oklch(40.68% 0.1479 23.16);
+    --ds-red-600: oklch(62.56% 0.2277 23.03);
+    --ds-red-700: oklch(62.56% 0.2234 23.03);
+    --ds-red-800: oklch(58.01% 0.227 25.12);
+    --ds-red-900: oklch(69.96% 0.2136 22.03);
+    --ds-red-1000: oklch(95.6% 0.0293 6.61);
+
+    /* RGB fallbacks */
+    --ds-red-100-rgb: 50, 23, 27;
+    --ds-red-200-rgb: 65, 28, 33;
+    --ds-red-300-rgb: 90, 34, 41;
+    --ds-red-400-rgb: 108, 39, 48;
+    --ds-red-500-rgb: 132, 45, 56;
+    --ds-red-600-rgb: 215, 85, 85;
+    --ds-red-700-rgb: 215, 85, 85;
+    --ds-red-800-rgb: 200, 60, 60;
+    --ds-red-900-rgb: 255, 108, 108;
+    --ds-red-1000-rgb: 255, 235, 235;
+
+    /* Amber Scale - Dark mode (Geist exact OKLCH values) */
+    --ds-amber-100: oklch(22.46% 0.0538 76.04);
+    --ds-amber-200: oklch(24.95% 0.0642 64.78);
+    --ds-amber-300: oklch(32.34% 0.0837 63.83);
+    --ds-amber-400: oklch(35.53% 0.0903 66.2971);
+    --ds-amber-500: oklch(41.55% 0.1044 67.98);
+    --ds-amber-600: oklch(75.04% 0.1737 74.49);
+    --ds-amber-700: oklch(81.87% 0.1969 76.46);
+    --ds-amber-800: oklch(77.21% 0.1991 64.28);
+    --ds-amber-900: oklch(77.21% 0.1991 64.28);
+    --ds-amber-1000: oklch(96.7% 0.0418 84.59);
+
+    /* RGB fallbacks */
+    --ds-amber-100-rgb: 41, 26, 0;
+    --ds-amber-200-rgb: 51, 32, 0;
+    --ds-amber-300-rgb: 77, 48, 0;
+    --ds-amber-400-rgb: 89, 55, 0;
+    --ds-amber-500-rgb: 113, 71, 0;
+    --ds-amber-600-rgb: 218, 158, 36;
+    --ds-amber-700-rgb: 245, 164, 0;
+    --ds-amber-800-rgb: 230, 140, 0;
+    --ds-amber-900-rgb: 230, 140, 0;
+    --ds-amber-1000-rgb: 255, 245, 220;
+
+    /* Green Scale - Dark mode (Geist exact OKLCH values) */
+    --ds-green-100: oklch(23.09% 0.0716 149.68);
+    --ds-green-200: oklch(27.12% 0.0895 150.09);
+    --ds-green-300: oklch(29.84% 0.096 149.25);
+    --ds-green-400: oklch(34.39% 0.1039 147.78);
+    --ds-green-500: oklch(44.19% 0.1484 147.2);
+    --ds-green-600: oklch(58.11% 0.1815 146.55);
+    --ds-green-700: oklch(64.58% 0.199 147.27);
+    --ds-green-800: oklch(57.81% 0.1776 147.5);
+    --ds-green-900: oklch(73.1% 0.2158 148.29);
+    --ds-green-1000: oklch(96.76% 0.056 154.18);
+
+    /* RGB fallbacks */
+    --ds-green-100-rgb: 15, 39, 22;
+    --ds-green-200-rgb: 17, 49, 28;
+    --ds-green-300-rgb: 20, 56, 32;
+    --ds-green-400-rgb: 20, 69, 38;
+    --ds-green-500-rgb: 30, 94, 52;
+    --ds-green-600-rgb: 50, 140, 80;
+    --ds-green-700-rgb: 47, 163, 76;
+    --ds-green-800-rgb: 36, 139, 61;
+    --ds-green-900-rgb: 102, 217, 130;
+    --ds-green-1000-rgb: 230, 253, 235;
+
+    /* Teal Scale - Dark mode (Geist exact OKLCH values) */
+    --ds-teal-100: oklch(22.1% 0.0544 178.74);
+    --ds-teal-200: oklch(25.06% 0.062 178.76);
+    --ds-teal-300: oklch(31.5% 0.0767 180.99);
+    --ds-teal-400: oklch(32.43% 0.0763 180.13);
+    --ds-teal-500: oklch(43.35% 0.1055 180.97);
+    --ds-teal-600: oklch(60.71% 0.1485 180.24);
+    --ds-teal-700: oklch(64.92% 0.1403 181.95);
+    --ds-teal-800: oklch(57.53% 0.1392 181.66);
+    --ds-teal-900: oklch(74.56% 0.1765 182.8);
+    --ds-teal-1000: oklch(96.46% 0.056 180.29);
+
+    /* RGB fallbacks */
+    --ds-teal-100-rgb: 12, 35, 31;
+    --ds-teal-200-rgb: 15, 43, 38;
+    --ds-teal-300-rgb: 20, 56, 50;
+    --ds-teal-400-rgb: 18, 58, 51;
+    --ds-teal-500-rgb: 30, 85, 75;
+    --ds-teal-600-rgb: 60, 140, 125;
+    --ds-teal-700-rgb: 26, 163, 144;
+    --ds-teal-800-rgb: 17, 139, 122;
+    --ds-teal-900-rgb: 102, 217, 195;
+    --ds-teal-1000-rgb: 225, 253, 248;
+
+    /* Purple Scale - Dark mode (Geist exact OKLCH values) */
+    --ds-purple-100: oklch(22.34% 0.0779 316.87);
+    --ds-purple-200: oklch(25.91% 0.0921 314.41);
+    --ds-purple-300: oklch(31.98% 0.1219 312.41);
+    --ds-purple-400: oklch(35.93% 0.1504 309.78);
+    --ds-purple-500: oklch(40.99% 0.1721 307.92);
+    --ds-purple-600: oklch(55.5% 0.2191 306.12);
+    --ds-purple-700: oklch(55.5% 0.2186 306.12);
+    --ds-purple-800: oklch(48.58% 0.2102 305.73);
+    --ds-purple-900: oklch(69.87% 0.2037 309.51);
+    --ds-purple-1000: oklch(96.1% 0.0304 316.46);
+
+    /* RGB fallbacks */
+    --ds-purple-100-rgb: 38, 26, 50;
+    --ds-purple-200-rgb: 47, 32, 64;
+    --ds-purple-300-rgb: 62, 42, 88;
+    --ds-purple-400-rgb: 72, 48, 105;
+    --ds-purple-500-rgb: 86, 56, 126;
+    --ds-purple-600-rgb: 121, 80, 190;
+    --ds-purple-700-rgb: 121, 80, 190;
+    --ds-purple-800-rgb: 100, 60, 160;
+    --ds-purple-900-rgb: 180, 130, 235;
+    --ds-purple-1000-rgb: 248, 240, 255;
+
+    /* Pink Scale - Dark mode (Geist exact OKLCH values) */
+    --ds-pink-100: oklch(22.67% 0.0628 354.73);
+    --ds-pink-200: oklch(26.2% 0.0859 356.68);
+    --ds-pink-300: oklch(31.15% 0.1067 355.93);
+    --ds-pink-400: oklch(32.13% 0.1174 356.71);
+    --ds-pink-500: oklch(37.01% 0.1453 358.39);
+    --ds-pink-600: oklch(50.33% 0.2089 4.33);
+    --ds-pink-700: oklch(63.52% 0.2346 1.01);
+    --ds-pink-800: oklch(59.51% 0.2429 4.21);
+    --ds-pink-900: oklch(69.36% 0.2223 3.91);
+    --ds-pink-1000: oklch(95.74% 0.0326 350.08);
+
+    /* RGB fallbacks */
+    --ds-pink-100-rgb: 48, 24, 32;
+    --ds-pink-200-rgb: 60, 30, 42;
+    --ds-pink-300-rgb: 78, 38, 54;
+    --ds-pink-400-rgb: 80, 38, 56;
+    --ds-pink-500-rgb: 100, 45, 68;
+    --ds-pink-600-rgb: 160, 60, 100;
+    --ds-pink-700-rgb: 235, 55, 125;
+    --ds-pink-800-rgb: 218, 45, 115;
+    --ds-pink-900-rgb: 240, 120, 165;
+    --ds-pink-1000-rgb: 255, 235, 245;
+
+    /* ─────────────────────────────────────────────────────────────────────────
+       SPACING - Base spacing scale (same in dark mode)
+       ───────────────────────────────────────────────────────────────────────── */
+    --ds-space: 4px;
+    --ds-space-2x: 8px;
+    --ds-space-3x: 12px;
+    --ds-space-4x: 16px;
+    --ds-space-6x: 24px;
+    --ds-space-8x: 32px;
+    --ds-space-10x: 40px;
+    --ds-space-12x: 48px;
+    --ds-space-16x: 64px;
+
+    --ds-space-small: 32px;
+    --ds-space-medium: 40px;
+    --ds-space-large: 48px;
+
+    --ds-space-gap: 24px;
+    --ds-space-gap-half: 12px;
+    --ds-space-gap-quarter: 6px;
+
+    /* ─────────────────────────────────────────────────────────────────────────
+       BUTTON - Button-specific tokens (same in dark mode)
+       ───────────────────────────────────────────────────────────────────────── */
+    --ds-button-height-tiny: 24px;
+    --ds-button-height-small: var(--ds-space-small);
+    --ds-button-height-medium: var(--ds-space-medium);
+    --ds-button-height-large: var(--ds-space-large);
+
+    --ds-button-padding-tiny: 6px;
+    --ds-button-padding-small: 6px;
+    --ds-button-padding-medium: 10px;
+    --ds-button-padding-large: 14px;
+
+    --ds-button-content-padding: 6px;
+
+    --ds-button-gap-tiny: 4px;
+    --ds-button-gap-small: 6px;
+    --ds-button-gap-medium: 8px;
+    --ds-button-gap-large: 8px;
+
+    --ds-button-icon-size-tiny: 12px;
+    --ds-button-icon-size-small: 14px;
+    --ds-button-icon-size-medium: 16px;
+    --ds-button-icon-size-large: 20px;
+
+    /* ─────────────────────────────────────────────────────────────────────────
+       MOTION - Transition and animation tokens (same in dark mode)
+       ───────────────────────────────────────────────────────────────────────── */
+    --ds-transition-duration: 150ms;
+    --ds-transition-timing: ease;
+
+    /* ─────────────────────────────────────────────────────────────────────────
+       RADIUS - Border radius scale (same in dark mode)
+       ───────────────────────────────────────────────────────────────────────── */
+    --ds-radius-small: 6px;
+    --ds-radius-large: 12px;
+    --ds-radius-xlarge: 16px;
+    --ds-radius-full: 9999px;
+
+    /* ─────────────────────────────────────────────────────────────────────────
+       HOVER - Interactive overlay values for hover states (dark mode)
+       ───────────────────────────────────────────────────────────────────────── */
+    --ds-hover-overlay: rgba(
+      255,
+      255,
+      255,
+      0.09
+    ); /* Tertiary button, ghost elements */
+    --ds-hover-mix: 15%; /* For color-mix with white on filled buttons */
+
+    /* ─────────────────────────────────────────────────────────────────────────
+       SHADOWS - Dark mode (inverted for dark backgrounds)
+       ───────────────────────────────────────────────────────────────────────── */
+    --ds-shadow-border-base: 0 0 0 1px rgba(255, 255, 255, 0.1);
+    --ds-shadow-small: 0px 2px 2px rgba(0, 0, 0, 0.2);
+    --ds-shadow-medium:
+      0px 2px 2px rgba(0, 0, 0, 0.2), 0px 8px 8px -8px rgba(0, 0, 0, 0.3);
+    --ds-shadow-large:
+      0px 2px 2px rgba(0, 0, 0, 0.2), 0px 8px 16px -4px rgba(0, 0, 0, 0.3);
+    --ds-shadow-tooltip:
+      0 0 0 1px rgba(255, 255, 255, 0.1), 0px 1px 1px rgba(0, 0, 0, 0.1),
+      0px 4px 8px rgba(0, 0, 0, 0.2);
+    --ds-shadow-menu:
+      0 0 0 1px rgba(255, 255, 255, 0.145), 0px 2px 2px rgba(0, 0, 0, 0.04),
+      0px 8px 16px -4px rgba(0, 0, 0, 0.04), 0 0 0 1px rgb(0, 0, 0);
+    --ds-shadow-modal:
+      0 0 0 1px rgba(255, 255, 255, 0.1), 0px 1px 1px rgba(0, 0, 0, 0.1),
+      0px 8px 16px -4px rgba(0, 0, 0, 0.2),
+      0px 24px 32px -8px rgba(0, 0, 0, 0.3);
+    --ds-shadow-fullscreen:
+      0 0 0 1px rgba(255, 255, 255, 0.1), 0px 1px 1px rgba(0, 0, 0, 0.1),
+      0px 8px 16px -4px rgba(0, 0, 0, 0.2),
+      0px 24px 32px -8px rgba(0, 0, 0, 0.3);
+
+    /* Overlay / Backdrop */
+    --ds-overlay-backdrop-color: rgb(0, 0, 0);
+    --ds-overlay-backdrop-opacity: 0.8;
+
+    /* Modal backgrounds — mirror light-mode semantics: the elevated
+       panel sits slightly brighter than the page canvas and any
+       sections inside it (header/footer/Inset) are a touch darker.
+       Previously both were swapped, leaving the panel identical to the
+       page canvas (pure black) with zero contrast. */
+    --ds-modal-panel-bg: var(--ds-background-100);
+    --ds-modal-section-bg: var(--ds-background-200);
+
+    /* Focus ring outer glow */
+    --ds-focus-ring: #ffffff3d;
+
+    /* Rounded shadow button - marketing style (dark mode) */
+    --ds-shadow-button-rounded:
+      0 0 0 1px rgba(255, 255, 255, 0.145), 0 1px 2px 0 rgba(0, 0, 0, 0.16),
+      0 0 0 1px #000;
+    --ds-shadow-button-rounded-hover: 0 0 0 1px #2e2e2e;
+    --ds-button-rounded-hover-bg: #1f1f1f;
+    --ds-button-rounded-bg: #0a0a0a;
+    --ds-button-rounded-text: #ededed;
+
+    /* Calendar button - uses box-shadow for border effect (Geist dark mode tokens) */
+    --calendar-button-shadow: var(--ds-gray-400) 0px 0px 0px 1px;
+    --calendar-button-shadow-hover: var(--ds-gray-500) 0px 0px 0px 1px;
+    --calendar-button-bg: var(--ds-background-100);
+    --calendar-button-bg-hover: var(--ds-gray-100);
+    --calendar-button-focus-ring: 0 0 0 1px #ffffff57, 0 0 0 4px #ffffff29;
+
+    /* Calendar popover - Geist design tokens (dark mode) */
+    --calendar-popover-bg: rgb(10, 10, 10);
+    --calendar-popover-radius: 12px;
+    --calendar-popover-shadow:
+      rgba(255, 255, 255, 0.145) 0px 0px 0px 1px,
+      rgba(0, 0, 0, 0.02) 0px 1px 1px 0px, rgba(0, 0, 0, 0.04) 0px 4px 8px -4px,
+      rgba(0, 0, 0, 0.06) 0px 16px 24px -8px, rgb(0, 0, 0) 0px 0px 0px 1px inset;
+    --calendar-day-radius: 4px;
+    --calendar-day-color: rgb(237, 237, 237);
+    --calendar-day-outside-color: rgb(143, 143, 143);
+    --calendar-header-color: rgb(161, 161, 161);
+
+    /* ─────────────────────────────────────────────────────────────────────────
+       SEMANTIC TOKENS - Dark Mode
+       ───────────────────────────────────────────────────────────────────────── */
+
+    /* Text colors - Dark mode uses lighter grays */
+    --color-textDefault: var(--ds-gray-1000-rgb); /* Primary text - bright */
+    --color-textSubtle: var(--ds-gray-900-rgb); /* Secondary text */
+    --color-textSubtler: var(--ds-gray-600-rgb); /* Muted text */
+    --color-textInverted: var(--ds-gray-100-rgb); /* Inverted text */
+    --color-textDisabled: var(--ds-gray-500-rgb); /* Disabled text */
+
+    /* Border colors - Dark mode */
+    --color-borderDefault: var(--ds-gray-400-rgb); /* Structural borders */
+    --color-borderDefaultHover: var(--ds-gray-500-rgb); /* Hover state */
+    --color-borderSubtle: var(--ds-gray-300-rgb); /* Subtle borders */
+    --color-borderSubtleHover: var(--ds-gray-400-rgb); /* Subtle hover */
+    --color-borderExtraSubtle: var(--ds-gray-200-rgb); /* Barely visible */
+
+    /* Legacy aliases */
+    --color-borderNeutral: var(--color-borderDefault);
+    --color-borderNeutralHover: var(--color-borderDefaultHover);
+    --color-borderNeutralSubtle: var(--color-borderSubtle);
+
+    /* Background/Surface colors */
+    --color-surface: var(--ds-gray-100-rgb); /* Elevated surfaces */
+    --color-surfaceSubtle: var(--ds-gray-200-rgb); /* Subtle elevation */
+    --color-surfaceWarm: var(--ds-gray-200-rgb); /* Warm-tinted surface */
+    --color-canvas: var(--ds-background-200-rgb); /* Page background */
+
+    /* Elevated Surfaces - Progressive lightening */
+    --color-surfaceElevated1: var(--ds-gray-200-rgb); /* Level 1 */
+    --color-surfaceElevated2: var(--ds-gray-300-rgb); /* Level 2 */
+    --color-surfaceElevated3: var(--ds-gray-400-rgb); /* Level 3 */
+
+    /* Elevated surface shadows - Deeper for dark mode */
+    --shadow-elevated1:
+      0 1px 3px rgba(0, 0, 0, 0.24), 0 1px 2px rgba(0, 0, 0, 0.16);
+    --shadow-elevated2:
+      0 4px 16px rgba(0, 0, 0, 0.32), 0 2px 6px rgba(0, 0, 0, 0.2);
+    --shadow-elevated3:
+      0 16px 48px rgba(0, 0, 0, 0.4), 0 6px 12px rgba(0, 0, 0, 0.24);
+
+    /* Legacy aliases */
+    --color-neutralBgSubtle: var(--color-surfaceSubtle);
+
+    /* Rule (horizontal dividers) - Dark mode */
+    --rule-default: 1px solid rgb(var(--color-borderSubtle));
+    --rule-emphasised: 1px solid rgb(var(--color-textDefault));
+    --rule-heavy: 4px solid rgb(var(--color-textDefault));
+    --rule-accent: 4px solid #e43c81;
+
+    /* Status colors - Dark mode (lighter text, darker backgrounds) */
+    --color-success-text: var(--ds-green-900-rgb);
+    --color-success-text-subtle: var(--ds-green-700-rgb);
+    --color-success-bg: var(--ds-green-200-rgb);
+    --color-success-bg-subtle: var(--ds-green-100-rgb);
+    --color-success-border: var(--ds-green-500-rgb);
+
+    --color-warning-text: var(--ds-amber-900-rgb);
+    --color-warning-text-subtle: var(--ds-amber-700-rgb);
+    --color-warning-bg: var(--ds-amber-200-rgb);
+    --color-warning-bg-subtle: var(--ds-amber-100-rgb);
+    --color-warning-border: var(--ds-amber-500-rgb);
+
+    --color-error-text: var(--ds-red-900-rgb);
+    --color-error-text-subtle: var(--ds-red-700-rgb);
+    --color-error-bg: var(--ds-red-200-rgb);
+    --color-error-bg-subtle: var(--ds-red-100-rgb);
+    --color-error-border: var(--ds-red-500-rgb);
+
+    --color-info-text: var(--ds-purple-900-rgb);
+    --color-info-text-subtle: var(--ds-purple-700-rgb);
+    --color-info-bg: var(--ds-purple-200-rgb);
+    --color-info-bg-subtle: var(--ds-purple-100-rgb);
+    --color-info-border: var(--ds-purple-500-rgb);
+
   }
 
-  /* Distanz reset (Quartr-inspired) */
-  *, *::before, *::after {
+  /* Distanz reset (Distanz design system) */
+  *,
+  *::before,
+  *::after {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
@@ -183,29 +1167,1334 @@
   }
 
   html {
-    font-family: var(--base-font);
+    font-family: var(--body-font);
     font-feature-settings: normal;
     font-variation-settings: normal;
     -webkit-text-size-adjust: 100%;
     -webkit-tap-highlight-color: transparent;
     line-height: 1.5;
     tab-size: 4;
+    /* Permanently reserve the scrollbar gutter so the layout doesn't
+       jump when an overlay (Modal, Radix Dialog, cmdk, Vaul) locks
+       body scroll and the scrollbar disappears. The Modal's
+       paddingRight compensation now resolves to 0 (scrollbarWidth
+       measures 0 because clientWidth stays constant), which is the
+       desired no-op — keeping the compensation as a fallback for
+       browsers that don't yet honour scrollbar-gutter (Safari < 18). */
+    scrollbar-gutter: stable;
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: touch;
+    scroll-padding-top: 112px; /* Header height */
   }
 
   body {
-    font-family: var(--base-font);
+    font-family: var(--body-font);
     font-synthesis: none;
-    -webkit-font-smoothing: subpixel-antialiased;
-    -moz-osx-font-smoothing: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
     margin: 0;
     line-height: inherit;
     scroll-behavior: smooth;
     color: rgb(var(--color-textDefault));
+    background-color: var(--ds-background-200);
+    overscroll-behavior: none;
+    position: relative;
   }
 }
 
 @layer components {
+  /* Input component styles */
+  .ds-input-container {
+    box-shadow: 0 0 0 1px var(--ds-gray-alpha-400);
+  }
+  .ds-input-container:has(:not(input[disabled])):not(.ds-input--error):hover {
+    box-shadow: 0 0 0 1px var(--ds-gray-alpha-500);
+  }
+  .ds-input-container:focus-within:not(.ds-input--error) {
+    box-shadow: 0 0 0 1px var(--ds-gray-alpha-600), 0px 0px 0px 4px var(--ds-focus-ring) !important;
+  }
+  .ds-input-container.ds-input--error {
+    box-shadow: 0 0 0 1px var(--ds-red-900);
+  }
+  .ds-input-container.ds-input--error:focus-within {
+    box-shadow: 0 0 0 1px var(--ds-red-900), 0 0 0 4px var(--ds-red-200) !important;
+  }
+  .ds-input-field::placeholder {
+    color: var(--ds-gray-700);
+  }
+  .ds-input-field:disabled {
+    opacity: 1;
+    -webkit-text-fill-color: var(--ds-gray-700);
+  }
+  .ds-input-field:disabled::placeholder {
+    color: var(--ds-gray-700);
+    -webkit-text-fill-color: var(--ds-gray-700);
+  }
+  .ds-input-field[type="search"]::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+    display: none;
+  }
+
+  /* Textarea component styles */
+  .ds-textarea-container {
+    box-shadow: 0 0 0 1px var(--ds-gray-alpha-400);
+  }
+  .ds-textarea-container:has(:not(textarea[disabled])):not(.ds-textarea--error):hover {
+    box-shadow: 0 0 0 1px var(--ds-gray-alpha-500);
+  }
+  .ds-textarea-container:focus-within:not(.ds-textarea--error) {
+    box-shadow: 0 0 0 1px var(--ds-gray-alpha-600), 0px 0px 0px 4px #00000029 !important;
+  }
+  .ds-textarea-container.ds-textarea--error {
+    box-shadow: 0 0 0 1px var(--ds-red-900), 0 0 0 4px var(--ds-red-200);
+  }
+  .ds-textarea-container.ds-textarea--error:hover {
+    box-shadow: 0 0 0 1px var(--ds-gray-alpha-500);
+  }
+  .ds-textarea-container.ds-textarea--error:focus-within {
+    box-shadow: 0 0 0 1px var(--ds-gray-alpha-600) !important;
+  }
+  .ds-textarea-field::placeholder {
+    color: var(--ds-gray-700);
+  }
+  .ds-textarea-field:disabled {
+    opacity: 1;
+    -webkit-text-fill-color: var(--ds-gray-700);
+  }
+  .ds-textarea-field:disabled::placeholder {
+    color: var(--ds-gray-700);
+    -webkit-text-fill-color: var(--ds-gray-700);
+  }
+
+  /* Switch & ThemeSwitcher hover states */
+  @media (hover: hover) {
+    .ds-switch-control:not([data-disabled]):not([data-selected]):hover {
+      color: var(--ds-gray-1000) !important;
+    }
+    .ds-theme-option:not([data-disabled]):not([data-selected]):hover {
+      color: var(--ds-gray-1000) !important;
+    }
+  }
+
+  /* Toast stacking hover behavior */
+  @media (hover: hover) {
+    .ds-toast-area--multiple:hover {
+      transform: translateY(-10px);
+    }
+    .ds-toast-area:hover [role="status"] {
+      max-height: var(--max-height) !important;
+      transform: translate3d(0, var(--y), var(--z)) scale(1) !important;
+    }
+    .ds-toast-area:hover .ds-toast-message {
+      opacity: 1 !important;
+    }
+    .ds-toast-area:hover [role="status"]:after {
+      content: "";
+      background: transparent;
+      width: 100%;
+      height: 20px;
+      position: absolute;
+      top: calc(100% + 1px);
+      left: 0;
+      right: 0;
+    }
+  }
+
+  /* Inline code styling */
+  p > code {
+    background: var(--ds-gray-100);
+    border: 1px solid var(--ds-gray-300) !important;
+    border-radius: .375rem;
+    font-size: .857143em !important;
+    padding: 2px 3.6px;
+  }
+  code {
+    font-family: var(--font-mono);
+  }
+
+  /* Note text selection colors */
+  [role="note"] ::selection { background: var(--ds-gray-900); color: var(--ds-background-100); }
+  .geist-success ::selection { background: var(--ds-blue-900); color: var(--ds-background-100); }
+  .geist-error ::selection { background: var(--ds-red-900); color: var(--ds-background-100); }
+  .geist-warning ::selection { background: var(--ds-amber-900); color: var(--ds-background-100); }
+  .geist-secondary ::selection { background: var(--ds-gray-900); color: var(--ds-background-100); }
+  .geist-violet ::selection { background: var(--ds-purple-900); color: var(--ds-background-100); }
+  .geist-cyan ::selection { background: var(--ds-teal-900); color: var(--ds-background-100); }
+  .geist-tertiary ::selection { background: var(--ds-gray-900); color: var(--ds-background-100); }
+  .geist-alert ::selection { background: var(--ds-red-900); color: var(--ds-background-100); }
+  .geist-lite ::selection { background: var(--ds-gray-900); color: var(--ds-background-100); }
+  .geist-ghost ::selection { background: var(--ds-gray-900); color: var(--ds-background-100); }
+
+  /* Note disabled overrides */
+  .ds-note-disabled .ds-note-link {
+    color: var(--ds-gray-600);
+  }
+  .ds-note-disabled button {
+    background: var(--ds-gray-100) !important;
+    color: var(--ds-gray-600) !important;
+    border-width: 1px !important;
+    border-style: solid !important;
+    border-color: var(--ds-gray-alpha-400) !important;
+    box-shadow: none !important;
+    pointer-events: none;
+  }
+
+  /* Note inline links */
+  .ds-note-link {
+    color: var(--ds-blue-1000);
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .ds-note-link:hover {
+    text-decoration: underline;
+  }
+
+  /* Button icon sizing - icons inside buttons inherit size from CSS variable */
+  button svg,
+  a[class*="button"] svg {
+    width: var(--ds-icon-size, 16px);
+    height: var(--ds-icon-size, 16px);
+  }
+
+  /* Rounded shadow button styles - complex box-shadows need CSS classes */
+  .button-shadow-rounded {
+    background-color: var(--ds-button-rounded-bg);
+    color: var(--ds-button-rounded-text);
+    box-shadow: var(--ds-shadow-button-rounded);
+  }
+
+  .button-shadow-rounded:hover {
+    background-color: var(--ds-button-rounded-hover-bg);
+    box-shadow: var(--ds-shadow-button-rounded-hover);
+  }
+
+  /* Calendar trigger button styles */
+  .calendar-trigger-button {
+    background-color: var(--calendar-button-bg);
+    box-shadow: var(--calendar-button-shadow);
+    transition:
+      border-color 0.15s ease,
+      background 0.15s ease,
+      color 0.15s ease,
+      transform 0.15s ease,
+      box-shadow 0.15s ease;
+  }
+
+  .calendar-trigger-button:hover {
+    background-color: var(--calendar-button-bg-hover);
+    box-shadow: var(--calendar-button-shadow-hover);
+  }
+
+  .calendar-trigger-button:focus-visible {
+    outline: none;
+    box-shadow: var(--calendar-button-focus-ring);
+  }
+
+  .calendar-trigger-button-expanded {
+    box-shadow: var(--calendar-button-focus-ring);
+  }
+
+  /* Calendar dropdown styles */
+  .calendar-dropdown {
+    min-width: 250px;
+    background: var(--calendar-popover-bg);
+    border-radius: var(--calendar-popover-radius);
+    box-shadow: var(--calendar-popover-shadow);
+    overflow: hidden;
+  }
+
+  .calendar-content-wrapper {
+    padding: 12px;
+    border-radius: 6px;
+    position: relative;
+    width: 280px;
+  }
+
+  .calendar-content-wrapper-horizontal {
+    width: 462px;
+  }
+
+  .calendar-content-flex {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+
+  /* When popover opens above trigger, controls should be on top */
+  .calendar-dropdown[data-side="top"] .calendar-content-flex {
+    flex-direction: column;
+  }
+
+  .calendar-content-flex-horizontal {
+    display: flex;
+    flex-direction: row-reverse;
+    gap: 20px;
+  }
+
+  /* When popover opens above trigger, controls should be on left */
+  .calendar-dropdown[data-side="top"] .calendar-content-flex-horizontal {
+    flex-direction: row;
+  }
+
+  .calendar-content-flex-horizontal .calendar-inputs-wrapper {
+    border-top: none;
+    border-bottom: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 194px;
+    min-width: 194px;
+  }
+
+  .calendar-content-flex-horizontal > div:last-child {
+    width: 224px;
+    min-width: 224px;
+  }
+
+  .calendar-inputs-wrapper {
+    border-top: 1px solid rgb(242, 242, 242);
+    margin: 12px -12px 0;
+    padding: 10px 12px 0;
+  }
+
+  :is(.dark, [data-theme="dark"]) .calendar-inputs-wrapper {
+    border-top-color: rgb(46, 46, 46);
+  }
+
+  /* When popover opens above trigger, border should be on bottom */
+  .calendar-dropdown[data-side="top"] .calendar-inputs-wrapper {
+    border-top: none;
+    border-bottom: 1px solid rgb(242, 242, 242);
+    margin: 0 -12px 12px;
+    padding: 0 12px 10px;
+  }
+
+  :is(.dark, [data-theme="dark"])
+    .calendar-dropdown[data-side="top"]
+    .calendar-inputs-wrapper {
+    border-bottom-color: rgb(46, 46, 46);
+  }
+
+  .calendar-month-label {
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 17px;
+    color: var(--calendar-header-color);
+    margin: 0 0 8px 0;
+  }
+
+  .calendar-nav-button {
+    display: block;
+    aspect-ratio: 1 / 1;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    color: rgb(143, 143, 143);
+    border-radius: 50%;
+    text-align: center;
+    touch-action: manipulation;
+    user-select: none;
+    position: relative;
+  }
+
+  .calendar-nav-button:hover {
+    color: var(--calendar-day-color);
+  }
+
+  .calendar-nav-button-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+  }
+
+  .calendar-table {
+    display: table;
+    table-layout: fixed;
+    border-collapse: separate;
+    border-spacing: 2px;
+    width: 100%;
+  }
+
+  .calendar-table th,
+  .calendar-table td {
+    padding: 0;
+  }
+
+  .calendar-table thead {
+    display: block;
+    width: 100%;
+  }
+
+  .calendar-header-row {
+    display: flex;
+    flex-wrap: nowrap;
+    margin-top: 8px;
+    height: 15.5px;
+    vertical-align: middle;
+  }
+
+  .calendar-table th {
+    display: block;
+    flex: 1 1 0%;
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--calendar-header-color);
+    height: 15.5px;
+    text-align: center;
+    text-transform: uppercase;
+    vertical-align: middle;
+  }
+
+  .calendar-body {
+    display: block;
+    width: 100%;
+    vertical-align: middle;
+  }
+
+  .calendar-body-row {
+    display: flex;
+    flex-wrap: nowrap;
+    height: 32px;
+    margin: 8px 0;
+    vertical-align: middle;
+  }
+
+  .calendar-cell {
+    display: flex;
+    flex: 1 1 0%;
+    justify-content: center;
+    padding: 0;
+    vertical-align: middle;
+  }
+
+  .calendar-day {
+    display: block;
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+    line-height: 30px;
+    border-radius: var(--calendar-day-radius);
+    border: 1px solid transparent;
+    cursor: pointer;
+    color: var(--calendar-day-color);
+    text-align: center;
+    touch-action: manipulation;
+    z-index: 1;
+  }
+
+  .calendar-day:hover {
+    border-color: var(--ds-gray-500);
+    color: var(--ds-gray-1000);
+  }
+
+  .calendar-day-outside {
+    color: var(--calendar-day-outside-color);
+  }
+
+  .calendar-day-weekend {
+    color: var(--calendar-day-outside-color);
+  }
+
+  .calendar-day-disabled {
+    color: var(--calendar-day-outside-color);
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  .calendar-day-disabled:hover {
+    border-color: transparent;
+  }
+
+  .calendar-day-today {
+    background: var(--ds-blue-900);
+    color: var(--ds-background-100);
+  }
+
+  .calendar-day-selected {
+    background: var(--ds-gray-1000);
+    color: var(--ds-background-100);
+  }
+
+  /* Prevent hover border on today and selected states, preserve text color */
+  .calendar-day-today:hover,
+  .calendar-day-selected:hover {
+    border-color: transparent;
+    color: var(--ds-background-100);
+  }
+
+  /* Today when selected - keep blue ring */
+  .calendar-day.calendar-day-today.calendar-day-selected {
+    box-shadow:
+      0 0 0 2px var(--ds-background-100),
+      0 0 0 4px var(--ds-blue-900);
+  }
+
+  .calendar-day:focus-visible {
+    outline: none;
+    box-shadow:
+      0 0 0 2px var(--ds-background-100),
+      0 0 0 4px var(--ds-gray-1000);
+  }
+
+  /* Range selection styles on td */
+  .calendar-cell-in-range {
+    background-color: var(--ds-gray-200);
+  }
+
+  /* Row start/end rounding for multi-row ranges */
+  .calendar-cell-in-range.calendar-cell-row-start {
+    border-top-left-radius: var(--calendar-day-radius);
+    border-bottom-left-radius: var(--calendar-day-radius);
+  }
+
+  .calendar-cell-in-range.calendar-cell-row-end {
+    border-top-right-radius: var(--calendar-day-radius);
+    border-bottom-right-radius: var(--calendar-day-radius);
+  }
+
+  .calendar-cell-first-in-range {
+    background: linear-gradient(
+      to right,
+      transparent 50%,
+      var(--ds-gray-200) 50%
+    );
+    border-top-right-radius: var(--calendar-day-radius);
+    border-bottom-right-radius: var(--calendar-day-radius);
+  }
+
+  .calendar-cell-last-in-range {
+    background: linear-gradient(
+      to left,
+      transparent 50%,
+      var(--ds-gray-200) 50%
+    );
+    border-top-left-radius: var(--calendar-day-radius);
+    border-bottom-left-radius: var(--calendar-day-radius);
+  }
+
+  .calendar-cell-first-in-range.calendar-cell-last-in-range {
+    background: transparent;
+  }
+
+  /* Hover preview range styles (when selecting end date) */
+  .calendar-cell-in-preview-range {
+    background-color: var(--ds-gray-200);
+  }
+
+  .calendar-cell-in-preview-range.calendar-cell-row-start {
+    border-top-left-radius: var(--calendar-day-radius);
+    border-bottom-left-radius: var(--calendar-day-radius);
+  }
+
+  .calendar-cell-in-preview-range.calendar-cell-row-end {
+    border-top-right-radius: var(--calendar-day-radius);
+    border-bottom-right-radius: var(--calendar-day-radius);
+  }
+
+  .calendar-cell-preview-start {
+    background: linear-gradient(
+      to right,
+      transparent 50%,
+      var(--ds-gray-200) 50%
+    );
+    border-top-right-radius: var(--calendar-day-radius);
+    border-bottom-right-radius: var(--calendar-day-radius);
+  }
+
+  .calendar-cell-preview-end {
+    background: linear-gradient(
+      to left,
+      transparent 50%,
+      var(--ds-gray-200) 50%
+    );
+    border-top-left-radius: var(--calendar-day-radius);
+    border-bottom-left-radius: var(--calendar-day-radius);
+  }
+
+  /* Hover preview day style (the hovered cell during range selection) */
+  .calendar-day.calendar-day-hover-preview {
+    background: var(--ds-gray-1000);
+    color: var(--ds-background-100);
+    box-shadow:
+      0 0 0 1px var(--ds-background-100),
+      0 0 0 2.5px var(--ds-gray-1000);
+  }
+
+  /* Today cell hover preview - blue ring */
+  .calendar-day.calendar-day-today.calendar-day-hover-preview {
+    box-shadow:
+      0 0 0 2px var(--ds-background-100),
+      0 0 0 4px var(--ds-blue-900);
+  }
+
+  /* Calendar input styles */
+  .calendar-input-label {
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 17px;
+    color: var(--calendar-header-color);
+    text-transform: capitalize;
+    margin-bottom: 0;
+    max-width: 100%;
+  }
+
+  .calendar-input-container {
+    display: flex;
+    align-items: center;
+    height: 32px;
+    max-width: 100%;
+    border-radius: 6px;
+    box-shadow: rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+    transition: box-shadow 0.15s ease;
+  }
+
+  :is(.dark, [data-theme="dark"]) .calendar-input-container {
+    box-shadow: rgba(255, 255, 255, 0.14) 0px 0px 0px 1px;
+  }
+
+  .calendar-input-container:focus-within {
+    box-shadow: var(--calendar-button-focus-ring);
+  }
+
+  .calendar-input {
+    width: 100%;
+    height: 32px;
+    min-width: 0;
+    border: none;
+    border-radius: 6px;
+    background-color: rgb(255, 255, 255);
+    padding: 0 12px;
+    font-size: 14px;
+    line-height: normal;
+    color: rgb(0, 0, 0);
+    outline: none;
+    order: 1;
+    appearance: none;
+    transition:
+      border-color 0.15s ease,
+      box-shadow 0.15s ease;
+  }
+
+  :is(.dark, [data-theme="dark"]) .calendar-input {
+    background-color: rgb(10, 10, 10);
+    color: rgb(255, 255, 255);
+  }
+
+  .calendar-input::placeholder {
+    color: var(--calendar-day-outside-color);
+  }
+
+  .calendar-apply-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 32px;
+    background: var(--ds-background-100);
+    border: 1px solid var(--ds-gray-400);
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--calendar-day-color);
+    cursor: pointer;
+    transition:
+      background-color 0.15s ease,
+      border-color 0.15s ease;
+  }
+
+  .calendar-apply-button:hover:not(:disabled) {
+    background: var(--ds-gray-100);
+  }
+
+  .calendar-apply-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .calendar-apply-button-content {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .calendar-apply-hint {
+    font-size: 12px;
+    color: var(--calendar-day-outside-color);
+  }
+
+  .calendar-timezone-label {
+    display: inline-block;
+  }
+
+  .calendar-select-measure {
+    position: absolute;
+    visibility: hidden;
+    height: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    font-size: 12px;
+    font-family: inherit;
+  }
+
+  .calendar-select-container {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .calendar-select {
+    appearance: none;
+    display: block;
+    width: auto;
+    height: 24px;
+    padding: 0 22px 0 6px;
+    background-color: rgb(255, 255, 255);
+    border: none;
+    border-radius: 4px;
+    box-shadow: rgba(0, 0, 0, 0) 0px 0px 0px 1px;
+    font-size: 12px;
+    line-height: 20px;
+    color: rgb(125, 125, 125);
+    cursor: pointer;
+    outline: none;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    transition:
+      box-shadow 0.2s ease,
+      color 0.2s ease;
+  }
+
+  :is(.dark, [data-theme="dark"]) .calendar-select {
+    background-color: rgb(10, 10, 10);
+    color: rgb(125, 125, 125);
+  }
+
+  .calendar-select:hover {
+    box-shadow: rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+  }
+
+  :is(.dark, [data-theme="dark"]) .calendar-select:hover {
+    box-shadow: rgba(255, 255, 255, 0.14) 0px 0px 0px 1px;
+  }
+
+  .calendar-select:focus {
+    outline: none;
+    box-shadow:
+      0 0 0 1px #00000057,
+      0px 0px 0px 4px #00000029;
+  }
+
+  :is(.dark, [data-theme="dark"]) .calendar-select:focus {
+    box-shadow:
+      0 0 0 1px #ffffff57,
+      0px 0px 0px 4px #ffffff29;
+  }
+
+  .calendar-select-suffix {
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    width: 16px;
+    height: 12px;
+    pointer-events: none;
+    color: var(--calendar-header-color);
+    transition: color 0.15s ease;
+  }
+
+  .calendar-select-suffix svg {
+    display: block;
+    width: 16px;
+    height: 12px;
+    min-width: 16px;
+    overflow: hidden;
+    shape-rendering: crispedges;
+  }
+
+  /* Calendar Wrapper with Presets */
+  .calendar-wrapper-with-presets {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    height: 40px;
+  }
+
+  /* Stacked Calendar Layout - presets on top, calendar button below */
+  .calendar-wrapper-stacked {
+    flex-direction: column;
+    height: auto;
+    width: var(--calendar-width, 250px);
+  }
+
+  .calendar-wrapper-stacked .calendar-combobox-wrapper {
+    width: 100%;
+    z-index: 2;
+  }
+
+  .calendar-wrapper-stacked .calendar-combobox-wrapper:hover {
+    z-index: 4;
+  }
+
+  .calendar-wrapper-stacked .calendar-combobox-wrapper:focus-within,
+  .calendar-wrapper-stacked
+    .calendar-combobox-wrapper:has(
+      .calendar-combobox-input[aria-expanded="true"]
+    ) {
+    z-index: 5;
+  }
+
+  .calendar-wrapper-stacked.calendar-wrapper-with-presets
+    .calendar-combobox-input,
+  .calendar-wrapper-stacked .calendar-combobox-input {
+    border-radius: 6px 6px 0 0 !important;
+    width: 100%;
+    box-shadow: var(--calendar-button-shadow);
+  }
+
+  .calendar-wrapper-stacked .calendar-combobox-input:hover {
+    box-shadow: var(--calendar-button-shadow-hover);
+    background-color: var(--calendar-button-bg-hover);
+  }
+
+  .calendar-wrapper-stacked .calendar-combobox-input:focus,
+  .calendar-wrapper-stacked .calendar-combobox-input:focus-visible,
+  .calendar-wrapper-stacked .calendar-combobox-input[aria-expanded="true"] {
+    box-shadow: var(--calendar-button-focus-ring) !important;
+  }
+
+  .calendar-wrapper-stacked .calendar-trigger-button-with-presets {
+    border-radius: 0 0 6px 6px !important;
+    width: 100%;
+    box-shadow: var(--calendar-button-shadow) !important;
+    position: relative;
+    z-index: 1;
+  }
+
+  .calendar-wrapper-stacked .calendar-trigger-button-with-presets:hover {
+    box-shadow: var(--calendar-button-shadow-hover) !important;
+    background-color: var(--calendar-button-bg-hover);
+    z-index: 3;
+  }
+
+  .calendar-wrapper-stacked .calendar-trigger-button-with-presets:focus,
+  .calendar-wrapper-stacked .calendar-trigger-button-with-presets:focus-visible,
+  .calendar-wrapper-stacked
+    .calendar-trigger-button-with-presets[aria-expanded="true"] {
+    box-shadow: var(--calendar-button-focus-ring) !important;
+    z-index: 5;
+  }
+
+  /* Preset Combobox Styles */
+  .calendar-combobox-wrapper {
+    position: relative;
+    display: flex;
+    height: 40px;
+    z-index: 1;
+  }
+
+  .calendar-combobox-wrapper:hover {
+    z-index: 3;
+  }
+
+  .calendar-combobox-wrapper:focus-within,
+  .calendar-combobox-wrapper:has(
+    .calendar-combobox-input[aria-expanded="true"]
+  ) {
+    z-index: 5;
+  }
+
+  .calendar-combobox-wrapper:focus-within .calendar-combobox-input,
+  .calendar-combobox-input[aria-expanded="true"] {
+    box-shadow: var(--calendar-button-focus-ring) !important;
+  }
+
+  .calendar-combobox-input {
+    width: 100%;
+    height: 40px;
+    padding: 0 0 0 40px;
+    font-size: 14px;
+    line-height: normal;
+    color: var(--ds-gray-1000);
+    background: var(--calendar-button-bg);
+    border: none;
+    border-radius: 6px;
+    box-shadow: var(--ds-gray-400) 0px 0px 0px 1px;
+    outline: none;
+    cursor: pointer;
+    transition:
+      border-color 0.15s ease,
+      box-shadow 0.15s ease,
+      background 0.15s ease;
+  }
+
+  .calendar-wrapper-with-presets .calendar-combobox-input {
+    border-radius: 6px 0 0 6px;
+    box-shadow: var(--ds-gray-400) 0px 0px 0px 1px;
+  }
+
+  .calendar-wrapper-with-presets .calendar-combobox-input:hover {
+    box-shadow: var(--calendar-button-shadow-hover);
+    background-color: var(--calendar-button-bg-hover);
+  }
+
+  .calendar-wrapper-with-presets .calendar-combobox-input:focus,
+  .calendar-wrapper-with-presets .calendar-combobox-input:focus-visible {
+    box-shadow: var(--calendar-button-focus-ring) !important;
+    outline: none !important;
+  }
+
+  /* Placeholder should be active color */
+  .calendar-combobox-input::placeholder {
+    color: var(--ds-gray-1000);
+  }
+
+  .calendar-combobox-input:hover {
+    box-shadow: var(--calendar-button-shadow-hover);
+    background-color: var(--calendar-button-bg-hover);
+  }
+
+  .calendar-combobox-input:focus,
+  .calendar-combobox-input:focus-visible {
+    box-shadow: var(--calendar-button-focus-ring) !important;
+    outline: none !important;
+  }
+
+  .calendar-combobox-prefix {
+    position: absolute;
+    left: 12px;
+    top: 12px;
+    display: block;
+    min-width: 16px;
+    width: 16px;
+    height: 16px;
+    pointer-events: none;
+    color: currentColor;
+    z-index: 10;
+    overflow: hidden;
+    shape-rendering: crispedges;
+    transition:
+      color 0.2s ease,
+      transform 0.2s ease;
+  }
+
+  .calendar-combobox-suffix {
+    position: absolute;
+    right: 12px;
+    top: 20px;
+    transform: translateY(-8px);
+    display: block;
+    min-width: 16px;
+    width: 16px;
+    height: 16px;
+    pointer-events: none;
+    color: var(--ds-gray-700);
+    z-index: 10;
+    overflow: hidden;
+    shape-rendering: crispedges;
+    transition:
+      color 0.2s ease,
+      transform 0.2s ease;
+  }
+
+  .calendar-combobox-divider {
+    display: none;
+  }
+
+  /* Calendar trigger button with presets */
+  .calendar-trigger-button-with-presets {
+    border: none !important;
+    box-shadow: var(--ds-gray-400) 0px 0px 0px 1px !important;
+    border-radius: 0 6px 6px 0 !important;
+    background: var(--calendar-button-bg) !important;
+    position: relative;
+    z-index: 2;
+  }
+
+  .calendar-trigger-button-with-presets:hover {
+    box-shadow: var(--calendar-button-shadow-hover) !important;
+    background-color: var(--calendar-button-bg-hover) !important;
+    z-index: 4;
+  }
+
+  .calendar-trigger-button-with-presets:focus,
+  .calendar-trigger-button-with-presets:focus-visible,
+  .calendar-trigger-button-with-presets[aria-expanded="true"] {
+    box-shadow: var(--calendar-button-focus-ring) !important;
+    outline: none;
+    z-index: 5;
+  }
+
+  .calendar-preset-dropdown {
+    width: calc(var(--radix-popover-trigger-width) * 2);
+    min-width: 370px;
+    background: var(--calendar-popover-bg);
+    border: none;
+    border-radius: var(--calendar-popover-radius);
+    box-shadow: var(--calendar-popover-shadow);
+    overflow: hidden;
+  }
+
+  .calendar-preset-dropdown-inner {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .calendar-preset-list {
+    width: var(--radix-popover-trigger-width);
+    flex-shrink: 0;
+    padding: 8px;
+  }
+
+  .calendar-preset-item {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 36px;
+    padding: 0 8px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: normal;
+    text-align: left;
+    color: var(--ds-gray-1000);
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+  }
+
+  .calendar-preset-item:hover {
+    background: var(--ds-gray-300);
+  }
+
+  .calendar-preset-item-selected {
+    background: var(--ds-gray-300);
+  }
+
+  /* Future presets column (right side) */
+  .calendar-preset-future {
+    width: var(--radix-popover-trigger-width);
+    flex-shrink: 0;
+    padding: 8px;
+    border-left: 1px solid var(--ds-gray-400);
+  }
+
+  /* Compact preset dropdown - single column */
+  .calendar-preset-dropdown-compact {
+    width: 180px;
+    min-width: 180px;
+  }
+
+  .calendar-preset-dropdown-compact .calendar-preset-list {
+    width: 100%;
+  }
+
+  /* Compact Calendar Styles */
+  .calendar-wrapper-compact {
+    width: auto !important;
+  }
+
+  /* Compact container - unified bar */
+  .calendar-compact-container {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    height: 40px;
+    width: 220px;
+    background: var(--ds-background-100);
+    border-radius: 6px;
+    box-shadow: 0 0 0 1px var(--ds-gray-400);
+    position: relative;
+  }
+
+  /* Calendar trigger - left side: icon + "Select Date Range" */
+  .calendar-compact-calendar-trigger {
+    display: flex;
+    align-items: center;
+    height: 40px;
+    padding: 0 12px 0 10px;
+    background: transparent;
+    border: none;
+    border-radius: 6px 0 0 6px;
+    cursor: pointer;
+    color: var(--ds-gray-1000);
+    transition: background 0.15s ease;
+    gap: 8px;
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  .calendar-compact-calendar-trigger:hover {
+    background: var(--ds-gray-100);
+    z-index: 1;
+  }
+
+  .calendar-compact-calendar-trigger:focus,
+  .calendar-compact-calendar-trigger:focus-visible,
+  .calendar-compact-calendar-trigger[aria-expanded="true"] {
+    outline: none;
+    box-shadow: var(--calendar-button-focus-ring);
+    z-index: 2;
+  }
+
+  .calendar-compact-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .calendar-compact-date-text {
+    font-size: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Divider line */
+  .calendar-compact-divider {
+    width: 1px;
+    background: var(--ds-gray-400);
+    flex-shrink: 0;
+    align-self: stretch;
+  }
+
+  /* Preset trigger - right side: "Select Period" text + chevron */
+  .calendar-compact-preset-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 40px;
+    padding: 0;
+    background: transparent;
+    border: none;
+    border-radius: 0 6px 6px 0;
+    cursor: pointer;
+    color: var(--ds-gray-900);
+    transition: background 0.15s ease;
+    flex-shrink: 0;
+  }
+
+  .calendar-compact-preset-trigger:hover {
+    background: var(--ds-gray-100);
+    z-index: 1;
+  }
+
+  .calendar-compact-preset-trigger:focus,
+  .calendar-compact-preset-trigger:focus-visible,
+  .calendar-compact-preset-trigger[aria-expanded="true"] {
+    outline: none;
+    box-shadow: var(--calendar-button-focus-ring);
+    z-index: 2;
+  }
+
+  .calendar-compact-preset-text {
+    font-size: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /* Hidden by default, shown when dropdown is open */
+    display: none;
+    padding-left: 12px;
+  }
+
+  .calendar-compact-chevron {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    min-width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+  }
+
+  .calendar-compact-chevron svg {
+    transition: transform 0.2s ease;
+  }
+
+  /* Chevron rotation when open */
+  .calendar-compact-preset-trigger[aria-expanded="true"]
+    .calendar-compact-chevron
+    svg {
+    transform: rotate(180deg);
+  }
+
+  /* ===== OPEN STATE: when preset dropdown is open ===== */
+  /* Hide the date text when open */
+  .calendar-compact-container[data-preset-open="true"]
+    .calendar-compact-date-text {
+    display: none;
+  }
+
+  /* Collapse calendar trigger to just icon when open — match chevron area width (40px) */
+  .calendar-compact-container[data-preset-open="true"]
+    .calendar-compact-calendar-trigger {
+    padding: 0;
+    flex: 0 0 40px;
+    justify-content: center;
+  }
+
+  /* Expand preset trigger when open */
+  .calendar-compact-container[data-preset-open="true"]
+    .calendar-compact-preset-trigger {
+    flex: 1;
+    min-width: 0;
+  }
+
+  /* Show the preset text when open */
+  .calendar-compact-container[data-preset-open="true"]
+    .calendar-compact-preset-text {
+    display: block;
+    color: var(--ds-gray-1000);
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Calendar Tab Switcher (Dates / Months) */
+  .calendar-tab-switcher {
+    display: flex;
+    background: var(--ds-gray-200);
+    border-radius: 6px;
+    padding: 2px;
+    margin-bottom: 10px;
+  }
+
+  .calendar-tab-button {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 28px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ds-gray-900);
+    background: transparent;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition:
+      background-color 0.15s ease,
+      color 0.15s ease;
+  }
+
+  .calendar-tab-button:hover:not(.calendar-tab-button-active) {
+    color: var(--ds-gray-1000);
+  }
+
+  .calendar-tab-button-active {
+    background: var(--ds-gray-1000);
+    color: var(--ds-background-100);
+  }
+
+  /* Month Grid */
+  .calendar-month-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4px;
+  }
+
+  .calendar-month-cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 36px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--calendar-day-color);
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    transition:
+      border-color 0.15s ease,
+      background-color 0.15s ease,
+      color 0.15s ease;
+  }
+
+  .calendar-month-cell:hover:not(.calendar-month-cell-selected):not(
+      .calendar-month-cell-disabled
+    ) {
+    border-color: var(--ds-gray-500);
+  }
+
+  .calendar-month-cell-selected {
+    background: var(--ds-gray-1000);
+    color: var(--ds-background-100);
+  }
+
+  .calendar-month-cell-selected:hover {
+    border-color: transparent;
+  }
+
+  .calendar-month-cell-disabled {
+    color: var(--calendar-day-outside-color);
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  .calendar-month-cell:focus-visible {
+    outline: none;
+    box-shadow:
+      0 0 0 2px var(--ds-background-100),
+      0 0 0 4px var(--ds-gray-1000);
+  }
+
+  /* Small size variant */
+  .calendar-wrapper[data-size="small"] .calendar-combobox-wrapper {
+    height: 32px;
+  }
+
+  .calendar-wrapper[data-size="small"] .calendar-combobox-input {
+    height: 32px;
+    font-size: 14px;
+  }
+
+  .calendar-wrapper[data-size="small"] .calendar-combobox-prefix {
+    top: 8px;
+  }
+
+  .calendar-wrapper[data-size="small"] .calendar-combobox-suffix {
+    top: 16px;
+  }
+
+  .calendar-wrapper[data-size="small"] .calendar-compact-container {
+    height: 32px;
+  }
+
+  .calendar-wrapper[data-size="small"] .calendar-compact-calendar-trigger {
+    height: 32px;
+  }
+
+  .calendar-wrapper[data-size="small"] .calendar-compact-chevron {
+    width: 32px;
+    min-width: 32px;
+    height: 32px;
+  }
+
+  .calendar-wrapper[data-size="small"] .calendar-compact-preset-trigger {
+    height: 32px;
+  }
+
+  .calendar-wrapper[data-size="small"][data-preset-open="true"]
+    .calendar-compact-calendar-trigger {
+    flex: 0 0 32px;
+  }
+
+  /* Hide trigger wrapper in compact mode with presets (handled by compact container) */
+  .calendar-trigger-wrapper-compact {
+    display: none;
+  }
+
   .layout-grid {
     @apply grid grid-cols-12 gap-x-4 px-6 md:px-8 lg:px-12 xl:px-24;
   }
@@ -214,109 +2503,117 @@
     @apply col-span-12 lg:col-start-3 lg:col-span-8;
   }
 
-  /* Distanz article container (Quartr-inspired) */
+  /* Distanz article container (Distanz design system)
+     Uses 4 columns (mobile) → 6 columns (≥600px) → 12 columns (≥960px)
+     Gap: 12px/16px, Gutter: 24px/32px, Max-width: 1585px */
   .distanz-article-container {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     margin-left: auto;
     margin-right: auto;
-    max-width: 1042px;
+    max-width: 1585px;
     width: 100%;
-    column-gap: 1.25rem;
-    padding-left: 1.5rem;
+    column-gap: 1rem; /* 16px gap */
+    padding-left: 1.5rem; /* 24px outside gutter mobile */
     padding-right: 1.5rem;
     padding-top: 80px;
   }
 
-  @media (min-width: 1024px) {
+  @media (min-width: 600px) {
     .distanz-article-container {
-      grid-template-columns: repeat(18, minmax(0, 1fr));
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 960px) {
+    .distanz-article-container {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      padding-left: 2rem; /* 32px outside gutter desktop */
+      padding-right: 2rem;
     }
   }
 
   .distanz-article-col {
-    @apply col-span-full lg:col-start-4 lg:col-span-10;
+    @apply col-span-full md:col-start-3 md:col-span-8;
   }
 
   .distanz-full-col {
     @apply col-span-full;
   }
 
-  /* Distanz font features */
+  /* Distanz font features — use Geist's default OpenType metrics. */
   .distanz-font-features {
-    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
-  }
-
-  /* Legacy Quartr classes for backwards compatibility */
-  .quartr-article-container {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    margin-left: auto;
-    margin-right: auto;
-    max-width: 1042px;
-    width: 100%;
-    column-gap: 1.25rem;
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
-    padding-top: 80px;
-  }
-
-  @media (min-width: 1024px) {
-    .quartr-article-container {
-      grid-template-columns: repeat(18, minmax(0, 1fr));
-    }
-  }
-
-  .quartr-article-col {
-    @apply col-span-full lg:col-start-4 lg:col-span-10;
-  }
-
-  .quartr-full-col {
-    @apply col-span-full;
-  }
-
-  /* Quartr's exact font features */
-  .quartr-font-features {
-    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+    font-feature-settings: normal;
+    font-variant-ligatures: normal;
+    font-variant-numeric: normal;
   }
 
   /* Updated capsize with tighter calculations */
   .capsize {
     --font-size-px: var(--font-size-px, 17);
-    --line-height-offset: calc((var(--line-height-scale)*var(--font-size-px)/2 - var(--font-size-px)*var(--line-height,1.25)/2)/var(--font-size-px));
+    --line-height-offset: calc(
+      (
+          var(--line-height-scale) * var(--font-size-px) / 2 -
+            var(--font-size-px) * var(--line-height, 1.25) / 2
+        ) /
+        var(--font-size-px)
+    );
   }
 
   .capsize:before {
     content: "";
     display: table;
     /* Reduced top spacing by adjusting the calculation */
-    margin-bottom: calc(((var(--ascent-scale) - var(--cap-height-scale) + var(--line-gap-scale)/2) - var(--line-height-offset))*-0.8em);
+    margin-bottom: calc(
+      (
+          (
+              var(--ascent-scale) - var(--cap-height-scale) +
+                var(--line-gap-scale) / 2
+            ) -
+            var(--line-height-offset)
+        ) *
+        -0.8em
+    );
   }
 
   .capsize:after {
     content: "";
     display: table;
     /* Reduced bottom spacing by adjusting the calculation */
-    margin-top: calc(((var(--descent-scale) + var(--line-gap-scale)/2) - var(--line-height-offset))*-0.8em);
+    margin-top: calc(
+      (
+          (var(--descent-scale) + var(--line-gap-scale) / 2) -
+            var(--line-height-offset)
+        ) *
+        -0.8em
+    );
   }
 
   /* Force capsize to work properly for text-lg leading-snug combination */
   .text-lg.leading-snug.capsize {
     --font-size-px: 17;
     --line-height: 1.25; /* Reduced from 1.375 */
-    --line-height-offset: calc((1.15*17/2 - 17*1.25/2)/17);
+    --line-height-offset: calc((1.15 * 17 / 2 - 17 * 1.25 / 2) / 17);
   }
 
   .text-lg.leading-snug.capsize:before {
     content: "";
     display: table;
-    margin-bottom: calc(((var(--ascent-scale) - var(--cap-height-scale)) - var(--line-height-offset)) * -0.8em);
+    margin-bottom: calc(
+      (
+          (var(--ascent-scale) - var(--cap-height-scale)) -
+            var(--line-height-offset)
+        ) *
+        -0.8em
+    );
   }
 
   .text-lg.leading-snug.capsize:after {
     content: "";
     display: table;
-    margin-top: calc(((var(--descent-scale)) - var(--line-height-offset)) * -0.8em);
+    margin-top: calc(
+      ((var(--descent-scale)) - var(--line-height-offset)) * -0.8em
+    );
   }
 
   /* Tighter line heights for more squared appearance */
@@ -360,159 +2657,539 @@
     --line-height: 1.1; /* Reduced from 1.2 */
   }
 
-  /* Quartr's exact pixel sizes with capsize */
+  /* Distanz exact pixel sizes with capsize */
   .text-\[17px\].capsize {
     --font-size-px: 17;
-    --line-height: calc(22/17); /* Reduced from 25px to 22px line height */
+    --line-height: calc(22 / 17); /* Reduced from 25px to 22px line height */
   }
 
   .text-\[19px\].capsize {
     --font-size-px: 19;
-    --line-height: calc(25/19); /* Reduced from 28px to 25px line height */
+    --line-height: calc(25 / 19); /* Reduced from 28px to 25px line height */
   }
 
   .text-\[21px\].capsize {
     --font-size-px: 21;
-    --line-height: calc(22/21); /* Reduced from 24px to 22px line height */
+    --line-height: calc(22 / 21); /* Reduced from 24px to 22px line height */
   }
 
   .text-\[22px\].capsize {
     --font-size-px: 22;
-    --line-height: calc(24/22); /* Reduced from 25px to 24px line height */
+    --line-height: calc(24 / 22); /* Reduced from 25px to 24px line height */
   }
 
   .text-\[35px\].capsize {
     --font-size-px: 35;
-    --line-height: calc(36/35); /* Reduced from 40px to 36px line height */
+    --line-height: calc(36 / 35); /* Reduced from 40px to 36px line height */
   }
 
   .text-\[56px\].capsize {
     --font-size-px: 56;
-    --line-height: calc(52/56); /* Reduced from 56px to 52px line height */
+    --line-height: calc(52 / 56); /* Reduced from 56px to 52px line height */
   }
 
   /* Updated leading adjustments for capsize - tighter values */
   .leading-snug.capsize {
     --line-height: 1.25; /* Reduced from 1.375 */
-    --line-height-offset: calc((var(--line-height-scale)*var(--font-size-px)/2 - var(--font-size-px)*1.25/2)/var(--font-size-px));
+    --line-height-offset: calc(
+      (
+          var(--line-height-scale) * var(--font-size-px) / 2 -
+            var(--font-size-px) * 1.25 / 2
+        ) /
+        var(--font-size-px)
+    );
   }
 
   .leading-tight.capsize {
     --line-height: 1.15; /* Reduced from 1.25 */
-    --line-height-offset: calc((var(--line-height-scale)*var(--font-size-px)/2 - var(--font-size-px)*1.15/2)/var(--font-size-px));
+    --line-height-offset: calc(
+      (
+          var(--line-height-scale) * var(--font-size-px) / 2 -
+            var(--font-size-px) * 1.15 / 2
+        ) /
+        var(--font-size-px)
+    );
   }
 
   .leading-normal.capsize {
     --line-height: 1.35; /* Reduced from 1.5 */
-    --line-height-offset: calc((var(--line-height-scale)*var(--font-size-px)/2 - var(--font-size-px)*1.35/2)/var(--font-size-px));
+    --line-height-offset: calc(
+      (
+          var(--line-height-scale) * var(--font-size-px) / 2 -
+            var(--font-size-px) * 1.35 / 2
+        ) /
+        var(--font-size-px)
+    );
   }
 
   .leading-\[23px\].capsize {
-    --line-height: calc(23/var(--font-size-px));
-    --line-height-offset: calc((var(--line-height-scale)*var(--font-size-px)/2 - 11.5)/var(--font-size-px));
+    --line-height: calc(23 / var(--font-size-px));
+    --line-height-offset: calc(
+      (var(--line-height-scale) * var(--font-size-px) / 2 - 11.5) /
+        var(--font-size-px)
+    );
   }
 
   .leading-\[24px\].capsize {
-    --line-height: calc(24/var(--font-size-px));
-    --line-height-offset: calc((var(--line-height-scale)*var(--font-size-px)/2 - 12)/var(--font-size-px));
+    --line-height: calc(24 / var(--font-size-px));
+    --line-height-offset: calc(
+      (var(--line-height-scale) * var(--font-size-px) / 2 - 12) /
+        var(--font-size-px)
+    );
   }
 
   .leading-\[25px\].capsize {
-    --line-height: calc(25/var(--font-size-px));
-    --line-height-offset: calc((var(--line-height-scale)*var(--font-size-px)/2 - 12.5)/var(--font-size-px));
+    --line-height: calc(25 / var(--font-size-px));
+    --line-height-offset: calc(
+      (var(--line-height-scale) * var(--font-size-px) / 2 - 12.5) /
+        var(--font-size-px)
+    );
   }
 
   .leading-\[28px\].capsize {
-    --line-height: calc(28/var(--font-size-px));
-    --line-height-offset: calc((var(--line-height-scale)*var(--font-size-px)/2 - 14)/var(--font-size-px));
+    --line-height: calc(28 / var(--font-size-px));
+    --line-height-offset: calc(
+      (var(--line-height-scale) * var(--font-size-px) / 2 - 14) /
+        var(--font-size-px)
+    );
   }
 
   .leading-\[40px\].capsize {
-    --line-height: calc(40/var(--font-size-px));
-    --line-height-offset: calc((var(--line-height-scale)*var(--font-size-px)/2 - 20)/var(--font-size-px));
+    --line-height: calc(40 / var(--font-size-px));
+    --line-height-offset: calc(
+      (var(--line-height-scale) * var(--font-size-px) / 2 - 20) /
+        var(--font-size-px)
+    );
   }
 
   .leading-\[56px\].capsize {
-    --line-height: calc(56/var(--font-size-px));
-    --line-height-offset: calc((var(--line-height-scale)*var(--font-size-px)/2 - 28)/var(--font-size-px));
+    --line-height: calc(56 / var(--font-size-px));
+    --line-height-offset: calc(
+      (var(--line-height-scale) * var(--font-size-px) / 2 - 28) /
+        var(--font-size-px)
+    );
+  }
+
+  /* Loading dots animation */
+  @keyframes loading-dot {
+    0%,
+    80%,
+    100% {
+      opacity: 0;
+    }
+    40% {
+      opacity: 1;
+    }
   }
 }
 
 @layer utilities {
-  /* Distanz utility classes (Quartr-inspired with tight spacing) */
+  /* macOS-style Window Shadows */
+  .mac-window-shadow {
+    box-shadow:
+      0 25px 50px -12px rgba(0, 0, 0, 0.25),
+      0 10px 10px -5px rgba(0, 0, 0, 0.04),
+      0 0 0 1px rgba(0, 0, 0, 0.05);
+  }
 
+  .mac-window-shadow-active {
+    box-shadow:
+      0 40px 70px -20px rgba(0, 0, 0, 0.35),
+      0 20px 25px -5px rgba(0, 0, 0, 0.08),
+      0 0 0 1px rgba(0, 0, 0, 0.05);
+  }
+
+  /* Dark mode shadows */
+  .dark .mac-window-shadow {
+    box-shadow:
+      0 25px 50px -12px rgba(0, 0, 0, 0.5),
+      0 10px 10px -5px rgba(0, 0, 0, 0.1),
+      0 0 0 1px rgba(255, 255, 255, 0.05);
+  }
+
+  .dark .mac-window-shadow-active {
+    box-shadow:
+      0 40px 70px -20px rgba(0, 0, 0, 0.6),
+      0 20px 25px -5px rgba(0, 0, 0, 0.15),
+      0 0 0 1px rgba(255, 255, 255, 0.08);
+  }
+
+  /* macOS-style Scrollbar */
+  .mac-scroll {
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+
+  .mac-scroll::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .mac-scroll::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .mac-scroll::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+  }
+
+  .mac-scroll::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.3);
+  }
+
+  .dark .mac-scroll::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  .dark .mac-scroll::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+  }
+
+  /* ========================================
+     Distanz Typography Utility Classes
+     Based on Inter + EB Garamond
+     ======================================== */
+
+  /* ===== BODY/UI TYPOGRAPHY (INTER) ===== */
+
+  /* Body Text - Body (Inter) */
+  .text-body-distanz,
+  .news-body {
+    font-family: var(--font-family-sans);
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.5;
+    letter-spacing: 0;
+    color: rgb(var(--color-textDefault));
+  }
+
+  .news-body-sm {
+    font-family: var(--font-family-sans);
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.5;
+    letter-spacing: 0;
+    color: rgb(var(--color-textDefault));
+  }
+
+  /* Overline / Tags (Inter SemiBold, Uppercase) */
+  .news-overline,
   .text-meta-distanz {
-    font-family: var(--base-font);
+    font-family: var(--font-family-sans);
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 1.3;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
     color: rgb(var(--color-textSubtle));
-    font-weight: 400;
-    font-size: 0.9375rem; /* text-base */
-    line-height: 1.25;
   }
 
-  .text-intro-distanz {
-    font-family: var(--base-font);
-    color: rgb(var(--color-textSubtle));
+  /* Caption (Inter Medium) */
+  .news-caption,
+  .text-caption-distanz {
+    font-family: var(--font-family-sans);
     font-weight: 500;
-    font-size: 21px;
-    line-height: 22px;
+    font-size: 12px;
+    line-height: 1.4;
+    letter-spacing: 0;
+    color: rgb(var(--color-textDefault));
   }
 
-  @media (min-width: 768px) {
-    .text-intro-distanz {
-      font-size: 22px;
-      line-height: 24px;
-    }
+  /* Label / Meta (Inter Medium) */
+  .news-label,
+  .text-label-distanz {
+    font-family: var(--font-family-sans);
+    font-weight: 500;
+    font-size: 11px;
+    line-height: 1.3;
+    letter-spacing: 0.02em;
+    color: rgb(var(--color-textDefault));
   }
 
-  .text-body-distanz {
-    font-family: var(--body-font);
+  /* Small Headings - Body (Inter SemiBold) */
+  .news-h3 {
+    font-family: var(--font-family-sans);
+    font-weight: 600;
+    font-size: 22px;
+    line-height: 1.3;
+    letter-spacing: 0;
+    color: rgb(var(--color-textDefault));
+  }
+
+  .news-h2 {
+    font-family: var(--font-family-sans);
+    font-weight: 600;
+    font-size: 28px;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    color: rgb(var(--color-textDefault));
+  }
+
+  /* UI Components (Inter) */
+  .ui-btn,
+  .text-button-distanz {
+    font-family: var(--font-family-sans);
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 1;
+    letter-spacing: 0.01em;
+  }
+
+  .ui-btn-lg {
+    font-family: var(--font-family-sans);
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 1;
+    letter-spacing: 0.01em;
+  }
+
+  .ui-btn-sm {
+    font-family: var(--font-family-sans);
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 1;
+    letter-spacing: 0.02em;
+  }
+
+  .ui-nav,
+  .text-nav-distanz {
+    font-family: var(--font-family-sans);
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 1;
+    letter-spacing: 0;
+    color: rgb(var(--color-textDefault));
+  }
+
+  .ui-nav-active {
+    font-family: var(--font-family-sans);
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 1;
+    letter-spacing: 0;
+    color: rgb(var(--color-textDefault));
+  }
+
+  .ui-input {
+    font-family: var(--font-family-sans);
     font-weight: 400;
-    font-size: 17px;
-    line-height: 22px;
+    font-size: 16px;
+    line-height: 1.5;
+    letter-spacing: 0;
+  }
+
+  .ui-input-label {
+    font-family: var(--font-family-sans);
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 1.4;
+    letter-spacing: 0;
+  }
+
+  .ui-tag {
+    font-family: var(--font-family-sans);
+    font-weight: 600;
+    font-size: 11px;
+    line-height: 1;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+  }
+
+  /* ===== HEADING TYPOGRAPHY (EB GARAMOND) ===== */
+
+  /* Main Headings (EB Garamond) */
+  .text-h3-distanz,
+  .feature-h3,
+  .text-h3-feature {
+    font-family: var(--font-family-serif);
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 1.3;
+    letter-spacing: 0;
     color: rgb(var(--color-textDefault));
   }
 
-  @media (min-width: 768px) {
-    .text-body-distanz {
-      font-size: 19px;
-      line-height: 25px;
-    }
+  .text-h2-distanz,
+  .feature-h2,
+  .text-h2-feature {
+    font-family: var(--font-family-serif);
+    font-weight: 500;
+    font-size: 30px;
+    line-height: 1.25;
+    letter-spacing: 0;
+    color: rgb(var(--color-textDefault));
   }
 
-  .text-h2-distanz {
-    font-family: var(--base-font);
-    font-weight: 600;
-    font-size: 1.875rem;
+  .text-h1-distanz,
+  .text-title-distanz,
+  .news-h1,
+  .feature-h1,
+  .text-h1-feature {
+    font-family: var(--font-family-serif);
+    font-weight: 500;
+    font-size: 40px;
     line-height: 1.15;
+    letter-spacing: -0.01em;
     color: rgb(var(--color-textDefault));
   }
 
-  .text-h3-distanz {
-    font-family: var(--base-font);
+  .news-display,
+  .feature-display,
+  .text-newsletter-heading-distanz {
+    font-family: var(--font-family-serif);
+    font-weight: 500;
+    font-size: 52px;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    color: rgb(var(--color-textDefault));
+  }
+
+  /* ===== EXTENDED CONTENT TYPOGRAPHY (EB GARAMOND) ===== */
+
+  /* Body Text - Features (EB Garamond) */
+  .feature-body {
+    font-family: var(--font-family-serif);
+    font-weight: 400;
+    font-size: 19px;
+    line-height: 1.6;
+    letter-spacing: 0.01em;
+    color: rgb(var(--color-textDefault));
+  }
+
+  /* Subhead / Deck (EB Garamond) */
+  .feature-subhead,
+  .text-intro-distanz,
+  .text-lead-distanz {
+    font-family: var(--font-family-serif);
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 1.4;
+    letter-spacing: 0;
+    font-style: italic;
+    color: rgb(var(--color-textDefault));
+  }
+
+  /* Pull Quote (EB Garamond) */
+  .feature-quote,
+  .text-quote-distanz {
+    font-family: var(--font-family-serif);
+    font-weight: 400;
+    font-size: 26px;
+    line-height: 1.4;
+    letter-spacing: 0;
+    font-style: italic;
+    color: rgb(var(--color-textDefault));
+  }
+
+  /* Caption (EB Garamond Italic) */
+  .feature-caption {
+    font-family: var(--font-family-serif);
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.4;
+    letter-spacing: 0.01em;
+    font-style: italic;
+    color: rgb(var(--color-textSubtle));
+  }
+
+  /* Footnote (EB Garamond) */
+  .feature-footnote {
+    font-family: var(--font-family-serif);
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 1.5;
+    letter-spacing: 0.01em;
+    color: rgb(var(--color-textSubtle));
+  }
+
+  /* ===== LEGACY/COMPATIBILITY CLASSES ===== */
+
+  .text-h6-distanz {
+    font-family: var(--font-family-serif);
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 1.2;
+    letter-spacing: 0;
+    color: rgb(var(--color-textDefault));
+  }
+
+  .text-h5-distanz {
+    font-family: var(--font-family-serif);
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 1.2;
+    letter-spacing: 0;
+    color: rgb(var(--color-textDefault));
+  }
+
+  .text-h4-distanz {
+    font-family: var(--font-family-serif);
+    font-weight: 500;
+    font-size: 22px;
+    line-height: 1.3;
+    letter-spacing: 0;
+    color: rgb(var(--color-textDefault));
+  }
+
+  /* Stat Callouts (Inter Bold) */
+  .text-stat-distanz {
+    font-family: var(--font-family-sans);
+    font-weight: 800;
+    font-size: clamp(48px, 6vw, 96px);
+    line-height: 0.9;
+    letter-spacing: -0.03em;
+    color: rgb(var(--color-textDefault));
+  }
+
+  .text-stat-label-distanz {
+    font-family: var(--font-family-sans);
     font-weight: 600;
-    font-size: 1.5rem;
-    line-height: 1.15;
-    color: rgb(var(--color-textDefault));
+    font-size: 12px;
+    line-height: 1;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgb(var(--color-textSubtle));
   }
 
-  .text-title-distanz {
-    font-family: var(--brand-font);
-    font-weight: 600;
-    letter-spacing: -0.025em;
-    font-size: 35px;
-    line-height: 36px;
-    color: rgb(var(--color-textDefault));
+  /* Content Containers */
+  .news-content {
+    max-width: 680px;
   }
 
-  @media (min-width: 768px) {
-    .text-title-distanz {
-      font-size: 56px;
-      line-height: 52px;
-    }
+  .news-content p {
+    margin-bottom: 16px;
+  }
+
+  .news-content section {
+    margin-bottom: 32px;
+  }
+
+  .news-content ul li,
+  .news-content ol li {
+    margin-bottom: 8px;
+  }
+
+  .feature-content {
+    max-width: 620px;
+  }
+
+  .feature-content p {
+    margin-bottom: 24px;
+  }
+
+  .feature-content section {
+    margin-bottom: 48px;
+  }
+
+  .feature-content ul li,
+  .feature-content ol li {
+    margin-bottom: 12px;
   }
 
   .text-breadcrumb-distanz {
-    font-family: var(--base-font);
+    font-family: var(--body-font);
     color: rgb(var(--color-textSubtle));
     font-weight: 400;
     font-size: 1.0625rem;
@@ -520,45 +3197,72 @@
     letter-spacing: 0.0025em;
     --font-size-px: 17;
     --line-height: 1.25;
-    --line-height-offset: calc((1.15*17/2 - 17*1.25/2)/17);
+    --line-height-offset: calc((1.15 * 17 / 2 - 17 * 1.25 / 2) / 17);
   }
 
   .text-breadcrumb-distanz:before {
     content: "";
     display: table;
-    margin-bottom: calc(((var(--ascent-scale) - var(--cap-height-scale)) - var(--line-height-offset)) * -0.8em);
+    margin-bottom: calc(
+      (
+          (var(--ascent-scale) - var(--cap-height-scale)) -
+            var(--line-height-offset)
+        ) *
+        -0.8em
+    );
   }
 
   .text-breadcrumb-distanz:after {
     content: "";
     display: table;
-    margin-top: calc(((var(--descent-scale)) - var(--line-height-offset)) * -0.8em);
+    margin-top: calc(
+      ((var(--descent-scale)) - var(--line-height-offset)) * -0.8em
+    );
   }
 
-  /* Legacy Quartr utility classes for backwards compatibility */
-  .text-meta-quartr {
+  /* Footer text utilities */
+  .text-footer-link {
+    font-family: var(--body-font);
+    font-weight: 400;
+    font-size: clamp(14px, 1.5vw, 15px);
+    line-height: 1.4;
+  }
+
+  .text-footer-heading {
+    font-family: var(--body-font);
+    font-weight: 600;
+    font-size: clamp(17px, 2vw, 19px);
+    line-height: 1;
+    letter-spacing: -0.025em;
+  }
+
+  /* Legacy Distanz utility classes for backwards compatibility */
+  .text-meta-distanz {
     font-family: var(--base-font);
     color: rgb(var(--color-textSubtle));
     font-weight: 400;
     font-size: 0.9375rem; /* text-base */
-    line-height: 1.25;   /* Reduced from 1.375 */
-  
+    line-height: 1.25; /* Reduced from 1.375 */
+  }
+
   .text-heading {
-    font-weight: 600;
+    font-family: var(--headline-font);
+    font-weight: 700;
     letter-spacing: -0.01em;
   }
 
   .text-meta {
+    font-family: var(--body-font);
     font-size: 0.9375rem;
     line-height: 1.25;
     color: rgb(var(--color-textSubtle));
   }
 
   .text-title {
-    font-family: var(--brand-font);
+    font-family: var(--headline-font);
     font-size: 35px;
     line-height: 36px;
-    font-weight: 600;
+    font-weight: 700;
   }
 
   @media (min-width: 768px) {
@@ -567,9 +3271,8 @@
       line-height: 52px;
     }
   }
-}
 
-  .text-intro-quartr {
+  .text-intro-distanz {
     font-family: var(--base-font);
     color: rgb(var(--color-textSubtle));
     font-weight: 500;
@@ -578,13 +3281,13 @@
   }
 
   @media (min-width: 768px) {
-    .text-intro-quartr {
+    .text-intro-distanz {
       font-size: 22px;
       line-height: 24px; /* Reduced from 25px */
     }
   }
 
-  .text-body-quartr {
+  .text-body-distanz {
     font-family: var(--base-font);
     font-weight: 400;
     font-size: 17px;
@@ -593,21 +3296,21 @@
   }
 
   @media (min-width: 768px) {
-    .text-body-quartr {
+    .text-body-distanz {
       font-size: 19px;
       line-height: 25px; /* Reduced from 28px */
     }
   }
 
-  .text-h2-quartr {
+  .text-h2-distanz {
     font-family: var(--base-font);
     font-weight: 600;
     font-size: 1.875rem; /* text-3xl */
-    line-height: 1.15;   /* Reduced from 1.25 */
+    line-height: 1.15; /* Reduced from 1.25 */
     color: rgb(var(--color-textDefault));
   }
 
-  .text-h3-quartr {
+  .text-h3-distanz {
     font-family: var(--base-font);
     font-weight: 600;
     font-size: 1.5rem; /* text-2xl */
@@ -615,8 +3318,8 @@
     color: rgb(var(--color-textDefault));
   }
 
-  /* Title exactly matching Quartr's: font-playfair font-semibold tracking-tight text-[35px] leading-[40px] md:text-[56px] md:leading-[56px] */
-  .text-title-quartr {
+  /* Title exactly matching Distanz: font-playfair font-semibold tracking-tight text-[35px] leading-[40px] md:text-[56px] md:leading-[56px] */
+  .text-title-distanz {
     font-family: var(--brand-font);
     font-weight: 600;
     letter-spacing: -0.025em; /* tracking-tight */
@@ -626,14 +3329,14 @@
   }
 
   @media (min-width: 768px) {
-    .text-title-quartr {
+    .text-title-distanz {
       font-size: 56px;
       line-height: 52px; /* Reduced from 56px */
     }
   }
 
-  /* Quartr's exact breadcrumb styling with perfect capsize */
-  .text-breadcrumb-quartr {
+  /* Distanz exact breadcrumb styling with perfect capsize */
+  .text-breadcrumb-distanz {
     font-family: var(--base-font);
     color: rgb(var(--color-textSubtle));
     font-weight: 400;
@@ -642,19 +3345,27 @@
     letter-spacing: 0.0025em;
     --font-size-px: 17;
     --line-height: 1.25;
-    --line-height-offset: calc((1.15*17/2 - 17*1.25/2)/17);
+    --line-height-offset: calc((1.15 * 17 / 2 - 17 * 1.25 / 2) / 17);
   }
 
-  .text-breadcrumb-quartr:before {
+  .text-breadcrumb-distanz:before {
     content: "";
     display: table;
-    margin-bottom: calc(((var(--ascent-scale) - var(--cap-height-scale)) - var(--line-height-offset)) * -0.8em);
+    margin-bottom: calc(
+      (
+          (var(--ascent-scale) - var(--cap-height-scale)) -
+            var(--line-height-offset)
+        ) *
+        -0.8em
+    );
   }
 
-  .text-breadcrumb-quartr:after {
+  .text-breadcrumb-distanz:after {
     content: "";
     display: table;
-    margin-top: calc(((var(--descent-scale)) - var(--line-height-offset)) * -0.8em);
+    margin-top: calc(
+      ((var(--descent-scale)) - var(--line-height-offset)) * -0.8em
+    );
   }
 
   /* Override Tailwind's default text-lg to match tighter spacing */
@@ -683,8 +3394,8 @@
     font-family: var(--base-font);
   }
 
-  .quartr-font-features {
-    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  .distanz-font-features {
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
 
   /* Distanz text colors */
@@ -704,16 +3415,16 @@
     color: rgb(var(--color-textAccent));
   }
 
-  /* Legacy Quartr text colors */
-  .text-quartr-default {
+  /* Legacy Distanz text colors */
+  .text-distanz-default {
     color: rgb(var(--color-textDefault));
   }
 
-  .text-quartr-subtle {
+  .text-distanz-subtle {
     color: rgb(var(--color-textSubtle));
   }
 
-  .text-quartr-subtler {
+  .text-distanz-subtler {
     color: rgb(var(--color-textSubtler));
   }
 
@@ -736,21 +3447,21 @@
     margin-bottom: 0.75rem;
   }
 
-  /* Legacy Quartr text spacing */
-  .quartr-text-spacing .text-body-quartr {
+  /* Legacy Distanz text spacing */
+  .distanz-text-spacing .text-body-distanz {
     margin-bottom: 1rem;
   }
 
-  .quartr-text-spacing .text-intro-quartr {
+  .distanz-text-spacing .text-intro-distanz {
     margin-bottom: 0.75rem;
   }
 
-  .quartr-text-spacing .text-h2-quartr {
+  .distanz-text-spacing .text-h2-distanz {
     margin-top: 1.25rem;
     margin-bottom: 1rem;
   }
 
-  .quartr-text-spacing .text-h3-quartr {
+  .distanz-text-spacing .text-h3-distanz {
     margin-top: 1.25rem;
     margin-bottom: 0.75rem;
   }
@@ -777,4 +3488,608 @@
     line-height: inherit;
     transform: translateY(2px); /* Fine-tune vertical alignment */
   }
+
+  /* Radix UI NavigationMenu animations - Medusa style */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-20px) scaleY(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scaleY(1);
+    }
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 1;
+      transform: translateY(0) scaleY(1);
+    }
+    to {
+      opacity: 0;
+      transform: translateY(-20px) scaleY(0.95);
+    }
+  }
+
+  /* Animation utilities for Radix */
+  .animate-in {
+    animation: slideDown 200ms ease-out;
+  }
+
+  .animate-out {
+    animation: slideUp 200ms ease-in;
+  }
+
+  .fade-in {
+    animation: fadeIn 200ms ease-out;
+  }
+
+  /* Radix Navigation Menu Viewport animations - based on official Radix documentation */
+  [data-radix-navigation-menu-viewport] {
+    transform-origin: top center;
+    transition:
+      width,
+      height,
+      300ms ease;
+  }
+
+  /* Animate viewport when opening - use Radix's scaleIn pattern */
+  [data-radix-navigation-menu-viewport][data-state="open"] {
+    animation: scaleIn 200ms ease;
+  }
+
+  /* Animate viewport when closing - use Radix's scaleOut pattern */
+  [data-radix-navigation-menu-viewport][data-state="closed"] {
+    animation: scaleOut 200ms ease;
+  }
+
+  /* Official Radix scaleIn animation with perspective transform */
+  @keyframes scaleIn {
+    from {
+      opacity: 0;
+      transform: rotateX(-30deg) scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: rotateX(0deg) scale(1);
+    }
+  }
+
+  /* Official Radix scaleOut animation with perspective transform */
+  @keyframes scaleOut {
+    from {
+      opacity: 1;
+      transform: rotateX(0deg) scale(1);
+    }
+    to {
+      opacity: 0;
+      transform: rotateX(-10deg) scale(0.95);
+    }
+  }
+
+  /* Radix Navigation Menu Content animations - these animate the individual dropdown contents */
+  [data-radix-navigation-menu-viewport] > div {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    animation-duration: 300ms;
+    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+    animation-fill-mode: both;
+  }
+
+  /* Default slide down animation for content when viewport opens (no directional motion) */
+  [data-radix-navigation-menu-viewport] > div:not([data-motion]) {
+    animation-name: slideDownFromTop;
+  }
+
+  /* Animate content when entering from left (moving from Gear to Road/Track) */
+  [data-radix-navigation-menu-viewport] > div[data-motion="from-start"] {
+    animation-name: slideDownFromLeft;
+  }
+
+  /* Animate content when entering from right (moving from Road/Track to Gear) */
+  [data-radix-navigation-menu-viewport] > div[data-motion="from-end"] {
+    animation-name: slideDownFromRight;
+  }
+
+  /* Animate content when exiting to left */
+  [data-radix-navigation-menu-viewport] > div[data-motion="to-start"] {
+    animation-name: slideUpToLeft;
+  }
+
+  /* Animate content when exiting to right */
+  [data-radix-navigation-menu-viewport] > div[data-motion="to-end"] {
+    animation-name: slideUpToRight;
+  }
+
+  @keyframes slideDownFromLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-20px) translateY(-20px) scaleY(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0) translateY(0) scaleY(1);
+    }
+  }
+
+  @keyframes slideDownFromRight {
+    from {
+      opacity: 0;
+      transform: translateX(20px) translateY(-20px) scaleY(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0) translateY(0) scaleY(1);
+    }
+  }
+
+  @keyframes slideUpToLeft {
+    from {
+      opacity: 1;
+      transform: translateX(0) translateY(0) scaleY(1);
+    }
+    to {
+      opacity: 0;
+      transform: translateX(-20px) translateY(-20px) scaleY(0.95);
+    }
+  }
+
+  @keyframes slideUpToRight {
+    from {
+      opacity: 1;
+      transform: translateX(0) translateY(0) scaleY(1);
+    }
+    to {
+      opacity: 0;
+      transform: translateX(20px) translateY(-20px) scaleY(0.95);
+    }
+  }
+
+  /* Content slide down from top - slides independently of container scale */
+  @keyframes slideDownFromTop {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Mega menu garage door open animation */
+  @keyframes megaMenuOpen {
+    from {
+      opacity: 0;
+      transform: scaleY(0);
+    }
+    to {
+      opacity: 1;
+      transform: scaleY(1);
+    }
+  }
+
+  /* Mega menu garage door close animation */
+  @keyframes megaMenuClose {
+    from {
+      opacity: 1;
+      transform: scaleY(1);
+    }
+    to {
+      opacity: 0;
+      transform: scaleY(0);
+    }
+  }
+
+  .fade-out {
+    animation: fadeOut 200ms ease-in;
+  }
+
+  /* Radix NavigationMenu.Viewport - uses CSS custom properties from Radix */
+  [data-radix-navigation-menu-viewport] {
+    position: relative;
+    width: var(--radix-navigation-menu-viewport-width);
+    height: var(--radix-navigation-menu-viewport-height);
+    transition:
+      width,
+      height,
+      250ms ease;
+  }
+
+  /* Content motion animations when switching between dropdowns */
+  [data-radix-navigation-menu-content] {
+    position: absolute;
+    top: 0;
+    left: 0;
+    animation-duration: 250ms;
+    animation-timing-function: ease;
+  }
+
+  [data-radix-navigation-menu-content][data-motion="from-start"] {
+    animation-name: enterFromLeft;
+  }
+
+  [data-radix-navigation-menu-content][data-motion="from-end"] {
+    animation-name: enterFromRight;
+  }
+
+  [data-radix-navigation-menu-content][data-motion="to-start"] {
+    animation-name: exitToLeft;
+  }
+
+  [data-radix-navigation-menu-content][data-motion="to-end"] {
+    animation-name: exitToRight;
+  }
+
+  /* Content slide animations for switching */
+  @keyframes enterFromRight {
+    from {
+      opacity: 0;
+      transform: translateX(200px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes enterFromLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-200px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes exitToRight {
+    from {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateX(200px);
+    }
+  }
+
+  @keyframes exitToLeft {
+    from {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateX(-200px);
+    }
+  }
+
+  /* Shadow for dropdown - no effect on top, only sides and bottom */
+  .shadow-elevation-flyout {
+    box-shadow:
+      1px 0 0 0 rgba(0, 0, 0, 0.08),
+      /* right edge */ -1px 0 0 0 rgba(0, 0, 0, 0.08),
+      /* left edge */ 0 4px 8px 0 rgba(0, 0, 0, 0.08),
+      /* bottom shadow */ 0 8px 16px 0 rgba(0, 0, 0, 0.08); /* larger bottom shadow */
+  }
+
+  .dark .shadow-elevation-flyout {
+    box-shadow:
+      1px 0 0 0 rgba(255, 255, 255, 0.1),
+      /* right edge */ -1px 0 0 0 rgba(255, 255, 255, 0.1),
+      /* left edge */ 0 4px 8px 0 rgba(0, 0, 0, 0.32),
+      /* bottom shadow */ 0 8px 16px 0 rgba(0, 0, 0, 0.32); /* larger bottom shadow */
+  }
+
+  /* Mega Menu Animations */
+  .mega-menu-content {
+    animation-duration: 250ms;
+    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .mega-menu-content[data-motion="from-start"] {
+    animation-name: enterFromLeft;
+  }
+
+  .mega-menu-content[data-motion="from-end"] {
+    animation-name: enterFromRight;
+  }
+
+  .mega-menu-content[data-motion="to-start"] {
+    animation-name: exitToLeft;
+  }
+
+  .mega-menu-content[data-motion="to-end"] {
+    animation-name: exitToRight;
+  }
+
+  @keyframes enterFromLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-200px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes enterFromRight {
+    from {
+      opacity: 0;
+      transform: translateX(200px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes exitToLeft {
+    from {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateX(-200px);
+    }
+  }
+
+  @keyframes exitToRight {
+    from {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateX(200px);
+    }
+  }
+}
+
+/* Hide reCAPTCHA badge */
+.grecaptcha-badge {
+  visibility: hidden;
+}
+
+/* Hide scrollbar for horizontal scrolling sections */
+.scrollbar-hide {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
+}
+
+/* Race Calendar Windows - Radix Scroll Area Hidden Scrollbars */
+[data-radix-scroll-area-viewport]::-webkit-scrollbar {
+  display: none;
+}
+
+[data-radix-scroll-area-viewport] {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+/* KendoReact Window - Dark Mode Compatibility */
+.dark .k-window {
+  background-color: rgb(23, 23, 23) !important;
+  border-color: rgb(64, 64, 64) !important;
+  color: rgb(245, 245, 245) !important;
+}
+
+.dark .k-window-titlebar {
+  background-color: rgb(38, 38, 38) !important;
+  border-bottom-color: rgb(64, 64, 64) !important;
+  color: rgb(245, 245, 245) !important;
+}
+
+/* Compact titlebar - PostHog style with backdrop blur */
+.k-window-titlebar {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 8px 12px !important;
+  min-height: auto !important;
+  position: relative !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+}
+
+.k-window-title {
+  text-align: center !important;
+  flex: 1 !important;
+  margin: 0 !important;
+  padding: 0 8px !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  line-height: 1.4 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.dark .k-window-title {
+  color: rgb(245, 245, 245) !important;
+}
+
+/* Action buttons positioned absolutely on the right */
+.k-window-titlebar-actions {
+  position: absolute !important;
+  right: 8px !important;
+  display: flex !important;
+  gap: 2px !important;
+}
+
+.dark .k-window-titlebar-action {
+  color: rgb(163, 163, 163) !important;
+}
+
+.dark .k-window-titlebar-action:hover {
+  background-color: rgb(64, 64, 64) !important;
+  color: rgb(245, 245, 245) !important;
+}
+
+.dark .k-window-content {
+  background-color: rgb(23, 23, 23) !important;
+  color: rgb(245, 245, 245) !important;
+}
+
+/* Default windows - positioned within container */
+.k-window {
+  z-index: 40 !important;
+  position: absolute !important; /* Position within container, not viewport */
+}
+
+/* Maximized window - fill parent container */
+.k-window.k-window-maximized {
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  transform: none !important;
+  margin: 0 !important;
+  z-index: 50 !important;
+}
+
+/* =======================
+   Bordered Layout System (IEEE Spectrum-inspired)
+   ======================= */
+
+/* Outer wrapper with responsive width and margins
+   Structure: Viewport edges > Responsive margin > Border > Content */
+.main-wrapper {
+  position: relative;
+  width: 100%;
+  margin: 0 auto;
+  background-color: rgb(var(--color-surface));
+  overflow: visible;
+  min-height: 100vh;
+}
+
+/* Responsive width - margins expand/contract with screen size */
+/* Keep full width on mobile and small tablets */
+@media (min-width: 768px) {
+  .main-wrapper {
+    width: 100%;
+    max-width: 1585px;
+  }
+}
+
+/* Dark mode support for wrapper */
+.dark .main-wrapper {
+  background-color: rgb(var(--color-canvas));
+}
+
+/* Inner bordered container - full width with side borders */
+.main-bordered {
+  position: relative;
+  width: 100%;
+  overflow: visible;
+}
+
+/* Borders appear at tablet size and above */
+@media (min-width: 768px) {
+  .main-bordered {
+    border-left: 1px solid rgb(var(--color-borderSubtle));
+    border-right: 1px solid rgb(var(--color-borderSubtle));
+  }
+}
+
+/* Utility class for vertical separator borders only (no width constraint) */
+.v-sep {
+  border-left: 1px solid rgb(var(--color-borderSubtle));
+  border-right: 1px solid rgb(var(--color-borderSubtle));
+}
+
+@media (max-width: 767px) {
+  .v-sep {
+    border-left: none;
+    border-right: none;
+  }
+}
+
+/* Navbar border that sits above mega menu */
+.navbar-border-overlay::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background-color: rgb(var(--color-borderSubtle));
+  z-index: 70;
+  pointer-events: none;
+}
+
+/* Shiki dual theme support - switch to dark colors in dark mode */
+html.dark [data-code-block] span[style*="--shiki-dark"] {
+  color: var(--shiki-dark) !important;
+}
+
+/* Design System — brand page copy buttons */
+/* Light mode: white button on both sections */
+.ds-copy-btn-on-white,
+.ds-copy-btn-on-black {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.15s ease, box-shadow 0.15s ease;
+  background: #fff;
+  color: #000;
+  box-shadow: rgba(0, 0, 0, 0.14) 0px 0px 0px 1px;
+}
+.ds-copy-btn-on-white:hover,
+.ds-copy-btn-on-black:hover {
+  background: #f0f0f0;
+  box-shadow: rgba(0, 0, 0, 0.14) 0px 0px 0px 1px, rgba(0, 0, 0, 0.06) 0px 2px 4px 0px;
+}
+/* Dark mode: black button on both sections */
+:is(.dark, [data-theme="dark"]) .ds-copy-btn-on-white,
+:is(.dark, [data-theme="dark"]) .ds-copy-btn-on-black {
+  background: #000;
+  color: #fff;
+  box-shadow: rgba(255, 255, 255, 0.2) 0px 0px 0px 1px;
+}
+:is(.dark, [data-theme="dark"]) .ds-copy-btn-on-white:hover,
+:is(.dark, [data-theme="dark"]) .ds-copy-btn-on-black:hover {
+  background: #1a1a1a;
+  box-shadow: rgba(255, 255, 255, 0.3) 0px 0px 0px 1px, rgba(255, 255, 255, 0.06) 0px 2px 4px 0px;
+}
+
+/* Design System overview — icon card hover */
+.ds-overview-icon {
+  color: var(--ds-gray-900);
+}
+.group:hover .ds-overview-icon {
+  color: var(--ds-gray-1000);
 }
