@@ -1235,7 +1235,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
   ]);
 
   return (
-    <div className="py-12 bg-canvas min-h-screen transition-colors duration-300">
+    <div className="py-12 bg-canvas min-h-screen">
       <div className="w-[95%] mx-auto px-2 sm:px-3">
         <div className="mb-12">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-headline font-bold mb-4 text-neutral-900 dark:text-white">
