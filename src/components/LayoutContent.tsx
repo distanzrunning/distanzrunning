@@ -37,13 +37,17 @@ export default async function LayoutContent({
   // Admin (dashboard + design system + studio) is a standalone SPA — no site navbar or footer
   const isAdmin = pathname.startsWith("/admin");
 
+  // Pre-launch holding page rendered on the production domain — owns
+  // its own full-screen layout, so suppress site chrome.
+  const isComingSoon = pathname === "/coming-soon";
+
   // Hide footer on calendar page (fullscreen app-like view)
   const isCalendarPage = pathname === "/races/calendar";
 
   // Homepage uses the new SiteHeader chrome.
   const isHome = pathname === "/";
 
-  if (isPreviewMode || isLoginPage || isAdmin) {
+  if (isPreviewMode || isLoginPage || isAdmin || isComingSoon) {
     return <main className="min-h-screen">{children}</main>;
   }
 

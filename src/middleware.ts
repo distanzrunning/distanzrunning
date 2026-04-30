@@ -35,6 +35,42 @@ function classifyRegion(country: string): Region {
   return REGULATED_COUNTRIES.has(code) ? "regulated" : "other";
 }
 
+// Hostnames where the public site is held behind a coming-soon page
+// until launch. Every request on these hosts gets rewritten to
+// /coming-soon, so any deep link still lands on the holding page
+// while keeping the URL the visitor typed in the address bar.
+// Remove this set (or wrap in an env flag) at launch to expose the
+// real site on the public domain.
+const HOLDING_PAGE_HOSTS = new Set([
+  "distanzrunning.com",
+  "www.distanzrunning.com",
+]);
+
+const HOLDING_PAGE_PATH = "/coming-soon";
+
+function handleHoldingPage(request: NextRequest): NextResponse | null {
+  const host = request.headers.get("host") ?? "";
+  if (!HOLDING_PAGE_HOSTS.has(host)) return null;
+
+  const { pathname } = request.nextUrl;
+  // Allowlist — the holding page itself, framework internals, public
+  // brand / image assets, and /api/* (newsletter signup, consent,
+  // recaptcha, anything the holding page or its providers call).
+  if (
+    pathname === HOLDING_PAGE_PATH ||
+    pathname.startsWith("/api/") ||
+    pathname.startsWith("/_next/") ||
+    pathname.startsWith("/brand/") ||
+    pathname.startsWith("/images/")
+  ) {
+    return null;
+  }
+
+  const url = request.nextUrl.clone();
+  url.pathname = HOLDING_PAGE_PATH;
+  return NextResponse.rewrite(url);
+}
+
 async function handleStagingAuth(
   request: NextRequest,
 ): Promise<NextResponse | null> {
@@ -73,17 +109,22 @@ async function handleStagingAuth(
 }
 
 export async function middleware(request: NextRequest) {
-  // 1. Staging auth — redirect unauthenticated visitors to /login on the
+  // 1. Production holding page — rewrite traffic on the public
+  //    domain(s) to /coming-soon while the site is in pre-launch.
+  const holdingResponse = handleHoldingPage(request);
+  if (holdingResponse) return holdingResponse;
+
+  // 2. Staging auth — redirect unauthenticated visitors to /login on the
   //    preview host. Runs before anything else so no downstream logic
   //    leaks data to unauthenticated requests.
   const authRedirect = await handleStagingAuth(request);
   if (authRedirect) return authRedirect;
 
-  // 2. Regional gating — write / refresh the distanz-region cookie.
+  // 3. Regional gating — write / refresh the distanz-region cookie.
   const country = request.headers.get("x-vercel-ip-country") ?? "";
   const region = classifyRegion(country);
 
-  // 3. Forward the request pathname as a custom header so server
+  // 4. Forward the request pathname as a custom header so server
   //    components / layouts can branch chrome without falling back
   //    to a client-only usePathname() (which returns null during
   //    static rendering and causes a flash of the wrong navbar).
