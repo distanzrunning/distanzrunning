@@ -1238,7 +1238,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
             {/* Search */}
             <div className="w-64 shrink-0" style={{ order: -100 }}>
               <Input
-                size="large"
+                size="default"
                 placeholder="Search races…"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
