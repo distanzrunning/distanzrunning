@@ -57,6 +57,13 @@ export interface SiteNavigationMenuProps {
   featuredGear: FeaturedProduct;
   featuredNutrition: FeaturedProduct;
   featuredRace: FeaturedRace;
+  /**
+   * Forwarded to the Radix NavigationMenu.Root. Fires with the
+   * currently-open trigger value (empty string when nothing's open).
+   * SiteHeader hooks this to drive the page-dim overlay behind the
+   * megamenu.
+   */
+  onValueChange?: (value: string) => void;
 }
 
 // ============================================================================
@@ -309,9 +316,10 @@ export default function SiteNavigationMenu({
   featuredGear,
   featuredNutrition,
   featuredRace,
+  onValueChange,
 }: SiteNavigationMenuProps) {
   return (
-    <NavigationMenu>
+    <NavigationMenu onValueChange={onValueChange}>
       <NavigationMenuList>
         {/* News */}
         <NavigationMenuItem>

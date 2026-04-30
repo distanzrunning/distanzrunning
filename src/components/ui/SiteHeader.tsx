@@ -64,6 +64,10 @@ export default function SiteHeader({
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  // True while any desktop nav megamenu is open. Drives the glassy
+  // page-dim overlay rendered below the header so the menu's
+  // contents read against busy page content (images, dense grids).
+  const [navMenuOpen, setNavMenuOpen] = useState(false);
   // Newsletter modal state lives at the header level so the modal
   // can outlive both the desktop trigger and the mobile drawer —
   // the drawer can close itself before the modal appears, so the
@@ -144,6 +148,7 @@ export default function SiteHeader({
               featuredGear={featuredGear}
               featuredNutrition={featuredNutrition}
               featuredRace={featuredRace}
+              onValueChange={(v) => setNavMenuOpen(Boolean(v))}
             />
           </div>
         </div>
@@ -217,6 +222,24 @@ export default function SiteHeader({
           )}
         </button>
       </header>
+
+      {/* Page-dim + glassy blur behind any open desktop megamenu.
+          Starts at top: 50 px so the header itself stays sharp;
+          z-30 sits between page content and the menu viewport
+          (z-50 in NavigationMenu). pointer-events: none so the
+          overlay never intercepts clicks — Radix handles outside-
+          click detection itself. */}
+      <div
+        aria-hidden
+        className="fixed inset-x-0 bottom-0 top-[50px] z-30 transition-opacity duration-150"
+        style={{
+          backgroundColor: "var(--ds-overlay-backdrop-color)",
+          opacity: navMenuOpen ? 0.5 : 0,
+          backdropFilter: navMenuOpen ? "blur(12px)" : "none",
+          WebkitBackdropFilter: navMenuOpen ? "blur(12px)" : "none",
+          pointerEvents: "none",
+        }}
+      />
 
       <MobileNavDrawer
         open={mobileOpen}
