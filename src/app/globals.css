@@ -1164,11 +1164,14 @@
     -webkit-tap-highlight-color: transparent;
     line-height: 1.5;
     tab-size: 4;
-    /* scrollbar-gutter: stable is intentionally NOT set. Our Modal and
-       third-party overlay libs (cmdk, Radix, Vaul) compensate for the
-       disappearing scrollbar themselves when they lock body scroll.
-       With `stable` on, they'd double-pad (their compensation plus the
-       reserved gutter), causing the page content to jump inward. */
+    /* Permanently reserve the scrollbar gutter so the layout doesn't
+       jump when an overlay (Modal, Radix Dialog, cmdk, Vaul) locks
+       body scroll and the scrollbar disappears. The Modal's
+       paddingRight compensation now resolves to 0 (scrollbarWidth
+       measures 0 because clientWidth stays constant), which is the
+       desired no-op — keeping the compensation as a fallback for
+       browsers that don't yet honour scrollbar-gutter (Safari < 18). */
+    scrollbar-gutter: stable;
     overscroll-behavior: none;
     -webkit-overflow-scrolling: touch;
     scroll-padding-top: 112px; /* Header height */
