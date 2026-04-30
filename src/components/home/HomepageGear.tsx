@@ -19,9 +19,12 @@ import { urlFor } from "@/sanity/lib/image";
 // column scrolls past — a "spotlight" pattern that lets a hero
 // review hold the visitor's attention while related items pass by.
 //
-// Sits directly on the PageFrame surface (no inner panel) so it
-// reads as a quieter editorial break between News and Races. Both
-// of those sections wear bordered panels; this one is a raw row.
+// Sits inside a contrast-toned panel (bg-gray-100, rounded-xl,
+// no border) at the same max-w-[1400px] / p-6 md:p-10 lg:p-12
+// rhythm as Breaking News and Races above and below. Surface
+// tone differs by design — gray-100 sits one notch off the
+// canvas in both themes so the row reads as its own editorial
+// moment without leaving the shared section geometry.
 //
 // Items come from the homepage query as the latest 4 productPost
 // records (any section) — first is the featured slot, next three
