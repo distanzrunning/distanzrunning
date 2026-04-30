@@ -1222,7 +1222,6 @@
   }
   .ds-input-field::placeholder {
     color: var(--ds-gray-700);
-    font-weight: 300;
   }
   .ds-input-field:disabled {
     opacity: 1;
