@@ -1423,7 +1423,6 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                           size="small"
                           variant="tertiary"
                           onClick={() => {
-                            setTempDistanceMode("distance");
                             setTempDistancePresets([]);
                             setTempCustomRange({ min: 0, max: 100 });
                           }}
