@@ -125,7 +125,7 @@ export default async function Home() {
           NewsletterSignup forces `.dark` / `.light` on its own
           subtree from the theme prop, so just gating visibility
           on the page theme gives the inverse. */}
-      <section className="w-full px-4 py-12 md:py-16 lg:py-20">
+      <section className="w-full px-4 pb-12 pt-12 md:pb-24 md:pt-16 lg:pb-32 lg:pt-20">
         <div className="dark:hidden">
           <NewsletterSignup theme="black" source="homepage_footer" />
         </div>
