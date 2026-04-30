@@ -12,6 +12,12 @@ import { headers } from "next/headers";
 import { ReactNode } from "react";
 import PageFrame from "./ui/PageFrame";
 
+// Routes that have been rebuilt against the new DS use the v0-style
+// SiteHeader. Add to this set as more pages migrate off the legacy
+// NavbarAlt; once every public route is on the new chrome, this set
+// goes away and SiteHeader becomes unconditional.
+const SITE_HEADER_ROUTES = new Set<string>(["/", "/races"]);
+
 interface LayoutContentProps {
   children: ReactNode;
   navbar: ReactNode;
@@ -44,8 +50,7 @@ export default async function LayoutContent({
   // Hide footer on calendar page (fullscreen app-like view)
   const isCalendarPage = pathname === "/races/calendar";
 
-  // Homepage uses the new SiteHeader chrome.
-  const isHome = pathname === "/";
+  const usesSiteHeader = SITE_HEADER_ROUTES.has(pathname);
 
   if (isPreviewMode || isLoginPage || isAdmin || isComingSoon) {
     return <main className="min-h-screen">{children}</main>;
@@ -57,7 +62,7 @@ export default async function LayoutContent({
   const chromeClass =
     "flex min-h-screen flex-col bg-[var(--ds-background-100)] dark:bg-[var(--ds-background-200)]";
 
-  if (isHome) {
+  if (usesSiteHeader) {
     return (
       <div className={chromeClass}>
         {header}
