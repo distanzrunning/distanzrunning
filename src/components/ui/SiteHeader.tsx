@@ -235,7 +235,13 @@ export default function SiteHeader({
 
       <Dialog.Root open={searchOpen} onOpenChange={setSearchOpen}>
         <Dialog.Portal>
-          <Dialog.Overlay className="fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm" />
+          <Dialog.Overlay
+            className="fixed inset-0 z-[60]"
+            style={{
+              backgroundColor: "var(--ds-overlay-backdrop-color)",
+              opacity: "var(--ds-overlay-backdrop-opacity)",
+            }}
+          />
           <Dialog.Content className="fixed left-1/2 top-24 z-[70] w-[calc(100%-1rem)] -translate-x-1/2 p-0 focus:outline-none md:w-full md:max-w-xl">
             <Dialog.Title className="sr-only">Search</Dialog.Title>
             <Dialog.Description className="sr-only">
