@@ -68,7 +68,15 @@ function handleHoldingPage(request: NextRequest): NextResponse | null {
 
   const url = request.nextUrl.clone();
   url.pathname = HOLDING_PAGE_PATH;
-  return NextResponse.rewrite(url);
+
+  // Forward the rewritten path as x-pathname so LayoutContent
+  // resolves to the no-chrome branch (no header, no footer). Without
+  // this the rewrite hits the route at /coming-soon but LayoutContent
+  // reads x-pathname = "/" (the original URL) and renders the
+  // homepage chrome around the holding page.
+  const headers = new Headers(request.headers);
+  headers.set("x-pathname", HOLDING_PAGE_PATH);
+  return NextResponse.rewrite(url, { request: { headers } });
 }
 
 async function handleStagingAuth(
