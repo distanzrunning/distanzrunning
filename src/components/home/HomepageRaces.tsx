@@ -119,15 +119,12 @@ export default function HomepageRaces({
       >
         <header className="flex items-end justify-between gap-8">
           <div className="flex flex-col gap-3">
-            {/* Calendar tick — section identity, mirroring the red
-                live-dot above "Latest news". 20 px lucide icon,
-                stroke 1.5 per the DS Iconography rules. */}
-            <Calendar
-              className="size-5 shrink-0 self-start text-[color:var(--ds-gray-1000)]"
-              strokeWidth={1.5}
-              aria-hidden
-            />
-            <h2 className="m-0 text-heading-32 text-balance text-[color:var(--ds-gray-1000)]">
+            <h2 className="m-0 flex items-center gap-3 text-heading-32 text-balance text-[color:var(--ds-gray-1000)]">
+              <Calendar
+                className="size-7 shrink-0"
+                strokeWidth={1.5}
+                aria-hidden
+              />
               Upcoming races
             </h2>
             <p className="text-[16px] leading-[1.5] text-[color:var(--ds-gray-900)] md:text-[18px]">
