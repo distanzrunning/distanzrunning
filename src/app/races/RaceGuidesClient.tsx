@@ -17,6 +17,8 @@ import { urlFor } from "@/sanity/lib/image";
 import { motion, AnimatePresence } from "framer-motion";
 import type { RaceGuide } from "./page";
 import { Calendar, type DateRange } from "@/components/ui/Calendar";
+import { Input } from "@/components/ui/Input";
+import { Search as SearchIcon, X as XIcon } from "lucide-react";
 import Slider from "@mui/material/Slider";
 import Box from "@mui/material/Box";
 import * as flags from "country-flag-icons/react/3x2";
@@ -34,7 +36,6 @@ function formatLocation(
 
 export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
   const [searchQuery, setSearchQuery] = useState("");
-  const [isSearchExpanded, setIsSearchExpanded] = useState(false);
   // Date filter — DS Calendar owns its own popover, tab switcher, and
   // navigation state. We only hold the applied range so the GROQ
   // filter can react to it.
@@ -1234,94 +1235,29 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
 
           {/* Search and Filters Row */}
           <div className="flex items-center gap-3 py-2">
-            {/* Search Bar */}
-            <div className="relative flex-shrink-0" style={{ order: -100 }}>
-              <AnimatePresence mode="wait" initial={false}>
-                {!isSearchExpanded ? (
-                  <motion.button
-                    key="search-button"
-                    initial={{ opacity: 0, width: 44 }}
-                    animate={{ opacity: 1, width: 44 }}
-                    exit={{ opacity: 0, width: 44 }}
-                    transition={{ duration: 0.15, ease: "easeInOut" }}
-                    onClick={() => setIsSearchExpanded(true)}
-                    className="flex items-center justify-center h-[44px] p-2.5 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:border-neutral-400 dark:hover:border-neutral-600 transition-colors"
-                    aria-label="Expand search"
-                  >
-                    <svg
-                      className="h-5 w-5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                      />
-                    </svg>
-                  </motion.button>
-                ) : (
-                  <motion.div
-                    key="search-input"
-                    initial={{ opacity: 0, width: 44 }}
-                    animate={{ opacity: 1, width: 400 }}
-                    exit={{ opacity: 0, width: 44 }}
-                    transition={{ duration: 0.25, ease: "easeInOut" }}
-                    className="relative"
-                  >
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <svg
-                        className="h-5 w-5 text-neutral-400"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                        />
-                      </svg>
-                    </div>
-                    <input
-                      type="text"
-                      placeholder="Search"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      onBlur={() => {
-                        if (!searchQuery) setIsSearchExpanded(false);
-                      }}
-                      autoFocus
-                      className="w-full h-[44px] pl-10 pr-10 py-2.5 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white placeholder-neutral-500 dark:placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-600 focus:border-transparent transition-colors"
-                    />
+            {/* Search */}
+            <div className="w-64 shrink-0" style={{ order: -100 }}>
+              <Input
+                size="large"
+                placeholder="Search races…"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                prefix={<SearchIcon className="size-4" />}
+                prefixStyling={false}
+                suffix={
+                  searchQuery ? (
                     <button
-                      onClick={() => {
-                        setSearchQuery("");
-                        setIsSearchExpanded(false);
-                      }}
-                      className="absolute inset-y-0 right-0 pr-3 flex items-center text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300"
+                      type="button"
+                      onClick={() => setSearchQuery("")}
                       aria-label="Clear search"
+                      className="flex items-center justify-center text-[color:var(--ds-gray-700)] transition-colors hover:text-[color:var(--ds-gray-1000)]"
                     >
-                      <svg
-                        className="h-5 w-5"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M6 18L18 6M6 6l12 12"
-                        />
-                      </svg>
+                      <XIcon className="size-4" />
                     </button>
-                  </motion.div>
-                )}
-              </AnimatePresence>
+                  ) : undefined
+                }
+                suffixStyling={false}
+              />
             </div>
 
             {/* Date Filter */}
