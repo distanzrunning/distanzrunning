@@ -25,7 +25,6 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { format } from "date-fns";
 import { urlFor } from "@/sanity/lib/image";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
@@ -151,27 +150,43 @@ export default function HomepageHeroCarousel({
 
                     {/* Right: image card. Inverse-zoom on slide hover.
                         order-1 on mobile pulls it above the text block;
-                        lg:order-2 puts it back on the right on desktop. */}
+                        lg:order-2 puts it back on the right on desktop.
+                        Aspect flips per viewport: 4/5 portrait on
+                        mobile (taller, more impactful in the phone
+                        viewport) → 16/9 cinematic on lg+. The
+                        <picture> element art-directs the source so
+                        Sanity returns a portrait crop on mobile and
+                        the original landscape crop on desktop —
+                        respects the editor's hotspot if set. */}
                     <Link
                       href={slide.href}
                       className="relative order-1 block overflow-hidden rounded-lg border border-[color:var(--ds-gray-400)] lg:order-2 lg:col-span-2"
                       style={{ background: "var(--ds-gray-200)" }}
                       aria-label={slide.title}
                     >
-                      <div className="relative aspect-[16/9] w-full">
+                      <div className="relative aspect-[4/5] w-full lg:aspect-[16/9]">
                         {slide.mainImage && (
-                          <Image
-                            src={urlFor(slide.mainImage)
-                              .width(1600)
-                              .height(900)
-                              .url()}
-                            alt=""
-                            fill
-                            sizes="(min-width: 1024px) 853px, 100vw"
-                            priority={i === 0}
-                            className="scale-[1.04] transition-transform duration-300 ease-out will-change-transform group-hover/slide:scale-100"
-                            style={{ objectFit: "cover" }}
-                          />
+                          <picture>
+                            <source
+                              media="(min-width: 1024px)"
+                              srcSet={urlFor(slide.mainImage)
+                                .width(1600)
+                                .height(900)
+                                .auto("format")
+                                .url()}
+                            />
+                            <img
+                              src={urlFor(slide.mainImage)
+                                .width(800)
+                                .height(1000)
+                                .auto("format")
+                                .url()}
+                              alt=""
+                              loading={i === 0 ? "eager" : "lazy"}
+                              fetchPriority={i === 0 ? "high" : "auto"}
+                              className="absolute inset-0 h-full w-full scale-[1.04] object-cover transition-transform duration-300 ease-out will-change-transform group-hover/slide:scale-100"
+                            />
+                          </picture>
                         )}
                       </div>
                     </Link>
