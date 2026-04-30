@@ -1347,7 +1347,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                           ))}
                         </div>
                       ) : (
-                        <div className="flex flex-col gap-3 px-1">
+                        <div className="flex flex-col gap-3">
                           {(() => {
                             // Slider drives temp custom range —
                             // commits to applied on Apply click.
@@ -1363,6 +1363,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                               <>
                                 <DsSlider
                                   range
+                                  width={288}
                                   min={0}
                                   max={
                                     distanceUnit === "km"
