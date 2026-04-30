@@ -74,6 +74,15 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
+                // Mirrors --ds-background-200 in globals.css per
+                // theme — the same token body uses for its
+                // background-color. Setting it inline on <html>
+                // before paint stops the browser-default white
+                // canvas from flashing through on dark-mode reloads
+                // (it'd otherwise paint white until the stylesheet
+                // loaded the body bg rule).
+                var darkBg = '#000000';
+                var lightBg = '#FAFAFA';
                 try {
                   var stored = localStorage.getItem('theme');
                   var prefersDark = window.matchMedia
@@ -84,15 +93,22 @@ export default function RootLayout({
                   if (isDark) {
                     root.classList.add('dark');
                     root.style.colorScheme = 'dark';
+                    root.style.backgroundColor = darkBg;
                   } else {
                     root.classList.remove('dark');
                     root.style.colorScheme = 'light';
+                    root.style.backgroundColor = lightBg;
                   }
                 } catch (e) {
-                  if (window.matchMedia
-                      && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                    document.documentElement.classList.add('dark');
-                    document.documentElement.style.colorScheme = 'dark';
+                  var fallbackDark = window.matchMedia
+                    && window.matchMedia('(prefers-color-scheme: dark)').matches;
+                  var fallbackRoot = document.documentElement;
+                  if (fallbackDark) {
+                    fallbackRoot.classList.add('dark');
+                    fallbackRoot.style.colorScheme = 'dark';
+                    fallbackRoot.style.backgroundColor = darkBg;
+                  } else {
+                    fallbackRoot.style.backgroundColor = lightBg;
                   }
                 }
               })();
