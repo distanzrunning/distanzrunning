@@ -1293,16 +1293,6 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                         size="small"
                         fullWidth
                         options={[
-                          { value: "km", label: "KM" },
-                          { value: "mi", label: "MI" },
-                        ]}
-                        value={distanceUnit}
-                        onChange={(v) => setDistanceUnit(v as "km" | "mi")}
-                      />
-                      <Switch
-                        size="small"
-                        fullWidth
-                        options={[
                           { value: "distance", label: "Distance" },
                           { value: "custom", label: "Custom" },
                         ]}
@@ -1390,6 +1380,19 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                   )}{" "}
                               {distanceUnit}
                             </span>
+                          </div>
+                          <div className="flex justify-center pt-1">
+                            <Switch
+                              size="small"
+                              options={[
+                                { value: "km", label: "KM" },
+                                { value: "mi", label: "MI" },
+                              ]}
+                              value={distanceUnit}
+                              onChange={(v) =>
+                                setDistanceUnit(v as "km" | "mi")
+                              }
+                            />
                           </div>
                         </div>
                       )}
