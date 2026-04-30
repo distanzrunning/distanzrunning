@@ -23,7 +23,7 @@
 // on narrow viewports anyway). Mobile users navigate via swipe and
 // the dot wayfinding strip below the slides.
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { format } from "date-fns";
 import { urlFor } from "@/sanity/lib/image";
@@ -36,6 +36,85 @@ import {
   CarouselPrevious,
   type CarouselApi,
 } from "@/components/ui/Carousel";
+
+// ============================================================================
+// HeroSlideImage — picture/img with skeleton overlay + cached-image fix
+// ============================================================================
+
+function HeroSlideImage({
+  slide,
+  index,
+}: {
+  slide: HomepageHeroSlide;
+  index: number;
+}) {
+  const [loaded, setLoaded] = useState(false);
+  const imgRef = useRef<HTMLImageElement | null>(null);
+
+  // Cached-image race: when the <link rel="preload"> for the LCP
+  // slide fires before React hydrates, the browser has the image
+  // in cache by the time React renders the <img> — and renders it
+  // synchronously without firing a load event. Check `complete`
+  // on mount; if the image is ready, mark loaded immediately.
+  // If not, wire a load listener (in addition to the JSX onLoad
+  // for the cached-then-evicted edge case).
+  useEffect(() => {
+    const img = imgRef.current;
+    if (!img) return;
+    if (img.complete && img.naturalWidth > 0) {
+      setLoaded(true);
+      return;
+    }
+    const handler = () => setLoaded(true);
+    img.addEventListener("load", handler);
+    return () => img.removeEventListener("load", handler);
+  }, []);
+
+  if (!slide.mainImage) return null;
+
+  return (
+    <>
+      {/* Skeleton overlay — uniform gray pulse until <img> decodes,
+          then fades out and the actual image takes over. */}
+      <div
+        aria-hidden
+        className={`absolute inset-0 bg-[color:var(--ds-gray-100)] transition-opacity duration-300 ${
+          loaded
+            ? "pointer-events-none opacity-0"
+            : "animate-pulse opacity-100"
+        }`}
+      />
+      <picture>
+        <source
+          media="(min-width: 1024px)"
+          srcSet={urlFor(slide.mainImage)
+            .width(1600)
+            .height(900)
+            .auto("format")
+            .url()}
+        />
+        <img
+          ref={imgRef}
+          src={urlFor(slide.mainImage)
+            .width(800)
+            .height(1000)
+            .auto("format")
+            .url()}
+          alt=""
+          // All slides eager — Embla translates non-active slides
+          // off-screen, so loading="lazy" never triggers.
+          loading="eager"
+          fetchPriority={index === 0 ? "high" : "auto"}
+          decoding="async"
+          onLoad={() => setLoaded(true)}
+          className={`absolute inset-0 h-full w-full scale-[1.04] object-cover transition-[transform,opacity] duration-300 ease-out will-change-transform group-hover/slide:scale-100 ${
+            loaded ? "opacity-100" : "opacity-0"
+          }`}
+        />
+      </picture>
+    </>
+  );
+}
 
 export type HomepageHeroSlide = {
   _id: string;
@@ -60,9 +139,6 @@ export default function HomepageHeroCarousel({
   const slideCount = slides.length;
   const [api, setApi] = useState<CarouselApi>();
   const [active, setActive] = useState(0);
-  // Per-slide image-loaded state — drives the skeleton overlay
-  // fade-out as each slide's image decodes.
-  const [loaded, setLoaded] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     if (!api) return;
@@ -168,56 +244,7 @@ export default function HomepageHeroCarousel({
                       aria-label={slide.title}
                     >
                       <div className="relative aspect-[4/5] w-full lg:aspect-[16/9]">
-                        {/* Skeleton overlay — uniform gray pulse
-                            until <img> decodes, then fades out and
-                            the actual image takes over. Same
-                            aesthetic as <CardImage> across the
-                            rest of the page. */}
-                        <div
-                          aria-hidden
-                          className={`absolute inset-0 bg-[color:var(--ds-gray-100)] transition-opacity duration-300 ${
-                            loaded[slide._id]
-                              ? "pointer-events-none opacity-0"
-                              : "animate-pulse opacity-100"
-                          }`}
-                        />
-                        {slide.mainImage && (
-                          <picture>
-                            <source
-                              media="(min-width: 1024px)"
-                              srcSet={urlFor(slide.mainImage)
-                                .width(1600)
-                                .height(900)
-                                .auto("format")
-                                .url()}
-                            />
-                            <img
-                              src={urlFor(slide.mainImage)
-                                .width(800)
-                                .height(1000)
-                                .auto("format")
-                                .url()}
-                              alt=""
-                              // All slides load eagerly — Embla
-                              // translates non-active slides off-screen,
-                              // so loading="lazy" never triggers (the
-                              // intersection observer doesn't see them
-                              // as in-viewport) and the skeleton would
-                              // sit gray forever. Eager + fetchPriority
-                              // gives the LCP-first slide a boost while
-                              // the others fetch at low priority.
-                              loading="eager"
-                              fetchPriority={i === 0 ? "high" : "low"}
-                              decoding="async"
-                              onLoad={() =>
-                                setLoaded((m) => ({ ...m, [slide._id]: true }))
-                              }
-                              className={`absolute inset-0 h-full w-full scale-[1.04] object-cover transition-[transform,opacity] duration-300 ease-out will-change-transform group-hover/slide:scale-100 ${
-                                loaded[slide._id] ? "opacity-100" : "opacity-0"
-                              }`}
-                            />
-                          </picture>
-                        )}
+                        <HeroSlideImage slide={slide} index={i} />
                       </div>
                     </Link>
                   </article>
