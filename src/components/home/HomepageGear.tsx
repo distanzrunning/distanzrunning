@@ -47,8 +47,10 @@ interface HomepageGearProps {
 }
 
 // Combined index of every productPost (shoes + gear + nutrition).
-// Route doesn't exist yet — needs to be created at /reviews/page.tsx.
-const SEE_ALL_HREF = "/reviews";
+// Route lives at /products — named after the schema rather than
+// "reviews" since the productPost type covers reviews, best-of
+// round-ups, and explainers.
+const SEE_ALL_HREF = "/products";
 
 const formatDate = (iso?: string) => {
   if (!iso) return "";

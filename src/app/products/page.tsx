@@ -1,9 +1,14 @@
-// src/app/reviews/page.tsx
+// src/app/products/page.tsx
 //
-// Combined reviews index — every productPost across shoes, gear,
-// and nutrition. Linked from the homepage Gear section ("See all
-// articles"). Pulls the same shape the homepage row uses so cards
-// route to /{section}/{slug} via the productCategory.section field.
+// Combined product-coverage index — every productPost across
+// shoes, gear, and nutrition. Covers reviews, best-of round-ups,
+// and explainers (anything published as a productPost), so the
+// route is named after the schema rather than "reviews" — that
+// would mis-scope the broader content.
+//
+// Linked from the homepage Gear section ("See all articles").
+// Pulls the same shape the homepage row uses so cards route to
+// /{section}/{slug} via the productCategory.section field.
 
 import { client as sanity } from "@/sanity/lib/client";
 import { urlFor } from "@/sanity/lib/image";
@@ -12,7 +17,7 @@ import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 
 export const revalidate = 60;
 
-type ReviewPost = {
+type ProductIndexItem = {
   _id: string;
   title: string;
   slug: string;
@@ -24,8 +29,8 @@ type ReviewPost = {
   kickerHref?: string | null;
 };
 
-export default async function ReviewsIndexPage() {
-  const posts: ReviewPost[] = await sanity.fetch(`
+export default async function ProductsIndexPage() {
+  const posts: ProductIndexItem[] = await sanity.fetch(`
     *[_type == "productPost" && defined(slug.current)] | order(publishedAt desc) {
       _id,
       title,
@@ -44,7 +49,7 @@ export default async function ReviewsIndexPage() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <header className="mb-8 flex flex-col gap-2">
           <h1 className="m-0 text-heading-40 text-balance text-[color:var(--ds-gray-1000)]">
-            Reviews
+            Products
           </h1>
           <p className="text-balance text-[16px] leading-[1.5] text-[color:var(--ds-gray-900)] md:text-[18px]">
             Reviews, best-of round-ups, and explainers across shoes,
@@ -54,7 +59,7 @@ export default async function ReviewsIndexPage() {
 
         {posts.length === 0 ? (
           <p className="text-[color:var(--ds-gray-900)]">
-            No reviews yet — check back soon.
+            No product articles yet — check back soon.
           </p>
         ) : (
           <div className="grid grid-cols-1 gap-x-8 gap-y-12 md:grid-cols-2 lg:grid-cols-3">
