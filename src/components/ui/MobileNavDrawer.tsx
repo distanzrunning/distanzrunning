@@ -27,8 +27,9 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { urlFor } from "@/sanity/lib/image";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 import { DarkModeContext } from "@/components/DarkModeProvider";
+import Button from "@/components/ui/Button";
 import { ThemeSwitcher } from "@/components/ui/ThemeSwitcher";
-import { NewsletterButton } from "@/components/ui/NewsletterModal";
+import { preloadNewsletterHero } from "@/components/ui/NewsletterModal";
 import {
   type CategoryItem,
   newsLinks,
@@ -58,7 +59,14 @@ interface MobileNavDrawerProps {
   featuredGear: FeaturedProduct;
   featuredNutrition: FeaturedProduct;
   featuredRace: FeaturedRace;
-  newsletterSource?: string;
+  /**
+   * Called when the user taps the newsletter button inside the
+   * drawer. The parent is expected to close the drawer + open the
+   * NewsletterModal — keeping the modal state at the parent level
+   * means the modal can outlive the drawer (otherwise the modal
+   * unmounts the moment the drawer slides out).
+   */
+  onOpenNewsletter: () => void;
 }
 
 // ============================================================================
@@ -115,12 +123,12 @@ function ensureKeyframes() {
 export default function MobileNavDrawer({
   open,
   onOpenChange,
+  onOpenNewsletter,
   featuredNews,
   featuredShoe,
   featuredGear,
   featuredNutrition,
   featuredRace,
-  newsletterSource = "site_header_mobile",
 }: MobileNavDrawerProps) {
   const { theme, setTheme } = useContext(DarkModeContext);
 
@@ -263,13 +271,23 @@ export default function MobileNavDrawer({
                   drawer widths (e.g. landscape phones). */}
               <div className="h-full w-1/2 shrink-0 overflow-y-auto p-4">
                 <div className="mx-auto flex w-full max-w-md flex-col">
-                  {/* Newsletter button + 16 px bottom gap before the list */}
+                  {/* Newsletter button + 16 px bottom gap before the list.
+                      The button only signals the parent — SiteHeader closes
+                      the drawer and opens the modal. Lifting the modal
+                      state above the drawer keeps it mounted across the
+                      drawer's slide-out, so the modal can take over the
+                      screen as the drawer dismisses. */}
                   <div className="flex flex-col gap-2 pb-4">
-                    <NewsletterButton
+                    <Button
                       size="small"
-                      source={newsletterSource}
+                      onClick={onOpenNewsletter}
+                      onMouseEnter={preloadNewsletterHero}
+                      onFocus={preloadNewsletterHero}
                       className="w-full !h-8 !rounded-[4px] !text-[14px] !leading-5"
-                    />
+                      data-attr="newsletter-modal-open-mobile-drawer"
+                    >
+                      Newsletter
+                    </Button>
                   </div>
                   {/* Section rows — match v0's mobile menu items:
                       text-base / 24 in gray-900, rounded-lg, px-3 py-2 */}

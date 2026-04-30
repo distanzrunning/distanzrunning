@@ -1,11 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
+import posthog from "posthog-js";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Search as SearchIcon } from "lucide-react";
+import Button from "@/components/ui/Button";
 import IconButton from "@/components/ui/IconButton";
-import { NewsletterButton } from "@/components/ui/NewsletterModal";
+import {
+  NewsletterModal,
+  preloadNewsletterHero,
+} from "@/components/ui/NewsletterModal";
 import SiteNavigationMenu, {
   type FeaturedProduct,
   type FeaturedRace,
@@ -59,6 +64,27 @@ export default function SiteHeader({
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  // Newsletter modal state lives at the header level so the modal
+  // can outlive both the desktop trigger and the mobile drawer —
+  // the drawer can close itself before the modal appears, so the
+  // user only ever sees one overlay at a time.
+  const [newsletterOpen, setNewsletterOpen] = useState(false);
+  const [newsletterEventSource, setNewsletterEventSource] =
+    useState(newsletterSource);
+
+  const openNewsletter = useCallback(
+    (source: string, options?: { fromMobileDrawer?: boolean }) => {
+      try {
+        posthog.capture("newsletter_modal_opened", { location: source });
+      } catch {
+        // PostHog may not be loaded yet (consent not granted) — ignore.
+      }
+      setNewsletterEventSource(source);
+      if (options?.fromMobileDrawer) setMobileOpen(false);
+      setNewsletterOpen(true);
+    },
+    [],
+  );
 
   // Track scroll position so the sticky header's bottom border can
   // fade in once content has been scrolled under it. Threshold of 0
@@ -135,7 +161,15 @@ export default function SiteHeader({
           >
             <SearchIcon className="size-4" />
           </IconButton>
-          <NewsletterButton size="small" source={newsletterSource} />
+          <Button
+            size="small"
+            onClick={() => openNewsletter(newsletterSource)}
+            onMouseEnter={preloadNewsletterHero}
+            onFocus={preloadNewsletterHero}
+            data-attr="newsletter-modal-open"
+          >
+            Newsletter
+          </Button>
         </div>
 
         {/* Right (mobile only): hamburger ↔ close toggle. 28 px
@@ -192,7 +226,11 @@ export default function SiteHeader({
         featuredGear={featuredGear}
         featuredNutrition={featuredNutrition}
         featuredRace={featuredRace}
-        newsletterSource={`${newsletterSource}_mobile`}
+        onOpenNewsletter={() =>
+          openNewsletter(`${newsletterSource}_mobile`, {
+            fromMobileDrawer: true,
+          })
+        }
       />
 
       <Dialog.Root open={searchOpen} onOpenChange={setSearchOpen}>
@@ -207,6 +245,12 @@ export default function SiteHeader({
           </Dialog.Content>
         </Dialog.Portal>
       </Dialog.Root>
+
+      <NewsletterModal
+        isOpen={newsletterOpen}
+        onClose={() => setNewsletterOpen(false)}
+        source={newsletterEventSource}
+      />
     </>
   );
 }
