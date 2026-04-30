@@ -28,12 +28,11 @@ import Link from "next/link";
 import { format } from "date-fns";
 import { urlFor } from "@/sanity/lib/image";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
   type CarouselApi,
 } from "@/components/ui/Carousel";
 
@@ -252,45 +251,55 @@ export default function HomepageHeroCarousel({
               );
             })}
           </CarouselContent>
-
-          {/* Prev / next chevrons fade in on section hover (desktop
-              affordance). Hidden on mobile / tablet — they sit at
-              -left-12 / -right-12 which puts them off-screen on
-              narrow viewports. Mobile users navigate via swipe
-              (Embla's built-in drag handler) and the dot
-              wayfinding strip below. */}
-          {slideCount > 1 && (
-            <>
-              <CarouselPrevious className="hidden opacity-0 transition-opacity duration-200 group-hover/carousel:opacity-100 focus-visible:opacity-100 lg:grid" />
-              <CarouselNext className="hidden opacity-0 transition-opacity duration-200 group-hover/carousel:opacity-100 focus-visible:opacity-100 lg:grid" />
-            </>
-          )}
         </Carousel>
 
-        {/* Subtle dots — wayfinding only. Active widens slightly to
-            mark position; inactive sit quietly at gray-400 so they
+        {/* Wayfinding row — prev button | dot strip | next button.
+            Inline below the carousel content (Embla's default
+            controls pattern) so chevrons stay on-screen even when
+            the hero is full-bleed. Active dot widens to mark
+            position; inactive dots sit quietly at gray-400 so they
             read as "more here" without dominating. */}
         {slideCount > 1 && (
-          <div
-            role="tablist"
-            aria-label="Slide navigation"
-            className="mt-8 flex items-center justify-center gap-1.5 lg:mt-10"
-          >
-            {slides.map((s, i) => (
-              <button
-                key={s._id}
-                role="tab"
-                type="button"
-                aria-selected={i === active}
-                aria-label={`Slide ${i + 1}: ${s.title}`}
-                onClick={() => scrollTo(i)}
-                className={`h-[5px] rounded-full transition-all ${
-                  i === active
-                    ? "w-4 bg-[color:var(--ds-gray-1000)]"
-                    : "w-[5px] bg-[color:var(--ds-gray-400)] hover:bg-[color:var(--ds-gray-700)]"
-                }`}
-              />
-            ))}
+          <div className="mt-8 flex items-center justify-center gap-4 lg:mt-10">
+            <button
+              type="button"
+              onClick={() => api?.scrollPrev()}
+              aria-label="Previous slide"
+              className="grid size-8 place-items-center rounded-full text-[color:var(--ds-gray-1000)] transition-colors hover:bg-[color:var(--ds-gray-100)]"
+            >
+              <ChevronLeft className="size-5" aria-hidden />
+            </button>
+
+            <div
+              role="tablist"
+              aria-label="Slide navigation"
+              className="flex items-center gap-1.5"
+            >
+              {slides.map((s, i) => (
+                <button
+                  key={s._id}
+                  role="tab"
+                  type="button"
+                  aria-selected={i === active}
+                  aria-label={`Slide ${i + 1}: ${s.title}`}
+                  onClick={() => scrollTo(i)}
+                  className={`h-[5px] rounded-full transition-all ${
+                    i === active
+                      ? "w-4 bg-[color:var(--ds-gray-1000)]"
+                      : "w-[5px] bg-[color:var(--ds-gray-400)] hover:bg-[color:var(--ds-gray-700)]"
+                  }`}
+                />
+              ))}
+            </div>
+
+            <button
+              type="button"
+              onClick={() => api?.scrollNext()}
+              aria-label="Next slide"
+              className="grid size-8 place-items-center rounded-full text-[color:var(--ds-gray-1000)] transition-colors hover:bg-[color:var(--ds-gray-100)]"
+            >
+              <ChevronRight className="size-5" aria-hidden />
+            </button>
           </div>
         )}
       </div>
