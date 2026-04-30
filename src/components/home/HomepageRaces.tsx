@@ -127,7 +127,7 @@ export default function HomepageRaces({
               />
               <span
                 aria-hidden
-                className="h-6 w-px shrink-0 bg-[color:var(--ds-gray-400)]"
+                className="h-6 w-1 shrink-0 rounded-full bg-[color:var(--ds-gray-1000)]"
               />
               Races
             </h2>
