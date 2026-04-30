@@ -2538,11 +2538,21 @@
     @apply col-span-full;
   }
 
-  /* Distanz font features — use Geist's default OpenType metrics. */
+  /* Distanz font features — match Vercel's Geist surfaces:
+     required ligatures on, contextual alternates off. Same toggle
+     they use on vercel.com so Geist renders identically here. */
   .distanz-font-features {
-    font-feature-settings: normal;
+    font-feature-settings: "rlig" 1, "calt" 0;
     font-variant-ligatures: normal;
     font-variant-numeric: normal;
+  }
+
+  /* EB Garamond (font-serif) — neutralise the Geist-tuned negative
+     tracking baked into text-heading-* so editorial headlines
+     don't render cramped. Serifs need air the way sans-serif
+     headings need tightness. */
+  .font-serif {
+    letter-spacing: 0;
   }
 
   /* Updated capsize with tighter calculations */
