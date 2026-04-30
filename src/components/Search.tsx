@@ -2,8 +2,10 @@
 //
 // Public-site search modal — Algolia-backed via react-instantsearch.
 // Visual layer is built from DS tokens / primitives only:
-//   - Panel uses material-modal (12 px radius + DS shadow) on top of
-//     --ds-background-100 with a --ds-gray-400 hairline.
+//   - Panel uses 12 px radius + --ds-shadow-modal on top of
+//     --ds-background-100 — same shadow + radius DS Modal /
+//     NewsletterModal use, no explicit border (the shadow's first
+//     stop carries a 1 px ring that defines the edge).
 //   - All text colour flows through the gray scale tokens (gray-1000
 //     primary, gray-900 subtle, gray-700 muted) so light/dark flip
 //     automatically.
@@ -234,7 +236,7 @@ function SearchInput({
 }
 
 // ============================================================================
-// Panel — wraps the input + body in a material-modal surface
+// Panel — wraps the input + body in a DS modal-shaped surface
 // ============================================================================
 
 function SearchPanel({
@@ -256,7 +258,10 @@ function SearchPanel({
   );
 
   return (
-    <div className="material-modal flex w-full max-w-xl flex-col overflow-hidden bg-[color:var(--ds-background-100)]">
+    <div
+      className="flex w-full max-w-xl flex-col overflow-hidden rounded-xl bg-[color:var(--ds-background-100)]"
+      style={{ boxShadow: "var(--ds-shadow-modal)" }}
+    >
       <SearchInput
         isExpanded={isExpanded}
         onClose={handleClose}
