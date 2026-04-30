@@ -675,71 +675,71 @@ export default function Typography() {
               <tr className="border-b border-borderSubtle">
                 <td className="py-2 pr-4">text-heading-72</td>
                 <td className="py-2 px-4">72px</td>
-                <td className="py-2 px-4">80px</td>
-                <td className="py-2 px-4">-0.04em</td>
-                <td className="py-2 px-4">700</td>
+                <td className="py-2 px-4">72px</td>
+                <td className="py-2 px-4">-0.06em</td>
+                <td className="py-2 px-4">600</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-2 pr-4">text-heading-64</td>
                 <td className="py-2 px-4">64px</td>
-                <td className="py-2 px-4">72px</td>
-                <td className="py-2 px-4">-0.04em</td>
-                <td className="py-2 px-4">700</td>
+                <td className="py-2 px-4">64px</td>
+                <td className="py-2 px-4">-0.06em</td>
+                <td className="py-2 px-4">600</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-2 pr-4">text-heading-56</td>
                 <td className="py-2 px-4">56px</td>
-                <td className="py-2 px-4">64px</td>
-                <td className="py-2 px-4">-0.04em</td>
-                <td className="py-2 px-4">700</td>
+                <td className="py-2 px-4">56px</td>
+                <td className="py-2 px-4">-0.06em</td>
+                <td className="py-2 px-4">600</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-2 pr-4">text-heading-48</td>
                 <td className="py-2 px-4">48px</td>
                 <td className="py-2 px-4">56px</td>
-                <td className="py-2 px-4">-0.03em</td>
-                <td className="py-2 px-4">700</td>
+                <td className="py-2 px-4">-0.06em</td>
+                <td className="py-2 px-4">600</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-2 pr-4">text-heading-40</td>
                 <td className="py-2 px-4">40px</td>
                 <td className="py-2 px-4">48px</td>
-                <td className="py-2 px-4">-0.02em</td>
+                <td className="py-2 px-4">-0.06em</td>
                 <td className="py-2 px-4">600</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-2 pr-4">text-heading-32</td>
                 <td className="py-2 px-4">32px</td>
                 <td className="py-2 px-4">40px</td>
-                <td className="py-2 px-4">-0.02em</td>
+                <td className="py-2 px-4">-0.04em</td>
                 <td className="py-2 px-4">600</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-2 pr-4">text-heading-24</td>
                 <td className="py-2 px-4">24px</td>
                 <td className="py-2 px-4">32px</td>
-                <td className="py-2 px-4">-0.015em</td>
+                <td className="py-2 px-4">-0.04em</td>
                 <td className="py-2 px-4">600</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-2 pr-4">text-heading-20</td>
                 <td className="py-2 px-4">20px</td>
-                <td className="py-2 px-4">28px</td>
-                <td className="py-2 px-4">-0.01em</td>
+                <td className="py-2 px-4">26px</td>
+                <td className="py-2 px-4">-0.02em</td>
                 <td className="py-2 px-4">600</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-2 pr-4">text-heading-16</td>
                 <td className="py-2 px-4">16px</td>
                 <td className="py-2 px-4">24px</td>
-                <td className="py-2 px-4">-0.01em</td>
+                <td className="py-2 px-4">-0.02em</td>
                 <td className="py-2 px-4">600</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-2 pr-4">text-heading-14</td>
                 <td className="py-2 px-4">14px</td>
                 <td className="py-2 px-4">20px</td>
-                <td className="py-2 px-4">-0.006em</td>
+                <td className="py-2 px-4">-0.02em</td>
                 <td className="py-2 px-4">600</td>
               </tr>
 
@@ -787,20 +787,20 @@ export default function Typography() {
                 <td className="py-2 pr-4">text-label-20</td>
                 <td className="py-2 px-4">20px</td>
                 <td className="py-2 px-4">32px</td>
-                <td className="py-2 px-4">-0.01em</td>
-                <td className="py-2 px-4">500</td>
+                <td className="py-2 px-4">0</td>
+                <td className="py-2 px-4">400</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-2 pr-4">text-label-18</td>
                 <td className="py-2 px-4">18px</td>
-                <td className="py-2 px-4">28px</td>
-                <td className="py-2 px-4">-0.01em</td>
-                <td className="py-2 px-4">500</td>
+                <td className="py-2 px-4">20px</td>
+                <td className="py-2 px-4">0</td>
+                <td className="py-2 px-4">400</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-2 pr-4">text-label-16</td>
                 <td className="py-2 px-4">16px</td>
-                <td className="py-2 px-4">24px</td>
+                <td className="py-2 px-4">20px</td>
                 <td className="py-2 px-4">0</td>
                 <td className="py-2 px-4">400</td>
               </tr>
@@ -821,7 +821,7 @@ export default function Typography() {
               <tr className="border-b border-borderSubtle">
                 <td className="py-2 pr-4">text-label-13</td>
                 <td className="py-2 px-4">13px</td>
-                <td className="py-2 px-4">20px</td>
+                <td className="py-2 px-4">16px</td>
                 <td className="py-2 px-4">0</td>
                 <td className="py-2 px-4">400</td>
               </tr>
@@ -846,6 +846,13 @@ export default function Typography() {
                 <td className="py-2 px-4">0</td>
                 <td className="py-2 px-4">400</td>
               </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-2 pr-4">text-label-11</td>
+                <td className="py-2 px-4">11px</td>
+                <td className="py-2 px-4">16px</td>
+                <td className="py-2 px-4">0</td>
+                <td className="py-2 px-4">400</td>
+              </tr>
 
               {/* Copy */}
               <tr className="border-b border-borderSubtle bg-surfaceSubtle">
@@ -866,7 +873,7 @@ export default function Typography() {
               <tr className="border-b border-borderSubtle">
                 <td className="py-2 pr-4">text-copy-20</td>
                 <td className="py-2 px-4">20px</td>
-                <td className="py-2 px-4">32px</td>
+                <td className="py-2 px-4">36px</td>
                 <td className="py-2 px-4">0</td>
                 <td className="py-2 px-4">400</td>
               </tr>
@@ -887,14 +894,14 @@ export default function Typography() {
               <tr className="border-b border-borderSubtle">
                 <td className="py-2 pr-4">text-copy-14</td>
                 <td className="py-2 px-4">14px</td>
-                <td className="py-2 px-4">22px</td>
+                <td className="py-2 px-4">20px</td>
                 <td className="py-2 px-4">0</td>
                 <td className="py-2 px-4">400</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-2 pr-4">text-copy-13</td>
                 <td className="py-2 px-4">13px</td>
-                <td className="py-2 px-4">20px</td>
+                <td className="py-2 px-4">18px</td>
                 <td className="py-2 px-4">0</td>
                 <td className="py-2 px-4">400</td>
               </tr>
