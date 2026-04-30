@@ -18,7 +18,16 @@ import { motion, AnimatePresence } from "framer-motion";
 import type { RaceGuide } from "./page";
 import { Calendar, type DateRange } from "@/components/ui/Calendar";
 import { Input } from "@/components/ui/Input";
-import { Search as SearchIcon, X as XIcon } from "lucide-react";
+import Button from "@/components/ui/Button";
+import Switch from "@/components/ui/Switch";
+import Checkbox from "@/components/ui/Checkbox";
+import { Slider as DsSlider } from "@/components/ui/Slider";
+import * as Popover from "@radix-ui/react-popover";
+import {
+  Search as SearchIcon,
+  X as XIcon,
+  ChevronDown as ChevronDownIcon,
+} from "lucide-react";
 import Slider from "@mui/material/Slider";
 import Box from "@mui/material/Box";
 import * as flags from "country-flag-icons/react/3x2";
@@ -44,34 +53,21 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
     end: null,
   });
 
-  // Distance filter states
-  const [isDistanceFilterOpen, setIsDistanceFilterOpen] = useState(false);
-  const [distanceFilterMode, setDistanceFilterMode] = useState<
-    "distance" | "custom"
-  >("distance");
-  const [distanceUnit, setDistanceUnit] = useState<"km" | "mi">("km");
-  const [appliedDistanceFilter, setAppliedDistanceFilter] = useState<
-    string | null
-  >(null); // e.g., 'marathon', 'ultra', or 'custom'
-  const [tempDistanceFilter, setTempDistanceFilter] = useState<string | null>(
-    null,
+  // Distance filter — Radix Popover owns its open state. Multi-pick
+  // presets in "distance" mode; numeric range in "custom" mode.
+  // distanceUnit only swaps display labels; appliedCustomRange always
+  // stores km internally so the filter logic stays unit-agnostic.
+  const [distanceMode, setDistanceMode] = useState<"distance" | "custom">(
+    "distance",
   );
-  // For custom range (in km)
+  const [distanceUnit, setDistanceUnit] = useState<"km" | "mi">("km");
+  const [appliedDistancePresets, setAppliedDistancePresets] = useState<
+    string[]
+  >([]);
   const [appliedCustomRange, setAppliedCustomRange] = useState<{
     min: number;
     max: number;
   }>({ min: 0, max: 100 });
-  const [tempCustomRange, setTempCustomRange] = useState<{
-    min: number;
-    max: number;
-  }>({ min: 0, max: 100 });
-  const distanceFilterRef = useRef<HTMLDivElement>(null);
-  // Track which input is focused
-  const [isMinInputFocused, setIsMinInputFocused] = useState(false);
-  const [isMaxInputFocused, setIsMaxInputFocused] = useState(false);
-  // Track input values while typing
-  const [minInputValue, setMinInputValue] = useState("");
-  const [maxInputValue, setMaxInputValue] = useState("");
 
   // Country filter states
   const [isCountryFilterOpen, setIsCountryFilterOpen] = useState(false);
@@ -519,31 +515,6 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
     return null;
   };
 
-  // Close distance filter on click outside
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (
-        distanceFilterRef.current &&
-        !distanceFilterRef.current.contains(event.target as Node)
-      ) {
-        setIsDistanceFilterOpen(false);
-      }
-    }
-    if (isDistanceFilterOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-      return () =>
-        document.removeEventListener("mousedown", handleClickOutside);
-    }
-  }, [isDistanceFilterOpen]);
-
-  // Initialize temp distance filter when opening dropdown
-  useEffect(() => {
-    if (isDistanceFilterOpen) {
-      setTempDistanceFilter(appliedDistanceFilter);
-      setTempCustomRange(appliedCustomRange);
-    }
-  }, [isDistanceFilterOpen, appliedDistanceFilter, appliedCustomRange]);
-
   // Close country filter on click outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -841,13 +812,13 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
     { id: "ultra", label: "Ultra", km: 50 }, // 50km+ for ultras
   ];
 
-  // Format distance filter display text
+  // Format distance filter display text. Three states:
+  //   - default: "Distance"
+  //   - 1 preset:  the preset's label  ("Marathon")
+  //   - >1 preset: count                ("3 distances")
+  //   - custom:    range with active unit ("10-42 km")
   const getDistanceFilterText = () => {
-    if (!appliedDistanceFilter) {
-      return "Distance";
-    }
-
-    if (appliedDistanceFilter === "custom") {
+    if (distanceMode === "custom") {
       const unit = distanceUnit;
       const min =
         unit === "km"
@@ -857,18 +828,24 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
         unit === "km"
           ? appliedCustomRange.max
           : kmToMiles(appliedCustomRange.max);
-      // Show decimal if values are close together (< 2 units apart)
+      // Default range — show as "Distance" rather than "0-100 km".
+      if (appliedCustomRange.min === 0 && appliedCustomRange.max === 100) {
+        return "Distance";
+      }
       const diff = max - min;
       if (diff < 2) {
-        return `${min.toFixed(1)}-${max.toFixed(1)}${unit}`;
+        return `${min.toFixed(1)}-${max.toFixed(1)} ${unit}`;
       }
-      return `${Math.round(min)}-${Math.round(max)}${unit}`;
+      return `${Math.round(min)}-${Math.round(max)} ${unit}`;
     }
-
-    const category = allDistanceCategories.find(
-      (c) => c.id === appliedDistanceFilter,
-    );
-    return category?.label || "Distance";
+    if (appliedDistancePresets.length === 0) return "Distance";
+    if (appliedDistancePresets.length === 1) {
+      const preset = allDistanceCategories.find(
+        (c) => c.id === appliedDistancePresets[0],
+      );
+      return preset?.label ?? "Distance";
+    }
+    return `${appliedDistancePresets.length} distances`;
   };
 
   const getElevationFilterText = () => {
@@ -944,8 +921,9 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
   }, [
     searchQuery,
     appliedDateRange,
-    appliedDistanceFilter,
+    appliedDistancePresets,
     appliedCustomRange,
+    distanceMode,
     appliedCountryFilter,
     appliedCityFilter,
     appliedStateFilter,
@@ -1001,10 +979,11 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
       });
     }
 
-    // Apply distance filter
-    if (appliedDistanceFilter) {
-      if (appliedDistanceFilter === "custom") {
-        // Custom range filter - uses distance field
+    // Apply distance filter — driven by distanceMode.
+    if (distanceMode === "custom") {
+      const customActive =
+        appliedCustomRange.min > 0 || appliedCustomRange.max < 100;
+      if (customActive) {
         filtered = filtered.filter((race) => {
           if (!race.distance) return false;
           return (
@@ -1012,17 +991,17 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
             race.distance <= appliedCustomRange.max
           );
         });
-      } else {
-        // Category filter - uses raceCategoryName from Sanity
-        filtered = filtered.filter((race) => {
-          if (!race.raceCategoryName) return false;
-          // Normalize category names for comparison
-          const normalizedCategory = race.raceCategoryName
-            .toLowerCase()
-            .replace(/\s+/g, "-");
-          return normalizedCategory === appliedDistanceFilter;
-        });
       }
+    } else if (appliedDistancePresets.length > 0) {
+      // Multi-pick presets — race matches if its normalized category
+      // is in the applied set.
+      filtered = filtered.filter((race) => {
+        if (!race.raceCategoryName) return false;
+        const normalizedCategory = race.raceCategoryName
+          .toLowerCase()
+          .replace(/\s+/g, "-");
+        return appliedDistancePresets.includes(normalizedCategory);
+      });
     }
 
     // Apply country filter
@@ -1126,8 +1105,9 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
     races,
     searchQuery,
     appliedDateRange,
-    appliedDistanceFilter,
+    appliedDistancePresets,
     appliedCustomRange,
+    distanceMode,
     appliedCountryFilter,
     appliedCityFilter,
     appliedStateFilter,
@@ -1208,7 +1188,8 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
   }, [
     searchQuery,
     appliedDateRange,
-    appliedDistanceFilter,
+    appliedDistancePresets,
+    distanceMode,
     appliedCountryFilter,
     appliedCityFilter,
     appliedStateFilter,
@@ -1277,630 +1258,158 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
               />
             </div>
 
-            {/* Distance Filter */}
+            {/* Distance Filter — DS Popover + Switch + Checkbox + Slider */}
             <div
               className="relative"
-              ref={distanceFilterRef}
-              style={{ order: appliedDistanceFilter ? -10 : 0 }}
+              style={{
+                order:
+                  appliedDistancePresets.length > 0 ||
+                  (distanceMode === "custom" &&
+                    (appliedCustomRange.min > 0 ||
+                      appliedCustomRange.max < 100))
+                    ? -10
+                    : 0,
+              }}
             >
-              {appliedDistanceFilter ? (
-                // Filter is active - show filter value with X button
-                <div className="flex items-center gap-2 px-4 h-[44px] rounded-lg border border-neutral-900 dark:border-white bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 text-sm font-medium">
-                  <button
-                    onClick={() =>
-                      setIsDistanceFilterOpen(!isDistanceFilterOpen)
-                    }
-                    className="hover:text-neutral-300 dark:hover:text-neutral-600 transition-colors"
+              <Popover.Root>
+                <Popover.Trigger asChild>
+                  <Button
+                    size="medium"
+                    variant="secondary"
+                    suffixIcon={<ChevronDownIcon className="size-4" />}
                   >
                     {getDistanceFilterText()}
-                  </button>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setAppliedDistanceFilter(null);
-                      setTempDistanceFilter(null);
-                      setAppliedCustomRange({ min: 0, max: 100 });
-                      setTempCustomRange({ min: 0, max: 100 });
-                    }}
-                    className="text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300 transition-colors"
-                    aria-label="Clear distance filter"
+                  </Button>
+                </Popover.Trigger>
+                <Popover.Portal>
+                  <Popover.Content
+                    sideOffset={8}
+                    align="start"
+                    className="z-50 w-80 rounded-xl bg-[color:var(--ds-background-100)] p-4"
+                    style={{ boxShadow: "var(--ds-shadow-modal)" }}
                   >
-                    <svg
-                      className="h-4 w-4"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M6 18L18 6M6 6l12 12"
+                    <div className="flex flex-col gap-4">
+                      <Switch
+                        size="small"
+                        fullWidth
+                        options={[
+                          { value: "km", label: "KM" },
+                          { value: "mi", label: "MI" },
+                        ]}
+                        value={distanceUnit}
+                        onChange={(v) => setDistanceUnit(v as "km" | "mi")}
                       />
-                    </svg>
-                  </button>
-                </div>
-              ) : (
-                // No filter - show default button
-                <button
-                  onClick={() => setIsDistanceFilterOpen(!isDistanceFilterOpen)}
-                  className="flex items-center gap-2 px-4 h-[44px] rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white hover:border-neutral-400 dark:hover:border-neutral-600 transition-colors text-sm font-medium whitespace-nowrap"
-                >
-                  Distance
-                  <svg
-                    className="h-4 w-4"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M19 9l-7 7-7-7"
-                    />
-                  </svg>
-                </button>
-              )}
-
-              {/* Distance Dropdown */}
-              <AnimatePresence>
-                {isDistanceFilterOpen && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    transition={{ duration: 0.2 }}
-                    className="absolute top-full mt-2 left-0 z-40 bg-white dark:bg-neutral-900 rounded-lg shadow-xl border border-neutral-200 dark:border-neutral-800 p-4 min-w-[600px]"
-                  >
-                    {/* Top Bar: Action Buttons and Toggle */}
-                    <div className="flex items-center justify-between mb-6">
-                      {/* Clear Button - Left */}
-                      <button
-                        onClick={() => {
-                          setTempDistanceFilter(null);
-                          setTempCustomRange({ min: 0, max: 100 });
-                        }}
-                        disabled={
-                          !tempDistanceFilter &&
-                          tempCustomRange.min === 0 &&
-                          tempCustomRange.max === 100
+                      <Switch
+                        size="small"
+                        fullWidth
+                        options={[
+                          { value: "distance", label: "Distance" },
+                          { value: "custom", label: "Custom" },
+                        ]}
+                        value={distanceMode}
+                        onChange={(v) =>
+                          setDistanceMode(v as "distance" | "custom")
                         }
-                        className={`p-2 rounded-lg transition-colors ${
-                          tempDistanceFilter ||
-                          tempCustomRange.min !== 0 ||
-                          tempCustomRange.max !== 100
-                            ? "bg-neutral-200 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-300 dark:hover:bg-neutral-600 cursor-pointer"
-                            : "text-neutral-400 dark:text-neutral-600 cursor-not-allowed opacity-50"
-                        }`}
-                        aria-label="Clear selection"
-                      >
-                        <svg
-                          className="h-5 w-5"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M6 18L18 6M6 6l12 12"
-                          />
-                        </svg>
-                      </button>
+                      />
 
-                      {/* Toggle between Distance and Custom - Center */}
-                      <div className="inline-flex bg-neutral-200 dark:bg-neutral-800 rounded-lg p-1 relative z-10">
-                        <button
-                          onClick={() => setDistanceFilterMode("distance")}
-                          className={`px-6 py-2.5 rounded-md text-base font-medium transition-colors ${
-                            distanceFilterMode === "distance"
-                              ? "bg-neutral-900 dark:bg-white text-white dark:text-neutral-900"
-                              : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white"
-                          }`}
-                        >
-                          Distance
-                        </button>
-                        <button
-                          onClick={() => setDistanceFilterMode("custom")}
-                          className={`px-6 py-2.5 rounded-md text-base font-medium transition-colors ${
-                            distanceFilterMode === "custom"
-                              ? "bg-neutral-900 dark:bg-white text-white dark:text-neutral-900"
-                              : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white"
-                          }`}
-                        >
-                          Custom
-                        </button>
-                      </div>
-
-                      {/* Apply Button - Right */}
-                      <button
-                        onClick={() => {
-                          setAppliedDistanceFilter(tempDistanceFilter);
-                          setAppliedCustomRange(tempCustomRange);
-                          setIsDistanceFilterOpen(false);
-                        }}
-                        disabled={
-                          !tempDistanceFilter &&
-                          tempCustomRange.min === 0 &&
-                          tempCustomRange.max === 100
-                        }
-                        className={`p-2 rounded-lg transition-colors ${
-                          tempDistanceFilter ||
-                          tempCustomRange.min !== 0 ||
-                          tempCustomRange.max !== 100
-                            ? "bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 hover:bg-neutral-700 dark:hover:bg-neutral-200 cursor-pointer"
-                            : "bg-neutral-200 dark:bg-neutral-800 text-neutral-400 dark:text-neutral-600 cursor-not-allowed opacity-50"
-                        }`}
-                        aria-label="Apply filter"
-                      >
-                        <svg
-                          className="h-5 w-5"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M5 13l4 4L19 7"
-                          />
-                        </svg>
-                      </button>
-                    </div>
-
-                    {distanceFilterMode === "distance" ? (
-                      <>
-                        {/* Predefined Distance Categories */}
-                        <div className="grid grid-cols-3 gap-3 mb-6">
-                          {allDistanceCategories.map((category) => {
-                            const isSelected =
-                              tempDistanceFilter === category.id;
-
-                            return (
-                              <button
-                                key={category.id}
-                                onClick={() => {
-                                  // Toggle: if already selected, deselect it
-                                  setTempDistanceFilter(
-                                    isSelected ? null : category.id,
+                      {distanceMode === "distance" ? (
+                        <div className="flex flex-col gap-2">
+                          {allDistanceCategories.map((preset) => (
+                            <Checkbox
+                              key={preset.id}
+                              label={preset.label}
+                              checked={appliedDistancePresets.includes(
+                                preset.id,
+                              )}
+                              onChange={(e) => {
+                                if (e.target.checked) {
+                                  setAppliedDistancePresets([
+                                    ...appliedDistancePresets,
+                                    preset.id,
+                                  ]);
+                                } else {
+                                  setAppliedDistancePresets(
+                                    appliedDistancePresets.filter(
+                                      (id) => id !== preset.id,
+                                    ),
                                   );
-                                }}
-                                className={`
-                                  py-4 px-4 rounded-lg text-base font-medium transition-colors
-                                  ${isSelected ? "bg-neutral-900 dark:bg-white text-white dark:text-neutral-900" : "bg-neutral-200 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-400 hover:bg-neutral-300 dark:hover:bg-neutral-700 hover:text-neutral-900 dark:hover:text-white"}
-                                `}
-                              >
-                                {category.label}
-                              </button>
-                            );
-                          })}
-                        </div>
-                      </>
-                    ) : (
-                      <>
-                        {/* Custom Range Slider */}
-                        <div className="mb-6">
-                          {/* Min/Max Input Fields */}
-                          <div className="px-3 mb-6">
-                            <div
-                              className="flex items-center justify-between"
-                              style={{
-                                paddingLeft: "12px",
-                                paddingRight: "12px",
-                              }}
-                            >
-                              {/* Min Value Box */}
-                              <div className="flex items-center justify-center bg-neutral-100 dark:bg-neutral-800 rounded-lg px-3 py-2 w-[80px]">
-                                {isMinInputFocused ? (
-                                  <div className="flex items-center justify-center gap-0 w-full">
-                                    <input
-                                      type="number"
-                                      value={minInputValue}
-                                      onChange={(e) => {
-                                        setMinInputValue(e.target.value);
-                                        const value = Number(e.target.value);
-                                        if (
-                                          !isNaN(value) &&
-                                          e.target.value !== ""
-                                        ) {
-                                          const kmValue =
-                                            distanceUnit === "km"
-                                              ? value
-                                              : milesToKm(value);
-                                          // Allow swapping: if new min > max, swap them
-                                          setTempCustomRange((prev) => {
-                                            if (kmValue > prev.max) {
-                                              return {
-                                                min: prev.max,
-                                                max: kmValue,
-                                              };
-                                            }
-                                            return { ...prev, min: kmValue };
-                                          });
-                                          setTempDistanceFilter("custom");
-                                        }
-                                      }}
-                                      onBlur={() => {
-                                        setIsMinInputFocused(false);
-                                        setMinInputValue("");
-                                      }}
-                                      autoFocus
-                                      className="flex-shrink-0 w-auto min-w-0 bg-transparent text-neutral-900 dark:text-white text-sm font-medium outline-none border-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none text-center"
-                                      style={{
-                                        width: `${Math.max(1, minInputValue.length)}ch`,
-                                      }}
-                                      placeholder=""
-                                    />
-                                    {minInputValue && (
-                                      <span className="text-neutral-900 dark:text-white text-sm font-medium flex-shrink-0">
-                                        {distanceUnit}
-                                      </span>
-                                    )}
-                                  </div>
-                                ) : (
-                                  <div
-                                    className="inline-flex items-center gap-0 cursor-pointer"
-                                    onClick={() => setIsMinInputFocused(true)}
-                                  >
-                                    <span className="text-neutral-900 dark:text-white text-sm font-medium">
-                                      {distanceUnit === "km"
-                                        ? Math.round(tempCustomRange.min)
-                                        : Math.round(
-                                            kmToMiles(tempCustomRange.min),
-                                          )}
-                                    </span>
-                                    <span className="text-neutral-900 dark:text-white text-sm font-medium">
-                                      {distanceUnit}
-                                    </span>
-                                  </div>
-                                )}
-                              </div>
-
-                              {/* Max Value Box with ">" prefix (only shown at max 100km/62mi) */}
-                              <div className="flex items-center justify-center bg-neutral-100 dark:bg-neutral-800 rounded-lg px-3 py-2 w-[80px]">
-                                {isMaxInputFocused ? (
-                                  <div className="flex items-center justify-center gap-0 w-full">
-                                    {(() => {
-                                      const maxValue =
-                                        distanceUnit === "km"
-                                          ? 100
-                                          : Math.round(kmToMiles(100));
-                                      const currentValue = maxInputValue
-                                        ? Number(maxInputValue)
-                                        : distanceUnit === "km"
-                                          ? tempCustomRange.max
-                                          : Math.round(
-                                              kmToMiles(tempCustomRange.max),
-                                            );
-                                      return (
-                                        currentValue >= maxValue &&
-                                        maxInputValue && (
-                                          <span className="text-neutral-900 dark:text-white text-sm font-medium flex-shrink-0">
-                                            &gt;
-                                          </span>
-                                        )
-                                      );
-                                    })()}
-                                    <input
-                                      type="number"
-                                      value={maxInputValue}
-                                      onChange={(e) => {
-                                        setMaxInputValue(e.target.value);
-                                        const value = Number(e.target.value);
-                                        if (
-                                          !isNaN(value) &&
-                                          e.target.value !== ""
-                                        ) {
-                                          const kmValue =
-                                            distanceUnit === "km"
-                                              ? value
-                                              : milesToKm(value);
-                                          // Allow swapping: if new max < min, swap them
-                                          setTempCustomRange((prev) => {
-                                            if (kmValue < prev.min) {
-                                              return {
-                                                min: kmValue,
-                                                max: prev.min,
-                                              };
-                                            }
-                                            return { ...prev, max: kmValue };
-                                          });
-                                          setTempDistanceFilter("custom");
-                                        }
-                                      }}
-                                      onBlur={() => {
-                                        setIsMaxInputFocused(false);
-                                        setMaxInputValue("");
-                                      }}
-                                      autoFocus
-                                      className="flex-shrink-0 w-auto min-w-0 bg-transparent text-neutral-900 dark:text-white text-sm font-medium outline-none border-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none text-center"
-                                      style={{
-                                        width: `${Math.max(1, maxInputValue.length)}ch`,
-                                      }}
-                                      placeholder=""
-                                    />
-                                    {maxInputValue && (
-                                      <span className="text-neutral-900 dark:text-white text-sm font-medium flex-shrink-0">
-                                        {distanceUnit}
-                                      </span>
-                                    )}
-                                  </div>
-                                ) : (
-                                  <div
-                                    className="inline-flex items-center gap-0 cursor-pointer"
-                                    onClick={() => setIsMaxInputFocused(true)}
-                                  >
-                                    {(() => {
-                                      const maxValue =
-                                        distanceUnit === "km"
-                                          ? 100
-                                          : Math.round(kmToMiles(100));
-                                      const currentValue =
-                                        distanceUnit === "km"
-                                          ? tempCustomRange.max
-                                          : Math.round(
-                                              kmToMiles(tempCustomRange.max),
-                                            );
-                                      return (
-                                        currentValue >= maxValue && (
-                                          <span className="text-neutral-900 dark:text-white text-sm font-medium">
-                                            &gt;
-                                          </span>
-                                        )
-                                      );
-                                    })()}
-                                    <span className="text-neutral-900 dark:text-white text-sm font-medium">
-                                      {distanceUnit === "km"
-                                        ? Math.round(tempCustomRange.max)
-                                        : Math.round(
-                                            kmToMiles(tempCustomRange.max),
-                                          )}
-                                    </span>
-                                    <span className="text-neutral-900 dark:text-white text-sm font-medium">
-                                      {distanceUnit}
-                                    </span>
-                                  </div>
-                                )}
-                              </div>
-                            </div>
-                          </div>
-
-                          {/* Slider Container */}
-                          <div className="px-3 mb-6">
-                            <Box sx={{ width: "100%", px: 1 }}>
-                              <Slider
-                                value={[
-                                  distanceUnit === "km"
-                                    ? tempCustomRange.min
-                                    : kmToMiles(tempCustomRange.min),
-                                  distanceUnit === "km"
-                                    ? tempCustomRange.max
-                                    : kmToMiles(tempCustomRange.max),
-                                ]}
-                                onChange={(_, newValue) => {
-                                  const [min, max] = newValue as number[];
-                                  const minKm =
-                                    distanceUnit === "km"
-                                      ? min
-                                      : milesToKm(min);
-                                  const maxKm =
-                                    distanceUnit === "km"
-                                      ? max
-                                      : milesToKm(max);
-                                  setTempCustomRange({
-                                    min: minKm,
-                                    max: maxKm,
-                                  });
-                                  // Only set to 'custom' if not at default min/max
-                                  if (minKm === 0 && maxKm === 100) {
-                                    setTempDistanceFilter(null);
-                                  } else {
-                                    setTempDistanceFilter("custom");
-                                  }
-                                }}
-                                onChangeCommitted={(_, newValue) => {
-                                  // Snap to markers when user releases slider
-                                  let [min, max] = newValue as number[];
-                                  const snapThreshold =
-                                    distanceUnit === "km" ? 3 : 2;
-
-                                  // Check min value for snapping
-                                  for (const category of distanceCategories) {
-                                    const markerValue =
-                                      distanceUnit === "km"
-                                        ? category.km
-                                        : kmToMiles(category.km);
-                                    if (
-                                      Math.abs(min - markerValue) <
-                                      snapThreshold
-                                    ) {
-                                      min = markerValue;
-                                      break;
-                                    }
-                                  }
-
-                                  // Check max value for snapping
-                                  for (const category of distanceCategories) {
-                                    const markerValue =
-                                      distanceUnit === "km"
-                                        ? category.km
-                                        : kmToMiles(category.km);
-                                    if (
-                                      Math.abs(max - markerValue) <
-                                      snapThreshold
-                                    ) {
-                                      max = markerValue;
-                                      break;
-                                    }
-                                  }
-
-                                  const minKm =
-                                    distanceUnit === "km"
-                                      ? min
-                                      : milesToKm(min);
-                                  const maxKm =
-                                    distanceUnit === "km"
-                                      ? max
-                                      : milesToKm(max);
-                                  setTempCustomRange({
-                                    min: minKm,
-                                    max: maxKm,
-                                  });
-                                  // Only set to 'custom' if not at default min/max
-                                  if (minKm === 0 && maxKm === 100) {
-                                    setTempDistanceFilter(null);
-                                  } else {
-                                    setTempDistanceFilter("custom");
-                                  }
-                                }}
-                                min={0}
-                                max={
-                                  distanceUnit === "km"
-                                    ? 100
-                                    : Math.round(kmToMiles(100))
                                 }
-                                step={distanceUnit === "km" ? 1 : 0.5}
-                                valueLabelDisplay="off"
-                                disableSwap={false}
-                                marks={distanceCategories.map((category) => ({
-                                  value:
-                                    distanceUnit === "km"
-                                      ? category.km
-                                      : kmToMiles(category.km),
-                                  label: "",
-                                }))}
-                                sx={{
-                                  color: "#1A1A1A", // gray-900
-                                  height: 24,
-                                  padding: 0,
-                                  "& .MuiSlider-rail": {
-                                    height: 24,
-                                    borderRadius: 12,
-                                    backgroundColor: "#404040", // gray-700 - dark rail
-                                    opacity: 1,
-                                    left: 0,
-                                    right: 0,
-                                    width: "100%",
-                                  },
-                                  "& .MuiSlider-track": {
-                                    height: 24,
-                                    borderRadius: 0, // Remove rounded ends to touch thumbs
-                                    backgroundColor: "#E6E6E6", // gray-200 - light track
-                                    border: "none",
-                                  },
-                                  "& .MuiSlider-thumb": {
-                                    height: 24,
-                                    width: 24,
-                                    backgroundColor: "#FFFFFF", // white thumb
-                                    border: "none",
-                                    boxShadow: "none",
-                                    zIndex: 2, // Thumbs below marks
-                                    "&:hover, &.Mui-active": {
-                                      boxShadow: "none",
-                                    },
-                                    "&.Mui-focusVisible": {
-                                      boxShadow: "none",
-                                    },
-                                  },
-                                  "& .MuiSlider-mark": {
-                                    width: 20,
-                                    height: 20,
-                                    borderRadius: "50%",
-                                    backgroundColor: "transparent",
-                                    border: "1px dashed #A3A3A3", // gray-400 - more subtle
-                                    top: "50%",
-                                    transform: "translate(-50%, -50%)",
-                                    opacity: 1,
-                                    zIndex: 3, // Marks above thumbs
-                                    pointerEvents: "none", // Don't interfere with thumb dragging
-                                    "&.MuiSlider-markActive": {
-                                      backgroundColor: "transparent",
-                                      border: "1px dashed #A3A3A3", // gray-400 when active
-                                    },
-                                  },
-                                }}
-                              />
-                            </Box>
-
-                            {/* Distance Labels Below Slider */}
-                            <div
-                              className="relative mt-1"
-                              style={{
-                                paddingLeft: "12px",
-                                paddingRight: "12px",
                               }}
-                            >
-                              {distanceCategories.map((category) => {
-                                const maxValue =
-                                  distanceUnit === "km" ? 100 : kmToMiles(100);
-                                const categoryValue =
-                                  distanceUnit === "km"
-                                    ? category.km
-                                    : kmToMiles(category.km);
-                                const position =
-                                  (categoryValue / maxValue) * 100;
-
-                                return (
-                                  <div
-                                    key={category.id}
-                                    className="absolute flex flex-col items-center"
-                                    style={{
-                                      left: `${position}%`,
-                                      transform: "translateX(-50%)",
-                                      top: 0,
-                                    }}
-                                  >
-                                    <p className="text-sm font-medium text-center leading-tight text-neutral-400 dark:text-neutral-500">
-                                      {category.id === "half-marathon" ? (
-                                        <>
-                                          Half
-                                          <br />
-                                          Marathon
-                                        </>
-                                      ) : (
-                                        category.label
-                                      )}
-                                    </p>
-                                  </div>
-                                );
-                              })}
-                            </div>
-                          </div>
-
-                          {/* Unit Toggle Below Distance Anchors */}
-                          <div className="flex items-center justify-center gap-2 mt-12 relative z-50">
-                            <div className="inline-flex bg-neutral-200 dark:bg-neutral-800 rounded-lg p-0.5">
-                              <button
-                                onClick={() => setDistanceUnit("km")}
-                                className={`px-6 py-2 rounded-md text-sm font-medium transition-colors ${
-                                  distanceUnit === "km"
-                                    ? "bg-neutral-900 dark:bg-white text-white dark:text-neutral-900"
-                                    : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white"
-                                }`}
-                              >
-                                km
-                              </button>
-                              <button
-                                onClick={() => setDistanceUnit("mi")}
-                                className={`px-6 py-2 rounded-md text-sm font-medium transition-colors ${
-                                  distanceUnit === "mi"
-                                    ? "bg-neutral-900 dark:bg-white text-white dark:text-neutral-900"
-                                    : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white"
-                                }`}
-                              >
-                                mi
-                              </button>
-                            </div>
+                            />
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="flex flex-col gap-3 px-1">
+                          <DsSlider
+                            range
+                            min={0}
+                            max={
+                              distanceUnit === "km"
+                                ? 100
+                                : Math.round(kmToMiles(100))
+                            }
+                            step={1}
+                            value={[
+                              distanceUnit === "km"
+                                ? Math.round(appliedCustomRange.min)
+                                : Math.round(
+                                    kmToMiles(appliedCustomRange.min),
+                                  ),
+                              distanceUnit === "km"
+                                ? Math.round(appliedCustomRange.max)
+                                : Math.round(
+                                    kmToMiles(appliedCustomRange.max),
+                                  ),
+                            ]}
+                            onChange={(value) => {
+                              const [min, max] = value as [number, number];
+                              const minKm =
+                                distanceUnit === "km" ? min : milesToKm(min);
+                              const maxKm =
+                                distanceUnit === "km" ? max : milesToKm(max);
+                              setAppliedCustomRange({
+                                min: Math.round(minKm * 10) / 10,
+                                max: Math.round(maxKm * 10) / 10,
+                              });
+                            }}
+                          />
+                          <div className="flex justify-between text-copy-13 text-[color:var(--ds-gray-900)]">
+                            <span>
+                              {distanceUnit === "km"
+                                ? Math.round(appliedCustomRange.min)
+                                : Math.round(
+                                    kmToMiles(appliedCustomRange.min),
+                                  )}{" "}
+                              {distanceUnit}
+                            </span>
+                            <span>
+                              {distanceUnit === "km"
+                                ? Math.round(appliedCustomRange.max)
+                                : Math.round(
+                                    kmToMiles(appliedCustomRange.max),
+                                  )}{" "}
+                              {distanceUnit}
+                            </span>
                           </div>
                         </div>
-                      </>
-                    )}
-                  </motion.div>
-                )}
-              </AnimatePresence>
+                      )}
+
+                      <div className="flex justify-end border-t border-[color:var(--ds-gray-400)] pt-3">
+                        <Button
+                          size="small"
+                          variant="tertiary"
+                          onClick={() => {
+                            setAppliedDistancePresets([]);
+                            setAppliedCustomRange({ min: 0, max: 100 });
+                          }}
+                        >
+                          Clear
+                        </Button>
+                      </div>
+                    </div>
+                  </Popover.Content>
+                </Popover.Portal>
+              </Popover.Root>
             </div>
 
             {/* Country Filter */}
@@ -4823,8 +4332,9 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
               onClick={() => {
                 setSearchQuery("");
                 setAppliedDateRange({ start: null, end: null });
-                setAppliedDistanceFilter(null);
-                setTempDistanceFilter(null);
+                setAppliedDistancePresets([]);
+                setAppliedCustomRange({ min: 0, max: 100 });
+                setDistanceMode("distance");
                 setAppliedCountryFilter(null);
                 setTempCountryFilter(null);
                 setAppliedCityFilter(null);
