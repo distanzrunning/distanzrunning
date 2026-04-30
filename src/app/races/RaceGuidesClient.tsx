@@ -53,14 +53,19 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
     end: null,
   });
 
-  // Distance filter — Radix Popover owns its open state. Multi-pick
-  // presets in "distance" mode; numeric range in "custom" mode.
-  // distanceUnit only swaps display labels; appliedCustomRange always
-  // stores km internally so the filter logic stays unit-agnostic.
-  const [distanceMode, setDistanceMode] = useState<"distance" | "custom">(
-    "distance",
-  );
+  // Distance filter — temp / applied pattern. Mode + presets +
+  // custom range only update applied state on Apply (or popover
+  // close). Mid-session interactions (mode switch, slider drag,
+  // preset toggles) only mutate temp, so the race-card grid never
+  // re-renders until the user explicitly commits. distanceUnit
+  // only swaps display labels; appliedCustomRange always stores
+  // km internally so the filter logic stays unit-agnostic.
+  const [distanceFilterOpen, setDistanceFilterOpen] = useState(false);
   const [distanceUnit, setDistanceUnit] = useState<"km" | "mi">("km");
+  // Applied — drives the filter logic + chip label.
+  const [appliedDistanceMode, setAppliedDistanceMode] = useState<
+    "distance" | "custom"
+  >("distance");
   const [appliedDistancePresets, setAppliedDistancePresets] = useState<
     string[]
   >([]);
@@ -68,15 +73,18 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
     min: number;
     max: number;
   }>({ min: 0, max: 100 });
-  // Pending range during an in-flight slider drag. Slider reads from
-  // this when set; the actual filter (and chip label, ordering) only
-  // re-runs once the user releases. Prevents the race card grid from
-  // re-rendering on every pointer move and stops the chip from
-  // visually jumping mid-drag.
-  const [pendingCustomRange, setPendingCustomRange] = useState<{
+  // Temp — drives the panel UI. Synced from applied when the
+  // popover opens; committed back via Apply.
+  const [tempDistanceMode, setTempDistanceMode] = useState<
+    "distance" | "custom"
+  >("distance");
+  const [tempDistancePresets, setTempDistancePresets] = useState<string[]>(
+    [],
+  );
+  const [tempCustomRange, setTempCustomRange] = useState<{
     min: number;
     max: number;
-  } | null>(null);
+  }>({ min: 0, max: 100 });
 
   // Country filter states
   const [isCountryFilterOpen, setIsCountryFilterOpen] = useState(false);
@@ -524,27 +532,21 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
     return null;
   };
 
-  // Commit the pending custom-distance range to applied state once
-  // the user releases the pointer (drag end). Listening on the
-  // document handles the case where the pointer leaves the slider
-  // bounds before release.
+  // Sync temp distance state from applied whenever the popover
+  // opens, so each session starts from the current applied filter
+  // and the user can revert by closing without Apply.
   useEffect(() => {
-    if (!pendingCustomRange) return;
-    const commit = () => {
-      setAppliedCustomRange((prev) =>
-        prev.min === pendingCustomRange.min && prev.max === pendingCustomRange.max
-          ? prev
-          : pendingCustomRange,
-      );
-      setPendingCustomRange(null);
-    };
-    document.addEventListener("pointerup", commit);
-    document.addEventListener("pointercancel", commit);
-    return () => {
-      document.removeEventListener("pointerup", commit);
-      document.removeEventListener("pointercancel", commit);
-    };
-  }, [pendingCustomRange]);
+    if (distanceFilterOpen) {
+      setTempDistanceMode(appliedDistanceMode);
+      setTempDistancePresets(appliedDistancePresets);
+      setTempCustomRange(appliedCustomRange);
+    }
+  }, [
+    distanceFilterOpen,
+    appliedDistanceMode,
+    appliedDistancePresets,
+    appliedCustomRange,
+  ]);
 
   // Close country filter on click outside
   useEffect(() => {
@@ -849,7 +851,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
   //   - >1 preset: count                ("3 distances")
   //   - custom:    range with active unit ("10-42 km")
   const getDistanceFilterText = () => {
-    if (distanceMode === "custom") {
+    if (appliedDistanceMode === "custom") {
       const unit = distanceUnit;
       const min =
         unit === "km"
@@ -954,7 +956,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
     appliedDateRange,
     appliedDistancePresets,
     appliedCustomRange,
-    distanceMode,
+    appliedDistanceMode,
     appliedCountryFilter,
     appliedCityFilter,
     appliedStateFilter,
@@ -1010,8 +1012,8 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
       });
     }
 
-    // Apply distance filter — driven by distanceMode.
-    if (distanceMode === "custom") {
+    // Apply distance filter — driven by appliedDistanceMode.
+    if (appliedDistanceMode === "custom") {
       const customActive =
         appliedCustomRange.min > 0 || appliedCustomRange.max < 100;
       if (customActive) {
@@ -1138,7 +1140,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
     appliedDateRange,
     appliedDistancePresets,
     appliedCustomRange,
-    distanceMode,
+    appliedDistanceMode,
     appliedCountryFilter,
     appliedCityFilter,
     appliedStateFilter,
@@ -1220,7 +1222,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
     searchQuery,
     appliedDateRange,
     appliedDistancePresets,
-    distanceMode,
+    appliedDistanceMode,
     appliedCountryFilter,
     appliedCityFilter,
     appliedStateFilter,
@@ -1286,7 +1288,10 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
 
             {/* Distance Filter — DS Popover + Switch + Checkbox + Slider */}
             <div className="relative">
-              <Popover.Root>
+              <Popover.Root
+                open={distanceFilterOpen}
+                onOpenChange={setDistanceFilterOpen}
+              >
                 <Popover.Trigger asChild>
                   <Button
                     size="medium"
@@ -1311,30 +1316,28 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                           { value: "distance", label: "Distance" },
                           { value: "custom", label: "Custom" },
                         ]}
-                        value={distanceMode}
+                        value={tempDistanceMode}
                         onChange={(v) =>
-                          setDistanceMode(v as "distance" | "custom")
+                          setTempDistanceMode(v as "distance" | "custom")
                         }
                       />
 
-                      {distanceMode === "distance" ? (
+                      {tempDistanceMode === "distance" ? (
                         <div className="flex flex-col gap-2">
                           {allDistanceCategories.map((preset) => (
                             <Checkbox
                               key={preset.id}
                               label={preset.label}
-                              checked={appliedDistancePresets.includes(
-                                preset.id,
-                              )}
+                              checked={tempDistancePresets.includes(preset.id)}
                               onChange={(e) => {
                                 if (e.target.checked) {
-                                  setAppliedDistancePresets([
-                                    ...appliedDistancePresets,
+                                  setTempDistancePresets([
+                                    ...tempDistancePresets,
                                     preset.id,
                                   ]);
                                 } else {
-                                  setAppliedDistancePresets(
-                                    appliedDistancePresets.filter(
+                                  setTempDistancePresets(
+                                    tempDistancePresets.filter(
                                       (id) => id !== preset.id,
                                     ),
                                   );
@@ -1346,19 +1349,16 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                       ) : (
                         <div className="flex flex-col gap-3 px-1">
                           {(() => {
-                            // Slider reads from pending range while
-                            // dragging; falls back to applied when
-                            // stable. Filter logic only sees applied.
-                            const displayRange =
-                              pendingCustomRange ?? appliedCustomRange;
+                            // Slider drives temp custom range —
+                            // commits to applied on Apply click.
                             const displayMin =
                               distanceUnit === "km"
-                                ? Math.round(displayRange.min)
-                                : Math.round(kmToMiles(displayRange.min));
+                                ? Math.round(tempCustomRange.min)
+                                : Math.round(kmToMiles(tempCustomRange.min));
                             const displayMax =
                               distanceUnit === "km"
-                                ? Math.round(displayRange.max)
-                                : Math.round(kmToMiles(displayRange.max));
+                                ? Math.round(tempCustomRange.max)
+                                : Math.round(kmToMiles(tempCustomRange.max));
                             return (
                               <>
                                 <DsSlider
@@ -1384,7 +1384,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                                       distanceUnit === "km"
                                         ? max
                                         : milesToKm(max);
-                                    setPendingCustomRange({
+                                    setTempCustomRange({
                                       min: Math.round(minKm * 10) / 10,
                                       max: Math.round(maxKm * 10) / 10,
                                     });
@@ -1417,16 +1417,29 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                         </div>
                       )}
 
-                      <div className="flex justify-end border-t border-[color:var(--ds-gray-400)] pt-3">
+                      <div className="flex items-center justify-between border-t border-[color:var(--ds-gray-400)] pt-3">
                         <Button
                           size="small"
                           variant="tertiary"
                           onClick={() => {
-                            setAppliedDistancePresets([]);
-                            setAppliedCustomRange({ min: 0, max: 100 });
+                            setTempDistanceMode("distance");
+                            setTempDistancePresets([]);
+                            setTempCustomRange({ min: 0, max: 100 });
                           }}
                         >
                           Clear
+                        </Button>
+                        <Button
+                          size="small"
+                          variant="default"
+                          onClick={() => {
+                            setAppliedDistanceMode(tempDistanceMode);
+                            setAppliedDistancePresets(tempDistancePresets);
+                            setAppliedCustomRange(tempCustomRange);
+                            setDistanceFilterOpen(false);
+                          }}
+                        >
+                          Apply
                         </Button>
                       </div>
                     </div>
@@ -4357,7 +4370,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                 setAppliedDateRange({ start: null, end: null });
                 setAppliedDistancePresets([]);
                 setAppliedCustomRange({ min: 0, max: 100 });
-                setDistanceMode("distance");
+                setAppliedDistanceMode("distance");
                 setAppliedCountryFilter(null);
                 setTempCountryFilter(null);
                 setAppliedCityFilter(null);
