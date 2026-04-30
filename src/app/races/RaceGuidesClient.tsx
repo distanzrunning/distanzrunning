@@ -1239,7 +1239,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
             <div className="w-64 shrink-0" style={{ order: -100 }}>
               <Input
                 size="default"
-                placeholder="Search races…"
+                placeholder="Search"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 prefix={<SearchIcon className="size-4" />}
