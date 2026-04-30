@@ -17,7 +17,11 @@
 //   - 33 / 66 column split on lg+
 //   - Left: serif headline + excerpt + kicker (clickable) · date
 //   - Right: rounded image card with subtle inverse-zoom on slide hover
-// On mobile the columns stack, image first.
+// On mobile the columns stack, image first (via `order-1 lg:order-2`),
+// the carousel drops its outer px-12 so the image fills the viewport,
+// and the prev/next chevron chips hide entirely (they sit off-screen
+// on narrow viewports anyway). Mobile users navigate via swipe and
+// the dot wayfinding strip below the slides.
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
@@ -86,7 +90,7 @@ export default function HomepageHeroCarousel({
         <Carousel
           opts={{ loop: true, align: "start" }}
           setApi={setApi}
-          className="px-12 lg:px-14"
+          className="lg:px-14"
         >
           <CarouselContent>
             {slides.map((slide, i) => {
@@ -96,8 +100,10 @@ export default function HomepageHeroCarousel({
               return (
                 <CarouselItem key={slide._id}>
                   <article className="group/slide grid items-center gap-8 lg:grid-cols-3 lg:gap-24">
-                    {/* Left: text — Headline → Excerpt → Meta */}
-                    <div className="flex flex-col justify-center gap-4 lg:col-span-1">
+                    {/* Left: text — Headline → Excerpt → Meta.
+                        order-2 on mobile so it sits below the image;
+                        lg:order-1 reverts to normal flow on desktop. */}
+                    <div className="order-2 flex flex-col justify-center gap-4 lg:order-1 lg:col-span-1">
                       <h2
                         className="text-balance font-headline font-semibold text-[color:var(--ds-gray-1000)]"
                         style={{
@@ -143,10 +149,12 @@ export default function HomepageHeroCarousel({
                       )}
                     </div>
 
-                    {/* Right: image card. Inverse-zoom on slide hover. */}
+                    {/* Right: image card. Inverse-zoom on slide hover.
+                        order-1 on mobile pulls it above the text block;
+                        lg:order-2 puts it back on the right on desktop. */}
                     <Link
                       href={slide.href}
-                      className="relative block overflow-hidden rounded-lg border border-[color:var(--ds-gray-400)] lg:col-span-2"
+                      className="relative order-1 block overflow-hidden rounded-lg border border-[color:var(--ds-gray-400)] lg:order-2 lg:col-span-2"
                       style={{ background: "var(--ds-gray-200)" }}
                       aria-label={slide.title}
                     >
@@ -174,12 +182,15 @@ export default function HomepageHeroCarousel({
           </CarouselContent>
 
           {/* Prev / next chevrons fade in on section hover (desktop
-              affordance). Mobile users navigate via swipe (Embla's
-              built-in drag handler). */}
+              affordance). Hidden on mobile / tablet — they sit at
+              -left-12 / -right-12 which puts them off-screen on
+              narrow viewports. Mobile users navigate via swipe
+              (Embla's built-in drag handler) and the dot
+              wayfinding strip below. */}
           {slideCount > 1 && (
             <>
-              <CarouselPrevious className="opacity-0 transition-opacity duration-200 group-hover/carousel:opacity-100 focus-visible:opacity-100" />
-              <CarouselNext className="opacity-0 transition-opacity duration-200 group-hover/carousel:opacity-100 focus-visible:opacity-100" />
+              <CarouselPrevious className="hidden opacity-0 transition-opacity duration-200 group-hover/carousel:opacity-100 focus-visible:opacity-100 lg:grid" />
+              <CarouselNext className="hidden opacity-0 transition-opacity duration-200 group-hover/carousel:opacity-100 focus-visible:opacity-100 lg:grid" />
             </>
           )}
         </Carousel>
