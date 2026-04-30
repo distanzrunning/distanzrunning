@@ -170,13 +170,27 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// Full reindex (protected by REINDEX_SECRET)
+// Full reindex. Two callers, two auth paths:
+//   1. Vercel Cron (scheduled in vercel.json) — Vercel adds an
+//      `Authorization: Bearer ${CRON_SECRET}` header automatically.
+//   2. Manual (`npm run reindex`, curl) — passes ?secret= matching
+//      REINDEX_SECRET in the URL.
+// Either path is sufficient; missing both → 401.
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
-    const secret = searchParams.get("secret");
+    const querySecret = searchParams.get("secret");
+    const authHeader = request.headers.get("authorization");
 
-    if (secret !== process.env.REINDEX_SECRET) {
+    const cronSecret = process.env.CRON_SECRET;
+    const reindexSecret = process.env.REINDEX_SECRET;
+
+    const isVercelCron =
+      Boolean(cronSecret) && authHeader === `Bearer ${cronSecret}`;
+    const isManualTrigger =
+      Boolean(reindexSecret) && querySecret === reindexSecret;
+
+    if (!isVercelCron && !isManualTrigger) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
