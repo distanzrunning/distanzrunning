@@ -204,7 +204,6 @@ export default function HomepageGear({ items }: HomepageGearProps) {
                     publishedAt={item.publishedAt ?? ""}
                     kicker={item.kicker}
                     kickerHref={item.kickerHref ?? undefined}
-                    excerpt={item.excerpt}
                     imageUrl={imageUrl}
                     blurDataURL={blurDataURL}
                   />
