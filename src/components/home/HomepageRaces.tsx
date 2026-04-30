@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Calendar, ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 
 import RaceCard from "@/components/RaceCard";
@@ -119,20 +119,11 @@ export default function HomepageRaces({
       >
         <header className="flex items-end justify-between gap-8">
           <div className="flex flex-col gap-3">
-            <h2 className="m-0 flex items-center gap-3 text-heading-32 text-balance text-[color:var(--ds-gray-1000)]">
-              <Calendar
-                className="size-7 shrink-0"
-                strokeWidth={2}
-                aria-hidden
-              />
-              <span
-                aria-hidden
-                className="h-6 w-0.5 shrink-0 rounded-full bg-[color:var(--ds-gray-1000)]"
-              />
-              Races
+            <h2 className="m-0 text-heading-32 text-balance text-[color:var(--ds-gray-1000)]">
+              Upcoming races
             </h2>
             <p className="text-[16px] leading-[1.5] text-[color:var(--ds-gray-900)] md:text-[18px]">
-              Find your next race.
+              Upcoming races worth planning your year around.
             </p>
           </div>
 
