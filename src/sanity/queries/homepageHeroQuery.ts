@@ -60,10 +60,14 @@ export const homepageHeroQuery = groq`
   *[_id == "homepageSettings"][0]{
     "slides": featuredSlides[]->{ ${articleProjection} },
     "breakingNews": breakingNewsItems[]->{ ${articleProjection} },
-    "gear": *[
-      _type == "productPost"
-      && defined(slug.current)
-    ] | order(publishedAt desc)[0...4]{ ${articleProjection} },
+    "gear": select(
+      count(featuredGearItems) > 0 =>
+        featuredGearItems[]->{ ${articleProjection} },
+      *[
+        _type == "productPost"
+        && defined(slug.current)
+      ] | order(publishedAt desc)[0...4]{ ${articleProjection} }
+    ),
     "races": *[
       _type == "raceGuide"
       && defined(eventDate)

@@ -146,16 +146,15 @@ export default function HomepageGear({ items }: HomepageGearProps) {
       <div className="flex w-full max-w-[1400px] flex-col gap-8 md:gap-11">
         <header className="flex flex-col-reverse items-start justify-end gap-2 md:flex-row md:items-end md:justify-between md:gap-8">
           <div className="flex flex-col gap-2">
-            {/* text-heading-40 (Geist, 40 / 48 / -0.02em / 600) —
-                one DS step above the heading-32 used by News and
-                Races so the Quartr-style spotlight row feels
+            {/* text-heading-40 — one DS step above the heading-32
+                used by News and Races so the spotlight row feels
                 weightier than the regular content rows. */}
             <h2 className="m-0 text-heading-40 text-balance text-[color:var(--ds-gray-1000)]">
-              Latest Reviews
+              Editor&apos;s picks in shoes &amp; gear
             </h2>
             <p className="text-balance text-copy-16 text-[color:var(--ds-gray-900)] md:text-copy-18">
-              Explore the reviews, best of, and explainers on latest
-              running shoes and gear.
+              Hand-picked reviews, best-of round-ups, and explainers
+              on the latest running shoes and gear.
             </p>
           </div>
 
