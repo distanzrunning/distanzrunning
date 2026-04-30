@@ -1273,12 +1273,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
             </div>
 
             {/* Date Filter */}
-            <div
-              className="relative"
-              style={{
-                order: appliedDateRange.start || appliedDateRange.end ? -10 : 0,
-              }}
-            >
+            <div className="relative">
               <Calendar
                 showMonthTab
                 showTimeInput={false}
@@ -1290,21 +1285,7 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
             </div>
 
             {/* Distance Filter — DS Popover + Switch + Checkbox + Slider */}
-            <div
-              className="relative"
-              style={{
-                // Only reorder based on stable signals so the chip
-                // doesn't jump mid-slider-drag. Custom-range moves
-                // commit on pointer-up; that's when ordering can
-                // settle.
-                order:
-                  appliedDistancePresets.length > 0 ||
-                  appliedCustomRange.min > 0 ||
-                  appliedCustomRange.max < 100
-                    ? -10
-                    : 0,
-              }}
-            >
+            <div className="relative">
               <Popover.Root>
                 <Popover.Trigger asChild>
                   <Button
