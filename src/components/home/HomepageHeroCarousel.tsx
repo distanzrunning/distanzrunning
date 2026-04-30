@@ -162,9 +162,9 @@ export default function HomepageHeroCarousel({
   return (
     <section
       aria-label="Featured stories"
-      className="group/carousel relative z-0 flex w-full justify-center px-4 py-12 md:py-24 lg:py-32"
+      className="group/carousel relative z-0 w-full px-4 py-12 md:py-24 lg:py-32"
     >
-      <div className="w-full max-w-[1400px]">
+      <div className="w-full">
         <Carousel
           opts={{ loop: true, align: "start" }}
           setApi={setApi}
