@@ -1271,6 +1271,8 @@ export function Calendar({
                         {showMonthTab && (
                           <Switch
                             size="small"
+                            fullWidth
+                            className="mb-3"
                             options={[
                               { value: "dates", label: "Dates" },
                               { value: "months", label: "Months" },
@@ -1713,6 +1715,8 @@ export function Calendar({
                           {showMonthTab && (
                             <Switch
                               size="small"
+                              fullWidth
+                              className="mb-3"
                               options={[
                                 { value: "dates", label: "Dates" },
                                 { value: "months", label: "Months" },
