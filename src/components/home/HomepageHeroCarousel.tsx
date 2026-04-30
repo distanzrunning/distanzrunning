@@ -253,22 +253,31 @@ export default function HomepageHeroCarousel({
           </CarouselContent>
         </Carousel>
 
-        {/* Wayfinding row — prev button | dot strip | next button.
-            Inline below the carousel content (Embla's default
-            controls pattern) so chevrons stay on-screen even when
-            the hero is full-bleed. Active dot widens to mark
-            position; inactive dots sit quietly at gray-400 so they
-            read as "more here" without dominating. */}
+        {/* Wayfinding row — Embla default controls pattern. Prev +
+            next buttons grouped on the bottom-left, dots on the
+            bottom-right. Active dot widens to mark position;
+            inactive dots sit quietly at gray-400 so they read as
+            "more here" without dominating. */}
         {slideCount > 1 && (
-          <div className="mt-8 flex items-center justify-center gap-4 lg:mt-10">
-            <button
-              type="button"
-              onClick={() => api?.scrollPrev()}
-              aria-label="Previous slide"
-              className="grid size-8 place-items-center rounded-full text-[color:var(--ds-gray-1000)] transition-colors hover:bg-[color:var(--ds-gray-100)]"
-            >
-              <ChevronLeft className="size-5" aria-hidden />
-            </button>
+          <div className="mt-8 flex items-center justify-between gap-4 lg:mt-10">
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => api?.scrollPrev()}
+                aria-label="Previous slide"
+                className="grid size-8 place-items-center rounded-full text-[color:var(--ds-gray-1000)] transition-colors hover:bg-[color:var(--ds-gray-100)]"
+              >
+                <ChevronLeft className="size-5" aria-hidden />
+              </button>
+              <button
+                type="button"
+                onClick={() => api?.scrollNext()}
+                aria-label="Next slide"
+                className="grid size-8 place-items-center rounded-full text-[color:var(--ds-gray-1000)] transition-colors hover:bg-[color:var(--ds-gray-100)]"
+              >
+                <ChevronRight className="size-5" aria-hidden />
+              </button>
+            </div>
 
             <div
               role="tablist"
@@ -291,15 +300,6 @@ export default function HomepageHeroCarousel({
                 />
               ))}
             </div>
-
-            <button
-              type="button"
-              onClick={() => api?.scrollNext()}
-              aria-label="Next slide"
-              className="grid size-8 place-items-center rounded-full text-[color:var(--ds-gray-1000)] transition-colors hover:bg-[color:var(--ds-gray-100)]"
-            >
-              <ChevronRight className="size-5" aria-hidden />
-            </button>
           </div>
         )}
       </div>
