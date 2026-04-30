@@ -29,6 +29,7 @@ import { format } from "date-fns";
 import { urlFor } from "@/sanity/lib/image";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import Button from "@/components/ui/Button";
 import {
   Carousel,
   CarouselContent,
@@ -259,24 +260,26 @@ export default function HomepageHeroCarousel({
             inactive dots sit quietly at gray-400 so they read as
             "more here" without dominating. */}
         {slideCount > 1 && (
-          <div className="mt-8 flex items-center justify-between gap-4 lg:mt-10">
+          <div className="mt-8 flex items-center justify-between gap-4 lg:mt-10 lg:px-14">
             <div className="flex items-center gap-2">
-              <button
-                type="button"
+              <Button
+                size="small"
+                shape="square"
+                variant="secondary"
                 onClick={() => api?.scrollPrev()}
                 aria-label="Previous slide"
-                className="grid size-8 place-items-center rounded-full text-[color:var(--ds-gray-1000)] transition-colors hover:bg-[color:var(--ds-gray-100)]"
               >
-                <ChevronLeft className="size-5" aria-hidden />
-              </button>
-              <button
-                type="button"
+                <ChevronLeft className="size-4" aria-hidden />
+              </Button>
+              <Button
+                size="small"
+                shape="square"
+                variant="secondary"
                 onClick={() => api?.scrollNext()}
                 aria-label="Next slide"
-                className="grid size-8 place-items-center rounded-full text-[color:var(--ds-gray-1000)] transition-colors hover:bg-[color:var(--ds-gray-100)]"
               >
-                <ChevronRight className="size-5" aria-hidden />
-              </button>
+                <ChevronRight className="size-4" aria-hidden />
+              </Button>
             </div>
 
             <div
