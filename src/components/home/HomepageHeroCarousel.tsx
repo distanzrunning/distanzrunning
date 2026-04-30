@@ -192,7 +192,7 @@ export default function HomepageHeroCarousel({
                       >
                         <Link
                           href={slide.href}
-                          className="outline-none transition-colors hover:text-[color:var(--ds-gray-900)] focus-visible:text-[color:var(--ds-gray-900)]"
+                          className="outline-none transition-colors hover:text-[color:var(--ds-gray-900)] focus-visible:text-[color:var(--ds-gray-900)] group-hover/slide:text-[color:var(--ds-gray-900)]"
                         >
                           {slide.title}
                         </Link>
