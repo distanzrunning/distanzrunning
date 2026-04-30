@@ -143,7 +143,7 @@ export default function HomepageGear({ items }: HomepageGearProps) {
 
   return (
     <section className="flex w-full justify-center px-4 py-12 md:py-16 lg:py-20">
-      <div className="flex w-full max-w-[1400px] flex-col gap-8 md:gap-11">
+      <div className="flex w-full max-w-[1400px] flex-col gap-8 rounded-xl border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-gray-100)] p-6 md:gap-11 md:p-10 lg:p-12">
         <header className="flex flex-col-reverse items-start justify-end gap-2 md:flex-row md:items-end md:justify-between md:gap-8">
           <div className="flex flex-col gap-2">
             {/* text-heading-40 — one DS step above the heading-32
