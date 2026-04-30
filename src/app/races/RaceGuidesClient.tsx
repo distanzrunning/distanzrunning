@@ -68,6 +68,15 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
     min: number;
     max: number;
   }>({ min: 0, max: 100 });
+  // Pending range during an in-flight slider drag. Slider reads from
+  // this when set; the actual filter (and chip label, ordering) only
+  // re-runs once the user releases. Prevents the race card grid from
+  // re-rendering on every pointer move and stops the chip from
+  // visually jumping mid-drag.
+  const [pendingCustomRange, setPendingCustomRange] = useState<{
+    min: number;
+    max: number;
+  } | null>(null);
 
   // Country filter states
   const [isCountryFilterOpen, setIsCountryFilterOpen] = useState(false);
@@ -514,6 +523,28 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
 
     return null;
   };
+
+  // Commit the pending custom-distance range to applied state once
+  // the user releases the pointer (drag end). Listening on the
+  // document handles the case where the pointer leaves the slider
+  // bounds before release.
+  useEffect(() => {
+    if (!pendingCustomRange) return;
+    const commit = () => {
+      setAppliedCustomRange((prev) =>
+        prev.min === pendingCustomRange.min && prev.max === pendingCustomRange.max
+          ? prev
+          : pendingCustomRange,
+      );
+      setPendingCustomRange(null);
+    };
+    document.addEventListener("pointerup", commit);
+    document.addEventListener("pointercancel", commit);
+    return () => {
+      document.removeEventListener("pointerup", commit);
+      document.removeEventListener("pointercancel", commit);
+    };
+  }, [pendingCustomRange]);
 
   // Close country filter on click outside
   useEffect(() => {
@@ -1262,11 +1293,14 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
             <div
               className="relative"
               style={{
+                // Only reorder based on stable signals so the chip
+                // doesn't jump mid-slider-drag. Custom-range moves
+                // commit on pointer-up; that's when ordering can
+                // settle.
                 order:
                   appliedDistancePresets.length > 0 ||
-                  (distanceMode === "custom" &&
-                    (appliedCustomRange.min > 0 ||
-                      appliedCustomRange.max < 100))
+                  appliedCustomRange.min > 0 ||
+                  appliedCustomRange.max < 100
                     ? -10
                     : 0,
               }}
@@ -1330,57 +1364,62 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
                         </div>
                       ) : (
                         <div className="flex flex-col gap-3 px-1">
-                          <DsSlider
-                            range
-                            min={0}
-                            max={
+                          {(() => {
+                            // Slider reads from pending range while
+                            // dragging; falls back to applied when
+                            // stable. Filter logic only sees applied.
+                            const displayRange =
+                              pendingCustomRange ?? appliedCustomRange;
+                            const displayMin =
                               distanceUnit === "km"
-                                ? 100
-                                : Math.round(kmToMiles(100))
-                            }
-                            step={1}
-                            value={[
+                                ? Math.round(displayRange.min)
+                                : Math.round(kmToMiles(displayRange.min));
+                            const displayMax =
                               distanceUnit === "km"
-                                ? Math.round(appliedCustomRange.min)
-                                : Math.round(
-                                    kmToMiles(appliedCustomRange.min),
-                                  ),
-                              distanceUnit === "km"
-                                ? Math.round(appliedCustomRange.max)
-                                : Math.round(
-                                    kmToMiles(appliedCustomRange.max),
-                                  ),
-                            ]}
-                            onChange={(value) => {
-                              const [min, max] = value as [number, number];
-                              const minKm =
-                                distanceUnit === "km" ? min : milesToKm(min);
-                              const maxKm =
-                                distanceUnit === "km" ? max : milesToKm(max);
-                              setAppliedCustomRange({
-                                min: Math.round(minKm * 10) / 10,
-                                max: Math.round(maxKm * 10) / 10,
-                              });
-                            }}
-                          />
-                          <div className="flex justify-between text-copy-13 text-[color:var(--ds-gray-900)]">
-                            <span>
-                              {distanceUnit === "km"
-                                ? Math.round(appliedCustomRange.min)
-                                : Math.round(
-                                    kmToMiles(appliedCustomRange.min),
-                                  )}{" "}
-                              {distanceUnit}
-                            </span>
-                            <span>
-                              {distanceUnit === "km"
-                                ? Math.round(appliedCustomRange.max)
-                                : Math.round(
-                                    kmToMiles(appliedCustomRange.max),
-                                  )}{" "}
-                              {distanceUnit}
-                            </span>
-                          </div>
+                                ? Math.round(displayRange.max)
+                                : Math.round(kmToMiles(displayRange.max));
+                            return (
+                              <>
+                                <DsSlider
+                                  range
+                                  min={0}
+                                  max={
+                                    distanceUnit === "km"
+                                      ? 100
+                                      : Math.round(kmToMiles(100))
+                                  }
+                                  step={1}
+                                  value={[displayMin, displayMax]}
+                                  onChange={(value) => {
+                                    const [min, max] = value as [
+                                      number,
+                                      number,
+                                    ];
+                                    const minKm =
+                                      distanceUnit === "km"
+                                        ? min
+                                        : milesToKm(min);
+                                    const maxKm =
+                                      distanceUnit === "km"
+                                        ? max
+                                        : milesToKm(max);
+                                    setPendingCustomRange({
+                                      min: Math.round(minKm * 10) / 10,
+                                      max: Math.round(maxKm * 10) / 10,
+                                    });
+                                  }}
+                                />
+                                <div className="flex justify-between text-copy-13 text-[color:var(--ds-gray-900)]">
+                                  <span>
+                                    {displayMin} {distanceUnit}
+                                  </span>
+                                  <span>
+                                    {displayMax} {distanceUnit}
+                                  </span>
+                                </div>
+                              </>
+                            );
+                          })()}
                           <div className="flex justify-center pt-1">
                             <Switch
                               size="small"
