@@ -1,6 +1,7 @@
-import Image from "next/image";
 import Link from "next/link";
 import { format } from "date-fns";
+
+import CardImage from "@/components/ui/CardImage";
 
 // ============================================================================
 // ArticleCard
@@ -39,10 +40,10 @@ export interface ArticleCardProps {
   excerpt?: string;
   /** Pre-resolved image URL (e.g. from urlFor(...).width(1200).auto("format").url()). */
   imageUrl?: string;
-  /** Optional low-res blur placeholder URL (e.g. urlFor(...).width(16).height(9).blur(20).auto("format").url()). */
-  blurDataURL?: string;
   /** Defaults to the title — override if the image conveys something different. */
   imageAlt?: string;
+  /** Mark above-the-fold cards as priority — disables lazy load. */
+  priority?: boolean;
   className?: string;
 }
 
@@ -59,8 +60,8 @@ export default function ArticleCard({
   kickerHref,
   excerpt,
   imageUrl,
-  blurDataURL,
   imageAlt,
+  priority = false,
   className = "",
 }: ArticleCardProps) {
   const dateLabel = formatDate(publishedAt);
@@ -71,15 +72,12 @@ export default function ArticleCard({
     >
       <div className="relative w-full overflow-hidden rounded-md bg-[color:var(--ds-gray-100)] aspect-[16/8.75]">
         {imageUrl && (
-          <div className="h-full w-full scale-[1.04] transition-transform duration-300 ease-out will-change-transform group-hover:scale-100">
-            <Image
+          <div className="absolute inset-0 scale-[1.04] transition-transform duration-300 ease-out will-change-transform group-hover:scale-100">
+            <CardImage
               src={imageUrl}
               alt={imageAlt ?? title}
-              fill
               sizes="(max-width: 768px) 100vw, (max-width: 1280px) 33vw, 25vw"
-              className="object-cover"
-              placeholder={blurDataURL ? "blur" : undefined}
-              blurDataURL={blurDataURL}
+              priority={priority}
             />
           </div>
         )}

@@ -57,17 +57,9 @@ function formatLocation(item: HomepageRaceItem): string | undefined {
   return parts.length ? parts.join(", ") : undefined;
 }
 
-function resolveCardImages(item: HomepageRaceItem) {
-  if (!item.mainImage) return { imageUrl: undefined, blurDataURL: undefined };
-  return {
-    imageUrl: urlFor(item.mainImage).width(1200).auto("format").url(),
-    blurDataURL: urlFor(item.mainImage)
-      .width(16)
-      .height(9)
-      .blur(20)
-      .auto("format")
-      .url(),
-  };
+function resolveCardImage(item: HomepageRaceItem): string | undefined {
+  if (!item.mainImage) return undefined;
+  return urlFor(item.mainImage).width(1200).auto("format").url();
 }
 
 export default function HomepageRaces({
@@ -172,26 +164,22 @@ export default function HomepageRaces({
             className="snap-x snap-mandatory scroll-smooth overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           >
             <ul className="flex list-none gap-x-6 p-0">
-              {visible.map((item) => {
-                const { imageUrl, blurDataURL } = resolveCardImages(item);
-                return (
-                  <li
-                    key={item._id}
-                    data-scroll-item
-                    className="w-[85%] shrink-0 snap-start sm:w-[calc(1/2*(100%-1.5rem))] lg:w-[calc(1/3*(100%-1.5rem*2))]"
-                  >
-                    <RaceCard
-                      href={item.href}
-                      title={item.title}
-                      eventDate={item.eventDate}
-                      location={formatLocation(item)}
-                      category={item.category}
-                      imageUrl={imageUrl}
-                      blurDataURL={blurDataURL}
-                    />
-                  </li>
-                );
-              })}
+              {visible.map((item) => (
+                <li
+                  key={item._id}
+                  data-scroll-item
+                  className="w-[85%] shrink-0 snap-start sm:w-[calc(1/2*(100%-1.5rem))] lg:w-[calc(1/3*(100%-1.5rem*2))]"
+                >
+                  <RaceCard
+                    href={item.href}
+                    title={item.title}
+                    eventDate={item.eventDate}
+                    location={formatLocation(item)}
+                    category={item.category}
+                    imageUrl={resolveCardImage(item)}
+                  />
+                </li>
+              ))}
             </ul>
           </div>
         </div>

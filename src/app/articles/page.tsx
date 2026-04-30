@@ -37,9 +37,6 @@ export default async function ArticlesPage() {
             const imageUrl = post.mainImage
               ? urlFor(post.mainImage).width(1200).auto('format').url()
               : undefined;
-            const blurDataURL = post.mainImage
-              ? urlFor(post.mainImage).width(16).height(9).blur(20).auto('format').url()
-              : undefined;
             return (
               <ArticleCard
                 key={post._id}
@@ -49,7 +46,6 @@ export default async function ArticlesPage() {
                 kicker={post.category}
                 excerpt={post.excerpt}
                 imageUrl={imageUrl}
-                blurDataURL={blurDataURL}
               />
             );
           })}

@@ -56,17 +56,9 @@ interface HomepageBreakingNewsProps {
 
 const SEE_ALL_HREF = "/articles";
 
-function resolveCardImages(item: BreakingNewsItem) {
-  if (!item.mainImage) return { imageUrl: undefined, blurDataURL: undefined };
-  return {
-    imageUrl: urlFor(item.mainImage).width(1200).auto("format").url(),
-    blurDataURL: urlFor(item.mainImage)
-      .width(16)
-      .height(9)
-      .blur(20)
-      .auto("format")
-      .url(),
-  };
+function resolveCardImage(item: BreakingNewsItem): string | undefined {
+  if (!item.mainImage) return undefined;
+  return urlFor(item.mainImage).width(1200).auto("format").url();
 }
 
 export default function HomepageBreakingNews({
@@ -131,48 +123,42 @@ export default function HomepageBreakingNews({
             className="group/row relative w-full"
           >
             <CarouselContent>
-              {visible.map((item) => {
-                const { imageUrl, blurDataURL } = resolveCardImages(item);
-                return (
-                  <CarouselItem
-                    key={item._id}
-                    className="basis-[85%] sm:basis-1/2 lg:basis-1/3"
-                  >
-                    <ArticleCard
-                      href={item.href}
-                      title={item.title}
-                      publishedAt={item.publishedAt ?? ""}
-                      kicker={item.kicker}
-                      kickerHref={item.kickerHref ?? undefined}
-                      excerpt={item.excerpt}
-                      imageUrl={imageUrl}
-                      blurDataURL={blurDataURL}
-                    />
-                  </CarouselItem>
-                );
-              })}
+              {visible.map((item, i) => (
+                <CarouselItem
+                  key={item._id}
+                  className="basis-[85%] sm:basis-1/2 lg:basis-1/3"
+                >
+                  <ArticleCard
+                    href={item.href}
+                    title={item.title}
+                    publishedAt={item.publishedAt ?? ""}
+                    kicker={item.kicker}
+                    kickerHref={item.kickerHref ?? undefined}
+                    excerpt={item.excerpt}
+                    imageUrl={resolveCardImage(item)}
+                    priority={i < 3}
+                  />
+                </CarouselItem>
+              ))}
             </CarouselContent>
             <CarouselPrevious className="opacity-0 transition-opacity group-hover/row:opacity-100 disabled:opacity-0" />
             <CarouselNext className="opacity-0 transition-opacity group-hover/row:opacity-100 disabled:opacity-0" />
           </Carousel>
         ) : (
           <div className="grid grid-cols-1 gap-x-4 gap-y-8 md:grid-cols-3 md:gap-y-12">
-            {visible.map((item) => {
-              const { imageUrl, blurDataURL } = resolveCardImages(item);
-              return (
-                <ArticleCard
-                  key={item._id}
-                  href={item.href}
-                  title={item.title}
-                  publishedAt={item.publishedAt ?? ""}
-                  kicker={item.kicker}
-                  kickerHref={item.kickerHref ?? undefined}
-                  excerpt={item.excerpt}
-                  imageUrl={imageUrl}
-                  blurDataURL={blurDataURL}
-                />
-              );
-            })}
+            {visible.map((item, i) => (
+              <ArticleCard
+                key={item._id}
+                href={item.href}
+                title={item.title}
+                publishedAt={item.publishedAt ?? ""}
+                kicker={item.kicker}
+                kickerHref={item.kickerHref ?? undefined}
+                excerpt={item.excerpt}
+                imageUrl={resolveCardImage(item)}
+                priority={i < 3}
+              />
+            ))}
           </div>
         )}
 

@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { format } from "date-fns";
 import { ChevronRight } from "lucide-react";
@@ -6,6 +5,7 @@ import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 
 import ArticleCard from "@/components/ArticleCard";
 import { ButtonLink } from "@/components/ui/Button";
+import CardImage from "@/components/ui/CardImage";
 import { urlFor } from "@/sanity/lib/image";
 
 // ============================================================================
@@ -58,17 +58,9 @@ const formatDate = (iso?: string) => {
   return Number.isNaN(d.getTime()) ? "" : format(d, "d MMM yyyy");
 };
 
-function resolveImageUrls(item: HomepageGearItem) {
-  if (!item.mainImage) return { imageUrl: undefined, blurDataURL: undefined };
-  return {
-    imageUrl: urlFor(item.mainImage).width(1600).auto("format").url(),
-    blurDataURL: urlFor(item.mainImage)
-      .width(16)
-      .height(9)
-      .blur(20)
-      .auto("format")
-      .url(),
-  };
+function resolveImageUrl(item: HomepageGearItem): string | undefined {
+  if (!item.mainImage) return undefined;
+  return urlFor(item.mainImage).width(1600).auto("format").url();
 }
 
 // ============================================================================
@@ -77,21 +69,17 @@ function resolveImageUrls(item: HomepageGearItem) {
 
 function FeaturedArticle({ item }: { item: HomepageGearItem }) {
   const dateLabel = formatDate(item.publishedAt);
-  const { imageUrl, blurDataURL } = resolveImageUrls(item);
+  const imageUrl = resolveImageUrl(item);
 
   return (
     <article className="group relative flex w-full flex-col gap-6">
       <div className="relative aspect-[16/8.75] w-full overflow-hidden rounded-md bg-[color:var(--ds-gray-100)]">
         {imageUrl && (
-          <div className="h-full w-full scale-[1.04] transition-transform duration-300 ease-out will-change-transform group-hover:scale-100">
-            <Image
+          <div className="absolute inset-0 scale-[1.04] transition-transform duration-300 ease-out will-change-transform group-hover:scale-100">
+            <CardImage
               src={imageUrl}
               alt={item.title}
-              fill
               sizes="(max-width: 1024px) 100vw, 75vw"
-              className="object-cover"
-              placeholder={blurDataURL ? "blur" : undefined}
-              blurDataURL={blurDataURL}
             />
           </div>
         )}
@@ -194,21 +182,17 @@ export default function HomepageGear({ items }: HomepageGearProps) {
               smaller cards lined up beside it. */}
           {supporting.length > 0 && (
             <div className="grid grid-cols-1 gap-8 md:grid-cols-3 md:gap-4 lg:grid-cols-1 lg:gap-12">
-              {supporting.map((item) => {
-                const { imageUrl, blurDataURL } = resolveImageUrls(item);
-                return (
-                  <ArticleCard
-                    key={item._id}
-                    href={item.href}
-                    title={item.title}
-                    publishedAt={item.publishedAt ?? ""}
-                    kicker={item.kicker}
-                    kickerHref={item.kickerHref ?? undefined}
-                    imageUrl={imageUrl}
-                    blurDataURL={blurDataURL}
-                  />
-                );
-              })}
+              {supporting.map((item) => (
+                <ArticleCard
+                  key={item._id}
+                  href={item.href}
+                  title={item.title}
+                  publishedAt={item.publishedAt ?? ""}
+                  kicker={item.kicker}
+                  kickerHref={item.kickerHref ?? undefined}
+                  imageUrl={resolveImageUrl(item)}
+                />
+              ))}
             </div>
           )}
         </div>

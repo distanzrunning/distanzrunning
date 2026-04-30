@@ -60,6 +60,9 @@ export default function HomepageHeroCarousel({
   const slideCount = slides.length;
   const [api, setApi] = useState<CarouselApi>();
   const [active, setActive] = useState(0);
+  // Per-slide image-loaded state — drives the skeleton overlay
+  // fade-out as each slide's image decodes.
+  const [loaded, setLoaded] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     if (!api) return;
@@ -165,6 +168,19 @@ export default function HomepageHeroCarousel({
                       aria-label={slide.title}
                     >
                       <div className="relative aspect-[4/5] w-full lg:aspect-[16/9]">
+                        {/* Skeleton overlay — uniform gray pulse
+                            until <img> decodes, then fades out and
+                            the actual image takes over. Same
+                            aesthetic as <CardImage> across the
+                            rest of the page. */}
+                        <div
+                          aria-hidden
+                          className={`absolute inset-0 bg-[color:var(--ds-gray-100)] transition-opacity duration-300 ${
+                            loaded[slide._id]
+                              ? "pointer-events-none opacity-0"
+                              : "animate-pulse opacity-100"
+                          }`}
+                        />
                         {slide.mainImage && (
                           <picture>
                             <source
@@ -184,7 +200,13 @@ export default function HomepageHeroCarousel({
                               alt=""
                               loading={i === 0 ? "eager" : "lazy"}
                               fetchPriority={i === 0 ? "high" : "auto"}
-                              className="absolute inset-0 h-full w-full scale-[1.04] object-cover transition-transform duration-300 ease-out will-change-transform group-hover/slide:scale-100"
+                              decoding="async"
+                              onLoad={() =>
+                                setLoaded((m) => ({ ...m, [slide._id]: true }))
+                              }
+                              className={`absolute inset-0 h-full w-full scale-[1.04] object-cover transition-[transform,opacity] duration-300 ease-out will-change-transform group-hover/slide:scale-100 ${
+                                loaded[slide._id] ? "opacity-100" : "opacity-0"
+                              }`}
                             />
                           </picture>
                         )}

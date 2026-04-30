@@ -13,6 +13,7 @@
 // consistent regardless of which section sits where.
 
 import { sanityFetch } from "@/sanity/lib/live";
+import { urlFor } from "@/sanity/lib/image";
 import { homepageHeroQuery } from "@/sanity/queries/homepageHeroQuery";
 import HomepageHeroCarousel, {
   type HomepageHeroSlide,
@@ -46,8 +47,38 @@ export default async function Home() {
   const gear = settings?.gear ?? [];
   const races = settings?.races ?? [];
 
+  // Preload the first hero slide's image at the right crop per
+  // viewport. Major LCP win — the browser starts the fetch during
+  // HTML parse, before React hydrates. Two preloads with media
+  // queries so only the matching crop is downloaded.
+  const firstSlideImage = slides[0]?.mainImage ?? null;
+  const heroDesktopUrl = firstSlideImage
+    ? urlFor(firstSlideImage).width(1600).height(900).auto("format").url()
+    : null;
+  const heroMobileUrl = firstSlideImage
+    ? urlFor(firstSlideImage).width(800).height(1000).auto("format").url()
+    : null;
+
   return (
     <>
+      {heroDesktopUrl && heroMobileUrl && (
+        <>
+          <link
+            rel="preload"
+            as="image"
+            href={heroMobileUrl}
+            media="(max-width: 1023px)"
+            fetchPriority="high"
+          />
+          <link
+            rel="preload"
+            as="image"
+            href={heroDesktopUrl}
+            media="(min-width: 1024px)"
+            fetchPriority="high"
+          />
+        </>
+      )}
       <HomepageHeroCarousel slides={slides} />
       <HomepageBreakingNews items={breakingNews} />
       <HomepageGear items={gear} />
