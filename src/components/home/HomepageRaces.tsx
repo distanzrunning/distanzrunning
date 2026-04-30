@@ -122,7 +122,7 @@ export default function HomepageRaces({
             <h2 className="m-0 text-heading-32 text-balance text-[color:var(--ds-gray-1000)]">
               Upcoming races
             </h2>
-            <p className="text-[16px] leading-[1.5] text-[color:var(--ds-gray-900)] md:text-[18px]">
+            <p className="text-copy-16 text-[color:var(--ds-gray-900)] md:text-copy-18">
               Upcoming races worth planning your year around.
             </p>
           </div>

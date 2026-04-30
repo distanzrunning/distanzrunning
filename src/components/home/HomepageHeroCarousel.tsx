@@ -198,12 +198,12 @@ export default function HomepageHeroCarousel({
                         </Link>
                       </h2>
                       {slide.excerpt && (
-                        <p className="max-w-prose text-[18px] font-medium leading-[1.4] text-[color:var(--ds-gray-900)] md:text-[21px] md:leading-[1.4]">
+                        <p className="max-w-prose text-copy-18 font-medium leading-snug text-[color:var(--ds-gray-900)] md:text-copy-20 md:leading-snug">
                           {slide.excerpt}
                         </p>
                       )}
                       {(slide.kicker || dateLabel) && (
-                        <div className="mt-1 flex items-center gap-2 text-[13px] text-[color:var(--ds-gray-700)]">
+                        <div className="mt-1 flex items-center gap-2 text-copy-13 text-[color:var(--ds-gray-700)]">
                           {slide.kicker && slide.kickerHref ? (
                             <Link
                               href={slide.kickerHref}

@@ -122,7 +122,7 @@ function FeaturedArticle({ item }: { item: HomepageGearItem }) {
         </h3>
 
         {item.excerpt && (
-          <p className="max-w-3xl text-balance text-[16px] leading-[1.5] text-[color:var(--ds-gray-900)] md:text-[18px]">
+          <p className="max-w-3xl text-balance text-copy-16 text-[color:var(--ds-gray-900)] md:text-copy-18">
             {item.excerpt}
           </p>
         )}
@@ -153,7 +153,7 @@ export default function HomepageGear({ items }: HomepageGearProps) {
             <h2 className="m-0 text-heading-40 text-balance text-[color:var(--ds-gray-1000)]">
               Latest Reviews
             </h2>
-            <p className="text-balance text-[16px] leading-[1.5] text-[color:var(--ds-gray-900)] md:text-[18px]">
+            <p className="text-balance text-copy-16 text-[color:var(--ds-gray-900)] md:text-copy-18">
               Explore the reviews, best of, and explainers on latest
               running shoes and gear.
             </p>
