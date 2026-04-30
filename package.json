@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "reindex": "node scripts/reindex-algolia.mjs"
   },
   "dependencies": {
     "@ag-grid-community/client-side-row-model": "^32.3.5",
