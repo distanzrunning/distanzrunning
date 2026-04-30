@@ -16,6 +16,7 @@ import {
 import { urlFor } from "@/sanity/lib/image";
 import { motion, AnimatePresence } from "framer-motion";
 import type { RaceGuide } from "./page";
+import { Calendar, type DateRange } from "@/components/ui/Calendar";
 import Slider from "@mui/material/Slider";
 import Box from "@mui/material/Box";
 import * as flags from "country-flag-icons/react/3x2";
@@ -34,29 +35,13 @@ function formatLocation(
 export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [isSearchExpanded, setIsSearchExpanded] = useState(false);
-  const [isDateFilterOpen, setIsDateFilterOpen] = useState(false);
-  // Applied filter (what's actually filtering the races)
-  const [appliedDateRange, setAppliedDateRange] = useState<{
-    start: Date | null;
-    end: Date | null;
-  }>({
+  // Date filter — DS Calendar owns its own popover, tab switcher, and
+  // navigation state. We only hold the applied range so the GROQ
+  // filter can react to it.
+  const [appliedDateRange, setAppliedDateRange] = useState<DateRange>({
     start: null,
     end: null,
   });
-  // Temporary selection in dropdown (before Apply is clicked)
-  const [tempDateRange, setTempDateRange] = useState<{
-    start: Date | null;
-    end: Date | null;
-  }>({
-    start: null,
-    end: null,
-  });
-  const [currentMonth, setCurrentMonth] = useState(new Date());
-  const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
-  const [dateFilterMode, setDateFilterMode] = useState<"dates" | "months">(
-    "dates",
-  );
-  const dateFilterRef = useRef<HTMLDivElement>(null);
 
   // Distance filter states
   const [isDistanceFilterOpen, setIsDistanceFilterOpen] = useState(false);
@@ -533,30 +518,6 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
     return null;
   };
 
-  // Close date filter on click outside
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (
-        dateFilterRef.current &&
-        !dateFilterRef.current.contains(event.target as Node)
-      ) {
-        setIsDateFilterOpen(false);
-      }
-    }
-    if (isDateFilterOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-      return () =>
-        document.removeEventListener("mousedown", handleClickOutside);
-    }
-  }, [isDateFilterOpen]);
-
-  // Initialize temp date range when opening dropdown
-  useEffect(() => {
-    if (isDateFilterOpen) {
-      setTempDateRange(appliedDateRange);
-    }
-  }, [isDateFilterOpen, appliedDateRange]);
-
   // Close distance filter on click outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -878,35 +839,6 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
     { id: "marathon", label: "Marathon", km: 42.195 },
     { id: "ultra", label: "Ultra", km: 50 }, // 50km+ for ultras
   ];
-
-  // Format date filter display text
-  const getDateFilterText = () => {
-    if (!appliedDateRange.start && !appliedDateRange.end) {
-      return "Dates";
-    }
-
-    const start = appliedDateRange.start;
-    const end = appliedDateRange.end;
-
-    // Check if it's a whole month selection
-    if (start && end) {
-      const isWholeMonth =
-        start.getDate() === 1 &&
-        end.getMonth() === start.getMonth() &&
-        end.getFullYear() === start.getFullYear() &&
-        end.getDate() ===
-          new Date(end.getFullYear(), end.getMonth() + 1, 0).getDate();
-
-      if (isWholeMonth) {
-        return format(start, "MMMM yyyy");
-      }
-
-      // Date range
-      return `${format(start, "dd/MM/yyyy")} - ${format(end, "dd/MM/yyyy")}`;
-    }
-
-    return "Dates";
-  };
 
   // Format distance filter display text
   const getDistanceFilterText = () => {
@@ -1395,450 +1327,18 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
             {/* Date Filter */}
             <div
               className="relative"
-              ref={dateFilterRef}
               style={{
                 order: appliedDateRange.start || appliedDateRange.end ? -10 : 0,
               }}
             >
-              {appliedDateRange.start || appliedDateRange.end ? (
-                // Filter is active - show filter value with X button
-                <div className="flex items-center gap-2 px-4 h-[44px] rounded-lg border border-neutral-900 dark:border-white bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 text-sm font-medium">
-                  <button
-                    onClick={() => setIsDateFilterOpen(!isDateFilterOpen)}
-                    className="hover:text-neutral-300 dark:hover:text-neutral-600 transition-colors"
-                  >
-                    {getDateFilterText()}
-                  </button>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setAppliedDateRange({ start: null, end: null });
-                      setTempDateRange({ start: null, end: null });
-                    }}
-                    className="text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300 transition-colors"
-                    aria-label="Clear date filter"
-                  >
-                    <svg
-                      className="h-4 w-4"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M6 18L18 6M6 6l12 12"
-                      />
-                    </svg>
-                  </button>
-                </div>
-              ) : (
-                // No filter - show default button
-                <button
-                  onClick={() => setIsDateFilterOpen(!isDateFilterOpen)}
-                  className="flex items-center gap-2 px-4 h-[44px] rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white hover:border-neutral-400 dark:hover:border-neutral-600 transition-colors text-sm font-medium whitespace-nowrap"
-                >
-                  Dates
-                  <svg
-                    className="h-4 w-4"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M19 9l-7 7-7-7"
-                    />
-                  </svg>
-                </button>
-              )}
-
-              {/* Date Dropdown */}
-              <AnimatePresence>
-                {isDateFilterOpen && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    transition={{ duration: 0.2 }}
-                    className="absolute top-full mt-2 left-0 z-40 bg-white dark:bg-neutral-900 rounded-lg shadow-xl border border-neutral-200 dark:border-neutral-800 p-4 min-w-[600px]"
-                  >
-                    {/* Top Bar: Action Buttons and Toggle */}
-                    <div className="flex items-center justify-between mb-6">
-                      {/* Clear Button - Left */}
-                      <button
-                        onClick={() => {
-                          setTempDateRange({ start: null, end: null });
-                        }}
-                        disabled={!tempDateRange.start && !tempDateRange.end}
-                        className={`p-2 rounded-lg transition-colors ${
-                          tempDateRange.start || tempDateRange.end
-                            ? "bg-neutral-200 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-300 dark:hover:bg-neutral-600 cursor-pointer"
-                            : "text-neutral-400 dark:text-neutral-600 cursor-not-allowed opacity-50"
-                        }`}
-                        aria-label="Clear selection"
-                      >
-                        <svg
-                          className="h-5 w-5"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M6 18L18 6M6 6l12 12"
-                          />
-                        </svg>
-                      </button>
-
-                      {/* Toggle between Dates and Months - Center */}
-                      <div className="inline-flex bg-neutral-200 dark:bg-neutral-800 rounded-lg p-1">
-                        <button
-                          onClick={() => setDateFilterMode("dates")}
-                          className={`px-6 py-2.5 rounded-md text-base font-medium transition-colors ${
-                            dateFilterMode === "dates"
-                              ? "bg-neutral-900 dark:bg-white text-white dark:text-neutral-900"
-                              : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white"
-                          }`}
-                        >
-                          Dates
-                        </button>
-                        <button
-                          onClick={() => setDateFilterMode("months")}
-                          className={`px-6 py-2.5 rounded-md text-base font-medium transition-colors ${
-                            dateFilterMode === "months"
-                              ? "bg-neutral-900 dark:bg-white text-white dark:text-neutral-900"
-                              : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white"
-                          }`}
-                        >
-                          Months
-                        </button>
-                      </div>
-
-                      {/* Apply Button - Right */}
-                      <button
-                        onClick={() => {
-                          setAppliedDateRange(tempDateRange);
-                          setIsDateFilterOpen(false);
-                        }}
-                        disabled={!tempDateRange.start && !tempDateRange.end}
-                        className={`p-2 rounded-lg transition-colors ${
-                          tempDateRange.start || tempDateRange.end
-                            ? "bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 hover:bg-neutral-700 dark:hover:bg-neutral-200 cursor-pointer"
-                            : "bg-neutral-200 dark:bg-neutral-800 text-neutral-400 dark:text-neutral-600 cursor-not-allowed opacity-50"
-                        }`}
-                        aria-label="Apply filter"
-                      >
-                        <svg
-                          className="h-5 w-5"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M5 13l4 4L19 7"
-                          />
-                        </svg>
-                      </button>
-                    </div>
-
-                    {dateFilterMode === "dates" ? (
-                      <>
-                        {/* Calendar Header Controls */}
-                        <div className="flex items-center justify-between mb-4 px-2">
-                          <button
-                            onClick={() =>
-                              setCurrentMonth(subMonths(currentMonth, 1))
-                            }
-                            className="p-2 hover:bg-neutral-200 dark:hover:bg-neutral-800 rounded-lg transition-colors"
-                          >
-                            <svg
-                              className="h-5 w-5 text-neutral-900 dark:text-white"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M15 19l-7-7 7-7"
-                              />
-                            </svg>
-                          </button>
-                          <button
-                            onClick={() =>
-                              setCurrentMonth(addMonths(currentMonth, 1))
-                            }
-                            className="p-2 hover:bg-neutral-200 dark:hover:bg-neutral-800 rounded-lg transition-colors"
-                          >
-                            <svg
-                              className="h-5 w-5 text-neutral-900 dark:text-white"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M9 5l7 7-7 7"
-                              />
-                            </svg>
-                          </button>
-                        </div>
-
-                        {/* Two Month Calendar Grid */}
-                        <div className="grid grid-cols-2 gap-6">
-                          {[currentMonth, addMonths(currentMonth, 1)].map(
-                            (month, monthIndex) => {
-                              const monthStart = startOfMonth(month);
-                              const monthEnd = endOfMonth(month);
-                              const daysInMonth = eachDayOfInterval({
-                                start: monthStart,
-                                end: monthEnd,
-                              });
-
-                              return (
-                                <div key={monthIndex}>
-                                  {/* Month Name */}
-                                  <div className="text-center mb-4">
-                                    <h3 className="text-neutral-900 dark:text-white font-semibold text-lg">
-                                      {format(month, "MMMM yyyy")}
-                                    </h3>
-                                  </div>
-
-                                  {/* Day Headers */}
-                                  <div className="grid grid-cols-7 gap-1 mb-2">
-                                    {[
-                                      "Mo",
-                                      "Tu",
-                                      "We",
-                                      "Th",
-                                      "Fr",
-                                      "Sa",
-                                      "Su",
-                                    ].map((day) => (
-                                      <div
-                                        key={day}
-                                        className="text-center text-neutral-500 dark:text-neutral-500 text-sm font-medium py-1"
-                                      >
-                                        {day}
-                                      </div>
-                                    ))}
-                                  </div>
-
-                                  {/* Calendar Days */}
-                                  <div className="grid grid-cols-7 gap-1">
-                                    {/* Add empty cells for days before month starts */}
-                                    {Array.from({
-                                      length: (monthStart.getDay() + 6) % 7,
-                                    }).map((_, i) => (
-                                      <div key={`empty-${i}`} />
-                                    ))}
-
-                                    {daysInMonth.map((day) => {
-                                      const dayStart = startOfDay(day);
-                                      const isSelected =
-                                        (tempDateRange.start &&
-                                          isSameDay(
-                                            dayStart,
-                                            tempDateRange.start,
-                                          )) ||
-                                        (tempDateRange.end &&
-                                          isSameDay(
-                                            dayStart,
-                                            tempDateRange.end,
-                                          ));
-                                      const isInRange =
-                                        tempDateRange.start &&
-                                        tempDateRange.end &&
-                                        isWithinInterval(dayStart, {
-                                          start: tempDateRange.start,
-                                          end: tempDateRange.end,
-                                        });
-
-                                      return (
-                                        <button
-                                          key={day.toString()}
-                                          onClick={() => {
-                                            if (
-                                              !tempDateRange.start ||
-                                              (tempDateRange.start &&
-                                                tempDateRange.end)
-                                            ) {
-                                              // If clicking the same date that's already selected as start (and no end), deselect it
-                                              if (
-                                                tempDateRange.start &&
-                                                !tempDateRange.end &&
-                                                isSameDay(
-                                                  dayStart,
-                                                  tempDateRange.start,
-                                                )
-                                              ) {
-                                                setTempDateRange({
-                                                  start: null,
-                                                  end: null,
-                                                });
-                                              } else {
-                                                setTempDateRange({
-                                                  start: dayStart,
-                                                  end: null,
-                                                });
-                                              }
-                                            } else {
-                                              if (
-                                                dayStart < tempDateRange.start
-                                              ) {
-                                                setTempDateRange({
-                                                  start: dayStart,
-                                                  end: tempDateRange.start,
-                                                });
-                                              } else {
-                                                setTempDateRange({
-                                                  ...tempDateRange,
-                                                  end: dayStart,
-                                                });
-                                              }
-                                            }
-                                          }}
-                                          className={`
-                                      h-10 flex items-center justify-center rounded-lg text-base font-medium transition-colors
-                                      ${isSelected ? "bg-neutral-900 dark:bg-white text-white dark:text-neutral-900" : ""}
-                                      ${isInRange && !isSelected ? "bg-neutral-300 dark:bg-neutral-700 text-neutral-900 dark:text-white" : ""}
-                                      ${!isSelected && !isInRange ? "text-neutral-600 dark:text-neutral-400 hover:bg-neutral-200 dark:hover:bg-neutral-800 hover:text-neutral-900 dark:hover:text-white" : ""}
-                                    `}
-                                        >
-                                          {format(day, "d")}
-                                        </button>
-                                      );
-                                    })}
-                                  </div>
-                                </div>
-                              );
-                            },
-                          )}
-                        </div>
-                      </>
-                    ) : (
-                      <>
-                        {/* Months View */}
-                        <div className="flex items-center justify-between mb-6 px-2">
-                          <button
-                            onClick={() => setCurrentYear(currentYear - 1)}
-                            className="p-2 hover:bg-neutral-200 dark:hover:bg-neutral-800 rounded-lg transition-colors"
-                          >
-                            <svg
-                              className="h-5 w-5 text-neutral-900 dark:text-white"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M15 19l-7-7 7-7"
-                              />
-                            </svg>
-                          </button>
-                          <h3 className="text-neutral-900 dark:text-white font-semibold text-xl">
-                            {currentYear}
-                          </h3>
-                          <button
-                            onClick={() => setCurrentYear(currentYear + 1)}
-                            className="p-2 hover:bg-neutral-200 dark:hover:bg-neutral-800 rounded-lg transition-colors"
-                          >
-                            <svg
-                              className="h-5 w-5 text-neutral-900 dark:text-white"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M9 5l7 7-7 7"
-                              />
-                            </svg>
-                          </button>
-                        </div>
-
-                        {/* Month Buttons Grid */}
-                        <div className="grid grid-cols-4 gap-3 mb-6">
-                          {[
-                            "January",
-                            "February",
-                            "March",
-                            "April",
-                            "May",
-                            "June",
-                            "July",
-                            "August",
-                            "September",
-                            "October",
-                            "November",
-                            "December",
-                          ].map((monthName, index) => {
-                            const isSelected =
-                              tempDateRange.start &&
-                              tempDateRange.start.getMonth() === index &&
-                              tempDateRange.start.getFullYear() === currentYear;
-
-                            return (
-                              <button
-                                key={monthName}
-                                onClick={() => {
-                                  const startOfMonthDate = new Date(
-                                    currentYear,
-                                    index,
-                                    1,
-                                  );
-                                  const endOfMonthDate = new Date(
-                                    currentYear,
-                                    index + 1,
-                                    0,
-                                    23,
-                                    59,
-                                    59,
-                                  );
-                                  // Toggle: if already selected, deselect it
-                                  if (isSelected) {
-                                    setTempDateRange({
-                                      start: null,
-                                      end: null,
-                                    });
-                                  } else {
-                                    setTempDateRange({
-                                      start: startOfMonthDate,
-                                      end: endOfMonthDate,
-                                    });
-                                  }
-                                }}
-                                className={`
-                                  py-4 px-4 rounded-lg text-base font-medium transition-colors
-                                  ${isSelected ? "bg-neutral-900 dark:bg-white text-white dark:text-neutral-900" : "bg-neutral-200 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-400 hover:bg-neutral-300 dark:hover:bg-neutral-700 hover:text-neutral-900 dark:hover:text-white"}
-                                `}
-                              >
-                                {monthName}
-                              </button>
-                            );
-                          })}
-                        </div>
-                      </>
-                    )}
-                  </motion.div>
-                )}
-              </AnimatePresence>
+              <Calendar
+                showMonthTab
+                showTimeInput={false}
+                placeholder="Dates"
+                value={appliedDateRange}
+                onChange={setAppliedDateRange}
+                popoverAlignment="start"
+              />
             </div>
 
             {/* Distance Filter */}
@@ -5387,7 +4887,6 @@ export function RaceGuidesClient({ races }: { races: RaceGuide[] }) {
               onClick={() => {
                 setSearchQuery("");
                 setAppliedDateRange({ start: null, end: null });
-                setTempDateRange({ start: null, end: null });
                 setAppliedDistanceFilter(null);
                 setTempDistanceFilter(null);
                 setAppliedCountryFilter(null);
