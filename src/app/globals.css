@@ -1160,9 +1160,6 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    -webkit-font-smoothing: subpixel-antialiased;
-    -moz-osx-font-smoothing: auto;
-    text-rendering: optimizeLegibility;
     border: 0 solid #e5e7eb;
   }
 
