@@ -125,10 +125,14 @@ export default function HomepageRaces({
                 strokeWidth={1.5}
                 aria-hidden
               />
-              Upcoming races
+              <span
+                aria-hidden
+                className="h-6 w-px shrink-0 bg-[color:var(--ds-gray-400)]"
+              />
+              Races
             </h2>
             <p className="text-[16px] leading-[1.5] text-[color:var(--ds-gray-900)] md:text-[18px]">
-              Upcoming races worth planning your year around.
+              Find your next race.
             </p>
           </div>
 
