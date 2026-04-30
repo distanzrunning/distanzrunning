@@ -52,6 +52,19 @@ export function DarkModeProvider({ children }: { children: React.ReactNode }) {
   const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
+    // Suppress transitions during initial mount the same way
+    // applyTheme does during a user-initiated theme switch.
+    // Without this, any element carrying a `transition-colors`
+    // class (SiteHeader, filter chips, etc.) animates its bg
+    // through the brief sequence of CSS-variable resolution
+    // states the browser walks during stylesheet load — visible
+    // as a white-to-dark flash on heavy pages.
+    const noTransition = document.createElement("style");
+    noTransition.setAttribute("data-theme-transition", "");
+    noTransition.textContent =
+      `*, *::before, *::after { transition: none !important; }`;
+    document.head.appendChild(noTransition);
+
     const savedTheme = localStorage.getItem("theme") as ThemePreference | null;
     const preference = savedTheme || "system";
     setThemeState(preference);
@@ -71,6 +84,14 @@ export function DarkModeProvider({ children }: { children: React.ReactNode }) {
     }
 
     setIsInitialized(true);
+
+    // Re-enable transitions after two animation frames so the
+    // first paint settles fully without animating.
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        noTransition.remove();
+      });
+    });
   }, []);
 
   // Listen for system theme changes when in "system" mode
