@@ -153,7 +153,7 @@ export default function RaceCard({
             (matches the homepage's race card). The index variant
             additionally renders the hover stat overlay below. */}
         {category && (
-          <div className="absolute right-3 top-3 z-10">
+          <div className="absolute right-3 top-3 z-20">
             <Badge variant="inverted" size="md">
               {category}
             </Badge>
