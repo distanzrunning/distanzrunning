@@ -29,6 +29,7 @@ export const raceIndexQuery = groq`
     profile,
     elevationGain,
     price,
-    currency
+    currency,
+    finishers
   }
 `;

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { format } from "date-fns";
+import { User } from "lucide-react";
 
 import { Badge } from "@/components/ui/Badge";
 import CardImage from "@/components/ui/CardImage";
@@ -45,9 +46,10 @@ export interface RaceCardProps {
   /** Visual variant. "default" matches the homepage Races row;
    *  "index" is the /races index page treatment. */
   variant?: "default" | "index";
-  /** Index-variant only — distance in km, rendered in the square
-   *  block on the right side of the body. */
+  /** Index-variant only — populates the body meta row. */
   distance?: number;
+  /** Index-variant only — number of finishers from the prior year. */
+  finishers?: number;
   /** Index-variant only — populates the glassy hover pills. */
   surface?: string;
   profile?: string;
@@ -85,6 +87,7 @@ export default function RaceCard({
   className = "",
   variant = "default",
   distance,
+  finishers,
   surface,
   profile,
   elevationGain,
@@ -157,30 +160,37 @@ export default function RaceCard({
       {/* Body — index variant: stacked text only.
                  default variant: text + square date block on the right. */}
       {isIndex ? (
-        <div className="flex items-center justify-between gap-3 rounded-b-md bg-[color:var(--ds-gray-100)] p-6">
-          <div className="flex min-w-0 flex-1 flex-col gap-1">
-            <h3 className="line-clamp-2 text-heading-20 text-[color:var(--ds-gray-1000)]">
-              <Link
-                href={href}
-                className="outline-none after:absolute after:inset-0 after:content-[''] focus-visible:after:rounded-md focus-visible:after:outline focus-visible:after:outline-2 focus-visible:after:outline-[color:var(--ds-focus-ring)]"
-              >
-                {title}
-              </Link>
-            </h3>
-            {location && (
-              <p className="truncate text-copy-14 text-[color:var(--ds-gray-900)]">
-                {location}
-              </p>
-            )}
-          </div>
-          {distance != null && (
-            <div className="flex size-16 shrink-0 flex-col items-center justify-center rounded-md bg-[color:var(--ds-gray-200)]">
-              <span className="text-heading-24 text-[color:var(--ds-gray-1000)]">
-                {Math.round(distance)}
-              </span>
-              <span className="text-label-11 font-medium uppercase tracking-[0.04em] text-[color:var(--ds-gray-1000)]">
-                km
-              </span>
+        <div className="flex flex-col gap-1 rounded-b-md bg-[color:var(--ds-gray-100)] p-6">
+          <h3 className="line-clamp-2 text-heading-20 text-[color:var(--ds-gray-1000)]">
+            <Link
+              href={href}
+              className="outline-none after:absolute after:inset-0 after:content-[''] focus-visible:after:rounded-md focus-visible:after:outline focus-visible:after:outline-2 focus-visible:after:outline-[color:var(--ds-focus-ring)]"
+            >
+              {title}
+            </Link>
+          </h3>
+          {location && (
+            <p className="truncate text-copy-14 text-[color:var(--ds-gray-900)]">
+              {location}
+            </p>
+          )}
+          {(category || finishers != null) && (
+            <div className="mt-2 flex items-center gap-3">
+              {category && (
+                <Badge
+                  variant="gray-subtle"
+                  size="sm"
+                  className="shrink-0 bg-[color:var(--ds-gray-300)]"
+                >
+                  {category}
+                </Badge>
+              )}
+              {finishers != null && (
+                <span className="flex items-center gap-1.5 text-copy-13 text-[color:var(--ds-gray-900)]">
+                  <User className="size-4" aria-hidden />
+                  {finishers.toLocaleString()} Runners
+                </span>
+              )}
             </div>
           )}
         </div>

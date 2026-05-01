@@ -25,6 +25,7 @@ export type RaceIndexItem = {
   elevationGain?: number;
   price?: number;
   currency?: string;
+  finishers?: number;
 };
 
 function formatLocation(item: RaceIndexItem): string | undefined {
@@ -69,6 +70,7 @@ export default function RaceGrid({ races }: { races: RaceIndexItem[] }) {
             elevationGain={race.elevationGain}
             price={race.price}
             currency={race.currency}
+            finishers={race.finishers}
           />
         </li>
       ))}
