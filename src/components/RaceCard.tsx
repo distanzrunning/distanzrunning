@@ -151,7 +151,7 @@ export default function RaceCard({
             sits over a photo, not over the canvas. */}
         {isIndex && fullDate ? (
           <div className="absolute right-3 top-3 z-20 rounded-full bg-white/50 px-3.5 pb-1.5 pt-[5px] backdrop-blur-2xl">
-            <span className="text-label-12 font-medium tracking-[-0.1px] text-[#161616]">
+            <span className="text-label-12 font-medium leading-[14px] tracking-[-0.1px] text-[#161616]">
               {fullDate}
             </span>
           </div>
