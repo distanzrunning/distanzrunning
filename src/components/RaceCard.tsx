@@ -1,8 +1,6 @@
 import Link from "next/link";
 import { format } from "date-fns";
-import { User } from "lucide-react";
 
-import { Avatar } from "@/components/ui/Avatar";
 import { Badge } from "@/components/ui/Badge";
 import CardImage from "@/components/ui/CardImage";
 import { formatPrice } from "@/lib/raceUtils";
@@ -47,10 +45,6 @@ export interface RaceCardProps {
   /** Visual variant. "default" matches the homepage Races row;
    *  "index" is the /races index page treatment. */
   variant?: "default" | "index";
-  /** Index-variant only — populates the body meta row. */
-  distance?: number;
-  /** Index-variant only — number of finishers from the prior year. */
-  finishers?: number;
   /** Index-variant only — populates the glassy hover stat columns. */
   surface?: string;
   surfaceBreakdown?: string;
@@ -105,8 +99,6 @@ export default function RaceCard({
   priority = false,
   className = "",
   variant = "default",
-  distance,
-  finishers,
   surface,
   surfaceBreakdown,
   profile,
@@ -118,7 +110,6 @@ export default function RaceCard({
 
   const month = safeFormat(eventDate, "MMM");
   const day = safeFormat(eventDate, "dd");
-  const fullDate = safeFormat(eventDate, "dd MMM, yyyy"); // → "31 Mar, 2026"
 
   // Format profile as title-case ("rolling" → "Rolling").
   const profileLabel = profile
@@ -158,23 +149,15 @@ export default function RaceCard({
           </div>
         )}
 
-        {/* Top-right pill — date in index variant (frosted glass,
-            heavy backdrop blur, dark text), category Badge in
-            default. Date pill text is hard-coded near-black so it
-            stays legible regardless of theme — the pill always
-            sits over a photo, not over the canvas. */}
-        {isIndex && fullDate ? (
-          <span className="absolute right-3 top-3 z-20 inline-block rounded-full bg-white/50 px-3.5 pb-1.5 pt-[5px] text-label-12 font-medium leading-[14px] tracking-[-0.1px] text-[#161616] backdrop-blur-2xl">
-            {fullDate}
-          </span>
-        ) : (
-          category && (
-            <div className="absolute right-3 top-3 z-10">
-              <Badge variant="inverted" size="md">
-                {category}
-              </Badge>
-            </div>
-          )
+        {/* Top-right pill — category Badge in both variants
+            (matches the homepage's race card). The index variant
+            additionally renders the hover stat overlay below. */}
+        {category && (
+          <div className="absolute right-3 top-3 z-10">
+            <Badge variant="inverted" size="md">
+              {category}
+            </Badge>
+          </div>
         )}
 
         {/* Hover overlay (index variant only). Single absolutely-
@@ -212,81 +195,38 @@ export default function RaceCard({
         )}
       </div>
 
-      {/* Body — index variant: stacked text only.
-                 default variant: text + square date block on the right. */}
-      {isIndex ? (
-        // Index body — uses gray-scale DS tokens that flip with
-        // theme: light card body in light mode, dark card body
-        // in dark mode. Pill bg sits one step away from body bg
-        // (gray-300 vs gray-100) so the chip stands out against
-        // the surface in either theme.
-        <div className="flex flex-col gap-4 bg-[color:var(--ds-gray-100)] px-6 pb-5 pt-[17px]">
-          <div className="flex flex-col">
-            <h3 className="truncate text-heading-20 font-bold text-[color:var(--ds-gray-1000)]">
-              <Link
-                href={href}
-                className="outline-none after:absolute after:inset-0 after:content-[''] focus-visible:after:rounded-md focus-visible:after:outline focus-visible:after:outline-2 focus-visible:after:outline-[color:var(--ds-focus-ring)]"
-              >
-                {title}
-              </Link>
-            </h3>
-            {location && (
-              <p className="truncate text-copy-14 tracking-[-0.14px] text-[color:var(--ds-gray-700)]">
-                {location}
-              </p>
-            )}
-          </div>
-          {(category || finishers != null) && (
-            <div className="flex items-center gap-2">
-              {category && (
-                <span className="inline-flex h-7 shrink-0 items-center rounded-full bg-[color:var(--ds-gray-300)] px-4 text-sm font-medium text-[color:var(--ds-gray-1000)]">
-                  {category}
-                </span>
-              )}
-              {finishers != null && (
-                <span className="flex items-center gap-2 text-copy-14 font-medium tracking-[-0.14px] text-[color:var(--ds-gray-1000)]">
-                  <Avatar
-                    size={28}
-                    placeholderIcon={
-                      <User className="size-3.5" aria-hidden />
-                    }
-                  />
-                  {finishers.toLocaleString()} Runners
-                </span>
-              )}
-            </div>
+      {/* Body — title + location stacked left, MAR / 31 square
+          block right. Same shape across variants now; the index
+          variant's only structural difference is the hover stat
+          overlay rendered above on the image. */}
+      <div className="flex items-center justify-between gap-3 rounded-b-md bg-[color:var(--ds-gray-100)] p-6">
+        <div className="flex min-w-0 flex-1 flex-col gap-1">
+          <h3 className="line-clamp-2 text-heading-20 text-[color:var(--ds-gray-1000)]">
+            <Link
+              href={href}
+              className="outline-none after:absolute after:inset-0 after:content-[''] focus-visible:after:rounded-md focus-visible:after:outline focus-visible:after:outline-2 focus-visible:after:outline-[color:var(--ds-focus-ring)]"
+            >
+              {title}
+            </Link>
+          </h3>
+          {location && (
+            <p className="truncate text-copy-14 text-[color:var(--ds-gray-900)]">
+              {location}
+            </p>
           )}
         </div>
-      ) : (
-        <div className="flex items-center justify-between gap-3 rounded-b-md bg-[color:var(--ds-gray-100)] p-6">
-          <div className="flex min-w-0 flex-1 flex-col gap-1">
-            <h3 className="line-clamp-2 text-heading-20 text-[color:var(--ds-gray-1000)]">
-              <Link
-                href={href}
-                className="outline-none after:absolute after:inset-0 after:content-[''] focus-visible:after:rounded-md focus-visible:after:outline focus-visible:after:outline-2 focus-visible:after:outline-[color:var(--ds-focus-ring)]"
-              >
-                {title}
-              </Link>
-            </h3>
-            {location && (
-              <p className="truncate text-copy-14 text-[color:var(--ds-gray-900)]">
-                {location}
-              </p>
-            )}
-          </div>
 
-          {(month || day) && (
-            <div className="flex size-16 shrink-0 flex-col items-center justify-center rounded-md bg-[color:var(--ds-gray-200)]">
-              <span className="text-label-11 font-medium uppercase tracking-[0.04em] text-[color:var(--ds-gray-1000)]">
-                {month}
-              </span>
-              <span className="text-heading-24 text-[color:var(--ds-gray-1000)]">
-                {day}
-              </span>
-            </div>
-          )}
-        </div>
-      )}
+        {(month || day) && (
+          <div className="flex size-16 shrink-0 flex-col items-center justify-center rounded-md bg-[color:var(--ds-gray-200)]">
+            <span className="text-label-11 font-medium uppercase tracking-[0.04em] text-[color:var(--ds-gray-1000)]">
+              {month}
+            </span>
+            <span className="text-heading-24 text-[color:var(--ds-gray-1000)]">
+              {day}
+            </span>
+          </div>
+        )}
+      </div>
     </article>
   );
 }
