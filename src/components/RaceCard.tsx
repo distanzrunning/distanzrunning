@@ -95,7 +95,7 @@ export default function RaceCard({
             </Link>
           </h3>
           {location && (
-            <p className="truncate text-sm font-normal text-[color:var(--ds-gray-900)]">
+            <p className="truncate text-copy-14 text-[color:var(--ds-gray-900)]">
               {location}
             </p>
           )}
@@ -106,7 +106,7 @@ export default function RaceCard({
             className="flex size-16 shrink-0 flex-col items-center justify-center rounded-md bg-[color:var(--ds-gray-200)]"
             aria-hidden={false}
           >
-            <span className="text-[11px] font-medium uppercase tracking-[0.04em] text-[color:var(--ds-gray-1000)]">
+            <span className="text-label-11 font-medium uppercase tracking-[0.04em] text-[color:var(--ds-gray-1000)]">
               {month}
             </span>
             <span className="text-heading-24 text-[color:var(--ds-gray-1000)]">
