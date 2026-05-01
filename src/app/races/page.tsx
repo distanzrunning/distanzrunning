@@ -16,6 +16,7 @@
 import { sanityFetch } from "@/sanity/lib/live";
 import { raceIndexQuery } from "@/sanity/queries/raceIndexQuery";
 import { raceCountriesQuery } from "@/sanity/queries/raceCountriesQuery";
+import { raceCitiesQuery } from "@/sanity/queries/raceCitiesQuery";
 import RaceGrid, { type RaceIndexItem } from "./RaceGrid";
 import RaceUnitControls from "./RaceUnitControls";
 import FiltersShell from "./FiltersShell";
@@ -40,15 +41,33 @@ export default async function RacesPage({
   const filters = parseFilters(sp);
   const queryParams = buildQueryParams(filters);
 
-  // Run the filtered race fetch and the unfiltered country list in
-  // parallel — the country list needs every option regardless of
-  // which filters are applied.
-  const [raceResult, countriesResult] = await Promise.all([
+  // Run the filtered race fetch + unfiltered country and city
+  // option lists in parallel — the option lists need every choice
+  // regardless of which filters are applied.
+  const [raceResult, countriesResult, citiesResult] = await Promise.all([
     sanityFetch({ query: raceIndexQuery, params: queryParams }),
     sanityFetch({ query: raceCountriesQuery }),
+    sanityFetch({ query: raceCitiesQuery }),
   ]);
   const races = (raceResult.data ?? []) as RaceIndexItem[];
   const countries = (countriesResult.data ?? []) as string[];
+
+  // Dedupe city/country pairs — Sanity returns one row per race
+  // and we want one row per unique city. First match wins for the
+  // associated country, which is fine as long as cities don't
+  // legitimately span multiple countries in our data.
+  const rawCities = (citiesResult.data ?? []) as {
+    city: string;
+    country: string;
+  }[];
+  const seen = new Set<string>();
+  const cities = rawCities
+    .filter(({ city }) => {
+      if (seen.has(city)) return false;
+      seen.add(city);
+      return true;
+    })
+    .sort((a, b) => a.city.localeCompare(b.city));
 
   return (
     <InitialLoadShell skeleton={<FullPageSkeleton />}>
@@ -68,7 +87,11 @@ export default async function RacesPage({
             <RaceUnitControls />
           </header>
 
-          <FiltersShell initialFilters={filters} countries={countries}>
+          <FiltersShell
+            initialFilters={filters}
+            countries={countries}
+            cities={cities}
+          >
             <RaceGrid races={races} />
           </FiltersShell>
         </div>

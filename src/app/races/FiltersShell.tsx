@@ -31,6 +31,7 @@ import SearchFilter from "./filters/SearchFilter";
 import DateFilter from "./filters/DateFilter";
 import DistanceFilter from "./filters/DistanceFilter";
 import CountryFilter from "./filters/CountryFilter";
+import CityFilter, { type CityOption } from "./filters/CityFilter";
 import RaceGridSkeleton from "./RaceGridSkeleton";
 
 interface FiltersShellProps {
@@ -38,12 +39,16 @@ interface FiltersShellProps {
   /** All countries we have race data for, alphabetised. Powers
    *  the Country filter's option list. */
   countries: string[];
+  /** All {city, country} pairs we have race data for, deduped by
+   *  city. Powers the City filter's option list. */
+  cities: CityOption[];
   children: ReactNode;
 }
 
 export default function FiltersShell({
   initialFilters,
   countries,
+  cities,
   children,
 }: FiltersShellProps) {
   const router = useRouter();
@@ -122,7 +127,36 @@ export default function FiltersShell({
         <CountryFilter
           options={countries}
           value={initialFilters.country}
-          onChange={(country) => setFilter({ country })}
+          onChange={(country) =>
+            setFilter({
+              country,
+              // Clear the city if it no longer fits inside the new
+              // country scope — e.g. user had Tokyo + Japan, then
+              // switches country to Belgium. Keep the city when
+              // country becomes undefined ("any country").
+              ...(country &&
+              initialFilters.city &&
+              !cities.some(
+                (c) => c.city === initialFilters.city && c.country === country,
+              )
+                ? { city: undefined }
+                : {}),
+            })
+          }
+        />
+        <CityFilter
+          options={cities}
+          value={initialFilters.city}
+          countryScope={initialFilters.country}
+          onChange={(picked) => {
+            if (!picked) {
+              setFilter({ city: undefined });
+              return;
+            }
+            // Auto-sync country to the picked city's country so
+            // filters stay coherent.
+            setFilter({ city: picked.city, country: picked.country });
+          }}
         />
         {anyActive && (
           <button
