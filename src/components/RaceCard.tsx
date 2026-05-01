@@ -132,11 +132,11 @@ export default function RaceCard({
     surface || profileLabel || elevationGainLabel || priceLabel,
   );
 
-  // Outer rounding — index variant adopts a single 20 px radius
-  // (matches Runna) with overflow-hidden so the image and body
-  // share one rounded silhouette. Default variant keeps its
-  // existing rounded-md per-half look.
-  const articleRadius = isIndex ? "overflow-hidden rounded-[20px]" : "";
+  // Outer rounding — index variant adopts the DS material-
+  // fullscreen radius (16 px / rounded-2xl) with overflow-hidden
+  // so the image and body share one rounded silhouette. Default
+  // variant keeps its existing rounded-md per-half look.
+  const articleRadius = isIndex ? "overflow-hidden rounded-2xl" : "";
 
   return (
     <article
@@ -215,22 +215,23 @@ export default function RaceCard({
       {/* Body — index variant: stacked text only.
                  default variant: text + square date block on the right. */}
       {isIndex ? (
-        // Index body — dark surface always (matches Runna's
-        // theme-locked dark card). Hard-coded hex for now;
-        // promote to a DS theme-locked token once we have a
-        // second dark-card use-case.
-        <div className="flex flex-col gap-4 bg-[#252525] px-6 pb-5 pt-[17px]">
+        // Index body — uses gray-scale DS tokens that flip with
+        // theme: light card body in light mode, dark card body
+        // in dark mode. Pill bg sits one step away from body bg
+        // (gray-300 vs gray-100) so the chip stands out against
+        // the surface in either theme.
+        <div className="flex flex-col gap-4 bg-[color:var(--ds-gray-100)] px-6 pb-5 pt-[17px]">
           <div className="flex flex-col">
-            <h3 className="truncate text-heading-20 font-bold text-white/90">
+            <h3 className="truncate text-heading-20 font-bold text-[color:var(--ds-gray-1000)]">
               <Link
                 href={href}
-                className="outline-none after:absolute after:inset-0 after:content-[''] focus-visible:after:rounded-[20px] focus-visible:after:outline focus-visible:after:outline-2 focus-visible:after:outline-[color:var(--ds-focus-ring)]"
+                className="outline-none after:absolute after:inset-0 after:content-[''] focus-visible:after:rounded-2xl focus-visible:after:outline focus-visible:after:outline-2 focus-visible:after:outline-[color:var(--ds-focus-ring)]"
               >
                 {title}
               </Link>
             </h3>
             {location && (
-              <p className="truncate text-copy-14 tracking-[-0.14px] text-white/50">
+              <p className="truncate text-copy-14 tracking-[-0.14px] text-[color:var(--ds-gray-700)]">
                 {location}
               </p>
             )}
@@ -238,12 +239,12 @@ export default function RaceCard({
           {(category || finishers != null) && (
             <div className="flex items-center gap-2">
               {category && (
-                <span className="inline-flex h-7 shrink-0 items-center rounded-full bg-[#333] px-4 text-sm font-medium text-white/90">
+                <span className="inline-flex h-7 shrink-0 items-center rounded-full bg-[color:var(--ds-gray-300)] px-4 text-sm font-medium text-[color:var(--ds-gray-1000)]">
                   {category}
                 </span>
               )}
               {finishers != null && (
-                <span className="flex items-center gap-2 text-copy-14 font-medium tracking-[-0.14px] text-white/90">
+                <span className="flex items-center gap-2 text-copy-14 font-medium tracking-[-0.14px] text-[color:var(--ds-gray-1000)]">
                   <Avatar
                     size={28}
                     placeholderIcon={
