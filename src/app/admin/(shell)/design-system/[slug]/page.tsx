@@ -851,6 +851,9 @@ export default function DesignSystemPage() {
       return (
         <ContentWithTOC
           tocTitle="On this page"
+          pageTitle="Collapsible Input"
+          pageSubtitle="A search-shaped input that collapses to its icon when empty, expanding on focus."
+          mainSectionId="collapsible-input"
           activeSlug={activeSlug}
           onNavigate={handleNavigation}
         >
