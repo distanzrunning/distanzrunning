@@ -150,11 +150,9 @@ export default function RaceCard({
             stays legible regardless of theme — the pill always
             sits over a photo, not over the canvas. */}
         {isIndex && fullDate ? (
-          <div className="absolute right-3 top-3 z-20 rounded-full bg-white/50 px-3.5 pb-1.5 pt-[5px] backdrop-blur-2xl">
-            <span className="text-label-12 font-medium leading-[14px] tracking-[-0.1px] text-[#161616]">
-              {fullDate}
-            </span>
-          </div>
+          <span className="absolute right-3 top-3 z-20 inline-block rounded-full bg-white/50 px-3.5 pb-1.5 pt-[5px] text-label-12 font-medium leading-[14px] tracking-[-0.1px] text-[#161616] backdrop-blur-2xl">
+            {fullDate}
+          </span>
         ) : (
           category && (
             <div className="absolute right-3 top-3 z-10">
