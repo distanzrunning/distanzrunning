@@ -18,6 +18,8 @@ import { raceIndexQuery } from "@/sanity/queries/raceIndexQuery";
 import RaceGrid, { type RaceIndexItem } from "./RaceGrid";
 import RaceUnitControls from "./RaceUnitControls";
 import FiltersShell from "./FiltersShell";
+import FullPageSkeleton from "./FullPageSkeleton";
+import InitialLoadShell from "./InitialLoadShell";
 import { buildQueryParams, parseFilters } from "./filters";
 
 export const metadata = {
@@ -44,26 +46,28 @@ export default async function RacesPage({
   const races = (data ?? []) as RaceIndexItem[];
 
   return (
-    <div className="flex w-full flex-col items-center px-4 py-12 md:py-16 lg:py-20">
-      <div className="flex w-full max-w-[1400px] flex-col gap-12">
-        <header className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between md:gap-8">
-          <div className="flex flex-col gap-3">
-            <h1 className="m-0 text-balance text-heading-40 text-[color:var(--ds-gray-1000)] md:text-heading-48">
-              Races
-            </h1>
-            <p className="max-w-2xl text-copy-16 text-[color:var(--ds-gray-900)] md:text-copy-18">
-              Find your next race. Explore thousands of the world&apos;s
-              greatest races with detailed race guides, course analysis,
-              local tips and recommendations.
-            </p>
-          </div>
-          <RaceUnitControls />
-        </header>
+    <InitialLoadShell skeleton={<FullPageSkeleton />}>
+      <div className="flex w-full flex-col items-center px-4 py-12 md:py-16 lg:py-20">
+        <div className="flex w-full max-w-[1400px] flex-col gap-12">
+          <header className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between md:gap-8">
+            <div className="flex flex-col gap-3">
+              <h1 className="m-0 text-balance text-heading-40 text-[color:var(--ds-gray-1000)] md:text-heading-48">
+                Races
+              </h1>
+              <p className="max-w-2xl text-copy-16 text-[color:var(--ds-gray-900)] md:text-copy-18">
+                Find your next race. Explore thousands of the world&apos;s
+                greatest races with detailed race guides, course analysis,
+                local tips and recommendations.
+              </p>
+            </div>
+            <RaceUnitControls />
+          </header>
 
-        <FiltersShell initialFilters={filters}>
-          <RaceGrid races={races} />
-        </FiltersShell>
+          <FiltersShell initialFilters={filters}>
+            <RaceGrid races={races} />
+          </FiltersShell>
+        </div>
       </div>
-    </div>
+    </InitialLoadShell>
   );
 }
