@@ -29,8 +29,9 @@ export default function RacesPage() {
             Races
           </h1>
           <p className="max-w-2xl text-copy-16 text-[color:var(--ds-gray-900)] md:text-copy-18">
-            Find your next race. Curated race guides with course
-            analysis, insider tips, and editorial coverage.
+            Find your next race. Explore thousands of the world&apos;s
+            greatest races with detailed race guides, course analysis,
+            local tips and recommendations.
           </p>
         </header>
 
