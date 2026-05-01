@@ -1,70 +1,56 @@
 // src/app/races/page.tsx
+//
+// Server component. URL-driven filter rewrite — replaces the
+// 4,500-line "use client" RaceGuidesClient monolith that
+// hydration-flickered the race grid + filter row on every reload.
+//
+// Phase 1 scaffold: minimal shell. Subsequent phases add
+// parseFilters / buildFilterUrl helpers, server-side GROQ
+// filtering, RaceGrid (RSC), and one client-island filter chip
+// at a time. The previous implementation lives at /races-legacy
+// for side-by-side reference until the rewrite is complete.
 
-import { client as sanity } from '@/sanity/lib/client'
-import { RaceGuidesClient } from './RaceGuidesClient'
+import Link from "next/link";
 
-export type RaceGuide = {
-  _id: string
-  title: string
-  slug: { current: string }
-  city?: string
-  stateRegion?: string
-  country?: string
-  eventDate: string
-  mainImage: any
-  raceCategoryName?: string
-  distance?: number
-  surface?: string
-  surfaceBreakdown?: string
-  profile?: string
-  elevationGain?: number
-  elevationLoss?: number
-  averageTemperature?: number
-  price?: number
-  currency?: string
-  tags?: string[]
-  mensCourseRecord?: string
-  mensCourseRecordAthlete?: string
-  mensCourseRecordCountry?: string
-  womensCourseRecord?: string
-  womensCourseRecordAthlete?: string
-  womensCourseRecordCountry?: string
-  finishers?: number
-  officialWebsite?: string
-  gpxFile?: {
-    asset?: {
-      _id: string
-      url: string
-    }
-  }
-}
+export const metadata = {
+  title: "Races — Distanz Running",
+  description:
+    "Find your next race. Curated race guides with course analysis, insider tips, and editorial coverage.",
+};
 
-export const revalidate = 60 // Incremental Static Regeneration - refresh every 60s
+export const revalidate = 60;
 
-export default async function RaceGuidesPage() {
-  const raceGuides: RaceGuide[] = await sanity.fetch(`
-    *[_type == "raceGuide"] | order(eventDate asc) {
-      _id,
-      title,
-      slug,
-      city,
-      stateRegion,
-      country,
-      eventDate,
-      mainImage,
-      distance,
-      surface,
-      surfaceBreakdown,
-      profile,
-      elevationGain,
-      averageTemperature,
-      price,
-      currency,
-      tags,
-      officialWebsite,
-      "raceCategoryName": raceCategory->title
-    }
-  `)
+export default function RacesPage() {
+  return (
+    <div className="flex w-full flex-col items-center px-4 py-12 md:py-16 lg:py-20">
+      <div className="flex w-full max-w-[1400px] flex-col gap-12">
+        <header className="flex flex-col gap-3">
+          <h1 className="m-0 text-balance text-heading-40 text-[color:var(--ds-gray-1000)] md:text-heading-48">
+            Races
+          </h1>
+          <p className="max-w-2xl text-copy-16 text-[color:var(--ds-gray-900)] md:text-copy-18">
+            Find your next race. Curated race guides with course
+            analysis, insider tips, and editorial coverage.
+          </p>
+        </header>
 
-  return <RaceGuidesClient races={raceGuides} />
+        <div className="flex flex-col items-center gap-3 rounded-xl border border-dashed border-[color:var(--ds-gray-400)] p-12 text-center">
+          <p className="text-copy-14 text-[color:var(--ds-gray-900)]">
+            Rebuild in progress — URL-driven filters, server-rendered
+            grid. Filter chips and grid land in subsequent phases.
+          </p>
+          <p className="text-copy-13 text-[color:var(--ds-gray-700)]">
+            The previous version is preserved at{" "}
+            <Link
+              href="/races-legacy"
+              className="underline transition-colors hover:text-[color:var(--ds-gray-1000)]"
+            >
+              /races-legacy
+            </Link>{" "}
+            for reference.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
 }
