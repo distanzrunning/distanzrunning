@@ -23,8 +23,8 @@ import { formatDistance } from "@/lib/raceUtils";
 
 const MIN_KM = 0;
 const MAX_KM = 100;
-const PANEL_WIDTH = 380;
-const SLIDER_WIDTH = 340;
+const PANEL_WIDTH = 420;
+const SLIDER_WIDTH = 380;
 const KM_TO_MI = 0.621371;
 
 interface Preset {
@@ -47,7 +47,7 @@ const PRESETS: Preset[] = [
   { label: "5K", min: 5, max: 5 },
   { label: "10K", min: 10, max: 10 },
   { label: "10 Mile", min: 16.1, max: 16.1 },
-  { label: "Half", min: 21.1, max: 21.1 },
+  { label: "Half Marathon", min: 21.1, max: 21.1 },
   { label: "Marathon", min: 42.2, max: 42.2 },
   { label: "Ultra", min: 50, max: MAX_KM },
 ];
