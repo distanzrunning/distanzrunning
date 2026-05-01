@@ -5,17 +5,20 @@ import Image from "next/image";
 // ============================================================================
 //
 // Uniform image used by every card primitive (ArticleCard, RaceCard,
-// HomepageGear featured slot). The card's own container provides
-// the --ds-gray-100 placeholder background and the aspect ratio,
-// so this component is just a thin Next.js Image wrapper — no
-// JS-managed skeleton overlay, no fade transition. The container
-// bg shows while the image decodes; once decoded the image renders
-// in place without any cross-fade. This avoids the staggered
-// "wave of fade-ins" effect when many cards load at once.
+// HomepageGear featured slot). Two layers, both absolutely positioned
+// inside the container:
+//   1. A pulsing --ds-gray-100 skeleton — always rendered.
+//   2. The Next.js <Image> on top.
 //
-// Container is responsible for `position: relative` + aspect ratio
-// + `bg-[color:var(--ds-gray-100)]`. CardImage uses `fill` +
-// `object-cover` to fit.
+// No JS state, no fade, no onLoad handler. While the image is
+// decoding it has no rendered pixels, so the skeleton beneath
+// shows through; once the browser draws the image it covers the
+// skeleton entirely. No "loaded → not loaded" toggle means no
+// React re-render and nothing to flash when the swap happens —
+// the image just gradually replaces the skeleton as bytes arrive.
+//
+// Container is responsible for `position: relative` + aspect ratio.
+// CardImage uses `fill` + `object-cover` to fit.
 
 export interface CardImageProps {
   src: string;
@@ -36,14 +39,20 @@ export default function CardImage({
   className = "",
 }: CardImageProps) {
   return (
-    <Image
-      src={src}
-      alt={alt}
-      fill
-      sizes={sizes}
-      priority={priority}
-      decoding="async"
-      className={`object-cover ${className}`.trim()}
-    />
+    <>
+      <div
+        aria-hidden
+        className="absolute inset-0 animate-pulse bg-[color:var(--ds-gray-100)]"
+      />
+      <Image
+        src={src}
+        alt={alt}
+        fill
+        sizes={sizes}
+        priority={priority}
+        decoding="async"
+        className={`object-cover ${className}`.trim()}
+      />
+    </>
   );
 }
