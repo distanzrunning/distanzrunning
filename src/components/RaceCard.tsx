@@ -162,18 +162,22 @@ export default function RaceCard({
               {title}
             </Link>
           </h3>
-          {location && (
-            <p className="truncate text-copy-14 text-[color:var(--ds-gray-900)]">
-              {location}
-            </p>
-          )}
-          {category && (
-            <div className="mt-1">
-              <Badge variant="gray-subtle" size="sm">
+          <div className="flex items-center justify-between gap-3">
+            {location && (
+              <p className="min-w-0 flex-1 truncate text-copy-14 text-[color:var(--ds-gray-900)]">
+                {location}
+              </p>
+            )}
+            {category && (
+              <Badge
+                variant="gray-subtle"
+                size="sm"
+                className="shrink-0 bg-[color:var(--ds-gray-300)]"
+              >
                 {category}
               </Badge>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       ) : (
         <div className="flex items-center justify-between gap-3 rounded-b-md bg-[color:var(--ds-gray-100)] p-6">
