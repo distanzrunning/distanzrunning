@@ -1,9 +1,16 @@
+"use client";
+
 import Link from "next/link";
 import { format } from "date-fns";
 
 import { Badge } from "@/components/ui/Badge";
 import CardImage from "@/components/ui/CardImage";
-import { formatPrice } from "@/lib/raceUtils";
+import {
+  convertCurrencySync,
+  formatElevation,
+  formatPrice,
+} from "@/lib/raceUtils";
+import { useUnits } from "@/contexts/UnitsContext";
 
 // ============================================================================
 // RaceCard
@@ -112,6 +119,7 @@ export default function RaceCard({
   currency,
 }: RaceCardProps) {
   const isIndex = variant === "index";
+  const { units, currency: displayCurrency } = useUnits();
 
   const month = safeFormat(eventDate, "MMM");
   const day = safeFormat(eventDate, "dd");
@@ -121,9 +129,14 @@ export default function RaceCard({
     ? profile.charAt(0).toUpperCase() + profile.slice(1)
     : undefined;
   const elevationGainLabel =
-    elevationGain != null ? `+${Math.round(elevationGain)}m` : undefined;
+    elevationGain != null ? formatElevation(elevationGain, units) : undefined;
   const priceLabel =
-    price != null && currency ? formatPrice(price, currency) : undefined;
+    price != null && currency
+      ? formatPrice(
+          convertCurrencySync(price, currency, displayCurrency),
+          displayCurrency,
+        )
+      : undefined;
   const hasAnyHoverContent = Boolean(
     surface || profileLabel || elevationGainLabel || priceLabel,
   );
@@ -197,7 +210,7 @@ export default function RaceCard({
               <StatColumn
                 label="Price"
                 value={priceLabel}
-                detail={currency}
+                detail={displayCurrency}
               />
             )}
           </div>

@@ -11,6 +11,7 @@ import Footer from "@/components/Footer";
 import { DarkModeProvider } from "@/components/DarkModeProvider";
 import ReCaptchaProvider from "@/components/ReCaptchaProvider";
 import { ConsentProvider } from "@/contexts/ConsentContext";
+import { UnitsProvider } from "@/contexts/UnitsContext";
 import { ConsentBanner } from "@/components/ui/ConsentBanner";
 import ConsentSync from "@/components/ConsentSync";
 import { gcmDefaultsScript } from "@/lib/consent-gcm";
@@ -171,6 +172,7 @@ export default function RootLayout({
       <body className="font-sans antialiased bg-canvas text-textDefault min-h-screen flex flex-col distanz-font-features">
         <ReCaptchaProvider>
           <DarkModeProvider>
+            <UnitsProvider>
             <ConsentProvider>
               <ConsentSync />
               <LayoutContent
@@ -185,6 +187,7 @@ export default function RootLayout({
               <Analytics />
               <SpeedInsights />
             </ConsentProvider>
+            </UnitsProvider>
           </DarkModeProvider>
         </ReCaptchaProvider>
 

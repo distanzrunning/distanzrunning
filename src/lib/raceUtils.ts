@@ -125,6 +125,36 @@ export function convertCurrencySync(
 }
 
 /**
+ * Format an elevation value (stored in meters) for display.
+ * Imperial converts m → ft (×3.28084) and rounds.
+ */
+export function formatElevation(
+  meters: number,
+  units: "imperial" | "metric" = "metric",
+): string {
+  if (units === "imperial") {
+    return `+${Math.round(meters * 3.28084)}ft`
+  }
+  return `+${Math.round(meters)}m`
+}
+
+/**
+ * Format a distance value (stored in km) for display.
+ * Imperial converts km → mi (×0.621371). Falls back to one decimal
+ * place when the value isn't a whole number.
+ */
+export function formatDistance(
+  km: number,
+  units: "imperial" | "metric" = "metric",
+): string {
+  const value = units === "imperial" ? km * 0.621371 : km
+  const rounded = Math.round(value * 10) / 10
+  const display =
+    Number.isInteger(rounded) ? rounded.toFixed(0) : rounded.toFixed(1)
+  return `${display}${units === "imperial" ? "mi" : "km"}`
+}
+
+/**
  * Format a price with currency symbol
  * @param amount - The amount to format
  * @param currency - The currency code (e.g., 'USD')
