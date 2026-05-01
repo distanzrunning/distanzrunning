@@ -18,6 +18,10 @@ export interface RaceFilters {
   dateFrom?: string;
   /** ISO date string — upper bound on eventDate (inclusive). */
   dateTo?: string;
+  /** Lower bound on race distance, in km. */
+  distanceMin?: number;
+  /** Upper bound on race distance, in km. */
+  distanceMax?: number;
 }
 
 type SearchParamsLike =
@@ -34,6 +38,16 @@ function getParam(sp: SearchParamsLike, key: string): string | undefined {
   return undefined;
 }
 
+function getNumberParam(
+  sp: SearchParamsLike,
+  key: string,
+): number | undefined {
+  const raw = getParam(sp, key);
+  if (raw == null) return undefined;
+  const n = Number(raw);
+  return Number.isFinite(n) ? n : undefined;
+}
+
 export function parseFilters(sp: SearchParamsLike): RaceFilters {
   const filters: RaceFilters = {};
   const q = getParam(sp, "q")?.trim();
@@ -42,6 +56,10 @@ export function parseFilters(sp: SearchParamsLike): RaceFilters {
   if (dateFrom) filters.dateFrom = dateFrom;
   const dateTo = getParam(sp, "dateTo");
   if (dateTo) filters.dateTo = dateTo;
+  const distanceMin = getNumberParam(sp, "distanceMin");
+  if (distanceMin != null) filters.distanceMin = distanceMin;
+  const distanceMax = getNumberParam(sp, "distanceMax");
+  if (distanceMax != null) filters.distanceMax = distanceMax;
   return filters;
 }
 
@@ -50,17 +68,29 @@ export function buildFilterParams(filters: RaceFilters): URLSearchParams {
   if (filters.q) params.set("q", filters.q);
   if (filters.dateFrom) params.set("dateFrom", filters.dateFrom);
   if (filters.dateTo) params.set("dateTo", filters.dateTo);
+  if (filters.distanceMin != null)
+    params.set("distanceMin", String(filters.distanceMin));
+  if (filters.distanceMax != null)
+    params.set("distanceMax", String(filters.distanceMax));
   return params;
 }
 
 export function hasActiveFilters(filters: RaceFilters): boolean {
-  return Boolean(filters.q || filters.dateFrom || filters.dateTo);
+  return Boolean(
+    filters.q ||
+      filters.dateFrom ||
+      filters.dateTo ||
+      filters.distanceMin != null ||
+      filters.distanceMax != null,
+  );
 }
 
 export interface RaceQueryParams {
   qWild: string | null;
   dateFrom: string | null;
   dateTo: string | null;
+  distanceMin: number | null;
+  distanceMax: number | null;
 }
 
 /**
@@ -83,5 +113,7 @@ export function buildQueryParams(filters: RaceFilters): RaceQueryParams {
     qWild,
     dateFrom: filters.dateFrom ?? null,
     dateTo: filters.dateTo ?? null,
+    distanceMin: filters.distanceMin ?? null,
+    distanceMax: filters.distanceMax ?? null,
   };
 }

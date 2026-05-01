@@ -29,6 +29,7 @@ import {
 } from "./filters";
 import SearchFilter from "./filters/SearchFilter";
 import DateFilter from "./filters/DateFilter";
+import DistanceFilter from "./filters/DistanceFilter";
 import RaceGridSkeleton from "./RaceGridSkeleton";
 
 interface FiltersShellProps {
@@ -47,8 +48,11 @@ export default function FiltersShell({
   const setFilter = (patch: Partial<RaceFilters>) => {
     const next: RaceFilters = { ...initialFilters, ...patch };
     // Strip empty strings / undefined so they don't pollute the URL.
+    // Explicit checks rather than `!v` so a meaningful 0 (e.g.,
+    // distanceMin = 0) survives.
     (Object.keys(next) as (keyof RaceFilters)[]).forEach((key) => {
-      if (!next[key]) delete next[key];
+      const v = next[key];
+      if (v === undefined || v === null || v === "") delete next[key];
     });
     const params = buildFilterParams(next);
     const qs = params.toString();
@@ -78,6 +82,18 @@ export default function FiltersShell({
             setFilter({
               dateFrom: range.from,
               dateTo: range.to,
+            })
+          }
+        />
+        <DistanceFilter
+          value={{
+            min: initialFilters.distanceMin,
+            max: initialFilters.distanceMax,
+          }}
+          onChange={(range) =>
+            setFilter({
+              distanceMin: range.min,
+              distanceMax: range.max,
             })
           }
         />
