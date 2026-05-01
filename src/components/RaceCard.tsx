@@ -114,7 +114,7 @@ export default function RaceCard({
 
   const month = safeFormat(eventDate, "MMM");
   const day = safeFormat(eventDate, "dd");
-  const fullDate = safeFormat(eventDate, "dd MMM yyyy"); // → "31 Mar 2026"
+  const fullDate = safeFormat(eventDate, "dd MMM, yyyy"); // → "31 Mar, 2026"
 
   // Format profile as title-case ("rolling" → "Rolling").
   const profileLabel = profile
@@ -150,8 +150,8 @@ export default function RaceCard({
             stays legible regardless of theme — the pill always
             sits over a photo, not over the canvas. */}
         {isIndex && fullDate ? (
-          <div className="absolute right-3 top-3 z-20 rounded-full bg-white/50 px-3 py-1 backdrop-blur-2xl">
-            <span className="text-label-12 font-medium text-[#161616]">
+          <div className="absolute right-3 top-3 z-20 rounded-full bg-white/50 px-3.5 pb-1.5 pt-[5px] backdrop-blur-2xl">
+            <span className="text-label-12 font-medium tracking-[-0.1px] text-[#161616]">
               {fullDate}
             </span>
           </div>
