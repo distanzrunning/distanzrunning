@@ -132,11 +132,11 @@ export default function RaceCard({
     surface || profileLabel || elevationGainLabel || priceLabel,
   );
 
-  // Outer rounding — index variant adopts the DS material-
-  // fullscreen radius (16 px / rounded-2xl) with overflow-hidden
-  // so the image and body share one rounded silhouette. Default
-  // variant keeps its existing rounded-md per-half look.
-  const articleRadius = isIndex ? "overflow-hidden rounded-2xl" : "";
+  // Outer rounding — index variant uses overflow-hidden +
+  // rounded-md so the single radius matches the homepage cards'
+  // 6 px corners (where the image + body each carry rounded-t-md
+  // / rounded-b-md separately for the same visual result).
+  const articleRadius = isIndex ? "overflow-hidden rounded-md" : "";
 
   return (
     <article
@@ -225,7 +225,7 @@ export default function RaceCard({
             <h3 className="truncate text-heading-20 font-bold text-[color:var(--ds-gray-1000)]">
               <Link
                 href={href}
-                className="outline-none after:absolute after:inset-0 after:content-[''] focus-visible:after:rounded-2xl focus-visible:after:outline focus-visible:after:outline-2 focus-visible:after:outline-[color:var(--ds-focus-ring)]"
+                className="outline-none after:absolute after:inset-0 after:content-[''] focus-visible:after:rounded-md focus-visible:after:outline focus-visible:after:outline-2 focus-visible:after:outline-[color:var(--ds-focus-ring)]"
               >
                 {title}
               </Link>
