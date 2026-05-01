@@ -168,9 +168,11 @@ export default function RaceCard({
             </p>
           )}
           {category && (
-            <p className="text-copy-14 text-[color:var(--ds-gray-900)]">
-              {category}
-            </p>
+            <div className="mt-1">
+              <Badge variant="gray-subtle" size="sm">
+                {category}
+              </Badge>
+            </div>
           )}
         </div>
       ) : (
