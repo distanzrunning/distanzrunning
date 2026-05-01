@@ -2,6 +2,7 @@ import Link from "next/link";
 import { format } from "date-fns";
 import { User } from "lucide-react";
 
+import { Avatar } from "@/components/ui/Avatar";
 import { Badge } from "@/components/ui/Badge";
 import CardImage from "@/components/ui/CardImage";
 import { formatPrice } from "@/lib/raceUtils";
@@ -179,15 +180,18 @@ export default function RaceCard({
               {category && (
                 <Badge
                   variant="gray-subtle"
-                  size="sm"
+                  size="md"
                   className="shrink-0 bg-[color:var(--ds-gray-300)]"
                 >
                   {category}
                 </Badge>
               )}
               {finishers != null && (
-                <span className="flex items-center gap-1.5 text-copy-13 text-[color:var(--ds-gray-900)]">
-                  <User className="size-4" aria-hidden />
+                <span className="flex items-center gap-2 text-copy-13 text-[color:var(--ds-gray-900)]">
+                  <Avatar
+                    size={24}
+                    placeholderIcon={<User className="size-3" aria-hidden />}
+                  />
                   {finishers.toLocaleString()} Runners
                 </span>
               )}
