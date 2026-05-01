@@ -30,15 +30,20 @@ import {
 import SearchFilter from "./filters/SearchFilter";
 import DateFilter from "./filters/DateFilter";
 import DistanceFilter from "./filters/DistanceFilter";
+import CountryFilter from "./filters/CountryFilter";
 import RaceGridSkeleton from "./RaceGridSkeleton";
 
 interface FiltersShellProps {
   initialFilters: RaceFilters;
+  /** All countries we have race data for, alphabetised. Powers
+   *  the Country filter's option list. */
+  countries: string[];
   children: ReactNode;
 }
 
 export default function FiltersShell({
   initialFilters,
+  countries,
   children,
 }: FiltersShellProps) {
   const router = useRouter();
@@ -113,6 +118,11 @@ export default function FiltersShell({
               distanceMax: range.max,
             })
           }
+        />
+        <CountryFilter
+          options={countries}
+          value={initialFilters.country}
+          onChange={(country) => setFilter({ country })}
         />
         {anyActive && (
           <button

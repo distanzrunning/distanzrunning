@@ -22,6 +22,8 @@ export interface RaceFilters {
   distanceMin?: number;
   /** Upper bound on race distance, in km. */
   distanceMax?: number;
+  /** Country name — exact match against the race's country field. */
+  country?: string;
 }
 
 type SearchParamsLike =
@@ -60,6 +62,8 @@ export function parseFilters(sp: SearchParamsLike): RaceFilters {
   if (distanceMin != null) filters.distanceMin = distanceMin;
   const distanceMax = getNumberParam(sp, "distanceMax");
   if (distanceMax != null) filters.distanceMax = distanceMax;
+  const country = getParam(sp, "country")?.trim();
+  if (country) filters.country = country;
   return filters;
 }
 
@@ -72,6 +76,7 @@ export function buildFilterParams(filters: RaceFilters): URLSearchParams {
     params.set("distanceMin", String(filters.distanceMin));
   if (filters.distanceMax != null)
     params.set("distanceMax", String(filters.distanceMax));
+  if (filters.country) params.set("country", filters.country);
   return params;
 }
 
@@ -81,7 +86,8 @@ export function hasActiveFilters(filters: RaceFilters): boolean {
       filters.dateFrom ||
       filters.dateTo ||
       filters.distanceMin != null ||
-      filters.distanceMax != null,
+      filters.distanceMax != null ||
+      filters.country,
   );
 }
 
@@ -91,6 +97,7 @@ export interface RaceQueryParams {
   dateTo: string | null;
   distanceMin: number | null;
   distanceMax: number | null;
+  country: string | null;
 }
 
 /**
@@ -121,5 +128,6 @@ export function buildQueryParams(filters: RaceFilters): RaceQueryParams {
     dateTo: filters.dateTo ? `${filters.dateTo}T23:59:59.999Z` : null,
     distanceMin: filters.distanceMin ?? null,
     distanceMax: filters.distanceMax ?? null,
+    country: filters.country ?? null,
   };
 }

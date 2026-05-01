@@ -46,6 +46,8 @@ export default function FullPageSkeleton() {
             <div className={`${PULSE_BG} h-8 w-[220px]`} />
             {/* Distance trigger */}
             <div className={`${PULSE_BG} h-8 w-[100px]`} />
+            {/* Country trigger */}
+            <div className={`${PULSE_BG} h-8 w-[92px]`} />
           </div>
           <RaceGridSkeleton />
         </div>

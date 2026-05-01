@@ -15,6 +15,7 @@
 
 import { sanityFetch } from "@/sanity/lib/live";
 import { raceIndexQuery } from "@/sanity/queries/raceIndexQuery";
+import { raceCountriesQuery } from "@/sanity/queries/raceCountriesQuery";
 import RaceGrid, { type RaceIndexItem } from "./RaceGrid";
 import RaceUnitControls from "./RaceUnitControls";
 import FiltersShell from "./FiltersShell";
@@ -39,11 +40,15 @@ export default async function RacesPage({
   const filters = parseFilters(sp);
   const queryParams = buildQueryParams(filters);
 
-  const { data } = await sanityFetch({
-    query: raceIndexQuery,
-    params: queryParams,
-  });
-  const races = (data ?? []) as RaceIndexItem[];
+  // Run the filtered race fetch and the unfiltered country list in
+  // parallel — the country list needs every option regardless of
+  // which filters are applied.
+  const [raceResult, countriesResult] = await Promise.all([
+    sanityFetch({ query: raceIndexQuery, params: queryParams }),
+    sanityFetch({ query: raceCountriesQuery }),
+  ]);
+  const races = (raceResult.data ?? []) as RaceIndexItem[];
+  const countries = (countriesResult.data ?? []) as string[];
 
   return (
     <InitialLoadShell skeleton={<FullPageSkeleton />}>
@@ -63,7 +68,7 @@ export default async function RacesPage({
             <RaceUnitControls />
           </header>
 
-          <FiltersShell initialFilters={filters}>
+          <FiltersShell initialFilters={filters} countries={countries}>
             <RaceGrid races={races} />
           </FiltersShell>
         </div>
