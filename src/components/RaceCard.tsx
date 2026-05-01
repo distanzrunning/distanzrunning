@@ -130,11 +130,15 @@ export default function RaceCard({
     : undefined;
   const elevationGainLabel =
     elevationGain != null ? formatElevation(elevationGain, units) : undefined;
+  const isLocalCurrency = displayCurrency === "local";
+  const targetCurrency = isLocalCurrency ? currency ?? "USD" : displayCurrency;
   const priceLabel =
     price != null && currency
       ? formatPrice(
-          convertCurrencySync(price, currency, displayCurrency),
-          displayCurrency,
+          isLocalCurrency
+            ? price
+            : convertCurrencySync(price, currency, displayCurrency),
+          targetCurrency,
         )
       : undefined;
   const hasAnyHoverContent = Boolean(
@@ -210,7 +214,7 @@ export default function RaceCard({
               <StatColumn
                 label="Price"
                 value={priceLabel}
-                detail={displayCurrency}
+                detail={targetCurrency}
               />
             )}
           </div>

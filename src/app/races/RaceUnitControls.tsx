@@ -7,10 +7,17 @@
 //   - Imperial / Metric segmented Switch (governs distance + elevation
 //     formatting on every RaceCard via UnitsContext).
 //   - Currency Select (governs price formatting on every RaceCard;
-//     the source price is converted via convertCurrencySync).
+//     "local" keeps each race's source currency, otherwise the price
+//     is converted via convertCurrencySync).
 //
 // Both write through to UnitsContext, which persists to localStorage
 // and exposes the values back to RaceCard at render time.
+//
+// Controls stay visibility:hidden until first mount completes so the
+// SSR'd default values don't briefly flash before localStorage-saved
+// preferences swap in.
+
+import { useEffect, useState } from "react";
 
 import { Switch } from "@/components/ui/Switch";
 import { Select } from "@/components/ui/Select";
@@ -22,6 +29,7 @@ const UNIT_OPTIONS = [
 ];
 
 const CURRENCY_OPTIONS = [
+  { value: "local", label: "Local" },
   { value: "USD", label: "USD ($)" },
   { value: "EUR", label: "EUR (€)" },
   { value: "GBP", label: "GBP (£)" },
@@ -33,9 +41,17 @@ const CURRENCY_OPTIONS = [
 
 export default function RaceUnitControls() {
   const { units, currency, setUnits, setCurrency } = useUnits();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
-    <div className="flex flex-wrap items-center gap-3">
+    <div
+      className="flex flex-wrap items-center gap-3"
+      style={{ visibility: mounted ? "visible" : "hidden" }}
+    >
       <Switch
         size="small"
         options={UNIT_OPTIONS}
