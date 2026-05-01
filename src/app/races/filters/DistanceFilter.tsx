@@ -57,19 +57,26 @@ export default function DistanceFilter({
   const { units } = useUnits();
   const isImperial = units === "imperial";
 
-  // Slider operates in display units. MAX in mi is the integer
-  // closest to 100 km (62 mi ≈ 100.0 km on round-trip). MIN is 0
+  // 1-decimal rounding helper. Slider step=0.1 lands on values
+  // like 3.0999999999 in IEEE 754 — round before storing in state
+  // so equality checks against preset bounds are stable.
+  const round1 = (n: number) => Math.round(n * 10) / 10;
+  // Float-safe equality at 0.1 precision (multiply up + integer
+  // compare). Used everywhere we ask "does this slider position
+  // sit on a preset's bounds?".
+  const eq = (a: number, b: number) => Math.round(a * 10) === Math.round(b * 10);
+
+  // Slider operates in display units at 0.1 precision. MAX in mi
+  // is the rounded equivalent of 100 km (62.1 mi); MIN is 0
   // either way.
-  const maxDisplay = isImperial ? Math.round(MAX_KM * KM_TO_MI) : MAX_KM;
+  const maxDisplay = isImperial ? round1(MAX_KM * KM_TO_MI) : MAX_KM;
   const minDisplay = MIN_KM;
 
   const kmToDisplay = (km: number): number =>
-    isImperial ? Math.round(km * KM_TO_MI) : Math.round(km);
+    isImperial ? round1(km * KM_TO_MI) : round1(km);
 
-  // When converting back to km for the URL we keep one decimal — a
-  // 50 mi → 80.5 km round-trip resolves to 50 mi when read back.
   const displayToKm = (d: number): number =>
-    isImperial ? Math.round((d / KM_TO_MI) * 10) / 10 : d;
+    isImperial ? round1(d / KM_TO_MI) : d;
 
   const valueMinKm = value.min ?? MIN_KM;
   const valueMaxKm = value.max ?? MAX_KM;
@@ -88,9 +95,30 @@ export default function DistanceFilter({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [valueMinDisplay, valueMaxDisplay, isImperial]);
 
+  const presetToDisplay = (p: Preset) => ({
+    min: kmToDisplay(p.min),
+    max: kmToDisplay(p.max),
+  });
+
+  const presetMatches = (p: Preset) => {
+    const d = presetToDisplay(p);
+    return eq(tempMin, d.min) && eq(tempMax, d.max);
+  };
+
+  // For the chip label: if the active value sits exactly on a
+  // preset's bounds, use the preset's name ("Half Marathon", "10K")
+  // rather than the numeric range. Compares in display unit so the
+  // imperial / metric round-trip lossiness doesn't break the match.
+  const matchedPreset = PRESETS.find((p) => {
+    const d = presetToDisplay(p);
+    return eq(valueMinDisplay, d.min) && eq(valueMaxDisplay, d.max);
+  });
+
   const isActive = value.min != null || value.max != null;
   const activeLabel = isActive
-    ? `${formatDistance(valueMinKm, units)} – ${formatDistance(valueMaxKm, units)}`
+    ? matchedPreset
+      ? matchedPreset.label
+      : `${formatDistance(valueMinKm, units)} – ${formatDistance(valueMaxKm, units)}`
     : undefined;
 
   const handleClear = () => {
@@ -99,8 +127,8 @@ export default function DistanceFilter({
 
   const handleApply = (close: () => void) => {
     onChange({
-      min: tempMin === minDisplay ? undefined : displayToKm(tempMin),
-      max: tempMax === maxDisplay ? undefined : displayToKm(tempMax),
+      min: eq(tempMin, minDisplay) ? undefined : displayToKm(tempMin),
+      max: eq(tempMax, maxDisplay) ? undefined : displayToKm(tempMax),
     });
     close();
   };
@@ -108,16 +136,6 @@ export default function DistanceFilter({
   const handleResetTemp = () => {
     setTempMin(minDisplay);
     setTempMax(maxDisplay);
-  };
-
-  const presetToDisplay = (p: Preset) => ({
-    min: kmToDisplay(p.min),
-    max: kmToDisplay(p.max),
-  });
-
-  const presetMatches = (p: Preset) => {
-    const d = presetToDisplay(p);
-    return tempMin === d.min && tempMax === d.max;
   };
 
   return (
@@ -156,17 +174,21 @@ export default function DistanceFilter({
             })}
           </div>
 
-          {/* Slider in display units (km or mi, integer steps). */}
+          {/* Slider in display units, 0.1 step so users can grab
+              exact race distances (21.1 km / 13.1 mi / etc). */}
           <div className="px-1">
             <Slider
               range
               min={minDisplay}
               max={maxDisplay}
-              step={1}
+              step={0.1}
               value={[tempMin, tempMax]}
               onChange={([min, max]) => {
-                setTempMin(min);
-                setTempMax(max);
+                // round1 to keep state on the 0.1 grid — float
+                // drift would otherwise break preset-equality
+                // checks against bounds like 3.1 mi.
+                setTempMin(round1(min));
+                setTempMax(round1(max));
               }}
               width={SLIDER_WIDTH}
             />
@@ -175,11 +197,11 @@ export default function DistanceFilter({
           {/* Live readout in user's preferred unit. */}
           <div className="flex items-center justify-between text-[13px] text-[color:var(--ds-gray-900)]">
             <span>
-              {tempMin}
+              {tempMin.toFixed(1)}
               {isImperial ? "mi" : "km"}
             </span>
             <span>
-              {tempMax}
+              {tempMax.toFixed(1)}
               {isImperial ? "mi" : "km"}
             </span>
           </div>
