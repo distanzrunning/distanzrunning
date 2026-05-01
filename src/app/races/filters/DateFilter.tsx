@@ -51,7 +51,7 @@ export default function DateFilter({ value, onChange }: DateFilterProps) {
         });
       }}
       size="small"
-      width={160}
+      width={220}
       showMonthTab
       showTimeInput={false}
     />
