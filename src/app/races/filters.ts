@@ -109,10 +109,16 @@ export function buildQueryParams(filters: RaceFilters): RaceQueryParams {
         .map((token) => `${token}*`)
         .join(" ")
     : null;
+  // eventDate in Sanity is `datetime` (stores like
+  // "2026-05-31T08:00:00.000Z"). GROQ string comparison is
+  // lexicographic, so a bare upper bound "2026-05-31" sorts BEFORE
+  // any "2026-05-31T..." value and filters out races on the
+  // boundary day. Extending dateTo to end-of-UTC-day fixes the
+  // boundary; we extend dateFrom to start-of-UTC-day for symmetry.
   return {
     qWild,
-    dateFrom: filters.dateFrom ?? null,
-    dateTo: filters.dateTo ?? null,
+    dateFrom: filters.dateFrom ? `${filters.dateFrom}T00:00:00.000Z` : null,
+    dateTo: filters.dateTo ? `${filters.dateTo}T23:59:59.999Z` : null,
     distanceMin: filters.distanceMin ?? null,
     distanceMax: filters.distanceMax ?? null,
   };
