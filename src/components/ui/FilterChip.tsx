@@ -99,7 +99,11 @@ export default function FilterChip({
           align="start"
           sideOffset={6}
           className="material-menu z-[2001]"
-          style={{ width: panelWidth, padding: 16 }}
+          // material-menu sets both `border: 1px solid` and a
+          // box-shadow whose first stop is also a 1 px ring — the
+          // two stack and read as a doubled edge. Drop the border
+          // and let the shadow ring define the silhouette.
+          style={{ width: panelWidth, padding: 16, border: "none" }}
         >
           {typeof children === "function"
             ? children({ close: () => handleOpenChange(false) })

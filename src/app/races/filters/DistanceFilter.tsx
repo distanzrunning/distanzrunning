@@ -23,7 +23,8 @@ import { formatDistance } from "@/lib/raceUtils";
 
 const MIN_KM = 0;
 const MAX_KM = 100;
-const SLIDER_WIDTH = 288;
+const PANEL_WIDTH = 380;
+const SLIDER_WIDTH = 340;
 const KM_TO_MI = 0.621371;
 
 interface Preset {
@@ -36,6 +37,9 @@ interface Preset {
 const PRESETS: Preset[] = [
   { label: "5K", min: 5, max: 5 },
   { label: "10K", min: 10, max: 10 },
+  // 10 mile = 16.09344 km. Range catches races advertised as
+  // "10 Mile" that store as 16.0–17.0 km in Sanity.
+  { label: "10 Mile", min: 16, max: 17 },
   { label: "Half", min: 21, max: 22 },
   { label: "Marathon", min: 42, max: 43 },
   { label: "Ultra", min: 50, max: MAX_KM },
@@ -121,7 +125,7 @@ export default function DistanceFilter({
       label="Distance"
       activeLabel={activeLabel}
       onClear={handleClear}
-      panelWidth={320}
+      panelWidth={PANEL_WIDTH}
     >
       {({ close }) => (
         <div className="flex flex-col gap-4">
