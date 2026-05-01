@@ -63,6 +63,7 @@ export default function RaceGrid({ races }: { races: RaceIndexItem[] }) {
             category={race.category}
             imageUrl={resolveImage(race)}
             priority={i < 3}
+            distance={race.distance}
             surface={race.surface}
             profile={race.profile}
             elevationGain={race.elevationGain}
