@@ -23,7 +23,13 @@
 //     )}
 //   </FilterChip>
 
-import { useState, type KeyboardEvent, type MouseEvent, type ReactNode } from "react";
+import {
+  useEffect,
+  useState,
+  type KeyboardEvent,
+  type MouseEvent,
+  type ReactNode,
+} from "react";
 import * as Popover from "@radix-ui/react-popover";
 import { ChevronDown, X } from "lucide-react";
 
@@ -62,6 +68,28 @@ export default function FilterChip({
     onOpenChange?.(next);
   };
 
+  // Lock body scroll while the popover is open. Mirrors the
+  // navbar megamenu's behaviour — keeps focus on the chip's
+  // dropdown without the page sliding underneath it. Padding
+  // compensation prevents layout shift when the scrollbar
+  // disappears.
+  useEffect(() => {
+    if (!open) return;
+    const body = document.body;
+    const prevOverflow = body.style.overflow;
+    const prevPaddingRight = body.style.paddingRight;
+    const scrollbarWidth =
+      window.innerWidth - document.documentElement.clientWidth;
+    body.style.overflow = "hidden";
+    if (scrollbarWidth > 0) {
+      body.style.paddingRight = `${scrollbarWidth}px`;
+    }
+    return () => {
+      body.style.overflow = prevOverflow;
+      body.style.paddingRight = prevPaddingRight;
+    };
+  }, [open]);
+
   const handleClearClick = (e: MouseEvent | KeyboardEvent) => {
     e.stopPropagation();
     e.preventDefault();
@@ -97,6 +125,23 @@ export default function FilterChip({
         </button>
       </Popover.Trigger>
       <Popover.Portal>
+        {/* Page-dim + glassy blur behind the open popover. Starts
+            at top: 50 px so the SiteHeader stays sharp (mirrors
+            the navbar megamenu's overlay). z-[2000] sits below
+            the popover content (z-[2001]); pointer-events: none
+            so Radix's outside-click detection still works through
+            the overlay. */}
+        <div
+          aria-hidden
+          className="fixed inset-x-0 bottom-0 top-[50px] z-[2000] transition-opacity duration-150"
+          style={{
+            backgroundColor: "var(--ds-overlay-backdrop-color)",
+            opacity: 0.5,
+            backdropFilter: "blur(12px)",
+            WebkitBackdropFilter: "blur(12px)",
+            pointerEvents: "none",
+          }}
+        />
         <Popover.Content
           align="start"
           sideOffset={6}
