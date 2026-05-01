@@ -76,13 +76,17 @@ function StatColumn({
   detail?: string;
 }) {
   return (
-    <div className="flex flex-col items-center gap-2 text-center">
-      <div className="rounded-full bg-white/30 px-3 py-1 backdrop-blur-md">
-        <span className="text-label-12 font-medium text-white">{label}</span>
+    <div className="flex w-20 flex-col items-center gap-4 text-center">
+      <div className="flex h-6 w-full items-center justify-center rounded-full bg-white/30 backdrop-blur-md">
+        <span className="text-label-12 font-medium leading-none text-white">
+          {label}
+        </span>
       </div>
-      <span className="text-heading-20 text-white">{value}</span>
+      <span className="text-heading-20 tracking-[0.17px] text-white">
+        {value}
+      </span>
       {detail && (
-        <span className="text-label-11 font-medium text-white/40">
+        <span className="text-label-12 font-semibold tracking-[0.11px] text-white/40">
           {detail}
         </span>
       )}
@@ -128,11 +132,21 @@ export default function RaceCard({
     surface || profileLabel || elevationGainLabel || priceLabel,
   );
 
+  // Outer rounding — index variant adopts a single 20 px radius
+  // (matches Runna) with overflow-hidden so the image and body
+  // share one rounded silhouette. Default variant keeps its
+  // existing rounded-md per-half look.
+  const articleRadius = isIndex ? "overflow-hidden rounded-[20px]" : "";
+
   return (
     <article
-      className={`group relative flex w-full flex-col ${className}`.trim()}
+      className={`group relative flex w-full flex-col ${articleRadius} ${className}`.trim()}
     >
-      <div className="relative aspect-[16/8.75] w-full overflow-hidden rounded-t-md bg-[color:var(--ds-gray-100)]">
+      <div
+        className={`relative aspect-[16/8.75] w-full overflow-hidden bg-[color:var(--ds-gray-100)] ${
+          isIndex ? "" : "rounded-t-md"
+        }`}
+      >
         {imageUrl && (
           <div className="absolute inset-0 scale-[1.04] transition-transform duration-300 ease-out will-change-transform group-hover:scale-100">
             <CardImage
@@ -201,36 +215,40 @@ export default function RaceCard({
       {/* Body — index variant: stacked text only.
                  default variant: text + square date block on the right. */}
       {isIndex ? (
-        <div className="flex flex-col gap-1 rounded-b-md bg-[color:var(--ds-gray-100)] p-6">
-          <h3 className="line-clamp-2 text-heading-20 text-[color:var(--ds-gray-1000)]">
-            <Link
-              href={href}
-              className="outline-none after:absolute after:inset-0 after:content-[''] focus-visible:after:rounded-md focus-visible:after:outline focus-visible:after:outline-2 focus-visible:after:outline-[color:var(--ds-focus-ring)]"
-            >
-              {title}
-            </Link>
-          </h3>
-          {location && (
-            <p className="truncate text-copy-14 text-[color:var(--ds-gray-900)]">
-              {location}
-            </p>
-          )}
+        // Index body — dark surface always (matches Runna's
+        // theme-locked dark card). Hard-coded hex for now;
+        // promote to a DS theme-locked token once we have a
+        // second dark-card use-case.
+        <div className="flex flex-col gap-4 bg-[#252525] px-6 pb-5 pt-[17px]">
+          <div className="flex flex-col">
+            <h3 className="truncate text-heading-20 font-bold text-white/90">
+              <Link
+                href={href}
+                className="outline-none after:absolute after:inset-0 after:content-[''] focus-visible:after:rounded-[20px] focus-visible:after:outline focus-visible:after:outline-2 focus-visible:after:outline-[color:var(--ds-focus-ring)]"
+              >
+                {title}
+              </Link>
+            </h3>
+            {location && (
+              <p className="truncate text-copy-14 tracking-[-0.14px] text-white/50">
+                {location}
+              </p>
+            )}
+          </div>
           {(category || finishers != null) && (
-            <div className="mt-2 flex items-center gap-3">
+            <div className="flex items-center gap-2">
               {category && (
-                <Badge
-                  variant="gray-subtle"
-                  size="md"
-                  className="shrink-0 bg-[color:var(--ds-gray-300)]"
-                >
+                <span className="inline-flex h-7 shrink-0 items-center rounded-full bg-[#333] px-4 text-sm font-medium text-white/90">
                   {category}
-                </Badge>
+                </span>
               )}
               {finishers != null && (
-                <span className="flex items-center gap-2 text-copy-13 text-[color:var(--ds-gray-900)]">
+                <span className="flex items-center gap-2 text-copy-14 font-medium tracking-[-0.14px] text-white/90">
                   <Avatar
-                    size={24}
-                    placeholderIcon={<User className="size-3" aria-hidden />}
+                    size={28}
+                    placeholderIcon={
+                      <User className="size-3.5" aria-hidden />
+                    }
                   />
                   {finishers.toLocaleString()} Runners
                 </span>
