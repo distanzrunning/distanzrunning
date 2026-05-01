@@ -4,17 +4,21 @@
 // 4,500-line "use client" RaceGuidesClient monolith that
 // hydration-flickered the race grid + filter row on every reload.
 //
-// Phase 2: server query + RaceGrid RSC. All race guides render
-// server-side so first paint is the final layout. Subsequent
-// phases add parseFilters / buildFilterUrl helpers and one
-// client-island filter chip at a time. The previous
-// implementation lives at /races-legacy for side-by-side
-// reference until the rewrite is complete.
+// Filter state lives in the URL. parseFilters reads searchParams
+// into a typed RaceFilters object; buildQueryParams turns that into
+// the GROQ parameters that raceIndexQuery's `!defined($x) || …`
+// predicates consume. FiltersShell is a thin client island that
+// renders the filter row and switches the grid for a skeleton while
+// router.replace() round-trips the next searchParams set through the
+// server. The previous implementation lives at /races-legacy for
+// side-by-side reference until the rewrite is complete.
 
 import { sanityFetch } from "@/sanity/lib/live";
 import { raceIndexQuery } from "@/sanity/queries/raceIndexQuery";
 import RaceGrid, { type RaceIndexItem } from "./RaceGrid";
 import RaceUnitControls from "./RaceUnitControls";
+import FiltersShell from "./FiltersShell";
+import { buildQueryParams, parseFilters } from "./filters";
 
 export const metadata = {
   title: "Races — Distanz Running",
@@ -24,8 +28,19 @@ export const metadata = {
 
 export const revalidate = 60;
 
-export default async function RacesPage() {
-  const { data } = await sanityFetch({ query: raceIndexQuery });
+export default async function RacesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const sp = await searchParams;
+  const filters = parseFilters(sp);
+  const queryParams = buildQueryParams(filters);
+
+  const { data } = await sanityFetch({
+    query: raceIndexQuery,
+    params: queryParams,
+  });
   const races = (data ?? []) as RaceIndexItem[];
 
   return (
@@ -45,7 +60,9 @@ export default async function RacesPage() {
           <RaceUnitControls />
         </header>
 
-        <RaceGrid races={races} />
+        <FiltersShell initialFilters={filters}>
+          <RaceGrid races={races} />
+        </FiltersShell>
       </div>
     </div>
   );
