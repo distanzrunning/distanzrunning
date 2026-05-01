@@ -4,13 +4,16 @@
 // 4,500-line "use client" RaceGuidesClient monolith that
 // hydration-flickered the race grid + filter row on every reload.
 //
-// Phase 1 scaffold: minimal shell. Subsequent phases add
-// parseFilters / buildFilterUrl helpers, server-side GROQ
-// filtering, RaceGrid (RSC), and one client-island filter chip
-// at a time. The previous implementation lives at /races-legacy
-// for side-by-side reference until the rewrite is complete.
+// Phase 2: server query + RaceGrid RSC. All race guides render
+// server-side so first paint is the final layout. Subsequent
+// phases add parseFilters / buildFilterUrl helpers and one
+// client-island filter chip at a time. The previous
+// implementation lives at /races-legacy for side-by-side
+// reference until the rewrite is complete.
 
-import Link from "next/link";
+import { sanityFetch } from "@/sanity/lib/live";
+import { raceIndexQuery } from "@/sanity/queries/raceIndexQuery";
+import RaceGrid, { type RaceIndexItem } from "./RaceGrid";
 
 export const metadata = {
   title: "Races — Distanz Running",
@@ -20,7 +23,10 @@ export const metadata = {
 
 export const revalidate = 60;
 
-export default function RacesPage() {
+export default async function RacesPage() {
+  const { data } = await sanityFetch({ query: raceIndexQuery });
+  const races = (data ?? []) as RaceIndexItem[];
+
   return (
     <div className="flex w-full flex-col items-center px-4 py-12 md:py-16 lg:py-20">
       <div className="flex w-full max-w-[1400px] flex-col gap-12">
@@ -35,22 +41,7 @@ export default function RacesPage() {
           </p>
         </header>
 
-        <div className="flex flex-col items-center gap-3 rounded-xl border border-dashed border-[color:var(--ds-gray-400)] p-12 text-center">
-          <p className="text-copy-14 text-[color:var(--ds-gray-900)]">
-            Rebuild in progress — URL-driven filters, server-rendered
-            grid. Filter chips and grid land in subsequent phases.
-          </p>
-          <p className="text-copy-13 text-[color:var(--ds-gray-700)]">
-            The previous version is preserved at{" "}
-            <Link
-              href="/races-legacy"
-              className="underline transition-colors hover:text-[color:var(--ds-gray-1000)]"
-            >
-              /races-legacy
-            </Link>{" "}
-            for reference.
-          </p>
-        </div>
+        <RaceGrid races={races} />
       </div>
     </div>
   );
