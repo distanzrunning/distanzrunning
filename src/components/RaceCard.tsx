@@ -76,14 +76,19 @@ function StatColumn({
           {label}
         </span>
       </div>
-      <span className="text-heading-20 tracking-[0.17px] text-white">
-        {value}
-      </span>
-      {detail && (
-        <span className="text-label-12 font-semibold tracking-[0.11px] text-white/40">
-          {detail}
+      {/* value + detail share a tighter inner stack so the detail
+          sits visually anchored to its value rather than floating
+          equidistant between value and the label pill above. */}
+      <div className="flex flex-col items-center gap-1">
+        <span className="text-heading-20 tracking-[0.17px] text-white">
+          {value}
         </span>
-      )}
+        {detail && (
+          <span className="text-label-12 font-bold tracking-[0.11px] text-white/40">
+            {detail}
+          </span>
+        )}
+      </div>
     </div>
   );
 }
