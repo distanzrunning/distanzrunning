@@ -21,6 +21,7 @@ export type RaceIndexItem = {
   category?: string;
   distance?: number;
   surface?: string;
+  surfaceBreakdown?: string;
   profile?: string;
   elevationGain?: number;
   price?: number;
@@ -66,6 +67,7 @@ export default function RaceGrid({ races }: { races: RaceIndexItem[] }) {
             priority={i < 3}
             distance={race.distance}
             surface={race.surface}
+            surfaceBreakdown={race.surfaceBreakdown}
             profile={race.profile}
             elevationGain={race.elevationGain}
             price={race.price}

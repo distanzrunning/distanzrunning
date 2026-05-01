@@ -51,8 +51,9 @@ export interface RaceCardProps {
   distance?: number;
   /** Index-variant only — number of finishers from the prior year. */
   finishers?: number;
-  /** Index-variant only — populates the glassy hover pills. */
+  /** Index-variant only — populates the glassy hover stat columns. */
   surface?: string;
+  surfaceBreakdown?: string;
   profile?: string;
   elevationGain?: number;
   price?: number;
@@ -65,13 +66,26 @@ const safeFormat = (iso: string | undefined, pattern: string): string => {
   return Number.isNaN(d.getTime()) ? "" : format(d, pattern);
 };
 
-function HoverPill({ label, value }: { label: string; value: string }) {
+function StatColumn({
+  label,
+  value,
+  detail,
+}: {
+  label: string;
+  value: string;
+  detail?: string;
+}) {
   return (
-    <div className="flex flex-col items-center gap-0.5 rounded-md border border-white/20 bg-white/10 px-3 py-2 text-center text-white backdrop-blur-md">
-      <span className="text-label-11 uppercase tracking-[0.04em] opacity-70">
-        {label}
-      </span>
-      <span className="text-copy-14 font-medium">{value}</span>
+    <div className="flex flex-col items-center gap-2 text-center">
+      <div className="rounded-full bg-white/30 px-3 py-1 backdrop-blur-md">
+        <span className="text-label-12 font-medium text-white">{label}</span>
+      </div>
+      <span className="text-heading-20 text-white">{value}</span>
+      {detail && (
+        <span className="text-label-11 font-medium text-white/40">
+          {detail}
+        </span>
+      )}
     </div>
   );
 }
@@ -90,6 +104,7 @@ export default function RaceCard({
   distance,
   finishers,
   surface,
+  surfaceBreakdown,
   profile,
   elevationGain,
   price,
@@ -105,11 +120,13 @@ export default function RaceCard({
   const profileLabel = profile
     ? profile.charAt(0).toUpperCase() + profile.slice(1)
     : undefined;
-  const elevationLabel =
-    elevationGain != null ? `+${Math.round(elevationGain)}m` : profileLabel;
+  const elevationGainLabel =
+    elevationGain != null ? `+${Math.round(elevationGain)}m` : undefined;
   const priceLabel =
     price != null && currency ? formatPrice(price, currency) : undefined;
-  const hasAnyHoverPill = Boolean(surface || elevationLabel || priceLabel);
+  const hasAnyHoverContent = Boolean(
+    surface || profileLabel || elevationGainLabel || priceLabel,
+  );
 
   return (
     <article
@@ -127,13 +144,16 @@ export default function RaceCard({
           </div>
         )}
 
-        {/* Top-right pill — date in index variant, category in
-            default. Same Badge slot, different content. */}
+        {/* Top-right pill — date in index variant (frosted glass,
+            heavy backdrop blur, dark text), category Badge in
+            default. Date pill text is hard-coded near-black so it
+            stays legible regardless of theme — the pill always
+            sits over a photo, not over the canvas. */}
         {isIndex && fullDate ? (
-          <div className="absolute right-3 top-3 z-10">
-            <Badge variant="inverted" size="md" className="uppercase">
+          <div className="absolute right-3 top-3 z-20 rounded-full bg-white/50 px-3 py-1.5 backdrop-blur-2xl">
+            <span className="text-label-12 font-medium uppercase tracking-[0.04em] text-[#161616]">
               {fullDate}
-            </Badge>
+            </span>
           </div>
         ) : (
           category && (
@@ -145,15 +165,37 @@ export default function RaceCard({
           )
         )}
 
-        {/* Glassy hover pills (index variant only). Centred row,
-            fades in on group hover. */}
-        {isIndex && hasAnyHoverPill && (
-          <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center gap-2 px-3 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-            {surface && <HoverPill label="Surface" value={surface} />}
-            {elevationLabel && (
-              <HoverPill label="Elevation" value={elevationLabel} />
+        {/* Hover overlay (index variant only). Single absolutely-
+            positioned layer that darkens the image via
+            backdrop-filter brightness/contrast (no blur — keeps
+            the photography readable underneath) and renders the
+            three stat columns on top. Fades in on group hover. */}
+        {isIndex && hasAnyHoverContent && (
+          <div
+            className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center gap-6 px-6 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+            style={{ backdropFilter: "brightness(0.7) contrast(1.2)" }}
+          >
+            {surface && (
+              <StatColumn
+                label="Surface"
+                value={surface}
+                detail={surfaceBreakdown}
+              />
             )}
-            {priceLabel && <HoverPill label="Price" value={priceLabel} />}
+            {(profileLabel || elevationGainLabel) && (
+              <StatColumn
+                label="Elevation"
+                value={profileLabel ?? elevationGainLabel ?? ""}
+                detail={profileLabel ? elevationGainLabel : undefined}
+              />
+            )}
+            {priceLabel && (
+              <StatColumn
+                label="Price"
+                value={priceLabel}
+                detail={currency}
+              />
+            )}
           </div>
         )}
       </div>

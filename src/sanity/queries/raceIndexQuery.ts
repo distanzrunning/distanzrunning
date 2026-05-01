@@ -26,6 +26,7 @@ export const raceIndexQuery = groq`
     "category": raceCategory->title,
     distance,
     surface,
+    surfaceBreakdown,
     profile,
     elevationGain,
     price,
