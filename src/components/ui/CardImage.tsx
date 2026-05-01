@@ -58,9 +58,16 @@ export default function CardImage({
 
   return (
     <>
+      {/* Skeleton overlay — sits ON TOP of the (already-rendered)
+          image and melts away when the image load fires. The image
+          itself is always opacity:1 so it's painted underneath the
+          skeleton from the start; the skeleton's fade-out reveals
+          it rather than the image fading in. With staggered loads
+          this reads as multiple skeletons dissolving rather than a
+          wave of images popping in. */}
       <div
         aria-hidden
-        className={`absolute inset-0 bg-[color:var(--ds-gray-100)] ${
+        className={`absolute inset-0 z-10 bg-[color:var(--ds-gray-100)] transition-opacity duration-300 ease-out ${
           loaded ? "pointer-events-none opacity-0" : "animate-pulse opacity-100"
         }`}
       />
@@ -73,13 +80,7 @@ export default function CardImage({
         priority={priority}
         decoding="async"
         onLoad={() => setLoaded(true)}
-        // No fade-in — the skeleton's pulse handles the loading
-        // affordance; once the image is decoded it should appear
-        // instantly. Multiple cards loading at staggered times
-        // otherwise read as a wave of fade-ins / "image flash".
-        className={`object-cover ${
-          loaded ? "opacity-100" : "opacity-0"
-        } ${className}`.trim()}
+        className={`object-cover ${className}`.trim()}
       />
     </>
   );
