@@ -30,6 +30,7 @@ import CloseComponent from "../components/content/CloseComponent";
 import ToggleComponent from "../components/content/ToggleComponent";
 import CodeBlockComponent from "../components/content/CodeBlockComponent";
 import CollapseComponent from "../components/content/CollapseComponent";
+import CollapsibleInputComponent from "../components/content/CollapsibleInputComponent";
 import ComboboxComponent from "../components/content/ComboboxComponent";
 import AvatarComponent from "../components/content/AvatarComponent";
 import BadgeComponent from "../components/content/BadgeComponent";
@@ -842,6 +843,18 @@ export default function DesignSystemPage() {
           onNavigate={handleNavigation}
         >
           <GridComponent />
+        </ContentWithTOC>
+      );
+    }
+
+    if (activeSlug === "collapsible-input") {
+      return (
+        <ContentWithTOC
+          tocTitle="On this page"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
+          <CollapsibleInputComponent />
         </ContentWithTOC>
       );
     }
