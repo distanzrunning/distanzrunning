@@ -19,7 +19,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Search, X } from "lucide-react";
 
-import IconButton from "@/components/ui/IconButton";
 import { Input } from "@/components/ui/Input";
 
 interface SearchFilterProps {
@@ -54,19 +53,23 @@ export default function SearchFilter({ value, onChange }: SearchFilterProps) {
   }, [local, value, onChange]);
 
   if (!expanded) {
+    // Styling mirrors the Calendar trigger so the two chips read
+    // identically: --ds-background-100 fill (white in light, near-
+    // black in dark), --ds-gray-400 hairline ring via box-shadow
+    // (--ds-gray-500 on hover), --ds-gray-100 hover fill.
     return (
-      <IconButton
-        size="small"
-        variant="secondary"
+      <button
+        type="button"
         aria-label="Search races"
         onClick={() => {
           setFocused(true);
           // Input mounts on next render — focus then.
           requestAnimationFrame(() => inputRef.current?.focus());
         }}
+        className="inline-flex size-8 items-center justify-center rounded-md bg-[color:var(--ds-background-100)] text-[color:var(--ds-gray-1000)] transition-colors hover:bg-[color:var(--ds-gray-100)] [box-shadow:var(--ds-gray-400)_0_0_0_1px] hover:[box-shadow:var(--ds-gray-500)_0_0_0_1px]"
       >
         <Search className="size-4" />
-      </IconButton>
+      </button>
     );
   }
 
