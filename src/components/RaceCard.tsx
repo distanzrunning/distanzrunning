@@ -168,7 +168,11 @@ export default function RaceCard({
         {isIndex && hasAnyHoverContent && (
           <div
             className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center gap-6 px-6 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-            style={{ backdropFilter: "brightness(0.7) contrast(1.2)" }}
+            style={{
+              backdropFilter: "blur(12px) brightness(0.55) contrast(1.1)",
+              WebkitBackdropFilter:
+                "blur(12px) brightness(0.55) contrast(1.1)",
+            }}
           >
             {surface && (
               <StatColumn
