@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useRef } from "react";
 import * as Popover from "@radix-ui/react-popover";
 import Switch from "./Switch";
+import PopoverBackdrop from "./PopoverBackdrop";
 
 // ============================================================================
 // Icons
@@ -1753,6 +1754,11 @@ export function Calendar({
             </span>
           )}
       </div>
+
+      {/* Page-dim + body-scroll-lock while either the main
+          calendar popover or the preset dropdown is open. Shared
+          with FilterChip via PopoverBackdrop. */}
+      <PopoverBackdrop open={isOpen || isPresetDropdownOpen} />
     </>
   );
 }
