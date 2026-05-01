@@ -169,9 +169,9 @@ export default function RaceCard({
           <div
             className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center gap-6 px-6 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
             style={{
-              backdropFilter: "blur(12px) brightness(0.55) contrast(1.1)",
+              backdropFilter: "blur(12px) brightness(0.7) contrast(1.1)",
               WebkitBackdropFilter:
-                "blur(12px) brightness(0.55) contrast(1.1)",
+                "blur(12px) brightness(0.7) contrast(1.1)",
             }}
           >
             {surface && (
