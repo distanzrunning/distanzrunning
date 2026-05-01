@@ -56,10 +56,20 @@ export default function DateFilter({ value, onChange }: DateFilterProps) {
       placeholder="Date"
       value={dateRange}
       onChange={(range) => {
-        onChange({
-          from: range.start ? toIsoDate(range.start) : undefined,
-          to: range.end ? toIsoDate(range.end) : undefined,
-        });
+        // Calendar emits onChange on every click — including the
+        // partial state where the user has picked a start but not
+        // an end yet. Don't propagate until BOTH ends are set
+        // (or both are null, e.g. the trigger's X clear button) —
+        // otherwise the grid runs a server round-trip + skeleton
+        // flash on each half-selected click.
+        if (range.start && range.end) {
+          onChange({
+            from: toIsoDate(range.start),
+            to: toIsoDate(range.end),
+          });
+        } else if (!range.start && !range.end) {
+          onChange({ from: undefined, to: undefined });
+        }
       }}
       size="small"
       width={220}
