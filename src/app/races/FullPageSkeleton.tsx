@@ -24,10 +24,15 @@ export default function FullPageSkeleton() {
                 text-heading-48 (lh 56) on md+. */}
             <div className={`${PULSE_BG} h-12 w-40 md:h-14`} />
             {/* Subtitle: two text lines. text-copy-16 (lh 24) on
-                mobile, text-copy-18 (lh 28) on md+. */}
+                mobile, text-copy-18 (lh 28) on md+. Each line is
+                4 px shorter than its line-height so the gap-2 (8)
+                between lines lands the total at 2 × lh: 48 px
+                mobile (20+8+20), 56 px md+ (24+8+24). Without
+                that compensation the skeleton was 8 px too tall
+                and pushed the chip row + grid down. */}
             <div className="flex max-w-2xl flex-col gap-2">
-              <div className={`${PULSE_BG} h-6 w-full md:h-7`} />
-              <div className={`${PULSE_BG} h-6 w-3/4 md:h-7`} />
+              <div className={`${PULSE_BG} h-5 w-full md:h-6`} />
+              <div className={`${PULSE_BG} h-5 w-3/4 md:h-6`} />
             </div>
           </div>
           {/* Unit controls: imperial/metric switch + currency select */}
