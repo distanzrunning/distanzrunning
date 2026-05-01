@@ -76,7 +76,7 @@ export default function DateFilter({ value, onChange }: DateFilterProps) {
       compact
       showMonthTab
       showTimeInput={false}
-      futurePresets={[
+      presets={[
         {
           value: "current-month",
           label: "Current month",
