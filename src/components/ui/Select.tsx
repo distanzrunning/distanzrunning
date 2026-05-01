@@ -224,14 +224,14 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
 
         <style>{`
           .ds-select {
-            box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 0 0 1px rgba(var(--ds-gray-1000-rgb), 0.1);
             transition: box-shadow 0.2s ease, color 0.2s ease;
           }
           .ds-select:hover:not(:disabled) {
             box-shadow: 0 0 0 1px var(--ds-gray-alpha-600);
           }
           .ds-select:focus-visible:not(:disabled) {
-            box-shadow: 0 0 0 1px var(--ds-gray-alpha-600), 0 0 0 4px rgba(0, 0, 0, 0.16);
+            box-shadow: 0 0 0 1px var(--ds-gray-alpha-600), 0 0 0 4px rgba(var(--ds-gray-1000-rgb), 0.16);
           }
           .ds-select-error {
             box-shadow: 0 0 0 1px var(--ds-red-700) !important;
