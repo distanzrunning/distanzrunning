@@ -45,7 +45,7 @@ export default function RaceGrid({ races }: { races: RaceIndexItem[] }) {
   }
 
   return (
-    <ul className="grid list-none grid-cols-1 gap-6 p-0 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+    <ul className="grid list-none grid-cols-1 gap-6 p-0 sm:grid-cols-2 lg:grid-cols-3">
       {races.map((race, i) => (
         <li key={race._id}>
           <RaceCard
@@ -55,7 +55,7 @@ export default function RaceGrid({ races }: { races: RaceIndexItem[] }) {
             location={formatLocation(race)}
             category={race.category}
             imageUrl={resolveImage(race)}
-            priority={i < 4}
+            priority={i < 3}
           />
         </li>
       ))}
