@@ -20,12 +20,14 @@ export default function FullPageSkeleton() {
         {/* Header — title block + unit controls slot */}
         <header className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between md:gap-8">
           <div className="flex min-w-0 flex-col gap-3">
-            {/* Title placeholder — matches text-heading-48 height */}
-            <div className={`${PULSE_BG} h-12 w-40`} />
-            {/* Subtitle: two text lines */}
-            <div className="flex flex-col gap-2 max-w-2xl">
-              <div className={`${PULSE_BG} h-5 w-full`} />
-              <div className={`${PULSE_BG} h-5 w-3/4`} />
+            {/* Title — text-heading-40 (lh 48) on mobile,
+                text-heading-48 (lh 56) on md+. */}
+            <div className={`${PULSE_BG} h-12 w-40 md:h-14`} />
+            {/* Subtitle: two text lines. text-copy-16 (lh 24) on
+                mobile, text-copy-18 (lh 28) on md+. */}
+            <div className="flex max-w-2xl flex-col gap-2">
+              <div className={`${PULSE_BG} h-6 w-full md:h-7`} />
+              <div className={`${PULSE_BG} h-6 w-3/4 md:h-7`} />
             </div>
           </div>
           {/* Unit controls: imperial/metric switch + currency select */}
@@ -40,8 +42,8 @@ export default function FullPageSkeleton() {
           <div className="flex flex-wrap items-center gap-2">
             {/* Search (collapsed icon) */}
             <div className={`${PULSE_BG} h-8 w-8`} />
-            {/* Date trigger */}
-            <div className={`${PULSE_BG} h-8 w-[160px]`} />
+            {/* Date trigger — Calendar uses width={220}. */}
+            <div className={`${PULSE_BG} h-8 w-[220px]`} />
             {/* Distance trigger */}
             <div className={`${PULSE_BG} h-8 w-[100px]`} />
           </div>

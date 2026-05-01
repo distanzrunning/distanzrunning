@@ -26,9 +26,16 @@ export default function RaceGridSkeleton({
           <article className="flex w-full flex-col">
             <div className="aspect-[16/8.75] w-full animate-pulse rounded-t-md bg-[color:var(--ds-gray-200)]" />
             <div className="flex items-center justify-between gap-3 rounded-b-md bg-[color:var(--ds-gray-100)] p-6">
-              <div className="flex min-w-0 flex-1 flex-col gap-2">
-                <div className="h-5 w-4/5 animate-pulse rounded bg-[color:var(--ds-gray-200)]" />
-                <div className="h-4 w-1/2 animate-pulse rounded bg-[color:var(--ds-gray-200)]" />
+              <div className="flex min-w-0 flex-1 flex-col gap-1">
+                {/* Title placeholder — h-7 (28 px) matches the
+                    text-heading-20 line-height of the real
+                    RaceCard title. Single-line; longer titles
+                    that wrap to 2 lines will still expand the
+                    real card slightly. */}
+                <div className="h-7 w-4/5 animate-pulse rounded bg-[color:var(--ds-gray-200)]" />
+                {/* Location placeholder — h-5 (20 px) matches
+                    text-copy-14 line-height. */}
+                <div className="h-5 w-1/2 animate-pulse rounded bg-[color:var(--ds-gray-200)]" />
               </div>
               <div className="size-16 shrink-0 animate-pulse rounded-md bg-[color:var(--ds-gray-200)]" />
             </div>
