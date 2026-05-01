@@ -7,17 +7,13 @@
 // FilterChip wrapper here — we just shape the value/onChange to
 // align with FiltersShell's RaceFilters object.
 //
-// Two Calendar features carry most of the UX weight:
-//   - compact = a 180 px trigger so the chip sits in the row
-//     alongside the icon-only Search and (eventually) the other
-//     filter pills without dominating.
-//   - showMonthTab = adds a "months" tab inside the calendar
-//     popover so a single tap picks a whole month — the most
-//     common race-search shape ("races in October").
-//
-// The futurePresets cover the second-most-common query shapes
-// (current month, near-future windows) so range dragging is a
-// last resort.
+// We render the standard non-compact trigger (h-32 to match the
+// other filter chips in the row) with showMonthTab on. The months
+// tab inside the popover lets a single tap pick a whole calendar
+// month — the most common race-search shape ("races in October").
+// Presets aren't passed: in non-compact mode they would render as
+// a *separate* combobox alongside the trigger, which breaks the
+// "one chip per filter" rhythm of the row.
 
 import { Calendar, type DateRange } from "@/components/ui/Calendar";
 
@@ -38,24 +34,6 @@ function fromIsoDate(iso: string | undefined): Date | null {
   return Number.isNaN(d.getTime()) ? null : d;
 }
 
-const today = (): Date => {
-  const d = new Date();
-  d.setHours(0, 0, 0, 0);
-  return d;
-};
-
-const addMonths = (date: Date, months: number): Date => {
-  const d = new Date(date);
-  d.setMonth(d.getMonth() + months);
-  return d;
-};
-
-const startOfMonth = (date: Date): Date =>
-  new Date(date.getFullYear(), date.getMonth(), 1);
-
-const endOfMonth = (date: Date): Date =>
-  new Date(date.getFullYear(), date.getMonth() + 1, 0);
-
 export default function DateFilter({ value, onChange }: DateFilterProps) {
   const dateRange: DateRange = {
     start: fromIsoDate(value.from),
@@ -73,43 +51,9 @@ export default function DateFilter({ value, onChange }: DateFilterProps) {
         });
       }}
       size="small"
-      compact
+      width={160}
       showMonthTab
       showTimeInput={false}
-      presets={[
-        {
-          value: "current-month",
-          label: "Current month",
-          getRange: () => ({
-            start: startOfMonth(today()),
-            end: endOfMonth(today()),
-          }),
-        },
-        {
-          value: "next-month",
-          label: "Next month",
-          getRange: () => {
-            const next = addMonths(today(), 1);
-            return { start: startOfMonth(next), end: endOfMonth(next) };
-          },
-        },
-        {
-          value: "next-3-months",
-          label: "Next 3 months",
-          getRange: () => ({ start: today(), end: addMonths(today(), 3) }),
-        },
-        {
-          value: "next-6-months",
-          label: "Next 6 months",
-          getRange: () => ({ start: today(), end: addMonths(today(), 6) }),
-        },
-        {
-          value: "next-12-months",
-          label: "Next 12 months",
-          getRange: () => ({ start: today(), end: addMonths(today(), 12) }),
-        },
-      ]}
-      presetPlaceholder="Date range"
     />
   );
 }
