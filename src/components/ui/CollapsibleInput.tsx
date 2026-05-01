@@ -101,13 +101,20 @@ export const CollapsibleInput = forwardRef<
 
   return (
     <div
-      className={`ds-input-container relative inline-flex items-center overflow-hidden rounded-sm transition-[width] duration-200 ease-out ${
-        expanded ? "" : "cursor-pointer"
+      // Background lives on the className (not inline) so the
+      // collapsed state can flip it on hover to --ds-gray-100,
+      // matching the Calendar trigger + FilterChip — the
+      // expanded/focused state intentionally keeps the regular
+      // Input bg + border-only hover behaviour the
+      // ds-input-container class provides.
+      className={`ds-input-container relative inline-flex items-center overflow-hidden rounded-sm bg-[color:var(--ds-background-100)] transition-[width,background-color] duration-200 ease-out ${
+        expanded
+          ? ""
+          : "cursor-pointer hover:bg-[color:var(--ds-gray-100)]"
       } ${className ?? ""}`}
       style={{
         width: expanded ? expandedWidth : config.height,
         height: config.height,
-        background: "var(--ds-background-100)",
         ...style,
       }}
       onMouseDown={handleWrapperMouseDown}
