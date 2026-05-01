@@ -15,6 +15,8 @@
 // a *separate* combobox alongside the trigger, which breaks the
 // "one chip per filter" rhythm of the row.
 
+import { useEffect, useState } from "react";
+
 import { Calendar, type DateRange } from "@/components/ui/Calendar";
 
 interface DateFilterProps {
@@ -46,22 +48,34 @@ function fromIsoDate(iso: string | undefined): Date | null {
 }
 
 export default function DateFilter({ value, onChange }: DateFilterProps) {
-  const dateRange: DateRange = {
+  // Calendar is a fully controlled component when `value` is set —
+  // every click (including the partial "start picked, end pending"
+  // state) needs to round-trip through value/onChange or the
+  // calendar UI freezes. We hold a local copy of the displayed
+  // range here and only forward complete (or fully cleared)
+  // selections up to FiltersShell, so the grid doesn't run a
+  // server round-trip + skeleton flash on each half-selected click.
+  const [localRange, setLocalRange] = useState<DateRange>({
     start: fromIsoDate(value.from),
     end: fromIsoDate(value.to),
-  };
+  });
+
+  // Re-sync local state when the URL changes externally — back/
+  // forward, Reset all, or any other path that bypasses the
+  // calendar UI.
+  useEffect(() => {
+    setLocalRange({
+      start: fromIsoDate(value.from),
+      end: fromIsoDate(value.to),
+    });
+  }, [value.from, value.to]);
 
   return (
     <Calendar
       placeholder="Date"
-      value={dateRange}
+      value={localRange}
       onChange={(range) => {
-        // Calendar emits onChange on every click — including the
-        // partial state where the user has picked a start but not
-        // an end yet. Don't propagate until BOTH ends are set
-        // (or both are null, e.g. the trigger's X clear button) —
-        // otherwise the grid runs a server round-trip + skeleton
-        // flash on each half-selected click.
+        setLocalRange(range);
         if (range.start && range.end) {
           onChange({
             from: toIsoDate(range.start),
