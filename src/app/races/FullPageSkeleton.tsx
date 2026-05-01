@@ -55,6 +55,8 @@ export default function FullPageSkeleton() {
             <div className={`${PULSE_BG} h-8 w-[92px]`} />
             {/* City trigger */}
             <div className={`${PULSE_BG} h-8 w-[68px]`} />
+            {/* State trigger */}
+            <div className={`${PULSE_BG} h-8 w-[76px]`} />
           </div>
           <RaceGridSkeleton />
         </div>

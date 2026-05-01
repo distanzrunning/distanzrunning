@@ -17,6 +17,7 @@ import { sanityFetch } from "@/sanity/lib/live";
 import { raceIndexQuery } from "@/sanity/queries/raceIndexQuery";
 import { raceCountriesQuery } from "@/sanity/queries/raceCountriesQuery";
 import { raceCitiesQuery } from "@/sanity/queries/raceCitiesQuery";
+import { raceStatesQuery } from "@/sanity/queries/raceStatesQuery";
 import RaceGrid, { type RaceIndexItem } from "./RaceGrid";
 import RaceUnitControls from "./RaceUnitControls";
 import FiltersShell from "./FiltersShell";
@@ -41,14 +42,16 @@ export default async function RacesPage({
   const filters = parseFilters(sp);
   const queryParams = buildQueryParams(filters);
 
-  // Run the filtered race fetch + unfiltered country and city
-  // option lists in parallel — the option lists need every choice
-  // regardless of which filters are applied.
-  const [raceResult, countriesResult, citiesResult] = await Promise.all([
-    sanityFetch({ query: raceIndexQuery, params: queryParams }),
-    sanityFetch({ query: raceCountriesQuery }),
-    sanityFetch({ query: raceCitiesQuery }),
-  ]);
+  // Run the filtered race fetch + unfiltered country / city /
+  // state option lists in parallel — the option lists need every
+  // choice regardless of which filters are applied.
+  const [raceResult, countriesResult, citiesResult, statesResult] =
+    await Promise.all([
+      sanityFetch({ query: raceIndexQuery, params: queryParams }),
+      sanityFetch({ query: raceCountriesQuery }),
+      sanityFetch({ query: raceCitiesQuery }),
+      sanityFetch({ query: raceStatesQuery }),
+    ]);
   const races = (raceResult.data ?? []) as RaceIndexItem[];
   const countries = (countriesResult.data ?? []) as string[];
 
@@ -60,14 +63,19 @@ export default async function RacesPage({
     city: string;
     country: string;
   }[];
-  const seen = new Set<string>();
-  const cities = rawCities
-    .filter(({ city }) => {
-      if (seen.has(city)) return false;
-      seen.add(city);
-      return true;
-    })
-    .sort((a, b) => a.city.localeCompare(b.city));
+  const cities = dedupeByKey(rawCities, "city").sort((a, b) =>
+    a.city.localeCompare(b.city),
+  );
+
+  // Same dedupe for {state, country} pairs — many US races share
+  // the same state, but the dropdown only needs one row per state.
+  const rawStates = (statesResult.data ?? []) as {
+    state: string;
+    country: string;
+  }[];
+  const states = dedupeByKey(rawStates, "state").sort((a, b) =>
+    a.state.localeCompare(b.state),
+  );
 
   return (
     <InitialLoadShell skeleton={<FullPageSkeleton />}>
@@ -91,6 +99,7 @@ export default async function RacesPage({
             initialFilters={filters}
             countries={countries}
             cities={cities}
+            states={states}
           >
             <RaceGrid races={races} />
           </FiltersShell>
@@ -98,4 +107,20 @@ export default async function RacesPage({
       </div>
     </InitialLoadShell>
   );
+}
+
+// Generic dedupe-by-string-key helper used to collapse the
+// per-race rows from raceCitiesQuery / raceStatesQuery down to
+// one row per unique city / state. First match wins.
+function dedupeByKey<T, K extends keyof T>(
+  rows: T[],
+  key: K,
+): T[] {
+  const seen = new Set<T[K]>();
+  return rows.filter((row) => {
+    const v = row[key];
+    if (seen.has(v)) return false;
+    seen.add(v);
+    return true;
+  });
 }

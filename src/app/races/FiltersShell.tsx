@@ -32,6 +32,7 @@ import DateFilter from "./filters/DateFilter";
 import DistanceFilter from "./filters/DistanceFilter";
 import CountryFilter from "./filters/CountryFilter";
 import CityFilter, { type CityOption } from "./filters/CityFilter";
+import StateFilter, { type StateOption } from "./filters/StateFilter";
 import RaceGridSkeleton from "./RaceGridSkeleton";
 
 interface FiltersShellProps {
@@ -42,6 +43,9 @@ interface FiltersShellProps {
   /** All {city, country} pairs we have race data for, deduped by
    *  city. Powers the City filter's option list. */
   cities: CityOption[];
+  /** All {state, country} pairs we have race data for, deduped by
+   *  state. Powers the State filter's option list. */
+  states: StateOption[];
   children: ReactNode;
 }
 
@@ -49,6 +53,7 @@ export default function FiltersShell({
   initialFilters,
   countries,
   cities,
+  states,
   children,
 }: FiltersShellProps) {
   const router = useRouter();
@@ -127,22 +132,34 @@ export default function FiltersShell({
         <CountryFilter
           options={countries}
           value={initialFilters.country}
-          onChange={(country) =>
-            setFilter({
-              country,
-              // Clear the city if it no longer fits inside the new
-              // country scope — e.g. user had Tokyo + Japan, then
-              // switches country to Belgium. Keep the city when
-              // country becomes undefined ("any country").
-              ...(country &&
+          onChange={(country) => {
+            // When the country changes, clear any stale city /
+            // state that no longer fits inside the new country
+            // scope — e.g. user had Tokyo + Japan, switches to
+            // Belgium. Picking "any country" (country = undefined)
+            // doesn't clear anything.
+            const patch: Partial<RaceFilters> = { country };
+            if (
+              country &&
               initialFilters.city &&
               !cities.some(
                 (c) => c.city === initialFilters.city && c.country === country,
               )
-                ? { city: undefined }
-                : {}),
-            })
-          }
+            ) {
+              patch.city = undefined;
+            }
+            if (
+              country &&
+              initialFilters.state &&
+              !states.some(
+                (s) =>
+                  s.state === initialFilters.state && s.country === country,
+              )
+            ) {
+              patch.state = undefined;
+            }
+            setFilter(patch);
+          }}
         />
         <CityFilter
           options={cities}
@@ -156,6 +173,21 @@ export default function FiltersShell({
             // Auto-sync country to the picked city's country so
             // filters stay coherent.
             setFilter({ city: picked.city, country: picked.country });
+          }}
+        />
+        <StateFilter
+          options={states}
+          value={initialFilters.state}
+          countryScope={initialFilters.country}
+          onChange={(picked) => {
+            if (!picked) {
+              setFilter({ state: undefined });
+              return;
+            }
+            // Auto-sync country to the picked state's country.
+            // Note: changing state doesn't clear city — a state
+            // and city can coexist (e.g. New York state + NYC).
+            setFilter({ state: picked.state, country: picked.country });
           }}
         />
         {anyActive && (

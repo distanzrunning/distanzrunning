@@ -26,6 +26,8 @@ export interface RaceFilters {
   country?: string;
   /** City name — exact match against the race's city field. */
   city?: string;
+  /** State / region — exact match against the race's stateRegion field. */
+  state?: string;
 }
 
 type SearchParamsLike =
@@ -68,6 +70,8 @@ export function parseFilters(sp: SearchParamsLike): RaceFilters {
   if (country) filters.country = country;
   const city = getParam(sp, "city")?.trim();
   if (city) filters.city = city;
+  const state = getParam(sp, "state")?.trim();
+  if (state) filters.state = state;
   return filters;
 }
 
@@ -82,6 +86,7 @@ export function buildFilterParams(filters: RaceFilters): URLSearchParams {
     params.set("distanceMax", String(filters.distanceMax));
   if (filters.country) params.set("country", filters.country);
   if (filters.city) params.set("city", filters.city);
+  if (filters.state) params.set("state", filters.state);
   return params;
 }
 
@@ -93,7 +98,8 @@ export function hasActiveFilters(filters: RaceFilters): boolean {
       filters.distanceMin != null ||
       filters.distanceMax != null ||
       filters.country ||
-      filters.city,
+      filters.city ||
+      filters.state,
   );
 }
 
@@ -105,6 +111,7 @@ export interface RaceQueryParams {
   distanceMax: number | null;
   country: string | null;
   city: string | null;
+  state: string | null;
 }
 
 /**
@@ -137,5 +144,6 @@ export function buildQueryParams(filters: RaceFilters): RaceQueryParams {
     distanceMax: filters.distanceMax ?? null,
     country: filters.country ?? null,
     city: filters.city ?? null,
+    state: filters.state ?? null,
   };
 }

@@ -23,6 +23,7 @@ export const raceIndexQuery = groq`
     && (!defined($distanceMax) || distance <= $distanceMax + 0.05)
     && (!defined($country) || country == $country)
     && (!defined($city) || city == $city)
+    && (!defined($state) || stateRegion == $state)
   ] | order(eventDate asc) {
     _id,
     title,
