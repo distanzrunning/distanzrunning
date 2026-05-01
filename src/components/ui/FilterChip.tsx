@@ -30,6 +30,7 @@ import {
   type MouseEvent,
   type ReactNode,
 } from "react";
+import { createPortal } from "react-dom";
 import * as Popover from "@radix-ui/react-popover";
 import { ChevronDown, X } from "lucide-react";
 
@@ -125,23 +126,6 @@ export default function FilterChip({
         </button>
       </Popover.Trigger>
       <Popover.Portal>
-        {/* Page-dim + glassy blur behind the open popover. Starts
-            at top: 50 px so the SiteHeader stays sharp (mirrors
-            the navbar megamenu's overlay). z-[2000] sits below
-            the popover content (z-[2001]); pointer-events: none
-            so Radix's outside-click detection still works through
-            the overlay. */}
-        <div
-          aria-hidden
-          className="fixed inset-x-0 bottom-0 top-[50px] z-[2000] transition-opacity duration-150"
-          style={{
-            backgroundColor: "var(--ds-overlay-backdrop-color)",
-            opacity: 0.5,
-            backdropFilter: "blur(12px)",
-            WebkitBackdropFilter: "blur(12px)",
-            pointerEvents: "none",
-          }}
-        />
         <Popover.Content
           align="start"
           sideOffset={6}
@@ -157,6 +141,30 @@ export default function FilterChip({
             : children}
         </Popover.Content>
       </Popover.Portal>
+
+      {/* Page-dim + glassy blur behind the open popover. Portaled
+          to document.body separately from Radix's Popover.Portal
+          (which expects React.Children.only) and starts at
+          top: 50 px so the SiteHeader stays sharp — mirrors the
+          navbar megamenu's overlay. z-[2000] sits below the
+          popover content (z-[2001]); pointer-events: none so
+          Radix's outside-click detection still works through. */}
+      {open &&
+        typeof document !== "undefined" &&
+        createPortal(
+          <div
+            aria-hidden
+            className="fixed inset-x-0 bottom-0 top-[50px] z-[2000] transition-opacity duration-150"
+            style={{
+              backgroundColor: "var(--ds-overlay-backdrop-color)",
+              opacity: 0.5,
+              backdropFilter: "blur(12px)",
+              WebkitBackdropFilter: "blur(12px)",
+              pointerEvents: "none",
+            }}
+          />,
+          document.body,
+        )}
     </Popover.Root>
   );
 }
