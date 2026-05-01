@@ -23,8 +23,8 @@ import { formatDistance } from "@/lib/raceUtils";
 
 const MIN_KM = 0;
 const MAX_KM = 100;
-const PANEL_WIDTH = 420;
-const SLIDER_WIDTH = 380;
+const PANEL_WIDTH = 460;
+const SLIDER_WIDTH = 420;
 const KM_TO_MI = 0.621371;
 
 interface Preset {
