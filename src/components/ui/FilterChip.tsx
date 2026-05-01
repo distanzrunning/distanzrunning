@@ -31,8 +31,10 @@ interface FilterChipProps {
   /** Default chip label, shown when no value is active. */
   label: string;
   /** When set, the chip switches to the active style and shows
-   *  this string instead of the label. */
-  activeLabel?: string;
+   *  this content instead of the label. ReactNode so consumers
+   *  can render an icon + text composition (e.g. a flag + country
+   *  name). */
+  activeLabel?: ReactNode;
   /** Called when the user clicks the X on an active chip. */
   onClear?: () => void;
   /** Called when the popover open state changes. */

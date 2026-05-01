@@ -17,6 +17,7 @@ import { Search } from "lucide-react";
 
 import FilterChip from "@/components/ui/FilterChip";
 import { Input } from "@/components/ui/Input";
+import { getCountryFlag } from "@/lib/countryFlags";
 
 interface CountryFilterProps {
   /** Every country we have race data for, alphabetised. */
@@ -40,10 +41,23 @@ export default function CountryFilter({
     return options.filter((country) => country.toLowerCase().includes(q));
   }, [options, query]);
 
+  const ActiveFlag = value ? getCountryFlag(value) : null;
+  const activeLabel = value ? (
+    <span className="inline-flex items-center gap-1.5">
+      {ActiveFlag && (
+        <ActiveFlag
+          className="h-3 w-[18px] shrink-0 rounded-[2px]"
+          aria-hidden
+        />
+      )}
+      <span>{value}</span>
+    </span>
+  ) : undefined;
+
   return (
     <FilterChip
       label="Country"
-      activeLabel={value}
+      activeLabel={activeLabel}
       onClear={() => onChange(undefined)}
       onOpenChange={(open) => {
         // Reset the search buffer each time the popover closes so
@@ -125,18 +139,27 @@ function CountryList({
     >
       {countries.map((country) => {
         const isSelected = country === selected;
+        const Flag = getCountryFlag(country);
         return (
           <li key={country} data-country={country}>
             <button
               type="button"
               onClick={() => onPick(country)}
-              className={`flex w-full cursor-pointer items-center justify-between rounded-sm px-3 py-1.5 text-left text-[13px] transition-colors ${
+              className={`flex w-full cursor-pointer items-center gap-2 rounded-sm px-3 py-1.5 text-left text-[13px] transition-colors ${
                 isSelected
                   ? "bg-[color:var(--ds-gray-1000)] text-[color:var(--ds-background-100)]"
                   : "text-[color:var(--ds-gray-1000)] hover:bg-[color:var(--ds-gray-100)]"
               }`}
             >
-              {country}
+              {Flag ? (
+                <Flag
+                  className="h-3 w-[18px] shrink-0 rounded-[2px]"
+                  aria-hidden
+                />
+              ) : (
+                <span className="size-4 shrink-0" aria-hidden />
+              )}
+              <span className="truncate">{country}</span>
             </button>
           </li>
         );
