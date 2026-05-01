@@ -23,7 +23,7 @@ export interface UnitsContextValue extends UnitsPreferences {
 }
 
 const STORAGE_KEY = "distanz:units";
-const DEFAULT_UNITS: UnitSystem = "metric";
+const DEFAULT_UNITS: UnitSystem = "imperial";
 const DEFAULT_CURRENCY = "USD";
 
 const UnitsContext = createContext<UnitsContextValue>({
@@ -40,7 +40,7 @@ function readStoredPreferences(): UnitsPreferences | null {
     if (!raw) return null;
     const parsed = JSON.parse(raw) as Partial<UnitsPreferences>;
     const units: UnitSystem =
-      parsed.units === "imperial" ? "imperial" : "metric";
+      parsed.units === "metric" ? "metric" : "imperial";
     const currency =
       typeof parsed.currency === "string" && parsed.currency.length > 0
         ? parsed.currency

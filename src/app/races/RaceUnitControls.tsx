@@ -24,8 +24,8 @@ import { Select } from "@/components/ui/Select";
 import { useUnits } from "@/contexts/UnitsContext";
 
 const UNIT_OPTIONS = [
-  { value: "metric", label: "Metric" },
   { value: "imperial", label: "Imperial" },
+  { value: "metric", label: "Metric" },
 ];
 
 const CURRENCY_OPTIONS = [

@@ -133,7 +133,7 @@ export function Switch({
     padding: config.containerPadding,
     borderRadius: config.borderRadius,
     backgroundColor: "var(--ds-background-100)",
-    boxShadow: "rgba(0, 0, 0, 0.08) 0px 0px 0px 1px",
+    boxShadow: "rgba(var(--ds-gray-1000-rgb), 0.1) 0px 0px 0px 1px",
     position: "relative",
     width: fullWidth ? "100%" : undefined,
     gap: 0,
