@@ -34,14 +34,21 @@ interface Preset {
   max: number;
 }
 
+// Canonical race distances expressed in km, rounded to the 0.1
+// precision the slider operates on. Each one round-trips cleanly
+// to an integer/clean mi value (16.1 km = 10.0 mi, 21.1 km =
+// 13.1 mi, etc) so picking a preset doesn't leave the user with
+// a weird range like "9.9 mi – 10.6 mi". Single-point presets
+// (point ranges where min === max) anchor the slider to the
+// canonical distance; users can still drag the thumbs apart for
+// custom windows. Ultra stays a range — the category itself is a
+// distance band, not a single value.
 const PRESETS: Preset[] = [
   { label: "5K", min: 5, max: 5 },
   { label: "10K", min: 10, max: 10 },
-  // 10 mile = 16.09344 km. Range catches races advertised as
-  // "10 Mile" that store as 16.0–17.0 km in Sanity.
-  { label: "10 Mile", min: 16, max: 17 },
-  { label: "Half", min: 21, max: 22 },
-  { label: "Marathon", min: 42, max: 43 },
+  { label: "10 Mile", min: 16.1, max: 16.1 },
+  { label: "Half", min: 21.1, max: 21.1 },
+  { label: "Marathon", min: 42.2, max: 42.2 },
   { label: "Ultra", min: 50, max: MAX_KM },
 ];
 

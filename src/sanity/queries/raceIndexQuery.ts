@@ -19,8 +19,8 @@ export const raceIndexQuery = groq`
     && (!defined($qWild) || title match $qWild || city match $qWild || country match $qWild)
     && (!defined($dateFrom) || eventDate >= $dateFrom)
     && (!defined($dateTo) || eventDate <= $dateTo)
-    && (!defined($distanceMin) || distance >= $distanceMin)
-    && (!defined($distanceMax) || distance <= $distanceMax)
+    && (!defined($distanceMin) || distance >= $distanceMin - 0.05)
+    && (!defined($distanceMax) || distance <= $distanceMax + 0.05)
   ] | order(eventDate asc) {
     _id,
     title,
