@@ -19,6 +19,12 @@ export type RaceIndexItem = {
   stateRegion?: string;
   country?: string;
   category?: string;
+  distance?: number;
+  surface?: string;
+  profile?: string;
+  elevationGain?: number;
+  price?: number;
+  currency?: string;
 };
 
 function formatLocation(item: RaceIndexItem): string | undefined {
@@ -49,6 +55,7 @@ export default function RaceGrid({ races }: { races: RaceIndexItem[] }) {
       {races.map((race, i) => (
         <li key={race._id}>
           <RaceCard
+            variant="index"
             href={race.href}
             title={race.title}
             eventDate={race.eventDate}
@@ -56,6 +63,11 @@ export default function RaceGrid({ races }: { races: RaceIndexItem[] }) {
             category={race.category}
             imageUrl={resolveImage(race)}
             priority={i < 3}
+            surface={race.surface}
+            profile={race.profile}
+            elevationGain={race.elevationGain}
+            price={race.price}
+            currency={race.currency}
           />
         </li>
       ))}

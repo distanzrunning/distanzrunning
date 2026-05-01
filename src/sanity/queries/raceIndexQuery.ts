@@ -23,6 +23,12 @@ export const raceIndexQuery = groq`
     city,
     stateRegion,
     country,
-    "category": raceCategory->title
+    "category": raceCategory->title,
+    distance,
+    surface,
+    profile,
+    elevationGain,
+    price,
+    currency
   }
 `;
