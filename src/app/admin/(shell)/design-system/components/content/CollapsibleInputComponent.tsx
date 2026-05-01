@@ -19,7 +19,7 @@ export default function CollapsibleInputComponent() {
         onMouseDown={(e) => e.preventDefault()}
         onClick={() => setValue("")}
         aria-label="Clear search"
-        className="flex size-6 cursor-pointer items-center justify-center rounded-md text-[color:var(--ds-gray-900)] transition-colors hover:bg-[color:var(--ds-gray-200)] hover:text-[color:var(--ds-gray-1000)]"
+        className="flex size-6 cursor-pointer items-center justify-center rounded-sm text-[color:var(--ds-gray-900)] transition-colors hover:bg-[color:var(--ds-gray-200)] hover:text-[color:var(--ds-gray-1000)]"
       >
         <X className="size-3.5" />
       </button>

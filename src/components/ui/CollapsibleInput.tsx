@@ -101,7 +101,7 @@ export const CollapsibleInput = forwardRef<
 
   return (
     <div
-      className={`ds-input-container relative inline-flex items-center overflow-hidden rounded-md transition-[width] duration-200 ease-out ${
+      className={`ds-input-container relative inline-flex items-center overflow-hidden rounded-sm transition-[width] duration-200 ease-out ${
         expanded ? "" : "cursor-pointer"
       } ${className ?? ""}`}
       style={{
