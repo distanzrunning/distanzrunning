@@ -23,15 +23,26 @@ interface DateFilterProps {
 }
 
 function toIsoDate(d: Date): string {
-  // YYYY-MM-DD — matches eventDate in Sanity (date type, no time)
-  // so direct string comparison via `>=` / `<=` works in GROQ.
-  return d.toISOString().slice(0, 10);
+  // YYYY-MM-DD using local-date components, NOT toISOString —
+  // toISOString shifts the date to UTC, which off-by-ones any
+  // user east of UTC (e.g. picking February in UTC+1 returns
+  // "Jan 31" because Feb 1 00:00 local = Jan 31 23:00 UTC).
+  // The serialized string matches Sanity's `date` type so
+  // direct string comparison via `>=` / `<=` works in GROQ.
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
 }
 
 function fromIsoDate(iso: string | undefined): Date | null {
   if (!iso) return null;
-  const d = new Date(iso);
-  return Number.isNaN(d.getTime()) ? null : d;
+  // Parse as local-date midnight rather than letting `new Date(iso)`
+  // treat YYYY-MM-DD as UTC — pairs with toIsoDate's local-format.
+  const parts = iso.split("-").map(Number);
+  if (parts.length !== 3 || parts.some((n) => Number.isNaN(n))) return null;
+  const [y, m, day] = parts;
+  return new Date(y, m - 1, day);
 }
 
 export default function DateFilter({ value, onChange }: DateFilterProps) {

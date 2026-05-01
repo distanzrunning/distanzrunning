@@ -67,7 +67,7 @@ export default function SearchFilter({ value, onChange }: SearchFilterProps) {
             onMouseDown={(e) => e.preventDefault()}
             onClick={handleClear}
             aria-label="Clear search"
-            className="flex size-6 cursor-pointer items-center justify-center rounded-sm text-[color:var(--ds-gray-900)] transition-colors hover:bg-[color:var(--ds-gray-200)] hover:text-[color:var(--ds-gray-1000)]"
+            className="flex size-5 cursor-pointer items-center justify-center rounded text-[color:var(--ds-gray-1000)] transition-colors hover:bg-[color:var(--ds-gray-200)]"
           >
             <X className="size-3.5" />
           </button>

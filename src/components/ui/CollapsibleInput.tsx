@@ -113,7 +113,7 @@ export const CollapsibleInput = forwardRef<
       onMouseDown={handleWrapperMouseDown}
     >
       <span
-        className="pointer-events-none absolute inset-y-0 left-0 flex items-center justify-center text-[color:var(--ds-gray-900)]"
+        className="pointer-events-none absolute inset-y-0 left-0 flex items-center justify-center text-[color:var(--ds-gray-1000)]"
         style={{ width: config.prefixGutter }}
         aria-hidden="true"
       >
