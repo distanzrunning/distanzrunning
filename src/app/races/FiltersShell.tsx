@@ -19,7 +19,7 @@
 //     page.tsx — cheap to render, expensive to fetch, so we keep
 //     it server-side and only swap during transitions.
 
-import { useTransition, type ReactNode } from "react";
+import { useEffect, useState, useTransition, type ReactNode } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
 import {
@@ -44,6 +44,23 @@ export default function FiltersShell({
   const router = useRouter();
   const pathname = usePathname();
   const [isPending, startTransition] = useTransition();
+
+  // Delay the skeleton so fast transitions (cached Sanity queries,
+  // simple toggles) finish before any visual swap happens. Without
+  // this, every filter change tore the grid down for the skeleton
+  // and rebuilt it — remounting all 29 RaceCards including their
+  // <Image> components, which re-ran the 300 ms image fade-in and
+  // read as a flash. With this guard, the swap only happens if the
+  // server is genuinely slow.
+  const [showSkeleton, setShowSkeleton] = useState(false);
+  useEffect(() => {
+    if (!isPending) {
+      setShowSkeleton(false);
+      return;
+    }
+    const t = setTimeout(() => setShowSkeleton(true), 250);
+    return () => clearTimeout(t);
+  }, [isPending]);
 
   const setFilter = (patch: Partial<RaceFilters>) => {
     const next: RaceFilters = { ...initialFilters, ...patch };
@@ -108,7 +125,7 @@ export default function FiltersShell({
         )}
       </div>
 
-      {isPending ? <RaceGridSkeleton /> : children}
+      {showSkeleton ? <RaceGridSkeleton /> : children}
     </div>
   );
 }
