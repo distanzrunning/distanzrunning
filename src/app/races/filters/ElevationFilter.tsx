@@ -7,12 +7,15 @@
 // in the user's display unit (m or ft) for UX, converting at the
 // boundary on Apply / read.
 //
-// Five named presets cover the typical race-profile spectrum:
-//   Flat        0 – 100 m  (~0 – 300 ft)
-//   Rolling   100 – 300 m  (~300 – 1000 ft)
-//   Hilly     300 – 600 m  (~1000 – 2000 ft)
-//   Mountain  600 – 1500 m (~2000 – 5000 ft)
-//   Extreme  1500 – 3000 m (5000 – 10000 ft)
+// Four named presets cover the race-profile spectrum:
+//   Flat           0 – 100 m  (~0 – 330 ft)
+//   Rolling      100 – 300 m  (~330 – 1000 ft)
+//   Hilly        300 – 600 m  (~1000 – 2000 ft)
+//   Mountainous 600 – 3000 m  (~2000 – 9800 ft)
+//
+// Mountainous extends to the slider's max so ultras with >1000 m
+// gain still match the preset rather than falling off the named
+// scale. Custom ranges via the slider cover anything in between.
 //
 // The chip's active label uses the preset name when the value
 // matches one, otherwise a "X – Y m/ft" range.
@@ -41,8 +44,7 @@ const PRESETS: Preset[] = [
   { label: "Flat", min: 0, max: 100 },
   { label: "Rolling", min: 100, max: 300 },
   { label: "Hilly", min: 300, max: 600 },
-  { label: "Mountain", min: 600, max: 1500 },
-  { label: "Extreme", min: 1500, max: MAX_M },
+  { label: "Mountainous", min: 600, max: MAX_M },
 ];
 
 interface ElevationFilterProps {
