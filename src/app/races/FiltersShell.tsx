@@ -76,6 +76,11 @@ export default function FiltersShell({
   // read as a flash. With this guard, the swap only happens if the
   // server is genuinely slow.
   const [showSkeleton, setShowSkeleton] = useState(false);
+  // Tracks the Search chip's expanded state so we can hide Reset
+  // all while the input is open — otherwise the 260 px expansion
+  // pushes the row past its container width and Sort wraps onto
+  // a second line.
+  const [searchExpanded, setSearchExpanded] = useState(false);
   useEffect(() => {
     if (!isPending) {
       setShowSkeleton(false);
@@ -115,6 +120,7 @@ export default function FiltersShell({
         <SearchFilter
           value={initialFilters.q}
           onChange={(q) => setFilter({ q: q || undefined })}
+          onExpandedChange={setSearchExpanded}
         />
         <DateFilter
           value={{ from: initialFilters.dateFrom, to: initialFilters.dateTo }}
@@ -241,7 +247,7 @@ export default function FiltersShell({
           value={initialFilters.tag}
           onChange={(tag) => setFilter({ tag })}
         />
-        {anyActive && (
+        {anyActive && !searchExpanded && (
           <button
             type="button"
             onClick={resetAll}

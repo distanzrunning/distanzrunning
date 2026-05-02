@@ -15,6 +15,7 @@
 
 import {
   forwardRef,
+  useEffect,
   useImperativeHandle,
   useRef,
   useState,
@@ -53,6 +54,10 @@ export interface CollapsibleInputProps
   /** aria-label used in the collapsed state where the placeholder
    *  isn't visible. Falls back to the regular aria-label if unset. */
   collapsedAriaLabel?: string;
+  /** Notifies the parent whenever the collapsed/expanded state
+   *  flips. Useful for hiding sibling controls (e.g. a Reset
+   *  button) that would otherwise wrap when the input expands. */
+  onExpandedChange?: (expanded: boolean) => void;
 }
 
 export const CollapsibleInput = forwardRef<
@@ -65,6 +70,7 @@ export const CollapsibleInput = forwardRef<
     expandedWidth = 260,
     size = "small",
     collapsedAriaLabel,
+    onExpandedChange,
     value,
     onFocus,
     onBlur,
@@ -82,6 +88,10 @@ export const CollapsibleInput = forwardRef<
   const hasValue = typeof value === "string" ? value.length > 0 : false;
   const expanded = focused || hasValue;
   const config = SIZE_CONFIG[size];
+
+  useEffect(() => {
+    onExpandedChange?.(expanded);
+  }, [expanded, onExpandedChange]);
 
   const handleWrapperMouseDown = (e: MouseEvent<HTMLDivElement>) => {
     // While collapsed the only interactive target is the wrapper —

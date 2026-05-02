@@ -20,9 +20,16 @@ interface SearchFilterProps {
   value?: string;
   /** Fires after the local buffer has been idle for 300 ms. */
   onChange: (next: string) => void;
+  /** Bubbles the underlying input's expanded state up — used by
+   *  FiltersShell to gate Reset all so the row doesn't wrap. */
+  onExpandedChange?: (expanded: boolean) => void;
 }
 
-export default function SearchFilter({ value, onChange }: SearchFilterProps) {
+export default function SearchFilter({
+  value,
+  onChange,
+  onExpandedChange,
+}: SearchFilterProps) {
   const [local, setLocal] = useState(value ?? "");
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -60,6 +67,7 @@ export default function SearchFilter({ value, onChange }: SearchFilterProps) {
       collapsedAriaLabel="Search races"
       aria-label="Search races"
       expandedWidth={260}
+      onExpandedChange={onExpandedChange}
       expandedSuffix={
         local ? (
           <button
