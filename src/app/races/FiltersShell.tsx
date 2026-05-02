@@ -164,13 +164,6 @@ export default function FiltersShell({
             onExpandedChange={setSearchExpanded}
           />
         </div>
-        {/* When Search expands, hide every other filter chip so
-            the input gets the row to itself. Sort stays put on
-            the right; Reset all is already gated by
-            searchExpanded below. Filters reappear once Search
-            collapses (blur + empty buffer). */}
-        {!searchExpanded && (
-          <>
         {slot(
           isDateActive,
           <DateFilter
@@ -327,8 +320,6 @@ export default function FiltersShell({
             onChange={(tag) => setFilter({ tag })}
           />,
         )}
-          </>
-        )}
         {anyActive && !searchExpanded && (
           <button
             type="button"
@@ -339,15 +330,19 @@ export default function FiltersShell({
           </button>
         )}
         {/* Sort sits at the far right — ml-auto pushes it past
-            any filter chips that wrap onto the same row. */}
-        <div className="ml-auto">
-          <SortFilter
-            value={initialFilters.sort ?? DEFAULT_SORT}
-            onChange={(sort) =>
-              setFilter({ sort: sort === DEFAULT_SORT ? undefined : sort })
-            }
-          />
-        </div>
+            any filter chips that wrap onto the same row. Hidden
+            while Search is expanded (same gate as Reset all) so
+            the input has uncluttered focus. */}
+        {!searchExpanded && (
+          <div className="ml-auto">
+            <SortFilter
+              value={initialFilters.sort ?? DEFAULT_SORT}
+              onChange={(sort) =>
+                setFilter({ sort: sort === DEFAULT_SORT ? undefined : sort })
+              }
+            />
+          </div>
+        )}
       </div>
 
       {showSkeleton ? <RaceGridSkeleton /> : children}
