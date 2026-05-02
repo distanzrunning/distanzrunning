@@ -153,11 +153,17 @@ export default function FiltersShell({
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-wrap items-center gap-2">
-        <SearchFilter
-          value={initialFilters.q}
-          onChange={(q) => setFilter({ q: q || undefined })}
-          onExpandedChange={setSearchExpanded}
-        />
+        {/* Search wrapped in its own order:-2 slot so it always
+            wins the leftmost spot, even against active filter
+            chips (which use order:-1 to pull in front of
+            inactive chips). */}
+        <div className="inline-flex" style={{ order: -2 }}>
+          <SearchFilter
+            value={initialFilters.q}
+            onChange={(q) => setFilter({ q: q || undefined })}
+            onExpandedChange={setSearchExpanded}
+          />
+        </div>
         {slot(
           isDateActive,
           <DateFilter
