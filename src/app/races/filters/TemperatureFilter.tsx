@@ -34,13 +34,20 @@ interface Preset {
   /** Canonical Celsius bounds. */
   min: number;
   max: number;
+  /** 0-100 — how filled the temperature-gauge bar should be. */
+  fill: number;
+  /** Bar fill colour. Hex literals because the cold→hot
+   *  thermometer ramp doesn't map cleanly onto our DS hues
+   *  (no orange, and "warm pink" doesn't read as temperature).
+   *  Same palette the legacy filter used. */
+  color: string;
 }
 
 const PRESETS: Preset[] = [
-  { label: "Cold", min: -10, max: 10 },
-  { label: "Mild", min: 10, max: 18 },
-  { label: "Warm", min: 18, max: 25 },
-  { label: "Hot", min: 25, max: MAX_C },
+  { label: "Cold", min: -10, max: 10, fill: 25, color: "#60A5FA" },
+  { label: "Mild", min: 10, max: 18, fill: 50, color: "#FCD34D" },
+  { label: "Warm", min: 18, max: 25, fill: 75, color: "#FB923C" },
+  { label: "Hot", min: 25, max: MAX_C, fill: 100, color: "#EF4444" },
 ];
 
 const cToF = (c: number) => c * (9 / 5) + 32;
@@ -137,8 +144,11 @@ export default function TemperatureFilter({
     >
       {({ close }) => (
         <div className="flex flex-col gap-4">
-          {/* Preset chips */}
-          <div className="flex flex-wrap justify-center gap-1.5">
+          {/* Preset chips — label + temperature gauge underneath.
+              Track uses --ds-gray-alpha-300 so it stays visible on
+              both the unselected (gray-100) and selected
+              (gray-1000) chip backgrounds in either theme. */}
+          <div className="flex flex-wrap justify-center gap-2">
             {PRESETS.map((p) => {
               const selected = presetMatchesTemp(p);
               return (
@@ -150,13 +160,22 @@ export default function TemperatureFilter({
                     setTempMin(d.min);
                     setTempMax(d.max);
                   }}
-                  className={`inline-flex h-7 cursor-pointer items-center rounded-sm px-2.5 text-[13px] font-medium transition-colors ${
+                  className={`flex cursor-pointer flex-col items-center gap-2 rounded-sm px-3 py-2 text-[13px] font-medium transition-colors ${
                     selected
                       ? "bg-[color:var(--ds-gray-1000)] text-[color:var(--ds-background-100)]"
                       : "bg-[color:var(--ds-gray-100)] text-[color:var(--ds-gray-1000)] hover:bg-[color:var(--ds-gray-200)]"
                   }`}
                 >
-                  {p.label}
+                  <span>{p.label}</span>
+                  <div className="h-1 w-16 overflow-hidden rounded-full bg-[color:var(--ds-gray-alpha-300)]">
+                    <div
+                      className="h-full rounded-full"
+                      style={{
+                        width: `${p.fill}%`,
+                        backgroundColor: p.color,
+                      }}
+                    />
+                  </div>
                 </button>
               );
             })}
