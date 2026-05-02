@@ -67,6 +67,8 @@ export default function FullPageSkeleton() {
             <div className={`${PULSE_BG} h-8 w-[120px]`} />
             {/* Tag trigger */}
             <div className={`${PULSE_BG} h-8 w-[60px]`} />
+            {/* Sort trigger — pushed to the right via ml-auto. */}
+            <div className={`${PULSE_BG} ml-auto h-8 w-[140px]`} />
           </div>
           <RaceGridSkeleton />
         </div>

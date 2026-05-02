@@ -38,6 +38,8 @@ import PriceFilter from "./filters/PriceFilter";
 import ElevationFilter from "./filters/ElevationFilter";
 import TemperatureFilter from "./filters/TemperatureFilter";
 import TagFilter from "./filters/TagFilter";
+import SortFilter from "./filters/SortFilter";
+import { DEFAULT_SORT } from "@/sanity/queries/raceIndexQuery";
 import { US_COUNTRY_NAME, US_STATES } from "@/lib/usStates";
 import RaceGridSkeleton from "./RaceGridSkeleton";
 
@@ -248,6 +250,16 @@ export default function FiltersShell({
             Reset all
           </button>
         )}
+        {/* Sort sits at the far right — ml-auto pushes it past
+            any filter chips that wrap onto the same row. */}
+        <div className="ml-auto">
+          <SortFilter
+            value={initialFilters.sort ?? DEFAULT_SORT}
+            onChange={(sort) =>
+              setFilter({ sort: sort === DEFAULT_SORT ? undefined : sort })
+            }
+          />
+        </div>
       </div>
 
       {showSkeleton ? <RaceGridSkeleton /> : children}

@@ -10,6 +10,17 @@
 //   2. parseFilters / buildFilterParams (URL <-> object)
 //   3. buildQueryParams (object -> GROQ params) and the predicate
 //      fragment in raceIndexQuery
+//
+// Sort lives alongside filters but is treated separately —
+// hasActiveFilters ignores it (Reset all doesn't change sort) and
+// it doesn't go through the GROQ params object (the order clause
+// is baked into the query string at build time).
+
+import {
+  DEFAULT_SORT,
+  SORT_KEYS,
+  type RaceSortKey,
+} from "@/sanity/queries/raceIndexQuery";
 
 export interface RaceFilters {
   /** Free-text search across title / city / country. */
@@ -47,6 +58,10 @@ export interface RaceFilters {
   temperatureMax?: number;
   /** Single tag the race must include in its `tags` array. */
   tag?: string;
+  /** Sort key — drives the GROQ order clause in raceIndexQuery.
+   *  Always defined when read via parseFiltersWithSort; absent
+   *  from URL when at default. */
+  sort?: RaceSortKey;
 }
 
 type SearchParamsLike =
@@ -107,7 +122,15 @@ export function parseFilters(sp: SearchParamsLike): RaceFilters {
   if (temperatureMax != null) filters.temperatureMax = temperatureMax;
   const tag = getParam(sp, "tag")?.trim();
   if (tag) filters.tag = tag;
+  const sort = getParam(sp, "sort")?.trim();
+  if (sort && (SORT_KEYS as readonly string[]).includes(sort)) {
+    filters.sort = sort as RaceSortKey;
+  }
   return filters;
+}
+
+export function getSort(filters: RaceFilters): RaceSortKey {
+  return filters.sort ?? DEFAULT_SORT;
 }
 
 export function buildFilterParams(filters: RaceFilters): URLSearchParams {
@@ -136,6 +159,10 @@ export function buildFilterParams(filters: RaceFilters): URLSearchParams {
   if (filters.temperatureMax != null)
     params.set("temperatureMax", String(filters.temperatureMax));
   if (filters.tag) params.set("tag", filters.tag);
+  // Only emit sort when it differs from the default — keeps URLs
+  // clean for the most common case.
+  if (filters.sort && filters.sort !== DEFAULT_SORT)
+    params.set("sort", filters.sort);
   return params;
 }
 

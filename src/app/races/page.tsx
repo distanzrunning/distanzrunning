@@ -14,7 +14,7 @@
 // side-by-side reference until the rewrite is complete.
 
 import { sanityFetch } from "@/sanity/lib/live";
-import { raceIndexQuery } from "@/sanity/queries/raceIndexQuery";
+import { buildRaceIndexQuery } from "@/sanity/queries/raceIndexQuery";
 import { raceCountriesQuery } from "@/sanity/queries/raceCountriesQuery";
 import { raceCitiesQuery } from "@/sanity/queries/raceCitiesQuery";
 import { raceTagsQuery } from "@/sanity/queries/raceTagsQuery";
@@ -23,7 +23,7 @@ import RaceUnitControls from "./RaceUnitControls";
 import FiltersShell from "./FiltersShell";
 import FullPageSkeleton from "./FullPageSkeleton";
 import InitialLoadShell from "./InitialLoadShell";
-import { buildQueryParams, parseFilters } from "./filters";
+import { buildQueryParams, getSort, parseFilters } from "./filters";
 
 export const metadata = {
   title: "Races — Distanz Running",
@@ -41,6 +41,7 @@ export default async function RacesPage({
   const sp = await searchParams;
   const filters = parseFilters(sp);
   const queryParams = buildQueryParams(filters);
+  const raceIndexQuery = buildRaceIndexQuery(getSort(filters));
 
   // Run the filtered race fetch + unfiltered country / city / tag
   // option lists in parallel — the option lists need every choice

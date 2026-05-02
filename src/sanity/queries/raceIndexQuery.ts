@@ -1,14 +1,17 @@
 // src/sanity/queries/raceIndexQuery.ts
 //
-// All published race guides for the /races index page, ordered by
-// eventDate ascending so upcoming races sort to the top.
-//
-// Filter predicates use the `!defined($x) || …` pattern so the same
+// All published race guides for the /races index page. Filter
+// predicates use the `!defined($x) || …` pattern so the same
 // query string serves the unfiltered first paint AND any filtered
 // view — page.tsx always passes every parameter, with null for
 // filters the user hasn't set. Adding a new filter is two steps:
 //   1. New parameter on RaceQueryParams in app/races/filters.ts
 //   2. New `&& (!defined($x) || <predicate>)` clause here
+//
+// Sort is parameterised differently — GROQ ordering can't be
+// driven by a parameter the way `where` predicates can, so we
+// build the order clause as a string and embed it via a query
+// builder function.
 
 import { groq } from "next-sanity";
 
@@ -30,44 +33,76 @@ const PRICE_TO_USD = `select(${[
   `price`,
 ].join(", ")})`;
 
-export const raceIndexQuery = groq`
-  *[
-    _type == "raceGuide"
-    && defined(slug.current)
-    && (!defined($qWild) || title match $qWild || city match $qWild || country match $qWild)
-    && (!defined($dateFrom) || eventDate >= $dateFrom)
-    && (!defined($dateTo) || eventDate <= $dateTo)
-    && (!defined($distanceMin) || distance >= $distanceMin - 0.05)
-    && (!defined($distanceMax) || distance <= $distanceMax + 0.05)
-    && (!defined($country) || country == $country)
-    && (!defined($city) || city == $city)
-    && (!defined($state) || stateRegion == $state)
-    && (!defined($surface) || surface == $surface)
-    && (!defined($priceMin) || (defined(price) && ${PRICE_TO_USD} >= $priceMin))
-    && (!defined($priceMax) || (defined(price) && ${PRICE_TO_USD} <= $priceMax))
-    && (!defined($elevationMin) || (defined(elevationGain) && elevationGain >= $elevationMin))
-    && (!defined($elevationMax) || (defined(elevationGain) && elevationGain <= $elevationMax))
-    && (!defined($temperatureMin) || (defined(averageTemperature) && averageTemperature >= $temperatureMin))
-    && (!defined($temperatureMax) || (defined(averageTemperature) && averageTemperature <= $temperatureMax))
-    && (!defined($raceTag) || $raceTag in tags)
-  ] | order(eventDate asc) {
-    _id,
-    title,
-    "slug": slug.current,
-    "href": "/races/" + slug.current,
-    mainImage,
-    eventDate,
-    city,
-    stateRegion,
-    country,
-    "category": raceCategory->title,
-    distance,
-    surface,
-    surfaceBreakdown,
-    profile,
-    elevationGain,
-    price,
-    currency,
-    finishers
-  }
-`;
+// Sort key → GROQ order clause. Adding a new sort: append here +
+// the matching label in src/app/races/filters/SortFilter.tsx.
+export const SORT_KEYS = [
+  "date-asc",
+  "date-desc",
+  "distance-asc",
+  "distance-desc",
+  "price-asc",
+  "price-desc",
+  "popularity",
+] as const;
+
+export type RaceSortKey = (typeof SORT_KEYS)[number];
+
+export const DEFAULT_SORT: RaceSortKey = "date-asc";
+
+const SORT_GROQ: Record<RaceSortKey, string> = {
+  "date-asc": "eventDate asc",
+  "date-desc": "eventDate desc",
+  "distance-asc": "distance asc",
+  "distance-desc": "distance desc",
+  "price-asc": "price asc",
+  "price-desc": "price desc",
+  // Most-popular ranks by 2025 finishers count, descending —
+  // races without a finishers count get sorted to the bottom by
+  // GROQ's null-handling.
+  popularity: "finishers desc",
+};
+
+export function buildRaceIndexQuery(sort: RaceSortKey = DEFAULT_SORT): string {
+  const order = SORT_GROQ[sort] ?? SORT_GROQ[DEFAULT_SORT];
+  return groq`
+    *[
+      _type == "raceGuide"
+      && defined(slug.current)
+      && (!defined($qWild) || title match $qWild || city match $qWild || country match $qWild)
+      && (!defined($dateFrom) || eventDate >= $dateFrom)
+      && (!defined($dateTo) || eventDate <= $dateTo)
+      && (!defined($distanceMin) || distance >= $distanceMin - 0.05)
+      && (!defined($distanceMax) || distance <= $distanceMax + 0.05)
+      && (!defined($country) || country == $country)
+      && (!defined($city) || city == $city)
+      && (!defined($state) || stateRegion == $state)
+      && (!defined($surface) || surface == $surface)
+      && (!defined($priceMin) || (defined(price) && ${PRICE_TO_USD} >= $priceMin))
+      && (!defined($priceMax) || (defined(price) && ${PRICE_TO_USD} <= $priceMax))
+      && (!defined($elevationMin) || (defined(elevationGain) && elevationGain >= $elevationMin))
+      && (!defined($elevationMax) || (defined(elevationGain) && elevationGain <= $elevationMax))
+      && (!defined($temperatureMin) || (defined(averageTemperature) && averageTemperature >= $temperatureMin))
+      && (!defined($temperatureMax) || (defined(averageTemperature) && averageTemperature <= $temperatureMax))
+      && (!defined($raceTag) || $raceTag in tags)
+    ] | order(${order}) {
+      _id,
+      title,
+      "slug": slug.current,
+      "href": "/races/" + slug.current,
+      mainImage,
+      eventDate,
+      city,
+      stateRegion,
+      country,
+      "category": raceCategory->title,
+      distance,
+      surface,
+      surfaceBreakdown,
+      profile,
+      elevationGain,
+      price,
+      currency,
+      finishers
+    }
+  `;
+}
