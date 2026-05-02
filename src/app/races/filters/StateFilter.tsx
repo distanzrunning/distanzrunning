@@ -2,67 +2,42 @@
 
 // src/app/races/filters/StateFilter.tsx
 //
-// Single-select state / region filter. Same shape as CityFilter —
-// each option carries its country so we can render the flag and
-// auto-sync the country filter when a state is picked. When the
-// country filter is set, the state list narrows to that country
-// only; states from countries that don't subdivide that way
-// (Belgium, Qatar, etc) simply don't appear in the source data
-// because the GROQ query filters out races without stateRegion.
+// Single-select US-state filter. State is conceptually US-only —
+// other countries' subdivisions don't fit the same model — so the
+// option list is a hardcoded canonical set of 50 states + DC from
+// US_STATES, not derived from race data.
+//
+// On pick, the parent (FiltersShell) auto-sets country to
+// US_COUNTRY_NAME so the resulting filter combination is always
+// coherent ("California" implies USA).
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Search } from "lucide-react";
 
 import FilterChip from "@/components/ui/FilterChip";
 import { Input } from "@/components/ui/Input";
-
-export interface StateOption {
-  state: string;
-  country: string;
-}
+import { US_STATES } from "@/lib/usStates";
 
 interface StateFilterProps {
-  /** Every {state, country} pair we have race data for. Sorted ASC
-   *  by state in page.tsx. */
-  options: StateOption[];
   /** Currently selected state, or undefined for "no filter". */
   value?: string;
-  /** Currently selected country filter — narrows the visible list
-   *  when set. */
-  countryScope?: string;
-  onChange: (next: StateOption | null) => void;
+  onChange: (next: string | null) => void;
 }
 
-export default function StateFilter({
-  options,
-  value,
-  countryScope,
-  onChange,
-}: StateFilterProps) {
+export default function StateFilter({ value, onChange }: StateFilterProps) {
   const [query, setQuery] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const scoped = useMemo(() => {
-    if (!countryScope) return options;
-    return options.filter((o) => o.country === countryScope);
-  }, [options, countryScope]);
-
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    if (!q) return scoped;
-    return scoped.filter((o) => o.state.toLowerCase().includes(q));
-  }, [scoped, query]);
-
-  // No flag column on State — sub-national flag coverage is
-  // patchy (some US states yes, UK regions no, etc) so we just
-  // show the state name. Active chip carries the same plain
-  // treatment.
-  const activeLabel = value;
+    if (!q) return US_STATES;
+    return US_STATES.filter((s) => s.toLowerCase().includes(q));
+  }, [query]);
 
   return (
     <FilterChip
       label="State"
-      activeLabel={activeLabel}
+      activeLabel={value}
       onClear={() => onChange(null)}
       onOpenChange={(open) => {
         if (!open) setQuery("");
@@ -86,8 +61,8 @@ export default function StateFilter({
           <StateList
             states={filtered}
             selected={value}
-            onPick={(option) => {
-              onChange(option.state === value ? null : option);
+            onPick={(state) => {
+              onChange(state === value ? null : state);
               close();
             }}
           />
@@ -106,9 +81,9 @@ function StateList({
   selected,
   onPick,
 }: {
-  states: StateOption[];
+  states: readonly string[];
   selected: string | undefined;
-  onPick: (option: StateOption) => void;
+  onPick: (state: string) => void;
 }) {
   const listRef = useRef<HTMLUListElement>(null);
   useEffect(() => {
@@ -132,13 +107,13 @@ function StateList({
       ref={listRef}
       className="-mx-2 max-h-[260px] list-none overflow-y-auto p-0"
     >
-      {states.map(({ state, country }) => {
+      {states.map((state) => {
         const isSelected = state === selected;
         return (
           <li key={state} data-state={state}>
             <button
               type="button"
-              onClick={() => onPick({ state, country })}
+              onClick={() => onPick(state)}
               className={`flex w-full cursor-pointer items-center rounded-sm px-3 py-1.5 text-left text-[13px] transition-colors ${
                 isSelected
                   ? "bg-[color:var(--ds-gray-1000)] text-[color:var(--ds-background-100)]"

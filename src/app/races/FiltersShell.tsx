@@ -32,7 +32,8 @@ import DateFilter from "./filters/DateFilter";
 import DistanceFilter from "./filters/DistanceFilter";
 import CountryFilter from "./filters/CountryFilter";
 import CityFilter, { type CityOption } from "./filters/CityFilter";
-import StateFilter, { type StateOption } from "./filters/StateFilter";
+import StateFilter from "./filters/StateFilter";
+import { US_COUNTRY_NAME, US_STATES } from "@/lib/usStates";
 import RaceGridSkeleton from "./RaceGridSkeleton";
 
 interface FiltersShellProps {
@@ -43,9 +44,6 @@ interface FiltersShellProps {
   /** All {city, country} pairs we have race data for, deduped by
    *  city. Powers the City filter's option list. */
   cities: CityOption[];
-  /** All {state, country} pairs we have race data for, deduped by
-   *  state. Powers the State filter's option list. */
-  states: StateOption[];
   children: ReactNode;
 }
 
@@ -53,7 +51,6 @@ export default function FiltersShell({
   initialFilters,
   countries,
   cities,
-  states,
   children,
 }: FiltersShellProps) {
   const router = useRouter();
@@ -150,12 +147,12 @@ export default function FiltersShell({
             }
             if (
               country &&
+              country !== US_COUNTRY_NAME &&
               initialFilters.state &&
-              !states.some(
-                (s) =>
-                  s.state === initialFilters.state && s.country === country,
-              )
+              US_STATES.includes(initialFilters.state)
             ) {
+              // Switching country to anything other than USA
+              // invalidates the State pick (states are US-only).
               patch.state = undefined;
             }
             setFilter(patch);
@@ -176,18 +173,16 @@ export default function FiltersShell({
           }}
         />
         <StateFilter
-          options={states}
           value={initialFilters.state}
-          countryScope={initialFilters.country}
-          onChange={(picked) => {
-            if (!picked) {
+          onChange={(state) => {
+            if (!state) {
               setFilter({ state: undefined });
               return;
             }
-            // Auto-sync country to the picked state's country.
-            // Note: changing state doesn't clear city — a state
-            // and city can coexist (e.g. New York state + NYC).
-            setFilter({ state: picked.state, country: picked.country });
+            // Auto-sync country to USA — states are conceptually
+            // US-only. Doesn't clear city: state and city can
+            // coexist (e.g. New York state + New York City).
+            setFilter({ state, country: US_COUNTRY_NAME });
           }}
         />
         {anyActive && (
