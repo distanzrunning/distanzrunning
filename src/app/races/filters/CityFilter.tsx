@@ -21,6 +21,10 @@ import { getCountryFlag } from "@/lib/countryFlags";
 export interface CityOption {
   city: string;
   country: string;
+  /** Optional state / region the city sits in. Only present for
+   *  US races in our data; FiltersShell uses it to auto-fill the
+   *  State chip when a US city is picked. */
+  state?: string;
 }
 
 interface CityFilterProps {

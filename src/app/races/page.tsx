@@ -59,17 +59,23 @@ export default async function RacesPage({
   const countries = (countriesResult.data ?? []) as string[];
   const tags = (tagsResult.data ?? []) as string[];
 
-  // Dedupe city/country pairs — Sanity returns one row per race
-  // and we want one row per unique city. First match wins for the
-  // associated country, which is fine as long as cities don't
-  // legitimately span multiple countries in our data.
+  // Dedupe {city, country, state} triples — Sanity returns one
+  // row per race and we want one row per unique city. First
+  // match wins for the associated country / state, which is
+  // fine as long as cities don't legitimately span multiple
+  // countries in our data.
   const rawCities = (citiesResult.data ?? []) as {
     city: string;
     country: string;
+    state?: string | null;
   }[];
-  const cities = dedupeByKey(rawCities, "city").sort((a, b) =>
-    a.city.localeCompare(b.city),
-  );
+  const cities = dedupeByKey(rawCities, "city")
+    .map((c) => ({
+      city: c.city,
+      country: c.country,
+      state: c.state ?? undefined,
+    }))
+    .sort((a, b) => a.city.localeCompare(b.city));
 
   return (
     <InitialLoadShell skeleton={<FullPageSkeleton />}>

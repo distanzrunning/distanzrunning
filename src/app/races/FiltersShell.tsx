@@ -239,8 +239,15 @@ export default function FiltersShell({
                 return;
               }
               // Auto-sync country to the picked city's country so
-              // filters stay coherent.
-              setFilter({ city: picked.city, country: picked.country });
+              // filters stay coherent. Also auto-fill state when
+              // the picked city carries one (US cities only) so
+              // the State chip reflects the implied region —
+              // picking NYC sets state="New York" too.
+              setFilter({
+                city: picked.city,
+                country: picked.country,
+                state: picked.state,
+              });
             }}
           />,
         )}
