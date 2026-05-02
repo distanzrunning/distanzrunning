@@ -47,8 +47,8 @@ export default function FullPageSkeleton() {
           <div className="flex flex-wrap items-center gap-2">
             {/* Search (collapsed icon) */}
             <div className={`${PULSE_BG} h-8 w-8`} />
-            {/* Date trigger — Calendar uses width={220}. */}
-            <div className={`${PULSE_BG} h-8 w-[220px]`} />
+            {/* Date trigger — Calendar uses width={140}. */}
+            <div className={`${PULSE_BG} h-8 w-[140px]`} />
             {/* Distance trigger */}
             <div className={`${PULSE_BG} h-8 w-[100px]`} />
             {/* Country trigger */}
