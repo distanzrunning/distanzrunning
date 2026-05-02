@@ -70,9 +70,11 @@ export default function FilterChip({
 }: FilterChipProps) {
   const [open, setOpen] = useState(false);
   const isActive = Boolean(activeLabel);
-  // `active` (when explicitly true) forces the inverted visual
-  // treatment regardless of whether activeLabel is set.
-  const isActiveStyled = active === true;
+  // Inverted dark treatment fires whenever the chip is "on" —
+  // either the consumer passed an activeLabel (chip carries a
+  // value) or `active` was set explicitly (controls like Sort
+  // that don't surface their value in the trigger).
+  const isActiveStyled = active === true || isActive;
 
   const handleOpenChange = (next: boolean) => {
     setOpen(next);
@@ -108,7 +110,12 @@ export default function FilterChip({
                   handleClearClick(e);
                 }
               }}
-              className="flex size-5 items-center justify-center rounded text-[color:var(--ds-gray-1000)] transition-colors hover:bg-[color:var(--ds-gray-200)]"
+              // Inherits text colour from the chip so the X
+              // stays readable against both the white default
+              // and the dark active backgrounds. Hover bg uses
+              // the alpha gray token so it tints in either
+              // theme / state.
+              className="flex size-5 items-center justify-center rounded transition-colors hover:bg-[color:var(--ds-gray-alpha-300)]"
             >
               <X className="size-3.5" />
             </span>
