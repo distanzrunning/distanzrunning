@@ -12,7 +12,10 @@
 //
 // Option labels mirror the legacy filter's wording.
 
+import { useState } from "react";
+
 import FilterChip from "@/components/ui/FilterChip";
+import { Tooltip } from "@/components/ui/Tooltip";
 import {
   DEFAULT_SORT,
   type RaceSortKey,
@@ -43,12 +46,18 @@ interface SortFilterProps {
 
 export default function SortFilter({ value, onChange }: SortFilterProps) {
   const isActive = value !== DEFAULT_SORT;
+  const activeOption = OPTIONS.find((o) => o.value === value) ?? OPTIONS[0];
 
-  return (
+  // Track popover open state so we can suppress the tooltip
+  // while the panel is up — the two would otherwise overlap.
+  const [open, setOpen] = useState(false);
+
+  const chip = (
     <FilterChip
       label="Sort"
       active={isActive}
       panelWidth={260}
+      onOpenChange={setOpen}
     >
       {({ close }) => (
         <ul className="-mx-2 list-none p-0">
@@ -76,6 +85,17 @@ export default function SortFilter({ value, onChange }: SortFilterProps) {
         </ul>
       )}
     </FilterChip>
+  );
+
+  // Skip the tooltip wrapper while the popover is open — Tooltip
+  // would otherwise float above the panel awkwardly. Wrap the
+  // chip in a span when tooltip is active so cloneElement on a
+  // function component doesn't drop the event handlers.
+  if (open) return chip;
+  return (
+    <Tooltip content={`Sort by ${activeOption.label}`} side="top" align="end">
+      <span>{chip}</span>
+    </Tooltip>
   );
 }
 
