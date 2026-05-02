@@ -8,14 +8,15 @@
 // boundary on Apply / read.
 //
 // Four named presets cover the race-profile spectrum:
-//   Flat           0 – 100 m  (~0 – 330 ft)
-//   Rolling      100 – 300 m  (~330 – 1000 ft)
-//   Hilly        300 – 600 m  (~1000 – 2000 ft)
-//   Mountainous 600 – 3000 m  (~2000 – 9800 ft)
+//   Flat           0 – 100 m   (~0 – 330 ft)
+//   Rolling      100 – 300 m   (~330 – 1000 ft)
+//   Hilly        300 – 600 m   (~1000 – 2000 ft)
+//   Mountainous 600 – 1000 m   (~2000 – 3300 ft) — open-ended
 //
-// Mountainous extends to the slider's max so ultras with >1000 m
-// gain still match the preset rather than falling off the named
-// scale. Custom ranges via the slider cover anything in between.
+// Slider caps at 1000 m / ~3300 ft. Selecting the upper bound
+// commits as "no upper limit" in the URL, so Mountainous + max
+// thumb means "races with ≥600 m gain, no upper bound" — ultras
+// with 5000 m+ gain still match.
 //
 // The chip's active label uses the preset name when the value
 // matches one, otherwise a "X – Y m/ft" range.
@@ -28,7 +29,7 @@ import { Button } from "@/components/ui/Button";
 import { useUnits } from "@/contexts/UnitsContext";
 
 const MIN_M = 0;
-const MAX_M = 3000;
+const MAX_M = 1000;
 const PANEL_WIDTH = 420;
 const SLIDER_WIDTH = 380;
 const M_TO_FT = 3.28084;
