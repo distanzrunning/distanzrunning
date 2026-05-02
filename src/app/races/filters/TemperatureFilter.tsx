@@ -9,10 +9,14 @@
 // boundary on Apply / read.
 //
 // Four named presets cover the typical race-day spectrum:
-//   Cold   -10 –  10 °C (~14 –  50 °F)
-//   Mild    10 –  18 °C ( 50 –  64 °F)
-//   Warm    18 –  25 °C ( 64 –  77 °F)
-//   Hot     25 –  45 °C ( 77 – 113 °F)
+//   Cold    0 – 10 °C (32 – 50 °F)
+//   Mild   10 – 18 °C (50 – 64 °F)
+//   Warm   18 – 25 °C (64 – 77 °F)
+//   Hot    25 – 35 °C (77 – 95 °F)
+//
+// Sub-zero races are extreme outliers and >35 °C race-day
+// averages would be unsafe to run, so the slider caps at those
+// bounds — clean conversions in both units (0/35 °C ↔ 32/95 °F).
 //
 // The chip's active label uses the preset name when the value
 // matches one, otherwise a "X° – Y° u" range.
@@ -24,8 +28,8 @@ import { Slider } from "@/components/ui/Slider";
 import { Button } from "@/components/ui/Button";
 import { useUnits } from "@/contexts/UnitsContext";
 
-const MIN_C = -10;
-const MAX_C = 45;
+const MIN_C = 0;
+const MAX_C = 35;
 const PANEL_WIDTH = 420;
 const SLIDER_WIDTH = 380;
 
@@ -44,7 +48,7 @@ interface Preset {
 }
 
 const PRESETS: Preset[] = [
-  { label: "Cold", min: -10, max: 10, fill: 25, color: "#60A5FA" },
+  { label: "Cold", min: 0, max: 10, fill: 25, color: "#60A5FA" },
   { label: "Mild", min: 10, max: 18, fill: 50, color: "#FCD34D" },
   { label: "Warm", min: 18, max: 25, fill: 75, color: "#FB923C" },
   { label: "Hot", min: 25, max: MAX_C, fill: 100, color: "#EF4444" },
@@ -65,14 +69,15 @@ export default function TemperatureFilter({
   const { units } = useUnits();
   const isImperial = units === "imperial";
 
-  // Per-unit slider config. Imperial step=2 °F so the thumb lands
-  // on integer Fahrenheit; metric step=1 °C.
-  const step = isImperial ? 2 : 1;
-  const minDisplay = isImperial ? Math.round(cToF(MIN_C) / step) * step : MIN_C;
-  const maxDisplay = isImperial ? Math.round(cToF(MAX_C) / step) * step : MAX_C;
+  // step = 1 in either unit. With step=2 °F the bounds (32 / 95)
+  // wouldn't land on the grid, so the slider's max would round
+  // off the user's stated upper limit.
+  const step = 1;
+  const minDisplay = isImperial ? Math.round(cToF(MIN_C)) : MIN_C;
+  const maxDisplay = isImperial ? Math.round(cToF(MAX_C)) : MAX_C;
 
   const cToDisplay = (c: number): number =>
-    isImperial ? Math.round(cToF(c) / step) * step : Math.round(c);
+    isImperial ? Math.round(cToF(c)) : Math.round(c);
 
   const displayToC = (d: number): number =>
     isImperial ? Math.round(fToC(d)) : Math.round(d);
