@@ -12,6 +12,24 @@
 
 import { groq } from "next-sanity";
 
+import { FALLBACK_RATES } from "@/lib/raceUtils";
+
+// GROQ snippet that converts a race's `price` field (in
+// `currency`) to USD using the same fallback rates raceUtils.ts
+// uses for client-side display. Generated from FALLBACK_RATES so
+// every currency we know about is covered — without this, races
+// in currencies we forgot to list (e.g. MXN, KRW) would be
+// treated as raw USD and a 649-MXN race would be filtered out by
+// "Under $50".
+const PRICE_TO_USD = `select(${[
+  ...Object.entries(FALLBACK_RATES).map(([cur, rate]) =>
+    cur === "USD" ? `currency == "USD" => price` : `currency == "${cur}" => price / ${rate}`,
+  ),
+  // Default: assume the value is already in USD if the currency
+  // string isn't one we know about.
+  `price`,
+].join(", ")})`;
+
 export const raceIndexQuery = groq`
   *[
     _type == "raceGuide"
@@ -25,26 +43,8 @@ export const raceIndexQuery = groq`
     && (!defined($city) || city == $city)
     && (!defined($state) || stateRegion == $state)
     && (!defined($surface) || surface == $surface)
-    && (!defined($priceMin) || (defined(price) && select(
-      currency == "USD" => price,
-      currency == "EUR" => price / 0.92,
-      currency == "GBP" => price / 0.79,
-      currency == "JPY" => price / 149.5,
-      currency == "AUD" => price / 1.58,
-      currency == "CAD" => price / 1.43,
-      currency == "CHF" => price / 0.88,
-      price
-    ) >= $priceMin))
-    && (!defined($priceMax) || (defined(price) && select(
-      currency == "USD" => price,
-      currency == "EUR" => price / 0.92,
-      currency == "GBP" => price / 0.79,
-      currency == "JPY" => price / 149.5,
-      currency == "AUD" => price / 1.58,
-      currency == "CAD" => price / 1.43,
-      currency == "CHF" => price / 0.88,
-      price
-    ) <= $priceMax))
+    && (!defined($priceMin) || (defined(price) && ${PRICE_TO_USD} >= $priceMin))
+    && (!defined($priceMax) || (defined(price) && ${PRICE_TO_USD} <= $priceMax))
   ] | order(eventDate asc) {
     _id,
     title,

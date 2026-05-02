@@ -14,11 +14,15 @@ export function calculateNetElevation(
 }
 
 /**
- * Fallback exchange rates (relative to USD)
- * Used when API is unavailable
+ * Fallback exchange rates (relative to USD).
+ * Each rate is "1 USD = X local" — divide a local price by its
+ * rate to get USD. Used when the API is unavailable AND by the
+ * GROQ price-filter predicate in raceIndexQuery (which builds
+ * its currency conversion select() from these entries — keep
+ * the two in sync by importing).
  * Last updated: January 2025
  */
-const FALLBACK_RATES: Record<string, number> = {
+export const FALLBACK_RATES: Record<string, number> = {
   USD: 1.0,
   EUR: 0.92,
   GBP: 0.79,

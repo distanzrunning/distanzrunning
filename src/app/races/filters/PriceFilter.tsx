@@ -5,17 +5,25 @@
 // Range price filter. Race prices in Sanity are stored in their
 // local currency; the URL canonical for this filter is USD (so
 // switching display currency doesn't change the filtered set).
-// The slider operates in the user's *display* currency for UX,
-// converting at the boundary on Apply / read.
+// The slider + presets operate in the user's *display* currency
+// for UX, converting to USD at the boundary on Apply / read.
 //
 // GROQ-side conversion lives in raceIndexQuery — a select() runs
-// per-race to translate price → USD using the same fallback
-// rates raceUtils.ts uses, then compares against $priceMin /
-// $priceMax bounds.
+// per-race to translate price → USD using the same FALLBACK_RATES
+// raceUtils.ts uses, then compares against $priceMin / $priceMax
+// bounds.
 //
-// "Local" display currency falls back to USD on the slider — a
-// price filter only makes sense in a single denomination, and
-// USD is the canonical store value anyway.
+// Preset NUMBERS stay logical-round per currency rather than
+// auto-converting from a USD canonical (which would yield ugly
+// values like "Under €46"):
+//   USD/EUR/GBP/CHF/AUD/CAD: 50 / 100 / 200 — all close enough
+//                            in real value that the same numbers
+//                            read naturally
+//   JPY                    : 5000 / 10000 / 20000 — yen needs a
+//                            different scale entirely
+//
+// "Local" display currency falls back to USD — a price filter
+// only makes sense in a single denomination.
 
 import { useEffect, useState } from "react";
 
@@ -25,27 +33,41 @@ import { Button } from "@/components/ui/Button";
 import { useUnits } from "@/contexts/UnitsContext";
 import { convertCurrencySync, formatPrice } from "@/lib/raceUtils";
 
-const MIN_USD = 0;
-const MAX_USD = 500;
 const PANEL_WIDTH = 420;
 const SLIDER_WIDTH = 380;
 
+// Per-currency slider scale + preset bounds. Values are in the
+// display currency itself — no conversion at definition time, so
+// the numbers stay clean. CONFIGS["USD"] is also the fallback for
+// any currency we haven't tuned (CNY, KRW, etc) — slightly off
+// but better than no chip.
+interface CurrencyConfig {
+  /** Slider min in this display currency. */
+  min: number;
+  /** Slider max in this display currency. */
+  max: number;
+  /** Slider step in this display currency. */
+  step: number;
+  /** Upper bounds for the "Under X" preset cluster. */
+  presets: number[];
+}
+
+const CONFIGS: Record<string, CurrencyConfig> = {
+  USD: { min: 0, max: 500, step: 5, presets: [50, 100, 200] },
+  EUR: { min: 0, max: 500, step: 5, presets: [50, 100, 200] },
+  GBP: { min: 0, max: 500, step: 5, presets: [50, 100, 200] },
+  CHF: { min: 0, max: 500, step: 5, presets: [50, 100, 200] },
+  AUD: { min: 0, max: 500, step: 5, presets: [50, 100, 200] },
+  CAD: { min: 0, max: 500, step: 5, presets: [50, 100, 200] },
+  JPY: { min: 0, max: 50000, step: 500, presets: [5000, 10000, 20000] },
+};
+
 interface Preset {
   label: string;
-  /** USD bounds — single canonical for both presets and slider. */
+  /** Bounds in the active display currency. */
   min: number;
   max: number;
 }
-
-// Presets are defined in USD. Labels reformat to the user's
-// display currency at render time.
-const PRESETS: Preset[] = [
-  { label: "Free", min: 0, max: 0 },
-  { label: "Under $50", min: 0, max: 50 },
-  { label: "Under $100", min: 0, max: 100 },
-  { label: "Under $200", min: 0, max: 200 },
-  { label: "$200+", min: 200, max: MAX_USD },
-];
 
 interface PriceFilterProps {
   value: { min?: number; max?: number };
@@ -57,20 +79,41 @@ export default function PriceFilter({ value, onChange }: PriceFilterProps) {
   // "Local" doesn't translate to a single denomination — fall
   // back to USD for the price filter UI.
   const displayCurrency = currency === "local" ? "USD" : currency;
+  const config = CONFIGS[displayCurrency] ?? CONFIGS.USD;
 
+  // Display ↔ USD conversion at the boundary. Values inside the
+  // slider / preset chips live in displayCurrency; URL stores USD.
   const usdToDisplay = (usd: number): number =>
     Math.round(convertCurrencySync(usd, "USD", displayCurrency));
 
   const displayToUsd = (d: number): number =>
     Math.round(convertCurrencySync(d, displayCurrency, "USD"));
 
-  const minDisplay = usdToDisplay(MIN_USD);
-  const maxDisplay = usdToDisplay(MAX_USD);
+  // Build the preset list from the per-currency config — Free
+  // first, then "Under X" for each preset bound, then the
+  // top-bucket "X+" tier.
+  const PRESETS: Preset[] = [
+    { label: "Free", min: 0, max: 0 },
+    ...config.presets.map((max) => ({
+      label: `Under ${formatPrice(max, displayCurrency)}`,
+      min: 0,
+      max,
+    })),
+    {
+      label: `${formatPrice(config.presets[config.presets.length - 1], displayCurrency)}+`,
+      min: config.presets[config.presets.length - 1],
+      max: config.max,
+    },
+  ];
 
-  const valueMinUsd = value.min ?? MIN_USD;
-  const valueMaxUsd = value.max ?? MAX_USD;
-  const valueMinDisplay = usdToDisplay(valueMinUsd);
-  const valueMaxDisplay = value.max == null ? maxDisplay : usdToDisplay(valueMaxUsd);
+  const minDisplay = config.min;
+  const maxDisplay = config.max;
+
+  const valueMinUsd = value.min ?? 0;
+  const valueMaxUsd = value.max;
+  const valueMinDisplay = value.min == null ? minDisplay : usdToDisplay(valueMinUsd);
+  const valueMaxDisplay =
+    valueMaxUsd == null ? maxDisplay : usdToDisplay(valueMaxUsd);
 
   const [tempMin, setTempMin] = useState(valueMinDisplay);
   const [tempMax, setTempMax] = useState(valueMaxDisplay);
@@ -83,35 +126,19 @@ export default function PriceFilter({ value, onChange }: PriceFilterProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [valueMinDisplay, valueMaxDisplay, displayCurrency]);
 
-  // Format helpers — use the user's display currency for labels.
-  const formatDisplay = (d: number): string => formatPrice(d, displayCurrency);
-  const formatUsdAsDisplay = (usd: number): string =>
-    formatPrice(usdToDisplay(usd), displayCurrency);
+  const presetMatchesTemp = (p: Preset) =>
+    tempMin === p.min && tempMax === p.max;
 
-  const presetLabel = (p: Preset): string => {
-    if (p.min === 0 && p.max === 0) return "Free";
-    if (p.min === 0) return `Under ${formatUsdAsDisplay(p.max)}`;
-    if (p.max >= MAX_USD) return `${formatUsdAsDisplay(p.min)}+`;
-    return `${formatUsdAsDisplay(p.min)} – ${formatUsdAsDisplay(p.max)}`;
-  };
-
-  const presetMatchesValue = (p: Preset) =>
-    valueMinUsd === p.min && valueMaxUsd === p.max;
-
-  const presetMatchesTemp = (p: Preset) => {
-    const dMin = usdToDisplay(p.min);
-    const dMax = usdToDisplay(p.max);
-    return tempMin === dMin && tempMax === dMax;
-  };
-
+  // Active chip label: prefer a preset name when the URL value
+  // exactly hits one (after USD ↔ display round-trip).
+  const matchedPreset = PRESETS.find(
+    (p) => valueMinDisplay === p.min && valueMaxDisplay === p.max,
+  );
   const isActive = value.min != null || value.max != null;
-  const matchedPreset = PRESETS.find(presetMatchesValue);
   const activeLabel = isActive
     ? matchedPreset
-      ? matchedPreset.label === "Free"
-        ? "Free"
-        : presetLabel(matchedPreset)
-      : `${formatDisplay(valueMinDisplay)} – ${formatDisplay(valueMaxDisplay)}`
+      ? matchedPreset.label
+      : `${formatPrice(valueMinDisplay, displayCurrency)} – ${formatPrice(valueMaxDisplay, displayCurrency)}`
     : undefined;
 
   const handleClear = () => {
@@ -149,8 +176,8 @@ export default function PriceFilter({ value, onChange }: PriceFilterProps) {
                   key={p.label}
                   type="button"
                   onClick={() => {
-                    setTempMin(usdToDisplay(p.min));
-                    setTempMax(usdToDisplay(p.max));
+                    setTempMin(p.min);
+                    setTempMax(p.max);
                   }}
                   className={`inline-flex h-7 cursor-pointer items-center rounded-sm px-2.5 text-[13px] font-medium transition-colors ${
                     selected
@@ -158,7 +185,7 @@ export default function PriceFilter({ value, onChange }: PriceFilterProps) {
                       : "bg-[color:var(--ds-gray-100)] text-[color:var(--ds-gray-1000)] hover:bg-[color:var(--ds-gray-200)]"
                   }`}
                 >
-                  {presetLabel(p)}
+                  {p.label}
                 </button>
               );
             })}
@@ -170,7 +197,7 @@ export default function PriceFilter({ value, onChange }: PriceFilterProps) {
               range
               min={minDisplay}
               max={maxDisplay}
-              step={5}
+              step={config.step}
               value={[tempMin, tempMax]}
               onChange={([min, max]) => {
                 setTempMin(Math.round(min));
@@ -182,8 +209,8 @@ export default function PriceFilter({ value, onChange }: PriceFilterProps) {
 
           {/* Live readout */}
           <div className="flex items-center justify-between text-[13px] text-[color:var(--ds-gray-900)]">
-            <span>{formatDisplay(tempMin)}</span>
-            <span>{formatDisplay(tempMax)}</span>
+            <span>{formatPrice(tempMin, displayCurrency)}</span>
+            <span>{formatPrice(tempMax, displayCurrency)}</span>
           </div>
 
           {/* Footer */}
