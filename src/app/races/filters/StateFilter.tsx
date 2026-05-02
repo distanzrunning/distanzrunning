@@ -15,7 +15,6 @@ import { Search } from "lucide-react";
 
 import FilterChip from "@/components/ui/FilterChip";
 import { Input } from "@/components/ui/Input";
-import { getCountryFlag } from "@/lib/countryFlags";
 
 export interface StateOption {
   state: string;
@@ -54,23 +53,11 @@ export default function StateFilter({
     return scoped.filter((o) => o.state.toLowerCase().includes(q));
   }, [scoped, query]);
 
-  const activeCountry = useMemo(() => {
-    if (!value) return undefined;
-    return options.find((o) => o.state === value)?.country;
-  }, [value, options]);
-
-  const ActiveFlag = activeCountry ? getCountryFlag(activeCountry) : null;
-  const activeLabel = value ? (
-    <span className="inline-flex items-center gap-1.5">
-      {ActiveFlag && (
-        <ActiveFlag
-          className="h-3 w-[18px] shrink-0 rounded-[2px]"
-          aria-hidden
-        />
-      )}
-      <span>{value}</span>
-    </span>
-  ) : undefined;
+  // No flag column on State — sub-national flag coverage is
+  // patchy (some US states yes, UK regions no, etc) so we just
+  // show the state name. Active chip carries the same plain
+  // treatment.
+  const activeLabel = value;
 
   return (
     <FilterChip
@@ -147,26 +134,17 @@ function StateList({
     >
       {states.map(({ state, country }) => {
         const isSelected = state === selected;
-        const Flag = getCountryFlag(country);
         return (
           <li key={state} data-state={state}>
             <button
               type="button"
               onClick={() => onPick({ state, country })}
-              className={`flex w-full cursor-pointer items-center gap-2 rounded-sm px-3 py-1.5 text-left text-[13px] transition-colors ${
+              className={`flex w-full cursor-pointer items-center rounded-sm px-3 py-1.5 text-left text-[13px] transition-colors ${
                 isSelected
                   ? "bg-[color:var(--ds-gray-1000)] text-[color:var(--ds-background-100)]"
                   : "text-[color:var(--ds-gray-1000)] hover:bg-[color:var(--ds-gray-100)]"
               }`}
             >
-              {Flag ? (
-                <Flag
-                  className="h-3 w-[18px] shrink-0 rounded-[2px]"
-                  aria-hidden
-                />
-              ) : (
-                <span className="size-4 shrink-0" aria-hidden />
-              )}
               <span className="truncate">{state}</span>
             </button>
           </li>
