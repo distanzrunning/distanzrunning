@@ -251,11 +251,16 @@ export default function FiltersShell({
             }}
           />,
         )}
-        {/* State is US-only — hide the chip when the user has
-            picked a country other than the USA. Shows when
-            country is unset (any country) or set to USA. */}
+        {/* State chip hides in two cases:
+            - Country is set to anything other than USA (states
+              are US-only).
+            - City is set (city is more specific — the city
+              dropdown already filters to a single location, and
+              the auto-filled state value still applies in the
+              URL silently). */}
         {(!initialFilters.country ||
           initialFilters.country === US_COUNTRY_NAME) &&
+          !initialFilters.city &&
           slot(
             isStateActive,
             <StateFilter
