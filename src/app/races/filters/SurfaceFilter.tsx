@@ -35,8 +35,8 @@ interface SurfaceOption {
 
 const RoadIcon = () => (
   <svg
-    width="48"
-    height="16"
+    width="72"
+    height="24"
     viewBox="0 0 120 40"
     aria-hidden
     fill="none"
@@ -55,8 +55,8 @@ const RoadIcon = () => (
 
 const TrailIcon = () => (
   <svg
-    width="48"
-    height="16"
+    width="72"
+    height="24"
     viewBox="0 0 120 40"
     aria-hidden
     fill="none"
@@ -77,8 +77,8 @@ const TrailIcon = () => (
 
 const TrackIcon = () => (
   <svg
-    width="48"
-    height="16"
+    width="72"
+    height="24"
     viewBox="0 0 120 40"
     aria-hidden
     fill="none"
@@ -99,8 +99,8 @@ const TrackIcon = () => (
 
 const MixedIcon = () => (
   <svg
-    width="48"
-    height="16"
+    width="72"
+    height="24"
     viewBox="0 0 120 40"
     aria-hidden
     fill="none"
