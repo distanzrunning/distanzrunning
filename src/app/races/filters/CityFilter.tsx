@@ -28,14 +28,18 @@ export interface CityOption {
 }
 
 interface CityFilterProps {
-  /** Every {city, country} pair we have race data for. Sorted ASC
-   *  by city in page.tsx. */
+  /** Every {city, country, state?} triple we have race data for.
+   *  Sorted ASC by city in page.tsx. */
   options: CityOption[];
   /** Currently selected city, or undefined for "no filter". */
   value?: string;
   /** Currently selected country filter — narrows the visible city
    *  list when set. */
   countryScope?: string;
+  /** Currently selected state filter — further narrows the visible
+   *  list to cities in that state when set (US races only carry
+   *  state in our data, so this is effectively US-scoped). */
+  stateScope?: string;
   /** Fires with the picked option (auto-syncs country) or null
    *  (clear). */
   onChange: (next: CityOption | null) => void;
@@ -45,15 +49,19 @@ export default function CityFilter({
   options,
   value,
   countryScope,
+  stateScope,
   onChange,
 }: CityFilterProps) {
   const [query, setQuery] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
 
   const scoped = useMemo(() => {
-    if (!countryScope) return options;
-    return options.filter((o) => o.country === countryScope);
-  }, [options, countryScope]);
+    return options.filter((o) => {
+      if (countryScope && o.country !== countryScope) return false;
+      if (stateScope && o.state !== stateScope) return false;
+      return true;
+    });
+  }, [options, countryScope, stateScope]);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();

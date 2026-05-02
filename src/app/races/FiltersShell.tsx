@@ -233,6 +233,7 @@ export default function FiltersShell({
             options={cities}
             value={initialFilters.city}
             countryScope={initialFilters.country}
+            stateScope={initialFilters.state}
             onChange={(picked) => {
               if (!picked) {
                 setFilter({ city: undefined });
