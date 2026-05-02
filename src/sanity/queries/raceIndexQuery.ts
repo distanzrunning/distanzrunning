@@ -33,16 +33,20 @@ const PRICE_TO_USD = `select(${[
   `price`,
 ].join(", ")})`;
 
-// Sort key → GROQ order clause. Adding a new sort: append here +
-// the matching label in src/app/races/filters/SortFilter.tsx.
+// Sort key → GROQ order clause. Mirrors the legacy filter's
+// option set. Adding a new sort: append here + the matching
+// label in src/app/races/filters/SortFilter.tsx.
 export const SORT_KEYS = [
   "date-asc",
   "date-desc",
+  "name-asc",
+  "name-desc",
   "distance-asc",
   "distance-desc",
+  "elevation-asc",
+  "elevation-desc",
   "price-asc",
   "price-desc",
-  "popularity",
 ] as const;
 
 export type RaceSortKey = (typeof SORT_KEYS)[number];
@@ -52,14 +56,14 @@ export const DEFAULT_SORT: RaceSortKey = "date-asc";
 const SORT_GROQ: Record<RaceSortKey, string> = {
   "date-asc": "eventDate asc",
   "date-desc": "eventDate desc",
+  "name-asc": "title asc",
+  "name-desc": "title desc",
   "distance-asc": "distance asc",
   "distance-desc": "distance desc",
+  "elevation-asc": "elevationGain asc",
+  "elevation-desc": "elevationGain desc",
   "price-asc": "price asc",
   "price-desc": "price desc",
-  // Most-popular ranks by 2025 finishers count, descending —
-  // races without a finishers count get sorted to the bottom by
-  // GROQ's null-handling.
-  popularity: "finishers desc",
 };
 
 export function buildRaceIndexQuery(sort: RaceSortKey = DEFAULT_SORT): string {

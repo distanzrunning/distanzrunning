@@ -37,11 +37,17 @@ import PopoverBackdrop from "./PopoverBackdrop";
 interface FilterChipProps {
   /** Default chip label, shown when no value is active. */
   label: string;
-  /** When set, the chip switches to the active style and shows
-   *  this content instead of the label. ReactNode so consumers
-   *  can render an icon + text composition (e.g. a flag + country
-   *  name). */
+  /** When set, the chip swaps the label for this content. Used
+   *  by filters that surface their selected value on the trigger
+   *  (e.g. Country: "Belgium", Date: "Mar 5"). ReactNode so
+   *  consumers can render an icon + text composition (e.g. a
+   *  flag + country name). */
   activeLabel?: ReactNode;
+  /** Forces the dark "active" visual treatment (gray-1000 bg,
+   *  inverted text) independent of whether activeLabel is set.
+   *  Useful for controls like Sort where the trigger should
+   *  indicate non-default state without changing its label. */
+  active?: boolean;
   /** Called when the user clicks the X on an active chip. */
   onClear?: () => void;
   /** Called when the popover open state changes. */
@@ -56,6 +62,7 @@ interface FilterChipProps {
 export default function FilterChip({
   label,
   activeLabel,
+  active,
   onClear,
   onOpenChange,
   children,
@@ -63,6 +70,9 @@ export default function FilterChip({
 }: FilterChipProps) {
   const [open, setOpen] = useState(false);
   const isActive = Boolean(activeLabel);
+  // `active` (when explicitly true) forces the inverted visual
+  // treatment regardless of whether activeLabel is set.
+  const isActiveStyled = active === true;
 
   const handleOpenChange = (next: boolean) => {
     setOpen(next);
@@ -80,7 +90,11 @@ export default function FilterChip({
       <Popover.Trigger asChild>
         <button
           type="button"
-          className="inline-flex h-8 cursor-pointer items-center gap-1 rounded-sm bg-[color:var(--ds-background-100)] pl-3 pr-1.5 text-[14px] font-normal leading-[20px] text-[color:var(--ds-gray-1000)] transition-colors hover:bg-[color:var(--ds-gray-100)] [box-shadow:var(--ds-gray-400)_0_0_0_1px] hover:[box-shadow:var(--ds-gray-500)_0_0_0_1px]"
+          className={`inline-flex h-8 cursor-pointer items-center gap-1 rounded-sm pl-3 pr-1.5 text-[14px] font-normal leading-[20px] transition-colors [box-shadow:var(--ds-gray-400)_0_0_0_1px] hover:[box-shadow:var(--ds-gray-500)_0_0_0_1px] ${
+            isActiveStyled
+              ? "bg-[color:var(--ds-gray-1000)] text-[color:var(--ds-background-100)] hover:bg-[color:var(--ds-gray-900)]"
+              : "bg-[color:var(--ds-background-100)] text-[color:var(--ds-gray-1000)] hover:bg-[color:var(--ds-gray-100)]"
+          }`}
         >
           <span>{isActive && activeLabel ? activeLabel : label}</span>
           {isActive && onClear ? (
@@ -99,7 +113,13 @@ export default function FilterChip({
               <X className="size-3.5" />
             </span>
           ) : (
-            <ChevronDown className="size-4 text-[color:var(--ds-gray-900)]" />
+            <ChevronDown
+              className={`size-4 ${
+                isActiveStyled
+                  ? "text-[color:var(--ds-background-100)] opacity-70"
+                  : "text-[color:var(--ds-gray-900)]"
+              }`}
+            />
           )}
         </button>
       </Popover.Trigger>

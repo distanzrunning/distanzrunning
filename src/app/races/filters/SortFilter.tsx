@@ -2,13 +2,15 @@
 
 // src/app/races/filters/SortFilter.tsx
 //
-// Sort selector — looks like a FilterChip but reads conceptually
-// as a control rather than a filter. The chip always shows the
-// active sort label (no "Sort" placeholder); there's no clear-X
-// because sort is always set, just defaulting to "Date (soonest)"
-// when the URL omits it.
-
-import { ArrowDownUp } from "lucide-react";
+// Sort selector. Renders as a FilterChip in the right-aligned
+// slot, but treats its "active" state visually rather than via
+// the activeLabel slot — the trigger always reads "Sort", and
+// the chip flips to the dark inverted treatment when the value
+// is anything other than DEFAULT_SORT. That keeps the chip
+// width stable as users cycle through long sort options
+// (e.g. "Distance (Longest First)") without re-flowing the row.
+//
+// Option labels mirror the legacy filter's wording.
 
 import FilterChip from "@/components/ui/FilterChip";
 import {
@@ -22,13 +24,16 @@ interface SortOption {
 }
 
 const OPTIONS: SortOption[] = [
-  { value: "date-asc", label: "Date (soonest)" },
-  { value: "date-desc", label: "Date (latest)" },
-  { value: "distance-asc", label: "Distance (shortest)" },
-  { value: "distance-desc", label: "Distance (longest)" },
-  { value: "price-asc", label: "Price (low to high)" },
-  { value: "price-desc", label: "Price (high to low)" },
-  { value: "popularity", label: "Most popular" },
+  { value: "date-asc", label: "Date (Earliest First)" },
+  { value: "date-desc", label: "Date (Latest First)" },
+  { value: "name-asc", label: "Name (A-Z)" },
+  { value: "name-desc", label: "Name (Z-A)" },
+  { value: "distance-asc", label: "Distance (Shortest First)" },
+  { value: "distance-desc", label: "Distance (Longest First)" },
+  { value: "elevation-asc", label: "Elevation (Lowest First)" },
+  { value: "elevation-desc", label: "Elevation (Highest First)" },
+  { value: "price-asc", label: "Price (Low to High)" },
+  { value: "price-desc", label: "Price (High to Low)" },
 ];
 
 interface SortFilterProps {
@@ -37,19 +42,14 @@ interface SortFilterProps {
 }
 
 export default function SortFilter({ value, onChange }: SortFilterProps) {
-  const active = OPTIONS.find((o) => o.value === value) ?? OPTIONS[0];
-  // Always show the active label — no "Sort" placeholder, since
-  // sort is always set. onClear is omitted so the chevron stays
-  // (not the X clear-button).
-  const activeLabel = (
-    <span className="inline-flex items-center gap-1.5">
-      <ArrowDownUp className="size-3.5 text-[color:var(--ds-gray-900)]" />
-      <span>{active.label}</span>
-    </span>
-  );
+  const isActive = value !== DEFAULT_SORT;
 
   return (
-    <FilterChip label="Sort" activeLabel={activeLabel} panelWidth={240}>
+    <FilterChip
+      label="Sort"
+      active={isActive}
+      panelWidth={260}
+    >
       {({ close }) => (
         <ul className="-mx-2 list-none p-0">
           {OPTIONS.map((opt) => {
@@ -59,8 +59,6 @@ export default function SortFilter({ value, onChange }: SortFilterProps) {
                 <button
                   type="button"
                   onClick={() => {
-                    // Default sort isn't worth committing to the
-                    // URL — buildFilterParams strips it anyway.
                     onChange(opt.value);
                     close();
                   }}
