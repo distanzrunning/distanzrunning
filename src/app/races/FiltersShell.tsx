@@ -164,6 +164,13 @@ export default function FiltersShell({
             onExpandedChange={setSearchExpanded}
           />
         </div>
+        {/* When Search expands, hide every other filter chip so
+            the input gets the row to itself. Sort stays put on
+            the right; Reset all is already gated by
+            searchExpanded below. Filters reappear once Search
+            collapses (blur + empty buffer). */}
+        {!searchExpanded && (
+          <>
         {slot(
           isDateActive,
           <DateFilter
@@ -319,6 +326,8 @@ export default function FiltersShell({
             value={initialFilters.tag}
             onChange={(tag) => setFilter({ tag })}
           />,
+        )}
+          </>
         )}
         {anyActive && !searchExpanded && (
           <button
