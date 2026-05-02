@@ -45,6 +45,8 @@ export const raceIndexQuery = groq`
     && (!defined($surface) || surface == $surface)
     && (!defined($priceMin) || (defined(price) && ${PRICE_TO_USD} >= $priceMin))
     && (!defined($priceMax) || (defined(price) && ${PRICE_TO_USD} <= $priceMax))
+    && (!defined($elevationMin) || (defined(elevationGain) && elevationGain >= $elevationMin))
+    && (!defined($elevationMax) || (defined(elevationGain) && elevationGain <= $elevationMax))
   ] | order(eventDate asc) {
     _id,
     title,

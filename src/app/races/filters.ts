@@ -36,6 +36,11 @@ export interface RaceFilters {
   priceMin?: number;
   /** Upper bound on race price, in USD (see priceMin). */
   priceMax?: number;
+  /** Lower bound on elevation gain, in meters (canonical store
+   *  unit in Sanity). */
+  elevationMin?: number;
+  /** Upper bound on elevation gain, in meters. */
+  elevationMax?: number;
 }
 
 type SearchParamsLike =
@@ -86,6 +91,10 @@ export function parseFilters(sp: SearchParamsLike): RaceFilters {
   if (priceMin != null) filters.priceMin = priceMin;
   const priceMax = getNumberParam(sp, "priceMax");
   if (priceMax != null) filters.priceMax = priceMax;
+  const elevationMin = getNumberParam(sp, "elevationMin");
+  if (elevationMin != null) filters.elevationMin = elevationMin;
+  const elevationMax = getNumberParam(sp, "elevationMax");
+  if (elevationMax != null) filters.elevationMax = elevationMax;
   return filters;
 }
 
@@ -106,6 +115,10 @@ export function buildFilterParams(filters: RaceFilters): URLSearchParams {
     params.set("priceMin", String(filters.priceMin));
   if (filters.priceMax != null)
     params.set("priceMax", String(filters.priceMax));
+  if (filters.elevationMin != null)
+    params.set("elevationMin", String(filters.elevationMin));
+  if (filters.elevationMax != null)
+    params.set("elevationMax", String(filters.elevationMax));
   return params;
 }
 
@@ -121,7 +134,9 @@ export function hasActiveFilters(filters: RaceFilters): boolean {
       filters.state ||
       filters.surface ||
       filters.priceMin != null ||
-      filters.priceMax != null,
+      filters.priceMax != null ||
+      filters.elevationMin != null ||
+      filters.elevationMax != null,
   );
 }
 
@@ -137,6 +152,8 @@ export interface RaceQueryParams {
   surface: string | null;
   priceMin: number | null;
   priceMax: number | null;
+  elevationMin: number | null;
+  elevationMax: number | null;
 }
 
 /**
@@ -173,5 +190,7 @@ export function buildQueryParams(filters: RaceFilters): RaceQueryParams {
     surface: filters.surface ?? null,
     priceMin: filters.priceMin ?? null,
     priceMax: filters.priceMax ?? null,
+    elevationMin: filters.elevationMin ?? null,
+    elevationMax: filters.elevationMax ?? null,
   };
 }
