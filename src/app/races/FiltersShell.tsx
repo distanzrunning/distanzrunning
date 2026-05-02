@@ -33,6 +33,7 @@ import DistanceFilter from "./filters/DistanceFilter";
 import CountryFilter from "./filters/CountryFilter";
 import CityFilter, { type CityOption } from "./filters/CityFilter";
 import StateFilter from "./filters/StateFilter";
+import SurfaceFilter from "./filters/SurfaceFilter";
 import { US_COUNTRY_NAME, US_STATES } from "@/lib/usStates";
 import RaceGridSkeleton from "./RaceGridSkeleton";
 
@@ -184,6 +185,10 @@ export default function FiltersShell({
             // coexist (e.g. New York state + New York City).
             setFilter({ state, country: US_COUNTRY_NAME });
           }}
+        />
+        <SurfaceFilter
+          value={initialFilters.surface}
+          onChange={(surface) => setFilter({ surface })}
         />
         {anyActive && (
           <button

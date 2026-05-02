@@ -28,6 +28,8 @@ export interface RaceFilters {
   city?: string;
   /** State / region — exact match against the race's stateRegion field. */
   state?: string;
+  /** Surface — one of Road / Trail / Track / Mountain / Mixed. */
+  surface?: string;
 }
 
 type SearchParamsLike =
@@ -72,6 +74,8 @@ export function parseFilters(sp: SearchParamsLike): RaceFilters {
   if (city) filters.city = city;
   const state = getParam(sp, "state")?.trim();
   if (state) filters.state = state;
+  const surface = getParam(sp, "surface")?.trim();
+  if (surface) filters.surface = surface;
   return filters;
 }
 
@@ -87,6 +91,7 @@ export function buildFilterParams(filters: RaceFilters): URLSearchParams {
   if (filters.country) params.set("country", filters.country);
   if (filters.city) params.set("city", filters.city);
   if (filters.state) params.set("state", filters.state);
+  if (filters.surface) params.set("surface", filters.surface);
   return params;
 }
 
@@ -99,7 +104,8 @@ export function hasActiveFilters(filters: RaceFilters): boolean {
       filters.distanceMax != null ||
       filters.country ||
       filters.city ||
-      filters.state,
+      filters.state ||
+      filters.surface,
   );
 }
 
@@ -112,6 +118,7 @@ export interface RaceQueryParams {
   country: string | null;
   city: string | null;
   state: string | null;
+  surface: string | null;
 }
 
 /**
@@ -145,5 +152,6 @@ export function buildQueryParams(filters: RaceFilters): RaceQueryParams {
     country: filters.country ?? null,
     city: filters.city ?? null,
     state: filters.state ?? null,
+    surface: filters.surface ?? null,
   };
 }

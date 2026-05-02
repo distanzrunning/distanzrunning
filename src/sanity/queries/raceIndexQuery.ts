@@ -24,6 +24,7 @@ export const raceIndexQuery = groq`
     && (!defined($country) || country == $country)
     && (!defined($city) || city == $city)
     && (!defined($state) || stateRegion == $state)
+    && (!defined($surface) || surface == $surface)
   ] | order(eventDate asc) {
     _id,
     title,
