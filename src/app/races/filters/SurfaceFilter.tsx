@@ -2,11 +2,16 @@
 
 // src/app/races/filters/SurfaceFilter.tsx
 //
-// Single-select surface filter. Renders the five canonical
-// surfaces from the Sanity schema (Road / Trail / Track /
-// Mountain / Mixed) as a 3-column grid of choice cards inside
-// the FilterChip — each card carries an inline SVG glyph that
-// mirrors the surface character.
+// Single-select surface filter. Renders four surface options as
+// a 2-column grid of choice cards inside the FilterChip — each
+// card carries an inline SVG glyph that mirrors the surface
+// character.
+//
+// Schema enum also includes "Mountain" but we don't expose it as
+// a filter option — Mountain reads as a profile/terrain category
+// and overlaps with the upcoming Elevation filter; surface here
+// stays focused on the running underfoot (paved / dirt /
+// synthetic / a mix).
 //
 // Picking a surface commits immediately and closes; clicking the
 // same surface again deselects. The X on the chip itself clears.
@@ -92,24 +97,6 @@ const TrackIcon = () => (
   </svg>
 );
 
-const MountainIcon = () => (
-  <svg
-    width="48"
-    height="16"
-    viewBox="0 0 120 40"
-    aria-hidden
-    fill="none"
-    stroke="currentColor"
-  >
-    <path
-      d="M10 32 L38 10 L58 24 L82 6 L110 32"
-      strokeWidth="4"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
-);
-
 const MixedIcon = () => (
   <svg
     width="48"
@@ -140,7 +127,6 @@ const SURFACES: SurfaceOption[] = [
   { value: "Road", label: "Road", Icon: RoadIcon },
   { value: "Trail", label: "Trail", Icon: TrailIcon },
   { value: "Track", label: "Track", Icon: TrackIcon },
-  { value: "Mountain", label: "Mountain", Icon: MountainIcon },
   { value: "Mixed", label: "Mixed", Icon: MixedIcon },
 ];
 
@@ -153,10 +139,10 @@ export default function SurfaceFilter({
       label="Surface"
       activeLabel={value}
       onClear={() => onChange(undefined)}
-      panelWidth={320}
+      panelWidth={280}
     >
       {({ close }) => (
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid grid-cols-2 gap-2">
           {SURFACES.map(({ value: optValue, label, Icon }) => {
             const isSelected = optValue === value;
             return (
