@@ -100,13 +100,21 @@ export function parseFilters(sp: SearchParamsLike): RaceFilters {
   if (distanceMin != null) filters.distanceMin = distanceMin;
   const distanceMax = getNumberParam(sp, "distanceMax");
   if (distanceMax != null) filters.distanceMax = distanceMax;
-  const country = getParam(sp, "country")?.trim();
+  // Country / City / State / Surface / Tag come from picker
+  // dropdowns — the URL value must match the Sanity-stored
+  // value byte-for-byte for the GROQ `==` predicate to fire.
+  // Any .trim() here would silently strip whitespace and break
+  // matches against records that were entered with stray spaces
+  // (e.g. one race had "New York " with a trailing space).
+  // The Search filter (q) below stays trimmed since it's
+  // user-typed and we want to handle accidental whitespace.
+  const country = getParam(sp, "country");
   if (country) filters.country = country;
-  const city = getParam(sp, "city")?.trim();
+  const city = getParam(sp, "city");
   if (city) filters.city = city;
-  const state = getParam(sp, "state")?.trim();
+  const state = getParam(sp, "state");
   if (state) filters.state = state;
-  const surface = getParam(sp, "surface")?.trim();
+  const surface = getParam(sp, "surface");
   if (surface) filters.surface = surface;
   const priceMin = getNumberParam(sp, "priceMin");
   if (priceMin != null) filters.priceMin = priceMin;
@@ -120,7 +128,7 @@ export function parseFilters(sp: SearchParamsLike): RaceFilters {
   if (temperatureMin != null) filters.temperatureMin = temperatureMin;
   const temperatureMax = getNumberParam(sp, "temperatureMax");
   if (temperatureMax != null) filters.temperatureMax = temperatureMax;
-  const tag = getParam(sp, "tag")?.trim();
+  const tag = getParam(sp, "tag");
   if (tag) filters.tag = tag;
   const sort = getParam(sp, "sort")?.trim();
   if (sort && (SORT_KEYS as readonly string[]).includes(sort)) {
