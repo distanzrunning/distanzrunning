@@ -63,6 +63,8 @@ export default function FullPageSkeleton() {
             <div className={`${PULSE_BG} h-8 w-[76px]`} />
             {/* Elevation trigger */}
             <div className={`${PULSE_BG} h-8 w-[100px]`} />
+            {/* Temperature trigger */}
+            <div className={`${PULSE_BG} h-8 w-[120px]`} />
           </div>
           <RaceGridSkeleton />
         </div>

@@ -36,6 +36,7 @@ import StateFilter from "./filters/StateFilter";
 import SurfaceFilter from "./filters/SurfaceFilter";
 import PriceFilter from "./filters/PriceFilter";
 import ElevationFilter from "./filters/ElevationFilter";
+import TemperatureFilter from "./filters/TemperatureFilter";
 import { US_COUNTRY_NAME, US_STATES } from "@/lib/usStates";
 import RaceGridSkeleton from "./RaceGridSkeleton";
 
@@ -213,6 +214,18 @@ export default function FiltersShell({
             setFilter({
               elevationMin: range.min,
               elevationMax: range.max,
+            })
+          }
+        />
+        <TemperatureFilter
+          value={{
+            min: initialFilters.temperatureMin,
+            max: initialFilters.temperatureMax,
+          }}
+          onChange={(range) =>
+            setFilter({
+              temperatureMin: range.min,
+              temperatureMax: range.max,
             })
           }
         />

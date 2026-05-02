@@ -41,6 +41,10 @@ export interface RaceFilters {
   elevationMin?: number;
   /** Upper bound on elevation gain, in meters. */
   elevationMax?: number;
+  /** Lower bound on average race-day temperature, in Celsius. */
+  temperatureMin?: number;
+  /** Upper bound on average race-day temperature, in Celsius. */
+  temperatureMax?: number;
 }
 
 type SearchParamsLike =
@@ -95,6 +99,10 @@ export function parseFilters(sp: SearchParamsLike): RaceFilters {
   if (elevationMin != null) filters.elevationMin = elevationMin;
   const elevationMax = getNumberParam(sp, "elevationMax");
   if (elevationMax != null) filters.elevationMax = elevationMax;
+  const temperatureMin = getNumberParam(sp, "temperatureMin");
+  if (temperatureMin != null) filters.temperatureMin = temperatureMin;
+  const temperatureMax = getNumberParam(sp, "temperatureMax");
+  if (temperatureMax != null) filters.temperatureMax = temperatureMax;
   return filters;
 }
 
@@ -119,6 +127,10 @@ export function buildFilterParams(filters: RaceFilters): URLSearchParams {
     params.set("elevationMin", String(filters.elevationMin));
   if (filters.elevationMax != null)
     params.set("elevationMax", String(filters.elevationMax));
+  if (filters.temperatureMin != null)
+    params.set("temperatureMin", String(filters.temperatureMin));
+  if (filters.temperatureMax != null)
+    params.set("temperatureMax", String(filters.temperatureMax));
   return params;
 }
 
@@ -136,7 +148,9 @@ export function hasActiveFilters(filters: RaceFilters): boolean {
       filters.priceMin != null ||
       filters.priceMax != null ||
       filters.elevationMin != null ||
-      filters.elevationMax != null,
+      filters.elevationMax != null ||
+      filters.temperatureMin != null ||
+      filters.temperatureMax != null,
   );
 }
 
@@ -154,6 +168,8 @@ export interface RaceQueryParams {
   priceMax: number | null;
   elevationMin: number | null;
   elevationMax: number | null;
+  temperatureMin: number | null;
+  temperatureMax: number | null;
 }
 
 /**
@@ -192,5 +208,7 @@ export function buildQueryParams(filters: RaceFilters): RaceQueryParams {
     priceMax: filters.priceMax ?? null,
     elevationMin: filters.elevationMin ?? null,
     elevationMax: filters.elevationMax ?? null,
+    temperatureMin: filters.temperatureMin ?? null,
+    temperatureMax: filters.temperatureMax ?? null,
   };
 }
