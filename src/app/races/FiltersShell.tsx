@@ -37,6 +37,7 @@ import SurfaceFilter from "./filters/SurfaceFilter";
 import PriceFilter from "./filters/PriceFilter";
 import ElevationFilter from "./filters/ElevationFilter";
 import TemperatureFilter from "./filters/TemperatureFilter";
+import TagFilter from "./filters/TagFilter";
 import { US_COUNTRY_NAME, US_STATES } from "@/lib/usStates";
 import RaceGridSkeleton from "./RaceGridSkeleton";
 
@@ -48,6 +49,9 @@ interface FiltersShellProps {
   /** All {city, country} pairs we have race data for, deduped by
    *  city. Powers the City filter's option list. */
   cities: CityOption[];
+  /** Every unique tag we have race data for, alphabetised.
+   *  Powers the Tag filter's option list. */
+  tags: string[];
   children: ReactNode;
 }
 
@@ -55,6 +59,7 @@ export default function FiltersShell({
   initialFilters,
   countries,
   cities,
+  tags,
   children,
 }: FiltersShellProps) {
   const router = useRouter();
@@ -228,6 +233,11 @@ export default function FiltersShell({
               temperatureMax: range.max,
             })
           }
+        />
+        <TagFilter
+          options={tags}
+          value={initialFilters.tag}
+          onChange={(tag) => setFilter({ tag })}
         />
         {anyActive && (
           <button

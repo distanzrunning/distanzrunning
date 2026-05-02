@@ -17,6 +17,7 @@ import { sanityFetch } from "@/sanity/lib/live";
 import { raceIndexQuery } from "@/sanity/queries/raceIndexQuery";
 import { raceCountriesQuery } from "@/sanity/queries/raceCountriesQuery";
 import { raceCitiesQuery } from "@/sanity/queries/raceCitiesQuery";
+import { raceTagsQuery } from "@/sanity/queries/raceTagsQuery";
 import RaceGrid, { type RaceIndexItem } from "./RaceGrid";
 import RaceUnitControls from "./RaceUnitControls";
 import FiltersShell from "./FiltersShell";
@@ -41,18 +42,21 @@ export default async function RacesPage({
   const filters = parseFilters(sp);
   const queryParams = buildQueryParams(filters);
 
-  // Run the filtered race fetch + unfiltered country / city
+  // Run the filtered race fetch + unfiltered country / city / tag
   // option lists in parallel — the option lists need every choice
   // regardless of which filters are applied. State doesn't need a
   // data fetch — it uses a hardcoded canonical US states list
   // from src/lib/usStates.ts.
-  const [raceResult, countriesResult, citiesResult] = await Promise.all([
-    sanityFetch({ query: raceIndexQuery, params: queryParams }),
-    sanityFetch({ query: raceCountriesQuery }),
-    sanityFetch({ query: raceCitiesQuery }),
-  ]);
+  const [raceResult, countriesResult, citiesResult, tagsResult] =
+    await Promise.all([
+      sanityFetch({ query: raceIndexQuery, params: queryParams }),
+      sanityFetch({ query: raceCountriesQuery }),
+      sanityFetch({ query: raceCitiesQuery }),
+      sanityFetch({ query: raceTagsQuery }),
+    ]);
   const races = (raceResult.data ?? []) as RaceIndexItem[];
   const countries = (countriesResult.data ?? []) as string[];
+  const tags = (tagsResult.data ?? []) as string[];
 
   // Dedupe city/country pairs — Sanity returns one row per race
   // and we want one row per unique city. First match wins for the
@@ -88,6 +92,7 @@ export default async function RacesPage({
             initialFilters={filters}
             countries={countries}
             cities={cities}
+            tags={tags}
           >
             <RaceGrid races={races} />
           </FiltersShell>

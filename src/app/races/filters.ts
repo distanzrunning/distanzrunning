@@ -45,6 +45,8 @@ export interface RaceFilters {
   temperatureMin?: number;
   /** Upper bound on average race-day temperature, in Celsius. */
   temperatureMax?: number;
+  /** Single tag the race must include in its `tags` array. */
+  tag?: string;
 }
 
 type SearchParamsLike =
@@ -103,6 +105,8 @@ export function parseFilters(sp: SearchParamsLike): RaceFilters {
   if (temperatureMin != null) filters.temperatureMin = temperatureMin;
   const temperatureMax = getNumberParam(sp, "temperatureMax");
   if (temperatureMax != null) filters.temperatureMax = temperatureMax;
+  const tag = getParam(sp, "tag")?.trim();
+  if (tag) filters.tag = tag;
   return filters;
 }
 
@@ -131,6 +135,7 @@ export function buildFilterParams(filters: RaceFilters): URLSearchParams {
     params.set("temperatureMin", String(filters.temperatureMin));
   if (filters.temperatureMax != null)
     params.set("temperatureMax", String(filters.temperatureMax));
+  if (filters.tag) params.set("tag", filters.tag);
   return params;
 }
 
@@ -150,7 +155,8 @@ export function hasActiveFilters(filters: RaceFilters): boolean {
       filters.elevationMin != null ||
       filters.elevationMax != null ||
       filters.temperatureMin != null ||
-      filters.temperatureMax != null,
+      filters.temperatureMax != null ||
+      filters.tag,
   );
 }
 
@@ -170,6 +176,10 @@ export interface RaceQueryParams {
   elevationMax: number | null;
   temperatureMin: number | null;
   temperatureMax: number | null;
+  // Named `raceTag` rather than `tag` — Sanity's QueryParams type
+  // reserves `tag` as a `never`-typed deprecated guard against
+  // accidentally passing the fetch-tag option as a GROQ param.
+  raceTag: string | null;
 }
 
 /**
@@ -210,5 +220,6 @@ export function buildQueryParams(filters: RaceFilters): RaceQueryParams {
     elevationMax: filters.elevationMax ?? null,
     temperatureMin: filters.temperatureMin ?? null,
     temperatureMax: filters.temperatureMax ?? null,
+    raceTag: filters.tag ?? null,
   };
 }

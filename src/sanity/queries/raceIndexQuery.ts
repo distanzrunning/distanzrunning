@@ -49,6 +49,7 @@ export const raceIndexQuery = groq`
     && (!defined($elevationMax) || (defined(elevationGain) && elevationGain <= $elevationMax))
     && (!defined($temperatureMin) || (defined(averageTemperature) && averageTemperature >= $temperatureMin))
     && (!defined($temperatureMax) || (defined(averageTemperature) && averageTemperature <= $temperatureMax))
+    && (!defined($raceTag) || $raceTag in tags)
   ] | order(eventDate asc) {
     _id,
     title,
