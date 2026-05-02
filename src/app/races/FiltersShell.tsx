@@ -244,22 +244,28 @@ export default function FiltersShell({
             }}
           />,
         )}
-        {slot(
-          isStateActive,
-          <StateFilter
-            value={initialFilters.state}
-            onChange={(state) => {
-              if (!state) {
-                setFilter({ state: undefined });
-                return;
-              }
-              // Auto-sync country to USA — states are conceptually
-              // US-only. Doesn't clear city: state and city can
-              // coexist (e.g. New York state + New York City).
-              setFilter({ state, country: US_COUNTRY_NAME });
-            }}
-          />,
-        )}
+        {/* State is US-only — hide the chip when the user has
+            picked a country other than the USA. Shows when
+            country is unset (any country) or set to USA. */}
+        {(!initialFilters.country ||
+          initialFilters.country === US_COUNTRY_NAME) &&
+          slot(
+            isStateActive,
+            <StateFilter
+              value={initialFilters.state}
+              onChange={(state) => {
+                if (!state) {
+                  setFilter({ state: undefined });
+                  return;
+                }
+                // Auto-sync country to USA — states are
+                // conceptually US-only. Doesn't clear city: state
+                // and city can coexist (e.g. New York state +
+                // New York City).
+                setFilter({ state, country: US_COUNTRY_NAME });
+              }}
+            />,
+          )}
         {slot(
           isSurfaceActive,
           <SurfaceFilter
