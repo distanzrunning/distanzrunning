@@ -34,6 +34,7 @@ import CountryFilter from "./filters/CountryFilter";
 import CityFilter, { type CityOption } from "./filters/CityFilter";
 import StateFilter from "./filters/StateFilter";
 import SurfaceFilter from "./filters/SurfaceFilter";
+import PriceFilter from "./filters/PriceFilter";
 import { US_COUNTRY_NAME, US_STATES } from "@/lib/usStates";
 import RaceGridSkeleton from "./RaceGridSkeleton";
 
@@ -189,6 +190,18 @@ export default function FiltersShell({
         <SurfaceFilter
           value={initialFilters.surface}
           onChange={(surface) => setFilter({ surface })}
+        />
+        <PriceFilter
+          value={{
+            min: initialFilters.priceMin,
+            max: initialFilters.priceMax,
+          }}
+          onChange={(range) =>
+            setFilter({
+              priceMin: range.min,
+              priceMax: range.max,
+            })
+          }
         />
         {anyActive && (
           <button

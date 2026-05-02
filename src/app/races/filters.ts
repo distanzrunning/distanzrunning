@@ -30,6 +30,12 @@ export interface RaceFilters {
   state?: string;
   /** Surface — one of Road / Trail / Track / Mountain / Mixed. */
   surface?: string;
+  /** Lower bound on race price, expressed in USD. The race's
+   *  stored price gets converted to USD at query time via the
+   *  GROQ select() in raceIndexQuery. */
+  priceMin?: number;
+  /** Upper bound on race price, in USD (see priceMin). */
+  priceMax?: number;
 }
 
 type SearchParamsLike =
@@ -76,6 +82,10 @@ export function parseFilters(sp: SearchParamsLike): RaceFilters {
   if (state) filters.state = state;
   const surface = getParam(sp, "surface")?.trim();
   if (surface) filters.surface = surface;
+  const priceMin = getNumberParam(sp, "priceMin");
+  if (priceMin != null) filters.priceMin = priceMin;
+  const priceMax = getNumberParam(sp, "priceMax");
+  if (priceMax != null) filters.priceMax = priceMax;
   return filters;
 }
 
@@ -92,6 +102,10 @@ export function buildFilterParams(filters: RaceFilters): URLSearchParams {
   if (filters.city) params.set("city", filters.city);
   if (filters.state) params.set("state", filters.state);
   if (filters.surface) params.set("surface", filters.surface);
+  if (filters.priceMin != null)
+    params.set("priceMin", String(filters.priceMin));
+  if (filters.priceMax != null)
+    params.set("priceMax", String(filters.priceMax));
   return params;
 }
 
@@ -105,7 +119,9 @@ export function hasActiveFilters(filters: RaceFilters): boolean {
       filters.country ||
       filters.city ||
       filters.state ||
-      filters.surface,
+      filters.surface ||
+      filters.priceMin != null ||
+      filters.priceMax != null,
   );
 }
 
@@ -119,6 +135,8 @@ export interface RaceQueryParams {
   city: string | null;
   state: string | null;
   surface: string | null;
+  priceMin: number | null;
+  priceMax: number | null;
 }
 
 /**
@@ -153,5 +171,7 @@ export function buildQueryParams(filters: RaceFilters): RaceQueryParams {
     city: filters.city ?? null,
     state: filters.state ?? null,
     surface: filters.surface ?? null,
+    priceMin: filters.priceMin ?? null,
+    priceMax: filters.priceMax ?? null,
   };
 }

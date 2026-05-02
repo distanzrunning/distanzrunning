@@ -59,6 +59,8 @@ export default function FullPageSkeleton() {
             <div className={`${PULSE_BG} h-8 w-[76px]`} />
             {/* Surface trigger */}
             <div className={`${PULSE_BG} h-8 w-[96px]`} />
+            {/* Price trigger */}
+            <div className={`${PULSE_BG} h-8 w-[76px]`} />
           </div>
           <RaceGridSkeleton />
         </div>

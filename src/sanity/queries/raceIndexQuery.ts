@@ -25,6 +25,26 @@ export const raceIndexQuery = groq`
     && (!defined($city) || city == $city)
     && (!defined($state) || stateRegion == $state)
     && (!defined($surface) || surface == $surface)
+    && (!defined($priceMin) || (defined(price) && select(
+      currency == "USD" => price,
+      currency == "EUR" => price / 0.92,
+      currency == "GBP" => price / 0.79,
+      currency == "JPY" => price / 149.5,
+      currency == "AUD" => price / 1.58,
+      currency == "CAD" => price / 1.43,
+      currency == "CHF" => price / 0.88,
+      price
+    ) >= $priceMin))
+    && (!defined($priceMax) || (defined(price) && select(
+      currency == "USD" => price,
+      currency == "EUR" => price / 0.92,
+      currency == "GBP" => price / 0.79,
+      currency == "JPY" => price / 149.5,
+      currency == "AUD" => price / 1.58,
+      currency == "CAD" => price / 1.43,
+      currency == "CHF" => price / 0.88,
+      price
+    ) <= $priceMax))
   ] | order(eventDate asc) {
     _id,
     title,
