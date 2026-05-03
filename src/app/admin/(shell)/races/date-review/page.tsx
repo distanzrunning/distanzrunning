@@ -104,7 +104,21 @@ export default async function RaceDateReviewPage() {
             "everyday surface" → 6 px. overflow-hidden keeps the
             Table's first/last row corners inside the radius. */}
         <section className="material-base overflow-hidden">
-          <Table>
+          {/* Full-featured DS Table variant: striped (alternating
+              row bg, --ds-background-200 on odd rows) +
+              interactive (row hover to --ds-gray-100). The
+              colgroup pins column widths so the Calendar trigger
+              + Approve/Reject buttons don't get squeezed when
+              source quotes get long. */}
+          <Table striped interactive>
+            <colgroup>
+              <col style={{ width: "22%" }} />
+              <col style={{ width: "14%" }} />
+              <col style={{ width: "26%" }} />
+              <col style={{ width: "10%" }} />
+              <col style={{ width: "14%" }} />
+              <col style={{ width: "14%" }} />
+            </colgroup>
             <TableHeader>
               <TableRow>
                 <TableHead>Race</TableHead>
