@@ -316,9 +316,13 @@ Today's date: ${today}
 Read the website text below and find the date of the NEXT edition of THIS specific race.
 
 CRITICAL — what counts as "the race date":
-- ONLY a date paired with explicit phrasing that the race itself is held on that day. Examples that count: "will be held on", "scheduled for", "race day is", "takes place on", "starts on".
-- IGNORE dates of adjacent / auxiliary events on the same site:
-  * article publish dates (e.g. an article published 2026-04-15)
+- A date clearly identified as the day THE RACE ITSELF is run. Common patterns that count include:
+  * "will be held on [date]" / "scheduled for [date]" / "takes place on [date]" / "race day is [date]" / "starts on [date]"
+  * "[Race name] on [date]" or "[Race name] [date]" — e.g. "Take on the Xiamen Marathon on January 10, 2027" or "Boston Marathon — April 19, 2027"
+  * "[date]: [Race name]" — e.g. headline-style framing
+  * A date prominently displayed as THE event date in a hero/lockup/header for the race
+- IGNORE dates of adjacent / auxiliary events:
+  * article publish / news publication dates (e.g. an article published 2026-04-15 — that's when the announcement went out, not the race day)
   * expo dates, packet pickup, opening ceremonies
   * rehearsals, dress rehearsals, demonstration flights / displays (e.g. "Blue Impulse flight on …")
   * registration deadlines, lottery draws, charity application closings
