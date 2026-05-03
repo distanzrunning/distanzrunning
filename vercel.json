@@ -4,6 +4,10 @@
     {
       "path": "/api/algolia-sync",
       "schedule": "0 3 * * *"
+    },
+    {
+      "path": "/api/race-date-refresh",
+      "schedule": "0 4 * * 1"
     }
   ]
 }

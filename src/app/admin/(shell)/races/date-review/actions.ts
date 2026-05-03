@@ -29,7 +29,12 @@ import { redirect } from "next/navigation";
 import { createClient } from "next-sanity";
 
 import { isAdminAuthenticated } from "@/lib/admin-auth";
-import { processRace, type RaceResult } from "@/lib/raceDateRefresh";
+import {
+  processRace,
+  runBatchRefresh,
+  type BatchRunResult,
+  type RaceResult,
+} from "@/lib/raceDateRefresh";
 
 const REVIEW_PATH = "/admin/races/date-review";
 
@@ -45,6 +50,17 @@ async function requireAdmin() {
   if (!(await isAdminAuthenticated())) {
     redirect("/admin/login");
   }
+}
+
+// Ad-hoc batch trigger from the admin UI. Runs the same query +
+// processRace loop as the weekly cron, but invoked synchronously
+// from the editor's click. Returns the run summary so the toast
+// can show "X scanned, Y new suggestions" feedback.
+export async function runBatchScan(): Promise<BatchRunResult> {
+  await requireAdmin();
+  const summary = await runBatchRefresh({ dryRun: false });
+  revalidatePath(REVIEW_PATH);
+  return summary;
 }
 
 export async function scanRace(formData: FormData): Promise<RaceResult> {

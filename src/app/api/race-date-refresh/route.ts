@@ -1,11 +1,12 @@
 // src/app/api/race-date-refresh/route.ts
 //
 // Batch endpoint for the date refresh pipeline. Selects up to
-// RUN_LIMIT past-dated races with no existing suggestion status,
-// scans each via the shared lib, and writes pending suggestions
-// to Sanity. Per-race scraping logic lives in
-// src/lib/raceDateRefresh.ts so the admin "Scan" button can call
-// the same processRace function directly from a server action.
+// BATCH_RUN_LIMIT past-dated races with no existing suggestion
+// status, scans each via the shared lib, and writes pending
+// suggestions to Sanity. The actual batch logic lives in
+// src/lib/raceDateRefresh.ts (`runBatchRefresh`) so the admin
+// "Run batch scan" button server action can exercise the same
+// path as the cron-triggered HTTP endpoint.
 //
 // Auth (mirrors algolia-sync):
 //   - Vercel cron: Authorization: Bearer ${CRON_SECRET}
@@ -15,35 +16,14 @@
 // dryRun=1 returns extraction results without any Sanity writes.
 
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "next-sanity";
 
-import {
-  mapWithConcurrency,
-  processRace,
-  type PendingRace,
-  type RaceResult,
-} from "@/lib/raceDateRefresh";
+import { runBatchRefresh } from "@/lib/raceDateRefresh";
 
 // Vercel serverless functions default to a 10 s timeout — way too
 // short for many races × (web fetch + Haiku call) at concurrency 3.
 // 60 s is the Hobby-plan ceiling; bump to 300 s if on Pro and
-// scaling RUN_LIMIT well past ~25.
+// scaling BATCH_RUN_LIMIT well past ~25.
 export const maxDuration = 60;
-
-// 2-level Pass 2 crawl (homepage + 5 wave-1 pages + 3 wave-2
-// pages on miss) makes worst-case scans ~20 s. Lower per-run cap
-// to keep the batch comfortably inside maxDuration. Most races
-// still finish in Pass 1 (homepage only) and don't pay the
-// multi-page tax.
-const RUN_LIMIT = 10;
-const CONCURRENCY = 3;
-
-const sanityClient = createClient({
-  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,
-  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET!,
-  apiVersion: process.env.NEXT_PUBLIC_SANITY_API_VERSION || "2024-01-01",
-  useCdn: false,
-});
 
 async function authorize(request: NextRequest): Promise<boolean> {
   const cronSecret = process.env.CRON_SECRET;
@@ -58,37 +38,13 @@ async function authorize(request: NextRequest): Promise<boolean> {
   return isCron || isManual;
 }
 
-async function runRefresh(options: {
-  dryRun: boolean;
-}): Promise<{ scanned: number; dryRun: boolean; results: RaceResult[] }> {
-  const query = `*[
-    _type == "raceGuide"
-    && defined(officialWebsite)
-    && defined(eventDate)
-    && eventDate < now()
-    && !defined(suggestedNextDateStatus)
-    && !(_id in path("drafts.**"))
-  ] | order(eventDate desc) [0...$limit] {
-    _id, title, eventDate, officialWebsite
-  }`;
-
-  const races: PendingRace[] = await sanityClient.fetch(query, {
-    limit: RUN_LIMIT,
-  });
-
-  const results = await mapWithConcurrency(races, CONCURRENCY, (race) =>
-    processRace(race, options),
-  );
-  return { scanned: races.length, dryRun: options.dryRun, results };
-}
-
 export async function POST(request: NextRequest) {
   if (!(await authorize(request))) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
   try {
     const dryRun = request.nextUrl.searchParams.get("dryRun") === "1";
-    const summary = await runRefresh({ dryRun });
+    const summary = await runBatchRefresh({ dryRun });
     return NextResponse.json({ ok: true, ...summary });
   } catch (err) {
     console.error("Race date refresh error:", err);
@@ -100,7 +56,7 @@ export async function POST(request: NextRequest) {
 }
 
 // GET mirrors POST so a curl with ?secret= works for manual
-// triggering during the pilot. Vercel cron also defaults to GET.
+// triggering. Vercel cron also defaults to GET.
 export async function GET(request: NextRequest) {
   return POST(request);
 }

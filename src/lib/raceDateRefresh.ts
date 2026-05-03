@@ -969,6 +969,44 @@ async function processRaceInner(
   });
 }
 
+// Public batch entry — selects up to RUN_LIMIT past-dated races
+// without an existing suggestion status, scans each via
+// processRace at the given concurrency, and returns the per-race
+// results. Shared between the cron-triggered API route and the
+// admin "Run batch scan" button so they exercise the same path.
+export const BATCH_RUN_LIMIT = 10;
+export const BATCH_CONCURRENCY = 3;
+
+export interface BatchRunResult {
+  scanned: number;
+  dryRun: boolean;
+  results: RaceResult[];
+}
+
+export async function runBatchRefresh(options: {
+  dryRun: boolean;
+}): Promise<BatchRunResult> {
+  const query = `*[
+    _type == "raceGuide"
+    && defined(officialWebsite)
+    && defined(eventDate)
+    && eventDate < now()
+    && !defined(suggestedNextDateStatus)
+    && !(_id in path("drafts.**"))
+  ] | order(eventDate desc) [0...$limit] {
+    _id, title, eventDate, officialWebsite
+  }`;
+
+  const races: PendingRace[] = await sanityClient.fetch(query, {
+    limit: BATCH_RUN_LIMIT,
+  });
+
+  const results = await mapWithConcurrency(races, BATCH_CONCURRENCY, (race) =>
+    processRace(race, options),
+  );
+  return { scanned: races.length, dryRun: options.dryRun, results };
+}
+
 // Process an array with bounded concurrency. Promise.all on the
 // full list would hammer all N race sites at once; this keeps it
 // to N in-flight, returning results in input order.
