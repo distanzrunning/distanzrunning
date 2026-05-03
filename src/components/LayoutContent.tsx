@@ -16,7 +16,7 @@ import PageFrame from "./ui/PageFrame";
 // SiteHeader. Add to this set as more pages migrate off the legacy
 // NavbarAlt; once every public route is on the new chrome, this set
 // goes away and SiteHeader becomes unconditional.
-const SITE_HEADER_ROUTES = new Set<string>(["/", "/races", "/races-legacy"]);
+const SITE_HEADER_ROUTES = new Set<string>(["/", "/races"]);
 
 interface LayoutContentProps {
   children: ReactNode;

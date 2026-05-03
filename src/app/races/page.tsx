@@ -10,8 +10,7 @@
 // predicates consume. FiltersShell is a thin client island that
 // renders the filter row and switches the grid for a skeleton while
 // router.replace() round-trips the next searchParams set through the
-// server. The previous implementation lives at /races-legacy for
-// side-by-side reference until the rewrite is complete.
+// server.
 
 import { sanityFetch } from "@/sanity/lib/live";
 import { buildRaceIndexQuery } from "@/sanity/queries/raceIndexQuery";
