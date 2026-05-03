@@ -1,16 +1,17 @@
 // src/app/api/race-date-refresh/route.ts
 //
-// Batch endpoint for the date refresh pipeline. Selects up to
-// BATCH_RUN_LIMIT past-dated races with no existing suggestion
-// status, scans each via the shared lib, and writes pending
-// suggestions to Sanity. The actual batch logic lives in
-// src/lib/raceDateRefresh.ts (`runBatchRefresh`) so the admin
-// "Run batch scan" button server action can exercise the same
-// path as the cron-triggered HTTP endpoint.
+// Manual / emergency batch endpoint for the date refresh pipeline.
+// No Vercel Cron is currently scheduled against this route — the
+// admin Date Review page relies on per-row Scan buttons instead,
+// which are simpler and don't risk Vercel's 60 s function timeout.
+// This route stays around so an operator can curl-trigger a small
+// batch when needed (e.g. after seeding a fresh catalog), but
+// production day-to-day relies on the per-row interactive flow.
 //
-// Auth (mirrors algolia-sync):
-//   - Vercel cron: Authorization: Bearer ${CRON_SECRET}
-//   - Manual: ?secret=${RACE_DATE_REFRESH_SECRET}
+// Auth:
+//   - Manual:    ?secret=${RACE_DATE_REFRESH_SECRET}
+//   - Vercel cron stub still works if a future schedule re-adds
+//     this path (Authorization: Bearer ${CRON_SECRET}).
 // Either path passes; otherwise 401.
 //
 // dryRun=1 returns extraction results without any Sanity writes.

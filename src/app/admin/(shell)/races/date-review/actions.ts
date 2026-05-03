@@ -29,12 +29,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "next-sanity";
 
 import { isAdminAuthenticated } from "@/lib/admin-auth";
-import {
-  processRace,
-  runBatchRefresh,
-  type BatchRunResult,
-  type RaceResult,
-} from "@/lib/raceDateRefresh";
+import { processRace, type RaceResult } from "@/lib/raceDateRefresh";
 
 const REVIEW_PATH = "/admin/races/date-review";
 
@@ -52,15 +47,19 @@ async function requireAdmin() {
   }
 }
 
-// Ad-hoc batch trigger from the admin UI. Runs the same query +
-// processRace loop as the weekly cron, but invoked synchronously
-// from the editor's click. Returns the run summary so the toast
-// can show "X scanned, Y new suggestions" feedback.
-export async function runBatchScan(): Promise<BatchRunResult> {
+// Lazy-load helper for the row expander. The page query
+// deliberately omits lastScanLog (it's a 5–20 KB JSON blob per
+// race that would balloon page weight at scale); when the editor
+// clicks a row's chevron we fetch just that race's log here.
+// Returns null when the race has never been scanned.
+export async function getScanLog(id: string): Promise<string | null> {
   await requireAdmin();
-  const summary = await runBatchRefresh({ dryRun: false });
-  revalidatePath(REVIEW_PATH);
-  return summary;
+  if (!id) return null;
+  const result = await sanityClient.fetch<{ lastScanLog?: string } | null>(
+    `*[_id == $id][0]{ lastScanLog }`,
+    { id },
+  );
+  return result?.lastScanLog ?? null;
 }
 
 export async function scanRace(formData: FormData): Promise<RaceResult> {

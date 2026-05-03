@@ -22,7 +22,6 @@ import {
   TableRow,
 } from "@/components/ui/Table";
 
-import BatchScanButton from "./BatchScanButton";
 import RaceRow, { type RaceRowData } from "./RaceRow";
 import { type RowState } from "./RowActions";
 
@@ -73,7 +72,6 @@ export default async function RaceDateReviewPage() {
       suggestedNextDateSourceQuote,
       suggestedNextDateStatus,
       lastScanAt,
-      lastScanLog,
       "_pendingPriority": select(suggestedNextDateStatus == "pending" => 0, 1)
     } | order(_pendingPriority asc, eventDate desc)`,
   );
@@ -85,22 +83,19 @@ export default async function RaceDateReviewPage() {
   return (
     <div className="px-6 py-8">
       <div className="mx-auto max-w-[1280px]">
-        <header className="mb-6 flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <h1 className="m-0 text-heading-24 text-[color:var(--ds-gray-1000)]">
-              Race Date Review
-            </h1>
-            <p className="mb-0 mt-2 text-copy-13 text-[color:var(--ds-gray-700)]">
-              {past.length} race{past.length === 1 ? "" : "s"} with a past
-              eventDate.{" "}
-              {pendingCount > 0
-                ? `${pendingCount} ${
-                    pendingCount === 1 ? "has" : "have"
-                  } a pending suggestion ready to review.`
-                : "No pending suggestions — use the Scan button per row to fetch a candidate date."}
-            </p>
-          </div>
-          <BatchScanButton />
+        <header className="mb-6">
+          <h1 className="m-0 text-heading-24 text-[color:var(--ds-gray-1000)]">
+            Race Date Review
+          </h1>
+          <p className="mb-0 mt-2 text-copy-13 text-[color:var(--ds-gray-700)]">
+            {past.length} race{past.length === 1 ? "" : "s"} with a past
+            eventDate.{" "}
+            {pendingCount > 0
+              ? `${pendingCount} ${
+                  pendingCount === 1 ? "has" : "have"
+                } a pending suggestion ready to review.`
+              : "No pending suggestions — use the Scan button per row to fetch a candidate date."}
+          </p>
         </header>
 
         {/* material-base = bg-100 + 1 px gray-400 border + 6 px

@@ -30,8 +30,11 @@ export interface RaceRowData {
   suggestedNextDateScrapedAt?: string;
   suggestedNextDateSourceQuote?: string;
   suggestedNextDateStatus?: "pending" | "approved" | "rejected";
+  /** Set on every scan attempt — used as the "has log" gate for
+   *  the expander chevron. The actual log JSON is lazy-loaded
+   *  via getScanLog() when the editor opens the expander, so it
+   *  doesn't bloat the page query at scale. */
   lastScanAt?: string;
-  lastScanLog?: string;
 }
 
 const safeFormat = (iso: string | undefined, pattern: string): string => {
@@ -47,7 +50,10 @@ interface RaceRowProps {
 
 export default function RaceRow({ race, state }: RaceRowProps) {
   const [expanded, setExpanded] = useState(false);
-  const hasLog = Boolean(race.lastScanLog);
+  // hasLog gates the chevron — the JSON itself is lazy-loaded
+  // by ScanLogPanel below. lastScanAt is set on every scan
+  // attempt so its presence is a reliable proxy for "log exists".
+  const hasLog = Boolean(race.lastScanAt);
 
   return (
     <>
@@ -134,7 +140,7 @@ export default function RaceRow({ race, state }: RaceRowProps) {
             style={{ textAlign: "left" }}
             className="bg-[color:var(--ds-background-200)] !px-0 !py-0"
           >
-            <ScanLogPanel logJson={race.lastScanLog!} />
+            <ScanLogPanel raceId={race._id} />
           </TableCell>
         </TableRow>
       )}

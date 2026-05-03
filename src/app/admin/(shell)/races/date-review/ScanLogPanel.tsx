@@ -17,9 +17,12 @@
 // parent TableCell carries an inline text-align:left override
 // for the rare inline content that doesn't go through flex.
 
+import { useEffect, useState } from "react";
 import { format } from "date-fns";
 
 import { Badge, type BadgeVariant } from "@/components/ui/Badge";
+
+import { getScanLog } from "./actions";
 
 interface PageLogEntry {
   url: string;
@@ -151,7 +154,56 @@ function PassSection({
   );
 }
 
-export default function ScanLogPanel({ logJson }: { logJson: string }) {
+// Lazy-fetches the scan log JSON for a single race when the
+// expander opens. The page query intentionally omits lastScanLog
+// (a 5–20 KB blob per race) so the table stays fast at scale —
+// only opened expanders pay the round-trip.
+export default function ScanLogPanel({ raceId }: { raceId: string }) {
+  const [logJson, setLogJson] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+    setLoading(true);
+    setError(null);
+    getScanLog(raceId)
+      .then((result) => {
+        if (cancelled) return;
+        if (!result) {
+          setError("No scan log on this race yet.");
+        } else {
+          setLogJson(result);
+        }
+      })
+      .catch((err: unknown) => {
+        if (cancelled) return;
+        setError((err as Error).message);
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [raceId]);
+
+  if (loading) {
+    return (
+      <div className="px-6 py-4 text-left text-copy-13 text-[color:var(--ds-gray-700)]">
+        Loading scan log…
+      </div>
+    );
+  }
+
+  if (error || !logJson) {
+    return (
+      <div className="px-6 py-4 text-left text-copy-13 text-[color:var(--ds-gray-700)]">
+        {error ?? "Could not load scan log."}
+      </div>
+    );
+  }
+
   let log: ScanLog;
   try {
     log = JSON.parse(logJson) as ScanLog;
