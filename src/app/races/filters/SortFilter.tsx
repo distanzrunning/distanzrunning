@@ -5,21 +5,23 @@
 // Sort selector. Trigger is an icon-only button (lucide
 // ArrowDownUp); clicking opens a popover with one option per
 // sort field (Date / Name / Distance / Elevation / Price). The
-// currently-selected field shows a ↑ / ↓ next to its label
-// indicating direction. Click logic:
+// currently-selected field is highlighted with the dark active
+// treatment — no separate direction indicator in the dropdown.
+//
+// Click logic:
 //   - Click a NEW field → switch to that field, default asc.
 //                         Closes the popover (most picks are
 //                         "set and done").
 //   - Click the CURRENT field → flip direction. Stays open so
-//                               the user can verify the new
-//                               state without re-opening.
+//                               the editor can click again to
+//                               flip back without re-opening.
 //
 // Trigger flips to the dark "active" treatment when the sort
 // is anything other than DEFAULT_SORT.
 
 import { useState } from "react";
 import * as Popover from "@radix-ui/react-popover";
-import { ArrowDown, ArrowDownUp, ArrowUp } from "lucide-react";
+import { ArrowDownUp } from "lucide-react";
 
 import {
   DEFAULT_SORT,
@@ -103,19 +105,13 @@ export default function SortFilter({ value, onChange }: SortFilterProps) {
                   <button
                     type="button"
                     onClick={() => handleSelect(opt.value)}
-                    className={`flex w-full cursor-pointer items-center justify-between rounded-sm px-3 py-1.5 text-left text-[13px] transition-colors ${
+                    className={`flex w-full cursor-pointer items-center rounded-sm px-3 py-1.5 text-left text-[13px] transition-colors ${
                       isSelected
                         ? "bg-[color:var(--ds-gray-1000)] text-[color:var(--ds-background-100)]"
                         : "text-[color:var(--ds-gray-1000)] hover:bg-[color:var(--ds-gray-100)]"
                     }`}
                   >
-                    <span>{opt.label}</span>
-                    {isSelected &&
-                      (currentDir === "asc" ? (
-                        <ArrowUp className="size-4" />
-                      ) : (
-                        <ArrowDown className="size-4" />
-                      ))}
+                    {opt.label}
                   </button>
                 </li>
               );
