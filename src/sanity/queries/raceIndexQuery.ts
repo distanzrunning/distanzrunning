@@ -88,6 +88,7 @@ export function buildRaceIndexQuery(sort: RaceSortKey = DEFAULT_SORT): string {
       && (!defined($temperatureMin) || (defined(averageTemperature) && averageTemperature >= $temperatureMin))
       && (!defined($temperatureMax) || (defined(averageTemperature) && averageTemperature <= $temperatureMax))
       && (!defined($raceTag) || $raceTag in tags)
+      && (!defined($hidePastBefore) || eventDate >= $hidePastBefore)
     ] | order(${order}) {
       _id,
       title,

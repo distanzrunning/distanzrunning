@@ -39,6 +39,7 @@ import ElevationFilter from "./filters/ElevationFilter";
 import TemperatureFilter from "./filters/TemperatureFilter";
 import TagFilter from "./filters/TagFilter";
 import SortFilter from "./filters/SortFilter";
+import Toggle from "@/components/ui/Toggle";
 import { DEFAULT_SORT } from "@/sanity/queries/raceIndexQuery";
 import { US_COUNTRY_NAME, US_STATES } from "@/lib/usStates";
 import RaceGridSkeleton from "./RaceGridSkeleton";
@@ -348,12 +349,25 @@ export default function FiltersShell({
             Reset all
           </button>
         )}
-        {/* Sort sits at the far right — ml-auto pushes it past
-            any filter chips that wrap onto the same row. Hidden
+        {/* Right-edge controls (toggle + sort) sit beyond any
+            filter chips that wrap onto the row — ml-auto on the
+            container pushes the whole group flush right. Hidden
             while Search is expanded (same gate as Reset all) so
             the input has uncluttered focus. */}
         {!searchExpanded && (
-          <div className="ml-auto">
+          <div className="ml-auto flex items-center gap-3">
+            <Toggle
+              size="default"
+              label="Hide past races"
+              labelPosition="left"
+              // Toggle is "on" by default — i.e., past races are
+              // hidden. Flipping off (showPast=true in URL)
+              // includes them in results.
+              checked={!initialFilters.showPast}
+              onChange={(checked) =>
+                setFilter({ showPast: checked ? undefined : true })
+              }
+            />
             <SortFilter
               value={initialFilters.sort ?? DEFAULT_SORT}
               onChange={(sort) =>

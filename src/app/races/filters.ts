@@ -62,6 +62,11 @@ export interface RaceFilters {
    *  Always defined when read via parseFiltersWithSort; absent
    *  from URL when at default. */
   sort?: RaceSortKey;
+  /** Include past-dated races in results. Default behaviour
+   *  (showPast undefined or false) hides anything where
+   *  eventDate is before today. URL emits `showPast=1` only
+   *  when the user has explicitly opted in via the toggle. */
+  showPast?: boolean;
 }
 
 type SearchParamsLike =
@@ -134,6 +139,7 @@ export function parseFilters(sp: SearchParamsLike): RaceFilters {
   if (sort && (SORT_KEYS as readonly string[]).includes(sort)) {
     filters.sort = sort as RaceSortKey;
   }
+  if (getParam(sp, "showPast") === "1") filters.showPast = true;
   return filters;
 }
 
@@ -171,6 +177,10 @@ export function buildFilterParams(filters: RaceFilters): URLSearchParams {
   // clean for the most common case.
   if (filters.sort && filters.sort !== DEFAULT_SORT)
     params.set("sort", filters.sort);
+  // Same — only emit showPast when the user has opted in (toggle
+  // off). Default behaviour hides past races and stays out of
+  // the URL.
+  if (filters.showPast) params.set("showPast", "1");
   return params;
 }
 
@@ -215,6 +225,11 @@ export interface RaceQueryParams {
   // reserves `tag` as a `never`-typed deprecated guard against
   // accidentally passing the fetch-tag option as a GROQ param.
   raceTag: string | null;
+  /** Set to today's date (UTC start-of-day) when the user has
+   *  NOT opted into showing past races. The GROQ predicate
+   *  drops anything with eventDate < this value. Null means no
+   *  past-date filter applied. */
+  hidePastBefore: string | null;
 }
 
 /**
@@ -256,5 +271,12 @@ export function buildQueryParams(filters: RaceFilters): RaceQueryParams {
     temperatureMin: filters.temperatureMin ?? null,
     temperatureMax: filters.temperatureMax ?? null,
     raceTag: filters.tag ?? null,
+    // Default behaviour: hide past races. We pass UTC start-of-
+    // today so the predicate matches races held later today (and
+    // every future date) regardless of the storing race's UTC
+    // offset. Cleared when the user has flipped the toggle off.
+    hidePastBefore: filters.showPast
+      ? null
+      : `${new Date().toISOString().slice(0, 10)}T00:00:00.000Z`,
   };
 }

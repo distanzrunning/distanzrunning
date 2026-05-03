@@ -87,10 +87,14 @@ export default function FullPageSkeleton() {
             <ChipPlaceholder label="Elevation" />
             <ChipPlaceholder label="Temperature" />
             <ChipPlaceholder label="Tag" />
-            {/* Sort — single split-trigger (field Select 170 px +
-                1 px divider + 32 px direction button = ~203 px),
-                pushed right via ml-auto to mirror the live row. */}
-            <div className={`${PULSE_BG} ml-auto h-8 w-[203px]`} />
+            {/* Right-edge group: Toggle ("Hide past races", ~140 px
+                including label) + 12 px gap + Sort split-trigger
+                (~203 px). Pushed right via ml-auto to mirror the
+                live row. */}
+            <div className="ml-auto flex items-center gap-3">
+              <div className={`${PULSE_BG} h-5 w-[140px]`} />
+              <div className={`${PULSE_BG} h-8 w-[203px]`} />
+            </div>
           </div>
           <RaceGridSkeleton />
         </div>
