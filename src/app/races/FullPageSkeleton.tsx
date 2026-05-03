@@ -87,9 +87,10 @@ export default function FullPageSkeleton() {
             <ChipPlaceholder label="Elevation" />
             <ChipPlaceholder label="Temperature" />
             <ChipPlaceholder label="Tag" />
-            {/* Sort — DS Select, w-[220px], pushed right via ml-auto
-                to mirror the live row. */}
-            <div className={`${PULSE_BG} ml-auto h-8 w-[220px]`} />
+            {/* Sort — pushed to the right via ml-auto, same as live. */}
+            <div className="ml-auto">
+              <ChipPlaceholder label="Sort" />
+            </div>
           </div>
           <RaceGridSkeleton />
         </div>
