@@ -88,12 +88,12 @@ export default function FullPageSkeleton() {
             <ChipPlaceholder label="Temperature" />
             <ChipPlaceholder label="Tag" />
             {/* Right-edge group: Toggle ("Hide past races", ~140 px
-                including label) + 12 px gap + Sort split-trigger
-                (~203 px). Pushed right via ml-auto to mirror the
-                live row. */}
+                including label) + 12 px gap + Sort icon trigger
+                (32 px square). Pushed right via ml-auto to mirror
+                the live row. */}
             <div className="ml-auto flex items-center gap-3">
               <div className={`${PULSE_BG} h-5 w-[140px]`} />
-              <div className={`${PULSE_BG} h-8 w-[203px]`} />
+              <div className={`${PULSE_BG} h-8 w-8`} />
             </div>
           </div>
           <RaceGridSkeleton />
