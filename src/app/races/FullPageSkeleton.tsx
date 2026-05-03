@@ -73,25 +73,27 @@ export default function FullPageSkeleton() {
 
         {/* Filter row + grid */}
         <div className="flex flex-col gap-6">
-          <div className="flex flex-wrap items-center gap-2">
-            {/* Search (collapsed icon) */}
-            <div className={`${PULSE_BG} h-8 w-8`} />
-            {/* Date trigger — Calendar uses an explicit width={140}. */}
-            <div className={`${PULSE_BG} h-8 w-[140px]`} />
-            <ChipPlaceholder label="Distance" />
-            <ChipPlaceholder label="Country" />
-            <ChipPlaceholder label="City" />
-            <ChipPlaceholder label="State" />
-            <ChipPlaceholder label="Surface" />
-            <ChipPlaceholder label="Price" />
-            <ChipPlaceholder label="Elevation" />
-            <ChipPlaceholder label="Temperature" />
-            <ChipPlaceholder label="Tag" />
-            {/* Right-edge group: Toggle ("Hide past races", ~140 px
-                including label) + 12 px gap + Sort icon trigger
-                (32 px square). Pushed right via ml-auto to mirror
-                the live row. */}
-            <div className="ml-auto flex items-center gap-3">
+          {/* Mirror of the live row: scrollable chip strip on
+              the left, shrink-0 right group with toggle + sort. */}
+          <div className="flex items-center gap-3">
+            <div className="flex min-w-0 flex-1 items-center gap-2 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              {/* Search (collapsed icon) */}
+              <div className={`${PULSE_BG} h-8 w-8`} />
+              {/* Date trigger — Calendar uses an explicit width={140}. */}
+              <div className={`${PULSE_BG} h-8 w-[140px]`} />
+              <ChipPlaceholder label="Distance" />
+              <ChipPlaceholder label="Country" />
+              <ChipPlaceholder label="City" />
+              <ChipPlaceholder label="State" />
+              <ChipPlaceholder label="Surface" />
+              <ChipPlaceholder label="Price" />
+              <ChipPlaceholder label="Elevation" />
+              <ChipPlaceholder label="Temperature" />
+              <ChipPlaceholder label="Tag" />
+            </div>
+            {/* Right-edge group: Toggle (~140 px including
+                label) + 12 px gap + Sort icon trigger (32 px). */}
+            <div className="flex shrink-0 items-center gap-3">
               <div className={`${PULSE_BG} h-5 w-[140px]`} />
               <div className={`${PULSE_BG} h-8 w-8`} />
             </div>
