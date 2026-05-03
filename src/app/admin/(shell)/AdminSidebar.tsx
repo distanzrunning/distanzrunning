@@ -7,6 +7,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Database,
+  Map,
   MessageSquare,
   PanelsTopLeft,
   SquareCheckBig,
@@ -31,6 +32,10 @@ export function isFeedbackRoute(pathname: string): boolean {
   );
 }
 
+export function isRacesRoute(pathname: string): boolean {
+  return pathname === "/admin/races" || pathname.startsWith("/admin/races/");
+}
+
 function dsSlugFrom(pathname: string): string | null {
   const match = pathname.match(/^\/admin\/design-system\/([^/?#]+)/);
   return match ? match[1] : null;
@@ -52,6 +57,10 @@ export const FEEDBACK_NAV: { id: string; label: string; href: string }[] = [
     label: "How it works",
     href: "/admin/feedback/how-it-works",
   },
+];
+
+export const RACES_NAV: { id: string; label: string; href: string }[] = [
+  { id: "date-review", label: "Date review", href: "/admin/races/date-review" },
 ];
 
 // ============================================================================
@@ -162,6 +171,13 @@ const ADMIN_NAV: {
     label: "Feedback",
     href: "/admin/feedback",
     icon: <MessageSquare className="w-4 h-4" />,
+    hasSubmenu: true,
+  },
+  {
+    id: "races",
+    label: "Races",
+    href: "/admin/races",
+    icon: <Map className="w-4 h-4" />,
     hasSubmenu: true,
   },
   {
@@ -464,6 +480,58 @@ function FeedbackNav({ pathname }: { pathname: string }) {
 }
 
 // ============================================================================
+// Races nav (replaces admin nav while inside /admin/races)
+// ============================================================================
+
+function RacesNav({ pathname }: { pathname: string }) {
+  return (
+    <nav style={{ padding: 16, paddingTop: 8 }}>
+      <ul
+        style={{
+          listStyle: "none",
+          margin: 0,
+          padding: 0,
+          display: "flex",
+          flexDirection: "column",
+          gap: 2,
+        }}
+      >
+        {RACES_NAV.map((item) => {
+          const active =
+            pathname === item.href ||
+            (item.href !== "/admin/races" &&
+              pathname.startsWith(`${item.href}/`));
+          const baseClasses =
+            "group flex items-center rounded-md outline-none transition-colors";
+          const stateClasses = active
+            ? "bg-[var(--ds-gray-200)] text-[var(--ds-gray-1000)] font-medium hover:bg-[var(--ds-gray-200)]"
+            : "text-[var(--ds-gray-900)] hover:bg-[var(--ds-gray-100)] hover:text-[var(--ds-gray-1000)] focus-visible:bg-[var(--ds-gray-100)] focus-visible:text-[var(--ds-gray-1000)]";
+          return (
+            <li key={item.id}>
+              <Link
+                href={item.href}
+                aria-current={active ? "page" : undefined}
+                className={`${baseClasses} ${stateClasses}`}
+                style={{
+                  height: 36,
+                  paddingLeft: 12,
+                  paddingRight: 12,
+                  fontSize: 14,
+                }}
+              >
+                <span className="flex-1 flex items-center min-w-0">
+                  <span className="truncate">{item.label}</span>
+                </span>
+              </Link>
+            </li>
+          );
+        })}
+      </ul>
+    </nav>
+  );
+}
+
+// ============================================================================
 // Public component — owns the full-height layout
 // ============================================================================
 
@@ -476,6 +544,7 @@ export default function AdminSidebar({
   const inDs = isDesignSystemRoute(pathname);
   const inConsent = isConsentRoute(pathname);
   const inFeedback = isFeedbackRoute(pathname);
+  const inRaces = isRacesRoute(pathname);
 
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
@@ -507,6 +576,14 @@ export default function AdminSidebar({
           ariaLabel="Back to admin"
         />
       )}
+      {inRaces && (
+        <BackHeader
+          leftSlot={<ChevronLeft className="w-4 h-4" />}
+          label="Races"
+          href="/admin"
+          ariaLabel="Back to admin"
+        />
+      )}
       <div style={{ flex: 1, overflowY: "auto", minHeight: 0 }}>
         {inDs ? (
           <DesignSystemNav pathname={pathname} />
@@ -514,6 +591,8 @@ export default function AdminSidebar({
           <ConsentNav pathname={pathname} />
         ) : inFeedback ? (
           <FeedbackNav pathname={pathname} />
+        ) : inRaces ? (
+          <RacesNav pathname={pathname} />
         ) : (
           <AdminNav pathname={pathname} />
         )}
