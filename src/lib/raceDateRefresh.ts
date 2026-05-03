@@ -368,14 +368,35 @@ ${pageText}`;
   return parsed;
 }
 
-// finishers.com is a third-party race aggregator that exposes
-// each event at /en/event/<slug> with the next-edition date in
-// static HTML (good signal even when the official site is a SPA
-// or otherwise unscrapeable). We fetch their event page in
-// parallel with our wave-2 sub-page fetches so the extra source
-// adds no wall-time cost. Slug pattern: title lowercased,
-// non-alphanumerics → hyphen, repeated hyphens collapsed.
-const FINISHERS_BASE_URL = "https://www.finishers.com/en/event/";
+// Third-party race aggregators we probe alongside the official
+// site during Pass 2. Each source exposes events at a predictable
+// slug-based URL, and serves the next-edition date in static HTML
+// (good signal when the official site is a SPA, JS-renders its
+// news, or just doesn't surface the next date prominently).
+//
+// All sources are fetched in parallel with the wave-2 sub-page
+// fetches via Promise.all, so adding a source costs nothing in
+// wall-time as long as it doesn't outlive the slowest wave-2 hit.
+//
+// Adding a new source = one entry here. `buildUrl` should return
+// a fully-qualified URL given a kebab-cased slug; the slug-→URL
+// shape is consistent enough across aggregators that this is
+// usually a one-liner.
+interface ExternalSource {
+  name: string;
+  buildUrl: (slug: string) => string;
+}
+
+const EXTERNAL_SOURCES: ExternalSource[] = [
+  {
+    name: "finishers.com",
+    buildUrl: (slug) => `https://www.finishers.com/en/event/${slug}`,
+  },
+  {
+    name: "marathontours.com",
+    buildUrl: (slug) => `https://marathontours.com/en-us/events/${slug}/`,
+  },
+];
 
 function slugifyRaceTitle(title: string): string {
   return title
@@ -387,36 +408,39 @@ function slugifyRaceTitle(title: string): string {
     .replace(/^-+|-+$/g, "");
 }
 
-// Fetch the finishers.com event page for a race title. Returns
-// the stripped text only when (a) the request succeeds and (b)
-// the response actually mentions the race — without that sanity
-// check, slug collisions could feed Haiku a totally unrelated
-// event's page and we'd suggest the wrong date.
-async function fetchFinishersText(raceTitle: string): Promise<{
-  url: string;
-  text: string;
-} | null> {
+// Distinctive title words used to verify a fetched aggregator
+// page is actually about the right race. 4+ chars to skip
+// "the"/"of"/etc.; matched case-insensitively against page text.
+function distinctiveTitleWords(title: string): string[] {
+  return title
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .split(/[^a-z0-9]+/)
+    .filter((w) => w.length >= 4);
+}
+
+// Fetch a single aggregator's event page. Returns text only when
+// (a) the request succeeds and (b) the response actually mentions
+// the race — without that sanity check, slug collisions could
+// feed Haiku a totally unrelated event's page and we'd suggest
+// the wrong date.
+async function fetchExternalSourceText(
+  source: ExternalSource,
+  raceTitle: string,
+  distinctive: string[],
+): Promise<{ url: string; text: string; sourceName: string } | null> {
   const slug = slugifyRaceTitle(raceTitle);
   if (!slug) return null;
-  const url = `${FINISHERS_BASE_URL}${slug}`;
+  const url = source.buildUrl(slug);
   try {
     const html = await fetchHtml(url);
     const text = htmlToText(html).slice(0, PASS_2_PER_PAGE_CHARS);
-    // Sanity check: at least one distinctive title word (length 4+
-    // to skip "the"/"of"/"the marathon" etc.) must appear in the
-    // page body. Drops false-positive 200s where finishers serves
-    // a placeholder for an unrelated slug.
-    const distinctive = raceTitle
-      .toLowerCase()
-      .normalize("NFD")
-      .replace(/[̀-ͯ]/g, "")
-      .split(/[^a-z0-9]+/)
-      .filter((w) => w.length >= 4);
     const lowerText = text.toLowerCase();
     if (!distinctive.some((w) => lowerText.includes(w))) {
       return null;
     }
-    return { url, text };
+    return { url, text, sourceName: source.name };
   } catch {
     return null;
   }
@@ -574,28 +598,36 @@ export async function processRace(
     const wave2 = topScoringLinks(wave2Pool, race.title, PASS_2_WAVE_2);
     wave2.forEach((c) => visited.add(c.url));
 
-    // Run wave 2 fetches AND the finishers.com fetch in parallel
-    // — finishers.com is an independent third-party source so
-    // there's no dependency between them; combining the awaits
-    // means finishers adds no wall-time cost when wave 2 also
-    // runs.
-    const [wave2Texts, finishers] = await Promise.all([
+    // Run wave 2 fetches AND every EXTERNAL_SOURCES probe in
+    // parallel — independent third-party sources have no
+    // dependency on the official-site fetches, so combining the
+    // awaits means external sources add no wall-time cost when
+    // wave 2 also runs (only the slowest fetch in the group is
+    // on the critical path).
+    const distinctive = distinctiveTitleWords(race.title);
+    const [wave2Texts, externalResults] = await Promise.all([
       Promise.all(wave2.map((c) => fetchSubPageText(c.url))),
-      fetchFinishersText(race.title),
+      Promise.all(
+        EXTERNAL_SOURCES.map((s) =>
+          fetchExternalSourceText(s, race.title, distinctive),
+        ),
+      ),
     ]);
 
     wave2.forEach((c, i) => {
       const text = wave2Texts[i];
       if (text) sections.push(`=== PAGE: ${c.url} ===\n${text}`);
     });
-    if (finishers) {
-      sections.push(
-        `=== PAGE: ${finishers.url} (third-party aggregator) ===\n${finishers.text}`,
-      );
-    }
+    externalResults.forEach((result) => {
+      if (result) {
+        sections.push(
+          `=== PAGE: ${result.url} (third-party aggregator: ${result.sourceName}) ===\n${result.text}`,
+        );
+      }
+    });
 
     // Combined extraction over homepage + wave 1 + wave 2 +
-    // finishers.com.
+    // every external aggregator that returned a sane match.
     if (sections.length > 1) {
       const combined = sections.join("\n\n");
       try {
