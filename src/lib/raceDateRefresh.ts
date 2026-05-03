@@ -28,10 +28,18 @@ export const FETCH_TIMEOUT_MS = 10_000;
 export const MAX_PAGE_TEXT_CHARS = 30_000;
 // Multi-page Pass 2 — fetch up to N best-scoring sub-pages and
 // concatenate their text alongside the homepage. Larger N = better
-// recall, more LLM tokens, slower scan. 3 is the sweet spot at the
-// pilot.
-const PASS_2_TOP_N = 3;
-const PASS_2_PER_PAGE_CHARS = 10_000;
+// recall, more LLM tokens, slower scan.
+const PASS_2_TOP_N = 5;
+const PASS_2_PER_PAGE_CHARS = 8_000;
+// Sitemap discovery — many race sites' homepages are JS-rendered
+// and only expose a tiny static link set, but their /sitemap.xml
+// (or /sitemap_index.xml) lists every URL the site wants indexed,
+// including deep news articles. Folding those URLs into the
+// candidate pool catches sites where the date lives on a page
+// the homepage doesn't statically link to (Tokyo Marathon's
+// /en/news/detail/… articles, etc.). Cap parsing to avoid
+// pathological sitemaps that list 10k+ URLs.
+const SITEMAP_URL_LIMIT = 500;
 
 const sanityClient = createClient({
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,
@@ -324,6 +332,53 @@ ${pageText}`;
   return parsed;
 }
 
+// Try to fetch the site's sitemap and return up to
+// SITEMAP_URL_LIMIT URLs. Tries /sitemap.xml first, then
+// /sitemap_index.xml. If the document is a sitemap *index*
+// (points at child sitemaps), follows the first child to keep
+// the discovery one level deep. Returns [] on any failure —
+// caller should still try homepage links.
+async function fetchSitemapUrls(baseUrl: string): Promise<string[]> {
+  const candidates = [
+    new URL("/sitemap.xml", baseUrl).toString(),
+    new URL("/sitemap_index.xml", baseUrl).toString(),
+  ];
+  for (const candidate of candidates) {
+    try {
+      const xml = await fetchHtml(candidate);
+      // Cheap content-type check — anything that isn't an XML
+      // sitemap probably 404'd into an HTML error page.
+      if (!xml.includes("<urlset") && !xml.includes("<sitemapindex")) {
+        continue;
+      }
+      // Sitemap index → recurse into the first child sitemap so
+      // we still pull URLs (one level only — full traversal would
+      // blow the budget on big WP sites).
+      if (xml.includes("<sitemapindex")) {
+        const childMatches = [
+          ...xml.matchAll(/<sitemap>[\s\S]*?<loc>\s*([^<]+)\s*<\/loc>[\s\S]*?<\/sitemap>/gi),
+        ];
+        const firstChild = childMatches[0]?.[1]?.trim();
+        if (!firstChild) return [];
+        const childXml = await fetchHtml(firstChild);
+        return parseSitemapLocs(childXml);
+      }
+      return parseSitemapLocs(xml);
+    } catch {
+      // Try the next candidate.
+    }
+  }
+  return [];
+}
+
+function parseSitemapLocs(xml: string): string[] {
+  return [
+    ...xml.matchAll(/<url>[\s\S]*?<loc>\s*([^<]+)\s*<\/loc>[\s\S]*?<\/url>/gi),
+  ]
+    .map((m) => m[1].trim())
+    .slice(0, SITEMAP_URL_LIMIT);
+}
+
 // Fetch a sub-page, strip to text, truncate. Returns null on
 // any failure — Pass 2 should still try the other candidates.
 async function fetchSubPageText(url: string): Promise<string | null> {
@@ -368,11 +423,27 @@ export async function processRace(
   }
 
   // Pass 2 — homepage didn't have it. Parse outgoing links from
-  // the raw homepage HTML, score against the race title, fetch
-  // the top N sub-pages, and re-extract from combined text.
+  // the raw homepage HTML AND any sitemap.xml entries (sitemaps
+  // catch JS-rendered sites where the static homepage HTML
+  // doesn't expose news article URLs), score against the race
+  // title, fetch the top N sub-pages, and re-extract from
+  // combined text.
   if (!extraction.next_date) {
-    const links = extractLinks(homeHtml, race.officialWebsite);
-    const candidates = topScoringLinks(links, race.title, PASS_2_TOP_N);
+    const homepageLinks = extractLinks(homeHtml, race.officialWebsite);
+    const sitemapUrls = await fetchSitemapUrls(race.officialWebsite);
+    // Sitemap entries have no anchor text, but the URL itself
+    // usually carries enough signal (news/2026/article-slug) for
+    // scoreLink to rank them well.
+    const sitemapLinks = sitemapUrls.map((url) => ({ url, text: "" }));
+    // Dedupe by URL — homepage and sitemap can overlap.
+    const seen = new Set<string>();
+    const allLinks = [...homepageLinks, ...sitemapLinks].filter((l) => {
+      if (l.url === race.officialWebsite) return false;
+      if (seen.has(l.url)) return false;
+      seen.add(l.url);
+      return true;
+    });
+    const candidates = topScoringLinks(allLinks, race.title, PASS_2_TOP_N);
 
     if (candidates.length > 0) {
       const subTexts = await Promise.all(
