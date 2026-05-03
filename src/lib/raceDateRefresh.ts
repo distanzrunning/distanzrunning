@@ -313,12 +313,26 @@ Race name: ${race.title}
 Previous edition date (now in the past): ${previousDate}
 Today's date: ${today}
 
-Read the website text below and find the date of the NEXT edition of THIS specific race. Notes:
+Read the website text below and find the date of the NEXT edition of THIS specific race.
 
-- The text may be in any language (English, Japanese, Spanish, German, Chinese, etc.). Interpret it regardless of language. Date formats may also vary: "March 7, 2027", "07.03.2027", "2027年3月7日", "07/03/2027", etc. — return the resolved date as YYYY-MM-DD.
-- The text may include content from multiple sub-pages (separated by markers like "=== PAGE: …"). Pages from /news/ or announcement-style URLs often carry the most authoritative scheduling info.
-- The text may also describe other races held by the same organiser (e.g. a half marathon alongside a marathon). Return the date of "${race.title}" specifically, not a sibling event.
-- News articles may be dated themselves (e.g. an article published 2026-04-15) — that's the publish date, not the race date. The race date is the one mentioned IN the article body about when the race will be held.
+CRITICAL — what counts as "the race date":
+- ONLY a date paired with explicit phrasing that the race itself is held on that day. Examples that count: "will be held on", "scheduled for", "race day is", "takes place on", "starts on".
+- IGNORE dates of adjacent / auxiliary events on the same site:
+  * article publish dates (e.g. an article published 2026-04-15)
+  * expo dates, packet pickup, opening ceremonies
+  * rehearsals, dress rehearsals, demonstration flights / displays (e.g. "Blue Impulse flight on …")
+  * registration deadlines, lottery draws, charity application closings
+  * sibling races held by the same organiser (e.g. half marathon vs marathon)
+- If multiple candidate dates appear and you can't pick THE race date with high confidence, RETURN NULL. False precision is worse than no answer — an editor will manually fix nulls but might miss a confident-but-wrong suggestion.
+
+Format / language notes:
+- The text may be in any language (English, Japanese, Spanish, German, Chinese, etc.). Interpret regardless. Date formats vary: "March 7, 2027", "07.03.2027", "2027年3月7日", "07/03/2027", "7 March 2027". Always resolve to YYYY-MM-DD.
+- The text may include content from multiple sub-pages (separated by markers like "=== PAGE: …"). Cross-reference: a date that's stated identically across multiple pages is more trustworthy than one that appears only in a single news article about an auxiliary event.
+
+Confidence levels:
+- "high"   = explicit "${race.title} will be held on YYYY-MM-DD" phrasing in primary content (homepage hero, race info page).
+- "medium" = clear mention but only on one auxiliary page, or phrasing slightly indirect.
+- "low"    = inferred / partially ambiguous. PREFER returning null over a "low" confidence guess.
 
 Only return a date if it is explicitly stated AND is after today. If only past dates appear, or the page says "TBA"/"coming soon"/"more info to follow" without a concrete date, return null.
 
@@ -538,6 +552,21 @@ export async function processRace(
       title: race.title,
       status: "no_date_found",
       message: extraction.reasoning,
+    };
+  }
+
+  // Reject "low" confidence suggestions — better to return
+  // no_date_found than a confident-but-wrong date. Tokyo's
+  // off-by-one (March 6 picked from a Blue Impulse rehearsal
+  // article rather than the actual race day) is the cautionary
+  // tale: an editor would have to notice the wrong date manually,
+  // whereas a null forces them to verify themselves anyway.
+  if (extraction.confidence === "low") {
+    return {
+      _id: race._id,
+      title: race.title,
+      status: "no_date_found",
+      message: `Low confidence — ${extraction.reasoning}`,
     };
   }
 
