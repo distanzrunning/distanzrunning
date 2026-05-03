@@ -2,15 +2,14 @@
 
 // src/app/admin/(shell)/races/date-review/RowActions.tsx
 //
-// Per-row controls for the Race Date Review queue:
-//   - DS Calendar (range mode, used as single-date adapter — we
-//     pass {start, end} both pointing at the same date so the
-//     trigger formats as "Apr 25" and a single click reselects).
-//   - Approve button (DS Button, default variant) → server action.
-//     The current Calendar pick rides along as overrideDate.
-//   - Reject button (DS Button, secondary variant) → server action.
-//     Confirms first since rejecting hides the row until the
-//     editor manually clears the status in Studio.
+// Renders the two interactive cells of a Date Review row as a
+// fragment so they share state but live in their own table
+// columns:
+//   - "Suggested" column → DS Calendar (range mode, single-date
+//     adapter — start === end). Doubles as both the date display
+//     and the editor for the override-on-approve.
+//   - "Action" column → Approve + Reject (DS Buttons). Approve
+//     submits the current Calendar pick; Reject confirms first.
 //
 // useTransition tracks the in-flight server-action call; both
 // buttons take loading={pending} so they spinner-disable in unison.
@@ -19,6 +18,7 @@ import { useState, useTransition } from "react";
 
 import { Button } from "@/components/ui/Button";
 import { Calendar, type DateRange } from "@/components/ui/Calendar";
+import { TableCell } from "@/components/ui/Table";
 
 import { approveSuggestion, rejectSuggestion } from "./actions";
 
@@ -81,30 +81,36 @@ export default function RowActions({
   };
 
   return (
-    // justify-end so the trio aligns under the right-aligned
-    // "Action" TableHead — the DS Table applies last:text-right
-    // by default to last-child cells, but flex children ignore
-    // text-align so we mirror it with justify-end here.
-    <div className="flex items-center justify-end gap-2">
-      <Calendar
-        placeholder="Date"
-        value={range}
-        onChange={handleCalendarChange}
-        size="small"
-        width={140}
-        showTimeInput={false}
-      />
-      <Button size="small" loading={pending} onClick={handleApprove}>
-        Approve
-      </Button>
-      <Button
-        size="small"
-        variant="secondary"
-        loading={pending}
-        onClick={handleReject}
-      >
-        Reject
-      </Button>
-    </div>
+    <>
+      <TableCell>
+        <Calendar
+          placeholder="Date"
+          value={range}
+          onChange={handleCalendarChange}
+          size="small"
+          width={140}
+          showTimeInput={false}
+        />
+      </TableCell>
+      {/* justify-end so the buttons line up with the right-aligned
+          "Action" TableHead — DS Table applies last:text-right by
+          default to last-child cells; flex children ignore
+          text-align so we mirror it via justify-end here. */}
+      <TableCell>
+        <div className="flex items-center justify-end gap-2">
+          <Button size="small" loading={pending} onClick={handleApprove}>
+            Approve
+          </Button>
+          <Button
+            size="small"
+            variant="secondary"
+            loading={pending}
+            onClick={handleReject}
+          >
+            Reject
+          </Button>
+        </div>
+      </TableCell>
+    </>
   );
 }

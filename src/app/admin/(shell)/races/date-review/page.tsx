@@ -109,10 +109,13 @@ export default async function RaceDateReviewPage() {
               <TableRow>
                 <TableHead>Race</TableHead>
                 <TableHead>Current eventDate</TableHead>
-                <TableHead>Suggested</TableHead>
                 <TableHead>Source quote</TableHead>
                 <TableHead>Scraped</TableHead>
-                <TableHead className="min-w-[280px]">Action</TableHead>
+                {/* Suggested cell renders the editable Calendar
+                    — it's both the display and the input for the
+                    override-on-approve flow. */}
+                <TableHead>Suggested</TableHead>
+                <TableHead>Action</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -155,9 +158,6 @@ export default async function RaceDateReviewPage() {
                       </span>
                     </div>
                   </TableCell>
-                  <TableCell className="whitespace-nowrap text-copy-13 font-medium text-[color:var(--ds-gray-1000)]">
-                    {safeFormat(row.suggestedNextDate, "d MMM yyyy")}
-                  </TableCell>
                   <TableCell className="max-w-[320px] text-copy-13 italic text-[color:var(--ds-gray-900)]">
                     {row.suggestedNextDateSourceQuote
                       ? `"${row.suggestedNextDateSourceQuote}"`
@@ -166,13 +166,14 @@ export default async function RaceDateReviewPage() {
                   <TableCell className="whitespace-nowrap text-label-12 text-[color:var(--ds-gray-700)]">
                     {safeFormat(row.suggestedNextDateScrapedAt, "d MMM, HH:mm")}
                   </TableCell>
-                  <TableCell>
-                    <RowActions
-                      id={row._id}
-                      suggestedDate={row.suggestedNextDate}
-                      title={row.title}
-                    />
-                  </TableCell>
+                  {/* RowActions returns a fragment of TWO cells —
+                      Suggested (Calendar) and Action (Approve /
+                      Reject) — sharing the picked-date state. */}
+                  <RowActions
+                    id={row._id}
+                    suggestedDate={row.suggestedNextDate}
+                    title={row.title}
+                  />
                 </TableRow>
               ))}
             </TableBody>
