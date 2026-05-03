@@ -24,6 +24,7 @@ import { Calendar, type DateRange } from "@/components/ui/Calendar";
 import { TableCell } from "@/components/ui/Table";
 
 import {
+  approveManualDate,
   approveSuggestion,
   rejectSuggestion,
   resetSuggestion,
@@ -38,6 +39,9 @@ interface RowActionsProps {
   state: RowState;
   /** Required when state === "pending". */
   suggestedDate?: string;
+  /** Previous (past) eventDate ISO — used by ScannableRow to
+   *  seed the Calendar with a "1 year later" default guess. */
+  previousEventDate: string;
 }
 
 // Local-date YYYY-MM-DD (NOT toISOString — toISOString shifts to
@@ -135,23 +139,45 @@ function PendingRow({ id, title, suggestedDate }: RowActionsProps) {
 }
 
 // ────────────────────────────────────────────────────────────────
-// Scannable — placeholder Suggested cell, single Scan button
+// Scannable — Calendar (manual override) + Approve + Scan
+// Calendar pre-seeds at previousEventDate + 1 year because most
+// races repeat annually. Editor either:
+//   (a) clicks Approve to accept the guess (or after editing it),
+//   (b) clicks Scan to let Haiku try to extract from the website.
 // ────────────────────────────────────────────────────────────────
 
-function ScannableRow({ id, title }: RowActionsProps) {
+function addOneYear(d: Date): Date {
+  const next = new Date(d);
+  next.setFullYear(next.getFullYear() + 1);
+  return next;
+}
+
+function ScannableRow({ id, title, previousEventDate }: RowActionsProps) {
+  const initialGuess = addOneYear(new Date(previousEventDate));
+  const [picked, setPicked] = useState<Date>(initialGuess);
   const [pending, startTransition] = useTransition();
+
+  const range: DateRange = { start: picked, end: picked };
+  const handleCalendarChange = (next: DateRange) => {
+    const candidate = next.start ?? next.end;
+    if (candidate) setPicked(candidate);
+  };
+
+  const handleApprove = () => {
+    startTransition(async () => {
+      const fd = new FormData();
+      fd.set("id", id);
+      fd.set("date", toIsoDate(picked));
+      await approveManualDate(fd);
+    });
+  };
 
   const handleScan = () => {
     startTransition(async () => {
       const fd = new FormData();
       fd.set("id", id);
       const result = await scanRace(fd);
-      // If a suggestion was written, the page revalidates and this
-      // row re-renders as PendingRow. For non-write outcomes, give
-      // the editor a heads-up so they know nothing changed.
       if (result.status !== "suggested") {
-        // Type narrowed to the non-suggested statuses by the guard
-        // above, so the lookup never returns the empty-string slot.
         const explainer: Record<typeof result.status, string> = {
           no_date_found: "Haiku couldn't find a future date on the page.",
           fetch_error: "Couldn't reach the website.",
@@ -167,18 +193,33 @@ function ScannableRow({ id, title }: RowActionsProps) {
 
   return (
     <>
-      <TableCell className="text-copy-13 text-[color:var(--ds-gray-700)]">
-        Not scanned yet
+      <TableCell>
+        <Calendar
+          placeholder="Date"
+          value={range}
+          onChange={handleCalendarChange}
+          size="small"
+          width={170}
+          showTimeInput={false}
+          formatTriggerLabel={(r) =>
+            r.start ? format(r.start, "d MMM yyyy") : ""
+          }
+        />
       </TableCell>
       <TableCell>
-        <Button
-          size="small"
-          variant="secondary"
-          loading={pending}
-          onClick={handleScan}
-        >
-          Scan
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button size="small" loading={pending} onClick={handleApprove}>
+            Approve
+          </Button>
+          <Button
+            size="small"
+            variant="secondary"
+            loading={pending}
+            onClick={handleScan}
+          >
+            Scan
+          </Button>
+        </div>
       </TableCell>
     </>
   );

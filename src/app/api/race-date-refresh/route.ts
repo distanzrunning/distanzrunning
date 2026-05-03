@@ -30,9 +30,12 @@ import {
 // scaling RUN_LIMIT well past ~25.
 export const maxDuration = 60;
 
-// Pilot-validated cap. Concurrency 3 + ~6 s/race lands a 25-race
-// batch comfortably inside maxDuration.
-const RUN_LIMIT = 25;
+// Two-pass extraction (homepage → sub-pages on miss) makes worst-
+// case scans ~15 s instead of ~6 s, so we lower the per-run cap
+// to keep the batch comfortably inside maxDuration. 15 races at
+// concurrency 3 lands at ~75 s upper bound but most races finish
+// in Pass 1 and only a few pay the Pass 2 tax.
+const RUN_LIMIT = 15;
 const CONCURRENCY = 3;
 
 const sanityClient = createClient({

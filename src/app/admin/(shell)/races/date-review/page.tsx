@@ -202,6 +202,7 @@ export default async function RaceDateReviewPage() {
                       title={row.title}
                       state={state}
                       suggestedDate={row.suggestedNextDate}
+                      previousEventDate={row.eventDate}
                     />
                   </TableRow>
                 );

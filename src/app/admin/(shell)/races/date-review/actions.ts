@@ -130,6 +130,40 @@ export async function rejectSuggestion(formData: FormData) {
   revalidatePath(REVIEW_PATH);
 }
 
+// Manual override path — editor sets eventDate directly without
+// going through the suggestion workflow. Used by the scannable
+// row's Calendar+Approve combo when the editor already knows the
+// date and doesn't want to wait for a scan.
+export async function approveManualDate(formData: FormData) {
+  await requireAdmin();
+
+  const id = String(formData.get("id") ?? "").trim();
+  const date = String(formData.get("date") ?? "").trim();
+  if (!id) throw new Error("Missing race id");
+  if (!date) throw new Error("Missing date");
+
+  const parsed = new Date(`${date}T12:00:00Z`);
+  if (Number.isNaN(parsed.getTime())) {
+    throw new Error("Invalid date");
+  }
+
+  await sanityClient
+    .patch(id)
+    .set({ eventDate: `${date}T12:00:00Z` })
+    // Defensive — if the race had previous suggestion fields
+    // lying around (rejected status etc.), wipe them so the row
+    // isn't half-stateful after the manual override.
+    .unset([
+      "suggestedNextDate",
+      "suggestedNextDateScrapedAt",
+      "suggestedNextDateSourceQuote",
+      "suggestedNextDateStatus",
+    ])
+    .commit();
+
+  revalidatePath(REVIEW_PATH);
+}
+
 export async function resetSuggestion(formData: FormData) {
   await requireAdmin();
 
