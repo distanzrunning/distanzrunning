@@ -33,6 +33,13 @@ export const MAX_PAGE_TEXT_CHARS = 30_000;
 const PASS_2_WAVE_1 = 5;
 const PASS_2_WAVE_2 = 3;
 const PASS_2_PER_PAGE_CHARS = 7_000;
+// External aggregator pages get a much larger budget — they're
+// pre-curated for race info and the actual date often sits deep
+// in the body (WordPress race-tour sites push the date past 25K
+// chars of nav/menus/JSON-LD). At Haiku's 200 K context this is
+// still comfortable (homepage 30K + wave 1 35K + wave 2 21K +
+// 2 sources × 30K ≈ 146K worst case).
+const EXTERNAL_SOURCE_CHARS = 30_000;
 // Sitemap discovery — many race sites' homepages are JS-rendered
 // and only expose a tiny static link set, but their /sitemap.xml
 // (or /sitemap_index.xml) lists every URL the site wants indexed,
@@ -90,15 +97,22 @@ interface ScoredLink {
   score: number;
 }
 
-// Strip HTML to plain text. Drops <script>/<style> blocks
-// entirely (their contents would otherwise leak into the LLM
-// prompt as garbage tokens), then collapses tags + whitespace.
+// Strip HTML to plain text. Drops <script>/<style> blocks AND
+// site-chrome blocks (<nav>/<header>/<footer>/<aside>) entirely
+// — their contents would otherwise eat hundreds of chars on
+// WordPress-style sites with sprawling mega-menus, pushing the
+// real race-info content past our truncation. After that the
+// regex collapses any remaining tags + whitespace.
 // Cheap regex pass; cheerio would be tidier but adds 200 KB.
 function htmlToText(html: string): string {
   return html
     .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, " ")
     .replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, " ")
     .replace(/<noscript\b[^>]*>[\s\S]*?<\/noscript>/gi, " ")
+    .replace(/<nav\b[^>]*>[\s\S]*?<\/nav>/gi, " ")
+    .replace(/<header\b[^>]*>[\s\S]*?<\/header>/gi, " ")
+    .replace(/<footer\b[^>]*>[\s\S]*?<\/footer>/gi, " ")
+    .replace(/<aside\b[^>]*>[\s\S]*?<\/aside>/gi, " ")
     .replace(/<[^>]+>/g, " ")
     .replace(/&nbsp;/g, " ")
     .replace(/&amp;/g, "&")
@@ -439,7 +453,7 @@ async function fetchExternalSourceText(
   const url = source.buildUrl(slug);
   try {
     const html = await fetchHtml(url);
-    const text = htmlToText(html).slice(0, PASS_2_PER_PAGE_CHARS);
+    const text = htmlToText(html).slice(0, EXTERNAL_SOURCE_CHARS);
     const lowerText = text.toLowerCase();
     if (!distinctive.some((w) => lowerText.includes(w))) {
       return null;
