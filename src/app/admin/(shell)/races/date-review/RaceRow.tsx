@@ -125,9 +125,14 @@ export default function RaceRow({ race, state }: RaceRowProps) {
       </TableRow>
       {expanded && hasLog && (
         <TableRow>
+          {/* Inline text-align: left overrides the DS Table's
+              last:text-right utility (which fires on every
+              last-child cell) so the panel content reads left
+              like the rest of the columns. */}
           <TableCell
             colSpan={6}
-            className="bg-[color:var(--ds-background-200)] !py-0 !px-0"
+            style={{ textAlign: "left" }}
+            className="bg-[color:var(--ds-background-200)] !px-0 !py-0"
           >
             <ScanLogPanel logJson={race.lastScanLog!} />
           </TableCell>
