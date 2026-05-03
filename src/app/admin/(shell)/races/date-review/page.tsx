@@ -87,7 +87,7 @@ export default async function RaceDateReviewPage() {
           <h1 className="m-0 text-heading-24 text-[color:var(--ds-gray-1000)]">
             Race Date Review
           </h1>
-          <p className="mb-0 mt-2 text-copy-13 text-[color:var(--ds-gray-700)]">
+          <p className="mb-0 mt-2 text-copy-14 text-[color:var(--ds-gray-700)]">
             {past.length} race{past.length === 1 ? "" : "s"} with a past
             eventDate.{" "}
             {pendingCount > 0
