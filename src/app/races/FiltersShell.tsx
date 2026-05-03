@@ -153,15 +153,13 @@ export default function FiltersShell({
 
   return (
     <div className="flex flex-col gap-6">
-      {/* Outer row is two zones: scrollable chip strip on the
-          left (overflows horizontally rather than wrapping) and
-          a shrink-0 right group with the toggle + sort. Keeps
-          the controls on a single line no matter how many
-          filters become active. */}
-      <div className="flex items-center gap-3">
-        <div
-          className="flex min-w-0 flex-1 items-center gap-2 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-        >
+      {/* Two-column layout: the chip column (left) wraps freely
+          across as many rows as needed; the right column
+          (toggle + sort) is shrink-0 and items-start so it stays
+          pinned top-right regardless of how many chip rows
+          appear beneath it. */}
+      <div className="flex items-start gap-3">
+        <div className="flex min-w-0 flex-1 flex-wrap items-center gap-2">
         {/* Search wrapped in its own order:-2 slot so it always
             wins the leftmost spot, even against active filter
             chips (which use order:-1 to pull in front of
@@ -358,13 +356,14 @@ export default function FiltersShell({
           </button>
         )}
         </div>
-        {/* Right-edge group (toggle + sort) — pinned outside the
-            scrollable chip strip with shrink-0 so it never gets
-            compressed or pushed onto a new line, no matter how
-            many filter chips exist. Hidden while Search is
-            expanded so the input has uncluttered focus. */}
+        {/* Right column (toggle + sort) — shrink-0 + h-8 + flex
+            items-center so it sits at the top of the row,
+            vertically aligned with the first chip row. Stays
+            pinned top-right regardless of how many chip rows
+            wrap beneath it. Hidden while Search is expanded so
+            the input has uncluttered focus. */}
         {!searchExpanded && (
-          <div className="flex shrink-0 items-center gap-3">
+          <div className="flex h-8 shrink-0 items-center gap-3">
             <Toggle
               size="default"
               label="Hide past races"

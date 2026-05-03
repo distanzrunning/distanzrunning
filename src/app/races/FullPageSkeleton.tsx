@@ -73,10 +73,11 @@ export default function FullPageSkeleton() {
 
         {/* Filter row + grid */}
         <div className="flex flex-col gap-6">
-          {/* Mirror of the live row: scrollable chip strip on
-              the left, shrink-0 right group with toggle + sort. */}
-          <div className="flex items-center gap-3">
-            <div className="flex min-w-0 flex-1 items-center gap-2 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          {/* Mirror of the live row: chips wrap freely in the
+              left column; right column (toggle + sort) is
+              shrink-0 and pinned top-right. */}
+          <div className="flex items-start gap-3">
+            <div className="flex min-w-0 flex-1 flex-wrap items-center gap-2">
               {/* Search (collapsed icon) */}
               <div className={`${PULSE_BG} h-8 w-8`} />
               {/* Date trigger — Calendar uses an explicit width={140}. */}
@@ -91,9 +92,9 @@ export default function FullPageSkeleton() {
               <ChipPlaceholder label="Temperature" />
               <ChipPlaceholder label="Tag" />
             </div>
-            {/* Right-edge group: Toggle (~140 px including
-                label) + 12 px gap + Sort icon trigger (32 px). */}
-            <div className="flex shrink-0 items-center gap-3">
+            {/* Right column: Toggle (~140 px including label) +
+                Sort icon trigger (32 px). Pinned top-right. */}
+            <div className="flex h-8 shrink-0 items-center gap-3">
               <div className={`${PULSE_BG} h-5 w-[140px]`} />
               <div className={`${PULSE_BG} h-8 w-8`} />
             </div>
