@@ -370,7 +370,11 @@ export default function FiltersShell({
             chip row. */}
         <div
           aria-hidden={searchExpanded}
-          className={`shrink-0 self-start overflow-hidden transition-[max-width,opacity,margin-left] duration-200 ease-out ${
+          // p-px gives the Sort trigger's 1 px box-shadow ring
+          // room to render — without it, overflow-hidden (needed
+          // for the collapse-to-0 transition) clips the ring on
+          // every side.
+          className={`shrink-0 self-start overflow-hidden p-px transition-[max-width,opacity,margin-left] duration-200 ease-out ${
             searchExpanded
               ? "ml-0 max-w-0 opacity-0 [pointer-events:none]"
               : "ml-3 max-w-[280px] opacity-100"
