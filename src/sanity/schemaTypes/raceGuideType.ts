@@ -8,6 +8,13 @@ export const raceGuideType = defineType({
   title: 'Race Guide',
   type: 'document',
   icon: PinIcon,
+  fieldsets: [
+    {
+      name: 'dateRefresh',
+      title: 'Date Refresh (auto-scraped)',
+      options: { collapsible: true, collapsed: true },
+    },
+  ],
   fields: [
     defineField({
       name: 'title',
@@ -562,6 +569,45 @@ export const raceGuideType = defineType({
     defineField({
       name: 'body',
       type: 'blockContent',
+    }),
+    defineField({
+      name: 'suggestedNextDate',
+      title: 'Suggested Next Date',
+      type: 'datetime',
+      fieldset: 'dateRefresh',
+      description:
+        'Auto-scraped suggestion from the official website. Approve to copy into eventDate; reject to discard.',
+      readOnly: true,
+    }),
+    defineField({
+      name: 'suggestedNextDateScrapedAt',
+      title: 'Scraped At',
+      type: 'datetime',
+      fieldset: 'dateRefresh',
+      readOnly: true,
+    }),
+    defineField({
+      name: 'suggestedNextDateSourceQuote',
+      title: 'Source Quote',
+      type: 'text',
+      fieldset: 'dateRefresh',
+      description: 'Verbatim phrase the date was extracted from.',
+      readOnly: true,
+    }),
+    defineField({
+      name: 'suggestedNextDateStatus',
+      title: 'Status',
+      type: 'string',
+      fieldset: 'dateRefresh',
+      options: {
+        list: [
+          { title: 'Pending review', value: 'pending' },
+          { title: 'Approved', value: 'approved' },
+          { title: 'Rejected', value: 'rejected' },
+        ],
+      },
+      description:
+        'Editor sets this. "Approved" → manually copy suggestedNextDate into eventDate, then clear status to re-enable scraping.',
     }),
   ],
 })
