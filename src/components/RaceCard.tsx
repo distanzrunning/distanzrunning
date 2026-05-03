@@ -7,7 +7,6 @@ import { Badge } from "@/components/ui/Badge";
 import CardImage from "@/components/ui/CardImage";
 import {
   convertCurrencySync,
-  formatDistance,
   formatElevation,
   formatPrice,
 } from "@/lib/raceUtils";
@@ -60,9 +59,6 @@ export interface RaceCardProps {
   elevationGain?: number;
   price?: number;
   currency?: string;
-  /** Race distance in km (canonical). Rendered in the hover stat
-   *  overlay; reformats to mi when the user picks Imperial. */
-  distance?: number;
 }
 
 const safeFormat = (iso: string | undefined, pattern: string): string => {
@@ -81,7 +77,7 @@ function StatColumn({
   detail?: string;
 }) {
   return (
-    <div className="flex w-16 flex-col items-center gap-4 text-center">
+    <div className="flex w-20 flex-col items-center gap-4 text-center">
       <div className="flex h-6 w-full items-center justify-center rounded-full bg-white/30 backdrop-blur-md">
         <span className="text-label-12 font-medium leading-none text-white">
           {label}
@@ -121,7 +117,6 @@ export default function RaceCard({
   elevationGain,
   price,
   currency,
-  distance,
 }: RaceCardProps) {
   const isIndex = variant === "index";
   const { units, currency: displayCurrency } = useUnits();
@@ -133,8 +128,6 @@ export default function RaceCard({
   const profileLabel = profile
     ? profile.charAt(0).toUpperCase() + profile.slice(1)
     : undefined;
-  const distanceLabel =
-    distance != null ? formatDistance(distance, units) : undefined;
   const elevationGainLabel =
     elevationGain != null ? formatElevation(elevationGain, units) : undefined;
   const isLocalCurrency = displayCurrency === "local";
@@ -149,7 +142,7 @@ export default function RaceCard({
         )
       : undefined;
   const hasAnyHoverContent = Boolean(
-    distanceLabel || surface || profileLabel || elevationGainLabel || priceLabel,
+    surface || profileLabel || elevationGainLabel || priceLabel,
   );
 
   // Outer rounding — index variant uses overflow-hidden +
@@ -196,16 +189,13 @@ export default function RaceCard({
             three stat columns on top. Fades in on group hover. */}
         {isIndex && hasAnyHoverContent && (
           <div
-            className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center gap-4 px-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+            className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center gap-6 px-6 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
             style={{
               backdropFilter: "blur(12px) brightness(0.8) contrast(1.1)",
               WebkitBackdropFilter:
                 "blur(12px) brightness(0.8) contrast(1.1)",
             }}
           >
-            {distanceLabel && (
-              <StatColumn label="Distance" value={distanceLabel} />
-            )}
             {surface && (
               <StatColumn
                 label="Surface"

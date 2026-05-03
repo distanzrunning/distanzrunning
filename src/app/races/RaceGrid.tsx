@@ -71,7 +71,6 @@ export default function RaceGrid({ races }: { races: RaceIndexItem[] }) {
             elevationGain={race.elevationGain}
             price={race.price}
             currency={race.currency}
-            distance={race.distance}
           />
         </li>
       ))}
