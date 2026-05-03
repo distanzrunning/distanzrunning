@@ -23,7 +23,7 @@ export default function BatchScanButton() {
     const scanningToastId = showToast({
       message: "Running batch scan…",
       description:
-        "Checking up to 10 past-dated races without an existing suggestion. May take 30–60 s.",
+        "Checking up to 3 past-dated races without an existing suggestion. Click again for the next batch when this one finishes.",
       preserve: true,
     });
 

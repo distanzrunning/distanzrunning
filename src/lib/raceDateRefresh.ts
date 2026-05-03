@@ -969,12 +969,19 @@ async function processRaceInner(
   });
 }
 
-// Public batch entry — selects up to RUN_LIMIT past-dated races
-// without an existing suggestion status, scans each via
+// Public batch entry — selects up to BATCH_RUN_LIMIT past-dated
+// races without an existing suggestion status, scans each via
 // processRace at the given concurrency, and returns the per-race
 // results. Shared between the cron-triggered API route and the
 // admin "Run batch scan" button so they exercise the same path.
-export const BATCH_RUN_LIMIT = 10;
+//
+// Hard math: each processRace can take up to SCAN_OVERALL_TIMEOUT_MS
+// (50 s). With concurrency=3 the wallclock ceiling is one parallel
+// wave ≈ 50 s. Anything more than 3 races per batch implies a
+// second wave and would breach the Vercel 60 s function timeout.
+// The cron makes up for the small batch by running daily — see
+// vercel.json.
+export const BATCH_RUN_LIMIT = 3;
 export const BATCH_CONCURRENCY = 3;
 
 export interface BatchRunResult {
