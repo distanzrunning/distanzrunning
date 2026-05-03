@@ -3,11 +3,11 @@
 // src/app/admin/(shell)/races/date-review/RowActions.tsx
 //
 // Per-row controls for the Race Date Review queue:
-//   - Date input (default: suggestedNextDate) so the editor can
-//     nudge the value before approving — handy when Haiku got the
-//     month/day right but, say, picked the wrong year edition.
+//   - DS Calendar (range mode, used as single-date adapter — we
+//     pass {start, end} both pointing at the same date so the
+//     trigger formats as "Apr 25" and a single click reselects).
 //   - Approve button (DS Button, default variant) → server action.
-//     The date input's current value goes along as overrideDate.
+//     The current Calendar pick rides along as overrideDate.
 //   - Reject button (DS Button, secondary variant) → server action.
 //     Confirms first since rejecting hides the row until the
 //     editor manually clears the status in Studio.
@@ -18,15 +18,26 @@
 import { useState, useTransition } from "react";
 
 import { Button } from "@/components/ui/Button";
+import { Calendar, type DateRange } from "@/components/ui/Calendar";
 
 import { approveSuggestion, rejectSuggestion } from "./actions";
 
 interface RowActionsProps {
   id: string;
-  /** ISO datetime — used as the default for the date input. */
+  /** ISO datetime — used as the default Calendar pick. */
   suggestedDate: string;
   /** Race title — used in the reject confirmation prompt. */
   title: string;
+}
+
+// Local-date YYYY-MM-DD (NOT toISOString — toISOString shifts to
+// UTC, off-by-oneing any timezone east of UTC). Mirrors the helper
+// in DateFilter so the format stays consistent across the codebase.
+function toIsoDate(d: Date): string {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
 }
 
 export default function RowActions({
@@ -34,14 +45,25 @@ export default function RowActions({
   suggestedDate,
   title,
 }: RowActionsProps) {
-  const [overrideDate, setOverrideDate] = useState(suggestedDate.slice(0, 10));
+  const initial = new Date(suggestedDate);
+  const [picked, setPicked] = useState<Date>(initial);
   const [pending, startTransition] = useTransition();
+
+  // Single-date adapter for the range-mode Calendar. We always
+  // pass {start, end} pointing at the same day; clicking any other
+  // day resets the range to {start: clicked, end: null}, and our
+  // onChange treats whichever side is set as the new pick.
+  const range: DateRange = { start: picked, end: picked };
+  const handleCalendarChange = (next: DateRange) => {
+    const candidate = next.start ?? next.end;
+    if (candidate) setPicked(candidate);
+  };
 
   const handleApprove = () => {
     startTransition(async () => {
       const fd = new FormData();
       fd.set("id", id);
-      fd.set("overrideDate", overrideDate);
+      fd.set("overrideDate", toIsoDate(picked));
       await approveSuggestion(fd);
     });
   };
@@ -60,17 +82,13 @@ export default function RowActions({
 
   return (
     <div className="flex items-center gap-2">
-      {/* Native <input type="date"> — DS doesn't ship a date input
-          (Calendar is popover-based). Matches the Input/Select
-          small size: h-8, rounded-[6px], faint hairline ring at
-          gray-1000 alpha-0.1, hover bumps to gray-alpha-600. */}
-      <input
-        type="date"
-        value={overrideDate}
-        onChange={(e) => setOverrideDate(e.target.value)}
-        disabled={pending}
-        aria-label={`Edit suggested date for ${title}`}
-        className="h-8 cursor-text rounded-[6px] bg-[color:var(--ds-background-100)] px-3 text-copy-13 text-[color:var(--ds-gray-1000)] outline-none transition-shadow duration-200 [box-shadow:0_0_0_1px_rgba(var(--ds-gray-1000-rgb),0.1)] hover:[box-shadow:0_0_0_1px_var(--ds-gray-alpha-600)] focus-visible:[box-shadow:0_0_0_1px_var(--ds-gray-alpha-600),0_0_0_4px_rgba(var(--ds-gray-1000-rgb),0.16)] disabled:cursor-not-allowed"
+      <Calendar
+        placeholder="Date"
+        value={range}
+        onChange={handleCalendarChange}
+        size="small"
+        width={140}
+        showTimeInput={false}
       />
       <Button size="small" loading={pending} onClick={handleApprove}>
         Approve
