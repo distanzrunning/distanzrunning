@@ -188,28 +188,46 @@ function ScannableRow({ id, title, previousEventDate }: RowActionsProps) {
     startTransition(async () => {
       const fd = new FormData();
       fd.set("id", id);
-      const result = await scanRace(fd);
-      dismissToast(scanningToastId);
+      try {
+        const result = await scanRace(fd);
 
-      if (result.status === "suggested") {
+        if (result.status === "suggested") {
+          showToast({
+            message: `Suggestion written for "${title}"`,
+            description: `Suggested next date: ${result.suggestedNextDate ?? "—"}. Review it in the row above.`,
+            variant: "success",
+          });
+        } else {
+          const explainer: Record<typeof result.status, string> = {
+            no_date_found: "Haiku couldn't find a future date on the available pages.",
+            fetch_error: "Couldn't reach the website (or scan exceeded the 50 s budget).",
+            extract_error: "The model errored — try again or use manual approve.",
+            invalid_date: "Returned date didn't pass validation.",
+          };
+          showToast({
+            message: `No suggestion for "${title}"`,
+            description: `${explainer[result.status]} ${result.message ? `Details: ${result.message}` : ""}`.trim(),
+            variant: "warning",
+            preserve: true,
+          });
+        }
+      } catch (err) {
+        // Server action threw — usually a 504 (function timeout)
+        // surfaced as a fetch failure on the client side. The
+        // page-level error.tsx boundary catches React render
+        // errors; this catch handles the in-handler case so we
+        // can still clean up the toast and tell the editor what
+        // to do next.
         showToast({
-          message: `Suggestion written for "${title}"`,
-          description: `Suggested next date: ${result.suggestedNextDate ?? "—"}. Review it in the row above.`,
-          variant: "success",
-        });
-      } else {
-        const explainer: Record<typeof result.status, string> = {
-          no_date_found: "Haiku couldn't find a future date on the available pages.",
-          fetch_error: "Couldn't reach the website (or scan exceeded the 50 s budget).",
-          extract_error: "The model errored — try again or use manual approve.",
-          invalid_date: "Returned date didn't pass validation.",
-        };
-        showToast({
-          message: `No suggestion for "${title}"`,
-          description: `${explainer[result.status]} ${result.message ? `Details: ${result.message}` : ""}`.trim(),
-          variant: "warning",
+          message: `Scan request failed for "${title}"`,
+          description: `${(err as Error).message}. The work may still complete in the background — refresh in a moment to check the row's state.`,
+          variant: "error",
           preserve: true,
         });
+      } finally {
+        // Always dismiss the scanning toast, even on error, so
+        // it doesn't sit there forever.
+        dismissToast(scanningToastId);
       }
     });
   };
