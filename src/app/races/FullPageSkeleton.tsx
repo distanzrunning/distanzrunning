@@ -87,13 +87,10 @@ export default function FullPageSkeleton() {
             <ChipPlaceholder label="Elevation" />
             <ChipPlaceholder label="Temperature" />
             <ChipPlaceholder label="Tag" />
-            {/* Sort — DS Select (w-[170px]) + direction icon button
-                (w-8) with a 4 px gap, pushed right via ml-auto to
-                mirror the live row. */}
-            <div className="ml-auto inline-flex items-center gap-1">
-              <div className={`${PULSE_BG} h-8 w-[170px]`} />
-              <div className={`${PULSE_BG} h-8 w-8`} />
-            </div>
+            {/* Sort — single split-trigger (field Select 170 px +
+                1 px divider + 32 px direction button = ~203 px),
+                pushed right via ml-auto to mirror the live row. */}
+            <div className={`${PULSE_BG} ml-auto h-8 w-[203px]`} />
           </div>
           <RaceGridSkeleton />
         </div>
