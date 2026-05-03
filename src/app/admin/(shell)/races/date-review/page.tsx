@@ -80,28 +80,13 @@ export default async function RaceDateReviewPage() {
   );
 
   return (
-    <div style={{ padding: "32px 24px" }}>
-      <div style={{ maxWidth: 1280, margin: "0 auto" }}>
-        <header style={{ marginBottom: 24 }}>
-          <h1
-            style={{
-              fontSize: 24,
-              fontWeight: 600,
-              lineHeight: "32px",
-              margin: 0,
-              color: "var(--ds-gray-1000)",
-            }}
-          >
+    <div className="px-6 py-8">
+      <div className="mx-auto max-w-[1280px]">
+        <header className="mb-6">
+          <h1 className="m-0 text-heading-24 text-[color:var(--ds-gray-1000)]">
             Race Date Review
           </h1>
-          <p
-            style={{
-              marginTop: 6,
-              marginBottom: 0,
-              fontSize: 13,
-              color: "var(--ds-gray-700)",
-            }}
-          >
+          <p className="mb-0 mt-1.5 text-copy-13 text-[color:var(--ds-gray-700)]">
             {pending.length === 0
               ? "Nothing pending. Suggestions land here when /api/race-date-refresh runs."
               : `${pending.length} pending ${
@@ -112,14 +97,10 @@ export default async function RaceDateReviewPage() {
           </p>
         </header>
 
-        <section
-          style={{
-            border: "1px solid var(--ds-gray-400)",
-            borderRadius: 12,
-            background: "var(--ds-background-100)",
-            overflow: "hidden",
-          }}
-        >
+        {/* material-medium gives bg-100 + 1 px gray-400 border +
+            12 px radius + DS shadow. overflow-hidden keeps the
+            Table's first/last row corners inside the radius. */}
+        <section className="material-medium overflow-hidden">
           <Table>
             <TableHeader>
               <TableRow>
@@ -128,7 +109,7 @@ export default async function RaceDateReviewPage() {
                 <TableHead>Suggested</TableHead>
                 <TableHead>Source quote</TableHead>
                 <TableHead>Scraped</TableHead>
-                <TableHead style={{ minWidth: 280 }}>Action</TableHead>
+                <TableHead className="min-w-[280px]">Action</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -136,12 +117,7 @@ export default async function RaceDateReviewPage() {
                 <TableRow>
                   <TableCell
                     colSpan={6}
-                    style={{
-                      padding: 32,
-                      textAlign: "center",
-                      color: "var(--ds-gray-700)",
-                      fontSize: 13,
-                    }}
+                    className="py-8 text-center text-copy-13 text-[color:var(--ds-gray-700)]"
                   >
                     No pending suggestions.
                   </TableCell>
@@ -149,16 +125,8 @@ export default async function RaceDateReviewPage() {
               )}
               {pending.map((row) => (
                 <TableRow key={row._id}>
-                  <TableCell
-                    style={{
-                      maxWidth: 220,
-                      fontSize: 13,
-                      color: "var(--ds-gray-1000)",
-                    }}
-                  >
-                    <div
-                      style={{ display: "flex", alignItems: "center", gap: 6 }}
-                    >
+                  <TableCell className="max-w-[220px] text-copy-13 text-[color:var(--ds-gray-1000)]">
+                    <div className="flex items-center gap-1.5">
                       <span>{row.title}</span>
                       {row.officialWebsite && (
                         <a
@@ -167,60 +135,32 @@ export default async function RaceDateReviewPage() {
                           rel="noopener noreferrer"
                           aria-label={`Open ${row.title} official website`}
                           title="Open official website"
-                          style={{
-                            color: "var(--ds-gray-700)",
-                            display: "inline-flex",
-                          }}
+                          className="inline-flex text-[color:var(--ds-gray-700)] hover:text-[color:var(--ds-gray-1000)]"
                         >
-                          <ExternalLink className="w-3.5 h-3.5" />
+                          <ExternalLink className="size-3.5" />
                         </a>
                       )}
                     </div>
                   </TableCell>
-                  <TableCell style={{ whiteSpace: "nowrap" }}>
-                    <Badge variant="red-subtle" size="sm">
-                      Past
-                    </Badge>
-                    <span
-                      style={{
-                        marginLeft: 8,
-                        fontSize: 12,
-                        color: "var(--ds-gray-900)",
-                      }}
-                    >
-                      {safeFormat(row.eventDate, "d MMM yyyy")}
-                    </span>
+                  <TableCell className="whitespace-nowrap">
+                    <div className="flex items-center gap-2">
+                      <Badge variant="red-subtle" size="sm">
+                        Past
+                      </Badge>
+                      <span className="text-label-12 text-[color:var(--ds-gray-900)]">
+                        {safeFormat(row.eventDate, "d MMM yyyy")}
+                      </span>
+                    </div>
                   </TableCell>
-                  <TableCell
-                    style={{
-                      whiteSpace: "nowrap",
-                      fontSize: 13,
-                      fontWeight: 500,
-                      color: "var(--ds-gray-1000)",
-                    }}
-                  >
+                  <TableCell className="whitespace-nowrap text-copy-13 font-medium text-[color:var(--ds-gray-1000)]">
                     {safeFormat(row.suggestedNextDate, "d MMM yyyy")}
                   </TableCell>
-                  <TableCell
-                    style={{
-                      maxWidth: 320,
-                      fontSize: 12,
-                      fontStyle: "italic",
-                      color: "var(--ds-gray-900)",
-                      lineHeight: 1.4,
-                    }}
-                  >
+                  <TableCell className="max-w-[320px] text-copy-13 italic text-[color:var(--ds-gray-900)]">
                     {row.suggestedNextDateSourceQuote
                       ? `"${row.suggestedNextDateSourceQuote}"`
                       : "—"}
                   </TableCell>
-                  <TableCell
-                    style={{
-                      whiteSpace: "nowrap",
-                      fontSize: 12,
-                      color: "var(--ds-gray-700)",
-                    }}
-                  >
+                  <TableCell className="whitespace-nowrap text-label-12 text-[color:var(--ds-gray-700)]">
                     {safeFormat(row.suggestedNextDateScrapedAt, "d MMM, HH:mm")}
                   </TableCell>
                   <TableCell>
