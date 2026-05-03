@@ -443,23 +443,41 @@ function distinctiveTitleWords(title: string): string[] {
 // the race — without that sanity check, slug collisions could
 // feed Haiku a totally unrelated event's page and we'd suggest
 // the wrong date.
+//
+// Logs every attempt so we can diagnose Cloudflare-blocked
+// fetches, slug mismatches, and sanity-check rejections from
+// Vercel runtime logs (most failures here are silent — fetch
+// errors caught + null returned — without this telemetry).
 async function fetchExternalSourceText(
   source: ExternalSource,
   raceTitle: string,
   distinctive: string[],
 ): Promise<{ url: string; text: string; sourceName: string } | null> {
   const slug = slugifyRaceTitle(raceTitle);
-  if (!slug) return null;
+  if (!slug) {
+    console.log(`[date-refresh] ${source.name} skipped: empty slug for "${raceTitle}"`);
+    return null;
+  }
   const url = source.buildUrl(slug);
   try {
     const html = await fetchHtml(url);
     const text = htmlToText(html).slice(0, EXTERNAL_SOURCE_CHARS);
     const lowerText = text.toLowerCase();
-    if (!distinctive.some((w) => lowerText.includes(w))) {
+    const matchedWord = distinctive.find((w) => lowerText.includes(w));
+    if (!matchedWord) {
+      console.log(
+        `[date-refresh] ${source.name} sanity-check failed for "${raceTitle}" at ${url} (text length: ${text.length}, distinctive words: ${distinctive.join(",")})`,
+      );
       return null;
     }
+    console.log(
+      `[date-refresh] ${source.name} OK for "${raceTitle}" at ${url} (text length: ${text.length}, matched: ${matchedWord})`,
+    );
     return { url, text, sourceName: source.name };
-  } catch {
+  } catch (err) {
+    console.log(
+      `[date-refresh] ${source.name} fetch failed for "${raceTitle}" at ${url}: ${(err as Error).message}`,
+    );
     return null;
   }
 }
