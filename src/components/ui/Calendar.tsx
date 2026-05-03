@@ -188,6 +188,13 @@ export interface CalendarProps {
   maxDate?: Date;
   size?: "small" | "default";
   showMonthTab?: boolean;
+  /** Override the trigger button label. Receives the current
+   *  range; return what the trigger should display. Useful when
+   *  the default "Apr 25" / "Apr 25 - May 2" formatting is too
+   *  terse for the surrounding context (e.g. an admin queue
+   *  where the year matters). When omitted, the built-in
+   *  formatDateRange is used. */
+  formatTriggerLabel?: (range: DateRange) => string;
 }
 
 // ============================================================================
@@ -890,6 +897,7 @@ export function Calendar({
   maxDate,
   size = "default",
   showMonthTab = false,
+  formatTriggerLabel,
 }: CalendarProps) {
   // Resolve default preset on initial render
   const resolvedDefault = React.useMemo(() => {
@@ -1030,7 +1038,11 @@ export function Calendar({
   };
 
   const hasSelection = dateRange.start !== null;
-  const displayText = hasSelection ? formatDateRange(dateRange) : placeholder;
+  const displayText = hasSelection
+    ? formatTriggerLabel
+      ? formatTriggerLabel(dateRange)
+      : formatDateRange(dateRange)
+    : placeholder;
   const selectedPresetLabel =
     presets?.find((p) => p.value === selectedPreset)?.label ||
     futurePresets?.find((p) => p.value === selectedPreset)?.label;

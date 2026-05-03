@@ -15,6 +15,7 @@
 // buttons take loading={pending} so they spinner-disable in unison.
 
 import { useState, useTransition } from "react";
+import { format } from "date-fns";
 
 import { Button } from "@/components/ui/Button";
 import { Calendar, type DateRange } from "@/components/ui/Calendar";
@@ -88,8 +89,16 @@ export default function RowActions({
           value={range}
           onChange={handleCalendarChange}
           size="small"
-          width={140}
+          // Width bumped from 140 → 170 to fit "25 Apr 2027" with
+          // the chevron without truncating.
+          width={170}
           showTimeInput={false}
+          // Override the default "Apr 25" label so the year is
+          // visible — this row is approving a 2027 date and the
+          // editor should see that explicitly.
+          formatTriggerLabel={(r) =>
+            r.start ? format(r.start, "d MMM yyyy") : ""
+          }
         />
       </TableCell>
       {/* justify-end so the buttons line up with the right-aligned
