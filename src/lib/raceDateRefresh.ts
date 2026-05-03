@@ -18,9 +18,20 @@
 //            page; Tokyo's news/detail/… article).
 
 import Anthropic from "@anthropic-ai/sdk";
+import Browserbase from "@browserbasehq/sdk";
 import { createClient } from "next-sanity";
+import { chromium, type Browser } from "playwright-core";
 
 export const FETCH_TIMEOUT_MS = 10_000;
+// Browserbase render budget — total time allowed for goto +
+// content settle. JS-heavy SPAs need a moment after DOMContent-
+// Loaded for the date to render.
+const BROWSERBASE_GOTO_TIMEOUT_MS = 20_000;
+// SPA shell threshold — if plain fetch returns less than this
+// many chars after stripping, we suspect a JS-rendered shell
+// and escalate to Browserbase. Shanghai's homepage is ~1.2 KB
+// of JS bootstrap; a real article is rarely under 2 KB.
+const SPA_SHELL_THRESHOLD_CHARS = 2_000;
 // Haiku context comfortably handles ~30 K chars of stripped page
 // text. Truncating bounds token cost on link-heavy / blog-heavy
 // race sites without losing the date (which is almost always
@@ -124,7 +135,12 @@ function htmlToText(html: string): string {
     .trim();
 }
 
-async function fetchHtml(url: string): Promise<string> {
+// Plain fetch — the cheap path. Returns HTML on success or
+// throws on network error / non-2xx. Used directly when we don't
+// expect JS rendering or CF mitigation; otherwise wrapped by
+// fetchHtmlWithFallback which escalates to Browserbase on
+// failure indicators.
+async function fetchHtmlPlain(url: string): Promise<string> {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
   try {
@@ -146,12 +162,115 @@ async function fetchHtml(url: string): Promise<string> {
       redirect: "follow",
     });
     if (!res.ok) {
-      throw new Error(`HTTP ${res.status}`);
+      // Surface the status in the error so the fallback layer
+      // can decide whether to escalate (403/429 = blocked, 5xx =
+      // server problem we shouldn't retry through Browserbase).
+      const err = new Error(`HTTP ${res.status}`);
+      (err as Error & { httpStatus?: number }).httpStatus = res.status;
+      throw err;
     }
     return await res.text();
   } finally {
     clearTimeout(timer);
   }
+}
+
+// Browserbase-rendered fetch. Spins up a remote Chromium session,
+// loads the URL with JS execution, returns the rendered DOM. Used
+// only as a fallback — see fetchHtmlWithFallback for the
+// escalation triggers. Browserbase sessions are pay-per-minute,
+// so we close immediately after content() to keep cost down.
+async function fetchHtmlBrowserbase(url: string): Promise<string> {
+  const apiKey = process.env.BROWSERBASE_API_KEY;
+  const projectId = process.env.BROWSERBASE_PROJECT_ID;
+  if (!apiKey || !projectId) {
+    throw new Error("Browserbase credentials not configured");
+  }
+  const bb = new Browserbase({ apiKey });
+  const session = await bb.sessions.create({ projectId });
+  let browser: Browser | null = null;
+  try {
+    browser = await chromium.connectOverCDP(session.connectUrl);
+    const context = browser.contexts()[0];
+    const page = context.pages()[0] ?? (await context.newPage());
+    await page.goto(url, {
+      waitUntil: "domcontentloaded",
+      timeout: BROWSERBASE_GOTO_TIMEOUT_MS,
+    });
+    return await page.content();
+  } finally {
+    if (browser) await browser.close();
+  }
+}
+
+// Two-tier fetch: try plain first (free, fast), escalate to
+// Browserbase when the response looks like it'll be useless.
+// Triggers:
+//   - HTTP 403 or 429 → likely Cloudflare bot mitigation
+//                       (marathontours, ahotu) — JS challenge
+//                       requires a real browser to solve
+//   - HTML strips down to < 2 KB of text → likely a SPA shell
+//                       (Shanghai, Bangsaen21, Xiamen) — needs
+//                       JS execution to populate the DOM
+//
+// Falls back gracefully when Browserbase fails or isn't
+// configured: returns whatever plain fetch managed to retrieve
+// rather than failing the whole scan.
+async function fetchHtml(url: string): Promise<string> {
+  const browserbaseEnabled =
+    Boolean(process.env.BROWSERBASE_API_KEY) &&
+    Boolean(process.env.BROWSERBASE_PROJECT_ID) &&
+    process.env.BROWSERBASE_DISABLED !== "1";
+
+  let plainHtml: string | null = null;
+  let plainError: Error | null = null;
+  try {
+    plainHtml = await fetchHtmlPlain(url);
+  } catch (err) {
+    plainError = err as Error;
+  }
+
+  // 403 / 429 → escalate immediately (no usable HTML to fall
+  // back on).
+  if (plainError) {
+    const status = (plainError as Error & { httpStatus?: number }).httpStatus;
+    if ((status === 403 || status === 429) && browserbaseEnabled) {
+      console.log(
+        `[date-refresh] escalating to Browserbase (HTTP ${status} on plain fetch): ${url}`,
+      );
+      try {
+        return await fetchHtmlBrowserbase(url);
+      } catch (bbErr) {
+        console.log(
+          `[date-refresh] Browserbase failed for ${url}: ${(bbErr as Error).message}`,
+        );
+        throw plainError;
+      }
+    }
+    throw plainError;
+  }
+
+  // SPA shell detection — if stripped text is suspiciously small,
+  // the page is almost certainly JS-rendered. Escalate but keep
+  // plainHtml as a fallback if Browserbase fails.
+  if (plainHtml && browserbaseEnabled) {
+    const stripped = htmlToText(plainHtml);
+    if (stripped.length < SPA_SHELL_THRESHOLD_CHARS) {
+      console.log(
+        `[date-refresh] escalating to Browserbase (SPA shell, ${stripped.length} chars stripped): ${url}`,
+      );
+      try {
+        return await fetchHtmlBrowserbase(url);
+      } catch (bbErr) {
+        console.log(
+          `[date-refresh] Browserbase failed for ${url}, returning plain shell: ${(bbErr as Error).message}`,
+        );
+        return plainHtml;
+      }
+    }
+  }
+
+  return plainHtml!;
 }
 
 // Pull every <a href> from the page, resolve to absolute URLs,
