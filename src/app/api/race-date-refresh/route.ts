@@ -30,12 +30,12 @@ import {
 // scaling RUN_LIMIT well past ~25.
 export const maxDuration = 60;
 
-// Two-pass extraction (homepage → sub-pages on miss) makes worst-
-// case scans ~15 s instead of ~6 s, so we lower the per-run cap
-// to keep the batch comfortably inside maxDuration. 15 races at
-// concurrency 3 lands at ~75 s upper bound but most races finish
-// in Pass 1 and only a few pay the Pass 2 tax.
-const RUN_LIMIT = 15;
+// 2-level Pass 2 crawl (homepage + 5 wave-1 pages + 3 wave-2
+// pages on miss) makes worst-case scans ~20 s. Lower per-run cap
+// to keep the batch comfortably inside maxDuration. Most races
+// still finish in Pass 1 (homepage only) and don't pay the
+// multi-page tax.
+const RUN_LIMIT = 10;
 const CONCURRENCY = 3;
 
 const sanityClient = createClient({

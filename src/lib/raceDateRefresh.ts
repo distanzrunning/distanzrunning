@@ -26,11 +26,13 @@ export const FETCH_TIMEOUT_MS = 10_000;
 // race sites without losing the date (which is almost always
 // near the top).
 export const MAX_PAGE_TEXT_CHARS = 30_000;
-// Multi-page Pass 2 — fetch up to N best-scoring sub-pages and
-// concatenate their text alongside the homepage. Larger N = better
-// recall, more LLM tokens, slower scan.
-const PASS_2_TOP_N = 5;
-const PASS_2_PER_PAGE_CHARS = 8_000;
+// Multi-page Pass 2 — 2-level BFS. Wave 1 fetches the top N
+// scoring links from the homepage + sitemap. Wave 2 then fetches
+// the top M scoring links found INSIDE those wave-1 pages
+// (typically catches news articles linked from a /news/ index).
+const PASS_2_WAVE_1 = 5;
+const PASS_2_WAVE_2 = 3;
+const PASS_2_PER_PAGE_CHARS = 7_000;
 // Sitemap discovery — many race sites' homepages are JS-rendered
 // and only expose a tiny static link set, but their /sitemap.xml
 // (or /sitemap_index.xml) lists every URL the site wants indexed,
@@ -283,6 +285,21 @@ function topScoringLinks(
     .slice(0, n);
 }
 
+// Drop any link whose URL already appears in `visited`, and
+// dedupe within the input list itself. Mutates `visited` only
+// indirectly — caller decides when to mark URLs as seen.
+function dedupeLinks(
+  links: { url: string; text: string }[],
+  visited: Set<string>,
+): { url: string; text: string }[] {
+  const seen = new Set<string>();
+  return links.filter((l) => {
+    if (visited.has(l.url) || seen.has(l.url)) return false;
+    seen.add(l.url);
+    return true;
+  });
+}
+
 async function extractNextDate(
   race: PendingRace,
   pageText: string,
@@ -296,9 +313,14 @@ Race name: ${race.title}
 Previous edition date (now in the past): ${previousDate}
 Today's date: ${today}
 
-Read the website text below and find the date of the NEXT edition of THIS specific race. The text may include content from multiple sub-pages (separated by markers like "=== PAGE: …"). The text may also describe other races held by the same organiser — be careful to return the date of "${race.title}" specifically, not a sibling event.
+Read the website text below and find the date of the NEXT edition of THIS specific race. Notes:
 
-Only return a date if it is explicitly stated on the page AND is after today. If the page only shows past results, says "TBA"/"coming soon" without a concrete date, or is too ambiguous, return null.
+- The text may be in any language (English, Japanese, Spanish, German, Chinese, etc.). Interpret it regardless of language. Date formats may also vary: "March 7, 2027", "07.03.2027", "2027年3月7日", "07/03/2027", etc. — return the resolved date as YYYY-MM-DD.
+- The text may include content from multiple sub-pages (separated by markers like "=== PAGE: …"). Pages from /news/ or announcement-style URLs often carry the most authoritative scheduling info.
+- The text may also describe other races held by the same organiser (e.g. a half marathon alongside a marathon). Return the date of "${race.title}" specifically, not a sibling event.
+- News articles may be dated themselves (e.g. an article published 2026-04-15) — that's the publish date, not the race date. The race date is the one mentioned IN the article body about when the race will be held.
+
+Only return a date if it is explicitly stated AND is after today. If only past dates appear, or the page says "TBA"/"coming soon"/"more info to follow" without a concrete date, return null.
 
 Output STRICT JSON only — no markdown, no prose around it:
 
@@ -390,6 +412,23 @@ async function fetchSubPageText(url: string): Promise<string | null> {
   }
 }
 
+// Fetch a page and return BOTH its stripped text AND its outgoing
+// link set so wave 2 of the crawl can pick deeper candidates.
+// Returns null on failure.
+async function fetchPageWithLinks(
+  url: string,
+): Promise<{ text: string; links: { url: string; text: string }[] } | null> {
+  try {
+    const html = await fetchHtml(url);
+    return {
+      text: htmlToText(html).slice(0, PASS_2_PER_PAGE_CHARS),
+      links: extractLinks(html, url),
+    };
+  } catch {
+    return null;
+  }
+}
+
 export async function processRace(
   race: PendingRace,
   options: { dryRun: boolean },
@@ -422,49 +461,64 @@ export async function processRace(
     };
   }
 
-  // Pass 2 — homepage didn't have it. Parse outgoing links from
-  // the raw homepage HTML AND any sitemap.xml entries (sitemaps
-  // catch JS-rendered sites where the static homepage HTML
-  // doesn't expose news article URLs), score against the race
-  // title, fetch the top N sub-pages, and re-extract from
-  // combined text.
+  // Pass 2 — homepage didn't have it. 2-level BFS:
+  //   Wave 1: homepage's outgoing links + /sitemap.xml entries,
+  //           scored, top PASS_2_WAVE_1 fetched.
+  //   Wave 2: links found INSIDE those wave-1 pages, scored,
+  //           top PASS_2_WAVE_2 fetched. Catches sites where the
+  //           homepage links to a /news/ index and the actual
+  //           article (with the date) is linked only from there.
   if (!extraction.next_date) {
+    const visited = new Set<string>([race.officialWebsite]);
+    const sections: string[] = [
+      `=== PAGE: ${race.officialWebsite} ===\n${homeText}`,
+    ];
+
+    // ── Wave 1 ─────────────────────────────────────────────
     const homepageLinks = extractLinks(homeHtml, race.officialWebsite);
     const sitemapUrls = await fetchSitemapUrls(race.officialWebsite);
     // Sitemap entries have no anchor text, but the URL itself
     // usually carries enough signal (news/2026/article-slug) for
     // scoreLink to rank them well.
     const sitemapLinks = sitemapUrls.map((url) => ({ url, text: "" }));
-    // Dedupe by URL — homepage and sitemap can overlap.
-    const seen = new Set<string>();
-    const allLinks = [...homepageLinks, ...sitemapLinks].filter((l) => {
-      if (l.url === race.officialWebsite) return false;
-      if (seen.has(l.url)) return false;
-      seen.add(l.url);
-      return true;
+    const wave1Pool = dedupeLinks([...homepageLinks, ...sitemapLinks], visited);
+    const wave1 = topScoringLinks(wave1Pool, race.title, PASS_2_WAVE_1);
+    wave1.forEach((c) => visited.add(c.url));
+
+    const wave1Pages = await Promise.all(
+      wave1.map((c) => fetchPageWithLinks(c.url)),
+    );
+
+    wave1.forEach((c, i) => {
+      const page = wave1Pages[i];
+      if (page) sections.push(`=== PAGE: ${c.url} ===\n${page.text}`);
     });
-    const candidates = topScoringLinks(allLinks, race.title, PASS_2_TOP_N);
 
-    if (candidates.length > 0) {
-      const subTexts = await Promise.all(
-        candidates.map((c) => fetchSubPageText(c.url)),
+    // ── Wave 2 ─────────────────────────────────────────────
+    // Pool every outgoing link from the wave-1 pages we managed
+    // to fetch, dedupe against everything we've seen, score, and
+    // pick the top scorers. Catches /en/news/news_…html articles
+    // that only the news index links to.
+    const wave2Pool = dedupeLinks(
+      wave1Pages.flatMap((p) => p?.links ?? []),
+      visited,
+    );
+    const wave2 = topScoringLinks(wave2Pool, race.title, PASS_2_WAVE_2);
+    wave2.forEach((c) => visited.add(c.url));
+
+    if (wave2.length > 0) {
+      const wave2Texts = await Promise.all(
+        wave2.map((c) => fetchSubPageText(c.url)),
       );
-
-      // Combine homepage + sub-pages, marking each section so
-      // Haiku knows where each chunk came from. Helps it ignore
-      // sibling-race noise when the homepage and a race-specific
-      // page disagree.
-      const sections: string[] = [
-        `=== PAGE: ${race.officialWebsite} ===\n${homeText}`,
-      ];
-      candidates.forEach((c, i) => {
-        const text = subTexts[i];
-        if (text) {
-          sections.push(`=== PAGE: ${c.url} ===\n${text}`);
-        }
+      wave2.forEach((c, i) => {
+        const text = wave2Texts[i];
+        if (text) sections.push(`=== PAGE: ${c.url} ===\n${text}`);
       });
-      const combined = sections.join("\n\n");
+    }
 
+    // Combined extraction over homepage + wave 1 + wave 2.
+    if (sections.length > 1) {
+      const combined = sections.join("\n\n");
       try {
         extraction = await extractNextDate(race, combined);
       } catch (err) {
