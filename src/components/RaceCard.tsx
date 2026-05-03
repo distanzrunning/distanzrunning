@@ -121,8 +121,8 @@ export default function RaceCard({
   const isIndex = variant === "index";
   const { units, currency: displayCurrency } = useUnits();
 
-  // Date pill on the title row — full year always shown.
-  const fullDate = safeFormat(eventDate, "d MMMM, yyyy");
+  // Date pill — abbreviated month, full year always shown.
+  const fullDate = safeFormat(eventDate, "d MMM, yyyy");
 
   // Format profile as title-case ("rolling" → "Rolling").
   const profileLabel = profile

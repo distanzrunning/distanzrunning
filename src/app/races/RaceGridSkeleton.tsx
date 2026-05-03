@@ -25,12 +25,12 @@ export default function RaceGridSkeleton({
         <li key={i}>
           <article className="flex w-full flex-col">
             <div className="relative aspect-[16/8.75] w-full animate-pulse rounded-t-md bg-[color:var(--ds-gray-200)]">
-              {/* Date Badge placeholder — top-right slot now
-                  carries the full date ("11 April, 2027" at
-                  Badge size="md", ~140 px wide). gray-300 sits
-                  one step darker than the gray-200 image area
-                  so the silhouette stays visible. */}
-              <div className="absolute right-3 top-3 h-6 w-[140px] rounded-full bg-[color:var(--ds-gray-300)]" />
+              {/* Date Badge placeholder — top-right slot
+                  carries the date ("11 Apr, 2027" at Badge
+                  size="md", ~110 px wide). gray-300 sits one
+                  step darker than the gray-200 image area so
+                  the silhouette stays visible. */}
+              <div className="absolute right-3 top-3 h-6 w-[110px] rounded-full bg-[color:var(--ds-gray-300)]" />
             </div>
             <div className="flex flex-col gap-1 rounded-b-md bg-[color:var(--ds-gray-100)] p-6">
               {/* Title row — title placeholder + category pill
