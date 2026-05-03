@@ -27,6 +27,15 @@ export const FETCH_TIMEOUT_MS = 8_000;
 // race-against returns a partial fetch_error rather than letting
 // the function 504 — preserves the editor UI's responsiveness.
 const SCAN_OVERALL_TIMEOUT_MS = 50_000;
+// Max response bytes per fetch. The htmlToText regex passes are
+// non-greedy ([\s\S]*?) and CPU-bound — running them over a 10 MB
+// page can block the JS event loop for multiple seconds, causing
+// the Promise.race scan-timeout setTimeout to NOT fire (timers
+// queue up but can't be processed during sync work). Capping at
+// the network layer keeps the regex inputs small. 1 MB is plenty
+// for any race-info content; pages bigger than this are typically
+// asset-heavy galleries that wouldn't yield a date anyway.
+const MAX_RESPONSE_BYTES = 1_000_000;
 // Haiku context comfortably handles ~30 K chars of stripped page
 // text. Truncating bounds token cost on link-heavy / blog-heavy
 // race sites without losing the date (which is almost always
@@ -190,7 +199,50 @@ async function fetchHtml(url: string): Promise<string> {
     if (!res.ok) {
       throw new Error(`HTTP ${res.status}`);
     }
-    return await res.text();
+    // Reject huge responses up front so htmlToText's regex passes
+    // (which run synchronously and can block the event loop on
+    // multi-MB inputs) never see a string they can't handle in
+    // bounded time. Some hosts serve gigantic pages; we'd rather
+    // skip a race than 504 the whole admin UI.
+    const contentLength = parseInt(
+      res.headers.get("content-length") ?? "0",
+      10,
+    );
+    if (contentLength > MAX_RESPONSE_BYTES) {
+      throw new Error(
+        `Response too large (${contentLength} bytes, max ${MAX_RESPONSE_BYTES})`,
+      );
+    }
+    // Stream the body and abort if it crosses the cap mid-flight
+    // (servers don't always send Content-Length, especially under
+    // chunked encoding or gzip — check both ends).
+    const reader = res.body?.getReader();
+    if (!reader) {
+      // No streaming reader available — fall back to full read,
+      // trusting the Content-Length check above.
+      return await res.text();
+    }
+    const decoder = new TextDecoder("utf-8");
+    let total = 0;
+    let html = "";
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      total += value.byteLength;
+      if (total > MAX_RESPONSE_BYTES) {
+        try {
+          await reader.cancel();
+        } catch {
+          // best-effort
+        }
+        throw new Error(
+          `Response too large (>${MAX_RESPONSE_BYTES} bytes streamed)`,
+        );
+      }
+      html += decoder.decode(value, { stream: true });
+    }
+    html += decoder.decode();
+    return html;
   } finally {
     clearTimeout(timer);
   }
