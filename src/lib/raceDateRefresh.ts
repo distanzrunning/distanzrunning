@@ -368,6 +368,60 @@ ${pageText}`;
   return parsed;
 }
 
+// finishers.com is a third-party race aggregator that exposes
+// each event at /en/event/<slug> with the next-edition date in
+// static HTML (good signal even when the official site is a SPA
+// or otherwise unscrapeable). We fetch their event page in
+// parallel with our wave-2 sub-page fetches so the extra source
+// adds no wall-time cost. Slug pattern: title lowercased,
+// non-alphanumerics → hyphen, repeated hyphens collapsed.
+const FINISHERS_BASE_URL = "https://www.finishers.com/en/event/";
+
+function slugifyRaceTitle(title: string): string {
+  return title
+    .toLowerCase()
+    .normalize("NFD")
+    // strip diacritics (è → e) so titles with accents still match
+    .replace(/[̀-ͯ]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+// Fetch the finishers.com event page for a race title. Returns
+// the stripped text only when (a) the request succeeds and (b)
+// the response actually mentions the race — without that sanity
+// check, slug collisions could feed Haiku a totally unrelated
+// event's page and we'd suggest the wrong date.
+async function fetchFinishersText(raceTitle: string): Promise<{
+  url: string;
+  text: string;
+} | null> {
+  const slug = slugifyRaceTitle(raceTitle);
+  if (!slug) return null;
+  const url = `${FINISHERS_BASE_URL}${slug}`;
+  try {
+    const html = await fetchHtml(url);
+    const text = htmlToText(html).slice(0, PASS_2_PER_PAGE_CHARS);
+    // Sanity check: at least one distinctive title word (length 4+
+    // to skip "the"/"of"/"the marathon" etc.) must appear in the
+    // page body. Drops false-positive 200s where finishers serves
+    // a placeholder for an unrelated slug.
+    const distinctive = raceTitle
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[̀-ͯ]/g, "")
+      .split(/[^a-z0-9]+/)
+      .filter((w) => w.length >= 4);
+    const lowerText = text.toLowerCase();
+    if (!distinctive.some((w) => lowerText.includes(w))) {
+      return null;
+    }
+    return { url, text };
+  } catch {
+    return null;
+  }
+}
+
 // Try to fetch the site's sitemap and return up to
 // SITEMAP_URL_LIMIT URLs. Tries /sitemap.xml first, then
 // /sitemap_index.xml. If the document is a sitemap *index*
@@ -520,17 +574,28 @@ export async function processRace(
     const wave2 = topScoringLinks(wave2Pool, race.title, PASS_2_WAVE_2);
     wave2.forEach((c) => visited.add(c.url));
 
-    if (wave2.length > 0) {
-      const wave2Texts = await Promise.all(
-        wave2.map((c) => fetchSubPageText(c.url)),
+    // Run wave 2 fetches AND the finishers.com fetch in parallel
+    // — finishers.com is an independent third-party source so
+    // there's no dependency between them; combining the awaits
+    // means finishers adds no wall-time cost when wave 2 also
+    // runs.
+    const [wave2Texts, finishers] = await Promise.all([
+      Promise.all(wave2.map((c) => fetchSubPageText(c.url))),
+      fetchFinishersText(race.title),
+    ]);
+
+    wave2.forEach((c, i) => {
+      const text = wave2Texts[i];
+      if (text) sections.push(`=== PAGE: ${c.url} ===\n${text}`);
+    });
+    if (finishers) {
+      sections.push(
+        `=== PAGE: ${finishers.url} (third-party aggregator) ===\n${finishers.text}`,
       );
-      wave2.forEach((c, i) => {
-        const text = wave2Texts[i];
-        if (text) sections.push(`=== PAGE: ${c.url} ===\n${text}`);
-      });
     }
 
-    // Combined extraction over homepage + wave 1 + wave 2.
+    // Combined extraction over homepage + wave 1 + wave 2 +
+    // finishers.com.
     if (sections.length > 1) {
       const combined = sections.join("\n\n");
       try {
