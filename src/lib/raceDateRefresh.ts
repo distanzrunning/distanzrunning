@@ -509,10 +509,12 @@ const EXTERNAL_SOURCES: ExternalSource[] = [
     name: "finishers.com",
     buildUrl: (slug) => `https://www.finishers.com/en/event/${slug}`,
   },
-  {
-    name: "marathontours.com",
-    buildUrl: (slug) => `https://marathontours.com/en-us/events/${slug}/`,
-  },
+  // marathontours.com was here too, but Cloudflare on its end
+  // 403s requests from Vercel IPs while leaving residential IPs
+  // alone — pure block, no UA workaround helped. Without
+  // headless-browser support (deferred), it just contributes 0
+  // text every probe, so dropped entirely. Re-add when we have
+  // a way to serve from a non-cloud IP.
 ];
 
 function slugifyRaceTitle(title: string): string {
