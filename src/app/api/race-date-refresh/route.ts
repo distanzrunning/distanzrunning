@@ -29,9 +29,15 @@ import { NextRequest, NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
 import { createClient } from "next-sanity";
 
+// Vercel serverless functions default to a 10 s timeout — way too
+// short for 5 races × (web fetch + Haiku call) at concurrency 3.
+// 60 s is the Hobby-plan ceiling; bump to 300 s if on Pro and
+// scaling RUN_LIMIT past ~20.
+export const maxDuration = 60;
+
 const RUN_LIMIT = 5;
 const CONCURRENCY = 3;
-const FETCH_TIMEOUT_MS = 15_000;
+const FETCH_TIMEOUT_MS = 10_000;
 // Haiku context comfortably handles ~30 K chars of stripped page
 // text. Truncating bounds token cost on link-heavy / blog-heavy
 // race sites without losing the date (which is almost always
