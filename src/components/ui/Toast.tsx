@@ -293,7 +293,24 @@ function ToastCard({
               )}
             </div>
             {item.description && (
-              <span style={{ color: "var(--ds-gray-900)", fontSize: 13, lineHeight: "18px" }}>
+              <span
+                style={{
+                  // Description color follows the variant's main
+                  // text color but slightly muted, so the
+                  // hierarchy reads (title bolder, description
+                  // softer) on every background:
+                  //   default  → gray-900   (paired w/ gray-1000 title)
+                  //   warning  → gray-900   (amber bg keeps dark text)
+                  //   success/error → rgba(white, .8)   (dark bg, white title)
+                  color:
+                    item.variant === "default" ||
+                    item.variant === "warning"
+                      ? "var(--ds-gray-900)"
+                      : "rgba(255, 255, 255, 0.8)",
+                  fontSize: 13,
+                  lineHeight: "18px",
+                }}
+              >
                 {item.description}
               </span>
             )}
