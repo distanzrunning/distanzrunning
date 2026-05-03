@@ -157,8 +157,10 @@ export default function FiltersShell({
           across as many rows as needed; the right column
           (toggle + sort) is shrink-0 and items-start so it stays
           pinned top-right regardless of how many chip rows
-          appear beneath it. */}
-      <div className="flex items-start gap-3">
+          appear beneath it. Outer gap is 0 — the right column
+          carries its own ml-3 so it can transition to 0 when
+          search is expanded. */}
+      <div className="flex items-start">
         <div className="flex min-w-0 flex-1 flex-wrap items-center gap-2">
         {/* Search wrapped in its own order:-2 slot so it always
             wins the leftmost spot, even against active filter
@@ -356,31 +358,44 @@ export default function FiltersShell({
           </button>
         )}
         </div>
-        {/* Right column (toggle + sort) — always rendered so the
-            search expand/collapse doesn't flicker by mounting and
-            unmounting these controls mid-transition. shrink-0 +
-            h-8 + flex items-center so it sits at the top of the
-            row, aligned with the first chip row, regardless of
-            how many chip rows wrap beneath it. */}
-        <div className="flex h-8 shrink-0 items-center gap-3">
-          <Toggle
-            size="default"
-            label="Hide past races"
-            labelPosition="left"
-            // Toggle is "on" by default — i.e., past races are
-            // hidden. Flipping off (showPast=true in URL)
-            // includes them in results.
-            checked={!initialFilters.showPast}
-            onChange={(checked) =>
-              setFilter({ showPast: checked ? undefined : true })
-            }
-          />
-          <SortFilter
-            value={initialFilters.sort ?? DEFAULT_SORT}
-            onChange={(sort) =>
-              setFilter({ sort: sort === DEFAULT_SORT ? undefined : sort })
-            }
-          />
+        {/* Right column (toggle + sort) — hides while Search is
+            expanded so the input has uncluttered focus. Always
+            rendered so the disappearance is a smooth max-width +
+            opacity + margin transition rather than a mount/
+            unmount pop. ml-3 carries the gap onto this element so
+            it can transition to 0 alongside max-width — keeps the
+            collapsed state visually flush rather than leaving a
+            stray 12 px of empty space. The inner flex keeps h-8 +
+            items-center so the controls align with the first
+            chip row. */}
+        <div
+          aria-hidden={searchExpanded}
+          className={`shrink-0 self-start overflow-hidden transition-[max-width,opacity,margin-left] duration-200 ease-out ${
+            searchExpanded
+              ? "ml-0 max-w-0 opacity-0 [pointer-events:none]"
+              : "ml-3 max-w-[280px] opacity-100"
+          }`}
+        >
+          <div className="flex h-8 items-center gap-3">
+            <Toggle
+              size="default"
+              label="Hide past races"
+              labelPosition="left"
+              // Toggle is "on" by default — i.e., past races are
+              // hidden. Flipping off (showPast=true in URL)
+              // includes them in results.
+              checked={!initialFilters.showPast}
+              onChange={(checked) =>
+                setFilter({ showPast: checked ? undefined : true })
+              }
+            />
+            <SortFilter
+              value={initialFilters.sort ?? DEFAULT_SORT}
+              onChange={(sort) =>
+                setFilter({ sort: sort === DEFAULT_SORT ? undefined : sort })
+              }
+            />
+          </div>
         </div>
       </div>
 
