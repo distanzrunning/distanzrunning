@@ -131,12 +131,17 @@ async function fetchHtml(url: string): Promise<string> {
     const res = await fetch(url, {
       signal: controller.signal,
       headers: {
-        // Identify ourselves so race websites can contact us
-        // rather than silently block — and so we don't pretend
-        // to be a browser.
+        // Mozilla-style "compatible" identifier — Cloudflare's bot
+        // heuristics flag any UA containing the literal word "Bot",
+        // which silently 403'd marathontours.com from Vercel IPs
+        // even though the same UA worked from residential IPs.
+        // Mirrors the Googlebot pattern: identifies us + the site
+        // we're crawling for, but starts with Mozilla/5.0 so CF
+        // browser-fingerprint checks don't auto-reject.
         "User-Agent":
-          "DistanzRunningBot/1.0 (+https://distanzrunning.com; date-refresh)",
-        Accept: "text/html,application/xhtml+xml",
+          "Mozilla/5.0 (compatible; DistanzRunningCrawler/1.0; +https://distanzrunning.com)",
+        Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "Accept-Language": "en-US,en;q=0.9",
       },
       redirect: "follow",
     });
