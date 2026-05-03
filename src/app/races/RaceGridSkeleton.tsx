@@ -33,8 +33,8 @@ export default function RaceGridSkeleton({
                   pill silhouette stays visible. */}
               <div className="absolute right-3 top-3 h-6 w-[72px] rounded-full bg-[color:var(--ds-gray-300)]" />
             </div>
-            <div className="flex items-center justify-between gap-3 rounded-b-md bg-[color:var(--ds-gray-100)] p-6">
-              <div className="flex min-w-0 flex-1 flex-col gap-1">
+            <div className="flex flex-col gap-3 rounded-b-md bg-[color:var(--ds-gray-100)] p-6">
+              <div className="flex min-w-0 flex-col gap-1">
                 {/* Title placeholder — h-7 (28 px) matches the
                     text-heading-20 line-height of the real
                     RaceCard title. Single-line; longer titles
@@ -45,7 +45,13 @@ export default function RaceGridSkeleton({
                     text-copy-14 line-height. */}
                 <div className="h-5 w-1/2 animate-pulse rounded bg-[color:var(--ds-gray-200)]" />
               </div>
-              <div className="size-16 shrink-0 animate-pulse rounded-md bg-[color:var(--ds-gray-200)]" />
+              {/* Meta pill row — date pill (~120 px for "11 April,
+                  2027") + distance pill (~52 px for "42 km"). h-6
+                  matches the live MetaPill height. */}
+              <div className="flex items-center gap-2">
+                <div className="h-6 w-[120px] animate-pulse rounded-full bg-[color:var(--ds-gray-200)]" />
+                <div className="h-6 w-[52px] animate-pulse rounded-full bg-[color:var(--ds-gray-200)]" />
+              </div>
             </div>
           </article>
         </li>

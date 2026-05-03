@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/Badge";
 import CardImage from "@/components/ui/CardImage";
 import {
   convertCurrencySync,
+  formatDistance,
   formatElevation,
   formatPrice,
 } from "@/lib/raceUtils";
@@ -52,6 +53,10 @@ export interface RaceCardProps {
   /** Visual variant. "default" matches the homepage Races row;
    *  "index" is the /races index page treatment. */
   variant?: "default" | "index";
+  /** Race distance in km — surfaced as a pill in the body next
+   *  to the date pill. Optional so the homepage row (which
+   *  doesn't currently fetch distance) renders without it. */
+  distance?: number;
   /** Index-variant only — populates the glassy hover stat columns. */
   surface?: string;
   surfaceBreakdown?: string;
@@ -111,6 +116,7 @@ export default function RaceCard({
   priority = false,
   className = "",
   variant = "default",
+  distance,
   surface,
   surfaceBreakdown,
   profile,
@@ -121,8 +127,11 @@ export default function RaceCard({
   const isIndex = variant === "index";
   const { units, currency: displayCurrency } = useUnits();
 
-  const month = safeFormat(eventDate, "MMM");
-  const day = safeFormat(eventDate, "dd");
+  // Body meta pills — full date + distance (units-aware). Both
+  // optional; the row only renders if at least one is set.
+  const fullDate = safeFormat(eventDate, "d MMMM, yyyy");
+  const distanceLabel =
+    distance != null ? formatDistance(distance, units) : undefined;
 
   // Format profile as title-case ("rolling" → "Rolling").
   const profileLabel = profile
@@ -221,12 +230,12 @@ export default function RaceCard({
         )}
       </div>
 
-      {/* Body — title + location stacked left, MAR / 31 square
-          block right. Same shape across variants now; the index
-          variant's only structural difference is the hover stat
-          overlay rendered above on the image. */}
-      <div className="flex items-center justify-between gap-3 rounded-b-md bg-[color:var(--ds-gray-100)] p-6">
-        <div className="flex min-w-0 flex-1 flex-col gap-1">
+      {/* Body — title + location stacked, then a meta pill row
+          (date + distance). Replaces the old MAR/31 square date
+          block; pills carry the full date inline with distance
+          so the editor doesn't have to interpret the abbrev. */}
+      <div className="flex flex-col gap-3 rounded-b-md bg-[color:var(--ds-gray-100)] p-6">
+        <div className="flex min-w-0 flex-col gap-1">
           <h3 className="line-clamp-2 text-heading-20 text-[color:var(--ds-gray-1000)]">
             <Link
               href={href}
@@ -242,17 +251,24 @@ export default function RaceCard({
           )}
         </div>
 
-        {(month || day) && (
-          <div className="flex size-16 shrink-0 flex-col items-center justify-center rounded-md bg-[color:var(--ds-gray-200)]">
-            <span className="text-label-11 font-medium uppercase tracking-[0.04em] text-[color:var(--ds-gray-1000)]">
-              {month}
-            </span>
-            <span className="text-heading-24 text-[color:var(--ds-gray-1000)]">
-              {day}
-            </span>
+        {(fullDate || distanceLabel) && (
+          <div className="flex flex-wrap items-center gap-2">
+            {fullDate && <MetaPill>{fullDate}</MetaPill>}
+            {distanceLabel && <MetaPill>{distanceLabel}</MetaPill>}
           </div>
         )}
       </div>
     </article>
+  );
+}
+
+// Subtle gray pill matching the previous date-block bg
+// (--ds-gray-200) — keeps the body meta items visually
+// associated with the card's "soft" surface region.
+function MetaPill({ children }: { children: React.ReactNode }) {
+  return (
+    <span className="inline-flex h-6 items-center rounded-full bg-[color:var(--ds-gray-200)] px-2.5 text-label-12 font-medium text-[color:var(--ds-gray-1000)]">
+      {children}
+    </span>
   );
 }
