@@ -97,6 +97,42 @@ interface ExtractionResult {
   reasoning: string;
 }
 
+// Per-scan diagnostic record persisted to Sanity on every attempt
+// (success or failure). Surfaced via the admin Date Review row
+// expander so an editor can audit which pages were reviewed and
+// why Haiku ruled the way it did.
+export interface ScanLog {
+  scannedAt: string;
+  durationMs: number;
+  pages: PageLogEntry[];
+  pass1?: PassLogEntry;
+  pass2?: PassLogEntry;
+  finalStatus: RaceResult["status"];
+  finalMessage?: string;
+}
+
+export interface PageLogEntry {
+  url: string;
+  source:
+    | "homepage"
+    | "sitemap"
+    | "wave1"
+    | "wave2"
+    | "external:finishers.com"
+    | "external:marathontours.com";
+  status: "ok" | "fetch_error" | "sanity_check_failed";
+  chars?: number;
+  message?: string;
+}
+
+interface PassLogEntry {
+  outcome: "suggested" | "no_date_found" | "low_confidence_rejected";
+  suggestedDate?: string;
+  confidence?: "high" | "medium" | "low";
+  sourceQuote?: string;
+  reasoning?: string;
+}
+
 interface ScoredLink {
   url: string;
   text: string;
@@ -594,19 +630,73 @@ async function processRaceInner(
   race: PendingRace,
   options: { dryRun: boolean },
 ): Promise<RaceResult> {
+  const startedAt = Date.now();
+  const startedAtIso = new Date(startedAt).toISOString();
+  const pages: PageLogEntry[] = [];
+  let pass1: PassLogEntry | undefined;
+  let pass2: PassLogEntry | undefined;
+
+  // Wraps every return so the scan log + (on success) the
+  // suggestion fields land in Sanity in a single patch. Failures
+  // still write the log so the row's expander can show why no
+  // suggestion was made on the most recent attempt.
+  const finalize = async (result: RaceResult): Promise<RaceResult> => {
+    const log: ScanLog = {
+      scannedAt: startedAtIso,
+      durationMs: Date.now() - startedAt,
+      pages,
+      pass1,
+      pass2,
+      finalStatus: result.status,
+      finalMessage: result.message,
+    };
+    if (!options.dryRun) {
+      const patch: Record<string, unknown> = {
+        lastScanAt: startedAtIso,
+        lastScanLog: JSON.stringify(log),
+      };
+      if (result.status === "suggested" && result.suggestedNextDate) {
+        patch.suggestedNextDate = `${result.suggestedNextDate}T12:00:00Z`;
+        patch.suggestedNextDateScrapedAt = startedAtIso;
+        patch.suggestedNextDateSourceQuote = result.sourceQuote ?? "";
+        patch.suggestedNextDateStatus = "pending";
+      }
+      try {
+        await sanityClient.patch(race._id).set(patch).commit();
+      } catch (err) {
+        console.log(
+          `[date-refresh] failed to persist scan log for ${race.title}: ${(err as Error).message}`,
+        );
+      }
+    }
+    return result;
+  };
+
   let homeHtml: string;
   try {
     homeHtml = await fetchHtml(race.officialWebsite);
   } catch (err) {
-    return {
+    pages.push({
+      url: race.officialWebsite,
+      source: "homepage",
+      status: "fetch_error",
+      message: (err as Error).message,
+    });
+    return finalize({
       _id: race._id,
       title: race.title,
       status: "fetch_error",
       message: (err as Error).message,
-    };
+    });
   }
 
   const homeText = htmlToText(homeHtml).slice(0, MAX_PAGE_TEXT_CHARS);
+  pages.push({
+    url: race.officialWebsite,
+    source: "homepage",
+    status: "ok",
+    chars: homeText.length,
+  });
 
   // Pass 1 — homepage text only. Catches the easy cases (London,
   // Boston, Berlin) without paying for sub-page fetches.
@@ -614,13 +704,20 @@ async function processRaceInner(
   try {
     extraction = await extractNextDate(race, homeText);
   } catch (err) {
-    return {
+    return finalize({
       _id: race._id,
       title: race.title,
       status: "extract_error",
       message: (err as Error).message,
-    };
+    });
   }
+  pass1 = {
+    outcome: extraction.next_date ? "suggested" : "no_date_found",
+    suggestedDate: extraction.next_date ?? undefined,
+    confidence: extraction.confidence,
+    sourceQuote: extraction.source_quote ?? undefined,
+    reasoning: extraction.reasoning,
+  };
 
   // Pass 2 — homepage didn't have it. 2-level BFS:
   //   Wave 1: homepage's outgoing links + /sitemap.xml entries,
@@ -652,7 +749,21 @@ async function processRaceInner(
 
     wave1.forEach((c, i) => {
       const page = wave1Pages[i];
-      if (page) sections.push(`=== PAGE: ${c.url} ===\n${page.text}`);
+      if (page) {
+        sections.push(`=== PAGE: ${c.url} ===\n${page.text}`);
+        pages.push({
+          url: c.url,
+          source: "wave1",
+          status: "ok",
+          chars: page.text.length,
+        });
+      } else {
+        pages.push({
+          url: c.url,
+          source: "wave1",
+          status: "fetch_error",
+        });
+      }
     });
 
     // ── Wave 2 ─────────────────────────────────────────────
@@ -685,13 +796,47 @@ async function processRaceInner(
 
     wave2.forEach((c, i) => {
       const text = wave2Texts[i];
-      if (text) sections.push(`=== PAGE: ${c.url} ===\n${text}`);
+      if (text) {
+        sections.push(`=== PAGE: ${c.url} ===\n${text}`);
+        pages.push({
+          url: c.url,
+          source: "wave2",
+          status: "ok",
+          chars: text.length,
+        });
+      } else {
+        pages.push({
+          url: c.url,
+          source: "wave2",
+          status: "fetch_error",
+        });
+      }
     });
-    externalResults.forEach((result) => {
+    externalResults.forEach((result, i) => {
+      const sourceName = EXTERNAL_SOURCES[i].name;
+      const sourceTag =
+        `external:${sourceName}` as PageLogEntry["source"];
       if (result) {
         sections.push(
           `=== PAGE: ${result.url} (third-party aggregator: ${result.sourceName}) ===\n${result.text}`,
         );
+        pages.push({
+          url: result.url,
+          source: sourceTag,
+          status: "ok",
+          chars: result.text.length,
+        });
+      } else {
+        // We don't have the URL here when the result is null
+        // (fetch_error or sanity_check_failed) — reconstruct it
+        // from the source config so the log still shows what we
+        // attempted.
+        const slug = slugifyRaceTitle(race.title);
+        pages.push({
+          url: slug ? EXTERNAL_SOURCES[i].buildUrl(slug) : "",
+          source: sourceTag,
+          status: "fetch_error",
+        });
       }
     });
 
@@ -702,23 +847,30 @@ async function processRaceInner(
       try {
         extraction = await extractNextDate(race, combined);
       } catch (err) {
-        return {
+        return finalize({
           _id: race._id,
           title: race.title,
           status: "extract_error",
           message: (err as Error).message,
-        };
+        });
       }
+      pass2 = {
+        outcome: extraction.next_date ? "suggested" : "no_date_found",
+        suggestedDate: extraction.next_date ?? undefined,
+        confidence: extraction.confidence,
+        sourceQuote: extraction.source_quote ?? undefined,
+        reasoning: extraction.reasoning,
+      };
     }
   }
 
   if (!extraction.next_date) {
-    return {
+    return finalize({
       _id: race._id,
       title: race.title,
       status: "no_date_found",
       message: extraction.reasoning,
-    };
+    });
   }
 
   // Reject "low" confidence suggestions — better to return
@@ -728,12 +880,16 @@ async function processRaceInner(
   // tale: an editor would have to notice the wrong date manually,
   // whereas a null forces them to verify themselves anyway.
   if (extraction.confidence === "low") {
-    return {
+    // Update the relevant pass entry so the log records the
+    // low-confidence rejection rather than a vanilla "suggested".
+    if (pass2) pass2.outcome = "low_confidence_rejected";
+    else if (pass1) pass1.outcome = "low_confidence_rejected";
+    return finalize({
       _id: race._id,
       title: race.title,
       status: "no_date_found",
       message: `Low confidence — ${extraction.reasoning}`,
-    };
+    });
   }
 
   // Validate the date string parses AND is in the future. Haiku
@@ -741,37 +897,22 @@ async function processRaceInner(
   // previous edition; rejecting <= today keeps junk out.
   const parsed = new Date(extraction.next_date);
   if (Number.isNaN(parsed.getTime()) || parsed <= new Date()) {
-    return {
+    return finalize({
       _id: race._id,
       title: race.title,
       status: "invalid_date",
       message: `Returned date ${extraction.next_date} is invalid or not in the future`,
-    };
+    });
   }
 
-  if (!options.dryRun) {
-    await sanityClient
-      .patch(race._id)
-      .set({
-        // Store as full datetime at noon UTC — eventDate is a
-        // datetime, and noon avoids tz-rollover surprises on
-        // either side of UTC when the editor approves.
-        suggestedNextDate: `${extraction.next_date}T12:00:00Z`,
-        suggestedNextDateScrapedAt: new Date().toISOString(),
-        suggestedNextDateSourceQuote: extraction.source_quote ?? "",
-        suggestedNextDateStatus: "pending",
-      })
-      .commit();
-  }
-
-  return {
+  return finalize({
     _id: race._id,
     title: race.title,
     status: "suggested",
     suggestedNextDate: extraction.next_date,
     sourceQuote: extraction.source_quote ?? undefined,
     confidence: extraction.confidence,
-  };
+  });
 }
 
 // Process an array with bounded concurrency. Promise.all on the

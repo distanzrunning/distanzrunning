@@ -609,5 +609,23 @@ export const raceGuideType = defineType({
       description:
         'Editor sets this. "Approved" → manually copy suggestedNextDate into eventDate, then clear status to re-enable scraping.',
     }),
+    defineField({
+      name: 'lastScanAt',
+      title: 'Last Scanned At',
+      type: 'datetime',
+      fieldset: 'dateRefresh',
+      description:
+        'Set on EVERY scan attempt (success or failure), so the row can show the scan history even when no suggestion was written.',
+      readOnly: true,
+    }),
+    defineField({
+      name: 'lastScanLog',
+      title: 'Last Scan Log (JSON)',
+      type: 'text',
+      fieldset: 'dateRefresh',
+      description:
+        'JSON-encoded breakdown of the most recent scan: pages fetched, sources used, Haiku reasoning, confidence. Surfaced in the admin Date Review row expander.',
+      readOnly: true,
+    }),
   ],
 })

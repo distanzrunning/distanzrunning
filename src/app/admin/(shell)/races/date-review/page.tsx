@@ -11,11 +11,8 @@
 // Per-row interactivity (Calendar, Scan, Approve, Reject, Reset)
 // lives in the RowActions client component.
 
-import { format } from "date-fns";
-import { ExternalLink } from "lucide-react";
 import { createClient } from "next-sanity";
 
-import { Badge } from "@/components/ui/Badge";
 import {
   Table,
   TableBody,
@@ -25,7 +22,8 @@ import {
   TableRow,
 } from "@/components/ui/Table";
 
-import RowActions, { type RowState } from "./RowActions";
+import RaceRow, { type RaceRowData } from "./RaceRow";
+import { type RowState } from "./RowActions";
 
 export const metadata = {
   title: "Race Date Review — Stride Admin",
@@ -47,24 +45,7 @@ const sanityClient = createClient({
   useCdn: false,
 });
 
-interface PastRace {
-  _id: string;
-  title: string;
-  eventDate: string;
-  officialWebsite?: string;
-  suggestedNextDate?: string;
-  suggestedNextDateScrapedAt?: string;
-  suggestedNextDateSourceQuote?: string;
-  suggestedNextDateStatus?: "pending" | "approved" | "rejected";
-}
-
-const safeFormat = (iso: string | undefined, pattern: string): string => {
-  if (!iso) return "—";
-  const d = new Date(iso);
-  return Number.isNaN(d.getTime()) ? "—" : format(d, pattern);
-};
-
-function rowStateFor(race: PastRace): RowState {
+function rowStateFor(race: RaceRowData): RowState {
   if (race.suggestedNextDateStatus === "pending") return "pending";
   if (race.suggestedNextDateStatus === "rejected") return "rejected";
   if (!race.officialWebsite) return "no-website";
@@ -72,7 +53,7 @@ function rowStateFor(race: PastRace): RowState {
 }
 
 export default async function RaceDateReviewPage() {
-  const past: PastRace[] = await sanityClient.fetch(
+  const past: RaceRowData[] = await sanityClient.fetch(
     // GROQ doesn't accept boolean expressions inline in order(),
     // so we project a sort-priority key first (pending → 0, others
     // → 1) and order ascending on it before the secondary date sort.
@@ -90,6 +71,8 @@ export default async function RaceDateReviewPage() {
       suggestedNextDateScrapedAt,
       suggestedNextDateSourceQuote,
       suggestedNextDateStatus,
+      lastScanAt,
+      lastScanLog,
       "_pendingPriority": select(suggestedNextDateStatus == "pending" => 0, 1)
     } | order(_pendingPriority asc, eventDate desc)`,
   );
@@ -152,61 +135,9 @@ export default async function RaceDateReviewPage() {
                   </TableCell>
                 </TableRow>
               )}
-              {past.map((row) => {
-                const state = rowStateFor(row);
-                return (
-                  <TableRow key={row._id}>
-                    <TableCell className="max-w-[220px] text-copy-13 text-[color:var(--ds-gray-1000)]">
-                      <div className="flex items-center gap-2">
-                        <span>{row.title}</span>
-                        {row.officialWebsite && (
-                          <a
-                            href={row.officialWebsite}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            aria-label={`Open ${row.title} official website`}
-                            title="Open official website"
-                            className="inline-flex text-[color:var(--ds-gray-700)] hover:text-[color:var(--ds-gray-1000)]"
-                          >
-                            <ExternalLink className="size-3.5" />
-                          </a>
-                        )}
-                      </div>
-                    </TableCell>
-                    <TableCell className="whitespace-nowrap">
-                      <div className="flex items-center gap-2">
-                        <Badge variant="red-subtle" size="sm">
-                          Past
-                        </Badge>
-                        <span className="text-label-12 text-[color:var(--ds-gray-900)]">
-                          {safeFormat(row.eventDate, "d MMM yyyy")}
-                        </span>
-                      </div>
-                    </TableCell>
-                    <TableCell className="max-w-[320px] text-copy-13 italic text-[color:var(--ds-gray-900)]">
-                      {row.suggestedNextDateSourceQuote
-                        ? `"${row.suggestedNextDateSourceQuote}"`
-                        : "—"}
-                    </TableCell>
-                    <TableCell className="whitespace-nowrap text-label-12 text-[color:var(--ds-gray-700)]">
-                      {safeFormat(
-                        row.suggestedNextDateScrapedAt,
-                        "d MMM, HH:mm",
-                      )}
-                    </TableCell>
-                    {/* RowActions renders a fragment of TWO cells —
-                        Suggested + Action — and switches its
-                        content based on the row state. */}
-                    <RowActions
-                      id={row._id}
-                      title={row.title}
-                      state={state}
-                      suggestedDate={row.suggestedNextDate}
-                      previousEventDate={row.eventDate}
-                    />
-                  </TableRow>
-                );
-              })}
+              {past.map((row) => (
+                <RaceRow key={row._id} race={row} state={rowStateFor(row)} />
+              ))}
             </TableBody>
           </Table>
         </section>
