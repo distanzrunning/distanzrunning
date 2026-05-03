@@ -177,29 +177,72 @@ async function fetchHtmlPlain(url: string): Promise<string> {
 
 // Browserbase-rendered fetch. Spins up a remote Chromium session,
 // loads the URL with JS execution, returns the rendered DOM. Used
-// only as a fallback — see fetchHtmlWithFallback for the
-// escalation triggers. Browserbase sessions are pay-per-minute,
-// so we close immediately after content() to keep cost down.
+// only as a fallback for external aggregator probes — see
+// fetchHtmlEscalating for the trigger logic. Browserbase sessions
+// are pay-per-minute, so we close immediately after content().
+//
+// Hard-bounded by BROWSERBASE_OVERALL_TIMEOUT_MS via Promise.race
+// — a slow render must not block the whole scan past the function
+// timeout. Each phase (session create, connect, goto, content) is
+// timed and logged so we can see where wall-time actually goes.
+const BROWSERBASE_OVERALL_TIMEOUT_MS = 25_000;
+
 async function fetchHtmlBrowserbase(url: string): Promise<string> {
   const apiKey = process.env.BROWSERBASE_API_KEY;
   const projectId = process.env.BROWSERBASE_PROJECT_ID;
   if (!apiKey || !projectId) {
     throw new Error("Browserbase credentials not configured");
   }
-  const bb = new Browserbase({ apiKey });
-  const session = await bb.sessions.create({ projectId });
+
+  const t0 = Date.now();
   let browser: Browser | null = null;
-  try {
+
+  const work = async (): Promise<string> => {
+    const bb = new Browserbase({ apiKey });
+    const session = await bb.sessions.create({ projectId });
+    const tSession = Date.now();
     browser = await chromium.connectOverCDP(session.connectUrl);
+    const tConnect = Date.now();
     const context = browser.contexts()[0];
     const page = context.pages()[0] ?? (await context.newPage());
     await page.goto(url, {
       waitUntil: "domcontentloaded",
       timeout: BROWSERBASE_GOTO_TIMEOUT_MS,
     });
-    return await page.content();
+    const tGoto = Date.now();
+    const html = await page.content();
+    const tContent = Date.now();
+    console.log(
+      `[date-refresh] Browserbase ${url} timings (ms): session=${tSession - t0}, connect=${tConnect - tSession}, goto=${tGoto - tConnect}, content=${tContent - tGoto}, total=${tContent - t0}, htmlSize=${html.length}`,
+    );
+    return html;
+  };
+
+  try {
+    return await Promise.race([
+      work(),
+      new Promise<string>((_, reject) =>
+        setTimeout(
+          () =>
+            reject(
+              new Error(
+                `Browserbase overall timeout (${BROWSERBASE_OVERALL_TIMEOUT_MS}ms)`,
+              ),
+            ),
+          BROWSERBASE_OVERALL_TIMEOUT_MS,
+        ),
+      ),
+    ]);
   } finally {
-    if (browser) await browser.close();
+    // Close even on timeout — keeps Browserbase session count
+    // tidy and stops billing the abandoned session.
+    if (browser) {
+      try {
+        await (browser as Browser).close();
+      } catch {
+        // best-effort cleanup
+      }
+    }
   }
 }
 
