@@ -203,8 +203,16 @@ async function fetchHtmlBrowserbase(url: string): Promise<string> {
   }
 }
 
+// Default fetch — plain only, no escalation. Used for the
+// homepage + wave-1/wave-2 sub-page crawl where escalating every
+// page would blow the function timeout (a single scan could see
+// 10+ pages, and every Browserbase render costs ~10 s).
+async function fetchHtml(url: string): Promise<string> {
+  return fetchHtmlPlain(url);
+}
+
 // Two-tier fetch: try plain first (free, fast), escalate to
-// Browserbase when the response looks like it'll be useless.
+// Browserbase only when the response looks like it'll be useless.
 // Triggers:
 //   - HTTP 403 or 429 → likely Cloudflare bot mitigation
 //                       (marathontours, ahotu) — JS challenge
@@ -213,10 +221,17 @@ async function fetchHtmlBrowserbase(url: string): Promise<string> {
 //                       (Shanghai, Bangsaen21, Xiamen) — needs
 //                       JS execution to populate the DOM
 //
+// Reserved for the EXTERNAL_SOURCES probes where the URL is
+// guaranteed to be high-value (a curated event page on an
+// aggregator) so paying the Browserbase tax is justified. With
+// at most 2 external sources per scan we cap Browserbase usage
+// at ~2 escalations per scan, keeping the function comfortably
+// inside maxDuration.
+//
 // Falls back gracefully when Browserbase fails or isn't
 // configured: returns whatever plain fetch managed to retrieve
 // rather than failing the whole scan.
-async function fetchHtml(url: string): Promise<string> {
+async function fetchHtmlEscalating(url: string): Promise<string> {
   const browserbaseEnabled =
     Boolean(process.env.BROWSERBASE_API_KEY) &&
     Boolean(process.env.BROWSERBASE_PROJECT_ID) &&
@@ -584,7 +599,10 @@ async function fetchExternalSourceText(
   }
   const url = source.buildUrl(slug);
   try {
-    const html = await fetchHtml(url);
+    // Use the escalating fetch — aggregator pages are high value
+    // (curated event info) and CF often blocks them from cloud
+    // IPs (marathontours, ahotu). Worth the Browserbase tax.
+    const html = await fetchHtmlEscalating(url);
     const text = htmlToText(html).slice(0, EXTERNAL_SOURCE_CHARS);
     const lowerText = text.toLowerCase();
     const matchedWord = distinctive.find((w) => lowerText.includes(w));
