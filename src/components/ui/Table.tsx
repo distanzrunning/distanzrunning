@@ -78,26 +78,20 @@ const TableBody = forwardRef<
   const { striped, bordered, interactive } = useContext(TableContext);
 
   return (
-    <>
-      {/* Spacer row between header and body */}
-      <tbody aria-hidden="true">
-        <tr className="table-row h-3" />
-      </tbody>
-      <tbody
-        ref={ref}
-        className={cn(
-          "[&_td:first-child]:rounded-l [&_td:last-child]:rounded-r",
-          striped &&
-            "[&_tr:where(:nth-child(odd))]:bg-[var(--ds-background-200)]",
-          bordered && "[&_tr:not(:last-child)]:border-b",
-          interactive && "[&_tr:hover]:bg-[var(--ds-gray-100)]",
-          className,
-        )}
-        {...props}
-      >
-        {children}
-      </tbody>
-    </>
+    <tbody
+      ref={ref}
+      className={cn(
+        "[&_td:first-child]:rounded-l [&_td:last-child]:rounded-r",
+        striped &&
+          "[&_tr:where(:nth-child(odd))]:bg-[var(--ds-background-200)]",
+        bordered && "[&_tr:not(:last-child)]:border-b",
+        interactive && "[&_tr:hover]:bg-[var(--ds-gray-100)]",
+        className,
+      )}
+      {...props}
+    >
+      {children}
+    </tbody>
   );
 });
 TableBody.displayName = "TableBody";
