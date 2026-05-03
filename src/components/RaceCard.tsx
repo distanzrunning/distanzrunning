@@ -171,13 +171,14 @@ export default function RaceCard({
           </div>
         )}
 
-        {/* Top-right pill — category Badge in both variants
-            (matches the homepage's race card). The index variant
-            additionally renders the hover stat overlay below. */}
-        {category && (
+        {/* Top-right pill — full date Badge (inverted variant
+            so the dark bg + white text reads against any
+            photo). Category (Marathon / Half / etc.) moves
+            inline with the title in the body. */}
+        {fullDate && (
           <div className="absolute right-3 top-3 z-20">
             <Badge variant="inverted" size="md">
-              {category}
+              {fullDate}
             </Badge>
           </div>
         )}
@@ -221,12 +222,10 @@ export default function RaceCard({
         )}
       </div>
 
-      {/* Body — title-row carries the date pill on the right
-          (inline, top-aligned with the title's first line so
-          multi-line titles still wrap cleanly). Location sits
-          below. Distance is intentionally absent — the category
-          badge top-right of the image already conveys that
-          information for the index variant. */}
+      {/* Body — title-row carries the category pill on the
+          right (inline, top-aligned with the title's first line
+          so multi-line titles still wrap cleanly). Location sits
+          below. Date moved to the image's top-right corner. */}
       <div className="flex flex-col gap-1 rounded-b-md bg-[color:var(--ds-gray-100)] p-6">
         <div className="flex items-start justify-between gap-3">
           <h3 className="line-clamp-2 min-w-0 flex-1 text-heading-20 text-[color:var(--ds-gray-1000)]">
@@ -237,7 +236,7 @@ export default function RaceCard({
               {title}
             </Link>
           </h3>
-          {fullDate && <MetaPill>{fullDate}</MetaPill>}
+          {category && <MetaPill>{category}</MetaPill>}
         </div>
         {location && (
           <p className="truncate text-copy-14 text-[color:var(--ds-gray-900)]">
