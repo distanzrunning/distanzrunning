@@ -86,7 +86,7 @@ export default async function RaceDateReviewPage() {
           <h1 className="m-0 text-heading-24 text-[color:var(--ds-gray-1000)]">
             Race Date Review
           </h1>
-          <p className="mb-0 mt-1.5 text-copy-13 text-[color:var(--ds-gray-700)]">
+          <p className="mb-0 mt-2 text-copy-13 text-[color:var(--ds-gray-700)]">
             {pending.length === 0
               ? "Nothing pending. Suggestions land here when /api/race-date-refresh runs."
               : `${pending.length} pending ${
@@ -104,13 +104,12 @@ export default async function RaceDateReviewPage() {
             "everyday surface" → 6 px. overflow-hidden keeps the
             Table's first/last row corners inside the radius. */}
         <section className="material-base overflow-hidden">
-          {/* Full-featured DS Table variant: striped (alternating
-              row bg, --ds-background-200 on odd rows) +
-              interactive (row hover to --ds-gray-100). The
-              colgroup pins column widths so the Calendar trigger
-              + Approve/Reject buttons don't get squeezed when
-              source quotes get long. */}
-          <Table striped interactive>
+          {/* DS Table "bordered" variant — adds a 1 px gray-400
+              divider between rows. The colgroup pins column
+              widths so the Calendar trigger + Approve/Reject
+              buttons don't get squeezed when source quotes get
+              long. */}
+          <Table bordered>
             <colgroup>
               <col style={{ width: "22%" }} />
               <col style={{ width: "14%" }} />
@@ -151,7 +150,7 @@ export default async function RaceDateReviewPage() {
               {pending.map((row) => (
                 <TableRow key={row._id}>
                   <TableCell className="max-w-[220px] text-copy-13 text-[color:var(--ds-gray-1000)]">
-                    <div className="flex items-center gap-1.5">
+                    <div className="flex items-center gap-2">
                       <span>{row.title}</span>
                       {row.officialWebsite && (
                         <a
