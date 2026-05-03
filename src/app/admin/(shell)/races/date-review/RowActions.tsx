@@ -81,7 +81,11 @@ export default function RowActions({
   };
 
   return (
-    <div className="flex items-center gap-2">
+    // justify-end so the trio aligns under the right-aligned
+    // "Action" TableHead — the DS Table applies last:text-right
+    // by default to last-child cells, but flex children ignore
+    // text-align so we mirror it with justify-end here.
+    <div className="flex items-center justify-end gap-2">
       <Calendar
         placeholder="Date"
         value={range}

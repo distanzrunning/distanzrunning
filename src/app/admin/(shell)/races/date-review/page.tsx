@@ -97,10 +97,13 @@ export default async function RaceDateReviewPage() {
           </p>
         </header>
 
-        {/* material-medium gives bg-100 + 1 px gray-400 border +
-            12 px radius + DS shadow. overflow-hidden keeps the
+        {/* material-base = bg-100 + 1 px gray-400 border + 6 px
+            radius, no shadow. The DS reserves the 12 px / shadowed
+            materials (medium/large) for "further raised" surfaces
+            like menus + modals; a flat table on the page is an
+            "everyday surface" → 6 px. overflow-hidden keeps the
             Table's first/last row corners inside the radius. */}
-        <section className="material-medium overflow-hidden">
+        <section className="material-base overflow-hidden">
           <Table>
             <TableHeader>
               <TableRow>
