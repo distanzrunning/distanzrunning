@@ -73,12 +73,15 @@ function rowStateFor(race: PastRace): RowState {
 
 export default async function RaceDateReviewPage() {
   const past: PastRace[] = await sanityClient.fetch(
+    // GROQ doesn't accept boolean expressions inline in order(),
+    // so we project a sort-priority key first (pending → 0, others
+    // → 1) and order ascending on it before the secondary date sort.
     `*[
       _type == "raceGuide"
       && defined(eventDate)
       && eventDate < now()
       && !(_id in path("drafts.**"))
-    ] | order(suggestedNextDateStatus == "pending" desc, eventDate desc) {
+    ]{
       _id,
       title,
       eventDate,
@@ -86,8 +89,9 @@ export default async function RaceDateReviewPage() {
       suggestedNextDate,
       suggestedNextDateScrapedAt,
       suggestedNextDateSourceQuote,
-      suggestedNextDateStatus
-    }`,
+      suggestedNextDateStatus,
+      "_pendingPriority": select(suggestedNextDateStatus == "pending" => 0, 1)
+    } | order(_pendingPriority asc, eventDate desc)`,
   );
 
   const pendingCount = past.filter(
