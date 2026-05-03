@@ -1,13 +1,15 @@
 // src/app/admin/(shell)/races/date-review/page.tsx
 //
-// Phase 2 of the date-refresh pipeline: editor-facing review queue
-// for the suggestions written by /api/race-date-refresh.
+// Editor-facing review queue for past-dated races. Shows EVERY
+// race whose eventDate is in the past, regardless of suggestion
+// status, so the editor can:
+//   - Approve / Reject pending suggestions written by the scraper
+//   - Trigger a per-race Scan for races that haven't been scanned
+//     yet (or where status is null)
+//   - Reset rejected races back to scannable
 //
-// Server component — pulls every raceGuide with
-// suggestedNextDateStatus == "pending" and renders one row per
-// suggestion with the source quote, the past eventDate, the
-// proposed new date (editable inline), and Approve/Reject buttons
-// that call into the server actions in ./actions.ts.
+// Per-row interactivity (Calendar, Scan, Approve, Reject, Reset)
+// lives in the RowActions client component.
 
 import { format } from "date-fns";
 import { ExternalLink } from "lucide-react";
@@ -23,7 +25,7 @@ import {
   TableRow,
 } from "@/components/ui/Table";
 
-import RowActions from "./RowActions";
+import RowActions, { type RowState } from "./RowActions";
 
 export const metadata = {
   title: "Race Date Review — Stride Admin",
@@ -31,7 +33,7 @@ export const metadata = {
 };
 
 // Always re-fetch — the page changes the moment any other tab
-// approves or rejects a suggestion.
+// approves, rejects, or scans a race.
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
@@ -39,21 +41,21 @@ const sanityClient = createClient({
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,
   dataset: process.env.NEXT_PUBLIC_SANITY_DATASET!,
   apiVersion: process.env.NEXT_PUBLIC_SANITY_API_VERSION || "2024-01-01",
-  // Read-only view of the queue — but using the write token bypasses
-  // CDN caching so the editor always sees the freshest state after
-  // their own approve/reject.
+  // Read-only view but write-token bypasses CDN cache so the
+  // editor sees the freshest state after their own actions.
   token: process.env.SANITY_API_WRITE_TOKEN,
   useCdn: false,
 });
 
-interface PendingSuggestion {
+interface PastRace {
   _id: string;
   title: string;
   eventDate: string;
-  officialWebsite: string;
-  suggestedNextDate: string;
-  suggestedNextDateScrapedAt: string;
+  officialWebsite?: string;
+  suggestedNextDate?: string;
+  suggestedNextDateScrapedAt?: string;
   suggestedNextDateSourceQuote?: string;
+  suggestedNextDateStatus?: "pending" | "approved" | "rejected";
 }
 
 const safeFormat = (iso: string | undefined, pattern: string): string => {
@@ -62,22 +64,35 @@ const safeFormat = (iso: string | undefined, pattern: string): string => {
   return Number.isNaN(d.getTime()) ? "—" : format(d, pattern);
 };
 
+function rowStateFor(race: PastRace): RowState {
+  if (race.suggestedNextDateStatus === "pending") return "pending";
+  if (race.suggestedNextDateStatus === "rejected") return "rejected";
+  if (!race.officialWebsite) return "no-website";
+  return "scannable";
+}
+
 export default async function RaceDateReviewPage() {
-  const pending: PendingSuggestion[] = await sanityClient.fetch(
+  const past: PastRace[] = await sanityClient.fetch(
     `*[
       _type == "raceGuide"
-      && suggestedNextDateStatus == "pending"
+      && defined(eventDate)
+      && eventDate < now()
       && !(_id in path("drafts.**"))
-    ] | order(suggestedNextDateScrapedAt desc) {
+    ] | order(suggestedNextDateStatus == "pending" desc, eventDate desc) {
       _id,
       title,
       eventDate,
       officialWebsite,
       suggestedNextDate,
       suggestedNextDateScrapedAt,
-      suggestedNextDateSourceQuote
+      suggestedNextDateSourceQuote,
+      suggestedNextDateStatus
     }`,
   );
+
+  const pendingCount = past.filter(
+    (r) => r.suggestedNextDateStatus === "pending",
+  ).length;
 
   return (
     <div className="px-6 py-8">
@@ -87,36 +102,28 @@ export default async function RaceDateReviewPage() {
             Race Date Review
           </h1>
           <p className="mb-0 mt-2 text-copy-13 text-[color:var(--ds-gray-700)]">
-            {pending.length === 0
-              ? "Nothing pending. Suggestions land here when /api/race-date-refresh runs."
-              : `${pending.length} pending ${
-                  pending.length === 1 ? "suggestion" : "suggestions"
-                }.`}{" "}
-            Approve to overwrite the race&rsquo;s eventDate; reject to
-            skip this race on future scans.
+            {past.length} race{past.length === 1 ? "" : "s"} with a past
+            eventDate.{" "}
+            {pendingCount > 0
+              ? `${pendingCount} ${
+                  pendingCount === 1 ? "has" : "have"
+                } a pending suggestion ready to review.`
+              : "No pending suggestions — use the Scan button per row to fetch a candidate date."}
           </p>
         </header>
 
         {/* material-base = bg-100 + 1 px gray-400 border + 6 px
-            radius, no shadow. The DS reserves the 12 px / shadowed
-            materials (medium/large) for "further raised" surfaces
-            like menus + modals; a flat table on the page is an
-            "everyday surface" → 6 px. overflow-hidden keeps the
-            Table's first/last row corners inside the radius. */}
+            radius. overflow-hidden keeps the Table's first/last
+            row corners inside the radius. */}
         <section className="material-base overflow-hidden">
-          {/* DS Table "bordered" variant — adds a 1 px gray-400
-              divider between rows. The colgroup pins column
-              widths so the Calendar trigger + Approve/Reject
-              buttons don't get squeezed when source quotes get
-              long. */}
           <Table bordered>
             <colgroup>
-              <col style={{ width: "22%" }} />
-              <col style={{ width: "14%" }} />
-              <col style={{ width: "26%" }} />
+              <col style={{ width: "20%" }} />
+              <col style={{ width: "13%" }} />
+              <col style={{ width: "23%" }} />
               <col style={{ width: "10%" }} />
-              <col style={{ width: "14%" }} />
-              <col style={{ width: "14%" }} />
+              <col style={{ width: "16%" }} />
+              <col style={{ width: "18%" }} />
             </colgroup>
             <TableHeader>
               <TableRow>
@@ -124,76 +131,77 @@ export default async function RaceDateReviewPage() {
                 <TableHead>Current eventDate</TableHead>
                 <TableHead>Source quote</TableHead>
                 <TableHead>Scraped</TableHead>
-                {/* Suggested cell renders the editable Calendar
-                    — it's both the display and the input for the
-                    override-on-approve flow. */}
                 <TableHead>Suggested</TableHead>
-                {/* DS TableHead applies last:text-right by default
-                    so action columns line up flush right. We want
-                    "Action" to read left like the other column
-                    titles — inline style wins the specificity
-                    battle vs the last:text-right utility. */}
+                {/* Override last:text-right inherited from DS so the
+                    Action header reads left like the others. */}
                 <TableHead style={{ textAlign: "left" }}>Action</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {pending.length === 0 && (
+              {past.length === 0 && (
                 <TableRow>
                   <TableCell
                     colSpan={6}
                     className="py-8 text-center text-copy-13 text-[color:var(--ds-gray-700)]"
                   >
-                    No pending suggestions.
+                    No past-dated races found.
                   </TableCell>
                 </TableRow>
               )}
-              {pending.map((row) => (
-                <TableRow key={row._id}>
-                  <TableCell className="max-w-[220px] text-copy-13 text-[color:var(--ds-gray-1000)]">
-                    <div className="flex items-center gap-2">
-                      <span>{row.title}</span>
-                      {row.officialWebsite && (
-                        <a
-                          href={row.officialWebsite}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          aria-label={`Open ${row.title} official website`}
-                          title="Open official website"
-                          className="inline-flex text-[color:var(--ds-gray-700)] hover:text-[color:var(--ds-gray-1000)]"
-                        >
-                          <ExternalLink className="size-3.5" />
-                        </a>
+              {past.map((row) => {
+                const state = rowStateFor(row);
+                return (
+                  <TableRow key={row._id}>
+                    <TableCell className="max-w-[220px] text-copy-13 text-[color:var(--ds-gray-1000)]">
+                      <div className="flex items-center gap-2">
+                        <span>{row.title}</span>
+                        {row.officialWebsite && (
+                          <a
+                            href={row.officialWebsite}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label={`Open ${row.title} official website`}
+                            title="Open official website"
+                            className="inline-flex text-[color:var(--ds-gray-700)] hover:text-[color:var(--ds-gray-1000)]"
+                          >
+                            <ExternalLink className="size-3.5" />
+                          </a>
+                        )}
+                      </div>
+                    </TableCell>
+                    <TableCell className="whitespace-nowrap">
+                      <div className="flex items-center gap-2">
+                        <Badge variant="red-subtle" size="sm">
+                          Past
+                        </Badge>
+                        <span className="text-label-12 text-[color:var(--ds-gray-900)]">
+                          {safeFormat(row.eventDate, "d MMM yyyy")}
+                        </span>
+                      </div>
+                    </TableCell>
+                    <TableCell className="max-w-[320px] text-copy-13 italic text-[color:var(--ds-gray-900)]">
+                      {row.suggestedNextDateSourceQuote
+                        ? `"${row.suggestedNextDateSourceQuote}"`
+                        : "—"}
+                    </TableCell>
+                    <TableCell className="whitespace-nowrap text-label-12 text-[color:var(--ds-gray-700)]">
+                      {safeFormat(
+                        row.suggestedNextDateScrapedAt,
+                        "d MMM, HH:mm",
                       )}
-                    </div>
-                  </TableCell>
-                  <TableCell className="whitespace-nowrap">
-                    <div className="flex items-center gap-2">
-                      <Badge variant="red-subtle" size="sm">
-                        Past
-                      </Badge>
-                      <span className="text-label-12 text-[color:var(--ds-gray-900)]">
-                        {safeFormat(row.eventDate, "d MMM yyyy")}
-                      </span>
-                    </div>
-                  </TableCell>
-                  <TableCell className="max-w-[320px] text-copy-13 italic text-[color:var(--ds-gray-900)]">
-                    {row.suggestedNextDateSourceQuote
-                      ? `"${row.suggestedNextDateSourceQuote}"`
-                      : "—"}
-                  </TableCell>
-                  <TableCell className="whitespace-nowrap text-label-12 text-[color:var(--ds-gray-700)]">
-                    {safeFormat(row.suggestedNextDateScrapedAt, "d MMM, HH:mm")}
-                  </TableCell>
-                  {/* RowActions returns a fragment of TWO cells —
-                      Suggested (Calendar) and Action (Approve /
-                      Reject) — sharing the picked-date state. */}
-                  <RowActions
-                    id={row._id}
-                    suggestedDate={row.suggestedNextDate}
-                    title={row.title}
-                  />
-                </TableRow>
-              ))}
+                    </TableCell>
+                    {/* RowActions renders a fragment of TWO cells —
+                        Suggested + Action — and switches its
+                        content based on the row state. */}
+                    <RowActions
+                      id={row._id}
+                      title={row.title}
+                      state={state}
+                      suggestedDate={row.suggestedNextDate}
+                    />
+                  </TableRow>
+                );
+              })}
             </TableBody>
           </Table>
         </section>

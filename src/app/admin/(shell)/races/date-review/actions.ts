@@ -4,15 +4,23 @@
 //
 // Server actions for the Race Date Review queue.
 //
-// approveSuggestion → copies the (optionally overridden) suggested
-//   date into eventDate and clears all 4 suggestion fields. Setting
-//   status back to undefined re-enables the race for the next scrape
-//   cycle (it'll be eligible again the next time eventDate is in
-//   the past).
-// rejectSuggestion  → marks status="rejected" so the scraper skips
-//   this race until an editor manually clears the status in Studio.
+// scanRace            → fetch + Haiku-extract for one race. Used
+//                       by the per-row Scan button. Returns the
+//                       RaceResult so the client can toast/alert
+//                       outcomes that don't write to Sanity
+//                       (no_date_found, fetch_error, …).
+// approveSuggestion   → copies the (optionally overridden) suggested
+//                       date into eventDate and clears all 4 suggestion
+//                       fields. Setting status back to undefined
+//                       re-enables the race for the next scrape cycle.
+// rejectSuggestion    → marks status="rejected" so the scraper skips
+//                       this race until an editor manually clears or
+//                       the Reset action below runs.
+// resetSuggestion     → clears suggestedNextDateStatus + the 3
+//                       suggestion fields entirely. Used to take
+//                       a "rejected" race back to scannable.
 //
-// Both actions are auth-gated by isAdminAuthenticated and call
+// All actions are auth-gated by isAdminAuthenticated and call
 // revalidatePath so the page re-renders without the just-decided
 // row.
 
@@ -21,6 +29,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "next-sanity";
 
 import { isAdminAuthenticated } from "@/lib/admin-auth";
+import { processRace, type RaceResult } from "@/lib/raceDateRefresh";
 
 const REVIEW_PATH = "/admin/races/date-review";
 
@@ -36,6 +45,33 @@ async function requireAdmin() {
   if (!(await isAdminAuthenticated())) {
     redirect("/admin/login");
   }
+}
+
+export async function scanRace(formData: FormData): Promise<RaceResult> {
+  await requireAdmin();
+  const id = String(formData.get("id") ?? "").trim();
+  if (!id) throw new Error("Missing race id");
+
+  const race = await sanityClient.fetch<{
+    _id: string;
+    title: string;
+    eventDate: string;
+    officialWebsite: string;
+  } | null>(
+    `*[_id == $id][0]{ _id, title, eventDate, officialWebsite }`,
+    { id },
+  );
+
+  if (!race) {
+    throw new Error("Race not found");
+  }
+  if (!race.officialWebsite) {
+    throw new Error("Race has no officialWebsite — can't scan");
+  }
+
+  const result = await processRace(race, { dryRun: false });
+  revalidatePath(REVIEW_PATH);
+  return result;
 }
 
 export async function approveSuggestion(formData: FormData) {
@@ -89,6 +125,25 @@ export async function rejectSuggestion(formData: FormData) {
   await sanityClient
     .patch(id)
     .set({ suggestedNextDateStatus: "rejected" })
+    .commit();
+
+  revalidatePath(REVIEW_PATH);
+}
+
+export async function resetSuggestion(formData: FormData) {
+  await requireAdmin();
+
+  const id = String(formData.get("id") ?? "").trim();
+  if (!id) throw new Error("Missing race id");
+
+  await sanityClient
+    .patch(id)
+    .unset([
+      "suggestedNextDate",
+      "suggestedNextDateScrapedAt",
+      "suggestedNextDateSourceQuote",
+      "suggestedNextDateStatus",
+    ])
     .commit();
 
   revalidatePath(REVIEW_PATH);
