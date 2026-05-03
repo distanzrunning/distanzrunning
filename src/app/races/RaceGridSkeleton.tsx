@@ -45,12 +45,13 @@ export default function RaceGridSkeleton({
                     text-copy-14 line-height. */}
                 <div className="h-5 w-1/2 animate-pulse rounded bg-[color:var(--ds-gray-200)]" />
               </div>
-              {/* Meta pill row — date pill (~120 px for "11 April,
-                  2027") + distance pill (~52 px for "42 km"). h-6
-                  matches the live MetaPill height. */}
+              {/* Meta pill row — date pill (~140 px for "11 April,
+                  2027" at text-copy-13) + distance pill (~60 px
+                  for "42 km"). h-7 + bg-gray-300 mirrors the live
+                  MetaPill so cold-load matches the swap. */}
               <div className="flex items-center gap-2">
-                <div className="h-6 w-[120px] animate-pulse rounded-full bg-[color:var(--ds-gray-200)]" />
-                <div className="h-6 w-[52px] animate-pulse rounded-full bg-[color:var(--ds-gray-200)]" />
+                <div className="h-7 w-[140px] animate-pulse rounded-full bg-[color:var(--ds-gray-300)]" />
+                <div className="h-7 w-[60px] animate-pulse rounded-full bg-[color:var(--ds-gray-300)]" />
               </div>
             </div>
           </article>

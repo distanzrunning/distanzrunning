@@ -262,12 +262,15 @@ export default function RaceCard({
   );
 }
 
-// Subtle gray pill matching the previous date-block bg
-// (--ds-gray-200) — keeps the body meta items visually
-// associated with the card's "soft" surface region.
+// Subtle gray pill — uses --ds-gray-300 for visible contrast
+// against the body's --ds-gray-100 surface in BOTH light and
+// dark modes. (gray-200 was too close to the body bg in dark
+// mode and rendered nearly invisible.) Sized one step up
+// (h-7 + text-copy-13) so the date string is comfortably
+// readable rather than label-tiny.
 function MetaPill({ children }: { children: React.ReactNode }) {
   return (
-    <span className="inline-flex h-6 items-center rounded-full bg-[color:var(--ds-gray-200)] px-2.5 text-label-12 font-medium text-[color:var(--ds-gray-1000)]">
+    <span className="inline-flex h-7 items-center rounded-full bg-[color:var(--ds-gray-300)] px-3 text-copy-13 font-medium text-[color:var(--ds-gray-1000)]">
       {children}
     </span>
   );
