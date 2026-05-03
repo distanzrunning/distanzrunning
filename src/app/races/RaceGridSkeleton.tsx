@@ -24,7 +24,15 @@ export default function RaceGridSkeleton({
       {Array.from({ length: count }).map((_, i) => (
         <li key={i}>
           <article className="flex w-full flex-col">
-            <div className="aspect-[16/8.75] w-full animate-pulse rounded-t-md bg-[color:var(--ds-gray-200)]" />
+            <div className="relative aspect-[16/8.75] w-full animate-pulse rounded-t-md bg-[color:var(--ds-gray-200)]">
+              {/* Category Badge placeholder — sits in the same
+                  top-right slot as the real RaceCard's distance /
+                  category pill (Badge size="md" → h-6 px-2.5,
+                  rounded-full). gray-300 sits one step darker
+                  than the surrounding gray-200 image area so the
+                  pill silhouette stays visible. */}
+              <div className="absolute right-3 top-3 h-6 w-[72px] rounded-full bg-[color:var(--ds-gray-300)]" />
+            </div>
             <div className="flex items-center justify-between gap-3 rounded-b-md bg-[color:var(--ds-gray-100)] p-6">
               <div className="flex min-w-0 flex-1 flex-col gap-1">
                 {/* Title placeholder — h-7 (28 px) matches the

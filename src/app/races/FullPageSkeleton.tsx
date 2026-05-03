@@ -10,6 +10,26 @@ import RaceGridSkeleton from "./RaceGridSkeleton";
 
 const PULSE_BG = "animate-pulse rounded bg-[color:var(--ds-gray-200)]";
 
+// Renders a placeholder shaped exactly like a FilterChip trigger
+// — same h-8 / pl-3 / pr-1.5 / gap-1 / text-[14px] /
+// leading-[20px] / size-4 chevron slot. Carries the real chip's
+// label as transparent text so the box auto-sizes to the same
+// pixel width as the live chip. Used so the cold-load chip row
+// matches the real row's flow without manual width guesses.
+function ChipPlaceholder({ label }: { label: string }) {
+  return (
+    <div
+      aria-hidden
+      className="inline-flex h-8 animate-pulse items-center gap-1 rounded-sm bg-[color:var(--ds-gray-200)] pl-3 pr-1.5 text-[14px] font-normal leading-[20px] text-transparent"
+    >
+      <span>{label}</span>
+      {/* Chevron-equivalent space — matches the size-4 ChevronDown
+          rendered inside the real FilterChip trigger. */}
+      <span className="size-4" />
+    </div>
+  );
+}
+
 export default function FullPageSkeleton() {
   return (
     <div
@@ -56,30 +76,21 @@ export default function FullPageSkeleton() {
           <div className="flex flex-wrap items-center gap-2">
             {/* Search (collapsed icon) */}
             <div className={`${PULSE_BG} h-8 w-8`} />
-            {/* Date trigger — Calendar uses width={140}. */}
+            {/* Date trigger — Calendar uses an explicit width={140}. */}
             <div className={`${PULSE_BG} h-8 w-[140px]`} />
-            {/* Distance trigger */}
-            <div className={`${PULSE_BG} h-8 w-[100px]`} />
-            {/* Country trigger */}
-            <div className={`${PULSE_BG} h-8 w-[92px]`} />
-            {/* City trigger */}
-            <div className={`${PULSE_BG} h-8 w-[68px]`} />
-            {/* State trigger */}
-            <div className={`${PULSE_BG} h-8 w-[76px]`} />
-            {/* Surface trigger */}
-            <div className={`${PULSE_BG} h-8 w-[96px]`} />
-            {/* Price trigger */}
-            <div className={`${PULSE_BG} h-8 w-[76px]`} />
-            {/* Elevation trigger */}
-            <div className={`${PULSE_BG} h-8 w-[100px]`} />
-            {/* Temperature trigger */}
-            <div className={`${PULSE_BG} h-8 w-[120px]`} />
-            {/* Tag trigger */}
-            <div className={`${PULSE_BG} h-8 w-[60px]`} />
-            {/* Sort trigger — pushed to the right via ml-auto.
-                Compact since it always reads "Sort" regardless of
-                the active option. */}
-            <div className={`${PULSE_BG} ml-auto h-8 w-[68px]`} />
+            <ChipPlaceholder label="Distance" />
+            <ChipPlaceholder label="Country" />
+            <ChipPlaceholder label="City" />
+            <ChipPlaceholder label="State" />
+            <ChipPlaceholder label="Surface" />
+            <ChipPlaceholder label="Price" />
+            <ChipPlaceholder label="Elevation" />
+            <ChipPlaceholder label="Temperature" />
+            <ChipPlaceholder label="Tag" />
+            {/* Sort — pushed to the right via ml-auto, same as live. */}
+            <div className="ml-auto">
+              <ChipPlaceholder label="Sort" />
+            </div>
           </div>
           <RaceGridSkeleton />
         </div>
