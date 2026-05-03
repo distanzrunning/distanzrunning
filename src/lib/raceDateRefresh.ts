@@ -20,7 +20,13 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { createClient } from "next-sanity";
 
-export const FETCH_TIMEOUT_MS = 10_000;
+export const FETCH_TIMEOUT_MS = 8_000;
+// Hard ceiling on the total scan time. Pass 1 + sitemap probe +
+// wave 1 + wave 2 + externals + 2 Haiku calls is normally ~30 s,
+// but slow sites stack up against the 60 s function timeout. This
+// race-against returns a partial fetch_error rather than letting
+// the function 504 — preserves the editor UI's responsiveness.
+const SCAN_OVERALL_TIMEOUT_MS = 50_000;
 // Haiku context comfortably handles ~30 K chars of stripped page
 // text. Truncating bounds token cost on link-heavy / blog-heavy
 // race sites without losing the date (which is almost always
@@ -487,43 +493,40 @@ async function fetchExternalSourceText(
   }
 }
 
-// Try to fetch the site's sitemap and return up to
-// SITEMAP_URL_LIMIT URLs. Tries /sitemap.xml first, then
-// /sitemap_index.xml. If the document is a sitemap *index*
-// (points at child sitemaps), follows the first child to keep
-// the discovery one level deep. Returns [] on any failure —
-// caller should still try homepage links.
+// Try to fetch the site's /sitemap.xml and return up to
+// SITEMAP_URL_LIMIT URLs. Single-attempt to bound the worst-case
+// time on slow sites (the previous two-candidate version could
+// burn 2 × FETCH_TIMEOUT_MS on hosts that don't have a sitemap).
+// Returns [] on any failure — caller still has homepage links.
 async function fetchSitemapUrls(baseUrl: string): Promise<string[]> {
-  const candidates = [
-    new URL("/sitemap.xml", baseUrl).toString(),
-    new URL("/sitemap_index.xml", baseUrl).toString(),
-  ];
-  for (const candidate of candidates) {
-    try {
-      const xml = await fetchHtml(candidate);
-      // Cheap content-type check — anything that isn't an XML
-      // sitemap probably 404'd into an HTML error page.
-      if (!xml.includes("<urlset") && !xml.includes("<sitemapindex")) {
-        continue;
-      }
-      // Sitemap index → recurse into the first child sitemap so
-      // we still pull URLs (one level only — full traversal would
-      // blow the budget on big WP sites).
-      if (xml.includes("<sitemapindex")) {
-        const childMatches = [
-          ...xml.matchAll(/<sitemap>[\s\S]*?<loc>\s*([^<]+)\s*<\/loc>[\s\S]*?<\/sitemap>/gi),
-        ];
-        const firstChild = childMatches[0]?.[1]?.trim();
-        if (!firstChild) return [];
+  const candidate = new URL("/sitemap.xml", baseUrl).toString();
+  try {
+    const xml = await fetchHtml(candidate);
+    if (!xml.includes("<urlset") && !xml.includes("<sitemapindex")) {
+      return [];
+    }
+    // Sitemap index → recurse into the first child sitemap so we
+    // still pull URLs (one level only — full traversal would blow
+    // the budget on big WP sites).
+    if (xml.includes("<sitemapindex")) {
+      const childMatches = [
+        ...xml.matchAll(
+          /<sitemap>[\s\S]*?<loc>\s*([^<]+)\s*<\/loc>[\s\S]*?<\/sitemap>/gi,
+        ),
+      ];
+      const firstChild = childMatches[0]?.[1]?.trim();
+      if (!firstChild) return [];
+      try {
         const childXml = await fetchHtml(firstChild);
         return parseSitemapLocs(childXml);
+      } catch {
+        return [];
       }
-      return parseSitemapLocs(xml);
-    } catch {
-      // Try the next candidate.
     }
+    return parseSitemapLocs(xml);
+  } catch {
+    return [];
   }
-  return [];
 }
 
 function parseSitemapLocs(xml: string): string[] {
@@ -562,7 +565,32 @@ async function fetchPageWithLinks(
   }
 }
 
+// Public entry — wraps the actual scan logic in a Promise.race
+// against SCAN_OVERALL_TIMEOUT_MS so a slow site never burns the
+// full Vercel function budget. Beats a hard 504 (which leaves the
+// admin UI in a bad state) with a structured fetch_error result.
 export async function processRace(
+  race: PendingRace,
+  options: { dryRun: boolean },
+): Promise<RaceResult> {
+  return Promise.race([
+    processRaceInner(race, options),
+    new Promise<RaceResult>((resolve) =>
+      setTimeout(
+        () =>
+          resolve({
+            _id: race._id,
+            title: race.title,
+            status: "fetch_error",
+            message: `Scan exceeded ${Math.round(SCAN_OVERALL_TIMEOUT_MS / 1000)}s budget — site or sub-pages too slow`,
+          }),
+        SCAN_OVERALL_TIMEOUT_MS,
+      ),
+    ),
+  ]);
+}
+
+async function processRaceInner(
   race: PendingRace,
   options: { dryRun: boolean },
 ): Promise<RaceResult> {
