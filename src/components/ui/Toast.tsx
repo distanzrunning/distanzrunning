@@ -61,7 +61,7 @@ function notifyListeners() {
   listeners.forEach((fn) => fn([...globalToasts]));
 }
 
-function addToast(options: string | ToastOptions) {
+function addToast(options: string | ToastOptions): number {
   const opts: ToastOptions =
     typeof options === "string" ? { message: options } : options;
 
@@ -85,6 +85,8 @@ function addToast(options: string | ToastOptions) {
       removeToast(item.id);
     }, 5000);
   }
+
+  return item.id;
 }
 
 function removeToast(id: number) {
@@ -525,12 +527,21 @@ export function Toast({
 // ============================================================================
 
 export function useToast() {
-  const showToast = useCallback((options: string | ToastOptions) => {
-    addToast(options);
-  }, []);
+  // Returns the id of the new toast so callers can dismiss it
+  // programmatically later (e.g. swap a "preserved" loading toast
+  // for a result toast when an async action settles).
+  const showToast = useCallback(
+    (options: string | ToastOptions): number => addToast(options),
+    [],
+  );
 
-  const dismissToast = useCallback(() => {
-    // Dismiss the most recent toast
+  const dismissToast = useCallback((id?: number) => {
+    if (typeof id === "number") {
+      removeToast(id);
+      return;
+    }
+    // No id supplied — fall back to dismissing the most recent
+    // toast (preserves the original API).
     if (globalToasts.length > 0) {
       removeToast(globalToasts[0].id);
     }

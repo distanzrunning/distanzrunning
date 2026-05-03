@@ -2,6 +2,7 @@
 
 import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
+import { ToastContainer } from "@/components/ui/Toast";
 import {
   CommandMenuDialog,
   CommandMenuTrigger,
@@ -80,6 +81,10 @@ export default function AdminShell({ children }: { children: ReactNode }) {
         open={cmdOpen}
         onClose={() => setCmdOpen(false)}
       />
+
+      {/* Global toast surface for any admin page — race-date-review
+          uses it to surface scan progress + result. */}
+      <ToastContainer />
     </div>
   );
 }

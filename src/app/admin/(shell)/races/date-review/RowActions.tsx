@@ -22,6 +22,7 @@ import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { Calendar, type DateRange } from "@/components/ui/Calendar";
 import { TableCell } from "@/components/ui/Table";
+import { useToast } from "@/components/ui/Toast";
 
 import {
   approveManualDate,
@@ -156,6 +157,7 @@ function ScannableRow({ id, title, previousEventDate }: RowActionsProps) {
   const initialGuess = addOneYear(new Date(previousEventDate));
   const [picked, setPicked] = useState<Date>(initialGuess);
   const [pending, startTransition] = useTransition();
+  const { showToast, dismissToast } = useToast();
 
   const range: DateRange = { start: picked, end: picked };
   const handleCalendarChange = (next: DateRange) => {
@@ -173,20 +175,41 @@ function ScannableRow({ id, title, previousEventDate }: RowActionsProps) {
   };
 
   const handleScan = () => {
+    // Persistent "scanning" toast — captured by id so we can
+    // dismiss it the moment scanRace resolves (otherwise it'd
+    // stack alongside the result toast). Tells the editor the
+    // scan is in flight and roughly how long to expect.
+    const scanningToastId = showToast({
+      message: `Scanning "${title}"…`,
+      description: "Fetching homepage, sub-pages, and aggregators. May take up to 50 s.",
+      preserve: true,
+    });
+
     startTransition(async () => {
       const fd = new FormData();
       fd.set("id", id);
       const result = await scanRace(fd);
-      if (result.status !== "suggested") {
+      dismissToast(scanningToastId);
+
+      if (result.status === "suggested") {
+        showToast({
+          message: `Suggestion written for "${title}"`,
+          description: `Suggested next date: ${result.suggestedNextDate ?? "—"}. Review it in the row above.`,
+          variant: "success",
+        });
+      } else {
         const explainer: Record<typeof result.status, string> = {
-          no_date_found: "Haiku couldn't find a future date on the page.",
-          fetch_error: "Couldn't reach the website.",
-          extract_error: "The model errored — try again or check the page.",
+          no_date_found: "Haiku couldn't find a future date on the available pages.",
+          fetch_error: "Couldn't reach the website (or scan exceeded the 50 s budget).",
+          extract_error: "The model errored — try again or use manual approve.",
           invalid_date: "Returned date didn't pass validation.",
         };
-        window.alert(
-          `Scan completed for "${title}" but no suggestion was written.\n\n${explainer[result.status]}\n\nDetails: ${result.message ?? "—"}`,
-        );
+        showToast({
+          message: `No suggestion for "${title}"`,
+          description: `${explainer[result.status]} ${result.message ? `Details: ${result.message}` : ""}`.trim(),
+          variant: "warning",
+          preserve: true,
+        });
       }
     });
   };
