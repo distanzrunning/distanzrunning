@@ -346,7 +346,7 @@ export default function FiltersShell({
             onChange={(tag) => setFilter({ tag })}
           />,
         )}
-        {anyActive && !searchExpanded && (
+        {anyActive && (
           <button
             type="button"
             onClick={resetAll}
@@ -356,34 +356,32 @@ export default function FiltersShell({
           </button>
         )}
         </div>
-        {/* Right column (toggle + sort) — shrink-0 + h-8 + flex
-            items-center so it sits at the top of the row,
-            vertically aligned with the first chip row. Stays
-            pinned top-right regardless of how many chip rows
-            wrap beneath it. Hidden while Search is expanded so
-            the input has uncluttered focus. */}
-        {!searchExpanded && (
-          <div className="flex h-8 shrink-0 items-center gap-3">
-            <Toggle
-              size="default"
-              label="Hide past races"
-              labelPosition="left"
-              // Toggle is "on" by default — i.e., past races are
-              // hidden. Flipping off (showPast=true in URL)
-              // includes them in results.
-              checked={!initialFilters.showPast}
-              onChange={(checked) =>
-                setFilter({ showPast: checked ? undefined : true })
-              }
-            />
-            <SortFilter
-              value={initialFilters.sort ?? DEFAULT_SORT}
-              onChange={(sort) =>
-                setFilter({ sort: sort === DEFAULT_SORT ? undefined : sort })
-              }
-            />
-          </div>
-        )}
+        {/* Right column (toggle + sort) — always rendered so the
+            search expand/collapse doesn't flicker by mounting and
+            unmounting these controls mid-transition. shrink-0 +
+            h-8 + flex items-center so it sits at the top of the
+            row, aligned with the first chip row, regardless of
+            how many chip rows wrap beneath it. */}
+        <div className="flex h-8 shrink-0 items-center gap-3">
+          <Toggle
+            size="default"
+            label="Hide past races"
+            labelPosition="left"
+            // Toggle is "on" by default — i.e., past races are
+            // hidden. Flipping off (showPast=true in URL)
+            // includes them in results.
+            checked={!initialFilters.showPast}
+            onChange={(checked) =>
+              setFilter({ showPast: checked ? undefined : true })
+            }
+          />
+          <SortFilter
+            value={initialFilters.sort ?? DEFAULT_SORT}
+            onChange={(sort) =>
+              setFilter({ sort: sort === DEFAULT_SORT ? undefined : sort })
+            }
+          />
+        </div>
       </div>
 
       {showSkeleton ? <RaceGridSkeleton /> : children}
