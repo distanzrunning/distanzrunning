@@ -101,12 +101,13 @@ export default function RowActions({
           }
         />
       </TableCell>
-      {/* justify-end so the buttons line up with the right-aligned
-          "Action" TableHead — DS Table applies last:text-right by
-          default to last-child cells; flex children ignore
-          text-align so we mirror it via justify-end here. */}
+      {/* Action cell keeps its content left-aligned to match the
+          "Action" TableHead (which we overrode away from the DS
+          default last:text-right). Flex children ignore the cell's
+          text-align anyway, so the explicit flex layout below is
+          what positions the buttons. */}
       <TableCell>
-        <div className="flex items-center justify-end gap-2">
+        <div className="flex items-center gap-2">
           <Button size="small" loading={pending} onClick={handleApprove}>
             Approve
           </Button>

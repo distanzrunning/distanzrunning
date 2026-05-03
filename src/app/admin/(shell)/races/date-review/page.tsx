@@ -115,7 +115,12 @@ export default async function RaceDateReviewPage() {
                     — it's both the display and the input for the
                     override-on-approve flow. */}
                 <TableHead>Suggested</TableHead>
-                <TableHead>Action</TableHead>
+                {/* DS TableHead applies last:text-right by default
+                    so action columns line up flush right. We want
+                    "Action" to read left like the other column
+                    titles — inline style wins the specificity
+                    battle vs the last:text-right utility. */}
+                <TableHead style={{ textAlign: "left" }}>Action</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
