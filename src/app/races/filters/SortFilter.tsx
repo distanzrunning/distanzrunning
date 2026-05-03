@@ -2,17 +2,13 @@
 
 // src/app/races/filters/SortFilter.tsx
 //
-// Sort selector. Renders as a FilterChip in the right-aligned
-// slot, but treats its "active" state visually rather than via
-// the activeLabel slot — the trigger always reads "Sort", and
-// the chip flips to the dark inverted treatment when the value
-// is anything other than DEFAULT_SORT. That keeps the chip
-// width stable as users cycle through long sort options
-// (e.g. "Distance (Longest First)") without re-flowing the row.
-//
-// Option labels mirror the legacy filter's wording.
+// Sort selector. Renders as a DS Select to match the currency
+// dropdown in RaceUnitControls — native <select> with a hairline
+// ring + chevron suffix, h-8 to align with the filter chip row.
+// Labels are intentionally compact (no parens, single-clause) so
+// the trigger stays narrow as the user cycles through options.
 
-import FilterChip from "@/components/ui/FilterChip";
+import { Select } from "@/components/ui/Select";
 import {
   DEFAULT_SORT,
   type RaceSortKey,
@@ -24,16 +20,16 @@ interface SortOption {
 }
 
 const OPTIONS: SortOption[] = [
-  { value: "date-asc", label: "Date (Earliest First)" },
-  { value: "date-desc", label: "Date (Latest First)" },
-  { value: "name-asc", label: "Name (A-Z)" },
-  { value: "name-desc", label: "Name (Z-A)" },
-  { value: "distance-asc", label: "Distance (Shortest First)" },
-  { value: "distance-desc", label: "Distance (Longest First)" },
-  { value: "elevation-asc", label: "Elevation (Lowest First)" },
-  { value: "elevation-desc", label: "Elevation (Highest First)" },
-  { value: "price-asc", label: "Price (Low to High)" },
-  { value: "price-desc", label: "Price (High to Low)" },
+  { value: "date-asc", label: "Earliest date" },
+  { value: "date-desc", label: "Latest date" },
+  { value: "name-asc", label: "Name A–Z" },
+  { value: "name-desc", label: "Name Z–A" },
+  { value: "distance-asc", label: "Shortest distance" },
+  { value: "distance-desc", label: "Longest distance" },
+  { value: "elevation-asc", label: "Lowest elevation" },
+  { value: "elevation-desc", label: "Highest elevation" },
+  { value: "price-asc", label: "Cheapest price" },
+  { value: "price-desc", label: "Highest price" },
 ];
 
 interface SortFilterProps {
@@ -42,36 +38,23 @@ interface SortFilterProps {
 }
 
 export default function SortFilter({ value, onChange }: SortFilterProps) {
-  const isActive = value !== DEFAULT_SORT;
-
   return (
-    <FilterChip label="Sort" active={isActive} panelWidth={260}>
-      {({ close }) => (
-        <ul className="-mx-2 list-none p-0">
-          {OPTIONS.map((opt) => {
-            const isSelected = opt.value === value;
-            return (
-              <li key={opt.value}>
-                <button
-                  type="button"
-                  onClick={() => {
-                    onChange(opt.value);
-                    close();
-                  }}
-                  className={`flex w-full cursor-pointer items-center rounded-sm px-3 py-1.5 text-left text-[13px] transition-colors ${
-                    isSelected
-                      ? "bg-[color:var(--ds-gray-1000)] text-[color:var(--ds-background-100)]"
-                      : "text-[color:var(--ds-gray-1000)] hover:bg-[color:var(--ds-gray-100)]"
-                  }`}
-                >
-                  <span className="truncate">{opt.label}</span>
-                </button>
-              </li>
-            );
-          })}
-        </ul>
-      )}
-    </FilterChip>
+    <Select
+      size="small"
+      value={value}
+      onChange={(e) => onChange(e.target.value as RaceSortKey)}
+      // Width set to fit "Highest elevation" — the longest label
+      // — without per-pick reflow. ~70 px narrower than the legacy
+      // "Date (Earliest First)" form took.
+      className="w-[180px]"
+      aria-label="Sort races"
+    >
+      {OPTIONS.map((opt) => (
+        <option key={opt.value} value={opt.value}>
+          {opt.label}
+        </option>
+      ))}
+    </Select>
   );
 }
 
