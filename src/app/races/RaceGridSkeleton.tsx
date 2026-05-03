@@ -33,26 +33,17 @@ export default function RaceGridSkeleton({
                   pill silhouette stays visible. */}
               <div className="absolute right-3 top-3 h-6 w-[72px] rounded-full bg-[color:var(--ds-gray-300)]" />
             </div>
-            <div className="flex flex-col gap-3 rounded-b-md bg-[color:var(--ds-gray-100)] p-6">
-              <div className="flex min-w-0 flex-col gap-1">
-                {/* Title placeholder — h-7 (28 px) matches the
-                    text-heading-20 line-height of the real
-                    RaceCard title. Single-line; longer titles
-                    that wrap to 2 lines will still expand the
-                    real card slightly. */}
-                <div className="h-7 w-4/5 animate-pulse rounded bg-[color:var(--ds-gray-200)]" />
-                {/* Location placeholder — h-5 (20 px) matches
-                    text-copy-14 line-height. */}
-                <div className="h-5 w-1/2 animate-pulse rounded bg-[color:var(--ds-gray-200)]" />
+            <div className="flex flex-col gap-1 rounded-b-md bg-[color:var(--ds-gray-100)] p-6">
+              {/* Title row — title placeholder + date pill on
+                  the right. h-7 / w-[140px] mirrors the live
+                  MetaPill ("11 April, 2027" at text-copy-13). */}
+              <div className="flex items-start justify-between gap-3">
+                <div className="h-7 w-3/5 animate-pulse rounded bg-[color:var(--ds-gray-200)]" />
+                <div className="h-7 w-[140px] shrink-0 animate-pulse rounded-full bg-[color:var(--ds-gray-300)]" />
               </div>
-              {/* Meta pill row — date pill (~140 px for "11 April,
-                  2027" at text-copy-13) + distance pill (~60 px
-                  for "42 km"). h-7 + bg-gray-300 mirrors the live
-                  MetaPill so cold-load matches the swap. */}
-              <div className="flex items-center gap-2">
-                <div className="h-7 w-[140px] animate-pulse rounded-full bg-[color:var(--ds-gray-300)]" />
-                <div className="h-7 w-[60px] animate-pulse rounded-full bg-[color:var(--ds-gray-300)]" />
-              </div>
+              {/* Location placeholder — h-5 (20 px) matches
+                  text-copy-14 line-height. */}
+              <div className="h-5 w-1/2 animate-pulse rounded bg-[color:var(--ds-gray-200)]" />
             </div>
           </article>
         </li>

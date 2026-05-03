@@ -7,7 +7,6 @@ import { Badge } from "@/components/ui/Badge";
 import CardImage from "@/components/ui/CardImage";
 import {
   convertCurrencySync,
-  formatDistance,
   formatElevation,
   formatPrice,
 } from "@/lib/raceUtils";
@@ -53,10 +52,6 @@ export interface RaceCardProps {
   /** Visual variant. "default" matches the homepage Races row;
    *  "index" is the /races index page treatment. */
   variant?: "default" | "index";
-  /** Race distance in km — surfaced as a pill in the body next
-   *  to the date pill. Optional so the homepage row (which
-   *  doesn't currently fetch distance) renders without it. */
-  distance?: number;
   /** Index-variant only — populates the glassy hover stat columns. */
   surface?: string;
   surfaceBreakdown?: string;
@@ -116,7 +111,6 @@ export default function RaceCard({
   priority = false,
   className = "",
   variant = "default",
-  distance,
   surface,
   surfaceBreakdown,
   profile,
@@ -127,11 +121,8 @@ export default function RaceCard({
   const isIndex = variant === "index";
   const { units, currency: displayCurrency } = useUnits();
 
-  // Body meta pills — full date + distance (units-aware). Both
-  // optional; the row only renders if at least one is set.
+  // Date pill on the title row — full year always shown.
   const fullDate = safeFormat(eventDate, "d MMMM, yyyy");
-  const distanceLabel =
-    distance != null ? formatDistance(distance, units) : undefined;
 
   // Format profile as title-case ("rolling" → "Rolling").
   const profileLabel = profile
@@ -230,13 +221,15 @@ export default function RaceCard({
         )}
       </div>
 
-      {/* Body — title + location stacked, then a meta pill row
-          (date + distance). Replaces the old MAR/31 square date
-          block; pills carry the full date inline with distance
-          so the editor doesn't have to interpret the abbrev. */}
-      <div className="flex flex-col gap-3 rounded-b-md bg-[color:var(--ds-gray-100)] p-6">
-        <div className="flex min-w-0 flex-col gap-1">
-          <h3 className="line-clamp-2 text-heading-20 text-[color:var(--ds-gray-1000)]">
+      {/* Body — title-row carries the date pill on the right
+          (inline, top-aligned with the title's first line so
+          multi-line titles still wrap cleanly). Location sits
+          below. Distance is intentionally absent — the category
+          badge top-right of the image already conveys that
+          information for the index variant. */}
+      <div className="flex flex-col gap-1 rounded-b-md bg-[color:var(--ds-gray-100)] p-6">
+        <div className="flex items-start justify-between gap-3">
+          <h3 className="line-clamp-2 min-w-0 flex-1 text-heading-20 text-[color:var(--ds-gray-1000)]">
             <Link
               href={href}
               className="outline-none after:absolute after:inset-0 after:content-[''] focus-visible:after:rounded-md focus-visible:after:outline focus-visible:after:outline-2 focus-visible:after:outline-[color:var(--ds-focus-ring)]"
@@ -244,18 +237,12 @@ export default function RaceCard({
               {title}
             </Link>
           </h3>
-          {location && (
-            <p className="truncate text-copy-14 text-[color:var(--ds-gray-900)]">
-              {location}
-            </p>
-          )}
+          {fullDate && <MetaPill>{fullDate}</MetaPill>}
         </div>
-
-        {(fullDate || distanceLabel) && (
-          <div className="flex flex-wrap items-center gap-2">
-            {fullDate && <MetaPill>{fullDate}</MetaPill>}
-            {distanceLabel && <MetaPill>{distanceLabel}</MetaPill>}
-          </div>
+        {location && (
+          <p className="truncate text-copy-14 text-[color:var(--ds-gray-900)]">
+            {location}
+          </p>
         )}
       </div>
     </article>
