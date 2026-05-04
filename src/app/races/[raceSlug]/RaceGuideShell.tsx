@@ -343,10 +343,15 @@ function fitToRoute(
 function GuidePanel() {
   return (
     <aside
-      className="rounded-md border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-200)] p-6 dark:bg-[color:var(--ds-background-100)]"
+      className="rounded-md bg-[color:var(--ds-background-200)] p-6 dark:bg-[color:var(--ds-background-100)]"
       style={{
         width: PANEL_WIDTH,
         pointerEvents: "auto",
+        // Same elevation treatment as the login cards / DS
+        // menu + popover surfaces: faint alpha hairline + soft
+        // drop, so the panel reads as floating above the map
+        // rather than as an inline page surface.
+        boxShadow: "var(--ds-shadow-menu)",
         // Temporary placeholder height so the page scrolls and we
         // can verify the sticky map / scrolling panel behaviour.
         // Comes out when real editorial content lands.
