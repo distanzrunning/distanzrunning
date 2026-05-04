@@ -2,27 +2,15 @@
 
 // src/app/races/[raceSlug]/RaceGuideShell.tsx
 //
-// Map-led canvas for a single race guide. The Mapbox map fills
-// the available PageFrame surface; a floating glass panel on the
-// right side carries the race meta + write-up. On mobile the
-// layout collapses to a stacked view: map first, panel below.
+// First slice: just the map. Race stats / guide panel will be
+// reintroduced once we're confident the map renders correctly
+// in every viewport.
 
 import { useContext, useEffect, useRef, useState } from "react";
-import Link from "next/link";
-import { format } from "date-fns";
-import { ArrowUpRight, MapPin } from "lucide-react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 
 import { DarkModeContext } from "@/components/DarkModeProvider";
-import { Badge } from "@/components/ui/Badge";
-import {
-  convertCurrencySync,
-  formatDistance,
-  formatElevation,
-  formatPrice,
-} from "@/lib/raceUtils";
-import { useUnits } from "@/contexts/UnitsContext";
 
 export interface RaceGuideMeta {
   _id: string;
@@ -57,41 +45,32 @@ interface RaceGuideShellProps {
   routeGeoJsonUrl: string | null;
 }
 
-const ROUTE_LINE_COLOR = "#FF0058"; // electric-pink
+const ROUTE_LINE_COLOR = "#FF0058";
+
+// Explicit height calc: 100vh minus the 50 px sticky site header
+// and the 9 px PageFrame margins/borders below it. Without an
+// explicit height, the absolutely-positioned map container would
+// collapse to 0 height because `position: absolute inset-0`
+// gives its parent no content to size against, and the parent's
+// flex-1 chain through PageFrame doesn't propagate a definite
+// height down to a leaf with no in-flow children.
+const SHELL_HEIGHT = "calc(100vh - 59px)";
 
 export default function RaceGuideShell({
   race,
   routeGeoJsonUrl,
 }: RaceGuideShellProps) {
   return (
-    // The shell takes the full inner height of PageFrame on md+
-    // and stacks (map first, panel below) on mobile. overflow-hidden
-    // lets the map clip to PageFrame's 6 px corner radius.
-    <div className="relative flex flex-1 flex-col overflow-hidden md:flex-row">
-      <div className="relative h-[50vh] w-full md:h-auto md:flex-1">
-        {routeGeoJsonUrl ? (
-          <RaceMap geoJsonUrl={routeGeoJsonUrl} />
-        ) : (
-          <NoRouteFallback />
-        )}
-      </div>
-
-      {/* Panel:
-          - mobile: normal flow under the map, full width
-          - md+: absolute, floating right with material-menu treatment */}
-      <aside
-        className={[
-          "flex flex-col bg-[color:var(--ds-background-100)]",
-          // Mobile flow
-          "border-t border-[color:var(--ds-gray-400)] md:border-t-0",
-          // Desktop floating card
-          "md:absolute md:right-4 md:top-4 md:bottom-4 md:w-[420px]",
-          "md:rounded-md md:border md:border-[color:var(--ds-gray-400)]",
-          "md:overflow-y-auto md:[box-shadow:var(--ds-shadow-menu)]",
-        ].join(" ")}
-      >
-        <RaceGuidePanel race={race} />
-      </aside>
+    <div
+      className="relative w-full overflow-hidden"
+      style={{ height: SHELL_HEIGHT }}
+      aria-label={`${race.title} route map`}
+    >
+      {routeGeoJsonUrl ? (
+        <RaceMap geoJsonUrl={routeGeoJsonUrl} />
+      ) : (
+        <NoRouteFallback />
+      )}
     </div>
   );
 }
@@ -109,9 +88,6 @@ function RaceMap({ geoJsonUrl }: { geoJsonUrl: string }) {
   const { isDark, isInitialized } = useContext(DarkModeContext);
   const [error, setError] = useState<string | null>(null);
 
-  // Initial map create — depends on `isInitialized` so we don't
-  // spin up before DarkModeContext has settled (avoids a style
-  // flip on first paint).
   useEffect(() => {
     if (!containerRef.current || !isInitialized) return;
     const token = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
@@ -242,7 +218,7 @@ function fitToRoute(
       [minLng, minLat],
       [maxLng, maxLat],
     ],
-    { padding: { top: 64, bottom: 64, left: 64, right: 480 }, duration: 0 },
+    { padding: 64, duration: 0 },
   );
 }
 
@@ -252,183 +228,4 @@ function NoRouteFallback() {
       Route map coming soon.
     </div>
   );
-}
-
-// ============================================================================
-// Guide panel — race meta + key stats + records + write-up slot.
-// Pulled into its own component so the shell stays focused on layout.
-// ============================================================================
-
-function RaceGuidePanel({ race }: { race: RaceGuideMeta }) {
-  const { units, currency: displayCurrency } = useUnits();
-
-  const location = [race.city, race.stateRegion, race.country]
-    .filter((p): p is string => Boolean(p))
-    .join(", ");
-  const dateLabel = formatEventDate(race.eventDate);
-  const distanceLabel =
-    race.distance != null ? formatDistance(race.distance, units) : null;
-  const elevationLabel =
-    race.elevationGain != null
-      ? formatElevation(race.elevationGain, units)
-      : null;
-  const profileLabel = race.profile
-    ? race.profile.charAt(0).toUpperCase() + race.profile.slice(1)
-    : null;
-
-  const isLocalCurrency = displayCurrency === "local";
-  const targetCurrency = isLocalCurrency
-    ? race.currency ?? "USD"
-    : displayCurrency;
-  const priceLabel =
-    race.price != null && race.currency
-      ? formatPrice(
-          isLocalCurrency
-            ? race.price
-            : convertCurrencySync(race.price, race.currency, displayCurrency),
-          targetCurrency,
-        )
-      : null;
-
-  return (
-    <div className="flex flex-col gap-6 p-6">
-      <header className="flex flex-col gap-3">
-        <Link
-          href="/races"
-          className="inline-flex w-fit items-center gap-1 text-copy-13 text-[color:var(--ds-gray-900)] underline-offset-4 hover:text-[color:var(--ds-gray-1000)] hover:underline"
-        >
-          ← All races
-        </Link>
-        {race.category && (
-          <Badge variant="gray" size="md">
-            {race.category}
-          </Badge>
-        )}
-        <h1 className="m-0 text-balance text-heading-32 text-[color:var(--ds-gray-1000)]">
-          {race.title}
-        </h1>
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-copy-14 text-[color:var(--ds-gray-900)]">
-          {dateLabel && <span>{dateLabel}</span>}
-          {location && (
-            <span className="inline-flex items-center gap-1.5">
-              <MapPin className="size-4" aria-hidden />
-              {location}
-            </span>
-          )}
-        </div>
-      </header>
-
-      <StatGrid
-        items={[
-          { label: "Distance", value: distanceLabel },
-          { label: "Surface", value: race.surface ?? null, detail: race.surfaceBreakdown },
-          { label: "Elevation", value: elevationLabel, detail: profileLabel },
-          { label: "Price", value: priceLabel, detail: targetCurrency },
-        ]}
-      />
-
-      {(race.mensCourseRecord || race.womensCourseRecord) && (
-        <section className="flex flex-col gap-3">
-          <h2 className="m-0 text-heading-16 text-[color:var(--ds-gray-1000)]">
-            Course records
-          </h2>
-          <ul className="m-0 flex flex-col gap-2 p-0 list-none">
-            {race.mensCourseRecord && (
-              <RecordRow
-                label="Men"
-                time={race.mensCourseRecord}
-                athlete={race.mensCourseRecordAthlete}
-                country={race.mensCourseRecordCountry}
-              />
-            )}
-            {race.womensCourseRecord && (
-              <RecordRow
-                label="Women"
-                time={race.womensCourseRecord}
-                athlete={race.womensCourseRecordAthlete}
-                country={race.womensCourseRecordCountry}
-              />
-            )}
-          </ul>
-        </section>
-      )}
-
-      {race.officialWebsite && (
-        <a
-          href={race.officialWebsite}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex h-10 items-center justify-center gap-1.5 rounded-md bg-[color:var(--ds-gray-1000)] px-4 text-copy-14 font-medium text-[color:var(--ds-background-100)] transition-colors hover:bg-[color:var(--ds-gray-900)]"
-        >
-          Official website
-          <ArrowUpRight className="size-4" aria-hidden />
-        </a>
-      )}
-    </div>
-  );
-}
-
-function StatGrid({
-  items,
-}: {
-  items: { label: string; value: string | null; detail?: string | null }[];
-}) {
-  const visible = items.filter((i) => i.value);
-  if (visible.length === 0) return null;
-  return (
-    <dl className="m-0 grid grid-cols-2 gap-4">
-      {visible.map((item) => (
-        <div key={item.label} className="flex flex-col gap-0.5">
-          <dt className="text-label-12 font-medium uppercase tracking-wide text-[color:var(--ds-gray-700)]">
-            {item.label}
-          </dt>
-          <dd className="m-0 text-copy-16 text-[color:var(--ds-gray-1000)]">
-            {item.value}
-          </dd>
-          {item.detail && (
-            <span className="text-copy-13 text-[color:var(--ds-gray-900)]">
-              {item.detail}
-            </span>
-          )}
-        </div>
-      ))}
-    </dl>
-  );
-}
-
-function RecordRow({
-  label,
-  time,
-  athlete,
-  country,
-}: {
-  label: string;
-  time: string;
-  athlete?: string;
-  country?: string;
-}) {
-  const subtitle = [athlete, country].filter(Boolean).join(" · ");
-  return (
-    <li className="flex items-baseline justify-between gap-3">
-      <div className="flex flex-col">
-        <span className="text-copy-14 text-[color:var(--ds-gray-1000)]">
-          {label}
-        </span>
-        {subtitle && (
-          <span className="text-copy-13 text-[color:var(--ds-gray-900)]">
-            {subtitle}
-          </span>
-        )}
-      </div>
-      <span className="font-mono text-copy-14 text-[color:var(--ds-gray-1000)]">
-        {time}
-      </span>
-    </li>
-  );
-}
-
-function formatEventDate(iso: string | undefined): string | null {
-  if (!iso) return null;
-  const d = new Date(iso);
-  return Number.isNaN(d.getTime()) ? null : format(d, "EEEE, d MMMM yyyy");
 }
