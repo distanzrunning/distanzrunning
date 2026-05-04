@@ -169,11 +169,13 @@ export default function FiltersShell({
           scroll keeps filter-row height stable. */}
       <div className="flex items-center">
         <div
-          // py-1 gives the chip box-shadow rings 4 px of vertical
-          // breathing room — overflow-x-auto otherwise clips
-          // them. Scrollbar hidden across browsers; chips scroll
-          // via wheel/swipe.
-          className="flex min-w-0 flex-1 items-center gap-2 overflow-x-auto py-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          // p-px gives chip box-shadow rings 1 px of breathing
+          // room on all sides — overflow-x-auto otherwise clips
+          // every chip ring at the strip's edges (most visibly
+          // the leftmost search trigger's left ring and the
+          // rightmost visible chip's right ring). Scrollbar
+          // hidden across browsers; chips scroll via wheel/swipe.
+          className="flex min-w-0 flex-1 items-center gap-2 overflow-x-auto p-px [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         >
         {/* Search wrapped in its own order:-2 slot so it always
             wins the leftmost spot, even against active filter

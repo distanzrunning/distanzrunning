@@ -77,7 +77,7 @@ export default function FullPageSkeleton() {
               (no wrap, hidden horizontal scrollbar) on the
               left, toggle + sort pinned right. */}
           <div className="flex items-center">
-            <div className="flex min-w-0 flex-1 items-center gap-2 overflow-x-auto py-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            <div className="flex min-w-0 flex-1 items-center gap-2 overflow-x-auto p-px [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               {/* Search (collapsed icon) */}
               <div className={`${PULSE_BG} h-8 w-8 shrink-0`} />
               {/* Date trigger — Calendar uses an explicit width={140}. */}
