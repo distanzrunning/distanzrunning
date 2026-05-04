@@ -1,71 +1,105 @@
 // src/app/races/[raceSlug]/page.tsx
+//
+// Server component for a single race guide. The page is a
+// map-led canvas: the race route fills the entire PageFrame
+// surface as a Mapbox map, with a floating guide panel on the
+// right-hand side carrying the race meta + write-up.
+//
+// Data shape: 26 of 30 race guides have an existing `gpxFile`
+// upload (a .geojson FeatureCollection of LineString features).
+// We dereference the asset to its CDN URL here and hand the URL
+// to the client island, which fetches + renders the route.
 
-import { client as sanity } from '@/sanity/lib/client'
-import { urlFor } from '@/sanity/lib/image'
-import { notFound } from 'next/navigation'
-import { format } from 'date-fns'
+import { notFound } from "next/navigation";
+import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 
-export const revalidate = 60 // optional
+import { sanityFetch } from "@/sanity/lib/live";
+import RaceGuideShell, {
+  type RaceGuideMeta,
+} from "./RaceGuideShell";
 
-export async function generateStaticParams() {
-  const races = await sanity.fetch(`*[_type == "raceGuide"]{slug}`)
-  return races.map((race: any) => ({ raceSlug: race.slug.current }))
-}
+export const revalidate = 60;
 
-export default async function RacePage({ params }: { params: { raceSlug: string } }) {
-  const { raceSlug } = await Promise.resolve(params) // ✅ Fix for Next.js 15
+type RaceGuideQueryRow = RaceGuideMeta & {
+  mainImage?: SanityImageSource | null;
+  routeGeoJsonUrl?: string | null;
+};
 
-  if (!raceSlug) return notFound()
+const raceGuideQuery = /* groq */ `
+  *[_type == "raceGuide" && slug.current == $slug][0]{
+    _id,
+    title,
+    "slug": slug.current,
+    eventDate,
+    city,
+    stateRegion,
+    country,
+    "category": raceCategory->title,
+    distance,
+    surface,
+    surfaceBreakdown,
+    profile,
+    elevationGain,
+    elevationLoss,
+    averageTemperature,
+    price,
+    currency,
+    finishers,
+    mensCourseRecord,
+    mensCourseRecordAthlete,
+    mensCourseRecordCountry,
+    womensCourseRecord,
+    womensCourseRecordAthlete,
+    womensCourseRecordCountry,
+    officialWebsite,
+    mainImage,
+    "routeGeoJsonUrl": gpxFile.asset->url
+  }
+`;
 
-  const race = await sanity.fetch(
-    `*[_type == "raceGuide" && slug.current == $slug][0]{
-      title,
-      city,
-      stateRegion,
-      country,
-      eventDate,
-      mainImage
-    }`,
-    { slug: raceSlug }
-  )
+export default async function RaceGuidePage({
+  params,
+}: {
+  params: Promise<{ raceSlug: string }>;
+}) {
+  const { raceSlug } = await params;
+  const result = await sanityFetch({
+    query: raceGuideQuery,
+    params: { slug: raceSlug },
+  });
+  const race = result.data as RaceGuideQueryRow | null;
 
-  if (!race) return notFound()
-
-  const formattedDate = race.eventDate ? format(new Date(race.eventDate), 'MMMM d, yyyy') : 'Unknown Date'
-  const location = [race.city, race.stateRegion, race.country].filter(Boolean).join(', ')
+  if (!race) notFound();
 
   return (
-    <div className="py-12">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <article>
-          {race.mainImage && (
-            <img
-              src={urlFor(race.mainImage).width(1200).url()}
-              alt={race.title}
-              className="rounded-xl w-full h-[400px] object-cover mb-8"
-            />
-          )}
+    <RaceGuideShell
+      race={race}
+      routeGeoJsonUrl={race.routeGeoJsonUrl ?? null}
+    />
+  );
+}
 
-          <h1 className="text-4xl font-bold mb-4">{race.title}</h1>
-
-          {location && (
-            <div className="text-lg text-muted mb-2">
-              📍 {location}
-            </div>
-          )}
-
-          {formattedDate && (
-            <div className="text-lg text-muted mb-8">
-              📅 {formattedDate}
-            </div>
-          )}
-
-          {/* Future: Interactive map, elevation graph, stats */}
-          <div className="text-muted">
-            <p>Full race guide content coming soon!</p>
-          </div>
-        </article>
-      </div>
-    </div>
-  )
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ raceSlug: string }>;
+}) {
+  const { raceSlug } = await params;
+  const result = await sanityFetch({
+    query: /* groq */ `
+      *[_type == "raceGuide" && slug.current == $slug][0]{ title, city, country }
+    `,
+    params: { slug: raceSlug },
+  });
+  const row = result.data as
+    | { title?: string; city?: string; country?: string }
+    | null;
+  if (!row?.title) return { title: "Race — Distanz Running" };
+  const location = [row.city, row.country].filter(Boolean).join(", ");
+  return {
+    title: `${row.title} — Distanz Running`,
+    description: location
+      ? `Race guide for ${row.title} in ${location}.`
+      : `Race guide for ${row.title}.`,
+  };
 }
