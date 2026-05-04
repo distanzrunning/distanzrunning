@@ -65,10 +65,10 @@ export default function FullPageSkeleton() {
               RaceUnitControls keeps visibility:hidden until mount, so
               the real controls reserve the same w/h space — these
               placeholders just fill the cold-load equivalent.
-              sm:self-end mirrors the live RaceUnitControls — true
-              mobile (< 640 px) keeps the default left-anchored
-              layout, sm+ pushes the controls flush right. */}
-          <div className="flex flex-wrap items-center gap-3 shrink-0 sm:self-end">
+              Stacked (< md) → left-aligned under the subheading;
+              row mode (md+) is right-aligned by the header's
+              md:justify-between. */}
+          <div className="flex flex-wrap items-center gap-3 shrink-0">
             <div className={`${PULSE_BG} h-8 w-[150px]`} />
             <div className={`${PULSE_BG} h-8 w-[120px]`} />
           </div>

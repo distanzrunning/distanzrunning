@@ -48,18 +48,11 @@ export default function RaceUnitControls() {
   }, []);
 
   return (
-    // Right-alignment kicks in at sm: (640 px+) so the controls
-    // sit flush right on the in-between widths where the header
-    // is still stacked (parent flex-col) but the viewport is
-    // wide enough that left-anchored controls look stranded.
-    // True mobile (< 640 px) keeps the default — left-anchored
-    // under the subheading.
-    // - sm: cross axis is horizontal → sm:self-end aligns right
-    //   AND shrinks to natural width (overrides the default
-    //   items-stretch).
-    // - md+ (parent md:flex-row md:items-end): cross axis
-    //   becomes vertical, sm:self-end matches the parent's
-    //   md:items-end (bottom-aligned) — no behaviour change.
+    // While the header is stacked (< md), the controls sit
+    // left-aligned under the subheading at every width. At md+
+    // the parent flips to row + items-end + justify-between,
+    // which handles bottom-alignment and pushes the wrapper
+    // flush right — no self-* override needed.
     <div
       // shrink-0 prevents the wrapper from being squeezed below
       // its natural width by flex-shrink:1 when the header is
@@ -68,7 +61,7 @@ export default function RaceUnitControls() {
       // natural width (~280 px) and flex-wrap then stacked
       // them vertically. Title block (which still has
       // flex-shrink:1) gives way instead.
-      className="flex flex-wrap items-center gap-3 shrink-0 sm:self-end"
+      className="flex flex-wrap items-center gap-3 shrink-0"
       style={{ visibility: mounted ? "visible" : "hidden" }}
     >
       <Switch
