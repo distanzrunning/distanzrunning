@@ -367,11 +367,12 @@ export default function FiltersShell({
             Reset all
           </button>
         )}
-        {/* Toggle + Sort at the end of the strip — they scroll
-            into / out of view alongside the chips when the row
-            overflows. ml-3 puts a small visual break between the
-            filter group and these "view controls". */}
-        <div className="ml-3 flex shrink-0 items-center gap-3">
+        {/* Toggle + Sort at the end of the strip. ml-auto absorbs
+            any free space so they sit flush right when the chip
+            count is low; when the strip overflows there's no free
+            space and they fall in after Reset all in normal
+            flow, scrolling alongside the chips. */}
+        <div className="ml-auto flex shrink-0 items-center gap-3">
           <Toggle
             size="default"
             label="Hide past races"

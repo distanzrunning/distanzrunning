@@ -93,8 +93,10 @@ export default function FullPageSkeleton() {
             <ChipPlaceholder label="Temperature" />
             <ChipPlaceholder label="Tag" />
             {/* Toggle (~140 px including label) + Sort icon
-                trigger (32 px) at the end of the strip. */}
-            <div className="ml-3 flex shrink-0 items-center gap-3">
+                trigger (32 px) at the end of the strip. ml-auto
+                pins them flush right when chips don't fill the
+                row. */}
+            <div className="ml-auto flex shrink-0 items-center gap-3">
               <div className={`${PULSE_BG} h-5 w-[140px]`} />
               <div className={`${PULSE_BG} h-8 w-8`} />
             </div>
