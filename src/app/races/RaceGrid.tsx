@@ -53,13 +53,18 @@ export default function RaceGrid({ races }: { races: RaceIndexItem[] }) {
   }
 
   return (
-    // contain: layout isolates the grid's reflow from filter-
-    // row layout shifts above (chip wrap when search expands on
-    // narrow viewports). Without it, Safari was repainting
-    // every card whenever the filter row resized.
+    // Promote the grid onto its own GPU compositor layer so
+    // filter-row reflow above (chip wrap when search expands
+    // on narrow Safari viewports) translates the cards on the
+    // GPU instead of triggering a paint pass for every card.
+    //   - transform: translateZ(0) → forces a stacking context
+    //     + composited layer.
+    //   - contain: layout paint → tells the browser the grid's
+    //     layout AND paint are independent of ancestors, so
+    //     external changes don't invalidate either.
     <ul
       className="grid list-none grid-cols-1 gap-6 p-0 sm:grid-cols-2 lg:grid-cols-3"
-      style={{ contain: "layout" }}
+      style={{ contain: "layout paint", transform: "translateZ(0)" }}
     >
       {races.map((race, i) => (
         <li key={race._id}>
