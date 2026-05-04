@@ -169,13 +169,15 @@ export default function FiltersShell({
           scroll keeps filter-row height stable. */}
       <div className="flex items-center">
         <div
-          // p-px gives chip box-shadow rings 1 px of breathing
-          // room on all sides — overflow-x-auto otherwise clips
-          // every chip ring at the strip's edges (most visibly
-          // the leftmost search trigger's left ring and the
-          // rightmost visible chip's right ring). Scrollbar
-          // hidden across browsers; chips scroll via wheel/swipe.
-          className="flex min-w-0 flex-1 items-center gap-2 overflow-x-auto p-px [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          // p-1 (4 px) gives box-shadow rings room to render
+          // without overflow-x-auto clipping them. 4 px is the
+          // largest ring on the strip — the search input's
+          // focus-within ring is `0 0 0 4px var(--ds-focus-ring)`
+          // (see globals.css .ds-input-container:focus-within).
+          // Anything smaller clipped the focus ring on the search
+          // when expanded. Scrollbar hidden across browsers; chips
+          // scroll via wheel/swipe.
+          className="flex min-w-0 flex-1 items-center gap-2 overflow-x-auto p-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         >
         {/* Search wrapped in its own order:-2 slot so it always
             wins the leftmost spot, even against active filter
