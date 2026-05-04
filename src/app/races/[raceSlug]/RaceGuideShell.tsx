@@ -343,17 +343,10 @@ function fitToRoute(
 function GuidePanel() {
   return (
     <aside
-      className="rounded-md bg-[color:var(--ds-background-200)] p-6 dark:bg-[color:var(--ds-background-100)]"
+      className="rounded-md border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-200)] p-6 dark:bg-[color:var(--ds-background-100)]"
       style={{
         width: PANEL_WIDTH,
         pointerEvents: "auto",
-        // Theme-aware edge: --ds-gray-400 is the DS standard
-        // border colour (flips with theme). Stacked under a
-        // larger drop shadow so the card reads as floating
-        // above the map even when its own bg matches the
-        // surrounding canvas tone closely.
-        boxShadow:
-          "0 0 0 1px var(--ds-gray-400), 0 12px 32px -8px rgba(var(--ds-gray-1000-rgb), 0.18)",
         // Temporary placeholder height so the page scrolls and we
         // can verify the sticky map / scrolling panel behaviour.
         // Comes out when real editorial content lands.
