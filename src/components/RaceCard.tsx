@@ -221,13 +221,13 @@ export default function RaceCard({
         )}
       </div>
 
-      {/* Body — title-row carries the date pill on the right
-          (inline, top-aligned with the title's first line so
-          multi-line titles still wrap cleanly). Location sits
-          below. Category moved to the image's top-right corner. */}
-      <div className="flex flex-col gap-1 rounded-b-md bg-[color:var(--ds-gray-100)] p-6">
-        <div className="flex items-start justify-between gap-3">
-          <h3 className="line-clamp-2 min-w-0 flex-1 text-heading-20 text-[color:var(--ds-gray-1000)]">
+      {/* Body — title + location stacked left, date pill on
+          the right vertically centered against the whole stack
+          (so it sits midway between title and location rather
+          than top-aligned with the title's first line). */}
+      <div className="flex items-center justify-between gap-3 rounded-b-md bg-[color:var(--ds-gray-100)] p-6">
+        <div className="flex min-w-0 flex-1 flex-col gap-1">
+          <h3 className="line-clamp-2 text-heading-20 text-[color:var(--ds-gray-1000)]">
             <Link
               href={href}
               className="outline-none after:absolute after:inset-0 after:content-[''] focus-visible:after:rounded-md focus-visible:after:outline focus-visible:after:outline-2 focus-visible:after:outline-[color:var(--ds-focus-ring)]"
@@ -235,13 +235,13 @@ export default function RaceCard({
               {title}
             </Link>
           </h3>
-          {fullDate && <MetaPill>{fullDate}</MetaPill>}
+          {location && (
+            <p className="truncate text-copy-14 text-[color:var(--ds-gray-900)]">
+              {location}
+            </p>
+          )}
         </div>
-        {location && (
-          <p className="truncate text-copy-14 text-[color:var(--ds-gray-900)]">
-            {location}
-          </p>
-        )}
+        {fullDate && <MetaPill>{fullDate}</MetaPill>}
       </div>
     </article>
   );
