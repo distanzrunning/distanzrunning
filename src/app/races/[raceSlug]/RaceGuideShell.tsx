@@ -2,9 +2,11 @@
 
 // src/app/races/[raceSlug]/RaceGuideShell.tsx
 //
-// First slice: just the map. Race stats / guide panel will be
-// reintroduced once we're confident the map renders correctly
-// in every viewport.
+// Map-led race guide canvas. The Mapbox map fills the shell;
+// a left-anchored panel (DS Sheet visual treatment) overlays
+// the map and will eventually carry the editorial guide content.
+// Panel content is intentionally blank for this iteration —
+// we're locking the layout first.
 
 import { useContext, useEffect, useRef, useState } from "react";
 import mapboxgl from "mapbox-gl";
@@ -50,11 +52,11 @@ const ROUTE_LINE_COLOR = "#FF0058";
 // Explicit height calc: 100vh minus the 50 px sticky site header
 // and the 9 px PageFrame margins/borders below it. Without an
 // explicit height, the absolutely-positioned map container would
-// collapse to 0 height because `position: absolute inset-0`
-// gives its parent no content to size against, and the parent's
-// flex-1 chain through PageFrame doesn't propagate a definite
-// height down to a leaf with no in-flow children.
+// collapse to 0 height because the parent's flex-1 chain through
+// PageFrame doesn't propagate a definite height down to a leaf
+// with no in-flow children.
 const SHELL_HEIGHT = "calc(100vh - 59px)";
+const PANEL_WIDTH = 384;
 
 export default function RaceGuideShell({
   race,
@@ -71,6 +73,7 @@ export default function RaceGuideShell({
       ) : (
         <StatusOverlay text="Route map coming soon." />
       )}
+      <GuidePanel />
     </div>
   );
 }
@@ -90,19 +93,11 @@ function RaceMap({ geoJsonUrl }: { geoJsonUrl: string }) {
   const geoJsonRef = useRef<GeoJSON.FeatureCollection | null>(null);
   const { isDark } = useContext(DarkModeContext);
   const [status, setStatus] = useState<MapStatus>({ kind: "loading" });
-  const [debug, setDebug] = useState<string>("init");
 
-  // Initial create — runs exactly once. We deliberately do NOT
-  // depend on DarkModeContext.isInitialized: in a hydration race
-  // the flag may stay false momentarily on a fresh load and stall
-  // map creation. Better to render with whatever isDark is at
-  // mount and let the second effect swap styles when the flag
-  // settles.
   useEffect(() => {
     if (!containerRef.current) return;
 
     const token = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
-    setDebug(`token:${token ? "ok" : "missing"}`);
     if (!token) {
       setStatus({
         kind: "error",
@@ -111,9 +106,6 @@ function RaceMap({ geoJsonUrl }: { geoJsonUrl: string }) {
       return;
     }
     mapboxgl.accessToken = token;
-
-    const rect = containerRef.current.getBoundingClientRect();
-    setDebug(`token:ok size:${Math.round(rect.width)}×${Math.round(rect.height)}`);
 
     const map = new mapboxgl.Map({
       container: containerRef.current,
@@ -130,22 +122,14 @@ function RaceMap({ geoJsonUrl }: { geoJsonUrl: string }) {
     );
 
     map.on("error", (e) => {
-      // Surface Mapbox-internal errors so we can see them rather
-      // than getting a silent blank canvas.
       const msg =
         (e?.error as Error | undefined)?.message ?? "Mapbox error";
       // eslint-disable-next-line no-console
       console.error("[RaceMap] mapbox error:", msg, e);
-      setDebug(`err:${msg.slice(0, 60)}`);
       setStatus({ kind: "error", message: msg });
     });
 
-    map.on("style.load", () => {
-      setDebug((prev) => `${prev} | style.load`);
-    });
-
     map.on("load", async () => {
-      setDebug((prev) => `${prev} | load`);
       try {
         const res = await fetch(geoJsonUrl);
         if (!res.ok) throw new Error(`Route fetch HTTP ${res.status}`);
@@ -161,13 +145,11 @@ function RaceMap({ geoJsonUrl }: { geoJsonUrl: string }) {
           return;
         }
         setStatus({ kind: "ready" });
-        setDebug((prev) => `${prev} | route-ready`);
       } catch (err) {
         const msg =
           err instanceof Error ? err.message : "Failed to load route";
         // eslint-disable-next-line no-console
         console.error("[RaceMap] route load failed:", err);
-        setDebug(`route-err:${msg.slice(0, 60)}`);
         setStatus({ kind: "error", message: msg });
       }
     });
@@ -179,18 +161,9 @@ function RaceMap({ geoJsonUrl }: { geoJsonUrl: string }) {
       if (data) addRouteLayer(map, data);
     });
 
-    // Resize after a tick — guards against the container having
-    // 0 dimensions on the very first paint (e.g. PageFrame
-    // hadn't laid out yet).
-    requestAnimationFrame(() => {
-      map.resize();
-      const r = containerRef.current?.getBoundingClientRect();
-      if (r) {
-        setDebug(
-          (prev) => `${prev} | resize ${Math.round(r.width)}×${Math.round(r.height)}`,
-        );
-      }
-    });
+    // Resize after the first paint as a guard against the
+    // container measuring 0 dimensions before layout settles.
+    requestAnimationFrame(() => map.resize());
 
     return () => {
       map.remove();
@@ -199,8 +172,7 @@ function RaceMap({ geoJsonUrl }: { geoJsonUrl: string }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [geoJsonUrl]);
 
-  // Swap style when dark mode flips after init. Doesn't recreate
-  // the map.
+  // Swap style when dark mode flips. Doesn't recreate the map.
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
@@ -209,21 +181,11 @@ function RaceMap({ geoJsonUrl }: { geoJsonUrl: string }) {
 
   return (
     <>
-      <div
-        ref={containerRef}
-        className="h-full w-full"
-        style={{ background: "var(--ds-gray-200)" }}
-      />
+      <div ref={containerRef} className="h-full w-full" />
       {status.kind === "loading" && (
         <StatusOverlay text="Loading route…" subtle />
       )}
       {status.kind === "error" && <StatusOverlay text={status.message} />}
-      <div
-        className="pointer-events-none absolute left-2 top-2 max-w-[60ch] rounded bg-black/70 px-2 py-1 font-mono text-[11px] text-white"
-        style={{ zIndex: 10 }}
-      >
-        {debug}
-      </div>
     </>
   );
 }
@@ -306,12 +268,42 @@ function fitToRoute(
   }
 
   if (!hasPoint) return false;
+  // Generous left padding so the route doesn't sit underneath
+  // the guide panel.
   map.fitBounds(
     [
       [minLng, minLat],
       [maxLng, maxLat],
     ],
-    { padding: 64, duration: 0 },
+    {
+      padding: { top: 64, bottom: 64, left: PANEL_WIDTH + 32, right: 64 },
+      duration: 0,
+    },
   );
   return true;
+}
+
+// ============================================================================
+// Guide panel — left-anchored card that overlays the map. Visual
+// treatment matches the DS Sheet (background, hairline + diffuse
+// shadow). Content is empty for now; we'll layer in the editorial
+// guide once the layout is locked.
+// ============================================================================
+
+function GuidePanel() {
+  return (
+    <aside
+      className="absolute left-0 top-0 bottom-0 z-10 flex flex-col bg-[color:var(--ds-background-100)] p-6"
+      style={{
+        width: PANEL_WIDTH,
+        // Sheet-equivalent shadow: hairline + small lift + outer
+        // ring against the secondary background. Lifted from
+        // src/components/ui/Sheet.tsx so the panel reads as a
+        // proper floating surface even though we're not using
+        // the dialog primitive itself.
+        boxShadow:
+          "rgba(0,0,0,0) 0px 0px 0px 0px, rgba(0,0,0,0) 0px 0px 0px 0px, rgba(0,0,0,0.08) 0px 0px 0px 1px, rgba(0,0,0,0.04) 0px 2px 2px 0px, rgba(0,0,0,0.04) 0px 8px 16px -4px, var(--ds-background-200) 0px 0px 0px 1px",
+      }}
+    />
+  );
 }
