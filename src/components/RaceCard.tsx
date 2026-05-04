@@ -16,17 +16,16 @@ import { useUnits } from "@/contexts/UnitsContext";
 // RaceCard
 // ============================================================================
 //
-// Two visual variants:
-//   - "default" (current homepage usage) — cinematic 16/8.75 image
-//     with category Badge top-right, body has title + location +
-//     square MAR/31 date block on the right. No hover affordances
-//     beyond the image settle-zoom.
-//   - "index" (new /races index page) — same 16/8.75 image but the
-//     top-right Badge carries the *date* ("31 MAR 2026") and the
-//     category moves into the body as a third meta line. On hover
-//     three glassy pills (Surface / Profile / Price) fade in
-//     centred over the image. Body becomes title → location → date
-//     stacked, no square date block.
+// Cinematic 16/8.75 image with the category Badge in the top-right
+// corner (inverted variant for contrast against any photo). Body
+// stacks the title + location on the left with a date pill (full
+// date, e.g. "11 Apr, 2027") vertically centered against that
+// stack on the right. Two visual variants:
+//   - "default" — homepage row. No hover affordances beyond the
+//     image settle-zoom.
+//   - "index"   — /races index page. Adds a glassy hover overlay
+//     over the image with three stat columns (Surface / Elevation
+//     / Price) that fades in on group hover.
 //
 // Markup uses the "card-with-overlay-link" pattern so the whole
 // card stays clickable while the title's anchor carries an
@@ -35,12 +34,13 @@ import { useUnits } from "@/contexts/UnitsContext";
 export interface RaceCardProps {
   href: string;
   title: string;
-  /** ISO date — formatted into the date block / pill. */
+  /** ISO date — formatted into the body's date pill ("11 Apr, 2027"). */
   eventDate?: string;
   /** Pre-formatted location string, e.g. "Tokyo, Japan". */
   location?: string;
-  /** Distance / category label rendered on the image (default
-   *  variant) or as a body meta line (index variant). */
+  /** Race category (Marathon / Half Marathon / 10K / etc.) —
+   *  rendered as the inverted Badge in the image's top-right
+   *  corner. */
   category?: string;
   /** Pre-resolved image URL. */
   imageUrl?: string;

@@ -73,28 +73,28 @@ export default function FullPageSkeleton() {
 
         {/* Filter row + grid */}
         <div className="flex flex-col gap-6">
-          {/* Mirror of the live row: single-row chip strip
-              (no wrap, hidden horizontal scrollbar) on the
-              left, toggle + sort pinned right. */}
-          <div className="flex items-center">
-            <div className="flex min-w-0 flex-1 items-center gap-2 overflow-x-auto p-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-              {/* Search (collapsed icon) */}
-              <div className={`${PULSE_BG} h-8 w-8 shrink-0`} />
-              {/* Date trigger — Calendar uses an explicit width={140}. */}
-              <div className={`${PULSE_BG} h-8 w-[140px] shrink-0`} />
-              <ChipPlaceholder label="Distance" />
-              <ChipPlaceholder label="Country" />
-              <ChipPlaceholder label="City" />
-              <ChipPlaceholder label="State" />
-              <ChipPlaceholder label="Surface" />
-              <ChipPlaceholder label="Price" />
-              <ChipPlaceholder label="Elevation" />
-              <ChipPlaceholder label="Temperature" />
-              <ChipPlaceholder label="Tag" />
-            </div>
-            {/* Right column: Toggle (~140 px including label) +
-                Sort icon trigger (32 px). Pinned right. */}
-            <div className="ml-3 flex h-8 shrink-0 items-center gap-3">
+          {/* Mirror of the live row: single scrollable strip
+              with every control (search, chips, reset, toggle,
+              sort). p-1 leaves room for the focus-within ring
+              on the search input; scrollbar hidden on every
+              browser. */}
+          <div className="flex items-center gap-2 overflow-x-auto p-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            {/* Search (collapsed icon) */}
+            <div className={`${PULSE_BG} h-8 w-8 shrink-0`} />
+            {/* Date trigger — Calendar uses an explicit width={140}. */}
+            <div className={`${PULSE_BG} h-8 w-[140px] shrink-0`} />
+            <ChipPlaceholder label="Distance" />
+            <ChipPlaceholder label="Country" />
+            <ChipPlaceholder label="City" />
+            <ChipPlaceholder label="State" />
+            <ChipPlaceholder label="Surface" />
+            <ChipPlaceholder label="Price" />
+            <ChipPlaceholder label="Elevation" />
+            <ChipPlaceholder label="Temperature" />
+            <ChipPlaceholder label="Tag" />
+            {/* Toggle (~140 px including label) + Sort icon
+                trigger (32 px) at the end of the strip. */}
+            <div className="ml-3 flex shrink-0 items-center gap-3">
               <div className={`${PULSE_BG} h-5 w-[140px]`} />
               <div className={`${PULSE_BG} h-8 w-8`} />
             </div>

@@ -21,6 +21,7 @@
 
 import { useEffect, useState, useTransition, type ReactNode } from "react";
 import { usePathname, useRouter } from "next/navigation";
+import Toggle from "@/components/ui/Toggle";
 
 import {
   buildFilterParams,
@@ -39,7 +40,6 @@ import ElevationFilter from "./filters/ElevationFilter";
 import TemperatureFilter from "./filters/TemperatureFilter";
 import TagFilter from "./filters/TagFilter";
 import SortFilter from "./filters/SortFilter";
-import Toggle from "@/components/ui/Toggle";
 import { DEFAULT_SORT } from "@/sanity/queries/raceIndexQuery";
 import { US_COUNTRY_NAME, US_STATES } from "@/lib/usStates";
 import RaceGridSkeleton from "./RaceGridSkeleton";
@@ -77,11 +77,6 @@ export default function FiltersShell({
   // read as a flash. With this guard, the swap only happens if the
   // server is genuinely slow.
   const [showSkeleton, setShowSkeleton] = useState(false);
-  // Tracks the Search chip's expanded state so we can hide Reset
-  // all while the input is open — otherwise the 260 px expansion
-  // pushes the row past its container width and Sort wraps onto
-  // a second line.
-  const [searchExpanded, setSearchExpanded] = useState(false);
   useEffect(() => {
     if (!isPending) {
       setShowSkeleton(false);
@@ -155,30 +150,29 @@ export default function FiltersShell({
 
   return (
     <div className="flex flex-col gap-6">
-      {/* Two-column layout: chip strip on the left (single row,
-          horizontally scrollable when it overflows — no wrap so
-          the filter row's height never changes), toggle+sort
-          pinned right. items-center vertically aligns toggle/
-          sort with the chip strip's chips. Outer gap is 0 —
-          the right column carries its own ml-3 so it can
-          transition to 0 when search is expanded.
-          Why no wrap: a wrapping row's height jumped between 1
-          and 2 rows during search expand/collapse on narrow
-          viewports, shifting the race grid below and producing
-          a Safari-visible flicker. Single-row + horizontal
-          scroll keeps filter-row height stable. */}
-      <div className="flex items-center">
-        <div
-          // p-1 (4 px) gives box-shadow rings room to render
-          // without overflow-x-auto clipping them. 4 px is the
-          // largest ring on the strip — the search input's
-          // focus-within ring is `0 0 0 4px var(--ds-focus-ring)`
-          // (see globals.css .ds-input-container:focus-within).
-          // Anything smaller clipped the focus ring on the search
-          // when expanded. Scrollbar hidden across browsers; chips
-          // scroll via wheel/swipe.
-          className="flex min-w-0 flex-1 items-center gap-2 overflow-x-auto p-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-        >
+      {/* Single scrollable strip — all controls live in one
+          horizontally-overflowing flex row. Chips on the left
+          (Search → filters → Reset all → Toggle → Sort). The
+          row never wraps; anything past the container's right
+          edge is reachable via horizontal scroll (wheel /
+          swipe). Hidden scrollbar on every browser.
+          Why one strip: a separate "pinned right" column for
+          toggle+sort meant chip-area width changed when search
+          expanded, which triggered chip wrap on narrow Safari
+          viewports and produced race-card flicker. With every
+          control in the same scrollable strip the row height
+          stays stable. */}
+      <div
+        // p-1 (4 px) gives box-shadow rings room to render
+        // without overflow-x-auto clipping them. 4 px is the
+        // largest ring on the strip — the search input's
+        // focus-within ring is `0 0 0 4px var(--ds-focus-ring)`
+        // (see globals.css .ds-input-container:focus-within).
+        // Anything smaller clipped the focus ring on the search
+        // when expanded. Scrollbar hidden across browsers;
+        // controls scroll via wheel/swipe.
+        className="flex items-center gap-2 overflow-x-auto p-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      >
         {/* Search wrapped in its own order:-2 slot so it always
             wins the leftmost spot, even against active filter
             chips (which use order:-1 to pull in front of
@@ -187,7 +181,6 @@ export default function FiltersShell({
           <SearchFilter
             value={initialFilters.q}
             onChange={(q) => setFilter({ q: q || undefined })}
-            onExpandedChange={setSearchExpanded}
           />
         </div>
         {slot(
@@ -374,53 +367,29 @@ export default function FiltersShell({
             Reset all
           </button>
         )}
-        </div>
-        {/* Right column (toggle + sort) — hides while Search is
-            expanded so the input has uncluttered focus. Always
-            rendered so the disappearance is a smooth max-width +
-            opacity + margin transition rather than a mount/
-            unmount pop. ml-3 carries the gap onto this element so
-            it can transition to 0 alongside max-width — keeps the
-            collapsed state visually flush rather than leaving a
-            stray 12 px of empty space. The inner flex keeps h-8 +
-            items-center so the controls align with the first
-            chip row. */}
-        <div
-          aria-hidden={searchExpanded}
-          // p-px gives the Sort trigger's 1 px box-shadow ring
-          // room to render — without it, overflow-hidden (needed
-          // for the collapse-to-0 transition) clips the ring on
-          // every side.
-          // will-change hints Safari to promote this to its own
-          // compositing layer so the slide-out doesn't repaint
-          // sibling chips on every animation frame.
-          style={{ willChange: "max-width, opacity, margin-left" }}
-          className={`shrink-0 self-start overflow-hidden p-px transition-[max-width,opacity,margin-left] duration-200 ease-out ${
-            searchExpanded
-              ? "ml-0 max-w-0 opacity-0 [pointer-events:none]"
-              : "ml-3 max-w-[280px] opacity-100"
-          }`}
-        >
-          <div className="flex h-8 items-center gap-3">
-            <Toggle
-              size="default"
-              label="Hide past races"
-              labelPosition="left"
-              // Toggle is "on" by default — i.e., past races are
-              // hidden. Flipping off (showPast=true in URL)
-              // includes them in results.
-              checked={!initialFilters.showPast}
-              onChange={(checked) =>
-                setFilter({ showPast: checked ? undefined : true })
-              }
-            />
-            <SortFilter
-              value={initialFilters.sort ?? DEFAULT_SORT}
-              onChange={(sort) =>
-                setFilter({ sort: sort === DEFAULT_SORT ? undefined : sort })
-              }
-            />
-          </div>
+        {/* Toggle + Sort at the end of the strip — they scroll
+            into / out of view alongside the chips when the row
+            overflows. ml-3 puts a small visual break between the
+            filter group and these "view controls". */}
+        <div className="ml-3 flex shrink-0 items-center gap-3">
+          <Toggle
+            size="default"
+            label="Hide past races"
+            labelPosition="left"
+            // Toggle is "on" by default — i.e., past races are
+            // hidden. Flipping off (showPast=true in URL)
+            // includes them in results.
+            checked={!initialFilters.showPast}
+            onChange={(checked) =>
+              setFilter({ showPast: checked ? undefined : true })
+            }
+          />
+          <SortFilter
+            value={initialFilters.sort ?? DEFAULT_SORT}
+            onChange={(sort) =>
+              setFilter({ sort: sort === DEFAULT_SORT ? undefined : sort })
+            }
+          />
         </div>
       </div>
 
