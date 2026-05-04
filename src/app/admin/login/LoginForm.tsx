@@ -19,7 +19,6 @@ export default function LoginForm() {
         gap: 16,
         padding: 24,
         background: "var(--ds-background-100)",
-        border: "1px solid var(--ds-gray-400)",
         borderRadius: 12,
         boxShadow: "var(--ds-shadow-menu)",
       }}
