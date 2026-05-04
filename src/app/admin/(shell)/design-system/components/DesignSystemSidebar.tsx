@@ -89,6 +89,7 @@ export const navigation: NavSection[] = [
       { id: "phone", label: "Phone" },
       { id: "progress", label: "Progress" },
       { id: "project-banner", label: "Project Banner" },
+      { id: "race-card", label: "Race Card" },
       { id: "radio", label: "Radio" },
       { id: "relative-time-card", label: "Relative Time Card" },
       { id: "scroller", label: "Scroller" },

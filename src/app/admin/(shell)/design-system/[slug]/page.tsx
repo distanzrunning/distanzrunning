@@ -87,6 +87,7 @@ import CalendarComponent from "../components/content/CalendarComponent";
 import SearchComponent from "../components/content/SearchComponent";
 import AdSlotComponent from "../components/content/AdSlotComponent";
 import ArticleCardComponent from "../components/content/ArticleCardComponent";
+import RaceCardComponent from "../components/content/RaceCardComponent";
 import ConsentBannerComponent from "../components/content/ConsentBannerComponent";
 import LoginComponent from "../components/content/LoginComponent";
 import Materials from "../components/content/Materials";
@@ -1353,6 +1354,21 @@ export default function DesignSystemPage() {
           onNavigate={handleNavigation}
         >
           <ArticleCardComponent />
+        </ContentWithTOC>
+      );
+    }
+
+    if (activeSlug === "race-card") {
+      return (
+        <ContentWithTOC
+          tocTitle="On this page"
+          pageTitle="Race Card"
+          pageSubtitle="The card used to surface a race guide. Two variants: the default homepage row and the index variant used on /races with its glassy hover overlay."
+          mainSectionId="overview"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
+          <RaceCardComponent />
         </ContentWithTOC>
       );
     }
