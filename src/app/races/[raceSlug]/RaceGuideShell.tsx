@@ -96,17 +96,23 @@ export default function RaceGuideShell({
         )}
       </div>
 
-      {/* Panel layer over the same grid cell. The container is
-          padded for the panel inset and is pointer-events:none
-          so map interactions pass through the empty area; the
-          aside re-enables pointer events so its own content
-          stays interactive. */}
+      {/* Panel layer over the same grid cell. position:relative
+          + zIndex lifts the wrapper above the sticky map: without
+          this, the static wrapper would paint in a lower layer
+          than the map (which is positioned via `sticky`), and
+          Mapbox's absolutely-positioned canvas would cover the
+          panel. The container is padded for the panel inset and
+          is pointer-events:none so map interactions pass through
+          the empty area; the aside re-enables pointer events so
+          its own content stays interactive. */}
       <div
         style={{
           gridColumn: 1,
           gridRow: 1,
           padding: PANEL_INSET,
           pointerEvents: "none",
+          position: "relative",
+          zIndex: 1,
         }}
       >
         <GuidePanel />
