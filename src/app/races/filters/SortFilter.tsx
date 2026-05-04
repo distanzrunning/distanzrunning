@@ -60,8 +60,9 @@ export default function SortFilter({ value, onChange }: SortFilterProps) {
 
   const handleSelect = (field: SortField) => {
     if (field === currentField) {
-      // Same field — flip direction, keep popover open so the
-      // editor can see the new direction badge.
+      // Same field — flip direction. Popover stays open so a
+      // second click on the same row flips back without having
+      // to re-open from the trigger.
       const nextDir: SortDir = currentDir === "asc" ? "desc" : "asc";
       onChange(joinKey(field, nextDir));
       return;
