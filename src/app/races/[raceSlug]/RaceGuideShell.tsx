@@ -2,11 +2,12 @@
 
 // src/app/races/[raceSlug]/RaceGuideShell.tsx
 //
-// Map-led race guide canvas. The Mapbox map fills the shell;
-// a left-anchored panel (DS Sheet visual treatment) overlays
-// the map and will eventually carry the editorial guide content.
-// Panel content is intentionally blank for this iteration —
-// we're locking the layout first.
+// Map-led race guide canvas modelled on trippin.world's guide
+// pages. The Mapbox map is sticky at the top of the viewport
+// (just below the 50 px SiteHeader); the editorial panel sits
+// on top of the map on the left and grows tall enough to make
+// the page itself scroll. The panel scrolls with the page; the
+// map stays put.
 
 import { useContext, useEffect, useRef, useState } from "react";
 import mapboxgl from "mapbox-gl";
@@ -49,17 +50,12 @@ interface RaceGuideShellProps {
 
 const ROUTE_LINE_COLOR = "#FF0058";
 
-// Explicit height calc: 100vh minus the 50 px sticky site header
-// and the 9 px PageFrame margins/borders below it. Without an
-// explicit height, the absolutely-positioned map container would
-// collapse to 0 height because the parent's flex-1 chain through
-// PageFrame doesn't propagate a definite height down to a leaf
-// with no in-flow children.
-const SHELL_HEIGHT = "calc(100vh - 59px)";
+// Sticky map sits just below the 50 px SiteHeader, filling the
+// rest of the viewport while the page scrolls past it.
+const MAP_STICKY_TOP = 50;
+const MAP_VIEWPORT_HEIGHT = "calc(100vh - 50px)";
+
 const PANEL_WIDTH = 480;
-// Inset of the floating panel from the shell edges. Drives the
-// fitBounds left-padding too so the route never sits underneath
-// the panel when bounds are computed.
 const PANEL_INSET = 24;
 // Extra breathing room around the route bbox so the map reads
 // slightly zoomed out — the panel ate enough of the canvas
@@ -71,17 +67,50 @@ export default function RaceGuideShell({
   routeGeoJsonUrl,
 }: RaceGuideShellProps) {
   return (
+    // Single-cell grid: the sticky map and the editorial panel
+    // both occupy row 1 / col 1. The cell auto-sizes to the
+    // larger of the two children — so when the panel is taller
+    // than the viewport, the grid (and therefore <main>) grows
+    // tall enough to drive page scroll, while the map's
+    // `position: sticky; top: 50px` keeps it pinned just under
+    // the SiteHeader throughout that scroll.
     <div
-      className="relative w-full overflow-hidden"
-      style={{ height: SHELL_HEIGHT }}
-      aria-label={`${race.title} route map`}
+      className="relative grid w-full"
+      style={{ gridTemplateColumns: "1fr", gridTemplateRows: "auto" }}
+      aria-label={`${race.title} route guide`}
     >
-      {routeGeoJsonUrl ? (
-        <RaceMap geoJsonUrl={routeGeoJsonUrl} />
-      ) : (
-        <StatusOverlay text="Route map coming soon." />
-      )}
-      <GuidePanel />
+      <div
+        className="overflow-hidden"
+        style={{
+          gridColumn: 1,
+          gridRow: 1,
+          position: "sticky",
+          top: MAP_STICKY_TOP,
+          height: MAP_VIEWPORT_HEIGHT,
+        }}
+      >
+        {routeGeoJsonUrl ? (
+          <RaceMap geoJsonUrl={routeGeoJsonUrl} />
+        ) : (
+          <StatusOverlay text="Route map coming soon." />
+        )}
+      </div>
+
+      {/* Panel layer over the same grid cell. The container is
+          padded for the panel inset and is pointer-events:none
+          so map interactions pass through the empty area; the
+          aside re-enables pointer events so its own content
+          stays interactive. */}
+      <div
+        style={{
+          gridColumn: 1,
+          gridRow: 1,
+          padding: PANEL_INSET,
+          pointerEvents: "none",
+        }}
+      >
+        <GuidePanel />
+      </div>
     </div>
   );
 }
@@ -277,10 +306,8 @@ function fitToRoute(
 
   if (!hasPoint) return false;
   // Left padding accounts for the floating panel's inset + width
-  // plus extra breathing room so the route never sits behind the
-  // panel when bounds are computed. Other sides also get the
-  // breathing-room value so the route reads centred and slightly
-  // zoomed out, not pushed up against any edge.
+  // plus extra breathing room. Other sides also get the breathing
+  // value so the route reads centred and slightly zoomed out.
   map.fitBounds(
     [
       [minLng, minLat],
@@ -300,33 +327,30 @@ function fitToRoute(
 }
 
 // ============================================================================
-// Guide panel — left-anchored card that overlays the map. Visual
-// treatment matches the DS Sheet (background, hairline + diffuse
-// shadow). Content is empty for now; we'll layer in the editorial
-// guide once the layout is locked.
+// Guide panel — left-aligned floating card. Background follows
+// PageFrame's flipped pattern (bg-200 light / bg-100 dark) so the
+// panel reads as the same surface as the rest of the framed page
+// content. The card grows with its content; the page (not the
+// card) scrolls.
 // ============================================================================
 
 function GuidePanel() {
   return (
     <aside
-      className="absolute z-10 flex flex-col overflow-y-auto rounded-md bg-[color:var(--ds-background-200)] p-6"
+      className="rounded-md bg-[color:var(--ds-background-200)] p-6 dark:bg-[color:var(--ds-background-100)]"
       style={{
-        top: PANEL_INSET,
-        bottom: PANEL_INSET,
-        left: PANEL_INSET,
         width: PANEL_WIDTH,
-        // Sheet-equivalent shadow stack: hairline + small lift +
-        // diffuse fall-off + outer ring. Outer ring against
-        // bg-100 so the card edge reads against the chrome canvas
-        // colour now that the card itself is bg-200.
+        pointerEvents: "auto",
+        // Theme-aware shadow: gray-1000 alpha (token flips so
+        // light=black @ 0.10, dark=white @ 0.10) gives a hairline
+        // edge + soft drop on either map style.
         boxShadow:
-          "rgba(0,0,0,0) 0px 0px 0px 0px, rgba(0,0,0,0) 0px 0px 0px 0px, rgba(0,0,0,0.08) 0px 0px 0px 1px, rgba(0,0,0,0.04) 0px 2px 2px 0px, rgba(0,0,0,0.04) 0px 8px 16px -4px, var(--ds-background-100) 0px 0px 0px 1px",
+          "0 0 0 1px rgba(var(--ds-gray-1000-rgb), 0.08), 0 4px 24px rgba(var(--ds-gray-1000-rgb), 0.08)",
+        // Temporary placeholder height so the page scrolls and we
+        // can verify the sticky map / scrolling panel behaviour.
+        // Comes out when real editorial content lands.
+        minHeight: 1500,
       }}
-    >
-      {/* Temporary scroll demo — replace with editorial guide
-          content. Sized > viewport so we can see the panel's
-          internal overflow scroll behave. */}
-      <div style={{ minHeight: 1200 }} />
-    </aside>
+    />
   );
 }
