@@ -20,7 +20,7 @@ function ChipPlaceholder({ label }: { label: string }) {
   return (
     <div
       aria-hidden
-      className="inline-flex h-8 animate-pulse items-center gap-1 rounded-sm bg-[color:var(--ds-gray-200)] pl-3 pr-1.5 text-[14px] font-normal leading-[20px] text-transparent"
+      className="inline-flex h-8 shrink-0 animate-pulse items-center gap-1 rounded-sm bg-[color:var(--ds-gray-200)] pl-3 pr-1.5 text-[14px] font-normal leading-[20px] text-transparent"
     >
       <span>{label}</span>
       {/* Chevron-equivalent space — matches the size-4 ChevronDown
@@ -73,15 +73,15 @@ export default function FullPageSkeleton() {
 
         {/* Filter row + grid */}
         <div className="flex flex-col gap-6">
-          {/* Mirror of the live row: chips wrap freely in the
-              left column; right column (toggle + sort) is
-              shrink-0 and pinned top-right. */}
-          <div className="flex items-start gap-3">
-            <div className="flex min-w-0 flex-1 flex-wrap items-center gap-2">
+          {/* Mirror of the live row: single-row chip strip
+              (no wrap, hidden horizontal scrollbar) on the
+              left, toggle + sort pinned right. */}
+          <div className="flex items-center">
+            <div className="flex min-w-0 flex-1 items-center gap-2 overflow-x-auto py-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               {/* Search (collapsed icon) */}
-              <div className={`${PULSE_BG} h-8 w-8`} />
+              <div className={`${PULSE_BG} h-8 w-8 shrink-0`} />
               {/* Date trigger — Calendar uses an explicit width={140}. */}
-              <div className={`${PULSE_BG} h-8 w-[140px]`} />
+              <div className={`${PULSE_BG} h-8 w-[140px] shrink-0`} />
               <ChipPlaceholder label="Distance" />
               <ChipPlaceholder label="Country" />
               <ChipPlaceholder label="City" />
@@ -93,8 +93,8 @@ export default function FullPageSkeleton() {
               <ChipPlaceholder label="Tag" />
             </div>
             {/* Right column: Toggle (~140 px including label) +
-                Sort icon trigger (32 px). Pinned top-right. */}
-            <div className="flex h-8 shrink-0 items-center gap-3">
+                Sort icon trigger (32 px). Pinned right. */}
+            <div className="ml-3 flex h-8 shrink-0 items-center gap-3">
               <div className={`${PULSE_BG} h-5 w-[140px]`} />
               <div className={`${PULSE_BG} h-8 w-8`} />
             </div>

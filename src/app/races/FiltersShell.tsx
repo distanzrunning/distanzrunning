@@ -140,11 +140,13 @@ export default function FiltersShell({
 
   // Helper: wrap a chip in an order-aware div. Active chips get
   // order:-1 so flex pulls them to the start of the row; default
-  // is order:0. inline-flex on the wrapper keeps the chip
-  // hugging its content the same way an unwrapped chip would.
+  // is order:0. inline-flex + shrink-0 keep the chip hugging its
+  // content at natural width even when the row overflows
+  // (overflow-x-auto on the chip strip). Without shrink-0,
+  // chips would compress and their text would wrap.
   const slot = (active: boolean, chip: ReactNode) => (
     <div
-      className="inline-flex"
+      className="inline-flex shrink-0"
       style={{ order: active ? -1 : 0 }}
     >
       {chip}
@@ -153,20 +155,31 @@ export default function FiltersShell({
 
   return (
     <div className="flex flex-col gap-6">
-      {/* Two-column layout: the chip column (left) wraps freely
-          across as many rows as needed; the right column
-          (toggle + sort) is shrink-0 and items-start so it stays
-          pinned top-right regardless of how many chip rows
-          appear beneath it. Outer gap is 0 — the right column
-          carries its own ml-3 so it can transition to 0 when
-          search is expanded. */}
-      <div className="flex items-start">
-        <div className="flex min-w-0 flex-1 flex-wrap items-center gap-2">
+      {/* Two-column layout: chip strip on the left (single row,
+          horizontally scrollable when it overflows — no wrap so
+          the filter row's height never changes), toggle+sort
+          pinned right. items-center vertically aligns toggle/
+          sort with the chip strip's chips. Outer gap is 0 —
+          the right column carries its own ml-3 so it can
+          transition to 0 when search is expanded.
+          Why no wrap: a wrapping row's height jumped between 1
+          and 2 rows during search expand/collapse on narrow
+          viewports, shifting the race grid below and producing
+          a Safari-visible flicker. Single-row + horizontal
+          scroll keeps filter-row height stable. */}
+      <div className="flex items-center">
+        <div
+          // py-1 gives the chip box-shadow rings 4 px of vertical
+          // breathing room — overflow-x-auto otherwise clips
+          // them. Scrollbar hidden across browsers; chips scroll
+          // via wheel/swipe.
+          className="flex min-w-0 flex-1 items-center gap-2 overflow-x-auto py-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        >
         {/* Search wrapped in its own order:-2 slot so it always
             wins the leftmost spot, even against active filter
             chips (which use order:-1 to pull in front of
             inactive chips). */}
-        <div className="inline-flex" style={{ order: -2 }}>
+        <div className="inline-flex shrink-0" style={{ order: -2 }}>
           <SearchFilter
             value={initialFilters.q}
             onChange={(q) => setFilter({ q: q || undefined })}
