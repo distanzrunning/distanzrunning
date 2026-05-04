@@ -64,8 +64,11 @@ export default function FullPageSkeleton() {
           {/* Unit controls: imperial/metric switch + currency select.
               RaceUnitControls keeps visibility:hidden until mount, so
               the real controls reserve the same w/h space — these
-              placeholders just fill the cold-load equivalent. */}
-          <div className="flex flex-wrap items-center gap-3">
+              placeholders just fill the cold-load equivalent.
+              self-end mirrors the live RaceUnitControls so the
+              controls stay flush right in both stacked (mobile)
+              and row (desktop) header layouts. */}
+          <div className="flex flex-wrap items-center gap-3 self-end">
             <div className={`${PULSE_BG} h-8 w-[150px]`} />
             <div className={`${PULSE_BG} h-8 w-[120px]`} />
           </div>
