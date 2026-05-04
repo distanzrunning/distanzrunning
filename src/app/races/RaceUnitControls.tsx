@@ -61,7 +61,14 @@ export default function RaceUnitControls() {
     //   becomes vertical, sm:self-end matches the parent's
     //   md:items-end (bottom-aligned) — no behaviour change.
     <div
-      className="flex flex-wrap items-center gap-3 sm:self-end"
+      // shrink-0 prevents the wrapper from being squeezed below
+      // its natural width by flex-shrink:1 when the header is
+      // in row mode and the title block is wide. Without it,
+      // the Switch + Select got compressed past their combined
+      // natural width (~280 px) and flex-wrap then stacked
+      // them vertically. Title block (which still has
+      // flex-shrink:1) gives way instead.
+      className="flex flex-wrap items-center gap-3 shrink-0 sm:self-end"
       style={{ visibility: mounted ? "visible" : "hidden" }}
     >
       <Switch

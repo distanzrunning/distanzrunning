@@ -68,7 +68,7 @@ export default function FullPageSkeleton() {
               sm:self-end mirrors the live RaceUnitControls — true
               mobile (< 640 px) keeps the default left-anchored
               layout, sm+ pushes the controls flush right. */}
-          <div className="flex flex-wrap items-center gap-3 sm:self-end">
+          <div className="flex flex-wrap items-center gap-3 shrink-0 sm:self-end">
             <div className={`${PULSE_BG} h-8 w-[150px]`} />
             <div className={`${PULSE_BG} h-8 w-[120px]`} />
           </div>
