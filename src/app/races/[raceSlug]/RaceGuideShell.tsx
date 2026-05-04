@@ -90,6 +90,7 @@ function RaceMap({ geoJsonUrl }: { geoJsonUrl: string }) {
   const geoJsonRef = useRef<GeoJSON.FeatureCollection | null>(null);
   const { isDark } = useContext(DarkModeContext);
   const [status, setStatus] = useState<MapStatus>({ kind: "loading" });
+  const [debug, setDebug] = useState<string>("init");
 
   // Initial create — runs exactly once. We deliberately do NOT
   // depend on DarkModeContext.isInitialized: in a hydration race
@@ -101,6 +102,7 @@ function RaceMap({ geoJsonUrl }: { geoJsonUrl: string }) {
     if (!containerRef.current) return;
 
     const token = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
+    setDebug(`token:${token ? "ok" : "missing"}`);
     if (!token) {
       setStatus({
         kind: "error",
@@ -109,6 +111,9 @@ function RaceMap({ geoJsonUrl }: { geoJsonUrl: string }) {
       return;
     }
     mapboxgl.accessToken = token;
+
+    const rect = containerRef.current.getBoundingClientRect();
+    setDebug(`token:ok size:${Math.round(rect.width)}×${Math.round(rect.height)}`);
 
     const map = new mapboxgl.Map({
       container: containerRef.current,
@@ -131,10 +136,16 @@ function RaceMap({ geoJsonUrl }: { geoJsonUrl: string }) {
         (e?.error as Error | undefined)?.message ?? "Mapbox error";
       // eslint-disable-next-line no-console
       console.error("[RaceMap] mapbox error:", msg, e);
+      setDebug(`err:${msg.slice(0, 60)}`);
       setStatus({ kind: "error", message: msg });
     });
 
+    map.on("style.load", () => {
+      setDebug((prev) => `${prev} | style.load`);
+    });
+
     map.on("load", async () => {
+      setDebug((prev) => `${prev} | load`);
       try {
         const res = await fetch(geoJsonUrl);
         if (!res.ok) throw new Error(`Route fetch HTTP ${res.status}`);
@@ -150,11 +161,13 @@ function RaceMap({ geoJsonUrl }: { geoJsonUrl: string }) {
           return;
         }
         setStatus({ kind: "ready" });
+        setDebug((prev) => `${prev} | route-ready`);
       } catch (err) {
         const msg =
           err instanceof Error ? err.message : "Failed to load route";
         // eslint-disable-next-line no-console
         console.error("[RaceMap] route load failed:", err);
+        setDebug(`route-err:${msg.slice(0, 60)}`);
         setStatus({ kind: "error", message: msg });
       }
     });
@@ -164,6 +177,19 @@ function RaceMap({ geoJsonUrl }: { geoJsonUrl: string }) {
     map.on("style.load", () => {
       const data = geoJsonRef.current;
       if (data) addRouteLayer(map, data);
+    });
+
+    // Resize after a tick — guards against the container having
+    // 0 dimensions on the very first paint (e.g. PageFrame
+    // hadn't laid out yet).
+    requestAnimationFrame(() => {
+      map.resize();
+      const r = containerRef.current?.getBoundingClientRect();
+      if (r) {
+        setDebug(
+          (prev) => `${prev} | resize ${Math.round(r.width)}×${Math.round(r.height)}`,
+        );
+      }
     });
 
     return () => {
@@ -183,11 +209,21 @@ function RaceMap({ geoJsonUrl }: { geoJsonUrl: string }) {
 
   return (
     <>
-      <div ref={containerRef} className="absolute inset-0" />
+      <div
+        ref={containerRef}
+        className="h-full w-full"
+        style={{ background: "var(--ds-gray-200)" }}
+      />
       {status.kind === "loading" && (
         <StatusOverlay text="Loading route…" subtle />
       )}
       {status.kind === "error" && <StatusOverlay text={status.message} />}
+      <div
+        className="pointer-events-none absolute left-2 top-2 max-w-[60ch] rounded bg-black/70 px-2 py-1 font-mono text-[11px] text-white"
+        style={{ zIndex: 10 }}
+      >
+        {debug}
+      </div>
     </>
   );
 }
